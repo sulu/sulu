@@ -16,10 +16,12 @@ use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepository;
+use Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepository;
 use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException;
+use Sulu\Bundle\MediaBundle\Media\Exception\InvalidMediaTypeException;
 use Sulu\Bundle\MediaBundle\Media\Exception\UploadFileValidationException;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Sulu\Bundle\MediaBundle\Media\FileValidator\FileValidatorInterface;
@@ -300,20 +302,20 @@ class DefaultMediaManager implements MediaManagerInterface
         foreach ($fileVersions as $fileVersion) {
             $changed = false;
             foreach ($properties as $fileVersionProperties) {
-                $propertiesFileVersionId = $fileVersionProperties['id'] != null ? $fileVersionProperties['id'] : null;
+                $propertiesFileVersionId = isset($fileVersionProperties['id']) ? $fileVersionProperties['id'] : null;
                 if ($fileVersion->getId() == $propertiesFileVersionId) {
                     foreach ($fileVersionProperties as $key => $value) {
                         switch ($key) {
                             case 'metas':
-                                $this->updateMetas($fileVersion, $fileVersionProperties);
+                                $this->updateMetas($fileVersion, $value);
                                 $changed = true;
                                 break;
                             case 'contentLanguages':
-                                $this->updateContentLanguages($fileVersion, $fileVersionProperties);
+                                $this->updateContentLanguages($fileVersion, $value);
                                 $changed = true;
                                 break;
                             case 'publishLanguages':
-                                $this->updatePublishLanguages($fileVersion, $fileVersionProperties);
+                                $this->updatePublishLanguages($fileVersion, $value);
                                 $changed = true;
                                 break;
                         }
@@ -340,29 +342,31 @@ class DefaultMediaManager implements MediaManagerInterface
          * @var FileVersionMeta $oldMeta
          */
         // Update Old Meta
-        foreach ($fileVersion->getMetas() as $oldMeta) {
-            $exists = false;
-            foreach ($metas as $key => $meta) {
-                if ($oldMeta->getId() == $meta['id']) {
-                    if (isset($meta['title'])) {
-                        $oldMeta->setTitle($meta['title']);
-                    }
-                    if (isset($meta['description'])) {
-                        $oldMeta->setDescription($meta['description']);
-                    }
-                    if (isset($meta['locale'])) {
-                        $oldMeta->setLocale($meta['locale']);
-                    }
-                    $this->em->persist($oldMeta);
+        if ($fileVersion->getMetas()) {
+            foreach ($fileVersion->getMetas() as $oldMeta) {
+                $exists = false;
+                foreach ($metas as $key => $meta) {
+                    if (isset($meta['id']) && $oldMeta->getId() == $meta['id']) {
+                        if (isset($meta['title'])) {
+                            $oldMeta->setTitle($meta['title']);
+                        }
+                        if (isset($meta['description'])) {
+                            $oldMeta->setDescription($meta['description']);
+                        }
+                        if (isset($meta['locale'])) {
+                            $oldMeta->setLocale($meta['locale']);
+                        }
+                        $this->em->persist($oldMeta);
 
-                    unset($metas[$key]);
-                    $exists = true;
-                    break;
+                        unset($metas[$key]);
+                        $exists = true;
+                        break;
+                    }
                 }
-            }
-            if (!$exists) {
-                // Remove Old Meta
-                $fileVersion->removeMeta($oldMeta);
+                if (!$exists) {
+                    // Remove Old Meta
+                    $fileVersion->removeMeta($oldMeta);
+                }
             }
         }
         // Add New Meta
@@ -371,8 +375,10 @@ class DefaultMediaManager implements MediaManagerInterface
             $meta->setTitle($metaData['title']);
             $meta->setDescription($metaData['description']);
             $meta->setLocale($metaData['locale']);
+            $meta->setFileVersion($fileVersion);
 
             $fileVersion->addMeta($meta);
+            $this->em->persist($meta);
         }
     }
 
@@ -386,31 +392,35 @@ class DefaultMediaManager implements MediaManagerInterface
          * @var FileVersionContentLanguage $oldContentLanguage
          */
         // Update Old ContentLanguages
-        foreach ($fileVersion->getFileVersionContentLanguages() as $oldContentLanguage) {
-            $exists = false;
-            foreach ($contentLanguages as $key => $contentLanguage) {
-                if ($oldContentLanguage->getId() == $contentLanguage['id']) {
-                    if (isset($contentLanguage['locale'])) {
-                        $oldContentLanguage->setLocale($contentLanguage['locale']);
-                    }
-                    $this->em->persist($oldContentLanguage);
+        if ($fileVersion->getContentLanguages()) {
+            foreach ($fileVersion->getContentLanguages() as $oldContentLanguage) {
+                $exists = false;
+                foreach ($contentLanguages as $key => $contentLanguage) {
+                    if (isset($contentLanguage['id']) && $oldContentLanguage->getId() == $contentLanguage['id']) {
+                        if (isset($contentLanguage['locale'])) {
+                            $oldContentLanguage->setLocale($contentLanguage['locale']);
+                        }
+                        $this->em->persist($oldContentLanguage);
 
-                    unset($contentLanguage[$key]);
-                    $exists = true;
-                    break;
+                        unset($contentLanguage[$key]);
+                        $exists = true;
+                        break;
+                    }
                 }
-            }
-            if (!$exists) {
-                // Remove Old ContentLanguages
-                $this->em->remove($oldContentLanguage);
+                if (!$exists) {
+                    // Remove Old ContentLanguages
+                    $this->em->remove($oldContentLanguage);
+                }
             }
         }
         // Add New ContentLanguages
         foreach ($contentLanguages as $contentLanguageData) {
             $contentLanguage = new FileVersionContentLanguage();
             $contentLanguage->setLocale($contentLanguageData['locale']);
+            $contentLanguage->setFileVersion($fileVersion);
 
-            $fileVersion->addFileVersionContentLanguage($contentLanguage);
+            $fileVersion->addContentLanguage($contentLanguage);
+            $this->em->persist($contentLanguage);
         }
     }
 
@@ -424,31 +434,35 @@ class DefaultMediaManager implements MediaManagerInterface
          * @var FileVersionPublishLanguage $oldPublishLanguage
          */
         // Update Old PublishLanguages
-        foreach ($fileVersion->getFileVersionPublishLanguages() as $oldPublishLanguage) {
-            $exists = false;
-            foreach ($publishLanguages as $key => $publishLanguage) {
-                if ($oldPublishLanguage->getId() == $publishLanguage['id']) {
-                    if (isset($publishLanguage['locale'])) {
-                        $oldPublishLanguage->setLocale($publishLanguage['locale']);
-                    }
-                    $this->em->persist($oldPublishLanguage);
+        if ($fileVersion->getPublishLanguages()) {
+            foreach ($fileVersion->getPublishLanguages() as $oldPublishLanguage) {
+                $exists = false;
+                foreach ($publishLanguages as $key => $publishLanguage) {
+                    if (isset($publishLanguage['id']) && $oldPublishLanguage->getId() == $publishLanguage['id']) {
+                        if (isset($publishLanguage['locale'])) {
+                            $oldPublishLanguage->setLocale($publishLanguage['locale']);
+                        }
+                        $this->em->persist($oldPublishLanguage);
 
-                    unset($publishLanguage[$key]);
-                    $exists = true;
-                    break;
+                        unset($publishLanguage[$key]);
+                        $exists = true;
+                        break;
+                    }
                 }
-            }
-            if (!$exists) {
-                // Remove Old PublishLanguages
-                $this->em->remove($oldPublishLanguage);
+                if (!$exists) {
+                    // Remove Old PublishLanguages
+                    $this->em->remove($oldPublishLanguage);
+                }
             }
         }
         // Add New PublishLanguages
         foreach ($publishLanguages as $publishLanguageData) {
             $publishLanguage = new FileVersionPublishLanguage();
+            $publishLanguage->setFileVersion($fileVersion);
             $publishLanguage->setLocale($publishLanguageData['locale']);
 
-            $fileVersion->addFileVersionPublishLanguage($publishLanguage);
+            $fileVersion->addPublishLanguage($publishLanguage);
+            $this->em->persist($publishLanguage);
         }
     }
 

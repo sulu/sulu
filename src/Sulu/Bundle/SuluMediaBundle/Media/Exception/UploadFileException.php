@@ -55,6 +55,12 @@ class UploadFileException extends Exception
     const EXCEPTION_CODE_FILE_VERSION_NOT_FOUND = 5006;
 
     /**
+     * @var int
+     * @description this exception code is thrown when the file has not the correct media type as the followed file versions
+     */
+    const EXCEPTION_CODE_INVALID_MEDIA_TYPE = 5007;
+
+    /**
      * @param string $message
      * @param int $code
      */
