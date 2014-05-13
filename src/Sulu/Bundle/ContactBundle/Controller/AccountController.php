@@ -151,7 +151,7 @@ class AccountController extends RestController implements ClassResourceInterface
             // flat structure
             $view = $this->responseList(array('account_id'=> $id), $this->contactsEntityName);
         } else {
-            $contacts = $this->getDoctrine()->getRepository($this->contactsEntityName)->findBy(array('id'=>$id));
+            $contacts = $this->getDoctrine()->getRepository($this->contactsEntityName)->findByAccountId($id);
             $view = $this->view($this->createHalResponse($contacts), 200);
         }
         return $this->handleView($view);
@@ -365,7 +365,7 @@ class AccountController extends RestController implements ClassResourceInterface
      */
     public function deleteAction($id, Request $request)
     {
-        $delete = function ($id) {
+        $delete = function ($id) use ($request) {
             $entityName = 'SuluContactBundle:Account';
 
             /* @var Account $account */
