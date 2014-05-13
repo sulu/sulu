@@ -27103,7 +27103,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
 
         /**
          * Prepares for removing a row
-         * Raises the husky.datagrid.row.remove-click event when auto remove handling is not set to true
+         * Raises the husky.datagrid.record.remove-click event when auto remove handling is not set to true
          * @param event
          */
         prepareRemoveRow: function(event) {
@@ -27640,7 +27640,7 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
 
         defaults = {
             showElementsSteps: [10, 20, 50, 100, 500],
-            pageSize: 4
+            pageSize: 10
         },
 
         constants = {
@@ -28325,8 +28325,8 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
 
             /**
              * used to remove a data-record
-             * @event husky.datagrid.row.remove
-             * @param {String} id of the row to be removed
+             * @event husky.datagrid.record.remove
+             * @param {String} id of the record to be removed
              */
                 RECORD_REMOVE = namespace + 'record.remove',
 
