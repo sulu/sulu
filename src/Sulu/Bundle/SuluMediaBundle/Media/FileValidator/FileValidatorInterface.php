@@ -8,9 +8,8 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\MediaBundle\Media\Validator;
-
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+namespace Sulu\Bundle\MediaBundle\Media\FileValidator;
+use Symfony\Component\HttpFoundation\File\File;
 
 /**
  * Defines the operations of the StorageLayer.
@@ -24,5 +23,5 @@ interface FileValidatorInterface
     const VALIDATOR_BLOCK_FILE_TYPES = 'BLOCK_FILE_TYPES';
     const VALIDATOR_MAX_FILE_SIZE = 'MAX_FILE_SIZE';
 
-    public function validate(UploadedFile $file, $methods = array());
+    public function validate(File $file, $methods = array());
 }

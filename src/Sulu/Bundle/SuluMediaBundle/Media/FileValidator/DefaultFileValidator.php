@@ -8,10 +8,14 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\MediaBundle\Media\Validator;
+namespace Sulu\Bundle\MediaBundle\Media\FileValidator;
 
+use Sulu\Bundle\MediaBundle\Media\Exception\InvalidFileException;
+use Sulu\Bundle\MediaBundle\Media\Exception\InvalidFileTypeException;
+use Sulu\Bundle\MediaBundle\Media\Exception\MaxFileSizeExceededException;
+use Sulu\Bundle\MediaBundle\Media\Exception\UploadFileNotSetException;
 use Sulu\Bundle\MediaBundle\Media\Exception\UploadFileValidationException;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\File\File;
 
 class DefaultFileValidator implements FileValidatorInterface
 {
@@ -20,21 +24,21 @@ class DefaultFileValidator implements FileValidatorInterface
     protected $maxFileSize = 0;
 
     /**
-     * @param UploadedFile $file
+     * @param File $file
      * @param array $methods
      * @throws InvalidFileException
      * @throws InvalidFileTypeException
      * @throws MaxFileSizeExceededException
      * @throws UploadFileNotSetException
      */
-    public function validate (UploadedFile $file, $methods = array(
+    public function validate (File $file, $methods = array(
             self::VALIDATOR_FILE_SET,
             self::VALIDATOR_FILE_ERRORS,
             self::VALIDATOR_BLOCK_FILE_TYPES,
             self::VALIDATOR_MAX_FILE_SIZE
         ))
     {
-        if (in_array(self::VALIDATOR_FILE_SET, $methods) && $file->getClientOriginalName() != '') {
+        if (in_array(self::VALIDATOR_FILE_SET, $methods) && $file->getFilename() == '') {
             throw new UploadFileNotSetException('No file was set');
         }
 
@@ -42,7 +46,7 @@ class DefaultFileValidator implements FileValidatorInterface
             throw new InvalidFileException('The file upload had an error('.$file->getError().'): ' . $file->getErrorMessage());
         }
 
-        if (in_array(self::VALIDATOR_BLOCK_FILE_TYPES, $methods) && !in_array($file->getMimeType(), $this->blockedMimeTypes)) {
+        if (in_array(self::VALIDATOR_BLOCK_FILE_TYPES, $methods) && in_array($file->getMimeType(), $this->blockedMimeTypes)) {
             throw new InvalidFileTypeException('The file type was blocked');
         }
 

@@ -62,4 +62,15 @@ class UploadFileException extends Exception
     {
         parent::__construct($message, $code);
     }
+
+    /**
+     * @return array
+     */
+    public function toArray()
+    {
+        return array(
+            'code' => $this->code,
+            'message' => $this->message
+        );
+    }
 }
