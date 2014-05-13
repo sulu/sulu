@@ -648,6 +648,8 @@ define([], function() {
                 if (typeof options.data === 'function') {
                     options.data = options.data.call(this);
                 }
+                this.options.changeStateCallback = getChangeToolbarStateCallback.call(this, options.template);
+                this.options.parentChangeStateCallback = getChangeToolbarStateCallback.call(this, options.parentTemplate);
             }
 
             this.sandbox.stop(this.$find('.' + constants.toolbarClass));
