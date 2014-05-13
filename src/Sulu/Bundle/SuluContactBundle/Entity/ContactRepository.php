@@ -178,7 +178,7 @@ class ContactRepository extends EntityRepository
 
 
     /**
-     * Searches for contacts with a specific account and the ability to exclude a certain contact
+     * Searches for contacts with a specific account and the ability to exclude a certain contacts
      * @param $accountId
      * @param null $excludeContactId
      * @return array
