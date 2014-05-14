@@ -71,11 +71,10 @@ define([], function() {
                 {
                     el: this.$find('#package-list'),
                     url: '/admin/api/packages?flat=true',
-                    pagination: false,
-                    sortable: true,
-                    fullWidth: true,
-                    selectItem: {
-                        type: 'checkbox'
+                    viewOptions: {
+                        table: {
+                            fullWidth: true
+                        }
                     }
                 });
         }
