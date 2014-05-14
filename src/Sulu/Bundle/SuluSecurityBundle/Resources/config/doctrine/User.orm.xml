@@ -2,7 +2,8 @@
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-    <entity name="Sulu\Bundle\SecurityBundle\Entity\User" table="se_users" repository-class="Sulu\Bundle\SecurityBundle\Entity\UserRepository">
+    <entity name="Sulu\Bundle\SecurityBundle\Entity\User" table="se_users"
+            repository-class="Sulu\Bundle\SecurityBundle\Entity\UserRepository">
 
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
@@ -12,7 +13,7 @@
         <field name="locale" type="string" column="locale" length="60"/>
         <field name="salt" type="string" column="salt" length="60"/>
         <field name="privateKey" type="string" column="privateKey" length="2000" nullable="true"/>
-        <field name="apiKey" type="string" column="apiKey" length="128" nullable="true"/>
+        <field name="apiKey" type="guid" column="apiKey" length="128" nullable="true"/>
 
         <one-to-one field="contact" target-entity="Sulu\Bundle\ContactBundle\Entity\Contact">
             <join-column name="idContacts" referenced-column-name="id" on-delete="CASCADE"/>
@@ -20,7 +21,8 @@
 
         <one-to-many field="userRoles" target-entity="Sulu\Bundle\SecurityBundle\Entity\UserRole" mapped-by="user"/>
         <one-to-many field="userGroups" target-entity="Sulu\Bundle\SecurityBundle\Entity\UserGroup" mapped-by="user"/>
-        <one-to-many field="userSettings" target-entity="Sulu\Bundle\SecurityBundle\Entity\UserSetting" mapped-by="user" />
+        <one-to-many field="userSettings" target-entity="Sulu\Bundle\SecurityBundle\Entity\UserSetting"
+                     mapped-by="user"/>
 
     </entity>
 </doctrine-mapping>
