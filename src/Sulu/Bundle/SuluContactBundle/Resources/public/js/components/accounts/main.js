@@ -264,8 +264,9 @@ define([
                 throw 'callback is not a function';
             }
 
-            var content = 'sulu.accounts.delete.desc',
+            var content = 'contact.accounts.delete.desc',
                 overlayType = 'show-warning',
+                title = 'sulu.overlay.be-careful',
                 okCallback = function() {
                     var deleteContacts = this.sandbox.dom.find('#overlay-checkbox').length && this.sandbox.dom.prop('#overlay-checkbox', 'checked');
                     callbackFunction.call(this, true, deleteContacts);
@@ -274,6 +275,7 @@ define([
             // sub-account exists => deletion is not allowed
             if (parseInt(values.numChildren, 10) > 0) {
                 overlayType = 'show-error';
+                title = 'sulu.overlay.error';
                 okCallback = undefined;
                 // parse sub-account template
                 content = this.sandbox.util.template(templates.entityFoundTemplate, {
@@ -299,7 +301,7 @@ define([
 
             // show dialog
             this.sandbox.emit('sulu.overlay.' + overlayType,
-                'sulu.overlay.be-careful',
+                title,
                 content,
                 callbackFunction.bind(this, false),
                 okCallback
@@ -334,7 +336,8 @@ define([
                 throw 'callback is not a function';
             }
 
-            var content = 'sulu.accounts.delete.desc',
+            var content = 'contact.accounts.delete.desc',
+                title = 'sulu.overlay.be-careful',
                 overlayType = 'show-warning',
                 okCallback = function() {
                     var deleteContacts = this.sandbox.dom.find('#delete-contacts').length && this.sandbox.dom.prop('#delete-contacts', 'checked');
@@ -345,6 +348,7 @@ define([
             // sub-account exists => deletion is not allowed
             if (parseInt(values.numChildren, 10) > 0) {
                 overlayType = 'show-error';
+                title = 'sulu.overlay.error';
                 okCallback = undefined;
                 content = this.sandbox.util.template(templates.entityFoundTemplate, {
                     foundMessage: this.sandbox.translate('contact.accounts.delete.sub-found'),
@@ -364,7 +368,7 @@ define([
 
             // show dialog
             this.sandbox.emit('sulu.overlay.' + overlayType,
-                'sulu.overlay.be-careful',
+                title,
                 content,
                 callbackFunction.bind(this, false),
                 okCallback
