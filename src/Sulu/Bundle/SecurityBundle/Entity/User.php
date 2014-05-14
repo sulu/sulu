@@ -84,6 +84,11 @@ class User extends ApiEntity implements UserInterface, Serializable
     private $userSettings;
 
     /**
+     * @var string
+     */
+    private $apiKey;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -91,6 +96,8 @@ class User extends ApiEntity implements UserInterface, Serializable
         $this->userRoles = new \Doctrine\Common\Collections\ArrayCollection();
         $this->userGroups = new \Doctrine\Common\Collections\ArrayCollection();
         $this->userSettings = new \Doctrine\Common\Collections\ArrayCollection();
+
+        $this->apiKey = md5(uniqid());
     }
 
     /**
@@ -395,10 +402,6 @@ class User extends ApiEntity implements UserInterface, Serializable
     {
         return $this->userSettings;
     }
-    /**
-     * @var string
-     */
-    private $apiKey;
 
 
     /**
@@ -410,14 +413,14 @@ class User extends ApiEntity implements UserInterface, Serializable
     public function setApiKey($apiKey)
     {
         $this->apiKey = $apiKey;
-    
+
         return $this;
     }
 
     /**
      * Get apiKey
      *
-     * @return string 
+     * @return string
      */
     public function getApiKey()
     {
