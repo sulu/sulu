@@ -124,7 +124,7 @@ define([
                             processData: true,
 
                             success: function() {
-                                this.sandbox.emit('husky.datagrid.row.remove', id);
+                                this.sandbox.emit('husky.datagrid.record.remove', id);
                             }.bind(this)
                         });
                     }.bind(this));
