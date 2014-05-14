@@ -122,7 +122,7 @@ define([
                     if (!!navigate) {
                         this.sandbox.emit('sulu.router.navigate', 'settings/roles');
                     } else {
-                        this.sandbox.emit('husky.datagrid.row.remove', id);
+                        this.sandbox.emit('husky.datagrid.record.remove', id);
                     }
                 }.bind(this),
                 error: function() {
