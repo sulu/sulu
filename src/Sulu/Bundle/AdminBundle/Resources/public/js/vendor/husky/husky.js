@@ -27272,7 +27272,7 @@ define('__component__$navigation@husky',[],function() {
                 this.animating = true;
                 var expandedHeight = CONSTANTS.ITEM_LABEL_HEIGHT + this.sandbox.dom.outerHeight($childList);
 
-                $($items).stop();
+                this.sandbox.dom.stop($items);
                 this.sandbox.dom.animate($items, {
                     height: (expandedHeight + 30)
                 }, {
@@ -40656,6 +40656,10 @@ define('husky_extensions/collection',[],function() {
 
             app.core.dom.stopPropagation = function(event) {
                 event.stopPropagation();
+            };
+
+            app.core.dom.stop = function(selector) {
+                $(selector).stop();
             };
 
             app.core.dom.preventDefault = function(event) {
