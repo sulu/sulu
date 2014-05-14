@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\MediaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Exclude;
 
 /**
  * MediaType
@@ -40,6 +41,7 @@ class MediaType
 
     /**
      * @var \Doctrine\Common\Collections\Collection
+     * @Exclude
      */
     private $medias;
 

@@ -20,17 +20,26 @@ define({
     initialize: function(app) {
 
         'use strict';
-
         var sandbox = app.sandbox;
 
         app.components.addSource('sulumedia', '/bundles/sulumedia/js/components');
 
-        // Example: list all contacts
-        // sandbox.mvc.routes.push({
-        //     route: 'contacts/contacts',
-        //    callback: function(){
-        //         this.html('<div data-aura-component="contacts@sulucontact" data-aura-display="list"/>');
-        //     }
-        // });
+        // list all collections
+        sandbox.mvc.routes.push({
+            route: 'media/collections',
+            callback: function() {
+                this.html('<div data-aura-component="collections@sulumedia" data-aura-display="list"/>');
+            }
+        });
+
+        // show a collection
+        sandbox.mvc.routes.push({
+            route: 'media/collections/edit::id/:content',
+            callback: function(id, content) {
+                this.html(
+                    '<div data-aura-component="collections/components/content@sulumedia" data-aura-content="' + content + '" data-aura-id="' + id + '"/>'
+                );
+            }
+        });
     }
 });
