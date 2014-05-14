@@ -219,35 +219,28 @@
                             inHeader: false
                         },
                         toolbarOptions = this.sandbox.util.extend(true, {}, toolbarDefaults, listToolbarOptions),
+
                         gridDefaults = {
-                            paginationOptions: {
-                                pageSize: 10
-                            },
-                            pagination: true,
-                            sortable: true,
-                            selectItem: {
-                                type: 'checkbox'
-                            },
-                            removeRow: false,
-                            excludeFields: ['']
+                            view: 'table',
+                            pagination: 'dropdown',
+                            matchings: data,
+                            viewOptions: {
+                                table: {
+                                    contentContainer: '#content'
+                                }
+                            }
                         },
                         gridOptions = this.sandbox.util.extend(true, {}, gridDefaults, datagridOptions);
 
-                    //start list-toolbar component
+                        gridOptions.searchInstanceName = gridOptions.searchInstanceName ? gridOptions.searchInstanceName : toolbarOptions.instanceName;
+                        gridOptions.columnOptionsInstanceName = gridOptions.columnOptionsInstanceName ? gridOptions.columnOptionsInstanceName : toolbarOptions.instanceName;
+
+                    //start list-toolbar and datagrid
                     this.sandbox.start([
                         {
                             name: 'list-toolbar@suluadmin',
                             options: toolbarOptions
-                        }
-                    ]);
-
-                    gridOptions.fieldsData = data;
-                    gridOptions.searchInstanceName = gridOptions.searchInstanceName ? gridOptions.searchInstanceName : toolbarOptions.instanceName;
-                    gridOptions.columnOptionsInstanceName = gridOptions.columnOptionsInstanceName ? gridOptions.columnOptionsInstanceName : toolbarOptions.instanceName;
-                    gridOptions.contentContainer = '#content';
-
-                    // start datagrid
-                    this.sandbox.start([
+                        },
                         {
                             name: 'datagrid@husky',
                             options: gridOptions

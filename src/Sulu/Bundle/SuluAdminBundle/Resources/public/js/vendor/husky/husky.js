@@ -23508,6 +23508,1830 @@ var UriTemplate = (function () {
 })(window.jQuery);
 define("typeahead", function(){});
 
+
+;(function(){
+
+/**
+ * Require the module at `name`.
+ *
+ * @param {String} name
+ * @return {Object} exports
+ * @api public
+ */
+
+function require(name) {
+  var module = require.modules[name];
+  if (!module) throw new Error('failed to require "' + name + '"');
+
+  if (!('exports' in module) && typeof module.definition === 'function') {
+    module.client = module.component = true;
+    module.definition.call(this, module.exports = {}, module);
+    delete module.definition;
+  }
+
+  return module.exports;
+}
+
+/**
+ * Registered modules.
+ */
+
+require.modules = {};
+
+/**
+ * Register module at `name` with callback `definition`.
+ *
+ * @param {String} name
+ * @param {Function} definition
+ * @api private
+ */
+
+require.register = function (name, definition) {
+  require.modules[name] = {
+    definition: definition
+  };
+};
+
+/**
+ * Define a module's exports immediately with `exports`.
+ *
+ * @param {String} name
+ * @param {Generic} exports
+ * @api private
+ */
+
+require.define = function (name, exports) {
+  require.modules[name] = {
+    exports: exports
+  };
+};
+require.register("component~emitter@1.1.2", function (exports, module) {
+
+/**
+ * Expose `Emitter`.
+ */
+
+module.exports = Emitter;
+
+/**
+ * Initialize a new `Emitter`.
+ *
+ * @api public
+ */
+
+function Emitter(obj) {
+  if (obj) return mixin(obj);
+};
+
+/**
+ * Mixin the emitter properties.
+ *
+ * @param {Object} obj
+ * @return {Object}
+ * @api private
+ */
+
+function mixin(obj) {
+  for (var key in Emitter.prototype) {
+    obj[key] = Emitter.prototype[key];
+  }
+  return obj;
+}
+
+/**
+ * Listen on the given `event` with `fn`.
+ *
+ * @param {String} event
+ * @param {Function} fn
+ * @return {Emitter}
+ * @api public
+ */
+
+Emitter.prototype.on =
+Emitter.prototype.addEventListener = function(event, fn){
+  this._callbacks = this._callbacks || {};
+  (this._callbacks[event] = this._callbacks[event] || [])
+    .push(fn);
+  return this;
+};
+
+/**
+ * Adds an `event` listener that will be invoked a single
+ * time then automatically removed.
+ *
+ * @param {String} event
+ * @param {Function} fn
+ * @return {Emitter}
+ * @api public
+ */
+
+Emitter.prototype.once = function(event, fn){
+  var self = this;
+  this._callbacks = this._callbacks || {};
+
+  function on() {
+    self.off(event, on);
+    fn.apply(this, arguments);
+  }
+
+  on.fn = fn;
+  this.on(event, on);
+  return this;
+};
+
+/**
+ * Remove the given callback for `event` or all
+ * registered callbacks.
+ *
+ * @param {String} event
+ * @param {Function} fn
+ * @return {Emitter}
+ * @api public
+ */
+
+Emitter.prototype.off =
+Emitter.prototype.removeListener =
+Emitter.prototype.removeAllListeners =
+Emitter.prototype.removeEventListener = function(event, fn){
+  this._callbacks = this._callbacks || {};
+
+  // all
+  if (0 == arguments.length) {
+    this._callbacks = {};
+    return this;
+  }
+
+  // specific event
+  var callbacks = this._callbacks[event];
+  if (!callbacks) return this;
+
+  // remove all handlers
+  if (1 == arguments.length) {
+    delete this._callbacks[event];
+    return this;
+  }
+
+  // remove specific handler
+  var cb;
+  for (var i = 0; i < callbacks.length; i++) {
+    cb = callbacks[i];
+    if (cb === fn || cb.fn === fn) {
+      callbacks.splice(i, 1);
+      break;
+    }
+  }
+  return this;
+};
+
+/**
+ * Emit `event` with the given args.
+ *
+ * @param {String} event
+ * @param {Mixed} ...
+ * @return {Emitter}
+ */
+
+Emitter.prototype.emit = function(event){
+  this._callbacks = this._callbacks || {};
+  var args = [].slice.call(arguments, 1)
+    , callbacks = this._callbacks[event];
+
+  if (callbacks) {
+    callbacks = callbacks.slice(0);
+    for (var i = 0, len = callbacks.length; i < len; ++i) {
+      callbacks[i].apply(this, args);
+    }
+  }
+
+  return this;
+};
+
+/**
+ * Return array of callbacks for `event`.
+ *
+ * @param {String} event
+ * @return {Array}
+ * @api public
+ */
+
+Emitter.prototype.listeners = function(event){
+  this._callbacks = this._callbacks || {};
+  return this._callbacks[event] || [];
+};
+
+/**
+ * Check if this emitter has `event` handlers.
+ *
+ * @param {String} event
+ * @return {Boolean}
+ * @api public
+ */
+
+Emitter.prototype.hasListeners = function(event){
+  return !! this.listeners(event).length;
+};
+
+});
+
+require.register("dropzone", function (exports, module) {
+
+
+/**
+ * Exposing dropzone
+ */
+module.exports = require("dropzone/lib/dropzone.js");
+
+});
+
+require.register("dropzone/lib/dropzone.js", function (exports, module) {
+/*
+#
+# More info at [www.dropzonejs.com](http://www.dropzonejs.com)
+# 
+# Copyright (c) 2012, Matias Meno  
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
+#
+*/
+
+
+(function() {
+  var Dropzone, Em, camelize, contentLoaded, detectVerticalSquash, drawImageIOSFix, noop, without,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+    __slice = [].slice;
+
+  Em = typeof Emitter !== "undefined" && Emitter !== null ? Emitter : require("component~emitter@1.1.2");
+
+  noop = function() {};
+
+  Dropzone = (function(_super) {
+    var extend;
+
+    __extends(Dropzone, _super);
+
+    /*
+    This is a list of all available events you can register on a dropzone object.
+    
+    You can register an event handler like this:
+    
+        dropzone.on("dragEnter", function() { });
+    */
+
+
+    Dropzone.prototype.events = ["drop", "dragstart", "dragend", "dragenter", "dragover", "dragleave", "addedfile", "removedfile", "thumbnail", "error", "errormultiple", "processing", "processingmultiple", "uploadprogress", "totaluploadprogress", "sending", "sendingmultiple", "success", "successmultiple", "canceled", "canceledmultiple", "complete", "completemultiple", "reset", "maxfilesexceeded", "maxfilesreached"];
+
+    Dropzone.prototype.defaultOptions = {
+      url: null,
+      method: "post",
+      withCredentials: false,
+      parallelUploads: 2,
+      uploadMultiple: false,
+      maxFilesize: 256,
+      paramName: "file",
+      createImageThumbnails: true,
+      maxThumbnailFilesize: 10,
+      thumbnailWidth: 100,
+      thumbnailHeight: 100,
+      maxFiles: null,
+      params: {},
+      clickable: true,
+      ignoreHiddenFiles: true,
+      acceptedFiles: null,
+      acceptedMimeTypes: null,
+      autoProcessQueue: true,
+      autoQueue: true,
+      addRemoveLinks: false,
+      previewsContainer: null,
+      dictDefaultMessage: "Drop files here to upload",
+      dictFallbackMessage: "Your browser does not support drag'n'drop file uploads.",
+      dictFallbackText: "Please use the fallback form below to upload your files like in the olden days.",
+      dictFileTooBig: "File is too big ({{filesize}}MiB). Max filesize: {{maxFilesize}}MiB.",
+      dictInvalidFileType: "You can't upload files of this type.",
+      dictResponseError: "Server responded with {{statusCode}} code.",
+      dictCancelUpload: "Cancel upload",
+      dictCancelUploadConfirmation: "Are you sure you want to cancel this upload?",
+      dictRemoveFile: "Remove file",
+      dictRemoveFileConfirmation: null,
+      dictMaxFilesExceeded: "You can not upload any more files.",
+      accept: function(file, done) {
+        return done();
+      },
+      init: function() {
+        return noop;
+      },
+      forceFallback: false,
+      fallback: function() {
+        var child, messageElement, span, _i, _len, _ref;
+        this.element.className = "" + this.element.className + " dz-browser-not-supported";
+        _ref = this.element.getElementsByTagName("div");
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          child = _ref[_i];
+          if (/(^| )dz-message($| )/.test(child.className)) {
+            messageElement = child;
+            child.className = "dz-message";
+            continue;
+          }
+        }
+        if (!messageElement) {
+          messageElement = Dropzone.createElement("<div class=\"dz-message\"><span></span></div>");
+          this.element.appendChild(messageElement);
+        }
+        span = messageElement.getElementsByTagName("span")[0];
+        if (span) {
+          span.textContent = this.options.dictFallbackMessage;
+        }
+        return this.element.appendChild(this.getFallbackForm());
+      },
+      resize: function(file) {
+        var info, srcRatio, trgRatio;
+        info = {
+          srcX: 0,
+          srcY: 0,
+          srcWidth: file.width,
+          srcHeight: file.height
+        };
+        srcRatio = file.width / file.height;
+        info.optWidth = this.options.thumbnailWidth;
+        info.optHeight = this.options.thumbnailHeight;
+        if (!((info.optWidth != null) && (info.optHeigh != null))) {
+          if ((info.optWidth == null) && (info.optHeight == null)) {
+            info.optWidth = info.srcWidth;
+            info.optHeight = info.srcHeight;
+          } else if (info.optWidth == null) {
+            info.optWidth = srcRatio * info.optHeight;
+          } else if (info.optHeight == null) {
+            info.optHeight = (1 / srcRatio) * info.optWidth;
+          }
+        }
+        trgRatio = info.optWidth / info.optHeight;
+        if (file.height < info.optHeight || file.width < info.optWidth) {
+          info.trgHeight = info.srcHeight;
+          info.trgWidth = info.srcWidth;
+        } else {
+          if (srcRatio > trgRatio) {
+            info.srcHeight = file.height;
+            info.srcWidth = info.srcHeight * trgRatio;
+          } else {
+            info.srcWidth = file.width;
+            info.srcHeight = info.srcWidth / trgRatio;
+          }
+        }
+        info.srcX = (file.width - info.srcWidth) / 2;
+        info.srcY = (file.height - info.srcHeight) / 2;
+        return info;
+      },
+      /*
+      Those functions register themselves to the events on init and handle all
+      the user interface specific stuff. Overwriting them won't break the upload
+      but can break the way it's displayed.
+      You can overwrite them if you don't like the default behavior. If you just
+      want to add an additional event handler, register it on the dropzone object
+      and don't overwrite those options.
+      */
+
+      drop: function(e) {
+        return this.element.classList.remove("dz-drag-hover");
+      },
+      dragstart: noop,
+      dragend: function(e) {
+        return this.element.classList.remove("dz-drag-hover");
+      },
+      dragenter: function(e) {
+        return this.element.classList.add("dz-drag-hover");
+      },
+      dragover: function(e) {
+        return this.element.classList.add("dz-drag-hover");
+      },
+      dragleave: function(e) {
+        return this.element.classList.remove("dz-drag-hover");
+      },
+      paste: noop,
+      reset: function() {
+        return this.element.classList.remove("dz-started");
+      },
+      addedfile: function(file) {
+        var node, removeFileEvent, removeLink, _i, _j, _k, _len, _len1, _len2, _ref, _ref1, _ref2, _results,
+          _this = this;
+        if (this.element === this.previewsContainer) {
+          this.element.classList.add("dz-started");
+        }
+        file.previewElement = Dropzone.createElement(this.options.previewTemplate.trim());
+        file.previewTemplate = file.previewElement;
+        this.previewsContainer.appendChild(file.previewElement);
+        _ref = file.previewElement.querySelectorAll("[data-dz-name]");
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          node = _ref[_i];
+          node.textContent = file.name;
+        }
+        _ref1 = file.previewElement.querySelectorAll("[data-dz-size]");
+        for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+          node = _ref1[_j];
+          node.innerHTML = this.filesize(file.size);
+        }
+        if (this.options.addRemoveLinks) {
+          file._removeLink = Dropzone.createElement("<a class=\"dz-remove\" href=\"javascript:undefined;\" data-dz-remove>" + this.options.dictRemoveFile + "</a>");
+          file.previewElement.appendChild(file._removeLink);
+        }
+        removeFileEvent = function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          if (file.status === Dropzone.UPLOADING) {
+            return Dropzone.confirm(_this.options.dictCancelUploadConfirmation, function() {
+              return _this.removeFile(file);
+            });
+          } else {
+            if (_this.options.dictRemoveFileConfirmation) {
+              return Dropzone.confirm(_this.options.dictRemoveFileConfirmation, function() {
+                return _this.removeFile(file);
+              });
+            } else {
+              return _this.removeFile(file);
+            }
+          }
+        };
+        _ref2 = file.previewElement.querySelectorAll("[data-dz-remove]");
+        _results = [];
+        for (_k = 0, _len2 = _ref2.length; _k < _len2; _k++) {
+          removeLink = _ref2[_k];
+          _results.push(removeLink.addEventListener("click", removeFileEvent));
+        }
+        return _results;
+      },
+      removedfile: function(file) {
+        var _ref;
+        if ((_ref = file.previewElement) != null) {
+          _ref.parentNode.removeChild(file.previewElement);
+        }
+        return this._updateMaxFilesReachedClass();
+      },
+      thumbnail: function(file, dataUrl) {
+        var thumbnailElement, _i, _len, _ref, _results;
+        file.previewElement.classList.remove("dz-file-preview");
+        file.previewElement.classList.add("dz-image-preview");
+        _ref = file.previewElement.querySelectorAll("[data-dz-thumbnail]");
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          thumbnailElement = _ref[_i];
+          thumbnailElement.alt = file.name;
+          _results.push(thumbnailElement.src = dataUrl);
+        }
+        return _results;
+      },
+      error: function(file, message) {
+        var node, _i, _len, _ref, _results;
+        file.previewElement.classList.add("dz-error");
+        if (typeof message !== "String" && message.error) {
+          message = message.error;
+        }
+        _ref = file.previewElement.querySelectorAll("[data-dz-errormessage]");
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          node = _ref[_i];
+          _results.push(node.textContent = message);
+        }
+        return _results;
+      },
+      errormultiple: noop,
+      processing: function(file) {
+        file.previewElement.classList.add("dz-processing");
+        if (file._removeLink) {
+          return file._removeLink.textContent = this.options.dictCancelUpload;
+        }
+      },
+      processingmultiple: noop,
+      uploadprogress: function(file, progress, bytesSent) {
+        var node, _i, _len, _ref, _results;
+        _ref = file.previewElement.querySelectorAll("[data-dz-uploadprogress]");
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          node = _ref[_i];
+          _results.push(node.style.width = "" + progress + "%");
+        }
+        return _results;
+      },
+      totaluploadprogress: noop,
+      sending: noop,
+      sendingmultiple: noop,
+      success: function(file) {
+        return file.previewElement.classList.add("dz-success");
+      },
+      successmultiple: noop,
+      canceled: function(file) {
+        return this.emit("error", file, "Upload canceled.");
+      },
+      canceledmultiple: noop,
+      complete: function(file) {
+        if (file._removeLink) {
+          return file._removeLink.textContent = this.options.dictRemoveFile;
+        }
+      },
+      completemultiple: noop,
+      maxfilesexceeded: noop,
+      maxfilesreached: noop,
+      previewTemplate: "<div class=\"dz-preview dz-file-preview\">\n  <div class=\"dz-details\">\n    <div class=\"dz-filename\"><span data-dz-name></span></div>\n    <div class=\"dz-size\" data-dz-size></div>\n    <img data-dz-thumbnail />\n  </div>\n  <div class=\"dz-progress\"><span class=\"dz-upload\" data-dz-uploadprogress></span></div>\n  <div class=\"dz-success-mark\"><span>✔</span></div>\n  <div class=\"dz-error-mark\"><span>✘</span></div>\n  <div class=\"dz-error-message\"><span data-dz-errormessage></span></div>\n</div>"
+    };
+
+    extend = function() {
+      var key, object, objects, target, val, _i, _len;
+      target = arguments[0], objects = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+      for (_i = 0, _len = objects.length; _i < _len; _i++) {
+        object = objects[_i];
+        for (key in object) {
+          val = object[key];
+          target[key] = val;
+        }
+      }
+      return target;
+    };
+
+    function Dropzone(element, options) {
+      var elementOptions, fallback, _ref;
+      this.element = element;
+      this.version = Dropzone.version;
+      this.defaultOptions.previewTemplate = this.defaultOptions.previewTemplate.replace(/\n*/g, "");
+      this.clickableElements = [];
+      this.listeners = [];
+      this.files = [];
+      if (typeof this.element === "string") {
+        this.element = document.querySelector(this.element);
+      }
+      if (!(this.element && (this.element.nodeType != null))) {
+        throw new Error("Invalid dropzone element.");
+      }
+      if (this.element.dropzone) {
+        throw new Error("Dropzone already attached.");
+      }
+      Dropzone.instances.push(this);
+      this.element.dropzone = this;
+      elementOptions = (_ref = Dropzone.optionsForElement(this.element)) != null ? _ref : {};
+      this.options = extend({}, this.defaultOptions, elementOptions, options != null ? options : {});
+      if (this.options.forceFallback || !Dropzone.isBrowserSupported()) {
+        return this.options.fallback.call(this);
+      }
+      if (this.options.url == null) {
+        this.options.url = this.element.getAttribute("action");
+      }
+      if (!this.options.url) {
+        throw new Error("No URL provided.");
+      }
+      if (this.options.acceptedFiles && this.options.acceptedMimeTypes) {
+        throw new Error("You can't provide both 'acceptedFiles' and 'acceptedMimeTypes'. 'acceptedMimeTypes' is deprecated.");
+      }
+      if (this.options.acceptedMimeTypes) {
+        this.options.acceptedFiles = this.options.acceptedMimeTypes;
+        delete this.options.acceptedMimeTypes;
+      }
+      this.options.method = this.options.method.toUpperCase();
+      if ((fallback = this.getExistingFallback()) && fallback.parentNode) {
+        fallback.parentNode.removeChild(fallback);
+      }
+      if (this.options.previewsContainer) {
+        this.previewsContainer = Dropzone.getElement(this.options.previewsContainer, "previewsContainer");
+      } else {
+        this.previewsContainer = this.element;
+      }
+      if (this.options.clickable) {
+        if (this.options.clickable === true) {
+          this.clickableElements = [this.element];
+        } else {
+          this.clickableElements = Dropzone.getElements(this.options.clickable, "clickable");
+        }
+      }
+      this.init();
+    }
+
+    Dropzone.prototype.getAcceptedFiles = function() {
+      var file, _i, _len, _ref, _results;
+      _ref = this.files;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        file = _ref[_i];
+        if (file.accepted) {
+          _results.push(file);
+        }
+      }
+      return _results;
+    };
+
+    Dropzone.prototype.getRejectedFiles = function() {
+      var file, _i, _len, _ref, _results;
+      _ref = this.files;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        file = _ref[_i];
+        if (!file.accepted) {
+          _results.push(file);
+        }
+      }
+      return _results;
+    };
+
+    Dropzone.prototype.getFilesWithStatus = function(status) {
+      var file, _i, _len, _ref, _results;
+      _ref = this.files;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        file = _ref[_i];
+        if (file.status === status) {
+          _results.push(file);
+        }
+      }
+      return _results;
+    };
+
+    Dropzone.prototype.getQueuedFiles = function() {
+      return this.getFilesWithStatus(Dropzone.QUEUED);
+    };
+
+    Dropzone.prototype.getUploadingFiles = function() {
+      return this.getFilesWithStatus(Dropzone.UPLOADING);
+    };
+
+    Dropzone.prototype.getActiveFiles = function() {
+      var file, _i, _len, _ref, _results;
+      _ref = this.files;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        file = _ref[_i];
+        if (file.status === Dropzone.UPLOADING || file.status === Dropzone.QUEUED) {
+          _results.push(file);
+        }
+      }
+      return _results;
+    };
+
+    Dropzone.prototype.init = function() {
+      var eventName, noPropagation, setupHiddenFileInput, _i, _len, _ref, _ref1,
+        _this = this;
+      if (this.element.tagName === "form") {
+        this.element.setAttribute("enctype", "multipart/form-data");
+      }
+      if (this.element.classList.contains("dropzone") && !this.element.querySelector(".dz-message")) {
+        this.element.appendChild(Dropzone.createElement("<div class=\"dz-default dz-message\"><span>" + this.options.dictDefaultMessage + "</span></div>"));
+      }
+      if (this.clickableElements.length) {
+        setupHiddenFileInput = function() {
+          if (_this.hiddenFileInput) {
+            document.body.removeChild(_this.hiddenFileInput);
+          }
+          _this.hiddenFileInput = document.createElement("input");
+          _this.hiddenFileInput.setAttribute("type", "file");
+          if ((_this.options.maxFiles == null) || _this.options.maxFiles > 1) {
+            _this.hiddenFileInput.setAttribute("multiple", "multiple");
+          }
+          _this.hiddenFileInput.className = "dz-hidden-input";
+          if (_this.options.acceptedFiles != null) {
+            _this.hiddenFileInput.setAttribute("accept", _this.options.acceptedFiles);
+          }
+          _this.hiddenFileInput.style.visibility = "hidden";
+          _this.hiddenFileInput.style.position = "absolute";
+          _this.hiddenFileInput.style.top = "0";
+          _this.hiddenFileInput.style.left = "0";
+          _this.hiddenFileInput.style.height = "0";
+          _this.hiddenFileInput.style.width = "0";
+          document.body.appendChild(_this.hiddenFileInput);
+          return _this.hiddenFileInput.addEventListener("change", function() {
+            var file, files, _i, _len;
+            files = _this.hiddenFileInput.files;
+            if (files.length) {
+              for (_i = 0, _len = files.length; _i < _len; _i++) {
+                file = files[_i];
+                _this.addFile(file);
+              }
+            }
+            return setupHiddenFileInput();
+          });
+        };
+        setupHiddenFileInput();
+      }
+      this.URL = (_ref = window.URL) != null ? _ref : window.webkitURL;
+      _ref1 = this.events;
+      for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
+        eventName = _ref1[_i];
+        this.on(eventName, this.options[eventName]);
+      }
+      this.on("uploadprogress", function() {
+        return _this.updateTotalUploadProgress();
+      });
+      this.on("removedfile", function() {
+        return _this.updateTotalUploadProgress();
+      });
+      this.on("canceled", function(file) {
+        return _this.emit("complete", file);
+      });
+      this.on("complete", function(file) {
+        if (_this.getUploadingFiles().length === 0 && _this.getQueuedFiles().length === 0) {
+          return setTimeout((function() {
+            return _this.emit("queuecomplete");
+          }), 0);
+        }
+      });
+      noPropagation = function(e) {
+        e.stopPropagation();
+        if (e.preventDefault) {
+          return e.preventDefault();
+        } else {
+          return e.returnValue = false;
+        }
+      };
+      this.listeners = [
+        {
+          element: this.element,
+          events: {
+            "dragstart": function(e) {
+              return _this.emit("dragstart", e);
+            },
+            "dragenter": function(e) {
+              noPropagation(e);
+              return _this.emit("dragenter", e);
+            },
+            "dragover": function(e) {
+              var efct;
+              try {
+                efct = e.dataTransfer.effectAllowed;
+              } catch (_error) {}
+              e.dataTransfer.dropEffect = 'move' === efct || 'linkMove' === efct ? 'move' : 'copy';
+              noPropagation(e);
+              return _this.emit("dragover", e);
+            },
+            "dragleave": function(e) {
+              return _this.emit("dragleave", e);
+            },
+            "drop": function(e) {
+              noPropagation(e);
+              return _this.drop(e);
+            },
+            "dragend": function(e) {
+              return _this.emit("dragend", e);
+            }
+          }
+        }
+      ];
+      this.clickableElements.forEach(function(clickableElement) {
+        return _this.listeners.push({
+          element: clickableElement,
+          events: {
+            "click": function(evt) {
+              if ((clickableElement !== _this.element) || (evt.target === _this.element || Dropzone.elementInside(evt.target, _this.element.querySelector(".dz-message")))) {
+                return _this.hiddenFileInput.click();
+              }
+            }
+          }
+        });
+      });
+      this.enable();
+      return this.options.init.call(this);
+    };
+
+    Dropzone.prototype.destroy = function() {
+      var _ref;
+      this.disable();
+      this.removeAllFiles(true);
+      if ((_ref = this.hiddenFileInput) != null ? _ref.parentNode : void 0) {
+        this.hiddenFileInput.parentNode.removeChild(this.hiddenFileInput);
+        this.hiddenFileInput = null;
+      }
+      delete this.element.dropzone;
+      return Dropzone.instances.splice(Dropzone.instances.indexOf(this), 1);
+    };
+
+    Dropzone.prototype.updateTotalUploadProgress = function() {
+      var activeFiles, file, totalBytes, totalBytesSent, totalUploadProgress, _i, _len, _ref;
+      totalBytesSent = 0;
+      totalBytes = 0;
+      activeFiles = this.getActiveFiles();
+      if (activeFiles.length) {
+        _ref = this.getActiveFiles();
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          file = _ref[_i];
+          totalBytesSent += file.upload.bytesSent;
+          totalBytes += file.upload.total;
+        }
+        totalUploadProgress = 100 * totalBytesSent / totalBytes;
+      } else {
+        totalUploadProgress = 100;
+      }
+      return this.emit("totaluploadprogress", totalUploadProgress, totalBytes, totalBytesSent);
+    };
+
+    Dropzone.prototype._getParamName = function(n) {
+      if (typeof this.options.paramName === "function") {
+        return this.options.paramName(n);
+      } else {
+        return "" + this.options.paramName + (this.options.uploadMultiple ? "[" + n + "]" : "");
+      }
+    };
+
+    Dropzone.prototype.getFallbackForm = function() {
+      var existingFallback, fields, fieldsString, form;
+      if (existingFallback = this.getExistingFallback()) {
+        return existingFallback;
+      }
+      fieldsString = "<div class=\"dz-fallback\">";
+      if (this.options.dictFallbackText) {
+        fieldsString += "<p>" + this.options.dictFallbackText + "</p>";
+      }
+      fieldsString += "<input type=\"file\" name=\"" + (this._getParamName(0)) + "\" " + (this.options.uploadMultiple ? 'multiple="multiple"' : void 0) + " /><input type=\"submit\" value=\"Upload!\"></div>";
+      fields = Dropzone.createElement(fieldsString);
+      if (this.element.tagName !== "FORM") {
+        form = Dropzone.createElement("<form action=\"" + this.options.url + "\" enctype=\"multipart/form-data\" method=\"" + this.options.method + "\"></form>");
+        form.appendChild(fields);
+      } else {
+        this.element.setAttribute("enctype", "multipart/form-data");
+        this.element.setAttribute("method", this.options.method);
+      }
+      return form != null ? form : fields;
+    };
+
+    Dropzone.prototype.getExistingFallback = function() {
+      var fallback, getFallback, tagName, _i, _len, _ref;
+      getFallback = function(elements) {
+        var el, _i, _len;
+        for (_i = 0, _len = elements.length; _i < _len; _i++) {
+          el = elements[_i];
+          if (/(^| )fallback($| )/.test(el.className)) {
+            return el;
+          }
+        }
+      };
+      _ref = ["div", "form"];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        tagName = _ref[_i];
+        if (fallback = getFallback(this.element.getElementsByTagName(tagName))) {
+          return fallback;
+        }
+      }
+    };
+
+    Dropzone.prototype.setupEventListeners = function() {
+      var elementListeners, event, listener, _i, _len, _ref, _results;
+      _ref = this.listeners;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        elementListeners = _ref[_i];
+        _results.push((function() {
+          var _ref1, _results1;
+          _ref1 = elementListeners.events;
+          _results1 = [];
+          for (event in _ref1) {
+            listener = _ref1[event];
+            _results1.push(elementListeners.element.addEventListener(event, listener, false));
+          }
+          return _results1;
+        })());
+      }
+      return _results;
+    };
+
+    Dropzone.prototype.removeEventListeners = function() {
+      var elementListeners, event, listener, _i, _len, _ref, _results;
+      _ref = this.listeners;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        elementListeners = _ref[_i];
+        _results.push((function() {
+          var _ref1, _results1;
+          _ref1 = elementListeners.events;
+          _results1 = [];
+          for (event in _ref1) {
+            listener = _ref1[event];
+            _results1.push(elementListeners.element.removeEventListener(event, listener, false));
+          }
+          return _results1;
+        })());
+      }
+      return _results;
+    };
+
+    Dropzone.prototype.disable = function() {
+      var file, _i, _len, _ref, _results;
+      this.clickableElements.forEach(function(element) {
+        return element.classList.remove("dz-clickable");
+      });
+      this.removeEventListeners();
+      _ref = this.files;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        file = _ref[_i];
+        _results.push(this.cancelUpload(file));
+      }
+      return _results;
+    };
+
+    Dropzone.prototype.enable = function() {
+      this.clickableElements.forEach(function(element) {
+        return element.classList.add("dz-clickable");
+      });
+      return this.setupEventListeners();
+    };
+
+    Dropzone.prototype.filesize = function(size) {
+      var string;
+      if (size >= 1024 * 1024 * 1024 * 1024 / 10) {
+        size = size / (1024 * 1024 * 1024 * 1024 / 10);
+        string = "TiB";
+      } else if (size >= 1024 * 1024 * 1024 / 10) {
+        size = size / (1024 * 1024 * 1024 / 10);
+        string = "GiB";
+      } else if (size >= 1024 * 1024 / 10) {
+        size = size / (1024 * 1024 / 10);
+        string = "MiB";
+      } else if (size >= 1024 / 10) {
+        size = size / (1024 / 10);
+        string = "KiB";
+      } else {
+        size = size * 10;
+        string = "b";
+      }
+      return "<strong>" + (Math.round(size) / 10) + "</strong> " + string;
+    };
+
+    Dropzone.prototype._updateMaxFilesReachedClass = function() {
+      if ((this.options.maxFiles != null) && this.getAcceptedFiles().length >= this.options.maxFiles) {
+        if (this.getAcceptedFiles().length === this.options.maxFiles) {
+          this.emit('maxfilesreached', this.files);
+        }
+        return this.element.classList.add("dz-max-files-reached");
+      } else {
+        return this.element.classList.remove("dz-max-files-reached");
+      }
+    };
+
+    Dropzone.prototype.drop = function(e) {
+      var files, items;
+      if (!e.dataTransfer) {
+        return;
+      }
+      this.emit("drop", e);
+      files = e.dataTransfer.files;
+      if (files.length) {
+        items = e.dataTransfer.items;
+        if (items && items.length && (items[0].webkitGetAsEntry != null)) {
+          this._addFilesFromItems(items);
+        } else {
+          this.handleFiles(files);
+        }
+      }
+    };
+
+    Dropzone.prototype.paste = function(e) {
+      var items, _ref;
+      if ((e != null ? (_ref = e.clipboardData) != null ? _ref.items : void 0 : void 0) == null) {
+        return;
+      }
+      this.emit("paste", e);
+      items = e.clipboardData.items;
+      if (items.length) {
+        return this._addFilesFromItems(items);
+      }
+    };
+
+    Dropzone.prototype.handleFiles = function(files) {
+      var file, _i, _len, _results;
+      _results = [];
+      for (_i = 0, _len = files.length; _i < _len; _i++) {
+        file = files[_i];
+        _results.push(this.addFile(file));
+      }
+      return _results;
+    };
+
+    Dropzone.prototype._addFilesFromItems = function(items) {
+      var entry, item, _i, _len, _results;
+      _results = [];
+      for (_i = 0, _len = items.length; _i < _len; _i++) {
+        item = items[_i];
+        if ((item.webkitGetAsEntry != null) && (entry = item.webkitGetAsEntry())) {
+          if (entry.isFile) {
+            _results.push(this.addFile(item.getAsFile()));
+          } else if (entry.isDirectory) {
+            _results.push(this._addFilesFromDirectory(entry, entry.name));
+          } else {
+            _results.push(void 0);
+          }
+        } else if (item.getAsFile != null) {
+          if ((item.kind == null) || item.kind === "file") {
+            _results.push(this.addFile(item.getAsFile()));
+          } else {
+            _results.push(void 0);
+          }
+        } else {
+          _results.push(void 0);
+        }
+      }
+      return _results;
+    };
+
+    Dropzone.prototype._addFilesFromDirectory = function(directory, path) {
+      var dirReader, entriesReader,
+        _this = this;
+      dirReader = directory.createReader();
+      entriesReader = function(entries) {
+        var entry, _i, _len;
+        for (_i = 0, _len = entries.length; _i < _len; _i++) {
+          entry = entries[_i];
+          if (entry.isFile) {
+            entry.file(function(file) {
+              if (_this.options.ignoreHiddenFiles && file.name.substring(0, 1) === '.') {
+                return;
+              }
+              file.fullPath = "" + path + "/" + file.name;
+              return _this.addFile(file);
+            });
+          } else if (entry.isDirectory) {
+            _this._addFilesFromDirectory(entry, "" + path + "/" + entry.name);
+          }
+        }
+      };
+      return dirReader.readEntries(entriesReader, function(error) {
+        return typeof console !== "undefined" && console !== null ? typeof console.log === "function" ? console.log(error) : void 0 : void 0;
+      });
+    };
+
+    Dropzone.prototype.accept = function(file, done) {
+      if (file.size > this.options.maxFilesize * 1024 * 1024) {
+        return done(this.options.dictFileTooBig.replace("{{filesize}}", Math.round(file.size / 1024 / 10.24) / 100).replace("{{maxFilesize}}", this.options.maxFilesize));
+      } else if (!Dropzone.isValidFile(file, this.options.acceptedFiles)) {
+        return done(this.options.dictInvalidFileType);
+      } else if ((this.options.maxFiles != null) && this.getAcceptedFiles().length >= this.options.maxFiles) {
+        done(this.options.dictMaxFilesExceeded.replace("{{maxFiles}}", this.options.maxFiles));
+        return this.emit("maxfilesexceeded", file);
+      } else {
+        return this.options.accept.call(this, file, done);
+      }
+    };
+
+    Dropzone.prototype.addFile = function(file) {
+      var _this = this;
+      file.upload = {
+        progress: 0,
+        total: file.size,
+        bytesSent: 0
+      };
+      this.files.push(file);
+      file.status = Dropzone.ADDED;
+      this.emit("addedfile", file);
+      this._enqueueThumbnail(file);
+      return this.accept(file, function(error) {
+        if (error) {
+          file.accepted = false;
+          _this._errorProcessing([file], error);
+        } else {
+          file.accepted = true;
+          if (_this.options.autoQueue) {
+            _this.enqueueFile(file);
+          }
+        }
+        return _this._updateMaxFilesReachedClass();
+      });
+    };
+
+    Dropzone.prototype.enqueueFiles = function(files) {
+      var file, _i, _len;
+      for (_i = 0, _len = files.length; _i < _len; _i++) {
+        file = files[_i];
+        this.enqueueFile(file);
+      }
+      return null;
+    };
+
+    Dropzone.prototype.enqueueFile = function(file) {
+      var _this = this;
+      if (file.status === Dropzone.ADDED && file.accepted === true) {
+        file.status = Dropzone.QUEUED;
+        if (this.options.autoProcessQueue) {
+          return setTimeout((function() {
+            return _this.processQueue();
+          }), 0);
+        }
+      } else {
+        throw new Error("This file can't be queued because it has already been processed or was rejected.");
+      }
+    };
+
+    Dropzone.prototype._thumbnailQueue = [];
+
+    Dropzone.prototype._processingThumbnail = false;
+
+    Dropzone.prototype._enqueueThumbnail = function(file) {
+      var _this = this;
+      if (this.options.createImageThumbnails && file.type.match(/image.*/) && file.size <= this.options.maxThumbnailFilesize * 1024 * 1024) {
+        this._thumbnailQueue.push(file);
+        return setTimeout((function() {
+          return _this._processThumbnailQueue();
+        }), 0);
+      }
+    };
+
+    Dropzone.prototype._processThumbnailQueue = function() {
+      var _this = this;
+      if (this._processingThumbnail || this._thumbnailQueue.length === 0) {
+        return;
+      }
+      this._processingThumbnail = true;
+      return this.createThumbnail(this._thumbnailQueue.shift(), function() {
+        _this._processingThumbnail = false;
+        return _this._processThumbnailQueue();
+      });
+    };
+
+    Dropzone.prototype.removeFile = function(file) {
+      if (file.status === Dropzone.UPLOADING) {
+        this.cancelUpload(file);
+      }
+      this.files = without(this.files, file);
+      this.emit("removedfile", file);
+      if (this.files.length === 0) {
+        return this.emit("reset");
+      }
+    };
+
+    Dropzone.prototype.removeAllFiles = function(cancelIfNecessary) {
+      var file, _i, _len, _ref;
+      if (cancelIfNecessary == null) {
+        cancelIfNecessary = false;
+      }
+      _ref = this.files.slice();
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        file = _ref[_i];
+        if (file.status !== Dropzone.UPLOADING || cancelIfNecessary) {
+          this.removeFile(file);
+        }
+      }
+      return null;
+    };
+
+    Dropzone.prototype.createThumbnail = function(file, callback) {
+      var fileReader,
+        _this = this;
+      fileReader = new FileReader;
+      fileReader.onload = function() {
+        var img;
+        img = document.createElement("img");
+        img.onload = function() {
+          var canvas, ctx, resizeInfo, thumbnail, _ref, _ref1, _ref2, _ref3;
+          file.width = img.width;
+          file.height = img.height;
+          resizeInfo = _this.options.resize.call(_this, file);
+          if (resizeInfo.trgWidth == null) {
+            resizeInfo.trgWidth = resizeInfo.optWidth;
+          }
+          if (resizeInfo.trgHeight == null) {
+            resizeInfo.trgHeight = resizeInfo.optHeight;
+          }
+          canvas = document.createElement("canvas");
+          ctx = canvas.getContext("2d");
+          canvas.width = resizeInfo.trgWidth;
+          canvas.height = resizeInfo.trgHeight;
+          drawImageIOSFix(ctx, img, (_ref = resizeInfo.srcX) != null ? _ref : 0, (_ref1 = resizeInfo.srcY) != null ? _ref1 : 0, resizeInfo.srcWidth, resizeInfo.srcHeight, (_ref2 = resizeInfo.trgX) != null ? _ref2 : 0, (_ref3 = resizeInfo.trgY) != null ? _ref3 : 0, resizeInfo.trgWidth, resizeInfo.trgHeight);
+          thumbnail = canvas.toDataURL("image/png");
+          _this.emit("thumbnail", file, thumbnail);
+          if (callback != null) {
+            return callback();
+          }
+        };
+        return img.src = fileReader.result;
+      };
+      return fileReader.readAsDataURL(file);
+    };
+
+    Dropzone.prototype.processQueue = function() {
+      var i, parallelUploads, processingLength, queuedFiles;
+      parallelUploads = this.options.parallelUploads;
+      processingLength = this.getUploadingFiles().length;
+      i = processingLength;
+      if (processingLength >= parallelUploads) {
+        return;
+      }
+      queuedFiles = this.getQueuedFiles();
+      if (!(queuedFiles.length > 0)) {
+        return;
+      }
+      if (this.options.uploadMultiple) {
+        return this.processFiles(queuedFiles.slice(0, parallelUploads - processingLength));
+      } else {
+        while (i < parallelUploads) {
+          if (!queuedFiles.length) {
+            return;
+          }
+          this.processFile(queuedFiles.shift());
+          i++;
+        }
+      }
+    };
+
+    Dropzone.prototype.processFile = function(file) {
+      return this.processFiles([file]);
+    };
+
+    Dropzone.prototype.processFiles = function(files) {
+      var file, _i, _len;
+      for (_i = 0, _len = files.length; _i < _len; _i++) {
+        file = files[_i];
+        file.processing = true;
+        file.status = Dropzone.UPLOADING;
+        this.emit("processing", file);
+      }
+      if (this.options.uploadMultiple) {
+        this.emit("processingmultiple", files);
+      }
+      return this.uploadFiles(files);
+    };
+
+    Dropzone.prototype._getFilesWithXhr = function(xhr) {
+      var file, files;
+      return files = (function() {
+        var _i, _len, _ref, _results;
+        _ref = this.files;
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          file = _ref[_i];
+          if (file.xhr === xhr) {
+            _results.push(file);
+          }
+        }
+        return _results;
+      }).call(this);
+    };
+
+    Dropzone.prototype.cancelUpload = function(file) {
+      var groupedFile, groupedFiles, _i, _j, _len, _len1, _ref;
+      if (file.status === Dropzone.UPLOADING) {
+        groupedFiles = this._getFilesWithXhr(file.xhr);
+        for (_i = 0, _len = groupedFiles.length; _i < _len; _i++) {
+          groupedFile = groupedFiles[_i];
+          groupedFile.status = Dropzone.CANCELED;
+        }
+        file.xhr.abort();
+        for (_j = 0, _len1 = groupedFiles.length; _j < _len1; _j++) {
+          groupedFile = groupedFiles[_j];
+          this.emit("canceled", groupedFile);
+        }
+        if (this.options.uploadMultiple) {
+          this.emit("canceledmultiple", groupedFiles);
+        }
+      } else if ((_ref = file.status) === Dropzone.ADDED || _ref === Dropzone.QUEUED) {
+        file.status = Dropzone.CANCELED;
+        this.emit("canceled", file);
+        if (this.options.uploadMultiple) {
+          this.emit("canceledmultiple", [file]);
+        }
+      }
+      if (this.options.autoProcessQueue) {
+        return this.processQueue();
+      }
+    };
+
+    Dropzone.prototype.uploadFile = function(file) {
+      return this.uploadFiles([file]);
+    };
+
+    Dropzone.prototype.uploadFiles = function(files) {
+      var file, formData, handleError, headerName, headerValue, headers, i, input, inputName, inputType, key, option, progressObj, response, updateProgress, value, xhr, _i, _j, _k, _l, _len, _len1, _len2, _len3, _m, _ref, _ref1, _ref2, _ref3, _ref4, _ref5,
+        _this = this;
+      xhr = new XMLHttpRequest();
+      for (_i = 0, _len = files.length; _i < _len; _i++) {
+        file = files[_i];
+        file.xhr = xhr;
+      }
+      xhr.open(this.options.method, this.options.url, true);
+      xhr.withCredentials = !!this.options.withCredentials;
+      response = null;
+      handleError = function() {
+        var _j, _len1, _results;
+        _results = [];
+        for (_j = 0, _len1 = files.length; _j < _len1; _j++) {
+          file = files[_j];
+          _results.push(_this._errorProcessing(files, response || _this.options.dictResponseError.replace("{{statusCode}}", xhr.status), xhr));
+        }
+        return _results;
+      };
+      updateProgress = function(e) {
+        var allFilesFinished, progress, _j, _k, _l, _len1, _len2, _len3, _results;
+        if (e != null) {
+          progress = 100 * e.loaded / e.total;
+          for (_j = 0, _len1 = files.length; _j < _len1; _j++) {
+            file = files[_j];
+            file.upload = {
+              progress: progress,
+              total: e.total,
+              bytesSent: e.loaded
+            };
+          }
+        } else {
+          allFilesFinished = true;
+          progress = 100;
+          for (_k = 0, _len2 = files.length; _k < _len2; _k++) {
+            file = files[_k];
+            if (!(file.upload.progress === 100 && file.upload.bytesSent === file.upload.total)) {
+              allFilesFinished = false;
+            }
+            file.upload.progress = progress;
+            file.upload.bytesSent = file.upload.total;
+          }
+          if (allFilesFinished) {
+            return;
+          }
+        }
+        _results = [];
+        for (_l = 0, _len3 = files.length; _l < _len3; _l++) {
+          file = files[_l];
+          _results.push(_this.emit("uploadprogress", file, progress, file.upload.bytesSent));
+        }
+        return _results;
+      };
+      xhr.onload = function(e) {
+        var _ref;
+        if (files[0].status === Dropzone.CANCELED) {
+          return;
+        }
+        if (xhr.readyState !== 4) {
+          return;
+        }
+        response = xhr.responseText;
+        if (xhr.getResponseHeader("content-type") && ~xhr.getResponseHeader("content-type").indexOf("application/json")) {
+          try {
+            response = JSON.parse(response);
+          } catch (_error) {
+            e = _error;
+            response = "Invalid JSON response from server.";
+          }
+        }
+        updateProgress();
+        if (!((200 <= (_ref = xhr.status) && _ref < 300))) {
+          return handleError();
+        } else {
+          return _this._finished(files, response, e);
+        }
+      };
+      xhr.onerror = function() {
+        if (files[0].status === Dropzone.CANCELED) {
+          return;
+        }
+        return handleError();
+      };
+      progressObj = (_ref = xhr.upload) != null ? _ref : xhr;
+      progressObj.onprogress = updateProgress;
+      headers = {
+        "Accept": "application/json",
+        "Cache-Control": "no-cache",
+        "X-Requested-With": "XMLHttpRequest"
+      };
+      if (this.options.headers) {
+        extend(headers, this.options.headers);
+      }
+      for (headerName in headers) {
+        headerValue = headers[headerName];
+        xhr.setRequestHeader(headerName, headerValue);
+      }
+      formData = new FormData();
+      if (this.options.params) {
+        _ref1 = this.options.params;
+        for (key in _ref1) {
+          value = _ref1[key];
+          formData.append(key, value);
+        }
+      }
+      for (_j = 0, _len1 = files.length; _j < _len1; _j++) {
+        file = files[_j];
+        this.emit("sending", file, xhr, formData);
+      }
+      if (this.options.uploadMultiple) {
+        this.emit("sendingmultiple", files, xhr, formData);
+      }
+      if (this.element.tagName === "FORM") {
+        _ref2 = this.element.querySelectorAll("input, textarea, select, button");
+        for (_k = 0, _len2 = _ref2.length; _k < _len2; _k++) {
+          input = _ref2[_k];
+          inputName = input.getAttribute("name");
+          inputType = input.getAttribute("type");
+          if (input.tagName === "SELECT" && input.hasAttribute("multiple")) {
+            _ref3 = input.options;
+            for (_l = 0, _len3 = _ref3.length; _l < _len3; _l++) {
+              option = _ref3[_l];
+              if (option.selected) {
+                formData.append(inputName, option.value);
+              }
+            }
+          } else if (!inputType || ((_ref4 = inputType.toLowerCase()) !== "checkbox" && _ref4 !== "radio") || input.checked) {
+            formData.append(inputName, input.value);
+          }
+        }
+      }
+      for (i = _m = 0, _ref5 = files.length - 1; 0 <= _ref5 ? _m <= _ref5 : _m >= _ref5; i = 0 <= _ref5 ? ++_m : --_m) {
+        formData.append(this._getParamName(i), files[i], files[i].name);
+      }
+      return xhr.send(formData);
+    };
+
+    Dropzone.prototype._finished = function(files, responseText, e) {
+      var file, _i, _len;
+      for (_i = 0, _len = files.length; _i < _len; _i++) {
+        file = files[_i];
+        file.status = Dropzone.SUCCESS;
+        this.emit("success", file, responseText, e);
+        this.emit("complete", file);
+      }
+      if (this.options.uploadMultiple) {
+        this.emit("successmultiple", files, responseText, e);
+        this.emit("completemultiple", files);
+      }
+      if (this.options.autoProcessQueue) {
+        return this.processQueue();
+      }
+    };
+
+    Dropzone.prototype._errorProcessing = function(files, message, xhr) {
+      var file, _i, _len;
+      for (_i = 0, _len = files.length; _i < _len; _i++) {
+        file = files[_i];
+        file.status = Dropzone.ERROR;
+        this.emit("error", file, message, xhr);
+        this.emit("complete", file);
+      }
+      if (this.options.uploadMultiple) {
+        this.emit("errormultiple", files, message, xhr);
+        this.emit("completemultiple", files);
+      }
+      if (this.options.autoProcessQueue) {
+        return this.processQueue();
+      }
+    };
+
+    return Dropzone;
+
+  })(Em);
+
+  Dropzone.version = "3.9.0";
+
+  Dropzone.options = {};
+
+  Dropzone.optionsForElement = function(element) {
+    if (element.getAttribute("id")) {
+      return Dropzone.options[camelize(element.getAttribute("id"))];
+    } else {
+      return void 0;
+    }
+  };
+
+  Dropzone.instances = [];
+
+  Dropzone.forElement = function(element) {
+    if (typeof element === "string") {
+      element = document.querySelector(element);
+    }
+    if ((element != null ? element.dropzone : void 0) == null) {
+      throw new Error("No Dropzone found for given element. This is probably because you're trying to access it before Dropzone had the time to initialize. Use the `init` option to setup any additional observers on your Dropzone.");
+    }
+    return element.dropzone;
+  };
+
+  Dropzone.autoDiscover = true;
+
+  Dropzone.discover = function() {
+    var checkElements, dropzone, dropzones, _i, _len, _results;
+    if (document.querySelectorAll) {
+      dropzones = document.querySelectorAll(".dropzone");
+    } else {
+      dropzones = [];
+      checkElements = function(elements) {
+        var el, _i, _len, _results;
+        _results = [];
+        for (_i = 0, _len = elements.length; _i < _len; _i++) {
+          el = elements[_i];
+          if (/(^| )dropzone($| )/.test(el.className)) {
+            _results.push(dropzones.push(el));
+          } else {
+            _results.push(void 0);
+          }
+        }
+        return _results;
+      };
+      checkElements(document.getElementsByTagName("div"));
+      checkElements(document.getElementsByTagName("form"));
+    }
+    _results = [];
+    for (_i = 0, _len = dropzones.length; _i < _len; _i++) {
+      dropzone = dropzones[_i];
+      if (Dropzone.optionsForElement(dropzone) !== false) {
+        _results.push(new Dropzone(dropzone));
+      } else {
+        _results.push(void 0);
+      }
+    }
+    return _results;
+  };
+
+  Dropzone.blacklistedBrowsers = [/opera.*Macintosh.*version\/12/i];
+
+  Dropzone.isBrowserSupported = function() {
+    var capableBrowser, regex, _i, _len, _ref;
+    capableBrowser = true;
+    if (window.File && window.FileReader && window.FileList && window.Blob && window.FormData && document.querySelector) {
+      if (!("classList" in document.createElement("a"))) {
+        capableBrowser = false;
+      } else {
+        _ref = Dropzone.blacklistedBrowsers;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          regex = _ref[_i];
+          if (regex.test(navigator.userAgent)) {
+            capableBrowser = false;
+            continue;
+          }
+        }
+      }
+    } else {
+      capableBrowser = false;
+    }
+    return capableBrowser;
+  };
+
+  without = function(list, rejectedItem) {
+    var item, _i, _len, _results;
+    _results = [];
+    for (_i = 0, _len = list.length; _i < _len; _i++) {
+      item = list[_i];
+      if (item !== rejectedItem) {
+        _results.push(item);
+      }
+    }
+    return _results;
+  };
+
+  camelize = function(str) {
+    return str.replace(/[\-_](\w)/g, function(match) {
+      return match.charAt(1).toUpperCase();
+    });
+  };
+
+  Dropzone.createElement = function(string) {
+    var div;
+    div = document.createElement("div");
+    div.innerHTML = string;
+    return div.childNodes[0];
+  };
+
+  Dropzone.elementInside = function(element, container) {
+    if (element === container) {
+      return true;
+    }
+    while (element = element.parentNode) {
+      if (element === container) {
+        return true;
+      }
+    }
+    return false;
+  };
+
+  Dropzone.getElement = function(el, name) {
+    var element;
+    if (typeof el === "string") {
+      element = document.querySelector(el);
+    } else if (el.nodeType != null) {
+      element = el;
+    }
+    if (element == null) {
+      throw new Error("Invalid `" + name + "` option provided. Please provide a CSS selector or a plain HTML element.");
+    }
+    return element;
+  };
+
+  Dropzone.getElements = function(els, name) {
+    var e, el, elements, _i, _j, _len, _len1, _ref;
+    if (els instanceof Array) {
+      elements = [];
+      try {
+        for (_i = 0, _len = els.length; _i < _len; _i++) {
+          el = els[_i];
+          elements.push(this.getElement(el, name));
+        }
+      } catch (_error) {
+        e = _error;
+        elements = null;
+      }
+    } else if (typeof els === "string") {
+      elements = [];
+      _ref = document.querySelectorAll(els);
+      for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
+        el = _ref[_j];
+        elements.push(el);
+      }
+    } else if (els.nodeType != null) {
+      elements = [els];
+    }
+    if (!((elements != null) && elements.length)) {
+      throw new Error("Invalid `" + name + "` option provided. Please provide a CSS selector, a plain HTML element or a list of those.");
+    }
+    return elements;
+  };
+
+  Dropzone.confirm = function(question, accepted, rejected) {
+    if (window.confirm(question)) {
+      return accepted();
+    } else if (rejected != null) {
+      return rejected();
+    }
+  };
+
+  Dropzone.isValidFile = function(file, acceptedFiles) {
+    var baseMimeType, mimeType, validType, _i, _len;
+    if (!acceptedFiles) {
+      return true;
+    }
+    acceptedFiles = acceptedFiles.split(",");
+    mimeType = file.type;
+    baseMimeType = mimeType.replace(/\/.*$/, "");
+    for (_i = 0, _len = acceptedFiles.length; _i < _len; _i++) {
+      validType = acceptedFiles[_i];
+      validType = validType.trim();
+      if (validType.charAt(0) === ".") {
+        if (file.name.toLowerCase().indexOf(validType.toLowerCase(), file.name.length - validType.length) !== -1) {
+          return true;
+        }
+      } else if (/\/\*$/.test(validType)) {
+        if (baseMimeType === validType.replace(/\/.*$/, "")) {
+          return true;
+        }
+      } else {
+        if (mimeType === validType) {
+          return true;
+        }
+      }
+    }
+    return false;
+  };
+
+  if (typeof jQuery !== "undefined" && jQuery !== null) {
+    jQuery.fn.dropzone = function(options) {
+      return this.each(function() {
+        return new Dropzone(this, options);
+      });
+    };
+  }
+
+  if (typeof module !== "undefined" && module !== null) {
+    module.exports = Dropzone;
+  } else {
+    window.Dropzone = Dropzone;
+  }
+
+  Dropzone.ADDED = "added";
+
+  Dropzone.QUEUED = "queued";
+
+  Dropzone.ACCEPTED = Dropzone.QUEUED;
+
+  Dropzone.UPLOADING = "uploading";
+
+  Dropzone.PROCESSING = Dropzone.UPLOADING;
+
+  Dropzone.CANCELED = "canceled";
+
+  Dropzone.ERROR = "error";
+
+  Dropzone.SUCCESS = "success";
+
+  /*
+  
+  Bugfix for iOS 6 and 7
+  Source: http://stackoverflow.com/questions/11929099/html5-canvas-drawimage-ratio-bug-ios
+  based on the work of https://github.com/stomita/ios-imagefile-megapixel
+  */
+
+
+  detectVerticalSquash = function(img) {
+    var alpha, canvas, ctx, data, ey, ih, iw, py, ratio, sy;
+    iw = img.naturalWidth;
+    ih = img.naturalHeight;
+    canvas = document.createElement("canvas");
+    canvas.width = 1;
+    canvas.height = ih;
+    ctx = canvas.getContext("2d");
+    ctx.drawImage(img, 0, 0);
+    data = ctx.getImageData(0, 0, 1, ih).data;
+    sy = 0;
+    ey = ih;
+    py = ih;
+    while (py > sy) {
+      alpha = data[(py - 1) * 4 + 3];
+      if (alpha === 0) {
+        ey = py;
+      } else {
+        sy = py;
+      }
+      py = (ey + sy) >> 1;
+    }
+    ratio = py / ih;
+    if (ratio === 0) {
+      return 1;
+    } else {
+      return ratio;
+    }
+  };
+
+  drawImageIOSFix = function(ctx, img, sx, sy, sw, sh, dx, dy, dw, dh) {
+    var vertSquashRatio;
+    vertSquashRatio = detectVerticalSquash(img);
+    return ctx.drawImage(img, sx, sy, sw, sh, dx, dy, dw, dh / vertSquashRatio);
+  };
+
+  /*
+  # contentloaded.js
+  #
+  # Author: Diego Perini (diego.perini at gmail.com)
+  # Summary: cross-browser wrapper for DOMContentLoaded
+  # Updated: 20101020
+  # License: MIT
+  # Version: 1.2
+  #
+  # URL:
+  # http://javascript.nwbox.com/ContentLoaded/
+  # http://javascript.nwbox.com/ContentLoaded/MIT-LICENSE
+  */
+
+
+  contentLoaded = function(win, fn) {
+    var add, doc, done, init, poll, pre, rem, root, top;
+    done = false;
+    top = true;
+    doc = win.document;
+    root = doc.documentElement;
+    add = (doc.addEventListener ? "addEventListener" : "attachEvent");
+    rem = (doc.addEventListener ? "removeEventListener" : "detachEvent");
+    pre = (doc.addEventListener ? "" : "on");
+    init = function(e) {
+      if (e.type === "readystatechange" && doc.readyState !== "complete") {
+        return;
+      }
+      (e.type === "load" ? win : doc)[rem](pre + e.type, init, false);
+      if (!done && (done = true)) {
+        return fn.call(win, e.type || e);
+      }
+    };
+    poll = function() {
+      var e;
+      try {
+        root.doScroll("left");
+      } catch (_error) {
+        e = _error;
+        setTimeout(poll, 50);
+        return;
+      }
+      return init("poll");
+    };
+    if (doc.readyState !== "complete") {
+      if (doc.createEventObject && root.doScroll) {
+        try {
+          top = !win.frameElement;
+        } catch (_error) {}
+        if (top) {
+          poll();
+        }
+      }
+      doc[add](pre + "DOMContentLoaded", init, false);
+      doc[add](pre + "readystatechange", init, false);
+      return win[add](pre + "load", init, false);
+    }
+  };
+
+  Dropzone._autoDiscoverFunction = function() {
+    if (Dropzone.autoDiscover) {
+      return Dropzone.discover();
+    }
+  };
+
+  contentLoaded(window, Dropzone._autoDiscoverFunction);
+
+}).call(this);
+
+});
+
+if (typeof exports == "object") {
+  module.exports = require("dropzone");
+} else if (typeof define == "function" && define.amd) {
+  define('dropzone',[], function(){ return require("dropzone"); });
+} else {
+  this["Dropzone"] = require("dropzone");
+}
+})()
+;
 /* ===================================================
  * tagmanager.js v3.0.1
  * http://welldonethings.com/tags/manager
@@ -24799,6 +26623,7 @@ define('husky',[
         app.use('./husky_extensions/ckeditor-extension');
 		app.use('./husky_extensions/typeahead');
         app.use('./husky_extensions/tagmanager');
+        app.use('./husky_extensions/dropzone');
 
     }
 
@@ -25703,460 +27528,6 @@ define('__component__$navigation@husky',[],function() {
 
 });
 
-/*
- * This file is part of the Sulu CMS.
- *
- * (c) MASSIVE ART WebServices GmbH
- *
- * This source file is subject to the MIT license that is bundled
- * with this source code in the file LICENSE.
- *
- * Name: header
- * Options:
- *  marginMid: add 45px to navWidth
- *  marginRight: add 20px to margin mid part
- *  buttonType: type of button at start
- *  userName:   username to be shown in left side of header
- *  logoutURL: logout link
- *  userIconURL: link to the icon in the left side
- *
- * Provided Events:
- *  husky.header.move-buttons: move middle part to match given navigation width
- *  husky.header.button-type: change ButtonType [save, saveDelete, saved, savedDelete, add, reset, template]
- *  husky.header.button-state: change state of buttons
- *  husky.header.user-menu: [username, logout-url, img-url]set user menu on top left side
- *
- * Used Events:
- *  navigation.item.content.show: used to move buttons when the content is changing
- *
- */
-
-define('__component__$header@husky',[], function() {
-
-    
-
-    var sandbox,
-        type,
-        types = {
-            save: {
-                template: function() {
-                    return [
-                        '<div class="grid-row">',
-                        '   <div class="grid-col-6 left">',
-                        '       <div id="save-button" data-aura-component="button@husky" data-aura-instance-name="save" data-aura-button-type="icon" data-aura-button-state="hide" data-aura-background="black" data-aura-icon-type="circle-ok" data-aura-text="',this.sandbox.translate('header.saved'),'"/>',
-                        '   </div>',
-                        '</div>'
-                    ].join('');
-                },
-                reset: function() {
-                    // do nothing
-                },
-
-                states: {
-                    standard: function() {
-                        // set text to saved and OK
-                        sandbox.emit('husky.button.save.set-content', this.sandbox.translate('header.saved'), 'circle-ok');
-                        sandbox.emit('husky.button.save.state', 'disable');
-                    },
-                    dirty: function() {
-                        // set text to save and icon to !
-                        sandbox.emit('husky.button.save.set-content', this.sandbox.translate('header.save'), 'caution');
-                        sandbox.emit('husky.button.save.state', 'standard');
-                    },
-                    disable: function() {
-                        sandbox.emit('husky.button.save.state', 'disable');
-                    },
-                    'loading-save-button': function() {
-                        sandbox.emit('husky.button.save.state', 'loading');
-                    },
-                    hide: function() {
-                        // hide save button
-                        sandbox.emit('husky.button.save.state', 'hide');
-                    }
-                }
-            },
-            saveDelete: {
-                template: function() {
-                    return [
-                        '<div class="grid-row">',
-                        '   <div class="grid-col-6 left">',
-                        '       <div id="save-button" data-aura-component="button@husky" data-aura-instance-name="save" data-aura-button-type="icon" data-aura-button-state="disable" data-aura-background="black" data-aura-icon-type="circle-ok" data-aura-text="',this.sandbox.translate('header.saved'),'"/>',
-                        '   </div>',
-                        '   <div class="grid-col-6 right">',
-                        '       <div id="delete-button" class="pull-right" data-aura-component="button@husky" data-aura-instance-name="delete" data-aura-button-type="icon" data-aura-background="black" data-aura-icon-type="circle-remove" data-aura-text="',this.sandbox.translate('header.delete'),'"/>',
-                        '   </div>',
-                        '</div>'
-                    ].join('');
-                },
-                reset: function() {
-                    // do nothing
-                },
-
-                states: {
-                    standard: function() {
-                        sandbox.emit('husky.button.save.set-content', this.sandbox.translate('header.saved'), 'circle-ok');
-                        sandbox.emit('husky.button.save.state', 'disable');
-                        sandbox.emit('husky.button.delete.state', 'standard');
-                    },
-                    dirty: function() {
-                        // set text to save and icon to !
-                        sandbox.emit('husky.button.save.set-content', this.sandbox.translate('header.save'), 'caution');
-                        sandbox.emit('husky.button.save.state', 'standard');
-                        sandbox.emit('husky.button.delete.state', 'standard');
-                    },
-                    disable: function() {
-                        sandbox.emit('husky.button.save.state', 'disable');
-                        sandbox.emit('husky.button.delete.state', 'disable');
-                    },
-                    'loading-save-button': function() {
-                        sandbox.emit('husky.button.save.state', 'loading');
-                        sandbox.emit('husky.button.delete.state', 'disable');
-                    },
-                    'loading-delete-button': function() {
-                        sandbox.emit('husky.button.save.state', 'disable');
-                        sandbox.emit('husky.button.delete.state', 'loading');
-                    },
-                    hide: function() {
-                        sandbox.emit('husky.button.save.state', 'hide');
-                        sandbox.emit('husky.button.delete.state', 'hide');
-                    }
-                }
-            },
-            add: {
-                template: function() {
-                    return [
-                        '<div class="grid-row">',
-                        '   <div class="grid-col-6 left">',
-                        '       <div id="add-button" data-aura-component="button@husky" data-aura-instance-name="add" data-aura-button-type="icon" data-aura-background="black" data-aura-icon-type="add" data-aura-text="',this.sandbox.translate('header.add'),'"/>',
-                        '   </div>',
-                        '</div>'
-                    ].join('');
-                },
-                reset: function() {
-                    // do nothing
-                },
-
-                states: {
-                    standard: function() {
-                        sandbox.emit('husky.button.add.state', 'standard');
-                    },
-                    disable: function() {
-                        sandbox.emit('husky.button.add.state', 'disable');
-                    },
-                    'loading-add-button': function() {
-                        sandbox.emit('husky.button.add.state', 'loading');
-                    },
-                    hide: function() {
-                        sandbox.emit('husky.button.add.state', 'hide');
-                    }
-                }
-            },
-            reset: {
-                template: function() {
-                    return [];
-                },
-                reset: function() {
-                },
-                states: { }
-            }
-        },
-        defaults = {
-            marginMid: 45,   // add 45px to navWidth
-            marginRight: 20,   // add 20px to margin mid part
-            buttonType: null, // type of button at start
-            userName: null, // username to be shown in left side of header
-            logoutUrl: null, // logout link
-            userIconUrl: null // link to the icon in the left side
-        };
-
-    return {
-
-        initialize: function() {
-            sandbox = this.sandbox;
-
-            this.sandbox.logger.log('initialize', this);
-            this.sandbox.logger.log(arguments);
-
-            // extend default options
-            this.options = this.sandbox.util.extend({}, defaults, this.options);
-
-            // init html elements
-            this.$header = this.sandbox.dom.$('<div/>', {
-                class: 'header header-fixed-top'
-            });
-            this.$left = this.sandbox.dom.$('<div/>', {
-                class: 'header-left'
-            });
-            this.$right = this.sandbox.dom.$('<div/>', {
-                class: 'header-right'
-            });
-            this.$mid = this.sandbox.dom.$('<div/>', {
-                id: 'header-mid',
-                class: 'header-mid grid'
-            });
-
-            // render header
-            this.render();
-        },
-
-        render: function() {
-            // append needed elements
-            this.$el.append(this.$header);
-            this.$header.append(this.$left);
-            this.$header.append(this.$mid);
-            this.$header.append(this.$right);
-
-            // bind events
-            this.bindDomEvents();
-            this.bindCustomEvents();
-
-            // set default type
-            if (!!this.options.buttonType) {
-                this.changeButtonType(this.options.buttonType);
-            }
-
-            // set default user
-            if (!!this.options.userName) {
-                this.changeUser(this.options.userName, this.options.logoutUrl, this.options.userIconUrl);
-            }
-        },
-
-        bindDomEvents: function() {
-
-        },
-
-        bindCustomEvents: function() {
-            // move buttons
-//            this.sandbox.on('navigation.item.content.show', function(item) {
-//                this.moveButtons(item.data.navWidth);
-//            }.bind(this));
-//            this.sandbox.on('navigation.size.changed', function(item) {
-//                this.moveButtons(item.data.navWidth);
-//            }.bind(this));
-
-            this.sandbox.on('husky.header.move-buttons', this.moveButtons.bind(this));
-
-            // add buttons
-            this.sandbox.on('husky.header.button-type', this.changeButtonType.bind(this));
-
-            // change state
-            this.sandbox.on('husky.header.button-state', this.changeState.bind(this));
-
-            // add username
-            this.sandbox.on('husky.header.user-menu', this.changeUser.bind(this));
-        },
-
-        // move buttons with navigation width
-        moveButtons: function(navWidth) {
-            var headerLeft = parseInt(this.sandbox.dom.css(this.$header, 'padding-left'), 10),
-                marginLeft = navWidth + this.options.marginMid - headerLeft,
-                width = parseInt(this.sandbox.dom.css(this.$mid, 'width'), 10);
-
-            this.$mid.css('margin-left', marginLeft);
-            this.$right.css('margin-left', width + marginLeft + this.options.marginRight);
-        },
-
-        changeButtonType: function(newType) {
-            // TODO perhaps sandbox.stop('#header-mid')
-
-            if (typeof newType === 'string') {
-                if (!!types[newType]) {
-                    type = types[newType];
-                } else {
-                    throw 'Not implemented';
-                }
-            } else {
-                if (!!newType.template && !!newType.reset && !!newType.states) {
-                    type = newType;
-                } else {
-                    throw 'Not implemented';
-                }
-            }
-            this.$mid.html(type.template.call(this));
-
-            this.sandbox.start('#header-mid');
-        },
-
-        changeState: function(state) {
-            if (!!type && !!type.states[state]) {
-                type.reset.call(this);
-                type.states[state].call(this);
-            } else {
-                throw 'Not implemented';
-            }
-        },
-
-        changeUser: function(username, logoutLink, usericon) {
-            var icon = usericon ? '<img src="' + usericon + '" />' : '',
-                logout = logoutLink ? '<a href="' + logoutLink + '" class="logout">Log out</a>' : '',
-                userSpan = username ? '<span class="username" >' + username + '</span>' : '';
-
-            this.$left.html(icon + userSpan + ' ' + logout);
-        }
-    };
-});
-
-/*
- * This file is part of the Sulu CMS.
- *
- * (c) MASSIVE ART WebServices GmbH
- *
- * This source file is subject to the MIT license that is bundled
- * with this source code in the file LICENSE.
- *
- * Name: button
- * Options:
- *  buttonType: type of button [icon, custom]
- *  instanceName: name of instance used in events
- *  text: button text
- *  iconType: button icon
- *  background: background color for spinner
- *
- * Provided Events:
- *  husky.button.<<instanceName>>.click: button where clicked
- *  husky.button.<<instanceName>>.state: change buttonType [icon, custom type]
- *
- */
-
-define('__component__$button@husky',[], function() {
-
-    
-
-    var type,
-        types = {
-            icon: {
-                init: function() {
-                    this.sandbox.dom.addClass(this.$el, 'pointer icon-btn');
-                    this.$el.html(type.template(this.options.iconType, this.options.text));
-                    type.bindDomEvents.call(this);
-                },
-                bindDomEvents: function() {
-                    this.$el.off('click');
-                    this.$el.on('click', this.clickEvent.bind(this));
-                },
-                unBindDomEvents: function() {
-                    this.$el.off('click');
-                },
-                template: function(icon, text) {
-                    return '<div class="loading-content"><span class="icon-' + icon + ' pull-left block"></span><span class="p-left-5 bold pull-left block">' + text + '</span></div>';
-                },
-                reset: function() {
-                    this.sandbox.dom.removeClass(this.$el, 'loading-black');
-                    this.sandbox.dom.removeClass(this.$el, 'loading');
-                    this.sandbox.dom.removeClass(this.$el, 'disable');
-                },
-
-                states: {
-                    standard: function() {
-                        this.sandbox.dom.show(this.$el);
-                        type.reset.call(this);
-
-                        type.bindDomEvents.call(this);
-                        this.sandbox.dom.addClass(this.$el, 'pointer');
-                    },
-                    disable: function() {
-                        this.sandbox.dom.show(this.$el);
-                        this.sandbox.dom.addClass(this.$el, 'disable');
-                        this.sandbox.dom.removeClass(this.$el, 'pointer');
-
-                        type.unBindDomEvents.call(this);
-                    },
-                    loading: function() {
-                        this.sandbox.dom.show(this.$el);
-                        if (!!this.options.background) {
-                            this.sandbox.dom.addClass(this.$el, 'loading-' + this.options.background);
-                        } else {
-                            this.sandbox.dom.addClass(this.$el, 'loading');
-                        }
-                        this.sandbox.dom.removeClass(this.$el, 'pointer');
-
-                        type.unBindDomEvents.call(this);
-                    },
-                    hide: function() {
-                        this.sandbox.dom.hide(this.$el);
-
-                    }
-
-                }
-            }
-        },
-        defaults = {
-            buttonType: 'icon',         // type of button [icon, custom]
-            buttonState: null,            // type of button [icon, custom]
-            instanceName: 'undefined',  // name of instance used in events
-            text: 'undefined',          // button text
-            iconType: 'caution',        // button icon
-            background: null            // background color for spinner
-        };
-
-
-    return {
-
-        getEvent: function(append) {
-            return 'husky.button.' + this.options.instanceName + '.' + append;
-        },
-
-        initialize: function() {
-            this.sandbox.logger.log('initialize');
-            this.sandbox.logger.log(arguments);
-
-            // extend default options
-            this.options = this.sandbox.util.extend({}, defaults, this.options);
-
-            this.render();
-            this.bindCustomEvents();
-        },
-
-        render: function() {
-            if (typeof this.options.buttonType === 'string') {
-                if (!!types[this.options.buttonType]) {
-                    type = types[this.options.buttonType];
-                } else {
-                    throw 'not implemented';
-                }
-            } else {
-                if (!!this.options.buttonType.init && !!this.options.buttonType.render && !!this.options.buttonType.states) {
-                    type = this.options.buttonType;
-                } else {
-                    throw 'not implemented';
-                }
-            }
-
-            type.init.call(this);
-
-            if (!!this.options.buttonState) {
-                this.changeState(this.options.buttonState);
-            }
-        },
-
-
-        clickEvent: function() {
-            this.sandbox.emit(this.getEvent('click'));
-        },
-
-        bindCustomEvents: function() {
-            this.sandbox.on(this.getEvent('state'), this.changeState.bind(this));
-            this.sandbox.on(this.getEvent('set-content'), this.setContent.bind(this));
-        },
-
-        changeState: function(state) {
-            if (!!type && !!type.states[state]) {
-                type.reset.call(this);
-                type.states[state].call(this);
-            } else {
-                throw 'not implemented';
-            }
-        },
-
-        setContent: function(text, icon) {
-            this.options.text = text;
-            this.options.iconType = icon;
-//            type.init.call(this);
-            this.render();
-        }
-    };
-});
-
 /**
  * This file is part of Husky frontend development framework.
  *
@@ -26581,536 +27952,372 @@ define('__component__$column-options@husky',[],function() {
 });
 
 /**
- * @class DataGrid
+ * @class TableView (Datagrid Decorator)
  * @constructor
  *
- * @param {Object} [options] Configuration object
- * @param {Boolean} [options.autoRemoveHandling] raises an event before a row is removed
- * @param {Array} [options.fieldsData] fields data will extend url and set tableHead automatically
- * @param {Object} [options.fieldsData.{}] fields object
- * @param {String} [options.fieldsData.{}.id] field name
- * @param {String} [options.fieldsData.{}.translation] translation key which will be translated automatically
- * @param {String} [options.fieldsData.{}.disabled] either 'true' or 'false'
+ * @param {Object} [viewOptions] Configuration object
  * @param {Boolean} [options.editable] will not set class is-selectable to prevent hover effect for complete rows
  * @param {String} [options.className] additional classname for the wrapping div
- * @param {Object} [options.data] if no url is provided (some functionality like search & sort will not work)
- * @param {String} [options.defaultMeasureUnit=px] the unit that should be taken
- * @param {String} [options.elementType=table] type of datagrid (currently only table is available)
- * @param {Array} [options.excludeFields=[id]] array of field to exclude
- * @param {Boolean} [options.pagination=false] display a pagination
- * @param {Object} [options.paginationOptions] Configuration Object for the pagination
- * @param {Number} [options.paginationOptions.pageSize] Number of items per page
- * @param {Boolean} [options.paginationOptions.showPages] show pages as visual numbers
- * @param {Number} [options.pageSize] lines per page
- * @param {Number} [options.showPages] amount of pages that will be shown
  * @param {Boolean} [options.removeRow] displays in the last column an icon to remove a row
  * @param {Object} [options.selectItem] Configuration object of select item (column)
  * @param {String} [options.selectItem.type] Type of select [checkbox, radio]
  * @param {String} [options.selectItem.width] Width of select column
- * @param {Boolean} [options.sortable] Defines if list is sortable
- * @param {Array} [options.columns] configuration array of columns
- * @param {String} [options.columns.content] column title
- * @param {String} [options.columns.width] width of column
- * @param {String} [options.columns.class] css class of th
- * @param {String} [options.columns.type] type of the column. Used to manipulate its content (e.g. 'date')
- * @param {String} [options.columns.attribute] mapping information to data (if not set it will just iterate of attributes)
- * @param {Boolean} [options.appendTBody] add TBODY to table
- * @param {String} [options.searchInstanceName=null] if set, a listener will be set for the corresponding search event
- * @param {String} [options.columnOptionsInstanceName=null] if set, a listener will be set for listening for column changes
- * @param {String} [options.url] url to fetch data from
- * @param {String} [options.paginationTemplate] template for pagination
  * @param {Boolean} [options.validation] enables validation for datagrid
+ * @param {Boolean} [options.validationDebug] enables validation debug for datagrid
  * @param {Boolean} [options.addRowTop] adds row to the top of the table when add row is triggered
  * @param {Boolean} [options.startTabIndex] start index for tabindex
- * @param {Boolean} [options.progressRow] has to be enabled when datagrid is editable to show progress of save action
  * @param {String} [options.columnMinWidth] sets the minimal width of table columns
  * @param {String|Object} [options.contentContainer] the container which holds the datagrid; this options resizes the contentContainer for responsiveness
- * @param {Array} [options.showElementsSteps] Array which contains the steps for the Show-Elements-dropdown as integers
  * @param {String} [options.fullWidth] If true datagrid style will be full-width mode
+ * @param {Array} [options.excludeFields=['id']] array of fields to exclude by the view
+ *
+ *
+ * @param {Boolean} [rendered] property used by the datagrid-main class
+ * @param {Function} [initialize] function which gets called once at the start of the view
+ * @param {Function} [render] function to render data
+ * @param {Function} [destroy] function to destroy the view and unbind events
+ * @param {Function} [onResize] function which gets automatically executed on window resize
+ * @param {Function} [unbindCustomEvents] function to unbind the custom events of this object
  */
-define('__component__$datagrid@husky',[],function() {
+define('husky_components/datagrid/decorators/table-view',[],function() {
 
     
 
     /**
-     *    Default values for options
+     * Variable to store the datagrid context
      */
-    var defaults = {
-            autoRemoveHandling: true,
+    var datagrid,
+
+        defaults = {
             editable: false,
             className: 'datagridcontainer',
-            elementType: 'table',
-            data: null,
-            defaultMeasureUnit: 'px',
-            excludeFields: ['id'],
-            instance: 'datagrid',
-            pagination: false,
-            //fullWidth: false,
-            paginationOptions: {
-                pageSize: null,
-                showPages: null
-            },
+            fullWidth: false,
             contentContainer: null,
-            removeRow: true,
+            removeRow: false,
             selectItem: {
-                type: null,      // checkbox, radio button
+                type: 'checkbox',      // checkbox, radio button
                 width: '50px'    // numerous value
-                //clickable: false   // defines if background is clickable TODO do not use until fixed
             },
-            sortable: false,
-            columns: [],
-            url: null,
-            appendTBody: true,   // add TBODY to table
-            searchInstanceName: null, // at which search it should be listened to can be null|string|empty_string
-            columnOptionsInstanceName: null, // at which search it should be listened to can be null|string|empty_string
-            paginationTemplate: '<%=translate("pagination.page")%> <strong><%=i%></strong> <%=translate("pagination.of")%> <%=pages%>',
-            fieldsData: null,
             validation: false, // TODO does not work for added rows
             validationDebug: false,
-            addRowTop: false,
-            progressRow: true,
+            addRowTop: true,
             startTabIndex: 99999,
-            columnMinWidth: '70px',
-            showElementsSteps: [10, 20, 50, 100, 500]
-        },
-
-        types = {
-            DATE: 'date'
+            excludeFields: [''],
+            columnMinWidth: '70px'
         },
 
         constants = {
+            viewClass: 'table-container',
             fullWidthClass: 'fullwidth',
             // if datagrid is in fullwidth-mode (options.fullWidth is true)
-            // this number gets subracted from the datagrids final width in the resize listener
-            overflowIconSpacing: 30
+            // this number gets subracted from the tables final width in the resize listener
+            overflowIconSpacing: 30,
+            ascClass: 'icon-arrow-up',
+            descClass: 'icon-arrow-down',
+            additionalHeaderClasses: ' m-left-5 small-font',
+            rowRemoverClass: 'row-remover',
+            editableClass: 'editable',
+            selectAllName: 'select-all',
+            isSelectedClass: 'is-selected',
+            isSelectableClass: 'is-selectable',
+            sortableClass: 'is-sortable',
+            tableClass: 'table',
+            serverValidationError: 'server-validation-error',
+            oversizedClass: 'oversized',
+            overflowClass: 'overflow'
         },
 
-        namespace = 'husky.datagrid.',
-
-    /* TRIGGERS EVENTS */
-
         /**
-         * raised when item is deselected
-         * @event husky.datagrid.item.deselect
-         * @param {String} id of deselected item
+         * Templates used by this class
          */
-            ITEM_DESELECT = namespace + 'item.deselect',
+        templates = {
+            removeRow: [
+                '<td class="remove-row">',
+                    '<span class="icon-bin pointer '+ constants.rowRemoverClass +'"></span>',
+                '</td>'
+            ].join(''),
 
-        /**
-         * raised when item is selected
-         * @event husky.datagrid.item.select
-         * @param {String} if of selected item
-         */
-            ITEM_SELECT = namespace + 'item.select',
+            checkbox: [
+                '<div class="custom-checkbox">',
+                    '<input id="<%= id %>" type="checkbox" data-form="false"<% if (!!checked) { %> checked<% } %>/>',
+                    '<span class="icon"></span>',
+                '</div>'
+            ].join(''),
 
-        /**
-         * raised when clicked on an item
-         * @event husky.datagrid.item.click
-         * @param {String} id of item that was clicked
-         */
-            ITEM_CLICK = namespace + 'item.click',
+            checkboxCell: [
+                '<td>',
+                    '<%= checkbox %>',
+                '</td>'
+            ].join(''),
 
-        /**
-         * raised when husky.datagrid.items.get-selected is triggered
-         * @event husky.datagrid.items.selected
-         * @param {Array} ids of all items that have been clicked
-         */
-            ITEMS_SELECTED = namespace + 'items.selected',
+            radio: [
+                '<td>',
+                    '<div class="custom-radio">',
+                        '<input name="<%= name %>" type="radio"/>',
+                        '<span class="icon"></span>',
+                    '</div>',
+                '</td>'
+            ].join('')
+    },
 
-        /**
-         * raised when all items get deselected via the header checkbox
-         * @event husky.datagrid.all.deselect
-         */
-            ALL_DESELECT = namespace + 'all.deselect',
+     namespace = 'husky.datagrid.',
 
-        /**
-         * raised when all items get deselected via the header checkbox
-         * @event husky.datagrid.all.select
-         * @param {Array} ids of all items that have been clicked
-         */
-            ALL_SELECT = namespace + 'all.select',
+    /**
+     * raised when clicked on an item
+     * @event husky.datagrid.item.click
+     * @param {String} id of item that was clicked
+     */
+        ITEM_CLICK = namespace + 'item.click',
 
-        /**
-         * click - raised when clicked on the remove-row-icon
-         * @event husky.datagrid.row.remove-click
-         * @param {Object} event object of click
-         * @param {String} id of item that was clicked for removal
-         */
-            ROW_REMOVE_CLICK = namespace + 'row.remove-click',
+    /**
+     * used to update the table width and its containers due to responsiveness
+     * @event husky.datagrid.update.table
+     */
+        UPDATE_TABLE = namespace + 'update.table',
 
-        /**
-         * raised when row got removed
-         * @event husky.datagrid.row.removed
-         * @param {String} id of item that was removed
-         */
-            ROW_REMOVED = namespace + 'row.removed',
+    /**
+     * calculates the width of a text by creating a tablehead element and measure its width
+     * @param text
+     * @param classArray
+     * @param isSortable
+     */
+    getTextWidth = function(text, classArray, isSortable) {
+        var elWidth, el,
+            sortIconWidth = 0,
+            paddings = 20;
+        // handle css classes
+        if (!classArray) {
+            classArray = [];
+        }
+        if (isSortable) {
+            classArray.push(constants.sortableClass);
+            sortIconWidth = 20;
+        }
+        classArray.push(constants.isSelectedClass);
 
-        /**
-         * raised when the the current page changes
-         * @event husky.datagrid.page.change
-         */
-            PAGE_CHANGE = namespace + 'page.change',
+        el = this.sandbox.dom.createElement('<table style="width:auto"><thead><tr><th class="' + classArray.join(',') + '">' + text + '</th></tr></thead></table>');
+        this.sandbox.dom.css(el, {
+            'position': 'absolute',
+            'visibility': 'hidden',
+            'height': 'auto',
+            'width': 'auto'
+        });
+        this.sandbox.dom.append('body', el);
 
-        /**
-         * raised when the data is updated
-         * @event husky.datagrid.updated
-         */
-            UPDATED = namespace + 'updated',
+        // text width + paddings and sorting icon
+        elWidth = this.sandbox.dom.width(el) + paddings + sortIconWidth;
 
-        /**
-         * raised when husky.datagrid.data.get is triggered
-         * @event husky.datagrid.data.provide
-         */
-            DATA_PROVIDE = namespace + 'data.provide',
+        this.sandbox.dom.remove(el);
 
-        /**
-         * raised when data is sorted
-         * @event husky.datagrid.data.sort
-         */
-            DATA_SORT = namespace + 'data.sort',
-
-        /**
-         * raised when selection of items changes
-         * @event husky.datagrid.number.selections
-         */
-            NUMBER_SELECTIONS = namespace + 'number.selections',
-
-        /**
-         * raised when data was saved
-         * @event husky.datagrid.data.saved
-         * @param {Object} data returned
-         */
-            DATA_SAVED = namespace + 'data.saved',
-
-        /**
-         * raised when save of data failed
-         * @event husky.datagrid.data.save.failed
-         * @param {String} text status
-         * @param {String} error thrown
-         *
-         */
-            DATA_SAVE_FAILED = namespace + 'data.save.failed',
-
-        /**
-         * raised when editable list is changed
-         * @event husky.datagrid.data.save
-         */
-            DATA_CHANGED = namespace + 'data.changed',
-
-
-    /* PROVIDED EVENTS */
-
-        /**
-         * used to trigger an update of the data
-         * @event husky.datagrid.update
-         */
-            UPDATE = namespace + 'update',
-
-        /**
-         * used to filter data by search
-         * @event husky.datagrid.data.filter
-         * @param {String} searchField
-         * @param {String} searchString
-         */
-            DATA_SEARCH = namespace + 'data.search',
-
-        /**
-         * used to filter data by updating an url parameter
-         * @event husky.datagrid.url.update
-         * @param {Object} url parameter : key
-         */
-            URL_UPDATE = namespace + 'url.update',
-
-        /**
-         * used to update the table width and its containers due to responsiveness
-         * @event husky.datagrid.update.table
-         */
-            UPDATE_TABLE = namespace + 'update.table',
-
-        /**
-         * used to add a row
-         * @event husky.datagrid.row.add
-         * @param {String} id of the row to be removed
-         */
-            ROW_ADD = namespace + 'row.add',
-
-        /**
-         * used to remove a row
-         * @event husky.datagrid.row.remove
-         * @param {String} id of the row to be removed
-         */
-            ROW_REMOVE = namespace + 'row.remove',
-
-        /**
-         * triggers husky.datagrid.items.selected event, which returns all selected item ids
-         * @event husky.datagrid.items.get-selected
-         * @param  {Function} callback function receives array of selected items
-         */
-            ITEMS_GET_SELECTED = namespace + 'items.get-selected',
-
-        /**
-         * triggers husky.datagrid.data.provide
-         * @event husky.datagrid.data.get
-         */
-            DATA_GET = namespace + 'data.get',
-
-        /**
-         * calculates the width of a text by creating a tablehead element and measure its width
-         * @param text
-         * @param classArray
-         * @param isSortable
-         */
-            getTextWidth = function(text, classArray, isSortable) {
-
-            var elWidth, el,
-                sortIconWidth = 0,
-                paddings = 20;
-            // handle css classes
-            if (!classArray) {
-                classArray = [];
-            }
-            if (isSortable) {
-                classArray.push('is-sortable');
-                sortIconWidth = 20;
-            }
-            classArray.push('is-selected');
-
-            el = this.sandbox.dom.createElement('<table style="width:auto"><thead><tr><th class="' + classArray.join(',') + '">' + text + '</th></tr></thead></table>');
-            this.sandbox.dom.css(el, {
-                'position': 'absolute',
-                'visibility': 'hidden',
-                'height': 'auto',
-                'width': 'auto'
-            });
-            this.sandbox.dom.append('body', el);
-
-            // text width + paddings and sorting icon
-            elWidth = this.sandbox.dom.width(el) + paddings + sortIconWidth;
-
-            this.sandbox.dom.remove(el);
-
-            return elWidth;
-        };
+        return elWidth;
+    };
 
     return {
 
-        view: true,
+        /**
+         * Initializes the view, gets called only once
+         * @param {Object} context The context of the datagrid class
+         * @param {Object} options The options used by the view
+         */
+        initialize: function(context, options) {
+            // context of the datagrid-component
+            datagrid = context;
 
-        initialize: function() {
-            this.sandbox.logger.log('initialized datagrid');
+            // make sandbox available in this-context
+            this.sandbox = datagrid.sandbox;
 
-            // extend default options and set variables
-            this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
-            this.name = this.options.name;
-            this.dropdownInstanceName = 'datagrid-pagination-dropdown';
-            this.data = null;
-            this.allItemIds = [];
-            this.selectedItemIds = [];
-            this.rowStructure = [];
-            this.elId = this.sandbox.dom.attr(this.$el, 'id');
-            this.currentUrl = '';
+            // merge defaults with options
+            this.options = this.sandbox.util.extend(true, {}, defaults, options);
 
-            if (!!this.options.contentContainer) {
-                if (this.sandbox.dom.css(this.options.contentContainer, 'max-width') === 'none') {
-                    this.originalMaxWidth = null;
-                } else {
-                    this.originalMaxWidth = this.getNumberAndUnit(this.sandbox.dom.css(this.options.contentContainer, 'max-width')).number;
-                }
-                this.contentMarginRight = this.getNumberAndUnit(this.sandbox.dom.css(this.options.contentContainer, 'margin-right')).number;
-                this.contentPaddings = this.getNumberAndUnit(this.sandbox.dom.css(this.options.contentContainer, 'padding-right')).number;
-                this.contentPaddings += this.getNumberAndUnit(this.sandbox.dom.css(this.options.contentContainer, 'padding-left')).number;
-            } else {
-                this.contentMarginRight = 0;
-                this.contentPaddings = 0;
-            }
-
-            this.domId = 0;
-
-            this.bottomTabIndex = this.options.startTabIndex || 49999;
-            this.topTabIndex = this.options.startTabIndex || 50000;
-
-            this.errorInRow = [];
-
-            this.sort = {
-                ascClass: 'icon-arrow-up',
-                descClass: 'icon-arrow-down',
-                additionalClasses: ' m-left-5 small-font'
-            };
-
-            // append datagrid to html element
-            this.$originalElement = this.sandbox.dom.$(this.options.el);
-            this.$element = this.sandbox.dom.$('<div class="husky-datagrid"/>');
-            this.$originalElement.append(this.$element);
-
-            this.getData();
-
-            // Should only be be called once
+            this.setVariables();
             this.bindCustomEvents();
         },
 
         /**
-         * Gets the data either via the url or the array
+         * Method to render data in table view
          */
-        getData: function() {
-            var fieldsData, url;
+        render: function(data, $container) {
+            this.data = data;
+            this.$el = $container;
 
-            if (!!this.options.url) {
-                url = this.options.url;
+            this.$tableContainer = this.sandbox.dom.createElement('<div class="'+ constants.viewClass +'"/>');
+            this.sandbox.dom.append(this.$el, this.$tableContainer);
+            this.sandbox.dom.append(this.$tableContainer, this.prepareTable());
 
-                // parse fields data
-                if (this.options.fieldsData) {
-                    fieldsData = this.parseFieldsData(this.options.fieldsData);
-                    url += '&fields=' + fieldsData.urlFields;
-                    this.options.columns = fieldsData.columns;
-                }
-
-                this.sandbox.logger.log('load data from url');
-                this.load({ url: url});
-
-            } else if (!!this.options.data.items) {
-
-                this.sandbox.logger.log('load data from array');
-                this.data = this.options.data;
-
-                this.prepare()
-                    .appendPagination()
-                    .render();
+            // add full-width class if configured
+            if (this.options.fullWidth === true) {
+                this.sandbox.dom.addClass(this.$el, constants.fullWidthClass);
             }
-        },
 
-        /**
-         * parses fields data retrieved from api
-         * @param fields
-         * @returns {{columns: Array, urlFields: string}}
-         */
-        parseFieldsData: function(fields) {
-            var data = [],
-                urlfields = [],
-                fieldsCount = 0,
-                tmp;
+            this.bindDomEvents();
+            this.onResize();
 
-            this.sandbox.util.foreach(fields, function(field) {
-
-                tmp = {};
-
-                if (field.disabled !== 'true' && field.disabled !== true) {
-
-                    // data
-                    for (var key in field) {
-                        if (key === 'translation') {
-                            tmp.content = this.sandbox.translate(field.translation);
-                        } else if (key === 'id') {
-                            tmp.attribute = field.id;
-                        } else {
-                            tmp[key] = field[key];
-                        }
-                    }
-
-                    data.push(tmp);
-                    urlfields.push(field.id);
-
-                } else if (field.id === 'id') {
-                    urlfields.push(field.id);
-                }
-
-                fieldsCount++;
-
-            }.bind(this));
-            return {
-                columns: data,
-                urlFields: urlfields.join(',')
-            };
-        },
-
-        /**
-         * Loads contents via ajax
-         * @param params url
-         */
-        load: function(params) {
-            this.currentUrl = params.url;
-            this.sandbox.util.load(this.getUrl(params), params.data)
-                .then(function(response) {
-                    this.initRender(response, params);
-                }.bind(this))
-                .fail(function(status, error) {
-                    this.sandbox.logger.error(status, error);
-                }.bind(this));
-        },
-
-
-        /**
-         * Initializes the rendering of the datagrid
-         */
-        initRender: function(response, params) {
-
-            this.data = {};
-            this.data.links = response._links;
-            this.data.embedded = response._embedded;
-            this.data.total = response.total;
-            this.data.numberOfAll = response.numberOfAll;
-            this.data.page = response.page;
-            this.data.pages = response.pages;
-            this.data.pageSize = response.pageSize || this.options.paginationOptions.pageSize;
-            this.data.pageDisplay = this.options.paginationOptions.showPages;
-
-            this.prepare()
-                .appendPagination()
-                .render();
+            // initialize validation
+            if (!!this.options.validation) {
+                this.sandbox.form.create(datagrid.$el);
+            }
 
             this.setHeaderClasses();
 
-            if (!!params && typeof params.success === 'function') {
-                params.success(response);
-            }
-
-            this.windowResizeListener();
+            this.rendered = true;
         },
 
         /**
-         * Returns url with page size and page param at the end
-         * @param params
-         * @returns {string}
+         * Destroys the view
          */
-        getUrl: function(params) {
-
-            if (!!this.data && !!this.data.links) {
-                return params.url;
+        destroy: function() {
+            this.unbindDomEvents();
+            this.sandbox.stop(this.sandbox.dom.find('*', this.$tableContainer));
+            // remove full-width class if configured
+            if (this.options.fullWidth === true) {
+                this.sandbox.dom.removeClass(this.$el, constants.fullWidthClass);
             }
-
-            var delimiter = '?', url = params.url;
-
-            if (!!this.options.pagination && !!this.options.paginationOptions.pageSize) {
-
-                if (params.url.indexOf('?') !== -1) {
-                    delimiter = '&';
-                }
-
-                url = params.url + delimiter + 'pageSize=' + this.options.paginationOptions.pageSize;
-                if (params.page > 1) {
-                    url += '&page=' + params.page;
-                }
-            }
-
-            return url;
+            this.sandbox.dom.remove(this.$tableContainer);
         },
 
         /**
-         * Prepares the structure of the datagrid (list, table)
-         * @returns {*}
+         * Binds custom events to the datagrid related to this
+         * view (like an extension)
          */
-        prepare: function() {
-            this.$element.empty();
+        bindCustomEvents: function() {
+            // checks table width
+            this.sandbox.on(UPDATE_TABLE, this.onResize.bind(this));
+        },
 
-            if (this.options.elementType === 'list') {
-                // TODO this.$element = this.prepareList();
-                this.sandbox.logger.log("list is not yet implemented!");
+        /**
+         * Unbinds the custom-events by this view
+         */
+        unBindCustomEvents: function() {
+            this.sandbox.off(UPDATE_TABLE);
+        },
+
+        /**
+         * Unbinds the Dom-Events of the view
+         */
+        unbindDomEvents: function() {
+            this.sandbox.dom.unbind(this.sandbox.dom.find('*', this.$tableContainer));
+            this.sandbox.dom.unbind(this.$tableContainer);
+        },
+
+        /**
+         * Binds Dom related events for this table-view
+         */
+        bindDomEvents: function() {
+            // select events for checkboxes and radio buttons
+            if (!!this.options.selectItem.type) {
+                this.sandbox.dom.on(
+                    this.sandbox.dom.find('input[type="checkbox"], input[type="radio"]', this.$tableContainer),
+                    'click',
+                    this.selectItem.bind(this)
+                );
+                //select all event
+                this.sandbox.dom.on(
+                    this.sandbox.dom.find('#' + constants.selectAllName),
+                    'click',
+                    this.selectAllItems.bind(this)
+                );
+            }
+
+            // events for removing row
+            if (this.options.removeRow) {
+                this.sandbox.dom.on(
+                    this.$tableContainer, 'click', this.prepareRemoveRow.bind(this), '.' + constants.rowRemoverClass
+                );
+            }
+
+            // emits an event when a table row gets clicked
+            this.sandbox.dom.on(
+                this.$tableContainer, 'click',
+                this.emitRowClickedEvent.bind(this), 'tr'
+            );
+
+            // add editable events if configured
+            if (!!this.options.editable) {
+                this.sandbox.dom.on(
+                    this.$tableContainer, 'click', this.editCellValues.bind(this), '.' + constants.editableClass
+                );
+                this.sandbox.dom.on(this.$tableContainer, 'click', this.focusOnRow.bind(this), 'tr');
+
+                // save on "blur"
+                this.sandbox.dom.on(window, 'click', function() {
+                    if (!!this.lastFocusedRow) {
+                        this.prepareSave();
+                    }
+                }.bind(this));
+            }
+
+            // add sortable events if configured
+            if (datagrid.options.sortable) {
+                this.sandbox.dom.on(
+                    this.sandbox.dom.find('thead th[data-attribute]', this.$tableContainer),
+                    'click',
+                    this.prepareSort.bind(this)
+                );
+            }
+        },
+
+        /**
+         * Emits the row-clicked event
+         */
+        emitRowClickedEvent: function(event) {
+            var id = this.sandbox.dom.$(event.currentTarget).data('id');
+            if (!!id) {
+                this.sandbox.emit(ITEM_CLICK, id);
             } else {
-                this.$tableContainer = this.sandbox.dom.createElement('<div class="table-container"/>');
-                this.sandbox.dom.append(this.$element, this.$tableContainer);
-                this.sandbox.dom.append(this.$tableContainer, this.prepareTable());
+                this.sandbox.emit(ITEM_CLICK, event);
             }
+        },
 
-            return this;
+        /**
+         * Sets the components starting properties
+         */
+        setVariables: function() {
+            this.rendered = false;
+            this.$tableContainer = null;
+            this.$table = null;
+            this.$el = null;
+            this.data = null;
+            this.rowId = 0;
+            this.rowStructure = [];
+            this.errorInRow = [];
+            this.bottomTabIndex = this.options.startTabIndex || 49999;
+            this.topTabIndex = this.options.startTabIndex || 50000;
+
+            // initialize variables for needed for responsivness
+            if (!!this.options.contentContainer) {
+                if (this.sandbox.dom.css(this.options.contentContainer, 'max-width') === 'none') {
+                    this.originalMaxWidth = null;
+                } else {
+                    this.originalMaxWidth = datagrid.getNumberAndUnit(this.sandbox.dom.css(this.options.contentContainer, 'max-width')).number;
+                }
+                this.contentMarginRight = datagrid.getNumberAndUnit(this.sandbox.dom.css(this.options.contentContainer, 'margin-right')).number;
+                this.contentPaddings = datagrid.getNumberAndUnit(this.sandbox.dom.css(this.options.contentContainer, 'padding-right')).number;
+                this.contentPaddings += datagrid.getNumberAndUnit(this.sandbox.dom.css(this.options.contentContainer, 'padding-left')).number;
+            } else {
+                this.contentMarginRight = 0;
+                this.contentPaddings = 0;
+            }
+        },
+
+        /**
+         * Sets the header classes used for sorting purposes
+         * uses datagrid.sort
+         */
+        setHeaderClasses: function() {
+            var attribute = datagrid.sort.attribute,
+                direction = datagrid.sort.direction,
+                $element = this.sandbox.dom.find('thead th[data-attribute=' + attribute + ']', this.$tableContainer),
+                $span = this.sandbox.dom.children($element, 'span')[0];
+
+            if (!!attribute) {
+                this.sandbox.dom.addClass($element, constants.isSelectedClass);
+
+                if (direction === 'asc') {
+                    this.sandbox.dom.addClass($span, constants.ascClass + constants.additionalHeaderClasses);
+                } else {
+                    this.sandbox.dom.addClass($span, constants.descClass + constants.additionalHeaderClasses);
+                }
+            }
         },
 
         /**
@@ -27122,30 +28329,31 @@ define('__component__$datagrid@husky',[],function() {
 
             this.$table = $table = this.sandbox.dom.createElement('<table' + (!!this.options.validationDebug ? 'data-debug="true"' : '' ) + '/>');
 
-            if (!!this.data.head || !!this.options.columns) {
+            if (!!this.data.head || !!datagrid.matchings) {
                 $thead = this.sandbox.dom.createElement('<thead/>');
-                $thead.append(this.prepareTableHead());
-                $table.append($thead);
+                this.sandbox.dom.append($thead, this.prepareTableHead());
+                this.sandbox.dom.append($table, $thead);
             }
 
             if (!!this.data.embedded) {
-                if (!!this.options.appendTBody) {
-                    $tbody = this.sandbox.dom.$('<tbody/>');
-                }
+                $tbody = this.sandbox.dom.createElement('<tbody/>');
                 this.sandbox.dom.append($tbody, this.prepareTableRows());
                 this.sandbox.dom.append($table, $tbody);
             }
 
             // set html classes
             tblClasses = [];
-            tblClasses.push((!!this.options.className && this.options.className !== 'table') ? 'table ' + this.options.className : 'table');
+            tblClasses.push(
+                (!!this.options.className && this.options.className !== constants.tableClass) ? constants.tableClass +
+                ' ' + this.options.className : constants.tableClass
+            );
 
             // when list should not have the hover effect for whole rows do not set the is-selectable class
             if (!this.options.editable) {
-                tblClasses.push((this.options.selectItem && this.options.selectItem.type === 'checkbox') ? 'is-selectable' : '');
+                tblClasses.push((this.options.selectItem && this.options.selectItem.type === 'checkbox') ? constants.isSelectableClass : '');
             }
 
-            $table.addClass(tblClasses.join(' '));
+            this.sandbox.dom.addClass($table, tblClasses.join(' '));
 
             return $table;
         },
@@ -27160,23 +28368,27 @@ define('__component__$datagrid@husky',[],function() {
                 tblColumnStyle, minWidth;
 
             tblColumns = [];
-            headData = this.options.columns || this.data.head;
+            headData = datagrid.matchings || this.data.head;
 
             // add a checkbox to head row
-            if (!!this.options.selectItem && this.options.selectItem.type) {
-
+            if (!!this.options.selectItem && !!this.options.selectItem.type) {
                 // default values
                 if (this.options.selectItem.width) {
-                    checkboxValues = this.getNumberAndUnit(this.options.selectItem.width);
+                    checkboxValues = datagrid.getNumberAndUnit(this.options.selectItem.width);
                 }
-
                 minWidth = checkboxValues.number + checkboxValues.unit;
 
                 tblColumns.push(
-                    '<th class="select-all" ', 'style="width:' + minWidth + ';max-width:' + minWidth + ';min-width:' + minWidth + ';"', ' >');
+                    '<th class="'+ constants.selectAllName +'" ',
+                    'style="width:' + minWidth + '; max-width:' + minWidth + '; min-width:' + minWidth + ';"',
+                    ' >'
+                );
 
                 if (this.options.selectItem.type === 'checkbox') {
-                    tblColumns.push(this.templates.checkbox({ id: 'select-all' }));
+                    tblColumns.push(this.sandbox.util.template(templates.checkbox)({
+                        id: constants.selectAllName,
+                        checked: false
+                    }));
                 }
 
                 tblColumns.push('</th>');
@@ -27187,71 +28399,70 @@ define('__component__$datagrid@husky',[],function() {
             // value used for correct tabindex when row added at top of table
             this.tabIndexParam = 1;
 
-            headData.forEach(function(column) {
+            this.sandbox.util.foreach(headData, function(column) {
+                if (this.options.excludeFields.indexOf(column.attribute) < 0) {
+                    isSortable = false;
 
-                isSortable = false;
+                    if (!!datagrid.data.links && !!this.data.links.sortable) {
+                        //is column sortable - check with received sort-links
+                        this.sandbox.util.each(this.data.links.sortable, function(index) {
+                            if (index === column.attribute) {
+                                isSortable = true;
+                                return false;
+                            }
+                        }.bind(this));
+                    }
 
-                if (!!this.data.links && !!this.data.links.sortable) {
+                    // calculate width
+                    tblColumnStyle = [];
+                    if (column.width) {
+                        minWidth = column.width;
+                    } else if (column.minWidth) {
+                        minWidth = column.minWidth;
+                    } else {
+                        minWidth = getTextWidth.call(this, column.content, [], isSortable);
+                        minWidth = (minWidth > datagrid.getNumberAndUnit(this.options.columnMinWidth).number) ? minWidth + 'px' : this.options.columnMinWidth;
 
-                    //is column sortable - check with received sort-links
-                    this.sandbox.util.each(this.data.links.sortable, function(index) {
-                        if (index === column.attribute) {
-                            isSortable = true;
-                            return false;
+                    }
+                    tblColumnStyle.push('min-width:' + minWidth);
+                    column.minWidth = minWidth;
+
+                    // get width and measureunit
+                    if (!!column.width) {
+                        widthValues = datagrid.getNumberAndUnit(column.width);
+                        tblColumnStyle.push('max-width:' + widthValues.number + widthValues.unit);
+                        tblColumnStyle.push('width:' + widthValues.number + widthValues.unit);
+                    }
+
+                    // add to row structure when valid entry
+                    if (column.attribute !== undefined) {
+                        this.rowStructure.push({
+                            attribute: column.attribute,
+                            editable: column.editable,
+                            validation: column.validation,
+                            type: column.type
+                        });
+
+                        if (!!column.editable) {
+                            this.tabIndexParam++;
                         }
-                    }.bind(this));
-                }
+                    }
 
-                // calculate width
-                tblColumnStyle = [];
-                if (column.width) {
-                    minWidth = column.width;
-                } else if (column.minWidth) {
-                    minWidth = column.minWidth;
-                } else {
-                    minWidth = getTextWidth.call(this, column.content, [], isSortable);
-                    minWidth = (minWidth > this.getNumberAndUnit(this.options.columnMinWidth).number) ? minWidth + 'px' : this.options.columnMinWidth;
 
-                }
-                tblColumnStyle.push('min-width:' + minWidth);
-                column.minWidth = minWidth;
-
-                // get width and measureunit
-                if (!!column.width) {
-                    widthValues = this.getNumberAndUnit(column.width);
-                    tblColumnStyle.push('max-width:' + widthValues.number + widthValues.unit);
-                    tblColumnStyle.push('width:' + widthValues.number + widthValues.unit);
-                }
-
-                // add to row structure when valid entry
-                if (column.attribute !== undefined) {
-                    this.rowStructure.push({
-                        attribute: column.attribute,
-                        editable: column.editable,
-                        validation: column.validation,
-                        type: column.type
-                    });
-
-                    if (!!column.editable) {
-                        this.tabIndexParam++;
+                    // add html to table header cell if sortable
+                    if (!!isSortable) {
+                        dataAttribute = ' data-attribute="' + column.attribute + '"';
+                        tblCellClass = ((!!column.class) ? ' class="' + column.class + ' "' + constants.sortableClass : ' class="'+ constants.sortableClass +'"');
+                        tblColumns.push('<th' + tblCellClass + ' style="' + tblColumnStyle.join(';') + '" ' + dataAttribute + '>' + column.content + '<span></span></th>');
+                    } else {
+                        tblCellClass = ((!!column.class) ? ' class="' + column.class + '"' : '');
+                        tblColumns.push('<th' + tblCellClass + ' style="' + tblColumnStyle.join(';') + '" >' + column.content + '</th>');
                     }
                 }
-
-
-                // add html to table header cell if sortable
-                if (!!isSortable) {
-                    dataAttribute = ' data-attribute="' + column.attribute + '"';
-                    tblCellClass = ((!!column.class) ? ' class="' + column.class + ' is-sortable"' : ' class="is-sortable"');
-                    tblColumns.push('<th' + tblCellClass + ' style="' + tblColumnStyle.join(';') + '" ' + dataAttribute + '>' + column.content + '<span></span></th>');
-                } else {
-                    tblCellClass = ((!!column.class) ? ' class="' + column.class + '"' : '');
-                    tblColumns.push('<th' + tblCellClass + ' style="' + tblColumnStyle.join(';') + '" >' + column.content + '</th>');
-                }
-
             }.bind(this));
 
             // remove-row entry
-            if (this.options.removeRow || this.options.progressRow) {
+            if (!!this.options.removeRow) {
                 tblColumns.push('<th style="width:30px;"/>');
             }
 
@@ -27259,29 +28470,11 @@ define('__component__$datagrid@husky',[],function() {
         },
 
         /**
-         * returns number and unit
-         * @param numberUnit
-         * @returns {{number: Number, unit: *}}
-         */
-        getNumberAndUnit: function(numberUnit) {
-            numberUnit = String(numberUnit);
-            var regex = numberUnit.match(/(\d+)\s*(.*)/);
-            // no unit , set default
-            if (!regex[2]) {
-                regex[2] = this.options.defaultMeasureUnit;
-            }
-            return {number: parseInt(regex[1], 10), unit: regex[2]};
-        },
-
-        /**
          * Itterates over all items and prepares the rows
          * @returns {string} returns a string of all rows
          */
         prepareTableRows: function() {
-            var tblRows;
-
-            tblRows = [];
-            this.allItemIds = [];
+            var tblRows = [];
 
             if (!!this.data.embedded) {
                 this.data.embedded.forEach(function(row) {
@@ -27289,32 +28482,25 @@ define('__component__$datagrid@husky',[],function() {
                 }.bind(this));
             }
 
-            return tblRows.join('');
+            return tblRows;
         },
 
         /**
-         * Returns a table row including values and data attributes
-         * @param row
+         * Responsible for creating a single table-row
+         * @param row {Object} the data for a row
          * @param triggeredByAddRow
-         * @returns string table row
+         * @returns {*}
          */
         prepareTableRow: function(row, triggeredByAddRow) {
+            var $tableRow, radioPrefix, key, i;
 
             if (!!(this.options.template && this.options.template.row)) {
-
-                return this.sandbox.template.parse(this.options.template.row, row);
+                $tableRow = this.sandbox.template.parse(this.options.template.row, row);
 
             } else {
-
-                var radioPrefix, key, i;
                 this.tblColumns = [];
-                this.tblRowAttributes = ' data-dom-id="dom-' + this.options.instance + '-' + this.domId + '"';
-                this.domId++;
-
-                // special treatment for id
-                if (!!row.id) {
-                    this.tblRowAttributes += ' data-id="' + row.id + '"';
-                }
+                this.tblRowAttributes = ' data-dom-id="dom-' + this.options.instance + '-' + this.rowId + '"';
+                this.rowId++;
 
                 if (!!this.options.className && this.options.className !== '') {
                     radioPrefix = '-' + this.options.className;
@@ -27322,17 +28508,20 @@ define('__component__$datagrid@husky',[],function() {
                     radioPrefix = '';
                 }
 
-                !!row.id && this.allItemIds.push(parseInt(row.id, 10));
-
                 // add a checkbox to each row
                 if (!!this.options.selectItem.type && this.options.selectItem.type === 'checkbox') {
-                    this.tblColumns.push('<td>', this.templates.checkbox(), '</td>');
+                    this.tblColumns.push(this.sandbox.util.template(templates.checkboxCell)({
+                        checkbox: this.sandbox.util.template(templates.checkbox)({
+                            id: '',
+                            checked: !!row.selected
+                        })
+                    }));
 
                     // add a radio to each row
                 } else if (!!this.options.selectItem.type && this.options.selectItem.type === 'radio') {
-                    this.tblColumns.push('<td>', this.templates.radio({
+                    this.tblColumns.push(this.sandbox.util.template(templates.radio)({
                         name: 'husky-radio' + radioPrefix
-                    }), '</td>');
+                    }));
                 }
 
                 // when row structure contains more elements than the id then use the structure to set values
@@ -27342,7 +28531,7 @@ define('__component__$datagrid@husky',[],function() {
                         this.bottomTabIndex -= (this.tabIndexParam + 1);
                     }
 
-                    this.rowStructure.forEach(function(key, index) {
+                    this.sandbox.util.foreach(this.rowStructure, function(key, index) {
                         key.editable = key.editable || false;
                         this.createRowCell(key.attribute, row[key.attribute], key.type, key.editable, key.validation, triggeredByAddRow, index);
                     }.bind(this));
@@ -27358,13 +28547,17 @@ define('__component__$datagrid@husky',[],function() {
                 }
 
                 if (!!this.options.removeRow) {
-                    this.tblColumns.push('<td class="remove-row">', this.templates.removeRow(), '</td>');
-                } else if (!!this.options.progressRow) {
-                    this.tblColumns.push('<td class="progress-row">', this.templates.progressRow(), '</td>');
+                    this.tblColumns.push(this.sandbox.util.template(templates.removeRow)());
                 }
 
-                return '<tr' + this.tblRowAttributes + '>' + this.tblColumns.join('') + '</tr>';
+                $tableRow = this.sandbox.dom.createElement('<tr'+ this.tblRowAttributes +'>'+ this.tblColumns.join('') +'</tr>');
+
+                if (!!row.id) {
+                    this.sandbox.dom.data($tableRow, 'id', row.id);
+                    this.sandbox.dom.attr($tableRow, 'data-id', row.id);
+                }
             }
+            return $tableRow;
         },
 
         /**
@@ -27404,33 +28597,28 @@ define('__component__$datagrid@husky',[],function() {
                         validationAttr += ['data-validation-', k, '="', validation[k], '" '].join('');
                     }
                 }
-
-                tblCellStyle = 'style="max-width:' + this.options.columns[index].minWidth + '"';
+                tblCellStyle = 'style="max-width:' + datagrid.matchings[index].minWidth + '"';
 
                 // call the type manipulate to manipulate the content of the cell
                 if (!!type) {
-                    tblCellContent = this.manipulateCellContent(tblCellContent, type);
+                    tblCellContent = datagrid.manipulateContent(tblCellContent, type);
                 }
 
                 if (!!editable) {
-
                     if (!!triggeredByAddRow) {
-
                         // differentiate for tab index
                         if (!!this.options.addRowTop) {
-                            this.tblColumns.push('<td data-field="' + key + '" ' + tblCellClass + ' ><span class="editable" style="display: none">' + tblCellContent + '</span><input type="text" class="form-element editable-content" tabindex="' + this.bottomTabIndex + '" value="' + tblCellContent + '"  ' + validationAttr + '/></td>');
+                            this.tblColumns.push('<td data-field="' + key + '" ' + tblCellClass + ' ><span class="'+ constants.editableClass +'" style="display: none">' + tblCellContent + '</span><input type="text" class="form-element editable-content" tabindex="' + this.bottomTabIndex + '" value="' + tblCellContent + '"  ' + validationAttr + '/></td>');
                             this.bottomTabIndex++;
                         } else {
-                            this.tblColumns.push('<td data-field="' + key + '" ' + tblCellClass + ' ><span class="editable" style="display: none">' + tblCellContent + '</span><input type="text" class="form-element editable-content" tabindex="' + this.topTabIndex + '" value="' + tblCellContent + '"  ' + validationAttr + '/></td>');
+                            this.tblColumns.push('<td data-field="' + key + '" ' + tblCellClass + ' ><span class="'+ constants.editableClass +'" style="display: none">' + tblCellContent + '</span><input type="text" class="form-element editable-content" tabindex="' + this.topTabIndex + '" value="' + tblCellContent + '"  ' + validationAttr + '/></td>');
                             this.topTabIndex++;
                         }
-
                     } else {
-                        this.tblColumns.push('<td data-field="' + key + '" ' + tblCellClass + ' ><span class="editable">' + tblCellContent + '</span><input type="text" class="form-element editable-content hidden" value="' + tblCellContent + '" tabindex="' + this.topTabIndex + '" ' + validationAttr + '/></td>');
+                        this.tblColumns.push('<td data-field="' + key + '" ' + tblCellClass + ' ><span class="'+ constants.editableClass +'">' + tblCellContent + '</span><input type="text" class="form-element editable-content hidden" value="' + tblCellContent + '" tabindex="' + this.topTabIndex + '" ' + validationAttr + '/></td>');
                         this.topTabIndex++;
 
                     }
-
                 } else {
                     this.tblColumns.push('<td data-field="' + key + '" ' + tblCellClass + ' ' + tblCellStyle + '>' + tblCellContent + '</td>');
                 }
@@ -27440,170 +28628,12 @@ define('__component__$datagrid@husky',[],function() {
         },
 
         /**
-         * Manipulates the content of a cell with a process realted to the columns type
-         * @param content {String} the content of the cell
-         * @param type {String} the columns type
-         * @returns {String} the manipualted content
-         */
-        manipulateCellContent: function(content, type) {
-            if (type === types.DATE) {
-                content = this.parseDate(content);
-            }
-            return content;
-        },
-
-        /**
-         * Brings a date into the right format
-         * @param date {String} the date to parse
-         * @returns {String}
-         */
-        parseDate: function(date) {
-            var parsedDate = this.sandbox.date.format(date);
-            if (parsedDate !== null) {
-                return parsedDate;
-            }
-            return date;
-        },
-
-        /**
-         * Resets the arrays for selected items
-         */
-        resetItemSelection: function() {
-            this.allItemIds = [];
-            this.selectedItemIds = [];
-        },
-
-        /**
-         * Selectes or deselects the clicked item
-         * @param event
-         */
-        selectItem: function(event) {
-
-            event.stopPropagation();
-
-            // Todo review handling of events for new rows in datagrid (itemId empty?)
-
-            var $element, itemId, oldSelectionId, parentTr;
-
-            $element = this.sandbox.dom.$(event.currentTarget);
-
-            if (!$element.is('input')) {
-                $element = this.sandbox.dom.find('input', this.sandbox.dom.parent($element));
-            }
-
-            parentTr = this.sandbox.dom.parents($element, 'tr');
-            itemId = this.sandbox.dom.data(parentTr, 'id');
-
-            if ($element.attr('type') === 'checkbox') {
-
-                if (this.sandbox.dom.prop($element, 'checked') === false) {
-                    $element
-                        .removeClass('is-selected')
-                        .prop('checked', false);
-
-                    // uncheck 'Select All'-checkbox
-                    $('th.select-all')
-                        .find('input[type="checkbox"]')
-                        .prop('checked', false);
-
-                    this.selectedItemIds.splice(this.selectedItemIds.indexOf(itemId), 1);
-                    this.sandbox.emit(ITEM_DESELECT, itemId);
-                } else {
-                    $element
-                        .addClass('is-selected')
-                        .prop('checked', true);
-
-                    if (!!itemId) {
-                        this.selectedItemIds.push(itemId);
-                        this.sandbox.emit(ITEM_SELECT, itemId);
-                    } else {
-                        this.sandbox.emit(ITEM_SELECT, event);
-                    }
-                }
-
-                this.sandbox.emit(NUMBER_SELECTIONS, this.getIdsOfSelectedRows().length);
-
-            } else if ($element.attr('type') === 'radio') {
-
-                oldSelectionId = this.selectedItemIds.pop();
-
-                if (!!oldSelectionId && oldSelectionId > -1) {
-                    this.sandbox.dom.$('tr[data-id="' + oldSelectionId + '"]').find('input[type="radio"]').removeClass('is-selected').prop('checked', false);
-                    this.sandbox.emit(ITEM_DESELECT, oldSelectionId);
-                }
-
-                $element.addClass('is-selected').prop('checked', true);
-
-                if (!!itemId) {
-                    this.selectedItemIds.push(itemId);
-                    this.sandbox.emit(ITEM_SELECT, itemId);
-                } else {
-                    this.sandbox.emit(ITEM_SELECT, event);
-                }
-                this.sandbox.emit(NUMBER_SELECTIONS, this.selectedItemIds.length);
-            }
-
-        },
-
-        /**
-         * Selects or deselect all available items of the list
-         * @param event
-         */
-        selectAllItems: function(event) {
-
-            event.stopPropagation();
-
-            var $headCheckbox = this.sandbox.dom.find('th input[type="checkbox"]', this.$el)[0],
-                $checkboxes = this.sandbox.dom.find('input[type="checkbox"]', this.$el),
-                selectedElements,
-                tmp;
-
-            if (this.sandbox.dom.prop($headCheckbox, 'checked') === false) {
-                this.sandbox.dom.prop($checkboxes, 'checked', false);
-                this.sandbox.dom.removeClass($checkboxes, 'is-selected');
-                this.sandbox.emit(ALL_DESELECT);
-            } else {
-                this.sandbox.dom.prop($checkboxes, 'checked', true);
-                this.sandbox.dom.addClass($checkboxes, 'is-selected');
-                this.sandbox.emit(ALL_SELECT, this.getIdsOfSelectedRows());
-            }
-
-            tmp = this.sandbox.dom.find('input[type="checkbox"]:checked', this.$el).length - 1;
-            selectedElements = tmp > 0 ? tmp : 0;
-
-            this.sandbox.emit(NUMBER_SELECTIONS, selectedElements);
-        },
-
-
-        /**
-         * Returns an array with the ids of the selected rows
-         */
-        getIdsOfSelectedRows: function() {
-            var $checkboxes = this.sandbox.dom.find('input[type=checkbox]:checked', this.$el),
-                ids = [],
-                id,
-                $tr;
-
-            this.sandbox.util.each($checkboxes, function(index, $checkbox) {
-                $tr = this.sandbox.dom.closest($checkbox, 'tr');
-                id = this.sandbox.dom.data($tr, 'id');
-                if (!!id) {
-                    ids.push(id);
-                }
-
-            }.bind(this));
-
-            return ids;
-        },
-
-        /**
          * Adds a row to the datagrid
          * @param row
          */
-        addRow: function(row) {
-            var $table, $row, $firstInputField, $checkbox;
+        addRecord: function(row) {
+            var $row, $firstInputField, $checkbox;
             // check for other element types when implemented
-            $table = this.$element.find('table');
             $row = this.sandbox.dom.$(this.prepareTableRow(row, true));
 
             // when unsaved new row exists - save it
@@ -27611,9 +28641,9 @@ define('__component__$datagrid@husky',[],function() {
 
             // prepend or append row
             if (!!this.options.addRowTop) {
-                this.sandbox.dom.prepend($table, $row);
+                this.sandbox.dom.prepend(this.$table, $row);
             } else {
-                this.sandbox.dom.append($table, $row);
+                this.sandbox.dom.append(this.$table, $row);
             }
 
             $firstInputField = this.sandbox.dom.find('input[type=text]', $row)[0];
@@ -27623,594 +28653,23 @@ define('__component__$datagrid@husky',[],function() {
                 this.lastFocusedRow = this.getInputValuesOfRow($row);
             }
 
-            // TODO fix validation for new rows
-//            if (!!this.options.validation) {
-            // add new row to validation context and add contraints to element
-//                $editableFields = this.sandbox.dom.find('input[type=text]', $row);
-
-//                this.sandbox.util.foreach($editableFields, function($el, i) {
-//                    this.sandbox.form.addField('#' + this.elId, $el);
-
-//                    validation = this.options.columns[i].validation;
-//                    for (var key in validation) {
-//                        this.sandbox.form.addConstraint('#' + this.elId, $el, key, {key: validation[key]});
-//                    }
-//                }.bind(this));
-
-//            }
-
             // if allchecked then disable top checkbox after adding new row
             if (!!this.options.selectItem.type && this.options.selectItem.type === 'checkbox') {
-                $checkbox = this.sandbox.dom.find('#select-all', this.$el);
-                if (this.sandbox.dom.hasClass($checkbox, 'is-selected')) {
+                $checkbox = this.sandbox.dom.find('#' + constants.selectAllName, this.$tableContainer);
+                if (this.sandbox.dom.hasClass($checkbox, constants.isSelectedClass)) {
                     this.sandbox.dom.prop($checkbox, 'checked', false);
-                    this.sandbox.dom.removeClass($checkbox, 'is-selected');
+                    this.sandbox.dom.removeClass($checkbox, constants.isSelectedClass);
                 }
             }
-        },
-
-        /**
-         * Prepares for removing a row
-         * Raises the husky.datagrid.row.remove-click event when auto remove handling is not set to true
-         * @param event
-         */
-        prepareRemoveRow: function(event) {
-            if (!!this.options.autoRemoveHandling) {
-                this.removeRow(event);
-            } else {
-                var $tblRow, id;
-
-                $tblRow = this.sandbox.dom.$(event.currentTarget).parent().parent();
-                id = $tblRow.data('id');
-
-                if (!!id) {
-                    this.sandbox.emit(ROW_REMOVE_CLICK, event, id);
-                } else {
-                    this.sandbox.emit(ROW_REMOVE_CLICK, event, $tblRow);
-                }
-            }
-        },
-
-        /**
-         * Removes a row from the datagrid
-         * Raises husky.datagrid.row.removed event
-         * @param event
-         */
-        removeRow: function(event) {
-
-            var $element, $tblRow, id, $editableElements, $checkboxes;
-
-            if (typeof event === 'object') {
-                $element = this.sandbox.dom.$(event.currentTarget);
-                $tblRow = this.sandbox.dom.closest($element, 'tr')[0];
-                id = this.sandbox.dom.data($tblRow, 'id');
-            } else {
-                id = event;
-                $tblRow = this.sandbox.dom.find('tr[data-id="' + id + '"]')[0];
-            }
-
-            // remove row elements from validation
-            if (!!this.options.validation) {
-                $editableElements = this.sandbox.dom.find('.editable', $tblRow);
-                this.sandbox.util.each($editableElements, function(index, $element) {
-                    this.sandbox.form.removeField('#' + this.elId, $element);
-                }.bind(this));
-            }
-
-            this.sandbox.emit(ROW_REMOVED, event);
-            this.sandbox.dom.remove($tblRow);
-
-            // when last table row was removed, uncheck thead checkbox if exists
-            $checkboxes = this.sandbox.dom.find('input[type=checkbox]', this.$el);
-            if ($checkboxes.length === 1) {
-                this.sandbox.dom.removeClass('is-selected', $checkboxes[0]);
-                this.sandbox.dom.prop($checkboxes[0], 'checked', false);
-            }
-
-        },
-
-        // TODO: create pagination module
-        /**
-         * Appends pagination when option is set
-         * @returns {*}
-         */
-        appendPagination: function() {
-
-            if (this.options.pagination && !!this.data.links) {
-                this.initPaginationIds();
-                this.$element.append(this.preparePagination());
-                this.preparePaginationDropdown();
-                this.prepareShowElementsDropdown();
-            }
-            return this;
-        },
-
-        /**
-         * inits the dom ids needed for the pagination
-         */
-        initPaginationIds: function() {
-            this.pagination = {
-                prevId: this.options.instance + '-prev',
-                nextId: this.options.instance + '-next',
-                dropdownId: this.options.instance + '-pagination-dropdown',
-                showElementsId: this.options.instance + '-show-elements'
-            };
-        },
-
-        /**
-         * Delegates the rendering of the pagination when pagination is needed
-         * @returns {*}
-         */
-        preparePagination: function() {
-            var $pagination,
-                $paginationWrapper,
-                $showElements,
-                paginationLabel;
-
-
-            $paginationWrapper = this.sandbox.dom.$('<div/>');
-            $paginationWrapper.addClass('pagination-wrapper m-top-20 grid-row small-font');
-
-            // if first defined step is bigger than the number of all elements don't display show-elements dropdown
-            if (this.data.numberOfAll > this.options.showElementsSteps[0]) {
-                $showElements = this.sandbox.dom.$(this.templates.showElements.call(this, this.pagination.showElementsId));
-                $paginationWrapper.append($showElements);
-            }
-
-            if (!!this.options.pagination && parseInt(this.data.pages, 10) > 1) {
-                $pagination = this.sandbox.dom.$('<div/>');
-                $pagination.addClass('pagination');
-
-                $paginationWrapper.append($pagination);
-
-                paginationLabel = this.renderPaginationRow(this.data.page, this.data.pages);
-
-                $pagination.append('<div id="' + this.pagination.nextId + '" class="pagination-prev pull-right pointer"></div>');
-                $pagination.append('<div id="' + this.pagination.dropdownId + '" class="pagination-main pull-right pointer"><span class="inline-block">' + paginationLabel + '</span><span class="dropdown-toggle inline-block"></span></div>');
-                $pagination.append('<div id="' + this.pagination.prevId + '" class="pagination-next pull-right pointer"></div>');
-            }
-
-            return $paginationWrapper;
-        },
-
-
-        /**
-         * Renders template for one row in the pagination
-         * @param i current page number
-         * @param pages total number of pages
-         */
-        renderPaginationRow: function(i, pages) {
-            var defaults = {
-                translate: this.sandbox.translate,
-                i: i,
-                pages: pages
-            };
-
-            return this.sandbox.util.template(this.options.paginationTemplate, defaults);
-        },
-
-        /**
-         * Prepares and initializes the dropdown used for the pagination
-         */
-        preparePaginationDropdown: function() {
-
-            var data = [], i, name;
-
-            for (i = 1; i <= this.data.pages; i++) {
-                name = this.renderPaginationRow(i, this.data.pages);
-                data.push({id: i, name: name});
-            }
-
-            this.sandbox.start([
-                {
-                    name: 'dropdown@husky',
-                    options: {
-                        el: this.sandbox.dom.find('#' + this.pagination.dropdownId, this.$el),
-                        setParentDropDown: true,
-                        instanceName: this.dropdownInstanceName,
-                        alignment: 'right',
-                        data: data
-                    }
-                }
-            ]);
-        },
-
-        /**
-         * Prepares and initializes the dropdown for showing elements
-         */
-        prepareShowElementsDropdown: function() {
-            var i, length, data = [];
-
-            for(i = -1, length = this.options.showElementsSteps.length; ++i < length;) {
-                if (this.options.showElementsSteps[i] > this.data.numberOfAll) {
-                    break;
-                }
-                data.push({
-                    id: this.options.showElementsSteps[i],
-                    name: '<strong>'+ this.options.showElementsSteps[i] +'</strong> ' + this.sandbox.translate('pagination.elements-per-page')
-                });
-            }
-
-            data.push({divider: true});
-            data.push({
-               id: 0,
-               name: this.sandbox.translate('pagination.show-all-elements')
-            });
-
-            this.sandbox.start([
-                {
-                    name: 'dropdown@husky',
-                    options: {
-                        el: this.sandbox.dom.find('#' + this.pagination.showElementsId, this.$el),
-                        setParentDropDown: true,
-                        instanceName: this.dropdownInstanceName + '-show',
-                        alignment: 'left',
-                        data: data
-                    }
-                }
-            ]);
-        },
-
-        /**
-         * Called when the current page should change
-         * Emits husky.datagrid.updated event on success
-         * @param uri
-         * @param event
-         */
-        changePage: function(uri, event) {
-            var url, template;
-
-            // when a valid uri is passed to this function - load from the uri
-            if (!!uri) {
-                if (!!event) {
-                    event.preventDefault();
-                }
-                url = uri;
-
-                // determine wether the page number received via the event from the dropdown is valid
-            } else if (!!event.id && event.id > 0 && event.id <= this.data.pages) {
-                template = this.sandbox.uritemplate.parse(this.data.links.pagination);
-                url = this.sandbox.uritemplate.expand(template, {page: event.id, pageSize: this.data.pageSize});
-
-                // invalid - whether page number nor uri are valid
-            } else {
-                this.sandbox.logger.log("invalid page number or reached start/end!");
-                return;
-            }
-
-            this.sandbox.emit(PAGE_CHANGE, url);
-            this.addLoader();
-            this.load({url: url,
-                success: function() {
-                    this.removeLoader();
-                    this.sandbox.emit(UPDATED, 'updated page');
-                }.bind(this)});
-        },
-
-        resetSortingOptions: function() {
-            this.sort.attribute = null;
-            this.sort.direction = null;
-        },
-
-        bindDOMEvents: function() {
-
-            // remove all events - prevents multiple events
-            this.sandbox.dom.unbind(this.sandbox.dom.find('*', this.$el));
-            this.sandbox.dom.unbind(this.$el);
-            this.sandbox.dom.unbind(window, 'click');
-
-            if (!!this.options.selectItem.type && this.options.selectItem.type === 'checkbox') {
-                this.$element.on('click', 'tbody > tr input[type="checkbox"]', this.selectItem.bind(this));
-                this.$element.on('click', 'th.select-all', this.selectAllItems.bind(this));
-            } else if (!!this.options.selectItem.type && this.options.selectItem.type === 'radio') {
-                this.$element.on('click', 'tbody > tr input[type="radio"]', this.selectItem.bind(this));
-            }
-
-            this.$element.on('click', 'tbody > tr', function(event) {
-                if (!this.sandbox.dom.$(event.target).is('input') && !this.sandbox.dom.$(event.target).is('span.icon-remove')) {
-                    var id = this.sandbox.dom.$(event.currentTarget).data('id');
-
-                    if (!!id) {
-                        this.sandbox.emit(ITEM_CLICK, id);
-                    } else {
-                        this.sandbox.emit(ITEM_CLICK, event);
-                    }
-                }
-            }.bind(this));
-
-            if (this.options.pagination) {
-
-                // next page
-                this.$element.on('click', '#' + this.pagination.nextId, this.changePage.bind(this, this.data.links.next));
-
-                // previous page
-                this.$element.on('click', '#' + this.pagination.prevId, this.changePage.bind(this, this.data.links.prev));
-            }
-
-            if (this.options.removeRow) {
-                this.$element.on('click', '.remove-row > span', this.prepareRemoveRow.bind(this));
-            }
-
-            if (this.options.sortable) {
-                this.sandbox.dom.on(this.$el, 'click', this.changeSorting.bind(this), 'thead th[data-attribute]');
-            }
-
-            if (!!this.options.editable) {
-                this.sandbox.dom.on(this.$el, 'click', this.editCellValues.bind(this), '.editable');
-
-                // FIXME does not work with focus - causes endless loop in some cases (husky-validation?)
-                this.sandbox.dom.on(this.$el, 'click', this.focusOnRow.bind(this), 'tr');
-
-                this.sandbox.dom.on(this.$el, 'click', function(event) {
-                    event.stopPropagation();
-                }, 'tr');
-
-                this.sandbox.dom.on(window, 'click', function() {
-                    if (!!this.lastFocusedRow) {
-                        this.prepareSave();
-                    }
-                }.bind(this));
-            }
-
-            this.sandbox.dom.on(this.sandbox.dom.window, 'resize', this.windowResizeListener.bind(this));
-
-
-            // Todo trigger event when click on clickable area
-            // trigger event when click on clickable area
-            // different handling when clicked on checkbox and when clicked on td
-
-            // if (this.options.selectItem && !this.options.selectItem.clickable)
-            //     this.$element.on('click', 'tbody tr td:first-child()', function(event) {
-
-            //         // change checked state
-            //         var $input = this.sandbox.dom.$(event.target).find("input");
-            //         $input.prop("checked", !$input.prop("checked"));
-
-            //         itemId = this.sandbox.dom.$(event.target).parents('tr').data('id');
-
-            // if(!!itemId){
-            //     this.selectedItemIds.push(itemId);
-            //     this.sandbox.once('husky.datagrid.item.select', itemId);
-            // } else {
-            //     this.sandbox.once('husky.datagrid.item.select', event);
-            // }
-
-            // stop propagation
-            //         event.stopPropagation();
-            // }.bind(this));
-        },
-
-        /**
-         * Shows input and hides span
-         * @param event
-         */
-        editCellValues: function(event) {
-            var $target = event.currentTarget,
-                $input = this.sandbox.dom.next($target, 'input');
-
-            this.lockWidthsOfColumns(this.sandbox.dom.find('table th', this.$el));
-
-            this.sandbox.dom.hide($target);
-            this.sandbox.dom.removeClass($input, 'hidden');
-            $input[0].select();
-        },
-
-        /**
-         * Makes the widths of columns fixed when the table is in edit mode
-         * prevents changes in column width
-         * @param $th array of th elements
-         */
-        lockWidthsOfColumns: function($th) {
-
-            var width, minwidth;
-            this.columnWidths = [];
-
-            this.sandbox.dom.each($th, function(index, $el) {
-                minwidth = this.sandbox.dom.css($el, 'min-width');
-                this.columnWidths.push(minwidth);
-
-                width = this.sandbox.dom.outerWidth($el);
-                this.sandbox.dom.css($el, 'min-width', width);
-                this.sandbox.dom.css($el, 'max-width', width);
-                this.sandbox.dom.css($el, 'width', width);
-            }.bind(this));
-        },
-
-        /**
-         * Resets the min-width of columns and
-         * @param $th array of th elements
-         */
-        unlockWidthsOfColumns: function($th) {
-            if (!!this.columnWidths) {
-                this.sandbox.dom.each($th, function(index, $el) {
-                    // skip columns without data-attribute because the have min/max and normal widths by default
-                    if (!!this.sandbox.dom.data($el, 'attribute')) {
-                        this.sandbox.dom.css($el, 'min-width', this.columnWidths[index]);
-                        this.sandbox.dom.css($el, 'max-width', '');
-                        this.sandbox.dom.css($el, 'width', '');
-                    }
-                }.bind(this));
-            }
-        },
-
-        /**
-         * Sets header classes and loads new data
-         * Emits husky.datagrid.updated event on success
-         * @param event
-         */
-        changeSorting: function(event) {
-
-            var attribute = this.sandbox.dom.data(event.currentTarget, 'attribute'),
-                $element = event.currentTarget,
-                $span = this.sandbox.dom.children($element, 'span')[0],
-                url, template;
-
-            if (!!attribute && !!this.data.links.sortable[attribute]) {
-
-                this.sandbox.emit(DATA_SORT);
-                this.sort.attribute = attribute;
-
-                if (this.sandbox.dom.hasClass($span, this.sort.ascClass)) {
-                    this.sort.direction = "desc";
-                } else {
-                    this.sort.direction = "asc";
-                }
-
-                this.addLoader();
-                template = this.sandbox.uritemplate.parse(this.data.links.sortable[attribute]);
-                url = this.sandbox.uritemplate.expand(template, {sortOrder: this.sort.direction});
-
-                this.load({
-                    url: url,
-                    success: function() {
-                        this.removeLoader();
-                        this.sandbox.emit(UPDATED, 'updated sort');
-                    }.bind(this)
-                });
-            }
-        },
-
-        /**
-         * Sets the header classes used for sorting purposes
-         * needs this.sort to be correctly initialized
-         */
-        setHeaderClasses: function() {
-            var attribute = this.sort.attribute,
-                direction = this.sort.direction,
-                $element = this.sandbox.dom.find('thead th[data-attribute=' + attribute + ']', this.$element),
-                $span = this.sandbox.dom.children($element, 'span')[0];
-
-            if (!!attribute) {
-
-                this.sandbox.dom.addClass($element, 'is-selected');
-
-                if (direction === 'asc') {
-                    this.sandbox.dom.addClass($span, this.sort.ascClass + this.sort.additionalClasses);
-                } else {
-                    this.sandbox.dom.addClass($span, this.sort.descClass + this.sort.additionalClasses);
-                }
-
-            }
-        },
-
-        bindCustomEvents: function() {
-            var searchInstanceName = '', columnOptionsInstanceName = '';
-
-            this.sandbox.on('husky.navigation.size.changed', this.windowResizeListener.bind(this));
-
-            // listen for private events
-            this.sandbox.on(UPDATE, this.updateHandler.bind(this));
-
-            // listen for public events
-            this.sandbox.on(ROW_ADD, this.addRow.bind(this));
-
-            this.sandbox.on(ROW_REMOVE, this.removeRow.bind(this));
-
-            // trigger selectedItems
-            this.sandbox.on(ITEMS_GET_SELECTED, this.getSelectedItemsIds.bind(this));
-
-            // checks tablel width
-            this.sandbox.on(UPDATE_TABLE, this.windowResizeListener.bind(this));
-
-            this.sandbox.on(DATA_GET, this.provideData.bind(this));
-
-            // filter data
-            this.sandbox.on(DATA_SEARCH, this.triggerSearch.bind(this));
-
-            // filter data
-            this.sandbox.on(URL_UPDATE, this.updateUrl.bind(this));
-
-            // pagination dropdown item clicked
-            this.sandbox.on('husky.dropdown.' + this.dropdownInstanceName + '.item.click', this.changePage.bind(this, null));
-
-            // show-elements dropdown item clicked
-            this.sandbox.on('husky.dropdown.datagrid-pagination-dropdown-show.item.click', function(item) {
-                if (this.data.pageSize !== item.id || this.data.total === this.data.numberOfAll) {
-                    // show all
-                    if (item.id === 0) {
-                        // only if not already all are shown
-                        if (this.data.total !== this.data.numberOfAll) {
-                            this.changePage(this.data.links.all);
-                        }
-                    } else {
-                        this.data.pageSize = item.id;
-                        this.changePage(null, {id: 1});
-                    }
-                }
-            }.bind(this));
-
-            // listen to search events
-            if (!!this.options.searchInstanceName) {
-                if (this.options.searchInstanceName !== '') {
-                    searchInstanceName = '.' + this.options.searchInstanceName;
-                }
-                this.sandbox.on('husky.search' + searchInstanceName, this.triggerSearch.bind(this));
-                this.sandbox.on('husky.search' + searchInstanceName + '.reset', this.triggerSearch.bind(this, ''));
-            }
-
-            // listen to search events
-            if (this.options.columnOptionsInstanceName || this.options.columnOptionsInstanceName === '') {
-                columnOptionsInstanceName = (this.options.columnOptionsInstanceName !== '') ? '.' + this.options.columnOptionsInstanceName : '';
-                this.sandbox.on('husky.column-options' + columnOptionsInstanceName + '.saved', this.filterColumns.bind(this));
-            }
-        },
-
-
-        /**
-         * Put focus on table row and remember values
-         */
-        focusOnRow: function(event) {
-
-            var $tr = event.currentTarget,
-                domId = this.sandbox.dom.data($tr, 'dom-id');
-
-            this.sandbox.logger.log("focus on row", domId);
-
-            if (!!this.lastFocusedRow && this.lastFocusedRow.domId !== domId) { // new focus
-                this.prepareSave();
-                this.lastFocusedRow = this.getInputValuesOfRow($tr);
-                this.sandbox.logger.log("focused " + this.lastFocusedRow.domId + " now!");
-            } else if (!this.lastFocusedRow) { // first focus
-                this.lastFocusedRow = this.getInputValuesOfRow($tr);
-                this.sandbox.logger.log("focused " + this.lastFocusedRow.domId + " now!");
-            }
-        },
-
-        /**
-         * Returns an object with the current values of the inputfields, id and domId
-         * @param $tr table row
-         * @returns {{domId: *, id: *, fields: Array}}
-         */
-        getInputValuesOfRow: function($tr) {
-
-            var id = this.sandbox.dom.data($tr, 'id'),
-                domId = this.sandbox.dom.data($tr, 'dom-id'),
-                $inputs = this.sandbox.dom.find('input[type=text]', $tr),
-                fields = [], field, $td;
-
-            this.sandbox.dom.each($inputs, function(index, $input) {
-                $td = this.sandbox.dom.parent($input, 'td');
-                field = this.sandbox.dom.data($td, 'field');
-
-                fields[field] = $input.value;
-
-            }.bind(this));
-            return {
-                domId: domId,
-                id: id,
-                fields: fields
-            };
-
         },
 
         /**
          * Perparse to save new/changed data includes validation
          */
         prepareSave: function() {
-
             if (!!this.lastFocusedRow) {
 
-                var $tr = this.sandbox.dom.find('tr[data-dom-id=' + this.lastFocusedRow.domId + ']', this.$el),
+                var $tr = this.sandbox.dom.find('tr[data-dom-id=' + this.lastFocusedRow.domId + ']', this.$tableContainer),
                     lastFocusedRowCurrentData = this.getInputValuesOfRow($tr),
 
                     data = {},
@@ -28223,7 +28682,7 @@ define('__component__$datagrid@husky',[],function() {
                 data.id = lastFocusedRowCurrentData.id;
 
                 // validate locally
-                if (!!this.options.validation && !this.sandbox.form.validate('#' + this.elId)) {
+                if (!!this.options.validation && !this.sandbox.form.validate('#' + datagrid.elId)) {
                     isValid = false;
                 }
 
@@ -28241,19 +28700,14 @@ define('__component__$datagrid@husky',[],function() {
                     }
 
                     // trigger save action when data changed
-                    if (!!valuesChanged) {
+                    if (!!valuesChanged || true) {
+                        url = datagrid.getUrlWithoutParams();
 
-                        this.sandbox.emit(DATA_CHANGED);
-                        url = this.getUrlWithoutParams();
-
-                        // save via put
-                        if (!!data.id) {
-                            this.save(data, 'PUT', url + '/' + data.id, $tr, this.lastFocusedRow.domId);
-
-                            // save via post
-                        } else {
-                            this.save(data, 'POST', url, $tr, this.lastFocusedRow.domId);
-                        }
+                        // pass data to datagrid to save it
+                        datagrid.saveGrid.call(datagrid, data, url,
+                            this.saveSuccess.bind(this, this.lastFocusedRow.domId, $tr),
+                            this.saveFail.bind(this, this.lastFocusedRow.domId, $tr),
+                            this.options.addRowTop);
 
                         // reset last focused row after save
                         this.lastFocusedRow = null;
@@ -28280,7 +28734,6 @@ define('__component__$datagrid@husky',[],function() {
          * @param data fields object
          */
         isDataRowEmpty: function(data) {
-
             var isEmpty = true, field;
 
             for (field in data) {
@@ -28293,73 +28746,106 @@ define('__component__$datagrid@husky',[],function() {
             return isEmpty;
         },
 
-
         /**
-         * Returns url without params
+         * Callback for save success
+         * @param $tr
+         * @param domId
+         * @param data
          */
-        getUrlWithoutParams: function() {
-            var url = this.data.links.self;
-
-            if (url.indexOf('?') !== -1) {
-                return url.substring(0, url.indexOf('?'));
+        saveSuccess: function(domId, $tr, data) {
+            // remove row from error list
+            if (this.errorInRow.indexOf(domId) !== -1) {
+                this.errorInRow.splice(this.errorInRow.indexOf(domId), 1);
             }
 
-            return url;
+            this.resetRowInputFields($tr);
+            this.unlockWidthsOfColumns(this.sandbox.dom.find('table th', this.$el));
+
+            // set new returned data
+            this.setDataForRow($tr[0], data);
         },
 
         /**
-         * Saves changes
-         * @param data
-         * @param method
-         * @param url
-         * @param $tr table row
+         * Callback for save fail
          * @param domId
+         * @param $tr
+         * @param jqXHR
          */
-        save: function(data, method, url, $tr, domId) {
+        saveFail: function(domId, $tr, jqXHR) {
+            var message = JSON.parse(jqXHR.responseText);
 
-            var message;
-
-            this.sandbox.logger.log("data to save", data);
-            this.showLoadingIconForRow($tr);
-
-            this.sandbox.util.save(url, method, data)
-                .then(function(data, textStatus) {
-
-                    // remove row from error list
-                    if (this.errorInRow.indexOf(domId) !== -1) {
-                        this.errorInRow.splice(this.errorInRow.indexOf(domId), 1);
-                    }
-
-                    this.sandbox.emit(DATA_SAVED, data, textStatus);
-                    this.hideLoadingIconForRow($tr);
-                    this.resetRowInputFields($tr);
-                    this.unlockWidthsOfColumns(this.sandbox.dom.find('table th', this.$el));
-
-                    // set new returned data
-                    this.setDataForRow($tr[0], data);
-
-                }.bind(this))
-                .fail(function(jqXHR, textStatus, error) {
-                    this.sandbox.emit(DATA_SAVE_FAILED, textStatus, error);
-                    this.hideLoadingIconForRow($tr);
-
-                    // remember row with error
-                    if (this.errorInRow.indexOf(domId) === -1) {
-                        this.errorInRow.push(domId);
-                    }
-
-                    message = JSON.parse(jqXHR.responseText);
-
-                    // error in context with database constraints
-                    if (!!message.field) {
-                        this.showValidationError($tr, message.field);
-                    } else {
-                        this.sandbox.logger.error("An error occured during save of changed data!");
-                    }
-
-                }.bind(this));
+            // remember row with error
+            if (this.errorInRow.indexOf(domId) === -1) {
+                this.errorInRow.push(domId);
+            }
+            // error in context with database constraints
+            if (!!message.field) {
+                this.showValidationError($tr, message.field);
+            }
         },
 
+        /**
+         *  Hides input fields and displays new content for table row
+         * @param $tr
+         */
+        resetRowInputFields: function($tr) {
+            var $inputFields = this.sandbox.dom.find('input[type=text]:not(.hidden)', $tr),
+                content, $span;
+
+            this.sandbox.util.each($inputFields, function(index, $field) {
+
+                // remove css class for server side validation error
+                // TODO: remove this when server-validation validation type is implemented
+                if (this.sandbox.dom.hasClass($field, constants.serverValidationError)) {
+                    this.sandbox.dom.removeClass($field, constants.serverValidationError);
+                }
+
+                content = this.sandbox.dom.val(this.sandbox.dom.$($field));
+                $span = this.sandbox.dom.prev($field, '.' + constants.editableClass);
+                $span.text(content);
+
+                this.sandbox.dom.addClass($field, 'hidden');
+                this.sandbox.dom.show($span);
+
+            }.bind(this));
+        },
+
+        /**
+         * Resets the min-width of columns and
+         * @param $th array of th elements
+         */
+        unlockWidthsOfColumns: function($th) {
+            if (!!this.columnWidths) {
+                this.sandbox.util.each($th, function(index, $el) {
+                    // skip columns without data-attribute because the have min/max and normal widths by default
+                    if (!!this.sandbox.dom.data($el, 'attribute')) {
+                        this.sandbox.dom.css($el, 'min-width', this.columnWidths[index]);
+                        this.sandbox.dom.css($el, 'max-width', '');
+                        this.sandbox.dom.css($el, 'width', '');
+                    }
+                }.bind(this));
+            }
+        },
+
+        /**
+         * Makes the widths of columns fixed when the table is in edit mode
+         * prevents changes in column width
+         * @param $th array of th elements
+         */
+        lockWidthsOfColumns: function($th) {
+            var width, minwidth;
+            this.columnWidths = [];
+
+            this.sandbox.dom.each($th, function(index, $el) {
+                minwidth = this.sandbox.dom.css($el, 'min-width');
+                this.columnWidths.push(minwidth);
+
+                width = this.sandbox.dom.outerWidth($el);
+                this.sandbox.dom.css($el, 'min-width', width);
+                this.sandbox.dom.css($el, 'max-width', width);
+                this.sandbox.dom.css($el, 'width', width);
+            }.bind(this));
+        },
 
         /**
          * Sets the data for a row
@@ -28367,7 +28853,6 @@ define('__component__$datagrid@husky',[],function() {
          * @param data
          */
         setDataForRow: function($tr, data) {
-
             var editables, field, $input;
 
             // set id
@@ -28376,7 +28861,7 @@ define('__component__$datagrid@husky',[],function() {
 
             this.sandbox.util.each(this.sandbox.dom.find('td', $tr), function(index, $el) {
 
-                editables = this.sandbox.dom.find('.editable', $el);
+                editables = this.sandbox.dom.find('.' + constants.editableClass, $el);
                 field = this.sandbox.dom.data($el, 'field');
                 $input = this.sandbox.dom.find('input[type=text]', $el);
 
@@ -28393,34 +28878,11 @@ define('__component__$datagrid@husky',[],function() {
         },
 
         /**
-         * Shows loading icon for a tr
-         * @param $tr
-         */
-        showLoadingIconForRow: function($tr) {
-            if (!!this.options.progressRow) {
-                var domId = this.sandbox.dom.data($tr, 'dom-id');
-                this.sandbox.dom.addClass('tr[data-dom-id=' + domId + '] td:last', 'is-loading');
-            }
-        },
-
-        /**
-         * Hides loading icon for a tr
-         * @param $tr
-         */
-        hideLoadingIconForRow: function($tr) {
-            if (!!this.options.progressRow) {
-                var domId = this.sandbox.dom.data($tr, 'dom-id');
-                this.sandbox.dom.removeClass('tr[data-dom-id=' + domId + '] td', 'is-loading');
-            }
-        },
-
-        /**
          * Sets the validation error class for a dom element
          * @param $domElement
          * @param field name of field which caused the error
          */
         showValidationError: function($domElement, field) {
-
             var $td = this.sandbox.dom.find('td[data-field=' + field + ']', $domElement)[0],
                 $input = this.sandbox.dom.find('input', $td)[0];
 
@@ -28432,199 +28894,90 @@ define('__component__$datagrid@husky',[],function() {
 
             // add class for serverside validation error
             // TODO remove this when correct validation type is implmented
-            if (!this.sandbox.dom.hasClass($input, 'server-validation-error')) {
-                this.sandbox.dom.addClass($input, 'server-validation-error');
+            if (!this.sandbox.dom.hasClass($input, constants.serverValidationError)) {
+                this.sandbox.dom.addClass($input, constants.serverValidationError);
             }
         },
 
         /**
-         *  Hides input fields and displays new content for table row
-         * @param $tr
+         * Returns an object with the current values of the inputfields, id and domId
+         * @param $tr table row
+         * @returns {{domId: *, id: *, fields: Array}}
          */
-        resetRowInputFields: function($tr) {
+        getInputValuesOfRow: function($tr) {
+            var id = this.sandbox.dom.data($tr, 'id'),
+                domId = this.sandbox.dom.data($tr, 'dom-id'),
+                $inputs = this.sandbox.dom.find('input[type=text]', $tr),
+                fields = [], field, $td;
 
-            var $inputFields = this.sandbox.dom.find('input[type=text]:not(.hidden)', $tr),
-                content, $span;
+            this.sandbox.dom.each($inputs, function(index, $input) {
+                $td = this.sandbox.dom.parent($input, 'td');
+                field = this.sandbox.dom.data($td, 'field');
 
-            this.sandbox.util.each($inputFields, function(index, $field) {
-
-                // remove css class for server side validation error
-                // TODO: remove this when validation type is implemented
-                if (this.sandbox.dom.hasClass($field, 'server-validation-error')) {
-                    this.sandbox.dom.removeClass($field, 'server-validation-error');
-                }
-
-                content = this.sandbox.dom.$($field).val();
-                $span = this.sandbox.dom.prev($field, '.editable');
-                $span.text(content);
-
-                this.sandbox.dom.addClass($field, 'hidden');
-                this.sandbox.dom.show($span);
+                fields[field] = $input.value;
 
             }.bind(this));
+            return {
+                domId: domId,
+                id: id,
+                fields: fields
+            };
+
         },
 
         /**
-         * Provides data of the list to the caller
+         * Prepares for removing a row
+         * Raises the husky.datagrid.record.remove-click event when auto remove handling is not set to true
+         * @param event
          */
-        provideData: function() {
-            this.sandbox.emit(DATA_PROVIDE, this.data);
+        prepareRemoveRow: function(event) {
+            this.sandbox.dom.stopPropagation(event);
+            this.removeRecord(event);
         },
 
         /**
-         * Updates data in datagrid
-         * Called when husky.datagrid.update event emitted
-         * Emits husky.datagrid.updated event on success
+         * Removes a row from the datagrid
+         * @param event
          */
-        updateHandler: function() {
-            this.resetItemSelection();
-            this.resetSortingOptions();
+        removeRecord: function(event) {
+            var $element, $tblRow, id, $editableElements, $checkboxes;
 
-            this.load({
-                url: this.data.links.self,
-                success: function() {
-                    this.removeLoader();
-                    this.sandbox.emit(UPDATED);
-                }.bind(this)
-            });
-        },
-
-        /**
-         * triggers an api search
-         * @param {String} searchString The String that will be searched
-         * @param {String|Array} searchFields Fields that will be included into the search
-         */
-        triggerSearch: function(searchString, searchFields) {
-
-            var template, url;
-
-            this.addLoader();
-            template = this.sandbox.uritemplate.parse(this.data.links.find);
-            url = this.sandbox.uritemplate.expand(template, {searchString: searchString, searchFields: searchFields});
-
-            this.load({
-                url: url,
-                success: function() {
-                    this.removeLoader();
-                    this.sandbox.emit(UPDATED, 'updated after search');
-                }.bind(this)
-            });
-        },
-
-        /**
-         * updates the current url by given parameter object
-         * @param {Object} parameters Object key is used as parameter name, value as parameter value
-         */
-        updateUrl: function(parameters) {
-
-            var url, key;
-
-            this.addLoader();
-            url = this.currentUrl;
-
-            for (key in parameters) {
-                url = this.setGetParameter(url, key, parameters[key]);
+            if (typeof event === 'object') {
+                $element = this.sandbox.dom.$(event.currentTarget);
+                $tblRow = this.sandbox.dom.closest($element, 'tr')[0];
+                id = this.sandbox.dom.data($tblRow, 'id');
+            } else {
+                id = event;
+                $tblRow = this.sandbox.dom.find('tr[data-id="' + id + '"]')[0];
             }
 
-            this.load({
-                url: url,
-                success: function() {
-                    this.removeLoader();
-                    this.sandbox.emit(UPDATED);
-                }.bind(this)
-            });
-        },
-
-        /**
-         * function updates an url by a given parameter name and value and returns it. The parameter is either added or updated.
-         * If value is not set, the parameter will be removed from url
-         * @param {String} url Url string to be updated
-         * @param {String} paramName Parameter which should be added / updated / removed
-         * @param {String|Null} paramValue Value of the parameter. If not set, parameter will be removed from url
-         * @returns {String} updated url
-         */
-        setGetParameter: function(url, paramName, paramValue){
-            if (url.indexOf(paramName + "=") >= 0)
-            {
-                var prefix = url.substring(0, url.indexOf(paramName)),
-                    suffix = url.substring(url.indexOf(paramName));
-                suffix = suffix.substring(suffix.indexOf('=') + 1);
-                suffix = (suffix.indexOf('&') >= 0) ? suffix.substring(suffix.indexOf('&')) : '';
-                if (!!paramValue) {
-                    url = prefix + paramName + '=' + paramValue + suffix;
-                } else {
-                    if (url.substr(url.indexOf(paramName)-1,1) === '&' ) {
-                        url = url.substring(0,prefix.length-1) + suffix;
-                    } else {
-                        url = prefix + suffix.substring(1, suffix.length);
-                    }
-                }
-            }
-            else if (!!paramValue)
-            {
-                if (url.indexOf("?") < 0)
-                    url += "?" + paramName + "=" + paramValue;
-                else
-                    url += "&" + paramName + "=" + paramValue;
-            }
-            return url;
-        },
-
-
-        /**
-         * is called when columns are changed
-         */
-        filterColumns: function(fieldsData) {
-
-            var template, url,
-                parsed = this.parseFieldsData(fieldsData);
-
-            this.addLoader();
-
-            template = this.sandbox.uritemplate.parse(this.data.links.filter);
-            url = this.sandbox.uritemplate.expand(template, {fieldsList: parsed.urlFields.split(',')});
-
-            this.options.columns = parsed.columns;
-
-            this.sandbox.dom.width(this.$element, '100%');
-            if (!!this.options.contentContainer) {
-                this.sandbox.dom.css(this.options.contentContainer, 'max-width', '');
-            }
-
-            this.load({
-                url: url,
-                success: function() {
-                    this.removeLoader();
-                    this.sandbox.emit(UPDATED, 'updated after search');
-                }.bind(this)
-            });
-        },
-
-
-        /**
-         * Renders datagrid element in container
-         * Binds DOM events
-         */
-        render: function() {
-            // add full-width class
-            if (this.options.fullWidth === true) {
-                this.sandbox.dom.addClass(this.$element, constants.fullWidthClass);
-            }
-
-            this.$originalElement.html(this.$element);
-            this.bindDOMEvents();
-
-            // initialize validation
+            // remove row elements from validation
             if (!!this.options.validation) {
-                this.sandbox.form.create(this.$el);
+                $editableElements = this.sandbox.dom.find('.' + constants.editableClass, $tblRow);
+                this.sandbox.util.each($editableElements, function(index, $element) {
+                    this.sandbox.form.removeField('#' + datagrid.elId, $element);
+                }.bind(this));
             }
+
+            if (!!id) {
+                datagrid.removeRecord.call(datagrid, id);
+            }
+            this.sandbox.dom.remove($tblRow);
+
+            // when last table row was removed, uncheck thead checkbox if exists
+            $checkboxes = this.sandbox.dom.find('input[type=checkbox]', this.$el);
+            if ($checkboxes.length === 1) {
+                this.sandbox.dom.removeClass(constants.isSelectedClass, $checkboxes[0]);
+                this.sandbox.dom.prop($checkboxes[0], 'checked', false);
+            }
+
         },
 
         /**
-         * this function is responsible for responsiveness of datagrid and is called everytime after resizing window and after initialization
+         * Gets automatically executed on window resize
+         * responsible for the responsiveness
          */
-        windowResizeListener: function() {
-
+        onResize: function() {
             var finalWidth,
                 contentPaddings = 0,
                 content = !!this.options.contentContainer ? this.options.contentContainer : this.$el,
@@ -28647,7 +29000,7 @@ define('__component__$datagrid@husky',[],function() {
             // if table is greater than max content width
             if (tableWidth > originalMaxWidth - contentPaddings && contentWidth < windowWidth - tableOffset.left) {
                 // adding this class, forces table cells to shorten long words
-                this.sandbox.dom.addClass(this.$element, 'oversized');
+                this.sandbox.dom.addClass(this.$el, constants.oversizedClass);
                 overlaps = true;
                 // reset table width and offset
                 tableWidth = this.sandbox.dom.width(this.$table);
@@ -28662,7 +29015,7 @@ define('__component__$datagrid@husky',[],function() {
                 finalWidth = windowWidth - tableOffset.left;
             } else {
                 // set scroll position back
-                this.sandbox.dom.scrollLeft(this.$element, 0);
+                this.sandbox.dom.scrollLeft(this.$el, 0);
             }
 
             // width is not allowed to be smaller than the width of content
@@ -28681,137 +29034,2126 @@ define('__component__$datagrid@husky',[],function() {
             }
 
             // now set width
-            this.sandbox.dom.width(this.$element, finalWidth);
+            this.sandbox.dom.width(this.$el, finalWidth);
 
             // check scrollwidth and add class
             if (this.sandbox.dom.get(this.$tableContainer, 0).scrollWidth > finalWidth) {
-                this.sandbox.dom.addClass(this.$tableContainer, 'overflow');
+                this.sandbox.dom.addClass(this.$tableContainer, constants.overflowClass);
 
                 // if overflown and in full width mode reduce list-width
                 if (this.options.fullWidth === true) {
                     finalWidth = finalWidth - constants.overflowIconSpacing;
-                    this.sandbox.dom.width(this.$element, finalWidth);
+                    this.sandbox.dom.width(this.$el, finalWidth);
                 }
 
             } else {
-                this.sandbox.dom.removeClass(this.$tableContainer, 'overflow');
+                this.sandbox.dom.removeClass(this.$tableContainer, constants.overflowClass);
             }
         },
 
         /**
-         * Adds loading icon and keeps width and height
-         * @returns {*}
+         * Selectes or deselects the clicked item
+         * @param event
          */
-        addLoader: function() {
-            this.$element
-                .outerWidth(this.$element.outerWidth())
-                .outerHeight(this.$element.outerHeight())
-                .empty();
+        selectItem: function(event) {
+            this.sandbox.dom.stopPropagation(event);
 
-            var $container = this.sandbox.dom.createElement('<div class="datagrid-loader"/>');
-            this.sandbox.dom.append(this.$element, $container);
+            var $element, itemId, parentTr;
+            $element = this.sandbox.dom.$(event.currentTarget);
 
-            this.sandbox.start([{
-                name: 'loader@husky',
-                options: {
-                    el: $container,
-                    size: '100px',
-                    color: '#cccccc'
-                }
-            }]);
-
-            return this.$element;
-        },
-
-        /**
-         * Removes loading icon, width and height of container
-         * @returns {*}
-         */
-        removeLoader: function() {
-            return this.$element.outerHeight("").outerWidth("");
-            this.sandbox.stop(this.sandbox.dom.find('.datagrid-loader', this.$element));
-
-            return this.$element;
-        },
-
-        /**
-         * Returns selected items either via callback or else via husky.datagrid.items.selected event
-         * Gets called on husky.datagrid.items.get-selected event
-         * @param callback
-         */
-        getSelectedItemsIds: function(callback) {
-
-            // get selected items
-            var ids = this.getIdsOfSelectedRows();
-
-            if (typeof callback === 'function') {
-                callback(ids);
-            } else {
-                this.sandbox.emit(ITEMS_SELECTED, ids);
+            if (!this.sandbox.dom.is($element, 'input')) {
+                $element = this.sandbox.dom.find('input', this.sandbox.dom.parent($element));
             }
-        },
 
-        templates: {
+            parentTr = this.sandbox.dom.parents($element, 'tr');
+            itemId = this.sandbox.dom.data(parentTr, 'id');
 
-            showElements: function(id) {
-                var desc = '';
-                if (this.data.total === this.data.numberOfAll) {
-                    desc = this.sandbox.translate('pagination.show-all-elements');
+            if (this.sandbox.dom.attr($element, 'type') === 'checkbox') {
+                if (this.sandbox.dom.prop($element, 'checked') === false) {
+                    this.sandbox.dom.removeClass($element, constants.isSelectedClass);
+                    this.sandbox.dom.prop($element, 'checked', false);
+
+                    // uncheck 'Select All'-checkbox
+                    this.sandbox.dom.prop(
+                        this.sandbox.dom.find('#' + constants.selectAllName, this.$tableContainer),
+                        'checked', false
+                    );
+
+                    datagrid.setItemUnselected.call(datagrid, itemId);
                 } else {
-                    desc = this.sandbox.translate('pagination.show') +' <strong>'+ this.data.total +'</strong> '+ this.sandbox.translate('pagination.elements-of') +' '+ this.data.numberOfAll;
+                    this.sandbox.dom.addClass($element, constants.isSelectedClass);
+                    this.sandbox.dom.prop($element, 'checked', true);
+                    if (!!itemId) {
+                        datagrid.setItemSelected.call(datagrid, itemId);
+                    }
                 }
 
-                return [
-                    '<div class="show-elements">',
-                        '<div class="dropdown-trigger" id="'+ id +'">'+ desc +'<span class="dropdown-toggle"></span></div>',
-                    '</div>'
-                ].join('');
-            },
+            } else if (this.sandbox.dom.attr($element, 'type') === 'radio') {
 
-            removeRow: function() {
-                return [
-                    '<span class="icon-remove pointer"></span>'
-                ].join('');
-            },
+                datagrid.deselectAllItems.call(datagrid);
 
-            progressRow: function() {
-                return [
-                    '<span class=""></span>'
-                ].join('');
-            },
+                this.sandbox.dom.removeClass(
+                    this.sandbox.dom.find('tr input[type="radio"]', this.$tableContainer), constants.isSelectedClass);
+                this.sandbox.dom.prop(
+                    this.sandbox.dom.find('tr input[type="radio"]', this.$tableContainer), 'checked', false);
 
-            checkbox: function(data) {
-                var id, name;
+                this.sandbox.dom.addClass($element, constants.isSelectedClass);
+                this.sandbox.dom.prop($element, 'checked', true);
 
-                data = data || {};
-                id = (!!data.id) ? ' id="' + data.id + '"' : '';
-                name = (!!data.name) ? ' name="' + data.name + '"' : '';
-
-                return [
-                    '<div class="custom-checkbox">',
-                        '<input', id, name, ' type="checkbox" data-form="false"/>',
-                        '<span class="icon"></span>',
-                    '</div>'
-                ].join('');
-            },
-
-            radio: function(data) {
-                var id, name;
-
-                data = data || {};
-                id = (!!data.id) ? ' id="' + data.id + '"' : '';
-                name = (!!data.name) ? ' name="' + data.name + '"' : '';
-
-                return [
-                    '<div class="custom-radio">',
-                        '<input', id, name, ' type="radio"/>',
-                        '<span class="icon"></span>',
-                    '</div>'
-                ].join('');
+                if (!!itemId) {
+                    datagrid.setItemSelected.call(datagrid, itemId);
+                }
             }
+
+        },
+
+        /**
+         * Shows input and hides span
+         * @param event
+         */
+        editCellValues: function(event) {
+            var $target = event.currentTarget,
+                $input = this.sandbox.dom.next($target, 'input');
+
+            this.lockWidthsOfColumns(this.sandbox.dom.find('table th', this.$tableContainer));
+
+            this.sandbox.dom.hide($target);
+            this.sandbox.dom.removeClass($input, 'hidden');
+            this.sandbox.dom.select($input[0]);
+        },
+
+        /**
+         * Put focus on table row and remember values
+         */
+        focusOnRow: function(event) {
+            var $tr = event.currentTarget,
+                domId = this.sandbox.dom.data($tr, 'dom-id');
+
+            this.sandbox.dom.stopPropagation(event);
+            this.sandbox.logger.log("focus on row", domId);
+
+            if (!!this.lastFocusedRow && this.lastFocusedRow.domId !== domId) { // new focus
+                this.prepareSave();
+                this.lastFocusedRow = this.getInputValuesOfRow($tr);
+                this.sandbox.logger.log("focused " + this.lastFocusedRow.domId + " now!");
+            } else if (!this.lastFocusedRow) { // first focus
+                this.lastFocusedRow = this.getInputValuesOfRow($tr);
+                this.sandbox.logger.log("focused " + this.lastFocusedRow.domId + " now!");
+            }
+        },
+
+        /**
+         * Selects or deselect all available items of the list
+         * @param event
+         */
+        selectAllItems: function(event) {
+            this.sandbox.dom.stopPropagation(event);
+
+            var $headCheckbox = this.sandbox.dom.find('th input[type="checkbox"]', this.$tableContainer)[0],
+                $checkboxes = this.sandbox.dom.find('input[type="checkbox"]', this.$tableContainer);
+
+            if (this.sandbox.dom.prop($headCheckbox, 'checked') === false) {
+                this.sandbox.dom.prop($checkboxes, 'checked', false);
+                this.sandbox.dom.removeClass($checkboxes, constants.isSelectedClass);
+                datagrid.deselectAllItems.call(datagrid);
+            } else {
+                this.sandbox.dom.prop($checkboxes, 'checked', true);
+                this.sandbox.dom.addClass($checkboxes, constants.isSelectedClass);
+                datagrid.selectAllItems.call(datagrid);
+            }
+        },
+
+        /**
+         * Handles the click on a sortable column title
+         *
+         * Creates the function parameters need for sorting
+         * and delegates the sorting itself to the datagrid
+         * @param event {Object} the event object
+         */
+        prepareSort: function(event) {
+            var $element = event.currentTarget,
+                $span = this.sandbox.dom.children($element, 'span')[0],
+
+                attribute = this.sandbox.dom.data($element, 'attribute'),
+                direction = this.sandbox.dom.hasClass($span, constants.ascClass) ? 'desc' : 'asc';
+
+                // delegate sorting to datagrid
+                datagrid.sortGrid.call(datagrid, attribute, direction);
         }
     };
 });
+
+/**
+ * @class ThumbnailView (Datagrid Decorator)
+ * @constructor
+ *
+ * @param {Object} [viewOptions] Configuration object
+ * @param {Boolean} [viewOptions.large] If true large thumbnails get rendered
+ * @param {Number} [viewOptions.fadeInDuration] duration of the fade in animation
+ *
+ * @param {Boolean} [rendered] property used by the datagrid-main class
+ * @param {Function} [initialize] function which gets called once at the start of the view
+ * @param {Function} [render] function to render data
+ * @param {Function} [destroy] function to destroy the view and unbind events
+ */
+define('husky_components/datagrid/decorators/thumbnail-view',[],function() {
+
+    
+
+    /**
+     * Variable to store the datagrid context
+     */
+    var datagrid,
+
+        defaults = {
+            large: false,
+            fadeInDuration: 400
+        },
+
+        constants = {
+            containerClass: 'husky-thumbnails',
+            itemClass: 'item',
+            smallClass: 'small',
+            largeClass: 'large',
+            titleClass: 'title',
+            downloadClass: 'download',
+            downloadIcon: 'cloud-download',
+            checkboxClass: 'checkbox',
+            descriptionClass: 'description',
+            thumbnailSrcProperty: 'thumb',
+            thumbnailAltProperty: 'alt',
+            idProperty: 'id',
+            textClass: 'text',
+            imageClass: 'image',
+            descriptionDelimiter: ', ',
+            selectedClass: 'is-selected'
+        },
+
+        templates = {
+            item: [
+                    '<div class="' + constants.itemClass + ' <%= styleClass %>">',
+                        '<div class="' + constants.imageClass + '">',
+                            '<img src="<%= imgSrc %>" alt="<%= imgAlt %>"/>',
+                        '</div>',
+                        '<div class="' + constants.textClass + '">',
+                            '<span class="' + constants.titleClass + '"><%= title %></span><br />',
+                            '<span class="' + constants.descriptionClass + '"><%= description %></span>',
+                        '</div>',
+                        '<div class="' + constants.checkboxClass + ' custom-checkbox no-spacing">',
+                            '<input type="checkbox"<% if (!!checked) { %> checked<% } %>/>',
+                            '<span class="icon"></span>',
+                        '</div>',
+                        '<div class="icon-' + constants.downloadIcon + ' ' + constants.downloadClass + '"></div>',
+                    '</div>'
+            ].join('')
+        };
+
+    return {
+
+        /**
+         * Initializes the view, gets called only once
+         * @param {Object} context The context of the datagrid class
+         * @param {Object} options The options used by the view
+         */
+        initialize: function(context, options) {
+            // context of the datagrid-component
+            datagrid = context;
+
+            // make sandbox available in this-context
+            this.sandbox = datagrid.sandbox;
+
+            // merge defaults with options
+            this.options = this.sandbox.util.extend(true, {}, defaults, options);
+
+            this.setVariables();
+        },
+
+        /**
+         * Takes an object with options and extends the current ones
+         * @param options {Object} new options to merge to the current ones
+         */
+        extendOptions: function(options) {
+            this.options = this.sandbox.util.extend(true, {}, this.options, options);
+        },
+
+        /**
+         * Sets the starting variables for the view
+         */
+        setVariables: function() {
+            this.rendered = false;
+            this.data = null;
+            this.$el = null;
+
+            // global array to store the dom elements
+            this.$thumbnails = {};
+        },
+
+        /**
+         * Method to render data in this view
+         */
+        render: function(data, $container) {
+            this.$el = this.sandbox.dom.createElement('<div class="' + constants.containerClass + '"/>');
+            this.sandbox.dom.append($container, this.$el);
+            this.data = data;
+
+            this.renderThumbnails(this.data.embedded);
+
+            this.rendered = true;
+        },
+
+        /**
+         * Parses the data and passes it to a render function
+         * @param thumbnails {Array} array with thumbnails to render
+         */
+        renderThumbnails: function(thumbnails) {
+            var imgSrc, imgAlt, title, description, id;
+
+            // loop through each data record
+            this.sandbox.util.foreach(thumbnails, function(record) {
+                imgSrc = imgAlt = title = '';
+                description = [];
+
+                // foreach matching configured get the corresponding datum from the record
+                this.sandbox.util.foreach(datagrid.matchings, function(matching) {
+
+                    // get the thumbnail and the title data (to place it on top)
+                    // with the rest generate a description string
+                    if (matching.type === datagrid.types.THUMBNAIL) {
+                        imgSrc = record[matching.attribute][constants.thumbnailSrcProperty];
+                        imgAlt = record[matching.attribute][constants.thumbnailAltProperty];
+                    } else if (matching.type === datagrid.types.TITLE) {
+                        title = record[matching.attribute];
+                    } else {
+                        description.push(record[matching.attribute]);
+                    }
+                }.bind(this));
+
+                id = record[constants.idProperty];
+                description = description.join(constants.descriptionDelimiter);
+
+                // pass the found data to a render method
+                this.renderThumbnail(id, imgSrc, imgAlt, title, description, record);
+            }.bind(this));
+        },
+
+        /**
+         * Renders the actual thumbnail element
+         * @param id {String|Number} the identifier of the data record
+         * @param imgSrc {String} the thumbnail src of the data record
+         * @param imgAlt {String} the thumbnail alt tag of the data record
+         * @param title {String} the title of the data record
+         * @param description {String} the thumbnail description to render
+         * @param record {Object} the original data record
+         */
+        renderThumbnail: function(id, imgSrc, imgAlt, title, description, record) {
+            this.$thumbnails[id] = this.sandbox.dom.createElement(
+                this.sandbox.util.template(templates.item)({
+                    imgSrc: imgSrc,
+                    imgAlt: imgAlt,
+                    title: this.sandbox.util.cropMiddle(title, 24),
+                    description: this.sandbox.util.cropMiddle(description, 32),
+                    styleClass: (this.options.large === true) ? constants.largeClass : constants.smallClass,
+                    checked: !!record.selected
+                })
+            );
+            if (record.selected === true) {
+                this.selectItem(id, true);
+            }
+            this.sandbox.dom.data(this.$thumbnails[id], 'id', id);
+            this.sandbox.dom.hide(this.$thumbnails[id]);
+            this.sandbox.dom.append(this.$el, this.$thumbnails[id]);
+            this.sandbox.dom.fadeIn(this.$thumbnails[id], this.options.fadeInDuration);
+
+            this.bindThumbnailDomEvents(id);
+        },
+
+        /**
+         * Destroys the view
+         */
+        destroy: function() {
+            this.sandbox.dom.remove(this.$el);
+        },
+
+        /**
+         * Binds Dom-Events for a thumbnail
+         * @param id {Number|String} the identifier of the thumbnail to bind events on
+         */
+        bindThumbnailDomEvents: function(id) {
+            this.sandbox.dom.on(this.$thumbnails[id], 'change', function() {
+                this.toggleItemSelected(id);
+            }.bind(this), '.' + constants.checkboxClass);
+
+            this.sandbox.dom.on(this.$thumbnails[id], 'click', function() {
+                this.downloadHandler(id);
+            }.bind(this), '.' + constants.downloadClass);
+        },
+
+        /**
+         * Toggles an item with a given id selected or unselected
+         * @param id {Number|String} the id of the item
+         */
+        toggleItemSelected: function(id) {
+            if (datagrid.itemIsSelected.call(datagrid, id) === true) {
+                this.unselectItem(id);
+            } else {
+                this.selectItem(id);
+            }
+        },
+
+        /**
+         * Selects an item with a given id
+         * @param id {Number|String} the id of the item
+         * @param onlyView {Boolean} if true the selection only affects this view and not the data array
+         */
+        selectItem: function(id, onlyView) {
+            this.sandbox.dom.addClass(this.$thumbnails[id], constants.selectedClass);
+            if (onlyView !== true) {
+                datagrid.setItemSelected.call(datagrid, id);
+            }
+        },
+
+        /**
+         * Unselects an item with a given id
+         * @param id {Number|String} the id of the item
+         */
+        unselectItem: function(id) {
+            this.sandbox.dom.removeClass(this.$thumbnails[id], constants.selectedClass);
+            datagrid.setItemUnselected.call(datagrid, id);
+        },
+
+        /**
+         * Adds a record to the view
+         * @param record
+         * @public
+         */
+        addRecord: function(record) {
+            this.renderThumbnails([record]);
+        },
+
+        /**
+         * Handles the click onto the download button of an item
+         * @param id {Number|String} the id of the item
+         */
+        downloadHandler: function(id) {
+            // not yet implemented
+            this.sandbox.logger.warn('Download handler not yet implemented!', id);
+        }
+    };
+});
+
+/**
+ * @class DropdownPagination (Datagrid Decorator)
+ * @constructor
+ *
+ * @param {Object} [paginationOptions] Configuration object
+ * @param {Array} [options.showElementsSteps] Array which contains the steps for the Show-Elements-dropdown as integers
+ * @param {Number} [options.pageSize] Data records per page
+ *
+ * @param {Function} [initialize] function which gets called once at the start of the view
+ * @param {Function} [render] function to render data
+ * @param {Function} [destroy] function to destroy the pagination and unbind events
+ */
+define('husky_components/datagrid/decorators/dropdown-pagination',[],function() {
+
+    
+
+    /**
+     * Variable to store the datagrid context
+     */
+    var datagrid,
+
+        defaults = {
+            showElementsSteps: [10, 20, 50, 100, 500],
+            pageSize: 10
+        },
+
+        constants = {
+            paginationClass: 'pagination-wrapper dropdowns',
+            paginationElementClass: 'pagination',
+            prevClass: 'previous',
+            nextClass: 'next',
+            pageChangeClass: 'page-change',
+            sizeChangeClass: 'size-change'
+        },
+
+        /**
+         * Templates used by this class
+         */
+        templates = {
+            pageLabel: [
+                '<%= translate("pagination.page") %>',
+                '<strong> <%= i %> </strong>',
+                '<%= translate("pagination.of") %> <%= pages %>'
+            ].join(''),
+
+            pageChanger: [
+                '<div class="', constants.nextClass , ' pagination-prev pull-right pointer"></div>',
+                '<div class="', constants.pageChangeClass , ' pagination-main pull-right pointer">',
+                    '<span class="inline-block"><%= label %></span>',
+                    '<span class="dropdown-toggle inline-block"></span>',
+                '</div>',
+                '<div class="' + constants.prevClass + ' pagination-next pull-right pointer"></div>'
+            ].join(''),
+
+            showElements: [
+                '<div class="show-elements">',
+                    '<div class="' + constants.sizeChangeClass + ' dropdown-trigger">',
+                        '<%= desc %>',
+                        '<span class="dropdown-toggle"></span>',
+                    '</div>',
+                '</div>'
+            ].join('')
+        },
+
+        /**
+         * Translation keys used by this class
+         */
+        translations = {
+            showAllElements: 'pagination.show-all-elements',
+            show: 'pagination.show',
+            elementsOf: 'pagination.elements-of',
+            elementsPerPage: 'pagination.elements-per-page'
+        };
+
+    return {
+
+        /**
+         * Initializes the pagination
+         * @param {Object} context The context of the datagrid
+         * @param {Object} options The options used by this pagination
+         */
+        initialize: function(context, options) {
+            // context of the datagrid-component
+            datagrid = context;
+
+            // make sandbox available in this-context
+            this.sandbox = datagrid.sandbox;
+
+            // merge defaults with pagination options
+            this.options = this.sandbox.util.extend(true, {}, defaults, options);
+
+            this.setVariables();
+            this.bindCustomEvents();
+        },
+
+        /**
+         * Renders the pagination
+         */
+        render: function(data, $container) {
+            this.$el = $container;
+            this.data = data;
+
+            this.$paginationContainer = this.sandbox.dom.createElement('<div class="' + constants.paginationClass + '"/>');
+            this.preparePagination();
+            this.sandbox.dom.append(this.$el, this.$paginationContainer);
+
+            this.preparePaginationDropdown();
+            this.prepareShowElementsDropdown();
+
+            this.bindDomEvents();
+        },
+
+        /**
+         * Rerenders the pagination
+         */
+        rerender: function() {
+            this.destroy();
+            this.render(this.data, this.$el);
+        },
+
+        /**
+         * Returns the pagination page size
+         * @returns {Number} current Page size
+         */
+        getPageSize: function() {
+            return this.options.pageSize;
+        },
+
+        /**
+         * Sets the classes properties
+         */
+        setVariables: function() {
+            this.$el = null;
+            this.$paginationContainer = null;
+            this.data = null;
+        },
+
+        /**
+         * Destroys the pagination
+         */
+        destroy: function() {
+            this.unbindDomEvents();
+            // uncommented just for testing purposes, if you see this uncomment it!!
+            //this.sandbox.stop(this.sandbox.dom.find('*', this.$paginationContainer));
+            this.sandbox.dom.remove(this.$paginationContainer);
+        },
+
+        /**
+         * Binds custom related events
+         */
+        bindCustomEvents: function() {
+            // pagination dropdown item clicked
+            this.sandbox.on('husky.dropdown.' + datagrid.options.instance + '-pagination-dropdown.item.click', function(item) {
+                datagrid.changePage.call(datagrid, null, item.id);
+            }.bind(this));
+
+            // show-elements dropdown item clicked
+            this.sandbox.on('husky.dropdown.' + datagrid.options.instance + '-pagination-dropdown-show.item.click', function(item) {
+                if (this.data.pageSize !== item.id || this.data.total === this.data.numberOfAll) {
+                    // show all
+                    if (item.id === 0) {
+                        // only if not already all are shown
+                        if (this.data.total !== this.data.numberOfAll) {
+                            datagrid.changePage.call(datagrid, this.data.links.all);
+                        }
+                    } else {
+                        // always jump to the first page
+                        datagrid.changePage.call(datagrid, null, 1, item.id);
+                    }
+                }
+            }.bind(this));
+        },
+
+        /**
+         * Binds dom related events
+         */
+        bindDomEvents: function() {
+            // next page
+            this.sandbox.dom.on(
+                this.sandbox.dom.find('.' + constants.nextClass, this.$el),
+                'click',
+                this.nextPage.bind(this)
+            );
+
+            // previous page
+            this.sandbox.dom.on(
+                this.sandbox.dom.find('.' + constants.prevClass, this.$el),
+                'click',
+                this.prevPage.bind(this)
+            );
+        },
+
+        /**
+         * Triggers a page change to the next change
+         */
+        nextPage: function() {
+            if (!!this.data.links.next) {
+                datagrid.changePage.call(datagrid, this.data.links.next);
+            }
+        },
+
+        /**
+         * Triggers a page change to the previous page
+         */
+        prevPage: function() {
+            if (!!this.data.links.prev) {
+                datagrid.changePage.call(datagrid, this.data.links.prev);
+            }
+        },
+
+        /**
+         * Unbinds all events from the class
+         */
+        unbindDomEvents: function() {
+            this.sandbox.dom.unbind(this.sandbox.dom.find('*', this.$paginationContainer));
+            this.sandbox.dom.unbind(this.$paginationContainer);
+        },
+
+        /**
+         * Delegates the rendering of the pagination when pagination is needed
+         * @returns {*}
+         */
+        preparePagination: function() {
+            var $pagination,
+                $showElements,
+                paginationLabel,
+                description;
+
+            // if first defined step is bigger than the number of all elements don't display show-elements dropdown
+            if (this.data.numberOfAll > this.options.showElementsSteps[0]) {
+                if (this.data.total === this.data.numberOfAll) {
+                    description = this.sandbox.translate(translations.showAllElements);
+                } else {
+                    description = this.sandbox.translate(translations.show) +
+                        ' <strong>' + this.data.total + '</strong> ' +
+                        this.sandbox.translate(translations.elementsOf) + ' ' + this.data.numberOfAll;
+                }
+                $showElements = this.sandbox.dom.createElement(this.sandbox.util.template(templates.showElements)({
+                    'desc': description
+                }));
+                this.sandbox.dom.append(this.$paginationContainer, $showElements);
+            }
+
+            if (parseInt(this.data.pages, 10) > 1) {
+                $pagination = this.sandbox.dom.createElement('<div/>');
+                $pagination.addClass(constants.paginationElementClass);
+
+                this.sandbox.dom.append(this.$paginationContainer, $pagination);
+
+                paginationLabel = this.renderPaginationRow(this.data.page, this.data.pages);
+
+                this.sandbox.dom.append($pagination, this.sandbox.util.template(templates.pageChanger)({
+                    label: paginationLabel
+                }));
+            }
+        },
+
+        /**
+         * Renders template for one row in the pagination
+         * @param i current page number
+         * @param pages total number of pages
+         */
+        renderPaginationRow: function(i, pages) {
+            var defaults = {
+                translate: this.sandbox.translate,
+                i: i,
+                pages: pages
+            };
+
+            return this.sandbox.util.template(templates.pageLabel, defaults);
+        },
+
+        /**
+         * Prepares and initializes the dropdown used for the pagination
+         */
+        preparePaginationDropdown: function() {
+
+            var data = [], i, name;
+
+            for (i = 1; i <= this.data.pages; i++) {
+                name = this.renderPaginationRow(i, this.data.pages);
+                data.push({id: i, name: name});
+            }
+
+            this.sandbox.start([
+                {
+                    name: 'dropdown@husky',
+                    options: {
+                        el: this.sandbox.dom.find('.' + constants.pageChangeClass, this.$paginationContainer),
+                        setParentDropDown: true,
+                        instanceName: datagrid.options.instance + '-pagination-dropdown',
+                        alignment: 'right',
+                        data: data
+                    }
+                }
+            ]);
+        },
+
+        /**
+         * Prepares and initializes the dropdown for showing elements
+         */
+        prepareShowElementsDropdown: function() {
+            var i, length, data = [];
+
+            for (i = -1, length = this.options.showElementsSteps.length; ++i < length;) {
+                if (this.options.showElementsSteps[i] > this.data.numberOfAll) {
+                    break;
+                }
+                data.push({
+                    id: this.options.showElementsSteps[i],
+                    name: '<strong>' + this.options.showElementsSteps[i] + '</strong> ' + this.sandbox.translate(translations.elementsPerPage)
+                });
+            }
+
+            data.push({divider: true});
+            data.push({
+                id: 0,
+                name: this.sandbox.translate(translations.showAllElements)
+            });
+
+            this.sandbox.start([
+                {
+                    name: 'dropdown@husky',
+                    options: {
+                        el: this.sandbox.dom.find('.' + constants.sizeChangeClass, this.$paginationContainer),
+                        setParentDropDown: true,
+                        instanceName: datagrid.options.instance + '-pagination-dropdown-show',
+                        alignment: 'left',
+                        data: data
+                    }
+                }
+            ]);
+        }
+    };
+});
+
+/**
+ * @class ShowAllPagination (Datagrid Decorator)
+ * @constructor
+ *
+ * @param {Object} [paginationOptions] Configuration object
+ *
+ * @param {Function} [initialize] function which gets called once at the start of the view
+ * @param {Function} [render] function to render data
+ * @param {Function} [rerender] function to rerender itself
+ * @param {Function} [destroy] function to destroy the pagination and unbind events
+ */
+define('husky_components/datagrid/decorators/showall-pagination',[],function () {
+
+    
+
+    /**
+     * Variable to store the datagrid context
+     */
+    var datagrid,
+
+        defaults = {
+            pageSize: 9
+        },
+
+        constants = {
+            paginationClass: 'pagination-wrapper showall',
+            squareClass: 'square',
+            textClass: 'text'
+        },
+
+        /**
+         * Translation keys used by this class
+         */
+            translations = {
+            showAll: 'pagination.show-all',
+            showOnly: 'pagination.show-only',
+            elements: 'pagination.elements'
+        },
+
+        /**
+         * Templates used by this class
+         */
+            templates = {
+            structure: [
+                '<div class="' + constants.squareClass + '"></div>',
+                '<div class="' + constants.textClass + '">',
+                    '<%= desc %>',
+                    '<strong><%= number %></strong> ',
+                    translations.elements,
+                '</div>'
+            ].join('')
+        };
+
+    return {
+
+        /**
+         * Initializes the pagination
+         * @param {Object} context The context of the datagrid
+         * @param {Object} options The options used by this pagination
+         */
+        initialize: function (context, options) {
+            // context of the datagrid-component
+            datagrid = context;
+
+            // make sandbox available in this-context
+            this.sandbox = datagrid.sandbox;
+
+            // merge defaults with pagination options
+            this.options = this.sandbox.util.extend(true, {}, defaults, options);
+
+            this.setVariables();
+        },
+
+        /**
+         * Renders the pagination
+         */
+        render: function (data, $container) {
+            this.$el = $container;
+            this.data = data;
+
+            this.$paginationContainer = this.sandbox.dom.createElement('<div class="' + constants.paginationClass + '"/>');
+            if (this.data.numberOfAll > this.data.total) {
+                this.renderShowAll();
+            } else {
+                this.renderShowOnly();
+            }
+
+            this.sandbox.dom.append(this.$el, this.$paginationContainer);
+
+            this.bindDomEvents();
+        },
+
+        /**
+         * Renders the markup for showing all records
+         */
+        renderShowAll: function() {
+            this.sandbox.dom.html(this.$paginationContainer, this.sandbox.util.template(templates.structure)({
+                desc: translations.showAll,
+                number: this.data.numberOfAll
+            }));
+        },
+
+        /**
+         * Renders the markup for not showing all records
+         */
+        renderShowOnly: function() {
+            this.sandbox.dom.html(this.$paginationContainer, this.sandbox.util.template(templates.structure)({
+                desc: translations.showOnly,
+                number: this.options.pageSize
+            }));
+        },
+
+        /**
+         * Rerenders the pagination
+         */
+        rerender: function () {
+            this.destroy();
+            this.render(this.data, this.$el);
+        },
+
+        /**
+         * Returns the pagination page size
+         * @returns {Number} current Page size
+         */
+        getPageSize: function () {
+            return this.options.pageSize;
+        },
+
+        /**
+         * Sets the classes properties
+         */
+        setVariables: function () {
+            this.$el = null;
+            this.$paginationContainer = null;
+            this.data = null;
+        },
+
+        /**
+         * Destroys the pagination
+         */
+        destroy: function () {
+            this.unbindDomEvents();
+            this.sandbox.dom.remove(this.$paginationContainer);
+        },
+
+        /**
+         * Binds dom related events
+         */
+        bindDomEvents: function () {
+            this.sandbox.dom.on(this.$paginationContainer, 'click', function() {
+                if (this.data.numberOfAll > this.data.total) {
+                    this.showAll();
+                } else {
+                    this.showOnly();
+                }
+            }.bind(this));
+        },
+
+        /**
+         * Shows all elements in the datagrid
+         */
+        showAll: function() {
+            datagrid.changePage.call(datagrid, this.data.links.all);
+        },
+
+        /**
+         * Shows only the configured amount of elements in the datagrid
+         */
+        showOnly: function() {
+            datagrid.changePage.call(datagrid, null, 1, this.options.pageSize);
+        },
+
+        /**
+         * Unbinds all events from the class
+         */
+        unbindDomEvents: function () {
+            this.sandbox.dom.off(this.$paginationContainer);
+        }
+    };
+});
+
+/**
+ * @class DataGrid
+ * @constructor
+ *
+ * @param {Object} [options] Configuration object
+ * @param {Array} [options.fieldsData] fields data will extend url and set tableHead automatically
+ * @param {Object} [options.fieldsData.{}] fields object
+ * @param {String} [options.fieldsData.{}.id] field name
+ * @param {String} [options.fieldsData.{}.translation] translation key which will be translated automatically
+ * @param {String} [options.fieldsData.{}.disabled] either 'true' or 'false'
+ * @param {Object} [options.data] if no url is provided (some functionality like search & sort will not work)
+ * @param {String} [options.defaultMeasureUnit=px] the unit that should be taken
+ * @param {Boolean|String} [options.pagination=dropdown] name of the pagination to use. If false no pagination will be initialized
+ * @param {String} [options.view='table'] name of the view to use
+ * @param {Object} [options.paginationOptions] Configuration Object for the pagination
+ * @param {Object} [options.viewOptions] Configuration Object for the view
+ * @param {Boolean} [options.sortable] Defines if records are sortable
+ * @param {String} [options.searchInstanceName=null] if set, a listener will be set for the corresponding search events
+ * @param {String} [options.columnOptionsInstanceName=null] if set, a listener will be set for listening for column changes
+ * @param {String} [options.url] url to fetch data from
+ *
+ * @param {Array} [options.matchings] configuration array of columns if fieldsData isn't set
+ * @param {String} [options.matchings.content] column title
+ * @param {String} [options.matchings.width] width of column (used by the table view)
+ * @param {String} [options.matchings.class] css class of the column
+ * @param {String} [options.matchings.type] type of the column. Used to manipulate its content (e.g. 'date')
+ * @param {String} [options.matchings.attribute] mapping information to data (if not set it will just iterate through attributes)
+ */
+(function() {
+
+    
+
+    define('__component__$datagrid@husky',[
+        'husky_components/datagrid/decorators/table-view',
+        'husky_components/datagrid/decorators/thumbnail-view',
+        'husky_components/datagrid/decorators/dropdown-pagination',
+        'husky_components/datagrid/decorators/showall-pagination'
+    ], function(decoratorTableView, thumbnailView, decoratorDropdownPagination, showallPagination) {
+
+        /**
+         *    Default values for options
+         */
+        var defaults = {
+                view: 'table',
+                viewOptions: {
+                    table: {},
+                    thumbnail: {}
+                },
+                pagination: 'dropdown',
+                paginationOptions: {
+                    dropdown: {}
+                },
+                sortable: true,
+                matchings: [],
+                url: null,
+                data: null,
+                instance: 'datagrid',
+                searchInstanceName: null,
+                columnOptionsInstanceName: null,
+                defaultMeasureUnit: 'px'
+            },
+
+            types = {
+                DATE: 'date',
+                THUMBNAIL: 'thumbnail',
+                TITLE: 'title'
+            },
+
+            decorators = {
+                views: {
+                    table: decoratorTableView,
+                    thumbnail: thumbnailView
+                },
+                paginations: {
+                    dropdown: decoratorDropdownPagination,
+                    showall: showallPagination
+                }
+            },
+
+            namespace = 'husky.datagrid.',
+
+        /* TRIGGERS EVENTS */
+
+            /**
+             * raised when the the current page changes
+             * @event husky.datagrid.page.change
+             */
+            PAGE_CHANGE = namespace + 'page.change',
+
+            /**
+             * raised when the data is updated
+             * @event husky.datagrid.updated
+             */
+            UPDATED = namespace + 'updated',
+
+            /**
+             * raised when item is deselected
+             * @event husky.datagrid.item.deselect
+             * @param {String} id of deselected item
+             */
+            ITEM_DESELECT = namespace + 'item.deselect',
+
+            /**
+             * raised when selection of items changes
+             * @event husky.datagrid.number.selections
+             */
+            NUMBER_SELECTIONS = namespace + 'number.selections',
+
+            /**
+             * raised when item is selected
+             * @event husky.datagrid.item.select
+             * @param {String} if of selected item
+             */
+            ITEM_SELECT = namespace + 'item.select',
+
+            /**
+             * raised when all items get deselected via the header checkbox
+             * @event husky.datagrid.all.deselect
+             */
+            ALL_DESELECT = namespace + 'all.deselect',
+
+            /**
+             * raised when all items get deselected via the header checkbox
+             * @event husky.datagrid.all.select
+             * @param {Array} ids of all items that have been clicked
+             */
+            ALL_SELECT = namespace + 'all.select',
+
+            /**
+             * raised when data was saved
+             * @event husky.datagrid.data.saved
+             * @param {Object} data returned
+             */
+            DATA_SAVED = namespace + 'data.saved',
+
+            /**
+             * raised when save of data failed
+             * @event husky.datagrid.data.save.failed
+             * @param {String} text status
+             * @param {String} error thrown
+             *
+             */
+            DATA_SAVE_FAILED = namespace + 'data.save.failed',
+
+            /**
+             * raised when editable table is changed
+             * @event husky.datagrid.data.save
+             */
+            DATA_CHANGED = namespace + 'data.changed',
+
+
+        /* PROVIDED EVENTS */
+
+            /**
+             * raised when husky.datagrid.data.get is triggered
+             * @event husky.datagrid.data.provide
+             */
+            DATA_PROVIDE = namespace + 'data.provide',
+
+            /**
+             * listens on and changes the view of the datagrid
+             * @event husky.datagrid.view.change
+             * @param {String} viewId The identifier of the view
+             * @param {Object} Options to merge with the current view options
+             */
+            CHANGE_VIEW = namespace + 'view.change',
+
+            /**
+             * listens on and changes the pagination of the datagrid
+             * @event husky.datagrid.pagination.change
+             * @param {String} paginationId The identifier of the pagination
+             */
+            CHANGE_PAGINATION = namespace + 'pagination.change',
+
+            /**
+             * used to add a data record
+             * @event husky.datagrid.record.add
+             * @param {Object} the data of the new record
+             */
+            RECORD_ADD = namespace + 'record.add',
+
+            /**
+             * used to add a data record
+             * @event husky.datagrid.record.add
+             * @param {Object} the data of the new record
+             */
+            RECORDS_ADD = namespace + 'records.add',
+
+            /**
+             * used to remove a data-record
+             * @event husky.datagrid.record.remove
+             * @param {String} id of the record to be removed
+             */
+            RECORD_REMOVE = namespace + 'record.remove',
+
+            /**
+             * used to trigger an update of the data
+             * @event husky.datagrid.update
+             */
+            UPDATE = namespace + 'update',
+
+            /**
+             * used to filter data by search
+             * @event husky.datagrid.data.filter
+             * @param {String} searchField
+             * @param {String} searchString
+             */
+            DATA_SEARCH = namespace + 'data.search',
+
+            /**
+             * raised when data is sorted
+             * @event husky.datagrid.data.sort
+             */
+            DATA_SORT = namespace + 'data.sort',
+
+            /**
+             * used to filter data by updating an url parameter
+             * @event husky.datagrid.url.update
+             * @param {Object} url parameter : key
+             */
+            URL_UPDATE = namespace + 'url.update',
+
+            /**
+             * triggers husky.datagrid.data.provide
+             * @event husky.datagrid.data.get
+             */
+            DATA_GET = namespace + 'data.get',
+
+            /**
+             * triggers husky.datagrid.items.selected event, which returns all selected item ids
+             * @event husky.datagrid.items.get-selected
+             * @param  {Function} callback function receives array of selected items
+             */
+            ITEMS_GET_SELECTED = namespace + 'items.get-selected',
+
+
+        /**
+         * Private Methods
+         * --------------------------------------------------------------------
+         */
+
+            /**
+             * function updates an url by a given parameter name and value and returns it. The parameter is either added or updated.
+             * If value is not set, the parameter will be removed from url
+             * @param {String} url Url string to be updated
+             * @param {String} paramName Parameter which should be added / updated / removed
+             * @param {String|Null} paramValue Value of the parameter. If not set, parameter will be removed from url
+             * @returns {String} updated url
+             */
+            setGetParameter = function(url, paramName, paramValue) {
+                if (url.indexOf(paramName + "=") >= 0) {
+                    var prefix = url.substring(0, url.indexOf(paramName)),
+                        suffix = url.substring(url.indexOf(paramName));
+                    suffix = suffix.substring(suffix.indexOf('=') + 1);
+                    suffix = (suffix.indexOf('&') >= 0) ? suffix.substring(suffix.indexOf('&')) : '';
+                    if (!!paramValue) {
+                        url = prefix + paramName + '=' + paramValue + suffix;
+                    } else {
+                        if (url.substr(url.indexOf(paramName) - 1, 1) === '&') {
+                            url = url.substring(0, prefix.length - 1) + suffix;
+                        } else {
+                            url = prefix + suffix.substring(1, suffix.length);
+                        }
+                    }
+                }
+                else if (!!paramValue) {
+                    if (url.indexOf("?") < 0) {
+                        url += "?" + paramName + "=" + paramValue;
+                    }
+                    else {
+                        url += "&" + paramName + "=" + paramValue;
+                    }
+                }
+                return url;
+            },
+
+            /**
+             * Brings a date into the right format
+             * @param date {String} the date to parse
+             * @returns {String}
+             */
+            parseDate = function(date) {
+                var parsedDate = this.sandbox.date.format(date);
+                if (parsedDate !== null) {
+                    return parsedDate;
+                }
+                return date;
+            };
+
+        return {
+
+            /**
+             * Initialize the datagrid component
+             */
+            initialize: function() {
+                this.sandbox.logger.log('initialized datagrid');
+
+                // extend default options and set variables
+                this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
+
+
+                this.matchings = [];
+                this.requestFields = [];
+                this.filterMatchings(this.options.matchings);
+
+                this.types = types;
+
+                this.gridViews = {};
+                this.viewId = this.options.view;
+
+                this.paginations = {};
+                this.paginationId = this.options.pagination;
+
+                this.$loader = null;
+
+                // append datagrid to html element
+                this.$element = this.sandbox.dom.$('<div class="husky-datagrid"/>');
+                this.elId = this.sandbox.dom.attr(this.$el, 'id');
+                this.$el.append(this.$element);
+
+                this.sort = {
+                    attribute: null,
+                    direction: null
+                };
+
+                this.initRender();
+
+                // Should only be be called once
+                this.bindCustomEvents();
+            },
+
+            /**
+             * Gets the data either via the url or the array
+             */
+            getData: function() {
+                var url;
+
+                if (!!this.options.url) {
+                    url = this.options.url;
+
+                    this.sandbox.logger.log('load data from url');
+                    if (this.requestFields.length > 0) {
+                        url += (url.indexOf('?') === -1) ? '?' : '&';
+                        url += 'fields=' + this.requestFields.join(',');
+                    }
+                    this.load({ url: url});
+
+                } else if (!!this.options.data.items) {
+
+                    this.sandbox.logger.log('load data from array');
+                    this.data = this.options.data;
+
+                    this.gridViews[this.viewId].render(this.data, this.$element);
+                    if (!!this.paginations[this.paginationId]) {
+                        this.paginations[this.paginationId].render(this.data, this.$element);
+                    }
+                }
+            },
+
+            /**
+             * Takes an array of matchings and filters disabled matchings out of it
+             * Moreover it constructs the array of fields which should be requested from a server
+             * The filtered matchings are available in this.matchings
+             * The request-fields are available in this.requestFields
+             *
+             * @param {Array} matchings array with matchings
+             */
+            filterMatchings: function(matchings) {
+                var matchingObject;
+                this.matchings = [];
+                this.requestFields = [];
+
+                this.sandbox.util.foreach(matchings, function(matching) {
+                    matchingObject = {};
+
+                    // only add matching if it's not disabled
+                    if (matching.disabled !== 'true' && matching.disabled !== true) {
+
+                        // build up the matching with the keys of the passed matching
+                        for (var key in matching) {
+                            if (key === 'translation') {
+                                matchingObject.content = this.sandbox.translate(matching.translation);
+                            } else if (key === 'id') {
+                                matchingObject.attribute = matching.id;
+                            } else {
+                                matchingObject[key] = matching[key];
+                            }
+                        }
+                        // push the constructed matching to the global matchings array
+                        this.matchings.push(matchingObject);
+                    }
+                    // always load the id (never ever even think about not loading the id)
+                    this.requestFields.push(matching.id);
+                }.bind(this));
+            },
+
+            /**
+             * Renders the data of the datagrid
+             */
+            render: function() {
+                this.gridViews[this.viewId].render(this.data, this.$element);
+                if (!!this.paginations[this.paginationId]) {
+                    this.paginations[this.paginationId].render(this.data, this.$element);
+                }
+            },
+
+            /**
+             * Destroys the view and the pagination
+             */
+            destroy: function() {
+                if (this.gridViews[this.viewId].rendered === true) {
+                    this.gridViews[this.viewId].destroy();
+                    if (!!this.paginations[this.paginationId]) {
+                        this.paginations[this.paginationId].destroy();
+                    }
+                }
+            },
+
+            /**
+             * Loads contents via ajax
+             * @param params url
+             */
+            load: function(params) {
+                this.currentUrl = params.url;
+
+                this.loading();
+                this.destroy();
+
+                this.sandbox.util.load(this.getUrl(params), params.data)
+                    .then(function(response) {
+                        this.stopLoading();
+                        this.parseData(response);
+                        this.render();
+                        if (!!params.success && typeof params.success === 'function') {
+                            params.success(response);
+                        }
+                    }.bind(this))
+                    .fail(function(status, error) {
+                        this.sandbox.logger.error(status, error);
+                    }.bind(this));
+            },
+
+            /**
+             * Displays a loading icon
+             */
+            loading: function() {
+                this.$element
+                    .outerWidth(this.$element.outerWidth())
+                    .outerHeight(this.$element.outerHeight());
+
+                this.sandbox.dom.addClass(this.$element, 'loading');
+
+                if (!this.$loader) {
+                    this.$loader = this.sandbox.dom.createElement('<div class="datagrid-loader"/>');
+                    this.sandbox.dom.hide(this.$loader);
+                    this.sandbox.dom.append(this.$element, this.$loader);
+
+                    this.sandbox.start([
+                        {
+                            name: 'loader@husky',
+                            options: {
+                                el: this.$loader,
+                                size: '100px',
+                                color: '#cccccc'
+                            }
+                        }
+                    ]);
+                }
+
+                this.sandbox.dom.show(this.$loader);
+            },
+
+            /**
+             * Hides the loading icon
+             */
+            stopLoading: function() {
+                this.sandbox.dom.hide(this.$loader);
+                this.sandbox.dom.removeClass(this.$element, 'loading');
+                return this.$element.outerHeight('').outerWidth('');
+            },
+
+            /**
+             * Gets the view and a load to get data and render it
+             */
+            initRender: function() {
+                this.bindDOMEvents();
+                this.getPaginationDecorator(this.paginationId);
+                this.getViewDecorator(this.viewId);
+                this.getData();
+            },
+
+            /**
+             * Takes a data object and sets it to the global data-property
+             * @param data {Object} data property
+             */
+            parseData: function(data) {
+                this.data = {};
+                this.data.links = data._links;
+                this.data.embedded = data._embedded;
+                this.data.total = data.total;
+                this.data.numberOfAll = data.numberOfAll;
+                this.data.page = data.page;
+                this.data.pages = data.pages;
+                this.data.pageSize = data.pageSize;
+            },
+
+            /**
+             * Gets the view and starts the rendering of the data
+             * @param viewId {String} the identifier of the decorator
+             */
+            getViewDecorator: function(viewId) {
+                // TODO: dynamically load a decorator from external source if local decorator doesn't exist
+                this.viewId = viewId;
+
+                // if view is not already loaded, load it
+                if (!this.gridViews[this.viewId]) {
+                    this.gridViews[this.viewId] = decorators.views[this.viewId];
+                    var isViewValid = this.isViewValid(this.gridViews[this.viewId]);
+
+                    if (isViewValid === true) {
+                        // merge view options with passed ones
+                        this.gridViews[this.viewId].initialize(this, this.options.viewOptions[this.viewId]);
+                    } else {
+                        this.sandbox.logger.log('Error: View does not meet the configured requirements. See the documentation');
+                    }
+                }
+            },
+
+            /**
+             * Validates a given view
+             * @param view {Object} the view to validate
+             * @returns {boolean} returns true if the view is usable
+             */
+            isViewValid: function(view) {
+                var bool = true;
+                if (typeof view.initialize === 'undefined' ||
+                    typeof view.render === 'undefined' ||
+                    typeof view.destroy === 'undefined') {
+                    bool = false;
+                }
+                return bool;
+            },
+
+            /**
+             * Gets the Pagination and initializes it
+             * @param {String} paginationId the identifier of the pagination
+             */
+            getPaginationDecorator: function(paginationId) {
+                // todo: dynamically load a decorator if local decorator doesn't exist
+                if (!!paginationId) {
+                    this.paginationId = paginationId;
+
+                    // load the pagination if not already loaded
+                    if (!this.paginations[this.paginationId]) {
+                        this.paginations[this.paginationId] = decorators.paginations[this.paginationId];
+                        var paginationIsValid = this.isPaginationValid(this.paginations[this.paginationId]);
+                        if (paginationIsValid === true) {
+                            this.paginations[this.paginationId].initialize(this, this.options.paginationOptions[this.paginationId]);
+                        } else {
+                            this.sandbox.logger.log('Error: Pagination does not meet the configured requirements. See the documentation');
+                        }
+                    }
+                }
+            },
+
+            /**
+             * Changes the view of the datagrid
+             * @param view {String} identifier of the new view to use
+             * @param options {Object} an object with options to merge with the current view options for the view
+             */
+            changeView: function(view, options) {
+                this.destroy();
+                this.getViewDecorator(view);
+                this.extendViewOptions(options);
+                this.render();
+            },
+
+            /**
+             * Changes the pagination of the datagrid
+             * @param pagination {String} identifier of the new pagination to use
+             */
+            changePagination: function(pagination) {
+                this.destroy();
+                this.getPaginationDecorator(pagination);
+                this.render();
+            },
+
+            /**
+             * Takes an object with options and passes them to the view,
+             * so the view can extend its current ones with them
+             * @param options {Object} mew options
+             */
+            extendViewOptions: function(options) {
+                if (!!options && !!this.gridViews[this.viewId].extendOptions) {
+                    this.gridViews[this.viewId].extendOptions(options);
+                }
+            },
+
+            /**
+             * Validates a given pagination
+             * @param pagination {Object} the pagination to validate
+             * @returns {boolean} returns true if the pagination is usable
+             */
+            isPaginationValid: function(pagination) {
+                var bool = true;
+                if (typeof pagination.initialize === 'undefined' ||
+                    typeof pagination.render === 'undefined' ||
+                    typeof pagination.getPageSize === 'undefined' ||
+                    typeof pagination.destroy === 'undefined') {
+                    bool = false;
+                }
+                return bool;
+            },
+
+            /**
+             * Returns url with page size and page param at the end
+             * @param params
+             * @returns {string}
+             */
+            getUrl: function(params) {
+                if (!!this.data && !!this.data.links) {
+                    return params.url;
+                }
+
+                var delimiter = '?', url = params.url;
+                if (!!this.options.pagination && !!this.paginations[this.paginationId].getPageSize()) {
+                    if (params.url.indexOf('?') !== -1) {
+                        delimiter = '&';
+                    }
+                    url = params.url + delimiter + 'pageSize=' + this.paginations[this.paginationId].getPageSize();
+                    if (params.page > 1) {
+                        url += '&page=' + params.page;
+                    }
+                }
+
+                return url;
+            },
+
+            /**
+             * returns number and unit
+             * @param numberUnit
+             * @returns {{number: Number, unit: *}}
+             */
+            getNumberAndUnit: function(numberUnit) {
+                numberUnit = String(numberUnit);
+                var regex = numberUnit.match(/(\d+)\s*(.*)/);
+                // no unit , set default
+                if (!regex[2]) {
+                    regex[2] = this.options.defaultMeasureUnit;
+                }
+                return {number: parseInt(regex[1], 10), unit: regex[2]};
+            },
+
+            /**
+             * Manipulates the content of a cell with a process realted to the columns type
+             * @param content {String} the content of the cell
+             * @param type {String} the columns type
+             * @returns {String} the manipualted content
+             */
+            manipulateContent: function(content, type) {
+                if (type === types.DATE) {
+                    content = parseDate.call(this, content);
+                }
+                return content;
+            },
+
+            /**
+             * Reset the sorting properties
+             */
+            resetSortingOptions: function() {
+                this.sort.attribute = null;
+                this.sort.direction = null;
+            },
+
+            /**
+             * Binds Dom-related events
+             */
+            bindDOMEvents: function() {
+                this.sandbox.dom.on(this.sandbox.dom.$window, 'resize', this.windowResizeListener.bind(this));
+            },
+
+            /**
+             * Bind custom-related events
+             */
+            bindCustomEvents: function() {
+                this.sandbox.on('husky.navigation.size.changed', this.windowResizeListener.bind(this));
+
+                // listen for private events
+                this.sandbox.on(UPDATE, this.updateGrid.bind(this));
+
+                // provide the datagrid-data via event
+                this.sandbox.on(DATA_GET, this.provideData.bind(this));
+
+                // filter data
+                this.sandbox.on(DATA_SEARCH, this.searchGrid.bind(this));
+
+                // filter data
+                this.sandbox.on(URL_UPDATE, this.updateUrl.bind(this));
+
+                // changes the view of the datagrid
+                this.sandbox.on(CHANGE_VIEW, this.changeView.bind(this));
+
+                // changes the view of the datagrid
+                this.sandbox.on(CHANGE_PAGINATION, this.changePagination.bind(this));
+
+                // trigger selectedItems
+                this.sandbox.on(ITEMS_GET_SELECTED, function(callback) {
+                    callback(this.getSelectedItemIds());
+                }.bind(this));
+
+                // add a single data record
+                this.sandbox.on(RECORD_ADD, this.addRecordHandler.bind(this));
+                // add multiple data records
+                this.sandbox.on(RECORDS_ADD, this.addRecordsHandler.bind(this));
+
+                // remove a data record
+                this.sandbox.on(RECORD_REMOVE, this.removeRecordHandler.bind(this));
+
+                this.startColumnOptionsListener();
+                this.startSearchListener();
+            },
+
+            /**
+             * Listens on search events to trigger a grid search
+             */
+            startSearchListener: function() {
+                if (this.options.searchInstanceName !== null) {
+                    var searchInstanceName = '.' + this.options.searchInstanceName;
+                    this.sandbox.on('husky.search' + searchInstanceName, this.searchGrid.bind(this));
+                    this.sandbox.on('husky.search' + searchInstanceName + '.reset', this.searchGrid.bind(this, ''));
+                }
+            },
+
+            /**
+             * Starts a listener on column options to trigger a grid filter
+             */
+            startColumnOptionsListener: function() {
+                // listen to events from column options
+                if (this.options.columnOptionsInstanceName !== null) {
+                    var columnOptionsInstanceName = (this.options.columnOptionsInstanceName !== '') ? '.' + this.options.columnOptionsInstanceName : '';
+                    this.sandbox.on('husky.column-options' + columnOptionsInstanceName + '.saved', this.filterGrid.bind(this));
+                }
+            },
+
+            /**
+             * Returns url without params
+             */
+            getUrlWithoutParams: function() {
+                var url = this.data.links.self;
+
+                if (url.indexOf('?') !== -1) {
+                    return url.substring(0, url.indexOf('?'));
+                }
+
+                return url;
+            },
+
+            /**
+             * Returns the index of a data record for a given id
+             * @param id {Number|String} the id to search for
+             * @returns {Number|String} the index of the found record
+             */
+            getRecordIndexById: function(id) {
+                for (var i = -1, length = this.data.embedded.length; ++i < length;) {
+                    if (this.data.embedded[i].id === id) {
+                        return i;
+                    }
+                }
+                return null;
+            },
+
+            /**
+             * Provides data of the list to the caller
+             */
+            provideData: function() {
+                this.sandbox.emit(DATA_PROVIDE, this.data);
+            },
+
+            /**
+             * calls the funciton of the view responsible for the responsiveness
+             */
+            windowResizeListener: function() {
+                if (!!this.gridViews[this.viewId].onResize) {
+                    this.gridViews[this.viewId].onResize();
+                }
+            },
+
+            /**
+             * Handles the record add event
+             */
+            addRecordHandler: function(recordData) {
+                if (!!this.gridViews[this.viewId].addRecord) {
+                    if (!!recordData.id) {
+                        this.pushRecords([recordData]);
+                    }
+                    this.gridViews[this.viewId].addRecord(recordData);
+                }
+            },
+
+            /**
+             * Handles the event for adding multiple records
+             * to a view
+             * @param records {Array} array with new records to add
+             */
+            addRecordsHandler: function(records) {
+                if (!!this.gridViews[this.viewId].addRecord) {
+                    this.sandbox.util.foreach(records, function(record) {
+                        if (!!record.id) {
+                            this.pushRecords([record]);
+                        }
+                        this.gridViews[this.viewId].addRecord(record);
+                    }.bind(this));
+                }
+            },
+
+            /**
+             * Handles the row remove event
+             */
+            removeRecordHandler: function(recordId) {
+                if (!!this.gridViews[this.viewId].removeRecord) {
+                    this.gridViews[this.viewId].removeRecord(recordId);
+                }
+            },
+
+            /**
+             * Methods for data manipulation
+             * --------------------------------------------------------------------
+             */
+
+            /**
+             * Sets all data records unselected
+             */
+            deselectAllItems: function() {
+                for (var i = -1, length = this.data.embedded.length; ++i < length;) {
+                    this.data.embedded[i].selected = false;
+                }
+                // emit events with selected data
+                this.sandbox.emit(ALL_DESELECT);
+                this.sandbox.emit(NUMBER_SELECTIONS, 0);
+            },
+
+            /**
+             * Sets all data records selected
+             */
+            selectAllItems: function() {
+                var ids = [], i, length;
+                for (i = -1, length = this.data.embedded.length; ++i < length;) {
+                    this.data.embedded[i].selected = true;
+                    ids.push(this.data.embedded[i].id);
+                }
+                // emit events with selected data
+                this.sandbox.emit(ALL_SELECT, ids);
+                this.sandbox.emit(NUMBER_SELECTIONS, this.data.embedded.length);
+            },
+
+            /**
+             * Returns the ids of all selected items
+             * @return {Array} array with all ids
+             */
+            getSelectedItemIds: function() {
+                var ids = [], i, length;
+                for (i = -1, length = this.data.embedded.length; ++i < length;) {
+                    if (this.data.embedded[i].selected === true) {
+                        ids.push(this.data.embedded[i].id);
+                    }
+                }
+                return ids;
+            },
+
+            /**
+             * Sets all data records with their ids contained in the passed one selected and
+             * deselects all data records not contained.
+             * @param items {Array} array with all items that should be selected
+             */
+            setSelectedItems: function(items) {
+                var count = 0, i, length;
+                for (i = -1, length = this.data.embedded.length; ++i < length;) {
+                    if (items.indexOf(this.data.embedded[i].id) !== -1) {
+                        this.data.embedded[i].selected = true;
+                        count++;
+                    } else {
+                        this.data.embedded[i].selected = false;
+                    }
+                }
+                this.sandbox.emit(NUMBER_SELECTIONS, count);
+            },
+
+            /**
+             * Returns true if an item with a given id is selected
+             * @param id {Number|String} id of the item
+             * @returns {Boolean} returns true if item is selected
+             */
+            itemIsSelected: function(id) {
+                for (var i = -1, length = this.data.embedded.length; ++i < length;) {
+                    if (this.data.embedded[i].id === id) {
+                        return this.data.embedded[i].selected;
+                    }
+                }
+                return false;
+            },
+
+            /**
+             * Sets a data record with a given id selected
+             * @param id {String|Number} id of the item
+             * @return {Boolean} true of operation was successfull
+             */
+            setItemSelected: function(id) {
+                var itemIndex = this.getRecordIndexById(id);
+                if (itemIndex !== null) {
+                    this.data.embedded[itemIndex].selected = true;
+                    // emit events with selected data
+                    this.sandbox.emit(ITEM_SELECT, id);
+                    this.sandbox.emit(NUMBER_SELECTIONS, this.getSelectedItemIds().length);
+                    return true;
+                }
+                return false;
+            },
+
+            /**
+             * Sets a data record with a given id unselected
+             * @param id
+             * @return {Boolean} true of operation was succesfull
+             */
+            setItemUnselected: function(id) {
+                var itemIndex = this.getRecordIndexById(id);
+                if (itemIndex !== null) {
+                    this.data.embedded[itemIndex].selected = false;
+                    // emit events with selected data
+                    this.sandbox.emit(ITEM_DESELECT, id);
+                    this.sandbox.emit(NUMBER_SELECTIONS, this.getSelectedItemIds().length);
+                    return true;
+                }
+                return false;
+            },
+
+            /**
+             * updates the current url by given parameter object
+             * @param {Object} parameters Object key is used as parameter name, value as parameter value
+             */
+            updateUrl: function(parameters) {
+                var url, key;
+
+                url = this.currentUrl;
+
+                for (key in parameters) {
+                    url = setGetParameter.call(this, url, key, parameters[key]);
+                }
+
+                this.load({
+                    url: url,
+                    success: function() {
+                        this.sandbox.emit(UPDATED);
+                    }.bind(this)
+                });
+            },
+
+            /**
+             * Takes a record and overrides the one with the same id
+             * @param record {Object} new record to set. Needs at leas an id property
+             * @returns {boolean} true if record got successfully overridden
+             */
+            updateRecord: function(record) {
+                for (var i = -1, length = this.data.embedded.length; ++i < length;) {
+                    if (record.id === this.data.embedded[i].id) {
+                        this.data.embedded[i] = record;
+                        return true;
+                    }
+                }
+                return false;
+            },
+
+            /**
+             * Deletes a record with a given id
+             * @param recordId {Number|String} the id of the record to delete
+             * @returns {boolean} true if record got successfully deleted
+             */
+            removeRecord: function(recordId) {
+                for (var i = -1, length = this.data.embedded.length; ++i < length;) {
+                    if (recordId === this.data.embedded[i].id) {
+                        this.data.embedded.splice(i, 1);
+                        this.data.numberOfAll--;
+                        this.data.total--;
+                        if (!!this.paginations[this.paginationId]) {
+                            this.paginations[this.paginationId].rerender();
+                        }
+                        return true;
+                    }
+                }
+                return false;
+            },
+
+            /**
+             * Takes an array of records and pushes them to the global array
+             * @param records {Array} records to push
+             */
+            pushRecords: function(records) {
+                for (var i = -1, length = records.length; ++i < length;) {
+                    this.data.embedded.push(records[i]);
+                    this.data.numberOfAll++;
+                    this.data.total++;
+                }
+                if (!!this.paginations[this.paginationId]) {
+                    this.paginations[this.paginationId].rerender();
+                }
+            },
+
+            /**
+             * Takes an array of records and unshifts them to the global array
+             * @param records {Array} records to push
+             */
+            unshiftRecords: function(records) {
+                for (var i = -1, length = records.length; ++i < length;) {
+                    this.data.embedded.unshift(records[i]);
+                    this.data.numberOfAll++;
+                    this.data.total++;
+                    if (!!this.paginations[this.paginationId]) {
+                        this.paginations[this.paginationId].rerender();
+                    }
+                }
+            },
+
+            /**
+             * Called when the current page should change
+             * Emits husky.datagrid.updated event on success
+             * @param uri {String} Url to load the new data from
+             * @param page {Number} the page to change to
+             * @param pageSize {Number} new page size. Has to be set if no Uri is passed
+             */
+            changePage: function(uri, page, pageSize) {
+                var url, uriTemplate;
+
+                // if a url is passed load the data from this url
+                if (!!uri) {
+                    url = uri;
+
+                    // else generate an own uri
+                } else {
+                    // return if no page is passed or passed invalidly
+                    if (!page || page > this.data.pages || page < 1) {
+                        this.sandbox.logger.log("invalid page number or reached start/end!");
+                        return;
+                    }
+                    // if no pageSize is passed keep current pageSize
+                    if (!pageSize) {
+                        pageSize = this.data.pageSize;
+                    }
+
+                    // generate uri for loading
+                    uriTemplate = this.sandbox.uritemplate.parse(this.data.links.pagination);
+                    url = this.sandbox.uritemplate.expand(uriTemplate, {page: page, pageSize: pageSize});
+                }
+
+                this.sandbox.emit(PAGE_CHANGE, url);
+                this.load({url: url,
+                    success: function() {
+                        this.sandbox.emit(UPDATED, 'changed page');
+                    }.bind(this)});
+            },
+
+            /**
+             * Updates data in datagrid
+             * Called when husky.datagrid.update event emitted
+             * Emits husky.datagrid.updated event on success
+             */
+            updateGrid: function() {
+                this.resetSortingOptions();
+
+                this.load({
+                    url: this.data.links.self,
+                    success: function() {
+                        this.sandbox.emit(UPDATED);
+                    }.bind(this)
+                });
+            },
+
+
+            /**
+             * Filters fields out of the data passed to the view
+             * So its possible to hide fields/columns
+             * Note that the also the arrangement of fields/columns can be changed and the view can react to it
+             * @param {Array} matchings
+             */
+            filterGrid: function(matchings) {
+                var uriTemplate, url;
+
+                this.filterMatchings(matchings);
+
+                uriTemplate = this.sandbox.uritemplate.parse(this.data.links.filter);
+                url = this.sandbox.uritemplate.expand(uriTemplate, {fieldsList: this.requestFields.join(',')});
+
+                this.load({
+                    url: url,
+                    success: function() {
+                        this.sandbox.emit(UPDATED);
+                    }.bind(this)
+                });
+            },
+
+            /**
+             * Constructs the url to get sorted data and sets the request for it
+             * @param attribute {String} The attribute to sort by
+             * @param direction {String} the sort method to use 'asc' or 'desc'
+             */
+            sortGrid: function(attribute, direction) {
+                if (this.options.sortable === true) {
+                    var template, url;
+
+                    // if passed attribute is sortable
+                    if (!!attribute && !!this.data.links.sortable[attribute]) {
+
+                        this.sort.attribute = attribute;
+                        this.sort.direction = direction;
+
+                        template = this.sandbox.uritemplate.parse(this.data.links.sortable[attribute]);
+                        url = this.sandbox.uritemplate.expand(template, {sortOrder: direction});
+
+                        this.sandbox.emit(DATA_SORT);
+
+                        this.load({
+                            url: url,
+                            success: function() {
+                                this.sandbox.emit(UPDATED);
+                            }.bind(this)
+                        });
+                    }
+                }
+            },
+
+            /**
+             * triggers an api search
+             * @param {String} searchString The String that will be searched
+             * @param {String|Array} searchFields Fields that will be included into the search
+             */
+            searchGrid: function(searchString, searchFields) {
+                var template, url;
+
+                template = this.sandbox.uritemplate.parse(this.data.links.find);
+                url = this.sandbox.uritemplate.expand(template, {searchString: searchString, searchFields: searchFields});
+
+                this.load({
+                    url: url,
+                    success: function() {
+                        this.sandbox.emit(UPDATED);
+                    }.bind(this)
+                });
+            },
+
+            /**
+             * Takes a data-record and sends it to a url
+             * @param data {Object} the data object to save
+             * @param url {String} Url to send the data to
+             * @param success {Function} callback to call after saving
+             * @param fail {Function} callback to call if saving has failed
+             * @param unshift {Boolean} If true newly added records will be unshifted instead of pushed
+             */
+            saveGrid: function(data, url, success, fail, unshift) {
+                var method = 'POST',
+                    isNewRecord = true;
+
+                if (!!data.id) {
+                    method = 'PUT';
+                    isNewRecord = false;
+                    url = url + '/' + data.id;
+                }
+
+                this.sandbox.emit(DATA_CHANGED);
+
+                this.sandbox.util.save(url, method, data)
+                    .then(function(data, textStatus) {
+                        this.sandbox.emit(DATA_SAVED, data, textStatus);
+
+                        if (typeof success === 'function') {
+                            success(data, textStatus);
+                        }
+
+                        // update the global data array
+                        if (isNewRecord === false) {
+                            this.updateRecord(data);
+                        } else if (unshift === true) {
+                            this.unshiftRecords([data]);
+                        } else {
+                            this.pushRecords([data]);
+                        }
+                    }.bind(this))
+                    .fail(function(jqXHR, textStatus, error) {
+                        this.sandbox.emit(DATA_SAVE_FAILED, textStatus, error);
+
+                        if (typeof fail === 'function') {
+                            fail(jqXHR, textStatus, error);
+                        }
+
+                    }.bind(this));
+            }
+        };
+    });
+})();
 
 /*
  * This file is part of the Sulu CMS.
@@ -37147,6 +39489,318 @@ define('__component__$toggler@husky',[], function() {
 
 });
 
+/**
+ * This file is part of Husky frontend development framework.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ *
+ * @module husky/components/dropzone
+ */
+
+/**
+ * @class Dropzone
+ * @constructor
+ *
+ * @params {Object} [options] Configuration object
+ * @params {String} [options.titleKey] The title to display if no items are dropped (can be a translation key)
+ * @params {String} [options.descriptionKey] The description to display if no items are dropped (can be a translation key)
+ * @params {String} [options.descriptionIcon] The icon to display if no items are dropped
+ * @params {String} [options.cancelLoadingIcon] the icon which gets displayed while a file item gets uploaded
+ * @params {String} [options.method] method to use for uploading 'PUT' or 'POST'
+ * @params {String} [options.url] url to upload the files to
+ * @params {String} [options.paramName] the name of the parameter which will contain the file(s). Note that if uploadMultiple is set to true the parameter Name gets extended with '[]'
+ * @params {Object} [options.headers] additional headers to pass with each request
+ * @params {Boolean} [options.uploadMultiple] if true a request can upload multiple files
+ * @params {Function} [options.successCallback] callback which gets called if a file got successfully uploaded. First parameter is the file, the second the response
+ * @params {Function} [options.beforeSendingCallback] callback which gets called before a file gets uploaded. First parameter is the file.
+ * @params {Function} [options.removeFileCallback] callback which gets called after a file got removed. First parameter is the file.
+ * @params {Object} [options.pluginOptions] Options to pass to the dropzone-plugin to completely override all options set by husky. Use with care.
+ */
+define('__component__$dropzone@husky',[], function() {
+
+    
+
+    var defaults = {
+            instanceName: 'undefined',
+            titleKey: 'sulu.upload.dropzone-title',
+            descriptionKey: 'sulu.upload.dropzone-desc',
+            descriptionIcon: 'cloud-upload',
+            cancelLoadingIcon: 'repeat',
+            method: 'POST',
+            url: '/',
+            paramName: 'file',
+            headers: {},
+            uploadMultiple: false,
+            successCallback: null,
+            beforeSendingCallback: null,
+            removeFileCallback: null,
+            pluginOptions: {},
+            fadeOutDuration: 200, //ms
+            fadeOutDelay: 1500 //ms
+        },
+
+        constants = {
+            contianerClass: 'husky-dropzone',
+            descriptionClass: 'description',
+            uploadedItemContainerClass: 'upload-items',
+            uploadItemClass: 'item',
+            droppedClass: 'dropped'
+        },
+
+        /** templates for component */
+        templates = {
+            basic: [
+                '<div class="'+ constants.descriptionClass +'">',
+                    '<div class="icon-<%= icon %> icon"></div>',
+                    '<span class="title"><%= title %></span>',
+                    '<span><%= description %></span>',
+                '</div>',
+                '<div class="'+ constants.uploadedItemContainerClass +'"></div>'
+            ].join(''),
+            uploadItem: [
+                '<div class="'+ constants.uploadItemClass +'">' +
+                    '<div class="loading-content">',
+                        '<div class="icon-<%= cancelIcon %> icon" data-dz-remove></div>',
+                        '<div class="file-size" data-dz-size></div>',
+                        '<div class="progress">',
+                            '<div class="bar" data-dz-uploadprogress></div>',
+                        '</div>',
+                    '</div>',
+                    '<div class="success-content">',
+                        '<div class="image">',
+                            '<img data-dz-thumbnail />',
+                        '</div>',
+                        '<div class="icon-ok tick"></div>',
+                    '</div>',
+                '</div>'
+            ].join('')
+        },
+
+        /**
+         * namespace for events
+         * @type {string}
+         */
+            eventNamespace = 'husky.dropzone.',
+
+        /**
+         * raised after initialization process
+         * @event husky.dropzone.<instance-name>.initialize
+         */
+            INITIALIZED = function() {
+            return createEventName.call(this, 'initialized');
+        },
+
+        /**
+         * raised before sending a file
+         * @event husky.dropzone.<instance-name>.uploading
+         * @param {Object} the file
+         */
+            UPLOADING = function() {
+            return createEventName.call(this, 'uploading');
+        },
+
+        /**
+         * raised after file got successfully uploaded
+         * @event husky.dropzone.<instance-name>.success
+         * @param {Object} the file
+         * @param {Object} the response
+         */
+            SUCCESS = function() {
+            return createEventName.call(this, 'success');
+        },
+
+        /**
+         * raised after file got removed from the zone
+         * @event husky.dropzone.<instance-name>.file-remove
+         * @param {Object} the file
+         */
+            FILE_REMOVED = function() {
+            return createEventName.call(this, 'file-removed');
+        },
+
+        /**
+         * raised after files got uploaded and faded out from the dropzone
+         * @event husky.dropzone.<instance-name>.files-added
+         * @param {Array} all newly added files
+         */
+            FILES_ADDED = function() {
+            return createEventName.call(this, 'files-added');
+        },
+
+        /** returns normalized event names */
+            createEventName = function(postFix) {
+            return eventNamespace + (this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
+        };
+
+    return {
+
+        /**
+         * Initialize component
+         */
+        initialize: function() {
+            this.sandbox.logger.log('initialize', this);
+
+            // merge defaults, type defaults and options
+            this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
+            this.dropzone = null;
+            this.lastUploadedFile = null;
+
+            this.render();
+            this.bindDomEvents();
+
+            this.sandbox.emit(INITIALIZED.call(this));
+        },
+
+        /**
+         * Binds dom related events
+         */
+        bindDomEvents: function() {
+            // delegate click on elements children to element
+            this.sandbox.dom.on(this.$find('*'), 'click', function(event) {
+                this.sandbox.dom.stopPropagation(event);
+                this.sandbox.dom.trigger(this.$el, 'click');
+            }.bind(this));
+        },
+
+        /**
+         * Renders the component
+         */
+        render: function() {
+            this.sandbox.dom.addClass(this.$el, constants.contianerClass);
+            this.sandbox.dom.html(this.$el, this.sandbox.util.template(templates.basic)({
+                description: this.options.descriptionKey,
+                title: this.options.titleKey,
+                icon: this.options.descriptionIcon,
+                instanceName: this.options.instanceName
+            }));
+            this.startDropzone();
+        },
+
+        /**
+         * Starts the dropzone component
+         */
+        startDropzone: function() {
+            var that = this,
+                options = {
+                    url: this.options.url,
+                    method: this.options.method,
+                    paramName: this.options.paramName,
+                    uploadMultiple: this.options.uploadMultiple,
+                    headers: this.options.headers,
+                    previewTemplate: this.sandbox.util.template(templates.uploadItem)({
+                        cancelIcon: this.options.cancelLoadingIcon
+                    }),
+                    previewsContainer: this.$find('.' + constants.uploadedItemContainerClass)[0],
+                    init: function() {
+                        // store dropzone context
+                        that.dropzone = this;
+
+                        // gets called if file gets added (drop or via the upload window)
+                        this.on('addedfile', function(file) {
+                            this.sandbox.dom.addClass(this.$el, constants.droppedClass);
+
+                            // prevent the the upload window to open on click on the preview item
+                            this.sandbox.dom.on(file.previewElement, 'click', function(event) {
+                                this.sandbox.dom.stopPropagation(event);
+                            }.bind(this));
+                        }.bind(that));
+
+                        // gets called before the file is sent
+                        this.on('sending', function(file) {
+                            if (typeof this.options.beforeSendingCallback === 'function') {
+                                this.options.beforeSendingCallback(file);
+                            } else {
+                                this.sandbox.emit(UPLOADING.call(this), file);
+                            }
+                        }.bind(that));
+
+                        // gets called if the file was uploaded successfully
+                        this.on('success', function(file, response) {
+                            if (this.lastUploadedFile !== file) {
+                                file.response = response;
+                                this.lastUploadedFile = file;
+                                if (typeof this.options.successCallback === 'function') {
+                                    this.options.successCallback(file, response);
+                                } else {
+                                    this.sandbox.emit(SUCCESS.call(this), file, response);
+                                }
+                                this.removeAllFiles();
+                            }
+                        }.bind(that));
+
+                        // gets called if a file gets removed from the zone
+                        this.on('removedfile', function(file) {
+                            if (typeof this.options.removeFileCallback === 'function') {
+                                this.options.removeFileCallback(file);
+                            } else {
+                                this.sandbox.emit(FILE_REMOVED.call(this), file);
+                            }
+                        }.bind(that));
+
+                        // gets called if all files are removed from the zone
+                        this.on('reset', function() {
+                            this.sandbox.dom.removeClass(this.$el, constants.droppedClass);
+                        }.bind(that));
+                    }
+                };
+
+            // merge the default plugin options with with passed ones
+            this.sandbox.util.extend(true, {}, options, this.options.pluginOptions);
+            this.sandbox.dropzone.initialize(this.$el, options);
+        },
+
+        /**
+         * Removes all files from the dropzone
+         * but only if all dropped files got uploaded
+         */
+        removeAllFiles: function() {
+            // if all files got uploaded
+            if (this.dropzone.getUploadingFiles.call(this.dropzone).length === 0) {
+                this.sandbox.util.delay(
+                    function() {
+                        this.sandbox.dom.fadeOut(
+                            this.$find('.' + constants.uploadItemClass),
+                            this.options.fadeOutDuration,
+                            function() {
+                                if (this.$find('.' + constants.uploadItemClass + ':animated').length === 0) {
+                                    this.afterFadeOut();
+                                }
+                            }.bind(this)
+                        );
+                    }.bind(this),
+                    this.options.fadeOutDelay
+                );
+            }
+        },
+
+        /**
+         * Function gets called after all dropped files
+         * have faded out
+         */
+        afterFadeOut: function() {
+            this.sandbox.dom.removeClass(this.$el, constants.droppedClass);
+            this.sandbox.emit(FILES_ADDED.call(this), this.getResponseArray(this.dropzone.files));
+        },
+
+        /**
+         * Returns an array with responses for a given array of files
+         * @param files {Array} array of files with response properties
+         * @returns {Array} array of responses
+         */
+        getResponseArray: function(files) {
+            var arrReturn = [], i, length;
+            for (i = -1, length = files.length; ++i < length;) {
+                arrReturn.push(files[i].response);
+            }
+            return arrReturn;
+        }
+    };
+
+});
+
 (function() {
 
     
@@ -37354,6 +40008,34 @@ define('husky_extensions/collection',[],function() {
 
     };
 });
+
+(function() {
+
+    
+
+    require.config({
+        paths: { "dropzone": 'bower_components/dropzone/dropzone' }
+    });
+
+    define('husky_extensions/dropzone',['dropzone'], function(Dropzone) {
+        return {
+            name: 'dropzone',
+
+            initialize: function(app) {
+                // Disable confirmation
+                Dropzone.confirm = function(question, accepted) {
+                    accepted();
+                },
+
+                app.sandbox.dropzone = {
+                    initialize: function(selector, configs) {
+                        return app.core.dom.$(selector).dropzone(configs);
+                    }
+                };
+            }
+        };
+    });
+})();
 
 (function() {
 
@@ -37912,6 +40594,14 @@ define('husky_extensions/collection',[],function() {
                 $(selector).trigger(eventType, params);
             };
 
+            app.core.dom.select = function(selector, handler) {
+                if (!!handler) {
+                    return $(selector).select(handler);
+                } else {
+                    return $(selector).select();
+                }
+            };
+
             app.core.dom.toggleClass = function(selector, className) {
                 $(selector).toggleClass(className);
             };
@@ -38071,6 +40761,10 @@ define('husky_extensions/collection',[],function() {
 
             app.core.dom.focus = function(selector) {
                 $(selector).focus();
+            };
+
+            app.core.dom.click = function(selector) {
+                $(selector).click();
             };
 
             app.core.dom.animate = function(selector, properties, options) {
@@ -38441,6 +41135,10 @@ define('husky_extensions/util',[],function() {
 
             app.core.util.uniqueId = function(prefix) {
                 return _.uniqueId(prefix);
+            };
+
+            app.core.util.delay = function(delay, callback) {
+                return _.delay(delay, callback);
             };
 
 			app.core.util.template = _.template;
