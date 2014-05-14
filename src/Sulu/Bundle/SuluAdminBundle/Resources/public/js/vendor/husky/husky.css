@@ -7620,6 +7620,103 @@ a.btn-black, a.btn-highlight {
   background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+Cjxzdmcgd2lkdGg9IjIycHgiIGhlaWdodD0iNTBweCIgdmlld0JveD0iMCAwIDIyIDUwIiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHhtbG5zOnNrZXRjaD0iaHR0cDovL3d3dy5ib2hlbWlhbmNvZGluZy5jb20vc2tldGNoL25zIj4KICAgIDx0aXRsZT5VbnRpdGxlZDwvdGl0bGU+CiAgICA8ZGVzY3JpcHRpb24+Q3JlYXRlZCB3aXRoIFNrZXRjaCAoaHR0cDovL3d3dy5ib2hlbWlhbmNvZGluZy5jb20vc2tldGNoKTwvZGVzY3JpcHRpb24+CiAgICA8ZGVmcz48L2RlZnM+CiAgICA8ZyBpZD0iUGFnZS0xIiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIiBza2V0Y2g6dHlwZT0iTVNQYWdlIj4KICAgICAgICA8cGF0aCBkPSJNLTE4MS45OTc3LDAgQy0xODMuNjU3NDkyLDAgLTE4NC4xNzkxODMsMS4wNDk5MjQxIC0xODMuMTUzMDgzLDIuMzU3NjIwNyBMLTE2Ny4wOTQ2MTgsMjIuODIzMDY2NCBDLTE2Ni4wNzI5MjcsMjQuMTI1MTQ0NCAtMTY2LjA4MTA1MywyNi4yMzEyODkzIC0xNjcuMTEyMzk2LDI3LjUyNjgwNDYgTC0xODMuMTM1MzA1LDQ3LjY1Mzg4MjQgQy0xODQuMTY2ODE1LDQ4Ljk0OTYwNzQgLTE4My42NTI1OTMsNTAgLTE4MS45OTc3LDUwIEwtMC4zMDQxMzI3NDcsNTAgQzEuMzU1NjU5MTksNTAgMy41Mzc1NTc0LDQ4Ljk0NzczOTMgNC41Njg5MDA1Nyw0Ny42NTAxNzkgTDIwLjU5MTgwOTcsMjcuNDkxMzI5NiBDMjEuNjIzMzE5NywyNi4xOTM1NTkzIDIxLjYzNTY4NzksMjQuMDkzMjE4IDIwLjYwMDcwNzQsMjIuNzc2MjU2NSBMNC41NjAwMDI4MywyLjM2NTI1MjA5IEMzLjUzMzQwNjg3LDEuMDU4OTU5NDMgMS4zNTA3NTk5NiwwIC0wLjMwNDEzMjc0NywwIEwtMTgxLjk5NzcsMCBaIiBpZD0iUmVjdGFuZ2xlLTc0IiBzdHJva2U9IiMyRDlGQkMiIGZpbGw9IiMyRDlGQkMiIHNrZXRjaDp0eXBlPSJNU1NoYXBlR3JvdXAiPjwvcGF0aD4KICAgIDwvZz4KPC9zdmc+);
 }
 
+/* line 5, ../scss/modules/toggler.scss */
+.husky-toggler {
+  width: 35px;
+  height: 20px;
+  border-radius: 11px;
+  display: inline-block;
+  vertical-align: middle;
+  cursor: pointer;
+}
+/* line 20, ../scss/modules/toggler.scss */
+.husky-toggler.outline {
+  margin-top: -2px;
+}
+/* line 22, ../scss/modules/toggler.scss */
+.husky-toggler.outline .toggler-wrapper {
+  border-color: #acdae6;
+  height: 22px;
+  border-radius: 11px;
+}
+/* line 27, ../scss/modules/toggler.scss */
+.husky-toggler.outline .switch {
+  border-color: #acdae6;
+  top: 1px;
+  left: 1px;
+}
+/* line 35, ../scss/modules/toggler.scss */
+.husky-toggler .toggler-wrapper {
+  background: white;
+  border: 1px solid #cccccc;
+  border-radius: 10px;
+  position: relative;
+  width: 35px;
+  height: 20px;
+  top: 0px;
+  left: 0px;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  -webkit-transition: all 100ms ease-in;
+  -moz-transition: all 100ms ease-in;
+  -o-transition: all 100ms ease-in;
+  transition: all 100ms ease-in;
+}
+/* line 48, ../scss/modules/toggler.scss */
+.husky-toggler .switch {
+  background: white;
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  border: 1px solid #cccccc;
+  margin: -1px 0 0 -1px;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  z-index: 10;
+  -webkit-transition: all 100ms ease-in;
+  -moz-transition: all 100ms ease-in;
+  -o-transition: all 100ms ease-in;
+  transition: all 100ms ease-in;
+}
+/* line 62, ../scss/modules/toggler.scss */
+.husky-toggler input {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  -webkit-transition: all 100ms ease-in;
+  -moz-transition: all 100ms ease-in;
+  -o-transition: all 100ms ease-in;
+  transition: all 100ms ease-in;
+  opacity: 0;
+  z-index: 0;
+}
+/* line 74, ../scss/modules/toggler.scss */
+.husky-toggler.checked.outline .toggler-wrapper {
+  border-color: #acdae6;
+}
+/* line 76, ../scss/modules/toggler.scss */
+.husky-toggler.checked.outline .toggler-wrapper .switch {
+  left: 14px;
+}
+/* line 82, ../scss/modules/toggler.scss */
+.husky-toggler.checked .toggler-wrapper {
+  background: #5dc774;
+  border-color: #5dc774;
+}
+/* line 87, ../scss/modules/toggler.scss */
+.husky-toggler.checked .switch {
+  border-color: #5dc774;
+  left: 15px;
+}
+/* line 91, ../scss/modules/toggler.scss */
+.husky-toggler.checked input {
+  left: 17px;
+}
+
 /* line 5, ../scss/modules/content-types.scss */
 .text-block {
   margin-bottom: 20px;
