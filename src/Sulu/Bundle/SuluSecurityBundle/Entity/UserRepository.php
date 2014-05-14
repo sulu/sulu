@@ -229,4 +229,20 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
 
         return $system;
     }
+
+    /**
+     * returns username for given apiKey
+     * @param string $apiKey userId
+     * @return string
+     */
+    public function getUsernameByApiKey($apiKey)
+    {
+        $user = $this->findOneBy(array('apiKey' => $apiKey));
+        if (!$user) {
+            return null;
+        }
+        return $user->getUsername();
+    }
+
+
 }
