@@ -91,7 +91,7 @@ define([
         },
 
         del: function() {
-            this.confirmSingleDeleteDialog(function(wasConfirmed, removeContacts) {
+            this.confirmSingleDeleteDialog(this.options.id, function(wasConfirmed, removeContacts) {
                 if (wasConfirmed) {
                     this.sandbox.emit('sulu.header.toolbar.item.loading', 'options-button');
                     this.account.destroy({
@@ -102,7 +102,7 @@ define([
                         }.bind(this)
                     });
                 }
-            }.bind(this), this.options.id);
+            }.bind(this));
         },
 
         save: function(data) {

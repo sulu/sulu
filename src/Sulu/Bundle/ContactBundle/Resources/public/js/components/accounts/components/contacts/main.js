@@ -151,6 +151,9 @@ define(['app-config'], function(AppConfig) {
                     el: this.$find('#list-toolbar-container'),
                     instanceName: 'contacts',
                     inHeader: true,
+                    selectItem: {
+                        type: null
+                    },
                     template: listTemplate
                 },
                 {
