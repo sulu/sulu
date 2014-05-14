@@ -41,6 +41,7 @@ define(['app-config'], function(AppConfig) {
             this.setHeadlines(this.accountType);
             this.render();
             this.setHeaderBar(true);
+            setHeaderToolbar.call(this);
             this.listenForChange();
         },
 
@@ -60,8 +61,6 @@ define(['app-config'], function(AppConfig) {
             if (!!this.options.data.id) {
                 excludeItem.push({id: this.options.data.id});
             }
-
-            setHeaderToolbar.call(this);
 
             this.sandbox.start([
                 {
