@@ -77,9 +77,10 @@ define(['app-config'], function(AppConfig) {
 
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/content/template/content/settings'));
             this.createForm(this.initData()).then(function() {
-                this.bindDomEvents();
-                this.listenForChange();
+                //todo: move bindDomEvents and listen for change here, but first look that the then-callback gets called
             }.bind(this));
+            this.bindDomEvents(); //move up
+            this.listenForChange(); //move up
 
             // enable state button
             this.setStateDropdown(this.options.data);
