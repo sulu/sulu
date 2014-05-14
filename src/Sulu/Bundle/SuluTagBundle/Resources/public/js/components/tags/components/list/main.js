@@ -15,7 +15,7 @@ define(function() {
 
         // add clicked
         this.sandbox.on('sulu.list-toolbar.add', function() {
-            this.sandbox.emit('husky.datagrid.row.add', { id: '', name: '', changed: '', created: '', author: ''});
+            this.sandbox.emit('husky.datagrid.record.add', { id: '', name: '', changed: '', created: '', author: ''});
         }.bind(this));
 
         // delete clicked
@@ -71,16 +71,13 @@ define(function() {
                 {
                     el: this.sandbox.dom.find('#tags-list', this.$el),
                     url: '/admin/api/tags?flat=true',
-                    editable: true,
-                    validation: true,
-                    addRowTop: true,
-                    progressRow: true,
-                    fullWidth: true,
-                    selectItem: {
-                        type: 'checkbox'
-                    },
-                    removeRow: false,
-                    sortable: true
+                    viewOptions: {
+                        table: {
+                            editable: true,
+                            validation: true,
+                            fullWidth: true
+                        }
+                    }
                 }
             );
 
