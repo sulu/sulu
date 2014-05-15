@@ -70,6 +70,11 @@ define([
                 this.load(id);
             }, this);
 
+            // wait for navigation events
+            this.sandbox.on('sulu.contacts.contact.load', function(id) {
+                this.loadContact(id);
+            }, this);
+
             // add new contact
             this.sandbox.on('sulu.contacts.accounts.new', function(type) {
                 this.add(type);
@@ -130,6 +135,11 @@ define([
             this.sandbox.emit('sulu.router.navigate', 'contacts/accounts/edit:' + id + '/details');
         },
 
+        loadContact: function(id) {
+            // TODO: show loading icon
+            this.sandbox.emit('sulu.router.navigate', 'contacts/contacts/edit:' + id + '/details');
+        },
+
         add: function(type) {
             // TODO: show loading icon
             this.sandbox.emit('sulu.router.navigate', 'contacts/accounts/add/type:' + type);
@@ -152,7 +162,7 @@ define([
                             processData: true,
 
                             success: function() {
-                                this.sandbox.emit('husky.datagrid.row.remove', id);
+                                this.sandbox.emit('husky.datagrid.record.remove', id);
                             }.bind(this)
                         });
                     }.bind(this));

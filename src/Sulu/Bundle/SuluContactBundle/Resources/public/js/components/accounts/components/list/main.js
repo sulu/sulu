@@ -233,10 +233,10 @@ define([
                 {
                     el: this.sandbox.dom.find('#companies-list', this.$el),
                     url: '/admin/api/accounts?flat=true' + dataUrlAddition,
-                    sortable: true,
-                    fullWidth: true,
-                    selectItem: {
-                        type: 'checkbox'
+                    viewOptions: {
+                        table: {
+                            fullWidth: true
+                        }
                     }
                 });
         }
