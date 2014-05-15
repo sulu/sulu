@@ -514,10 +514,6 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
                 formObject.initialized.then(function() {
                     this.sandbox.form.setData(constants.addressFormId, data);
                 }.bind(this));
-
-                // event listener to check if all necessary form elements are set
-                // TODO: change to $container after changing to current husky version
-                this.sandbox.dom.on(this.sandbox.dom.find(constants.addressFormId), 'keyup change', checkValidAddressData.bind(this), 'input, select');
             }.bind(this));
 
 //            // use husky select

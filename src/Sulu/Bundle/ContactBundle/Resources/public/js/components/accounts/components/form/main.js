@@ -14,7 +14,14 @@ define(['app-config'], function(AppConfig) {
     var defaults = {
         headline: 'contact.accounts.title'
     },
-        fields = ['urls', 'emails', 'faxes', 'phones', 'notes', 'addresses'];
+        fields = ['urls', 'emails', 'faxes', 'phones', 'notes', 'addresses'],
+
+        // sets toolbar
+        setHeaderToolbar = function() {
+            this.sandbox.emit('sulu.header.set-toolbar', {
+                template: 'default'
+            });
+        };
 
     return {
 
@@ -34,6 +41,7 @@ define(['app-config'], function(AppConfig) {
             this.setHeadlines(this.accountType);
             this.render();
             this.setHeaderBar(true);
+            setHeaderToolbar.call(this);
             this.listenForChange();
         },
 
@@ -54,7 +62,6 @@ define(['app-config'], function(AppConfig) {
                 excludeItem.push({id: this.options.data.id});
             }
 
-
             this.sandbox.start([
                 {
                     name: 'auto-complete@husky',
@@ -73,7 +80,9 @@ define(['app-config'], function(AppConfig) {
                 }
             ]);
 
+
             this.initForm(data);
+
 
             this.bindDomEvents();
             this.bindCustomEvents();
@@ -308,7 +317,7 @@ define(['app-config'], function(AppConfig) {
 
                 // FIXME auto complete in mapper
                 data.parent = {
-                    id: this.sandbox.dom.data('#company input', 'id')
+                    id: this.sandbox.dom.attr('#company input', 'data-id')
                 };
 
                 this.sandbox.emit('sulu.contacts.accounts.save', data);

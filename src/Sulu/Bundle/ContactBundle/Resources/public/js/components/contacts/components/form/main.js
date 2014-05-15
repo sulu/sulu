@@ -12,7 +12,13 @@ define([], function() {
     'use strict';
 
     var form = '#contact-form',
-        fields = ['urls', 'emails', 'faxes', 'phones', 'notes', 'addresses'];
+        fields = ['urls', 'emails', 'faxes', 'phones', 'notes', 'addresses'],
+
+        setHeaderToolbar = function() {
+            this.sandbox.emit('sulu.header.set-toolbar', {
+                template: 'default'
+            });
+        };
 
     return (function() {
         // FIXME move to this.*
@@ -28,6 +34,7 @@ define([], function() {
                 this.setTitle();
                 this.render();
                 this.setHeaderBar(true);
+                setHeaderToolbar.call(this);
                 this.listenForChange();
             },
 
@@ -248,7 +255,7 @@ define([], function() {
 
                     // FIXME auto complete in mapper
                     data.account = {
-                        id: this.sandbox.dom.data('#' + this.companyInstanceName, 'id')
+                        id: this.sandbox.dom.attr('#' + this.companyInstanceName, 'data-id')
                     };
 
                     this.sandbox.logger.log('log data', data);

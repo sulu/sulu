@@ -25,6 +25,7 @@ use Sulu\Bundle\ContactBundle\Entity\Note;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\RestController;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Makes contacts available through a REST API
@@ -104,11 +105,12 @@ class ContactController extends RestController implements ClassResourceInterface
     /**
      * lists all contacts
      * optional parameter 'flat' calls listAction
+     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function cgetAction()
+    public function cgetAction(Request $request)
     {
-        if ($this->getRequest()->get('flat') == 'true') {
+        if ($request->get('flat') == 'true') {
             // flat structure
             $view = $this->responseList();
         } else {
@@ -205,12 +207,13 @@ class ContactController extends RestController implements ClassResourceInterface
 
     /**
      * Creates a new contact
+     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function postAction()
+    public function postAction(Request $request)
     {
-        $firstName = $this->getRequest()->get('firstName');
-        $lastName = $this->getRequest()->get('lastName');
+        $firstName = $request->get('firstName');
+        $lastName = $request->get('lastName');
 
         try {
             if ($firstName == null) {
@@ -227,10 +230,10 @@ class ContactController extends RestController implements ClassResourceInterface
             $contact->setFirstName($firstName);
             $contact->setLastName($lastName);
 
-            $contact->setTitle($this->getRequest()->get('title'));
-            $contact->setPosition($this->getRequest()->get('position'));
+            $contact->setTitle($request->get('title'));
+            $contact->setPosition($request->get('position'));
 
-            $parentData = $this->getRequest()->get('account');
+            $parentData = $request->get('account');
             if ($parentData != null && $parentData['id'] != null && $parentData['id'] != 'null' && $parentData['id'] != '') {
                 /** @var Account $parent */
                 $parent = $this->getDoctrine()
@@ -246,42 +249,42 @@ class ContactController extends RestController implements ClassResourceInterface
             $contact->setCreated(new DateTime());
             $contact->setChanged(new DateTime());
 
-//            $urls = $this->getRequest()->get('urls');
+//            $urls = $request->get('urls');
 //            if (!empty($urls)) {
 //                foreach ($urls as $urlData) {
 //                    $this->addUrl($contact, $urlData);
 //                }
 //            }
 
-            $faxes = $this->getRequest()->get('faxes');
+            $faxes = $request->get('faxes');
             if (!empty($faxes)) {
                 foreach ($faxes as $faxData) {
                     $this->addFax($contact, $faxData);
                 }
             }
 
-            $emails = $this->getRequest()->get('emails');
+            $emails = $request->get('emails');
             if (!empty($emails)) {
                 foreach ($emails as $emailData) {
                     $this->addEmail($contact, $emailData);
                 }
             }
 
-            $phones = $this->getRequest()->get('phones');
+            $phones = $request->get('phones');
             if (!empty($phones)) {
                 foreach ($phones as $phoneData) {
                     $this->addPhone($contact, $phoneData);
                 }
             }
 
-            $addresses = $this->getRequest()->get('addresses');
+            $addresses = $request->get('addresses');
             if (!empty($addresses)) {
                 foreach ($addresses as $addressData) {
                     $this->addAddress($contact, $addressData);
                 }
             }
 
-            $notes = $this->getRequest()->get('notes');
+            $notes = $request->get('notes');
             if (!empty($notes)) {
                 foreach ($notes as $noteData) {
                     $this->addNote($contact, $noteData);
@@ -302,7 +305,12 @@ class ContactController extends RestController implements ClassResourceInterface
         return $this->handleView($view);
     }
 
-    public function putAction($id)
+    /**
+     * @param $id
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function putAction($id, Request $request)
     {
         $contactEntity = 'SuluContactBundle:Contact';
 
@@ -319,13 +327,13 @@ class ContactController extends RestController implements ClassResourceInterface
                 $em = $this->getDoctrine()->getManager();
 
                 // Standard contact fields
-                $contact->setFirstName($this->getRequest()->get('firstName'));
-                $contact->setLastName($this->getRequest()->get('lastName'));
+                $contact->setFirstName($request->get('firstName'));
+                $contact->setLastName($request->get('lastName'));
 
-                $contact->setTitle($this->getRequest()->get('title'));
-                $contact->setPosition($this->getRequest()->get('position'));
+                $contact->setTitle($request->get('title'));
+                $contact->setPosition($request->get('position'));
 
-                $parentData = $this->getRequest()->get('account');
+                $parentData = $request->get('account');
                 if ($parentData != null && $parentData['id'] != null && $parentData['id'] != 'null' && $parentData['id'] != '') {
                     /** @var Account $parent */
                     $parent = $this->getDoctrine()
@@ -343,12 +351,12 @@ class ContactController extends RestController implements ClassResourceInterface
                 $contact->setChanged(new DateTime());
 
                 // process details
-                if (!($this->processEmails($contact)
-                    && $this->processPhones($contact)
-                    && $this->processAddresses($contact)
-                    && $this->processNotes($contact)
-                    && $this->processFaxes($contact))
-//                    && $this->processUrls($contact))
+                if (!($this->processEmails($contact, $request)
+                    && $this->processPhones($contact, $request)
+                    && $this->processAddresses($contact, $request)
+                    && $this->processNotes($contact, $request)
+                    && $this->processFaxes($contact, $request))
+//                    && $this->processUrls($contact, $request))
                 ) {
                     throw new RestException('Updating dependencies is not possible', 0);
                 }
@@ -369,11 +377,12 @@ class ContactController extends RestController implements ClassResourceInterface
     /**
      * Process all emails from request
      * @param Contact $contact The contact on which is worked
+     * @param Request $request
      * @return bool True if the processing was successful, otherwise false
      */
-    protected function processEmails(Contact $contact)
+    protected function processEmails(Contact $contact, Request $request)
     {
-        $emails = $this->getRequest()->get('emails');
+        $emails = $request->get('emails');
 
         $delete = function ($email) use ($contact) {
             return $contact->removeEmail($email);
@@ -445,11 +454,12 @@ class ContactController extends RestController implements ClassResourceInterface
     /**
      * Process all phones from request
      * @param Contact $contact The contact on which is worked
+     * @param Request $request
      * @return bool True if the processing was successful, otherwise false
      */
-    protected function processPhones(Contact $contact)
+    protected function processPhones(Contact $contact, Request $request)
     {
-        $phones = $this->getRequest()->get('phones');
+        $phones = $request->get('phones');
 
         $delete = function ($phone) use ($contact) {
             return $contact->removePhone($phone);
@@ -522,11 +532,12 @@ class ContactController extends RestController implements ClassResourceInterface
 
     /**
      * @param Contact $contact
+     * @param Request $request
      * @return bool
      */
-    protected function processFaxes(Contact $contact)
+    protected function processFaxes(Contact $contact, Request $request)
     {
-        $faxes = $this->getRequest()->get('faxes');
+        $faxes = $request->get('faxes');
 
         $delete = function ($fax) use ($contact) {
             $contact->removeFax($fax);
@@ -605,11 +616,12 @@ class ContactController extends RestController implements ClassResourceInterface
     /**
      * Process all addresses from request
      * @param Contact $contact The contact on which is worked
+     * @param Request $request
      * @return bool True if the processing was sucessful, otherwise false
      */
-    protected function processAddresses(Contact $contact)
+    protected function processAddresses(Contact $contact, Request $request)
     {
-        $addresses = $this->getRequest()->get('addresses');
+        $addresses = $request->get('addresses');
 
         $delete = function ($address) use ($contact) {
             return $contact->removeAddresse($address);
@@ -709,11 +721,12 @@ class ContactController extends RestController implements ClassResourceInterface
     /**
      * Process all notes from request
      * @param Contact $contact The contact on which is worked
+     * @param Request $request
      * @return bool True if the processing was successful, otherwise false
      */
-    protected function processNotes(Contact $contact)
+    protected function processNotes(Contact $contact, Request $request)
     {
-        $notes = $this->getRequest()->get('notes');
+        $notes = $request->get('notes');
 
         $delete = function ($note) use ($contact) {
             return $contact->removeNote($note);
