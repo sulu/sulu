@@ -1,0 +1,71 @@
+/* line 6, ../scss/modules/collections.scss */
+#collections-list-container .toggle-all {
+  display: inline-block;
+  cursor: pointer;
+  font-size: 12px;
+}
+/* line 10, ../scss/modules/collections.scss */
+#collections-list-container .toggle-all .icon {
+  font-size: 8px;
+  color: #3E3E3E;
+  margin-right: 5px;
+}
+/* line 16, ../scss/modules/collections.scss */
+#collections-list-container .collections {
+  padding-top: 35px;
+}
+/* line 19, ../scss/modules/collections.scss */
+#collections-list-container .slide {
+  width: 100%;
+  height: 100px;
+  background: red;
+}
+/* line 27, ../scss/modules/collections.scss */
+#collections-list-container .collection .head {
+  height: 40px;
+  line-height: 40px;
+  border-bottom: 1px solid #cccccc;
+  cursor: pointer;
+}
+/* line 33, ../scss/modules/collections.scss */
+#collections-list-container .collection .head::after {
+  display: table;
+  content: "";
+  clear: both;
+}
+/* line 39, ../scss/modules/collections.scss */
+#collections-list-container .collection .color {
+  float: left;
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  margin-right: 8px;
+  margin-top: 10px;
+}
+/* line 47, ../scss/modules/collections.scss */
+#collections-list-container .collection .icon {
+  float: left;
+  margin-right: 8px;
+  font-size: 12px;
+  color: #3E3E3E;
+}
+/* line 53, ../scss/modules/collections.scss */
+#collections-list-container .collection .title {
+  float: left;
+  font-size: 18px;
+}
+/* line 57, ../scss/modules/collections.scss */
+#collections-list-container .collection .rightContent {
+  float: right;
+}
+/* line 59, ../scss/modules/collections.scss */
+#collections-list-container .collection .rightContent .total {
+  color: #999999;
+  font-size: 12px;
+  line-height: 12px;
+}
+
+/* line 1, ../scss/modules/collection.scss */
+.datagrid-container {
+  margin-top: 30px;
+}

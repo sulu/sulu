@@ -1,5 +1,7 @@
 parameters:
     sulu_media.admin.class: Sulu\Bundle\MediaBundle\Admin\SuluMediaAdmin
+    sulu_media.admin.content_navigation.class: Sulu\Bundle\MediaBundle\Admin\SuluMediaContentNavigation
+
 
 services:
     sulu_media.admin:
@@ -7,3 +9,5 @@ services:
         arguments: [%sulu_admin.name%]
         tags:
         - { name: sulu.admin }
+    sulu_media.admin.content_navigation:
+        class: %sulu_media.admin.content_navigation.class%

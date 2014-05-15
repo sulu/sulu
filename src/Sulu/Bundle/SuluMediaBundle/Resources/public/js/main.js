@@ -32,7 +32,7 @@ define({
             }
         });
 
-        // show a collection
+        // show a single collection with files and upload
         sandbox.mvc.routes.push({
             route: 'media/collections/edit::id/:content',
             callback: function(id, content) {
