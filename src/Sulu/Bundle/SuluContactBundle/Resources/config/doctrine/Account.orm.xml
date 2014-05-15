@@ -23,14 +23,18 @@
 
         <field name="division" type="string" column="division" length="255" nullable="true"/>
 
-        <field name="disabled" type="integer" column="disabled" length="1" column-definition="INT DEFAULT 0 NOT NULL"  />
-
-        <field name="uid" type="string" column="uid" length="50" nullable="true" />
 
         <field name="created" type="datetime" column="created"/>
         <field name="changed" type="datetime" column="changed"/>
 
+        <field name="number" type="integer" column="number" nullable="true" />
+
+        <field name="disabled" type="integer" column="disabled" length="1" column-definition="INT DEFAULT 0 NOT NULL"  />
         <field name="type" type="integer" column="type" nullable="false" column-definition="INT DEFAULT 0 NOT NULL" />
+
+        <!-- financial infos -->
+        <field name="uid" type="string" column="uid" length="50" nullable="true" />
+        <field name="registerNumber" type="string" column="registerNumber" nullable="true" />
 
         <!-- enabled EXTRA_LAZY loading to avoid overhead while using slice() to get contacts -->
         <one-to-many field="contacts" target-entity="Sulu\Bundle\ContactBundle\Entity\Contact" mapped-by="account"
@@ -128,6 +132,19 @@
                 </join-columns>
                 <inverse-join-columns>
                     <join-column name="idFaxes" referenced-column-name="id"/>
+                </inverse-join-columns>
+            </join-table>
+            <order-by>
+                <order-by-field name="id" direction="ASC"/>
+            </order-by>
+        </many-to-many>
+        <many-to-many field="bankAccounts" target-entity="Sulu\Bundle\ContactBundle\Entity\BankAccount" inversed-by="accounts">
+            <join-table name="co_account_bank_accounts">
+                <join-columns>
+                    <join-column name="idAccounts" referenced-column-name="id"/>
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="idBankAccounts" referenced-column-name="id"/>
                 </inverse-join-columns>
             </join-table>
             <order-by>

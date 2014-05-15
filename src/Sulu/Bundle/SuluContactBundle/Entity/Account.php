@@ -154,6 +154,21 @@ class Account extends ApiEntity
      */
     private $uid;
 
+    /**
+     * @var integer
+     */
+    private $number;
+
+    /**
+     * @var string
+     */
+    private $registerNumber;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $bankAccounts;
+
 
     /**
      * Constructor
@@ -766,5 +781,84 @@ class Account extends ApiEntity
     public function removeFaxe(\Sulu\Bundle\ContactBundle\Entity\Fax $faxes)
     {
         $this->faxes->removeElement($faxes);
+    }
+
+    /**
+     * Set number
+     *
+     * @param integer $number
+     * @return Account
+     */
+    public function setNumber($number)
+    {
+        $this->number = $number;
+    
+        return $this;
+    }
+
+    /**
+     * Get number
+     *
+     * @return integer 
+     */
+    public function getNumber()
+    {
+        return $this->number;
+    }
+
+    /**
+     * Set registerNumber
+     *
+     * @param string $registerNumber
+     * @return Account
+     */
+    public function setRegisterNumber($registerNumber)
+    {
+        $this->registerNumber = $registerNumber;
+    
+        return $this;
+    }
+
+    /**
+     * Get registerNumber
+     *
+     * @return string 
+     */
+    public function getRegisterNumber()
+    {
+        return $this->registerNumber;
+    }
+
+    /**
+     * Add bankAccounts
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\BankAccount $bankAccounts
+     * @return Account
+     */
+    public function addBankAccount(\Sulu\Bundle\ContactBundle\Entity\BankAccount $bankAccounts)
+    {
+        $this->bankAccounts[] = $bankAccounts;
+    
+        return $this;
+    }
+
+    /**
+     * Remove bankAccounts
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\BankAccount $bankAccounts
+     */
+    public function removeBankAccount(\Sulu\Bundle\ContactBundle\Entity\BankAccount $bankAccounts)
+    {
+        $this->bankAccounts->removeElement($bankAccounts);
+    }
+
+    /**
+     * Get bankAccounts
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getBankAccounts()
+    {
+        return $this->bankAccounts;
     }
 }
