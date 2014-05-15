@@ -166,6 +166,12 @@ input, select {
   left: 0;
 }
 /* line 24, ../scss/modules/header.scss */
+.sulu-header .headline::after {
+  display: table;
+  content: "";
+  clear: both;
+}
+/* line 30, ../scss/modules/header.scss */
 .sulu-header .headline .back {
   position: absolute;
   top: 18px;
@@ -179,14 +185,32 @@ input, select {
   -o-transition: opacity 0.5s;
   transition: opacity 0.5s;
 }
-/* line 36, ../scss/modules/header.scss */
+/* line 40, ../scss/modules/header.scss */
+.sulu-header .headline .h1 {
+  float: left;
+}
+/* line 43, ../scss/modules/header.scss */
+.sulu-header .headline .title-color {
+  display: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  float: left;
+  margin-top: 19px;
+  margin-right: 10px;
+}
+/* line 51, ../scss/modules/header.scss */
+.sulu-header .headline .title-color.color-set {
+  display: block;
+}
+/* line 57, ../scss/modules/header.scss */
 .sulu-header .bottom-row {
   position: absolute;
   bottom: 10px;
   left: 0;
   width: 100%;
 }
-/* line 42, ../scss/modules/header.scss */
+/* line 63, ../scss/modules/header.scss */
 .sulu-header .bottom-row::after {
   content: ".";
   display: block;
@@ -195,34 +219,34 @@ input, select {
   line-height: 0;
   height: 0;
 }
-/* line 51, ../scss/modules/header.scss */
+/* line 72, ../scss/modules/header.scss */
 .sulu-header .bottom-row .bottom-content {
   float: left;
   line-height: 29px;
 }
-/* line 54, ../scss/modules/header.scss */
+/* line 75, ../scss/modules/header.scss */
 .sulu-header .bottom-row .bottom-content * {
   color: white;
 }
-/* line 60, ../scss/modules/header.scss */
+/* line 81, ../scss/modules/header.scss */
 .sulu-header .tabs {
   height: 50px;
 }
-/* line 64, ../scss/modules/header.scss */
+/* line 85, ../scss/modules/header.scss */
 .sulu-header .info {
   position: absolute;
   top: 10px;
   left: 0px;
 }
-/* line 72, ../scss/modules/header.scss */
+/* line 93, ../scss/modules/header.scss */
 .sulu-header.squeezed .info, .sulu-header.squeezed .headline {
   left: 50px;
 }
-/* line 75, ../scss/modules/header.scss */
+/* line 96, ../scss/modules/header.scss */
 .sulu-header.squeezed .tabs, .sulu-header.squeezed .bottom-row {
   padding-left: 50px;
 }
-/* line 78, ../scss/modules/header.scss */
+/* line 99, ../scss/modules/header.scss */
 .sulu-header.squeezed .bottom-row {
   padding-right: 30px;
 }
