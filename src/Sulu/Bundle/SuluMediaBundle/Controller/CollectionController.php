@@ -47,7 +47,7 @@ class CollectionController extends RestController implements ClassResourceInterf
     /**
      * {@inheritdoc}
      */
-    protected $fieldsExcluded = array('lft', 'rgt', 'depth');
+    protected $fieldsExcluded = array('lft', 'rgt', 'depth', 'medias');
 
     /**
      * {@inheritdoc}
