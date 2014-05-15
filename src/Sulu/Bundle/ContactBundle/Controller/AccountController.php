@@ -55,12 +55,12 @@ class AccountController extends RestController implements ClassResourceInterface
     /**
      * {@inheritdoc}
      */
-    protected $fieldsExcluded = array('lft', 'rgt', 'depth');
+    protected $fieldsExcluded = array('lft', 'rgt', 'depth', 'id');
 
     /**
      * {@inheritdoc}
      */
-    protected $fieldsHidden = array('created', 'type', 'division', 'disabled', 'uid');
+    protected $fieldsHidden = array('created', 'type', 'division', 'disabled', 'uid','registerNumber');
 
     /**
      * {@inheritdoc}
@@ -70,12 +70,15 @@ class AccountController extends RestController implements ClassResourceInterface
     /**
      * {@inheritdoc}
      */
-    protected $fieldsSortOrder = array(0 => 'id');
+    protected $fieldsSortOrder = array(0=>'number');
 
     /**
      * {@inheritdoc}
      */
-    protected $fieldsTranslationKeys = array('id' => 'public.id');
+    protected $fieldsTranslationKeys = array(
+        'id' => 'public.id',
+        'number' => 'public.number'
+    );
 
     /**
      * {@inheritdoc}
@@ -90,7 +93,10 @@ class AccountController extends RestController implements ClassResourceInterface
     /**
      * {@inheritdoc}
      */
-    protected $fieldsWidth = array('type' => '150px');
+    protected $fieldsWidth = array(
+        'type' => '150px',
+        'number'=> '90px'
+    );
 
     /**
      * {@inheritdoc}
@@ -355,6 +361,13 @@ class AccountController extends RestController implements ClassResourceInterface
         }
 
         return $this->handleView($view);
+    }
+
+    /**
+     * partial update of account infos
+     */
+    public function patchAction() {
+
     }
 
     /**
