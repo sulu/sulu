@@ -1,5 +1,5 @@
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu CMF.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -36,6 +36,7 @@
  * @param {Boolean} [options.toolbarDisabled] if true the toolbar-component won't be initialized
  * @param {Boolean} [options.noBack] if true the back icon won't be displayed
  * @param {Boolean} [options.squeezed] if true the inner of the component will be squeezed. Used for the full-width mode of the content
+ * @param {String} [options.titleColor] hex-color for setting a colored point in front of the title
  */
 
 define([], function() {
@@ -59,11 +60,14 @@ define([], function() {
             breadcrumb: null,
             toolbarDisabled: false,
             noBack: false,
-            squeezed: false
+            squeezed: false,
+            titleColor: null
         },
 
         constants = {
             componentClass: 'sulu-header',
+            titleColorClass: 'title-color',
+            titleColorSetClass: 'color-set',
             infoClass: 'info',
             headlineClass: 'headline',
             backClass: 'back',
@@ -186,6 +190,7 @@ define([], function() {
                     '<div class="'+ constants.infoClass +'"></div>',
                     '<div class="'+ constants.headlineClass +'">',
                         '<span class="icon-'+ constants.backIcon +' '+ constants.backClass +'"></span>',
+                        '<span class="'+ constants.titleColorClass +'"></span>',
                         '<h1 class="bright"><%= headline %></h1>',
                     '</div>',
                     '<div class="bottom-row">',
@@ -288,6 +293,16 @@ define([], function() {
          */
         SET_TITLE = function() {
             return createEventName.call(this, 'set-title');
+        },
+
+        /**
+         * listens on and sets a color-point in front of the title
+         *
+         * @event sulu.header.[INSTANCE_NAME].set-title-color
+         * @param {string} color to set
+         */
+        SET_TITLE_COLOR = function() {
+            return createEventName.call(this, 'set-title-color');
         },
 
         /**
@@ -511,6 +526,11 @@ define([], function() {
                 this.setBreadcrumb(this.options.breadcrumb);
             }
 
+            // set title-color if set
+            if (this.options.titleColor !== null) {
+                this.setTitleColor(this.options.titleColor);
+            }
+
             // hide back if configured
             if (this.options.noBack === true) {
                 this.hideBack(false);
@@ -695,6 +715,9 @@ define([], function() {
             // change the title
             this.sandbox.on(SET_TITLE.call(this), this.setTitle.bind(this));
 
+            // change the color-point in front of the title
+            this.sandbox.on(SET_TITLE_COLOR.call(this), this.setTitleColor.bind(this));
+
             // get height event
             this.sandbox.on(GET_HEIGHT.call(this), function(callback) {
                 callback(this.sandbox.dom.outerHeight(this.$el));
@@ -859,6 +882,17 @@ define([], function() {
          */
         setTitle: function(title) {
             this.sandbox.dom.html(this.$find('h1'), this.sandbox.translate(title));
+        },
+
+        /**
+         * Changes the color-point in front of the title
+         * @param color {string} the new color
+         */
+        setTitleColor: function(color) {
+            this.sandbox.dom.addClass(this.$find('.' + constants.titleColorClass), constants.titleColorSetClass);
+            this.sandbox.dom.css(this.$find('.' + constants.titleColorClass), {
+               'background-color': color
+            });
         },
 
         /**

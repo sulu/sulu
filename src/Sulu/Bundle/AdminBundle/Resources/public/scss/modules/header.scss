@@ -21,6 +21,12 @@
         top: 45px;
         left: 0;
 
+        &::after {
+            display: table;
+            content: "";
+            clear: both;
+        }
+
         .back {
             position: absolute;
             top: 18px;
@@ -30,6 +36,21 @@
             cursor: pointer;
             opacity: 1;
             @include single-transition(opacity, $transitionDuration);
+        }
+        .h1 {
+          float: left;
+        }
+        .title-color {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 10px;
+            float: left;
+            margin-top: 19px;
+            margin-right: 10px;
+            &.color-set {
+                display: block;
+            }
         }
     }
 
