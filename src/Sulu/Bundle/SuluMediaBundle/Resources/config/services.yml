@@ -4,5 +4,6 @@ parameters:
 services:
     sulu_media.admin:
         class: %sulu_media.admin.class%
+        arguments: [%sulu_admin.name%]
         tags:
         - { name: sulu.admin }

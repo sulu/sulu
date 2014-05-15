@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage" table="me_file_version_publish_languages">
+
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+        <field name="locale" type="string" column="locale" length="5" />
+        <many-to-one field="fileVersion" target-entity="Sulu\Bundle\MediaBundle\Entity\FileVersion" inversed-by="publishLanguages">
+            <join-columns>
+                <join-column name="idFileVersions" referenced-column-name="id" on-delete="CASCADE" />
+            </join-columns>
+        </many-to-one>
+
+    </entity>
+</doctrine-mapping>
