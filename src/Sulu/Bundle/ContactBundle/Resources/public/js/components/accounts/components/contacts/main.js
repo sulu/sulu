@@ -7,14 +7,17 @@
  * with this source code in the file LICENSE.
  */
 
-define(['app-config'], function(AppConfig) {
+define([
+    'app-config',
+    'mvc/relationalstore',
+], function(AppConfig, RelationalStore) {
 
     'use strict';
 
     var bindCustomEvents = function() {
             // navigate to edit contact
             this.sandbox.on('husky.datagrid.item.click', function(item) {
-                this.sandbox.emit('sulu.contacts.accounts.load', item);
+                this.sandbox.emit('sulu.contacts.contact.load', item);
             }, this);
 
             // delete clicked
@@ -101,7 +104,7 @@ define(['app-config'], function(AppConfig) {
                         }
                     ]
                 }
-            ]
+            ];
         },
 
 
@@ -141,6 +144,8 @@ define(['app-config'], function(AppConfig) {
 
         render: function() {
 
+            RelationalStore.reset(); //FIXME really necessary?
+
             this.sandbox.emit('sulu.', this.options.account);
 
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/contact/template/contact/list'));
@@ -151,21 +156,19 @@ define(['app-config'], function(AppConfig) {
                     el: this.$find('#list-toolbar-container'),
                     instanceName: 'contacts',
                     inHeader: true,
-                    selectItem: {
-                        type: null
-                    },
                     template: listTemplate
                 },
                 {
                     el: this.sandbox.dom.find('#people-list', this.$el),
                     url: '/admin/api/accounts/' + this.options.data.id + '/contacts?flat=true',
-                    fullWidth: true,
-                    selectItem: {
-                        type: 'checkbox'
-                    },
-                    removeRow: false,
                     searchInstanceName: 'contacts',
-                    sortable: true
+                    viewOptions: {
+                        table: {
+                            fullWidth: true,
+                            selectItem: false,
+                            removeRow: false
+                        }
+                    }
                 }
             );
         }

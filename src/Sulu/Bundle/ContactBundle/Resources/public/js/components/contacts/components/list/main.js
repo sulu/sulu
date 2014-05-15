@@ -67,13 +67,12 @@ define(function() {
                 {
                     el: this.sandbox.dom.find('#people-list', this.$el),
                     url: '/admin/api/contacts?flat=true',
-                    fullWidth: true,
-                    selectItem: {
-                        type: 'checkbox'
-                    },
-                    removeRow: false,
                     searchInstanceName: 'contacts',
-                    sortable: true
+                    viewOptions: {
+                        table: {
+                            fullWidth: true
+                        }
+                    }
                 }
             );
         }
