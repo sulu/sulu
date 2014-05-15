@@ -34,23 +34,9 @@ class CollectionRepository extends EntityRepository
                 ->leftJoin('collection.metas', 'collectionMeta')
                 ->leftJoin('collection.type', 'type')
                 ->leftJoin('collection.parent', 'parent')
-                ->leftJoin('collection.medias', 'media')
-                ->leftJoin('media.files', 'file')
-                ->leftJoin('file.fileVersions', 'fileVersion')
-                ->leftJoin('fileVersion.tags', 'tag')
-                ->leftJoin('fileVersion.metas', 'fileVersionMeta')
-                ->leftJoin('fileVersion.contentLanguages', 'fileVersionContentLanguage')
-                ->leftJoin('fileVersion.publishLanguages', 'fileVersionPublishLanguage')
                 ->addSelect('collectionMeta')
                 ->addSelect('type')
                 ->addSelect('parent')
-                ->addSelect('media')
-                ->addSelect('file')
-                ->addSelect('fileVersion')
-                ->addSelect('tag')
-                ->addSelect('fileVersionMeta')
-                ->addSelect('fileVersionContentLanguage')
-                ->addSelect('fileVersionPublishLanguage')
                 ->where('collection.id = :collectionId');
 
             $query = $qb->getQuery();
