@@ -11,7 +11,7 @@
 namespace Sulu\Bundle\MediaBundle\Media\Manager;
 
 use Doctrine\Common\Persistence\ObjectManager;
-use Sulu\Bundle\MediaBundle\Entity\File as FileEntity;
+use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
@@ -26,8 +26,8 @@ use Sulu\Bundle\MediaBundle\Media\Exception\UploadFileValidationException;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Sulu\Bundle\MediaBundle\Media\FileValidator\FileValidatorInterface;
 use Sulu\Component\Security\UserRepositoryInterface;
-use Symfony\Component\HttpFoundation\File\File;
 use DateTime;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class DefaultMediaManager implements MediaManagerInterface
 {
@@ -125,11 +125,11 @@ class DefaultMediaManager implements MediaManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function add(File $uploadedFile, $userId, $collectionId, $properties = array())
+    public function add(UploadedFile $uploadedFile, $userId, $collectionId, $properties = array())
     {
         $this->validator->validate($uploadedFile);
 
-        $storageOptions = $this->storage->save($uploadedFile->getPathname(), $uploadedFile->getFilename(), 1);
+        $storageOptions = $this->storage->save($uploadedFile->getPathname(), $uploadedFile->getClientOriginalName(), 1);
 
         // create media object
         $media = new Media();
@@ -148,7 +148,7 @@ class DefaultMediaManager implements MediaManagerInterface
         }
 
         // create file
-        $file = new FileEntity();
+        $file = new File();
         $file->setChanged(new Datetime());
         $file->setCreated(new Datetime());
         $file->setChanger($user);
@@ -187,10 +187,10 @@ class DefaultMediaManager implements MediaManagerInterface
     }
 
     /**
-     * @param File $uploadedFile
+     * @param UploadedFile $uploadedFile
      * @return object
      */
-    protected function getMediaType(File $uploadedFile)
+    protected function getMediaType(UploadedFile $uploadedFile)
     {
         $extension = $uploadedFile->getExtension();
         $id = null;
@@ -206,7 +206,7 @@ class DefaultMediaManager implements MediaManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function update(File $uploadedFile, $userId, $id, $collectionId = null, $properties = array())
+    public function update(UploadedFile $uploadedFile, $userId, $id, $collectionId = null, $properties = array())
     {
         $media = $this->mediaRepository->findMediaById($id);
         $user = $this->userRepository->findUserById($userId);
@@ -229,7 +229,7 @@ class DefaultMediaManager implements MediaManagerInterface
         }
 
         /**
-         * @var FileEntity $file
+         * @var File $file
          */
         $file = $media->getFiles()[0];
 
