@@ -165,7 +165,7 @@ define([
                     {title: 'navigation.contacts'},
                     {title: 'contact.accounts.title', event: 'sulu.contacts.accounts.list'}
                 ],
-                title = this.sandbox.translate(this.options.headline),
+                title = this.sandbox.translate('contact.accounts.title'),
                 typeTranslation;
 
             if (!!accountType) {
@@ -340,8 +340,10 @@ define([
                     }.bind(this)
                 });
             } else {
+                this.accountType = this.getAccountType(this.options.accountType);
+                this.account.set({type:this.accountType.id});
                 this.sandbox.start([
-                    {name: 'accounts/components/form@sulucontact', options: { el: $form, data: this.account.toJSON(), accountTypeName: this.options.accountType}}
+                    {name: 'accounts/components/form@sulucontact', options: { el: $form, data: this.account.toJSON()}}
                 ]);
                 dfd.resolve();
             }
