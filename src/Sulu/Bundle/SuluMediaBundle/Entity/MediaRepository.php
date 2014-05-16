@@ -13,6 +13,7 @@ namespace Sulu\Bundle\MediaBundle\Entity;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
+use Sulu\Bundle\MediaBundle\Entity\Media;
 
 /**
  * MediaRepository
@@ -25,7 +26,7 @@ class MediaRepository extends EntityRepository
     /**
      * Get Media by id
      * @param $id
-     * @return mixed
+     * @return mixed|Media
      */
     public function findMediaById($id)
     {
@@ -83,12 +84,16 @@ class MediaRepository extends EntityRepository
     /**
      * Get Media by id to delete
      * @param $id
-     * @return mixed
+     * @return mixed|Media
      */
     public function findMediaByIdForDelete($id)
     {
         try {
             $qb = $this->createQueryBuilder('media')
+                ->leftJoin('media.files', 'file')
+                ->leftJoin('file.fileVersions', 'fileVersion')
+                ->addSelect('file')
+                ->addSelect('fileVersion')
                 ->where('media.id = :mediaId');
 
             $query = $qb->getQuery();
