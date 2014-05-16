@@ -25,9 +25,10 @@ class CollectionRepository extends EntityRepository
     /**
      * Get Collection by id
      * @param $id
-     * @return mixed
+     * @param bool $asArray
+     * @return mixed|null
      */
-    public function findCollectionById($id)
+    public function findCollectionById($id, $asArray = false)
     {
         try {
             $qb = $this->createQueryBuilder('collection')
@@ -35,17 +36,35 @@ class CollectionRepository extends EntityRepository
                 ->leftJoin('collection.type', 'type')
                 ->leftJoin('collection.parent', 'parent')
                 ->leftJoin('collection.children', 'children')
+                ->leftJoin('children.medias', 'childrenMedias')
+                ->leftJoin('collection.medias', 'medias')
+
+                ->leftJoin('collection.creator', 'creator')
+                ->leftJoin('creator.contact', 'creatorContact')
+                ->leftJoin('collection.changer', 'changer')
+                ->leftJoin('changer.contact', 'changerContact')
+
                 ->addSelect('collectionMeta')
                 ->addSelect('type')
                 ->addSelect('parent')
-                ->addSelect('collection')
+                ->addSelect('children')
+                ->addSelect('childrenMedias')
+                ->addSelect('creator')
+                ->addSelect('changer')
+                ->addSelect('creatorContact')
+                ->addSelect('changerContact')
+                ->addSelect('medias')
                 ->where('collection.id = :collectionId');
 
             $query = $qb->getQuery();
             $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
             $query->setParameter('collectionId', $id);
 
-            return $query->getSingleResult();
+            if ($asArray) {
+                return $query->getArrayResult()[0];
+            } else {
+                return $query->getSingleResult();
+            }
         } catch (NoResultException $ex) {
             return null;
         }
@@ -67,11 +86,21 @@ class CollectionRepository extends EntityRepository
                 ->leftJoin('collection.children', 'children')
                 ->leftJoin('children.medias', 'childrenMedias')
                 ->leftJoin('collection.medias', 'medias')
+
+                ->leftJoin('collection.creator', 'creator')
+                ->leftJoin('creator.contact', 'creatorContact')
+                ->leftJoin('collection.changer', 'changer')
+                ->leftJoin('changer.contact', 'changerContact')
+
                 ->addSelect('collectionMeta')
                 ->addSelect('type')
                 ->addSelect('parent')
                 ->addSelect('children')
                 ->addSelect('childrenMedias')
+                ->addSelect('creator')
+                ->addSelect('changer')
+                ->addSelect('creatorContact')
+                ->addSelect('changerContact')
                 ->addSelect('medias');
 
             if ($parentId !== null) {
