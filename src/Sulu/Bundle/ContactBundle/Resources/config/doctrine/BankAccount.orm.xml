@@ -6,7 +6,7 @@
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
         </id>
-        <field name="name" type="string" column="name" length="150"/>
+        <field name="bankName" type="string" column="bankName" length="150"/>
         <field name="bic" type="string" column="bic" length="15"/>
         <field name="iban" type="string" column="iban" length="35"/>
         <field name="public" type="boolean" column="public" nullable="false"/>

@@ -37,5 +37,9 @@ class SuluContactExtension extends Extension
             'sulu_contact.defaults',
             $config['defaults']
         );
+        $container->setParameter(
+            'sulu_contact.account_types',
+            $config['account_types']
+        );
     }
 }

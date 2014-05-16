@@ -13,7 +13,7 @@ class BankAccount
     /**
      * @var string
      */
-    private $name;
+    private $bankName;
 
     /**
      * @var string
@@ -47,29 +47,6 @@ class BankAccount
     public function __construct()
     {
         $this->accounts = new \Doctrine\Common\Collections\ArrayCollection();
-    }
-    
-    /**
-     * Set name
-     *
-     * @param string $name
-     * @return BankAccount
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-    
-        return $this;
-    }
-
-    /**
-     * Get name
-     *
-     * @return string 
-     */
-    public function getName()
-    {
-        return $this->name;
     }
 
     /**
@@ -182,5 +159,28 @@ class BankAccount
     public function getAccounts()
     {
         return $this->accounts;
+    }
+
+    /**
+     * Set bankName
+     *
+     * @param string $bankName
+     * @return BankAccount
+     */
+    public function setBankName($bankName)
+    {
+        $this->bankName = $bankName;
+    
+        return $this;
+    }
+
+    /**
+     * Get bankName
+     *
+     * @return string 
+     */
+    public function getBankName()
+    {
+        return $this->bankName;
     }
 }

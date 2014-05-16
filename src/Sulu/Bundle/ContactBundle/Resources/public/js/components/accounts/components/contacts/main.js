@@ -8,9 +8,8 @@
  */
 
 define([
-    'app-config',
-    'mvc/relationalstore',
-], function(AppConfig, RelationalStore) {
+    'mvc/relationalstore'
+], function(RelationalStore) {
 
     'use strict';
 
@@ -28,51 +27,8 @@ define([
             }, this);
         },
 
-        /**
-         * returns the accounttype
-         * @returns {number}
-         */
-            getAccountType = function() {
-            var typeInfo, compareAttribute,
-                accountType = 0,
-                accountTypes = AppConfig.getSection('sulu-contact').accountTypes; // get account types
-
-            // if newly created account, get type id
-            if (!!this.options.data.id) {
-                typeInfo = this.options.data.type;
-                compareAttribute = 'id';
-            } else if (!!this.options.accountTypeName) {
-                typeInfo = this.options.accountTypeName;
-                compareAttribute = 'name';
-            } else {
-                typeInfo = 0;
-                compareAttribute = 'id';
-            }
-
-            // get account type information
-            this.sandbox.util.foreach(accountTypes, function(type) {
-                if (type[compareAttribute] === typeInfo) {
-                    accountType = type;
-                    this.options.data.type = type.id;
-                    return false; // break loop
-                }
-            }.bind(this));
-
-            return accountType;
-        },
-
         listTemplate = function() {
             return [
-//                {
-//                    id: 'delete',
-//                    icon: 'bin',
-//                    title: 'delete',
-//                    disabled: true,
-//                    callback: function() {
-//                        this.sandbox.emit('sulu.list-toolbar.delete');
-//                    }.bind(this)
-//                }
-//                ,
                 {
                     id: 'settings',
                     icon: 'cogwheel',
@@ -105,42 +61,17 @@ define([
                     ]
                 }
             ];
-        },
-
-
-        /**
-         * sets headline to the current title input
-         * @param accountType
-         */
-            setHeadlines = function(accountType) {
-            var title = this.sandbox.translate(this.options.data.name),
-                breadcrumb = [
-                    {title: 'navigation.contacts'},
-                    {title: 'contact.accounts.title', event: 'sulu.contacts.accounts.list'},
-                    {title: accountType.translation + ' #' + this.options.data.id}
-                ];
-
-            this.sandbox.emit('sulu.header.set-title', title);
-            this.sandbox.emit('sulu.header.set-breadcrumb', breadcrumb);
         };
 
     return {
         view: true,
-
-//        fullSize: {
-//            width: true
-//        },
 
         templates: ['/admin/contact/template/contact/list'],
 
         initialize: function() {
             this.render();
             bindCustomEvents.call(this);
-
-            this.accountType = getAccountType.call(this);
-            setHeadlines.call(this, this.accountType);
         },
-
 
         render: function() {
 
