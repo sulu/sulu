@@ -28,7 +28,17 @@ define(function() {
          * Bind custom events concerning collections
          */
         bindCustomEvents: function() {
+            // navigate to list view
+            this.sandbox.on('sulu.media.collections.list', function(noReload) {
+                this.sandbox.emit('sulu.router.navigate', 'media/collections', !noReload ? true : false , true);
+            }, this);
 
+            // navigate to collection edit
+            this.sandbox.on('sulu.media.collections.files', function(collectionId, tab) {
+                // default tab is files
+                tab = (!!tab) ? tab : 'files';
+                this.sandbox.emit('sulu.router.navigate', 'media/collections/edit:'+ collectionId +'/' + tab , true, true);
+            }.bind(this));
         },
 
         /**
