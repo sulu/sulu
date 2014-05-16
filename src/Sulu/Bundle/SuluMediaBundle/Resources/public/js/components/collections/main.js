@@ -11,6 +11,10 @@ define(function() {
 
     'use strict';
 
+    var constants = {
+        allCollectionsUrl: '/admin/api/collections'
+    };
+
     return {
 
         initialize: function() {
@@ -45,51 +49,19 @@ define(function() {
          * Inserts a container and starts the collections list in it
          */
         renderList: function() {
-            //Todo: remove hardcoded data
             var $list = this.sandbox.dom.createElement('<div id="collections-list-container"/>');
             this.html($list);
-            this.sandbox.start([
-                {
-                    name: 'collections/components/list@sulumedia',
-                    options: {
-                        el: $list,
-                        data: {
-                            _embedded: [
-                                {
-                                    id: 1,
-                                    title: 'Collection 1',
-                                    color: '9854fa',
-                                    children: 320
-                                },
-                                {
-                                    id: 2,
-                                    title: 'Collection 2',
-                                    color: 'ff54fa',
-                                    children: 10
-                                },
-                                {
-                                    id: 3,
-                                    title: 'Collection 3',
-                                    color: '7432cf',
-                                    children: 57
-                                },
-                                {
-                                    id: 4,
-                                    title: 'Collection 4',
-                                    color: '96341a',
-                                    children: 23
-                                },
-                                {
-                                    id: 5,
-                                    title: 'Collection 5',
-                                    color: 'dd94fc',
-                                    children: 19
-                                }
-                            ]
+            this.sandbox.util.load(constants.allCollectionsUrl).then(function(collections) {
+                this.sandbox.start([
+                    {
+                        name: 'collections/components/list@sulumedia',
+                        options: {
+                            el: $list,
+                            data: collections
                         }
                     }
-                }
-            ]);
+                ]);
+            }.bind(this));
         },
 
         /**
@@ -97,24 +69,20 @@ define(function() {
          * collection in it
          */
         renderFiles: function() {
-            //Todo: remove hardcoded data
             var $files = this.sandbox.dom.createElement('<div id="collection-files-container"/>');
             this.html($files);
-            this.sandbox.start([
-                {
-                    name: 'collections/components/files@sulumedia',
-                    options: {
-                        el: $files,
-                        activeTab: this.options.content,
-                        data: {
-                            id: 1,
-                            title: 'Collection 1',
-                            color: '9854fa',
-                            files: 'admin/api/collections/1'
+            this.sandbox.util.load(constants.allCollectionsUrl + '/' + this.options.id).then(function(collection) {
+                this.sandbox.start([
+                    {
+                        name: 'collections/components/files@sulumedia',
+                        options: {
+                            el: $files,
+                            activeTab: this.options.content,
+                            data: collection
                         }
                     }
-                }
-            ]);
+                ]);
+            }.bind(this));
         }
     };
 });

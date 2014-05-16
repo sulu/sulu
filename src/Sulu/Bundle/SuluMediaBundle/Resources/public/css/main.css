@@ -19,29 +19,28 @@
   width: 100%;
   padding-left: 18px;
   padding-bottom: 40px;
-  width: 835px;
 }
-/* line 28, ../scss/modules/collections.scss */
+/* line 27, ../scss/modules/collections.scss */
 #collections-list-container .collection .head {
   height: 40px;
   line-height: 40px;
   border-bottom: 1px solid #cccccc;
   cursor: pointer;
 }
-/* line 34, ../scss/modules/collections.scss */
+/* line 33, ../scss/modules/collections.scss */
 #collections-list-container .collection .head .icon {
   float: left;
   margin-right: 8px;
   font-size: 12px;
   color: #3E3E3E;
 }
-/* line 41, ../scss/modules/collections.scss */
+/* line 40, ../scss/modules/collections.scss */
 #collections-list-container .collection .head::after {
   display: table;
   content: "";
   clear: both;
 }
-/* line 47, ../scss/modules/collections.scss */
+/* line 46, ../scss/modules/collections.scss */
 #collections-list-container .collection .color {
   float: left;
   width: 20px;
@@ -50,16 +49,16 @@
   margin-right: 8px;
   margin-top: 10px;
 }
-/* line 55, ../scss/modules/collections.scss */
+/* line 54, ../scss/modules/collections.scss */
 #collections-list-container .collection .title {
   float: left;
   font-size: 18px;
 }
-/* line 59, ../scss/modules/collections.scss */
+/* line 58, ../scss/modules/collections.scss */
 #collections-list-container .collection .rightContent {
   float: right;
 }
-/* line 61, ../scss/modules/collections.scss */
+/* line 60, ../scss/modules/collections.scss */
 #collections-list-container .collection .rightContent .total {
   color: #999999;
   font-size: 12px;

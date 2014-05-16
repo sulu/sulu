@@ -37,7 +37,7 @@ define(function () {
         collection: [
             '<div class="', constants.collectionClass ,'">',
             '   <div class="head">',
-            '       <div class="color" style="background-color: #<%= color %>"></div>',
+            '       <div class="color" style="background-color: <%= color %>"></div>',
             '       <div class="icon-<%= icon %> icon"></div>',
             '       <div class="title"><%= title %></div>',
             '       <div class="', constants.rightContentClass ,'"></div>',
@@ -46,7 +46,7 @@ define(function () {
             '</div>'
         ].join(''),
         totalElements: [
-            '<span class="total"><%= total %> ', constants.elementsKey ,'</span>'
+            '<span class="total"><%= total %> <%= elements %></span>'
         ].join('')
     };
 
@@ -110,7 +110,7 @@ define(function () {
             this.toggleAll.$element = this.sandbox.dom.createElement('<div class="'+ constants.toggleAllClass +'"/>');
             this.sandbox.dom.html(this.toggleAll.$element, this.sandbox.util.template(templates.toggleAll)({
                 icon: constants.slideDownIcon,
-                text: constants.openAllKey
+                text: this.sandbox.translate(constants.openAllKey)
             }));
             this.sandbox.dom.append(this.$el, this.toggleAll.$element);
 
@@ -118,7 +118,7 @@ define(function () {
             $collections = this.sandbox.dom.createElement('<div class="'+ constants.collectionsClass +'"/>');
             this.sandbox.util.foreach(this.options.data._embedded, function(collection) {
                 $collection = this.sandbox.dom.createElement(this.sandbox.util.template(templates.collection)({
-                    color: collection.color,
+                    color: collection.style.color,
                     icon: constants.slideDownIcon,
                     title: collection.title
                 }));
@@ -126,7 +126,10 @@ define(function () {
                 // insert the total-elements markup
                 this.sandbox.dom.html(
                     this.sandbox.dom.find('.' + constants.rightContentClass, $collection),
-                    this.sandbox.util.template(templates.totalElements)({total: collection.children})
+                    this.sandbox.util.template(templates.totalElements)({
+                        total: collection.mediaNumber,
+                        elements: this.sandbox.translate(constants.elementsKey)
+                    })
                 );
 
                 // hide the slide-container
@@ -146,6 +149,7 @@ define(function () {
          * @param $container {Object} the dom container to start the datagrid in
          */
         startCollectionDatagrid: function (collection, $container) {
+            //TODO: don't fetch the data from contact-bundle
             this.sandbox.sulu.initList.call(this, 'accountsFields'+collection.id, '/admin/api/contacts/fields',
                 {
                     el: $container,
@@ -170,13 +174,6 @@ define(function () {
          */
         showAllFiles: function(collectionId) {
             this.sandbox.emit('sulu.media.collections.files', collectionId);
-        },
-
-        /**
-         * Bind custom events concerning collections
-         */
-        bindCustomEvents: function () {
-
         },
 
         /**
@@ -208,14 +205,14 @@ define(function () {
                 this.toggleAll.allOpen = false;
                 this.sandbox.dom.html(this.toggleAll.$element, this.sandbox.util.template(templates.toggleAll)({
                     icon: constants.slideDownIcon,
-                    text: constants.openAllKey
+                    text: this.sandbox.translate(constants.openAllKey)
                 }));
             } else {
                 action = this.slideDown.bind(this);
                 this.toggleAll.allOpen = true;
                 this.sandbox.dom.html(this.toggleAll.$element, this.sandbox.util.template(templates.toggleAll)({
                     icon: constants.slideUpIcon,
-                    text: constants.closeAllKey
+                    text: this.sandbox.translate(constants.closeAllKey)
                 }));
             }
             for ($id in this.collections) {
@@ -245,7 +242,6 @@ define(function () {
          * @param $collection {Object} the dom object of the colleciton
          */
         slideUp: function($collection) {
-            this.sandbox.dom.stop(this.sandbox.dom.find('.' + constants.collectionSlideClass, $collection));
             this.sandbox.dom.slideUp(
                 this.sandbox.dom.find('.' + constants.collectionSlideClass, $collection),
                 this.options.slideDuration
@@ -265,7 +261,6 @@ define(function () {
          * @param $collection {Object} the dom object of the colleciton
          */
         slideDown: function($collection) {
-            this.sandbox.dom.stop(this.sandbox.dom.find('.' + constants.collectionSlideClass, $collection));
             this.sandbox.dom.slideDown(
                 this.sandbox.dom.find('.' + constants.collectionSlideClass, $collection),
                 this.options.slideDuration
