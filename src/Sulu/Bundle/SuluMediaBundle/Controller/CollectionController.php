@@ -200,7 +200,7 @@ class CollectionController extends RestController implements ClassResourceInterf
                         if ($meta['locale'] == $locale) {
                             $metaSet = true;
                             foreach ($meta as $metaKey => $metaValue) {
-                                if ($metaKey !== 'locale') {
+                                if (!in_array($metaKey, array('locale', 'id'))) {
                                     $flatCollection[$metaKey] = $metaValue;
                                 }
                             }
