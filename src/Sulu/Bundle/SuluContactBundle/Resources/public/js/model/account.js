@@ -15,8 +15,9 @@ define([
     'sulucontact/model/phone',
     'sulucontact/model/address',
     'sulucontact/model/url',
+    'sulucontact/model/bankAccount',
     'sulucontact/model/note'
-], function(RelationalModel, HasMany, Account, Email, Phone, Address, Url, Note) {
+], function(RelationalModel, HasMany, Account, Email, Phone, Address, Url, BankAccount, Note) {
     return RelationalModel({
         urlRoot: '/admin/api/accounts',
         defaults: function() {
@@ -27,6 +28,7 @@ define([
                 phones: [],
                 addresses: [],
                 notes: [],
+                bankAccount: [],
                 urls: []
             }
         }, relations: [
@@ -49,6 +51,11 @@ define([
                 type: HasMany,
                 key: 'urls',
                 relatedModel: Url
+            },
+            {
+                type: HasMany,
+                key: 'bankAccounts',
+                relatedModel: BankAccount
             },
             {
                 type: HasMany,

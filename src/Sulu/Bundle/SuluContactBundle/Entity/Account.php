@@ -30,18 +30,6 @@ class Account extends ApiEntity
     const DISABLED = 1;
 
     /**
-     * array containing all the translations for CRM types
-     * @Exclude
-     * @var array
-     */
-    public static $TYPE_TRANSLATIONS = array(
-        self::TYPE_BASIC => 'contact.account.type.basic',
-        self::TYPE_LEAD => 'contact.account.type.lead',
-        self::TYPE_CUSTOMER => 'contact.account.type.customer',
-        self::TYPE_SUPPLIER => 'contact.account.type.supplier',
-    );
-
-    /**
      * @var integer
      */
     private $lft;
@@ -153,11 +141,6 @@ class Account extends ApiEntity
      * @var string
      */
     private $uid;
-
-    /**
-     * @var integer
-     */
-    private $number;
 
     /**
      * @var string
@@ -781,29 +764,6 @@ class Account extends ApiEntity
     public function removeFaxe(\Sulu\Bundle\ContactBundle\Entity\Fax $faxes)
     {
         $this->faxes->removeElement($faxes);
-    }
-
-    /**
-     * Set number
-     *
-     * @param integer $number
-     * @return Account
-     */
-    public function setNumber($number)
-    {
-        $this->number = $number;
-    
-        return $this;
-    }
-
-    /**
-     * Get number
-     *
-     * @return integer 
-     */
-    public function getNumber()
-    {
-        return $this->number;
     }
 
     /**

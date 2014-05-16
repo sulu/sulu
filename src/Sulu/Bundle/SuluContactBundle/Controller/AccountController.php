@@ -13,6 +13,7 @@ namespace Sulu\Bundle\ContactBundle\Controller;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Put;
+use Sulu\Bundle\ContactBundle\Entity\BankAccount;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\Fax;
@@ -55,7 +56,7 @@ class AccountController extends RestController implements ClassResourceInterface
     /**
      * {@inheritdoc}
      */
-    protected $fieldsExcluded = array('lft', 'rgt', 'depth', 'id');
+    protected $fieldsExcluded = array('lft', 'rgt', 'depth');
 
     /**
      * {@inheritdoc}
@@ -70,7 +71,7 @@ class AccountController extends RestController implements ClassResourceInterface
     /**
      * {@inheritdoc}
      */
-    protected $fieldsSortOrder = array(0=>'number');
+    protected $fieldsSortOrder = array(0=>'id');
 
     /**
      * {@inheritdoc}
@@ -365,9 +366,47 @@ class AccountController extends RestController implements ClassResourceInterface
 
     /**
      * partial update of account infos
+     * @param $id
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function patchAction() {
+    public function patchAction($id, Request $request) {
+        $accountEntity = 'SuluContactBundle:Account';
 
+        try {
+            /** @var Account $account */
+            $account = $this->getDoctrine()
+                ->getRepository($accountEntity)
+                ->findAccountById($id);
+
+            if (!$account) {
+                throw new EntityNotFoundException($accountEntity, $id);
+            } else {
+
+                $em = $this->getDoctrine()->getManager();
+
+                if (!is_null($request->get('uid'))) {
+                    $account->setUid($request->get('uid'));
+                }
+                if (!is_null($request->get('registerNumber'))) {
+                    $account->setRegisterNumber($request->get('registerNumber'));
+                }
+
+                // process details
+                if (!is_null($request->get('bankAccounts'))) {
+                    $this->processBankAccounts($account, $request);
+                }
+
+                $em->flush();
+                $view = $this->view($account, 200);
+            }
+        } catch (EntityNotFoundException $enfe) {
+            $view = $this->view($enfe->toArray(), 404);
+        } catch (RestException $exc) {
+            $view = $this->view($exc->toArray(), 400);
+        }
+
+        return $this->handleView($view);
     }
 
     /**
@@ -905,6 +944,78 @@ class AccountController extends RestController implements ClassResourceInterface
         };
 
         return $this->processPut($account->getNotes(), $notes, $delete, $update, $add);
+    }
+
+    /**
+     * Process all bankAccounts of a request
+     * @param Account $account
+     * @param Request $request
+     * @return bool True if the processing was sucessful, otherwise false
+     */
+    protected function processBankAccounts(Account $account, Request $request)
+    {
+        $bankAccounts = $request->get('bankAccounts');
+
+        $delete = function ($bankAccounts) use ($account) {
+            $account->removeBankAccount($bankAccounts);
+            return true;
+        };
+
+        $update = function ($bankAccounts, $matchedEntry) {
+            return $this->updateBankAccount($bankAccounts, $matchedEntry);
+        };
+
+        $add = function ($bankAccounts) use ($account) {
+            return $this->addBankAccount($account, $bankAccounts);
+        };
+
+        return $this->processPut($account->getBankAccounts(), $bankAccounts, $delete, $update, $add);
+    }
+
+    /**
+     * Add a new note to the given contact and persist it with the given object manager
+     * @param Account $account
+     * @param $data
+     * @return bool
+     * @throws \Sulu\Component\Rest\Exception\EntityIdAlreadySetException
+     */
+    protected function addBankAccount(Account $account, $data)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $entityName = 'SuluContactBundle:BankAccount';
+
+        if (isset($data['id'])) {
+            throw new EntityIdAlreadySetException($entityName, $data['id']);
+        } else {
+            $entity = new BankAccount();
+            $entity->setBankName($data['bankName']);
+            $entity->setBic($data['bic']);
+            $entity->setIban($data['iban']);
+            $entity->setPublic($data['public']);
+
+            $em->persist($entity);
+            $account->addBankAccount($entity);
+        }
+
+        return true;
+    }
+
+    /**
+     * Updates the given note
+     * @param BankAccount $entity The phone object to update
+     * @param string $data The entry with the new data
+     * @return bool True if successful, otherwise false
+     */
+    protected function updateBankAccount(BankAccount $entity, $data)
+    {
+        $success = true;
+
+        $entity->setBankName($data['bankName']);
+        $entity->setBic($data['bic']);
+        $entity->setIban($data['iban']);
+        $entity->setPublic($data['public']);
+
+        return $success;
     }
 
     /**

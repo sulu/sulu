@@ -23,11 +23,8 @@
 
         <field name="division" type="string" column="division" length="255" nullable="true"/>
 
-
         <field name="created" type="datetime" column="created"/>
         <field name="changed" type="datetime" column="changed"/>
-
-        <field name="number" type="integer" column="number" nullable="true" />
 
         <field name="disabled" type="integer" column="disabled" length="1" column-definition="INT DEFAULT 0 NOT NULL"  />
         <field name="type" type="integer" column="type" nullable="false" column-definition="INT DEFAULT 0 NOT NULL" />
