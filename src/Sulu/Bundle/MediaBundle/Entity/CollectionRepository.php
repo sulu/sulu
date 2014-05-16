@@ -25,39 +25,101 @@ class CollectionRepository extends EntityRepository
     /**
      * Get Collection by id
      * @param $id
-     * @return mixed
+     * @param bool $asArray
+     * @return mixed|null
      */
-    public function findCollectionById($id)
+    public function findCollectionById($id, $asArray = false)
     {
         try {
             $qb = $this->createQueryBuilder('collection')
                 ->leftJoin('collection.metas', 'collectionMeta')
                 ->leftJoin('collection.type', 'type')
                 ->leftJoin('collection.parent', 'parent')
-                ->leftJoin('collection.medias', 'media')
-                ->leftJoin('media.files', 'file')
-                ->leftJoin('file.fileVersions', 'fileVersion')
-                ->leftJoin('fileVersion.tags', 'tag')
-                ->leftJoin('fileVersion.metas', 'fileVersionMeta')
-                ->leftJoin('fileVersion.contentLanguages', 'fileVersionContentLanguage')
-                ->leftJoin('fileVersion.publishLanguages', 'fileVersionPublishLanguage')
+                ->leftJoin('collection.children', 'children')
+                ->leftJoin('children.medias', 'childrenMedias')
+                ->leftJoin('collection.medias', 'medias')
+
+                ->leftJoin('collection.creator', 'creator')
+                ->leftJoin('creator.contact', 'creatorContact')
+                ->leftJoin('collection.changer', 'changer')
+                ->leftJoin('changer.contact', 'changerContact')
+
                 ->addSelect('collectionMeta')
                 ->addSelect('type')
                 ->addSelect('parent')
-                ->addSelect('media')
-                ->addSelect('file')
-                ->addSelect('fileVersion')
-                ->addSelect('tag')
-                ->addSelect('fileVersionMeta')
-                ->addSelect('fileVersionContentLanguage')
-                ->addSelect('fileVersionPublishLanguage')
+                ->addSelect('children')
+                ->addSelect('childrenMedias')
+                ->addSelect('creator')
+                ->addSelect('changer')
+                ->addSelect('creatorContact')
+                ->addSelect('changerContact')
+                ->addSelect('medias')
                 ->where('collection.id = :collectionId');
 
             $query = $qb->getQuery();
             $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
             $query->setParameter('collectionId', $id);
 
-            return $query->getSingleResult();
+            if ($asArray) {
+                return $query->getArrayResult()[0];
+            } else {
+                return $query->getSingleResult();
+            }
+        } catch (NoResultException $ex) {
+            return null;
+        }
+    }
+
+    /**
+     * Give back all Collections from specific parentId
+     * @param null $parentId
+     * @param null $depth
+     * @return array|null
+     */
+    public function findCollections($parentId = null, $depth = null)
+    {
+        try {
+            $qb = $this->createQueryBuilder('collection')
+                ->leftJoin('collection.metas', 'collectionMeta')
+                ->leftJoin('collection.type', 'type')
+                ->leftJoin('collection.parent', 'parent')
+                ->leftJoin('collection.children', 'children')
+                ->leftJoin('children.medias', 'childrenMedias')
+                ->leftJoin('collection.medias', 'medias')
+
+                ->leftJoin('collection.creator', 'creator')
+                ->leftJoin('creator.contact', 'creatorContact')
+                ->leftJoin('collection.changer', 'changer')
+                ->leftJoin('changer.contact', 'changerContact')
+
+                ->addSelect('collectionMeta')
+                ->addSelect('type')
+                ->addSelect('parent')
+                ->addSelect('children')
+                ->addSelect('childrenMedias')
+                ->addSelect('creator')
+                ->addSelect('changer')
+                ->addSelect('creatorContact')
+                ->addSelect('changerContact')
+                ->addSelect('medias');
+
+            if ($parentId !== null) {
+                $qb->where('parent.id = :parentId');
+            }
+            if ($depth !== null) {
+                $qb->where('collection.depth = :depth');
+            }
+
+            $query = $qb->getQuery();
+            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+            if ($parentId !== null) {
+                $query->setParameter('parentId', $parentId);
+            }
+            if ($depth !== null) {
+                $query->setParameter('depth', $depth);
+            }
+
+            return $query->getArrayResult();
         } catch (NoResultException $ex) {
             return null;
         }

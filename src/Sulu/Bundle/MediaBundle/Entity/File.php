@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\MediaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Exclude;
 
 /**
  * File
@@ -49,11 +50,13 @@ class File
 
     /**
      * @var \Sulu\Component\Security\UserInterface
+     * @Exclude
      */
     private $changer;
 
     /**
      * @var \Sulu\Component\Security\UserInterface
+     * @Exclude
      */
     private $creator;
 

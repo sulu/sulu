@@ -15,8 +15,10 @@ use Doctrine\ORM\Tools\SchemaTool;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
+use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
+use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\TestBundle\Testing\DatabaseTestCase;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -50,13 +52,17 @@ class MediaControllerTest extends DatabaseTestCase
     protected function cleanImage()
     {
         if (self::$kernel->getContainer()) { //
-            $configPath = self::$kernel->getContainer()->getParameter('sulu_media.media.folder.path');
-            $movedFolder = $configPath . '/02';
-            $movedFile = $movedFolder . '/photo.jpeg';
-            if (file_exists($movedFile)) {
-                copy ($movedFile, $this->getImagePath());
-                unlink($movedFile);
-                rmdir($movedFolder);
+            $configPath = self::$kernel->getContainer()->getParameter('sulu_media.media.storage.local.path');
+            $segments = self::$kernel->getContainer()->getParameter('sulu_media.media.storage.local.segments');
+
+            for ($i = 1; $i <= intval($segments); $i++) {
+                $movedFolder = $configPath . '/' . $i;
+                $movedFile = $movedFolder . '/photo.jpeg';
+                if (file_exists($movedFile)) {
+                    copy ($movedFile, $this->getImagePath());
+                    unlink($movedFile);
+                    rmdir($movedFolder);
+                }
             }
         }
     }
@@ -92,33 +98,41 @@ class MediaControllerTest extends DatabaseTestCase
         $media->setCreated(new DateTime());
         $media->setChanged(new DateTime());
 
-        // Media Meta 1
-        /*
-        $mediaMeta = new MediaMeta();
-        $mediaMeta->setTitle('Test Media');
-        $mediaMeta->setDescription('This Description is only for testing');
-        $mediaMeta->setLocale('en-gb');
-        $mediaMeta->setMedia($media);
-
-        $media->addMeta($mediaMeta);
-
-        // Media Meta 2
-        $mediaMeta2 = new MediaMeta();
-        $mediaMeta2->setTitle('Test Media');
-        $mediaMeta2->setDescription('Dies ist eine Test Beschreibung');
-        $mediaMeta2->setLocale('de');
-        $mediaMeta2->setMedia($media);
-
-        $media->addMeta($mediaMeta2);
-        */
-
         // Create Media Type
         $mediaType = new MediaType();
-        $mediaType->setName('Default Media Type');
-        $mediaType->setDescription('Default Media Type');
+        $mediaType->setName('Document Type');
+        $mediaType->setDescription('This is a document');
 
-        $media->setType($mediaType);
+        $imageType = new MediaType();
+        $imageType->setName('Image Type');
+        $imageType->setDescription('This is an image');
 
+        $videoType = new MediaType();
+        $videoType->setName('Video Type');
+        $videoType->setDescription('This is a video');
+
+        $videoType = new MediaType();
+        $videoType->setName('Audio Type');
+        $videoType->setDescription('This is an audio');
+
+        $media->setType($imageType);
+
+        $file = new File();
+        $file->setVersion(1);
+        $file->setCreated(new DateTime());
+        $file->setChanged(new DateTime());
+        $file->setMedia($media);
+
+        $fileVersion = new FileVersion();
+        $fileVersion->setVersion(1);
+        $fileVersion->setCreated(new DateTime());
+        $fileVersion->setChanged(new DateTime());
+        $fileVersion->setName('photo.jpeg');
+        $fileVersion->setFile($file);
+        $fileVersion->setSize(1124214);
+        $file->addFileVersion($fileVersion);
+
+        $media->addFile($file);
 
         // Setup Collection
         $collection = new Collection();
@@ -128,7 +142,11 @@ class MediaControllerTest extends DatabaseTestCase
         $media->setCollection($collection);
 
         self::$em->persist($media);
+        self::$em->persist($file);
+        self::$em->persist($fileVersion);
         self::$em->persist($mediaType);
+        self::$em->persist($imageType);
+        self::$em->persist($videoType);
         // self::$em->persist($mediaMeta);
         // self::$em->persist($mediaMeta2);
 
@@ -217,7 +235,7 @@ class MediaControllerTest extends DatabaseTestCase
 
         $this->assertEquals(1, $response->id);
 
-        $this->assertEquals(1, $response->type->id);
+        $this->assertEquals(2, $response->type->id);
     }
 
     /**
@@ -225,7 +243,10 @@ class MediaControllerTest extends DatabaseTestCase
      */
     public function testcGet()
     {
-        /* cGet not working (routing problem)
+        $this->markTestSkipped(
+            'Test not running yet because of a routing problem in FOS RestBundle: https://github.com/FriendsOfSymfony/FOSRestBundle/pull/761'
+        );
+
         $client = $this->createTestClient();
 
         $client->request(
@@ -240,7 +261,6 @@ class MediaControllerTest extends DatabaseTestCase
         $this->assertNotEmpty($response);
 
         $this->assertEquals(1, $response->total);
-        */
     }
 
     /**
@@ -263,7 +283,7 @@ class MediaControllerTest extends DatabaseTestCase
     }
 
     /**
-     * @description Test POST to create a new Collection
+     * @description Test POST to create a new Media
      */
     public function testPost()
     {
@@ -277,9 +297,6 @@ class MediaControllerTest extends DatabaseTestCase
             'POST',
             '/api/media',
             array(
-                'type' => array(
-                    'id' => 1
-                ),
                 'collection' => array(
                     'id' => 1
                 )
@@ -294,6 +311,93 @@ class MediaControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
+    }
+
+    /**
+     * @description Test PUT to create a new FileVersion
+     */
+    public function testPut()
+    {
+        $client = $this->createTestClient();
+
+        $imagePath = $this->getImagePath();
+        $this->assertTrue(file_exists($imagePath));
+        $photo = new UploadedFile($imagePath, 'photo.jpeg', 'image/jpeg', 160768);
+
+        $client->request(
+            'PUT',
+            '/api/media/1',
+            array(
+                'collection' => array(
+                    'id' => 1
+                ),
+                'files' => array(
+                    'fileVersions' => array(
+                        array(
+                            'id' => 1,
+                            'contentLanguages' => array(
+                                array(
+                                    'locale' => 'de-de'
+                                ),
+                                array(
+                                    'locale' => 'en-at'
+                                )
+                            ),
+                            'publishLanguages' => array(
+                                array(
+                                    'locale' => 'de-de'
+                                )
+                            ),
+                            'metas' => array(
+                                array(
+                                    'title' => 'Eine neue File Version',
+                                    'description' => 'Ein neue File Version wurde hochgeladen',
+                                    'locale' => 'de-at'
+                                ),
+                                array(
+                                    'title' => 'A new Fileversion',
+                                    'description' => 'A new fileversion was uploaded',
+                                    'locale' => 'en-gb'
+                                )
+                            )
+                        ),
+                        array(
+                            'contentLanguages' => array(
+                                array(
+                                    'locale' => 'de-at'
+                                ),
+                                array(
+                                    'locale' => 'en-gb'
+                                )
+                            ),
+                            'metas' => array(
+                                array(
+                                    'title' => 'Eine neue File Version',
+                                    'description' => 'Ein neue File Version wurde hochgeladen',
+                                    'locale' => 'de-at'
+                                ),
+                                array(
+                                    'title' => 'A new Fileversion',
+                                    'description' => 'A new fileversion was uploaded',
+                                    'locale' => 'en-gb'
+                                )
+                            )
+                        )
+                    )
+                )
+            ),
+            array(
+                'fileVersion' => $photo
+            )
+        );
+
+        $this->assertEquals(1, count($client->getRequest()->files->all()));
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $this->assertEquals(2, $response->files[0]->version);
     }
 
     /**
