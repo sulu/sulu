@@ -3836,49 +3836,51 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
 .icon-show-thumbnails::after {
   content: "\e157";
   display: inline-block;
+  -webkit-font-smoothing: auto;
+  -moz-osx-font-smoothing: auto;
 }
 
-/* line 493, ../scss/modules/icons.scss */
+/* line 495, ../scss/modules/icons.scss */
 .icon-eye-open::after {
   content: "\e052";
   display: inline-block;
 }
 
-/* line 500, ../scss/modules/icons.scss */
+/* line 502, ../scss/modules/icons.scss */
 .icon-half-eye-open::after {
   font-family: "Glyphicons Halflings Regular";
   content: "\e105";
   display: inline-block;
 }
 
-/* line 508, ../scss/modules/icons.scss */
+/* line 510, ../scss/modules/icons.scss */
 .icon-half-eye-close::after {
   font-family: "Glyphicons Halflings Regular";
   content: "\e106";
   display: inline-block;
 }
 
-/* line 516, ../scss/modules/icons.scss */
+/* line 518, ../scss/modules/icons.scss */
 .icon-floppy-save::after {
   font-family: "Glyphicons Halflings Regular";
   content: "\e175";
   display: inline-block;
 }
 
-/* line 524, ../scss/modules/icons.scss */
+/* line 526, ../scss/modules/icons.scss */
 .icon-floppy-saved::after {
   font-family: "Glyphicons Halflings Regular";
   content: "\e173";
   display: inline-block;
 }
 
-/* line 532, ../scss/modules/icons.scss */
+/* line 534, ../scss/modules/icons.scss */
 .icon-play::after {
   content: "\e174";
   display: inline-block;
 }
 
-/* line 539, ../scss/modules/icons.scss */
+/* line 541, ../scss/modules/icons.scss */
 .icon-play-down::after {
   content: "\e174";
   display: inline-block;
@@ -3889,40 +3891,40 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   transform: rotate(90deg);
 }
 
-/* line 551, ../scss/modules/icons.scss */
+/* line 553, ../scss/modules/icons.scss */
 .icon-half-ok::after {
   font-family: "Glyphicons Halflings Regular";
   content: "\e013";
   display: inline-block;
 }
 
-/* line 559, ../scss/modules/icons.scss */
+/* line 561, ../scss/modules/icons.scss */
 .icon-repeat::after {
   font-family: "Glyphicons Halflings Regular";
   content: "\e030";
   display: inline-block;
 }
 
-/* line 567, ../scss/modules/icons.scss */
+/* line 569, ../scss/modules/icons.scss */
 .icon-::after {
   font-family: "Glyphicons Halflings Regular";
   content: "\e014";
   display: inline-block;
 }
 
-/* line 575, ../scss/modules/icons.scss */
+/* line 577, ../scss/modules/icons.scss */
 .icon-remove2::after {
   content: "\e208";
   display: inline-block;
 }
 
-/* line 582, ../scss/modules/icons.scss */
+/* line 584, ../scss/modules/icons.scss */
 .icon-ok::after {
   content: "\e207";
   display: inline-block;
 }
 
-/* line 589, ../scss/modules/icons.scss */
+/* line 591, ../scss/modules/icons.scss */
 .icon-publish::after {
   content: "";
   display: inline-block;
@@ -3934,7 +3936,7 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   font-size: medium !important;
 }
 
-/* line 602, ../scss/modules/icons.scss */
+/* line 604, ../scss/modules/icons.scss */
 .icon-unpublish::after {
   content: "";
   display: inline-block;
@@ -3946,7 +3948,7 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   font-size: medium !important;
 }
 
-/* line 615, ../scss/modules/icons.scss */
+/* line 617, ../scss/modules/icons.scss */
 .icon-test::after {
   content: "";
   display: inline-block;
@@ -3958,25 +3960,25 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   font-size: medium !important;
 }
 
-/* line 628, ../scss/modules/icons.scss */
+/* line 630, ../scss/modules/icons.scss */
 .icon-right-arrow::after {
   content: "\e212";
   display: inline-block;
 }
 
-/* line 635, ../scss/modules/icons.scss */
+/* line 637, ../scss/modules/icons.scss */
 .icon-step-backward::after {
   content: "\e171";
   display: inline-block;
 }
 
-/* line 642, ../scss/modules/icons.scss */
+/* line 644, ../scss/modules/icons.scss */
 .icon-step-forward::after {
   content: "\e179";
   display: inline-block;
 }
 
-/* line 649, ../scss/modules/icons.scss */
+/* line 651, ../scss/modules/icons.scss */
 .icon-disk-export::after {
   content: "\e420";
   display: inline-block;
@@ -7784,9 +7786,9 @@ a.btn-black, a.btn-highlight {
   padding: 10px 20px 20px 20px;
   background: #dddddd;
   border: 1px solid #cccccc;
-  -webkit-box-shadow: rgba(0, 0, 0, 0.08) 3px 3px 0px 0px;
-  -moz-box-shadow: rgba(0, 0, 0, 0.08) 3px 3px 0px 0px;
-  box-shadow: rgba(0, 0, 0, 0.08) 3px 3px 0px 0px;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.06) 2px 2px 0px 0px;
+  -moz-box-shadow: rgba(0, 0, 0, 0.06) 2px 2px 0px 0px;
+  box-shadow: rgba(0, 0, 0, 0.06) 2px 2px 0px 0px;
 }
 /* line 56, ../scss/modules/content-types.scss */
 .text-block .container label {
@@ -7953,32 +7955,34 @@ a.btn-black, a.btn-highlight {
 /* line 106, ../scss/modules/dropzone.scss */
 .husky-dropzone .upload-items .item .image img {
   vertical-align: bottom;
+  max-width: 100%;
+  max-height: 100%;
 }
-/* line 110, ../scss/modules/dropzone.scss */
+/* line 112, ../scss/modules/dropzone.scss */
 .husky-dropzone .upload-items .item .tick {
   text-align: center;
   color: #999999;
   font-size: 15px;
   line-height: 15px;
 }
-/* line 117, ../scss/modules/dropzone.scss */
+/* line 119, ../scss/modules/dropzone.scss */
 .husky-dropzone .upload-items .item.dz-success {
   border-color: #cccccc;
   background: transparent;
 }
-/* line 120, ../scss/modules/dropzone.scss */
+/* line 122, ../scss/modules/dropzone.scss */
 .husky-dropzone .upload-items .item.dz-success .success-content {
   display: block;
 }
-/* line 123, ../scss/modules/dropzone.scss */
+/* line 125, ../scss/modules/dropzone.scss */
 .husky-dropzone .upload-items .item.dz-success .loading-content {
   display: none;
 }
-/* line 131, ../scss/modules/dropzone.scss */
+/* line 133, ../scss/modules/dropzone.scss */
 .husky-dropzone.dz-drag-hover {
   opacity: 0.5;
 }
-/* line 135, ../scss/modules/dropzone.scss */
+/* line 137, ../scss/modules/dropzone.scss */
 .husky-dropzone.dropped {
   padding-bottom: 0;
   -webkit-transition: padding 300ms;
@@ -7986,7 +7990,7 @@ a.btn-black, a.btn-highlight {
   -o-transition: padding 300ms;
   transition: padding 300ms;
 }
-/* line 139, ../scss/modules/dropzone.scss */
+/* line 141, ../scss/modules/dropzone.scss */
 .husky-dropzone.dropped .description {
   margin-top: -150px;
 }
@@ -8026,10 +8030,10 @@ a.btn-black, a.btn-highlight {
 }
 /* line 35, ../scss/modules/thumbnails.scss */
 .husky-thumbnails .item.small {
-  width: 260px;
+  width: 259px;
   height: 70px;
   margin-bottom: 20px;
-  margin-right: 12px;
+  margin-right: 8px;
 }
 /* line 41, ../scss/modules/thumbnails.scss */
 .husky-thumbnails .item.small .image {
@@ -8047,7 +8051,7 @@ a.btn-black, a.btn-highlight {
 .husky-thumbnails .item.small .text {
   float: left;
   padding-top: 20px;
-  width: 190px;
+  width: 190px -1px;
 }
 /* line 56, ../scss/modules/thumbnails.scss */
 .husky-thumbnails .item.small .checkbox {
@@ -8066,10 +8070,10 @@ a.btn-black, a.btn-highlight {
 }
 /* line 71, ../scss/modules/thumbnails.scss */
 .husky-thumbnails .item.large {
-  width: 188px;
+  width: 187px;
   height: 248px;
   margin-bottom: 40px;
-  margin-right: 20px;
+  margin-right: 18px;
   border: 1px solid #cccccc;
   padding: 10px;
 }
