@@ -22,7 +22,7 @@
         "sulu/tag-bundle": "dev-develop",
         "liip/theme-bundle": "@dev",
 
-        "jackalope/jackalope-jackrabbit": "1.0.*",
+        "jackalope/jackalope-jackrabbit": "1.1.*",
 
         "doctrine/orm": ">=2.2.3,<2.4-dev",
         "friendsofsymfony/rest-bundle": "1.0.*",
@@ -30,8 +30,8 @@
         "jms/serializer-bundle": "@dev",
 
         "cboden/ratchet": "dev-master",
-        "doctrine/phpcr-bundle": "1.0.*",
-        "doctrine/phpcr-odm": "1.0.*",
+        "doctrine/phpcr-bundle": "1.1.*",
+        "doctrine/phpcr-odm": "1.1.*",
 
         "symfony-cmf/core-bundle": "1.1.*@dev",
         "symfony-cmf/routing-bundle": "1.2.*@dev",
