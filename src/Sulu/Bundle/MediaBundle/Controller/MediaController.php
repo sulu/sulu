@@ -166,7 +166,7 @@ class MediaController extends RestController implements ClassResourceInterface
                     break;
                 }
             } else {
-                throw new RestException('Uploaded file not found', self::EXCEPTION_CODE_UPLOADED_FILE_NOT_FOUND);
+                throw new RestException('Uploaded file not found', UploadFileException::EXCEPTION_CODE_UPLOADED_FILE_NOT_FOUND);
             }
 
             $view = $this->view($media, 200);
