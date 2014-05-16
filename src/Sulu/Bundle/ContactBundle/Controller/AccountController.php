@@ -61,7 +61,7 @@ class AccountController extends RestController implements ClassResourceInterface
     /**
      * {@inheritdoc}
      */
-    protected $fieldsHidden = array('created', 'type', 'division', 'disabled', 'uid','registerNumber');
+    protected $fieldsHidden = array('created', 'type', 'division', 'disabled', 'uid', 'registerNumber');
 
     /**
      * {@inheritdoc}
@@ -71,7 +71,7 @@ class AccountController extends RestController implements ClassResourceInterface
     /**
      * {@inheritdoc}
      */
-    protected $fieldsSortOrder = array(0=>'id');
+    protected $fieldsSortOrder = array(0 => 'id');
 
     /**
      * {@inheritdoc}
@@ -96,7 +96,7 @@ class AccountController extends RestController implements ClassResourceInterface
      */
     protected $fieldsWidth = array(
         'type' => '150px',
-        'number'=> '90px'
+        'number' => '90px'
     );
 
     /**
@@ -156,7 +156,7 @@ class AccountController extends RestController implements ClassResourceInterface
     {
         if ($request->get('flat') == 'true') {
             // flat structure
-            $view = $this->responseList(array('account_id'=> $id), $this->contactsEntityName);
+            $view = $this->responseList(array('account_id' => $id), $this->contactsEntityName);
         } else {
             $contacts = $this->getDoctrine()->getRepository($this->contactsEntityName)->findByAccountId($id);
             $view = $this->view($this->createHalResponse($contacts), 200);
@@ -370,7 +370,8 @@ class AccountController extends RestController implements ClassResourceInterface
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function patchAction($id, Request $request) {
+    public function patchAction($id, Request $request)
+    {
         $accountEntity = 'SuluContactBundle:Account';
 
         try {

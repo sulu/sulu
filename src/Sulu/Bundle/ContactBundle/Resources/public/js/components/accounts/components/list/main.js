@@ -14,7 +14,6 @@ define([
 
     'use strict';
 
-
     var defaults = {
             accountType: null
         },
@@ -78,7 +77,7 @@ define([
                 }
                 type = accountTypes[index];
                 items.push({
-                    id: parseInt(type.id,10),
+                    id: parseInt(type.id, 10),
                     name: type.name,
                     title: this.sandbox.translate(type.translation)
                 });
@@ -166,9 +165,8 @@ define([
             var items, i, len,
                 dataUrlAddition = '',
                 accountType,
-                // get account types
+            // get account types
                 accountTypes = AppConfig.getSection('sulu-contact').accountTypes;
-
 
             // define string urlAddition if accountType is set
             if (!!this.options.accountType) {
@@ -179,7 +177,7 @@ define([
                     }
                 }
                 if (!accountType) {
-                    throw 'accountType '+accountType+' does not exist!';
+                    throw 'accountType ' + accountType + ' does not exist!';
                 }
                 dataUrlAddition += '&type=' + accountType.id;
             }
