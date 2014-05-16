@@ -13,9 +13,9 @@ define(function () {
 
     var defaults = {
         data: {},
-        slideDuration: 250 //ms
+        slideDuration: 250, //ms
+        instanceName: 'collections'
     },
-
     constants = {
         openAllKey: 'public.open-all',
         closeAllKey: 'public.close-all',
@@ -79,7 +79,25 @@ define(function () {
             this.collections = {}
 
             this.render();
+            this.startListToolbar();
             this.bindDomEvents();
+        },
+
+        /**
+         * Starts the list toolbar in the header
+         */
+        startListToolbar: function() {
+            var $listtoolbar = this.sandbox.dom.createElement('</div>');
+            this.sandbox.dom.append(this.$el, $listtoolbar);
+            this.sandbox.start([{
+                name: 'list-toolbar@suluadmin',
+                options: {
+                    el: $listtoolbar,
+                    instanceName: this.options.instanceName,
+                    template: 'default',
+                    inHeader: true
+                }
+            }]);
         },
 
         /**
@@ -116,9 +134,42 @@ define(function () {
 
                 this.sandbox.dom.append($collections, $collection);
                 this.collections[collection.id] = $collection;
+                this.startCollectionDatagrid(collection, this.sandbox.dom.find('.' + constants.collectionSlideClass, $collection));
                 this.bindCollectionDomEvents(collection.id, $collection);
             }.bind(this));
             this.sandbox.dom.append(this.$el, $collections);
+        },
+
+        /**
+         * Starts the preview-datagrid for a collection
+         * @param collection {Object} the collection object
+         * @param $container {Object} the dom container to start the datagrid in
+         */
+        startCollectionDatagrid: function (collection, $container) {
+            this.sandbox.sulu.initList.call(this, 'accountsFields'+collection.id, '/admin/api/contacts/fields',
+                {
+                    el: $container,
+                    url: '/admin/api/contacts?flat=true',
+                    view: 'thumbnail',
+                    pagination: 'showall',
+                    instanceName: this.options.instanceName + collection.id,
+                    searchInstanceName: this.options.instanceName,
+                    paginationOptions: {
+                        showall: {
+                            showAllHandler: this.showAllFiles.bind(this, collection.id)
+                        }
+                    }
+                }
+            );
+        },
+
+        /**
+         * Handles the click on the show-all pagination
+         * navigates to another view where all files are accessable
+         * @param collectionId {Nubmer|String} the id of the collection
+         */
+        showAllFiles: function(collectionId) {
+            this.sandbox.emit('sulu.media.collections.files', collectionId);
         },
 
         /**
@@ -142,7 +193,7 @@ define(function () {
          */
         bindCollectionDomEvents: function(id, $collection) {
             // toggle slide-container
-            this.sandbox.dom.on($collection, 'click', function() {
+            this.sandbox.dom.on(this.sandbox.dom.find('.head', $collection), 'click', function() {
                 this.toggleCollection($collection);
             }.bind(this));
         },

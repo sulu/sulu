@@ -58,6 +58,16 @@ define(function () {
             this.sandbox.on('sulu.list-toolbar.change.table', function () {
                 this.sandbox.emit('husky.datagrid.view.change', 'table');
             }.bind(this));
+
+            // load collections list if back icon is clicked
+            this.sandbox.on('sulu.header.back', function() {
+                this.sandbox.emit('sulu.media.collections.list');
+            }.bind(this));
+
+            // if files got uploaded to the server add them to the datagrid
+            this.sandbox.on('husky.dropzone.'+ this.options.instanceName +'.files-added', function(files) {
+                this.addFilesToDatagrid(files);
+            }.bind(this));
         },
 
         /**
@@ -78,7 +88,7 @@ define(function () {
             this.sandbox.emit('sulu.header.set-title', this.options.data.title);
             this.sandbox.emit('sulu.header.set-breadcrumb', [
                 {title: 'navigation.media'},
-                {title: 'media.collections.title'},
+                {title: 'media.collections.title', event: 'sulu.media.collections.list'},
                 {title: 'this.options.data.title'}
             ]);
             this.sandbox.emit('sulu.header.set-title-color', '#' + this.options.data.color);
@@ -93,8 +103,10 @@ define(function () {
                     name: 'dropzone@husky',
                     options: {
                         el: this.$find(constants.dropzoneSelector),
-                        url: '/admin/api/media',
-                        method: 'POST'
+                        url: '/admin/api/media?collection%5Bid%5D=1',
+                        method: 'POST',
+                        paramName: 'fileVersion',
+                        instanceName: this.options.instanceName
                     }
                 }
             ]);
@@ -105,7 +117,7 @@ define(function () {
          */
         startDatagrid: function () {
             // init list-toolbar and datagrid
-            this.sandbox.sulu.initListToolbarAndList.call(this, 'accountsFields', '/admin/api/accounts/fields',
+            this.sandbox.sulu.initListToolbarAndList.call(this, 'contactsFields', '/admin/api/contacts/fields',
                 {
                     el: this.$find(constants.toolbarSelector),
                     instanceName: this.options.instanceName,
@@ -116,9 +128,20 @@ define(function () {
                 },
                 {
                     el: this.$find(constants.datagridSelector),
-                    url: '/admin/api/accounts?flat=true',
+                    url: '/admin/api/contacts?flat=true',
                     view: 'thumbnail'
                 });
+        },
+
+        /**
+         * Takes an array of files and adds them to the datagrid
+         * @param files {Array} array of files
+         */
+        addFilesToDatagrid: function(files) {
+            for (var i = -1, length = files.length; ++i < length;) {
+                files[i].selected = true;
+            }
+            this.sandbox.emit('husky.datagrid.records.add', files);
         }
     };
 });
