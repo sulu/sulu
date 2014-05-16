@@ -209,7 +209,9 @@ class CollectionController extends RestController implements ClassResourceInterf
                     if (!$metaSet) {
                         if (isset($value[0])) {
                             foreach ($value[0] as $metaKey => $metaValue) {
-                                $flatCollection[$metaKey] = $metaValue;
+                                if (!in_array($metaKey, array('locale', 'id'))) {
+                                    $flatCollection[$metaKey] = $metaValue;
+                                }
                             }
                         }
                     }
