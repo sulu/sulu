@@ -34,9 +34,11 @@ class CollectionRepository extends EntityRepository
                 ->leftJoin('collection.metas', 'collectionMeta')
                 ->leftJoin('collection.type', 'type')
                 ->leftJoin('collection.parent', 'parent')
+                ->leftJoin('collection.children', 'children')
                 ->addSelect('collectionMeta')
                 ->addSelect('type')
                 ->addSelect('parent')
+                ->addSelect('collection')
                 ->where('collection.id = :collectionId');
 
             $query = $qb->getQuery();
@@ -44,6 +46,51 @@ class CollectionRepository extends EntityRepository
             $query->setParameter('collectionId', $id);
 
             return $query->getSingleResult();
+        } catch (NoResultException $ex) {
+            return null;
+        }
+    }
+
+    /**
+     * Give back all Collections from specific parentId
+     * @param null $parentId
+     * @param null $depth
+     * @return array|null
+     */
+    public function findCollections($parentId = null, $depth = null)
+    {
+        try {
+            $qb = $this->createQueryBuilder('collection')
+                ->leftJoin('collection.metas', 'collectionMeta')
+                ->leftJoin('collection.type', 'type')
+                ->leftJoin('collection.parent', 'parent')
+                ->leftJoin('collection.children', 'children')
+                ->leftJoin('children.medias', 'childrenMedias')
+                ->leftJoin('collection.medias', 'medias')
+                ->addSelect('collectionMeta')
+                ->addSelect('type')
+                ->addSelect('parent')
+                ->addSelect('children')
+                ->addSelect('childrenMedias')
+                ->addSelect('medias');
+
+            if ($parentId !== null) {
+                $qb->where('parent.id = :parentId');
+            }
+            if ($depth !== null) {
+                $qb->where('collection.depth = :depth');
+            }
+
+            $query = $qb->getQuery();
+            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+            if ($parentId !== null) {
+                $query->setParameter('parentId', $parentId);
+            }
+            if ($depth !== null) {
+                $query->setParameter('depth', $depth);
+            }
+
+            return $query->getArrayResult();
         } catch (NoResultException $ex) {
             return null;
         }

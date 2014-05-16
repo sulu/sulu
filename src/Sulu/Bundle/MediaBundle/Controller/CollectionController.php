@@ -42,12 +42,12 @@ class CollectionController extends RestController implements ClassResourceInterf
     /**
      * {@inheritdoc}
      */
-    protected $fieldsDefault = array('name');
+    protected $fieldsDefault = array();
 
     /**
      * {@inheritdoc}
      */
-    protected $fieldsExcluded = array('lft', 'rgt', 'depth', 'medias');
+    protected $fieldsExcluded = array('lft', 'rgt', 'depth');
 
     /**
      * {@inheritdoc}
@@ -130,14 +130,125 @@ class CollectionController extends RestController implements ClassResourceInterf
 
     /**
      * lists all collections
+     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function cgetAction()
+    public function cgetAction(Request $request)
     {
-        $collections = $this->getDoctrine()->getRepository($this->entityName)->findAll();
+        $userLocale = $this->getUser()->getLocale();
+        $locale = $request->get('locale');
+        if ($locale) {
+            $userLocale = $locale;
+        }
+
+        $parentId = $request->get('parent');
+        $depth = $request->get('depth');
+
+        $collections = $this->getDoctrine()->getRepository($this->entityName)->findCollections($parentId, $depth);
+
+        $collections = $this->flatCollections($collections, $userLocale);
+
         $view = $this->view($this->createHalResponse($collections), 200);
 
         return $this->handleView($view);
+    }
+
+    /**
+     * @param $collections
+     * @param $locale
+     * @return array
+     */
+    protected function flatCollections ($collections, $locale)
+    {
+        $flatCollections = array();
+
+        foreach ($collections as $collection) {
+            $flatCollection = array();
+            $flatCollection['locale'] = $locale;
+            $mediaCount = 0;
+            foreach ($collection as $key => $value) {
+                $setKeyValue = true;
+                switch ($key) {
+                    case 'style':
+                        $value = json_decode($value, true);
+                        break;
+                    case 'metas':
+                        $metaSet = false;
+                        foreach ($value as $meta) {
+                            if ($meta['locale'] == $locale) {
+                                $metaSet = true;
+                                foreach ($meta as $metaKey => $metaValue) {
+                                    if ($metaKey !== 'locale') {
+                                        $flatCollection[$metaKey] = $metaValue;
+                                    }
+                                }
+                            }
+                        }
+                        if (!$metaSet) {
+                            if (isset($value[0])) {
+                                foreach ($value[0] as $metaKey => $metaValue) {
+                                    $flatCollection[$metaKey] = $metaValue;
+                                }
+                            }
+                        }
+
+                        $setKeyValue = false;
+                        break;
+                    case 'children':
+                        $newValue = array();
+                        if ($value) {
+                            foreach ($value as $children) {
+                                array_push($newValue, $children['id']);
+                                if ($children['medias']) {
+                                    $mediaCount += count($children['medias']);
+                                }
+                            }
+                        }
+                        $value = $newValue;
+                        break;
+                    case 'parent':
+                    case 'type':
+                        if ($value) {
+                            $value = $value['id'];
+                        }
+                        break;
+                    case 'changer':
+                    case 'creator':
+                        break;
+                    case 'changed':
+                    case 'created':
+                        if ($value) {
+                            $value = $value->format('Y-m-d H:i:s');
+                        }
+                        break;
+                    case 'lft':
+                    case 'rgt':
+                    case 'depth':
+                        $setKeyValue = false;
+                        break;
+                    case 'medias':
+                        if ($value) {
+                            $mediaCount += count($value);
+                        }
+                        $setKeyValue = false;
+                        break;
+                    default:
+                        if (is_string($value) || is_int($value)) {
+                            $flatCollection[$key] = $value;
+                        } else {
+                            $setKeyValue = false;
+                        }
+                        break;
+                }
+                if ($setKeyValue) {
+                    $flatCollection[$key] = $value;
+                }
+            }
+            $flatCollection['mediaNumber'] = $mediaCount;
+            array_push($flatCollections, $flatCollection);
+        }
+
+        return $flatCollections;
     }
 
     /**
