@@ -89,9 +89,9 @@ define(function () {
             this.sandbox.emit('sulu.header.set-breadcrumb', [
                 {title: 'navigation.media'},
                 {title: 'media.collections.title', event: 'sulu.media.collections.list'},
-                {title: 'this.options.data.title'}
+                {title: this.options.data.title}
             ]);
-            this.sandbox.emit('sulu.header.set-title-color', '#' + this.options.data.color);
+            this.sandbox.emit('sulu.header.set-title-color', this.options.data.style.color);
         },
 
         /**
@@ -116,8 +116,9 @@ define(function () {
          * Starts the list-toolbar in the header
          */
         startDatagrid: function () {
+            // todo: remove fetching data from contact-bundle
             // init list-toolbar and datagrid
-            this.sandbox.sulu.initListToolbarAndList.call(this, 'contactsFields', '/admin/api/contacts/fields',
+            this.sandbox.sulu.initListToolbarAndList.call(this, 'accountsFields', '/admin/api/accounts/fields',
                 {
                     el: this.$find(constants.toolbarSelector),
                     instanceName: this.options.instanceName,
@@ -128,8 +129,9 @@ define(function () {
                 },
                 {
                     el: this.$find(constants.datagridSelector),
-                    url: '/admin/api/contacts?flat=true',
-                    view: 'thumbnail'
+                    url: '/admin/api/accounts?flat=true',
+                    view: 'thumbnail',
+                    pagination: false
                 });
         },
 
