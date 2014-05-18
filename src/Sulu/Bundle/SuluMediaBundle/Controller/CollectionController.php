@@ -17,6 +17,7 @@ use FOS\RestBundle\Controller\Annotations\Put;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
+use Sulu\Bundle\MediaBundle\Media\RestObject\CollectionRestObject;
 use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
@@ -135,6 +136,8 @@ class CollectionController extends RestController implements ClassResourceInterf
                 404
             );
         } else {
+            $collectionRestObject = new CollectionRestObject();
+
             $view = $this->view(
                 array_merge(
                     array(
@@ -142,7 +145,7 @@ class CollectionController extends RestController implements ClassResourceInterf
                             'self' => $request->getRequestUri()
                         )
                     ),
-                    $this->flatCollection($collection, $userLocale)
+                    $collectionRestObject->setDataByEntityArray($collection, $userLocale)
                 )
                 , 200);
         }
@@ -167,130 +170,26 @@ class CollectionController extends RestController implements ClassResourceInterf
         $depth = $request->get('depth');
 
         $collections = $this->getDoctrine()->getRepository($this->entityName)->findCollections($parentId, $depth);
-
-        $collections = $this->flatCollections($collections, $userLocale);
-
+        $collections = $this->flatCollections($collections, $userLocale, $request->get('fields', array()));
         $view = $this->view($this->createHalResponse($collections), 200);
 
         return $this->handleView($view);
     }
 
     /**
-     * flat the collection array
-     * @param $collection
-     * @param $locale
-     * @return array
-     */
-    protected function flatCollection ($collection, $locale)
-    {
-        $flatCollection = array();
-        $flatCollection['locale'] = $locale;
-        $mediaCount = 0;
-        foreach ($collection as $key => $value) {
-            $setKeyValue = true;
-            switch ($key) {
-                case 'style':
-                    if ($value) {
-                        $value = json_decode($value, true);
-                    }
-                    break;
-                case 'metas':
-                    $metaSet = false;
-                    foreach ($value as $meta) {
-                        if ($meta['locale'] == $locale) {
-                            $metaSet = true;
-                            foreach ($meta as $metaKey => $metaValue) {
-                                if (!in_array($metaKey, array('locale', 'id'))) {
-                                    $flatCollection[$metaKey] = $metaValue;
-                                }
-                            }
-                        }
-                    }
-                    if (!$metaSet) {
-                        if (isset($value[0])) {
-                            foreach ($value[0] as $metaKey => $metaValue) {
-                                if (!in_array($metaKey, array('locale', 'id'))) {
-                                    $flatCollection[$metaKey] = $metaValue;
-                                }
-                            }
-                        }
-                    }
-
-                    $setKeyValue = false;
-                    break;
-                case 'children':
-                    $newValue = array();
-                    if ($value) {
-                        foreach ($value as $children) {
-                            array_push($newValue, $children['id']);
-                            if ($children['medias']) {
-                                $mediaCount += count($children['medias']);
-                            }
-                        }
-                    }
-                    $value = $newValue;
-                    break;
-                case 'parent':
-                case 'type':
-                    if ($value) {
-                        $value = $value['id'];
-                    }
-                    break;
-                case 'changer':
-                case 'creator':
-                    if ($value) {
-                        if (isset($value['contact']['firstName'])) {
-                            $value = $value['contact']['firstName'] . ' ' . $value['contact']['lastName'];
-                        }
-                    }
-                    break;
-                case 'changed':
-                case 'created':
-                    if ($value) {
-                        $value = $value->format('Y-m-d H:i:s');
-                    }
-                    break;
-                case 'lft':
-                case 'rgt':
-                case 'depth':
-                    $setKeyValue = false;
-                    break;
-                case 'medias':
-                    if ($value) {
-                        $mediaCount += count($value);
-                    }
-                    $setKeyValue = false;
-                    break;
-                default:
-                    if (is_string($value) || is_int($value)) {
-                        $flatCollection[$key] = $value;
-                    } else {
-                        $setKeyValue = false;
-                    }
-                    break;
-            }
-            if ($setKeyValue) {
-                $flatCollection[$key] = $value;
-            }
-        }
-        $flatCollection['mediaNumber'] = $mediaCount;
-
-        return $flatCollection;
-    }
-
-    /**
-     * collections to an flat collection array
+     * convert a collections array to an array of collection rest objects
      * @param $collections
      * @param $locale
+     * @param array $fields
      * @return array
      */
-    protected function flatCollections ($collections, $locale)
+    protected function flatCollections ($collections, $locale, $fields = array())
     {
         $flatCollections = array();
 
         foreach ($collections as $collection) {
-            $flatCollection = $this->flatCollection($collection, $locale);
-            array_push($flatCollections, $flatCollection);
+            $flatCollection = new CollectionRestObject();
+            array_push($flatCollections, $flatCollection->setDataByEntityArray($collection, $locale, $fields));
         }
 
         return $flatCollections;
