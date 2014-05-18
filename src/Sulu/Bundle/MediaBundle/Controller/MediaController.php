@@ -29,6 +29,7 @@ use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\UploadFileException;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
+use Sulu\Bundle\MediaBundle\Media\RestObject\MediaRestObject;
 use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
@@ -132,6 +133,8 @@ class MediaController extends RestController implements ClassResourceInterface
                 404
             );
         } else {
+            $mediaRestObject = new MediaRestObject();
+
             $view = $this->view(
                 array_merge(
                     array(
@@ -139,7 +142,7 @@ class MediaController extends RestController implements ClassResourceInterface
                             'self' => $request->getRequestUri()
                         )
                     ),
-                    $this->flatMedia($media, $userLocale)
+                    $mediaRestObject->setDataByEntityArray($media, $userLocale, $request->get('version', null))
                 )
                 , 200);
         }
@@ -161,136 +164,27 @@ class MediaController extends RestController implements ClassResourceInterface
         }
 
         $collection = $request->get('collection');
-
         $medias = $this->getDoctrine()->getRepository($this->entityName)->findMedias($collection);
-
-        $collections = $this->flatMedias($medias, $userLocale);
-
-        $view = $this->view($this->createHalResponse($collections), 200);
+        $medias = $this->flatMedias($medias, $userLocale, $request->get('fields', array()));
+        $view = $this->view($this->createHalResponse($medias), 200);
 
         return $this->handleView($view);
     }
 
     /**
-     * flat the collection array
-     * @param $media
-     * @param $locale
-     * @return array
-     */
-    protected function flatMedia ($media, $locale)
-    {
-        $fileFormats = array( // TODO from config
-            '170x170',
-            '50x50'
-        );
-        $uploadPath = '/uploads/sulumedia'; // TODO from config
-        $originPath = '/fileproxy'; // TODO from config;
-
-        $flatMedia = array();
-        $flatMedia['locale'] = $locale;
-        foreach ($media as $key => $value) {
-            $setKeyValue = true;
-            switch ($key) {
-                case 'collection':
-                    if ($value) {
-                        $value = $value['id'];
-                    }
-                    break;
-                case 'changer':
-                case 'creator':
-                    if ($value) {
-                        if (isset($value['contact']['firstName'])) {
-                            $value = $value['contact']['firstName'] . ' ' . $value['contact']['lastName'];
-                        }
-                    }
-                    break;
-                case 'files':
-                    if ($value) {
-                        $file = $value[0];
-                        $version = $file['version'];
-                        $versions = array();
-                        if ($file['fileVersions']) {
-                            foreach ($file['fileVersions'] as $fileVersion) {
-                                $versions = array(
-                                    'id' => $fileVersion['id'],
-                                    'version' => $fileVersion['version'],
-                                );
-                                if ($fileVersion['version'] == $version) {
-                                    $flatMedia['name'] = $fileVersion['name'];
-                                    $flatMedia['size'] = $fileVersion['size'];
-                                    $flatMedia['version'] = $fileVersion['version'];
-                                    $flatMedia['changed'] = $fileVersion['changed']->format('Y-m-d H:i:s');
-                                    $flatMedia['created'] = $fileVersion['created']->format('Y-m-d H:i:s');
-                                    $flatMedia['contentLanguages'] = $fileVersion['contentLanguages'];
-                                    $flatMedia['publishLanguages'] = $fileVersion['publishLanguages'];
-                                    $flatMedia['url'] = $originPath . '/' . $fileVersion['id'];
-                                    $flatMedia['thumbnails'] = array();
-                                    foreach ($fileFormats as $format) {
-                                        $flatMedia['thumbnails'][] = array(
-                                            'format' => $format,
-                                            'url' => $uploadPath . '/'.$format.'/' . $fileVersion['name']
-                                        );
-                                    }
-
-                                    if ($fileVersion['metas']) {
-                                        $metaSet = false;
-                                        foreach ($fileVersion['metas'] as $meta) {
-                                            if ($meta['locale'] == $locale) {
-                                                $metaSet = true;
-                                                foreach ($meta as $metaKey => $metaValue) {
-                                                    if (!in_array($metaKey, array('locale', 'id'))) {
-                                                        $flatMedia[$metaKey] = $metaValue;
-                                                    }
-                                                }
-                                            }
-                                        }
-                                        if (!$metaSet) {
-                                            if (isset($fileVersion['metas'][0])) {
-                                                foreach ($fileVersion['metas'][0] as $metaKey => $metaValue) {
-                                                    if (!in_array($metaKey, array('locale', 'id'))) {
-                                                        $flatMedia[$metaKey] = $metaValue;
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-
-                                    break;
-                                }
-                            }
-                        }
-                        $flatMedia['versions'] = $versions;
-                    }
-                    $setKeyValue = false;
-                    break;
-                default:
-                    if (is_string($value) || is_int($value)) {
-                        $flatMedia[$key] = $value;
-                    } else {
-                        $setKeyValue = false;
-                    }
-                    break;
-            }
-            if ($setKeyValue) {
-                $flatMedia[$key] = $value;
-            }
-        }
-        return $flatMedia;
-    }
-
-    /**
-     * medias to an flat meda array
+     * convert media entities array to flat media rest object array
      * @param $medias
      * @param $locale
+     * @param array $fields
      * @return array
      */
-    protected function flatMedias ($medias, $locale)
+    protected function flatMedias ($medias, $locale, $fields = array())
     {
         $flatMedias = array();
 
         foreach ($medias as $media) {
-            $flatMedia = $this->flatMedia($media, $locale);
-            array_push($flatMedias, $flatMedia);
+            $flatMedia = new MediaRestObject();
+            array_push($flatMedias, $flatMedia->setDataByEntityArray($media, $locale)->toArray($fields));
         }
 
         return $flatMedias;
