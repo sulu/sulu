@@ -13,6 +13,7 @@ namespace Sulu\Bundle\TestBundle\Entity;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
 use Sulu\Component\Security\UserRepositoryInterface;
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -127,5 +128,16 @@ class TestUserRepository extends EntityRepository implements UserRepositoryInter
     public function getSystem()
     {
         // TODO: Implement getSystem() method.
+    }
+
+    /**
+     * initializes the UserRepository
+     * @param string $suluSystem The standard sulu system
+     * @param RequestAnalyzerInterface $requestAnalyzer The RequestAnalyzer is required for getting the current security
+     * @return void
+     */
+    public function init($suluSystem, RequestAnalyzerInterface $requestAnalyzer = null)
+    {
+        // TODO: Implement init() method.
     }
 }
