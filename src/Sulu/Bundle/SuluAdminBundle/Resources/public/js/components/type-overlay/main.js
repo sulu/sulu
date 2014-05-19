@@ -130,6 +130,7 @@ define([], function() {
         initialize: function() {
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
             this.elementsToRemove = [];
+            this.$elementsToRemove = [];
             this.bindCustomEvents();
         },
 
@@ -170,6 +171,8 @@ define([], function() {
                     }.bind(this)).fail(function(status, error) {
                         this.sandbox.logger.error(status, error);
                     }.bind(this));
+            } else {
+                this.sandbox.emit(CLOSED.call(this), this.parseDataFromDom(domData, true));
             }
         },
 
@@ -213,12 +216,21 @@ define([], function() {
          */
         removeDeletedItems: function(){
 
+            // remove dom elements - important for the getChangedData method
+            if(!!this.$elementsToRemove && this.$elementsToRemove.length > 0) {
+                this.sandbox.util.each(this.$elementsToRemove, function(index, $el){
+                    this.sandbox.dom.remove($el);
+                }.bind(this));
+            }
+
+            // remove items from db
             if(!!this.elementsToRemove && this.elementsToRemove.length > 0) {
                 this.sandbox.util.each(this.elementsToRemove, function(index, el){
                     this.deleteItem(el);
                 }.bind(this));
 
                 this.elementsToRemove = [];
+                this.$elementsToRemove = [];
             }
         },
 
@@ -276,7 +288,7 @@ define([], function() {
                     id = this.sandbox.dom.data($row, 'id');
 
                 if (!!id) {
-                    this.sandbox.emit(REMOVE.call(this),id);
+                    this.sandbox.emit(REMOVE.call(this),id, $row);
                 }
 
                 this.toggleStateOfRow($row);
@@ -345,19 +357,31 @@ define([], function() {
                 this.startOverlayComponent(config);
             }.bind(this));
 
-            this.sandbox.on(REMOVE.call(this), function(id){
-                this.updateRemoveList(id);
+            this.sandbox.on(REMOVE.call(this), function(id, $row){
+                this.updateRemoveList(id, $row);
             }.bind(this));
         },
 
         /**
          * Adds new item to the list or removes existing
+         * @param id of element to remove
+         * @param $row dom row of elment to remove
          */
-        updateRemoveList: function(id){
-            if(this.elementsToRemove.indexOf(id) === -1) {
-                this.elementsToRemove.push(id);
+        updateRemoveList: function(id, $row) {
+            if (this.elementsToRemove.indexOf(id) === -1) {
+
+                if (!!id) {
+                    this.elementsToRemove.push(id);
+                }
+
+                this.$elementsToRemove.push($row);
+
             } else {
-                this.elementsToRemove.splice(this.elementsToRemove.indexOf(id) , 1);
+
+                if (!!id) {
+                    this.elementsToRemove.splice(this.elementsToRemove.indexOf(id), 1);
+                }
+                this.$elementsToRemove.splice(this.elementsToRemove.indexOf($row), 1);
             }
         },
 
