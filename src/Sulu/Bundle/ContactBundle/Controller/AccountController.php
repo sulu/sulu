@@ -13,6 +13,7 @@ namespace Sulu\Bundle\ContactBundle\Controller;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Put;
+use Sulu\Bundle\ContactBundle\Entity\BankAccount;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\Fax;
@@ -60,7 +61,7 @@ class AccountController extends RestController implements ClassResourceInterface
     /**
      * {@inheritdoc}
      */
-    protected $fieldsHidden = array('created', 'type', 'division', 'disabled', 'uid');
+    protected $fieldsHidden = array('created', 'type', 'division', 'disabled', 'uid', 'registerNumber');
 
     /**
      * {@inheritdoc}
@@ -75,7 +76,10 @@ class AccountController extends RestController implements ClassResourceInterface
     /**
      * {@inheritdoc}
      */
-    protected $fieldsTranslationKeys = array('id' => 'public.id');
+    protected $fieldsTranslationKeys = array(
+        'id' => 'public.id',
+        'number' => 'public.number'
+    );
 
     /**
      * {@inheritdoc}
@@ -90,7 +94,10 @@ class AccountController extends RestController implements ClassResourceInterface
     /**
      * {@inheritdoc}
      */
-    protected $fieldsWidth = array('type' => '150px');
+    protected $fieldsWidth = array(
+        'type' => '150px',
+        'number' => '90px'
+    );
 
     /**
      * {@inheritdoc}
@@ -149,7 +156,7 @@ class AccountController extends RestController implements ClassResourceInterface
     {
         if ($request->get('flat') == 'true') {
             // flat structure
-            $view = $this->responseList(array('account_id'=> $id), $this->contactsEntityName);
+            $view = $this->responseList(array('account_id' => $id), $this->contactsEntityName);
         } else {
             $contacts = $this->getDoctrine()->getRepository($this->contactsEntityName)->findByAccountId($id);
             $view = $this->view($this->createHalResponse($contacts), 200);
@@ -346,6 +353,52 @@ class AccountController extends RestController implements ClassResourceInterface
 
                 $em->flush();
 
+                $view = $this->view($account, 200);
+            }
+        } catch (EntityNotFoundException $enfe) {
+            $view = $this->view($enfe->toArray(), 404);
+        } catch (RestException $exc) {
+            $view = $this->view($exc->toArray(), 400);
+        }
+
+        return $this->handleView($view);
+    }
+
+    /**
+     * partial update of account infos
+     * @param $id
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function patchAction($id, Request $request)
+    {
+        $accountEntity = 'SuluContactBundle:Account';
+
+        try {
+            /** @var Account $account */
+            $account = $this->getDoctrine()
+                ->getRepository($accountEntity)
+                ->findAccountById($id);
+
+            if (!$account) {
+                throw new EntityNotFoundException($accountEntity, $id);
+            } else {
+
+                $em = $this->getDoctrine()->getManager();
+
+                if (!is_null($request->get('uid'))) {
+                    $account->setUid($request->get('uid'));
+                }
+                if (!is_null($request->get('registerNumber'))) {
+                    $account->setRegisterNumber($request->get('registerNumber'));
+                }
+
+                // process details
+                if (!is_null($request->get('bankAccounts'))) {
+                    $this->processBankAccounts($account, $request);
+                }
+
+                $em->flush();
                 $view = $this->view($account, 200);
             }
         } catch (EntityNotFoundException $enfe) {
@@ -892,6 +945,78 @@ class AccountController extends RestController implements ClassResourceInterface
         };
 
         return $this->processPut($account->getNotes(), $notes, $delete, $update, $add);
+    }
+
+    /**
+     * Process all bankAccounts of a request
+     * @param Account $account
+     * @param Request $request
+     * @return bool True if the processing was sucessful, otherwise false
+     */
+    protected function processBankAccounts(Account $account, Request $request)
+    {
+        $bankAccounts = $request->get('bankAccounts');
+
+        $delete = function ($bankAccounts) use ($account) {
+            $account->removeBankAccount($bankAccounts);
+            return true;
+        };
+
+        $update = function ($bankAccounts, $matchedEntry) {
+            return $this->updateBankAccount($bankAccounts, $matchedEntry);
+        };
+
+        $add = function ($bankAccounts) use ($account) {
+            return $this->addBankAccount($account, $bankAccounts);
+        };
+
+        return $this->processPut($account->getBankAccounts(), $bankAccounts, $delete, $update, $add);
+    }
+
+    /**
+     * Add a new note to the given contact and persist it with the given object manager
+     * @param Account $account
+     * @param $data
+     * @return bool
+     * @throws \Sulu\Component\Rest\Exception\EntityIdAlreadySetException
+     */
+    protected function addBankAccount(Account $account, $data)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $entityName = 'SuluContactBundle:BankAccount';
+
+        if (isset($data['id'])) {
+            throw new EntityIdAlreadySetException($entityName, $data['id']);
+        } else {
+            $entity = new BankAccount();
+            $entity->setBankName($data['bankName']);
+            $entity->setBic($data['bic']);
+            $entity->setIban($data['iban']);
+            $entity->setPublic($data['public']);
+
+            $em->persist($entity);
+            $account->addBankAccount($entity);
+        }
+
+        return true;
+    }
+
+    /**
+     * Updates the given note
+     * @param BankAccount $entity The phone object to update
+     * @param string $data The entry with the new data
+     * @return bool True if successful, otherwise false
+     */
+    protected function updateBankAccount(BankAccount $entity, $data)
+    {
+        $success = true;
+
+        $entity->setBankName($data['bankName']);
+        $entity->setBic($data['bic']);
+        $entity->setIban($data['iban']);
+        $entity->setPublic($data['public']);
+
+        return $success;
     }
 
     /**

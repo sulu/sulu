@@ -8,13 +8,14 @@
  */
 
 define([
-    'sulucontact/model/account'
-], function(Account) {
+    'sulucontact/model/account',
+    'app-config'
+], function(Account, AppConfig) {
 
     'use strict';
 
     var templates = {
-        entityFoundTemplate: [
+        dialogEntityFoundTemplate: [
             '<p><%= foundMessage %>:</p>',
             '<% if (typeof list !== "undefined") { %>',
             '<ul><%= list %></ul>',
@@ -42,13 +43,23 @@ define([
 
         initialize: function() {
             this.bindCustomEvents();
+            this.account = null;
+            this.accountType = null;
 
             if (this.options.display === 'list') {
                 this.renderList();
             } else if (this.options.display === 'form') {
-                this.renderForm();
+                this.renderForm().then(function() {
+                    this.prepareHeader();
+                }.bind(this));
             } else if (this.options.display === 'contacts') {
-                this.renderContacts();
+                this.renderContacts().then(function() {
+                    this.prepareHeader();
+                }.bind(this));
+            } else if (this.options.display === 'financials') {
+                this.renderFinancials().then(function() {
+                    this.prepareHeader();
+                }.bind(this));
             } else {
                 throw 'display type wrong';
             }
@@ -56,34 +67,32 @@ define([
 
         bindCustomEvents: function() {
             // delete contact
-            this.sandbox.on('sulu.contacts.account.delete', function() {
-                this.del();
-            }, this);
+            this.sandbox.on('sulu.contacts.account.delete', this.del.bind(this));
 
             // save the current package
-            this.sandbox.on('sulu.contacts.accounts.save', function(data) {
-                this.save(data);
-            }, this);
+            this.sandbox.on('sulu.contacts.accounts.save', this.save.bind(this));
 
             // wait for navigation events
-            this.sandbox.on('sulu.contacts.accounts.load', function(id) {
-                this.load(id);
-            }, this);
+            this.sandbox.on('sulu.contacts.accounts.load', this.load.bind(this));
 
             // wait for navigation events
-            this.sandbox.on('sulu.contacts.contact.load', function(id) {
-                this.loadContact(id);
-            }, this);
+            this.sandbox.on('sulu.contacts.contact.load', this.loadContact.bind(this));
 
             // add new contact
-            this.sandbox.on('sulu.contacts.accounts.new', function(type) {
-                this.add(type);
-            }, this);
+            this.sandbox.on('sulu.contacts.accounts.new', this.add.bind(this));
 
             // delete selected contacts
-            this.sandbox.on('sulu.contacts.accounts.delete', function(ids) {
-                this.delAccounts(ids);
-            }, this);
+            this.sandbox.on('sulu.contacts.accounts.delete', this.delAccounts.bind(this));
+
+            this.sandbox.on('sulu.contacts.accounts.financials.save', this.saveFinancials.bind(this));
+
+            // get account type
+            this.sandbox.on('sulu.contacts.accounts.get-type', function(account, callbackFunction) {
+                if (!this.accountType) {
+                    this.accountType = this.getAccountType(account);
+                }
+                callbackFunction(this.accountType);
+            }.bind(this));
 
             // load list view
             this.sandbox.on('sulu.contacts.accounts.list', function(type, noReload) {
@@ -93,6 +102,91 @@ define([
                 }
                 this.sandbox.emit('sulu.router.navigate', 'contacts/accounts' + typeString, !noReload ? true : false, true);
             }, this);
+        },
+
+        getAccountType: function(data) {
+            var typeInfo, compareAttribute, i, type,
+                accountType = 0,
+                accountTypes,
+                section = AppConfig.getSection('sulu-contact'); // get account types
+
+            if (!section || section.length > 0 || !section.hasOwnProperty('accountTypes')) {
+                return false;
+            } else {
+                accountTypes = section.accountTypes;
+            }
+
+            if (!!data.id) {
+                typeInfo = data.type;
+                compareAttribute = 'id';
+            } else if (!!this.options.accountType) {
+                typeInfo = this.options.accountType;
+                compareAttribute = 'name';
+            } else {
+                typeInfo = 0;
+                compareAttribute = 'id';
+            }
+
+            // get account type information
+            for (i in accountTypes) {
+                type = accountTypes[i];
+                if (type[compareAttribute] === typeInfo) {
+                    accountType = type;
+                    break;
+                }
+            }
+
+            return accountType;
+        },
+
+        // enables tabs based on account type
+        enableTabsByType: function(account) {
+            var index;
+
+            this.accountType = this.getAccountType(account);
+
+            if (!this.accountType && !this.accountType.hasownProperty('tabs')) { // no account type specified
+                return;
+            }
+
+            for (index in this.accountType.tabs) {
+                if (this.accountType.tabs[index] === true) {
+                    this.sandbox.emit('husky.tabs.header.item.show', index);
+                }
+            }
+
+            return this.accountType;
+        },
+
+        prepareHeader: function() {
+            var account = this.account.toJSON(),
+                accountType = this.enableTabsByType(account);
+            this.setHeadlines(accountType, account);
+        },
+
+        setHeadlines: function(accountType, account) {
+            var breadcrumb = [
+                    {title: 'navigation.contacts'},
+                    {title: 'contact.accounts.title', event: 'sulu.contacts.accounts.list'}
+                ],
+                title = this.sandbox.translate('contact.accounts.title'),
+                typeTranslation;
+
+            if (!!accountType) {
+                typeTranslation = this.sandbox.translate(accountType.translation);
+            } else {
+                typeTranslation = this.sandbox.translate('contact.account.type.basic');
+            }
+
+            if (!!this.options.id) {
+                breadcrumb.push({title: typeTranslation + ' #' + this.options.id});
+                title = account.name;
+            } else {
+                breadcrumb.push({title: typeTranslation});
+            }
+
+            this.sandbox.emit('sulu.header.set-title', title);
+            this.sandbox.emit('sulu.header.set-breadcrumb', breadcrumb);
         },
 
         del: function() {
@@ -123,6 +217,22 @@ define([
                     } else {
                         this.sandbox.emit('sulu.router.navigate', 'contacts/accounts/edit:' + model.id + '/details');
                     }
+                }.bind(this),
+                error: function() {
+                    this.sandbox.logger.log("error while saving profile");
+                }.bind(this)
+            });
+        },
+
+        saveFinancials: function(data) {
+            this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
+
+            this.account.set(data);
+            this.account.save(null, {
+                patch: true,
+                success: function(response) {
+                    var model = response.toJSON();
+                    this.sandbox.emit('sulu.contacts.accounts.financials.saved', model);
                 }.bind(this),
                 error: function() {
                     this.sandbox.logger.log("error while saving profile");
@@ -185,11 +295,37 @@ define([
 
         },
 
+        renderFinancials: function() {
+            // TODO implement
+            var $form = this.sandbox.dom.createElement('<div id="accounts-form-container"/>'),
+                dfd = this.sandbox.data.deferred();
+            this.html($form);
+
+            if (!!this.options.id) {
+                this.account = new Account({id: this.options.id});
+                this.account.fetch({
+                    success: function(model) {
+                        this.sandbox.start([
+                            {name: 'accounts/components/financials@sulucontact', options: { el: $form, data: model.toJSON()}}
+                        ]);
+                        dfd.resolve();
+                    }.bind(this),
+                    error: function() {
+                        this.sandbox.logger.log("error while fetching contact");
+                        dfd.reject();
+                    }.bind(this)
+                });
+            }
+            return dfd.promise();
+
+        },
+
         renderForm: function() {
             // load data and show form
             this.account = new Account();
 
-            var $form = this.sandbox.dom.createElement('<div id="accounts-form-container"/>');
+            var $form = this.sandbox.dom.createElement('<div id="accounts-form-container"/>'),
+                dfd = this.sandbox.data.deferred();
             this.html($form);
 
             if (!!this.options.id) {
@@ -200,38 +336,46 @@ define([
                         this.sandbox.start([
                             {name: 'accounts/components/form@sulucontact', options: { el: $form, data: model.toJSON()}}
                         ]);
+                        dfd.resolve();
                     }.bind(this),
                     error: function() {
                         this.sandbox.logger.log("error while fetching contact");
+                        dfd.reject();
                     }.bind(this)
                 });
             } else {
+                this.accountType = this.getAccountType(this.options.accountType);
+                this.account.set({type:this.accountType.id});
                 this.sandbox.start([
-                    {name: 'accounts/components/form@sulucontact', options: { el: $form, data: this.account.toJSON(), accountTypeName: this.options.accountType}}
+                    {name: 'accounts/components/form@sulucontact', options: { el: $form, data: this.account.toJSON()}}
                 ]);
+                dfd.resolve();
             }
+            return dfd.promise();
         },
 
         renderContacts: function() {
 
-            var $form = this.sandbox.dom.createElement('<div id="accounts-contacts-container"/>');
+            var $form = this.sandbox.dom.createElement('<div id="accounts-contacts-container"/>'),
+                dfd = this.sandbox.data.deferred();
             this.html($form);
 
             if (!!this.options.id) {
                 this.account = new Account({id: this.options.id});
                 this.account.fetch({
-                    // pass include parameter when fetching
-//                    data: {'include': 'contacts'},
                     success: function(model) {
                         this.sandbox.start([
                             {name: 'accounts/components/contacts@sulucontact', options: { el: $form, data: model.toJSON()}}
                         ]);
+                        dfd.resolve();
                     }.bind(this),
                     error: function() {
                         this.sandbox.logger.log("error while fetching contact");
+                        dfd.reject();
                     }.bind(this)
                 });
             }
+            return dfd.promise();
         },
 
         showDeleteConfirmation: function(ids, callbackFunction) {
@@ -288,7 +432,7 @@ define([
                 title = 'sulu.overlay.error';
                 okCallback = undefined;
                 // parse sub-account template
-                content = this.sandbox.util.template(templates.entityFoundTemplate, {
+                content = this.sandbox.util.template(templates.dialogEntityFoundTemplate, {
                     foundMessage: this.sandbox.translate('contact.accounts.delete.sub-found'),
                     list: this.template.dependencyListAccounts.call(this, values.children),
                     numChildren: parseInt(values.numChildren, 10),
@@ -299,7 +443,7 @@ define([
             // related contacts exist => show checkbox
             else if (parseInt(values.numContacts, 10) > 0) {
                 // create message
-                content = this.sandbox.util.template(templates.entityFoundTemplate, {
+                content = this.sandbox.util.template(templates.dialogEntityFoundTemplate, {
                     foundMessage: this.sandbox.translate('contact.accounts.delete.contacts-found'),
                     list: this.template.dependencyListContacts.call(this, values.contacts),
                     numChildren: parseInt(values.numContacts, 10),
@@ -354,13 +498,12 @@ define([
                     callbackFunction(true, deleteContacts);
                 }.bind(this);
 
-
             // sub-account exists => deletion is not allowed
             if (parseInt(values.numChildren, 10) > 0) {
                 overlayType = 'show-error';
                 title = 'sulu.overlay.error';
                 okCallback = undefined;
-                content = this.sandbox.util.template(templates.entityFoundTemplate, {
+                content = this.sandbox.util.template(templates.dialogEntityFoundTemplate, {
                     foundMessage: this.sandbox.translate('contact.accounts.delete.sub-found'),
                     description: this.sandbox.translate('contact.accounts.delete.sub-found-desc')
                 });
@@ -368,7 +511,7 @@ define([
             // related contacts exist => show checkbox
             else if (parseInt(values.numContacts, 10) > 0) {
                 // create message
-                content = this.sandbox.util.template(templates.entityFoundTemplate, {
+                content = this.sandbox.util.template(templates.dialogEntityFoundTemplate, {
                     foundMessage: this.sandbox.translate('contact.accounts.delete.contacts-found'),
                     numChildren: parseInt(values.numContacts, 10),
                     description: this.sandbox.translate('contact.accounts.delete.contacts-question'),

@@ -352,4 +352,32 @@ class Address
     {
         return $this->accounts;
     }
+    /**
+     * @var string
+     */
+    private $box;
+
+
+    /**
+     * Set box
+     *
+     * @param string $box
+     * @return Address
+     */
+    public function setBox($box)
+    {
+        $this->box = $box;
+    
+        return $this;
+    }
+
+    /**
+     * Get box
+     *
+     * @return string 
+     */
+    public function getBox()
+    {
+        return $this->box;
+    }
 }
