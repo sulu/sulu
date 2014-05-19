@@ -154,7 +154,7 @@ define([], function() {
          * @param domData
          * @param method
          */
-        saveNewEditedItems: function(domData, method) {
+        saveNewEditedItemsAndClose: function(domData, method) {
 
             var data = this.parseDataFromDom(domData),
                 changedData = this.getChangedData(data);
@@ -162,11 +162,13 @@ define([], function() {
             if(changedData.length > 0) {
                 this.sandbox.util.save(this.options.url, method, changedData)
                     .then(function(response) {
+
                         this.sandbox.emit(SAVED.call(this), response);
-                        return response;
+
+                        var mergeData = this.mergeDomAndRequestData(response,  this.parseDataFromDom(domData, true));
+                        this.sandbox.emit(CLOSED.call(this), mergeData);
                     }.bind(this)).fail(function(status, error) {
                         this.sandbox.logger.error(status, error);
-                        return null;
                     }.bind(this));
             }
         },
@@ -215,6 +217,8 @@ define([], function() {
                 this.sandbox.util.each(this.elementsToRemove, function(index, el){
                     this.deleteItem(el);
                 }.bind(this));
+
+                this.elementsToRemove = [];
             }
         },
 
@@ -293,13 +297,33 @@ define([], function() {
          * Callback for close of overlay with ok button
          */
         onCloseWithOk: function(domData){
-            if (!!domData) {
-                this.saveNewEditedItems(domData, 'PATCH');
-            }
+
             this.removeDeletedItems();
 
-            this.sandbox.emit(CLOSED.call(this), this.parseDataFromDom(domData, true));
+            if (!!domData) {
+                this.saveNewEditedItemsAndClose(domData, 'PATCH');
+            }
 
+
+        },
+
+        /**
+         * Merges data returned by the rest api and the dom
+         * @param updatedData
+         * @param parsedDomData
+         */
+        mergeDomAndRequestData: function(updatedData, parsedDomData) {
+            this.sandbox.util.foreach(parsedDomData, function(parsedEl) {
+                this.sandbox.util.foreach(updatedData, function(updatedEl) {
+                    if (parsedEl.id === updatedEl.id) {
+                        parsedEl.category = updatedEl.category;
+                    } else if (parsedEl.category === updatedEl.category) {
+                        parsedEl.id = updatedEl.id;
+                    }
+                }.bind(this));
+            }.bind(this));
+
+            return parsedDomData;
         },
 
         /**
