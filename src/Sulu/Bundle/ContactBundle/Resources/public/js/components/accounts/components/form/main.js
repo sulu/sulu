@@ -93,8 +93,15 @@ define(['app-config'], function(AppConfig) {
             this.sandbox.util.load(this.accountCategoryURL)
                 .then(function(response) {
 
+                    // data is data for select but not for overlay
                     var data = response['_embedded'];
                     this.accountCategoryData = data.slice(0,data.length);
+
+                    // translate values for select but not for overlay
+                    this.sandbox.util.foreach(data, function(el){
+                        el.category = this.sandbox.translate(el.category);
+                    }.bind(this));
+
 
                     data.push({divider: true});
                     data.push({id: -1, category: this.sandbox.translate('contacts.accounts.manage.categories'), callback: this.showCategoryOverlay.bind(this)});
