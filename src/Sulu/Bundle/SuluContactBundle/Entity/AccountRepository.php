@@ -38,9 +38,10 @@ class AccountRepository extends EntityRepository
     /**
      * Get account by id
      * @param $id
+     * @param $contacts
      * @return mixed
      */
-    public function findAccountById($id)
+    public function findAccountById($id, $contacts = false)
     {
         try {
             $qb = $this->createQueryBuilder('account')
@@ -58,6 +59,8 @@ class AccountRepository extends EntityRepository
                 ->leftJoin('account.faxes', 'faxes')
                 ->leftJoin('faxes.faxType', 'faxType')
                 ->leftJoin('account.accountCategory', 'accountCategory')
+                ->leftJoin('account.bankAccounts', 'bankAccounts')
+                ->addSelect('bankAccounts')
                 ->addSelect('addresses')
                 ->addSelect('country')
                 ->addSelect('addressType')
@@ -73,6 +76,12 @@ class AccountRepository extends EntityRepository
                 ->addSelect('notes')
                 ->addSelect('accountCategory')
                 ->where('account.id = :accountId');
+
+
+            if ($contacts === true) {
+                $qb->leftJoin('account.contacts', 'contacts')
+                ->addSelect('contacts');
+            }
 
             $query = $qb->getQuery();
             $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
@@ -137,6 +146,8 @@ class AccountRepository extends EntityRepository
                 ->leftJoin('emails.contacts', 'emailsContacts')
                 ->leftJoin('emails.accounts', 'emailsAccounts')
                 ->leftJoin('account.notes', 'notes')
+                ->leftJoin('account.bankAccounts', 'bankAccounts')
+                ->addSelect('bankAccounts')
                 ->addSelect('addresses')
                 ->addSelect('children')
                 ->addSelect('contacts')

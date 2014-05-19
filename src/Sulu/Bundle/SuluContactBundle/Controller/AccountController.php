@@ -13,6 +13,7 @@ namespace Sulu\Bundle\ContactBundle\Controller;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Put;
+use Sulu\Bundle\ContactBundle\Entity\BankAccount;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\Fax;
@@ -28,6 +29,7 @@ use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\RestController;
 use \DateTime;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Makes accounts available through a REST API
@@ -39,6 +41,7 @@ class AccountController extends RestController implements ClassResourceInterface
      * {@inheritdoc}
      */
     protected $entityName = 'SuluContactBundle:Account';
+    protected $contactsEntityName = 'SuluContactBundle:Contact';
 
     /**
      * {@inheritdoc}
@@ -58,7 +61,7 @@ class AccountController extends RestController implements ClassResourceInterface
     /**
      * {@inheritdoc}
      */
-    protected $fieldsHidden = array('created', 'type', 'division', 'disabled', 'uid');
+    protected $fieldsHidden = array('created', 'type', 'division', 'disabled', 'uid', 'registerNumber');
 
     /**
      * {@inheritdoc}
@@ -73,7 +76,10 @@ class AccountController extends RestController implements ClassResourceInterface
     /**
      * {@inheritdoc}
      */
-    protected $fieldsTranslationKeys = array('id' => 'public.id');
+    protected $fieldsTranslationKeys = array(
+        'id' => 'public.id',
+        'number' => 'public.number'
+    );
 
     /**
      * {@inheritdoc}
@@ -88,7 +94,10 @@ class AccountController extends RestController implements ClassResourceInterface
     /**
      * {@inheritdoc}
      */
-    protected $fieldsWidth = array('type' => '150px');
+    protected $fieldsWidth = array(
+        'type' => '150px',
+        'number' => '90px'
+    );
 
     /**
      * {@inheritdoc}
@@ -117,16 +126,19 @@ class AccountController extends RestController implements ClassResourceInterface
     /**
      * Shows a single account with the given id
      * @param $id
+     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getAction($id)
+    public function getAction($id, Request $request)
     {
+        $includes = explode(',', $request->get('include'));
+
         $view = $this->responseGetById(
             $id,
-            function ($id) {
+            function ($id) use ($includes) {
                 return $this->getDoctrine()
                     ->getRepository($this->entityName)
-                    ->findAccountById($id);
+                    ->findAccountById($id, in_array('contacts', $includes));
             }
         );
 
@@ -134,18 +146,38 @@ class AccountController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * lists all accounts
+     * lists all contacts of an account
      * optional parameter 'flat' calls listAction
+     * @param $id
+     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function cgetAction()
+    public function getContactsAction($id, Request $request)
+    {
+        if ($request->get('flat') == 'true') {
+            // flat structure
+            $view = $this->responseList(array('account_id' => $id), $this->contactsEntityName);
+        } else {
+            $contacts = $this->getDoctrine()->getRepository($this->contactsEntityName)->findByAccountId($id);
+            $view = $this->view($this->createHalResponse($contacts), 200);
+        }
+        return $this->handleView($view);
+    }
+
+    /**
+     * lists all accounts
+     * optional parameter 'flat' calls listAction
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function cgetAction(Request $request)
     {
         $where = array();
-        $type = $this->getRequest()->get('type');
-        if($type) {
+        $type = $request->get('type');
+        if ($type) {
             $where['type'] = $type;
         }
-        if ($this->getRequest()->get('flat') == 'true') {
+        if ($request->get('flat') == 'true') {
             $view = $this->responseList($where);
         } else {
             $contacts = $this->getDoctrine()->getRepository($this->entityName)->findAll();
@@ -156,11 +188,12 @@ class AccountController extends RestController implements ClassResourceInterface
 
     /**
      * Creates a new account
+     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function postAction()
+    public function postAction(Request $request)
     {
-        $name = $this->getRequest()->get('name');
+        $name = $request->get('name');
 
         try {
             if ($name == null) {
@@ -171,18 +204,18 @@ class AccountController extends RestController implements ClassResourceInterface
 
             $account = new Account();
 
-            $account->setName($this->getRequest()->get('name'));
+            $account->setName($request->get('name'));
 
-            $account->setType($this->getRequest()->get('type'));
+            $account->setType($request->get('type'));
 
 
-            $disabled = $this->getRequest()->get('disabled');
+            $disabled = $request->get('disabled');
             if (is_null($disabled)) {
                 $disabled = false;
             }
             $account->setDisabled($disabled);
 
-            $parentData = $this->getRequest()->get('parent');
+            $parentData = $request->get('parent');
             if ($parentData != null && isset($parentData['id']) && $parentData['id'] != 'null' && $parentData['id'] != '') {
                 $parent = $this->getDoctrine()
                     ->getRepository($this->entityName)
@@ -200,42 +233,42 @@ class AccountController extends RestController implements ClassResourceInterface
             $account->setCreator($this->getUser());
             $account->setChanger($this->getUser());
 
-            $urls = $this->getRequest()->get('urls');
+            $urls = $request->get('urls');
             if (!empty($urls)) {
                 foreach ($urls as $urlData) {
                     $this->addUrl($account, $urlData);
                 }
             }
 
-            $emails = $this->getRequest()->get('emails');
+            $emails = $request->get('emails');
             if (!empty($emails)) {
                 foreach ($emails as $emailData) {
                     $this->addEmail($account, $emailData);
                 }
             }
 
-            $phones = $this->getRequest()->get('phones');
+            $phones = $request->get('phones');
             if (!empty($phones)) {
                 foreach ($phones as $phoneData) {
                     $this->addPhone($account, $phoneData);
                 }
             }
 
-            $faxes = $this->getRequest()->get('faxes');
+            $faxes = $request->get('faxes');
             if (!empty($faxes)) {
                 foreach ($faxes as $faxData) {
                     $this->addFax($account, $faxData);
                 }
             }
 
-            $addresses = $this->getRequest()->get('addresses');
+            $addresses = $request->get('addresses');
             if (!empty($addresses)) {
                 foreach ($addresses as $addressData) {
                     $this->addAddress($account, $addressData);
                 }
             }
 
-            $notes = $this->getRequest()->get('notes');
+            $notes = $request->get('notes');
             if (!empty($notes)) {
                 foreach ($notes as $noteData) {
                     $this->addNote($account, $noteData);
@@ -259,10 +292,11 @@ class AccountController extends RestController implements ClassResourceInterface
     /**
      * Edits the existing contact with the given id
      * @param integer $id The id of the contact to update
+     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      */
-    public function putAction($id)
+    public function putAction($id, Request $request)
     {
         $accountEntity = 'SuluContactBundle:Account';
 
@@ -279,16 +313,16 @@ class AccountController extends RestController implements ClassResourceInterface
                 $em = $this->getDoctrine()->getManager();
 
                 // set name
-                $account->setName($this->getRequest()->get('name'));
+                $account->setName($request->get('name'));
 
                 // set disabled
-                $disabled = $this->getRequest()->get('disabled');
+                $disabled = $request->get('disabled');
                 if (!is_null($disabled)) {
                     $account->setDisabled($disabled);
                 }
 
                 // set parent
-                $parentData = $this->getRequest()->get('parent');
+                $parentData = $request->get('parent');
                 if ($parentData != null && isset($parentData['id']) && $parentData['id'] != 'null' && $parentData['id'] != '') {
                     $parent = $this->getDoctrine()
                         ->getRepository($this->entityName)
@@ -307,12 +341,12 @@ class AccountController extends RestController implements ClassResourceInterface
                 $account->setChanger($user);
 
                 // process details
-                if (!($this->processUrls($account)
-                    && $this->processEmails($account)
-                    && $this->processFaxes($account)
-                    && $this->processPhones($account)
-                    && $this->processAddresses($account)
-                    && $this->processNotes($account))
+                if (!($this->processUrls($account, $request)
+                    && $this->processEmails($account, $request)
+                    && $this->processFaxes($account, $request)
+                    && $this->processPhones($account, $request)
+                    && $this->processAddresses($account, $request)
+                    && $this->processNotes($account, $request))
                 ) {
                     throw new RestException('Updating dependencies is not possible', 0);
                 }
@@ -331,13 +365,60 @@ class AccountController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * Delete an account with the given id
+     * partial update of account infos
      * @param $id
+     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function deleteAction($id)
+    public function patchAction($id, Request $request)
     {
-        $delete = function ($id) {
+        $accountEntity = 'SuluContactBundle:Account';
+
+        try {
+            /** @var Account $account */
+            $account = $this->getDoctrine()
+                ->getRepository($accountEntity)
+                ->findAccountById($id);
+
+            if (!$account) {
+                throw new EntityNotFoundException($accountEntity, $id);
+            } else {
+
+                $em = $this->getDoctrine()->getManager();
+
+                if (!is_null($request->get('uid'))) {
+                    $account->setUid($request->get('uid'));
+                }
+                if (!is_null($request->get('registerNumber'))) {
+                    $account->setRegisterNumber($request->get('registerNumber'));
+                }
+
+                // process details
+                if (!is_null($request->get('bankAccounts'))) {
+                    $this->processBankAccounts($account, $request);
+                }
+
+                $em->flush();
+                $view = $this->view($account, 200);
+            }
+        } catch (EntityNotFoundException $enfe) {
+            $view = $this->view($enfe->toArray(), 404);
+        } catch (RestException $exc) {
+            $view = $this->view($exc->toArray(), 400);
+        }
+
+        return $this->handleView($view);
+    }
+
+    /**
+     * Delete an account with the given id
+     * @param $id
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function deleteAction($id, Request $request)
+    {
+        $delete = function ($id) use ($request) {
             $entityName = 'SuluContactBundle:Account';
 
             /* @var Account $account */
@@ -357,8 +438,8 @@ class AccountController extends RestController implements ClassResourceInterface
             $em = $this->getDoctrine()->getManager();
 
             // remove related contacts if removeContacts is true
-            if (!is_null($this->getRequest()->get('removeContacts')) &&
-                $this->getRequest()->get('removeContacts') == "true"
+            if (!is_null($request->get('removeContacts')) &&
+                $request->get('removeContacts') == "true"
             ) {
                 foreach ($account->getContacts() as $contact) {
                     $em->remove($contact);
@@ -377,11 +458,12 @@ class AccountController extends RestController implements ClassResourceInterface
     /**
      * Process all urls from request
      * @param Account $account The contact on which is worked
+     * @param Request $request
      * @return bool True if the processing was sucessful, otherwise false
      */
-    protected function processUrls(Account $account)
+    protected function processUrls(Account $account, Request $request)
     {
-        $urls = $this->getRequest()->get('urls');
+        $urls = $request->get('urls');
 
         $delete = function ($url) use ($account) {
             $account->removeUrl($url);
@@ -462,11 +544,12 @@ class AccountController extends RestController implements ClassResourceInterface
     /**
      * Process all emails from request
      * @param Account $account The contact on which is worked
+     * @param Request $request
      * @return bool True if the processing was sucessful, otherwise false
      */
-    protected function processEmails(Account $account)
+    protected function processEmails(Account $account, Request $request)
     {
-        $emails = $this->getRequest()->get('emails');
+        $emails = $request->get('emails');
 
         $delete = function ($email) use ($account) {
             $account->removeEmail($email);
@@ -490,11 +573,12 @@ class AccountController extends RestController implements ClassResourceInterface
     /**
      * Process all faxes from request
      * @param Account $account The contact on which is worked
+     * @param Request $request
      * @return bool True if the processing was sucessful, otherwise false
      */
-    protected function processFaxes(Account $account)
+    protected function processFaxes(Account $account, Request $request)
     {
-        $faxes = $this->getRequest()->get('faxes');
+        $faxes = $request->get('faxes');
 
         $delete = function ($fax) use ($account) {
             $account->removeFax($fax);
@@ -630,11 +714,12 @@ class AccountController extends RestController implements ClassResourceInterface
     /**
      * Process all phones from request
      * @param Account $account The contact on which is worked
+     * @param Request $request
      * @return bool True if the processing was sucessful, otherwise false
      */
-    protected function processPhones(Account $account)
+    protected function processPhones(Account $account, Request $request)
     {
-        $phones = $this->getRequest()->get('phones');
+        $phones = $request->get('phones');
 
         $delete = function ($phone) use ($account) {
             $account->removePhone($phone);
@@ -716,11 +801,12 @@ class AccountController extends RestController implements ClassResourceInterface
     /**
      * Process all addresses from request
      * @param Account $account The contact on which is worked
+     * @param Request $request
      * @return bool True if the processing was sucessful, otherwise false
      */
-    protected function processAddresses(Account $account)
+    protected function processAddresses(Account $account, Request $request)
     {
-        $addresses = $this->getRequest()->get('addresses');
+        $addresses = $request->get('addresses');
 
         $delete = function ($address) use ($account) {
             $account->removeAddresse($address);
@@ -837,11 +923,12 @@ class AccountController extends RestController implements ClassResourceInterface
     /**
      * Process all notes from request
      * @param Account $account The contact on which is worked
+     * @param Request $request
      * @return bool True if the processing was sucessful, otherwise false
      */
-    protected function processNotes(Account $account)
+    protected function processNotes(Account $account, Request $request)
     {
-        $notes = $this->getRequest()->get('notes');
+        $notes = $request->get('notes');
 
         $delete = function ($note) use ($account) {
             $account->removeNote($note);
@@ -858,6 +945,78 @@ class AccountController extends RestController implements ClassResourceInterface
         };
 
         return $this->processPut($account->getNotes(), $notes, $delete, $update, $add);
+    }
+
+    /**
+     * Process all bankAccounts of a request
+     * @param Account $account
+     * @param Request $request
+     * @return bool True if the processing was sucessful, otherwise false
+     */
+    protected function processBankAccounts(Account $account, Request $request)
+    {
+        $bankAccounts = $request->get('bankAccounts');
+
+        $delete = function ($bankAccounts) use ($account) {
+            $account->removeBankAccount($bankAccounts);
+            return true;
+        };
+
+        $update = function ($bankAccounts, $matchedEntry) {
+            return $this->updateBankAccount($bankAccounts, $matchedEntry);
+        };
+
+        $add = function ($bankAccounts) use ($account) {
+            return $this->addBankAccount($account, $bankAccounts);
+        };
+
+        return $this->processPut($account->getBankAccounts(), $bankAccounts, $delete, $update, $add);
+    }
+
+    /**
+     * Add a new note to the given contact and persist it with the given object manager
+     * @param Account $account
+     * @param $data
+     * @return bool
+     * @throws \Sulu\Component\Rest\Exception\EntityIdAlreadySetException
+     */
+    protected function addBankAccount(Account $account, $data)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $entityName = 'SuluContactBundle:BankAccount';
+
+        if (isset($data['id'])) {
+            throw new EntityIdAlreadySetException($entityName, $data['id']);
+        } else {
+            $entity = new BankAccount();
+            $entity->setBankName($data['bankName']);
+            $entity->setBic($data['bic']);
+            $entity->setIban($data['iban']);
+            $entity->setPublic($data['public']);
+
+            $em->persist($entity);
+            $account->addBankAccount($entity);
+        }
+
+        return true;
+    }
+
+    /**
+     * Updates the given note
+     * @param BankAccount $entity The phone object to update
+     * @param string $data The entry with the new data
+     * @return bool True if successful, otherwise false
+     */
+    protected function updateBankAccount(BankAccount $entity, $data)
+    {
+        $success = true;
+
+        $entity->setBankName($data['bankName']);
+        $entity->setBic($data['bic']);
+        $entity->setIban($data['iban']);
+        $entity->setPublic($data['public']);
+
+        return $success;
     }
 
     /**
@@ -902,12 +1061,13 @@ class AccountController extends RestController implements ClassResourceInterface
 
     /**
      * returns delete info for multiple ids
+     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function multipledeleteinfoAction()
+    public function multipledeleteinfoAction(Request $request)
     {
 
-        $ids = $this->getRequest()->get('ids');
+        $ids = $request->get('ids');
 
         $response = array();
         $numContacts = 0;

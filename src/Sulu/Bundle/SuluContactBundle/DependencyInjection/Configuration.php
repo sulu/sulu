@@ -42,8 +42,24 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('country')->defaultValue('1')->end()
                     ->end()
                 ->end()
+                ->arrayNode('account_types')
+                    ->useAttributeAsKey('title')
+                    ->prototype('array')
+                        ->addDefaultsIfNotSet()
+                        ->children()
+                            ->scalarNode('id')->end()
+                            ->scalarNode('name')->end()
+                            ->scalarNode('translation')->end()
+                            ->arrayNode('tabs')
+                                ->useAttributeAsKey('name')
+                                ->prototype('scalar')->defaultValue('false')->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
             ->end()
         ;
+
 
         // Here you should define the parameters that are allowed to
         // configure your bundle. See the documentation linked above for

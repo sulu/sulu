@@ -12,7 +12,13 @@ define([], function() {
     'use strict';
 
     var form = '#contact-form',
-        fields = ['urls', 'emails', 'faxes', 'phones', 'notes', 'addresses'];
+        fields = ['urls', 'emails', 'faxes', 'phones', 'notes', 'addresses'],
+
+        setHeaderToolbar = function() {
+            this.sandbox.emit('sulu.header.set-toolbar', {
+                template: 'default'
+            });
+        };
 
     return (function() {
         // FIXME move to this.*
@@ -28,6 +34,7 @@ define([], function() {
                 this.setTitle();
                 this.render();
                 this.setHeaderBar(true);
+                setHeaderToolbar.call(this);
                 this.listenForChange();
             },
 
@@ -57,7 +64,6 @@ define([], function() {
                         }
                     }
                 ]);
-
 
                 this.initForm(data);
 
@@ -120,8 +126,9 @@ define([], function() {
                 this.sandbox.start([{
                     name: 'contact-form@sulucontact',
                     options: {
-                        el:'#contact-options-dropdown',
-                        fieldTypes: this.fieldTypes
+                        el:'#contact-edit-form',
+                        fieldTypes: this.fieldTypes,
+                        defaultTypes: this.defaultTypes
                     }
                 }]);
             },
@@ -248,7 +255,7 @@ define([], function() {
 
                     // FIXME auto complete in mapper
                     data.account = {
-                        id: this.sandbox.dom.data('#' + this.companyInstanceName, 'id')
+                        id: this.sandbox.dom.attr('#' + this.companyInstanceName, 'data-id')
                     };
 
                     this.sandbox.logger.log('log data', data);
@@ -279,12 +286,11 @@ define([], function() {
                 }.bind(this), "select, input, textarea");
                 this.sandbox.dom.on('#contact-form', 'keyup', function() {
                     this.setHeaderBar(false);
-                }.bind(this), "input");
+                }.bind(this), "input, textarea");
                 this.sandbox.on('sulu.contact-form.changed', function() {
                     this.setHeaderBar(false);
                 }.bind(this));
             }
-
         };
     })();
 });

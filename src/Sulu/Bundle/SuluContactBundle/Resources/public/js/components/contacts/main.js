@@ -112,7 +112,7 @@ define([
                         var contact = new Contact({id: id});
                         contact.destroy({
                             success: function() {
-                                this.sandbox.emit('husky.datagrid.row.remove', id);
+                                this.sandbox.emit('husky.datagrid.record.remove', id);
                             }.bind(this)
                         });
                     }.bind(this));
@@ -164,32 +164,13 @@ define([
             if (!!callbackFunction && typeof(callbackFunction) !== 'function') {
                 throw 'callback is not a function';
             }
-
             // show dialog
-            this.sandbox.emit('sulu.dialog.confirmation.show', {
-                content: {
-                    title: 'Be careful!',
-                    content: '<p>The operation you are about to do will delete data.<br/>This is not undoable!</p><p>Please think about it and accept or decline.</p>'
-                },
-                footer: {
-                    buttonCancelText: 'Don\'t do it',
-                    buttonSubmitText: 'Do it, I understand'
-                },
-                callback: {
-                    submit: function() {
-                        this.sandbox.emit('husky.dialog.hide');
-                        if (!!callbackFunction) {
-                            callbackFunction(true);
-                        }
-                    }.bind(this),
-                    cancel: function() {
-                        this.sandbox.emit('husky.dialog.hide');
-                        if (!!callbackFunction) {
-                            callbackFunction(false);
-                        }
-                    }.bind(this)
-                }
-            });
+            this.sandbox.emit('sulu.overlay.show-warning',
+                'sulu.overlay.be-careful',
+                'sulu.overlay.delete-desc',
+                callbackFunction.bind(this, false),
+                callbackFunction.bind(this, true)
+            );
         }
     };
 });

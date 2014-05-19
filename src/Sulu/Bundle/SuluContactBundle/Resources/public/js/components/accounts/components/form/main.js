@@ -7,14 +7,21 @@
  * with this source code in the file LICENSE.
  */
 
-define(['app-config'], function(AppConfig) {
+define([], function() {
 
     'use strict';
 
     var defaults = {
             headline: 'contact.accounts.title'
         },
-        fields = ['urls', 'emails', 'faxes', 'phones', 'notes', 'addresses'];
+        fields = ['urls', 'emails', 'faxes', 'phones', 'notes', 'addresses'],
+
+    // sets toolbar
+        setHeaderToolbar = function() {
+            this.sandbox.emit('sulu.header.set-toolbar', {
+                template: 'default'
+            });
+        };
 
     return {
 
@@ -28,12 +35,12 @@ define(['app-config'], function(AppConfig) {
 
             this.form = '#contact-form';
             this.saved = true;
+
             this.accountCategoryURL = 'api/account/categories';
 
-            this.accountType = this.getAccountType();
-            this.setHeadlines(this.accountType);
             this.render();
             this.setHeaderBar(true);
+            setHeaderToolbar.call(this);
             this.listenForChange();
         },
 
@@ -54,7 +61,6 @@ define(['app-config'], function(AppConfig) {
                 excludeItem.push({id: this.options.data.id});
             }
 
-
             this.sandbox.start([
                 {
                     name: 'auto-complete@husky',
@@ -73,9 +79,11 @@ define(['app-config'], function(AppConfig) {
                 }
             ]);
 
+
             this.initForm(data);
             this.initCategorySelect(data);
             this.startCategoryOverlay();
+
 
             this.bindDomEvents();
             this.bindCustomEvents();
@@ -98,7 +106,7 @@ define(['app-config'], function(AppConfig) {
                     this.accountCategoryData = this.copyArrayOfObjects(data);
 
                     // translate values for select but not for overlay
-                    this.sandbox.util.foreach(data, function(el){
+                    this.sandbox.util.foreach(data, function(el) {
                         el.category = this.sandbox.translate(el.category);
                     }.bind(this));
 
@@ -131,9 +139,9 @@ define(['app-config'], function(AppConfig) {
          * Adds divider and actions to dropdown elements
          * @param data
          */
-        addDividerAndActionsForSelect: function(data){
+        addDividerAndActionsForSelect: function(data) {
             data.push({divider: true});
-            data.push({id: -1, category: this.sandbox.translate('contacts.accounts.manage.categories'), callback: this.showCategoryOverlay.bind(this),updateLabel: false});
+            data.push({id: -1, category: this.sandbox.translate('contacts.accounts.manage.categories'), callback: this.showCategoryOverlay.bind(this), updateLabel: false});
         },
 
         /**
@@ -191,62 +199,6 @@ define(['app-config'], function(AppConfig) {
         setTypes: function(types) {
             this.fieldTypes = types;
         },
-
-        /**
-         * returns the accounttype
-         * @returns {number}
-         */
-        getAccountType: function() {
-            var typeInfo, compareAttribute,
-                accountType = 0,
-                accountTypes = AppConfig.getSection('sulu-contact').accountTypes; // get account types
-
-            // if newly created account, get type id
-            if (!!this.options.data.id) {
-                typeInfo = this.options.data.type;
-                compareAttribute = 'id';
-            } else if (!!this.options.accountTypeName) {
-                typeInfo = this.options.accountTypeName;
-                compareAttribute = 'name';
-            } else {
-                typeInfo = 0;
-                compareAttribute = 'id';
-            }
-
-            // get account type information
-            this.sandbox.util.foreach(accountTypes, function(type) {
-                if (type[compareAttribute] === typeInfo) {
-                    accountType = type;
-                    this.options.data.type = type.id;
-                    return false; // break loop
-                }
-            }.bind(this));
-
-            return accountType;
-        },
-
-        /**
-         * sets headline to the current title input
-         * @param accountType
-         */
-        setHeadlines: function(accountType) {
-            var breadcrumb = [
-                    {title: 'navigation.contacts'},
-                    {title: 'contact.accounts.title', event: 'sulu.contacts.accounts.list'}
-                ],
-                title = this.sandbox.translate(this.options.headline);
-
-            if (!!this.options.data.id) {
-                breadcrumb.push({title: accountType.translation + ' #' + this.options.data.id});
-                title = this.options.data.name;
-            } else {
-                breadcrumb.push({title: accountType.translation});
-            }
-
-            this.sandbox.emit('sulu.header.set-title', title);
-            this.sandbox.emit('sulu.header.set-breadcrumb', breadcrumb);
-        },
-
 
         /**
          * Takes an array of fields and fills it up with empty fields till a minimum amount
@@ -333,12 +285,14 @@ define(['app-config'], function(AppConfig) {
             }.bind(this));
 
             // initialize contact form
+
             this.sandbox.start([
                 {
                     name: 'contact-form@sulucontact',
                     options: {
-                        el: '#contact-options-dropdown',
-                        fieldTypes: this.fieldTypes
+                        el: '#contact-edit-form',
+                        fieldTypes: this.fieldTypes,
+                        defaultTypes: this.defaultTypes
                     }
                 }
             ]);
@@ -396,11 +350,11 @@ define(['app-config'], function(AppConfig) {
                 var selected = [];
 
                 this.accountCategoryData = this.copyArrayOfObjects(data);
-                selected.push(parseInt(!!this.selectedAccountCategory ? this.selectedAccountCategory : this.preselectedElemendId,10));
+                selected.push(parseInt(!!this.selectedAccountCategory ? this.selectedAccountCategory : this.preselectedElemendId, 10));
                 this.addDividerAndActionsForSelect(data);
 
                 // translate values for select but not for overlay
-                this.sandbox.util.foreach(data, function(el){
+                this.sandbox.util.foreach(data, function(el) {
                     el.category = this.sandbox.translate(el.category);
                 }.bind(this));
 
@@ -413,9 +367,9 @@ define(['app-config'], function(AppConfig) {
          * @param data
          * @returns {Array}
          */
-        copyArrayOfObjects: function(data){
+        copyArrayOfObjects: function(data) {
             var newArray = [];
-            this.sandbox.util.foreach(data, function(el){
+            this.sandbox.util.foreach(data, function(el) {
                 newArray.push(this.sandbox.util.extend(true, {}, el));
             }.bind(this));
 
@@ -432,8 +386,8 @@ define(['app-config'], function(AppConfig) {
                     delete data.id;
                 }
 
-                if(!!this.selectedAccountCategory) {
-                    if(!data.accountCategory) {
+                if (!!this.selectedAccountCategory) {
+                    if (!data.accountCategory) {
                         data.accountCategory = {};
                     }
 
@@ -444,7 +398,7 @@ define(['app-config'], function(AppConfig) {
 
                 // FIXME auto complete in mapper
                 data.parent = {
-                    id: this.sandbox.dom.data('#company input', 'id')
+                    id: this.sandbox.dom.attr('#company input', 'data-id')
                 };
 
                 this.sandbox.emit('sulu.contacts.accounts.save', data);
@@ -475,8 +429,8 @@ define(['app-config'], function(AppConfig) {
                 this.setHeaderBar(false);
             }.bind(this));
 
-            this.sandbox.on('husky.select.account-category.selected.item', function(id){
-                if(id > 0) {
+            this.sandbox.on('husky.select.account-category.selected.item', function(id) {
+                if (id > 0) {
                     this.selectedAccountCategory = id;
                     this.setHeaderBar(false);
                 }

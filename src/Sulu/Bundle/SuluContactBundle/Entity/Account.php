@@ -30,18 +30,6 @@ class Account extends ApiEntity
     const DISABLED = 1;
 
     /**
-     * array containing all the translations for CRM types
-     * @Exclude
-     * @var array
-     */
-    public static $TYPE_TRANSLATIONS = array(
-        self::TYPE_BASIC => 'contact.account.type.basic',
-        self::TYPE_LEAD => 'contact.account.type.lead',
-        self::TYPE_CUSTOMER => 'contact.account.type.customer',
-        self::TYPE_SUPPLIER => 'contact.account.type.supplier',
-    );
-
-    /**
      * @var integer
      */
     private $lft;
@@ -153,6 +141,16 @@ class Account extends ApiEntity
      * @var string
      */
     private $uid;
+
+    /**
+     * @var string
+     */
+    private $registerNumber;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $bankAccounts;
 
 
     /**
@@ -767,6 +765,7 @@ class Account extends ApiEntity
     {
         $this->faxes->removeElement($faxes);
     }
+
     /**
      * @var \Sulu\Bundle\ContactBundle\Entity\AccountCategory
      */
@@ -782,6 +781,40 @@ class Account extends ApiEntity
     public function setAccountCategory(\Sulu\Bundle\ContactBundle\Entity\AccountCategory $accountCategory = null)
     {
         $this->accountCategory = $accountCategory;
+    }
+
+    /**
+     * Set registerNumber
+     *
+     * @param string $registerNumber
+     * @return Account
+     */
+    public function setRegisterNumber($registerNumber)
+    {
+        $this->registerNumber = $registerNumber;
+    
+        return $this;
+    }
+
+    /**
+     * Get registerNumber
+     *
+     * @return string 
+     */
+    public function getRegisterNumber()
+    {
+        return $this->registerNumber;
+    }
+
+    /**
+     * Add bankAccounts
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\BankAccount $bankAccounts
+     * @return Account
+     */
+    public function addBankAccount(\Sulu\Bundle\ContactBundle\Entity\BankAccount $bankAccounts)
+    {
+        $this->bankAccounts[] = $bankAccounts;
     
         return $this;
     }
@@ -794,5 +827,25 @@ class Account extends ApiEntity
     public function getAccountCategory()
     {
         return $this->accountCategory;
+    }
+
+    /**
+     * Remove bankAccounts
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\BankAccount $bankAccounts
+     */
+    public function removeBankAccount(\Sulu\Bundle\ContactBundle\Entity\BankAccount $bankAccounts)
+    {
+        $this->bankAccounts->removeElement($bankAccounts);
+    }
+
+    /**
+     * Get bankAccounts
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getBankAccounts()
+    {
+        return $this->bankAccounts;
     }
 }

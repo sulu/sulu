@@ -12,6 +12,7 @@
         <field name="zip" type="string" column="zip" length="60" nullable="true"/>
         <field name="city" type="string" column="city" length="60"/>
         <field name="state" type="string" column="state" length="60" nullable="true" />
+        <field name="box" type="string" column="box" length="100" nullable="true" />
         <many-to-one field="addressType" target-entity="Sulu\Bundle\ContactBundle\Entity\AddressType"
                      inversed-by="addresses">
             <join-columns>
