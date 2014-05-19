@@ -44,6 +44,15 @@ class TemplateController extends Controller
     }
 
     /**
+     * Returns the financials form for accounts
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function accountFinancialsAction()
+    {
+        return $this->render('SuluContactBundle:Template:account.financials.html.twig');
+    }
+
+    /**
      * Returns an array for rendering a form
      * @return array
      */

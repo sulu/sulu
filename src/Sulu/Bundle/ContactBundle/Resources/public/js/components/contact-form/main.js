@@ -7,13 +7,14 @@
  * with this source code in the file LICENSE.
  */
 
-define([], function() {
+define(['text!sulucontact/components/contact-form/address.form.html'], function(AddressForm) {
 
     'use strict';
 
     var defaults = {
             fields: ['address', 'email', 'fax', 'phone', 'url'],
             fieldTypes: [],
+            defaultTypes: [],
             trigger: '.contact-options-toggle'
         },
 
@@ -23,7 +24,10 @@ define([], function() {
             editDeleteSelector: '.delete',
             editDeleteIcon: 'icon-circle-minus',
             editUndoDeleteIcon: 'icon-circle-plus',
-            fadedClass: 'faded'
+            fadedClass: 'faded',
+            addressFormId: '#address-form',
+            dropdownContainerId: '#contact-options-dropdown',
+            addressRowTemplateSelector: '[data-mapper-property-tpl="address-tpl"]'
         },
 
         templates = {
@@ -36,16 +40,16 @@ define([], function() {
             ].join(''),
             editField: [
                 '<div class="grid-row divider" data-deleted="false">',
-                    '<div class="grid-col-7 pull-left">',
-                        '<div id="<%= dropdownId %>"></div>',
-                    '</div>',
-                    '<div class="grid-col-2 pull-right">',
-                    '<% if (showDeleteButton == true) { %>',
-                        '<div class="delete btn gray-dark fit only-icon pull-right">',
-                            '<div class="icon-circle-minus"></div>',
-                        '</div>',
-                    '</div>',
-                    '<% } %>',
+                '   <div class="grid-col-7 pull-left">',
+                '       <div id="<%= dropdownId %>"></div>',
+                '   </div>',
+                '   <div class="grid-col-2 pull-right">',
+                '<% if (showDeleteButton == true) { %>',
+                '       <div class="delete btn gray-dark fit only-icon pull-right">',
+                '           <div class="icon-circle-minus"></div>',
+                '       </div>',
+                '<% } %>',
+                '   </div>',
                 '</div>'
             ].join('')
         },
@@ -75,6 +79,10 @@ define([], function() {
 
             // bind events for add-fields overlay
             bindAddEvents.call(this);
+        },
+
+        bindDomEvents = function() {
+            this.sandbox.dom.on(this.$el, 'click', editAddressClicked.bind(this), constants.addressRowTemplateSelector);
         },
 
         bindAddEvents = function() {
@@ -130,6 +138,7 @@ define([], function() {
 
         removeCollectionFilters = function() {
             // add collection filters
+            this.sandbox.form.removeCollectionFilter(this.form, 'addresses');
             this.sandbox.form.removeCollectionFilter(this.form, 'emails');
             this.sandbox.form.removeCollectionFilter(this.form, 'phones');
             this.sandbox.form.removeCollectionFilter(this.form, 'urls');
@@ -142,6 +151,12 @@ define([], function() {
             this.form = form;
 
             // add collection filters
+            this.sandbox.form.addCollectionFilter(this.form, 'addresses', function(address) {
+                if (address.id === "") {
+                    delete address.id;
+                }
+                return address.city !== "";
+            });
             this.sandbox.form.addCollectionFilter(this.form, 'emails', function(email) {
                 if (email.id === "") {
                     delete email.id;
@@ -224,9 +239,13 @@ define([], function() {
             };
             dataObject.attributes = {};
 
-            // insert field
-            this.sandbox.form.addToCollection(this.form, data.collection, dataObject);
-
+            if (data.type === 'address') {
+                // open overlay with address form
+                createAddressOverlay.call(this, dataObject);
+            } else {
+                // insert field
+                this.sandbox.form.addToCollection(this.form, data.collection, dataObject);
+            }
 
             // TODO: focus on just inserted field
 
@@ -269,6 +288,12 @@ define([], function() {
             this.sandbox.stop(this.$editOverlayContent);
         },
 
+        editAddressClicked = function(event) {
+            var $template = this.sandbox.dom.$(event.currentTarget),
+                data = this.sandbox.form.getData(this.form, true, $template);
+            createAddressOverlay.call(this, data, this.sandbox.dom.data($template, 'mapperId'));
+        },
+
         /**
          * Takes an object of types with an id-property and returns the matching type for a given id
          * @param types
@@ -303,7 +328,7 @@ define([], function() {
             createEditOverlayContent = function() {
             this.editFieldsData = [];
             removeCollectionFilters.call(this);
-            var data = this.sandbox.form.getData(this.form),
+            var data = this.sandbox.form.getData(this.form, true),
                 dataArray,
                 i, length, key,
                 $content = this.sandbox.dom.createElement('<div class="edit-fields"/>'),
@@ -409,16 +434,18 @@ define([], function() {
          * Create the edit-fields overlay
          */
             createEditOverlay = function() {
-            this.$editOverlayContent = createEditOverlayContent.call(this);
 
-            var $element = this.sandbox.dom.createElement('<div/>');
-            this.sandbox.dom.append(this.sandbox.dom.parent(this.$el), $element);
+            // create container for overlay
+            var $overlay = this.sandbox.dom.createElement('<div>');
+            this.sandbox.dom.append('body', $overlay);
+
+            this.$editOverlayContent = createEditOverlayContent.call(this);
 
             this.sandbox.start([
                 {
                     name: 'overlay@husky',
                     options: {
-                        el: $element,
+                        el: $overlay,
                         title: this.sandbox.translate('public.edit-fields'),
                         openOnStart: true,
                         removeOnClose: true,
@@ -433,9 +460,107 @@ define([], function() {
             bindEditEvents.call(this);
         },
 
+        createAddressOverlay = function(data, mapperId) {
+
+            var addressTemplate, formObject, $overlay, title,
+                isNew = !!data ? false : true;
+
+            // remove add overlay
+            this.sandbox.emit('husky.overlay.add-fields.remove');
+            // remove edit overlay
+            this.sandbox.emit('husky.overlay.edit-fields.remove');
+
+            // extend address data by additional variables
+            this.sandbox.util.extend(true, data, {
+                translate: this.sandbox.translate,
+                countries: this.options.fieldTypes['countries']
+            });
+
+            // parse template
+            addressTemplate = this.sandbox.util.template(AddressForm, data);
+
+            // create container for overlay
+            $overlay = this.sandbox.dom.createElement('<div>');
+            this.sandbox.dom.append('body', $overlay);
+
+            if (isNew) {
+                title = this.sandbox.translate('contacts.add-address');
+            } else {
+                title = this.sandbox.translate('contacts.edit-address');
+            }
+
+            // create overlay with data
+            this.sandbox.start([
+                {
+                    name: 'overlay@husky',
+                    options: {
+                        el: $overlay,
+                        title: title,
+                        openOnStart: true,
+                        removeOnClose: true,
+                        instanceName: 'add-address',
+                        data: addressTemplate,
+                        skin: 'wide',
+                        okCallback: addAddressOkClicked.bind(this, mapperId),
+                        closeCallback: removeAddressFormEvents.bind(this)
+                    }
+                }
+            ]);
+
+            // after everything was added to dom
+            this.sandbox.on('husky.overlay.add-address.opened', function() {
+                // start form and set data
+                formObject = this.sandbox.form.create(constants.addressFormId);
+                formObject.initialized.then(function() {
+                    this.sandbox.form.setData(constants.addressFormId, data);
+                }.bind(this));
+            }.bind(this));
+
+//            // use husky select
+//            this.sandbox.start([
+//                {
+//                    name: 'select@husky',
+//                    options: {
+//                        el: '#country-select',
+//                        instanceName: 'country-select',
+//                        data: this.options.fieldTypes['countries'],
+//                        preSelectedElements: !!data.country ? [data.country.id]: [this.options.defaultTypes.country.id]
+//                    }
+//                }
+//            ]);
+
+        },
+
+    // removes listeners of addressform
+        removeAddressFormEvents = function() {
+            this.sandbox.dom.off(constants.addressFormId);
+        },
+
+        addAddressOkClicked = function(mapperId) {
+            var formData;
+
+            if (!this.sandbox.form.validate(constants.addressFormId)) {
+                return false;
+            }
+            formData = this.sandbox.form.getData(constants.addressFormId, true);
+
+            // add to collection
+            if (!mapperId) {
+                this.sandbox.form.addToCollection(this.form, 'addresses', formData);
+            } else {
+                this.sandbox.form.editInCollection(this.form, mapperId, formData)
+            }
+
+            // set changed to be able to save
+            this.sandbox.emit(EVENT_CHANGED.call(this));
+
+            // remove change listener
+            removeAddressFormEvents.call(this);
+        },
+
         createAddOverlay = function() {
-            var data,
-                dropdownData = {}, $element;
+            var data, $overlay,
+                dropdownData = {};
 
             this.dropdownDataArray = [];
 
@@ -459,9 +584,7 @@ define([], function() {
                     }
                 }.bind(this));
 
-            // TODO:  REMOVE AFTER ADDRESSES CAN BE ADDED
             // change data
-            dropdownData.address.disabled = true;
             dropdownData.fax.collection = 'faxes';
 
             // convert object to array
@@ -469,16 +592,16 @@ define([], function() {
                 return dropdownData[key];
             });
 
-            $element = this.sandbox.dom.createElement('<div/>');
-            this.sandbox.dom.append(this.sandbox.dom.parent(this.$el), $element);
-
+            // create container for overlay
+            $overlay = this.sandbox.dom.createElement('<div>');
+            this.sandbox.dom.append('body', $overlay);
 
             // start overlay and dependent select
             this.sandbox.start([
                 {
                     name: 'overlay@husky',
                     options: {
-                        el: $element,
+                        el: $overlay,
                         title: this.sandbox.translate('public.add-fields'),
                         openOnStart: true,
                         removeOnClose: true,
@@ -519,6 +642,7 @@ define([], function() {
             this.render();
 
             bindCustomEvents.call(this);
+            bindDomEvents.call(this);
 
             this.sandbox.emit(EVENT_INITIALIZED.call(this));
             this.initialized = true;
@@ -526,11 +650,12 @@ define([], function() {
 
         render: function() {
 
-            var $container = this.sandbox.dom.createElement('<div id="contact-form-options-container" />');
+            var $container = this.sandbox.dom.createElement('<div id="contact-form-options-container" />'),
+                $dropdownContainer = this.$find(constants.dropdownContainerId);
 
             // add new container
-            this.sandbox.dom.append(this.$el, $container);
-
+//            this.sandbox.dom.append(this.$el, $container);
+            this.sandbox.dom.append($dropdownContainer, $container);
 
             // TODO: implement options dropdown functionality for adding and editing contact details
             // initialize dropdown
@@ -538,12 +663,12 @@ define([], function() {
                 {
                     name: 'dropdown@husky',
                     options: {
-                        trigger: this.$el,
+                        trigger: $dropdownContainer,
                         triggerOutside: true,
                         el: $container,
                         alignment: 'right',
                         shadow: true,
-                        toggleClassOn: this.$el,
+                        toggleClassOn: $dropdownContainer,
                         data: [
                             {
                                 id: 1,
@@ -560,6 +685,5 @@ define([], function() {
                 }
             ]);
         }
-
     };
 });
