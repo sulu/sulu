@@ -174,6 +174,7 @@ define([], function() {
             } else {
                 this.sandbox.emit(CLOSED.call(this), this.parseDataFromDom(domData, true));
             }
+
         },
 
         /**
@@ -403,6 +404,10 @@ define([], function() {
                 this.onCloseWithOk(data);
             }.bind(this);
 
+            config.closeCallback = function() {
+                this.elementsToRemove = [];
+                this.$elementsToRemove = [];
+            }.bind(this),
 
             this.sandbox.start([
                 {
