@@ -14,7 +14,6 @@ define([
 
     'use strict';
 
-
     var defaults = {
             accountType: null
         },
@@ -43,16 +42,25 @@ define([
          * Generates the options for the tabs in the header
          * @returns {object} tabs options
          */
-        getTabsOptions = function() {
+            getTabsOptions = function() {
             var returnObj = {
-                callback: selectFilter.bind(this),
-                preselect: false,
-                preselector: 'position',
-                data: null
-            },
-            items, i, len,
-            accountTypes = AppConfig.getSection('sulu-contact').accountTypes,
-            accountType;
+                    callback: selectFilter.bind(this),
+                    preselect: false,
+                    preselector: 'position',
+                    data: null
+                },
+                items, i, len, index, type,
+                accountTypes,
+                contactSection = AppConfig.getSection('sulu-contact'),
+                accountType;
+
+            // check if accountTypes exist
+            if (!contactSection || !contactSection.hasOwnProperty('accountTypes') ||
+                contactSection.accountTypes.length < 1) {
+                return false;
+            }
+
+            accountTypes = contactSection.accountTypes;
 
             // generate items
             items = [
@@ -61,27 +69,35 @@ define([
                     title: this.sandbox.translate('public.all')
                 }
             ];
-            for (i = 0, len = accountTypes.length; ++i < len;) {
+            // parse info for tabs
+            for (index in accountTypes) {
+                if (index === 'basic') {
+                    // exclude basic type from tabs
+                    continue;
+                }
+                type = accountTypes[index];
                 items.push({
-                    id: accountTypes[i].id,
-                    name: accountTypes[i].name,
-                    title: this.sandbox.translate(accountTypes[i].translation)
+                    id: parseInt(type.id, 10),
+                    name: type.name,
+                    title: this.sandbox.translate(type.translation)
                 });
             }
 
-            // get selected account-type
             if (!!this.options.accountType) {
-                for (i = 0, len = accountTypes.length; ++i < len;) {
-                    if (accountTypes[i].name === this.options.accountType) {
+                for (i in accountTypes) {
+                    if (i.toLowerCase() === this.options.accountType.toLowerCase()) {
                         accountType = accountTypes[i];
                         break;
                     }
                 }
-                dataUrlAddition += '&searchFields=type&search=' + accountType.id;
+                if (!accountType) {
+                    throw 'accountType ' + accountType + ' does not exist!';
+                }
+                dataUrlAddition += '&type=' + accountType.id;
             }
 
             returnObj.data = {items: items};
-            returnObj.preselect = (!!accountType) ? accountType.id + 1 : false;
+            returnObj.preselect = (!!accountType) ? parseInt(accountType.id, 10) + 1 : false;
 
             return returnObj;
         },
@@ -109,14 +125,22 @@ define([
         },
 
         header: function() {
+
+            var tabs = false,
+                tabOptions = getTabsOptions.call(this);
+
+            if (tabOptions) {
+                tabs = {
+                    fullControl: true,
+                    options: tabOptions
+                };
+            }
+
             return {
                 title: 'contact.accounts.title',
                 noBack: true,
 
-                tabs: {
-                    fullControl: true,
-                    options: getTabsOptions.call(this)
-                },
+                tabs: tabs,
 
                 breadcrumb: [
                     {title: 'navigation.contacts'},
@@ -144,47 +168,19 @@ define([
             // get account types
                 accountTypes = AppConfig.getSection('sulu-contact').accountTypes;
 
-
             // define string urlAddition if accountType is set
             if (!!this.options.accountType) {
-                for (i = 0, len = accountTypes.length; ++i < len;) {
-                    if (accountTypes[i].name === this.options.accountType) {
+                for (i in accountTypes) {
+                    if (i.toLowerCase() === this.options.accountType.toLowerCase()) {
                         accountType = accountTypes[i];
                         break;
                     }
                 }
+                if (!accountType) {
+                    throw 'accountType ' + accountType + ' does not exist!';
+                }
                 dataUrlAddition += '&type=' + accountType.id;
             }
-
-            // -- initialize filter tabs --
-            // define items array
-            items = [
-                {
-                    id: 'all',
-                    title: this.sandbox.translate('public.all')
-                }
-            ];
-            for (i = 0, len = accountTypes.length; ++i < len;) {
-                items.push({
-                    id: accountTypes[i].id,
-                    name: accountTypes[i].name,
-                    title: this.sandbox.translate(accountTypes[i].translation)
-                });
-            }
-            // start tabs component
-            this.sandbox.start([
-                {
-                    name: 'tabs@husky',
-                    options: {
-                        el: '#filter-tabs',
-                        callback: selectFilter.bind(this),
-                        preselect: accountType ? accountType.id + 1 : false,
-                        preselector: 'position',
-                        data: { items: items }
-
-                    }
-                }
-            ]);
 
             // init list-toolbar and datagrid
             this.sandbox.sulu.initListToolbarAndList.call(this, 'accountsFields', '/admin/api/accounts/fields',
