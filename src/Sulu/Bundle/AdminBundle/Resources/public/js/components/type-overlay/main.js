@@ -21,8 +21,6 @@ define([], function() {
 
     'use strict';
 
-    // TODO reopen overlay when deleted elements
-
     var defaults = {
 
             url: null,
@@ -283,7 +281,7 @@ define([], function() {
             this.sandbox.dom.off(constants.templateRemoveSelector);
 
             // bind click on remove icon
-            this.sandbox.dom.on(constants.templateRemoveSelector, 'click', function(event) {
+            this.sandbox.dom.on(this.$overlayInnerContent, 'click', function(event) {
 
                 var $row = this.sandbox.dom.parent(this.sandbox.dom.parent(event.currentTarget)),
                     id = this.sandbox.dom.data($row, 'id');
@@ -294,14 +292,11 @@ define([], function() {
 
                 this.toggleStateOfRow($row);
 
-            }.bind(this), this.$overlayInnerContent);
+            }.bind(this), constants.templateRemoveSelector);
 
             // bind click on add icon
             this.sandbox.dom.on(constants.templateAddSelector, 'click', function() {
                 this.sandbox.dom.append(this.$overlayInnerContent,this.options.templateRow);
-
-                // TODO no eventlistener on newly added rows
-
             }.bind(this), this.$overlay);
 
         },
@@ -407,7 +402,7 @@ define([], function() {
             config.closeCallback = function() {
                 this.elementsToRemove = [];
                 this.$elementsToRemove = [];
-            }.bind(this),
+            }.bind(this);
 
             this.sandbox.start([
                 {
