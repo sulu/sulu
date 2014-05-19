@@ -21,6 +21,8 @@ define([], function() {
 
     'use strict';
 
+    // TODO reopen overlay when deleted elements
+
     var defaults = {
 
             url: null,
@@ -97,11 +99,19 @@ define([], function() {
         },
 
         /**
-         * open event
+         * Open event
          * @event sulu.types.open
          */
             OPEN = function() {
             return createEventName.call(this, 'open');
+        },
+
+        /**
+         * Closed event
+         * @event sulu.types.closed
+         */
+            CLOSED = function() {
+            return createEventName.call(this, 'closed');
         },
 
 
@@ -210,16 +220,30 @@ define([], function() {
 
         /**
          * Extracts data from dom structure
+         * @param domData
+         * @param excludeDeleted
          */
-        parseDataFromDom: function(domData) {
+        parseDataFromDom: function(domData, excludeDeleted) {
             var $rows = this.sandbox.dom.find(constants.typeRowSelector, domData),
                 data = [],
-                id, value;
+                id, value, deleted;
 
             this.sandbox.dom.each($rows, function(index, $el) {
-                id = this.sandbox.dom.data($el, 'id');
-                value = this.sandbox.dom.val(this.sandbox.dom.find('input', $el));
-                data.push({id: id, category: value});
+
+                deleted = this.sandbox.dom.hasClass($el, 'faded');
+
+                if (!!excludeDeleted) {
+                    if (!deleted) {
+                        id = this.sandbox.dom.data($el, 'id');
+                        value = this.sandbox.dom.val(this.sandbox.dom.find('input', $el));
+                        data.push({id: id, category: value});
+                    }
+                } else {
+                    id = this.sandbox.dom.data($el, 'id');
+                    value = this.sandbox.dom.val(this.sandbox.dom.find('input', $el));
+                    data.push({id: id, category: value});
+                }
+
             }.bind(this));
 
             return data;
@@ -273,6 +297,9 @@ define([], function() {
                 this.saveNewEditedItems(domData, 'PATCH');
             }
             this.removeDeletedItems();
+
+            this.sandbox.emit(CLOSED.call(this), this.parseDataFromDom(domData, true));
+
         },
 
         /**
