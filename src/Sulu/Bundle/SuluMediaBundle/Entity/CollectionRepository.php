@@ -61,7 +61,11 @@ class CollectionRepository extends EntityRepository
             $query->setParameter('collectionId', $id);
 
             if ($asArray) {
-                return $query->getArrayResult()[0];
+                if (isset($query->getArrayResult()[0])) {
+                    return $query->getArrayResult()[0];
+                } else {
+                    return null;
+                }
             } else {
                 return $query->getSingleResult();
             }
@@ -86,12 +90,10 @@ class CollectionRepository extends EntityRepository
                 ->leftJoin('collection.children', 'children')
                 ->leftJoin('children.medias', 'childrenMedias')
                 ->leftJoin('collection.medias', 'medias')
-
                 ->leftJoin('collection.creator', 'creator')
                 ->leftJoin('creator.contact', 'creatorContact')
                 ->leftJoin('collection.changer', 'changer')
                 ->leftJoin('changer.contact', 'changerContact')
-
                 ->addSelect('collectionMeta')
                 ->addSelect('type')
                 ->addSelect('parent')
