@@ -213,27 +213,17 @@ class CollectionControllerTest extends DatabaseTestCase
             'POST',
             '/api/collections',
             array(
+                'locale'      => 'en-gb',
                 'style' => json_encode(
                     array(
                         'type'  => 'circle',
                         'color' => $generateColor
                     )
                 ),
-                'type'  => array(
-                    'id' => 1
-                ),
-                'metas' => array(
-                    array(
-                        'title'       => 'Test Collection 2',
-                        'description' => 'This Description 2 is only for testing',
-                        'locale'      => 'en-gb'
-                    ),
-                    array(
-                        'title'       => 'Test Kollektion 2',
-                        'description' => 'Diese Beschreibung 2 ist zum Test',
-                        'locale'      => 'de'
-                    )
-                )
+                'type'  => 1,
+                'title'       => 'Test Collection 2',
+                'description' => 'This Description 2 is only for testing',
+                'parent'      => null,
             )
         );
 
@@ -241,21 +231,19 @@ class CollectionControllerTest extends DatabaseTestCase
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
+        $this->assertEquals('en-gb', $response->locale);
         $this->assertEquals(json_encode(array(
             'type'  => 'circle',
             'color' => $generateColor
         )), $response->style);
         $this->assertEquals(2, $response->id);
-        $this->assertEquals(1, $response->type->id);
-        $this->assertEquals(2, count($response->metas));
+        $this->assertEquals(1, $response->type);
         $this->assertNotEmpty($response->created);
         $this->assertNotEmpty($response->changed);
-        $this->assertEquals('Test Collection 2', $response->metas[0]->title);
-        $this->assertEquals('This Description 2 is only for testing', $response->metas[0]->description);
-        $this->assertEquals('en-gb', $response->metas[0]->locale);
-        $this->assertEquals('Test Kollektion 2', $response->metas[1]->title);
-        $this->assertEquals('Diese Beschreibung 2 ist zum Test', $response->metas[1]->description);
-        $this->assertEquals('de', $response->metas[1]->locale);
+        $this->assertEquals('Test Collection 2', $response->title);
+        $this->assertEquals('This Description 2 is only for testing', $response->description);
+        $this->assertNotEmpty($response->creator);
+        $this->assertNotEmpty($response->changer);
 
         $client = $this->createTestClient();
 
@@ -280,37 +268,32 @@ class CollectionControllerTest extends DatabaseTestCase
             'color' => '#ffcc00'
         );
 
-        $this->assertEquals(json_encode($style), $responseFirstEntity->style);
         $this->assertEquals(1, $responseFirstEntity->id);
-        $this->assertEquals(1, $responseFirstEntity->type->id);
-        $this->assertEquals(2, count($responseFirstEntity->metas));
+        $this->assertEquals('en-gb', $responseFirstEntity->locale);
+        $this->assertEquals(json_encode($style), $responseFirstEntity->style);
+        $this->assertEquals(1, $responseFirstEntity->type);
         $this->assertNotEmpty($responseFirstEntity->created);
         $this->assertNotEmpty($responseFirstEntity->changed);
-        $this->assertEquals('Test Collection', $responseFirstEntity->metas[0]->title);
-        $this->assertEquals('This Description is only for testing', $responseFirstEntity->metas[0]->description);
-        $this->assertEquals('en-gb', $responseFirstEntity->metas[0]->locale);
-        $this->assertEquals('Test Kollektion', $responseFirstEntity->metas[1]->title);
-        $this->assertEquals('Dies ist eine Test Beschreibung', $responseFirstEntity->metas[1]->description);
-        $this->assertEquals('de', $responseFirstEntity->metas[1]->locale);
+        $this->assertEquals('Test Collection', $responseFirstEntity->title);
+        $this->assertEquals('This Description is only for testing', $responseFirstEntity->description);
 
         // check second entity was created right
         $responseSecondEntity = $response->_embedded[1];
 
-        $this->assertEquals(json_encode(array(
+        $style = array(
             'type'  => 'circle',
             'color' => $generateColor
-        )), $responseSecondEntity->style);
+        );
+
         $this->assertEquals(2, $responseSecondEntity->id);
-        $this->assertEquals(1, $responseSecondEntity->type->id);
+        $this->assertEquals('en-gb', $responseSecondEntity->locale);
+        $this->assertEquals(json_encode($style), $responseSecondEntity->style);
+        $this->assertEquals(1, $responseSecondEntity->type);
         $this->assertEquals(2, count($responseSecondEntity->metas));
         $this->assertNotEmpty($responseSecondEntity->created);
         $this->assertNotEmpty($responseSecondEntity->changed);
-        $this->assertEquals('Test Collection 2', $responseSecondEntity->metas[0]->title);
-        $this->assertEquals('This Description 2 is only for testing', $responseSecondEntity->metas[0]->description);
-        $this->assertEquals('en-gb', $responseSecondEntity->metas[0]->locale);
-        $this->assertEquals('Test Kollektion 2', $responseSecondEntity->metas[1]->title);
-        $this->assertEquals('Diese Beschreibung 2 ist zum Test', $responseSecondEntity->metas[1]->description);
-        $this->assertEquals('de', $responseSecondEntity->metas[1]->locale);
+        $this->assertEquals('Test Collection 2', $responseSecondEntity->title);
+        $this->assertEquals('This Description 2 is only for testing', $responseSecondEntity->description);
     }
 
     /**
@@ -335,21 +318,10 @@ class CollectionControllerTest extends DatabaseTestCase
                         'color' => $generateColor
                     )
                 ),
-                'type'  => array(
-                    'id' => 2
-                ),
-                'metas' => array(
-                    array(
-                        'title'       => 'Test Collection 2',
-                        'description' => 'This Description 2 is only for testing',
-                        'locale'      => 'en-gb'
-                    ),
-                    array(
-                        'title'       => 'Test Kollektion 2',
-                        'description' => 'Diese Beschreibung 2 ist zum Test',
-                        'locale'      => 'de'
-                    )
-                )
+                'type'  => 2,
+                'title'       => 'Test Collection 2',
+                'description' => 'This Description 2 is only for testing',
+                'locale'      => 'en-gb'
             )
         );
 
@@ -376,23 +348,10 @@ class CollectionControllerTest extends DatabaseTestCase
                         'color' => '#00ccff'
                     )
                 ),
-                'type'  => array(
-                    'id' => 1
-                ),
-                'metas' => array(
-                    array(
-                        'id'          => 1,
-                        'title'       => 'Test Collection changed',
-                        'description' => 'This Description is only for testing changed',
-                        'locale'      => 'en-au'
-                    ),
-                    array(
-                        'id'          => 2,
-                        'title'       => 'Test Kollektion geändert',
-                        'description' => 'Diese Beschreibung ist zum Test geändert',
-                        'locale'      => 'de-de'
-                    )
-                )
+                'type'  => 1,
+                'title'       => 'Test Collection changed',
+                'description' => 'This Description is only for testing changed',
+                'locale'      => 'en-au'
             )
         );
 
@@ -410,16 +369,13 @@ class CollectionControllerTest extends DatabaseTestCase
             'color' => '#00ccff'
         )), $response->style);
         $this->assertEquals(1, $response->id);
-        $this->assertEquals(1, $response->type->id);
+        $this->assertEquals(1, $response->type);
         $this->assertEquals(2, count($response->metas));
         $this->assertNotEmpty($response->created);
         $this->assertNotEmpty($response->changed);
-        $this->assertEquals('Test Collection changed', $response->metas[0]->title);
-        $this->assertEquals('This Description is only for testing changed', $response->metas[0]->description);
-        $this->assertEquals('en-au', $response->metas[0]->locale);
-        $this->assertEquals('Test Kollektion geändert', $response->metas[1]->title);
-        $this->assertEquals('Diese Beschreibung ist zum Test geändert', $response->metas[1]->description);
-        $this->assertEquals('de-de', $response->metas[1]->locale);
+        $this->assertEquals('Test Collection changed', $response->title);
+        $this->assertEquals('This Description is only for testing changed', $response->description);
+        $this->assertEquals('en-au', $response->locale);
 
         $client = $this->createTestClient();
 
@@ -443,16 +399,13 @@ class CollectionControllerTest extends DatabaseTestCase
             'color' => '#00ccff'
         )), $responseFirstEntity->style);
         $this->assertEquals(1, $responseFirstEntity->id);
-        $this->assertEquals(1, $responseFirstEntity->type->id);
+        $this->assertEquals(1, $responseFirstEntity->type);
         $this->assertEquals(2, count($responseFirstEntity->metas));
         $this->assertNotEmpty($responseFirstEntity->created);
         $this->assertNotEmpty($responseFirstEntity->changed);
-        $this->assertEquals('Test Collection changed', $responseFirstEntity->metas[0]->title);
-        $this->assertEquals('This Description is only for testing changed', $responseFirstEntity->metas[0]->description);
-        $this->assertEquals('en-au', $responseFirstEntity->metas[0]->locale);
-        $this->assertEquals('Test Kollektion geändert', $responseFirstEntity->metas[1]->title);
-        $this->assertEquals('Diese Beschreibung ist zum Test geändert', $responseFirstEntity->metas[1]->description);
-        $this->assertEquals('de-de', $responseFirstEntity->metas[1]->locale);
+        $this->assertEquals('Test Collection changed', $responseFirstEntity->title);
+        $this->assertEquals('This Description is only for testing changed', $responseFirstEntity->description);
+        $this->assertEquals('en-au', $responseFirstEntity->locale);
     }
 
     /**
@@ -481,9 +434,7 @@ class CollectionControllerTest extends DatabaseTestCase
                         'color' => '#00ccff'
                     )
                 ),
-                'type'  => array(
-                    'id' => 2
-                )
+                'type'  => 2
             )
         );
 
@@ -524,9 +475,7 @@ class CollectionControllerTest extends DatabaseTestCase
                         'color' => '#00ccff'
                     )
                 ),
-                'type'  => array(
-                    'id' => 1
-                )
+                'type'  => 1
             )
         );
 
