@@ -87,7 +87,7 @@ define(['app-config'], function(AppConfig) {
          */
         initCategorySelect: function(formData) {
 
-            var preselectedElemendId = !!formData.accountCategory ? formData.accountCategory.id : null;
+            this.preselectedElemendId = !!formData.accountCategory ? formData.accountCategory.id : null;
             this.accountCategoryData = null;
 
             this.sandbox.util.load(this.accountCategoryURL)
@@ -103,8 +103,7 @@ define(['app-config'], function(AppConfig) {
                     }.bind(this));
 
 
-                    data.push({divider: true});
-                    data.push({id: -1, category: this.sandbox.translate('contacts.accounts.manage.categories'), callback: this.showCategoryOverlay.bind(this)});
+                    this.addDividerAndActionsForSelect(data);
 
                     this.sandbox.start([
                         {
@@ -116,7 +115,7 @@ define(['app-config'], function(AppConfig) {
                                 defaultLabel: this.sandbox.translate('contacts.accounts.category.select'),
                                 valueName: 'category',
                                 repeatSelect: true,
-                                preSelectedElements: [preselectedElemendId],
+                                preSelectedElements: [this.preselectedElemendId],
                                 data: data
                             }
                         }
@@ -126,8 +125,15 @@ define(['app-config'], function(AppConfig) {
                 .fail(function(textStatus, error) {
                     this.sandbox.logger.error(textStatus, error);
                 }.bind(this));
+        },
 
-
+        /**
+         * Adds divider and actions to dropdown elements
+         * @param data
+         */
+        addDividerAndActionsForSelect: function(data){
+            data.push({divider: true});
+            data.push({id: -1, category: this.sandbox.translate('contacts.accounts.manage.categories'), callback: this.showCategoryOverlay.bind(this),updateLabel: false});
         },
 
         /**
@@ -384,6 +390,15 @@ define(['app-config'], function(AppConfig) {
             // back to list
             this.sandbox.on('sulu.header.back', function() {
                 this.sandbox.emit('sulu.contacts.accounts.list');
+            }, this);
+
+            this.sandbox.on('sulu.types.closed', function(data) {
+                var selected = [];
+
+                selected.push(parseInt(!!this.selectedAccountCategory ? this.selectedAccountCategory : this.preselectedElemendId,10));
+                this.addDividerAndActionsForSelect(data);
+
+                this.sandbox.emit('husky.select.account-category.update', data, selected);
             }, this);
         },
 
