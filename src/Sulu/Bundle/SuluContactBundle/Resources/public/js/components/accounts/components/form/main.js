@@ -95,7 +95,7 @@ define(['app-config'], function(AppConfig) {
 
                     // data is data for select but not for overlay
                     var data = response['_embedded'];
-                    this.accountCategoryData = data.slice(0,data.length);
+                    this.accountCategoryData = this.copyArrayOfObjects(data);
 
                     // translate values for select but not for overlay
                     this.sandbox.util.foreach(data, function(el){
@@ -395,12 +395,31 @@ define(['app-config'], function(AppConfig) {
             this.sandbox.on('sulu.types.closed', function(data) {
                 var selected = [];
 
-                this.accountCategoryData = data.slice(0,data.length);
+                this.accountCategoryData = this.copyArrayOfObjects(data);
                 selected.push(parseInt(!!this.selectedAccountCategory ? this.selectedAccountCategory : this.preselectedElemendId,10));
                 this.addDividerAndActionsForSelect(data);
 
+                // translate values for select but not for overlay
+                this.sandbox.util.foreach(data, function(el){
+                    el.category = this.sandbox.translate(el.category);
+                }.bind(this));
+
                 this.sandbox.emit('husky.select.account-category.update', data, selected);
             }, this);
+        },
+
+        /**
+         * Copies array of objects
+         * @param data
+         * @returns {Array}
+         */
+        copyArrayOfObjects: function(data){
+            var newArray = [];
+            this.sandbox.util.foreach(data, function(el){
+                newArray.push(this.sandbox.util.extend(true, {}, el));
+            }.bind(this));
+
+            return newArray;
         },
 
 
