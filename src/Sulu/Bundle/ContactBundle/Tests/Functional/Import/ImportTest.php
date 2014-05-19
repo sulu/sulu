@@ -129,6 +129,7 @@ class ImportTest extends DatabaseTestCase
         self::$entities = array(
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Account'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Contact'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\BankAccount'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Phone'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\PhoneType'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Email'),
