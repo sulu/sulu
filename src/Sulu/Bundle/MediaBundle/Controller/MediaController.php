@@ -29,6 +29,7 @@ use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\UploadFileException;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
+use Sulu\Bundle\MediaBundle\Media\RestObject\MediaRestObject;
 use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
@@ -107,32 +108,86 @@ class MediaController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * lists all medias
+     * Shows a single media with the given id
+     * @param $id
+     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function cgetAction()
+    public function getAction($id, Request $request)
     {
-        $medias = $this->getDoctrine()->getRepository($this->entityName)->findAll();
+        $userLocale = $this->getUser()->getLocale();
+        $locale = $request->get('locale');
+        if ($locale) {
+            $userLocale = $locale;
+        }
+
+        $media = $this->getDoctrine()
+            ->getRepository($this->entityName)
+            ->findMediaById($id, true);
+
+        if (!$media) {
+            $exception = new EntityNotFoundException($this->entityName, $id);
+            // Return a 404 together with an error message, given by the exception, if the entity is not found
+            $view = $this->view(
+                $exception->toArray(),
+                404
+            );
+        } else {
+            $mediaRestObject = new MediaRestObject();
+
+            $view = $this->view(
+                array_merge(
+                    array(
+                        '_links' => array(
+                            'self' => $request->getRequestUri()
+                        )
+                    ),
+                    $mediaRestObject->setDataByEntityArray($media, $userLocale, $request->get('version', null))
+                )
+                , 200);
+        }
+
+        return $this->handleView($view);
+    }
+
+    /**
+     * lists all medias
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function cgetAction(Request $request)
+    {
+        $userLocale = $this->getUser()->getLocale();
+        $locale = $request->get('locale');
+        if ($locale) {
+            $userLocale = $locale;
+        }
+
+        $collection = $request->get('collection');
+        $medias = $this->getDoctrine()->getRepository($this->entityName)->findMedias($collection);
+        $medias = $this->flatMedias($medias, $userLocale, $request->get('fields', array()));
         $view = $this->view($this->createHalResponse($medias), 200);
 
         return $this->handleView($view);
     }
 
     /**
-     * Shows a single media with the given id
-     * @param $id
-     * @return \Symfony\Component\HttpFoundation\Response
+     * convert media entities array to flat media rest object array
+     * @param $medias
+     * @param $locale
+     * @param array $fields
+     * @return array
      */
-    public function getAction($id)
+    protected function flatMedias ($medias, $locale, $fields = array())
     {
-        $view = $this->responseGetById(
-            $id,
-            function ($id) {
-                return $this->getMediaManager()->get($id);
-            }
-        );
+        $flatMedias = array();
 
-        return $this->handleView($view);
+        foreach ($medias as $media) {
+            $flatMedia = new MediaRestObject();
+            array_push($flatMedias, $flatMedia->setDataByEntityArray($media, $locale)->toArray($fields));
+        }
+
+        return $flatMedias;
     }
 
     /**
