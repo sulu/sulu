@@ -395,6 +395,7 @@ define(['app-config'], function(AppConfig) {
             this.sandbox.on('sulu.types.closed', function(data) {
                 var selected = [];
 
+                this.accountCategoryData = data.slice(0,data.length);
                 selected.push(parseInt(!!this.selectedAccountCategory ? this.selectedAccountCategory : this.preselectedElemendId,10));
                 this.addDividerAndActionsForSelect(data);
 
