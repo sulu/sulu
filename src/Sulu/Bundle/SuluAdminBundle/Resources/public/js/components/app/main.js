@@ -292,12 +292,12 @@ define(function() {
                 trigger = (typeof trigger !== 'undefined') ? trigger : true;
 
                 if (!!trigger && this.currentRoute !== route) {
-                    // FIXME - header does not get removed and because of that the dom element will be removed
+                    // FIXME - App.stop is used in global context; possibly there is a better solution
                     // and the stop event will be called
-                    this.sandbox.stop('#sulu-content-container');
-                    this.sandbox.stop('#sulu-header-container');
-                    this.sandbox.stop('#content > *');
-                    this.sandbox.stop('#preview > *');
+                    App.stop('#sulu-content-container');
+                    App.stop('#sulu-header-container');
+                    App.stop('#content > *');
+                    App.stop('#preview > *');
 
                     // remove eventual spacing because of header
                     this.headerVisible = false;

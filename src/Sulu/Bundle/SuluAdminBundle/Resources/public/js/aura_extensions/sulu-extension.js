@@ -57,6 +57,25 @@
             app.sandbox.sulu.viewStates = {};
 
             /**
+             * Stores the info that a node got deleted, so other views are
+             * able to display a success label
+             */
+            app.sandbox.sulu.unlockDeleteSuccessLabel = function() {
+                app.sandbox.sulu.viewStates.nodeDeleted = true;
+            },
+
+            /**
+             * Actually shows a success label if delete description and title. But only
+             * if a node actually got deleted beforehand
+             */
+            app.sandbox.sulu.triggerDeleteSuccessLabel = function() {
+                if (app.sandbox.sulu.viewStates.nodeDeleted === true) {
+                    app.sandbox.emit('sulu.labels.success.show', 'labels.success.content-deleted-desc', 'labels.success');
+                    delete app.sandbox.sulu.viewStates.nodeDeleted;
+                }
+            },
+
+            /**
              * load user settings
              * @param key
              * @param url Where to get data from, if not already available
@@ -200,35 +219,28 @@
                             inHeader: false
                         },
                         toolbarOptions = this.sandbox.util.extend(true, {}, toolbarDefaults, listToolbarOptions),
+
                         gridDefaults = {
-                            paginationOptions: {
-                                pageSize: 10
-                            },
-                            pagination: true,
-                            sortable: true,
-                            selectItem: {
-                                type: 'checkbox'
-                            },
-                            removeRow: false,
-                            excludeFields: ['']
+                            view: 'table',
+                            pagination: 'dropdown',
+                            matchings: data,
+                            viewOptions: {
+                                table: {
+                                    contentContainer: '#content'
+                                }
+                            }
                         },
                         gridOptions = this.sandbox.util.extend(true, {}, gridDefaults, datagridOptions);
 
-                    //start list-toolbar component
+                        gridOptions.searchInstanceName = gridOptions.searchInstanceName ? gridOptions.searchInstanceName : toolbarOptions.instanceName;
+                        gridOptions.columnOptionsInstanceName = gridOptions.columnOptionsInstanceName ? gridOptions.columnOptionsInstanceName : toolbarOptions.instanceName;
+
+                    //start list-toolbar and datagrid
                     this.sandbox.start([
                         {
                             name: 'list-toolbar@suluadmin',
                             options: toolbarOptions
-                        }
-                    ]);
-
-                    gridOptions.fieldsData = data;
-                    gridOptions.searchInstanceName = gridOptions.searchInstanceName ? gridOptions.searchInstanceName : toolbarOptions.instanceName;
-                    gridOptions.columnOptionsInstanceName = gridOptions.columnOptionsInstanceName ? gridOptions.columnOptionsInstanceName : toolbarOptions.instanceName;
-                    gridOptions.contentContainer = '#content';
-
-                    // start datagrid
-                    this.sandbox.start([
+                        },
                         {
                             name: 'datagrid@husky',
                             options: gridOptions
