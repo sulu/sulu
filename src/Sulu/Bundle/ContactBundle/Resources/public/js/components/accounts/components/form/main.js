@@ -120,7 +120,7 @@ define([], function() {
                                 el: '#accountCategory',
                                 instanceName: 'account-category',
                                 multipleSelect: false,
-                                defaultLabel: this.sandbox.translate('contacts.accounts.category.select'),
+                                defaultLabel: this.sandbox.translate('contact.accounts.category.select'),
                                 valueName: 'category',
                                 repeatSelect: true,
                                 preSelectedElements: [this.preselectedElemendId],
@@ -141,7 +141,7 @@ define([], function() {
          */
         addDividerAndActionsForSelect: function(data) {
             data.push({divider: true});
-            data.push({id: -1, category: this.sandbox.translate('contacts.accounts.manage.categories'), callback: this.showCategoryOverlay.bind(this), updateLabel: false});
+            data.push({id: -1, category: this.sandbox.translate('contact.accounts.manage.categories'), callback: this.showCategoryOverlay.bind(this), updateLabel: false});
         },
 
         /**
@@ -156,7 +156,7 @@ define([], function() {
                     openOnStart: true,
                     removeOnClose: true,
                     triggerEl: null,
-                    title: this.sandbox.translate('contacts.accounts.manage.categories.title'),
+                    title: this.sandbox.translate('contact.accounts.manage.categories.title'),
                     data: this.accountCategoryData
                 };
 
