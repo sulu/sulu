@@ -141,14 +141,18 @@ define([
 
         // enables tabs based on account type
         enableTabsByType: function(account) {
+            var index;
+
             this.accountType = this.getAccountType(account);
 
-            if (!this.accountType) { // no account type specified
+            if (!this.accountType && !this.accountType.hasownProperty('tabs')) { // no account type specified
                 return;
             }
 
-            if (this.accountType.hasFinancials) {
-                this.sandbox.emit('husky.tabs.header.item.show', 'account-financials');
+            for (index in this.accountType.tabs) {
+                if (this.accountType.tabs[index] === true) {
+                    this.sandbox.emit('husky.tabs.header.item.show', index);
+                }
             }
 
             return this.accountType;

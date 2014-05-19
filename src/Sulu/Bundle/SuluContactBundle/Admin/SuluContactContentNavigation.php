@@ -35,7 +35,7 @@ class SuluContactContentNavigation extends ContentNavigation
         // details
         $details = new NavigationItem('content-navigation.contacts.details');
         $details->setAction('details');
-        $details->setId('account-details');
+        $details->setId('details');
         $details->setContentType('account');
         $details->setContentComponent('accounts@sulucontact');
         $details->setContentComponentOptions(array('display'=>'form'));
@@ -43,7 +43,7 @@ class SuluContactContentNavigation extends ContentNavigation
         // contacts
         $contacts = new NavigationItem('navigation.contacts');
         $contacts->setAction('contacts');
-        $contacts->setId('account-contacts');
+        $contacts->setId('contacts');
         $contacts->setContentType('account');
         $contacts->setContentComponent('accounts@sulucontact');
         $contacts->setContentComponentOptions(array('display'=>'contacts'));
@@ -52,7 +52,7 @@ class SuluContactContentNavigation extends ContentNavigation
         // financial infos
         $item = new NavigationItem('navigation.financials');
         $item->setAction('financials');
-        $item->setId('account-financials');
+        $item->setId('financials');
         $item->setDisabled(true);
         $item->setContentType('account');
         $item->setContentComponent('accounts@sulucontact');
