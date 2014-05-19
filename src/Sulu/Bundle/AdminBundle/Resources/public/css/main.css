@@ -114,8 +114,8 @@ input, select {
   vertical-align: middle;
 }
 /* line 18, ../scss/modules/login.scss */
-#login .logo {
-  margin-bottom: 50px;
+#login .icon {
+  margin-bottom: 30px;
   text-align: center;
 }
 /* line 23, ../scss/modules/login.scss */

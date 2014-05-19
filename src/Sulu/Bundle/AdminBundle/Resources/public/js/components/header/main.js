@@ -642,6 +642,16 @@ define([], function() {
                     instanceName: 'header' + this.options.instanceName
                 };
 
+            // if passed template is a string get the corresponding default template
+            if (!!options.template && typeof options.template === 'string' && toolbarTemplates.hasOwnProperty(options.template)) {
+                options.data = toolbarTemplates[options.template];
+                if (typeof options.data === 'function') {
+                    options.data = options.data.call(this);
+                }
+                this.options.changeStateCallback = getChangeToolbarStateCallback.call(this, options.template);
+                this.options.parentChangeStateCallback = getChangeToolbarStateCallback.call(this, options.parentTemplate);
+            }
+
             this.sandbox.stop(this.$find('.' + constants.toolbarClass));
             this.sandbox.dom.html(this.$find('.' + constants.toolbarClass), $container);
 
