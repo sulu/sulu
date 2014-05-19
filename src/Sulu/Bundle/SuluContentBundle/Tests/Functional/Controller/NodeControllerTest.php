@@ -850,6 +850,9 @@ class NodeControllerTest extends DatabaseTestCase
             'url' => '/a2',
             'article' => 'Test'
         );
+
+        sleep(1);
+
         $client->request('PUT', '/api/nodes/' . $uuid . '?template=default&webspace=sulu_io&language=en', $data);
         $data = array(
             'title' => 'news',
