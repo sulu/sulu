@@ -139,7 +139,7 @@ define([
                                         trigger: '.drop-down-trigger',
                                         setParentDropDown: true,
                                         instanceName: 'change' + options.index,
-                                        alignment: 'right',
+                                        alignment: 'left',
                                         valueName: 'title',
                                         translateLabels: true,
                                         clickCallback: function(item) {
