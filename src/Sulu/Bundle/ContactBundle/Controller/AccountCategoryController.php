@@ -183,8 +183,10 @@ class AccountCategoryController extends RestController implements ClassResourceI
      */
     public function patchAction()
     {
-
         try {
+
+            $data = [];
+
             /** @var Request $request */
             $request = $this->getRequest();
             $i = 0;
@@ -194,12 +196,12 @@ class AccountCategoryController extends RestController implements ClassResourceI
                     throw new RestException('There is no category-name for the account-category given');
                 }
 
-                $this->addAndUpdateCategories($item);
+                $data[] = $this->addAndUpdateCategories($item);
                 $i++;
             }
 
             $this->getDoctrine()->getManager()->flush();
-            $view = $this->view(null, 204);
+            $view = $this->view($data, 200);
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
         } catch (RestException $exc) {
@@ -212,6 +214,7 @@ class AccountCategoryController extends RestController implements ClassResourceI
      * Helper function for patch action
      * @param $item
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
+     * @return added or updated entity
      */
     private function addAndUpdateCategories($item)
     {
@@ -232,6 +235,9 @@ class AccountCategoryController extends RestController implements ClassResourceI
             $category->setCategory($item['category']);
             $this->getDoctrine()->getManager()->persist($category);
         }
+
+
+        return $category;
     }
 
 }

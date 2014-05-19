@@ -263,7 +263,13 @@ class AccountCategoryControllerTest extends DatabaseTestCase
             )
         );
 
-        $this->assertEquals('204', $client->getResponse()->getStatusCode());
+        $this->assertEquals('200', $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals('Changed Hauptsitz', $response[0]->category);
+        $this->assertEquals(1, $response[0]->id);
+
+        $this->assertEquals('Neuer Nebensitz', $response[1]->category);
+        $this->assertEquals(3, $response[1]->id);
 
         $client2 = $this->createTestClient();
         $client2->request(
