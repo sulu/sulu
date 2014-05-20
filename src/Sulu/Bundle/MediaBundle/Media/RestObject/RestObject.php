@@ -13,7 +13,7 @@ namespace Sulu\Bundle\MediaBundle\Media\RestObject;
 interface RestObject {
 
     /**
-     * @description will set the RestObject by an Entity Array
+     * will set the RestObject by an Entity Array
      * @param array $data
      * @param string $locale
      * @return mixed
@@ -21,7 +21,15 @@ interface RestObject {
     public function setDataByEntityArray($data, $locale);
 
     /**
-     * @description will give back the RestObject as Array for the RestController
+     * will set the RestObject by an Entity Object
+     * @param $object
+     * @param $locale
+     * @return mixed
+     */
+    public function setDataByEntity($object, $locale);
+
+    /**
+     * will give back the RestObject as Array for the RestController
      * @param array $fields when empty all fields of the object will be returned
      * @return mixed
      */

@@ -38,7 +38,7 @@ class MediaRepository extends EntityRepository
                 ->leftJoin('media.files', 'file')
                 ->leftJoin('file.fileVersions', 'fileVersion')
                 ->leftJoin('fileVersion.tags', 'tag')
-                ->leftJoin('fileVersion.metas', 'fileVersionMeta')
+                ->leftJoin('fileVersion.meta', 'fileVersionMeta')
                 ->leftJoin('fileVersion.contentLanguages', 'fileVersionContentLanguage')
                 ->leftJoin('fileVersion.publishLanguages', 'fileVersionPublishLanguage')
                 ->leftJoin('media.creator', 'creator')
@@ -80,7 +80,7 @@ class MediaRepository extends EntityRepository
     /**
      *
      */
-    public function findMedias($collection = null)
+    public function findMedia($collection = null)
     {
         try {
             $qb = $this->createQueryBuilder('media')
@@ -89,7 +89,7 @@ class MediaRepository extends EntityRepository
                 ->leftJoin('media.files', 'file')
                 ->leftJoin('file.fileVersions', 'fileVersion')
                 ->leftJoin('fileVersion.tags', 'tag')
-                ->leftJoin('fileVersion.metas', 'fileVersionMeta')
+                ->leftJoin('fileVersion.meta', 'fileVersionMeta')
                 ->leftJoin('fileVersion.contentLanguages', 'fileVersionContentLanguage')
                 ->leftJoin('fileVersion.publishLanguages', 'fileVersionPublishLanguage')
                 ->leftJoin('media.creator', 'creator')

@@ -239,7 +239,7 @@ class MediaControllerTest extends DatabaseTestCase
     }
 
     /**
-     * @description Test GET all Medias
+     * @description Test GET all Media
      */
     public function testcGet()
     {

@@ -21,8 +21,8 @@ define(function () {
         closeAllKey: 'public.close-all',
         elementsKey: 'public.elements',
         toggleAllClass: 'toggle-all',
-        slideDownIcon: 'play',
-        slideUpIcon: 'play-down',
+        slideDownIcon: 'caret-right',
+        slideUpIcon: 'caret-down',
         collectionsClass: 'collections',
         collectionClass: 'collection',
         collectionSlideClass: 'slide',
@@ -31,14 +31,14 @@ define(function () {
 
     templates = {
         toggleAll: [
-            '<span class="icon-<%= icon %> icon"></span>',
+            '<span class="fa-<%= icon %> icon"></span>',
             '<span><%= text %></span>'
         ].join(''),
         collection: [
             '<div class="', constants.collectionClass ,'">',
             '   <div class="head">',
             '       <div class="color" style="background-color: <%= color %>"></div>',
-            '       <div class="icon-<%= icon %> icon"></div>',
+            '       <div class="fa-<%= icon %> icon"></div>',
             '       <div class="title"><%= title %></div>',
             '       <div class="', constants.rightContentClass ,'"></div>',
             '   </div>',
@@ -248,11 +248,11 @@ define(function () {
             );
             this.sandbox.dom.removeClass(
                 this.sandbox.dom.find('.head .icon', $collection),
-                'icon-' + constants.slideUpIcon
+                'fa-' + constants.slideUpIcon
             );
             this.sandbox.dom.prependClass(
                 this.sandbox.dom.find('.head .icon', $collection),
-                'icon-' + constants.slideDownIcon
+                'fa-' + constants.slideDownIcon
             );
         },
 
@@ -267,11 +267,11 @@ define(function () {
             );
             this.sandbox.dom.removeClass(
                 this.sandbox.dom.find('.head .icon', $collection),
-                'icon-' + constants.slideDownIcon
+                'fa-' + constants.slideDownIcon
             );
             this.sandbox.dom.prependClass(
                 this.sandbox.dom.find('.head .icon', $collection),
-                'icon-' + constants.slideUpIcon
+                'fa-' + constants.slideUpIcon
             );
         }
     };

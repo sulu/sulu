@@ -23,7 +23,7 @@ class SuluMediaAdmin extends Admin
         $section = new NavigationItem('');
 
         $media = new NavigationItem('navigation.media');
-        $media->setIcon('picture');
+        $media->setIcon('image');
 
         $products = new NavigationItem('navigation.media.collections', $media);
         $products->setAction('media/collections');

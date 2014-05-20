@@ -18,6 +18,7 @@ use JMS\Serializer\Annotation\Exclude;
  */
 class File
 {
+
     /**
      * @var \DateTime
      */
@@ -50,13 +51,11 @@ class File
 
     /**
      * @var \Sulu\Component\Security\UserInterface
-     * @Exclude
      */
     private $changer;
 
     /**
      * @var \Sulu\Component\Security\UserInterface
-     * @Exclude
      */
     private $creator;
 
@@ -206,10 +205,10 @@ class File
     /**
      * Set changer
      *
-     * @param \Sulu\Component\Security\UserInterface $changer
+     * @param \Sulu\Bundle\SecurityBundle\Entity\User $changer
      * @return File
      */
-    public function setChanger(\Sulu\Component\Security\UserInterface $changer = null)
+    public function setChanger(\Sulu\Bundle\SecurityBundle\Entity\User $changer = null)
     {
         $this->changer = $changer;
     
@@ -219,7 +218,7 @@ class File
     /**
      * Get changer
      *
-     * @return \Sulu\Component\Security\UserInterface
+     * @return \Sulu\Bundle\SecurityBundle\Entity\User 
      */
     public function getChanger()
     {
@@ -229,10 +228,10 @@ class File
     /**
      * Set creator
      *
-     * @param \Sulu\Component\Security\UserInterface $creator
+     * @param \Sulu\Bundle\SecurityBundle\Entity\User $creator
      * @return File
      */
-    public function setCreator(\Sulu\Component\Security\UserInterface $creator = null)
+    public function setCreator(\Sulu\Bundle\SecurityBundle\Entity\User $creator = null)
     {
         $this->creator = $creator;
     
@@ -242,7 +241,7 @@ class File
     /**
      * Get creator
      *
-     * @return \Sulu\Component\Security\UserInterface
+     * @return \Sulu\Bundle\SecurityBundle\Entity\User 
      */
     public function getCreator()
     {
