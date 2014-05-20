@@ -21,6 +21,7 @@ use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepository;
 use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException;
+use Sulu\Bundle\MediaBundle\Media\Exception\InvalidFileException;
 use Sulu\Bundle\MediaBundle\Media\Exception\InvalidMediaTypeException;
 use Sulu\Bundle\MediaBundle\Media\Exception\UploadFileValidationException;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
@@ -125,8 +126,12 @@ class DefaultMediaManager implements MediaManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function add(UploadedFile $uploadedFile, $userId, $collectionId, $properties = array())
+    public function add($uploadedFile, $userId, $collectionId, $properties = array())
     {
+        if (!($uploadedFile instanceof UploadedFile)) {
+            throw new InvalidFileException('given uploadfile is not of instance UploadFile');
+        }
+
         $this->validator->validate($uploadedFile);
 
         $storageOptions = $this->storage->save($uploadedFile->getPathname(), $uploadedFile->getClientOriginalName(), 1);
@@ -188,7 +193,7 @@ class DefaultMediaManager implements MediaManagerInterface
     }
 
     /**
-     * @param UploadedFile $uploadedFile
+     * @param UploadedFile|null $uploadedFile
      * @return object
      */
     protected function getMediaType(UploadedFile $uploadedFile)
@@ -207,7 +212,7 @@ class DefaultMediaManager implements MediaManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function update(UploadedFile $uploadedFile, $userId, $id, $collectionId = null, $properties = array())
+    public function update($uploadedFile, $userId, $id, $collectionId = null, $properties = array())
     {
         $media = $this->mediaRepository->findMediaById($id);
         $user = $this->userRepository->findUserById($userId);
@@ -215,9 +220,17 @@ class DefaultMediaManager implements MediaManagerInterface
         $media->setChanged(new Datetime());
         $media->setChanger($user);
 
-        $mediaType = $this->getMediaType($uploadedFile);
-        if ($media->getType()->getId() != $mediaType->getId()) {
-            throw new InvalidMediaTypeException('Media must be of type ' . $media->getType()->getId() . '('.$media->getType()->getName().'), ' . $mediaType->getId() . '('.$mediaType->getName().') was given');
+        if ($uploadedFile !== null) {
+            if (!($uploadedFile instanceof UploadedFile)) {
+                throw new InvalidFileException('given uploadfile is not of instance UploadFile');
+            }
+        }
+
+        if ($uploadedFile) {
+            $mediaType = $this->getMediaType($uploadedFile);
+            if ($media->getType()->getId() != $mediaType->getId()) {
+                throw new InvalidMediaTypeException('Media must be of type ' . $media->getType()->getId() . '('.$media->getType()->getName().'), ' . $mediaType->getId() . '('.$mediaType->getName().') was given');
+            }
         }
 
         if ($collectionId !== null) { // collection not changed
