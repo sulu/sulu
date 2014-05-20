@@ -35739,10 +35739,10 @@ define('__component__$column-navigation@husky',[], function() {
         load: function(url, columnNumber) {
             if (!!url) {
                 this.columnLoadStarted = true;
-
                 this.sandbox.util.load(url)
                     .then(function(response) {
                         this.removeBigLoader();
+                        console.log('here');
                         this.columnLoadStarted = false;
                         this.parseData(response, columnNumber);
                         this.handleLastEmptyColumn();
@@ -39660,6 +39660,9 @@ define('__component__$toggler@husky',[], function() {
  * @params {Function} [options.beforeSendingCallback] callback which gets called before a file gets uploaded. First parameter is the file.
  * @params {Function} [options.removeFileCallback] callback which gets called after a file got removed. First parameter is the file.
  * @params {Object} [options.pluginOptions] Options to pass to the dropzone-plugin to completely override all options set by husky. Use with care.
+ * @params {Number} [options.showOverlayOnScrollTop] number of scroll-top on which the overlay will be displayed
+ * @params {Object|String} [options.scrollContainer] element to check to scroll-top on
+ * @params {Boolean} [options.showOverlay] if true the dropzone will be displayed in an overlay if its not visible any more or the passed scroll-top is reached
  */
 define('__component__$dropzone@husky',[], function() {
 
@@ -39684,7 +39687,11 @@ define('__component__$dropzone@husky',[], function() {
             removeFileCallback: null,
             pluginOptions: {},
             fadeOutDuration: 200, //ms
-            fadeOutDelay: 1500 //ms
+            fadeOutDelay: 1500, //ms
+            showOverlayOnScrollTop: 50,
+            scrollContainer: 'body',
+            overlayTitle: 'sulu.dropzone.overlay-title',
+            showOverlay: true
         },
 
         constants = {
@@ -39791,7 +39798,9 @@ define('__component__$dropzone@husky',[], function() {
             // merge defaults, type defaults and options
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
             this.dropzone = null;
+            this.$dropzone = null;
             this.lastUploadedFile = null;
+            this.overlayOpened = false;
 
             this.render();
             this.bindDomEvents();
@@ -39804,23 +39813,65 @@ define('__component__$dropzone@husky',[], function() {
          */
         bindDomEvents: function() {
             // delegate click on elements children to element
-            this.sandbox.dom.on(this.$find('*'), 'click', function(event) {
+            this.sandbox.dom.on(this.sandbox.dom.find('*', this.$dropzone), 'click', function(event) {
                 this.sandbox.dom.stopPropagation(event);
-                this.sandbox.dom.trigger(this.$el, 'click');
+                this.sandbox.dom.trigger(this.$dropzone, 'click');
             }.bind(this));
+
+            if (this.options.showOverlay) {
+                this.sandbox.dom.on(this.sandbox.dom.$document, 'dragenter', function() {
+                    this.openOverlay();
+                }.bind(this));
+            }
+        },
+
+        /**
+         * Opens the dropzone in an overlay
+         */
+        openOverlay: function() {
+            // open the overlay only if it's not already opened and if the dropzone is not visible
+            if (this.overlayOpened === false) {
+                if (this.sandbox.dom.visible(this.$dropzone) === false ||
+                    this.sandbox.dom.scrollTop(this.options.scrollContainer) > this.options.showOverlayOnScrollTop) {
+
+                    // set height of components element to prevent the site from bumping
+                    this.sandbox.dom.height(this.$el, this.sandbox.dom.outerHeight(this.$el));
+
+                    var $container = this.sandbox.dom.createElement('<div/>');
+                    this.sandbox.dom.append(this.$el, $container);
+                    this.sandbox.start([{
+                        name: 'overlay@husky',
+                        options: {
+                            el: $container,
+                            openOnStart: true,
+                            removeOnClose: true,
+                            data: this.$dropzone,
+                            title: this.options.overlayTitle,
+                            skin: 'dropzone',
+                            closeCallback: function() {
+                                this.sandbox.dom.append(this.$el, this.$dropzone);
+                                this.sandbox.dom.height(this.$el, '');
+                                this.overlayOpened = false;
+                            }.bind(this)
+                        }
+                    }]);
+                    this.overlayOpened = true;
+                }
+            }
         },
 
         /**
          * Renders the component
          */
         render: function() {
-            this.sandbox.dom.addClass(this.$el, constants.contianerClass);
-            this.sandbox.dom.html(this.$el, this.sandbox.util.template(templates.basic)({
+            this.$dropzone = this.sandbox.dom.createElement('<div class="'+ constants.contianerClass +'"/>');
+            this.sandbox.dom.html(this.$dropzone, this.sandbox.util.template(templates.basic)({
                 description: this.sandbox.translate(this.options.descriptionKey),
                 title: this.sandbox.translate(this.options.titleKey),
                 icon: this.options.descriptionIcon,
                 instanceName: this.options.instanceName
             }));
+            this.sandbox.dom.append(this.$el, this.$dropzone);
             this.startDropzone();
         },
 
@@ -39838,14 +39889,14 @@ define('__component__$dropzone@husky',[], function() {
                     previewTemplate: this.sandbox.util.template(templates.uploadItem)({
                         cancelIcon: this.options.cancelLoadingIcon
                     }),
-                    previewsContainer: this.$find('.' + constants.uploadedItemContainerClass)[0],
+                    previewsContainer: this.sandbox.dom.find('.' + constants.uploadedItemContainerClass, this.$dropzone)[0],
                     init: function() {
                         // store dropzone context
                         that.dropzone = this;
 
                         // gets called if file gets added (drop or via the upload window)
                         this.on('addedfile', function(file) {
-                            this.sandbox.dom.addClass(this.$el, constants.droppedClass);
+                            this.sandbox.dom.addClass(this.$dropzone, constants.droppedClass);
 
                             // prevent the the upload window to open on click on the preview item
                             this.sandbox.dom.on(file.previewElement, 'click', function(event) {
@@ -39887,14 +39938,14 @@ define('__component__$dropzone@husky',[], function() {
 
                         // gets called if all files are removed from the zone
                         this.on('reset', function() {
-                            this.sandbox.dom.removeClass(this.$el, constants.droppedClass);
+                            this.sandbox.dom.removeClass(this.$dropzone, constants.droppedClass);
                         }.bind(that));
                     }
                 };
 
             // merge the default plugin options with with passed ones
             this.sandbox.util.extend(true, {}, options, this.options.pluginOptions);
-            this.sandbox.dropzone.initialize(this.$el, options);
+            this.sandbox.dropzone.initialize(this.$dropzone, options);
         },
 
         /**
@@ -39907,10 +39958,10 @@ define('__component__$dropzone@husky',[], function() {
                 this.sandbox.util.delay(
                     function() {
                         this.sandbox.dom.fadeOut(
-                            this.$find('.' + constants.uploadItemClass),
+                            this.sandbox.dom.find('.' + constants.uploadItemClass, this.$dropzone),
                             this.options.fadeOutDuration,
                             function() {
-                                if (this.$find('.' + constants.uploadItemClass + ':animated').length === 0) {
+                                if (this.sandbox.dom.find('.' + constants.uploadItemClass + ':animated', this.$dropzone).length === 0) {
                                     this.afterFadeOut();
                                 }
                             }.bind(this)
@@ -39926,7 +39977,7 @@ define('__component__$dropzone@husky',[], function() {
          * have faded out
          */
         afterFadeOut: function() {
-            this.sandbox.dom.removeClass(this.$el, constants.droppedClass);
+            this.sandbox.dom.removeClass(this.$dropzone, constants.droppedClass);
             this.sandbox.emit(FILES_ADDED.call(this), this.getResponseArray(this.dropzone.files));
         },
 
@@ -40918,6 +40969,78 @@ define('husky_extensions/collection',[],function() {
 
             app.core.dom.animate = function(selector, properties, options) {
                 $(selector).animate(properties, options);
+            };
+
+            /**
+             * Awesome visible method. Returns true if any part of a given element is not visible
+             * Method is copied and slightly adapted from https://github.com/teamdf/jquery-visible/
+             * @param selector {Stirng|Object} element selector or jquery dom object
+             * @param partial {Boolean} if true only returns false if every part of the element is not visible
+             * @param hidden {Boolean} if true checks whether the element is visible, as well as wheter it's within the viewport too. Defaults to true
+             * @param direction {String} to specify the direction to check for visibility. This can either be 'horizontal', 'vertical' or 'both'. Default is to 'both'
+             * @returns {Boolean} true or false whether the element is visible or not
+             */
+            app.core.dom.visible = function (selector, partial, hidden, direction) {
+                if (this.length < 1) {
+                    return;
+                }
+                direction = (direction) ? direction : 'both';
+                hidden = (typeof hidden === 'undefined') ? true : hidden;
+
+                var $element = $(selector), $t = $element.length > 1 ? $element.eq(0) : $element,
+                    t = $t.get(0),
+                    vpWidth = app.sandbox.dom.$window.width(),
+                    vpHeight = app.sandbox.dom.$window.height(),
+                    clientSize = hidden === true ? t.offsetWidth * t.offsetHeight : true,
+                    rec, tViz, bViz, lViz, rViz, vVisible, hVisible, viewTop, viewBottom, viewLeft, viewRight,
+                    offset, _top, _bottom, _left, _right, compareTop, compareBottom, compareLeft, compareRight;
+
+                if (typeof t.getBoundingClientRect === 'function') {
+
+                    // Use this native browser method, if available.
+                    rec = t.getBoundingClientRect();
+                    tViz = rec.top >= 0 && rec.top < vpHeight;
+                    bViz = rec.bottom > 0 && rec.bottom <= vpHeight;
+                    lViz = rec.left >= 0 && rec.left < vpWidth;
+                    rViz = rec.right > 0 && rec.right <= vpWidth;
+                    vVisible = partial ? tViz || bViz : tViz && bViz;
+                    hVisible = partial ? lViz || lViz : lViz && rViz;
+
+                    if (direction === 'both') {
+                        return clientSize && vVisible && hVisible;
+                    }
+                    else if (direction === 'vertical') {
+                        return clientSize && vVisible;
+                    }
+                    else if (direction === 'horizontal') {
+                        return clientSize && hVisible;
+                    }
+                } else {
+
+                    viewTop = app.sandbox.dom.$window.scrollTop();
+                    viewBottom = viewTop + vpHeight;
+                    viewLeft = app.sandbox.dom.$window.scrollLeft();
+                    viewRight = viewLeft + vpWidth;
+                    offset = $t.offset();
+                    _top = offset.top;
+                    _bottom = _top + $t.height();
+                    _left = offset.left;
+                    _right = _left + $t.width();
+                    compareTop = partial === true ? _bottom : _top;
+                    compareBottom = partial === true ? _top : _bottom;
+                    compareLeft = partial === true ? _right : _left;
+                    compareRight = partial === true ? _left : _right;
+
+                    if (direction === 'both') {
+                        return !!clientSize && ((compareBottom <= viewBottom) && (compareTop >= viewTop)) && ((compareRight <= viewRight) && (compareLeft >= viewLeft));
+                    }
+                    else if (direction === 'vertical') {
+                        return !!clientSize && ((compareBottom <= viewBottom) && (compareTop >= viewTop));
+                    }
+                    else if (direction === 'horizontal') {
+                        return !!clientSize && ((compareRight <= viewRight) && (compareLeft >= viewLeft));
+                    }
+                }
             };
 
             app.core.util.ajax = $.ajax;
