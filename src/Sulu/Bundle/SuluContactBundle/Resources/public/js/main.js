@@ -9,7 +9,8 @@
 
 require.config({
     paths: {
-        sulucontact: '../../sulucontact/js'
+        sulucontact: '../../sulucontact/js',
+        'accountsutil/header': '../../sulucontact/js/components/accounts/util/header'
     }
 });
 
