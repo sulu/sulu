@@ -3638,7 +3638,19 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
 .husky-overlay-container.wide {
   width: 602px;
 }
-/* line 26, ../scss/modules/overlay.scss */
+/* line 25, ../scss/modules/overlay.scss */
+.husky-overlay-container.dropzone {
+  width: 702px;
+}
+/* line 27, ../scss/modules/overlay.scss */
+.husky-overlay-container.dropzone .overlay-content {
+  margin-bottom: 20px;
+}
+/* line 30, ../scss/modules/overlay.scss */
+.husky-overlay-container.dropzone .overlay-footer {
+  display: none;
+}
+/* line 36, ../scss/modules/overlay.scss */
 .husky-overlay-container.draggable .overlay-header {
   cursor: move;
   user-select: none;
@@ -3647,32 +3659,32 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   -ms-user-select: none;
   -o-user-select: none;
 }
-/* line 33, ../scss/modules/overlay.scss */
+/* line 43, ../scss/modules/overlay.scss */
 .husky-overlay-container.error .overlay-header {
   background: #ea524e;
   color: white;
 }
-/* line 36, ../scss/modules/overlay.scss */
+/* line 46, ../scss/modules/overlay.scss */
 .husky-overlay-container.error .overlay-header .title {
   color: black;
 }
-/* line 43, ../scss/modules/overlay.scss */
+/* line 53, ../scss/modules/overlay.scss */
 .husky-overlay-container.warning .overlay-header {
   background: #f2d212;
 }
-/* line 45, ../scss/modules/overlay.scss */
+/* line 55, ../scss/modules/overlay.scss */
 .husky-overlay-container.warning .overlay-header .title {
   color: black;
 }
 
-/* line 52, ../scss/modules/overlay.scss */
+/* line 62, ../scss/modules/overlay.scss */
 .overlay-header {
   min-height: 50px;
   background: #efefef;
   position: relative;
   border-radius: 3px 3px 0 0;
 }
-/* line 58, ../scss/modules/overlay.scss */
+/* line 68, ../scss/modules/overlay.scss */
 .overlay-header .title {
   color: #999999;
   font-size: 23px;
@@ -3681,7 +3693,7 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   display: block;
   padding: 15px 40px 10px 20px;
 }
-/* line 67, ../scss/modules/overlay.scss */
+/* line 77, ../scss/modules/overlay.scss */
 .overlay-header .close-button {
   position: absolute;
   top: 0px;
@@ -3692,11 +3704,11 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   line-height: 12px;
   padding: 8px;
 }
-/* line 78, ../scss/modules/overlay.scss */
+/* line 88, ../scss/modules/overlay.scss */
 .overlay-header .tabs {
   display: inline-block;
 }
-/* line 82, ../scss/modules/overlay.scss */
+/* line 92, ../scss/modules/overlay.scss */
 .overlay-header .language-changer {
   width: 80px;
   position: absolute;
@@ -3704,7 +3716,7 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   right: 20px;
 }
 
-/* line 90, ../scss/modules/overlay.scss */
+/* line 100, ../scss/modules/overlay.scss */
 .overlay-footer {
   padding: 10px;
   border-top: 1px solid #cccccc;
@@ -3717,58 +3729,58 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   content: ' ';
   display: block;
 }
-/* line 97, ../scss/modules/overlay.scss */
+/* line 107, ../scss/modules/overlay.scss */
 .overlay-footer .btn {
   display: inline-block;
   min-width: 70px;
   margin: 0 auto;
   padding: 0;
 }
-/* line 103, ../scss/modules/overlay.scss */
+/* line 113, ../scss/modules/overlay.scss */
 .overlay-footer .btn.tick {
   width: 70px;
   line-height: 28px;
 }
-/* line 108, ../scss/modules/overlay.scss */
+/* line 118, ../scss/modules/overlay.scss */
 .overlay-footer .btn.left {
   float: left;
   margin-right: 20px;
   margin-right: 0;
 }
-/* line 113, ../scss/modules/overlay.scss */
+/* line 123, ../scss/modules/overlay.scss */
 .overlay-footer .btn.right {
   float: right;
   margin-left: 20px;
   margin-right: 0;
 }
-/* line 120, ../scss/modules/overlay.scss */
+/* line 130, ../scss/modules/overlay.scss */
 .overlay-footer.center .btn {
   margin: 0 auto;
 }
-/* line 124, ../scss/modules/overlay.scss */
+/* line 134, ../scss/modules/overlay.scss */
 .overlay-footer.left .btn {
   float: left;
   margin-right: 20px;
 }
-/* line 129, ../scss/modules/overlay.scss */
+/* line 139, ../scss/modules/overlay.scss */
 .overlay-footer.right .btn {
   float: right;
   margin-left: 20px;
 }
 
-/* line 135, ../scss/modules/overlay.scss */
+/* line 145, ../scss/modules/overlay.scss */
 .overlay-content {
   padding-left: 0;
   margin: 0 20px 10px 20px;
 }
-/* line 139, ../scss/modules/overlay.scss */
+/* line 149, ../scss/modules/overlay.scss */
 .overlay-content .message {
   padding: 20px 0 25px 0;
   font-size: 16px;
   color: #999999;
 }
 
-/* line 146, ../scss/modules/overlay.scss */
+/* line 156, ../scss/modules/overlay.scss */
 .husky-overlay-backdrop {
   width: 100%;
   height: 100%;
