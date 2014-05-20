@@ -1039,8 +1039,8 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
  * -------------------------- */
 @font-face {
   font-family: 'FontAwesome';
-  src: url("../../fonts/fontawesome/fontawesome-webfont.eot?v=4.1.0");
-  src: url("../../fonts/fontawesome/fontawesome-webfont.eot?#iefix&v=4.1.0") format("embedded-opentype"), url("../../fonts/fontawesome/fontawesome-webfont.woff?v=4.1.0") format("woff"), url("../../fonts/fontawesome/fontawesome-webfont.ttf?v=4.1.0") format("truetype"), url("../../fonts/fontawesome/fontawesome-webfont.svg?v=4.1.0#fontawesomeregular") format("svg");
+  src: url("fonts/fontawesome/fontawesome-webfont.eot?v=4.1.0");
+  src: url("fonts/fontawesome/fontawesome-webfont.eot?#iefix&v=4.1.0") format("embedded-opentype"), url("fonts/fontawesome/fontawesome-webfont.woff?v=4.1.0") format("woff"), url("fonts/fontawesome/fontawesome-webfont.ttf?v=4.1.0") format("truetype"), url("fonts/fontawesome/fontawesome-webfont.svg?v=4.1.0#fontawesomeregular") format("svg");
   font-weight: normal;
   font-style: normal;
 }
@@ -3789,9 +3789,10 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   border: 3px solid white;
   background: #5dc774;
   font-size: medium !important;
+  margin-bottom: -1px;
 }
 
-/* line 19, ../scss/modules/custom-icons.scss */
+/* line 20, ../scss/modules/custom-icons.scss */
 .fa-husky-unpublish::after {
   content: "";
   display: inline-block;
@@ -3801,9 +3802,10 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   border: 3px solid white;
   background: #ea524e;
   font-size: medium !important;
+  margin-bottom: -1px;
 }
 
-/* line 32, ../scss/modules/custom-icons.scss */
+/* line 34, ../scss/modules/custom-icons.scss */
 .fa-husky-test::after {
   content: "";
   display: inline-block;
@@ -3813,6 +3815,7 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   border: 3px solid white;
   background: #f2d212;
   font-size: medium !important;
+  margin-bottom: -1px;
 }
 
 /* line 8, ../scss/modules/core.scss */
@@ -4344,9 +4347,12 @@ label.spacing-left {
 }
 /* line 188, ../scss/modules/form.scss */
 .custom-checkbox input:checked + .icon::after, .custom-checkbox input.is-checked + .icon::after {
+  display: inline-block;
+  margin-top: -1px;
+  margin-left: -1px;
   content: "\f00c";
 }
-/* line 195, ../scss/modules/form.scss */
+/* line 198, ../scss/modules/form.scss */
 .custom-checkbox input + .icon {
   position: absolute;
   top: 0px;
@@ -4358,33 +4364,33 @@ label.spacing-left {
   height: 15px;
   border: 1px solid #cccccc;
   background-color: #fff;
-  font-size: 14px;
+  font-size: 15px;
   line-height: 13px;
   text-align: center;
   border-radius: 2px;
 }
 
-/* line 220, ../scss/modules/form.scss */
+/* line 223, ../scss/modules/form.scss */
 textarea {
   resize: both;
 }
 
-/* line 224, ../scss/modules/form.scss */
+/* line 227, ../scss/modules/form.scss */
 textarea.vertical {
   resize: vertical;
 }
 
-/* line 228, ../scss/modules/form.scss */
+/* line 231, ../scss/modules/form.scss */
 textarea.horizontal {
   resize: horizontal;
 }
 
-/* line 232, ../scss/modules/form.scss */
+/* line 235, ../scss/modules/form.scss */
 textarea.noResize {
   resize: none;
 }
 
-/* line 236, ../scss/modules/form.scss */
+/* line 239, ../scss/modules/form.scss */
 textarea.form-element {
   width: 100%;
   height: 40px;
@@ -4394,7 +4400,7 @@ textarea.form-element {
   font-family: inherit;
 }
 
-/* line 247, ../scss/modules/form.scss */
+/* line 250, ../scss/modules/form.scss */
 .custom-radio {
   width: 15px;
   height: 15px;
@@ -4404,12 +4410,12 @@ textarea.form-element {
   display: inline-block;
   margin: 0 5px 0 0;
 }
-/* line 257, ../scss/modules/form.scss */
+/* line 260, ../scss/modules/form.scss */
 .custom-radio.no-spacing {
   top: 0;
   margin: 0;
 }
-/* line 262, ../scss/modules/form.scss */
+/* line 265, ../scss/modules/form.scss */
 .custom-radio input {
   width: 15px;
   height: 15px;
@@ -4422,11 +4428,11 @@ textarea.form-element {
   margin: 0;
   padding: 0;
 }
-/* line 276, ../scss/modules/form.scss */
+/* line 279, ../scss/modules/form.scss */
 .custom-radio input:checked + .icon, .custom-radio input.is-checked + .icon {
   border-color: white;
 }
-/* line 279, ../scss/modules/form.scss */
+/* line 282, ../scss/modules/form.scss */
 .custom-radio input:checked + .icon::after, .custom-radio input.is-checked + .icon::after {
   content: "";
   display: block;
@@ -4435,7 +4441,7 @@ textarea.form-element {
   border-radius: 15px;
   background-color: #5dc774;
 }
-/* line 290, ../scss/modules/form.scss */
+/* line 293, ../scss/modules/form.scss */
 .custom-radio input + .icon {
   display: block;
   position: absolute;
@@ -4451,23 +4457,23 @@ textarea.form-element {
   margin: 0;
 }
 
-/* line 312, ../scss/modules/form.scss */
+/* line 315, ../scss/modules/form.scss */
 .cke.cke_chrome {
   box-shadow: none !important;
   border: 0 !important;
 }
-/* line 317, ../scss/modules/form.scss */
+/* line 320, ../scss/modules/form.scss */
 .cke .cke_inner {
   border: 1px solid #cccccc !important;
 }
-/* line 321, ../scss/modules/form.scss */
+/* line 324, ../scss/modules/form.scss */
 .cke .cke_inner,
 .cke .cke_wysiwyg_frame {
   border-bottom-left-radius: 3px !important;
   border-bottom-right-radius: 3px !important;
 }
 
-/* line 329, ../scss/modules/form.scss */
+/* line 332, ../scss/modules/form.scss */
 span.error {
   font-size: 14px;
   color: #ea524e;
@@ -6111,7 +6117,7 @@ a.btn-black, a.btn-highlight {
 .toolbar-item a {
   text-align: center;
   color: black;
-  padding: 0 10px 0 9px;
+  padding: 0 10px 0 8px;
   display: table;
   text-decoration: none;
   height: 100%;

@@ -35739,10 +35739,10 @@ define('__component__$column-navigation@husky',[], function() {
         load: function(url, columnNumber) {
             if (!!url) {
                 this.columnLoadStarted = true;
-
                 this.sandbox.util.load(url)
                     .then(function(response) {
                         this.removeBigLoader();
+                        console.log('here');
                         this.columnLoadStarted = false;
                         this.parseData(response, columnNumber);
                         this.handleLastEmptyColumn();
