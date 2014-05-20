@@ -148,13 +148,14 @@ class DefaultMediaManager implements MediaManagerInterface
         }
 
         // create file
+        $version = 1;
         $file = new File();
         $file->setChanged(new Datetime());
         $file->setCreated(new Datetime());
         $file->setChanger($user);
         $file->setCreator($user);
 
-        $file->setVersion(1);
+        $file->setVersion($version);
 
         // create file version
         $fileVersion = new FileVersion();
@@ -162,9 +163,9 @@ class DefaultMediaManager implements MediaManagerInterface
         $fileVersion->setCreated(new Datetime());
         $fileVersion->setChanger($user);
         $fileVersion->setCreator($user);
-        $fileVersion->setVersion(1);
+        $fileVersion->setVersion($version);
         $fileVersion->setSize($uploadedFile->getSize());
-        $fileVersion->setName($uploadedFile->getFilename());
+        $fileVersion->setName($uploadedFile->getClientOriginalName());
         $fileVersion->setStorageOptions($storageOptions);
 
         // add file version to file
@@ -172,7 +173,7 @@ class DefaultMediaManager implements MediaManagerInterface
         $file->addFileVersion($fileVersion);
 
         // update properties
-        $this->setProperties($file->getFileVersions(), $properties, $user);
+        $this->setProperties($file->getFileVersions(), $properties, $user, $version);
 
         // add file to media
         $file->setMedia($media);
@@ -254,32 +255,32 @@ class DefaultMediaManager implements MediaManagerInterface
 
         if (!$fileName) {
             throw new FileVersionNotFoundException ('Actual Version not found('.$version.')');
-        } else {
-            if ($uploadedFile) {
-                $version++; // Update Version
-                $this->validator->validate($uploadedFile);
-                $storageOptions = $this->storage->save($uploadedFile->getPathname(), $uploadedFile->getFilename(), $version, $oldStorageOptions);
+        }
 
-                $fileVersion = new FileVersion();
-                $fileVersion->setChanged(new Datetime());
-                $fileVersion->setCreated(new Datetime());
-                $fileVersion->setChanger($user);
-                $fileVersion->setCreator($user);
-                $fileVersion->setSize($uploadedFile->getSize());
-                $fileVersion->setName($uploadedFile->getFilename());
-                $fileVersion->setVersion($version);
-                $file->setVersion($version);
-                $fileVersion->setStorageOptions($storageOptions);
-                $fileVersion->setFile($file);
-            }
+        if ($uploadedFile) {
+            $version++; // Update Version
+            $this->validator->validate($uploadedFile);
+            $storageOptions = $this->storage->save($uploadedFile->getPathname(), $uploadedFile->getFilename(), $version, $oldStorageOptions);
 
-            if ($uploadedFile) {
-                $file->addFileVersion($fileVersion);
-            }
+            $fileVersion = new FileVersion();
+            $fileVersion->setChanged(new Datetime());
+            $fileVersion->setCreated(new Datetime());
+            $fileVersion->setChanger($user);
+            $fileVersion->setCreator($user);
+            $fileVersion->setSize($uploadedFile->getSize());
+            $fileVersion->setName($uploadedFile->getClientOriginalName());
+            $fileVersion->setVersion($version);
+            $file->setVersion($version);
+            $fileVersion->setStorageOptions($storageOptions);
+            $fileVersion->setFile($file);
+        }
+
+        if ($uploadedFile) {
+            $file->addFileVersion($fileVersion);
         }
 
         // update properties
-        $this->setProperties($file->getFileVersions(), $properties, $user);
+        $this->setProperties($file->getFileVersions(), $properties, $user, $version);
 
         $this->em->persist($fileVersion);
         $this->em->persist($file);
@@ -293,33 +294,19 @@ class DefaultMediaManager implements MediaManagerInterface
      * @param $fileVersions
      * @param $properties
      * @param $user
+     * @param $version
      */
-    protected function setProperties($fileVersions, $properties, $user)
+    protected function setProperties($fileVersions, $properties, $user, $version)
     {
         /**
          * @var FileVersion $fileVersion
          */
-        foreach ($fileVersions as $fileVersion) {
+        foreach ($fileVersions as &$fileVersion) {
             $changed = false;
             foreach ($properties as $fileVersionProperties) {
-                $propertiesFileVersionId = isset($fileVersionProperties['id']) ? $fileVersionProperties['id'] : null;
-                if ($fileVersion->getId() == $propertiesFileVersionId) {
-                    foreach ($fileVersionProperties as $key => $value) {
-                        switch ($key) {
-                            case 'meta':
-                                $this->updateMetas($fileVersion, $value);
-                                $changed = true;
-                                break;
-                            case 'contentLanguages':
-                                $this->updateContentLanguages($fileVersion, $value);
-                                $changed = true;
-                                break;
-                            case 'publishLanguages':
-                                $this->updatePublishLanguages($fileVersion, $value);
-                                $changed = true;
-                                break;
-                        }
-                    }
+                $propertiesFileVersionId = isset($fileVersionProperties['version']) ? $fileVersionProperties['version'] : $version; // update old version or actual version
+                if ($fileVersion->getVersion() == $propertiesFileVersionId) {
+                    $changed = $this->updateFileVersionProperties($fileVersion, $fileVersionProperties);
                 }
             }
 
@@ -333,18 +320,46 @@ class DefaultMediaManager implements MediaManagerInterface
     }
 
     /**
-     * @param FileVersion $fileVersion
-     * @param $metas
+     * @param $fileVersion
+     * @param $fileVersionProperties
+     * @return bool
      */
-    protected function updateMetas(&$fileVersion, $metas)
+    protected function updateFileVersionProperties(&$fileVersion, &$fileVersionProperties)
+    {
+        $changed = false;
+        foreach ($fileVersionProperties as $key => $value) {
+            switch ($key) {
+                case 'meta':
+                    $this->updateMeta($fileVersion, $value);
+                    $changed = true;
+                    break;
+                case 'contentLanguages':
+                    $this->updateContentLanguages($fileVersion, $value);
+                    $changed = true;
+                    break;
+                case 'publishLanguages':
+                    $this->updatePublishLanguages($fileVersion, $value);
+                    $changed = true;
+                    break;
+            }
+        }
+        return $changed;
+    }
+
+
+    /**
+     * @param FileVersion $fileVersion
+     * @param $metaList
+     */
+    protected function updateMeta(&$fileVersion, $metaList)
     {
         /**
          * @var FileVersionMeta $oldMeta
          */
         // Update Old Meta
-        if ($fileVersion->getMetas()) {
-            foreach ($fileVersion->getMetas() as $oldMeta) {
-                foreach ($metas as $key => $meta) {
+        if ($fileVersion->getMeta()) {
+            foreach ($fileVersion->getMeta() as $oldMeta) {
+                foreach ($metaList as $key => $meta) {
                     if (isset($meta['locale']) && $oldMeta->getLocale() == $meta['locale']) {
                         if (isset($meta['title'])) {
                             $oldMeta->setTitle($meta['title']);
@@ -354,14 +369,14 @@ class DefaultMediaManager implements MediaManagerInterface
                         }
                         $this->em->persist($oldMeta);
 
-                        unset($metas[$key]);
+                        unset($metaList[$key]);
                         break;
                     }
                 }
             }
         }
         // Add New Meta
-        foreach ($metas as $metaData) {
+        foreach ($metaList as $metaData) {
             if (
                 !empty($metaData['locale']) && // http://www.php.net/manual/en/function.empty.php#refsect1-function.empty-parameters
                 !empty($metaData['title'])
@@ -394,12 +409,7 @@ class DefaultMediaManager implements MediaManagerInterface
             foreach ($fileVersion->getContentLanguages() as $oldContentLanguage) {
                 $exists = false;
                 foreach ($contentLanguages as $key => $contentLanguage) {
-                    if (isset($contentLanguage['id']) && $oldContentLanguage->getId() == $contentLanguage['id']) {
-                        if (isset($contentLanguage['locale'])) {
-                            $oldContentLanguage->setLocale($contentLanguage['locale']);
-                        }
-                        $this->em->persist($oldContentLanguage);
-
+                    if (isset($contentLanguage) && $oldContentLanguage->getId() == $contentLanguage) {
                         unset($contentLanguage[$key]);
                         $exists = true;
                         break;
@@ -414,7 +424,7 @@ class DefaultMediaManager implements MediaManagerInterface
         // Add New ContentLanguages
         foreach ($contentLanguages as $contentLanguageData) {
             $contentLanguage = new FileVersionContentLanguage();
-            $contentLanguage->setLocale($contentLanguageData['locale']);
+            $contentLanguage->setLocale($contentLanguageData);
             $contentLanguage->setFileVersion($fileVersion);
 
             $fileVersion->addContentLanguage($contentLanguage);
@@ -436,12 +446,7 @@ class DefaultMediaManager implements MediaManagerInterface
             foreach ($fileVersion->getPublishLanguages() as $oldPublishLanguage) {
                 $exists = false;
                 foreach ($publishLanguages as $key => $publishLanguage) {
-                    if (isset($publishLanguage['id']) && $oldPublishLanguage->getId() == $publishLanguage['id']) {
-                        if (isset($publishLanguage['locale'])) {
-                            $oldPublishLanguage->setLocale($publishLanguage['locale']);
-                        }
-                        $this->em->persist($oldPublishLanguage);
-
+                    if (isset($publishLanguage) && $oldPublishLanguage->getLocale() == $publishLanguage) {
                         unset($publishLanguage[$key]);
                         $exists = true;
                         break;
@@ -457,7 +462,7 @@ class DefaultMediaManager implements MediaManagerInterface
         foreach ($publishLanguages as $publishLanguageData) {
             $publishLanguage = new FileVersionPublishLanguage();
             $publishLanguage->setFileVersion($fileVersion);
-            $publishLanguage->setLocale($publishLanguageData['locale']);
+            $publishLanguage->setLocale($publishLanguageData);
 
             $fileVersion->addPublishLanguage($publishLanguage);
             $this->em->persist($publishLanguage);

@@ -116,11 +116,7 @@ class MediaController extends RestController implements ClassResourceInterface
      */
     public function getAction($id, Request $request)
     {
-        $userLocale = $this->getUser()->getLocale();
-        $locale = $request->get('locale');
-        if ($locale) {
-            $userLocale = $locale;
-        }
+        $locale = $this->getLocale($request->get('locale'));
 
         $media = $this->getDoctrine()
             ->getRepository($this->entityName)
@@ -143,7 +139,7 @@ class MediaController extends RestController implements ClassResourceInterface
                             'self' => $request->getRequestUri()
                         )
                     ),
-                    $mediaRestObject->setDataByEntityArray($media, $userLocale, $request->get('version', null))
+                    $mediaRestObject->setDataByEntityArray($media, $locale, $request->get('version', null))
                 )
                 , 200);
         }
@@ -158,15 +154,11 @@ class MediaController extends RestController implements ClassResourceInterface
      */
     public function cgetAction(Request $request)
     {
-        $userLocale = $this->getUser()->getLocale();
-        $locale = $request->get('locale');
-        if ($locale) {
-            $userLocale = $locale;
-        }
+        $locale = $this->getLocale($request->get('locale'));
 
         $collection = $request->get('collection');
         $mediaList = $this->getDoctrine()->getRepository($this->entityName)->findMedia($collection);
-        $mediaList = $this->flatMedia($mediaList, $userLocale, $request->get('fields', array()));
+        $mediaList = $this->flatMedia($mediaList, $locale, $request->get('fields', array()));
         $view = $this->view($this->createHalResponse($mediaList), 200);
 
         return $this->handleView($view);
@@ -181,6 +173,9 @@ class MediaController extends RestController implements ClassResourceInterface
     public function postAction(Request $request)
     {
         try {
+            // locale
+            $locale = $this->getLocale($request->get('locale'));
+
             // get collection id
             $mediaRestObject = $this->getRestObject($request);
 
@@ -198,7 +193,8 @@ class MediaController extends RestController implements ClassResourceInterface
                 throw new RestException('Uploaded file not found', UploadFileException::EXCEPTION_CODE_UPLOADED_FILE_NOT_FOUND);
             }
 
-            $view = $this->view($media, 200);
+            $mediaRestObject = new MediaRestObject();
+            $view = $this->view($mediaRestObject->setDataByEntity($media, $locale)->toArray(), 200);
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
         } catch (RestException $re) {
@@ -220,6 +216,9 @@ class MediaController extends RestController implements ClassResourceInterface
     public function putAction($id, Request $request)
     {
         try {
+            // locale
+            $locale = $this->getLocale($request->get('locale'));
+
             // get collection id
             $mediaRestObject = $this->getRestObject($request);
 
@@ -239,7 +238,8 @@ class MediaController extends RestController implements ClassResourceInterface
                 $media = $this->getMediaManager()->update(null, $this->getUser()->getId(), $id, $mediaRestObject->getCollection(), $properties);
             }
 
-            $view = $this->view($media, 200);
+            $mediaRestObject = new MediaRestObject();
+            $view = $this->view($mediaRestObject->setDataByEntity($media, $locale)->toArray(), 200);
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
         } catch (RestException $exc) {
@@ -345,34 +345,32 @@ class MediaController extends RestController implements ClassResourceInterface
     {
         $properties = array();
 
-        if ($restObject->getVersion()) {
-            $fileVersion = array();
-            $fileVersion['version'] = $restObject->getVersion();
+        $fileVersion = array();
+        $fileVersion['version'] = $restObject->getVersion();
 
-            if ($restObject->getContentLanguages() && count($restObject->getContentLanguages())) {
-                $fileVersion['contentLanguages'] = $restObject->getContentLanguages();
-            }
-
-            if ($restObject->getPublishLanguages() && count($restObject->getPublishLanguages())) {
-                $fileVersion['publishLanguages'] = $restObject->getPublishLanguages();
-            }
-
-            if ($restObject->getTags() && count($restObject->getTags())) {
-                $fileVersion['tags'] = $restObject->getTags();
-            }
-
-            if ($restObject->getLocale() && $restObject->getTitle()) {
-                $meta = array();
-                $meta['title'] = $restObject->getTitle();
-                $meta['locale'] = $restObject->getLocale();
-                if ($restObject->getDescription()) {
-                    $meta['description'] = $restObject->getDescription();
-                }
-                $fileVersion['meta'] = array();
-                $fileVersion['meta'][] = $meta;
-            }
-            $properties[] = $fileVersion;
+        if ($restObject->getContentLanguages() && count($restObject->getContentLanguages())) {
+            $fileVersion['contentLanguages'] = $restObject->getContentLanguages();
         }
+
+        if ($restObject->getPublishLanguages() && count($restObject->getPublishLanguages())) {
+            $fileVersion['publishLanguages'] = $restObject->getPublishLanguages();
+        }
+
+        if ($restObject->getTags() && count($restObject->getTags())) {
+            $fileVersion['tags'] = $restObject->getTags();
+        }
+
+        if ($restObject->getLocale() && $restObject->getTitle()) {
+            $meta = array();
+            $meta['title'] = $restObject->getTitle();
+            $meta['locale'] = $restObject->getLocale();
+            if ($restObject->getDescription()) {
+                $meta['description'] = $restObject->getDescription();
+            }
+            $fileVersion['meta'] = array();
+            $fileVersion['meta'][] = $meta;
+        }
+        $properties[] = $fileVersion;
 
         return $properties;
     }
@@ -384,5 +382,18 @@ class MediaController extends RestController implements ClassResourceInterface
     protected function getMediaManager()
     {
         return $this->get('sulu_media.media_manager');
+    }
+
+    /**
+     * @param $requestLocale
+     * @return mixed
+     */
+    protected function getLocale($requestLocale)
+    {
+        if ($requestLocale) {
+            return $requestLocale;
+        }
+
+        return $this->getUser()->getLocale();
     }
 }
