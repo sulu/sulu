@@ -10,8 +10,13 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\RestObject;
 
+use Sulu\Bundle\MediaBundle\Entity\File;
+use Sulu\Bundle\MediaBundle\Entity\FileVersion;
+use Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage;
+use Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use DateTime;
+use Sulu\Bundle\TagBundle\Entity\Tag;
 
 class MediaRestObject implements RestObject
 {
@@ -120,9 +125,11 @@ class MediaRestObject implements RestObject
         foreach ($data as $key => $value) {
             switch ($key) {
                 case 'id':
+                    // set id
                     $this->id = $value;
                     break;
                 case 'collection':
+                    // set collection
                     if ($value) {
                         $this->collection = $value['id'];
                     }
@@ -145,10 +152,7 @@ class MediaRestObject implements RestObject
                         $versions = array();
                         if ($file['fileVersions']) {
                             foreach ($file['fileVersions'] as $fileVersion) {
-                                $versions[] = array(
-                                    'id' => $fileVersion['id'],
-                                    'version' => $fileVersion['version'],
-                                );
+                                $versions[] = $fileVersion['version'];
                                 if ($fileVersion['version'] == $version) {
                                     $this->name = $fileVersion['name'];
                                     $this->size = $fileVersion['size'];
@@ -159,11 +163,27 @@ class MediaRestObject implements RestObject
                                     if ($fileVersion['created'] instanceof DateTime) {
                                         $this->created = $fileVersion['created']->format('Y-m-d H:i:s');
                                     }
-                                    $this->contentLanguages = $fileVersion['contentLanguages'];
-                                    $this->publishLanguages = $fileVersion['publishLanguages'];
-                                    // $this->url = $originPath . '/' . $fileVersion['id']; TODO
+                                    $this->contentLanguages = array();
+                                    if ($fileVersion['contentLanguages']) {
+                                        foreach ($fileVersion['contentLanguages'] as $contentLanguage) {
+                                            if (!empty($contentLanguage['locale'])) {
+                                                $this->contentLanguages[] = $contentLanguage['locale'];
+                                            }
+                                        }
+                                    }
+                                    $this->publishLanguages = array();
+                                    if ($fileVersion['publishLanguages']) {
+                                        foreach ($fileVersion['publishLanguages'] as $publishLanguage) {
+                                            if (!empty($contentLanguage['locale'])) {
+                                                $this->publishLanguages[] = $publishLanguage['locale'];
+                                            }
+                                        }
+                                    }
+                                    // TODO url
+                                    // $this->url = $originPath . '/' . $fileVersion['id'];
                                     $this->thumbnails = array();
-                                    /* TODO
+                                    // TODO thumbnails
+                                    /*
                                     foreach ($fileFormats as $format) {
                                         $this->thumbnails[] = array(
                                             'format' => $format,
@@ -217,6 +237,82 @@ class MediaRestObject implements RestObject
         $contentLanguages = array();
         $publishLanguages = array();
         $tags = array();
+        $thumbnails = array();
+
+        /**
+         * @var File $file
+         */
+        foreach ($object->getFiles() as $file) {
+            if ($version === null) {
+                $version = $file->getVersion();
+            }
+            // set version
+            $this->version = $version;
+            /**
+             * @var FileVersion $fileVersion
+             */
+            foreach ($file->getFileVersions() as $fileVersion) {
+                $versions[] = $fileVersion->getVersion();
+                if ($version == $fileVersion->getVersion()) {
+                    // set name
+                    $this->name = $fileVersion->getName();
+
+                    // set size
+                    $this->size = $fileVersion->getSize();
+
+                    /**
+                     * @var FileVersionContentLanguage $contentLanguage
+                     */
+                    foreach ($fileVersion->getContentLanguages() as $contentLanguage) {
+                        array_push($contentLanguages, $contentLanguage->getLocale());
+                    }
+
+                    /**
+                     * @var FileVersionPublishLanguage $publishLanguage
+                     */
+                    foreach ($fileVersion->getPublishLanguages() as $publishLanguage) {
+                        array_push($publishLanguages, $publishLanguage->getLocale());
+                    }
+
+                    /**
+                     * @var Tag $tag
+                     */
+                    foreach ($fileVersion->getTags() as $tag) {
+                        $tags[] = array(
+                            'id' => $tag->getId(),
+                            'name' =>$tag->getName()
+                        );
+                    }
+
+                    // TODO url
+                    $fileVersion->getStorageOptions();
+                    $this->url = null;
+
+                    // TODO thumbnails
+                    $thumbnails = array();
+                }
+            }
+        }
+
+        // set versions
+        $this->versions = $versions;
+
+        // set contentLanguages
+        $this->contentLanguages = $contentLanguages;
+
+        // set publishLanguages
+        $this->publishLanguages = $publishLanguages;
+
+        // set tags
+        $this->tags = $tags;
+
+        // set thumbnails
+        $this->thumbnails = $thumbnails;
+
+        // set collection
+        if ($object->getCollection()) {
+            $this->collection = $object->getCollection()->getId();
+        }
 
         // set changed time
         if ($object->getChanged() instanceof DateTime) {
