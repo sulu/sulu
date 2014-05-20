@@ -60,8 +60,8 @@ define([], function() {
          * Initialized event
          * @event sulu.types.initialzed
          */
-            INITIALZED = function() {
-            return createEventName.call(this, 'initialzed');
+            INITIALIZED = function() {
+            return createEventName.call(this, 'initialized');
         },
 
         /**
@@ -343,6 +343,8 @@ define([], function() {
          */
         bindCustomEvents: function() {
 
+            this.sandbox.off();
+
             // use open event because initialzed is to early
             this.sandbox.on('husky.overlay.'+this.options.overlay.instanceName+'.opened', function(){
                 this.$overlay = this.sandbox.dom.find(this.options.overlay.el);
@@ -350,7 +352,7 @@ define([], function() {
                 this.$overlayInnerContent = this.sandbox.dom.find(constants.contentInnerSelector, this.$overlayContent);
 
                 this.bindDomEvents();
-                this.sandbox.emit(INITIALZED.call(this));
+                this.sandbox.emit(INITIALIZED.call(this));
             }.bind(this));
 
             this.sandbox.on(OPEN.call(this), function(config){
