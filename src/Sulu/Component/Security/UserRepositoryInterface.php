@@ -10,6 +10,7 @@
 
 namespace Sulu\Component\Security;
 
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 /**
@@ -19,16 +20,12 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 interface UserRepositoryInterface extends UserProviderInterface
 {
     /**
-     * Sets the security system
-     * @param string $system
+     * initializes the UserRepository
+     * @param string $suluSystem The standard sulu system
+     * @param RequestAnalyzerInterface $requestAnalyzer The RequestAnalyzer is required for getting the current security
+     * @return
      */
-    public function setSystem($system);
-
-    /**
-     * Returns the security system
-     * @return string
-     */
-    public function getSystem();
+    public function init($suluSystem, RequestAnalyzerInterface $requestAnalyzer = null);
 
     /**
      * Returns the user with the given id

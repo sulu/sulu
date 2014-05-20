@@ -7,7 +7,7 @@
     <key>massiveart</key>
 
     <localizations>
-        <localization language="en" country="us" shadow="auto">
+        <localization language="en" country="us" shadow="auto" default="true">
             <localization language="en" country="ca"/>
         </localization>
         <localization language="fr" country="ca"/>
@@ -15,7 +15,7 @@
 
     <segments>
         <segment key="w">winter</segment>
-        <segment key="s">summer</segment>
+        <segment key="s" default="true">summer</segment>
     </segments>
 
     <theme>
@@ -40,12 +40,12 @@
             <environments>
                 <environment type="prod">
                     <urls>
-                        <url>{language}.massiveart.{country}/{segment}</url>
+                        <url>{language}.massiveart-us.{country}/{segment}</url>
                     </urls>
                 </environment>
                 <environment type="dev">
                     <urls>
-                        <url>massiveart.lo/{localization}/{segment}</url>
+                        <url>massiveart-us.lo/{localization}/{segment}</url>
                     </urls>
                 </environment>
             </environments>
@@ -59,18 +59,18 @@
 
             <localizations>
                 <localization language="en" country="ca"/>
-                <localization language="fr" country="ca"/>
+                <localization language="fr" country="ca" default="true"/>
             </localizations>
 
             <environments>
                 <environment type="prod">
                     <urls>
-                        <url>{language}.massiveart.{country}/{segment}</url>
+                        <url>{language}.massiveart-ca.{country}/{segment}</url>
                     </urls>
                 </environment>
                 <environment type="dev">
                     <urls>
-                        <url>massiveart.lo/{localization}/{segment}</url>
+                        <url>massiveart-ca.lo/{localization}/{segment}</url>
                     </urls>
                 </environment>
             </environments>

@@ -1,6 +1,7 @@
 <?php
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\Block\BlockProperty;
+use Sulu\Component\Content\Block\BlockPropertyType;
 use Sulu\Component\Content\PropertyTag;
 
 /**
@@ -16,74 +17,72 @@ class {{ cache_class }} extends {{ base_class }}
         parent::__construct('{{ content.key }}', '{{ content.view }}', '{{ content.controller }}', '{{ content.cacheLifetime }}');
 
 {% for property in content.properties %}
-{% set counter = 0 %}
-{% if property.type == 'block' %}
-{% set parent = '$prop1' %}
-        {{ parent }} = {{ _self.complextype(property) }};
-        $this->add({{ parent }});
-{{ _self.constructProperties(property.properties, counter, parent) }}
-{% else %}
-        $this->add(
-{{ _self.basictype(property) }}
-        );
-{% endif %}
+{{ _self.buildProperty(property, '$this', 1) }}
 {% endfor %}
     }
 }
 
-{% macro constructProperties(properties, counter, parent) %}
-{% for prop in properties %}
-{% set counter = counter+1 %}
-{% if prop.type == 'block' %}
-{% set child = '$prop' ~ counter %}
-        {{ child }} = {{ _self.complextype(prop) }};
+{% macro buildProperty(property, parent, layer) %}
+{% set child = '$prop'~layer %}
+{% if property.type == 'block' %}
+        {{ child }} = {{ _self.blockPropertyConstructor(property) }}
         {{ parent }}->addChild({{ child }});
-{{ _self.constructProperties(prop.properties, counter, child) }}
+{% for type in property.types %}
+{{ _self.buildTypes(type, child, layer, loop.index) }}
+{% endfor %}
 {% else %}
-        {{ parent }}->addChild(
-{{ _self.basictype(prop) }}
-        );
+        {{ child }} = {{ _self.propertyConstructor(property) }}
+        {{ parent }}->addChild({{ child }});
 {% endif %}
+{% endmacro %}
+
+{% macro buildTypes(type, parent, layer, typeIndex) %}
+{% set typeVar = '$type'~layer~typeIndex %}
+        {{ typeVar }} = new BlockPropertyType('{{ type.name }}', '{{ type.title }}');
+        {{ parent }}->addType({{ typeVar }});
+{% for childProperty in type.properties %}
+{{ _self.buildProperty(childProperty, typeVar, layer+1) }}
 {% endfor %}
 {% endmacro %}
 
-{% macro complextype(property) %}
-new BlockProperty(
+{% macro propertyConstructor(property) %}
+new Property(
             '{{ property.name }}',
             '{{ property.title }}',
+            '{{ property.type }}',
             {{ property.mandatory is defined and property.mandatory ? 'true' : 'false' }},
             {{ property.multilingual is defined ? (property.multilingual? 'true':'false') : 'true' }},
             {{ property.maxOccurs is defined ? property.maxOccurs : 1 }},
             {{ property.minOccurs is defined ? property.minOccurs : 1 }},
             array(
-            {% for param in property.params %}
+{% for param in property.params %}
                 '{{ param.name }}' => '{{ param.value }}',
-            {% endfor %}
+{% endfor %}
             ),
             array(
 {% for tag in property.tags %}
                 '{{ tag.name }}' => new PropertyTag('{{ tag.name }}', {{ tag.priority is defined and tag.priority ? tag.priority : '1' }}),
 {% endfor %}
             )
-        ){% endmacro %}
+        );{% endmacro %}
 
-{% macro basictype(property) %}
-            new Property(
-                '{{ property.name }}',
-                '{{ property.title }}',
-                '{{ property.type }}',
-                {{ property.mandatory is defined and property.mandatory ? 'true' : 'false' }},
-                {{ property.multilingual is defined ? (property.multilingual? 'true':'false') : 'true' }},
-                {{ property.maxOccurs is defined ? property.maxOccurs : 1 }},
-                {{ property.minOccurs is defined ? property.minOccurs : 1 }},
-                array(
+{% macro blockPropertyConstructor(property) %}
+new BlockProperty(
+            '{{ property.name }}',
+            '{{ property.title }}',
+            '{{ property['default-type'] }}',
+            {{ property.mandatory is defined and property.mandatory ? 'true' : 'false' }},
+            {{ property.multilingual is defined ? (property.multilingual? 'true':'false') : 'true' }},
+            {{ property.maxOccurs is defined ? property.maxOccurs : 1 }},
+            {{ property.minOccurs is defined ? property.minOccurs : 1 }},
+            array(
 {% for param in property.params %}
-                    '{{ param.name }}' => '{{ param.value }}',
+                '{{ param.name }}' => '{{ param.value }}',
 {% endfor %}
-                ),
-                array(
+            ),
+            array(
 {% for tag in property.tags %}
-                    '{{ tag.name }}' => new PropertyTag('{{ tag.name }}', {{ tag.priority is defined and tag.priority ? tag.priority : '1' }}),
+                '{{ tag.name }}' => new PropertyTag('{{ tag.name }}', {{ tag.priority is defined and tag.priority ? tag.priority : '1' }}),
 {% endfor %}
-                )
-            ){% endmacro %}
+            )
+        );{% endmacro %}

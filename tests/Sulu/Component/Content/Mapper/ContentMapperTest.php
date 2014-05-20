@@ -17,6 +17,7 @@ use PHPCR\Util\NodeHelper;
 use ReflectionMethod;
 use Sulu\Bundle\TestBundle\Testing\PhpcrTestCase;
 use Sulu\Component\Content\Block\BlockProperty;
+use Sulu\Component\Content\Block\BlockPropertyType;
 use Sulu\Component\Content\BreadcrumbItemInterface;
 use Sulu\Component\Content\ContentEvents;
 use Sulu\Component\Content\Property;
@@ -62,7 +63,7 @@ class ContentMapperTest extends PhpcrTestCase
         );
 
         $method = new ReflectionMethod(
-            get_class($structureMock), 'add'
+            get_class($structureMock), 'addChild'
         );
 
         $method->setAccessible(true);
@@ -103,9 +104,11 @@ class ContentMapperTest extends PhpcrTestCase
                 )
             );
         } elseif ($type == 3) {
-            $blockProperty = new BlockProperty('block1', '', false, true, 2, 10);
-            $blockProperty->addChild(new Property('name', '', 'text_line', false, true));
-            $blockProperty->addChild(new Property('article', '', 'text_area', false, true));
+            $blockProperty = new BlockProperty('block1', '', 'default', false, true, 2, 10);
+            $type = new BlockPropertyType('default', '');
+            $type->addChild(new Property('name', '', 'text_line', false, true));
+            $type->addChild(new Property('article', '', 'text_area', false, true));
+            $blockProperty->addType($type);
 
             $method->invokeArgs(
                 $structureMock,
@@ -1767,10 +1770,12 @@ class ContentMapperTest extends PhpcrTestCase
             'url' => '/test',
             'block1' => array(
                 array(
+                    'type' => 'default',
                     'name' => 'Block-name-1',
                     'article' => 'Block-Article-1'
                 ),
                 array(
+                    'type' => 'default',
                     'name' => 'Block-name-2',
                     'article' => 'Block-Article-2'
                 )

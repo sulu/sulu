@@ -19,7 +19,6 @@ use Sulu\Component\PHPCR\PathCleanupInterface;
  */
 abstract class RlpStrategy implements RlpStrategyInterface
 {
-
     /**
      * @var string name of strategy
      */
@@ -157,6 +156,14 @@ abstract class RlpStrategy implements RlpStrategyInterface
     {
         // delegate to mapper
         return $this->mapper->loadByContentUuid($uuid, $webspaceKey, $languageCode, $segmentKey);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function loadHistoryByContentUuid($uuid, $webspaceKey, $languageCode, $segmentKey = null)
+    {
+        return $this->mapper->loadHistoryByContentUuid($uuid, $webspaceKey, $languageCode, $segmentKey);
     }
 
     /**

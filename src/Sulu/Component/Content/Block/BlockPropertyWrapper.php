@@ -26,13 +26,20 @@ class BlockPropertyWrapper implements PropertyInterface
     private $block;
 
     /**
+     * @var integer
+     */
+    private $index;
+
+    /**
      * @param PropertyInterface $property
      * @param PropertyInterface $block
+     * @param integer $index
      */
-    public function __construct(PropertyInterface $property, PropertyInterface $block)
+    public function __construct(PropertyInterface $property, PropertyInterface $block, $index = null)
     {
         $this->property = $property;
         $this->block = $block;
+        $this->index = $index;
     }
 
     /**
@@ -41,7 +48,9 @@ class BlockPropertyWrapper implements PropertyInterface
      */
     public function getName()
     {
-        return $this->block->getName().'-'.$this->property->getName();
+        return $this->block->getName() . '-' .
+        $this->property->getName() .
+        ($this->index !== null ? '#' . $this->index : '');
     }
 
     /**

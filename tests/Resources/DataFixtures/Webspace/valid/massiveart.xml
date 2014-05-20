@@ -15,11 +15,11 @@
             <localization language="en" country="ca"/>
         </localization>
         <localization language="fr" country="ca"/>
-        <localization language="de"/>
+        <localization language="de" default="true"/>
     </localizations>
 
     <segments>
-        <segment key="w">winter</segment>
+        <segment key="w" default="true">winter</segment>
         <segment key="s">summer</segment>
     </segments>
 
@@ -64,7 +64,7 @@
             </resource-locator>
 
             <localizations>
-                <localization language="en" country="ca"/>
+                <localization language="en" country="ca" default="true"/>
                 <localization language="fr" country="ca"/>
             </localizations>
 
