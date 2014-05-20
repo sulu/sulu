@@ -6,6 +6,7 @@
      data-type-instance-name="{{ id|raw }}"
      data-instance-name="{{ id|raw }}"
      data-form="true"
+     data-aura-column-navigation-url="http://sulu.lo/admin/api/nodes?depth=1&webspace={{ webspaceKey }}&language={{ languageCode }}&exclude-ghosts=false"
      data-aura-url="/admin/api/nodes/filter?webspace={{ webspaceKey }}&language={{ languageCode }}"
      data-aura-tags-auto-complete-url="/admin/api/tags?flat=true"
      data-aura-sort-by='[{"id":"published","name":"<%= translate("public.published") %>"},{"id":"created","name":"<%= translate("public.created") %>"},{"id":"changed","name":"<%= translate("public.changed") %>"}]'></div>
