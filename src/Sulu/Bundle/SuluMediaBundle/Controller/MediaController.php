@@ -182,26 +182,16 @@ class MediaController extends RestController implements ClassResourceInterface
     {
         try {
             // get collection id
-
-
-            $collectionData = $request->get('collection');
-            $collectionId = null;
-            if ($this->checkDataForId($collectionData)) {
-                $collectionId = $collectionData['id'];
-            }
+            $mediaRestObject = $this->getRestObject($request);
 
             // get fileversions properties
-            $properties = array();
-            $files = $request->get('files');
-            if ($files) {
-                $properties = $this->getProperties($files);
-            }
+            $properties = $this->getProperties($mediaRestObject);
 
             // generate media
             $uploadFiles = $this->getUploadedFiles($request, 'fileVersion');
             if (count($uploadFiles)) {
                 foreach ($uploadFiles as $uploadFile) {
-                    $media = $this->getMediaManager()->add($uploadFile, $this->getUser()->getId(), $collectionId, $properties);
+                    $media = $this->getMediaManager()->add($uploadFile, $this->getUser()->getId(), $mediaRestObject->getCollection(), $properties);
                     break;
                 }
             } else {
