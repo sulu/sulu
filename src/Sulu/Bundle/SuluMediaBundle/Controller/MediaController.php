@@ -276,6 +276,7 @@ class MediaController extends RestController implements ClassResourceInterface
         $object = new MediaRestObject();
         $object->setId($request->get('id'));
         $object->setLocale($request->get('locale', $this->getLocale($request->get('locale'))));
+        $object->setType($request->get('type'));
         $object->setCollection($request->get('collection'));
         $object->setVersions($request->get('versions', array()));
         $object->setLocale($request->get('version', 1));
