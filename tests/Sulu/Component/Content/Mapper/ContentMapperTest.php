@@ -230,6 +230,7 @@ class ContentMapperTest extends PhpcrTestCase
         $content = $this->mapper->load($structure->getUuid(), 'default', 'de');
 
         $this->assertNotNull($content->getUuid());
+        $this->assertEquals('/testname', $content->getPath());
         $this->assertEquals('default', $content->getWebspaceKey());
         $this->assertEquals('de', $content->getLanguageCode());
         $this->assertEquals('overview', $content->getKey());
@@ -1045,43 +1046,51 @@ class ContentMapperTest extends PhpcrTestCase
         // /News
         $this->assertEquals(1, sizeof($children));
         $this->assertEquals('News', $children[0]->name);
+        $this->assertEquals('/news', $children[0]->path);
 
         // /News/Testnews-1
         $tmp = $children[0]->getChildren()[0];
         $this->assertEquals(0, sizeof($tmp->getChildren()));
         $this->assertEquals('Testnews-1', $tmp->name);
+        $this->assertEquals('/news/testnews-1', $tmp->path);
 
         // /News/Testnews-2
         $tmp = $children[0]->getChildren()[1];
         $this->assertEquals(null, $tmp->getChildren());
         $this->assertTrue($tmp->getHasChildren());
         $this->assertEquals('Testnews-2', $tmp->name);
+        $this->assertEquals('/news/testnews-2', $tmp->path);
 
 
         $children = $this->mapper->loadByParent(null, 'default', 'de', 3, false);
         // /News
         $this->assertEquals(1, sizeof($children));
         $this->assertEquals('News', $children[0]->name);
+        $this->assertEquals('/news', $children[0]->path);
 
         // /News/Testnews-1
         $tmp = $children[0]->getChildren()[0];
         $this->assertEquals(0, sizeof($tmp->getChildren()));
         $this->assertEquals('Testnews-1', $tmp->name);
+        $this->assertEquals('/news/testnews-1', $tmp->path);
 
         // /News/Testnews-2
         $tmp = $children[0]->getChildren()[1];
         $this->assertEquals(1, sizeof($tmp->getChildren()));
         $this->assertEquals('Testnews-2', $tmp->name);
+        $this->assertEquals('/news/testnews-2', $tmp->path);
 
         // /News/Testnews-2/Testnews-2-1
         $tmp = $children[0]->getChildren()[1]->getChildren()[0];
         $this->assertEquals(null, $tmp->getChildren());
         $this->assertFalse($tmp->getHasChildren());
         $this->assertEquals('Testnews-2-1', $tmp->name);
+        $this->assertEquals('/news/testnews-2/testnews-2-1', $tmp->path);
 
         $children = $this->mapper->loadByParent($child->getUuid(), 'default', 'de', 3, false);
         $this->assertEquals(1, sizeof($children));
         $this->assertEquals('Testnews-2-1', $children[0]->name);
+        $this->assertEquals('/news/testnews-2/testnews-2-1', $children[0]->path);
     }
 
     public function testStartPage()
