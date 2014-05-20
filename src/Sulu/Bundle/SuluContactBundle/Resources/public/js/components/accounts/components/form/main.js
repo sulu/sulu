@@ -122,7 +122,7 @@ define([], function() {
                                 multipleSelect: false,
                                 defaultLabel: this.sandbox.translate('contact.accounts.category.select'),
                                 valueName: 'category',
-                                repeatSelect: true,
+                                repeatSelect: false,
                                 preSelectedElements: [this.preselectedElemendId],
                                 data: data
                             }
@@ -175,7 +175,8 @@ define([], function() {
                     options: {
                         overlay: {
                             el: '#overlayContainer',
-                            instanceName: 'accountCategories'
+                            instanceName: 'accountCategories',
+                            removeOnClose: true
                         },
                         url: this.accountCategoryURL,
                         data: this.accountCategoryData
@@ -384,14 +385,6 @@ define([], function() {
 
                 if (data.id === '') {
                     delete data.id;
-                }
-
-                if (!!this.selectedAccountCategory) {
-                    if (!data.accountCategory) {
-                        data.accountCategory = {};
-                    }
-
-                    data.accountCategory.id = this.selectedAccountCategory;
                 }
 
                 this.updateHeadline();
