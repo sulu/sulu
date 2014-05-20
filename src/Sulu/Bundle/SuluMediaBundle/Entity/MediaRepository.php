@@ -41,10 +41,12 @@ class MediaRepository extends EntityRepository
                 ->leftJoin('fileVersion.meta', 'fileVersionMeta')
                 ->leftJoin('fileVersion.contentLanguages', 'fileVersionContentLanguage')
                 ->leftJoin('fileVersion.publishLanguages', 'fileVersionPublishLanguage')
+                /*
                 ->leftJoin('media.creator', 'creator')
                 ->leftJoin('creator.contact', 'creatorContact')
                 ->leftJoin('media.changer', 'changer')
                 ->leftJoin('changer.contact', 'changerContact')
+                */
                 ->addSelect('type')
                 ->addSelect('collection')
                 ->addSelect('file')
@@ -53,10 +55,12 @@ class MediaRepository extends EntityRepository
                 ->addSelect('fileVersionMeta')
                 ->addSelect('fileVersionContentLanguage')
                 ->addSelect('fileVersionPublishLanguage')
+                /*
                 ->addSelect('creator')
                 ->addSelect('changer')
                 ->addSelect('creatorContact')
                 ->addSelect('changerContact')
+                */
                 ->where('media.id = :mediaId');
 
             $query = $qb->getQuery();
@@ -92,10 +96,12 @@ class MediaRepository extends EntityRepository
                 ->leftJoin('fileVersion.meta', 'fileVersionMeta')
                 ->leftJoin('fileVersion.contentLanguages', 'fileVersionContentLanguage')
                 ->leftJoin('fileVersion.publishLanguages', 'fileVersionPublishLanguage')
+                /*
                 ->leftJoin('media.creator', 'creator')
                 ->leftJoin('creator.contact', 'creatorContact')
                 ->leftJoin('media.changer', 'changer')
                 ->leftJoin('changer.contact', 'changerContact')
+                */
                 ->addSelect('type')
                 ->addSelect('collection')
                 ->addSelect('file')
@@ -104,10 +110,11 @@ class MediaRepository extends EntityRepository
                 ->addSelect('fileVersionMeta')
                 ->addSelect('fileVersionContentLanguage')
                 ->addSelect('fileVersionPublishLanguage')
+                /*
                 ->addSelect('creator')
                 ->addSelect('changer')
                 ->addSelect('creatorContact')
-                ->addSelect('changerContact');
+                ->addSelect('changerContact')*/;
 
             if ($collection !== null) {
                 $qb->where('collection.id = :collection');

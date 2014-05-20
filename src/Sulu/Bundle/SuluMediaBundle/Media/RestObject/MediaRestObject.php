@@ -13,6 +13,7 @@ namespace Sulu\Bundle\MediaBundle\Media\RestObject;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage;
+use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use DateTime;
@@ -193,18 +194,12 @@ class MediaRestObject implements RestObject
                                     */
 
                                     if ($fileVersion['meta']) {
-                                        $metaSet = false;
+                                        $counter = 0;
                                         foreach ($fileVersion['meta'] as $meta) {
-                                            if ($meta['locale'] == $locale) {
-                                                $metaSet = true;
+                                            $counter++;
+                                            if ($counter == 1 || $meta['locale'] == $locale) {
                                                 $this->title = $meta['title'];
                                                 $this->description = $meta['description'];
-                                            }
-                                        }
-                                        if (!$metaSet) {
-                                            if (isset($fileVersion['metas'][0])) {
-                                                $this->title = $fileVersion['metas'][0]['title'];
-                                                $this->description = $fileVersion['metas'][0]['description'];
                                             }
                                         }
                                     }
@@ -232,6 +227,9 @@ class MediaRestObject implements RestObject
     {
         // set id
         $this->id = $object->getId();
+
+        // set locale
+        $this->locale = $locale;
 
         $versions = array();
         $contentLanguages = array();
@@ -282,6 +280,20 @@ class MediaRestObject implements RestObject
                             'id' => $tag->getId(),
                             'name' =>$tag->getName()
                         );
+                    }
+
+                    /**
+                     * @var FileVersionMeta $meta
+                     */
+                    $counter = 0;
+                    foreach ($fileVersion->getMeta() as $meta) {
+                        $counter++;
+                        if ($counter == 1 || $meta->getLocale() == $locale) {
+                            // set title
+                            $this->title = $meta->getTitle();
+                            // set description
+                            $this->description = $meta->getDescription();
+                        }
                     }
 
                     // TODO url
@@ -348,7 +360,9 @@ class MediaRestObject implements RestObject
                 'id' => $this->id,
                 'locale' => $this->locale,
                 'collection' => $this->collection,
+                'version' => $this->version,
                 'versions' => $this->versions,
+                'name' => $this->name,
                 'title' => $this->title,
                 'description' => $this->description,
                 'size' => $this->size,

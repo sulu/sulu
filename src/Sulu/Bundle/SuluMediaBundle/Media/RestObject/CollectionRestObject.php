@@ -110,20 +110,12 @@ class CollectionRestObject implements RestObject
                     break;
                 // set title and description
                 case 'meta':
-                    $metaSet = false;
+                    $counter = 0;
                     foreach ($value as $meta) {
-                        if ($meta['locale'] == $locale) {
-                            $metaSet = true;
+                        $counter++;
+                        if ($counter == 1 || $meta['locale'] == $locale) {
                             $this->title = $meta['title'];
                             $this->description = $meta['description'];
-                        }
-                    }
-
-                    // get title and description from first when no title exist in this language
-                    if (!$metaSet) {
-                        if (isset($value[0])) {
-                            $this->title = $value[0]['title'];
-                            $this->description = $value[0]['description'];
                         }
                     }
                     break;
