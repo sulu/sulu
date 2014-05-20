@@ -42,7 +42,7 @@ use Symfony\Component\Translation\Exception\NotFoundResourceException;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Makes medias available through a REST API
+ * Makes media available through a REST API
  * @package Sulu\Bundle\MediaBundle\Controller
  */
 class MediaController extends RestController implements ClassResourceInterface
@@ -151,7 +151,7 @@ class MediaController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * lists all medias
+     * lists all media
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -164,30 +164,11 @@ class MediaController extends RestController implements ClassResourceInterface
         }
 
         $collection = $request->get('collection');
-        $medias = $this->getDoctrine()->getRepository($this->entityName)->findMedias($collection);
-        $medias = $this->flatMedias($medias, $userLocale, $request->get('fields', array()));
-        $view = $this->view($this->createHalResponse($medias), 200);
+        $mediaList = $this->getDoctrine()->getRepository($this->entityName)->findMedia($collection);
+        $mediaList = $this->flatMedia($mediaList, $userLocale, $request->get('fields', array()));
+        $view = $this->view($this->createHalResponse($mediaList), 200);
 
         return $this->handleView($view);
-    }
-
-    /**
-     * convert media entities array to flat media rest object array
-     * @param $medias
-     * @param $locale
-     * @param array $fields
-     * @return array
-     */
-    protected function flatMedias ($medias, $locale, $fields = array())
-    {
-        $flatMedias = array();
-
-        foreach ($medias as $media) {
-            $flatMedia = new MediaRestObject();
-            array_push($flatMedias, $flatMedia->setDataByEntityArray($media, $locale)->toArray($fields));
-        }
-
-        return $flatMedias;
     }
 
     /**
@@ -200,6 +181,8 @@ class MediaController extends RestController implements ClassResourceInterface
     {
         try {
             // get collection id
+            
+
             $collectionData = $request->get('collection');
             $collectionId = null;
             if ($this->checkDataForId($collectionData)) {
@@ -299,6 +282,25 @@ class MediaController extends RestController implements ClassResourceInterface
         $view = $this->responseDelete($id, $delete);
 
         return $this->handleView($view);
+    }
+
+    /**
+     * convert media entities array to flat media rest object array
+     * @param $mediaList
+     * @param $locale
+     * @param array $fields
+     * @return array
+     */
+    protected function flatMedia ($mediaList, $locale, $fields = array())
+    {
+        $flatMediaList = array();
+
+        foreach ($mediaList as $media) {
+            $flatMedia = new MediaRestObject();
+            array_push($flatMediaList, $flatMedia->setDataByEntityArray($mediaList, $locale)->toArray($fields));
+        }
+
+        return $flatMediaList;
     }
 
     /**
