@@ -101,8 +101,7 @@ define([], function() {
                 return[
                     {
                         id: 'save-button',
-                        icon: 'floppy',
-                        disabledIcon: 'floppy-saved',
+                        icon: 'floppy-o',
                         iconSize: 'large',
                         class: 'highlight',
                         position: 1,
@@ -113,7 +112,7 @@ define([], function() {
                         }.bind(this)
                     },
                     {
-                        icon: 'cogwheel',
+                        icon: 'gear',
                         iconSize: 'large',
                         group: 'left',
                         id: 'options-button',
@@ -185,7 +184,7 @@ define([], function() {
                 '<div class="inner">',
                     '<div class="'+ constants.infoClass +'"></div>',
                     '<div class="'+ constants.headlineClass +'">',
-                        '<span class="icon-'+ constants.backIcon +' '+ constants.backClass +'"></span>',
+                        '<span class="fa-'+ constants.backIcon +' '+ constants.backClass +'"></span>',
                         '<h1 class="bright"><%= headline %></h1>',
                     '</div>',
                     '<div class="bottom-row">',
