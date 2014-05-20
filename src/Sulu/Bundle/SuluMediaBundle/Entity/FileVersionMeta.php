@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class FileVersionMeta
 {
+
     /**
      * @var string
      */
@@ -33,7 +34,6 @@ class FileVersionMeta
      * @var \Sulu\Bundle\MediaBundle\Entity\FileVersion
      */
     private $fileVersion;
-
 
     /**
      * Set title

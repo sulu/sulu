@@ -25,6 +25,7 @@ use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage;
 
+use Sulu\Bundle\MediaBundle\Entity\MediaRepository;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\UploadFileException;
@@ -42,7 +43,7 @@ use Symfony\Component\Translation\Exception\NotFoundResourceException;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Makes medias available through a REST API
+ * Makes media available through a REST API
  * @package Sulu\Bundle\MediaBundle\Controller
  */
 class MediaController extends RestController implements ClassResourceInterface
@@ -151,7 +152,7 @@ class MediaController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * lists all medias
+     * lists all media
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -164,30 +165,11 @@ class MediaController extends RestController implements ClassResourceInterface
         }
 
         $collection = $request->get('collection');
-        $medias = $this->getDoctrine()->getRepository($this->entityName)->findMedias($collection);
-        $medias = $this->flatMedias($medias, $userLocale, $request->get('fields', array()));
-        $view = $this->view($this->createHalResponse($medias), 200);
+        $mediaList = $this->getDoctrine()->getRepository($this->entityName)->findMedia($collection);
+        $mediaList = $this->flatMedia($mediaList, $userLocale, $request->get('fields', array()));
+        $view = $this->view($this->createHalResponse($mediaList), 200);
 
         return $this->handleView($view);
-    }
-
-    /**
-     * convert media entities array to flat media rest object array
-     * @param $medias
-     * @param $locale
-     * @param array $fields
-     * @return array
-     */
-    protected function flatMedias ($medias, $locale, $fields = array())
-    {
-        $flatMedias = array();
-
-        foreach ($medias as $media) {
-            $flatMedia = new MediaRestObject();
-            array_push($flatMedias, $flatMedia->setDataByEntityArray($media, $locale)->toArray($fields));
-        }
-
-        return $flatMedias;
     }
 
     /**
@@ -200,6 +182,8 @@ class MediaController extends RestController implements ClassResourceInterface
     {
         try {
             // get collection id
+
+
             $collectionData = $request->get('collection');
             $collectionId = null;
             if ($this->checkDataForId($collectionData)) {
@@ -247,30 +231,22 @@ class MediaController extends RestController implements ClassResourceInterface
     {
         try {
             // get collection id
-            $collectionData = $request->get('collection');
-            $collectionId = null;
-            if ($this->checkDataForId($collectionData)) {
-                $collectionId = $collectionData['id'];
-            }
+            $mediaRestObject = $this->getRestObject($request);
 
             // get fileversions properties
-            $properties = array();
-            $files = $request->get('files');
-            if ($files) {
-                $properties = $this->getProperties($files);
-            }
+            $properties = $this->getProperties($mediaRestObject);
 
             // update media
             $uploadFiles = $this->getUploadedFiles($request, 'fileVersion');
             if (count($uploadFiles)) {
                 // Add new Fileversion
                 foreach ($uploadFiles as $uploadFile) {
-                    $media = $this->getMediaManager()->update($uploadFile, $this->getUser()->getId(), $id, $collectionId, $properties);
+                    $media = $this->getMediaManager()->update($uploadFile, $this->getUser()->getId(), $id, $mediaRestObject->getCollection(), $properties);
                     break;
                 }
             } else {
                 // Update only properties
-                $media = $this->getMediaManager()->update(null, $this->getUser()->getId(), $id, $collectionId, $properties);
+                $media = $this->getMediaManager()->update(null, $this->getUser()->getId(), $id, $mediaRestObject->getCollection(), $properties);
             }
 
             $view = $this->view($media, 200);
@@ -302,16 +278,51 @@ class MediaController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * Check given data for a not empty id
-     * @param $data
-     * @return bool
+     * @param Request $request
+     * @return MediaRestObject
      */
-    protected function checkDataForId($data)
+    protected function getRestObject(Request $request)
     {
-        if ($data != null && isset($data['id']) && $data['id'] != 'null' && $data['id'] != '') {
-            return true;
+        $object = new MediaRestObject();
+        $object->setId($request->get('id'));
+        $object->setLocale($request->get('locale'));
+        $object->setCollection($request->get('collection'));
+        $object->setVersions($request->get('versions', array()));
+        $object->setLocale($request->get('version', 1));
+        $object->setSize($request->get('size'));
+        $object->setContentLanguages($request->get('contentLanguages', array()));
+        $object->setPublishLanguages($request->get('publishLanguages', array()));
+        $object->setTags($request->get('tags', array()));
+        $object->setThumbnails($request->get('thumbnails', array()));
+        $object->setUrl($request->get('url'));
+        $object->setName($request->get('name'));
+        $object->setTitle($request->get('title'));
+        $object->setDescription($request->get('description'));
+        $object->setChanger($request->get('changer'));
+        $object->setCreator($request->get('creator'));
+        $object->setChanged($request->get('changed'));
+        $object->setCreated($request->get('created'));
+
+        return $object;
+    }
+
+    /**
+     * convert media entities array to flat media rest object array
+     * @param $mediaList
+     * @param $locale
+     * @param array $fields
+     * @return array
+     */
+    protected function flatMedia ($mediaList, $locale, $fields = array())
+    {
+        $flatMediaList = array();
+
+        foreach ($mediaList as $media) {
+            $flatMedia = new MediaRestObject();
+            array_push($flatMediaList, $flatMedia->setDataByEntityArray($media, $locale)->toArray($fields));
         }
-        return false;
+
+        return $flatMediaList;
     }
 
     /**
@@ -337,15 +348,40 @@ class MediaController extends RestController implements ClassResourceInterface
 
     /**
      * give back the fileversion properties
-     * @param $files
+     * @param MediaRestObject $restObject
      * @return array
      */
-    protected function getProperties($files)
+    protected function getProperties($restObject)
     {
         $properties = array();
 
-        if (isset($files['fileVersions'])) {
-            $properties = $files['fileVersions'];
+        if ($restObject->getVersion()) {
+            $fileVersion = array();
+            $fileVersion['version'] = $restObject->getVersion();
+
+            if ($restObject->getContentLanguages() && count($restObject->getContentLanguages())) {
+                $fileVersion['contentLanguages'] = $restObject->getContentLanguages();
+            }
+
+            if ($restObject->getPublishLanguages() && count($restObject->getPublishLanguages())) {
+                $fileVersion['publishLanguages'] = $restObject->getPublishLanguages();
+            }
+
+            if ($restObject->getTags() && count($restObject->getTags())) {
+                $fileVersion['tags'] = $restObject->getTags();
+            }
+
+            if ($restObject->getLocale() && $restObject->getTitle()) {
+                $meta = array();
+                $meta['title'] = $restObject->getTitle();
+                $meta['locale'] = $restObject->getLocale();
+                if ($restObject->getDescription()) {
+                    $meta['description'] = $restObject->getDescription();
+                }
+                $fileVersion['meta'] = array();
+                $fileVersion['meta'][] = $meta;
+            }
+            $properties[] = $fileVersion;
         }
 
         return $properties;

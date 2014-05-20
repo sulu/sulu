@@ -10,7 +10,10 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\RestObject;
 
-use Symfony\Component\Validator\Constraints\DateTime;
+use Sulu\Bundle\MediaBundle\Entity\Collection;
+use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
+use Sulu\Bundle\TestBundle\Entity\TestUser;
+use DateTime;
 
 class CollectionRestObject implements RestObject
 {
@@ -102,11 +105,11 @@ class CollectionRestObject implements RestObject
                 // set style
                 case 'style':
                     if ($value) {
-                        $this->style = json_decode($value);
+                        $this->style = json_decode($value, true);
                     }
                     break;
                 // set title and description
-                case 'metas':
+                case 'meta':
                     $metaSet = false;
                     foreach ($value as $meta) {
                         if ($meta['locale'] == $locale) {
@@ -130,9 +133,9 @@ class CollectionRestObject implements RestObject
                     if ($value) {
                         foreach ($value as $child) {
                             array_push($childrenIds, $child['id']);
-                            if ($child['medias']) {
+                            if ($child['media']) {
                                 // increase media count
-                                $mediaCount += count($child['medias']);
+                                $mediaCount += count($child['media']);
                             }
                         }
                     }
@@ -156,11 +159,11 @@ class CollectionRestObject implements RestObject
                 case 'changed':
                 case 'created':
                     if ($value instanceof DateTime) {
-                        $value = $value->format('Y-m-d H:i:s');
+                        $this->$key = $value;
                     }
                     break;
                 // increase media count
-                case 'medias':
+                case 'media':
                     if ($value) {
                         $mediaCount += count($value);
                     }
@@ -179,6 +182,86 @@ class CollectionRestObject implements RestObject
             }
         }
         $this->mediaNumber = $mediaCount;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setDataByEntity($object, $locale, $properties = array())
+    {
+        $mediaCount = 0;
+
+        // set id
+        $this->id = $object->getId();
+
+        // set locale
+        $this->locale = $locale;
+
+        // set type
+        $type = $object->getType();
+        if ($type) {
+            $this->type = $type->getId();
+        }
+
+        // set style
+        $this->style = json_decode($object->getStyle(), true);
+
+        // set children and get media counts
+        $childIds = array();
+        /**
+         * @var Collection $child
+         */
+        foreach ($object->getChildren() as $child) {
+            array_push($childIds, $child->getId());
+            $mediaCount += count($child->getMedia());
+        }
+
+        // set media count
+        $mediaCount += count($object->getMedia());
+        $this->mediaNumber = $mediaCount;
+
+        // set changed time
+        if ($object->getChanged() instanceof DateTime) {
+            $this->changed = $object->getChanged();
+        }
+
+        // set created time
+        if ($object->getCreated() instanceof DateTime) {
+            $this->created = $object->getCreated();
+        }
+
+        // set changer
+        if ($object->getChanger()) {
+            $this->changer = ''; // TODO
+        }
+
+        // set creator
+        if ($object->getCreator()) {
+            $this->creator = ''; // TODO
+        }
+
+        // set title and description
+        $title = null;
+        $description = null;
+        /**
+         * @var CollectionMeta $meta
+         */
+        $counter = 0;
+        foreach ($object->getMeta() as $meta) {
+            $counter++;
+            // get locale meta or first meta
+            if ($meta->getLocale() == $locale || $counter == 1) {
+                $title = $meta->getTitle();
+                $description = $meta->getDescription();
+            }
+        }
+        $this->title = $title;
+        $this->description = $description;
+
+        // set properties
+        $this->properties = $properties;
 
         return $this;
     }

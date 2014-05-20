@@ -52,13 +52,11 @@ class Media
 
     /**
      * @var \Sulu\Component\Security\UserInterface
-     * @Exclude
      */
     private $changer;
 
     /**
      * @var \Sulu\Component\Security\UserInterface
-     * @Exclude
      */
     private $creator;
 
@@ -208,10 +206,10 @@ class Media
     /**
      * Set changer
      *
-     * @param \Sulu\Component\Security\UserInterface $changer
+     * @param \Sulu\Bundle\SecurityBundle\Entity\User $changer
      * @return Media
      */
-    public function setChanger(\Sulu\Component\Security\UserInterface $changer = null)
+    public function setChanger(\Sulu\Bundle\SecurityBundle\Entity\User $changer = null)
     {
         $this->changer = $changer;
     
@@ -221,7 +219,7 @@ class Media
     /**
      * Get changer
      *
-     * @return \Sulu\Component\Security\UserInterface
+     * @return \Sulu\Bundle\SecurityBundle\Entity\User 
      */
     public function getChanger()
     {
@@ -231,10 +229,10 @@ class Media
     /**
      * Set creator
      *
-     * @param \Sulu\Component\Security\UserInterface $creator
+     * @param \Sulu\Bundle\SecurityBundle\Entity\User $creator
      * @return Media
      */
-    public function setCreator(\Sulu\Component\Security\UserInterface $creator = null)
+    public function setCreator(\Sulu\Bundle\SecurityBundle\Entity\User $creator = null)
     {
         $this->creator = $creator;
     
@@ -244,7 +242,7 @@ class Media
     /**
      * Get creator
      *
-     * @return \Sulu\Component\Security\UserInterface
+     * @return \Sulu\Bundle\SecurityBundle\Entity\User 
      */
     public function getCreator()
     {
