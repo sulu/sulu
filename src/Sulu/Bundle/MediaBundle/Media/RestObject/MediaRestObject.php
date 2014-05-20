@@ -40,6 +40,11 @@ class MediaRestObject implements RestObject
     /**
      * @var int
      */
+    protected $type;
+
+    /**
+     * @var int
+     */
     protected $collection;
 
     /**
@@ -129,16 +134,17 @@ class MediaRestObject implements RestObject
                     // set id
                     $this->id = $value;
                     break;
+                case 'type':
                 case 'collection':
                     // set collection
                     if ($value) {
-                        $this->collection = $value['id'];
+                        $this->$key = $value['id'];
                     }
                     break;
                 case 'changer':
                 case 'creator':
                     if ($value) {
-                        if (isset($value['contact']['firstName'])) {
+                        if (isset($value['contact']['firstName']) && isset($value['contact']['lastName'])) {
                             $this->$key = $value['contact']['firstName'] . ' ' . $value['contact']['lastName'];
                         }
                     }
@@ -326,6 +332,11 @@ class MediaRestObject implements RestObject
             $this->collection = $object->getCollection()->getId();
         }
 
+        // set type
+        if ($object->getType()) {
+            $this->type = $object->getType()->getId();
+        }
+
         // set changed time
         if ($object->getChanged() instanceof DateTime) {
             $this->changed = $object->getChanged();
@@ -360,6 +371,7 @@ class MediaRestObject implements RestObject
                 'id' => $this->id,
                 'locale' => $this->locale,
                 'collection' => $this->collection,
+                'type' => $this->type,
                 'version' => $this->version,
                 'versions' => $this->versions,
                 'name' => $this->name,
@@ -731,4 +743,19 @@ class MediaRestObject implements RestObject
         return $this->name;
     }
 
+    /**
+     * @return int
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param int $type
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+    }
 } 
