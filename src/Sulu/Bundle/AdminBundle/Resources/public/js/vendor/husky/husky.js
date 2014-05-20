@@ -25815,6 +25815,65 @@ if (typeof exports == "object") {
 
 define("tagsManager", function(){});
 
+/*
+ * This file is part of the Husky Validation.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ *
+ */
+
+define('type/husky-select',[
+    'type/default',
+    'form/util'
+], function(Default) {
+
+    
+
+    return function($el, options) {
+        var defaults = {
+                id: 'id',
+                label: 'value'
+            },
+
+            typeInterface = {
+                setValue: function(data) {
+
+                    this.$el.data({
+                        'selection': data[this.options.id],
+                        'selectionValues': data[this.options.label]
+                    }).trigger('data-changed');
+                },
+
+                getValue: function() {
+
+                    // For single select
+
+                    var data = {},
+                        ids = this.$el.data('selection'),
+                        values = this.$el.data('selection-values');
+
+                    data[this.options.label] = Array.isArray(values) ? values[0] : values;
+                    data[this.options.id] = Array.isArray(ids) ? ids[0] : ids;
+
+                    return data;
+                },
+
+                needsValidation: function() {
+                    return false;
+                },
+
+                validate: function() {
+                    return true;
+                }
+            };
+
+        return new Default($el, defaults, options, 'husky-select', typeInterface);
+    };
+});
+
 define('bower_components/aura/lib/platform',[],function() {
   // The bind method is used for callbacks.
   //
@@ -34949,6 +35008,13 @@ define('__component__$select@husky',[], function() {
             EVENT_UPDATE = function() {
             return getEventName.call(this, 'update');
         },
+        /**
+         * update the elements of the dropdown list
+         * @event data-changed
+         */
+            EVENT_DATA_CHANGED = function() {
+            return 'data-changed';
+        },
 
         getEventName = function(suffix) {
             return 'husky.select.' + this.options.instanceName + '.' + suffix;
@@ -35027,6 +35093,13 @@ define('__component__$select@husky',[], function() {
         // prepares data for dropDown, if options.data not set load with ajax
         prepareData: function() {
             if (this.options.data.length > 0) {
+                if (this.options.preSelectedElements.length > 0) {
+                    this.options.preSelectedElements.map(function(el, index, arr) {
+                        if(!!arr[index] || arr[index] === 0){
+                            arr[index] = el.toString();
+                        }
+                    });
+                }
                 this.generateDropDown(this.options.data);
             } else {
                 this.sandbox.logger.log('error: data not set');
@@ -35045,7 +35118,7 @@ define('__component__$select@husky',[], function() {
             var $item,
                 idString = (!!id || id === 0) ? id.toString() : this.sandbox.util.uniqueId();
 
-            if (this.options.preSelectedElements.indexOf(id) >= 0 || this.options.preSelectedElements.indexOf(value) >= 0) {
+            if (this.options.preSelectedElements.indexOf(idString) >= 0 || this.options.preSelectedElements.indexOf(value) >= 0) {
                 $item = this.sandbox.dom.createElement(this.template.menuElement.call(this, idString, value, 'checked', updateLabel));
                 this.selectedElements.push(idString);
                 this.selectedElementsValues.push(value);
@@ -35124,6 +35197,8 @@ define('__component__$select@husky',[], function() {
                 }
             }.bind(this), '.husky-select-dropdown-container li');
 
+            this.sandbox.dom.on(this.$el, EVENT_DATA_CHANGED.call(this), this.dataChanged.bind(this));
+
         },
 
         bindCustomEvents: function() {
@@ -35139,15 +35214,50 @@ define('__component__$select@husky',[], function() {
         },
 
         /**
+         * Should be triggered when data attributes have changed
+         */
+        dataChanged: function(){
+            var selectedIds = this.sandbox.dom.data(this.$el,'selection'),
+                selectedValues = this.sandbox.dom.data(this.$el,'selectionValues'),
+                id, $checkbox;
+
+            this.selectedElements = [];
+            this.selectedElementsValues = [];
+
+            if(typeof selectedIds === 'string') {
+                this.selectedElements = selectedIds.split(',');
+            } else if(Array.isArray(selectedIds)) {
+                this.selectedElements = selectedIds.map(String);
+            } else if(typeof selectedIds === 'number'){
+                this.selectedElements.push(selectedIds.toString());
+            }
+
+            this.selectedElementsValues = selectedValues.split(',');
+
+            this.sandbox.util.foreach(this.$list, function($el){
+                id = this.sandbox.dom.data($el, 'id') || '';
+                $checkbox = this.sandbox.dom.find('input[type=checkbox]', $el);
+                if(this.selectedElements.indexOf(id) > -1){
+                    this.sandbox.dom.addClass($checkbox, 'is-selected');
+                    this.sandbox.dom.prop($checkbox, 'checked', true);
+                } else {
+                    this.sandbox.dom.removeClass($checkbox, 'is-selected');
+                    this.sandbox.dom.prop($checkbox, 'checked', false);
+                }
+
+            }.bind(this));
+
+            this.changeLabel();
+            this.updateSelectionAttribute();
+
+        },
+
+        /**
          * Updates the dropdown list
          * @param data
          * @param preselected
          */
         updateDropdown: function(data, preselected){
-
-            // TODO
-            // selected values
-            // label
 
             this.options.preSelectedElements = preselected;
             this.selectedElements = [];
@@ -35162,8 +35272,8 @@ define('__component__$select@husky',[], function() {
         },
 
         updateSelectionAttribute: function() {
-            this.sandbox.dom.attr(this.$el, 'data-selection', this.selectedElements);
-            this.sandbox.dom.attr(this.$el, 'data-selection-values', this.selectedElementsValues);
+            this.sandbox.dom.data(this.$el, 'selection', this.selectedElements);
+            this.sandbox.dom.data(this.$el, 'selectionValues', this.selectedElementsValues);
         },
 
         //unchecks all checked elements
@@ -35174,9 +35284,14 @@ define('__component__$select@husky',[], function() {
                 key, index, $checkbox;
 
             for (; ++i < length;) {
-                key = this.sandbox.dom.attr(elements[i], 'data-id');
+                key = this.sandbox.dom.data(elements[i], 'id');
+
+                if(key === undefined){
+                    key = '';
+                }
+
                 $checkbox = this.sandbox.dom.find('input[type=checkbox]', elements[i])[0];
-                index = this.selectedElements.indexOf(key);
+                index = this.selectedElements.indexOf(key.toString());
 
                 if (index >= 0) {
                     if (clickedElementKey !== key) {
@@ -35195,7 +35310,7 @@ define('__component__$select@husky',[], function() {
 
             var key, value, $checkbox, index, callback, updateLabel;
 
-            key = this.sandbox.dom.attr(event.currentTarget, 'data-id');
+            key = this.sandbox.dom.data(event.currentTarget, 'id').toString();
             callback = this.sandbox.dom.data(event.currentTarget, 'selectCallback');
             index = this.selectedElements.indexOf(key);
             updateLabel = this.sandbox.dom.attr(event.currentTarget, 'data-update-label');
@@ -35235,7 +35350,7 @@ define('__component__$select@husky',[], function() {
                 } else {
                     this.sandbox.dom.addClass($checkbox, 'is-selected');
                     this.sandbox.dom.prop($checkbox, 'checked', true);
-                    this.selectedElements.push(key);
+                    this.selectedElements.push(key.toString());
                     this.selectedElementsValues.push(value);
                 }
 
