@@ -80,7 +80,7 @@ class MediaRepository extends EntityRepository
     /**
      *
      */
-    public function findMedias($collection = null)
+    public function findMedia($collection = null)
     {
         try {
             $qb = $this->createQueryBuilder('media')

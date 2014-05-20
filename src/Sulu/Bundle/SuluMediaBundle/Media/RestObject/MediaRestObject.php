@@ -10,7 +10,8 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\RestObject;
 
-use Symfony\Component\Validator\Constraints\DateTime;
+use Sulu\Bundle\MediaBundle\Entity\Media;
+use DateTime;
 
 class MediaRestObject implements RestObject
 {
@@ -118,6 +119,9 @@ class MediaRestObject implements RestObject
         $this->locale = $locale;
         foreach ($data as $key => $value) {
             switch ($key) {
+                case 'id':
+                    $this->id = $value;
+                    break;
                 case 'collection':
                     if ($value) {
                         $this->collection = $value['id'];
@@ -168,9 +172,9 @@ class MediaRestObject implements RestObject
                                     }
                                     */
 
-                                    if ($fileVersion['metas']) {
+                                    if ($fileVersion['meta']) {
                                         $metaSet = false;
-                                        foreach ($fileVersion['metas'] as $meta) {
+                                        foreach ($fileVersion['meta'] as $meta) {
                                             if ($meta['locale'] == $locale) {
                                                 $metaSet = true;
                                                 $this->title = $meta['title'];
@@ -195,6 +199,43 @@ class MediaRestObject implements RestObject
                 default:
                     break;
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @var Media $object
+     * {@inheritdoc}
+     */
+    public function setDataByEntity($object, $locale, $version = null)
+    {
+        // set id
+        $this->id = $object->getId();
+
+        $versions = array();
+        $contentLanguages = array();
+        $publishLanguages = array();
+        $tags = array();
+
+        // set changed time
+        if ($object->getChanged() instanceof DateTime) {
+            $this->changed = $object->getChanged();
+        }
+
+        // set created time
+        if ($object->getCreated() instanceof DateTime) {
+            $this->created = $object->getCreated();
+        }
+
+        // set changer
+        if ($object->getChanger()) {
+            $this->changer = ''; // TODO
+        }
+
+        // set creator
+        if ($object->getCreator()) {
+            $this->creator = ''; // TODO
         }
 
         return $this;
