@@ -159,6 +159,21 @@ class AccountCategoryControllerTest extends DatabaseTestCase
         $this->checkAssertionsForOriginalState();
     }
 
+    public function testPostEmptyCategoryName()
+    {
+        $client = $this->createTestClient();
+        $client->request(
+            'POST',
+            'api/account/categories',
+            array(
+                'category' => '',
+            )
+        );
+
+        $this->assertEquals(400, $client->getResponse()->getStatusCode());
+        $this->checkAssertionsForOriginalState();
+    }
+
     public function testPut()
     {
         $client = $this->createTestClient();
