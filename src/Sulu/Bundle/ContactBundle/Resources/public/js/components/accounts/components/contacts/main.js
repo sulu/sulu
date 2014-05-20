@@ -31,7 +31,7 @@ define([
             return [
                 {
                     id: 'settings',
-                    icon: 'cogwheel',
+                    icon: 'gear',
                     items: [
                         {
                             title: this.sandbox.translate('list-toolbar.column-options'),
