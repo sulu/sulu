@@ -85,12 +85,6 @@ input, select {
   margin-top: 1px !important;
 }
 
-/* line 2, ../scss/modules/icons.scss */
-.icon-floppy::after {
-  content: "\e444";
-  display: inline-block;
-}
-
 /* line 1, ../scss/modules/login.scss */
 #main.login {
   width: 100%;
@@ -168,9 +162,9 @@ input, select {
 /* line 24, ../scss/modules/header.scss */
 .sulu-header .headline .back {
   position: absolute;
-  top: 18px;
+  top: 22px;
   left: -22px;
-  font-size: 15px;
+  font-size: 16px;
   color: white;
   cursor: pointer;
   opacity: 1;
