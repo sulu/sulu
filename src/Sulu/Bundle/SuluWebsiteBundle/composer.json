@@ -15,7 +15,7 @@
         "php": ">=5.4",
 
         "sulu/sulu": "dev-develop",
-        "friendsofsymfony/rest-bundle": "1.3.*",
+        "friendsofsymfony/rest-bundle": "1.0.*",
 
         "doctrine/orm": ">=2.2.3,<2.4-dev",
         "liip/theme-bundle": "1.0.*@dev",
