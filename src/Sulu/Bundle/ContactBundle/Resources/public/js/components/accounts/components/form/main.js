@@ -160,6 +160,7 @@ define([], function() {
                     data: this.accountCategoryData
                 };
 
+            this.sandbox.dom.remove('#overlayContainer');
             this.sandbox.dom.append('body', $overlayContainer);
             this.sandbox.emit('sulu.types.open', config);
         },
