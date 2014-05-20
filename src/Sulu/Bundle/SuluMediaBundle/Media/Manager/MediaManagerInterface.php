@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Defines the operations of the MediaManager.
- * The MediaManager is responsible for the centralized management of our medias.
+ * The MediaManager is responsible for the centralized management of our media.
  * @package Sulu\Bundle\MediaBundle\Media
  */
 interface MediaManagerInterface

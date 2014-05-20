@@ -12,6 +12,7 @@ namespace Sulu\Bundle\MediaBundle\Tests\Functional\Controller;
 
 use DateTime;
 use Doctrine\ORM\Tools\SchemaTool;
+use MyProject\Proxies\__CG__\OtherProject\Proxies\__CG__\stdClass;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
@@ -131,30 +132,29 @@ class CollectionControllerTest extends DatabaseTestCase
 
         $client->request(
             'GET',
-            '/api/collections/1'
+            '/api/collections/1',
+            array(
+                'locale' => 'en-gb'
+            )
         );
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
         $response = json_decode($client->getResponse()->getContent());
 
-        $style = array(
+        $style = json_decode(json_encode(array(
             'type'  => 'circle',
             'color' => '#ffcc00'
-        );
+        )), false);
 
         $this->assertEquals($style, $response->style);
         $this->assertEquals(1, $response->id);
-        $this->assertEquals(1, $response->type->id);
-        $this->assertEquals(2, count($response->metas));
+        $this->assertEquals(1, $response->type);
         $this->assertNotEmpty($response->created);
         $this->assertNotEmpty($response->changed);
-        $this->assertEquals('Test Collection', $response->metas[0]->title);
-        $this->assertEquals('This Description is only for testing', $response->metas[0]->description);
-        $this->assertEquals('en-gb', $response->metas[0]->locale);
-        $this->assertEquals('Test Kollektion', $response->metas[1]->title);
-        $this->assertEquals('Dies ist eine Test Beschreibung', $response->metas[1]->description);
-        $this->assertEquals('de', $response->metas[1]->locale);
+        $this->assertEquals('Test Collection', $response->title);
+        $this->assertEquals('This Description is only for testing', $response->description);
+        $this->assertEquals('en-gb', $response->locale);
     }
 
     /**
@@ -166,7 +166,10 @@ class CollectionControllerTest extends DatabaseTestCase
 
         $client->request(
             'GET',
-            '/api/collections'
+            '/api/collections',
+            array(
+                'locale' => 'en-gb'
+            )
         );
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
@@ -231,25 +234,31 @@ class CollectionControllerTest extends DatabaseTestCase
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
+        $style = new \stdClass();
+        $style->type = 'circle';
+        $style->color = $generateColor;
+
         $this->assertEquals('en-gb', $response->locale);
-        $this->assertEquals(array(
-            'type'  => 'circle',
-            'color' => $generateColor
-        ), $response->style);
+        $this->assertEquals($style, $response->style);
         $this->assertEquals(2, $response->id);
         $this->assertEquals(1, $response->type);
         $this->assertNotEmpty($response->created);
         $this->assertNotEmpty($response->changed);
         $this->assertEquals('Test Collection 2', $response->title);
         $this->assertEquals('This Description 2 is only for testing', $response->description);
+        /*
         $this->assertNotEmpty($response->creator);
         $this->assertNotEmpty($response->changer);
+        */
 
         $client = $this->createTestClient();
 
         $client->request(
             'GET',
-            '/api/collections'
+            '/api/collections',
+            array(
+                'locale' => 'en-gb'
+            )
         );
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
@@ -263,10 +272,9 @@ class CollectionControllerTest extends DatabaseTestCase
         // check if first entity is unchanged
         $responseFirstEntity = $response->_embedded[0];
 
-        $style = array(
-            'type'  => 'circle',
-            'color' => '#ffcc00'
-        );
+        $style = new \stdClass();
+        $style->type = 'circle';
+        $style->color = '#ffcc00';
 
         $this->assertEquals(1, $responseFirstEntity->id);
         $this->assertEquals('en-gb', $responseFirstEntity->locale);
@@ -280,16 +288,15 @@ class CollectionControllerTest extends DatabaseTestCase
         // check second entity was created right
         $responseSecondEntity = $response->_embedded[1];
 
-        $style = array(
-            'type'  => 'circle',
-            'color' => $generateColor
-        );
+
+        $style = new \stdClass();
+        $style->type = 'circle';
+        $style->color = $generateColor;
 
         $this->assertEquals(2, $responseSecondEntity->id);
         $this->assertEquals('en-gb', $responseSecondEntity->locale);
         $this->assertEquals($style, $responseSecondEntity->style);
         $this->assertEquals(1, $responseSecondEntity->type);
-        $this->assertEquals(2, count($responseSecondEntity->metas));
         $this->assertNotEmpty($responseSecondEntity->created);
         $this->assertNotEmpty($responseSecondEntity->changed);
         $this->assertEquals('Test Collection 2', $responseSecondEntity->title);
@@ -351,7 +358,7 @@ class CollectionControllerTest extends DatabaseTestCase
                 'type'  => 1,
                 'title'       => 'Test Collection changed',
                 'description' => 'This Description is only for testing changed',
-                'locale'      => 'en-au'
+                'locale'      => 'en-gb'
             )
         );
 
@@ -359,29 +366,32 @@ class CollectionControllerTest extends DatabaseTestCase
 
         $client->request(
             'GET',
-            '/api/collections/1'
+            '/api/collections/1',
+            array(
+                'locale'      => 'en-gb'
+            )
         );
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
-        $this->assertEquals(array(
-            'type'  => 'circle',
-            'color' => '#00ccff'
-        ), $response->style);
+        $style = new \stdClass();
+        $style->type = 'circle';
+        $style->color = '#00ccff';
+
+        $this->assertEquals($style, $response->style);
         $this->assertEquals(1, $response->id);
         $this->assertEquals(1, $response->type);
-        $this->assertEquals(2, count($response->metas));
         $this->assertNotEmpty($response->created);
         $this->assertNotEmpty($response->changed);
         $this->assertEquals('Test Collection changed', $response->title);
         $this->assertEquals('This Description is only for testing changed', $response->description);
-        $this->assertEquals('en-au', $response->locale);
+        $this->assertEquals('en-gb', $response->locale);
 
         $client = $this->createTestClient();
 
         $client->request(
             'GET',
-            '/api/collections'
+            '/api/collections?locale=en-gb'
         );
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
@@ -394,18 +404,18 @@ class CollectionControllerTest extends DatabaseTestCase
 
         $responseFirstEntity = $response->_embedded[0];
 
-        $this->assertEquals(array(
-            'type'  => 'circle',
-            'color' => '#00ccff'
-        ), $responseFirstEntity->style);
+        $style = new \stdClass();
+        $style->type = 'circle';
+        $style->color = '#00ccff';
+
+        $this->assertEquals($style, $responseFirstEntity->style);
         $this->assertEquals(1, $responseFirstEntity->id);
         $this->assertEquals(1, $responseFirstEntity->type);
-        $this->assertEquals(2, count($responseFirstEntity->metas));
         $this->assertNotEmpty($responseFirstEntity->created);
         $this->assertNotEmpty($responseFirstEntity->changed);
         $this->assertEquals('Test Collection changed', $responseFirstEntity->title);
         $this->assertEquals('This Description is only for testing changed', $responseFirstEntity->description);
-        $this->assertEquals('en-au', $responseFirstEntity->locale);
+        $this->assertEquals('en-gb', $responseFirstEntity->locale);
     }
 
     /**
@@ -442,20 +452,18 @@ class CollectionControllerTest extends DatabaseTestCase
 
         $client->request(
             'GET',
-            '/api/collections/1'
+            '/api/collections/1?locale=en-gb'
         );
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
-        $this->assertEquals(json_encode(
-            array(
-                'type'  => 'quader',
-                'color' => '#00ccff'
-            )
-        ), $response->style);
+        $style = new \stdClass();
+        $style->type = 'quader';
+        $style->color = '#00ccff';
 
-        $this->assertEquals(2, $response->type->id);
-        $this->assertEquals(2, count($response->metas));
+        $this->assertEquals($style, $response->style);
+
+        $this->assertEquals(2, $response->type);
     }
 
     /**
