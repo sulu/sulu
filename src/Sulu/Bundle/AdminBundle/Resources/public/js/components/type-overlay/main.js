@@ -251,12 +251,16 @@ define([], function() {
                     if (!deleted) {
                         id = this.sandbox.dom.data($el, 'id');
                         value = this.sandbox.dom.val(this.sandbox.dom.find('input', $el));
-                        data.push({id: id, category: value});
+                        if (value !== '') {
+                            data.push({id: id, category: value});
+                        }
                     }
                 } else {
                     id = this.sandbox.dom.data($el, 'id');
                     value = this.sandbox.dom.val(this.sandbox.dom.find('input', $el));
-                    data.push({id: id, category: value});
+                    if (value !== '') {
+                        data.push({id: id, category: value});
+                    }
                 }
 
             }.bind(this));
@@ -277,8 +281,8 @@ define([], function() {
          */
         bindDomEvents: function() {
 
-            this.sandbox.dom.off(constants.templateAddSelector);
-            this.sandbox.dom.off(constants.templateRemoveSelector);
+            this.sandbox.dom.off(constants.templateAddSelector, 'click');
+            this.sandbox.dom.off(constants.templateRemoveSelector, 'click');
 
             // bind click on remove icon
             this.sandbox.dom.on(this.$overlayInnerContent, 'click', function(event) {

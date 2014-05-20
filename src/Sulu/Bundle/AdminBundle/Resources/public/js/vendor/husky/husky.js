@@ -25841,6 +25841,10 @@ define('type/husky-select',[
             typeInterface = {
                 setValue: function(data) {
 
+                    if(!data){
+                        return;
+                    }
+
                     this.$el.data({
                         'selection': data[this.options.id],
                         'selectionValues': data[this.options.label]
@@ -35255,11 +35259,11 @@ define('__component__$select@husky',[], function() {
         /**
          * Updates the dropdown list
          * @param data
-         * @param preselected
+         * @param preselected array of ids
          */
         updateDropdown: function(data, preselected){
 
-            this.options.preSelectedElements = preselected;
+            this.options.preSelectedElements = preselected.map(String);
             this.selectedElements = [];
             this.selectedElementsValues = [];
             this.sandbox.dom.empty(this.$list);
