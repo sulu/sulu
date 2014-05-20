@@ -22,7 +22,9 @@ class MediaType
     const TYPE_IMAGE = 2; // TODO change this to config
 
     const TYPE_VIDEO = 3; // TODO change this to config
-    
+
+    const TYPE_AUDIO = 4; // TODO change this to config
+
     /**
      * @var string
      */
@@ -41,14 +43,14 @@ class MediaType
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
-    private $medias;
+    private $media;
 
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->medias = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->media = new \Doctrine\Common\Collections\ArrayCollection();
     }
     
     /**
@@ -108,35 +110,35 @@ class MediaType
     }
 
     /**
-     * Add medias
+     * Add media
      *
-     * @param \Sulu\Bundle\MediaBundle\Entity\Media $medias
+     * @param \Sulu\Bundle\MediaBundle\Entity\Media $media
      * @return MediaType
      */
-    public function addMedia(\Sulu\Bundle\MediaBundle\Entity\Media $medias)
+    public function addMedia(\Sulu\Bundle\MediaBundle\Entity\Media $media)
     {
-        $this->medias[] = $medias;
+        $this->media[] = $media;
     
         return $this;
     }
 
     /**
-     * Remove medias
+     * Remove media
      *
-     * @param \Sulu\Bundle\MediaBundle\Entity\Media $medias
+     * @param \Sulu\Bundle\MediaBundle\Entity\Media $media
      */
-    public function removeMedia(\Sulu\Bundle\MediaBundle\Entity\Media $medias)
+    public function removeMedia(\Sulu\Bundle\MediaBundle\Entity\Media $media)
     {
-        $this->medias->removeElement($medias);
+        $this->media->removeElement($media);
     }
 
     /**
-     * Get medias
+     * Get media
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getMedias()
+    public function getMedia()
     {
-        return $this->medias;
+        return $this->media;
     }
 }

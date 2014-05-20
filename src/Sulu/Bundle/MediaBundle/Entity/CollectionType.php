@@ -17,6 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class CollectionType
 {
+
     /**
      * @var string
      */
@@ -44,7 +45,7 @@ class CollectionType
     {
         $this->collections = new \Doctrine\Common\Collections\ArrayCollection();
     }
-
+    
     /**
      * Set name
      *
@@ -54,14 +55,14 @@ class CollectionType
     public function setName($name)
     {
         $this->name = $name;
-
+    
         return $this;
     }
 
     /**
      * Get name
      *
-     * @return string
+     * @return string 
      */
     public function getName()
     {
@@ -77,14 +78,14 @@ class CollectionType
     public function setDescription($description)
     {
         $this->description = $description;
-
+    
         return $this;
     }
 
     /**
      * Get description
      *
-     * @return string
+     * @return string 
      */
     public function getDescription()
     {
@@ -94,7 +95,7 @@ class CollectionType
     /**
      * Get id
      *
-     * @return integer
+     * @return integer 
      */
     public function getId()
     {
@@ -110,7 +111,7 @@ class CollectionType
     public function addCollection(\Sulu\Bundle\MediaBundle\Entity\Collection $collections)
     {
         $this->collections[] = $collections;
-
+    
         return $this;
     }
 
@@ -127,7 +128,7 @@ class CollectionType
     /**
      * Get collections
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return \Doctrine\Common\Collections\Collection 
      */
     public function getCollections()
     {

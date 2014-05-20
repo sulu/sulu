@@ -32,28 +32,34 @@ class CollectionRepository extends EntityRepository
     {
         try {
             $qb = $this->createQueryBuilder('collection')
-                ->leftJoin('collection.metas', 'collectionMeta')
+                ->leftJoin('collection.meta', 'collectionMeta')
                 ->leftJoin('collection.type', 'type')
                 ->leftJoin('collection.parent', 'parent')
                 ->leftJoin('collection.children', 'children')
-                ->leftJoin('children.medias', 'childrenMedias')
-                ->leftJoin('collection.medias', 'medias')
+                ->leftJoin('children.media', 'childrenMedia')
+                ->leftJoin('collection.media', 'media')
 
+                /* TODO TestUser has no Contact!
                 ->leftJoin('collection.creator', 'creator')
                 ->leftJoin('creator.contact', 'creatorContact')
                 ->leftJoin('collection.changer', 'changer')
                 ->leftJoin('changer.contact', 'changerContact')
+                */
 
+                ->addSelect('collection')
                 ->addSelect('collectionMeta')
                 ->addSelect('type')
                 ->addSelect('parent')
                 ->addSelect('children')
-                ->addSelect('childrenMedias')
+                ->addSelect('childrenMedia')
+
+                /* TODO TestUser has no Contact!
                 ->addSelect('creator')
                 ->addSelect('changer')
                 ->addSelect('creatorContact')
                 ->addSelect('changerContact')
-                ->addSelect('medias')
+                */
+                ->addSelect('media')
                 ->where('collection.id = :collectionId');
 
             $query = $qb->getQuery();
@@ -84,26 +90,30 @@ class CollectionRepository extends EntityRepository
     {
         try {
             $qb = $this->createQueryBuilder('collection')
-                ->leftJoin('collection.metas', 'collectionMeta')
+                ->leftJoin('collection.meta', 'collectionMeta')
                 ->leftJoin('collection.type', 'type')
                 ->leftJoin('collection.parent', 'parent')
                 ->leftJoin('collection.children', 'children')
-                ->leftJoin('children.medias', 'childrenMedias')
-                ->leftJoin('collection.medias', 'medias')
+                ->leftJoin('children.media', 'childrenMedia')
+                ->leftJoin('collection.media', 'media')
+                /*
                 ->leftJoin('collection.creator', 'creator')
                 ->leftJoin('creator.contact', 'creatorContact')
                 ->leftJoin('collection.changer', 'changer')
                 ->leftJoin('changer.contact', 'changerContact')
+                */
                 ->addSelect('collectionMeta')
                 ->addSelect('type')
                 ->addSelect('parent')
                 ->addSelect('children')
-                ->addSelect('childrenMedias')
+                ->addSelect('childrenMedia')
+                /*
                 ->addSelect('creator')
                 ->addSelect('changer')
                 ->addSelect('creatorContact')
                 ->addSelect('changerContact')
-                ->addSelect('medias');
+                */
+                ->addSelect('media');
 
             if ($parentId !== null) {
                 $qb->where('parent.id = :parentId');
@@ -157,7 +167,7 @@ class CollectionRepository extends EntityRepository
     {
         try {
             $qb = $this->createQueryBuilder('collection')
-                ->leftJoin('collection.medias', 'media')
+                ->leftJoin('collection.media', 'media')
                 ->addSelect('media')
                 ->where('collection.id = :collectionId');
 

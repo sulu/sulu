@@ -33,7 +33,6 @@ class FileVersionPublishLanguage
      */
     private $fileVersion;
 
-
     /**
      * Set locale
      *
