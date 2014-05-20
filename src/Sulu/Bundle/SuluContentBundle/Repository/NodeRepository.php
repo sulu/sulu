@@ -16,6 +16,7 @@ use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\Types\ResourceLocator;
 use Sulu\Component\Content\Types\ResourceLocatorInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
 class NodeRepository implements NodeRepositoryInterface
 {
@@ -45,17 +46,24 @@ class NodeRepository implements NodeRepositoryInterface
      */
     private $resourceLocator;
 
+    /**
+     * @var WebspaceManagerInterface
+     */
+    private $webspaceManager;
+
     function __construct(
         ContentMapperInterface $mapper,
         SessionManagerInterface $sessionManager,
         UserManagerInterface $userManager,
-        ResourceLocatorInterface $resourceLocator
+        ResourceLocatorInterface $resourceLocator,
+        WebspaceManagerInterface $webspaceManager
     )
     {
         $this->mapper = $mapper;
         $this->sessionManager = $sessionManager;
         $this->userManager = $userManager;
         $this->resourceLocator = $resourceLocator;
+        $this->webspaceManager = $webspaceManager;
     }
 
     /**
@@ -213,6 +221,56 @@ class NodeRepository implements NodeRepositoryInterface
         $result['total'] = sizeof($result['_embedded']);
 
         return $result;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getWebspaceNode(
+        $webspaceKey,
+        $languageCode,
+        $depth = 1,
+        $excludeGhosts = false
+    )
+    {
+        $webspace = $this->webspaceManager->getWebspaceCollection()->getWebspace($webspaceKey);
+
+        if ($depth > 0) {
+            $nodes = $this->getMapper()->loadByParent(
+                null,
+                $webspaceKey,
+                $languageCode,
+                $depth,
+                false,
+                false,
+                $excludeGhosts
+            );
+            $embedded = $this->prepareNodesTree($nodes, $webspaceKey, $languageCode, true, $excludeGhosts);
+        } else {
+            $embedded = array();
+        }
+
+        $node = array(
+            'id' => $webspace->getKey(),
+            'path' => '/',
+            'title' => $webspace->getName(),
+            'hasSub' => true,
+            '_embedded' => $embedded,
+            '_links' => array(
+                'children' => $this->apiBasePath . '?depth=' . $depth . '&webspace=' . $webspaceKey . '&language=' . $languageCode . ($excludeGhosts === true ? '&exclude-ghosts=true' : '')
+            )
+        );
+
+        // add default empty embedded property
+        $data['_embedded'] = array(
+            $node
+        );
+        // add api links
+        $data['_links'] = array(
+            'self' => $this->apiBasePath . '/entry?depth=' . $depth . '&webspace=' . $webspaceKey . '&language=' . $languageCode . ($excludeGhosts === true ? '&exclude-ghosts=true' : ''),
+        );
+
+        return $data;
     }
 
     /**
