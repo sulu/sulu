@@ -336,8 +336,7 @@ class CollectionControllerTest extends DatabaseTestCase
         $this->assertEquals('Test Collection 2', $response->title);
 
 
-
-
+        // get collection in locale 'en-gb'
         $client = $this->createTestClient();
 
         $client->request(
@@ -383,7 +382,7 @@ class CollectionControllerTest extends DatabaseTestCase
         $this->assertEquals('Test Collection 2', $responseSecondEntity->title);
 
 
-
+        // get collection in locale 'en'
         $client = $this->createTestClient();
 
         $client->request(
