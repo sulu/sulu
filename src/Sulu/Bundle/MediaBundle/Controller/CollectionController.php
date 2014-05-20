@@ -300,10 +300,13 @@ class CollectionController extends RestController implements ClassResourceInterf
     {
         $collectionRestObject = new CollectionRestObject();
         $collectionRestObject->setId($request->get('id'));
-        $collectionRestObject->setStyle($request->get('style'));
-        $collectionRestObject->setType($request->get('type'));
+        $collectionRestObject->setStyle($request->get('style', array(
+            'type' => 'circle',
+            'color' => Collection::generateColor()
+        )));
+        $collectionRestObject->setType($request->get('type', Collection::TYPE_DEFAULT));
         $collectionRestObject->setParent($request->get('parent'));
-        $collectionRestObject->setLocale($request->get('locale'));
+        $collectionRestObject->setLocale($request->get('locale', $this->getLocale($request->get('locale'))));
         $collectionRestObject->setTitle($request->get('title'));
         $collectionRestObject->setDescription($request->get('description'));
         $collectionRestObject->setChanger($request->get('changer'));
@@ -361,13 +364,14 @@ class CollectionController extends RestController implements ClassResourceInterf
                     $metaSet = true;
                     $meta->setTitle($object->getTitle());
                     $meta->setDescription($object->getDescription());
+                    $meta->setLocale($object->getLocale());
                     $em->persist($meta);
                 }
             }
             if (!$metaSet) {
                 $meta = new CollectionMeta();
-                $meta->setLocale($object->getLocale());
                 $meta->setTitle($object->getTitle());
+                $meta->setLocale($object->getLocale());
                 $meta->setDescription($object->getDescription());
                 $meta->setCollection($collection);
                 $collection->addMeta($meta);
