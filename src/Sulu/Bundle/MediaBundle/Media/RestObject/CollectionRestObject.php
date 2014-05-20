@@ -187,11 +187,7 @@ class CollectionRestObject implements RestObject
     }
 
     /**
-     * will set the RestObject by an Entity Object
-     * @param $object
-     * @param $locale
-     * @param array $properties
-     * @return $this
+     * {@inheritdoc}
      */
     public function setDataByEntity($object, $locale, $properties = array())
     {

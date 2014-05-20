@@ -306,7 +306,7 @@ class DefaultMediaManager implements MediaManagerInterface
                 if ($fileVersion->getId() == $propertiesFileVersionId) {
                     foreach ($fileVersionProperties as $key => $value) {
                         switch ($key) {
-                            case 'metas':
+                            case 'meta':
                                 $this->updateMetas($fileVersion, $value);
                                 $changed = true;
                                 break;
@@ -344,41 +344,39 @@ class DefaultMediaManager implements MediaManagerInterface
         // Update Old Meta
         if ($fileVersion->getMetas()) {
             foreach ($fileVersion->getMetas() as $oldMeta) {
-                $exists = false;
                 foreach ($metas as $key => $meta) {
-                    if (isset($meta['id']) && $oldMeta->getId() == $meta['id']) {
+                    if (isset($meta['locale']) && $oldMeta->getLocale() == $meta['locale']) {
                         if (isset($meta['title'])) {
                             $oldMeta->setTitle($meta['title']);
                         }
                         if (isset($meta['description'])) {
                             $oldMeta->setDescription($meta['description']);
                         }
-                        if (isset($meta['locale'])) {
-                            $oldMeta->setLocale($meta['locale']);
-                        }
                         $this->em->persist($oldMeta);
 
                         unset($metas[$key]);
-                        $exists = true;
                         break;
                     }
-                }
-                if (!$exists) {
-                    // Remove Old Meta
-                    $fileVersion->removeMeta($oldMeta);
                 }
             }
         }
         // Add New Meta
         foreach ($metas as $metaData) {
-            $meta = new FileVersionMeta();
-            $meta->setTitle($metaData['title']);
-            $meta->setDescription($metaData['description']);
-            $meta->setLocale($metaData['locale']);
-            $meta->setFileVersion($fileVersion);
+            if (
+                !empty($metaData['locale']) && // http://www.php.net/manual/en/function.empty.php#refsect1-function.empty-parameters
+                !empty($metaData['title'])
+            ) {
+                $meta = new FileVersionMeta();
+                $meta->setTitle($metaData['title']);
+                $meta->setLocale($metaData['locale']);
+                if (isset($metaData['description'])) {
+                    $meta->setDescription($metaData['description']);
+                }
+                $meta->setFileVersion($fileVersion);
 
-            $fileVersion->addMeta($meta);
-            $this->em->persist($meta);
+                $fileVersion->addMeta($meta);
+                $this->em->persist($meta);
+            }
         }
     }
 
