@@ -39,6 +39,21 @@ interface NodeRepositoryInterface
     public function getNodes($parent, $webspaceKey, $languageCode, $depth = 1, $flat = true, $complete = true, $excludeGhosts = false);
 
     /**
+     * returns webspace as node
+     * @param $webspaceKey
+     * @param $languageCode
+     * @param int $depth
+     * @param bool $excludeGhosts
+     * @return mixed
+     */
+    public function getWebspaceNode(
+        $webspaceKey,
+        $languageCode,
+        $depth = 1,
+        $excludeGhosts = false
+    );
+
+    /**
      * Returns the content of a smartcontent configuration
      * @param array $filterConfig The config of the smart content
      * @param string $languageCode The desired language code

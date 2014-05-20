@@ -49,6 +49,37 @@ class NodeController extends RestController implements ClassResourceInterface
     }
 
     /**
+     * returns entry point (webspace as node)
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function entryAction()
+    {
+        $language = $this->getLanguage();
+        $webspace = $this->getWebspace();
+
+        $depth = $this->getRequestParameter($this->getRequest(), 'depth', false, 1);
+        $ghostContent = $this->getBooleanRequestParameter($this->getRequest(), 'ghost-content', false, false);
+
+        $view = $this->responseGetById(
+            '',
+            function ($id) use ($language, $webspace, $depth, $ghostContent) {
+                try {
+                    return $this->getRepository()->getWebspaceNode(
+                        $webspace,
+                        $language,
+                        $depth,
+                        $ghostContent
+                    );
+                } catch (ItemNotFoundException $ex) {
+                    return null;
+                }
+            }
+        );
+
+        return $this->handleView($view);
+    }
+
+    /**
      * returns a content item with given UUID as JSON String
      * @param $uuid
      * @return \Symfony\Component\HttpFoundation\Response

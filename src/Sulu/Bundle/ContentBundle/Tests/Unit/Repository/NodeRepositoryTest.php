@@ -19,6 +19,8 @@ use Sulu\Bundle\TestBundle\Testing\PhpcrTestCase;
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyTag;
 use Sulu\Component\Content\Types\ResourceLocator;
+use Sulu\Component\Webspace\Manager\WebspaceCollection;
+use Sulu\Component\Webspace\Webspace;
 
 class NodeRepositoryTest extends PhpcrTestCase
 {
@@ -34,6 +36,16 @@ class NodeRepositoryTest extends PhpcrTestCase
      * @var CurrentUserDataInterface
      */
     private $currentUserData;
+
+    /**
+     * @var WebspaceCollection
+     */
+    private $webspaceCollection;
+
+    /**
+     * @var Webspace
+     */
+    private $webspace;
 
     private function prepareGetTestData()
     {
@@ -168,6 +180,13 @@ class NodeRepositoryTest extends PhpcrTestCase
         $this->assertEquals('Testtitle', $index['title']);
     }
 
+    public function testGetWebspaceNode()
+    {
+        $result = $this->nodeRepository->getWebspaceNode('default', 'en');
+
+        $this->assertEquals('Test', $result['title']);
+    }
+
     protected function setUp()
     {
         $this->prepareMapper();
@@ -177,7 +196,27 @@ class NodeRepositoryTest extends PhpcrTestCase
     private function prepareNodeRepository()
     {
         $this->prepareUserManager();
-        $this->nodeRepository = new NodeRepository($this->mapper, $this->sessionManager, $this->userManager, $this->containerValueMap['sulu.content.type.resource_locator']);
+        $this->prepareWebspaceManager();
+
+        $this->webspaceCollection = $this->getMock('Sulu\Component\Webspace\Manager\WebspaceCollection');
+        $this->webspace = new Webspace();
+        $this->webspace->setName('Test');
+
+        $this->webspaceManager->expects($this->any())
+            ->method('getWebspaceCollection')
+            ->will($this->returnValue($this->webspaceCollection));
+
+        $this->webspaceCollection->expects($this->any())
+            ->method('getWebspace')
+            ->will($this->returnValue($this->webspace));
+
+        $this->nodeRepository = new NodeRepository(
+            $this->mapper,
+            $this->sessionManager,
+            $this->userManager,
+            $this->containerValueMap['sulu.content.type.resource_locator'],
+            $this->webspaceManager
+        );
     }
 
     private function prepareUserManager()
