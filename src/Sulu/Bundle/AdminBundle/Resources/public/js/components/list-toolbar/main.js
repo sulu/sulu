@@ -33,7 +33,7 @@ define([], function() {
                 return [
                     {
                         id: 'add',
-                        icon: 'user-add',
+                        icon: 'plus-circle',
                         class: 'highlight-white',
                         title: 'add',
                         callback: function() {
@@ -42,7 +42,7 @@ define([], function() {
                     },
                     {
                         id: 'delete',
-                        icon: 'bin',
+                        icon: 'trash-o',
                         title: 'delete',
                         disabled: true,
                         callback: function() {
@@ -51,7 +51,7 @@ define([], function() {
                     },
                     {
                         id: 'settings',
-                        icon: 'cogwheel',
+                        icon: 'gear',
                         items: [
                             {
                                 title: this.sandbox.translate('sulu.list-toolbar.import'),
@@ -93,7 +93,7 @@ define([], function() {
             defaultEditableList: function() {
                 var defaults = templates.default.call(this);
                 defaults.splice(1, 0, {
-                    icon: 'floppy-saved',
+                    icon: 'floppy-o',
                     iconSize: 'large',
                     disabled: true,
                     id: 'save',
