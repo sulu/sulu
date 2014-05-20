@@ -17,7 +17,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class FileVersionContentLanguage
 {
-
     /**
      * @var string
      */
@@ -32,7 +31,6 @@ class FileVersionContentLanguage
      * @var \Sulu\Bundle\MediaBundle\Entity\FileVersion
      */
     private $fileVersion;
-
 
     /**
      * Set locale

@@ -2,6 +2,6 @@ sulu_media.collections:
     type: rest
     resource: Sulu\Bundle\MediaBundle\Controller\CollectionController
 
-sulu_media.medias:
+sulu_media.media:
     type: rest
     resource: Sulu\Bundle\MediaBundle\Controller\MediaController
