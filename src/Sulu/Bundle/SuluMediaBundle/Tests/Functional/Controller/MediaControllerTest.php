@@ -144,6 +144,7 @@ class MediaControllerTest extends DatabaseTestCase
         $fileVersion->setName('photo.jpeg');
         $fileVersion->setFile($file);
         $fileVersion->setSize(1124214);
+        $fileVersion->setStorageOptions('{"segment":"1","fileName":"photo.jpeg"}');
         $file->addFileVersion($fileVersion);
 
         $media->addFile($file);
@@ -525,6 +526,47 @@ class MediaControllerTest extends DatabaseTestCase
         $this->assertEquals(1, $response->id);
         $this->assertEquals(1, $response->collection);
         $this->assertEquals(2, $response->version);
+    }
+
+    /**
+     * @description Test DELETE
+     */
+    public function testDeleteById()
+    {
+        $client = $this->createTestClient();
+
+        $client->request('DELETE', '/api/media/1');
+        $this->assertEquals('204', $client->getResponse()->getStatusCode());
+
+        $client = $this->createTestClient();
+
+        /*
+        $client->request(
+            'GET',
+            '/api/media/1'
+        );
+
+        $this->assertEquals(404, $client->getResponse()->getStatusCode());
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(0, $response->code);
+        $this->assertTrue(isset($response->message));
+        */
+    }
+
+    /**
+     * @description Test DELETE on none existing Object
+     */
+    public function testDeleteByIdNotExisting()
+    {
+        $client = $this->createTestClient();
+
+        $client->request('DELETE', '/api/media/404');
+        $this->assertEquals('404', $client->getResponse()->getStatusCode());
+
+        $client->request('GET', '/api/collections?flat=true');
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(1, $response->total);
     }
 
     /**
