@@ -78,7 +78,7 @@ class AccountController extends RestController implements ClassResourceInterface
      */
     protected $fieldsTranslationKeys = array(
         'id' => 'public.id',
-        'number' => 'public.number'
+        'disabled' => 'public.deactivate'
     );
 
     /**
