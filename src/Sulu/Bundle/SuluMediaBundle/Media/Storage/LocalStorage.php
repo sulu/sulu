@@ -64,7 +64,10 @@ class LocalStorage implements StorageInterface
         $segment = $this->getStorageOption('segment');
         $fileName = $this->getStorageOption('fileName');
 
-        return $this->uploadPath . '/' . $segment . '/' . $fileName;
+        if ($segment && $fileName) {
+            return $this->uploadPath . '/' . $segment . '/' . $fileName;
+        }
+        return false;
     }
 
     /**
@@ -77,7 +80,12 @@ class LocalStorage implements StorageInterface
         $segment = $this->getStorageOption('segment');
         $fileName = $this->getStorageOption('fileName');
 
-        @unlink($this->uploadPath . '/' . $segment . '/' . $fileName);
+        if ($segment && $fileName) {
+            @unlink($this->uploadPath . '/' . $segment . '/' . $fileName);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -117,9 +125,10 @@ class LocalStorage implements StorageInterface
 
     /**
      * @param $key
+     * @return mixed
      */
     private function getStorageOption($key)
     {
-        return $this->storageOption->$key;
+        return isset($this->storageOption->$key) ? $this->storageOption->$key : null;
     }
 }
