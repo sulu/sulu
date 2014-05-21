@@ -222,7 +222,7 @@ class CollectionControllerTest extends DatabaseTestCase
                         'type'  => 'circle',
                         'color' => $generateColor
                     )
-                ,
+            ,
                 'type'  => 1,
                 'title'       => 'Test Collection 2',
                 'description' => 'This Description 2 is only for testing',
@@ -301,6 +301,131 @@ class CollectionControllerTest extends DatabaseTestCase
         $this->assertNotEmpty($responseSecondEntity->changed);
         $this->assertEquals('Test Collection 2', $responseSecondEntity->title);
         $this->assertEquals('This Description 2 is only for testing', $responseSecondEntity->description);
+    }
+
+    /**
+     * @description Test POST to create a new Collection
+     */
+    public function testPostWithoutDetails()
+    {
+        $client = $this->createTestClient();
+
+        $generateColor = Collection::generateColor();
+
+        $this->assertNotEmpty($generateColor);
+        $this->assertEquals(7, strlen($generateColor));
+
+        $client->request(
+            'POST',
+            '/api/collections',
+            array(
+                'title'       => 'Test Collection 2',
+            )
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $this->assertEquals('en', $response->locale);
+        $this->assertNotEmpty($response->style);
+        $this->assertEquals(2, $response->id);
+        $this->assertEquals(1, $response->type);
+        $this->assertNotEmpty($response->created);
+        $this->assertNotEmpty($response->changed);
+        $this->assertEquals('Test Collection 2', $response->title);
+
+
+        // get collection in locale 'en-gb'
+        $client = $this->createTestClient();
+
+        $client->request(
+            'GET',
+            '/api/collections',
+            array(
+                'locale' => 'en-gb'
+            )
+        );
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertNotEmpty($response);
+
+        $this->assertEquals(2, $response->total);
+
+        // check if first entity is unchanged
+        $responseFirstEntity = $response->_embedded[0];
+
+        $style = new \stdClass();
+        $style->type = 'circle';
+        $style->color = '#ffcc00';
+
+        $this->assertEquals(1, $responseFirstEntity->id);
+        $this->assertEquals('en-gb', $responseFirstEntity->locale);
+        $this->assertEquals($style, $responseFirstEntity->style);
+        $this->assertEquals(1, $responseFirstEntity->type);
+        $this->assertNotEmpty($responseFirstEntity->created);
+        $this->assertNotEmpty($responseFirstEntity->changed);
+        $this->assertEquals('Test Collection', $responseFirstEntity->title);
+        $this->assertEquals('This Description is only for testing', $responseFirstEntity->description);
+
+        // check second entity was created right
+        $responseSecondEntity = $response->_embedded[1];
+
+        $this->assertEquals(2, $responseSecondEntity->id);
+        $this->assertEquals('en-gb', $responseSecondEntity->locale);
+        $this->assertEquals(1, $responseSecondEntity->type);
+        $this->assertNotEmpty($responseSecondEntity->created);
+        $this->assertNotEmpty($responseSecondEntity->changed);
+        $this->assertEquals('Test Collection 2', $responseSecondEntity->title);
+
+
+        // get collection in locale 'en'
+        $client = $this->createTestClient();
+
+        $client->request(
+            'GET',
+            '/api/collections',
+            array(
+                'locale' => 'en'
+            )
+        );
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertNotEmpty($response);
+
+        $this->assertEquals(2, $response->total);
+
+        // check if first entity is unchanged
+        $responseFirstEntity = $response->_embedded[0];
+
+        $style = new \stdClass();
+        $style->type = 'circle';
+        $style->color = '#ffcc00';
+
+        $this->assertEquals(1, $responseFirstEntity->id);
+        $this->assertEquals('en', $responseFirstEntity->locale);
+        $this->assertEquals($style, $responseFirstEntity->style);
+        $this->assertEquals(1, $responseFirstEntity->type);
+        $this->assertNotEmpty($responseFirstEntity->created);
+        $this->assertNotEmpty($responseFirstEntity->changed);
+        $this->assertEquals('Test Collection', $responseFirstEntity->title);
+        $this->assertEquals('This Description is only for testing', $responseFirstEntity->description);
+
+        // check second entity was created right
+        $responseSecondEntity = $response->_embedded[1];
+
+        $this->assertEquals(2, $responseSecondEntity->id);
+        $this->assertEquals('en', $responseSecondEntity->locale);
+        $this->assertEquals(1, $responseSecondEntity->type);
+        $this->assertNotEmpty($responseSecondEntity->created);
+        $this->assertNotEmpty($responseSecondEntity->changed);
+        $this->assertEquals('Test Collection 2', $responseSecondEntity->title);
     }
 
     /**
