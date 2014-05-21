@@ -35,6 +35,21 @@ class AccountRepository extends EntityRepository
         return $query->getSingleResult();
     }
 
+    public function findAccountOnly($id) {
+        try {
+            $qb = $this->createQueryBuilder('account')
+                ->where('account.id = :accountId');
+
+            $query = $qb->getQuery();
+            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+            $query->setParameter('accountId', $id);
+
+            return $query->getSingleResult();
+        } catch (NoResultException $ex) {
+            return null;
+        }
+    }
+
     /**
      * Get account by id
      * @param $id
