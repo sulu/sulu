@@ -328,6 +328,7 @@ class ContentMapper implements ContentMapperInterface
         $session->save();
 
         $structure->setUuid($node->getPropertyValue('jcr:uuid'));
+        $structure->setPath(str_replace($this->getContentNode($webspaceKey)->getPath(), '', $node->getPath()));
         $structure->setWebspaceKey($webspaceKey);
         $structure->setLanguageCode($languageCode);
         $structure->setCreator($node->getPropertyValue($this->properties->getName('creator')));
@@ -708,6 +709,7 @@ class ContentMapper implements ContentMapperInterface
         $structure->setHasTranslation($contentNode->hasProperty($this->properties->getName('template')));
 
         $structure->setUuid($contentNode->getPropertyValue('jcr:uuid'));
+        $structure->setPath(str_replace($this->getContentNode($webspaceKey)->getPath(), '', $contentNode->getPath()));
         $structure->setWebspaceKey($webspaceKey);
         $structure->setLanguageCode($localization);
         $structure->setCreator($contentNode->getPropertyValueWithDefault($this->properties->getName('creator'), 0));
@@ -810,6 +812,7 @@ class ContentMapper implements ContentMapperInterface
             );
             $nodeName = $property->getValue();
             $structure->setUuid($node->getPropertyValue('jcr:uuid'));
+            $structure->setPath(str_replace($this->getContentNode($webspaceKey)->getPath(), '', $node->getPath()));
 
             // throw an content.node.load event (disabled for now)
             //$event = new ContentNodeEvent($node, $structure);
