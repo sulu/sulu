@@ -102,7 +102,7 @@ class AccountController extends RestController implements ClassResourceInterface
     /**
      * {@inheritdoc}
      */
-    protected $bundlePrefix = 'contact.account.';
+    protected $bundlePrefix = 'contact.accounts.';
 
     /**
      * returns all fields that can be used by list
