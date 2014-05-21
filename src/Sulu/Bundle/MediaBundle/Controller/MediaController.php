@@ -258,11 +258,17 @@ class MediaController extends RestController implements ClassResourceInterface
      */
     public function deleteAction($id)
     {
-        $delete = function ($id) {
-            $this->getMediaManager()->remove($id, $this->getUser()->getId());
-        };
+        try {
+            $delete = function ($id) {
+                $this->getMediaManager()->remove($id, $this->getUser()->getId());
+            };
 
-        $view = $this->responseDelete($id, $delete);
+            $view = $this->responseDelete($id, $delete);
+        } catch (EntityNotFoundException $enfe) {
+            $view = $this->view($enfe->toArray(), 404);
+        } catch (RestException $re) {
+            $view = $this->view($re->toArray(), 400);
+        }
 
         return $this->handleView($view);
     }
@@ -287,7 +293,7 @@ class MediaController extends RestController implements ClassResourceInterface
         $object->setThumbnails($request->get('thumbnails', array()));
         $object->setUrl($request->get('url'));
         $object->setName($request->get('name'));
-        $object->setTitle($request->get('title'));
+        $object->setTitle($request->get('title'), $this->getTitleFromUpload($request, 'fileVersion'));
         $object->setDescription($request->get('description'));
         $object->setChanger($request->get('changer'));
         $object->setCreator($request->get('creator'));
@@ -295,6 +301,25 @@ class MediaController extends RestController implements ClassResourceInterface
         $object->setCreated($request->get('created'));
 
         return $object;
+    }
+
+    /**
+     * @param Request $request
+     * @return null
+     */
+    protected function getTitleFromUpload($request)
+    {
+        $title = null;
+
+        /**
+         * @var UploadedFile $uploadedFile
+         */
+        foreach ($this->getUploadedFiles($request, 'fileVersion') as $uploadedFile) {
+            $title = $uploadedFile->getClientOriginalName();
+            break;
+        }
+
+        return $title;
     }
 
     /**

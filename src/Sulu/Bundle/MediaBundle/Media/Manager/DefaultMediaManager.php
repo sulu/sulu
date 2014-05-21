@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\MediaBundle\Media\Manager;
 
 use Doctrine\Common\Persistence\ObjectManager;
+use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage;
@@ -488,6 +489,10 @@ class DefaultMediaManager implements MediaManagerInterface
     public function remove($id, $userId)
     {
         $media = $this->mediaRepository->findMediaByIdForDelete($id);
+
+        if (!$media) {
+            throw new EntityNotFoundException('SuluMediaBundle:Media', $id);
+        }
         /**
          * @var File $file
          */
@@ -496,7 +501,7 @@ class DefaultMediaManager implements MediaManagerInterface
              * @var FileVersion $fileVersion
              */
             foreach ($file->getFileVersions() as $fileVersion) {
-                $this->storage->remove($fileVersion->getStorageOption());
+                $this->storage->remove($fileVersion->getStorageOptions());
             }
         }
         $this->em->remove($media);
