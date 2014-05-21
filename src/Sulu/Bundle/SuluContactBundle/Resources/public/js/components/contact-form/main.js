@@ -617,6 +617,7 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
                         el: this.$addOverlay,
                         singleSelect: true,
                         data: this.dropdownDataArray,
+                        defaultLabels: this.sandbox.translate('public.please-choose'),
                         instanceName: 'add-fields',
                         container: ['#' + constants.fieldId, '#' + constants.fieldTypeId]
                     }
