@@ -13,6 +13,7 @@ namespace Sulu\Bundle\MediaBundle\Media\RestObject;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage;
+use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use DateTime;
@@ -35,6 +36,11 @@ class MediaRestObject implements RestObject
      * @var string
      */
     protected $locale;
+
+    /**
+     * @var int
+     */
+    protected $type;
 
     /**
      * @var int
@@ -128,16 +134,17 @@ class MediaRestObject implements RestObject
                     // set id
                     $this->id = $value;
                     break;
+                case 'type':
                 case 'collection':
                     // set collection
                     if ($value) {
-                        $this->collection = $value['id'];
+                        $this->$key = $value['id'];
                     }
                     break;
                 case 'changer':
                 case 'creator':
                     if ($value) {
-                        if (isset($value['contact']['firstName'])) {
+                        if (isset($value['contact']['firstName']) && isset($value['contact']['lastName'])) {
                             $this->$key = $value['contact']['firstName'] . ' ' . $value['contact']['lastName'];
                         }
                     }
@@ -193,18 +200,12 @@ class MediaRestObject implements RestObject
                                     */
 
                                     if ($fileVersion['meta']) {
-                                        $metaSet = false;
+                                        $counter = 0;
                                         foreach ($fileVersion['meta'] as $meta) {
-                                            if ($meta['locale'] == $locale) {
-                                                $metaSet = true;
+                                            $counter++;
+                                            if ($counter == 1 || $meta['locale'] == $locale) {
                                                 $this->title = $meta['title'];
                                                 $this->description = $meta['description'];
-                                            }
-                                        }
-                                        if (!$metaSet) {
-                                            if (isset($fileVersion['metas'][0])) {
-                                                $this->title = $fileVersion['metas'][0]['title'];
-                                                $this->description = $fileVersion['metas'][0]['description'];
                                             }
                                         }
                                     }
@@ -232,6 +233,9 @@ class MediaRestObject implements RestObject
     {
         // set id
         $this->id = $object->getId();
+
+        // set locale
+        $this->locale = $locale;
 
         $versions = array();
         $contentLanguages = array();
@@ -284,6 +288,20 @@ class MediaRestObject implements RestObject
                         );
                     }
 
+                    /**
+                     * @var FileVersionMeta $meta
+                     */
+                    $counter = 0;
+                    foreach ($fileVersion->getMeta() as $meta) {
+                        $counter++;
+                        if ($counter == 1 || $meta->getLocale() == $locale) {
+                            // set title
+                            $this->title = $meta->getTitle();
+                            // set description
+                            $this->description = $meta->getDescription();
+                        }
+                    }
+
                     // TODO url
                     $fileVersion->getStorageOptions();
                     $this->url = null;
@@ -312,6 +330,11 @@ class MediaRestObject implements RestObject
         // set collection
         if ($object->getCollection()) {
             $this->collection = $object->getCollection()->getId();
+        }
+
+        // set type
+        if ($object->getType()) {
+            $this->type = $object->getType()->getId();
         }
 
         // set changed time
@@ -348,7 +371,10 @@ class MediaRestObject implements RestObject
                 'id' => $this->id,
                 'locale' => $this->locale,
                 'collection' => $this->collection,
+                'type' => $this->type,
+                'version' => $this->version,
                 'versions' => $this->versions,
+                'name' => $this->name,
                 'title' => $this->title,
                 'description' => $this->description,
                 'size' => $this->size,
@@ -717,4 +743,19 @@ class MediaRestObject implements RestObject
         return $this->name;
     }
 
+    /**
+     * @return int
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param int $type
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+    }
 } 
