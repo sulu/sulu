@@ -94,7 +94,7 @@ define([], function () {
                 return [
                     {
                         id: 'change',
-                        icon: 'show-thumbnails',
+                        icon: 'th-large',
                         items: [
                             {
                                 title: this.sandbox.translate('sulu.list-toolbar.small-thumbnails'),
