@@ -56,7 +56,7 @@ class MediaController extends RestController implements ClassResourceInterface
     /**
      * {@inheritdoc}
      */
-    protected $fieldsHidden = array('created');
+    protected $fieldsHidden = array('id', 'created', 'changed');
 
     /**
      * {@inheritdoc}
@@ -84,7 +84,11 @@ class MediaController extends RestController implements ClassResourceInterface
     protected $fieldsWidth = array();
 
     /**
-     *
+     * {@inheritdoc}
+     */
+    protected $fieldsRelations = array('title', 'name', 'description', 'size');
+
+    /**
      * {@inheritdoc}
      */
     protected $bundlePrefix = 'media.media.';
@@ -157,8 +161,12 @@ class MediaController extends RestController implements ClassResourceInterface
         $locale = $this->getLocale($request->get('locale'));
 
         $collection = $request->get('collection');
+        $fields = $request->get('fields', null);
+        if ($fields !== null) {
+            $fields = explode(',', $fields);
+        }
         $mediaList = $this->getDoctrine()->getRepository($this->entityName)->findMedia($collection);
-        $mediaList = $this->flatMedia($mediaList, $locale, $request->get('fields', array()));
+        $mediaList = $this->flatMedia($mediaList, $locale, $fields);
         $view = $this->view($this->createHalResponse($mediaList), 200);
 
         return $this->handleView($view);

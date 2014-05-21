@@ -209,7 +209,7 @@ class MediaRestObject implements RestObject
                                             }
                                         }
                                     }
-
+                                    $this->title = ($this->title) ? $this->title : $fileVersion['name'];
                                     break;
                                 }
                             }
@@ -301,6 +301,8 @@ class MediaRestObject implements RestObject
                             $this->description = $meta->getDescription();
                         }
                     }
+
+                    $this->title = ($this->title) ? $this->title : $this->name;
 
                     // TODO url
                     $fileVersion->getStorageOptions();
