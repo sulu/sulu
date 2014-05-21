@@ -55,7 +55,9 @@ abstract class RestController extends FOSRestController
     protected $fieldTypes = array(
         'created' => 'date',
         'changed' => 'date',
-        'birthday' => 'date'
+        'birthday' => 'date',
+        'title' => 'title',
+        'size' => 'bytes'
     );
 
     /**
