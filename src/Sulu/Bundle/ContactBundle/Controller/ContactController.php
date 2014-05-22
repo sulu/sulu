@@ -214,6 +214,8 @@ class ContactController extends RestController implements ClassResourceInterface
     {
         $firstName = $request->get('firstName');
         $lastName = $request->get('lastName');
+        $disabled = $request->get('disabled');
+        $formOfAddress = $request->get('formOfAddress');
 
         try {
             if ($firstName == null) {
@@ -221,6 +223,12 @@ class ContactController extends RestController implements ClassResourceInterface
             }
             if ($lastName == null) {
                 throw new RestException('There is no last name for the contact');
+            }
+            if (is_null($disabled)) {
+                throw new RestException('There is no disabled flag for the contact');
+            }
+            if (is_null($formOfAddress)) {
+                throw new RestException('There is no form of address for the contact');
             }
 
             $em = $this->getDoctrine()->getManager();
@@ -291,6 +299,15 @@ class ContactController extends RestController implements ClassResourceInterface
                 }
             }
 
+
+            $contact->setFormOfAddress($formOfAddress);
+            $contact->setDisabled($disabled);
+
+            $salutation = $request->get('salutation');
+            if (!empty($salutation)) {
+                $contact->setSalutation($salutation);
+            }
+
             $em->persist($contact);
 
             $em->flush();
@@ -359,6 +376,21 @@ class ContactController extends RestController implements ClassResourceInterface
 //                    && $this->processUrls($contact, $request))
                 ) {
                     throw new RestException('Updating dependencies is not possible', 0);
+                }
+
+                $formOfAddress = $request->get('formOfAddress');
+                if(!is_null($formOfAddress)){
+                    $contact->setFormOfAddress($formOfAddress);
+                }
+
+                $disabled = $request->get('disabled');
+                if(!is_null($disabled)){
+                    $contact->setDisabled($disabled);
+                }
+
+                $salutation = $request->get('salutation');
+                if (!empty($salutation)) {
+                    $contact->setSalutation($salutation);
                 }
 
                 $em->flush();
