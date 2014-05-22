@@ -265,10 +265,9 @@ class NodeRepository implements NodeRepositoryInterface
             $sqlFunction =
                 (isset($filterConfig['includeSubFolders']) && $filterConfig['includeSubFolders'])
                     ? 'ISDESCENDANTNODE' : 'ISCHILDNODE';
-            $node = $this->sessionManager->getContentNode($webspaceKey);
-            $dataSource = $node->getPath();
-            $dataSource .= $filterConfig['dataSource'];
-            $sql2Where[] = $sqlFunction . '(\'' . $dataSource . '\')';
+
+            $node = $this->sessionManager->getSession()->getNodeByIdentifier($filterConfig['dataSource']);
+            $sql2Where[] = $sqlFunction . '(\'' . $node->getPath() . '\')';
         }
 
         // build where clause for tags
@@ -393,14 +392,14 @@ class NodeRepository implements NodeRepositoryInterface
      * {@inheritdoc}
      */
     public function getNodesTree(
-        $path,
+        $uuid,
         $webspaceKey,
         $languageCode,
         $excludeGhosts = false,
         $appendWebspaceNode = false
     )
     {
-        $nodes = $this->getMapper()->loadTreeByPath($path, $languageCode, $webspaceKey, $excludeGhosts, false);
+        $nodes = $this->getMapper()->loadTreeByUuid($uuid, $languageCode, $webspaceKey, $excludeGhosts, false);
 
         if ($appendWebspaceNode) {
             $webspace = $this->webspaceManager->getWebspaceCollection()->getWebspace($webspaceKey);
@@ -432,7 +431,7 @@ class NodeRepository implements NodeRepositoryInterface
 
         // add api links
         $result['_links'] = array(
-            'self' => $this->apiBasePath . '/tree?path=' . $path . '&webspace=' . $webspaceKey . '&language=' . $languageCode . ($excludeGhosts === true ? '&exclude-ghosts=true' : '') . ($appendWebspaceNode === true ? '&webspace-node=true' : ''),
+            'self' => $this->apiBasePath . '/tree?uuid=' . $uuid . '&webspace=' . $webspaceKey . '&language=' . $languageCode . ($excludeGhosts === true ? '&exclude-ghosts=true' : '') . ($appendWebspaceNode === true ? '&webspace-node=true' : ''),
         );
 
         return $result;

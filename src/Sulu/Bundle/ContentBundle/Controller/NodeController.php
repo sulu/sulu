@@ -127,11 +127,11 @@ class NodeController extends RestController implements ClassResourceInterface
         $webspace = $this->getWebspace();
         $excludeGhosts = $this->getBooleanRequestParameter($this->getRequest(), 'exclude-ghosts', false, false);
 
-        $path = $this->getRequest()->get('path');
+        $uuid = $this->getRequest()->get('uuid');
         $appendWebspaceNode = $this->getBooleanRequestParameter($this->getRequest(), 'webspace-node', false, false);
 
         $result = $this->getRepository()->getNodesTree(
-            $path,
+            $uuid,
             $webspace,
             $language,
             $excludeGhosts,
