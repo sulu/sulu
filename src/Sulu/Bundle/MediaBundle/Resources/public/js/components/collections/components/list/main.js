@@ -110,6 +110,8 @@ define(function () {
             };
             // stores all colleciton objects with the corresponding id
             this.collections = {}
+            // stores key value paires of an array of selected elements as value and the corresponding datagrid-name as key
+            this.selectedMedias = {};
 
             this.bindCustomEvents();
             this.render();
@@ -126,6 +128,51 @@ define(function () {
             this.sandbox.on('sulu.header.initialized', this.startListToolbar.bind(this));
             // update a collection in the list if the data-record has changed
             this.sandbox.on('sulu.media.collections.collection-changed', this.updateCollection.bind(this));
+            // delete media if list-toolbar delete is clicked
+            this.sandbox.on('sulu.list-toolbar.delete', this.deleteMedia.bind(this));
+        },
+
+        /**
+         * Deletes all the selected media
+         */
+        deleteMedia: function() {
+            this.setSelectedMedias().then(function() {
+                for (var key in this.selectedMedias) {
+                    this.sandbox.emit('sulu.media.collections.delete-media', this.selectedMedias[key], function(key, mediaId) {
+                        this.sandbox.emit('husky.datagrid.'+ this.collections[key].datagridName +'.record.remove', mediaId);
+                        this.collections[key].selectedElements = 0;
+                        delete this.selectedMedias[key];
+                    }.bind(this, key));
+                }
+            }.bind(this));
+        },
+
+        /**
+         * Asks each datagrid with selected elements for the selected
+         * element-ids and stores them in the global array
+         */
+        setSelectedMedias: function() {
+            var key, count = 0, length = Object.keys(this.collections).length,
+                dfd = this.sandbox.data.deferred();
+
+            for (var key in this.collections) {
+                if (this.collections[key].selectedElements > 0) {
+                    this.sandbox.emit('husky.datagrid.'+ this.collections[key].datagridName +'.items.get-selected', function(ids) {
+                        // stores the selected media-ids with the id of the corresponding datagrid
+                        this.selectedMedias[key] = ids;
+                        count++;
+                        if (count === length) {
+                            dfd.resolve();
+                        }
+                    }.bind(this));
+                } else {
+                    length--;
+                    if (count === length) {
+                        dfd.resolve();
+                    }
+                }
+            }
+            return dfd.promise();
         },
 
         /**
@@ -162,7 +209,7 @@ define(function () {
                 options: {
                     el: $listtoolbar,
                     instanceName: this.options.instanceName,
-                    template: 'default',
+                    template: 'defaultNoSettings',
                     inHeader: true
                 }
             }]);
@@ -221,7 +268,9 @@ define(function () {
             this.sandbox.dom.append($container, $collection);
             this.collections[collection.id] = {
                 $el: $collection,
-                data: collection
+                data: collection,
+                selectedElements: 0,
+                datagridName: null
             };
             this.bindCollectionDomEvents(collection.id);
         },
@@ -274,7 +323,13 @@ define(function () {
          * @param $container {Object} the dom container to start the datagrid in
          */
         startCollectionDatagrid: function (id, $container) {
-            //TODO: don't fetch the data from contact-bundle
+            // store number of selected elements
+            this.sandbox.on('husky.datagrid.'+ this.options.instanceName + id +'.number.selections', function(number) {
+                this.collections[id].selectedElements = number;
+                this.refreshDeleteState();
+            }.bind(this));
+
+            this.collections[id].datagridName = this.options.instanceName + id;
             this.sandbox.sulu.initList.call(this, 'mediaFields', '/admin/api/media/fields',
                 {
                     el: $container,
@@ -290,6 +345,21 @@ define(function () {
                     }
                 }
             );
+        },
+
+        /**
+         * Looks if any collection has selected elements and enbalbes or disables the delete button
+         * @param {Boolean} returns true if the button got enabled
+         */
+        refreshDeleteState: function() {
+            for (var key in this.collections) {
+                if (this.collections[key].selectedElements > 0) {
+                    this.sandbox.emit('sulu.list-toolbar.'+ this.options.instanceName +'.delete.state-change', true);
+                    return true;
+                }
+            }
+            this.sandbox.emit('sulu.list-toolbar.'+ this.options.instanceName +'.delete.state-change', false);
+            return false;
         },
 
         /**

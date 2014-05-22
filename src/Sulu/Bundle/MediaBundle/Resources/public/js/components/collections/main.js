@@ -32,6 +32,7 @@ define(function() {
      * listens on and deletes medias
      * @event sulu.media.collections.delete-media
      * @param ids {Array} array of ids of the media to delete
+     * @param callback {Function} callback to execute after a media got deleted
      */
     DELETE_MEDIA = function() {
         return createEventName.call(this, 'delete-media');
@@ -127,16 +128,27 @@ define(function() {
         /**
          * Deletes an array of media
          * @param mediaIds {Array} array of media ids
+         * @param callback {Function} callback to execute after deleting a media
          */
-        deleteMedia: function(mediaIds) {
-            this.sandbox.util.foreach(mediaIds, function(id) {
-                this.sandbox.util.ajax({
-                    url: constants.singleMediaUrl + '/' + id,
-                    type: 'DELETE',
-                    success: function() {
-                        this.sandbox.emit(SINGLE_MEDIA_DELETED.call(this), id);
-                    }
-                });
+        deleteMedia: function(mediaIds, callback) {
+            this.sandbox.sulu.showDeleteDialog(function(confirmed) {
+                if (confirmed === true) {
+
+                    this.sandbox.util.foreach(mediaIds, function(id) {
+                        this.sandbox.util.ajax({
+                            url: constants.singleMediaUrl + '/' + id,
+                            type: 'DELETE',
+                            success: function() {
+                                if (typeof callback === 'function') {
+                                    callback(id);
+                                } else {
+                                    this.sandbox.emit(SINGLE_MEDIA_DELETED.call(this), id);
+                                }
+                            }.bind(this)
+                        });
+                    }.bind(this));
+
+                }
             }.bind(this));
         },
 
