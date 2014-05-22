@@ -29431,6 +29431,20 @@ define('husky_components/datagrid/decorators/thumbnail-view',[],function() {
         downloadHandler: function(id) {
             // not yet implemented
             this.sandbox.logger.warn('Download handler not yet implemented!', id);
+        },
+
+        /**
+         * Removes a data record from the view
+         * @param recordId {Number|String} the records identifier
+         * @returns {Boolean} true if deleted succesfully
+         */
+        removeRecord: function(recordId) {
+            if (!!this.$thumbnails[recordId]) {
+                this.sandbox.dom.remove(this.$thumbnails[recordId]);
+                this.datagrid.removeRecord.call(this.datagrid, recordId);
+                return true;
+            }
+            return false;
         }
     };
 });
@@ -29772,7 +29786,7 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
  *
  * @param {Object} [paginationOptions] Configuration object
  * @param {Number} [paginationOptions.pageSize] maximum elements per page
- * @param {Function} [paginationOptions.showAllHandler] function to call if pagination is clicked. Default action gets not executed if set
+ * @param {Function} [paginationOptions.showAllHandler] function to call if pagination is clicked. If set pagination will always be displayed. Default action gets not executed if set.
  *
  * @param {Function} [initialize] function which gets called once at the start of the view
  * @param {Function} [render] function to render data
@@ -29845,7 +29859,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
             this.data = data;
 
             this.$paginationContainer = this.sandbox.dom.createElement('<div class="' + constants.paginationClass + '"/>');
-            if (this.data.numberOfAll > this.data.total) {
+            if (this.data.numberOfAll > this.data.total || !!this.options.showAllHandler) {
                 this.renderShowAll();
             } else if (this.data.numberOfAll > this.options.pageSize) {
                 this.renderShowOnly();
@@ -29922,7 +29936,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
          */
         bindDomEvents: function () {
             this.sandbox.dom.on(this.$paginationContainer, 'click', function() {
-                if (this.data.numberOfAll > this.data.total) {
+                if (this.data.numberOfAll > this.data.total || !!this.options.showAllHandler) {
                     this.showAll();
                 } else {
                     this.showOnly();
@@ -30474,9 +30488,10 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * Displays a loading icon
              */
             loading: function() {
-                this.$element
-                    .outerWidth(this.$element.outerWidth())
-                    .outerHeight(this.$element.outerHeight());
+                if (this.sandbox.dom.is(this.$element, ':visible')) {
+                    this.sandbox.dom.height(this.$element, this.sandbox.dom.outerHeight(this.$element));
+                    this.sandbox.dom.width(this.$element, this.sandbox.dom.outerWidth(this.$element));
+                }
 
                 this.sandbox.dom.addClass(this.$element, 'loading');
 
@@ -30506,7 +30521,10 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
             stopLoading: function() {
                 this.sandbox.dom.hide(this.$loader);
                 this.sandbox.dom.removeClass(this.$element, 'loading');
-                return this.$element.outerHeight('').outerWidth('');
+
+                this.sandbox.dom.height(this.$element, '');
+                this.sandbox.dom.width(this.$element, '');
+                return this.$element;
             },
 
             /**
@@ -30831,6 +30849,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
                         this.pushRecords([recordData]);
                     }
                     this.gridViews[this.viewId].addRecord(recordData);
+                    this.sandbox.emit(NUMBER_SELECTIONS.call(this), this.getSelectedItemIds().length);
                 }
             },
 
@@ -30847,6 +30866,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
                         }
                         this.gridViews[this.viewId].addRecord(record);
                     }.bind(this));
+                    this.sandbox.emit(NUMBER_SELECTIONS.call(this), this.getSelectedItemIds().length);
                 }
             },
 
@@ -30856,6 +30876,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
             removeRecordHandler: function(recordId) {
                 if (!!this.gridViews[this.viewId].removeRecord) {
                     this.gridViews[this.viewId].removeRecord(recordId);
+                    this.sandbox.emit(NUMBER_SELECTIONS.call(this), this.getSelectedItemIds().length);
                 }
             },
 
@@ -39785,6 +39806,14 @@ define('__component__$dropzone@husky',[], function() {
         },
 
         /**
+         * listens on and opens the data-source folder-overlay
+         * @event husky.dropzone.<instance-name>.open-data-source
+         */
+            OPEN_DATA_SOURCE = function() {
+            return createEventName.call(this, 'open-data-source');
+        },
+
+        /**
          * raised after files got uploaded and faded out from the dropzone
          * @event husky.dropzone.<instance-name>.files-added
          * @param {Array} all newly added files
@@ -39813,6 +39842,7 @@ define('__component__$dropzone@husky',[], function() {
             this.lastUploadedFile = null;
             this.overlayOpened = false;
 
+            this.bindCustomEvents();
             this.render();
             this.bindDomEvents();
 
@@ -39834,6 +39864,16 @@ define('__component__$dropzone@husky',[], function() {
                     this.openOverlay();
                 }.bind(this));
             }
+        },
+
+        /**
+         * Binds custom-related events
+         */
+        bindCustomEvents: function() {
+            // opens the data-source folder-overlay
+            this.sandbox.on(OPEN_DATA_SOURCE.call(this), function() {
+                this.sandbox.dom.trigger(this.$dropzone, 'click');
+            }.bind(this));
         },
 
         /**
@@ -40692,7 +40732,7 @@ define('husky_extensions/collection',[],function() {
             };
 
             app.core.dom.height = function(selector, value) {
-                if (!value) {
+                if (typeof value === 'undefined') {
                     return $(selector).height();
                 }
                 return $(selector).height(value);
@@ -40703,6 +40743,14 @@ define('husky_extensions/collection',[],function() {
                     return $(selector).outerHeight();
                 } else {
                     return $(selector).outerHeight(includeMargin);
+                }
+            };
+
+            app.core.dom.outerWidth = function(selector, includeMargin) {
+                if (typeof includeMargin === 'undefined') {
+                    return $(selector).outerWidth();
+                } else {
+                    return $(selector).outerWidth(includeMargin);
                 }
             };
 

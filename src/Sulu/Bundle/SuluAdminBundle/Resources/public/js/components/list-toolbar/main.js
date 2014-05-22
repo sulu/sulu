@@ -90,6 +90,11 @@ define([], function () {
                     }
                 ];
             },
+            defaultNoSettings: function() {
+                var defaults = templates.default.call(this);
+                defaults.splice(2, 1);
+                return defaults;
+            },
             changeable: function () {
                 return [
                     {
@@ -139,6 +144,11 @@ define([], function () {
                     postfix;
                 this.sandbox.on('husky.datagrid.number.selections', function (number) {
                     postfix = number > 0 ? 'enable' : 'disable';
+                    this.sandbox.emit('husky.toolbar.' + instanceName + 'item.' + postfix, 'delete', false);
+                }.bind(this));
+
+                this.sandbox.on('sulu.list-toolbar.'+ instanceName +'delete.state-change', function (enable) {
+                    postfix = !!enable ? 'enable' : 'disable';
                     this.sandbox.emit('husky.toolbar.' + instanceName + 'item.' + postfix, 'delete', false);
                 }.bind(this));
             },
