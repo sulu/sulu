@@ -56,11 +56,11 @@ class DefaultController extends WebsiteController
 
     public function redirectAction(Request $request)
     {
-        $url = str_replace(
+        $url = rtrim(str_replace(
             $request->get('url'),
             $request->get('redirect'),
             $request->getUri()
-        );
+        ), '/');
 
         return new RedirectResponse($url, 301);
     }
