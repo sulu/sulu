@@ -125,7 +125,7 @@ interface NodeRepositoryInterface
     public function getHistory($uuid, $webspaceKey, $languageCode);
 
     /**
-     * @param string $path
+     * @param string $uuid
      * @param string $webspaceKey
      * @param string $languageCode
      * @param boolean $excludeGhosts
@@ -133,7 +133,7 @@ interface NodeRepositoryInterface
      * @return array
      */
     public function getNodesTree(
-        $path,
+        $uuid,
         $webspaceKey,
         $languageCode,
         $excludeGhosts = false,
