@@ -86,6 +86,10 @@ class NodeController extends RestController implements ClassResourceInterface
      */
     public function getAction($uuid)
     {
+        if ($uuid === 'tree') {
+            return $this->cgetTree();
+        }
+
         $language = $this->getLanguage();
         $webspace = $this->getWebspace();
         $breadcrumb = $this->getBooleanRequestParameter($this->getRequest(), 'breadcrumb', false, false);
@@ -111,6 +115,32 @@ class NodeController extends RestController implements ClassResourceInterface
         );
 
         return $this->handleView($view);
+    }
+
+    /**
+     * return a tree for given path
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function cgetTree()
+    {
+        $language = $this->getLanguage();
+        $webspace = $this->getWebspace();
+        $excludeGhosts = $this->getBooleanRequestParameter($this->getRequest(), 'exclude-ghosts', false, false);
+
+        $path = $this->getRequest()->get('path');
+        $appendWebspaceNode = $this->getBooleanRequestParameter($this->getRequest(), 'webspace-node', false, false);
+
+        $result = $this->getRepository()->getNodesTree(
+            $path,
+            $webspace,
+            $language,
+            $excludeGhosts,
+            $appendWebspaceNode
+        );
+
+        return $this->handleView(
+            $this->view($result)
+        );
     }
 
     /**

@@ -10,7 +10,9 @@
 
 namespace Sulu\Bundle\ContentBundle\Repository;
 
-
+/**
+ * repository for node objects
+ */
 interface NodeRepositoryInterface
 {
     /**
@@ -54,12 +56,12 @@ interface NodeRepositoryInterface
     );
 
     /**
-     * Returns the content of a smartcontent configuration
+     * Returns the content of a smart content configuration
      * @param array $filterConfig The config of the smart content
      * @param string $languageCode The desired language code
      * @param string $webspaceKey The webspace key
-     * @param bool $preview
-     * @return mixed
+     * @param boolean $preview If true also  unpublished pages will be returned
+     * @return array
      */
     public function getFilteredNodes(array $filterConfig, $languageCode, $webspaceKey, $preview = false);
 
@@ -109,8 +111,8 @@ interface NodeRepositoryInterface
 
     /**
      * removes given node
-     * @param $uuid
-     * @param $webspaceKey
+     * @param string $uuid
+     * @param string $webspaceKey
      */
     public function deleteNode($uuid, $webspaceKey);
 
@@ -121,4 +123,20 @@ interface NodeRepositoryInterface
      * @return array
      */
     public function getHistory($uuid, $webspaceKey, $languageCode);
+
+    /**
+     * @param string $path
+     * @param string $webspaceKey
+     * @param string $languageCode
+     * @param boolean $excludeGhosts
+     * @param bool $appendWebspaceNode
+     * @return array
+     */
+    public function getNodesTree(
+        $path,
+        $webspaceKey,
+        $languageCode,
+        $excludeGhosts = false,
+        $appendWebspaceNode = false
+    );
 }
