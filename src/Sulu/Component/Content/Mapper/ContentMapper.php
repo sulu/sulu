@@ -690,7 +690,11 @@ class ContentMapper implements ContentMapperInterface
     )
     {
         $path = ltrim($path, '/');
+        if ($path === '') {
+            $node = $this->getContentNode($webspaceKey);
+        } else {
         $node = $this->getContentNode($webspaceKey)->getNode($path);
+        }
 
         if ($this->stopwatch) {
             $this->stopwatch->start('contentManager.loadTreeByPath');
