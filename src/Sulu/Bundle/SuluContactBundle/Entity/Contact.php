@@ -117,6 +117,22 @@ class Contact extends ApiEntity
     private $faxes;
 
     /**
+     * @var integer
+     */
+    private $formOfAddress = 0;
+
+    /**
+     * @var string
+     */
+    private $salutation;
+
+    /**
+     * @var integer
+     */
+    private $disabled = 0;
+
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -710,21 +726,6 @@ class Contact extends ApiEntity
     {
         $this->faxes->removeElement($faxes);
     }
-    /**
-     * @var integer
-     */
-    private $formOfAddress;
-
-    /**
-     * @var string
-     */
-    private $salutation;
-
-    /**
-     * @var integer
-     */
-    private $disabled;
-
 
     /**
      * Set formOfAddress
