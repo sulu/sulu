@@ -69,12 +69,24 @@ define(function () {
                 this.addFilesToDatagrid(files);
             }.bind(this));
 
+            // open data-source folder-overlay
+            this.sandbox.on('sulu.list-toolbar.add', function() {
+                this.sandbox.emit('husky.dropzone.'+ this.options.instanceName +'.open-data-source');
+            }.bind(this));
+
             // delete clicked
-            this.sandbox.on('sulu.list-toolbar.delete', function() {
-                this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
-                    this.sandbox.emit('sulu.media.collections.delete-media', ids);
+            this.sandbox.on('sulu.list-toolbar.delete', this.deleteMedia.bind(this));
+        },
+
+        /**
+         * Deletes all selected medias
+         */
+        deleteMedia: function() {
+            this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
+                this.sandbox.emit('sulu.media.collections.delete-media', ids, function(mediaId) {
+                    this.sandbox.emit('husky.datagrid.record.remove', mediaId);
                 }.bind(this));
-            }, this);
+            }.bind(this));
         },
 
         /**
