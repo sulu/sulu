@@ -91,7 +91,12 @@ class PortalRouteProvider implements RouteProviderInterface
                     $portal->getWebspace()->getKey(),
                     $language
                 );
-                if ($content->getGlobalState() === StructureInterface::STATE_TEST || !$content->getHasTranslation()) {
+                if (
+                    $content->getGlobalState() === StructureInterface::STATE_TEST ||
+                    !$content->getHasTranslation() ||
+                    // don't response to startpage with slash at the end (to avoid duplicate content)
+                    $this->requestAnalyzer->getCurrentResourceLocator() === '/'
+                ) {
                     throw new ResourceLocatorNotFoundException();
                 } else {
                     $route = new Route($request->getRequestUri(), array(
