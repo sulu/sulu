@@ -195,6 +195,37 @@
                 });
             };
 
+            /**
+             * Shows a standard delete warning dialog
+             * @param callback {Function} callback function to execute after dialog got closed. The callback gets always executed (with true or false as first argument, whether the dialog got confirmed or not)
+             * @param title {String} custom title of the dialog
+             * @param description {String} custom description of the dialog
+             */
+            app.sandbox.sulu.showDeleteDialog = function(callback, title, description) {
+                // check if callback is a function
+                if (!!callback && typeof(callback) !== 'function') {
+                    throw 'callback is not a function';
+                }
+                title = (typeof title === 'string') ? title : 'sulu.overlay.be-careful';
+                description = (typeof description === 'string') ? description : 'sulu.overlay.delete-desc';
+
+                // show warning dialog
+                app.sandbox.emit('sulu.overlay.show-warning',
+                    title,
+                    description,
+
+                    function() {
+                        // cancel callback
+                        callback(false);
+                    }.bind(this),
+
+                    function() {
+                        // ok callback
+                        callback(true);
+                    }.bind(this)
+                );
+            };
+
             /*********
              * MISC
              *********/
