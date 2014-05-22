@@ -16,6 +16,10 @@
         <field name="created" type="datetime" column="created"/>
         <field name="changed" type="datetime" column="changed"/>
 
+        <field name="salutation" type="string" column="salutation" length="255" nullable="true"/>
+        <field name="formOfAddress" type="integer" column="formOfAddress" nullable="false"/>
+        <field name="disabled" type="integer" column="disabled" length="1" nullable="false"/>
+
         <one-to-many field="locales" target-entity="Sulu\Bundle\ContactBundle\Entity\ContactLocale"
                      mapped-by="contact"/>
         <one-to-many field="activities" target-entity="Sulu\Bundle\ContactBundle\Entity\Activity" mapped-by="contact"/>

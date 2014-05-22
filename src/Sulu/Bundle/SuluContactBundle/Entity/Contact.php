@@ -710,4 +710,88 @@ class Contact extends ApiEntity
     {
         $this->faxes->removeElement($faxes);
     }
+    /**
+     * @var integer
+     */
+    private $formOfAddress;
+
+    /**
+     * @var string
+     */
+    private $salutation;
+
+    /**
+     * @var integer
+     */
+    private $disabled;
+
+
+    /**
+     * Set formOfAddress
+     *
+     * @param integer $formOfAddress
+     * @return Contact
+     */
+    public function setFormOfAddress($formOfAddress)
+    {
+        $this->formOfAddress = $formOfAddress;
+    
+        return $this;
+    }
+
+    /**
+     * Get formOfAddress
+     *
+     * @return integer 
+     */
+    public function getFormOfAddress()
+    {
+        return $this->formOfAddress;
+    }
+
+    /**
+     * Set salutation
+     *
+     * @param string $salutation
+     * @return Contact
+     */
+    public function setSalutation($salutation)
+    {
+        $this->salutation = $salutation;
+    
+        return $this;
+    }
+
+    /**
+     * Get salutation
+     *
+     * @return string 
+     */
+    public function getSalutation()
+    {
+        return $this->salutation;
+    }
+
+    /**
+     * Set disabled
+     *
+     * @param integer $disabled
+     * @return Contact
+     */
+    public function setDisabled($disabled)
+    {
+        $this->disabled = $disabled;
+    
+        return $this;
+    }
+
+    /**
+     * Get disabled
+     *
+     * @return integer 
+     */
+    public function getDisabled()
+    {
+        return $this->disabled;
+    }
 }
