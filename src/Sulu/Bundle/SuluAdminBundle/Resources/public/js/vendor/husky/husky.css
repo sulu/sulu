@@ -5327,27 +5327,32 @@ table {
   vertical-align: middle;
   font-family: Helvetica, Arial;
 }
-/* line 60, ../scss/modules/tables.scss */
+/* line 56, ../scss/modules/tables.scss */
+.table tbody td img {
+  max-height: 50px;
+  max-width: 50px;
+}
+/* line 64, ../scss/modules/tables.scss */
 .table.is-selectable tr {
   cursor: pointer;
 }
-/* line 62, ../scss/modules/tables.scss */
+/* line 66, ../scss/modules/tables.scss */
 .table.is-selectable tr:hover > td {
   background-color: #fff;
 }
-/* line 67, ../scss/modules/tables.scss */
+/* line 71, ../scss/modules/tables.scss */
 .table.is-selectable thead tr {
   cursor: auto;
 }
-/* line 73, ../scss/modules/tables.scss */
+/* line 77, ../scss/modules/tables.scss */
 .table .thumb {
   text-align: center;
 }
-/* line 76, ../scss/modules/tables.scss */
+/* line 80, ../scss/modules/tables.scss */
 .table .thumb img {
   vertical-align: middle;
 }
-/* line 81, ../scss/modules/tables.scss */
+/* line 85, ../scss/modules/tables.scss */
 .table .remove-row {
   text-align: center;
 }
@@ -6302,7 +6307,7 @@ a.btn-black, a.btn-highlight {
   color: #999999;
 }
 /* line 37, ../scss/modules/matrix.scss */
-.table.matrix span[class^="fa-"] {
+.table.matrix .matrix-icon {
   border: 1px solid black;
   color: black;
   border-radius: 12px;
@@ -6313,7 +6318,7 @@ a.btn-black, a.btn-highlight {
   text-align: center;
 }
 /* line 50, ../scss/modules/matrix.scss */
-.table.matrix span[class^="fa-"].is-active {
+.table.matrix .matrix-icon.is-active {
   color: white;
   border-color: #5dc774;
   background-color: #5dc774;
@@ -7889,14 +7894,16 @@ a.btn-black, a.btn-highlight {
 /* line 47, ../scss/modules/thumbnails.scss */
 .husky-thumbnails .item.small .image img {
   vertical-align: middle;
+  max-width: 100%;
+  max-height: 100%;
 }
-/* line 51, ../scss/modules/thumbnails.scss */
+/* line 53, ../scss/modules/thumbnails.scss */
 .husky-thumbnails .item.small .text {
   float: left;
   padding-top: 20px;
   width: 190px -1px;
 }
-/* line 56, ../scss/modules/thumbnails.scss */
+/* line 58, ../scss/modules/thumbnails.scss */
 .husky-thumbnails .item.small .checkbox {
   position: absolute;
   top: 10px;
@@ -7904,14 +7911,14 @@ a.btn-black, a.btn-highlight {
   left: auto;
   display: none;
 }
-/* line 63, ../scss/modules/thumbnails.scss */
+/* line 65, ../scss/modules/thumbnails.scss */
 .husky-thumbnails .item.small .download {
   position: absolute;
   right: 10px;
   bottom: 10px;
   display: none;
 }
-/* line 71, ../scss/modules/thumbnails.scss */
+/* line 73, ../scss/modules/thumbnails.scss */
 .husky-thumbnails .item.large {
   width: 187px;
   height: 248px;
@@ -7920,7 +7927,7 @@ a.btn-black, a.btn-highlight {
   border: 1px solid #cccccc;
   padding: 10px;
 }
-/* line 79, ../scss/modules/thumbnails.scss */
+/* line 81, ../scss/modules/thumbnails.scss */
 .husky-thumbnails .item.large .image {
   width: 100%;
   height: 170px;
@@ -7928,40 +7935,42 @@ a.btn-black, a.btn-highlight {
   line-height: 170px;
   margin-bottom: 10px;
 }
-/* line 85, ../scss/modules/thumbnails.scss */
+/* line 87, ../scss/modules/thumbnails.scss */
 .husky-thumbnails .item.large .image img {
   vertical-align: bottom;
+  max-width: 100%;
+  max-height: 100%;
 }
-/* line 89, ../scss/modules/thumbnails.scss */
+/* line 93, ../scss/modules/thumbnails.scss */
 .husky-thumbnails .item.large .text {
   text-align: center;
 }
-/* line 92, ../scss/modules/thumbnails.scss */
+/* line 96, ../scss/modules/thumbnails.scss */
 .husky-thumbnails .item.large .checkbox {
   position: absolute;
   left: 10px;
   bottom: 10px;
   top: auto;
 }
-/* line 98, ../scss/modules/thumbnails.scss */
+/* line 102, ../scss/modules/thumbnails.scss */
 .husky-thumbnails .item.large .download {
   position: absolute;
   bottom: 10px;
   right: 10px;
 }
-/* line 106, ../scss/modules/thumbnails.scss */
+/* line 110, ../scss/modules/thumbnails.scss */
 .husky-thumbnails .item:hover, .husky-thumbnails .item.is-selected {
   background: white;
 }
-/* line 109, ../scss/modules/thumbnails.scss */
+/* line 113, ../scss/modules/thumbnails.scss */
 .husky-thumbnails .item:hover .checkbox, .husky-thumbnails .item.is-selected .checkbox {
   display: block;
 }
-/* line 112, ../scss/modules/thumbnails.scss */
+/* line 116, ../scss/modules/thumbnails.scss */
 .husky-thumbnails .item:hover .download, .husky-thumbnails .item.is-selected .download {
   display: block;
 }
-/* line 115, ../scss/modules/thumbnails.scss */
+/* line 119, ../scss/modules/thumbnails.scss */
 .husky-thumbnails .item:hover.large, .husky-thumbnails .item.is-selected.large {
   border-color: white;
 }
