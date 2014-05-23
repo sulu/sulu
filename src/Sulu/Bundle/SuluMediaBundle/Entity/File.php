@@ -18,6 +18,7 @@ use JMS\Serializer\Annotation\Exclude;
  */
 class File
 {
+
     /**
      * @var \DateTime
      */
@@ -50,13 +51,11 @@ class File
 
     /**
      * @var \Sulu\Component\Security\UserInterface
-     * @Exclude
      */
     private $changer;
 
     /**
      * @var \Sulu\Component\Security\UserInterface
-     * @Exclude
      */
     private $creator;
 

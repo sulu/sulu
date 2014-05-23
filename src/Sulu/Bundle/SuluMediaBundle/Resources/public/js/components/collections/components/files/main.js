@@ -68,6 +68,25 @@ define(function () {
             this.sandbox.on('husky.dropzone.'+ this.options.instanceName +'.files-added', function(files) {
                 this.addFilesToDatagrid(files);
             }.bind(this));
+
+            // open data-source folder-overlay
+            this.sandbox.on('sulu.list-toolbar.add', function() {
+                this.sandbox.emit('husky.dropzone.'+ this.options.instanceName +'.open-data-source');
+            }.bind(this));
+
+            // delete clicked
+            this.sandbox.on('sulu.list-toolbar.delete', this.deleteMedia.bind(this));
+        },
+
+        /**
+         * Deletes all selected medias
+         */
+        deleteMedia: function() {
+            this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
+                this.sandbox.emit('sulu.media.collections.delete-media', ids, function(mediaId) {
+                    this.sandbox.emit('husky.datagrid.record.remove', mediaId);
+                }.bind(this));
+            }.bind(this));
         },
 
         /**
@@ -103,7 +122,7 @@ define(function () {
                     name: 'dropzone@husky',
                     options: {
                         el: this.$find(constants.dropzoneSelector),
-                        url: '/admin/api/media?collection%5Bid%5D=1',
+                        url: '/admin/api/media?collection%5Bid%5D=' + this.options.data.id,
                         method: 'POST',
                         paramName: 'fileVersion',
                         instanceName: this.options.instanceName
@@ -116,9 +135,8 @@ define(function () {
          * Starts the list-toolbar in the header
          */
         startDatagrid: function () {
-            // todo: remove fetching data from contact-bundle
             // init list-toolbar and datagrid
-            this.sandbox.sulu.initListToolbarAndList.call(this, 'accountsFields', '/admin/api/accounts/fields',
+            this.sandbox.sulu.initListToolbarAndList.call(this, 'mediaFields', '/admin/api/media/fields',
                 {
                     el: this.$find(constants.toolbarSelector),
                     instanceName: this.options.instanceName,
@@ -129,7 +147,7 @@ define(function () {
                 },
                 {
                     el: this.$find(constants.datagridSelector),
-                    url: '/admin/api/accounts?flat=true',
+                    url: '/admin/api/media?collection=' + this.options.data.id,
                     view: 'thumbnail',
                     pagination: false
                 });

@@ -3,7 +3,7 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
-    <entity name="Sulu\Bundle\MediaBundle\Entity\Media" table="me_medias" repository-class="Sulu\Bundle\MediaBundle\Entity\MediaRepository">
+    <entity name="Sulu\Bundle\MediaBundle\Entity\Media" table="me_media" repository-class="Sulu\Bundle\MediaBundle\Entity\MediaRepository">
 
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
@@ -13,12 +13,12 @@
 
         <one-to-many field="files" target-entity="Sulu\Bundle\MediaBundle\Entity\File" mapped-by="media"/>
 
-        <many-to-one field="collection" target-entity="Sulu\Bundle\MediaBundle\Entity\Collection" inversed-by="medias">
+        <many-to-one field="collection" target-entity="Sulu\Bundle\MediaBundle\Entity\Collection" inversed-by="media">
             <join-columns>
                 <join-column name="idCollections" referenced-column-name="id" on-delete="CASCADE" nullable="false"/>
             </join-columns>
         </many-to-one>
-        <many-to-one field="type" target-entity="Sulu\Bundle\MediaBundle\Entity\MediaType" inversed-by="medias">
+        <many-to-one field="type" target-entity="Sulu\Bundle\MediaBundle\Entity\MediaType" inversed-by="media">
             <join-columns>
                 <join-column name="idMediaTypes" referenced-column-name="id" nullable="false"/>
             </join-columns>
