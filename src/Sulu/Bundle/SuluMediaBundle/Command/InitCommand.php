@@ -31,7 +31,7 @@ class InitCommand extends ContainerAwareCommand
     {
         $baseDir = dirname(dirname($this->getContainer()->get('kernel')->getRootDir()));
 
-        $output->writeln('Create upload dir in ' . $baseDir);
+        $output->writeln('Create upload dir ...');
 
         $uploadDir = $baseDir . '/uploads';
 
@@ -41,12 +41,12 @@ class InitCommand extends ContainerAwareCommand
             $output->writeLn('Directory ' . $uploadDir . ' already exists');
         }
 
-        $sulumediaDir = $uploadDir . '/sulumedia';
+        $suluMediaDir = $uploadDir . '/sulumedia';
 
-        if (!is_dir($sulumediaDir)) {
-            mkdir($sulumediaDir);
+        if (!is_dir($suluMediaDir)) {
+            mkdir($suluMediaDir);
         } else {
-            $output->writeLn('Directory ' . $sulumediaDir . ' already exists');
+            $output->writeLn('Directory ' . $suluMediaDir . ' already exists');
         }
     }
 }
