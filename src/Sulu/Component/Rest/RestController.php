@@ -57,7 +57,8 @@ abstract class RestController extends FOSRestController
         'changed' => 'date',
         'birthday' => 'date',
         'title' => 'title',
-        'size' => 'bytes'
+        'size' => 'bytes',
+        'thumbnails' => 'thumbnails'
     );
 
     /**
