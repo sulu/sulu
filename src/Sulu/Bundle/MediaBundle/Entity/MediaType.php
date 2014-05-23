@@ -54,7 +54,7 @@ class MediaType
     {
         $this->media = new \Doctrine\Common\Collections\ArrayCollection();
     }
-    
+
     /**
      * Set name
      *
@@ -64,14 +64,14 @@ class MediaType
     public function setName($name)
     {
         $this->name = $name;
-    
+
         return $this;
     }
 
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -87,14 +87,14 @@ class MediaType
     public function setDescription($description)
     {
         $this->description = $description;
-    
+
         return $this;
     }
 
     /**
      * Get description
      *
-     * @return string 
+     * @return string
      */
     public function getDescription()
     {
@@ -102,9 +102,19 @@ class MediaType
     }
 
     /**
+     * To force id = 1 in load fixtures
+     *
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -120,7 +130,7 @@ class MediaType
     public function addMedia(\Sulu\Bundle\MediaBundle\Entity\Media $media)
     {
         $this->media[] = $media;
-    
+
         return $this;
     }
 
@@ -137,7 +147,7 @@ class MediaType
     /**
      * Get media
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getMedia()
     {
