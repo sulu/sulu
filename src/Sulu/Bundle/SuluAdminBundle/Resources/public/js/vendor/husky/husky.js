@@ -28011,7 +28011,8 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             addRowTop: true,
             startTabIndex: 99999,
             excludeFields: [''],
-            columnMinWidth: '70px'
+            columnMinWidth: '70px',
+            thumbnailFormat: '50x50'
         },
 
         constants = {
@@ -28032,7 +28033,9 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             tableClass: 'table',
             serverValidationError: 'server-validation-error',
             oversizedClass: 'oversized',
-            overflowClass: 'overflow'
+            overflowClass: 'overflow',
+            thumbSrcKey: 'url',
+            thumbAltKey: 'alt'
         },
 
         /**
@@ -28594,11 +28597,11 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
 
             if (this.options.excludeFields.indexOf(key) < 0) {
                 tblCellClasses = [];
-                tblCellContent = (!!value.thumb) ? '<img alt="' + (value.alt || '') + '" src="' + value.thumb + '"/>' : value;
+                tblCellContent = value;
 
                 // prepare table cell classes
                 !!value.class && tblCellClasses.push(value.class);
-                !!value.thumb && tblCellClasses.push('thumb');
+                (type === this.datagrid.types.THUMBNAILS) && tblCellClasses.push('thumb');
 
                 tblCellClass = (!!tblCellClasses.length) ? 'class="' + tblCellClasses.join(' ') + '"' : '';
 
@@ -28611,7 +28614,12 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
 
                 // call the type manipulate to manipulate the content of the cell
                 if (!!type) {
-                    tblCellContent = this.datagrid.manipulateContent(tblCellContent, type);
+                    if (type === this.datagrid.types.THUMBNAILS) {
+                        tblCellContent = this.datagrid.manipulateContent(tblCellContent, type, this.options.thumbnailFormat);
+                        tblCellContent = '<img alt="'+ tblCellContent[constants.thumbAltKey] +'" src="'+ tblCellContent[constants.thumbSrcKey] +'"/>';
+                    } else {
+                        tblCellContent = this.datagrid.manipulateContent(tblCellContent, type);
+                    }
                 }
 
                 if (!!editable) {
@@ -29212,7 +29220,9 @@ define('husky_components/datagrid/decorators/thumbnail-view',[],function() {
 
     var defaults = {
             large: false,
-            fadeInDuration: 400
+            fadeInDuration: 400,
+            largeThumbnailFormat: '170x170',
+            smallThumbnailFormat: '50x50'
         },
 
         constants = {
@@ -29225,7 +29235,7 @@ define('husky_components/datagrid/decorators/thumbnail-view',[],function() {
             downloadIcon: 'cloud-download',
             checkboxClass: 'checkbox',
             descriptionClass: 'description',
-            thumbnailSrcProperty: 'thumb',
+            thumbnailSrcProperty: 'url',
             thumbnailAltProperty: 'alt',
             idProperty: 'id',
             textClass: 'text',
@@ -29288,6 +29298,7 @@ define('husky_components/datagrid/decorators/thumbnail-view',[],function() {
             this.rendered = false;
             this.data = null;
             this.$el = null;
+            this.thumbnailFormat = null;
 
             // global array to store the dom elements
             this.$thumbnails = {};
@@ -29311,7 +29322,9 @@ define('husky_components/datagrid/decorators/thumbnail-view',[],function() {
          * @param thumbnails {Array} array with thumbnails to render
          */
         renderThumbnails: function(thumbnails) {
-            var imgSrc, imgAlt, title, description, id;
+            var imgSrc, imgAlt, title, description, id, thumbnail;
+
+            this.thumbnailFormat = (this.options.large === false) ? this.options.smallThumbnailFormat : this.options.largeThumbnailFormat;
 
             // loop through each data record
             this.sandbox.util.foreach(thumbnails, function(record) {
@@ -29323,9 +29336,14 @@ define('husky_components/datagrid/decorators/thumbnail-view',[],function() {
 
                     // get the thumbnail and the title data (to place it on top)
                     // with the rest generate a description string
-                    if (matching.type === this.datagrid.types.THUMBNAIL) {
-                        imgSrc = record[matching.attribute][constants.thumbnailSrcProperty];
-                        imgAlt = record[matching.attribute][constants.thumbnailAltProperty];
+                    if (matching.type === this.datagrid.types.THUMBNAILS) {
+                        thumbnail = this.datagrid.manipulateContent.call(this.datagrid,
+                            record[matching.attribute],
+                            this.datagrid.types.THUMBNAILS,
+                            this.thumbnailFormat
+                        );
+                        imgSrc = thumbnail[constants.thumbnailSrcProperty];
+                        imgAlt = thumbnail[constants.thumbnailAltProperty];
                     } else if (matching.type === this.datagrid.types.TITLE) {
                         title = record[matching.attribute];
                     } else if (matching.type === this.datagrid.types.BYTES) {
@@ -29444,6 +29462,20 @@ define('husky_components/datagrid/decorators/thumbnail-view',[],function() {
         downloadHandler: function(id) {
             // not yet implemented
             this.sandbox.logger.warn('Download handler not yet implemented!', id);
+        },
+
+        /**
+         * Removes a data record from the view
+         * @param recordId {Number|String} the records identifier
+         * @returns {Boolean} true if deleted succesfully
+         */
+        removeRecord: function(recordId) {
+            if (!!this.$thumbnails[recordId]) {
+                this.sandbox.dom.remove(this.$thumbnails[recordId]);
+                this.datagrid.removeRecord.call(this.datagrid, recordId);
+                return true;
+            }
+            return false;
         }
     };
 });
@@ -29785,7 +29817,7 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
  *
  * @param {Object} [paginationOptions] Configuration object
  * @param {Number} [paginationOptions.pageSize] maximum elements per page
- * @param {Function} [paginationOptions.showAllHandler] function to call if pagination is clicked. Default action gets not executed if set
+ * @param {Function} [paginationOptions.showAllHandler] function to call if pagination is clicked. If set pagination will always be displayed. Default action gets not executed if set.
  *
  * @param {Function} [initialize] function which gets called once at the start of the view
  * @param {Function} [render] function to render data
@@ -29858,7 +29890,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
             this.data = data;
 
             this.$paginationContainer = this.sandbox.dom.createElement('<div class="' + constants.paginationClass + '"/>');
-            if (this.data.numberOfAll > this.data.total) {
+            if (this.data.numberOfAll > this.data.total || !!this.options.showAllHandler) {
                 this.renderShowAll();
             } else if (this.data.numberOfAll > this.options.pageSize) {
                 this.renderShowOnly();
@@ -29935,7 +29967,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
          */
         bindDomEvents: function () {
             this.sandbox.dom.on(this.$paginationContainer, 'click', function() {
-                if (this.data.numberOfAll > this.data.total) {
+                if (this.data.numberOfAll > this.data.total || !!this.options.showAllHandler) {
                     this.showAll();
                 } else {
                     this.showOnly();
@@ -30031,7 +30063,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
 
             types = {
                 DATE: 'date',
-                THUMBNAIL: 'thumbnail',
+                THUMBNAILS: 'thumbnails',
                 TITLE: 'title',
                 BYTES: 'bytes'
             },
@@ -30314,6 +30346,24 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
                     return parsedDate;
                 }
                 return date;
+            },
+
+            /**
+             * Takes an array of thumbnails and returns an object with url and and alt
+             * @param thumbnails {Array} array of thumbnails
+             * @param format {String} the format of the thumbnail
+             * @returns {Object} with url and alt property
+             */
+            parseThumbnails = function(thumbnails, format) {
+                var thumbnail = {
+                    url: null,
+                    alt: null
+                };
+                if (!!thumbnails[format]) {
+                    thumbnail.url = thumbnails[format].url;
+                    thumbnail.alt = thumbnails[format].alt;
+                }
+                return thumbnail;
             };
 
         return {
@@ -30487,9 +30537,10 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * Displays a loading icon
              */
             loading: function() {
-                this.$element
-                    .outerWidth(this.$element.outerWidth())
-                    .outerHeight(this.$element.outerHeight());
+                if (this.sandbox.dom.is(this.$element, ':visible')) {
+                    this.sandbox.dom.height(this.$element, this.sandbox.dom.outerHeight(this.$element));
+                    this.sandbox.dom.width(this.$element, this.sandbox.dom.outerWidth(this.$element));
+                }
 
                 this.sandbox.dom.addClass(this.$element, 'loading');
 
@@ -30519,7 +30570,10 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
             stopLoading: function() {
                 this.sandbox.dom.hide(this.$loader);
                 this.sandbox.dom.removeClass(this.$element, 'loading');
-                return this.$element.outerHeight('').outerWidth('');
+
+                this.sandbox.dom.height(this.$element, '');
+                this.sandbox.dom.width(this.$element, '');
+                return this.$element;
             },
 
             /**
@@ -30703,13 +30757,16 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * Manipulates the content of a cell with a process realted to the columns type
              * @param content {String} the content of the cell
              * @param type {String} the columns type
+             * @param argument {Number|String} argument to pass to the processor
              * @returns {String} the manipulated content
              */
-            manipulateContent: function(content, type) {
+            manipulateContent: function(content, type, argument) {
                 if (type === types.DATE) {
-                    content = parseDate.call(this, content);
+                    content = parseDate.call(this, content, argument);
                 } else if (type === types.BYTES) {
-                    content = parseBytes.call(this, content);
+                    content = parseBytes.call(this, content, argument);
+                } else if (type === types.THUMBNAILS) {
+                    content = parseThumbnails.call(this, content, argument)
                 }
                 return content;
             },
@@ -30844,6 +30901,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
                         this.pushRecords([recordData]);
                     }
                     this.gridViews[this.viewId].addRecord(recordData);
+                    this.sandbox.emit(NUMBER_SELECTIONS.call(this), this.getSelectedItemIds().length);
                 }
             },
 
@@ -30860,6 +30918,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
                         }
                         this.gridViews[this.viewId].addRecord(record);
                     }.bind(this));
+                    this.sandbox.emit(NUMBER_SELECTIONS.call(this), this.getSelectedItemIds().length);
                 }
             },
 
@@ -30869,6 +30928,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
             removeRecordHandler: function(recordId) {
                 if (!!this.gridViews[this.viewId].removeRecord) {
                     this.gridViews[this.viewId].removeRecord(recordId);
+                    this.sandbox.emit(NUMBER_SELECTIONS.call(this), this.getSelectedItemIds().length);
                 }
             },
 
@@ -31727,7 +31787,7 @@ define('__component__$matrix@husky',[],function() {
                         title = '';
                     }
                     $span = sandbox.dom.createElement(
-                        '<span ' + title + ' class="fa-' + this.options.values.horizontal[j] + ' pointer"/>'
+                        '<span ' + title + ' class="fa-' + this.options.values.horizontal[j] + ' matrix-icon pointer"/>'
                     );
                     sandbox.dom.data($span, 'value', this.options.values.horizontal[j]);
                     sandbox.dom.data($span, 'section', this.options.values.vertical[i]);
@@ -34000,6 +34060,23 @@ define('__component__$auto-complete-list@husky',[], function() {
             },
 
             /**
+             * used for setting tags
+             * @event husky.auto-complete-list.set-tags
+             * @param {Array} tags Array of strings
+             */
+                SET_TAGS = function() {
+                return createEventName.call(this, 'set-tags');
+            },
+
+            /**
+             * used for receiving tags
+             * @event husky.auto-complete-list.get-tags
+             */
+                GET_TAGS = function() {
+                return createEventName.call(this, 'get-tags');
+            },
+
+            /**
              * raised after AJAX request for loading items is sent
              * @event husky.auto-complete-list.items-request
              */
@@ -34030,6 +34107,14 @@ define('__component__$auto-complete-list@husky',[], function() {
              */
                 ITEM_DELETED = function() {
                 return createEventName.call(this, 'item-deleted');
+            },
+
+            /**
+             * raised after data was loaded
+             * @event husky.auto-complete-list.data-loaded
+             */
+                DATA_LOADED = function() {
+                return createEventName.call(this, 'data-loaded');
             },
 
             /**
@@ -34208,7 +34293,7 @@ define('__component__$auto-complete-list@husky',[], function() {
              * Bind several events
              */
             bindEvents: function() {
-                this.sandbox.on(createEventName.call(this, 'getTags'), function(callback) {
+                this.sandbox.on(GET_TAGS.call(this), function(callback) {
                     if (typeof callback === 'function') {
                         callback(this.getTags());
                     } else {
@@ -34216,7 +34301,7 @@ define('__component__$auto-complete-list@husky',[], function() {
                     }
                 }.bind(this));
 
-                this.sandbox.on(createEventName.call(this, 'set-tags'), function(tags) {
+                this.sandbox.on(SET_TAGS.call(this), function(tags) {
                     this.pushTags(tags);
                 }.bind(this));
 
@@ -34315,6 +34400,7 @@ define('__component__$auto-complete-list@husky',[], function() {
                     success: function(data) {
                         this.options.items = this.options.items.concat(data[this.options.itemsKey]);
                         this.startPlugins();
+                        DATA_LOADED.call(this); 
                     }.bind(this),
 
                     error: function(error) {
@@ -39799,6 +39885,14 @@ define('__component__$dropzone@husky',[], function() {
         },
 
         /**
+         * listens on and opens the data-source folder-overlay
+         * @event husky.dropzone.<instance-name>.open-data-source
+         */
+            OPEN_DATA_SOURCE = function() {
+            return createEventName.call(this, 'open-data-source');
+        },
+
+        /**
          * raised after files got uploaded and faded out from the dropzone
          * @event husky.dropzone.<instance-name>.files-added
          * @param {Array} all newly added files
@@ -39827,6 +39921,7 @@ define('__component__$dropzone@husky',[], function() {
             this.lastUploadedFile = null;
             this.overlayOpened = false;
 
+            this.bindCustomEvents();
             this.render();
             this.bindDomEvents();
 
@@ -39848,6 +39943,16 @@ define('__component__$dropzone@husky',[], function() {
                     this.openOverlay();
                 }.bind(this));
             }
+        },
+
+        /**
+         * Binds custom-related events
+         */
+        bindCustomEvents: function() {
+            // opens the data-source folder-overlay
+            this.sandbox.on(OPEN_DATA_SOURCE.call(this), function() {
+                this.sandbox.dom.trigger(this.$dropzone, 'click');
+            }.bind(this));
         },
 
         /**
@@ -40706,7 +40811,7 @@ define('husky_extensions/collection',[],function() {
             };
 
             app.core.dom.height = function(selector, value) {
-                if (!value) {
+                if (typeof value === 'undefined') {
                     return $(selector).height();
                 }
                 return $(selector).height(value);
@@ -40717,6 +40822,14 @@ define('husky_extensions/collection',[],function() {
                     return $(selector).outerHeight();
                 } else {
                     return $(selector).outerHeight(includeMargin);
+                }
+            };
+
+            app.core.dom.outerWidth = function(selector, includeMargin) {
+                if (typeof includeMargin === 'undefined') {
+                    return $(selector).outerWidth();
+                } else {
+                    return $(selector).outerWidth(includeMargin);
                 }
             };
 
