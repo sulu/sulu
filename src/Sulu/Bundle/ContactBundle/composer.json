@@ -4,7 +4,7 @@
     "description": "The sulu bundle for managing contacts",
     "license": "MIT",
     "keywords": ["contact", "crm"],
-    "version": "0.3.0",
+    "version": "dev-develop",
     "authors": [
         {
             "name": "Sulu Community",
@@ -20,7 +20,8 @@
 
         "sulu/sulu": "dev-develop",
         "sulu/tag-bundle": "dev-develop",
-        "sulu/admin-bundle": "dev-develop"
+        "sulu/admin-bundle": "dev-develop",
+        "sulu/security-bundle": "dev-develop"
 
     },
     "require-dev": {
