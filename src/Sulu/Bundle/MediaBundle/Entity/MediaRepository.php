@@ -26,9 +26,10 @@ class MediaRepository extends EntityRepository
     /**
      * Get Media by id
      * @param $id
+     * @param bool $asArray
      * @return mixed|Media
      */
-    public function findMediaById($id)
+    public function findMediaById($id, $asArray = false)
     {
         try {
             $qb = $this->createQueryBuilder('media')
@@ -37,9 +38,15 @@ class MediaRepository extends EntityRepository
                 ->leftJoin('media.files', 'file')
                 ->leftJoin('file.fileVersions', 'fileVersion')
                 ->leftJoin('fileVersion.tags', 'tag')
-                ->leftJoin('fileVersion.metas', 'fileVersionMeta')
+                ->leftJoin('fileVersion.meta', 'fileVersionMeta')
                 ->leftJoin('fileVersion.contentLanguages', 'fileVersionContentLanguage')
                 ->leftJoin('fileVersion.publishLanguages', 'fileVersionPublishLanguage')
+                /*
+                ->leftJoin('media.creator', 'creator')
+                ->leftJoin('creator.contact', 'creatorContact')
+                ->leftJoin('media.changer', 'changer')
+                ->leftJoin('changer.contact', 'changerContact')
+                */
                 ->addSelect('type')
                 ->addSelect('collection')
                 ->addSelect('file')
@@ -48,13 +55,78 @@ class MediaRepository extends EntityRepository
                 ->addSelect('fileVersionMeta')
                 ->addSelect('fileVersionContentLanguage')
                 ->addSelect('fileVersionPublishLanguage')
+                /*
+                ->addSelect('creator')
+                ->addSelect('changer')
+                ->addSelect('creatorContact')
+                ->addSelect('changerContact')
+                */
                 ->where('media.id = :mediaId');
 
             $query = $qb->getQuery();
             $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
             $query->setParameter('mediaId', $id);
 
-            return $query->getSingleResult();
+            if ($asArray) {
+                if (isset($query->getArrayResult()[0])) {
+                    return $query->getArrayResult()[0];
+                } else {
+                    return null;
+                }
+            } else {
+                return $query->getSingleResult();
+            }
+        } catch (NoResultException $ex) {
+            return null;
+        }
+    }
+
+    /**
+     *
+     */
+    public function findMedia($collection = null)
+    {
+        try {
+            $qb = $this->createQueryBuilder('media')
+                ->leftJoin('media.type', 'type')
+                ->leftJoin('media.collection', 'collection')
+                ->leftJoin('media.files', 'file')
+                ->leftJoin('file.fileVersions', 'fileVersion')
+                ->leftJoin('fileVersion.tags', 'tag')
+                ->leftJoin('fileVersion.meta', 'fileVersionMeta')
+                ->leftJoin('fileVersion.contentLanguages', 'fileVersionContentLanguage')
+                ->leftJoin('fileVersion.publishLanguages', 'fileVersionPublishLanguage')
+                /*
+                ->leftJoin('media.creator', 'creator')
+                ->leftJoin('creator.contact', 'creatorContact')
+                ->leftJoin('media.changer', 'changer')
+                ->leftJoin('changer.contact', 'changerContact')
+                */
+                ->addSelect('type')
+                ->addSelect('collection')
+                ->addSelect('file')
+                ->addSelect('tag')
+                ->addSelect('fileVersion')
+                ->addSelect('fileVersionMeta')
+                ->addSelect('fileVersionContentLanguage')
+                ->addSelect('fileVersionPublishLanguage')
+                /*
+                ->addSelect('creator')
+                ->addSelect('changer')
+                ->addSelect('creatorContact')
+                ->addSelect('changerContact')*/;
+
+            if ($collection !== null) {
+                $qb->where('collection.id = :collection');
+            }
+
+            $query = $qb->getQuery();
+            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+            if ($collection !== null) {
+                $query->setParameter('collection', $collection);
+            }
+
+            return $query->getArrayResult();
         } catch (NoResultException $ex) {
             return null;
         }

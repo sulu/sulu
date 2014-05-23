@@ -52,13 +52,11 @@ class Media
 
     /**
      * @var \Sulu\Component\Security\UserInterface
-     * @Exclude
      */
     private $changer;
 
     /**
      * @var \Sulu\Component\Security\UserInterface
-     * @Exclude
      */
     private $creator;
 
@@ -221,7 +219,7 @@ class Media
     /**
      * Get changer
      *
-     * @return \Sulu\Component\Security\UserInterface
+     * @return \Sulu\Component\Security\UserInterface 
      */
     public function getChanger()
     {
@@ -244,7 +242,7 @@ class Media
     /**
      * Get creator
      *
-     * @return \Sulu\Component\Security\UserInterface
+     * @return \Sulu\Component\Security\UserInterface 
      */
     public function getCreator()
     {

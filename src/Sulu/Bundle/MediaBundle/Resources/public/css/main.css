@@ -6,7 +6,7 @@
 }
 /* line 10, ../scss/modules/collections.scss */
 #collections-list-container .toggle-all .icon {
-  font-size: 8px;
+  font-size: 14px;
   color: #3E3E3E;
   margin-right: 5px;
 }
@@ -30,35 +30,55 @@
 /* line 33, ../scss/modules/collections.scss */
 #collections-list-container .collection .head .icon {
   float: left;
-  margin-right: 8px;
-  font-size: 12px;
+  font-size: 18px;
+  width: 25px;
   color: #3E3E3E;
+  line-height: 40px;
+  text-align: center;
 }
-/* line 40, ../scss/modules/collections.scss */
+/* line 41, ../scss/modules/collections.scss */
+#collections-list-container .collection .head .change-title {
+  width: 200px;
+  display: none;
+  float: left;
+  margin-top: 5px;
+}
+/* line 47, ../scss/modules/collections.scss */
 #collections-list-container .collection .head::after {
   display: table;
   content: "";
   clear: both;
 }
-/* line 46, ../scss/modules/collections.scss */
-#collections-list-container .collection .color {
+/* line 53, ../scss/modules/collections.scss */
+#collections-list-container .collection .collection-color {
   float: left;
   width: 20px;
   height: 20px;
   border-radius: 10px;
-  margin-right: 8px;
   margin-top: 10px;
 }
-/* line 54, ../scss/modules/collections.scss */
-#collections-list-container .collection .title {
+/* line 60, ../scss/modules/collections.scss */
+#collections-list-container .collection .collection-title {
   float: left;
   font-size: 18px;
+  cursor: default;
+  min-width: 200px;
+  margin-top: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-radius: 3px;
+  line-height: 28px;
+  border: 1px solid transparent;
 }
-/* line 58, ../scss/modules/collections.scss */
+/* line 71, ../scss/modules/collections.scss */
+#collections-list-container .collection .collection-title:hover {
+  border-color: #cccccc;
+}
+/* line 75, ../scss/modules/collections.scss */
 #collections-list-container .collection .rightContent {
   float: right;
 }
-/* line 60, ../scss/modules/collections.scss */
+/* line 77, ../scss/modules/collections.scss */
 #collections-list-container .collection .rightContent .total {
   color: #999999;
   font-size: 12px;

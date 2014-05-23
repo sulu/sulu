@@ -17,6 +17,7 @@ use FOS\RestBundle\Controller\Annotations\Put;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
+use Sulu\Bundle\MediaBundle\Media\RestObject\CollectionRestObject;
 use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
@@ -52,7 +53,7 @@ class CollectionController extends RestController implements ClassResourceInterf
     /**
      * {@inheritdoc}
      */
-    protected $fieldsHidden = array('created');
+    protected $fieldsHidden = array('');
 
     /**
      * {@inheritdoc}
@@ -117,12 +118,6 @@ class CollectionController extends RestController implements ClassResourceInterf
      */
     public function getAction($id, Request $request)
     {
-        $userLocale = $this->getUser()->getLocale();
-        $locale = $request->get('locale');
-        if ($locale) {
-            $userLocale = $locale;
-        }
-
         $collection = $this->getDoctrine()
             ->getRepository($this->entityName)
             ->findCollectionById($id, true);
@@ -135,6 +130,9 @@ class CollectionController extends RestController implements ClassResourceInterf
                 404
             );
         } else {
+            $locale = $this->getLocale($request->get('locale'));
+            $collectionRestObject = new CollectionRestObject();
+
             $view = $this->view(
                 array_merge(
                     array(
@@ -142,7 +140,7 @@ class CollectionController extends RestController implements ClassResourceInterf
                             'self' => $request->getRequestUri()
                         )
                     ),
-                    $this->flatCollection($collection, $userLocale)
+                    $collectionRestObject->setDataByEntityArray($collection, $locale)->toArray()
                 )
                 , 200);
         }
@@ -157,143 +155,16 @@ class CollectionController extends RestController implements ClassResourceInterf
      */
     public function cgetAction(Request $request)
     {
-        $userLocale = $this->getUser()->getLocale();
-        $locale = $request->get('locale');
-        if ($locale) {
-            $userLocale = $locale;
-        }
+        $locale = $this->getLocale($request->get('locale'));
 
         $parentId = $request->get('parent');
         $depth = $request->get('depth');
 
         $collections = $this->getDoctrine()->getRepository($this->entityName)->findCollections($parentId, $depth);
-
-        $collections = $this->flatCollections($collections, $userLocale);
-
+        $collections = $this->flatCollections($collections, $locale, $request->get('fields', array()));
         $view = $this->view($this->createHalResponse($collections), 200);
 
         return $this->handleView($view);
-    }
-
-    /**
-     * flat the collection array
-     * @param $collection
-     * @param $locale
-     * @return array
-     */
-    protected function flatCollection ($collection, $locale)
-    {
-        $flatCollection = array();
-        $flatCollection['locale'] = $locale;
-        $mediaCount = 0;
-        foreach ($collection as $key => $value) {
-            $setKeyValue = true;
-            switch ($key) {
-                case 'style':
-                    if ($value) {
-                        $value = json_decode($value, true);
-                    }
-                    break;
-                case 'metas':
-                    $metaSet = false;
-                    foreach ($value as $meta) {
-                        if ($meta['locale'] == $locale) {
-                            $metaSet = true;
-                            foreach ($meta as $metaKey => $metaValue) {
-                                if (!in_array($metaKey, array('locale', 'id'))) {
-                                    $flatCollection[$metaKey] = $metaValue;
-                                }
-                            }
-                        }
-                    }
-                    if (!$metaSet) {
-                        if (isset($value[0])) {
-                            foreach ($value[0] as $metaKey => $metaValue) {
-                                if (!in_array($metaKey, array('locale', 'id'))) {
-                                    $flatCollection[$metaKey] = $metaValue;
-                                }
-                            }
-                        }
-                    }
-
-                    $setKeyValue = false;
-                    break;
-                case 'children':
-                    $newValue = array();
-                    if ($value) {
-                        foreach ($value as $children) {
-                            array_push($newValue, $children['id']);
-                            if ($children['medias']) {
-                                $mediaCount += count($children['medias']);
-                            }
-                        }
-                    }
-                    $value = $newValue;
-                    break;
-                case 'parent':
-                case 'type':
-                    if ($value) {
-                        $value = $value['id'];
-                    }
-                    break;
-                case 'changer':
-                case 'creator':
-                    if ($value) {
-                        if (isset($value['contact']['firstName'])) {
-                            $value = $value['contact']['firstName'] . ' ' . $value['contact']['lastName'];
-                        }
-                    }
-                    break;
-                case 'changed':
-                case 'created':
-                    if ($value) {
-                        $value = $value->format('Y-m-d H:i:s');
-                    }
-                    break;
-                case 'lft':
-                case 'rgt':
-                case 'depth':
-                    $setKeyValue = false;
-                    break;
-                case 'medias':
-                    if ($value) {
-                        $mediaCount += count($value);
-                    }
-                    $setKeyValue = false;
-                    break;
-                default:
-                    if (is_string($value) || is_int($value)) {
-                        $flatCollection[$key] = $value;
-                    } else {
-                        $setKeyValue = false;
-                    }
-                    break;
-            }
-            if ($setKeyValue) {
-                $flatCollection[$key] = $value;
-            }
-        }
-        $flatCollection['mediaNumber'] = $mediaCount;
-
-        return $flatCollection;
-    }
-
-    /**
-     * collections to an flat collection array
-     * @param $collections
-     * @param $locale
-     * @return array
-     */
-    protected function flatCollections ($collections, $locale)
-    {
-        $flatCollections = array();
-
-        foreach ($collections as $collection) {
-            $flatCollection = $this->flatCollection($collection, $locale);
-            array_push($flatCollections, $flatCollection);
-        }
-
-        return $flatCollections;
     }
 
     /**
@@ -306,58 +177,21 @@ class CollectionController extends RestController implements ClassResourceInterf
         try {
             $em = $this->getDoctrine()->getManager();
 
+            $collectionRestObject = $this->getRestObject($request);
+
             $collection = new Collection();
-
-            // set style
-            $collection->setStyle($request->get('style'));
-
-            // set type
-            $typeData = $request->get('type');
-            /** @var CollectionType $type */
-            $type = $this->getDoctrine()->getRepository('SuluMediaBundle:CollectionType')->find($typeData['id']);
-
-            if (!$type) {
-                throw new EntityNotFoundException($this->entityName, $typeData['id']);
-            }
-
-            $collection->setType($type);
-
-            // set parent
-            $parentData = $request->get('parent');
-            if ($this->checkDataForId($parentData)) {
-                /** @var Collection $parent */
-                $parent = $this->getDoctrine()
-                    ->getRepository($this->entityName)
-                    ->findCollectionById($parentData['id']);
-
-                if (!$parent) {
-                    throw new EntityNotFoundException($this->entityName, $parentData['id']);
-                }
-
-                $collection->setParent($parent);
-            } else {
-                $collection->setParent(null);
-            }
-
-            // set creator / changer
             $collection->setCreated(new DateTime());
-            $collection->setChanged(new DateTime());
             $collection->setCreator($this->getUser());
-            $collection->setChanger($this->getUser());
-
-            // set metas
-            $metas = $request->get('metas');
-            if (!empty($metas)) {
-                foreach ($metas as $metaData) {
-                    $this->addMetas($collection, $metaData);
-                }
-            }
+            $this->createCollectionByRestObject($collectionRestObject, $collection, $em);
 
             $em->persist($collection);
-
             $em->flush();
 
-            $view = $this->view($collection, 200);
+            $locale = $this->getLocale($request->get('locale'));
+
+            $collectionRestObject = new CollectionRestObject();
+
+            $view = $this->view($collectionRestObject->setDataByEntity($collection, $locale)->toArray(), 200);
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
         } catch (RestException $re) {
@@ -389,49 +223,16 @@ class CollectionController extends RestController implements ClassResourceInterf
             } else {
                 $em = $this->getDoctrine()->getManager();
 
-                // set style
-                $collection->setStyle($request->get('style'));
+                $collectionRestObject = $this->getRestObject($request);
+                $this->createCollectionByRestObject($collectionRestObject, $collection, $em);
 
-                // set type
-                $typeData = $request->get('type');
-                /** @var CollectionType $type */
-                $type = $this->getDoctrine()->getRepository('SuluMediaBundle:CollectionType')->find($typeData['id']);
-
-                if (!$type) {
-                    throw new EntityNotFoundException($this->entityName, $typeData['id']);
-                }
-
-                $collection->setType($type);
-
-                // set parent
-                $parentData = $request->get('parent');
-                if ($this->checkDataForId($parentData)) {
-                    /** @var Collection $parent */
-                    $parent = $this->getDoctrine()
-                        ->getRepository($this->entityName)
-                        ->findCollectionById($parentData['id']);
-
-                    if (!$parent) {
-                        throw new EntityNotFoundException($this->entityName, $parentData['id']);
-                    }
-
-                    $collection->setParent($parent);
-                } else {
-                    $collection->setParent(null);
-                }
-
-                // set changed
-                $collection->setChanged(new DateTime());
-                $user = $this->getUser();
-                $collection->setChanger($user);
-
-                // process details
-                if (!$this->processMetas($collection, $request->get('metas'))) {
-                    throw new RestException('Updating dependencies is not possible', 0);
-                }
-
+                $em->persist($collection);
                 $em->flush();
-                $view = $this->view($collection, 200);
+
+                $collectionRestObject = new CollectionRestObject();
+                $locale = $this->getLocale($request->get('locale'));
+
+                $view = $this->view($collectionRestObject->setDataByEntity($collection, $locale)->toArray(), 200);
             }
         } catch (EntityNotFoundException $exc) {
             $view = $this->view($exc->toArray(), 404);
@@ -473,85 +274,122 @@ class CollectionController extends RestController implements ClassResourceInterf
     }
 
     /**
-     * Check given data for a not empty id
-     * @param $data
-     * @return bool
+     * convert a collections array to an array of collection rest objects
+     * @param $collections
+     * @param $locale
+     * @param array $fields
+     * @return array
      */
-    protected function checkDataForId($data)
+    protected function flatCollections ($collections, $locale, $fields = array())
     {
-        if ($data != null && isset($data['id']) && $data['id'] != 'null' && $data['id'] != '') {
-            return true;
+        $flatCollections = array();
+
+        foreach ($collections as $collection) {
+            $flatCollection = new CollectionRestObject();
+            array_push($flatCollections, $flatCollection->setDataByEntityArray($collection, $locale, $fields));
         }
-        return false;
+
+        return $flatCollections;
     }
 
     /**
-     * Process all metas from request
-     * @param Collection $collection The collection on which is worked
-     * @param mixed $metas Request meta data to process
-     * @return bool True if the processing was successful, otherwise false
+     * @param Request $request
+     * @return CollectionRestObject
      */
-    protected function processMetas(Collection $collection, $metas)
+    protected function getRestObject(Request $request)
     {
-        $delete = function ($meta) use ($collection) {
-            $collection->removeMeta($meta);
+        $collectionRestObject = new CollectionRestObject();
+        $collectionRestObject->setId($request->get('id'));
+        $collectionRestObject->setStyle($request->get('style', array(
+            'type' => 'circle',
+            'color' => Collection::generateColor()
+        )));
+        $collectionRestObject->setType($request->get('type', Collection::TYPE_DEFAULT));
+        $collectionRestObject->setParent($request->get('parent'));
+        $collectionRestObject->setLocale($request->get('locale', $this->getLocale($request->get('locale'))));
+        $collectionRestObject->setTitle($request->get('title'));
+        $collectionRestObject->setDescription($request->get('description'));
+        $collectionRestObject->setChanger($request->get('changer'));
+        $collectionRestObject->setCreator($request->get('creator'));
+        $collectionRestObject->setChanged($request->get('changed'));
+        $collectionRestObject->setCreated($request->get('created'));
 
-            return true;
-        };
-
-        $update = function ($meta, $matchedEntry) {
-            return $this->updateMeta($meta, $matchedEntry);
-        };
-
-        $add = function ($meta) use ($collection) {
-            $this->addMetas($collection, $meta);
-
-            return true;
-        };
-
-        return $this->processPut($collection->getMetas(), $metas, $delete, $update, $add);
+        return $collectionRestObject;
     }
 
     /**
-     * Adds META to a collection
+     * @param CollectionRestObject $object
      * @param Collection $collection
-     * @param $metaData
-     * @throws \Sulu\Component\Rest\Exception\EntityIdAlreadySetException
-     */
-    private function addMetas(Collection $collection, $metaData)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $metaEntity = 'SuluMediaBundle:CollectionMeta';
-
-        if (isset($metaData['id'])) {
-            throw new EntityIdAlreadySetException($metaEntity, $metaData['id']);
-        } else {
-            $meta = new CollectionMeta();
-            $meta->setCollection($collection);
-            $meta->setTitle($metaData['title']);
-            $meta->setDescription($metaData['description']);
-            $meta->setLocale($metaData['locale']);
-
-            $em->persist($meta);
-            $collection->addMeta($meta);
-        }
-    }
-
-    /**
-     * Updates the given meta
-     * @param CollectionMeta $meta The collection meta object to update
-     * @param string $entry The entry with the new data
-     * @return bool True if successful, otherwise false
+     * @param $em
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      */
-    protected function updateMeta(CollectionMeta $meta, $entry)
+    protected function createCollectionByRestObject(CollectionRestObject $object, Collection &$collection, &$em)
     {
-        $success = true;
+        // Set Style
+        $collection->setStyle(json_encode($object->getStyle()));
 
-        $meta->setTitle($entry['title']);
-        $meta->setDescription($entry['description']);
-        $meta->setLocale($entry['locale']);
+        // Set Type
+        $type = $this->getDoctrine()->getRepository('SuluMediaBundle:CollectionType')->find($object->getType());
+        if (!$type) {
+            throw new EntityNotFoundException($this->entityName, $object->getType());
+        }
+        $collection->setType($type);
 
-        return $success;
+        // Set Parent
+        if ($object->getParent()) {
+            // / @var Collection $parent
+            $parent = $this->getDoctrine()
+                ->getRepository($this->entityName)
+                ->findCollectionById($object->getParent());
+
+            if (!$parent) {
+                throw new EntityNotFoundException($this->entityName, $object->getParent());
+            }
+            $collection->setParent($parent);
+        } else {
+            $collection->setParent(null);
+        }
+
+        $collection->setChanged(new DateTime());
+        $collection->setChanger($this->getUser());
+
+        // set Meta
+        $metaSet = false;
+        if ($object->getTitle()) {
+            foreach ($collection->getMeta() as $meta) {
+                /**
+                 * @var CollectionMeta $meta
+                 */
+                if ($meta->getLocale() == $object->getLocale()) {
+                    $metaSet = true;
+                    $meta->setTitle($object->getTitle());
+                    $meta->setDescription($object->getDescription());
+                    $meta->setLocale($object->getLocale());
+                    $em->persist($meta);
+                }
+            }
+            if (!$metaSet) {
+                $meta = new CollectionMeta();
+                $meta->setTitle($object->getTitle());
+                $meta->setLocale($object->getLocale());
+                $meta->setDescription($object->getDescription());
+                $meta->setCollection($collection);
+                $collection->addMeta($meta);
+                $em->persist($meta);
+            }
+        }
+    }
+
+    /**
+     * @param $requestLocale
+     * @return mixed
+     */
+    protected function getLocale($requestLocale)
+    {
+        if ($requestLocale) {
+            return $requestLocale;
+        }
+
+        return $this->getUser()->getLocale();
     }
 }
