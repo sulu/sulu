@@ -148,11 +148,20 @@
             </div>
         {% endblock %}
     </div>
+
+    {% block tags %}
+        <div class="form-horizontal">
+            <h2 class="divider"><%= translate('tag.tags.title') %></h2>
+            <div class="form-group">
+                <label></label>
+                <div id="tags"></div>
+            </div>
+        </div>
+    {% endblock %}
+
 </form>
 
-{% block dialog %}
-    <div id="dialog"></div>
-{% endblock %}
+
 
 {% block data %}
     <script type="text/javascript">

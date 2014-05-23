@@ -275,6 +275,14 @@ class AccountController extends RestController implements ClassResourceInterface
                 }
             }
 
+            // handle tags
+            $tags = $request->get('tags');
+            if (!empty($tags)) {
+                foreach ($tags as $tag) {
+                    $this->addTag($account, $tag);
+                }
+            }
+
             $em->persist($account);
 
             $em->flush();
@@ -346,6 +354,7 @@ class AccountController extends RestController implements ClassResourceInterface
                     && $this->processFaxes($account, $request)
                     && $this->processPhones($account, $request)
                     && $this->processAddresses($account, $request)
+                    && $this->processTags($account, $request)
                     && $this->processNotes($account, $request))
                 ) {
                     throw new RestException('Updating dependencies is not possible', 0);
@@ -707,6 +716,47 @@ class AccountController extends RestController implements ClassResourceInterface
             $email->setEmail($entry['email']);
             $email->setEmailType($emailType);
         }
+
+        return $success;
+    }
+
+    /**
+     * Process all tags of request
+     * @param Account $account The contact on which is worked
+     * @param Request $request
+     * @return bool True if the processing was successful, otherwise false
+     */
+    protected function processTags(Account $account, Request $request)
+    {
+        $tags = $request->get('tags');
+
+        $delete = function ($tag) use ($account) {
+            return $account->removeTag($tag);
+        };
+
+        $update = function () {
+            return true;
+        };
+
+        $add = function ($tag) use ($account) {
+            return $this->addTag($account, $tag);
+        };
+
+        return $this->processPut($account->getTags(), $tags, $delete, $update, $add);
+    }
+
+    /**
+     * Adds a new tag to the given contact and persist it with the given object manager
+     * @param Account $account
+     * @param $data
+     * @return bool True if there was no error, otherwise false
+     */
+    protected function addTag(Account $account, $data)
+    {
+        $success = true;
+        $tagManager = $this->get('sulu_tag.tag_manager');
+        $resolvedTag = $tagManager->findByName($data);
+        $account->addTag($resolvedTag);
 
         return $success;
     }

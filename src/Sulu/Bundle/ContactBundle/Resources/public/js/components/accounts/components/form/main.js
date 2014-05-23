@@ -12,11 +12,15 @@ define([], function() {
     'use strict';
 
     var defaults = {
-        headline: 'contact.accounts.title'
-    },
+            headline: 'contact.accounts.title'
+        },
         fields = ['urls', 'emails', 'faxes', 'phones', 'notes', 'addresses'],
 
-        // sets toolbar
+        constants = {
+            tagsId: '#tags'
+        },
+
+    // sets toolbar
         setHeaderToolbar = function() {
             this.sandbox.emit('sulu.header.set-toolbar', {
                 template: 'default'
@@ -35,6 +39,9 @@ define([], function() {
 
             this.form = '#contact-form';
             this.saved = true;
+
+            this.dfdListenForChange = this.sandbox.data.deferred();
+            this.dfdFormIsSet = this.sandbox.data.deferred();
 
             this.render();
             this.setHeaderBar(true);
@@ -77,12 +84,47 @@ define([], function() {
                 }
             ]);
 
-
             this.initForm(data);
 
+            this.setTags(data);
 
             this.bindDomEvents();
             this.bindCustomEvents();
+            this.bindTagEvents(data);
+        },
+
+        // show tags and activate keylistener
+        setTags: function(data) {
+            this.dfdFormIsSet.then(function() {
+                this.sandbox.start([
+                    {
+                        name: 'auto-complete-list@husky',
+                        options: {
+                            el: '#tags',
+                            instanceName: 'contacts',
+                            getParameter: 'search',
+                            remoteUrl: '/admin/api/tags?flat=true&sortBy=name',
+                            completeIcon: 'tag',
+                            noNewTags: true
+                        }
+                    }
+                ]);
+            }.bind(this));
+        },
+
+        bindTagEvents: function(data) {
+            if (!!data.tags && data.tags.length > 0) {
+                // set tags after auto complete list was initialized
+                this.sandbox.on('husky.auto-complete-list.contacts.initialized', function() {
+                    this.sandbox.emit('husky.auto-complete-list.contacts.set-tags', data.tags);
+                }.bind(this));
+                // listen for change after items have been added
+                this.sandbox.on('husky.auto-complete-list.contacts.items-added', function() {
+                    this.dfdListenForChange.resolve();
+                }.bind(this));
+            } else {
+                this.dfdListenForChange.resolve();
+            }
         },
 
         /**
@@ -116,10 +158,9 @@ define([], function() {
                 length = minAmount;
             }
 
-            for (;++i < length;) {
-
+            for (; ++i < length;) {
                 // construct the attributes object for fields under and equal the minimum amount
-                if ((i+1) > minAmount) {
+                if ((i + 1) > minAmount) {
                     attributes = {};
                 } else {
                     attributes = {
@@ -186,14 +227,16 @@ define([], function() {
             }.bind(this));
 
             // initialize contact form
-            this.sandbox.start([{
-                name: 'contact-form@sulucontact',
-                options: {
-                    el:'#contact-edit-form',
-                    fieldTypes: this.fieldTypes,
-                    defaultTypes: this.defaultTypes
+            this.sandbox.start([
+                {
+                    name: 'contact-form@sulucontact',
+                    options: {
+                        el: '#contact-edit-form',
+                        fieldTypes: this.fieldTypes,
+                        defaultTypes: this.defaultTypes
+                    }
                 }
-            }]);
+            ]);
         },
 
         setFormData: function(data) {
@@ -201,7 +244,8 @@ define([], function() {
             this.sandbox.emit('sulu.contact-form.add-collectionfilters', this.form);
             this.sandbox.form.setData(this.form, data).then(function() {
                 this.sandbox.start(this.form);
-                this.sandbox.emit('sulu.contact-form.add-required',['email']);
+                this.sandbox.emit('sulu.contact-form.add-required', ['email']);
+                this.dfdFormIsSet.resolve();
             }.bind(this));
         },
 
@@ -245,7 +289,6 @@ define([], function() {
             }, this);
         },
 
-
         submit: function() {
             if (this.sandbox.form.validate(this.form)) {
                 var data = this.sandbox.form.getData(this.form);
@@ -253,6 +296,8 @@ define([], function() {
                 if (data.id === '') {
                     delete data.id;
                 }
+
+                data.tags = this.sandbox.dom.data(this.$find(constants.tagsId), 'tags');
 
                 this.updateHeadline();
 
@@ -265,7 +310,6 @@ define([], function() {
             }
         },
 
-
         /** @var Bool saved - defines if saved state should be shown */
         setHeaderBar: function(saved) {
             if (saved !== this.saved) {
@@ -276,17 +320,19 @@ define([], function() {
         },
 
         listenForChange: function() {
-            this.sandbox.dom.on('#contact-form', 'change', function() {
-                this.setHeaderBar(false);
-            }.bind(this), "select, input, textarea");
-            // TODO: only activate this, if wanted
-            this.sandbox.dom.on('#contact-form', 'keyup', function() {
-                this.setHeaderBar(false);
-            }.bind(this), "input, textarea");
+            this.dfdListenForChange.then(function() {
+                this.sandbox.dom.on('#contact-form', 'change', function() {
+                    this.setHeaderBar(false);
+                }.bind(this), "select, input, textarea");
+                // TODO: only activate this, if wanted
+                this.sandbox.dom.on('#contact-form', 'keyup', function() {
+                    this.setHeaderBar(false);
+                }.bind(this), "input, textarea");
 
-            // if a field-type gets changed or a field gets deleted
-            this.sandbox.on('sulu.contact-form.changed', function() {
-                this.setHeaderBar(false);
+                // if a field-type gets changed or a field gets deleted
+                this.sandbox.on('sulu.contact-form.changed', function() {
+                    this.setHeaderBar(false);
+                }.bind(this));
             }.bind(this));
         }
 

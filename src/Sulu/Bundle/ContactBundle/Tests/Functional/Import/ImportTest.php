@@ -142,6 +142,7 @@ class ImportTest extends DatabaseTestCase
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AddressType'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Country'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Note'),
+            self::$em->getClassMetadata('Sulu\Bundle\TagBundle\Entity\Tag'),
         );
 
         self::$tool->createSchema(self::$entities);
