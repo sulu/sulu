@@ -280,7 +280,7 @@ class CollectionController extends RestController implements ClassResourceInterf
      * @param array $fields
      * @return array
      */
-    protected function flatCollections ($collections, $locale, $fields = array())
+    protected function flatCollections($collections, $locale, $fields = array())
     {
         $flatCollections = array();
 
@@ -301,7 +301,7 @@ class CollectionController extends RestController implements ClassResourceInterf
         $collectionRestObject = new CollectionRestObject();
         $collectionRestObject->setId($request->get('id'));
         $collectionRestObject->setStyle($request->get('style', array(
-            'type' => 'circle',
+            'type'  => 'circle',
             'color' => Collection::generateColor()
         )));
         $collectionRestObject->setType($request->get('type', Collection::TYPE_DEFAULT));
