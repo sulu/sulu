@@ -74,6 +74,8 @@ class AccountRepository extends EntityRepository
                 ->leftJoin('account.faxes', 'faxes')
                 ->leftJoin('faxes.faxType', 'faxType')
                 ->leftJoin('account.bankAccounts', 'bankAccounts')
+                ->leftJoin('account.tags','tags')
+                ->addSelect('partial tags.{id, name}')
                 ->addSelect('bankAccounts')
                 ->addSelect('addresses')
                 ->addSelect('country')

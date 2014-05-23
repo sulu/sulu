@@ -12,6 +12,7 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Exclude;
+use JMS\Serializer\Annotation\Accessor;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 
 
@@ -152,6 +153,11 @@ class Account extends ApiEntity
      */
     private $bankAccounts;
 
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     * @Accessor(getter="getTagNameArray")
+     */
+    private $tags;
 
     /**
      * Constructor
@@ -165,6 +171,7 @@ class Account extends ApiEntity
         $this->emails = new \Doctrine\Common\Collections\ArrayCollection();
         $this->notes = new \Doctrine\Common\Collections\ArrayCollection();
         $this->faxes = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->tags = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -820,5 +827,53 @@ class Account extends ApiEntity
     public function getBankAccounts()
     {
         return $this->bankAccounts;
+    }
+
+    /**
+     * Add tags
+     *
+     * @param \Sulu\Bundle\TagBundle\Entity\Tag $tags
+     * @return Account
+     */
+    public function addTag(\Sulu\Bundle\TagBundle\Entity\Tag $tags)
+    {
+        $this->tags[] = $tags;
+    
+        return $this;
+    }
+
+    /**
+     * Remove tags
+     *
+     * @param \Sulu\Bundle\TagBundle\Entity\Tag $tags
+     */
+    public function removeTag(\Sulu\Bundle\TagBundle\Entity\Tag $tags)
+    {
+        $this->tags->removeElement($tags);
+    }
+
+    /**
+     * Get tags
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getTags()
+    {
+        return $this->tags;
+    }
+
+    /**
+     * parses tags to array containing tag names
+     * @return array
+     */
+    public function getTagNameArray()
+    {
+        $tags = array();
+        if (!is_null($this->getTags())) {
+            foreach ($this->getTags() as $tag) {
+                $tags[] = $tag->getName();
+            }
+        }
+        return $tags;
     }
 }

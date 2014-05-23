@@ -22,6 +22,8 @@ use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\ContactBundle\Entity\Phone;
 use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\Note;
+use Sulu\Bundle\TagBundle\Entity\Tag;
+use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\RestController;
@@ -291,6 +293,14 @@ class ContactController extends RestController implements ClassResourceInterface
                 }
             }
 
+            // handle tags
+            $tags = $request->get('tags');
+            if (!empty($tags)) {
+                foreach ($tags as $tag) {
+                    $this->addTag($contact, $tag);
+                }
+            }
+
             $em->persist($contact);
 
             $em->flush();
@@ -355,7 +365,8 @@ class ContactController extends RestController implements ClassResourceInterface
                     && $this->processPhones($contact, $request)
                     && $this->processAddresses($contact, $request)
                     && $this->processNotes($contact, $request)
-                    && $this->processFaxes($contact, $request))
+                    && $this->processFaxes($contact, $request)
+                    && $this->processTags($contact, $request))
 //                    && $this->processUrls($contact, $request))
                 ) {
                     throw new RestException('Updating dependencies is not possible', 0);
@@ -447,6 +458,47 @@ class ContactController extends RestController implements ClassResourceInterface
             $email->setEmail($entry['email']);
             $email->setEmailType($emailType);
         }
+
+        return $success;
+    }
+
+    /**
+     * Process all tags of request
+     * @param Contact $contact The contact on which is worked
+     * @param Request $request
+     * @return bool True if the processing was successful, otherwise false
+     */
+    protected function processTags(Contact $contact, Request $request)
+    {
+        $tags = $request->get('tags');
+
+        $delete = function ($tag) use ($contact) {
+            return $contact->removeTag($tag);
+        };
+
+        $update = function () {
+            return true;
+        };
+
+        $add = function ($tag) use ($contact) {
+            return $this->addTag($contact, $tag);
+        };
+
+        return $this->processPut($contact->getTags(), $tags, $delete, $update, $add);
+    }
+
+    /**
+     * Adds a new tag to the given contact and persist it with the given object manager
+     * @param Contact $contact
+     * @param $data
+     * @return bool True if there was no error, otherwise false
+     */
+    protected function addTag(Contact $contact, $data)
+    {
+        $success = true;
+        $tagManager = $this->get('sulu_tag.tag_manager');
+        $resolvedTag = $tagManager->findByName($data);
+        $contact->addTag($resolvedTag);
 
         return $success;
     }
