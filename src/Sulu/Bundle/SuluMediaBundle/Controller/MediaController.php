@@ -86,7 +86,7 @@ class MediaController extends RestController implements ClassResourceInterface
     /**
      * {@inheritdoc}
      */
-    protected $fieldsRelations = array('title', 'name', 'description', 'size');
+    protected $fieldsRelations = array('title', 'name', 'description', 'thumbnails');
 
     /**
      * {@inheritdoc}
