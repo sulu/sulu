@@ -362,6 +362,7 @@ class MediaControllerTest extends DatabaseTestCase
 
     /**
      * @description Test POST to create a new Media without details
+     * @group postWithoutDetails
      */
     public function testPostWithoutDetails()
     {
@@ -387,6 +388,7 @@ class MediaControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertEquals('photo', $response->title);
 
         $this->assertEquals('photo.jpeg', $response->name);
         $this->assertEquals(2, $response->id);

@@ -293,7 +293,7 @@ class MediaController extends RestController implements ClassResourceInterface
         $object->setThumbnails($request->get('thumbnails', array()));
         $object->setUrl($request->get('url'));
         $object->setName($request->get('name'));
-        $object->setTitle($request->get('title'), $this->getTitleFromUpload($request, 'fileVersion'));
+        $object->setTitle($request->get('title', $this->getTitleFromUpload($request, 'fileVersion')));
         $object->setDescription($request->get('description'));
         $object->setChanger($request->get('changer'));
         $object->setCreator($request->get('creator'));
@@ -315,7 +315,7 @@ class MediaController extends RestController implements ClassResourceInterface
          * @var UploadedFile $uploadedFile
          */
         foreach ($this->getUploadedFiles($request, 'fileVersion') as $uploadedFile) {
-            $title = $uploadedFile->getClientOriginalName();
+            $title = $part   = implode('.', explode('.', $uploadedFile->getClientOriginalName(), -1));;
             break;
         }
 
