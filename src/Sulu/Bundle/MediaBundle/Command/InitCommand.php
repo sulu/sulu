@@ -31,7 +31,7 @@ class InitCommand extends ContainerAwareCommand
     {
         $baseDir = dirname(dirname($this->getContainer()->get('kernel')->getRootDir()));
 
-        $output->writeln('Create upload dir ...');
+        $output->writeln('Create Upload dir in ' . $baseDir);
 
         $uploadDir = $baseDir . '/uploads';
 
