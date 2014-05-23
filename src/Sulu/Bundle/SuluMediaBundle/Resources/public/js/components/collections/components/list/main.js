@@ -189,7 +189,7 @@ define(function () {
             var collection = {
                 id: constants.newCollectionId,
                 mediaNumber: 0,
-                title: this.options.newCollectionTitle,
+                title: this.sandbox.translate(this.options.newCollectionTitle),
                 style: {
                     color: this.options.newCollectionColor
                 }
@@ -396,14 +396,14 @@ define(function () {
             }.bind(this), '.' + constants.titleChangerClass);
 
             // change collection on input blur
-            this.sandbox.dom.on(this.collections[id].$el, 'blur', function() {
+            this.sandbox.dom.on(this.collections[id].$el, 'blur', function(event) {
                 this.hideTitleInput(this.collections[id]);
             }.bind(this), '.' + constants.titleChangerClass);
 
-            // change collection on input enter
+            // blur input on enter
             this.sandbox.dom.on(this.collections[id].$el, 'keyup', function(event) {
                 if (event.keyCode === 13) {
-                    this.hideTitleInput(this.collections[id]);
+                    this.sandbox.dom.trigger(this.$find('.' + constants.titleChangerClass), 'blur');
                 }
             }.bind(this), '.' + constants.titleChangerClass);
 
