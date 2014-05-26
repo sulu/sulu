@@ -13,7 +13,7 @@
     "require": {
         "php": ">=5.4",
         "doctrine/orm": ">=2.2.3,<2.4-dev",
-        "friendsofsymfony/rest-bundle": "1.0.*",
+        "friendsofsymfony/rest-bundle": "dev-master",
         "jms/serializer-bundle": "@dev",
         "stof/doctrine-extensions-bundle": "1.1.*@dev",
         "sulu/sulu": "dev-develop",
@@ -25,6 +25,7 @@
         "sulu/contact-bundle": "@dev"
     },
     "require-dev": {
+        "sensio/framework-extra-bundle": "~3.0",
         "symfony/symfony": "2.4.*",
         "doctrine/doctrine-bundle": "1.2.*",
         "symfony/monolog-bundle": "2.4.*",
