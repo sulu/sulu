@@ -16,7 +16,7 @@ define([], function() {
         },
         fields = ['urls', 'emails', 'faxes', 'phones', 'notes', 'addresses'],
 
-    // sets toolbar
+        // sets toolbar
         setHeaderToolbar = function() {
             this.sandbox.emit('sulu.header.set-toolbar', {
                 template: 'default'
@@ -30,7 +30,6 @@ define([], function() {
         templates: ['/admin/contact/template/account/form'],
 
         initialize: function() {
-
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
             this.form = '#contact-form';
@@ -79,7 +78,6 @@ define([], function() {
                 }
             ]);
 
-
             this.initForm(data);
             this.initCategorySelect(data);
             this.startCategoryOverlay();
@@ -89,12 +87,10 @@ define([], function() {
             this.bindCustomEvents();
         },
 
-
         /**
          * Inits the select for the account category
          */
         initCategorySelect: function(formData) {
-
             this.preselectedElemendId = !!formData.accountCategory ? formData.accountCategory.id : null;
             this.accountCategoryData = null;
 
@@ -148,7 +144,6 @@ define([], function() {
          * Triggers event to show overlay
          */
         showCategoryOverlay: function() {
-
             var $overlayContainer = this.sandbox.dom.$('<div id="overlayContainer"></div>'),
                 config = {
                     instanceName: 'accountCategories',
@@ -169,7 +164,6 @@ define([], function() {
          * Shows the overlay to manage account categories
          */
         startCategoryOverlay: function() {
-
             this.sandbox.start([
                 {
                     name: 'type-overlay@suluadmin',
@@ -430,6 +424,5 @@ define([], function() {
                 }
             }.bind(this));
         }
-
     };
 });
