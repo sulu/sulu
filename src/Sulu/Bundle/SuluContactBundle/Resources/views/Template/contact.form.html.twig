@@ -6,13 +6,15 @@
         <div class="grid-col-6">
             <div class="form-group">
                 <label for="form-of-address" class="required"><%=translate('contact.contacts.formOfAddress')%></label>
-                <div id="form-of-address" data-type-label="name" data-mapper-property="formOfAddress" data-type="husky-select" data-form="true"></div>
+                {#<div id="form-of-address" data-type-label="name" data-mapper-property="formOfAddress" data-type="husky-select" data-form="true"></div>#}
+                <div id="form-of-address"></div>
             </div>
         </div>
         <div class="grid-col-6">
             <div class="form-group">
                 <label for="salutation" class="required"><%=translate('contact.contacts.salutation')%></label>
-                <input class="form-element" type="text" id="salutation" data-trigger="focusout" data-mapper-property="salutation"/>
+                {#<input class="form-element" type="text" id="salutation" data-trigger="focusout" data-mapper-property="salutation"/>#}
+                <input class="form-element" type="text" id="salutation"/>
             </div>
         </div>
     </div>
