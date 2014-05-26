@@ -65,7 +65,6 @@
         <div class="grid-col-6">
             <div class="form-group">
                 <label for="company-input"><%=translate('contact.contacts.company')%></label>
-
                 <div id="company"></div>
             </div>
         </div>
@@ -79,6 +78,17 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+    <div class="grid-row">
+        <div class="grid-col-6">
+            <div class="form-group">
+                <label for="birthday"><%=translate('contact.contacts.birthday')%></label>
+                <input class="form-element" type="text" id="birthday" data-mapper-property="birthday"/>
+            </div>
+        </div>
+        <div class="grid-col-6">
+
         </div>
     </div>
 {% endblock %}
