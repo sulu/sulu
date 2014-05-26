@@ -16,7 +16,9 @@ define(function () {
         slideDuration: 250, //ms
         instanceName: 'collections',
         newCollectionColor: '#cccccc',
-        newCollectionTitle: 'sulu.media.new-collection'
+        newCollectionTitle: 'sulu.media.new-collection',
+        newTitleKey: 'public.title',
+        newColorKey: 'public.color'
     },
     constants = {
         openAllKey: 'public.open-all',
@@ -27,10 +29,11 @@ define(function () {
         slideUpIcon: 'caret-down',
         collectionsClass: 'collections',
         collectionClass: 'collection',
-        collectionSlideClass: 'slide',
+        collectionSlideClass: 'collection-slide',
         rightContentClass: 'rightContent',
         titleClass: 'collection-title',
-        titleChangerClass: 'change-title',
+        colorChangerId: 'change-color',
+        titleChangerId: 'change-title',
         colorPointClass: 'collection-color',
         newCollectionId: 'new'
     },
@@ -48,10 +51,21 @@ define(function () {
             '       <div class="', constants.colorPointClass ,'" style="background-color: <%= color %>"></div>',
             '       <div class="fa-<%= icon %> icon"></div>',
             '       <div class="', constants.titleClass ,'"><%= title %></div>',
-            '       <input type="text" class="form-element '+ constants.titleChangerClass +'" value="<%= title %>"/>',
             '       <div class="', constants.rightContentClass ,'"></div>',
             '   </div>',
             '   <div class="', constants.collectionSlideClass ,'"></div>',
+            '</div>'
+        ].join(''),
+        addCollection: [
+            '<div class="grid">',
+            '   <div class="grid-row">',
+            '       <label for="', constants.titleChangerId ,'"><%= titleDesc %></label>',
+            '       <input class="form-element" type="text" id="', constants.titleChangerId ,'" value="<%= title %>">',
+            '   </div>',
+            '   <div class="grid-row">',
+            '       <label for="', constants.colorChangerId ,'"><%= colorDesc %></label>',
+            '       <input class="form-element" type="text" id="', constants.colorChangerId ,'" value="<%= color %>">',
+            '   </div>',
             '</div>'
         ].join(''),
         totalElements: [
@@ -112,6 +126,7 @@ define(function () {
             this.collections = {}
             // stores key value paires of an array of selected elements as value and the corresponding datagrid-name as key
             this.selectedMedias = {};
+            this.$overlayContent = null;
 
             this.bindCustomEvents();
             this.render();
@@ -123,7 +138,7 @@ define(function () {
          */
         bindCustomEvents: function() {
             // add a new collection to the list
-            this.sandbox.on('sulu.list-toolbar.add', this.addCollection.bind(this));
+            this.sandbox.on('sulu.list-toolbar.add', this.openOverlay.bind(this));
             // start list-toolbar after header has initialized
             this.sandbox.on('sulu.header.initialized', this.startListToolbar.bind(this));
             // update a collection in the list if the data-record has changed
@@ -180,22 +195,19 @@ define(function () {
          * @param name {String} the title of the new collection - optional
          * @returns {Boolean} returns false if a new and unsafed colleciton exists
          */
-        addCollection: function(name) {
-            // if new and unsafed collection exists just focus the title input and return false
-            if (!!this.collections[constants.newCollectionId]) {
-                this.showTitleInput(this.collections[constants.newCollectionId]);
-                return false;
-            }
-            var collection = {
-                id: constants.newCollectionId,
-                mediaNumber: 0,
-                title: this.sandbox.translate(this.options.newCollectionTitle),
-                style: {
-                    color: this.options.newCollectionColor
-                }
-            }
+        addCollection: function() {
+            var title = this.sandbox.dom.val(this.sandbox.dom.find('#' + constants.titleChangerId, this.$overlayContent)),
+                color = this.sandbox.dom.val(this.sandbox.dom.find('#' + constants.colorChangerId, this.$overlayContent)),
+                collection = {
+                    id: constants.newCollectionId,
+                    mediaNumber: 0,
+                    title: title,
+                    style: {
+                        color: color
+                    }
+            };
             this.renderCollection(collection, this.$find('.' + constants.collectionsClass));
-            this.showTitleInput(this.collections[constants.newCollectionId]);
+            this.sandbox.emit(COLLECTION_ADDED.call(this), title, color);
         },
 
         /**
@@ -238,7 +250,41 @@ define(function () {
                         this.sandbox.dom.find('.' + constants.collectionSlideClass, this.collections[collection.id].$el)
                 );
             }.bind(this));
+            this.initializeOverlay();
             this.sandbox.dom.append(this.$el, $collections);
+        },
+
+        /**
+         * Initializes the overlay for adding a new collection
+         */
+        initializeOverlay: function() {
+            var $container = this.sandbox.dom.createElement('<div class="overlay-element"/>');
+            this.sandbox.dom.append(this.$el, $container);
+
+            this.$overlayContent = this.sandbox.dom.createElement(this.sandbox.util.template(templates.addCollection)({
+                title: this.sandbox.translate(this.options.newCollectionTitle),
+                color: this.options.newCollectionColor,
+                titleDesc: this.sandbox.translate(this.options.newTitleKey),
+                colorDesc: this.sandbox.translate(this.options.newColorKey)
+            }));
+
+            this.sandbox.start([{
+                name: 'overlay@husky',
+                options: {
+                    el: $container,
+                    title: this.sandbox.translate('sulu.media.add-collection'),
+                    instanceName: 'add-collection',
+                    data: this.$overlayContent,
+                    okCallback: this.addCollection.bind(this)
+                }
+            }]);
+        },
+
+        /**
+         * Opens the add colleciton overlay
+         */
+        openOverlay: function() {
+            this.sandbox.emit('husky.overlay.add-collection.open');
         },
 
         /**
@@ -290,7 +336,7 @@ define(function () {
                 this.collections[collection.id] = {
                     $el: this.collections[constants.newCollectionId].$el,
                     data: collection
-                }
+                };
                 // rebind events and start grid
                 this.sandbox.dom.off(this.collections[collection.id].$el);
                 this.bindCollectionDomEvents(collection.id);
@@ -388,65 +434,12 @@ define(function () {
                 this.sandbox.dom.on(this.collections[id].$el, 'click', function() {
                     this.toggleCollection(this.collections[id]);
                 }.bind(this), '.head');
+
+                this.sandbox.dom.on(this.collections[id].$el, 'click', function(event) {
+                    this.sandbox.dom.stopPropagation(event);
+                    this.showAllFiles(id);
+                }.bind(this), '.' + constants.titleClass);
             }
-
-            // prevent slide down on input click
-            this.sandbox.dom.on(this.collections[id].$el, 'click', function(event) {
-                this.sandbox.dom.stopPropagation(event);
-            }.bind(this), '.' + constants.titleChangerClass);
-
-            // change collection on input blur
-            this.sandbox.dom.on(this.collections[id].$el, 'blur', function(event) {
-                this.hideTitleInput(this.collections[id]);
-            }.bind(this), '.' + constants.titleChangerClass);
-
-            // blur input on enter
-            this.sandbox.dom.on(this.collections[id].$el, 'keyup', function(event) {
-                if (event.keyCode === 13) {
-                    this.sandbox.dom.trigger(this.$find('.' + constants.titleChangerClass), 'blur');
-                }
-            }.bind(this), '.' + constants.titleChangerClass);
-
-            // show input on click on title
-            this.sandbox.dom.on(this.collections[id].$el, 'click', function(event) {
-                this.sandbox.dom.stopPropagation(event);
-                this.showTitleInput(this.collections[id]);
-            }.bind(this), '.' + constants.titleClass);
-        },
-
-        /**
-         * Shows the title input field of a collection
-         * @param collection
-         */
-        showTitleInput: function(collection) {
-            // hide title
-            this.sandbox.dom.hide(this.sandbox.dom.find('.' + constants.titleClass, collection.$el));
-            // show input and foucs
-            this.sandbox.dom.show(this.sandbox.dom.find('.' + constants.titleChangerClass, collection.$el));
-            this.sandbox.dom.select(this.sandbox.dom.find('.' + constants.titleChangerClass, collection.$el));
-        },
-
-        /**
-         * Hides the title input field of a collection
-         * @param collection
-         */
-        hideTitleInput: function(collection) {
-            var editedTitle = this.sandbox.dom.val(this.sandbox.dom.find('.' + constants.titleChangerClass, collection.$el));
-
-            // take input value as title if title has been edited
-            if (editedTitle !== collection.data.title) {
-                this.sandbox.dom.html(this.sandbox.dom.find('.' + constants.titleClass, collection.$el), editedTitle);
-                if (collection.data.id === constants.newCollectionId) {
-                    this.sandbox.emit(COLLECTION_ADDED.call(this), editedTitle)
-                } else {
-                    this.sandbox.emit(TITLE_CHANGED.call(this), collection.data.id, editedTitle)
-                }
-            }
-
-            // hide input
-            this.sandbox.dom.hide(this.sandbox.dom.find('.' + constants.titleChangerClass, collection.$el));
-            // show title
-            this.sandbox.dom.show(this.sandbox.dom.find('.' + constants.titleClass, collection.$el));
         },
 
         /**
