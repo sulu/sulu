@@ -16,6 +16,7 @@ use FOS\RestBundle\Controller\Annotations\Put;
 use Sulu\Bundle\ContactBundle\Entity\BankAccount;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\Account;
+use Sulu\Bundle\ContactBundle\Entity\AccountCategory;
 use Sulu\Bundle\ContactBundle\Entity\Fax;
 use Sulu\Bundle\ContactBundle\Entity\FaxType;
 use Sulu\Bundle\ContactBundle\Entity\Address;
@@ -42,6 +43,7 @@ class AccountController extends RestController implements ClassResourceInterface
      */
     protected $entityName = 'SuluContactBundle:Account';
     protected $contactsEntityName = 'SuluContactBundle:Contact';
+    protected $accountCategoryEntityName = 'SuluContactBundle:AccountCategory';
 
     /**
      * {@inheritdoc}
@@ -215,17 +217,11 @@ class AccountController extends RestController implements ClassResourceInterface
             }
             $account->setDisabled($disabled);
 
-            $parentData = $request->get('parent');
-            if ($parentData != null && isset($parentData['id']) && $parentData['id'] != 'null' && $parentData['id'] != '') {
-                $parent = $this->getDoctrine()
-                    ->getRepository($this->entityName)
-                    ->findAccountById($parentData['id']);
+            // set category
+            $this->setCategory($request->get('accountCategory'), $account);
 
-                if (!$parent) {
-                    throw new EntityNotFoundException($this->entityName, $parentData['id']);
-                }
-                $account->setParent($parent);
-            }
+            // set parent
+            $this->setParent($request->get('parent'), $account);
 
             // set creator / changer
             $account->setCreated(new DateTime());
@@ -321,19 +317,11 @@ class AccountController extends RestController implements ClassResourceInterface
                     $account->setDisabled($disabled);
                 }
 
+                // set category
+                $this->setCategory($request->get('accountCategory'), $account);
+
                 // set parent
-                $parentData = $request->get('parent');
-                if ($parentData != null && isset($parentData['id']) && $parentData['id'] != 'null' && $parentData['id'] != '') {
-                    $parent = $this->getDoctrine()
-                        ->getRepository($this->entityName)
-                        ->findAccountById($parentData['id']);
-                    if (!$parent) {
-                        throw new EntityNotFoundException($this->entityName, $parentData['id']);
-                    }
-                    $account->setParent($parent);
-                } else {
-                    $account->setParent(null);
-                }
+                $this->setParent($request->get('parent'), $account);
 
                 // set changed
                 $account->setChanged(new DateTime());
@@ -362,6 +350,47 @@ class AccountController extends RestController implements ClassResourceInterface
         }
 
         return $this->handleView($view);
+    }
+
+    /**
+     * set parent to account
+     * @param array $parentData
+     * @param Account $account
+     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
+     */
+    private function setParent($parentData, Account $account)
+    {
+        if ($parentData != null && isset($parentData['id']) && $parentData['id'] != 'null' && $parentData['id'] != '') {
+            $parent = $this->getDoctrine()
+                ->getRepository($this->entityName)
+                ->findAccountById($parentData['id']);
+            if (!$parent) {
+                throw new EntityNotFoundException($this->entityName, $parentData['id']);
+            }
+            $account->setParent($parent);
+        } else {
+            $account->setParent(null);
+        }
+    }
+
+    /**
+     * set category to account
+     * @param array $categoryData
+     * @param Account $account
+     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
+     */
+    public function setCategory($categoryData, Account $account)
+    {
+        $categoryId = $categoryData['id'];
+        if (!is_null($categoryId) && !empty($categoryId)) {
+            /** @var @var AccountCategory $category */
+            $category = $this->getDoctrine()->getRepository($this->accountCategoryEntityName)->find($categoryId);
+            if (!is_null($category)) {
+                $account->setAccountCategory($category);
+            } else {
+                throw new EntityNotFoundException($this->accountCategoryEntityName, $categoryId);
+            }
+        }
     }
 
     /**
