@@ -41,7 +41,6 @@ class AccountCategoryController extends RestController implements ClassResourceI
      */
     public function getAction($id)
     {
-
         $view = $this->responseGetById(
             $id,
             function ($id) {
@@ -118,13 +117,11 @@ class AccountCategoryController extends RestController implements ClassResourceI
             if (!$category) {
                 throw new EntityNotFoundException($this->entityName, $id);
             } else {
-
                 $name = $this->getRequest()->get('category');
 
                 if ($name == null || $name == '') {
                     throw new RestException('There is no category-name for the account-category given');
                 } else {
-
                     $em = $this->getDoctrine()->getManager();
                     $category->setCategory($name);
 
@@ -140,7 +137,6 @@ class AccountCategoryController extends RestController implements ClassResourceI
 
         return $this->handleView($view);
     }
-
 
     /**
      * Delete a account category with the given id
@@ -184,7 +180,6 @@ class AccountCategoryController extends RestController implements ClassResourceI
     public function patchAction()
     {
         try {
-
             $data = [];
 
             /** @var Request $request */
@@ -235,7 +230,6 @@ class AccountCategoryController extends RestController implements ClassResourceI
             $category->setCategory($item['category']);
             $this->getDoctrine()->getManager()->persist($category);
         }
-
 
         return $category;
     }
