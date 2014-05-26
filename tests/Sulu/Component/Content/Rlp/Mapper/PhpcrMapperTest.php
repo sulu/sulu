@@ -394,4 +394,47 @@ class PhpcrMapperTest extends PhpcrTestCase
         $this->assertTrue($result[1]->getCreated() > $result[2]->getCreated());
         $this->assertTrue($result[2]->getCreated() > $result[3]->getCreated());
     }
+
+    public function testDeleteByPath()
+    {
+        $session = $this->sessionManager->getSession();
+        $rootNode = $session->getNode('/cmf/default/routes/de');
+
+        // create routes for content
+        $this->rlpMapper->save($this->content1, '/news', 'default', 'de');
+        $this->rlpMapper->save($this->content1, '/news/news-1', 'default', 'de');
+        $this->rlpMapper->save($this->content1, '/news/news-1/sub-1', 'default', 'de');
+        $this->rlpMapper->save($this->content1, '/news/news-1/sub-2', 'default', 'de');
+
+        $this->rlpMapper->save($this->content1, '/news/news-2', 'default', 'de');
+        $this->rlpMapper->save($this->content1, '/news/news-2/sub-1', 'default', 'de');
+        $this->rlpMapper->save($this->content1, '/news/news-2/sub-2', 'default', 'de');
+        $session->save();
+
+        // move route
+        $this->rlpMapper->move('/news', '/test', 'default', 'de');
+        $session->save();
+        $session->refresh(false);
+
+        // delete a history url
+        $this->rlpMapper->deleteByPath('/news/news-1/sub-1', 'default', 'de');
+        $this->assertFalse($rootNode->hasNode('news/news-1/sub-1'));
+        $this->assertTrue($rootNode->hasNode('news/news-1/sub-2'));
+        $this->assertTrue($rootNode->hasNode('test/news-1/sub-1'));
+        $this->assertTrue($rootNode->hasNode('test/news-1/sub-2'));
+
+        // delete a normal url
+        $this->rlpMapper->deleteByPath('/test/news-1/sub-2', 'default', 'de');
+        $this->assertFalse($rootNode->hasNode('news/news-1/sub-1'));
+        $this->assertFalse($rootNode->hasNode('news/news-1/sub-2'));
+
+        $this->assertTrue($rootNode->hasNode('news/news-1'));
+        $this->assertTrue($rootNode->hasNode('test/news-1/sub-1'));
+        $this->assertFalse($rootNode->hasNode('test/news-1/sub-2'));
+
+        // delete all
+        $this->rlpMapper->deleteByPath('/test', 'default', 'de');
+        $this->assertFalse($rootNode->hasNode('test'));
+        $this->assertFalse($rootNode->hasNode('news'));
+    }
 }

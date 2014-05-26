@@ -385,6 +385,74 @@ class PhpcrMapper extends RlpMapper
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function deleteByPath($path, $webspaceKey, $languageCode, $segmentKey = null)
+    {
+        $session = $this->sessionManager->getSession();
+
+        $rootNode = $this->getRoutes($webspaceKey, $languageCode, $segmentKey);
+        $routeNode = $rootNode->getNode(ltrim($path, '/'));
+
+        $this->deleteByNode($routeNode, $session, $webspaceKey, $languageCode, $segmentKey);
+        $session->save();
+    }
+
+    /**
+     * delete route with given node uuid (with history)
+     */
+    private function deleteByUuid(
+        $uuid,
+        SessionInterface $session,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey = null
+    )
+    {
+        $node = $this->sessionManager->getSession()->getNodeByIdentifier(
+            $uuid,
+            $session,
+            $webspaceKey,
+            $languageCode,
+            $segmentKey
+        );
+
+        $this->deleteByNode($node, $session, $webspaceKey, $languageCode, $segmentKey);
+    }
+
+    /**
+     * deletes route node (with history)
+     */
+    private function deleteByNode(
+        NodeInterface $node,
+        SessionInterface $session,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey = null
+    )
+    {
+        if ($node->getPropertyValue('sulu:history') !== true) {
+            // search for history nodes
+            $this->loadPathNodeByContent(
+                $node,
+                function ($resourceLocator, NodeInterface $historyNode) use (
+                    $session,
+                    $webspaceKey,
+                    $languageCode,
+                    $segmentKey
+                ) {
+                    // delete history nodes
+                    $this->deleteByNode($historyNode, $session, $webspaceKey, $languageCode, $segmentKey);
+                },
+                $webspaceKey,
+                $languageCode,
+                $segmentKey
+            );
+        }
+        $node->remove();
+    }
+
+    /**
      * returns resource locator for parent node
      * @param string $uuid
      * @param string $webspaceKey
