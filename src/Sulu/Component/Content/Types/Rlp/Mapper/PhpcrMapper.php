@@ -395,6 +395,7 @@ class PhpcrMapper extends RlpMapper
         $routeNode = $rootNode->getNode(ltrim($path, '/'));
 
         $this->deleteByNode($routeNode, $session, $webspaceKey, $languageCode, $segmentKey);
+        $session->save();
     }
 
     /**
@@ -420,6 +421,7 @@ class PhpcrMapper extends RlpMapper
                 ) {
                     // delete history nodes
                     $this->deleteByNode($historyNode, $session, $webspaceKey, $languageCode, $segmentKey);
+                    $session->save();
                 },
                 $webspaceKey,
                 $languageCode,
@@ -427,7 +429,6 @@ class PhpcrMapper extends RlpMapper
             );
         }
         $node->remove();
-        $session->save();
     }
 
     /**

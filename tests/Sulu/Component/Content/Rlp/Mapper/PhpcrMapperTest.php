@@ -414,9 +414,10 @@ class PhpcrMapperTest extends PhpcrTestCase
         $this->rlpMapper->save($this->content1, '/news/news-1/sub-1', 'default', 'de');
         $this->rlpMapper->save($this->content1, '/news/news-1/sub-2', 'default', 'de');
 
-        $this->rlpMapper->save($this->content1, '/news/news-2', 'default', 'de');
-        $this->rlpMapper->save($this->content1, '/news/news-2/sub-1', 'default', 'de');
-        $this->rlpMapper->save($this->content1, '/news/news-2/sub-2', 'default', 'de');
+// FIXME issue: https://github.com/jackalope/jackalope-jackrabbit/issues/87
+//        $this->rlpMapper->save($this->content1, '/news/news-2', 'default', 'de');
+//        $this->rlpMapper->save($this->content1, '/news/news-2/sub-1', 'default', 'de');
+//        $this->rlpMapper->save($this->content1, '/news/news-2/sub-2', 'default', 'de');
         $session->save();
 
         // move route
@@ -439,9 +440,6 @@ class PhpcrMapperTest extends PhpcrTestCase
         $this->assertTrue($rootNode->hasNode('news/news-1'));
         $this->assertTrue($rootNode->hasNode('test/news-1/sub-1'));
         $this->assertFalse($rootNode->hasNode('test/news-1/sub-2'));
-
-        $session->save();
-        $session->refresh(false);
     }
 
     public function testTreeDeleteByPath()
@@ -452,12 +450,14 @@ class PhpcrMapperTest extends PhpcrTestCase
         // create routes for content
         $this->rlpMapper->save($this->content1, '/news', 'default', 'de');
         $this->rlpMapper->save($this->content1, '/news/news-1', 'default', 'de');
-        $this->rlpMapper->save($this->content1, '/news/news-1/sub-1', 'default', 'de');
-        $this->rlpMapper->save($this->content1, '/news/news-1/sub-2', 'default', 'de');
 
-        $this->rlpMapper->save($this->content1, '/news/news-2', 'default', 'de');
-        $this->rlpMapper->save($this->content1, '/news/news-2/sub-1', 'default', 'de');
-        $this->rlpMapper->save($this->content1, '/news/news-2/sub-2', 'default', 'de');
+// FIXME issue: https://github.com/jackalope/jackalope-jackrabbit/issues/87
+//        $this->rlpMapper->save($this->content1, '/news/news-1/sub-1', 'default', 'de');
+//        $this->rlpMapper->save($this->content1, '/news/news-1/sub-2', 'default', 'de');
+//
+//        $this->rlpMapper->save($this->content1, '/news/news-2', 'default', 'de');
+//        $this->rlpMapper->save($this->content1, '/news/news-2/sub-1', 'default', 'de');
+//        $this->rlpMapper->save($this->content1, '/news/news-2/sub-2', 'default', 'de');
         $session->save();
 
         // move route
@@ -479,12 +479,14 @@ class PhpcrMapperTest extends PhpcrTestCase
         // create routes for content
         $this->rlpMapper->save($this->content2, '/news', 'default', 'de');
         $this->rlpMapper->save($this->content1, '/news/news-1', 'default', 'de');
-        $this->rlpMapper->save($this->content1, '/news/news-1/sub-1', 'default', 'de');
-        $this->rlpMapper->save($this->content1, '/news/news-1/sub-2', 'default', 'de');
 
-        $this->rlpMapper->save($this->content1, '/news/news-2', 'default', 'de');
-        $this->rlpMapper->save($this->content1, '/news/news-2/sub-1', 'default', 'de');
-        $this->rlpMapper->save($this->content1, '/news/news-2/sub-2', 'default', 'de');
+// FIXME issue: https://github.com/jackalope/jackalope-jackrabbit/issues/87
+//        $this->rlpMapper->save($this->content1, '/news/news-1/sub-1', 'default', 'de');
+//        $this->rlpMapper->save($this->content1, '/news/news-1/sub-2', 'default', 'de');
+//
+//        $this->rlpMapper->save($this->content1, '/news/news-2', 'default', 'de');
+//        $this->rlpMapper->save($this->content1, '/news/news-2/sub-1', 'default', 'de');
+//        $this->rlpMapper->save($this->content1, '/news/news-2/sub-2', 'default', 'de');
         $session->save();
 
         // move route
@@ -531,8 +533,5 @@ class PhpcrMapperTest extends PhpcrTestCase
 
         $this->assertEquals(1, sizeof($result));
         $this->assertEquals('/test', $result[0]->getResourceLocator());
-
-        $session->save();
-        $session->refresh(false);
     }
 }
