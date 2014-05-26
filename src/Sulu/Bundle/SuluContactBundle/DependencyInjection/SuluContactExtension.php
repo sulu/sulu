@@ -43,8 +43,20 @@ class SuluContactExtension extends Extension
             $config['account_types']
         );
 
-        // set default values
-        if(!array_key_exists('form_of_address', $config) || count($config['form_of_address']) == 0){
+        $this->setDefaultForFormOfAddress($config);
+        $container->setParameter(
+            'sulu_contact.form_of_address',
+            $config['form_of_address']
+        );
+    }
+
+    /**
+     * Sets default values for form of address if not defined in config
+     * @param $config
+     */
+    private function setDefaultForFormOfAddress($config)
+    {
+        if (!array_key_exists('form_of_address', $config) || count($config['form_of_address']) == 0) {
             $config['form_of_address'] = array(
                 'male' => array(
                     'id' => 0,
@@ -58,10 +70,5 @@ class SuluContactExtension extends Extension
                 )
             );
         }
-
-        $container->setParameter(
-            'sulu_contact.form_of_address',
-            $config['form_of_address']
-        );
     }
 }
