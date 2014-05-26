@@ -17,6 +17,8 @@
         "friendsofsymfony/rest-bundle": "dev-master",
         "jms/serializer-bundle": "@dev",
         "stof/doctrine-extensions-bundle": "1.1.*@dev",
+        "sensio/framework-extra-bundle":  "~2.2",
+
         "sulu/sulu": "dev-develop",
         "sulu/admin-bundle": "dev-develop",
         "sulu/contact-bundle": "dev-develop"
