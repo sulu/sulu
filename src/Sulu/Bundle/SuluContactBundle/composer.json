@@ -24,7 +24,7 @@
 
     },
     "require-dev": {
-        "sensio/framework-extra-bundle":  "~2.2",
+        "sensio/framework-extra-bundle":  "~3.0",
         "symfony/symfony": "2.4.*",
         "doctrine/doctrine-bundle": "1.2.*",
         "symfony/monolog-bundle": "2.4.*",
