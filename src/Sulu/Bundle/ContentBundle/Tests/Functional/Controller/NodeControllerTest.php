@@ -718,43 +718,59 @@ class NodeControllerTest extends DatabaseTestCase
         );
 
         $client->request('GET', '/api/nodes/filter?webspace=sulu_io&language=en');
-        $response = json_decode($client->getResponse()->getContent())->_embedded;
+        $response = json_decode($client->getResponse()->getContent());
+        $items = $response->_embedded;
 
-        $this->assertEquals(6, sizeof($response));
+        $this->assertEquals('', $response->title);
+        $this->assertEquals(6, sizeof($items));
 
         $client->request('GET', '/api/nodes/filter?webspace=sulu_io&language=en&dataSource=' . $data[1]['id']);
-        $response = json_decode($client->getResponse()->getContent())->_embedded;
+        $response = json_decode($client->getResponse()->getContent());
+        $items = $response->_embedded;
 
-        $this->assertEquals(2, sizeof($response));
+        $this->assertEquals(2, sizeof($items));
+        $this->assertEquals($data[1]['title'], $response->title);
 
         $client->request(
             'GET',
             '/api/nodes/filter?webspace=sulu_io&language=en&dataSource=' . $data[1]['id'] . '&includeSubFolders=true'
         );
-        $response = json_decode($client->getResponse()->getContent())->_embedded;
+        $response = json_decode($client->getResponse()->getContent());
+        $items = $response->_embedded;
 
-        $this->assertEquals(3, sizeof($response));
+        $this->assertEquals(3, sizeof($items));
+        $this->assertEquals($data[1]['title'], $response->title);
 
         $client->request(
             'GET',
             '/api/nodes/filter?webspace=sulu_io&language=en&dataSource=' . $data[1]['id'] . '&includeSubFolders=true&limitResult=2'
         );
-        $response = json_decode($client->getResponse()->getContent())->_embedded;
+        $response = json_decode($client->getResponse()->getContent());
+        $items = $response->_embedded;
 
-        $this->assertEquals(2, sizeof($response));
+        $this->assertEquals(2, sizeof($items));
+        $this->assertEquals($data[1]['title'], $response->title);
 
         $client->request('GET', '/api/nodes/filter?webspace=sulu_io&language=en&tags=tag1');
-        $response = json_decode($client->getResponse()->getContent())->_embedded;
+        $response = json_decode($client->getResponse()->getContent());
+        $items = $response->_embedded;
 
-        $this->assertEquals(4, sizeof($response));
+        $this->assertEquals('', $response->title);
+        $this->assertEquals(4, sizeof($items));
 
         $client->request('GET', '/api/nodes/filter?webspace=sulu_io&language=en&tags=tag2');
-        $response = json_decode($client->getResponse()->getContent())->_embedded;
-        $this->assertEquals(3, sizeof($response));
+        $response = json_decode($client->getResponse()->getContent());
+        $items = $response->_embedded;
+
+        $this->assertEquals('', $response->title);
+        $this->assertEquals(3, sizeof($items));
 
         $client->request('GET', '/api/nodes/filter?webspace=sulu_io&language=en&tags=tag1,tag2');
-        $response = json_decode($client->getResponse()->getContent())->_embedded;
-        $this->assertEquals(2, sizeof($response));
+        $response = json_decode($client->getResponse()->getContent());
+        $items = $response->_embedded;
+
+        $this->assertEquals('', $response->title);
+        $this->assertEquals(2, sizeof($items));
     }
 
     public function testBreadcrumb()

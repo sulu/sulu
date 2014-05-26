@@ -248,25 +248,15 @@ class NodeController extends RestController implements ClassResourceInterface
         $webspaceKey = $this->getWebspace();
         $languageCode = $this->getLanguage();
 
-        $structures = array();
-
         $content = $this->get('sulu_content.node_repository')->getFilteredNodes(
             $filterConfig,
             $languageCode,
             $webspaceKey,
+            true,
             true
         );
 
-        $i = 0;
-        foreach ($content as $structure) {
-            /** @var StructureInterface $structure */
-            $structures[] = array(
-                'id' => $i++,
-                'name' => $structure->getProperty('title')->getValue()
-            );
-        }
-
-        return $this->handleView($this->view(array('_embedded' => $structures)));
+        return $this->handleView($this->view($content));
     }
 
     /**

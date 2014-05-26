@@ -253,12 +253,13 @@ class NodeRepository implements NodeRepositoryInterface
     /**
      * {@inheritdoc}
      */
-    public function getFilteredNodes(array $filterConfig, $languageCode, $webspaceKey, $preview = false)
+    public function getFilteredNodes(array $filterConfig, $languageCode, $webspaceKey, $preview = false, $api = false)
     {
         // build sql2 query
         $sql2 = 'SELECT * FROM [sulu:content] AS c';
         $sql2Where = array();
         $sql2Order = array();
+        $parent = null;
 
         // build where clause for datasource
         if (isset($filterConfig['dataSource']) && !empty($filterConfig['dataSource'])) {
@@ -266,6 +267,7 @@ class NodeRepository implements NodeRepositoryInterface
                 (isset($filterConfig['includeSubFolders']) && $filterConfig['includeSubFolders'])
                     ? 'ISDESCENDANTNODE' : 'ISCHILDNODE';
 
+            $parent = $filterConfig['dataSource'];
             $node = $this->sessionManager->getSession()->getNodeByIdentifier($filterConfig['dataSource']);
             $sql2Where[] = $sqlFunction . '(\'' . $node->getPath() . '\')';
         }
@@ -311,7 +313,20 @@ class NodeRepository implements NodeRepositoryInterface
         // execute query and return results
         $nodes = $this->getMapper()->loadBySql2($sql2, $languageCode, $webspaceKey, $limit);
 
-        return $nodes;
+        if ($api) {
+            if ($parent != null) {
+                $parentNode = $this->getMapper()->load($parent, $webspaceKey, $languageCode);
+            } else {
+                $parentNode = $this->getMapper()->loadStartPage($webspaceKey, $languageCode);
+            }
+            $result = $this->prepareNode($parentNode, $webspaceKey, $languageCode, 1, false);
+            $result['_embedded'] = $this->prepareNodesTree($nodes, $webspaceKey, $languageCode, false);
+            $result['total'] = sizeof($result['_embedded']);
+
+            return $result;
+        } else {
+            return $nodes;
+        }
     }
 
     /**
