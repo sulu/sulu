@@ -123,4 +123,13 @@ interface RlpStrategyInterface
      * @param string $segmentKey
      */
     public function deleteByPath($path, $webspaceKey, $languageCode, $segmentKey = null);
+
+    /**
+     * restore given resource locator
+     * @param string $path of resource locator
+     * @param string $webspaceKey key of portal
+     * @param string $languageCode
+     * @param string $segmentKey
+     */
+    public function restoreByPath($path, $webspaceKey, $languageCode, $segmentKey = null);
 }
