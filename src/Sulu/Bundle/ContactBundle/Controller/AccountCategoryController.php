@@ -107,7 +107,6 @@ class AccountCategoryController extends RestController implements ClassResourceI
      */
     public function putAction($id)
     {
-
         try {
             /** @var AccountCategory $category */
             $category = $this->getDoctrine()
@@ -233,5 +232,4 @@ class AccountCategoryController extends RestController implements ClassResourceI
 
         return $category;
     }
-
 }
