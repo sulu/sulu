@@ -126,7 +126,7 @@ define([], function() {
         handleHeaderMarked = function(header) {
             var $content, $header, startHeader,
                 breadcrumb, toolbarTemplate, toolbarParentTemplate, tabsOptions, toolbarOptions, tabsFullControl,
-                toolbarDisabled, toolbarLanguageChanger, noBack, squeezed;
+                toolbarDisabled, toolbarLanguageChanger, noBack, squeezed, titleColor;
 
             // if header is a function get the data from the return value of the function
             if (typeof header === 'function') {
@@ -159,6 +159,7 @@ define([], function() {
                 toolbarLanguageChanger = (!!header.toolbar && !!header.toolbar.languageChanger) ? header.toolbar.languageChanger : true;
                 noBack = (typeof header.noBack !== 'undefined') ? header.noBack : false;
                 squeezed = (!!this.fullSize && this.fullSize.width === true) ? true : false;
+                titleColor = (!!header.titleColor) ? header.titleColor : null;
 
                 this.sandbox.start([
                     {
@@ -178,7 +179,8 @@ define([], function() {
                             toolbarDisabled: toolbarDisabled,
                             toolbarLanguageChanger: toolbarLanguageChanger,
                             noBack: noBack,
-                            squeezed: squeezed
+                            squeezed: squeezed,
+                            titleColor: titleColor
                         }
                     }
                 ]);
