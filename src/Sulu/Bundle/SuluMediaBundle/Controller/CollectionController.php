@@ -300,11 +300,8 @@ class CollectionController extends RestController implements ClassResourceInterf
     {
         $collectionRestObject = new CollectionRestObject();
         $collectionRestObject->setId($request->get('id'));
-        $collectionRestObject->setStyle($request->get('style', array(
-            'type' => 'circle',
-            'color' => Collection::generateColor()
-        )));
-        $collectionRestObject->setType($request->get('type', Collection::TYPE_DEFAULT));
+        $collectionRestObject->setStyle($request->get('style'));
+        $collectionRestObject->setType($request->get('type'));
         $collectionRestObject->setParent($request->get('parent'));
         $collectionRestObject->setLocale($request->get('locale', $this->getLocale($request->get('locale'))));
         $collectionRestObject->setTitle($request->get('title'));
@@ -326,14 +323,31 @@ class CollectionController extends RestController implements ClassResourceInterf
     protected function createCollectionByRestObject(CollectionRestObject $object, Collection &$collection, &$em)
     {
         // Set Style
-        $collection->setStyle(json_encode($object->getStyle()));
+        if ($object->getStyle()) {
+            $collection->setStyle(json_encode($object->getStyle()));
+        } elseif (!$collection->getStyle()) {
+            $generatedStyle = array(
+                'type' => 'circle',
+                'color' => Collection::generateColor()
+            );
+
+            $collection->setStyle(json_encode($generatedStyle));
+        }
 
         // Set Type
-        $type = $this->getDoctrine()->getRepository('SuluMediaBundle:CollectionType')->find($object->getType());
-        if (!$type) {
-            throw new EntityNotFoundException($this->entityName, $object->getType());
+        if ($object->getType()) {
+            $type = $this->getDoctrine()->getRepository('SuluMediaBundle:CollectionType')->find($object->getType());
+            if (!$type) {
+                throw new EntityNotFoundException($this->entityName, $object->getType());
+            }
+            $collection->setType($type);
+        } elseif (!$collection->getType()) {
+            $type = $this->getDoctrine()->getRepository('SuluMediaBundle:CollectionType')->find(Collection::TYPE_DEFAULT);
+            if (!$type) {
+                throw new EntityNotFoundException($this->entityName, $object->getType());
+            }
+            $collection->setType($type);
         }
-        $collection->setType($type);
 
         // Set Parent
         if ($object->getParent()) {
@@ -346,7 +360,7 @@ class CollectionController extends RestController implements ClassResourceInterf
                 throw new EntityNotFoundException($this->entityName, $object->getParent());
             }
             $collection->setParent($parent);
-        } else {
+        } elseif (!$collection->getParent()) {
             $collection->setParent(null);
         }
 
@@ -363,7 +377,9 @@ class CollectionController extends RestController implements ClassResourceInterf
                 if ($meta->getLocale() == $object->getLocale()) {
                     $metaSet = true;
                     $meta->setTitle($object->getTitle());
-                    $meta->setDescription($object->getDescription());
+                    if ($object->getDescription()) {
+                        $meta->setDescription($object->getDescription());
+                    }
                     $meta->setLocale($object->getLocale());
                     $em->persist($meta);
                 }
@@ -372,7 +388,9 @@ class CollectionController extends RestController implements ClassResourceInterf
                 $meta = new CollectionMeta();
                 $meta->setTitle($object->getTitle());
                 $meta->setLocale($object->getLocale());
-                $meta->setDescription($object->getDescription());
+                if ($object->getDescription()) {
+                    $meta->setDescription($object->getDescription());
+                }
                 $meta->setCollection($collection);
                 $collection->addMeta($meta);
                 $em->persist($meta);
