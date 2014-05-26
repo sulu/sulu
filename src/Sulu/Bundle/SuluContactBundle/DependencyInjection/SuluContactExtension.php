@@ -49,12 +49,12 @@ class SuluContactExtension extends Extension
                 'male' => array(
                     'id' => 0,
                     'name' => 'male',
-                    'translation' => 'contact.contact.formOfAddress.male'
+                    'translation' => 'contact.contacts.formOfAddress.male'
                 ),
                 'female' => array(
                     'id' => 1,
                     'name' => 'female',
-                    'translation' => 'contact.contact.formOfAddress.female'
+                    'translation' => 'contact.contacts.formOfAddress.female'
                 )
             );
         }

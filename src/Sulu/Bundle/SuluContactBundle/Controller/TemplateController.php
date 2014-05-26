@@ -31,7 +31,13 @@ class TemplateController extends Controller
      */
     public function contactFormAction()
     {
-        return $this->render('SuluContactBundle:Template:contact.form.html.twig', $this->getRenderArray());
+        $data = $this->getRenderArray();
+        $data['form_of_address'] = [];
+        foreach ($this->container->getParameter('sulu_contact.form_of_address') as $el) {
+            $data['form_of_address'][] = $el;
+        }
+
+        return $this->render('SuluContactBundle:Template:contact.form.html.twig', $data);
     }
 
     /**
