@@ -56,6 +56,12 @@
             <gedmo:tree-parent/>
         </many-to-one>
 
+        <many-to-one field="accountCategory" target-entity="Sulu\Bundle\ContactBundle\Entity\AccountCategory">
+            <join-columns>
+                <join-column name="idAccountCategory" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
+            </join-columns>
+        </many-to-one>
+
 
         <many-to-many field="urls" target-entity="Sulu\Bundle\ContactBundle\Entity\Url" inversed-by="accounts">
             <join-table name="co_account_urls">
