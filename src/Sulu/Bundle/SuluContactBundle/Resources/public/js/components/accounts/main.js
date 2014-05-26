@@ -9,8 +9,8 @@
 
 define([
     'sulucontact/model/account',
-    'app-config'
-], function(Account, AppConfig) {
+    'accountsutil/header'
+], function(Account, AccountsUtilHeader) {
 
     'use strict';
 
@@ -50,15 +50,15 @@ define([
                 this.renderList();
             } else if (this.options.display === 'form') {
                 this.renderForm().then(function() {
-                    this.prepareHeader();
+                    AccountsUtilHeader.setHeader.call(this, this.account, this.options.accountType);
                 }.bind(this));
             } else if (this.options.display === 'contacts') {
                 this.renderContacts().then(function() {
-                    this.prepareHeader();
+                    AccountsUtilHeader.setHeader.call(this, this.account, this.options.accountType);
                 }.bind(this));
             } else if (this.options.display === 'financials') {
                 this.renderFinancials().then(function() {
-                    this.prepareHeader();
+                    AccountsUtilHeader.setHeader.call(this, this.account, this.options.accountType);
                 }.bind(this));
             } else {
                 throw 'display type wrong';
@@ -84,15 +84,8 @@ define([
             // delete selected contacts
             this.sandbox.on('sulu.contacts.accounts.delete', this.delAccounts.bind(this));
 
+            // saves financial infos
             this.sandbox.on('sulu.contacts.accounts.financials.save', this.saveFinancials.bind(this));
-
-            // get account type
-            this.sandbox.on('sulu.contacts.accounts.get-type', function(account, callbackFunction) {
-                if (!this.accountType) {
-                    this.accountType = this.getAccountType(account);
-                }
-                callbackFunction(this.accountType);
-            }.bind(this));
 
             // load list view
             this.sandbox.on('sulu.contacts.accounts.list', function(type, noReload) {
@@ -104,91 +97,7 @@ define([
             }, this);
         },
 
-        getAccountType: function(data) {
-            var typeInfo, compareAttribute, i, type,
-                accountType = 0,
-                accountTypes,
-                section = AppConfig.getSection('sulu-contact'); // get account types
-
-            if (!section || section.length > 0 || !section.hasOwnProperty('accountTypes')) {
-                return false;
-            } else {
-                accountTypes = section.accountTypes;
-            }
-
-            if (!!data.id) {
-                typeInfo = data.type;
-                compareAttribute = 'id';
-            } else if (!!this.options.accountType) {
-                typeInfo = this.options.accountType;
-                compareAttribute = 'name';
-            } else {
-                typeInfo = 0;
-                compareAttribute = 'id';
-            }
-
-            // get account type information
-            for (i in accountTypes) {
-                type = accountTypes[i];
-                if (type[compareAttribute] === typeInfo) {
-                    accountType = type;
-                    break;
-                }
-            }
-
-            return accountType;
-        },
-
-        // enables tabs based on account type
-        enableTabsByType: function(account) {
-            var index;
-
-            this.accountType = this.getAccountType(account);
-
-            if (!this.accountType && !this.accountType.hasownProperty('tabs')) { // no account type specified
-                return;
-            }
-
-            for (index in this.accountType.tabs) {
-                if (this.accountType.tabs[index] === true) {
-                    this.sandbox.emit('husky.tabs.header.item.show', index);
-                }
-            }
-
-            return this.accountType;
-        },
-
-        prepareHeader: function() {
-            var account = this.account.toJSON(),
-                accountType = this.enableTabsByType(account);
-            this.setHeadlines(accountType, account);
-        },
-
-        setHeadlines: function(accountType, account) {
-            var breadcrumb = [
-                    {title: 'navigation.contacts'},
-                    {title: 'contact.accounts.title', event: 'sulu.contacts.accounts.list'}
-                ],
-                title = this.sandbox.translate('contact.accounts.title'),
-                typeTranslation;
-
-            if (!!accountType) {
-                typeTranslation = this.sandbox.translate(accountType.translation);
-            } else {
-                typeTranslation = this.sandbox.translate('contact.account.type.basic');
-            }
-
-            if (!!this.options.id) {
-                breadcrumb.push({title: typeTranslation + ' #' + this.options.id});
-                title = account.name;
-            } else {
-                breadcrumb.push({title: typeTranslation});
-            }
-
-            this.sandbox.emit('sulu.header.set-title', title);
-            this.sandbox.emit('sulu.header.set-breadcrumb', breadcrumb);
-        },
-
+        // show confirmation and delete account
         del: function() {
             this.confirmSingleDeleteDialog(this.options.id, function(wasConfirmed, removeContacts) {
                 if (wasConfirmed) {
@@ -204,6 +113,7 @@ define([
             }.bind(this));
         },
 
+        // saves an account
         save: function(data) {
             this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
 
@@ -224,6 +134,7 @@ define([
             });
         },
 
+        // saves financial infos
         saveFinancials: function(data) {
             this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
 
@@ -292,11 +203,9 @@ define([
                     }
                 }
             ]);
-
         },
 
         renderFinancials: function() {
-            // TODO implement
             var $form = this.sandbox.dom.createElement('<div id="accounts-form-container"/>'),
                 dfd = this.sandbox.data.deferred();
             this.html($form);
@@ -324,7 +233,8 @@ define([
             // load data and show form
             this.account = new Account();
 
-            var $form = this.sandbox.dom.createElement('<div id="accounts-form-container"/>'),
+            var accTypeId,
+                $form = this.sandbox.dom.createElement('<div id="accounts-form-container"/>'),
                 dfd = this.sandbox.data.deferred();
             this.html($form);
 
@@ -344,8 +254,8 @@ define([
                     }.bind(this)
                 });
             } else {
-                this.accountType = this.getAccountType(this.options.accountType);
-                this.account.set({type:this.accountType.id});
+                accTypeId = AccountsUtilHeader.getAccountTypeIdByTypeName.call(this, this.options.accountType);
+                this.account.set({type: accTypeId});
                 this.sandbox.start([
                     {name: 'accounts/components/form@sulucontact', options: { el: $form, data: this.account.toJSON()}}
                 ]);
@@ -355,7 +265,6 @@ define([
         },
 
         renderContacts: function() {
-
             var $form = this.sandbox.dom.createElement('<div id="accounts-contacts-container"/>'),
                 dfd = this.sandbox.data.deferred();
             this.html($form);
