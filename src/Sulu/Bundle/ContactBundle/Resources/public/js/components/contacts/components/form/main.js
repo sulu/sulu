@@ -42,7 +42,7 @@ define([], function() {
                 this.sandbox.once('sulu.contacts.set-defaults', this.setDefaults.bind(this));
                 this.sandbox.once('sulu.contacts.set-types', this.setTypes.bind(this));
 
-                this.$el.html(this.renderTemplate('/admin/contact/template/contact/form'));
+                this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/contact/template/contact/form'));
 
                 this.sandbox.on('husky.dropdown.type.item.click', this.typeClick.bind(this));
 
@@ -149,7 +149,6 @@ define([], function() {
                 this.sandbox.on('sulu.contacts.contacts.saved', function(data) {
                     this.options.data = data;
                     this.initContactData();
-                    this.setFormData(data);
                     this.setHeaderBar(true);
                 }, this);
 
