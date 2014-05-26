@@ -5,3 +5,7 @@ sulu_contact.contacts:
 sulu_contact.accounts:
     type: rest
     resource: Sulu\Bundle\ContactBundle\Controller\AccountController
+
+sulu_contact.accountcategory:
+    type: rest
+    resource: Sulu\Bundle\ContactBundle\Controller\AccountCategoryController

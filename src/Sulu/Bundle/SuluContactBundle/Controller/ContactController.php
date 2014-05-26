@@ -22,6 +22,7 @@ use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\ContactBundle\Entity\Phone;
 use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\Note;
+use Sulu\Bundle\ContactBundle\Entity\Url;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
@@ -366,8 +367,8 @@ class ContactController extends RestController implements ClassResourceInterface
                     && $this->processAddresses($contact, $request)
                     && $this->processNotes($contact, $request)
                     && $this->processFaxes($contact, $request)
-                    && $this->processTags($contact, $request))
-//                    && $this->processUrls($contact, $request))
+                    && $this->processTags($contact, $request)
+                    && $this->processUrls($contact, $request))
                 ) {
                     throw new RestException('Updating dependencies is not possible', 0);
                 }
@@ -504,6 +505,83 @@ class ContactController extends RestController implements ClassResourceInterface
     }
 
     /**
+     * Process all urls of request
+     * @param Contact $contact The contact on which is worked
+     * @param Request $request
+     * @return bool True if the processing was successful, otherwise false
+     */
+    protected function processUrls(Contact $contact, Request $request)
+    {
+        $urls = $request->get('urls');
+
+        $delete = function ($url) use ($contact) {
+            return $contact->removeUrl($url);
+        };
+
+        $update = function ($url, $matchedEntry) {
+            return $this->updateUrl($url, $matchedEntry);
+        };
+
+        $add = function ($url) use ($contact) {
+            return $this->addUrl($contact, $url);
+        };
+
+        return $this->processPut($contact->getUrls(), $urls, $delete, $update, $add);
+    }
+
+    /**
+     * Updates the given url
+     * @param Url $url The phone object to update
+     * @param $entry The entry with the new data
+     * @return bool True if successful, otherwise false
+     */
+    protected function updateUrl(Url $url, $entry)
+    {
+        $success = true;
+
+        $urlType = $this->getDoctrine()
+            ->getRepository('SuluContactBundle:UrlType')
+            ->find($entry['urlType']['id']);
+
+        if (!$urlType) {
+            $success = false;
+        } else {
+            $url->setUrl($entry['url']);
+            $url->setUrlType($urlType);
+        }
+
+        return $success;
+    }
+
+    /**
+     * Adds a new tag to the given contact
+     * @param Contact $contact
+     * @param $data
+     * @return bool True if there was no error, otherwise false
+     */
+    protected function addUrl(Contact $contact, $data)
+    {
+        $success = true;
+        $em = $this->getDoctrine()->getManager();
+
+        $urlType = $this->getDoctrine()
+            ->getRepository('SuluContactBundle:UrlType')
+            ->find($data['urlType']['id']);
+
+        if (!$urlType || isset($data['id'])) {
+            $success = false;
+        } else {
+            $url = new Url();
+            $url->setUrl($data['url']);
+            $url->setUrlType($urlType);
+            $em->persist($url);
+            $contact->addUrl($url);
+        }
+
+        return $success;
+    }
+
+    /**
      * Process all phones from request
      * @param Contact $contact The contact on which is worked
      * @param Request $request
@@ -556,7 +634,6 @@ class ContactController extends RestController implements ClassResourceInterface
         return $success;
     }
 
-
     /**
      * Updates the given phone
      * @param Phone $phone The phone object to update
@@ -580,7 +657,6 @@ class ContactController extends RestController implements ClassResourceInterface
 
         return $success;
     }
-
 
     /**
      * @param Contact $contact
@@ -638,7 +714,6 @@ class ContactController extends RestController implements ClassResourceInterface
             $contact->addFax($fax);
         }
     }
-
 
     /**
      * @param Fax $fax
