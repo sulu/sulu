@@ -61,9 +61,10 @@ interface NodeRepositoryInterface
      * @param string $languageCode The desired language code
      * @param string $webspaceKey The webspace key
      * @param boolean $preview If true also  unpublished pages will be returned
+     * @param bool $api If true result will be formated for HAL API
      * @return array
      */
-    public function getFilteredNodes(array $filterConfig, $languageCode, $webspaceKey, $preview = false);
+    public function getFilteredNodes(array $filterConfig, $languageCode, $webspaceKey, $preview = false, $api = false);
 
     /**
      * returns start node for given portal
