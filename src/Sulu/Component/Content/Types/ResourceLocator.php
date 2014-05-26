@@ -13,11 +13,9 @@ namespace Sulu\Component\Content\Types;
 use PHPCR\NodeInterface;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\ContentTypeInterface;
-use Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\Types\Rlp\Strategy\RLPStrategyInterface;
-use Sulu\Component\PHPCR\SessionFactory\SessionManagerInterface;
 
 /**
  * Class ResourceLocator

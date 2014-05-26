@@ -399,28 +399,6 @@ class PhpcrMapper extends RlpMapper
     }
 
     /**
-     * delete route with given node uuid (with history)
-     */
-    private function deleteByUuid(
-        $uuid,
-        SessionInterface $session,
-        $webspaceKey,
-        $languageCode,
-        $segmentKey = null
-    )
-    {
-        $node = $this->sessionManager->getSession()->getNodeByIdentifier(
-            $uuid,
-            $session,
-            $webspaceKey,
-            $languageCode,
-            $segmentKey
-        );
-
-        $this->deleteByNode($node, $session, $webspaceKey, $languageCode, $segmentKey);
-    }
-
-    /**
      * deletes route node (with history)
      */
     private function deleteByNode(
