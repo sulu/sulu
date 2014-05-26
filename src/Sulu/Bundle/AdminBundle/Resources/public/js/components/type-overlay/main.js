@@ -284,7 +284,9 @@ define([], function() {
             this.sandbox.dom.off(constants.templateRemoveSelector, 'click');
 
             // bind click on remove icon
-            this.sandbox.dom.on(this.$overlayInnerContent, 'click', this.markElementForRemoval.call(this, event), constants.templateRemoveSelector);
+            this.sandbox.dom.on(this.$overlayInnerContent, 'click', function(event){
+                this.markElementForRemoval(event);
+            }.bind(this), constants.templateRemoveSelector);
 
             // bind click on add icon
             this.sandbox.dom.on(constants.templateAddSelector, 'click', function() {
