@@ -36296,7 +36296,7 @@ define('__component__$column-navigation@husky',[], function() {
             this.sandbox.dom.on(this.$el, 'mouseenter', this.showOptions.bind(this), '.column');
             this.sandbox.dom.on(this.$el, 'click', this.addNode.bind(this), '#' + this.addId);
             this.sandbox.dom.on(this.$el, 'click', this.editNode.bind(this), '.edit');
-            this.sandbox.dom.on(this.$el, 'dblclick', this.editNode.bind(this), '.edit');
+            this.sandbox.dom.on(this.$el, 'dblclick', this.editNode.bind(this), 'li');
 
             this.sandbox.dom.on(this.sandbox.dom.$window, 'resize', function() {
                 this.setContainerHeight();
@@ -36405,6 +36405,8 @@ define('__component__$column-navigation@husky',[], function() {
         displayOptions: function($activeColumn) {
             var visibleRatio;
 
+            this.lastHoveredColumn = this.sandbox.dom.data($activeColumn, 'column');
+
             // calculate the ratio of how much of the hovered column is visible
             if (this.sandbox.dom.position($activeColumn).left + this.sandbox.dom.width($activeColumn) > this.sandbox.dom.width(this.$columnContainer)) {
                 visibleRatio = (this.sandbox.dom.width(this.$columnContainer) - this.sandbox.dom.position($activeColumn).left ) / this.sandbox.dom.width($activeColumn);
@@ -36414,7 +36416,6 @@ define('__component__$column-navigation@husky',[], function() {
 
             // display the option only if the column is visible enough
             if (visibleRatio >= this.options.minVisibleRatio) {
-                this.lastHoveredColumn = this.sandbox.dom.data($activeColumn, 'column');
                 this.sandbox.dom.css(this.$optionsContainer, {'visibility': 'visible'});
                 this.updateOptionsMargin($activeColumn);
             } else {
@@ -36568,15 +36569,16 @@ define('__component__$column-navigation@husky',[], function() {
          * @param {Object} event
          */
         editNode: function(event) {
-            var $listItem, id, item;
+            var $listItem, id, item, column;
 
             if (this.sandbox.dom.hasClass(event.currentTarget, 'edit') === true) {
                 $listItem = this.sandbox.dom.parent(this.sandbox.dom.parent(event.currentTarget));
             } else {
                 $listItem = this.sandbox.dom.$(event.currentTarget);
             }
+            column = this.sandbox.dom.index(this.sandbox.dom.parents(event.currentTarget, '.column'));
             id = this.sandbox.dom.data($listItem, 'id');
-            item = this.columns[this.lastHoveredColumn][id];
+            item = this.columns[column][id];
 
             this.sandbox.dom.stopPropagation(event);
             this.sandbox.emit(EDIT, item);
@@ -41217,6 +41219,14 @@ define('husky_extensions/collection',[],function() {
 
             app.core.dom.toggle = function(selector) {
                 return $(selector).toggle();
+            };
+
+            app.core.dom.index = function(selector, filter) {
+                if (!!filter) {
+                    return $(selector).index(filter);
+                } else {
+                    return $(selector).index();
+                }
             };
 
             app.core.dom.keypress = function(selector, callback) {
