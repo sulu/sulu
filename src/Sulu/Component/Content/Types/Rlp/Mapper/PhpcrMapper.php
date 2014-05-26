@@ -83,7 +83,7 @@ class PhpcrMapper extends RlpMapper
      *
      * @throws \Sulu\Component\Content\Exception\ResourceLocatorNotFoundException
      *
-     * @return string path
+     * @return NodeInterface path
      */
     public function loadByContent(NodeInterface $contentNode, $webspaceKey, $languageCode, $segmentKey = null)
     {
@@ -155,7 +155,7 @@ class PhpcrMapper extends RlpMapper
      *
      * @throws \Sulu\Component\Content\Exception\ResourceLocatorNotFoundException
      *
-     * @return string path
+     * @return NodeInterface path
      */
     public function loadByContentUuid($uuid, $webspaceKey, $languageCode, $segmentKey = null)
     {
@@ -400,6 +400,9 @@ class PhpcrMapper extends RlpMapper
 
     /**
      * deletes route node (with history)
+     * @param string $webspaceKey
+     * @param string $languageCode
+     * @param string $segmentKey
      */
     private function deleteByNode(
         NodeInterface $node,
@@ -436,7 +439,7 @@ class PhpcrMapper extends RlpMapper
      * @param string $webspaceKey
      * @param string $languageCode
      * @param string $segmentKey
-     * @return string
+     * @return NodeInterface|null
      */
     public function getParentPath($uuid, $webspaceKey, $languageCode, $segmentKey = null)
     {
@@ -450,6 +453,21 @@ class PhpcrMapper extends RlpMapper
             // parent node don´t have a resource locator
             return null;
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function restoreByPath($path, $webspaceKey, $languageCode, $segmentKey = null)
+    {
+        $rootNode = $this->getRoutes($webspaceKey, $languageCode, $segmentKey);
+        $routeNode = $rootNode->getNode(ltrim($path, '/'));
+        $currentNode = $routeNode->getPropertyValue('sulu:content');
+
+        $currentRoute = $this->getResourceLocator($currentNode->getPath(), $webspaceKey, $languageCode, $segmentKey);
+        $newRoute = $this->getResourceLocator($routeNode->getPath(), $webspaceKey, $languageCode, $segmentKey);
+
+        $this->move($currentRoute, $newRoute, $webspaceKey, $languageCode, $segmentKey);
     }
 
     /**
@@ -475,8 +493,8 @@ class PhpcrMapper extends RlpMapper
      * changes path node to history node
      * @param NodeInterface $node
      * @param SessionInterface $session
-     * @param $absSrcPath
-     * @param $absDestPath
+     * @param string $absSrcPath
+     * @param string $absDestPath
      */
     private function changePathToHistory(NodeInterface $node, SessionInterface $session, $absSrcPath, $absDestPath)
     {
@@ -499,7 +517,7 @@ class PhpcrMapper extends RlpMapper
     /**
      * check resourcelocator is unique and points to given content node
      * @param NodeInterface $routes
-     * @param $resourceLocator
+     * @param string $resourceLocator
      * @param $contentNode
      * @return bool
      * @throws \Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException
@@ -562,7 +580,7 @@ class PhpcrMapper extends RlpMapper
 
     /**
      * @param $path
-     * @param $webspaceKey
+     * @param string $webspaceKey
      * @param string $languageCode
      * @param string $segmentKey
      * @return string
