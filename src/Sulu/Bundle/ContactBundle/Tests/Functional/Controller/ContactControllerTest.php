@@ -280,7 +280,9 @@ class ContactControllerTest extends DatabaseTestCase
                 ),
                 'disabled' => 0,
                 'salutation' => 'Sehr geehrte Frau Dr Mustermann',
-                'formOfAddress' => 0
+                'formOfAddress' => array(
+                    'id' => 0
+                )
             )
         );
 
@@ -420,7 +422,9 @@ class ContactControllerTest extends DatabaseTestCase
                 ),
                 'disabled' => 0,
                 'salutation' => 'Sehr geehrte Frau Dr Mustermann',
-                'formOfAddress' => 0
+                'formOfAddress' => array(
+                    'id' => 0
+                )
             )
         );
 
@@ -492,7 +496,9 @@ class ContactControllerTest extends DatabaseTestCase
                 'position' => 'Manager',
                 'disabled' => 0,
                 'salutation' => 'Sehr geehrte Frau Dr Mustermann',
-                'formOfAddress' => 0
+                'formOfAddress' => array(
+                    'id' => 0
+                )
             )
         );
 
@@ -526,7 +532,9 @@ class ContactControllerTest extends DatabaseTestCase
                 'title' => 'MSc',
                 'position' => 'Manager',
                 'salutation' => 'Sehr geehrte Frau Mustermann',
-                'formOfAddress' => 0
+                'formOfAddress' => array(
+                    'id' => 0
+                )
             )
         );
 
@@ -577,7 +585,9 @@ class ContactControllerTest extends DatabaseTestCase
                 'addresses' => array(),
                 'disabled' => 0,
                 'salutation' => 'Sehr geehrte Frau Dr Mustermann',
-                'formOfAddress' => 0
+                'formOfAddress' => array(
+                    'id' => 0
+                )
             )
         );
 
@@ -731,7 +741,9 @@ class ContactControllerTest extends DatabaseTestCase
                 ),
                 'disabled' => 0,
                 'salutation' => 'Sehr geehrter John',
-                'formOfAddress' => 0
+                'formOfAddress' => array(
+                    'id' => 0
+                )
             )
         );
 
@@ -854,7 +866,9 @@ class ContactControllerTest extends DatabaseTestCase
                 ),
                 'disabled' => 0,
                 'salutation' => 'Sehr geehrter John',
-                'formOfAddress' => 0
+                'formOfAddress' => array(
+                    'id' => 0
+                )
             )
         );
 
@@ -966,7 +980,9 @@ class ContactControllerTest extends DatabaseTestCase
                 ),
                 'disabled' => 0,
                 'salutation' => 'Sehr geehrter John',
-                'formOfAddress' => 0
+                'formOfAddress' => array(
+                    'id' => 0
+                )
             )
         );
 
@@ -1046,7 +1062,9 @@ class ContactControllerTest extends DatabaseTestCase
                 ),
                 'disabled' => 0,
                 'salutation' => 'Sehr geehrter John',
-                'formOfAddress' => 0
+                'formOfAddress' => array(
+                    'id' => 0
+                )
             )
         );
 
@@ -1131,7 +1149,9 @@ class ContactControllerTest extends DatabaseTestCase
                 ),
                 'disabled' => 0,
                 'salutation' => 'Sehr geehrter John',
-                'formOfAddress' => 0
+                'formOfAddress' => array(
+                    'id' => 0
+                )
             )
         );
 
@@ -1315,7 +1335,9 @@ class ContactControllerTest extends DatabaseTestCase
                 ),
                 'disabled' => 0,
                 'salutation' => 'Sehr geehrter John',
-                'formOfAddress' => 0
+                'formOfAddress' => array(
+                    'id' => 0
+                )
             )
         );
 

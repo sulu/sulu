@@ -6,15 +6,25 @@
         <div class="grid-col-6">
             <div class="form-group">
                 <label for="form-of-address" class="required"><%=translate('contact.contacts.formOfAddress')%></label>
-                {#<div id="form-of-address" data-type-label="name" data-mapper-property="formOfAddress" data-type="husky-select" data-form="true"></div>#}
-                <div id="form-of-address"></div>
+                <div id="form-of-address"
+                     data-aura-component="select@husky"
+                     data-aura-data="{{ form_of_address|json_encode() }}"
+                     data-aura-default-label="<%=translate('contact.contacts.formOfAddress.select')%>"
+                     data-aura-value-name="translation"
+                     data-aura-multiple-select="false"
+                     data-aura-instance-name="form-of-address"
+                     data-type-label="translation"
+                     data-mapper-property="formOfAddress"
+                     data-type="husky-select"
+                     data-form="true"
+                     data-validation-required="true">
+                </div>
             </div>
         </div>
         <div class="grid-col-6">
             <div class="form-group">
                 <label for="salutation" class="required"><%=translate('contact.contacts.salutation')%></label>
-                {#<input class="form-element" type="text" id="salutation" data-trigger="focusout" data-mapper-property="salutation"/>#}
-                <input class="form-element" type="text" id="salutation"/>
+                <input class="form-element" type="text" id="salutation" data-trigger="focusout" data-mapper-property="salutation"/>
             </div>
         </div>
     </div>
@@ -59,6 +69,15 @@
             </div>
         </div>
         <div class="grid-col-6">
+            <div class="form-group">
+                <label for="disabled"><%=translate('public.deactivate')%></label>
+                <div>
+                    <div class="custom-checkbox">
+                        <input class="form-element husky-validate" type="checkbox" id="disabled" data-mapper-property="disabled">
+                        <span class="icon"></span>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}

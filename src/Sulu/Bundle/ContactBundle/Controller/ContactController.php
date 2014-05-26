@@ -227,7 +227,7 @@ class ContactController extends RestController implements ClassResourceInterface
             if (is_null($disabled)) {
                 throw new RestException('There is no disabled flag for the contact');
             }
-            if (is_null($formOfAddress)) {
+            if (is_null($formOfAddress) || !array_key_exists('id', $formOfAddress)) {
                 throw new RestException('There is no form of address for the contact');
             }
 
@@ -299,8 +299,8 @@ class ContactController extends RestController implements ClassResourceInterface
                 }
             }
 
+            $contact->setFormOfAddress($formOfAddress['id']);
 
-            $contact->setFormOfAddress($formOfAddress);
             $contact->setDisabled($disabled);
 
             $salutation = $request->get('salutation');
@@ -379,8 +379,8 @@ class ContactController extends RestController implements ClassResourceInterface
                 }
 
                 $formOfAddress = $request->get('formOfAddress');
-                if(!is_null($formOfAddress)){
-                    $contact->setFormOfAddress($formOfAddress);
+                if(!is_null($formOfAddress) && array_key_exists('id', $formOfAddress)){
+                    $contact->setFormOfAddress($formOfAddress['id']);
                 }
 
                 $disabled = $request->get('disabled');

@@ -290,6 +290,9 @@ define([], function() {
                 this.sandbox.on('sulu.contact-form.changed', function() {
                     this.setHeaderBar(false);
                 }.bind(this));
+                this.sandbox.on('husky.select.form-of-address.selected.item', function() {
+                    this.setHeaderBar(false);
+                }.bind(this));
             }
         };
     })();
