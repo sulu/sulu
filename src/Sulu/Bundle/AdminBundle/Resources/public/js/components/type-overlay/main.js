@@ -22,7 +22,6 @@ define([], function() {
     'use strict';
 
     var defaults = {
-
             url: null,
             data: null,
             overlay: {
@@ -60,7 +59,7 @@ define([], function() {
          * Initialized event
          * @event sulu.types.initialzed
          */
-            INITIALIZED = function() {
+        INITIALIZED = function() {
             return createEventName.call(this, 'initialized');
         },
 
@@ -68,7 +67,7 @@ define([], function() {
          * Loaded event
          * @event sulu.types.loaded
          */
-            LOADED = function() {
+        LOADED = function() {
             return createEventName.call(this, 'loaded');
         },
 
@@ -76,7 +75,7 @@ define([], function() {
          * Saved event
          * @event sulu.types.saved
          */
-            SAVED = function() {
+        SAVED = function() {
             return createEventName.call(this, 'saved');
         },
 
@@ -84,7 +83,7 @@ define([], function() {
          * Remove event
          * @event sulu.types.remove
          */
-            REMOVE = function() {
+        REMOVE = function() {
             return createEventName.call(this, 'remove');
         },
 
@@ -92,7 +91,7 @@ define([], function() {
          * Removed event
          * @event sulu.types.removed
          */
-            REMOVED = function() {
+        REMOVED = function() {
             return createEventName.call(this, 'removed');
         },
 
@@ -100,7 +99,7 @@ define([], function() {
          * Open event
          * @event sulu.types.open
          */
-            OPEN = function() {
+        OPEN = function() {
             return createEventName.call(this, 'open');
         },
 
@@ -108,7 +107,7 @@ define([], function() {
          * Closed event
          * @event sulu.types.closed
          */
-            CLOSED = function() {
+        CLOSED = function() {
             return createEventName.call(this, 'closed');
         },
 
@@ -153,7 +152,6 @@ define([], function() {
          * @param method
          */
         saveNewEditedItemsAndClose: function(domData, method) {
-
             var data = this.parseDataFromDom(domData),
                 changedData = this.getChangedData(data);
 
@@ -171,7 +169,6 @@ define([], function() {
             } else {
                 this.sandbox.emit(CLOSED.call(this), this.parseDataFromDom(domData, true));
             }
-
         },
 
         /**
@@ -199,7 +196,6 @@ define([], function() {
          * @param id
          */
         deleteItem: function(id) {
-
             this.sandbox.util.save(this.options.url + '/' + id, 'DELETE')
                 .then(function() {
                     this.sandbox.emit(REMOVED.call(this));
@@ -313,13 +309,10 @@ define([], function() {
          * Callback for close of overlay with ok button
          */
         onCloseWithOk: function(domData) {
-
             this.removeDeletedItems();
-
             if (!!domData) {
                 this.saveNewEditedItemsAndClose(domData, 'PATCH');
             }
-
         },
 
         /**
@@ -345,7 +338,6 @@ define([], function() {
          * Bind custom related events
          */
         bindCustomEvents: function() {
-
             this.sandbox.off();
 
             // use open event because initialzed is to early
@@ -374,15 +366,11 @@ define([], function() {
          */
         updateRemoveList: function(id, $row) {
             if (this.elementsToRemove.indexOf(id) === -1) {
-
                 if (!!id) {
                     this.elementsToRemove.push(id);
                 }
-
                 this.$elementsToRemove.push($row);
-
             } else {
-
                 if (!!id) {
                     this.elementsToRemove.splice(this.elementsToRemove.indexOf(id), 1);
                 }
@@ -395,7 +383,6 @@ define([], function() {
          * @param config
          */
         startOverlayComponent: function(config) {
-
             if (!!this.options.url && !config.data) {
                 this.options.data = this.loadData();
             } else {
