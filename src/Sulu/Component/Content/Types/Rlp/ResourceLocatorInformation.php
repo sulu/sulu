@@ -27,10 +27,16 @@ class ResourceLocatorInformation
      */
     private $created;
 
-    function __construct($resourceLocator, $created)
+    /**
+     * @var string
+     */
+    private $id;
+
+    function __construct($resourceLocator, $created ,$id)
     {
         $this->created = $created;
         $this->resourceLocator = $resourceLocator;
+        $this->id = $id;
     }
 
     /**
@@ -49,5 +55,13 @@ class ResourceLocatorInformation
     public function getResourceLocator()
     {
         return $this->resourceLocator;
+    }
+
+    /**
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 }
