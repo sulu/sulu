@@ -820,7 +820,7 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertEquals(10, sizeof($items[1]));
         $this->assertArrayHasKey('id', $items[1]);
         $this->assertEquals('test2', $items[1]['title']);
-        $this->assertEquals('/test2', $items[0]['path']);
+        $this->assertEquals('/test2', $items[1]['path']);
         $this->assertEquals(1, $items[1]['nodeState']);
         $this->assertEquals(1, $items[1]['globalState']);
         $this->assertFalse($items[1]['publishedState']);
