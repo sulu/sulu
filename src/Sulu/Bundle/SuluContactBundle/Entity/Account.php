@@ -767,6 +767,23 @@ class Account extends ApiEntity
     }
 
     /**
+     * @var \Sulu\Bundle\ContactBundle\Entity\AccountCategory
+     */
+    private $accountCategory;
+
+
+    /**
+     * Set accountCategory
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\AccountCategory $accountCategory
+     * @return Account
+     */
+    public function setAccountCategory(\Sulu\Bundle\ContactBundle\Entity\AccountCategory $accountCategory = null)
+    {
+        $this->accountCategory = $accountCategory;
+    }
+
+    /**
      * Set registerNumber
      *
      * @param string $registerNumber
@@ -800,6 +817,16 @@ class Account extends ApiEntity
         $this->bankAccounts[] = $bankAccounts;
     
         return $this;
+    }
+
+    /**
+     * Get accountCategory
+     *
+     * @return \Sulu\Bundle\ContactBundle\Entity\AccountCategory 
+     */
+    public function getAccountCategory()
+    {
+        return $this->accountCategory;
     }
 
     /**
