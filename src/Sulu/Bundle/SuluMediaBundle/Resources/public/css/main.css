@@ -15,7 +15,7 @@
   padding-top: 35px;
 }
 /* line 19, ../scss/modules/collections.scss */
-#collections-list-container .slide {
+#collections-list-container .collection-slide {
   width: 100%;
   padding-left: 18px;
   padding-bottom: 40px;
@@ -61,24 +61,17 @@
 #collections-list-container .collection .collection-title {
   float: left;
   font-size: 18px;
-  cursor: default;
-  min-width: 200px;
   margin-top: 5px;
   padding-left: 5px;
   padding-right: 5px;
   border-radius: 3px;
   line-height: 28px;
-  border: 1px solid transparent;
 }
-/* line 71, ../scss/modules/collections.scss */
-#collections-list-container .collection .collection-title:hover {
-  border-color: #cccccc;
-}
-/* line 75, ../scss/modules/collections.scss */
+/* line 69, ../scss/modules/collections.scss */
 #collections-list-container .collection .rightContent {
   float: right;
 }
-/* line 77, ../scss/modules/collections.scss */
+/* line 71, ../scss/modules/collections.scss */
 #collections-list-container .collection .rightContent .total {
   color: #999999;
   font-size: 12px;

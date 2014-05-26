@@ -92,8 +92,14 @@ define(function() {
             }.bind(this));
 
             // collection title got changed
-            this.sandbox.on('sulu.collection-list.collections.collection-added', function(title) {
-                this.saveNewCollection({title: title});
+            this.sandbox.on('sulu.collection-list.collections.collection-added', function(title, color) {
+                this.saveNewCollection({
+                    title: title,
+                    style: {
+                        type: 'circle',
+                        color: color
+                    }
+                });
             }.bind(this));
 
             // navigate to collection edit
