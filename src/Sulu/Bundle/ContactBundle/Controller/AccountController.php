@@ -80,7 +80,7 @@ class AccountController extends RestController implements ClassResourceInterface
      */
     protected $fieldsTranslationKeys = array(
         'id' => 'public.id',
-        'number' => 'public.number'
+        'disabled' => 'public.deactivate'
     );
 
     /**
@@ -104,7 +104,7 @@ class AccountController extends RestController implements ClassResourceInterface
     /**
      * {@inheritdoc}
      */
-    protected $bundlePrefix = 'contact.account.';
+    protected $bundlePrefix = 'contact.accounts.';
 
     /**
      * returns all fields that can be used by list

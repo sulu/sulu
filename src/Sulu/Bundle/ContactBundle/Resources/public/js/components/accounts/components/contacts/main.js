@@ -25,6 +25,11 @@ define([
                     this.sandbox.emit('sulu.contacts.accounts.delete', ids);
                 }.bind(this));
             }, this);
+
+            // back to list
+            this.sandbox.on('sulu.header.back', function() {
+                this.sandbox.emit('sulu.contacts.accounts.list');
+            }, this);
         },
 
         listTemplate = function() {
