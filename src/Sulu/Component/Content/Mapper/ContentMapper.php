@@ -740,7 +740,7 @@ class ContentMapper implements ContentMapperInterface
             );
         }
 
-        // load chilren of node
+        // load children of node
         $result = array();
         $childStructure = null;
         foreach ($node as $child) {
