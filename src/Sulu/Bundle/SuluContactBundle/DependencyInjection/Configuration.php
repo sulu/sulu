@@ -57,6 +57,19 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
+
+                ->arrayNode('form_of_address')
+                    ->useAttributeAsKey('title')
+                    ->prototype('array')
+                        ->addDefaultsIfNotSet()
+                        ->children()
+                            ->scalarNode('id')->end()
+                            ->scalarNode('name')->end()
+                            ->scalarNode('translation')->end()
+                        ->end()
+                    ->end()
+                ->end()
+
             ->end()
         ;
 
