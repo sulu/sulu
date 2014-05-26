@@ -34127,6 +34127,14 @@ define('__component__$auto-complete-list@husky',[], function() {
             },
 
             /**
+             * raised after all item were added
+             * @event husky.auto-complete-list.items-added
+             */
+                ITEMS_ADDED = function() {
+                return createEventName.call(this, 'items-added');
+            },
+
+            /**
              * raised when the suggestion container is closed
              * @event husky.auto-complete-list.sug-closed
              */
@@ -34163,7 +34171,13 @@ define('__component__$auto-complete-list@husky',[], function() {
                 this.initSuggestions();
                 this.initItems();
 
-                this.sandbox.emit(INITIALIZED.call(this));
+                if (this.options.autocomplete === true) {
+                    this.sandbox.on('husky.auto-complete.'+this.options.instanceName+'.initialized', function() {
+                        this.sandbox.emit(INITIALIZED.call(this));
+                    }.bind(this));
+                } else {
+                    this.sandbox.emit(INITIALIZED.call(this));
+                }
             },
 
             /**
@@ -34400,7 +34414,7 @@ define('__component__$auto-complete-list@husky',[], function() {
                     success: function(data) {
                         this.options.items = this.options.items.concat(data[this.options.itemsKey]);
                         this.startPlugins();
-                        DATA_LOADED.call(this); 
+                        DATA_LOADED.call(this);
                     }.bind(this),
 
                     error: function(error) {
@@ -34638,6 +34652,7 @@ define('__component__$auto-complete-list@husky',[], function() {
                 for (var i = -1, length = tags.length; ++i < length;) {
                     this.pushTag(tags[i]);
                 }
+                this.sandbox.emit(ITEMS_ADDED.call(this));
             },
 
             /**
@@ -36207,6 +36222,8 @@ define('__component__$column-navigation@husky',[], function() {
         displayOptions: function($activeColumn) {
             var visibleRatio;
 
+            this.lastHoveredColumn = this.sandbox.dom.data($activeColumn, 'column');
+
             // calculate the ratio of how much of the hovered column is visible
             if (this.sandbox.dom.position($activeColumn).left + this.sandbox.dom.width($activeColumn) > this.sandbox.dom.width(this.$columnContainer)) {
                 visibleRatio = (this.sandbox.dom.width(this.$columnContainer) - this.sandbox.dom.position($activeColumn).left ) / this.sandbox.dom.width($activeColumn);
@@ -36216,7 +36233,6 @@ define('__component__$column-navigation@husky',[], function() {
 
             // display the option only if the column is visible enough
             if (visibleRatio >= this.options.minVisibleRatio) {
-                this.lastHoveredColumn = this.sandbox.dom.data($activeColumn, 'column');
                 this.sandbox.dom.css(this.$optionsContainer, {'visibility': 'visible'});
                 this.updateOptionsMargin($activeColumn);
             } else {
@@ -36370,15 +36386,16 @@ define('__component__$column-navigation@husky',[], function() {
          * @param {Object} event
          */
         editNode: function(event) {
-            var $listItem, id, item;
+            var $listItem, id, item, column;
 
             if (this.sandbox.dom.hasClass(event.currentTarget, 'edit') === true) {
                 $listItem = this.sandbox.dom.parent(this.sandbox.dom.parent(event.currentTarget));
             } else {
                 $listItem = this.sandbox.dom.$(event.currentTarget);
             }
+            column = this.sandbox.dom.index(this.sandbox.dom.parents(event.currentTarget, '.column'));
             id = this.sandbox.dom.data($listItem, 'id');
-            item = this.columns[this.lastHoveredColumn][id];
+            item = this.columns[column][id];
 
             this.sandbox.dom.stopPropagation(event);
             this.sandbox.emit(EDIT, item);
@@ -36426,7 +36443,7 @@ define('__component__$column-navigation@husky',[], function() {
                 // type (ghost, shadow)
                 if (!!data[this.options.typeName]) {
                     if (data[this.options.typeName].name === 'ghost') {
-                        item.push('<span class="ghost pull-left m-right-5">', data[this.options.typeName].value, '</span>');
+                        item.push('<span class="ghost pull-left">', data[this.options.typeName].value, '</span>');
                     } else if (data[this.options.typeName].name === 'shadow') {
                         item.push('<span class="fa-share pull-left m-right-5"></span>');
                     }
@@ -41017,6 +41034,14 @@ define('husky_extensions/collection',[],function() {
 
             app.core.dom.toggle = function(selector) {
                 return $(selector).toggle();
+            };
+
+            app.core.dom.index = function(selector, filter) {
+                if (!!filter) {
+                    return $(selector).index(filter);
+                } else {
+                    return $(selector).index();
+                }
             };
 
             app.core.dom.keypress = function(selector, callback) {
