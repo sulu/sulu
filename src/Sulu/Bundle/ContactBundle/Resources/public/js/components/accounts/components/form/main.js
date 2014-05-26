@@ -34,7 +34,6 @@ define([], function() {
         templates: ['/admin/contact/template/account/form'],
 
         initialize: function() {
-
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
             this.form = '#contact-form';
@@ -42,6 +41,8 @@ define([], function() {
 
             this.dfdListenForChange = this.sandbox.data.deferred();
             this.dfdFormIsSet = this.sandbox.data.deferred();
+
+            this.accountCategoryURL = 'api/account/categories';
 
             this.render();
             this.setHeaderBar(true);
@@ -85,6 +86,8 @@ define([], function() {
             ]);
 
             this.initForm(data);
+            this.initCategorySelect(data);
+            this.startCategoryOverlay();
 
             this.setTags(data);
 
@@ -125,6 +128,99 @@ define([], function() {
             } else {
                 this.dfdListenForChange.resolve();
             }
+        },
+
+        /**
+         * Inits the select for the account category
+         */
+        initCategorySelect: function(formData) {
+            this.preselectedElemendId = !!formData.accountCategory ? formData.accountCategory.id : null;
+            this.accountCategoryData = null;
+
+            this.sandbox.util.load(this.accountCategoryURL)
+                .then(function(response) {
+
+                    // data is data for select but not for overlay
+                    var data = response['_embedded'];
+                    this.accountCategoryData = this.copyArrayOfObjects(data);
+
+                    // translate values for select but not for overlay
+                    this.sandbox.util.foreach(data, function(el) {
+                        el.category = this.sandbox.translate(el.category);
+                    }.bind(this));
+
+
+                    this.addDividerAndActionsForSelect(data);
+
+                    this.sandbox.start([
+                        {
+                            name: 'select@husky',
+                            options: {
+                                el: '#accountCategory',
+                                instanceName: 'account-category',
+                                multipleSelect: false,
+                                defaultLabel: this.sandbox.translate('contact.accounts.category.select'),
+                                valueName: 'category',
+                                repeatSelect: false,
+                                preSelectedElements: [this.preselectedElemendId],
+                                data: data
+                            }
+                        }
+                    ]);
+
+                }.bind(this))
+                .fail(function(textStatus, error) {
+                    this.sandbox.logger.error(textStatus, error);
+                }.bind(this));
+        },
+
+        /**
+         * Adds divider and actions to dropdown elements
+         * @param data
+         */
+        addDividerAndActionsForSelect: function(data) {
+            data.push({divider: true});
+            data.push({id: -1, category: this.sandbox.translate('contact.accounts.manage.categories'), callback: this.showCategoryOverlay.bind(this), updateLabel: false});
+        },
+
+        /**
+         * Triggers event to show overlay
+         */
+        showCategoryOverlay: function() {
+            var $overlayContainer = this.sandbox.dom.$('<div id="overlayContainer"></div>'),
+                config = {
+                    instanceName: 'accountCategories',
+                    el: '#overlayContainer',
+                    openOnStart: true,
+                    removeOnClose: true,
+                    triggerEl: null,
+                    title: this.sandbox.translate('contact.accounts.manage.categories.title'),
+                    data: this.accountCategoryData
+                };
+
+            this.sandbox.dom.remove('#overlayContainer');
+            this.sandbox.dom.append('body', $overlayContainer);
+            this.sandbox.emit('sulu.types.open', config);
+        },
+
+        /**
+         * Shows the overlay to manage account categories
+         */
+        startCategoryOverlay: function() {
+            this.sandbox.start([
+                {
+                    name: 'type-overlay@suluadmin',
+                    options: {
+                        overlay: {
+                            el: '#overlayContainer',
+                            instanceName: 'accountCategories',
+                            removeOnClose: true
+                        },
+                        url: this.accountCategoryURL,
+                        data: this.accountCategoryData
+                    }
+                }
+            ]);
         },
 
         /**
@@ -287,11 +383,41 @@ define([], function() {
             this.sandbox.on('sulu.header.back', function() {
                 this.sandbox.emit('sulu.contacts.accounts.list');
             }, this);
+
+            this.sandbox.on('sulu.types.closed', function(data) {
+                var selected = [];
+
+                this.accountCategoryData = this.copyArrayOfObjects(data);
+                selected.push(parseInt(!!this.selectedAccountCategory ? this.selectedAccountCategory : this.preselectedElemendId, 10));
+                this.addDividerAndActionsForSelect(data);
+
+                // translate values for select but not for overlay
+                this.sandbox.util.foreach(data, function(el) {
+                    el.category = this.sandbox.translate(el.category);
+                }.bind(this));
+
+                this.sandbox.emit('husky.select.account-category.update', data, selected);
+            }, this);
+        },
+
+        /**
+         * Copies array of objects
+         * @param data
+         * @returns {Array}
+         */
+        copyArrayOfObjects: function(data) {
+            var newArray = [];
+            this.sandbox.util.foreach(data, function(el) {
+                newArray.push(this.sandbox.util.extend(true, {}, el));
+            }.bind(this));
+
+            return newArray;
         },
 
         submit: function() {
             if (this.sandbox.form.validate(this.form)) {
                 var data = this.sandbox.form.getData(this.form);
+
 
                 if (data.id === '') {
                     delete data.id;
@@ -324,7 +450,6 @@ define([], function() {
                 this.sandbox.dom.on('#contact-form', 'change', function() {
                     this.setHeaderBar(false);
                 }.bind(this), "select, input, textarea");
-                // TODO: only activate this, if wanted
                 this.sandbox.dom.on('#contact-form', 'keyup', function() {
                     this.setHeaderBar(false);
                 }.bind(this), "input, textarea");
@@ -334,7 +459,13 @@ define([], function() {
                     this.setHeaderBar(false);
                 }.bind(this));
             }.bind(this));
-        }
 
+            this.sandbox.on('husky.select.account-category.selected.item', function(id) {
+                if (id > 0) {
+                    this.selectedAccountCategory = id;
+                    this.setHeaderBar(false);
+                }
+            }.bind(this));
+        }
     };
 });
