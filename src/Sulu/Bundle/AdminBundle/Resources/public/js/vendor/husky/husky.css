@@ -4554,7 +4554,7 @@ span.error {
   vertical-align: center;
   color: white;
   text-align: center;
-  font-size: 18px;
+  font-size: 20px;
   cursor: pointer;
   border-radius: 0 0 2px 0;
   opacity: 1;
@@ -6512,32 +6512,39 @@ a.btn-black, a.btn-highlight {
 .column-navigation-wrapper .column-navigation .ghost {
   background: #52b6ca;
   padding: 0 2px;
+  margin-right: 5px;
+  margin-top: 3px;
   color: white;
   border-radius: 3px;
+  font-size: 10px;
 }
-/* line 123, ../scss/modules/column-navigation.scss */
+/* line 126, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .icons-right {
   position: absolute;
   right: 5px;
   top: 15px;
   height: 20px;
 }
-/* line 128, ../scss/modules/column-navigation.scss */
+/* line 131, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .icons-right * {
   line-height: 20px;
 }
-/* line 132, ../scss/modules/column-navigation.scss */
+/* line 135, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .icons-left {
   display: block;
   float: left;
   height: 20px;
   font-size: 14px;
 }
-/* line 137, ../scss/modules/column-navigation.scss */
+/* line 140, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .icons-left * {
   line-height: 20px;
 }
-/* line 141, ../scss/modules/column-navigation.scss */
+/* line 143, ../scss/modules/column-navigation.scss */
+.column-navigation-wrapper .column-navigation .icons-left .ghost {
+  line-height: 15px;
+}
+/* line 147, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .edit {
   background-color: #52b6ca;
   padding: 0px 10px;
@@ -6545,14 +6552,16 @@ a.btn-black, a.btn-highlight {
   color: white;
   border-radius: 3px;
   display: none;
+  margin-right: 0;
 }
-/* line 149, ../scss/modules/column-navigation.scss */
+/* line 156, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .husky-column-navigation-loader {
   position: relative;
   top: 2px;
   left: -2px;
+  padding-left: 2px;
 }
-/* line 155, ../scss/modules/column-navigation.scss */
+/* line 163, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .arrow {
   display: inline-block;
   width: 11px;
@@ -6560,8 +6569,9 @@ a.btn-black, a.btn-highlight {
   vertical-align: middle;
   text-align: right;
   color: black;
+  margin: 0;
 }
-/* line 165, ../scss/modules/column-navigation.scss */
+/* line 174, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .add {
   display: inline-block;
   width: 50%;
@@ -6573,7 +6583,7 @@ a.btn-black, a.btn-highlight {
   -moz-border-radius-bottomleft: 5px;
   font-size: 16px;
 }
-/* line 177, ../scss/modules/column-navigation.scss */
+/* line 186, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .settings {
   display: inline-block;
   width: 50%;
