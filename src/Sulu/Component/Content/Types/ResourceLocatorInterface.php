@@ -59,4 +59,13 @@ interface ResourceLocatorInterface extends ContentTypeInterface
      * @return mixed
      */
     public function loadHistoryByUuid($uuid, $webspaceKey, $languageCode, $segmentKey = null);
+
+    /**
+     * deletes given resource locator node
+     * @param string $path of resource locator node
+     * @param string $webspaceKey key of portal
+     * @param string $languageCode
+     * @param string $segmentKey
+     */
+    public function deleteByPath($path, $webspaceKey, $languageCode, $segmentKey = null);
 }
