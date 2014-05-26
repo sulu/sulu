@@ -6793,84 +6793,91 @@ a.btn-black, a.btn-highlight {
   border-radius: 3px;
 }
 /* line 63, ../scss/modules/select.scss */
+.husky-select-container .dropdown-list .divider {
+  max-width: 100%;
+  height: 1px;
+  background-color: #ccc;
+  margin: 0;
+}
+/* line 70, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list.top {
   top: inherit;
   bottom: 5px;
 }
-/* line 69, ../scss/modules/select.scss */
+/* line 76, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list .disabled,
 .husky-select-container .dropdown-list .disabled:hover {
   background: none;
   cursor: default;
 }
-/* line 72, ../scss/modules/select.scss */
+/* line 79, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list .disabled .item-value,
 .husky-select-container .dropdown-list .disabled:hover .item-value {
   color: #999999;
 }
-/* line 76, ../scss/modules/select.scss */
+/* line 83, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list .check {
   float: left;
   width: 20px;
   margin-right: 10px;
   padding-top: 7px;
 }
-/* line 82, ../scss/modules/select.scss */
+/* line 89, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list .item-value {
   float: left;
   line-height: 30px;
 }
-/* line 87, ../scss/modules/select.scss */
+/* line 94, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list > ul {
   list-style: none;
   margin: 0;
   padding: 10px 0;
 }
-/* line 92, ../scss/modules/select.scss */
+/* line 99, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list > ul input {
   margin: 0;
 }
-/* line 96, ../scss/modules/select.scss */
+/* line 103, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list > ul > li {
   padding: 0px 10px 0px 20px;
   clear: both;
   height: 30px;
 }
-/* line 102, ../scss/modules/select.scss */
+/* line 109, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list > ul > li:hover, .husky-select-container .dropdown-list > ul > li.hover {
   background-color: #52b6ca;
   cursor: pointer;
 }
-/* line 106, ../scss/modules/select.scss */
+/* line 113, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list > ul > li:hover .item-value {
   color: white;
 }
-/* line 114, ../scss/modules/select.scss */
+/* line 121, ../scss/modules/select.scss */
 .husky-select-container.small .dropdown-label {
   font-size: 10px;
   line-height: 20px;
 }
-/* line 118, ../scss/modules/select.scss */
+/* line 125, ../scss/modules/select.scss */
 .husky-select-container.small .toggle-icon {
   line-height: 20px;
 }
-/* line 121, ../scss/modules/select.scss */
+/* line 128, ../scss/modules/select.scss */
 .husky-select-container.small .dropdown-list {
   top: 12px;
   min-width: 200px;
   max-width: 100%;
   border-radius: 2px;
 }
-/* line 127, ../scss/modules/select.scss */
+/* line 134, ../scss/modules/select.scss */
 .husky-select-container.small .dropdown-list.top {
   top: auto;
   bottom: -3px;
 }
-/* line 135, ../scss/modules/select.scss */
+/* line 142, ../scss/modules/select.scss */
 .husky-select-container.white .dropdown-label {
   background: white;
 }
-/* line 141, ../scss/modules/select.scss */
+/* line 148, ../scss/modules/select.scss */
 .husky-select-container.action .dropdown-label {
   background: #52b6ca;
   color: white;
