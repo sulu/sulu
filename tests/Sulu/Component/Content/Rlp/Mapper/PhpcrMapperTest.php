@@ -459,6 +459,37 @@ class PhpcrMapperTest extends PhpcrTestCase
         $session->save();
         $session->refresh(false);
 
+        $news = $rootNode->getNode('news');
+        $news1 = $rootNode->getNode('news/news-1');
+        $test = $rootNode->getNode('test');
+        $test1 = $rootNode->getNode('test/news-1');
+
+        // before
+        $this->assertTrue($news->getPropertyValue('sulu:history'));
+        $this->assertEquals($test, $news->getPropertyValue('sulu:content'));
+
+        $this->assertTrue($news1->getPropertyValue('sulu:history'));
+        $this->assertEquals($test1, $news1->getPropertyValue('sulu:content'));
+
+        $this->assertFalse($test->getPropertyValue('sulu:history'));
+        $this->assertEquals($this->content1, $test->getPropertyValue('sulu:content'));
+
+        $this->assertFalse($test1->getPropertyValue('sulu:history'));
+        $this->assertEquals($this->content1, $test1->getPropertyValue('sulu:content'));
+
         $this->rlpMapper->restoreByPath('/news', 'default', 'de');
+
+        // after
+        $this->assertFalse($news->getPropertyValue('sulu:history'));
+        $this->assertEquals($this->content1, $news->getPropertyValue('sulu:content'));
+
+        $this->assertTrue($news1->getPropertyValue('sulu:history'));
+        $this->assertEquals($test1, $news1->getPropertyValue('sulu:content'));
+
+        $this->assertTrue($test->getPropertyValue('sulu:history'));
+        $this->assertEquals($news, $test->getPropertyValue('sulu:content'));
+
+        $this->assertFalse($test1->getPropertyValue('sulu:history'));
+        $this->assertEquals($this->content1, $test1->getPropertyValue('sulu:content'));
     }
 }

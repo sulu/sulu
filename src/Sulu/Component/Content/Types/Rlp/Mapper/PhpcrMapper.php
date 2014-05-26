@@ -399,10 +399,7 @@ class PhpcrMapper extends RlpMapper
     }
 
     /**
-     * deletes route node (with history)
-     * @param string $webspaceKey
-     * @param string $languageCode
-     * @param string $segmentKey
+     * {@inheritdoc}
      */
     private function deleteByNode(
         NodeInterface $node,
@@ -461,13 +458,17 @@ class PhpcrMapper extends RlpMapper
     public function restoreByPath($path, $webspaceKey, $languageCode, $segmentKey = null)
     {
         $rootNode = $this->getRoutes($webspaceKey, $languageCode, $segmentKey);
-        $routeNode = $rootNode->getNode(ltrim($path, '/'));
-        $currentNode = $routeNode->getPropertyValue('sulu:content');
+        $newRouteNode = $rootNode->getNode(ltrim($path, '/'));
+        $currentRouteNode = $newRouteNode->getPropertyValue('sulu:content');
+        $contentNode = $currentRouteNode->getPropertyValue('sulu:content');
 
-        $currentRoute = $this->getResourceLocator($currentNode->getPath(), $webspaceKey, $languageCode, $segmentKey);
-        $newRoute = $this->getResourceLocator($routeNode->getPath(), $webspaceKey, $languageCode, $segmentKey);
+        // change history
+        $newRouteNode->setProperty('sulu:history', false);
+        $currentRouteNode->setProperty('sulu:history', true);
 
-        $this->move($currentRoute, $newRoute, $webspaceKey, $languageCode, $segmentKey);
+        // set content
+        $newRouteNode->setProperty('sulu:content', $contentNode);
+        $currentRouteNode->setProperty('sulu:content', $newRouteNode);
     }
 
     /**
