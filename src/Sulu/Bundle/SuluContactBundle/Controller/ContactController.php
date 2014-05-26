@@ -299,6 +299,11 @@ class ContactController extends RestController implements ClassResourceInterface
                 }
             }
 
+            $birthday = $request->get('birthday');
+            if (!empty($birthday)) {
+               $contact->setBirthday(new DateTime($birthday));
+            }
+
             $contact->setFormOfAddress($formOfAddress['id']);
 
             $contact->setDisabled($disabled);
@@ -391,6 +396,11 @@ class ContactController extends RestController implements ClassResourceInterface
                 $salutation = $request->get('salutation');
                 if (!empty($salutation)) {
                     $contact->setSalutation($salutation);
+                }
+
+                $birthday = $request->get('birthday');
+                if (!empty($birthday)) {
+                    $contact->setBirthday(new DateTime($birthday));
                 }
 
                 $em->flush();
