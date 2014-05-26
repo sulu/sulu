@@ -395,7 +395,6 @@ class PhpcrMapper extends RlpMapper
         $routeNode = $rootNode->getNode(ltrim($path, '/'));
 
         $this->deleteByNode($routeNode, $session, $webspaceKey, $languageCode, $segmentKey);
-        $session->save();
     }
 
     /**
@@ -428,6 +427,7 @@ class PhpcrMapper extends RlpMapper
             );
         }
         $node->remove();
+        $session->save();
     }
 
     /**
@@ -466,9 +466,16 @@ class PhpcrMapper extends RlpMapper
         $newRouteNode->setProperty('sulu:history', false);
         $currentRouteNode->setProperty('sulu:history', true);
 
+        // set creation date
+        $newRouteNode->setProperty('sulu:created', new DateTime());
+        $currentRouteNode->setProperty('sulu:created', new DateTime());
+
         // set content
         $newRouteNode->setProperty('sulu:content', $contentNode);
         $currentRouteNode->setProperty('sulu:content', $newRouteNode);
+
+        // save session
+        $this->sessionManager->getSession()->save();
     }
 
     /**

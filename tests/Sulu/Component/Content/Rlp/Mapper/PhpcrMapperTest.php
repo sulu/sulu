@@ -24,6 +24,11 @@ class PhpcrMapperTest extends PhpcrTestCase
     private $content1;
 
     /**
+     * @var NodeInterface
+     */
+    private $content2;
+
+    /**
      * @var RlpMapperInterface
      */
     private $rlpMapper;
@@ -55,6 +60,9 @@ class PhpcrMapperTest extends PhpcrTestCase
 
         $this->content1 = $this->contents->addNode('content1');
         $this->content1->addMixin('mix:referenceable');
+
+        $this->content2 = $this->contents->addNode('content2');
+        $this->content2->addMixin('mix:referenceable');
 
         $this->session->save();
     }
@@ -432,6 +440,31 @@ class PhpcrMapperTest extends PhpcrTestCase
         $this->assertTrue($rootNode->hasNode('test/news-1/sub-1'));
         $this->assertFalse($rootNode->hasNode('test/news-1/sub-2'));
 
+        $session->save();
+        $session->refresh(false);
+    }
+
+    public function testTreeDeleteByPath()
+    {
+        $session = $this->sessionManager->getSession();
+        $rootNode = $session->getNode('/cmf/default/routes/de');
+
+        // create routes for content
+        $this->rlpMapper->save($this->content1, '/news', 'default', 'de');
+        $this->rlpMapper->save($this->content1, '/news/news-1', 'default', 'de');
+        $this->rlpMapper->save($this->content1, '/news/news-1/sub-1', 'default', 'de');
+        $this->rlpMapper->save($this->content1, '/news/news-1/sub-2', 'default', 'de');
+
+        $this->rlpMapper->save($this->content1, '/news/news-2', 'default', 'de');
+        $this->rlpMapper->save($this->content1, '/news/news-2/sub-1', 'default', 'de');
+        $this->rlpMapper->save($this->content1, '/news/news-2/sub-2', 'default', 'de');
+        $session->save();
+
+        // move route
+        $this->rlpMapper->move('/news', '/test', 'default', 'de');
+        $session->save();
+        $session->refresh(false);
+
         // delete all
         $this->rlpMapper->deleteByPath('/test', 'default', 'de');
         $this->assertFalse($rootNode->hasNode('test'));
@@ -444,7 +477,7 @@ class PhpcrMapperTest extends PhpcrTestCase
         $rootNode = $session->getNode('/cmf/default/routes/de');
 
         // create routes for content
-        $this->rlpMapper->save($this->content1, '/news', 'default', 'de');
+        $this->rlpMapper->save($this->content2, '/news', 'default', 'de');
         $this->rlpMapper->save($this->content1, '/news/news-1', 'default', 'de');
         $this->rlpMapper->save($this->content1, '/news/news-1/sub-1', 'default', 'de');
         $this->rlpMapper->save($this->content1, '/news/news-1/sub-2', 'default', 'de');
@@ -472,16 +505,17 @@ class PhpcrMapperTest extends PhpcrTestCase
         $this->assertEquals($test1, $news1->getPropertyValue('sulu:content'));
 
         $this->assertFalse($test->getPropertyValue('sulu:history'));
-        $this->assertEquals($this->content1, $test->getPropertyValue('sulu:content'));
+        $this->assertEquals($this->content2, $test->getPropertyValue('sulu:content'));
 
         $this->assertFalse($test1->getPropertyValue('sulu:history'));
         $this->assertEquals($this->content1, $test1->getPropertyValue('sulu:content'));
 
+        sleep(1);
         $this->rlpMapper->restoreByPath('/news', 'default', 'de');
 
         // after
         $this->assertFalse($news->getPropertyValue('sulu:history'));
-        $this->assertEquals($this->content1, $news->getPropertyValue('sulu:content'));
+        $this->assertEquals($this->content2, $news->getPropertyValue('sulu:content'));
 
         $this->assertTrue($news1->getPropertyValue('sulu:history'));
         $this->assertEquals($test1, $news1->getPropertyValue('sulu:content'));
@@ -491,5 +525,14 @@ class PhpcrMapperTest extends PhpcrTestCase
 
         $this->assertFalse($test1->getPropertyValue('sulu:history'));
         $this->assertEquals($this->content1, $test1->getPropertyValue('sulu:content'));
+
+        // load history
+        $result = $this->rlpMapper->loadHistoryByContentUuid($this->content2->getIdentifier(), 'default', 'de');
+
+        $this->assertEquals(1, sizeof($result));
+        $this->assertEquals('/test', $result[0]->getResourceLocator());
+
+        $session->save();
+        $session->refresh(false);
     }
 }
