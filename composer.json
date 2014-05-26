@@ -16,7 +16,7 @@
         "doctrine/orm": ">=2.2.3,<2.4-dev",
         "symfony/framework-bundle": "2.4.*",
         "sensio/distribution-bundle": "2.3.*",
-        "friendsofsymfony/rest-bundle": "1.0.*",
+        "friendsofsymfony/rest-bundle": "dev-master",
         "jackalope/jackalope-jackrabbit": "1.0.*",
         "doctrine/phpcr-bundle": "1.0.*",
         "doctrine/phpcr-odm": "1.0.*"
