@@ -17,13 +17,13 @@
         "friendsofsymfony/rest-bundle": "dev-master",
         "jms/serializer-bundle": "@dev",
         "stof/doctrine-extensions-bundle": "1.1.*@dev",
-        "sensio/framework-extra-bundle":  "~2.2",
 
         "sulu/sulu": "dev-develop",
         "sulu/admin-bundle": "dev-develop",
         "sulu/contact-bundle": "dev-develop"
     },
     "require-dev": {
+        "sensio/framework-extra-bundle":  "~3.0",
         "symfony/symfony": "2.4.*",
         "doctrine/doctrine-bundle": "1.2.*",
         "symfony/monolog-bundle": "2.4.*",
