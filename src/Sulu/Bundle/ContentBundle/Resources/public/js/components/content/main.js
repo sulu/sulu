@@ -153,7 +153,7 @@ define([
         },
 
         getResourceLocator: function(parts, template, callback) {
-            var url = '/admin/api/resourcelocators/generates?' + (!!this.options.parent ? 'parent=' + this.options.parent + '&' : '') + (!!this.options.id ? 'uuid=' + this.options.id + '&' : '') + '&webspace=' + this.options.webspace + '&language=' + this.options.language + '&template=' + template;
+            var url = '/admin/api/nodes/resourcelocators/generates?' + (!!this.options.parent ? 'parent=' + this.options.parent + '&' : '') + (!!this.options.id ? 'uuid=' + this.options.id + '&' : '') + '&webspace=' + this.options.webspace + '&language=' + this.options.language + '&template=' + template;
             this.sandbox.util.save(url, 'POST', {parts: parts})
                 .then(function(data) {
                     callback(data.resourceLocator);

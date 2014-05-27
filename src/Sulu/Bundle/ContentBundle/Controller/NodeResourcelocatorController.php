@@ -18,7 +18,7 @@ use Sulu\Component\Rest\RestController;
 /**
  * handles resource locator api
  */
-class ResourcelocatorController extends RestController implements ClassResourceInterface
+class NodeResourcelocatorController extends RestController implements ClassResourceInterface
 {
     use RequestParametersTrait;
 
@@ -32,13 +32,45 @@ class ResourcelocatorController extends RestController implements ClassResourceI
         $parentUuid = $this->getRequestParameter($this->getRequest(), 'parent');
         $uuid = $this->getRequestParameter($this->getRequest(), 'uuid');
         $parts = $this->getRequestParameter($this->getRequest(), 'parts', true);
-        $webspaceKey = $this->getRequestParameter($this->getRequest(), 'webspace', true);
-        $languageCode = $this->getRequestParameter($this->getRequest(), 'language', true);
         $templateKey = $this->getRequestParameter($this->getRequest(), 'template', true);
 
-        $result = $this->getResourceLocatorRepository()->generate($parts, $parentUuid, $uuid, $webspaceKey, $languageCode, $templateKey);
+        list($webspaceKey, $languageCode) = $this->getWebspaceAndLanguage();
+
+        $result = $this->getResourceLocatorRepository()->generate(
+            $parts,
+            $parentUuid,
+            $uuid,
+            $webspaceKey,
+            $languageCode,
+            $templateKey
+        );
 
         return $this->handleView($this->view($result));
+    }
+
+    /**
+     * return all resource locators for given node
+     * @param string $uuid
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function cgetAction($uuid)
+    {
+        list($webspaceKey, $languageCode) = $this->getWebspaceAndLanguage();
+        $result = $this->getResourceLocatorRepository()->getHistory($uuid, $webspaceKey, $languageCode);
+
+        return $this->handleView($this->view($result));
+    }
+
+    /**
+     * returns webspacekey and languagecode
+     * @return array list($webspaceKey, $languageCode)
+     */
+    private function getWebspaceAndLanguage()
+    {
+        $webspaceKey = $this->getRequestParameter($this->getRequest(), 'webspace', true);
+        $languageCode = $this->getRequestParameter($this->getRequest(), 'language', true);
+
+        return array($webspaceKey, $languageCode);
     }
 
     /**

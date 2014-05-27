@@ -186,22 +186,6 @@ class NodeController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * returns history of resourcelocator of given node
-     * @param string $uuid
-     * @return JsonResponse
-     */
-    public function cgetHistoryAction($uuid)
-    {
-        $languageCode = $this->getLanguage();
-        $webspaceKey = $this->getWebspace();
-        $result = $this->getRepository()->getHistory($uuid, $webspaceKey, $languageCode);
-
-        return $this->handleView(
-            $this->view($result)
-        );
-    }
-
-    /**
      * Returns the title of the pages for a given smart content configuration
      * @return \Symfony\Component\HttpFoundation\Response
      */

@@ -12,6 +12,7 @@ namespace Sulu\Bundle\ContentBundle\Repository;
 
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManagerInterface;
+use Sulu\Component\Content\Types\ResourceLocatorInterface;
 use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
 
 /**
@@ -30,18 +31,32 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
     private $strategy;
 
     /**
-     * @var string
+     * @var ResourceLocatorInterface
      */
-    private $apiPath;
+    private $resourceLocator;
+
+    /**
+     * @var string[]
+     */
+    private $apiBasePath = array(
+        '/admin/api/nodes/resourcelocators',
+        '/admin/api/nodes/{uuid}resourcelocators'
+    );
 
     /**
      * @param RlpStrategyInterface $strategy
      * @param StructureManagerInterface $structureManager
+     * @param ResourceLocatorInterface $resourceLocator
      */
-    function __construct(RlpStrategyInterface $strategy, StructureManagerInterface $structureManager)
+    function __construct(
+        RlpStrategyInterface $strategy,
+        StructureManagerInterface $structureManager,
+        ResourceLocatorInterface $resourceLocator
+    )
     {
         $this->strategy = $strategy;
         $this->structureManager = $structureManager;
+        $this->resourceLocator = $resourceLocator;
     }
 
     /**
@@ -66,9 +81,39 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
         return array(
             'resourceLocator' => $result,
             '_links' => array(
-                'self' => $this->apiPath
+                'self' => $this->getBasePath() . '/generates'
             )
         );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getHistory($uuid, $webspaceKey, $languageCode)
+    {
+        $result = $this->resourceLocator->loadHistoryByUuid($uuid, $webspaceKey, $languageCode);
+
+        return array(
+            '_embedded' => $result,
+            '_links' => array(
+                'self' => $this->getBasePath($uuid) . '/history?language=' . $languageCode . '&webspace=' . $webspaceKey
+            ),
+            'total' => sizeof($result)
+        );
+    }
+
+    /**
+     * returns base path fo given uuid
+     * @param null|string $uuid
+     * @return string
+     */
+    private function getBasePath($uuid = null)
+    {
+        if ($uuid !== null) {
+            return str_replace('{uuid}', $uuid, $this->apiBasePath[1]);
+        } else {
+            return $this->apiBasePath[0];
+        }
     }
 
     /**

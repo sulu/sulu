@@ -54,7 +54,6 @@
             <argument type="service" id="sulu.content.mapper"/>
             <argument type="service" id="sulu.phpcr.session"/>
             <argument type="service" id="sulu_security.user_manager"/>
-            <argument type="service" id="sulu.content.type.resource_locator"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
         </service>
         <service id="sulu.content.type.smart_content" class="%sulu.content.type.smart_content.class%">
@@ -67,6 +66,7 @@
         <service id="sulu_content.rl_repository" class="%sulu_content.rl_repository.class%">
             <argument type="service" id="sulu.content.rlp.strategy.tree"/>
             <argument type="service" id="sulu.content.structure_manager"/>
+            <argument type="service" id="sulu.content.type.resource_locator"/>
         </service>
     </services>
 </container>
