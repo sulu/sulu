@@ -11,7 +11,7 @@
                 <div class="pos-rel">
                     <h2 class="divider"><%=translate('contact.contacts.details')%></h2>
                     <span id="contact-options-dropdown" class="options-dropdown-container">
-                        <a href="javascript:void(0)" class="contact-options-toggle options-toggle"><span class="icon-cogwheel"/></a>
+                        <a href="javascript:void(0)" class="contact-options-toggle options-toggle"><span class="fa-gear"/></a>
                     </span>
                 </div>
 
@@ -148,11 +148,18 @@
             </div>
         {% endblock %}
     </div>
-</form>
 
-{% block dialog %}
-    <div id="dialog"></div>
-{% endblock %}
+    {% block tags %}
+        <div class="form-horizontal">
+            <h2 class="divider"><%= translate('tag.tags.title') %></h2>
+            <div class="form-group">
+                <label></label>
+                <div id="tags"></div>
+            </div>
+        </div>
+    {% endblock %}
+
+</form>
 
 {% block data %}
     <script type="text/javascript">

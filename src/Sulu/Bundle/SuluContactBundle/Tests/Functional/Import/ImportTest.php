@@ -23,6 +23,7 @@ use Sulu\Bundle\ContactBundle\Entity\UrlType;
 use Sulu\Bundle\ContactBundle\Entity\Note;
 use Sulu\Bundle\ContactBundle\Import\Import;
 use Sulu\Bundle\TestBundle\Testing\DatabaseTestCase;
+use Sulu\Bundle\ContactBundle\Entity\AccountCategory;
 
 class ImportTest extends DatabaseTestCase
 {
@@ -142,6 +143,8 @@ class ImportTest extends DatabaseTestCase
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AddressType'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Country'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Note'),
+            self::$em->getClassMetadata('Sulu\Bundle\TagBundle\Entity\Tag'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AccountCategory'),
         );
 
         self::$tool->createSchema(self::$entities);

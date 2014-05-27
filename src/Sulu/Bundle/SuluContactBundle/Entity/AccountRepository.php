@@ -35,6 +35,21 @@ class AccountRepository extends EntityRepository
         return $query->getSingleResult();
     }
 
+    public function findAccountOnly($id) {
+        try {
+            $qb = $this->createQueryBuilder('account')
+                ->where('account.id = :accountId');
+
+            $query = $qb->getQuery();
+            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+            $query->setParameter('accountId', $id);
+
+            return $query->getSingleResult();
+        } catch (NoResultException $ex) {
+            return null;
+        }
+    }
+
     /**
      * Get account by id
      * @param $id
@@ -58,7 +73,10 @@ class AccountRepository extends EntityRepository
                 ->leftJoin('account.notes', 'notes')
                 ->leftJoin('account.faxes', 'faxes')
                 ->leftJoin('faxes.faxType', 'faxType')
+                ->leftJoin('account.accountCategory', 'accountCategory')
                 ->leftJoin('account.bankAccounts', 'bankAccounts')
+                ->leftJoin('account.tags','tags')
+                ->addSelect('partial tags.{id, name}')
                 ->addSelect('bankAccounts')
                 ->addSelect('addresses')
                 ->addSelect('country')
@@ -73,6 +91,7 @@ class AccountRepository extends EntityRepository
                 ->addSelect('faxes')
                 ->addSelect('faxType')
                 ->addSelect('notes')
+                ->addSelect('accountCategory')
                 ->where('account.id = :accountId');
 
 

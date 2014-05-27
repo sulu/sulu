@@ -24,16 +24,16 @@ class SuluContactAdmin extends Admin
         $section = new NavigationItem('');
 
         $contacts = new NavigationItem('navigation.contacts');
-        $contacts->setIcon('contact-book');
+        $contacts->setIcon('user');
         $section->addChild($contacts);
 
         $people = new NavigationItem('navigation.contacts.people');
-        $people->setIcon('parents');
+        $people->setIcon('users');
         $people->setAction('contacts/contacts');
         $contacts->addChild($people);
 
         $companies = new NavigationItem('navigation.contacts.companies');
-        $companies->setIcon('bank');
+        $companies->setIcon('building');
         $companies->setAction('contacts/accounts');
         $contacts->addChild($companies);
 
