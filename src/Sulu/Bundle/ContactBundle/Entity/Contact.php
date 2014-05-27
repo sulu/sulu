@@ -120,7 +120,6 @@ class Contact extends ApiEntity
     private $faxes;
 
     /**
-     * <<<<<<< HEAD
      * @var integer
      */
     private $formOfAddress = 0;
@@ -642,7 +641,6 @@ class Contact extends ApiEntity
         );
     }
 
-
     /**
      * Add faxes
      *
@@ -681,7 +679,6 @@ class Contact extends ApiEntity
      */
     private $urls;
 
-
     /**
      * Add urls
      *
@@ -691,6 +688,7 @@ class Contact extends ApiEntity
     public function addUrl(\Sulu\Bundle\ContactBundle\Entity\Url $urls)
     {
         $this->urls[] = $urls;
+
         return $this;
     }
 
@@ -723,7 +721,7 @@ class Contact extends ApiEntity
     public function addFaxe(\Sulu\Bundle\ContactBundle\Entity\Fax $faxes)
     {
         $this->faxes[] = $faxes;
-    
+
         return $this;
     }
 
@@ -746,6 +744,8 @@ class Contact extends ApiEntity
     public function setFormOfAddress($formOfAddress)
     {
         $this->formOfAddress = $formOfAddress;
+
+        return $this;
     }
 
     /**
@@ -764,7 +764,7 @@ class Contact extends ApiEntity
     /**
      * Get formOfAddress
      *
-     * @return integer 
+     * @return integer
      */
     public function getFormOfAddress()
     {
@@ -780,14 +780,14 @@ class Contact extends ApiEntity
     public function setSalutation($salutation)
     {
         $this->salutation = $salutation;
-    
+
         return $this;
     }
 
     /**
      * Get salutation
      *
-     * @return string 
+     * @return string
      */
     public function getSalutation()
     {
@@ -803,14 +803,14 @@ class Contact extends ApiEntity
     public function setDisabled($disabled)
     {
         $this->disabled = $disabled;
-    
+
         return $this;
     }
 
     /**
      * Get disabled
      *
-     * @return integer 
+     * @return integer
      */
     public function getDisabled()
     {
