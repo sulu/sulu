@@ -208,7 +208,7 @@ abstract class RlpStrategy implements RlpStrategyInterface
      */
     public function deleteByPath($path, $webspaceKey, $languageCode, $segmentKey = null)
     {
-        $this->mapper->deleteByPath($path, $webspaceKey, $webspaceKey, $segmentKey);
+        $this->mapper->deleteByPath($path, $webspaceKey, $languageCode, $segmentKey);
     }
 
     /**
