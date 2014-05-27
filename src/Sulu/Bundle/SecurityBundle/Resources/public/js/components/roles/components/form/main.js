@@ -11,7 +11,7 @@ define([], function() {
 
     'use strict';
 
-    var permissions = ['eye', 'plus-circle', 'pencil-square-o', 'trash-o', 'archive', 'signal', 'unlock-alt'],
+    var permissions = ['view', 'add', 'edit', 'delete', 'archive', 'live', 'security'],
         permissionTitles = [
             'security.permissions.view',
             'security.permissions.add',
@@ -24,9 +24,7 @@ define([], function() {
         permissionData,
         matrixContainerSelector = '#matrix-container',
         matrixSelector = '#matrix',
-        formSelector = '#role-form',
-        loadedContexts,
-        loadedSystems;
+        formSelector = '#role-form';
 
     return {
 
@@ -38,15 +36,12 @@ define([], function() {
 
         initialize: function() {
             this.saved = true;
-            this.selectedSystem = '';
             permissionData = this.options.data.permissions;
 
             // wait for dropdown to initialize, then get the value and continue
             this.sandbox.on('husky.select.system.initialize', function() {
-                this.selectedSystem = this.sandbox.dom.data('#system', 'selection-values');
-                loadedSystems = this.sandbox.dom.data('#system', 'aura-data');
-
-                this.initializeMatrix();
+                // FIXME correct after selection component has been fixed (https://github.com/massiveart/husky/issues/310)
+                this.initializeMatrix(this.sandbox.dom.data('#system', 'selection-values')[0]);
                 this.initializeValidation();
 
                 this.bindDOMEvents();
@@ -89,8 +84,8 @@ define([], function() {
             }, this);
 
             this.sandbox.on('husky.select.system.selected.item', function(value) {
-                this.selectedSystem = loadedSystems[value];
-                this.initializeMatrix();
+                // FIXME correct after selection component has been fixed (https://github.com/massiveart/husky/issues/310)
+                this.initializeMatrix(this.sandbox.dom.data('#system', 'selection-values')[0]);
             }.bind(this));
         },
 
@@ -98,7 +93,7 @@ define([], function() {
             this.sandbox.form.create(formSelector);
         },
 
-        initializeMatrix: function() {
+        initializeMatrix: function(system) {
             // create new matrix div, and stop old matrix
             var $matrix = this.sandbox.dom.createElement('<div id="matrix" class="loading"/>'),
                 contextHeadlines, matrixData,
@@ -131,11 +126,10 @@ define([], function() {
 
             // load all the contexts from the selected module
             this.sandbox.util.ajax({
-                url: '/admin/contexts?system=' + this.selectedSystem
+                url: '/admin/contexts?system=' + system
             })
                 .done(function(data) {
                     data = JSON.parse(data);
-                    loadedContexts = data;
                     for (var module in data) {
                         if (data.hasOwnProperty(module)) {
                             // create a matrix for every module
@@ -229,8 +223,12 @@ define([], function() {
                 var data = {
                     id: this.sandbox.dom.val('#id'),
                     name: this.sandbox.dom.val('#name'),
-                    system: this.selectedSystem,
-                    permissions: permissionData
+                    // FIXME correct after selection component has been fixed (https://github.com/massiveart/husky/issues/310)
+                    system: this.sandbox.dom.data('#system', 'selection-values')[0],
+                    permissions: permissionData,
+                    securityType: {
+                        id: this.sandbox.dom.data('#security-type', 'selection')[0]
+                    }
                 };
                 this.options.data = this.sandbox.util.extend(true, {}, this.options.data, data);
                 this.sandbox.emit('sulu.roles.save', data);
