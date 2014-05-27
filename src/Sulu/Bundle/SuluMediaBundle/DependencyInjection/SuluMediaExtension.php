@@ -30,6 +30,8 @@ class SuluMediaExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
+        $container->setParameter('sulu_media.collection.style.type.default', 'circle');
+        $container->setParameter('sulu_media.collection.type.default', 1);
         $container->setParameter('sulu_media.media.max_file_size', '16MB');
         $container->setParameter('sulu_media.media.blocked_file_types', array('file/exe'));
         $container->setParameter('sulu_media.media.storage.local.path', '%kernel.root_dir%/uploads/sulumedia');
