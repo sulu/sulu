@@ -209,7 +209,6 @@ class MediaRestObject implements RestObject
                                             }
                                         }
                                     }
-
                                     break;
                                 }
                             }
@@ -398,6 +397,21 @@ class MediaRestObject implements RestObject
                 }
             }
         }
+
+        // Todo: move the sample picture to media-proxy if implemented
+        if (!$this->thumbnails) {
+            $data['thumbnails'] = array(
+                '50x50' => array(
+                    'url' => 'http://lorempixel.com/50/50/',
+                    'alt' => 'Description of the Image'
+                ),
+                '170x170' => array(
+                    'url' => 'http://lorempixel.com/170/170/',
+                    'alt' => 'Description of the Image'
+                )
+            );
+        }
+
         return $data;
     }
 

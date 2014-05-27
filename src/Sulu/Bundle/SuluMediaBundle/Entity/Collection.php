@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\MediaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Exclude;
 
 /**
  * Collection
@@ -24,16 +25,19 @@ class Collection
 
     /**
      * @var integer
+     * @Exclude
      */
     private $lft;
 
     /**
      * @var integer
+     * @Exclude
      */
     private $rgt;
 
     /**
      * @var integer
+     * @Exclude
      */
     private $depth;
 
@@ -59,6 +63,7 @@ class Collection
 
     /**
      * @var \Doctrine\Common\Collections\Collection
+     * @Exclude
      */
     private $media;
 
@@ -79,11 +84,13 @@ class Collection
 
     /**
      * @var \Sulu\Component\Security\UserInterface
+     * @Exclude
      */
     private $changer;
 
     /**
      * @var \Sulu\Component\Security\UserInterface
+     * @Exclude
      */
     private $creator;
 

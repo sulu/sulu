@@ -2,6 +2,7 @@
 <container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <parameters>
         <parameter key="sulu_media.admin.class">Sulu\Bundle\MediaBundle\Admin\SuluMediaAdmin</parameter>
+        <parameter key="sulu_media.admin.content_navigation.class">Sulu\Bundle\MediaBundle\Admin\SuluMediaContentNavigation</parameter>
         <parameter key="sulu_media.media_manager.class">Sulu\Bundle\MediaBundle\Media\Manager\DefaultMediaManager</parameter>
         <parameter key="sulu_media.media_repository.class">Sulu\Bundle\MediaBundle\Entity\MediaRepository</parameter>
         <parameter key="sulu_media.collection_repository.class">Sulu\Bundle\MediaBundle\Entity\CollectionRepository</parameter>
@@ -13,6 +14,7 @@
             <tag name="sulu.admin"/>
             <argument>%sulu_admin.name%</argument>
         </service>
+        <service id="sulu_media.admin.content_navigation" class="%sulu_media.admin.content_navigation.class%"></service>
         <service id="sulu_media.media_repository"
                  class="%sulu_media.media_repository.class%"
                  factory-service="doctrine.orm.entity_manager"

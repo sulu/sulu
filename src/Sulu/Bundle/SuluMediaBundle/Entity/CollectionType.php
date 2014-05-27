@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\MediaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Exclude;
 
 /**
  * CollectionType
@@ -35,6 +36,7 @@ class CollectionType
 
     /**
      * @var \Doctrine\Common\Collections\Collection
+     * @Exclude
      */
     private $collections;
 
@@ -45,7 +47,7 @@ class CollectionType
     {
         $this->collections = new \Doctrine\Common\Collections\ArrayCollection();
     }
-    
+
     /**
      * Set name
      *
@@ -55,14 +57,14 @@ class CollectionType
     public function setName($name)
     {
         $this->name = $name;
-    
+
         return $this;
     }
 
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -78,14 +80,14 @@ class CollectionType
     public function setDescription($description)
     {
         $this->description = $description;
-    
+
         return $this;
     }
 
     /**
      * Get description
      *
-     * @return string 
+     * @return string
      */
     public function getDescription()
     {
@@ -93,9 +95,19 @@ class CollectionType
     }
 
     /**
+     * To force id = 1 in load fixtures
+     *
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -111,7 +123,7 @@ class CollectionType
     public function addCollection(\Sulu\Bundle\MediaBundle\Entity\Collection $collections)
     {
         $this->collections[] = $collections;
-    
+
         return $this;
     }
 
@@ -128,7 +140,7 @@ class CollectionType
     /**
      * Get collections
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getCollections()
     {
