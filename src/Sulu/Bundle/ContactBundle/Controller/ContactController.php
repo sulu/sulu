@@ -61,7 +61,7 @@ class ContactController extends RestController implements ClassResourceInterface
     /**
      * {@inheritdoc}
      */
-    protected $fieldsHidden = array('middleName', 'created', 'changed', 'birthday');
+    protected $fieldsHidden = array('middleName', 'created', 'changed', 'birthday','salutation','formOfAddress','id', 'title','disabled');
 
     /**
      * {@inheritdoc}
@@ -76,7 +76,9 @@ class ContactController extends RestController implements ClassResourceInterface
     /**
      * {@inheritdoc}
      */
-    protected $fieldsTranslationKeys = array();
+    protected $fieldsTranslationKeys = array(
+        'disabled' => 'public.deactivate'
+    );
 
     /**
      * {@inheritdoc}
