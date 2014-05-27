@@ -130,13 +130,17 @@ class NodeController extends RestController implements ClassResourceInterface
         $uuid = $this->getRequest()->get('uuid');
         $appendWebspaceNode = $this->getBooleanRequestParameter($this->getRequest(), 'webspace-node', false, false);
 
-        $result = $this->getRepository()->getNodesTree(
-            $uuid,
-            $webspace,
-            $language,
-            $excludeGhosts,
-            $appendWebspaceNode
-        );
+        if ($uuid !== null && $uuid !== '') {
+            $result = $this->getRepository()->getNodesTree(
+                $uuid,
+                $webspace,
+                $language,
+                $excludeGhosts,
+                $appendWebspaceNode
+            );
+        } else {
+            $result = $this->getRepository()->getWebspaceNode($webspace, $language);
+        }
 
         return $this->handleView(
             $this->view($result)
