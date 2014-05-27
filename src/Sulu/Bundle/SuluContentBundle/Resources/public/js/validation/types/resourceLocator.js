@@ -26,8 +26,17 @@ define([
                     return App.dom.data($el, 'value');
                 },
 
+                needsValidation: function() {
+                    return this.$el.data('auraContentId') !== 'index';
+                },
+
                 validate: function() {
-                    return true;
+                    if (this.needsValidation()) {
+                        var val = this.getValue();
+                        return val.length > 0 && val !== '/';
+                    } else {
+                        return true;
+                    }
                 }
             };
 

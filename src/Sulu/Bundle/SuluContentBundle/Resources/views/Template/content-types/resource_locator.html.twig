@@ -6,5 +6,6 @@
      data-type="resourceLocator"
      data-aura-component="resource-locator@sulucontent"
      data-type-instance-name="{{ id|raw }}"
-     data-aura-history-api="/admin/api/nodes/<%=content.id%>/resourcelocators?language={{ languageCode }}&webspace={{ webspaceKey }}"≈
+     data-aura-history-api="/admin/api/nodes/<%=content.id%>/resourcelocators?language={{ languageCode }}&webspace={{ webspaceKey }}"
+     data-aura-content-id="<%=options.id%>"
      {% if property.mandatory %}data-validation-required="true"{% endif %} ></div>
