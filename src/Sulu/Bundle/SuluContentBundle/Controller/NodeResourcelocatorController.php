@@ -62,6 +62,20 @@ class NodeResourcelocatorController extends RestController implements ClassResou
     }
 
     /**
+     * deletes resource locator with given path
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function deleteAction()
+    {
+        list($webspaceKey, $languageCode) = $this->getWebspaceAndLanguage();
+        $path = $this->getRequestParameter($this->getRequest(), 'path', true);
+
+        $this->getResourceLocatorRepository()->delete($path, $webspaceKey, $languageCode);
+
+        return $this->handleView($this->view());
+    }
+
+    /**
      * returns webspacekey and languagecode
      * @return array list($webspaceKey, $languageCode)
      */
