@@ -27,6 +27,10 @@
         clear: both;
     }
 
+    li::after {
+        clear: both;
+    }
+
     .url,
     .date,
     .options-restore,
