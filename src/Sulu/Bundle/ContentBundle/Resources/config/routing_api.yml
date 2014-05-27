@@ -1,3 +1,7 @@
 sulu_content.node:
     type: rest
     resource: Sulu\Bundle\ContentBundle\Controller\NodeController
+
+sulu_content.rl:
+    type: rest
+    resource: Sulu\Bundle\ContentBundle\Controller\ResourceLocatorController
