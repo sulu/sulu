@@ -131,10 +131,10 @@ class NodeController extends RestController implements ClassResourceInterface
     {
         $language = $this->getLanguage($request);
         $webspace = $this->getWebspace($request);
-        $excludeGhosts = $this->getBooleanRequestParameter($this->getRequest(), 'exclude-ghosts', false, false);
+        $excludeGhosts = $this->getBooleanRequestParameter($request, 'exclude-ghosts', false, false);
 
-        $uuid = $this->getRequest()->get('uuid');
-        $appendWebspaceNode = $this->getBooleanRequestParameter($this->getRequest(), 'webspace-node', false, false);
+        $uuid = $request->get('uuid');
+        $appendWebspaceNode = $this->getBooleanRequestParameter($request, 'webspace-node', false, false);
 
         if ($uuid !== null && $uuid !== '') {
             $result = $this->getRepository()->getNodesTree(
@@ -177,12 +177,12 @@ class NodeController extends RestController implements ClassResourceInterface
     {
         $language = $this->getLanguage($request);
         $webspace = $this->getWebspace($request);
-        $excludeGhosts = $this->getBooleanRequestParameter($this->getRequest(), 'exclude-ghosts', false, false);
+        $excludeGhosts = $this->getBooleanRequestParameter($request, 'exclude-ghosts', false, false);
 
-        $parentUuid = $this->getRequest()->get('parent');
-        $depth = $this->getRequest()->get('depth', 1);
+        $parentUuid = $request->get('parent');
+        $depth = $request->get('depth', 1);
         $depth = intval($depth);
-        $flat = $this->getRequest()->get('flat', 'true');
+        $flat = $request->get('flat', 'true');
         $flat = ($flat === 'true');
 
         // TODO pagination
@@ -295,11 +295,11 @@ class NodeController extends RestController implements ClassResourceInterface
             // default navigation
             $navigation = 'main';
         }
-        $state = $this->getRequestParameter($this->getRequest(), 'state');
+        $state = $this->getRequestParameter($request, 'state');
         if ($state !== null) {
             $state = intval($state);
         }
-        $data = $this->getRequest()->request->all();
+        $data = $request->request->all();
 
         $result = $this->getRepository()->saveNode(
             $data,
