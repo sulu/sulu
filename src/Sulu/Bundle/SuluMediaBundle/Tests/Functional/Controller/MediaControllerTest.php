@@ -16,6 +16,7 @@ use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
+use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\MediaBundle\Entity\File;
@@ -145,6 +146,16 @@ class MediaControllerTest extends DatabaseTestCase
         $fileVersion->setFile($file);
         $fileVersion->setSize(1124214);
         $fileVersion->setStorageOptions('{"segment":"1","fileName":"photo.jpeg"}');
+
+        // create meta
+        $fileVersionMeta = new FileVersionMeta();
+        $fileVersionMeta->setLocale('en-gb');
+        $fileVersionMeta->setTitle('photo');
+        $fileVersionMeta->setDescription('description');
+        $fileVersionMeta->setFileVersion($fileVersion);
+
+        $fileVersion->addMeta($fileVersionMeta);
+
         $file->addFileVersion($fileVersion);
 
         $media->addFile($file);
@@ -160,6 +171,7 @@ class MediaControllerTest extends DatabaseTestCase
         self::$em->persist($tag2);
         self::$em->persist($media);
         self::$em->persist($file);
+        self::$em->persist($fileVersionMeta);
         self::$em->persist($fileVersion);
         self::$em->persist($mediaType);
         self::$em->persist($imageType);
@@ -237,10 +249,6 @@ class MediaControllerTest extends DatabaseTestCase
      */
     public function testGetById()
     {
-        $this->markTestSkipped(
-            'Test not running yet because of a routing problem in FOS RestBundle: https://github.com/FriendsOfSymfony/FOSRestBundle/pull/761'
-        );
-
         $client = $this->createTestClient();
 
         $client->request(
@@ -254,7 +262,11 @@ class MediaControllerTest extends DatabaseTestCase
 
         $this->assertEquals(1, $response->id);
 
-        $this->assertEquals(2, $response->type->id);
+        $this->assertEquals(2, $response->type);
+
+        $this->assertEquals('photo', $response->title);
+
+        $this->assertEquals('description', $response->description);
     }
 
     /**
@@ -262,7 +274,6 @@ class MediaControllerTest extends DatabaseTestCase
      */
     public function testcGet()
     {
-
         $client = $this->createTestClient();
 
         $client->request(
@@ -284,10 +295,6 @@ class MediaControllerTest extends DatabaseTestCase
      */
     public function testGetByIdNotExisting()
     {
-        $this->markTestSkipped(
-            'Test not running yet because of a routing problem in FOS RestBundle: https://github.com/FriendsOfSymfony/FOSRestBundle/pull/761'
-        );
-
         $client = $this->createTestClient();
 
         $client->request(

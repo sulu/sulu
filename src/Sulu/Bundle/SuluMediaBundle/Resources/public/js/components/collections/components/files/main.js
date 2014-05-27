@@ -76,7 +76,7 @@ define(function () {
 
            // open edit overlay on datagrid click
             this.sandbox.on('husky.datagrid.item.click', function(id) {
-                this.sandbox.emit('sulu.media-edit.edit', id);
+                this.sandbox.emit('sulu.media.collections.edit-media', id);
             }.bind(this));
 
             // delete clicked
