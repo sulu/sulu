@@ -301,7 +301,7 @@ class CollectionController extends RestController implements ClassResourceInterf
         $collectionRestObject = new CollectionRestObject();
         $collectionRestObject->setId($request->get('id'));
         $collectionRestObject->setStyle($request->get('style'));
-        $collectionRestObject->setType($request->get('type'));
+        $collectionRestObject->setType($request->get('type', Collection::TYPE_DEFAULT));
         $collectionRestObject->setParent($request->get('parent'));
         $collectionRestObject->setLocale($request->get('locale', $this->getLocale($request->get('locale'))));
         $collectionRestObject->setTitle($request->get('title'));
@@ -325,7 +325,7 @@ class CollectionController extends RestController implements ClassResourceInterf
         // Set Style
         if ($object->getStyle()) {
             $collection->setStyle(json_encode($object->getStyle()));
-        } elseif (!$collection->getStyle()) {
+        } elseif (!$collection->getStyle()) { // if no style was set generate one
             $generatedStyle = array(
                 'type' => 'circle',
                 'color' => Collection::generateColor()
@@ -335,19 +335,11 @@ class CollectionController extends RestController implements ClassResourceInterf
         }
 
         // Set Type
-        if ($object->getType()) {
-            $type = $this->getDoctrine()->getRepository('SuluMediaBundle:CollectionType')->find($object->getType());
-            if (!$type) {
-                throw new EntityNotFoundException($this->entityName, $object->getType());
-            }
-            $collection->setType($type);
-        } elseif (!$collection->getType()) {
-            $type = $this->getDoctrine()->getRepository('SuluMediaBundle:CollectionType')->find(Collection::TYPE_DEFAULT);
-            if (!$type) {
-                throw new EntityNotFoundException($this->entityName, $object->getType());
-            }
-            $collection->setType($type);
+        $type = $this->getDoctrine()->getRepository('SuluMediaBundle:CollectionType')->find($object->getType());
+        if (!$type) {
+            throw new EntityNotFoundException($this->entityName, $object->getType());
         }
+        $collection->setType($type);
 
         // Set Parent
         if ($object->getParent()) {
@@ -360,7 +352,7 @@ class CollectionController extends RestController implements ClassResourceInterf
                 throw new EntityNotFoundException($this->entityName, $object->getParent());
             }
             $collection->setParent($parent);
-        } elseif (!$collection->getParent()) {
+        } else {
             $collection->setParent(null);
         }
 
