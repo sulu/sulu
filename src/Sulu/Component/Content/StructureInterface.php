@@ -282,6 +282,14 @@ interface StructureInterface extends \JsonSerializable
     public function getPropertyByTagName($tagName, $highest = true);
 
     /**
+     * returns properties with given tag name sorted by priority
+     * @param string $tagName
+     * @throws \Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException
+     * @return PropertyInterface
+     */
+    public function getPropertiesByTagName($tagName);
+
+    /**
      * returns value of property with given tag name
      * @param string $tagName
      * @return mixed
