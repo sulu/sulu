@@ -43,7 +43,7 @@ define([], function() {
 
             // wait for dropdown to initialize, then get the value and continue
             this.sandbox.on('husky.select.system.initialize', function() {
-                this.selectedSystem = this.sandbox.dom.attr('#system', 'data-selection-values');
+                this.selectedSystem = this.sandbox.dom.data('#system', 'selection-values');
                 loadedSystems = this.sandbox.dom.data('#system', 'aura-data');
 
                 this.initializeMatrix();
