@@ -20,10 +20,10 @@ class SuluMediaAdmin extends Admin
     public function __construct($title)
     {
         $rootNavigationItem = new NavigationItem($title);
-        $section = new NavigationItem('navigation.tools');
+        $section = new NavigationItem('');
 
         $media = new NavigationItem('navigation.media');
-        $media->setIcon('asterisk');
+        $media->setIcon('image');
 
         $products = new NavigationItem('navigation.media.collections', $media);
         $products->setAction('media/collections');
@@ -42,4 +42,11 @@ class SuluMediaAdmin extends Admin
         return array();
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function getJsBundleName()
+    {
+        return 'sulumedia';
+    }
 }

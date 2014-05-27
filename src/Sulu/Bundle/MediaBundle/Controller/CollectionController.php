@@ -280,7 +280,7 @@ class CollectionController extends RestController implements ClassResourceInterf
      * @param array $fields
      * @return array
      */
-    protected function flatCollections ($collections, $locale, $fields = array())
+    protected function flatCollections($collections, $locale, $fields = array())
     {
         $flatCollections = array();
 

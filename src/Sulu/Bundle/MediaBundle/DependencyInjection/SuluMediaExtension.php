@@ -34,7 +34,7 @@ class SuluMediaExtension extends Extension
         $container->setParameter('sulu_media.collection.type.default', 1);
         $container->setParameter('sulu_media.media.max_file_size', '16MB');
         $container->setParameter('sulu_media.media.blocked_file_types', array('file/exe'));
-        $container->setParameter('sulu_media.media.storage.local.path', '%kernel.root_dir%/uploads/sulumedia');
+        $container->setParameter('sulu_media.media.storage.local.path', '%kernel.root_dir%/../../uploads/sulumedia');
         $container->setParameter('sulu_media.media.storage.local.segments', '10');
 
         $container->setParameter('sulu_media.media.types', array(

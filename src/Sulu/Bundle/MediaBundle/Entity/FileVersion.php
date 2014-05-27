@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\MediaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Exclude;
 
 /**
  * FileVersion
@@ -70,6 +71,7 @@ class FileVersion
 
     /**
      * @var \Sulu\Bundle\MediaBundle\Entity\File
+     * @Exclude
      */
     private $file;
 
