@@ -20,7 +20,9 @@ define([], function() {
     var defaults = {
             instanceName: null,
             url: null,
-            historyApi: null
+            historyApi: null,
+            deleteApi: null,
+            restoreApi: null
         },
 
         skeleton = function(options) {
@@ -58,6 +60,27 @@ define([], function() {
             bindDomEvents.call(this);
         },
 
+        startOptionsLoader = function($element) {
+            this.sandbox.dom.append($element, this.sandbox.dom.createElement('<div class="loader"/>'));
+            this.sandbox.dom.css($element, 'display', 'none');
+
+            this.sandbox.start([
+                {
+                    name: 'loader@husky',
+                    options: {
+                        el: $element,
+                        size: '16px',
+                        color: '#666666'
+                    }
+                }
+            ]);
+        },
+
+        stopOptionsLoader = function($element) {
+            this.sandbox.dom.css($element, 'display', 'block');
+            this.sandbox.stop(this.sandbox.dom.find('div.loader', $element));
+        },
+
         startLoader = function() {
             var $element = this.sandbox.dom.createElement('<div/>');
             this.sandbox.dom.html(getId.call(this, 'loader'), $element);
@@ -79,11 +102,15 @@ define([], function() {
         },
 
         bindDomEvents = function() {
+            // set value
             this.sandbox.dom.on(this.$el, 'data-changed', function (e, value) {
                 setValue.call(this, value);
             }.bind(this));
-            this.sandbox.dom.on(getId.call(this, 'edit'), 'click', editClicked.bind(this));
+
+            // load history
             this.sandbox.dom.on(getId.call(this, 'toggle'), 'click', loadHistory.bind(this));
+
+            // value change
             this.sandbox.dom.on(getId.call(this, 'input'), 'change', setDataValue.bind(this));
             this.sandbox.dom.on(getId.call(this, 'input'), 'change', function() {
                 this.sandbox.emit('sulu.content.changed');
@@ -91,6 +118,36 @@ define([], function() {
             this.sandbox.dom.on(getId.call(this, 'input'), 'focusout', function() {
                 this.$el.trigger('focusout');
             }.bind(this));
+
+            // delete
+            this.sandbox.dom.on(this.$el, 'click', deleteUrl.bind(this), '.options-delete');
+
+            // restore
+            this.sandbox.dom.on(this.$el, 'click', restoreUrl.bind(this), '.options-restore');
+        },
+
+        deleteUrl = function(e) {
+            var $currentElement = this.sandbox.dom.$(e.currentTarget),
+                $element = this.sandbox.dom.parent($currentElement),
+                id = this.sandbox.dom.data($element, 'id');
+
+            startOptionsLoader($currentElement);
+
+            this.sandbox.util.save(this.items[id]._links.delete, 'DELETE', {})
+                .then(function() {
+                    stopOptionsLoader($currentElement);
+                    this.sandbox.dom.remove($element);
+                }.bind(this))
+                .error(function() {
+                    // FIXME message
+                    stopOptionsLoader($currentElement);
+                });
+        },
+
+        restoreUrl = function(e) {
+            var $element = this.sandbox.dom.parent(e.currentTarget),
+                id = this.sandbox.dom.data($element, 'id'),
+                path = this.sandbox.dom.data($element, 'path');
         },
 
         setValue = function(value) {
@@ -105,10 +162,6 @@ define([], function() {
             this.sandbox.dom.html(getId.call(this, 'tree'), parts.join('/') + '/');
         },
 
-        editClicked = function() {
-            this.sandbox.dom.removeAttr(getId.call(this, 'input'), 'readonly');
-        },
-
         setDataValue = function() {
             var input = this.sandbox.dom.val(getId.call(this, 'input')),
                 tree = this.sandbox.dom.html(getId.call(this, 'tree'));
@@ -120,21 +173,27 @@ define([], function() {
          * Creates the content for the history overlay
          */
         renderHistories = function(histories) {
-            var html = ['<ul class="resource-locator-history">'];
+            this.items = [];
 
-            this.sandbox.util.foreach(histories, function(history) {
-                html.push(
-                    '<li>' +
-                    '   <span class="options-restore"><i class="fa fa-refresh pointer"></i></span>' +
-                    '   <span class="url">' + this.sandbox.util.cropMiddle(history.resourceLocator, 35) +'</span>' +
-                    '   <span class="date">' + this.sandbox.date.format(history.created) + '</span>' +
-                    '   <span class="options-delete"><i class="fa fa-trash-o pointer"></i></span>' +
-                    '</li>'
-                );
-            }.bind(this));
-            html.push('</ul>');
+            if (histories.length > 0) {
+                var html = ['<ul class="resource-locator-history">'];
 
-            return html.join('');
+                this.sandbox.util.foreach(histories, function(history) {
+                    this.items[history.id] = history;
+                    html.push(
+                            '<li data-id="' + history.id + '" data-path="' + history.resourceLocator + '">' +
+                            '   <span class="options-restore"><i class="fa fa-refresh pointer"></i></span>' +
+                            '   <span class="url">' + this.sandbox.util.cropMiddle(history.resourceLocator, 35) + '</span>' +
+                            '   <span class="date">' + this.sandbox.date.format(history.created) + '</span>' +
+                            '   <span class="options-delete"><i class="fa fa-trash-o pointer"></i></span>' +
+                            '</li>'
+                    );
+                }.bind(this));
+                html.push('</ul>');
+                return html.join('');
+            } else {
+                return '<p>' + this.sandbox.translate('public.url-history.none') + '</p>';
+            }
         },
 
         /**

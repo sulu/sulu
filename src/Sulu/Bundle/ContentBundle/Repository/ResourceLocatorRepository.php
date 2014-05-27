@@ -39,8 +39,9 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
      * @var string[]
      */
     private $apiBasePath = array(
+        '/admin/api/node/resourcelocator',
         '/admin/api/nodes/resourcelocators',
-        '/admin/api/nodes/{uuid}resourcelocators'
+        '/admin/api/nodes/{uuid}/resourcelocators'
     );
 
     /**
@@ -91,7 +92,24 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
      */
     public function getHistory($uuid, $webspaceKey, $languageCode)
     {
-        $result = $this->resourceLocator->loadHistoryByUuid($uuid, $webspaceKey, $languageCode);
+        $urls = $this->resourceLocator->loadHistoryByUuid($uuid, $webspaceKey, $languageCode);
+
+        $result = array();
+        foreach ($urls as $url) {
+            $defaultParameter = '&language=' . $languageCode . '&webspace=' . $webspaceKey;
+            $deleteParameter = '?path=' . $url->getResourceLocator() . $defaultParameter;
+            $restoreParameter = '/restore?path=' . $url->getResourceLocator() . $defaultParameter;
+
+            $result[] = array(
+                'id' => $url->getId(),
+                'resourceLocator' => $url->getResourceLocator(),
+                'created' => $url->getCreated(),
+                '_links' => array(
+                    'delete' => $this->getBasePath(null, 0) . $deleteParameter,
+                    'restore' => $this->getBasePath(null, 0) . $restoreParameter
+                )
+            );
+        }
 
         return array(
             '_embedded' => $result,
@@ -103,16 +121,25 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function delete($path, $webspaceKey, $languageCode, $segmentKey = null)
+    {
+        $this->resourceLocator->deleteByPath($path, $webspaceKey, $languageCode, $segmentKey);
+    }
+
+    /**
      * returns base path fo given uuid
      * @param null|string $uuid
+     * @param int $default
      * @return string
      */
-    private function getBasePath($uuid = null)
+    private function getBasePath($uuid = null, $default = 1)
     {
         if ($uuid !== null) {
-            return str_replace('{uuid}', $uuid, $this->apiBasePath[1]);
+            return str_replace('{uuid}', $uuid, $this->apiBasePath[2]);
         } else {
-            return $this->apiBasePath[0];
+            return $this->apiBasePath[$default];
         }
     }
 
