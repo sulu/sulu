@@ -259,10 +259,20 @@ class DefaultMediaManager implements MediaManagerInterface
         /**
          * @var FileVersion $fileVersion
          */
+        $oldMeta = array();
+        $oldTags = array();
+        $oldContentLanguages = array();
+        $oldPublishLanguages = array();
         foreach ($file->getFileVersions() as $fileVersion) {
             if ($version == $file->getVersion()) {
                 $fileName = $fileVersion->getName();
                 $oldStorageOptions = $fileVersion->getStorageOptions();
+
+                $oldMeta = $fileVersion->getMeta();
+                $oldTags = $fileVersion->getTags();
+                $oldContentLanguages = $fileVersion->getContentLanguages();
+                $oldPublishLanguages = $fileVersion->getPublishLanguages();
+
                 break;
             }
         }
@@ -287,6 +297,8 @@ class DefaultMediaManager implements MediaManagerInterface
             $file->setVersion($version);
             $fileVersion->setStorageOptions($storageOptions);
             $fileVersion->setFile($file);
+
+            $this->setNewVersionProperties($fileVersion, $oldMeta, $oldTags, $oldContentLanguages, $oldPublishLanguages);
         }
 
         if ($uploadedFile) {
@@ -302,6 +314,50 @@ class DefaultMediaManager implements MediaManagerInterface
         $this->em->flush();
 
         return $media;
+    }
+
+    /**
+     * @param FileVersion $fileVersion
+     * @param array $meta
+     * @param array $tags
+     * @param array $contentLanguages
+     * @param array $publishLanguages
+     */
+    protected function setNewVersionProperties(&$fileVersion, $meta = array(), $tags = array(), $contentLanguages = array(), $publishLanguages = array())
+    {
+        /**
+         * @var FileVersionMeta $meta
+         */
+        foreach ($meta as $meta) {
+            $newMedia = clone $meta;
+            $newMedia->setFileVersion($fileVersion);
+            $this->em->persist($newMedia);
+            $fileVersion->addMeta($newMedia);
+        }
+        /**
+         * @var Tag $meta
+         */
+        foreach ($tags as $tag) {
+            $fileVersion->addTag($tag);
+        }
+        /**
+         * @var FileVersionContentLanguage $contentLanguage
+         */
+        foreach ($contentLanguages as $contentLanguage) {
+            $newContentLanguage = clone $contentLanguage;
+            $newContentLanguage->setFileVersion($fileVersion);
+            $this->em->persist($newContentLanguage);
+            $fileVersion->addContentLanguage($newContentLanguage);
+        }
+        /**
+         * @var FileVersionPublishLanguage $publishLanguage
+         */
+        foreach ($publishLanguages as $publishLanguage) {
+            $newPublishLanguage = clone $publishLanguage;
+            $newPublishLanguage->setFileVersion($fileVersion);
+            $this->em->persist($newPublishLanguage);
+            $fileVersion->addPublishLanguage($newPublishLanguage);
+        }
     }
 
     /**
@@ -372,7 +428,7 @@ class DefaultMediaManager implements MediaManagerInterface
          */
         // Update Old Meta
         if ($fileVersion->getMeta()) {
-            foreach ($fileVersion->getMeta() as $oldMeta) {
+            foreach ($fileVersion->getMeta() as &$oldMeta) {
                 foreach ($metaList as $key => $meta) {
                     if (isset($meta['locale']) && $oldMeta->getLocale() == $meta['locale']) {
                         if (isset($meta['title'])) {
@@ -381,6 +437,7 @@ class DefaultMediaManager implements MediaManagerInterface
                         if (isset($meta['description'])) {
                             $oldMeta->setDescription($meta['description']);
                         }
+                        $fileVersion->addMeta($oldMeta);
                         $this->em->persist($oldMeta);
 
                         unset($metaList[$key]);
