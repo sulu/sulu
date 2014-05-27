@@ -129,6 +129,16 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function restore($path, $webspaceKey, $languageCode, $segmentKey = null)
+    {
+        $this->resourceLocator->restoreByPath($path, $webspaceKey, $languageCode, $segmentKey);
+
+        return array('resourceLocator' => $path, '_links' => array());
+    }
+
+    /**
      * returns base path fo given uuid
      * @param null|string $uuid
      * @param int $default

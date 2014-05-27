@@ -76,6 +76,20 @@ class NodeResourcelocatorController extends RestController implements ClassResou
     }
 
     /**
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function putRestoreAction()
+    {
+        list($webspaceKey, $languageCode) = $this->getWebspaceAndLanguage();
+        $path = $this->getRequestParameter($this->getRequest(), 'path', true);
+
+        $result = $this->getResourceLocatorRepository()->restore($path, $webspaceKey, $languageCode);
+
+        return $this->handleView($this->view($result));
+    }
+
+    /**
      * returns webspacekey and languagecode
      * @return array list($webspaceKey, $languageCode)
      */

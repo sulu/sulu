@@ -126,7 +126,11 @@
   content: "";
   clear: both;
 }
-/* line 33, ../scss/modules/resource-locator.scss */
+/* line 30, ../scss/modules/resource-locator.scss */
+.resource-locator-history li::after {
+  clear: both;
+}
+/* line 37, ../scss/modules/resource-locator.scss */
 .resource-locator-history .url,
 .resource-locator-history .date,
 .resource-locator-history .options-restore,
@@ -136,29 +140,29 @@
   padding-bottom: 10px;
   border-bottom: 1px solid #ddd;
 }
-/* line 41, ../scss/modules/resource-locator.scss */
+/* line 45, ../scss/modules/resource-locator.scss */
 .resource-locator-history .url,
 .resource-locator-history .date {
   float: left;
   width: 45%;
 }
-/* line 46, ../scss/modules/resource-locator.scss */
+/* line 50, ../scss/modules/resource-locator.scss */
 .resource-locator-history .options-restore {
   float: left;
   width: 5%;
   text-align: center;
 }
-/* line 52, ../scss/modules/resource-locator.scss */
+/* line 56, ../scss/modules/resource-locator.scss */
 .resource-locator-history .options-delete {
   float: right;
   width: 5%;
   text-align: center;
 }
-/* line 58, ../scss/modules/resource-locator.scss */
+/* line 62, ../scss/modules/resource-locator.scss */
 .resource-locator-history .url {
   text-align: left;
 }
-/* line 61, ../scss/modules/resource-locator.scss */
+/* line 65, ../scss/modules/resource-locator.scss */
 .resource-locator-history .date {
   text-align: center;
 }

@@ -61,14 +61,16 @@ define([], function() {
         },
 
         startOptionsLoader = function($element) {
+            $element = $element.parents('.overlay-content');
+
             this.sandbox.dom.append($element, this.sandbox.dom.createElement('<div class="loader"/>'));
-            this.sandbox.dom.css($element, 'display', 'none');
+            this.sandbox.dom.css($element.find('.resource-locator-history'), 'display', 'none');
 
             this.sandbox.start([
                 {
                     name: 'loader@husky',
                     options: {
-                        el: $element,
+                        el: this.sandbox.dom.find('.loader', $element),
                         size: '16px',
                         color: '#666666'
                     }
@@ -77,8 +79,10 @@ define([], function() {
         },
 
         stopOptionsLoader = function($element) {
-            this.sandbox.dom.css($element, 'display', 'block');
-            this.sandbox.stop(this.sandbox.dom.find('div.loader', $element));
+            $element = $element.parents('.overlay-content');
+
+            this.sandbox.dom.css($element.find('.resource-locator-history'), 'display', 'block');
+            this.sandbox.stop(this.sandbox.dom.find('.loader', $element));
         },
 
         startLoader = function() {
@@ -131,23 +135,36 @@ define([], function() {
                 $element = this.sandbox.dom.parent($currentElement),
                 id = this.sandbox.dom.data($element, 'id');
 
-            startOptionsLoader($currentElement);
+            startOptionsLoader.call(this, $element);
 
             this.sandbox.util.save(this.items[id]._links.delete, 'DELETE', {})
                 .then(function() {
-                    stopOptionsLoader($currentElement);
+                    stopOptionsLoader.call(this, $element);
                     this.sandbox.dom.remove($element);
                 }.bind(this))
-                .error(function() {
+                .fail(function() {
                     // FIXME message
-                    stopOptionsLoader($currentElement);
+                    stopOptionsLoader.call(this, $element);
                 });
         },
 
         restoreUrl = function(e) {
-            var $element = this.sandbox.dom.parent(e.currentTarget),
-                id = this.sandbox.dom.data($element, 'id'),
-                path = this.sandbox.dom.data($element, 'path');
+            var $currentElement = this.sandbox.dom.$(e.currentTarget),
+                $element = this.sandbox.dom.parent($currentElement),
+                id = this.sandbox.dom.data($element, 'id');
+
+            startOptionsLoader.call(this, $element);
+
+            this.sandbox.util.save(this.items[id]._links.restore, 'PUT', {})
+                .then(function(data) {
+                    setValue.call(this, data.resourceLocator);
+                    this.sandbox.emit('husky.overlay.url-history.close');
+                    stopOptionsLoader.call(this, $element);
+                }.bind(this))
+                .fail(function() {
+                    // FIXME message
+                    stopOptionsLoader.call(this, $element);
+                });
         },
 
         setValue = function(value) {
