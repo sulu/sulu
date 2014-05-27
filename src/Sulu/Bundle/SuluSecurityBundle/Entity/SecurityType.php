@@ -66,6 +66,16 @@ class SecurityType
     }
 
     /**
+     * Set id
+     *
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
      * Add roles
      *
      * @param \Sulu\Bundle\SecurityBundle\Entity\Role $roles
