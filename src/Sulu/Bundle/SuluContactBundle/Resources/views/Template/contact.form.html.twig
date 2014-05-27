@@ -14,6 +14,7 @@
                      data-aura-multiple-select="false"
                      data-aura-instance-name="form-of-address"
                      data-type-label="translation"
+                     data-type-required="translation"
                      data-mapper-property="formOfAddress"
                      data-type="husky-select"
                      data-validation-required="true"
@@ -24,8 +25,8 @@
         </div>
         <div class="grid-col-6">
             <div class="form-group">
-                <label for="salutation" class="required"><%=translate('contact.contacts.salutation')%></label>
-                <input class="form-element" type="text" id="salutation" data-trigger="focusout" data-mapper-property="salutation"/>
+                <label for="title"><%=translate('contact.contacts.contactTitle')%></label>
+                <input class="form-element" type="text" id="title" data-mapper-property="title" value=""/>
             </div>
         </div>
     </div>
@@ -47,11 +48,11 @@
             </div>
         </div>
     </div>
-    <div class="grid-row small">
+    <div class="grid-row m-bottom-40">
         <div class="grid-col-6">
             <div class="form-group">
-                <label for="title"><%=translate('contact.contacts.contactTitle')%></label>
-                <input class="form-element" type="text" id="title" data-mapper-property="title" value=""/>
+                <label for="company-input"><%=translate('contact.contacts.company')%></label>
+                <div id="company"></div>
             </div>
         </div>
         <div class="grid-col-6">
@@ -61,23 +62,11 @@
             </div>
         </div>
     </div>
-    <div class="grid-row">
-        <div class="grid-col-6">
-            <div class="form-group">
-                <label for="company-input"><%=translate('contact.contacts.company')%></label>
-                <div id="company"></div>
-            </div>
-        </div>
-        <div class="grid-col-6">
-            <div class="form-group">
-                <label for="disabled"><%=translate('public.deactivate')%></label>
-                <div>
-                    <div class="custom-checkbox">
-                        <input class="form-element husky-validate" type="checkbox" id="disabled" data-mapper-property="disabled">
-                        <span class="icon"></span>
-                    </div>
-                </div>
-            </div>
+    <div class="grid-row small">
+        <div class="form-group">
+            <label for="salutation"><%=translate('contact.contacts.salutation')%></label>
+            <input class="form-element" type="text" id="salutation" data-trigger="focusout"
+                   data-mapper-property="salutation"/>
         </div>
     </div>
     <div class="grid-row">
@@ -88,7 +77,16 @@
             </div>
         </div>
         <div class="grid-col-6">
-
+            <div class="form-group">
+                <label for="disabled"><%=translate('public.deactivate')%></label>
+                <div>
+                    <div class="custom-checkbox">
+                        <input class="form-element husky-validate" type="checkbox" id="disabled"
+                               data-mapper-property="disabled">
+                        <span class="icon"></span>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}
