@@ -65,7 +65,7 @@ class NodeController extends RestController implements ClassResourceInterface
         $ghostContent = $this->getBooleanRequestParameter($request, 'ghost-content', false, false);
 
         $view = $this->responseGetById(
-            '',
+            null,
             function () use ($language, $webspace, $depth, $ghostContent) {
                 try {
                     return $this->getRepository()->getWebspaceNode(
@@ -123,11 +123,13 @@ class NodeController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * return a tree for given path
+     * Returns a tree along the given path with the siblings of all nodes on the path.
+     * This functionality is required for preloading the content navigation.
+     *
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function cgetTree(Request $request)
+    private function cgetTree(Request $request)
     {
         $language = $this->getLanguage($request);
         $webspace = $this->getWebspace($request);
