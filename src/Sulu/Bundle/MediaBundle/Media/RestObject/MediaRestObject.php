@@ -402,12 +402,10 @@ class MediaRestObject implements RestObject
         if (!$this->thumbnails) {
             $data['thumbnails'] = array(
                 '50x50' => array(
-                    'url' => 'http://lorempixel.com/50/50/',
-                    'alt' => 'Description of the Image'
+                    'url' => 'http://lorempixel.com/50/50/'
                 ),
                 '170x170' => array(
-                    'url' => 'http://lorempixel.com/170/170/',
-                    'alt' => 'Description of the Image'
+                    'url' => 'http://lorempixel.com/170/170/'
                 )
             );
         }

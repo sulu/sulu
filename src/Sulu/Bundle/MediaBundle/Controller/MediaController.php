@@ -143,7 +143,7 @@ class MediaController extends RestController implements ClassResourceInterface
                             'self' => $request->getRequestUri()
                         )
                     ),
-                    $mediaRestObject->setDataByEntityArray($media, $locale, $request->get('version', null))
+                    $mediaRestObject->setDataByEntityArray($media, $locale, $request->get('version', null))->toArray()
                 )
                 , 200);
         }
