@@ -21,7 +21,6 @@ use Doctrine\ORM\Query;
  */
 class RoleRepository extends EntityRepository
 {
-
     /**
      * Searches for a role with a specific id
      * @param $id
@@ -33,7 +32,9 @@ class RoleRepository extends EntityRepository
 
             $qb = $this->createQueryBuilder('role')
                 ->leftJoin('role.permissions', 'permissions')
+                ->leftJoin('role.securityType', 'securityType')
                 ->addSelect('permissions')
+                ->addSelect('securityType')
                 ->where('role.id=:roleId');
 
             $query = $qb->getQuery();
@@ -70,5 +71,4 @@ class RoleRepository extends EntityRepository
             return null;
         }
     }
-
 }
