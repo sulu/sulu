@@ -16,6 +16,7 @@ use FOS\RestBundle\Controller\Annotations\Put;
 use Sulu\Bundle\ContactBundle\Entity\BankAccount;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\Account;
+use Sulu\Bundle\ContactBundle\Entity\AccountCategory;
 use Sulu\Bundle\ContactBundle\Entity\Fax;
 use Sulu\Bundle\ContactBundle\Entity\FaxType;
 use Sulu\Bundle\ContactBundle\Entity\Address;
@@ -42,6 +43,7 @@ class AccountController extends RestController implements ClassResourceInterface
      */
     protected $entityName = 'SuluContactBundle:Account';
     protected $contactsEntityName = 'SuluContactBundle:Contact';
+    protected $accountCategoryEntityName = 'SuluContactBundle:AccountCategory';
 
     /**
      * {@inheritdoc}
@@ -78,7 +80,7 @@ class AccountController extends RestController implements ClassResourceInterface
      */
     protected $fieldsTranslationKeys = array(
         'id' => 'public.id',
-        'number' => 'public.number'
+        'disabled' => 'public.deactivate'
     );
 
     /**
@@ -102,7 +104,7 @@ class AccountController extends RestController implements ClassResourceInterface
     /**
      * {@inheritdoc}
      */
-    protected $bundlePrefix = 'contact.account.';
+    protected $bundlePrefix = 'contact.accounts.';
 
     /**
      * returns all fields that can be used by list
@@ -215,17 +217,11 @@ class AccountController extends RestController implements ClassResourceInterface
             }
             $account->setDisabled($disabled);
 
-            $parentData = $request->get('parent');
-            if ($parentData != null && isset($parentData['id']) && $parentData['id'] != 'null' && $parentData['id'] != '') {
-                $parent = $this->getDoctrine()
-                    ->getRepository($this->entityName)
-                    ->findAccountById($parentData['id']);
+            // set category
+            $this->setCategory($request->get('accountCategory'), $account);
 
-                if (!$parent) {
-                    throw new EntityNotFoundException($this->entityName, $parentData['id']);
-                }
-                $account->setParent($parent);
-            }
+            // set parent
+            $this->setParent($request->get('parent'), $account);
 
             // set creator / changer
             $account->setCreated(new DateTime());
@@ -275,6 +271,14 @@ class AccountController extends RestController implements ClassResourceInterface
                 }
             }
 
+            // handle tags
+            $tags = $request->get('tags');
+            if (!empty($tags)) {
+                foreach ($tags as $tag) {
+                    $this->addTag($account, $tag);
+                }
+            }
+
             $em->persist($account);
 
             $em->flush();
@@ -321,19 +325,11 @@ class AccountController extends RestController implements ClassResourceInterface
                     $account->setDisabled($disabled);
                 }
 
+                // set category
+                $this->setCategory($request->get('accountCategory'), $account);
+
                 // set parent
-                $parentData = $request->get('parent');
-                if ($parentData != null && isset($parentData['id']) && $parentData['id'] != 'null' && $parentData['id'] != '') {
-                    $parent = $this->getDoctrine()
-                        ->getRepository($this->entityName)
-                        ->findAccountById($parentData['id']);
-                    if (!$parent) {
-                        throw new EntityNotFoundException($this->entityName, $parentData['id']);
-                    }
-                    $account->setParent($parent);
-                } else {
-                    $account->setParent(null);
-                }
+                $this->setParent($request->get('parent'), $account);
 
                 // set changed
                 $account->setChanged(new DateTime());
@@ -346,6 +342,7 @@ class AccountController extends RestController implements ClassResourceInterface
                     && $this->processFaxes($account, $request)
                     && $this->processPhones($account, $request)
                     && $this->processAddresses($account, $request)
+                    && $this->processTags($account, $request)
                     && $this->processNotes($account, $request))
                 ) {
                     throw new RestException('Updating dependencies is not possible', 0);
@@ -362,6 +359,47 @@ class AccountController extends RestController implements ClassResourceInterface
         }
 
         return $this->handleView($view);
+    }
+
+    /**
+     * set parent to account
+     * @param array $parentData
+     * @param Account $account
+     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
+     */
+    private function setParent($parentData, Account $account)
+    {
+        if ($parentData != null && isset($parentData['id']) && $parentData['id'] != 'null' && $parentData['id'] != '') {
+            $parent = $this->getDoctrine()
+                ->getRepository($this->entityName)
+                ->findAccountById($parentData['id']);
+            if (!$parent) {
+                throw new EntityNotFoundException($this->entityName, $parentData['id']);
+            }
+            $account->setParent($parent);
+        } else {
+            $account->setParent(null);
+        }
+    }
+
+    /**
+     * set category to account
+     * @param array $categoryData
+     * @param Account $account
+     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
+     */
+    public function setCategory($categoryData, Account $account)
+    {
+        $categoryId = $categoryData['id'];
+        if (!is_null($categoryId) && !empty($categoryId)) {
+            /** @var @var AccountCategory $category */
+            $category = $this->getDoctrine()->getRepository($this->accountCategoryEntityName)->find($categoryId);
+            if (!is_null($category)) {
+                $account->setAccountCategory($category);
+            } else {
+                throw new EntityNotFoundException($this->accountCategoryEntityName, $categoryId);
+            }
+        }
     }
 
     /**
@@ -707,6 +745,47 @@ class AccountController extends RestController implements ClassResourceInterface
             $email->setEmail($entry['email']);
             $email->setEmailType($emailType);
         }
+
+        return $success;
+    }
+
+    /**
+     * Process all tags of request
+     * @param Account $account The contact on which is worked
+     * @param Request $request
+     * @return bool True if the processing was successful, otherwise false
+     */
+    protected function processTags(Account $account, Request $request)
+    {
+        $tags = $request->get('tags');
+
+        $delete = function ($tag) use ($account) {
+            return $account->removeTag($tag);
+        };
+
+        $update = function () {
+            return true;
+        };
+
+        $add = function ($tag) use ($account) {
+            return $this->addTag($account, $tag);
+        };
+
+        return $this->processPut($account->getTags(), $tags, $delete, $update, $add);
+    }
+
+    /**
+     * Adds a new tag to the given contact
+     * @param Account $account
+     * @param $data
+     * @return bool True if there was no error, otherwise false
+     */
+    protected function addTag(Account $account, $data)
+    {
+        $success = true;
+        $tagManager = $this->get('sulu_tag.tag_manager');
+        $resolvedTag = $tagManager->findByName($data);
+        $account->addTag($resolvedTag);
 
         return $success;
     }

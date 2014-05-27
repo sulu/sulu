@@ -14,6 +14,10 @@ define([], function() {
     var form = '#contact-form',
         fields = ['urls', 'emails', 'faxes', 'phones', 'notes', 'addresses'],
 
+        constants = {
+            tagsId: '#tags'
+        },
+
         setHeaderToolbar = function() {
             this.sandbox.emit('sulu.header.set-toolbar', {
                 template: 'default'
@@ -21,7 +25,6 @@ define([], function() {
         };
 
     return (function() {
-        // FIXME move to this.*
         return {
 
             view: true,
@@ -31,6 +34,10 @@ define([], function() {
             initialize: function() {
                 this.saved = true;
                 this.formId = '#contact-form';
+
+                this.dfdListenForChange = this.sandbox.data.deferred();
+                this.dfdFormIsSet = this.sandbox.data.deferred();
+
                 this.setTitle();
                 this.render();
                 this.setHeaderBar(true);
@@ -67,8 +74,11 @@ define([], function() {
 
                 this.initForm(data);
 
+                this.setTags(data);
+
                 this.bindDomEvents();
                 this.bindCustomEvents();
+                this.bindTagEvents(data);
             },
 
             /**
@@ -77,10 +87,10 @@ define([], function() {
              */
             setTitle: function() {
                 var title = this.sandbox.translate('contact.contacts.title'),
-                breadcrumb = [
-                    {title: 'navigation.contacts'},
-                    {title: 'contact.contacts.title', event: 'sulu.contacts.contacts.list'}
-                ];
+                    breadcrumb = [
+                        {title: 'navigation.contacts'},
+                        {title: 'contact.contacts.title', event: 'sulu.contacts.contacts.list'}
+                    ];
 
                 if (!!this.options.data && !!this.options.data.id) {
                     title = this.options.data.fullName;
@@ -89,6 +99,40 @@ define([], function() {
 
                 this.sandbox.emit('sulu.header.set-title', title);
                 this.sandbox.emit('sulu.header.set-breadcrumb', breadcrumb);
+            },
+
+            // show tags and activate keylistener
+            setTags: function() {
+                this.dfdFormIsSet.then(function() {
+                    this.sandbox.start([
+                        {
+                            name: 'auto-complete-list@husky',
+                            options: {
+                                el: '#tags',
+                                instanceName: 'contacts',
+                                getParameter: 'search',
+                                remoteUrl: '/admin/api/tags?flat=true&sortBy=name',
+                                completeIcon: 'tag',
+                                noNewTags: true
+                            }
+                        }
+                    ]);
+                }.bind(this));
+            },
+
+            bindTagEvents: function(data) {
+                if (!!data.tags && data.tags.length > 0) {
+                    // set tags after auto complete list was initialized
+                    this.sandbox.on('husky.auto-complete-list.contacts.initialized', function() {
+                        this.sandbox.emit('husky.auto-complete-list.contacts.set-tags', data.tags);
+                    }.bind(this));
+                    // listen for change after items have been added
+                    this.sandbox.on('husky.auto-complete-list.contacts.items-added', function() {
+                        this.dfdListenForChange.resolve();
+                    }.bind(this));
+                } else {
+                    this.dfdListenForChange.resolve();
+                }
             },
 
             setDefaults: function(defaultTypes) {
@@ -112,6 +156,8 @@ define([], function() {
                     this.sandbox.emit('sulu.contact-form.add-required',['email']);
                 }.bind(this)).fail(function(error){
                     this.sandbox.logger.error("An error occured when setting data!", error);
+                    this.sandbox.emit('sulu.contact-form.add-required', ['email']);
+                    this.dfdFormIsSet.resolve();
                 }.bind(this));
             },
 
@@ -126,14 +172,16 @@ define([], function() {
                 }.bind(this));
 
                 // initialize contact form
-                this.sandbox.start([{
-                    name: 'contact-form@sulucontact',
-                    options: {
-                        el:'#contact-edit-form',
-                        fieldTypes: this.fieldTypes,
-                        defaultTypes: this.defaultTypes
+                this.sandbox.start([
+                    {
+                        name: 'contact-form@sulucontact',
+                        options: {
+                            el: '#contact-edit-form',
+                            fieldTypes: this.fieldTypes,
+                            defaultTypes: this.defaultTypes
+                        }
                     }
-                }]);
+                ]);
             },
 
             bindDomEvents: function() {
@@ -164,8 +212,7 @@ define([], function() {
             },
 
             initContactData: function() {
-                var contactJson = this.options.data,
-                    field;
+                var contactJson = this.options.data;
 
                 this.sandbox.util.foreach(fields, function(field) {
                     if (!contactJson.hasOwnProperty(field)) {
@@ -221,10 +268,9 @@ define([], function() {
                     length = minAmount;
                 }
 
-                for (;++i < length;) {
-
+                for (; ++i < length;) {
                     // construct the attributes object for fields under and equal the minimum amount
-                    if ((i+1) > minAmount) {
+                    if ((i + 1) > minAmount) {
                         attributes = {};
                     } else {
                         attributes = {
@@ -244,7 +290,6 @@ define([], function() {
                 return field;
             },
 
-
             submit: function() {
                 this.sandbox.logger.log('save Model');
 
@@ -255,6 +300,8 @@ define([], function() {
                         delete data.id;
                     }
 
+                    data.tags = this.sandbox.dom.data(this.$find(constants.tagsId), 'tags');
+
                     // FIXME auto complete in mapper
                     data.account = {
                         id: this.sandbox.dom.attr('#' + this.companyInstanceName, 'data-id')
@@ -262,14 +309,6 @@ define([], function() {
 
                     this.sandbox.logger.log('log data', data);
                     this.sandbox.emit('sulu.contacts.contacts.save', data);
-                }
-            },
-
-            // checks if el is in next row and adds margin top if necessary
-            checkRowMargin: function(item) {
-                var parent = this.sandbox.dom.parent(item);
-                if (this.sandbox.dom.children(parent).length > 2) {
-                    this.sandbox.dom.addClass(item, 'm-top-20');
                 }
             },
 
@@ -283,14 +322,16 @@ define([], function() {
             },
 
             listenForChange: function() {
-                this.sandbox.dom.on('#contact-form', 'change', function() {
-                    this.setHeaderBar(false);
-                }.bind(this), "select, input, textarea");
-                this.sandbox.dom.on('#contact-form', 'keyup', function() {
-                    this.setHeaderBar(false);
-                }.bind(this), "input, textarea");
-                this.sandbox.on('sulu.contact-form.changed', function() {
-                    this.setHeaderBar(false);
+                this.dfdListenForChange.then(function() {
+                    this.sandbox.dom.on('#contact-form', 'change', function() {
+                        this.setHeaderBar(false);
+                    }.bind(this), "select, input, textarea");
+                    this.sandbox.dom.on('#contact-form', 'keyup', function() {
+                        this.setHeaderBar(false);
+                    }.bind(this), "input, textarea");
+                    this.sandbox.on('sulu.contact-form.changed', function() {
+                        this.setHeaderBar(false);
+                    }.bind(this));
                 }.bind(this));
                 this.sandbox.on('husky.select.form-of-address.selected.item', function() {
                     this.setHeaderBar(false);

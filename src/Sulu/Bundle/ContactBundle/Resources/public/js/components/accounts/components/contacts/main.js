@@ -25,13 +25,18 @@ define([
                     this.sandbox.emit('sulu.contacts.accounts.delete', ids);
                 }.bind(this));
             }, this);
+
+            // back to list
+            this.sandbox.on('sulu.header.back', function() {
+                this.sandbox.emit('sulu.contacts.accounts.list');
+            }, this);
         },
 
         listTemplate = function() {
             return [
                 {
                     id: 'settings',
-                    icon: 'cogwheel',
+                    icon: 'gear',
                     items: [
                         {
                             title: this.sandbox.translate('list-toolbar.column-options'),

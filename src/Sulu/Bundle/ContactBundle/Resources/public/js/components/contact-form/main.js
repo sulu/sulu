@@ -22,8 +22,8 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
             fieldId: 'field-select',
             fieldTypeId: 'field-type-select',
             editDeleteSelector: '.delete',
-            editDeleteIcon: 'icon-circle-minus',
-            editUndoDeleteIcon: 'icon-circle-plus',
+            editDeleteIcon: 'fa-minus-circle',
+            editUndoDeleteIcon: 'fa-plus-circle',
             fadedClass: 'faded',
             addressFormId: '#address-form',
             dropdownContainerId: '#contact-options-dropdown',
@@ -46,7 +46,7 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
                 '   <div class="grid-col-2 pull-right">',
                 '<% if (showDeleteButton == true) { %>',
                 '       <div class="delete btn gray-dark fit only-icon pull-right">',
-                '           <div class="icon-circle-minus"></div>',
+                '           <div class="fa-minus-circle"></div>',
                 '       </div>',
                 '<% } %>',
                 '   </div>',
@@ -617,6 +617,7 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
                         el: this.$addOverlay,
                         singleSelect: true,
                         data: this.dropdownDataArray,
+                        defaultLabels: this.sandbox.translate('public.please-choose'),
                         instanceName: 'add-fields',
                         container: ['#' + constants.fieldId, '#' + constants.fieldTypeId]
                     }

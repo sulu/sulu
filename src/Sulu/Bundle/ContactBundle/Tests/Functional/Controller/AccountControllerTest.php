@@ -14,6 +14,7 @@ namespace Sulu\Bundle\ContactBundle\Tests\Functional\Controller;
 use DateTime;
 use Doctrine\ORM\Tools\SchemaTool;
 use Sulu\Bundle\ContactBundle\Entity\Account;
+use Sulu\Bundle\ContactBundle\Entity\AccountCategory;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\AddressType;
@@ -133,6 +134,10 @@ class AccountControllerTest extends DatabaseTestCase
         self::$em->persist($fax);
         self::$em->persist($contact);
 
+        $accountCategory = new AccountCategory();
+        $accountCategory->setCategory("Test");
+        self::$em->persist($accountCategory);
+
         self::$em->flush();
     }
 
@@ -166,6 +171,8 @@ class AccountControllerTest extends DatabaseTestCase
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\PhoneType'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Url'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\UrlType'),
+            self::$em->getClassMetadata('Sulu\Bundle\TagBundle\Entity\Tag'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AccountCategory'),
         );
 
         self::$tool->dropSchema(self::$entities);
@@ -365,6 +372,149 @@ class AccountControllerTest extends DatabaseTestCase
         $this->assertEquals('Musterstate', $response->addresses[0]->state);
         $this->assertEquals('Note 1', $response->notes[0]->value);
         $this->assertEquals('Note 2', $response->notes[1]->value);
+    }
+
+    public function testPostWithCategory()
+    {
+        $client = $this->createTestClient();
+
+        $client->request(
+            'POST',
+            '/api/accounts',
+            array(
+                'name' => 'ExampleCompany',
+                'parent' => array('id' => self::$account->getId()),
+                'type' => Account::TYPE_BASIC,
+                'urls' => array(
+                    array(
+                        'url' => 'http://example.company.com',
+                        'urlType' => array(
+                            'id' => '1',
+                            'name' => 'Private'
+                        )
+                    )
+                ),
+                'emails' => array(
+                    array(
+                        'email' => 'erika.mustermann@muster.at',
+                        'emailType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        )
+                    ),
+                    array(
+                        'email' => 'erika.mustermann@muster.de',
+                        'emailType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        )
+                    )
+                ),
+                'phones' => array(
+                    array(
+                        'phone' => '123456789',
+                        'phoneType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        )
+                    ),
+                    array(
+                        'phone' => '987654321',
+                        'phoneType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        )
+                    )
+                ),
+                'faxes' => array(
+                    array(
+                        'fax' => '123456789-1',
+                        'faxType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        )
+                    ),
+                    array(
+                        'fax' => '987654321-1',
+                        'faxType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        )
+                    )
+                ),
+                'addresses' => array(
+                    array(
+                        'street' => 'Musterstraße',
+                        'number' => '1',
+                        'zip' => '0000',
+                        'city' => 'Musterstadt',
+                        'state' => 'Musterstate',
+                        'country' => array(
+                            'id' => 1,
+                            'name' => 'Musterland',
+                            'code' => 'ML'
+                        ),
+                        'addressType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        )
+                    )
+                ),
+                'notes' => array(
+                    array('value' => 'Note 1'),
+                    array('value' => 'Note 2')
+                ),
+                'accountCategory' => array(
+                    'id' => '1',
+                    'category' => 'test'
+                )
+            )
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals('ExampleCompany', $response->name);
+        $this->assertEquals(2, $response->lft);
+        $this->assertEquals(3, $response->rgt);
+        $this->assertEquals(1, $response->depth);
+        $this->assertEquals(self::$account->getId(), $response->parent->id);
+        $this->assertEquals('erika.mustermann@muster.at', $response->emails[0]->email);
+        $this->assertEquals('erika.mustermann@muster.de', $response->emails[1]->email);
+        $this->assertEquals('123456789', $response->phones[0]->phone);
+        $this->assertEquals('987654321', $response->phones[1]->phone);
+        $this->assertEquals('123456789-1', $response->faxes[0]->fax);
+        $this->assertEquals('987654321-1', $response->faxes[1]->fax);
+        $this->assertEquals('Musterstraße', $response->addresses[0]->street);
+        $this->assertEquals('1', $response->addresses[0]->number);
+        $this->assertEquals('0000', $response->addresses[0]->zip);
+        $this->assertEquals('Musterstadt', $response->addresses[0]->city);
+        $this->assertEquals('Musterstate', $response->addresses[0]->state);
+        $this->assertEquals('Note 1', $response->notes[0]->value);
+        $this->assertEquals('Note 2', $response->notes[1]->value);
+        $this->assertEquals(1, $response->accountCategory->id);
+
+        $client->request('GET', '/api/accounts/' . $response->id);
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals('ExampleCompany', $response->name);
+        $this->assertEquals(2, $response->lft);
+        $this->assertEquals(3, $response->rgt);
+        $this->assertEquals(1, $response->depth);
+        $this->assertEquals(self::$account->getId(), $response->parent->id);
+        $this->assertEquals('erika.mustermann@muster.at', $response->emails[0]->email);
+        $this->assertEquals('erika.mustermann@muster.de', $response->emails[1]->email);
+        $this->assertEquals('123456789', $response->phones[0]->phone);
+        $this->assertEquals('987654321', $response->phones[1]->phone);
+        $this->assertEquals('123456789-1', $response->faxes[0]->fax);
+        $this->assertEquals('987654321-1', $response->faxes[1]->fax);
+        $this->assertEquals('Musterstraße', $response->addresses[0]->street);
+        $this->assertEquals('1', $response->addresses[0]->number);
+        $this->assertEquals('0000', $response->addresses[0]->zip);
+        $this->assertEquals('Musterstadt', $response->addresses[0]->city);
+        $this->assertEquals('Musterstate', $response->addresses[0]->state);
+        $this->assertEquals('Note 1', $response->notes[0]->value);
+        $this->assertEquals('Note 2', $response->notes[1]->value);
+        $this->assertEquals(1, $response->accountCategory->id);
     }
 
     public function testPostWithIds()

@@ -193,7 +193,7 @@ define([
                         return [
                             {
                                 id: 'add',
-                                icon: 'circle-plus',
+                                icon: 'plus-circle',
                                 class: 'highlight-white',
                                 title: this.sandbox.translate('sulu.list-toolbar.add'),
                                 items: [
