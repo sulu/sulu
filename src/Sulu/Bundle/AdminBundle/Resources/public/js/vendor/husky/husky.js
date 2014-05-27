@@ -1,4 +1,3 @@
-
 /** vim: et:ts=4:sw=4:sts=4
  * @license RequireJS 2.1.9 Copyright (c) 2010-2012, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
@@ -37004,6 +37003,7 @@ return {
  * @params {String} [options.idKey] key for the id in the returning JSON-result
  * @params {String} [options.resultKey] key for the data in the returning JSON-result
  * @params {String} [options.titleKey] key for the title in the returning JSON-result
+ * @params {String} [options.pathKey] key for the path in the returning JSON-result
  * @params {Boolean} [options.subFoldersDisabled] if true sub-folders overlay-item will be disabled
  * @params {Boolean} [options.tagsDisabled] if true tags overlay-item will be disabled
  * @params {Boolean} [options.limitResultDisabled] if true limit-result overlay-item will be disabled
@@ -37078,6 +37078,7 @@ define('__component__$smart-content@husky',[], function() {
             idKey: 'id',
             resultKey: '_embedded',
             titleKey: 'title',
+            pathKey: 'path',
             translations: {},
             elementDataName: 'smart-content',
             externalConfigs: false,
@@ -37430,7 +37431,9 @@ define('__component__$smart-content@husky',[], function() {
          * Renders the source text and prepends it to the header
          */
         prependSource: function() {
-            var desc;
+            var desc, $element = this.sandbox.dom.find(constants.dataSourceSelector, this.$overlayContent);
+            this.sandbox.dom.text($element, this.sandbox.util.cropMiddle(this.overlayData.path, 30, '...'));
+
             if (typeof(this.overlayData.dataSource) !== 'undefined') {
                 desc = this.sandbox.translate(this.translations.from);
                 if (this.overlayData.includeSubFolders !== false) {
@@ -37765,7 +37768,7 @@ define('__component__$smart-content@husky',[], function() {
                 this.$overlayContent.append(_.template(templates.overlayContent.dataSource)({
                     dataSourceLabelStr: this.sandbox.translate(this.translations.dataSourceLabel),
                     dataSourceButtonStr: this.sandbox.translate(this.translations.dataSourceButton),
-                    dataSourceValStr: this.options.dataSource
+                    dataSourceValStr: this.options.dataSource.path
                 }));
                 this.$overlayContent.append(_.template(templates.overlayContent.subFolders)({
                     includeSubStr: this.sandbox.translate(this.translations.includeSubFolders),
@@ -37923,6 +37926,7 @@ define('__component__$smart-content@husky',[], function() {
 
                     success: function(data) {
                         this.overlayData.title = data[this.options.titleKey];
+                        this.overlayData.path = data[this.options.pathKey];
                         this.items = data[this.options.resultKey];
                         this.sandbox.emit(DATA_RETRIEVED.call(this));
                     }.bind(this),
@@ -42131,3 +42135,4 @@ define('husky_extensions/util',[],function() {
         }
     };
 });
+
