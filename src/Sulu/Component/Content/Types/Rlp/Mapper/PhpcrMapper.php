@@ -463,6 +463,20 @@ class PhpcrMapper extends RlpMapper
         $currentRouteNode = $newRouteNode->getPropertyValue('sulu:content');
         $contentNode = $currentRouteNode->getPropertyValue('sulu:content');
 
+        // change other history connections
+        $this->loadPathNodeByContent(
+            $currentRouteNode,
+            function ($resourceLocator, NodeInterface $node) use (&$newRouteNode) {
+                if ($node->getPropertyValue('sulu:history') === true) {
+                    $node->setProperty('sulu:content', $newRouteNode);
+                }
+                return false;
+            },
+            $webspaceKey,
+            $languageCode,
+            $segmentKey
+        );
+
         // change history
         $newRouteNode->setProperty('sulu:history', false);
         $currentRouteNode->setProperty('sulu:history', true);

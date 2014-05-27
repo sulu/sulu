@@ -493,9 +493,18 @@ class PhpcrMapperTest extends PhpcrTestCase
         $session->save();
 
         // move route
-        $this->rlpMapper->move('/news', '/test', 'default', 'de');
+        $this->rlpMapper->move('/news', '/asdf', 'default', 'de');
         $session->save();
         $session->refresh(false);
+
+        // move route
+        $this->rlpMapper->move('/asdf', '/test', 'default', 'de');
+        $session->save();
+        $session->refresh(false);
+
+        // load history
+        $result = $this->rlpMapper->loadHistoryByContentUuid($this->content2->getIdentifier(), 'default', 'de');
+        $this->assertEquals(2, sizeof($result));
 
         $news = $rootNode->getNode('news');
         $news1 = $rootNode->getNode('news/news-1');
@@ -534,7 +543,9 @@ class PhpcrMapperTest extends PhpcrTestCase
         // load history
         $result = $this->rlpMapper->loadHistoryByContentUuid($this->content2->getIdentifier(), 'default', 'de');
 
-        $this->assertEquals(1, sizeof($result));
+        $this->assertEquals(2, sizeof($result));
         $this->assertEquals('/test', $result[0]->getResourceLocator());
+        $this->assertTrue($result[0]->getCreated() > $result[1]->getCreated());
+        $this->assertEquals('/asdf', $result[1]->getResourceLocator());
     }
 }
