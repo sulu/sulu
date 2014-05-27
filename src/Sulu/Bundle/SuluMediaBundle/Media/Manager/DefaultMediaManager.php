@@ -428,7 +428,7 @@ class DefaultMediaManager implements MediaManagerInterface
          */
         // Update Old Meta
         if ($fileVersion->getMeta()) {
-            foreach ($fileVersion->getMeta() as &$oldMeta) {
+            foreach ($fileVersion->getMeta() as $oldMeta) {
                 foreach ($metaList as $key => $meta) {
                     if (isset($meta['locale']) && $oldMeta->getLocale() == $meta['locale']) {
                         if (isset($meta['title'])) {
