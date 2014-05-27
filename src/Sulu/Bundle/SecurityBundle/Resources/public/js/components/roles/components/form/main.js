@@ -83,7 +83,7 @@ define([], function() {
                 this.sandbox.emit('sulu.roles.list');
             }, this);
 
-            this.sandbox.on('husky.select.system.selected.item', function(value) {
+            this.sandbox.on('husky.select.system.selected.item', function() {
                 // FIXME correct after selection component has been fixed (https://github.com/massiveart/husky/issues/310)
                 this.initializeMatrix(this.sandbox.dom.data('#system', 'selection-values')[0]);
             }.bind(this));
@@ -285,6 +285,12 @@ define([], function() {
                 this.setHeaderBar(false);
             }.bind(this), 'input');
             this.sandbox.on('husky.matrix.changed', function() {
+                this.setHeaderBar(false);
+            }.bind(this));
+            this.sandbox.on('husky.select.system.selected.item', function(value) {
+                this.setHeaderBar(false);
+            }.bind(this));
+            this.sandbox.on('husky.select.security-type.selected.item', function(value) {
                 this.setHeaderBar(false);
             }.bind(this));
         }
