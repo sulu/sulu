@@ -414,7 +414,8 @@ class PhpcrMapperTest extends PhpcrTestCase
         $this->rlpMapper->save($this->content1, '/news/news-1/sub-1', 'default', 'de');
         $this->rlpMapper->save($this->content1, '/news/news-1/sub-2', 'default', 'de');
 
-// FIXME issue: https://github.com/jackalope/jackalope-jackrabbit/issues/87
+// FIXME  issue: https://github.com/jackalope/jackalope/issues/227
+// FIXME  pr: https://github.com/jackalope/jackalope/pull/228
 //        $this->rlpMapper->save($this->content1, '/news/news-2', 'default', 'de');
 //        $this->rlpMapper->save($this->content1, '/news/news-2/sub-1', 'default', 'de');
 //        $this->rlpMapper->save($this->content1, '/news/news-2/sub-2', 'default', 'de');
@@ -451,7 +452,8 @@ class PhpcrMapperTest extends PhpcrTestCase
         $this->rlpMapper->save($this->content1, '/news', 'default', 'de');
         $this->rlpMapper->save($this->content1, '/news/news-1', 'default', 'de');
 
-// FIXME issue: https://github.com/jackalope/jackalope-jackrabbit/issues/87
+// FIXME  issue: https://github.com/jackalope/jackalope/issues/227
+// FIXME  pr: https://github.com/jackalope/jackalope/pull/228
 //        $this->rlpMapper->save($this->content1, '/news/news-1/sub-1', 'default', 'de');
 //        $this->rlpMapper->save($this->content1, '/news/news-1/sub-2', 'default', 'de');
 //
@@ -480,7 +482,8 @@ class PhpcrMapperTest extends PhpcrTestCase
         $this->rlpMapper->save($this->content2, '/news', 'default', 'de');
         $this->rlpMapper->save($this->content1, '/news/news-1', 'default', 'de');
 
-// FIXME issue: https://github.com/jackalope/jackalope-jackrabbit/issues/87
+// FIXME  issue: https://github.com/jackalope/jackalope/issues/227
+// FIXME  pr: https://github.com/jackalope/jackalope/pull/228
 //        $this->rlpMapper->save($this->content1, '/news/news-1/sub-1', 'default', 'de');
 //        $this->rlpMapper->save($this->content1, '/news/news-1/sub-2', 'default', 'de');
 //
