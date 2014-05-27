@@ -72,6 +72,7 @@ define(function() {
             } else {
                 throw 'display type wrong';
             }
+            this.startMediaEdit();
         },
 
         /**
@@ -196,6 +197,20 @@ define(function() {
                     }
                 ]);
             }.bind(this));
-        }
+        },
+
+        /**
+         * Starts the media-edit-component
+         */
+        startMediaEdit: function() {
+            var $container = this.sandbox.dom.createElement('</div>');
+            this.sandbox.dom.append(this.$el, $container);
+            this.sandbox.start([{
+                name: 'collections/components/media-edit@sulumedia',
+                options: {
+                    el: $container
+                }
+            }]);
+        },
     };
 });
