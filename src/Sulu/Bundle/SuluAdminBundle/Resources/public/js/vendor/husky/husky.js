@@ -25848,20 +25848,27 @@ define('type/husky-select',[
     return function($el, options) {
         var defaults = {
                 id: 'id',
-                label: 'value'
+                label: 'value',
+                required: false
             },
 
             typeInterface = {
                 setValue: function(data) {
 
-                    if(!data){
+                    if (data === undefined || data === '') {
                         return;
                     }
 
-                    this.$el.data({
-                        'selection': data[this.options.id],
-                        'selectionValues': data[this.options.label]
-                    }).trigger('data-changed');
+                    if (typeof data === 'object') {
+                        this.$el.data({
+                            'selection': data[this.options.id],
+                            'selectionValues': data[this.options.label]
+                        }).trigger('data-changed');
+                    } else {
+                        this.$el.data({
+                            'selection': data
+                        }).trigger('data-changed');
+                    }
                 },
 
                 getValue: function() {
@@ -25877,11 +25884,12 @@ define('type/husky-select',[
                 },
 
                 needsValidation: function() {
-                    return false;
+                    return this.options.required;
                 },
 
                 validate: function() {
-                    return true;
+                    var value = this.getValue();
+                    return !!value.id;
                 }
             };
 
@@ -35164,6 +35172,8 @@ define('__component__$select@husky',[], function() {
 
         initialize: function() {
 
+            var selectedIds;
+
             this.sandbox.logger.log('initialize', this);
             this.options = this.sandbox.util.extend({}, defaults, this.options);
 
@@ -35173,10 +35183,22 @@ define('__component__$select@husky',[], function() {
             }
 
             this.selection = [];
-
             this.selectedElements = [];
             this.selectedElementsValues = [];
             this.dropdownVisible = false;
+
+            // when preselected elements is not set via options look in data-attribute
+            if(!this.options.preSelectedElements || this.options.preSelectedElements.length === 0) {
+                selectedIds = this.sandbox.dom.data(this.$el, 'selection');
+
+                if (typeof selectedIds === 'string') {
+                    this.options.preSelectedElements = selectedIds.split(',');
+                } else if (Array.isArray(selectedIds)) {
+                    this.options.preSelectedElements = selectedIds.map(String);
+                } else if (typeof selectedIds === 'number') {
+                    this.options.preSelectedElements.push(selectedIds.toString());
+                }
+            }
 
             this.render();
             this.sandbox.emit(EVENT_INITIALIZED.call(this));
@@ -35300,14 +35322,14 @@ define('__component__$select@husky',[], function() {
             if (items.length > 0) {
                 if (typeof(items[0]) === 'string') {
                     this.sandbox.util.each(items, function(index, value) {
-                        this.addDropdownElement(index, value);
+                        this.addDropdownElement(index, this.sandbox.translate(value));
                     }.bind(this));
                 } else if (typeof(items[0]) === 'object') {
                     this.sandbox.util.each(items, function(index, value) {
                         if (value.divider === true) {
                             this.addDivider();
                         } else {
-                            this.addDropdownElement(value.id, value[this.options.valueName], !!value.disabled, value.callback, value.updateLabel);
+                            this.addDropdownElement(value.id, this.sandbox.translate(value[this.options.valueName]), !!value.disabled, value.callback, this.sandbox.translate(value.updateLabel));
                         }
 
                     }.bind(this));
@@ -35370,7 +35392,11 @@ define('__component__$select@husky',[], function() {
                 this.selectedElements.push(selectedIds.toString());
             }
 
-            this.selectedElementsValues = selectedValues.split(',');
+            if(typeof selectedValues === 'string') {
+                this.selectedElementsValues = selectedValues.split(',');
+            } else if(!!Array.isArray(selectedValues)){
+                this.selectedElementsValues = selectedValues;
+            }
 
             this.sandbox.util.foreach(this.$list, function($el) {
                 id = this.sandbox.dom.data($el, 'id') || '';
