@@ -188,11 +188,7 @@ class NodeRepository implements NodeRepositoryInterface
     {
         $nodes = $this->getMapper()->loadByParent($parent, $webspaceKey, $languageCode, $depth, $flat, false, $excludeGhosts);
 
-        if ($parent != null) {
-            $parentNode = $this->getMapper()->load($parent, $webspaceKey, $languageCode);
-        } else {
-            $parentNode = $this->getMapper()->loadStartPage($webspaceKey, $languageCode);
-        }
+        $parentNode = $this->getParentNode($parent, $webspaceKey, $languageCode);
         $result = $this->prepareNode($parentNode, $webspaceKey, $languageCode, 1, $complete, $excludeGhosts);
         $result['_embedded'] = $this->prepareNodesTree($nodes, $webspaceKey, $languageCode, $complete, $excludeGhosts);
         $result['total'] = sizeof($result['_embedded']);
@@ -314,11 +310,7 @@ class NodeRepository implements NodeRepositoryInterface
         $nodes = $this->getMapper()->loadBySql2($sql2, $languageCode, $webspaceKey, $limit);
 
         if ($api) {
-            if ($parent != null) {
-                $parentNode = $this->getMapper()->load($parent, $webspaceKey, $languageCode);
-            } else {
-                $parentNode = $this->getMapper()->loadStartPage($webspaceKey, $languageCode);
-            }
+            $parentNode = $this->getParentNode($parent, $webspaceKey, $languageCode);
             $result = $this->prepareNode($parentNode, $webspaceKey, $languageCode, 1, false);
             $result['_embedded'] = $this->prepareNodesTree($nodes, $webspaceKey, $languageCode, false);
             $result['total'] = sizeof($result['_embedded']);
@@ -326,6 +318,22 @@ class NodeRepository implements NodeRepositoryInterface
             return $result;
         } else {
             return $nodes;
+        }
+    }
+
+    /**
+     * if parent is null return home page else the page with given uuid
+     * @param string|null $parent uuid of parent node
+     * @param string $webspaceKey
+     * @param string $languageCode
+     * @return StructureInterface
+     */
+    private function getParentNode($parent, $webspaceKey, $languageCode)
+    {
+        if ($parent != null) {
+            return $this->getMapper()->load($parent, $webspaceKey, $languageCode);
+        } else {
+            return $this->getMapper()->loadStartPage($webspaceKey, $languageCode);
         }
     }
 
