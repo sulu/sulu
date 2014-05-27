@@ -21,6 +21,7 @@ use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * handles content nodes
@@ -32,37 +33,40 @@ class NodeController extends RestController implements ClassResourceInterface
 
     /**
      * returns language code from request
+     * @param Request $request
      * @return string
      */
-    private function getLanguage()
+    private function getLanguage(Request $request)
     {
-        return $this->getRequestParameter($this->getRequest(), 'language', true);
+        return $this->getRequestParameter($request, 'language', true);
     }
 
     /**
      * returns webspace key from request
+     * @param Request $request
      * @return string
      */
-    private function getWebspace()
+    private function getWebspace(Request $request)
     {
-        return $this->getRequestParameter($this->getRequest(), 'webspace', true);
+        return $this->getRequestParameter($request, 'webspace', true);
     }
 
     /**
      * returns entry point (webspace as node)
+     * @param \Symfony\Component\HttpFoundation\Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function entryAction()
+    public function entryAction(Request $request)
     {
-        $language = $this->getLanguage();
-        $webspace = $this->getWebspace();
+        $language = $this->getLanguage($request);
+        $webspace = $this->getWebspace($request);
 
-        $depth = $this->getRequestParameter($this->getRequest(), 'depth', false, 1);
-        $ghostContent = $this->getBooleanRequestParameter($this->getRequest(), 'ghost-content', false, false);
+        $depth = $this->getRequestParameter($request, 'depth', false, 1);
+        $ghostContent = $this->getBooleanRequestParameter($request, 'ghost-content', false, false);
 
         $view = $this->responseGetById(
             '',
-            function ($id) use ($language, $webspace, $depth, $ghostContent) {
+            function () use ($language, $webspace, $depth, $ghostContent) {
                 try {
                     return $this->getRepository()->getWebspaceNode(
                         $webspace,
@@ -81,20 +85,21 @@ class NodeController extends RestController implements ClassResourceInterface
 
     /**
      * returns a content item with given UUID as JSON String
-     * @param $uuid
+     * @param Request $request
+     * @param string $uuid
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getAction($uuid)
+    public function getAction(Request $request, $uuid)
     {
         if ($uuid === 'tree') {
-            return $this->cgetTree();
+            return $this->cgetTree($request);
         }
 
-        $language = $this->getLanguage();
-        $webspace = $this->getWebspace();
-        $breadcrumb = $this->getBooleanRequestParameter($this->getRequest(), 'breadcrumb', false, false);
-        $complete = $this->getBooleanRequestParameter($this->getRequest(), 'complete', false, true);
-        $ghostContent = $this->getBooleanRequestParameter($this->getRequest(), 'ghost-content', false, false);
+        $language = $this->getLanguage($request);
+        $webspace = $this->getWebspace($request);
+        $breadcrumb = $this->getBooleanRequestParameter($request, 'breadcrumb', false, false);
+        $complete = $this->getBooleanRequestParameter($request, 'complete', false, true);
+        $ghostContent = $this->getBooleanRequestParameter($request, 'ghost-content', false, false);
 
         $view = $this->responseGetById(
             $uuid,
@@ -119,12 +124,13 @@ class NodeController extends RestController implements ClassResourceInterface
 
     /**
      * return a tree for given path
+     * @param \Symfony\Component\HttpFoundation\Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function cgetTree()
+    public function cgetTree(Request $request)
     {
-        $language = $this->getLanguage();
-        $webspace = $this->getWebspace();
+        $language = $this->getLanguage($request);
+        $webspace = $this->getWebspace($request);
         $excludeGhosts = $this->getBooleanRequestParameter($this->getRequest(), 'exclude-ghosts', false, false);
 
         $uuid = $this->getRequest()->get('uuid');
@@ -149,12 +155,13 @@ class NodeController extends RestController implements ClassResourceInterface
 
     /**
      * returns a content item for startpage
+     * @param \Symfony\Component\HttpFoundation\Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
-        $language = $this->getLanguage();
-        $webspace = $this->getWebspace();
+        $language = $this->getLanguage($request);
+        $webspace = $this->getWebspace($request);
 
         $result = $this->getRepository()->getIndexNode($webspace, $language);
 
@@ -163,12 +170,13 @@ class NodeController extends RestController implements ClassResourceInterface
 
     /**
      * returns all content items as JSON String
+     * @param \Symfony\Component\HttpFoundation\Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function cgetAction()
+    public function cgetAction(Request $request)
     {
-        $language = $this->getLanguage();
-        $webspace = $this->getWebspace();
+        $language = $this->getLanguage($request);
+        $webspace = $this->getWebspace($request);
         $excludeGhosts = $this->getBooleanRequestParameter($this->getRequest(), 'exclude-ghosts', false, false);
 
         $parentUuid = $this->getRequest()->get('parent');
@@ -187,13 +195,14 @@ class NodeController extends RestController implements ClassResourceInterface
 
     /**
      * returns history of resourcelocator of given node
+     * @param \Symfony\Component\HttpFoundation\Request $request
      * @param string $uuid
      * @return JsonResponse
      */
-    public function cgetHistoryAction($uuid)
+    public function cgetHistoryAction(Request $request, $uuid)
     {
-        $languageCode = $this->getLanguage();
-        $webspaceKey = $this->getWebspace();
+        $languageCode = $this->getLanguage($request);
+        $webspaceKey = $this->getWebspace($request);
         $result = $this->getRepository()->getHistory($uuid, $webspaceKey, $languageCode);
 
         return $this->handleView(
@@ -203,17 +212,20 @@ class NodeController extends RestController implements ClassResourceInterface
 
     /**
      * Returns the title of the pages for a given smart content configuration
+     * @param \Symfony\Component\HttpFoundation\Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function filterAction()
+    public function filterAction(Request $request)
     {
         // load data from request
-        $dataSource = $this->getRequestParameter($this->getRequest(), 'dataSource');
-        $includeSubFolders = $this->getBooleanRequestParameter($this->getRequest(), 'includeSubFolders', false, false);
-        $limitResult = $this->getRequestParameter($this->getRequest(), 'limitResult');
-        $tagNames = $this->getRequestParameter($this->getRequest(), 'tags');
-        $sortBy = $this->getRequestParameter($this->getRequest(), 'sortBy');
-        $sortMethod = $this->getRequestParameter($this->getRequest(), 'sortMethod', false, 'asc');
+        $dataSource = $this->getRequestParameter($request, 'dataSource');
+        $includeSubFolders = $this->getBooleanRequestParameter($request, 'includeSubFolders', false, false);
+        $limitResult = $this->getRequestParameter($request, 'limitResult');
+        $tagNames = $this->getRequestParameter($request, 'tags');
+        $sortBy = $this->getRequestParameter($request, 'sortBy');
+        $sortMethod = $this->getRequestParameter($request, 'sortMethod', false, 'asc');
+        $webspaceKey = $this->getWebspace($request);
+        $languageCode = $this->getLanguage($request);
 
         // resolve tag names
         $resolvedTags = array();
@@ -249,8 +261,6 @@ class NodeController extends RestController implements ClassResourceInterface
             'sortMethod' => $sortMethod
         );
 
-        $webspaceKey = $this->getWebspace();
-        $languageCode = $this->getLanguage();
 
         $content = $this->get('sulu_content.node_repository')->getFilteredNodes(
             $filterConfig,
@@ -265,19 +275,20 @@ class NodeController extends RestController implements ClassResourceInterface
 
     /**
      * saves node with given uuid and data
-     * @param $uuid
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param string $uuid
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function putAction($uuid)
+    public function putAction(Request $request, $uuid)
     {
         if ($uuid === 'index') {
-            return $this->putIndex();
+            return $this->putIndex($request);
         }
 
-        $language = $this->getLanguage();
-        $webspace = $this->getWebspace();
-        $template = $this->getRequestParameter($this->getRequest(), 'template', true);
-        $navigation = $this->getRequestParameter($this->getRequest(), 'navigation');
+        $language = $this->getLanguage($request);
+        $webspace = $this->getWebspace($request);
+        $template = $this->getRequestParameter($request, 'template', true);
+        $navigation = $this->getRequestParameter($request, 'navigation');
         if ($navigation === false || $navigation === '0') {
             $navigation = false;
         } else {
@@ -309,14 +320,15 @@ class NodeController extends RestController implements ClassResourceInterface
 
     /**
      * put index page
+     * @param \Symfony\Component\HttpFoundation\Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    private function putIndex()
+    private function putIndex(Request $request)
     {
-        $language = $this->getLanguage();
-        $webspace = $this->getWebspace();
-        $template = $this->getRequestParameter($this->getRequest(), 'template', true);
-        $data = $this->getRequest()->request->all();
+        $language = $this->getLanguage($request);
+        $webspace = $this->getWebspace($request);
+        $template = $this->getRequestParameter($request, 'template', true);
+        $data = $request->request->all();
 
         try {
             if ($data['url'] != '/') {
@@ -343,16 +355,17 @@ class NodeController extends RestController implements ClassResourceInterface
 
     /**
      * Updates a content item and returns result as JSON String
+     * @param \Symfony\Component\HttpFoundation\Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function postAction()
+    public function postAction(Request $request)
     {
-        $language = $this->getLanguage();
-        $webspace = $this->getWebspace();
-        $template = $this->getRequestParameter($this->getRequest(), 'template', true);
-        $navigation = $this->getRequestParameter($this->getRequest(), 'navigation');
-        $parent = $this->getRequestParameter($this->getRequest(), 'parent');
-        $data = $this->getRequest()->request->all();
+        $language = $this->getLanguage($request);
+        $webspace = $this->getWebspace($request);
+        $template = $this->getRequestParameter($request, 'template', true);
+        $navigation = $this->getRequestParameter($request, 'navigation');
+        $parent = $this->getRequestParameter($request, 'parent');
+        $data = $request->request->all();
 
         if ($navigation === '0') {
             $navigation = false;
@@ -380,13 +393,14 @@ class NodeController extends RestController implements ClassResourceInterface
 
     /**
      * deletes node with given uuid
-     * @param $uuid
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param string $uuid
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function deleteAction($uuid)
+    public function deleteAction(Request $request, $uuid)
     {
-        $language = $this->getLanguage();
-        $webspace = $this->getWebspace();
+        $language = $this->getLanguage($request);
+        $webspace = $this->getWebspace($request);
 
         $view = $this->responseDelete(
             $uuid,
