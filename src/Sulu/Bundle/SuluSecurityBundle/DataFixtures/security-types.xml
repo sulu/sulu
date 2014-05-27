@@ -1,9 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <security-types>
-    <security-type>
-        <name>Security Type 1</name>
-    </security-type>
-    <security-type>
-        <name>Security Type 2</name>
-    </security-type>
+
 </security-types>
