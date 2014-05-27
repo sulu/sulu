@@ -12,8 +12,9 @@ use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Sulu\Bundle\SecurityBundle\Entity\SecurityType;
+use Symfony\Component\DependencyInjection\ContainerAware;
 
-class LoadSecurityTypes implements FixtureInterface, OrderedFixtureInterface
+class LoadSecurityTypes extends ContainerAware implements FixtureInterface, OrderedFixtureInterface
 {
     /**
      * {@inheritDoc}
@@ -25,7 +26,7 @@ class LoadSecurityTypes implements FixtureInterface, OrderedFixtureInterface
         $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
         $i = 1;
 
-        $file = dirname(__FILE__) . '/../security-types.xml';
+        $file = $this->container->getParameter('sulu_security.security_types.fixture');
         $doc = new DOMDocument();
         $doc->load($file);
 
