@@ -74,6 +74,11 @@ define(function () {
                 this.sandbox.emit('husky.dropzone.'+ this.options.instanceName +'.open-data-source');
             }.bind(this));
 
+           // open edit overlay on datagrid click
+            this.sandbox.on('husky.datagrid.item.click', function(id) {
+                this.sandbox.emit('sulu.media-edit.edit', id);
+            }.bind(this));
+
             // delete clicked
             this.sandbox.on('sulu.list-toolbar.delete', this.deleteMedia.bind(this));
         },
