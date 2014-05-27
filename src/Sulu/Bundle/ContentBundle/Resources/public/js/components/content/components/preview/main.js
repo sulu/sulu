@@ -206,9 +206,9 @@ define([], function() {
 
                 this.$toolbar = this.sandbox.dom.$([
                     '<div id="preview-toolbar" class="preview-toolbar">',
-                    '<div id="', constants.toolbarLeft, '" class="left pointer collapsed"><span class="icon-chevron-left"></span></div>',
+                    '<div id="', constants.toolbarLeft, '" class="left pointer collapsed"><span class="fa-chevron-left"></span></div>',
                     '<div id="', constants.toolbarRight, '" class="right">',
-                    '<div id="', constants.toolbarNewWindow, '" class="new-window pull-right pointer"><span class="icon-disk-export"></span></div>',
+                    '<div id="', constants.toolbarNewWindow, '" class="new-window pull-right pointer"><span class="fa-external-link"></span></div>',
                     '<div id="', constants.toolbarResolutions, '" class="resolutions pull-right pointer">',
                     '<label class="drop-down-trigger">',
                     '<span class="dropdown-label">', resolutionsLabel, '</span>',
@@ -365,8 +365,8 @@ define([], function() {
                 this.sandbox.dom.removeClass($target, 'collapsed');
                 this.sandbox.dom.addClass($target, 'expanded');
 
-                this.sandbox.dom.addClass($span, 'icon-chevron-right');
-                this.sandbox.dom.removeClass($span, 'icon-chevron-left');
+                this.sandbox.dom.addClass($span, 'fa-chevron-right');
+                this.sandbox.dom.removeClass($span, 'fa-chevron-left');
 
                 this.sandbox.emit(EXPANDING);
                 this.isExpanded = true;
@@ -401,8 +401,8 @@ define([], function() {
                 this.sandbox.dom.removeClass($target, 'expanded');
                 this.sandbox.dom.addClass($target, 'collapsed');
 
-                this.sandbox.dom.removeClass($span, 'icon-chevron-right');
-                this.sandbox.dom.addClass($span, 'icon-chevron-left');
+                this.sandbox.dom.removeClass($span, 'fa-chevron-right');
+                this.sandbox.dom.addClass($span, 'fa-chevron-left');
 
                 this.sandbox.emit(COLLAPSING);
                 this.isExpanded = false;

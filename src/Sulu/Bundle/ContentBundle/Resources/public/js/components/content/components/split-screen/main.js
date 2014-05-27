@@ -26,7 +26,7 @@ define(['app-config'], function(AppConfig) {
             return[
                 {
                     id: 'exit',
-                    icon: 'remove',
+                    icon: 'times',
                     container: 'left',
                     align: 'left',
                     customClass: 'exit',
@@ -37,7 +37,7 @@ define(['app-config'], function(AppConfig) {
                 },
                 {
                     id: 3,
-                    icon: 'delete',
+                    icon: 'trash-o',
                     container: 'left',
                     align: 'right',
                     customClass: 'delete',
@@ -48,7 +48,7 @@ define(['app-config'], function(AppConfig) {
                 },
                 {
                     id: 'save',
-                    icon: 'floppy-save',
+                    icon: 'floppy-o',
                     container: 'left',
                     align: 'right',
                     customClass: 'save',
