@@ -220,7 +220,7 @@ abstract class RlpStrategy implements RlpStrategyInterface
      */
     public function restoreByPath($path, $webspaceKey, $languageCode, $segmentKey = null)
     {
-        $this->mapper->restoreByPath($path, $webspaceKey, $webspaceKey, $segmentKey);
+        $this->mapper->restoreByPath($path, $webspaceKey, $languageCode, $segmentKey);
     }
 }
 
