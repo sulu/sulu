@@ -13,6 +13,7 @@ namespace Sulu\Bundle\SecurityBundle\Tests\Functional\Controller;
 use DateTime;
 use Doctrine\ORM\Tools\SchemaTool;
 
+use Sulu\Bundle\SecurityBundle\Entity\SecurityType;
 use Sulu\Bundle\TestBundle\Testing\DatabaseTestCase;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
@@ -25,6 +26,16 @@ class RolesControllerTest extends DatabaseTestCase
     protected static $entities;
 
     /**
+     * @var SecurityType
+     */
+    protected static $securityType1;
+
+    /**
+     * @var SecurityType
+     */
+    protected static $securityType2;
+
+    /**
      * @var SchemaTool
      */
     protected static $tool;
@@ -33,11 +44,20 @@ class RolesControllerTest extends DatabaseTestCase
     {
         $this->setUpSchema();
 
+        self::$securityType1 = new SecurityType();
+        self::$securityType1->setName('Security Type 1');
+        self::$em->persist(self::$securityType1);
+
+        self::$securityType2 = new SecurityType();
+        self::$securityType2->setName('Security Type 2');
+        self::$em->persist(self::$securityType2);
+
         $role = new Role();
         $role->setName('Sulu Administrator');
         $role->setSystem('Sulu');
         $role->setCreated(new DateTime());
         $role->setChanged(new DateTime());
+        $role->setSecurityType(self::$securityType1);
         self::$em->persist($role);
 
         $role2 = new Role();
@@ -92,6 +112,7 @@ class RolesControllerTest extends DatabaseTestCase
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Role'),
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Group'),
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\UserGroup'),
+            self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\SecurityType'),
         );
 
         self::$tool->dropSchema(self::$entities);
@@ -137,6 +158,7 @@ class RolesControllerTest extends DatabaseTestCase
         $this->assertEquals(false, $response->permissions[1]->permissions->archive);
         $this->assertEquals(false, $response->permissions[1]->permissions->live);
         $this->assertEquals(true, $response->permissions[1]->permissions->security);
+        $this->assertEquals('Security Type 1', $response->securityType->name);
     }
 
     public function testPost()
@@ -174,6 +196,9 @@ class RolesControllerTest extends DatabaseTestCase
                             'security' => false
                         )
                     )
+                ),
+                'securityType' => array(
+                    'id' => 2
                 )
             )
         );
@@ -199,6 +224,7 @@ class RolesControllerTest extends DatabaseTestCase
         $this->assertEquals(false, $response->permissions[1]->permissions->archive);
         $this->assertEquals(false, $response->permissions[1]->permissions->live);
         $this->assertEquals(false, $response->permissions[1]->permissions->security);
+        $this->assertEquals('Security Type 1', $response->securityType->name);
 
         $client->request(
             'GET',
@@ -226,6 +252,7 @@ class RolesControllerTest extends DatabaseTestCase
         $this->assertEquals(false, $response->permissions[1]->permissions->archive);
         $this->assertEquals(false, $response->permissions[1]->permissions->live);
         $this->assertEquals(false, $response->permissions[1]->permissions->security);
+        $this->assertEquals('Security Type 2', $response->securityType->name);
     }
 
     public function testPut()
@@ -277,6 +304,9 @@ class RolesControllerTest extends DatabaseTestCase
                             'security' => true
                         )
                     )
+                ),
+                'securityType' => array(
+                    'id' => 2
                 )
             )
         );
@@ -309,6 +339,7 @@ class RolesControllerTest extends DatabaseTestCase
         $this->assertEquals(true, $response->permissions[2]->permissions->archive);
         $this->assertEquals(true, $response->permissions[2]->permissions->live);
         $this->assertEquals(true, $response->permissions[2]->permissions->security);
+        $this->assertEquals('Security Type 2', $response->securityType->name);
 
         $client->request(
             'GET',
@@ -342,6 +373,7 @@ class RolesControllerTest extends DatabaseTestCase
         $this->assertEquals(true, $response->permissions[2]->permissions->archive);
         $this->assertEquals(true, $response->permissions[2]->permissions->live);
         $this->assertEquals(true, $response->permissions[2]->permissions->security);
+        $this->assertEquals('Security Type 2', $response->securityType->name);
     }
 
     public function testPutNotExisting()
