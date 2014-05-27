@@ -74,7 +74,7 @@ define([
                                 defaultLabel: App.translate('sulu.content.add-type'),
                                 fixedLabel: true,
                                 style: 'action',
-                                icon: 'circle-plus',
+                                icon: 'plus-circle',
                                 data: (selectData.length > 1 ? selectData : []),
                                 selectCallback: function(item) {
                                     this.addChild(item, {}, true);

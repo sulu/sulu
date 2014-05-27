@@ -29,7 +29,7 @@ define([], function() {
                 '   <span id="' + options.ids.tree + '" class="grey-font"></span>',
                 '   <input type="text" id="' + options.ids.input + '" class="form-element"/>',
                 '   <span class="show pointer small-font" id="', options.ids.toggle, '">',
-                '       <span class="icon-history icon"></span>',
+                '       <span class="fa-history icon"></span>',
                 '       <span>', options.showHistoryText, '</span>',
                 '   </span>',
                 '   <div class="loader" id="', options.ids.loader, '"></div>',

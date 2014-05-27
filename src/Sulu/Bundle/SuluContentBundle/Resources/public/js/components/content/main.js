@@ -21,7 +21,7 @@ define([
                 return {
                     'id': 'publish',
                     'title': this.sandbox.translate('toolbar.state-publish'),
-                    'icon': 'publish',
+                    'icon': 'husky-publish',
                     'callback': function() {
                         this.changeState(2);
                     }.bind(this)
@@ -31,7 +31,7 @@ define([
                 return {
                     'id': 'test',
                     'title': this.sandbox.translate('toolbar.state-test'),
-                    'icon': 'test',
+                    'icon': 'husky-test',
                     'callback': function() {
                         this.changeState(1);
                     }.bind(this)

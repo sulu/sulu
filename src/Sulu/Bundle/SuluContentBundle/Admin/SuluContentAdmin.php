@@ -30,7 +30,7 @@ class SuluContentAdmin extends Admin
         /** @var Webspace $webspace */
         foreach ($webspaceManager->getWebspaceCollection() as $webspace) {
             $webspaceItem = new NavigationItem($webspace->getName());
-            $webspaceItem->setIcon('globe');
+            $webspaceItem->setIcon('bullseye');
 
             $contentItem = new NavigationItem('navigation.webspaces.content');
             $contentItem->setAction('content/contents/' . $webspace->getKey());

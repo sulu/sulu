@@ -39,7 +39,7 @@ define(function() {
                         },
                         {
                             id: 'template',
-                            icon: 'brush',
+                            icon: 'pencil',
                             iconSize: 'large',
                             group: 'left',
                             position: 10,
