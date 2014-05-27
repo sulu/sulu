@@ -64,7 +64,7 @@ class ContactController extends RestController implements ClassResourceInterface
     /**
      * {@inheritdoc}
      */
-    protected $fieldsHidden = array('middleName', 'created', 'changed', 'birthday');
+    protected $fieldsHidden = array('middleName', 'created', 'changed', 'birthday','salutation','formOfAddress','id', 'title','disabled');
 
     /**
      * {@inheritdoc}
@@ -79,7 +79,9 @@ class ContactController extends RestController implements ClassResourceInterface
     /**
      * {@inheritdoc}
      */
-    protected $fieldsTranslationKeys = array();
+    protected $fieldsTranslationKeys = array(
+        'disabled' => 'public.deactivate'
+    );
 
     /**
      * {@inheritdoc}
@@ -217,6 +219,8 @@ class ContactController extends RestController implements ClassResourceInterface
     {
         $firstName = $request->get('firstName');
         $lastName = $request->get('lastName');
+        $disabled = $request->get('disabled');
+        $formOfAddress = $request->get('formOfAddress');
 
         try {
             if ($firstName == null) {
@@ -224,6 +228,12 @@ class ContactController extends RestController implements ClassResourceInterface
             }
             if ($lastName == null) {
                 throw new RestException('There is no last name for the contact');
+            }
+            if (is_null($disabled)) {
+                throw new RestException('There is no disabled flag for the contact');
+            }
+            if (is_null($formOfAddress) || !array_key_exists('id', $formOfAddress)) {
+                throw new RestException('There is no form of address for the contact');
             }
 
             $em = $this->getDoctrine()->getManager();
@@ -292,6 +302,20 @@ class ContactController extends RestController implements ClassResourceInterface
                 foreach ($notes as $noteData) {
                     $this->addNote($contact, $noteData);
                 }
+            }
+
+            $birthday = $request->get('birthday');
+            if (!empty($birthday)) {
+               $contact->setBirthday(new DateTime($birthday));
+            }
+
+            $contact->setFormOfAddress($formOfAddress['id']);
+
+            $contact->setDisabled($disabled);
+
+            $salutation = $request->get('salutation');
+            if (!empty($salutation)) {
+                $contact->setSalutation($salutation);
             }
 
             // handle tags
@@ -371,6 +395,26 @@ class ContactController extends RestController implements ClassResourceInterface
                     && $this->processUrls($contact, $request))
                 ) {
                     throw new RestException('Updating dependencies is not possible', 0);
+                }
+
+                $formOfAddress = $request->get('formOfAddress');
+                if(!is_null($formOfAddress) && array_key_exists('id', $formOfAddress)){
+                    $contact->setFormOfAddress($formOfAddress['id']);
+                }
+
+                $disabled = $request->get('disabled');
+                if(!is_null($disabled)){
+                    $contact->setDisabled($disabled);
+                }
+
+                $salutation = $request->get('salutation');
+                if (!empty($salutation)) {
+                    $contact->setSalutation($salutation);
+                }
+
+                $birthday = $request->get('birthday');
+                if (!empty($birthday)) {
+                    $contact->setBirthday(new DateTime($birthday));
                 }
 
                 $em->flush();

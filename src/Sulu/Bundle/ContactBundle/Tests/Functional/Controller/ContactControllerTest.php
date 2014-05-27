@@ -45,6 +45,9 @@ class ContactControllerTest extends DatabaseTestCase
         $contact->setPosition('CEO');
         $contact->setCreated(new DateTime());
         $contact->setChanged(new DateTime());
+        $contact->setFormOfAddress(1);
+        $contact->setSalutation("Sehr geehrter Herr Dr Mustermann");
+        $contact->setDisabled(0);
 
         $account = new Account();
         $account->setLft(0);
@@ -192,6 +195,11 @@ class ContactControllerTest extends DatabaseTestCase
         $this->assertEquals('Musterstadt', $response->addresses[0]->city);
         $this->assertEquals('Musterland', $response->addresses[0]->state);
         $this->assertEquals('Note', $response->notes[0]->value);
+
+        $this->assertEquals(1, $response->formOfAddress);
+        $this->assertEquals("Sehr geehrter Herr Dr Mustermann", $response->salutation);
+        $this->assertEquals(0, $response->disabled);
+
     }
 
     private function createTestClient() {
@@ -272,6 +280,11 @@ class ContactControllerTest extends DatabaseTestCase
                 'notes' => array(
                     array('value' => 'Note 1'),
                     array('value' => 'Note 2')
+                ),
+                'disabled' => 0,
+                'salutation' => 'Sehr geehrte Frau Dr Mustermann',
+                'formOfAddress' => array(
+                    'id' => 0
                 )
             )
         );
@@ -295,6 +308,10 @@ class ContactControllerTest extends DatabaseTestCase
         $this->assertEquals('Note 1', $response->notes[0]->value);
         $this->assertEquals('Note 2', $response->notes[1]->value);
 
+        $this->assertEquals(0 , $response->formOfAddress);
+        $this->assertEquals('Sehr geehrte Frau Dr Mustermann', $response->salutation);
+        $this->assertEquals(0, $response->disabled);
+
         $client->request('GET', '/api/contacts/' . $response->id);
         $response = json_decode($client->getResponse()->getContent());
 
@@ -314,6 +331,11 @@ class ContactControllerTest extends DatabaseTestCase
         $this->assertEquals('Musterstate', $response->addresses[0]->state);
         $this->assertEquals('Note 1', $response->notes[0]->value);
         $this->assertEquals('Note 2', $response->notes[1]->value);
+        $this->assertEquals(0, $response->disabled);
+
+        $this->assertEquals(0 , $response->formOfAddress);
+        $this->assertEquals('Sehr geehrte Frau Dr Mustermann', $response->salutation);
+        $this->assertEquals(0, $response->disabled);
     }
 
     public function testPost()
@@ -400,6 +422,11 @@ class ContactControllerTest extends DatabaseTestCase
                 'notes' => array(
                     array('value' => 'Note 1'),
                     array('value' => 'Note 2')
+                ),
+                'disabled' => 0,
+                'salutation' => 'Sehr geehrte Frau Dr Mustermann',
+                'formOfAddress' => array(
+                    'id' => 0
                 )
             )
         );
@@ -426,6 +453,10 @@ class ContactControllerTest extends DatabaseTestCase
         $this->assertEquals('Note 1', $response->notes[0]->value);
         $this->assertEquals('Note 2', $response->notes[1]->value);
 
+        $this->assertEquals(0 , $response->formOfAddress);
+        $this->assertEquals('Sehr geehrte Frau Dr Mustermann', $response->salutation);
+        $this->assertEquals(0, $response->disabled);
+
         $client->request('GET', '/api/contacts/' . $response->id);
         $response = json_decode($client->getResponse()->getContent());
 
@@ -447,6 +478,10 @@ class ContactControllerTest extends DatabaseTestCase
         $this->assertEquals('Musterstate', $response->addresses[0]->state);
         $this->assertEquals('Note 1', $response->notes[0]->value);
         $this->assertEquals('Note 2', $response->notes[1]->value);
+
+        $this->assertEquals(0 , $response->formOfAddress);
+        $this->assertEquals('Sehr geehrte Frau Dr Mustermann', $response->salutation);
+        $this->assertEquals(0, $response->disabled);
     }
 
 
@@ -462,6 +497,11 @@ class ContactControllerTest extends DatabaseTestCase
                 'lastName' => 'Mustermann',
                 'title' => 'MSc',
                 'position' => 'Manager',
+                'disabled' => 0,
+                'salutation' => 'Sehr geehrte Frau Dr Mustermann',
+                'formOfAddress' => array(
+                    'id' => 0
+                )
             )
         );
 
@@ -480,6 +520,54 @@ class ContactControllerTest extends DatabaseTestCase
         $this->assertEquals('Mustermann', $response->lastName);
         $this->assertEquals('MSc', $response->title);
         $this->assertEquals('Manager', $response->position);
+    }
+
+    public function testPostWithoutDisabledFlag()
+    {
+        $client = $this->createTestClient();
+
+        $client->request(
+            'POST',
+            '/api/contacts',
+            array(
+                'firstName' => 'Erika',
+                'lastName' => 'Mustermann',
+                'title' => 'MSc',
+                'position' => 'Manager',
+                'salutation' => 'Sehr geehrte Frau Mustermann',
+                'formOfAddress' => array(
+                    'id' => 0
+                )
+            )
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(400, $client->getResponse()->getStatusCode());
+        $this->assertEquals('There is no disabled flag for the contact', $response->message);
+    }
+
+    public function testPostWithoutFormOfAddress()
+    {
+        $client = $this->createTestClient();
+
+        $client->request(
+            'POST',
+            '/api/contacts',
+            array(
+                'firstName' => 'Erika',
+                'lastName' => 'Mustermann',
+                'title' => 'MSc',
+                'position' => 'Manager',
+                'salutation' => 'Sehr geehrte Frau Mustermann',
+                'disabled' => 0
+            )
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(400, $client->getResponse()->getStatusCode());
+        $this->assertEquals('There is no form of address for the contact', $response->message);
     }
 
     public function testPostWithEmptyAdditionalData()
@@ -497,7 +585,12 @@ class ContactControllerTest extends DatabaseTestCase
                 'emails' => array(),
                 'phones' => array(),
                 'notes' => array(),
-                'addresses' => array()
+                'addresses' => array(),
+                'disabled' => 0,
+                'salutation' => 'Sehr geehrte Frau Dr Mustermann',
+                'formOfAddress' => array(
+                    'id' => 0
+                )
             )
         );
 
@@ -508,6 +601,10 @@ class ContactControllerTest extends DatabaseTestCase
         $this->assertEquals('MSc', $response->title);
         $this->assertEquals('Manager', $response->position);
 
+        $this->assertEquals(0, $response->formOfAddress);
+        $this->assertEquals("Sehr geehrte Frau Dr Mustermann", $response->salutation);
+        $this->assertEquals(0, $response->disabled);
+
         $client->request('GET', '/api/contacts/' . $response->id);
         $response = json_decode($client->getResponse()->getContent());
 
@@ -516,6 +613,10 @@ class ContactControllerTest extends DatabaseTestCase
         $this->assertEquals('Mustermann', $response->lastName);
         $this->assertEquals('MSc', $response->title);
         $this->assertEquals('Manager', $response->position);
+
+        $this->assertEquals(0, $response->formOfAddress);
+        $this->assertEquals("Sehr geehrte Frau Dr Mustermann", $response->salutation);
+        $this->assertEquals(0, $response->disabled);
     }
 
     public function testGetListSearch()
@@ -640,6 +741,11 @@ class ContactControllerTest extends DatabaseTestCase
                         'id' => 1,
                         'value' => 'Note 1_1'
                     )
+                ),
+                'disabled' => 0,
+                'salutation' => 'Sehr geehrter John',
+                'formOfAddress' => array(
+                    'id' => 0
                 )
             )
         );
@@ -666,6 +772,10 @@ class ContactControllerTest extends DatabaseTestCase
         $this->assertEquals('Note 1_1', $response->notes[0]->value);
         $this->assertEquals(1, count($response->notes));
 
+        $this->assertEquals(0, $response->formOfAddress);
+        $this->assertEquals('Sehr geehrter John', $response->salutation);
+        $this->assertEquals(0, $response->disabled);
+
         $client->request('GET', '/api/contacts/' . $response->id);
         $response = json_decode($client->getResponse()->getContent());
 
@@ -688,6 +798,10 @@ class ContactControllerTest extends DatabaseTestCase
         $this->assertEquals('Colorado', $response->addresses[0]->state);
         $this->assertEquals('Note 1_1', $response->notes[0]->value);
         $this->assertEquals(1, count($response->notes));
+
+        $this->assertEquals(0, $response->formOfAddress);
+        $this->assertEquals('Sehr geehrter John', $response->salutation);
+        $this->assertEquals(0, $response->disabled);
     }
 
 
@@ -752,6 +866,11 @@ class ContactControllerTest extends DatabaseTestCase
                     array(
                         'value' => 'Note 1_1'
                     )
+                ),
+                'disabled' => 0,
+                'salutation' => 'Sehr geehrter John',
+                'formOfAddress' => array(
+                    'id' => 0
                 )
             )
         );
@@ -773,6 +892,10 @@ class ContactControllerTest extends DatabaseTestCase
         $this->assertEquals('Note 1_1', $response->notes[0]->value);
         $this->assertEquals(1, count($response->notes));
 
+        $this->assertEquals(0, $response->formOfAddress);
+        $this->assertEquals('Sehr geehrter John', $response->salutation);
+        $this->assertEquals(0, $response->disabled);
+
         $client->request('GET', '/api/contacts/' . $response->id);
         $response = json_decode($client->getResponse()->getContent());
 
@@ -790,6 +913,10 @@ class ContactControllerTest extends DatabaseTestCase
         $this->assertEquals('Colorado', $response->addresses[0]->state);
         $this->assertEquals('Note 1_1', $response->notes[0]->value);
         $this->assertEquals(1, count($response->notes));
+
+        $this->assertEquals(0, $response->formOfAddress);
+        $this->assertEquals('Sehr geehrter John', $response->salutation);
+        $this->assertEquals(0, $response->disabled);
     }
 
     public function testPutNoEmail()
@@ -853,6 +980,11 @@ class ContactControllerTest extends DatabaseTestCase
                         'id' => 1,
                         'value' => 'Note 1_1'
                     )
+                ),
+                'disabled' => 0,
+                'salutation' => 'Sehr geehrter John',
+                'formOfAddress' => array(
+                    'id' => 0
                 )
             )
         );
@@ -864,6 +996,10 @@ class ContactControllerTest extends DatabaseTestCase
         $this->assertEquals('MBA', $response->title);
         $this->assertEquals('Manager', $response->position);
         $this->assertEquals(0, count($response->emails));
+
+        $this->assertEquals(0, $response->formOfAddress);
+        $this->assertEquals('Sehr geehrter John', $response->salutation);
+        $this->assertEquals(0, $response->disabled);
     }
 
     public function testPutNewCountryOnlyId()
@@ -926,6 +1062,11 @@ class ContactControllerTest extends DatabaseTestCase
                         'id' => 1,
                         'value' => 'Note 1_1'
                     )
+                ),
+                'disabled' => 0,
+                'salutation' => 'Sehr geehrter John',
+                'formOfAddress' => array(
+                    'id' => 0
                 )
             )
         );
@@ -939,6 +1080,10 @@ class ContactControllerTest extends DatabaseTestCase
         $this->assertEquals(0, count($response->emails));
 
         $this->assertEquals(2, $response->addresses[0]->country->id);
+
+        $this->assertEquals(0, $response->formOfAddress);
+        $this->assertEquals('Sehr geehrter John', $response->salutation);
+        $this->assertEquals(0, $response->disabled);
     }
 
     public function testPutNewAccount()
@@ -1004,6 +1149,11 @@ class ContactControllerTest extends DatabaseTestCase
                         'id' => 1,
                         'value' => 'Note 1_1'
                     )
+                ),
+                'disabled' => 0,
+                'salutation' => 'Sehr geehrter John',
+                'formOfAddress' => array(
+                    'id' => 0
                 )
             )
         );
@@ -1019,6 +1169,10 @@ class ContactControllerTest extends DatabaseTestCase
         $this->assertEquals(2, $response->account->id);
 
         $this->assertEquals(2, $response->addresses[0]->country->id);
+
+        $this->assertEquals(0, $response->formOfAddress);
+        $this->assertEquals('Sehr geehrter John', $response->salutation);
+        $this->assertEquals(0, $response->disabled);
     }
 
     public function testPutNotExisting()
@@ -1048,6 +1202,10 @@ class ContactControllerTest extends DatabaseTestCase
         $this->assertEquals('Mustermann', $response->_embedded[0]->lastName);
         $this->assertEquals('Dr', $response->_embedded[0]->title);
         $this->assertEquals('CEO', $response->_embedded[0]->position);
+
+        $this->assertEquals(1, $response->_embedded[0]->formOfAddress);
+        $this->assertEquals('Sehr geehrter Herr Dr Mustermann', $response->_embedded[0]->salutation);
+        $this->assertEquals(0, $response->_embedded[0]->disabled);
     }
 
     public function testGetListFields()
@@ -1177,6 +1335,11 @@ class ContactControllerTest extends DatabaseTestCase
                         'id' => 1,
                         'value' => 'Note 1_1'
                     )
+                ),
+                'disabled' => 0,
+                'salutation' => 'Sehr geehrter John',
+                'formOfAddress' => array(
+                    'id' => 0
                 )
             )
         );
@@ -1200,6 +1363,10 @@ class ContactControllerTest extends DatabaseTestCase
         $this->assertEquals('Colorado', $response->addresses[0]->state);
         $this->assertEquals('Note 1_1', $response->notes[0]->value);
         $this->assertEquals(1, count($response->notes));
+
+        $this->assertEquals(0, $response->formOfAddress);
+        $this->assertEquals('Sehr geehrter John', $response->salutation);
+        $this->assertEquals(0, $response->disabled);
 
         $client->request(
             'PUT',
@@ -1304,6 +1471,9 @@ class ContactControllerTest extends DatabaseTestCase
         $this->assertEquals('Note 1_1', $response->notes[0]->value);
         $this->assertEquals(1, count($response->notes));
 
+        $this->assertEquals(0, $response->formOfAddress);
+        $this->assertEquals('Sehr geehrter John', $response->salutation);
+        $this->assertEquals(0, $response->disabled);
 
         $client->request('GET', '/api/contacts/' . $response->id);
         $response = json_decode($client->getResponse()->getContent());
@@ -1325,5 +1495,9 @@ class ContactControllerTest extends DatabaseTestCase
         $this->assertEquals('Colorado', $response->addresses[0]->state);
         $this->assertEquals('Note 1_1', $response->notes[0]->value);
         $this->assertEquals(1, count($response->notes));
+
+        $this->assertEquals(0, $response->formOfAddress);
+        $this->assertEquals('Sehr geehrter John', $response->salutation);
+        $this->assertEquals(0, $response->disabled);
     }
 }

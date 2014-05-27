@@ -25,7 +25,6 @@ define([], function() {
         };
 
     return (function() {
-        // FIXME move to this.*
         return {
 
             view: true,
@@ -50,7 +49,7 @@ define([], function() {
                 this.sandbox.once('sulu.contacts.set-defaults', this.setDefaults.bind(this));
                 this.sandbox.once('sulu.contacts.set-types', this.setTypes.bind(this));
 
-                this.$el.html(this.renderTemplate('/admin/contact/template/contact/form'));
+                this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/contact/template/contact/form'));
 
                 this.sandbox.on('husky.dropdown.type.item.click', this.typeClick.bind(this));
 
@@ -103,7 +102,7 @@ define([], function() {
             },
 
             // show tags and activate keylistener
-            setTags: function(data) {
+            setTags: function() {
                 this.dfdFormIsSet.then(function() {
                     this.sandbox.start([
                         {
@@ -149,10 +148,14 @@ define([], function() {
             },
 
             setFormData: function(data) {
+
                 // add collection filters to form
                 this.sandbox.emit('sulu.contact-form.add-collectionfilters', form);
                 this.sandbox.form.setData(form, data).then(function() {
                     this.sandbox.start(form);
+                    this.sandbox.emit('sulu.contact-form.add-required',['email']);
+                }.bind(this)).fail(function(error){
+                    this.sandbox.logger.error("An error occured when setting data!", error);
                     this.sandbox.emit('sulu.contact-form.add-required', ['email']);
                     this.dfdFormIsSet.resolve();
                 }.bind(this));
@@ -194,7 +197,6 @@ define([], function() {
                 this.sandbox.on('sulu.contacts.contacts.saved', function(data) {
                     this.options.data = data;
                     this.initContactData();
-                    this.setFormData(data);
                     this.setHeaderBar(true);
                 }, this);
 
@@ -267,7 +269,6 @@ define([], function() {
                 }
 
                 for (; ++i < length;) {
-
                     // construct the attributes object for fields under and equal the minimum amount
                     if ((i + 1) > minAmount) {
                         attributes = {};
@@ -311,14 +312,6 @@ define([], function() {
                 }
             },
 
-            // checks if el is in next row and adds margin top if necessary
-            checkRowMargin: function(item) {
-                var parent = this.sandbox.dom.parent(item);
-                if (this.sandbox.dom.children(parent).length > 2) {
-                    this.sandbox.dom.addClass(item, 'm-top-20');
-                }
-            },
-
             // @var Bool saved - defines if saved state should be shown
             setHeaderBar: function(saved) {
                 if (saved !== this.saved) {
@@ -339,6 +332,9 @@ define([], function() {
                     this.sandbox.on('sulu.contact-form.changed', function() {
                         this.setHeaderBar(false);
                     }.bind(this));
+                }.bind(this));
+                this.sandbox.on('husky.select.form-of-address.selected.item', function() {
+                    this.setHeaderBar(false);
                 }.bind(this));
             }
         };

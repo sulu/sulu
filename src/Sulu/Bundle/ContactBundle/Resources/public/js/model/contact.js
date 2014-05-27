@@ -32,8 +32,11 @@ define([
                 emails: [],
                 phones: [],
                 notes: [],
-                addresses: []
-            }
+                addresses: [],
+                formOfAddress: '',
+                salutation: '',
+                disabled: false
+            };
         }, relations: [
             {
                 type: HasOne,

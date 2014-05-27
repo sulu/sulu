@@ -120,6 +120,21 @@ class Contact extends ApiEntity
     private $faxes;
 
     /**
+     * @var integer
+     */
+    private $formOfAddress = 0;
+
+    /**
+     * @var string
+     */
+    private $salutation;
+
+    /**
+     * @var integer
+     */
+    private $disabled = 0;
+
+    /**
      * @var \Doctrine\Common\Collections\Collection
      * @Accessor(getter="getTagNameArray")
      */
@@ -626,7 +641,6 @@ class Contact extends ApiEntity
         );
     }
 
-
     /**
      * Add faxes
      *
@@ -665,7 +679,6 @@ class Contact extends ApiEntity
      */
     private $urls;
 
-
     /**
      * Add urls
      *
@@ -675,6 +688,7 @@ class Contact extends ApiEntity
     public function addUrl(\Sulu\Bundle\ContactBundle\Entity\Url $urls)
     {
         $this->urls[] = $urls;
+
         return $this;
     }
 
@@ -707,7 +721,7 @@ class Contact extends ApiEntity
     public function addFaxe(\Sulu\Bundle\ContactBundle\Entity\Fax $faxes)
     {
         $this->faxes[] = $faxes;
-    
+
         return $this;
     }
 
@@ -722,6 +736,19 @@ class Contact extends ApiEntity
     }
 
     /**
+     * Set formOfAddress
+     *
+     * @param integer $formOfAddress
+     * @return Contact
+     */
+    public function setFormOfAddress($formOfAddress)
+    {
+        $this->formOfAddress = $formOfAddress;
+
+        return $this;
+    }
+
+    /**
      * Add tags
      *
      * @param \Sulu\Bundle\TagBundle\Entity\Tag $tags
@@ -730,8 +757,64 @@ class Contact extends ApiEntity
     public function addTag(\Sulu\Bundle\TagBundle\Entity\Tag $tags)
     {
         $this->tags[] = $tags;
-    
+
         return $this;
+    }
+
+    /**
+     * Get formOfAddress
+     *
+     * @return integer
+     */
+    public function getFormOfAddress()
+    {
+        return $this->formOfAddress;
+    }
+
+    /**
+     * Set salutation
+     *
+     * @param string $salutation
+     * @return Contact
+     */
+    public function setSalutation($salutation)
+    {
+        $this->salutation = $salutation;
+
+        return $this;
+    }
+
+    /**
+     * Get salutation
+     *
+     * @return string
+     */
+    public function getSalutation()
+    {
+        return $this->salutation;
+    }
+
+    /**
+     * Set disabled
+     *
+     * @param integer $disabled
+     * @return Contact
+     */
+    public function setDisabled($disabled)
+    {
+        $this->disabled = $disabled;
+
+        return $this;
+    }
+
+    /**
+     * Get disabled
+     *
+     * @return integer
+     */
+    public function getDisabled()
+    {
+        return $this->disabled;
     }
 
     /**
@@ -747,7 +830,7 @@ class Contact extends ApiEntity
     /**
      * Get tags
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getTags()
     {
