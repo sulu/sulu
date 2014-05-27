@@ -9,7 +9,7 @@
 
 /**
  * @class MediaEdit
- * Class which takes ids of medias and shows overlays to edit them
+ * Class which shows overlays for editing media models
  * @constructor
  *
  **/
@@ -65,10 +65,10 @@ define(function () {
 
         /**
          * Shows an overlay to edit a media
-         * @param id {Number|String} id of the media to edit
+         * @param media {Object} the media model
          */
-        editMedia: function(id) {
-            console.log(id);
+        editMedia: function(media) {
+            console.log(media);
         }
     };
 });

@@ -48,6 +48,15 @@ define(function() {
     },
 
     /**
+     * listens on loads the media model for an id and forwards it to another component
+     * @event sulu.media.collections.edit-media
+     * @param id {Number|String} the id of the media to edit
+     */
+    EDIT_MEDIA = function() {
+        return createEventName.call(this, 'edit-media');
+    },
+
+    /**
      * emited after a collection entity got changed
      * @event sulu.media.collections.collection-changed
      * @param {Object} the changed collection object
@@ -86,6 +95,9 @@ define(function() {
 
             // delete media
             this.sandbox.on(DELETE_MEDIA.call(this), this.deleteMedia.bind(this));
+
+            // edit a media
+            this.sandbox.on(EDIT_MEDIA.call(this), this.editMedia.bind(this));
 
             // collection title got changed
             this.sandbox.on('sulu.collection-list.collections.title-changed', function(collectionId, title) {
@@ -157,6 +169,15 @@ define(function() {
 
                 }
             }.bind(this));
+        },
+
+        /**
+         * Takes the id of a media, loads the model and forwards it to
+         * another component
+         * @param id {Number|String} the id of the media
+         */
+        editMedia: function(id) {
+            console.log(id);
         },
 
         /**
