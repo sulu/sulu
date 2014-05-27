@@ -31,44 +31,48 @@ class PreviewController extends Controller
 
     /**
      * returns language code from request
+     * @param \Symfony\Component\HttpFoundation\Request $request
      * @return string
      */
-    private function getLanguageCode()
+    private function getLanguageCode(Request $request)
     {
-        return $this->getRequestParameter($this->getRequest(), 'language', true);
+        return $this->getRequestParameter($request, 'language', true);
     }
 
     /**
      * returns language code from request
+     * @param \Symfony\Component\HttpFoundation\Request $request
      * @return string
      */
-    private function getTemplateKey()
+    private function getTemplateKey(Request $request)
     {
-        return $this->getRequestParameter($this->getRequest(), 'template', true);
+        return $this->getRequestParameter($request, 'template', true);
     }
 
     /**
      * returns webspace key from request
+     * @param \Symfony\Component\HttpFoundation\Request $request
      * @return string
      */
-    private function getWebspaceKey()
+    private function getWebspaceKey(Request $request)
     {
-        return $this->getRequestParameter($this->getRequest(), 'webspace', true);
+        return $this->getRequestParameter($request, 'webspace', true);
     }
 
     /**
      * render content for logged in user with data from FORM
+     * @param \Symfony\Component\HttpFoundation\Request $request
      * @param string $contentUuid
      * @return Response
      */
-    public function renderAction($contentUuid)
+    public function renderAction(Request $request, $contentUuid)
     {
         $uid = $this->getUserId();
         $preview = $this->getPreview();
 
-        $webspaceKey = $this->getWebspaceKey();
-        $languageCode = $this->getLanguageCode();
-        $templateKey = $this->getTemplateKey();
+        $webspaceKey = $this->getWebspaceKey($request);
+        $languageCode = $this->getLanguageCode($request);
+        $templateKey = $this->getTemplateKey($request);
 
         if ($contentUuid === 'index') {
             /** @var ContentMapperInterface $contentMapper */
@@ -97,7 +101,7 @@ class PreviewController extends Controller
                             'language' => $languageCode
                         )
                     ),
-                'wsUrl' => 'ws://' . $this->getRequest()->getHttpHost(),
+                'wsUrl' => 'ws://' . $request->getHttpHost(),
                 'wsPort' => $this->container->getParameter('sulu_content.preview.websocket.port'),
                 'interval' => $this->container->getParameter('sulu_content.preview.fallback.interval'),
                 'contentUuid' => $contentUuid,
@@ -126,18 +130,19 @@ class PreviewController extends Controller
 
     /**
      * updates a property in cache
-     * @param string $contentUuid
      * @param Request $request
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param string $contentUuid
      * @return Response
      */
-    public function updateAction($contentUuid, Request $request)
+    public function updateAction(Request $request, $contentUuid)
     {
         $preview = $this->getPreview();
         $uid = $this->getUserId();
 
-        $webspaceKey = $this->getWebspaceKey();
-        $languageCode = $this->getLanguageCode();
-        $templateKey = $this->getTemplateKey();
+        $webspaceKey = $this->getWebspaceKey($request);
+        $languageCode = $this->getLanguageCode($request);
+        $templateKey = $this->getTemplateKey($request);
 
         if (!$preview->started($uid, $contentUuid, $templateKey, $languageCode)) {
             $preview->start($uid, $contentUuid, $webspaceKey, $templateKey, $languageCode);
@@ -156,14 +161,15 @@ class PreviewController extends Controller
 
     /**
      * returns changes since last request
+     * @param \Symfony\Component\HttpFoundation\Request $request
      * @param string $contentUuid
      * @return Response
      */
-    public function changesAction($contentUuid)
+    public function changesAction(Request $request, $contentUuid)
     {
         $uid = $this->getUserId();
-        $languageCode = $this->getLanguageCode();
-        $templateKey = $this->getTemplateKey();
+        $languageCode = $this->getLanguageCode($request);
+        $templateKey = $this->getTemplateKey($request);
 
         $changes = $this->getPreview()->getChanges($uid, $contentUuid, $templateKey, $languageCode);
 
