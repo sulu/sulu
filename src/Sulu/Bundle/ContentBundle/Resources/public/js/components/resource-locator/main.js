@@ -19,7 +19,8 @@ define([], function() {
 
     var defaults = {
             instanceName: null,
-            url: null
+            url: null,
+            historyApi: null
         },
 
         skeleton = function(options) {
@@ -124,8 +125,10 @@ define([], function() {
             this.sandbox.util.foreach(histories, function(history) {
                 html.push(
                     '<li>' +
+                    '   <span class="options-restore"><i class="fa fa-refresh pointer"></i></span>' +
                     '   <span class="url">' + this.sandbox.util.cropMiddle(history.resourceLocator, 35) +'</span>' +
                     '   <span class="date">' + this.sandbox.date.format(history.created) + '</span>' +
+                    '   <span class="options-delete"><i class="fa fa-trash-o pointer"></i></span>' +
                     '</li>'
                 );
             }.bind(this));
