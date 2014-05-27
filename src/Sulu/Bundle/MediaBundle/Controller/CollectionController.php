@@ -301,7 +301,7 @@ class CollectionController extends RestController implements ClassResourceInterf
         $collectionRestObject = new CollectionRestObject();
         $collectionRestObject->setId($request->get('id'));
         $collectionRestObject->setStyle($request->get('style'));
-        $collectionRestObject->setType($request->get('type', Collection::TYPE_DEFAULT));
+        $collectionRestObject->setType($request->get('type', $this->container->getParameter('sulu_media.collection.type.default')));
         $collectionRestObject->setParent($request->get('parent'));
         $collectionRestObject->setLocale($request->get('locale', $this->getLocale($request->get('locale'))));
         $collectionRestObject->setTitle($request->get('title'));
@@ -327,7 +327,7 @@ class CollectionController extends RestController implements ClassResourceInterf
             $collection->setStyle(json_encode($object->getStyle()));
         } elseif (!$collection->getStyle()) { // if no style was set generate one
             $generatedStyle = array(
-                'type' => 'circle',
+                'type' => $this->container->getParameter('sulu_media.collection.style.type.default'),
                 'color' => Collection::generateColor()
             );
 
