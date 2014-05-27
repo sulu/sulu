@@ -81,6 +81,11 @@ class Role extends ApiEntity
     private $groups;
 
     /**
+     * @var \Sulu\Bundle\SecurityBundle\Entity\SecurityType
+     */
+    private $securityType;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -332,5 +337,28 @@ class Role extends ApiEntity
     public function getGroups()
     {
         return $this->groups;
+    }
+
+    /**
+     * Set securityType
+     *
+     * @param \Sulu\Bundle\SecurityBundle\Entity\SecurityType $securityType
+     * @return Role
+     */
+    public function setSecurityType(\Sulu\Bundle\SecurityBundle\Entity\SecurityType $securityType = null)
+    {
+        $this->securityType = $securityType;
+    
+        return $this;
+    }
+
+    /**
+     * Get securityType
+     *
+     * @return \Sulu\Bundle\SecurityBundle\Entity\SecurityType 
+     */
+    public function getSecurityType()
+    {
+        return $this->securityType;
     }
 }
