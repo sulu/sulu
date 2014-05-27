@@ -111,6 +111,8 @@ class AccountControllerTest extends DatabaseTestCase
         $contact->setCreated(new \DateTime());
         $contact->setChanged(new \DateTime());
         $contact->setAccount(self::$account);
+        $contact->setDisabled(0);
+        $contact->setFormOfAddress(0);
         self::$account->addContact($contact);
 
         $note = new Note();
@@ -1176,7 +1178,8 @@ class AccountControllerTest extends DatabaseTestCase
         $contact->setCreated(new \DateTime());
         $contact->setChanged(new \DateTime());
         $contact->setAccount(self::$account);
-
+        $contact->setDisabled(0);
+        $contact->setFormOfAddress(0);
         self::$em->persist($contact);
         self::$em->flush();
 
@@ -1235,7 +1238,8 @@ class AccountControllerTest extends DatabaseTestCase
             $contact->setCreated(new \DateTime());
             $contact->setChanged(new \DateTime());
             $contact->setAccount(self::$account);
-
+            $contact->setDisabled(0);
+            $contact->setFormOfAddress(0);
             $acc->addContact($contact);
             self::$em->persist($contact);
         }
@@ -1292,6 +1296,8 @@ class AccountControllerTest extends DatabaseTestCase
             $contact->setCreated(new \DateTime());
             $contact->setChanged(new \DateTime());
             $contact->setAccount(self::$account);
+            $contact->setDisabled(0);
+            $contact->setFormOfAddress(0);
             self::$account->addContact($contact);
 
             self::$em->persist($contact);
