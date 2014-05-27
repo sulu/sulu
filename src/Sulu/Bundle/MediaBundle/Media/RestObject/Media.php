@@ -10,16 +10,17 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\RestObject;
 
+use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage;
-use Sulu\Bundle\MediaBundle\Entity\Media;
+use Sulu\Bundle\MediaBundle\Entity\Media as Entity;
 use DateTime;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 
-class MediaRestObject implements RestObject
+class Media extends ApiEntity implements RestObject
 {
 
     /**
@@ -225,7 +226,7 @@ class MediaRestObject implements RestObject
     }
 
     /**
-     * @var Media $object
+     * @var Entity $object
      * {@inheritdoc}
      */
     public function setDataByEntity($object, $locale, $version = null)
