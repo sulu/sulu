@@ -121,14 +121,6 @@ interface NodeRepositoryInterface
      * @param string $uuid
      * @param string $webspaceKey
      * @param string $languageCode
-     * @return array
-     */
-    public function getHistory($uuid, $webspaceKey, $languageCode);
-
-    /**
-     * @param string $uuid
-     * @param string $webspaceKey
-     * @param string $languageCode
      * @param boolean $excludeGhosts
      * @param bool $appendWebspaceNode
      * @return array

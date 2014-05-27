@@ -4,4 +4,4 @@ sulu_content.node:
 
 sulu_content.rl:
     type: rest
-    resource: Sulu\Bundle\ContentBundle\Controller\ResourceLocatorController
+    resource: Sulu\Bundle\ContentBundle\Controller\NodeResourcelocatorController

@@ -27,4 +27,12 @@ interface ResourceLocatorRepositoryInterface
      * @return string
      */
     public function generate($parts, $parentUuid, $uuid, $webspaceKey, $languageCode, $templateKey, $segmentKey = null);
+
+    /**
+     * @param string $uuid
+     * @param string $webspaceKey
+     * @param string $languageCode
+     * @return array
+     */
+    public function getHistory($uuid, $webspaceKey, $languageCode);
 }

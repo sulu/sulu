@@ -13,8 +13,6 @@ namespace Sulu\Bundle\ContentBundle\Repository;
 use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\StructureInterface;
-use Sulu\Component\Content\Types\ResourceLocator;
-use Sulu\Component\Content\Types\ResourceLocatorInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
@@ -45,11 +43,6 @@ class NodeRepository implements NodeRepositoryInterface
     private $userManager;
 
     /**
-     * @var ResourceLocatorInterface
-     */
-    private $resourceLocator;
-
-    /**
      * @var WebspaceManagerInterface
      */
     private $webspaceManager;
@@ -58,14 +51,12 @@ class NodeRepository implements NodeRepositoryInterface
         ContentMapperInterface $mapper,
         SessionManagerInterface $sessionManager,
         UserManagerInterface $userManager,
-        ResourceLocatorInterface $resourceLocator,
         WebspaceManagerInterface $webspaceManager
     )
     {
         $this->mapper = $mapper;
         $this->sessionManager = $sessionManager;
         $this->userManager = $userManager;
-        $this->resourceLocator = $resourceLocator;
         $this->webspaceManager = $webspaceManager;
     }
 
@@ -396,20 +387,6 @@ class NodeRepository implements NodeRepositoryInterface
         return $this->prepareNode($node, $webspaceKey, $languageCode);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getHistory($uuid, $webspaceKey, $languageCode)
-    {
-        $result = $this->resourceLocator->loadHistoryByUuid($uuid, $webspaceKey, $languageCode);
-        return array(
-            '_embedded' => $result,
-            '_links' => array(
-                'self' => $this->apiBasePath . '/' . $uuid . '/history?language=' . $languageCode . '&webspace=' . $webspaceKey
-            ),
-            'total' => sizeof($result)
-        );
-    }
 
     /**
      * {@inheritdoc}
