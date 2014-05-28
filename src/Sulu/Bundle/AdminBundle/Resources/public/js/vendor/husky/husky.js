@@ -1,3 +1,4 @@
+
 /** vim: et:ts=4:sw=4:sts=4
  * @license RequireJS 2.1.9 Copyright (c) 2010-2012, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
@@ -25855,7 +25856,7 @@ define('type/husky-select',[
             typeInterface = {
                 setValue: function(data) {
 
-                    if (data === undefined || data === '') {
+                    if (data === undefined || data === '' || data === null) {
                         return;
                     }
 
@@ -25877,6 +25878,10 @@ define('type/husky-select',[
                         ids = this.$el.data('selection'),
                         values = this.$el.data('selection-values');
 
+                    if (this.$el.attr('data-mapper-property-type') === 'string') {
+                        return Array.isArray(values) ? values[0] : values;
+                    }
+
                     data[this.options.label] = Array.isArray(values) ? values[0] : values;
                     data[this.options.id] = Array.isArray(ids) ? ids[0] : ids;
 
@@ -25889,7 +25894,11 @@ define('type/husky-select',[
 
                 validate: function() {
                     var value = this.getValue();
-                    return !!value.id;
+                    if (typeof value === 'object') {
+                        return !!value.id;
+                    } else {
+                        return value !== '' && typeof value !== 'undefined';
+                    }
                 }
             };
 
@@ -28139,15 +28148,6 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             ].join('')
     },
 
-    /**
-     * raised when clicked on an item
-     * @event husky.datagrid.item.click
-     * @param {String} id of item that was clicked
-     */
-        ITEM_CLICK = function () {
-        return this.datagrid.createEventName.call(this.datagrid, 'item.click');
-    },
-
         /**
          * used to update the table width and its containers due to responsiveness
          * @event husky.datagrid.update.table
@@ -28343,9 +28343,9 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         emitRowClickedEvent: function(event) {
             var id = this.sandbox.dom.$(event.currentTarget).data('id');
             if (!!id) {
-                this.sandbox.emit(ITEM_CLICK.call(this), id);
+                this.datagrid.emitItemClickedEvent.call(this.datagrid, id);
             } else {
-                this.sandbox.emit(ITEM_CLICK.call(this), event);
+                this.datagrid.emitItemClickedEvent.call(this.datagrid, event);
             }
         },
 
@@ -29472,13 +29472,22 @@ define('husky_components/datagrid/decorators/thumbnail-view',[],function() {
          * @param id {Number|String} the identifier of the thumbnail to bind events on
          */
         bindThumbnailDomEvents: function(id) {
-            this.sandbox.dom.on(this.$thumbnails[id], 'change', function() {
+            this.sandbox.dom.on(this.$thumbnails[id], 'change', function(event) {
                 this.toggleItemSelected(id);
             }.bind(this), '.' + constants.checkboxClass);
 
-            this.sandbox.dom.on(this.$thumbnails[id], 'click', function() {
+            this.sandbox.dom.on(this.$thumbnails[id], 'click', function(event) {
+                this.sandbox.dom.stopPropagation(event);
+            }.bind(this), '.' + constants.checkboxClass);
+
+            this.sandbox.dom.on(this.$thumbnails[id], 'click', function(event) {
+                this.sandbox.dom.stopPropagation(event);
                 this.downloadHandler(id);
             }.bind(this), '.' + constants.downloadClass);
+
+            this.sandbox.dom.on(this.$thumbnails[id], 'click', function() {
+                this.datagrid.emitItemClickedEvent.call(this.datagrid, id);
+            }.bind(this));
         },
 
         /**
@@ -30182,6 +30191,15 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              */
                 NUMBER_SELECTIONS = function () {
                 return this.createEventName('number.selections');
+            },
+
+            /**
+             * raised when clicked on an item
+             * @event husky.datagrid.item.click
+             * @param {String} id of item that was clicked
+             */
+                ITEM_CLICK = function () {
+                return this.createEventName('item.click');
             },
 
             /**
@@ -30998,6 +31016,14 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
                     this.gridViews[this.viewId].removeRecord(recordId);
                     this.sandbox.emit(NUMBER_SELECTIONS.call(this), this.getSelectedItemIds().length);
                 }
+            },
+
+            /**
+             * Emits the item clicked event
+             * @param id {Number|String} id to emit with the event
+             */
+            emitItemClickedEvent: function(id) {
+                this.sandbox.emit(ITEM_CLICK.call(this), id);
             },
 
             /**
@@ -34887,7 +34913,7 @@ define('__component__$dependent-select@husky',[],function() {
         checkAllSelected = function() {
             var $lastContainer = this.$find(this.options.container[this.options.container.length-1]),
                 lastSelectElement = this.sandbox.dom.children($lastContainer)[0],
-                selection = this.sandbox.dom.attr(lastSelectElement,'data-selection');
+                selection = this.sandbox.dom.data(lastSelectElement,'selection');
 
             // if last element is selected
             if (!!lastSelectElement && typeof selection !== 'undefined') {
@@ -38129,7 +38155,8 @@ define('__component__$overlay@husky',[], function() {
             cancelDefaultText: 'Cancel',
             okDefaultText: 'Ok',
             languageChanger: null,
-            cssClass: ''
+            cssClass: '',
+            smallHeader: false
         },
 
         internalSlideDefaults = {
@@ -38154,7 +38181,8 @@ define('__component__$overlay@husky',[], function() {
             overlayOkSelector: '.overlay-ok',
             overlayCancelSelector: '.overlay-cancel',
             tabsClass: 'tabs',
-            languageChangerClass: 'language-changer'
+            languageChangerClass: 'language-changer',
+            smallHeaderClass: 'small-header'
         },
 
         types = {
@@ -38211,9 +38239,9 @@ define('__component__$overlay@husky',[], function() {
         },
 
         /** templates for component */
-        templates = {
+            templates = {
             overlaySkeleton: [
-                '<div class="husky-overlay-container <%= skin %> <%= cssClass %> smart-content-overlay">',
+                '<div class="husky-overlay-container <%= overflowClass %> <%= skin %> <%= cssClass %> smart-content-overlay">',
                 '   <div class="slides"></div>',
                 '</div>'
             ].join(''),
@@ -38256,13 +38284,13 @@ define('__component__$overlay@husky',[], function() {
          * namespace for events
          * @type {string}
          */
-        eventNamespace = 'husky.overlay.',
+            eventNamespace = 'husky.overlay.',
 
         /**
          * raised after initialization process
          * @event husky.overlay.<instance-name>.initialize
          */
-        INITIALIZED = function() {
+            INITIALIZED = function() {
             return createEventName.call(this, 'initialized');
         },
 
@@ -38270,7 +38298,7 @@ define('__component__$overlay@husky',[], function() {
          * raised after overlay is opened
          * @event husky.overlay.<instance-name>.opened
          */
-        OPENED = function() {
+            OPENED = function() {
             return createEventName.call(this, 'opened');
         },
 
@@ -38278,7 +38306,7 @@ define('__component__$overlay@husky',[], function() {
          * raised after overlay is closed
          * @event husky.overlay.<instance-name>.closed
          */
-        CLOSED = function() {
+            CLOSED = function() {
             return createEventName.call(this, 'closed');
         },
 
@@ -38286,7 +38314,7 @@ define('__component__$overlay@husky',[], function() {
          * raised after overlay is closing
          * @event husky.overlay.<instance-name>.closing
          */
-        CLOSING = function() {
+            CLOSING = function() {
             return createEventName.call(this, 'closing');
         },
 
@@ -38294,7 +38322,7 @@ define('__component__$overlay@husky',[], function() {
          * used to activate all ok buttons
          * @event husky.overlay.<instance-name>.okbutton.activate
          */
-        OKBUTTON_ACTIVATE = function() {
+            OKBUTTON_ACTIVATE = function() {
             return createEventName.call(this, 'okbutton.activate');
         },
 
@@ -38302,7 +38330,7 @@ define('__component__$overlay@husky',[], function() {
          * used to deactivate all ok buttons
          * @event husky.overlay.<instance-name>.okbutton.deactivate
          */
-        OKBUTTON_DEACTIVATE = function() {
+            OKBUTTON_DEACTIVATE = function() {
             return createEventName.call(this, 'okbutton.deactivate');
         },
 
@@ -38310,7 +38338,7 @@ define('__component__$overlay@husky',[], function() {
          * removes the component
          * @event husky.overlay.<instance-name>.remove
          */
-        REMOVE = function() {
+            REMOVE = function() {
             return createEventName.call(this, 'remove');
         },
 
@@ -38318,7 +38346,7 @@ define('__component__$overlay@husky',[], function() {
          * opens the overlay
          * @event husky.overlay.<instance-name>.open
          */
-        OPEN = function() {
+            OPEN = function() {
             return createEventName.call(this, 'open');
         },
 
@@ -38326,7 +38354,7 @@ define('__component__$overlay@husky',[], function() {
          * closes the overlay
          * @event husky.overlay.<instance-name>.close
          */
-        CLOSE = function() {
+            CLOSE = function() {
             return createEventName.call(this, 'close');
         },
 
@@ -38336,7 +38364,7 @@ define('__component__$overlay@husky',[], function() {
          * @param {String} selected language
          * @param {Object} currently active tab
          */
-        LANGUAGE_CHANGED = function() {
+            LANGUAGE_CHANGED = function() {
             return createEventName.call(this, 'language-changed');
         },
 
@@ -38344,7 +38372,7 @@ define('__component__$overlay@husky',[], function() {
          * slide left
          * @event husky.overlay.<instance-name>.slide-left
          */
-        SLIDE_LEFT = function() {
+            SLIDE_LEFT = function() {
             return createEventName.call(this, 'slide-left');
         },
 
@@ -38352,12 +38380,12 @@ define('__component__$overlay@husky',[], function() {
          * slide right
          * @event husky.overlay.<instance-name>.slide-right
          */
-        SLIDE_RIGHT = function() {
+            SLIDE_RIGHT = function() {
             return createEventName.call(this, 'slide-right');
         },
 
         /** returns normalized event names */
-        createEventName = function(postFix) {
+            createEventName = function(postFix) {
             return eventNamespace + (this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
         };
 
@@ -38544,18 +38572,21 @@ define('__component__$overlay@husky',[], function() {
 
                     this.insertOverlay(false);
 
-                    // set width to n-width
-                    this.overlay.width = this.sandbox.dom.outerWidth(this.overlay.$slides.find('.slide'));
-                    this.sandbox.dom.css(this.overlay.$slides, 'width', (this.slides.length * this.overlay.width) + 'px');
-
                     this.overlay.$content = this.sandbox.dom.find(constants.contentSelector, this.overlay.$el);
-                    var maxHeight = -1;
 
-                    $(this.overlay.$content).each(function() {
-                        maxHeight = maxHeight > $(this).height() ? maxHeight : $(this).height();
-                    });
+                    if (this.slides.length > 1) {
+                        // set width to n-width
+                        this.overlay.width = this.sandbox.dom.outerWidth(this.sandbox.dom.find(this.overlay.$slides, '.slide'));
+                        this.sandbox.dom.css(this.overlay.$slides, 'width', (this.slides.length * this.overlay.width) + 'px');
 
-                    this.sandbox.dom.css(this.overlay.$content, 'height', maxHeight + 'px');
+                        var maxHeight = -1;
+
+                        $(this.overlay.$content).each(function() {
+                            maxHeight = maxHeight > $(this).height() ? maxHeight : $(this).height();
+                        });
+
+                        this.sandbox.dom.css(this.overlay.$content, 'height', maxHeight + 'px');
+                    }
 
                     this.insertOverlay(true);
                 } else {
@@ -38662,7 +38693,8 @@ define('__component__$overlay@husky',[], function() {
                 this.sandbox.util.template(templates.overlaySkeleton,
                     {
                         skin: this.options.skin,
-                        cssClass: this.options.cssClass || ''
+                        cssClass: this.options.cssClass || '',
+                        overflowClass: (this.slides.length > 1) ? 'overflow-hidden' : ''
                     }
                 )
             );
@@ -38699,6 +38731,11 @@ define('__component__$overlay@husky',[], function() {
                 this.sandbox.dom.addClass(this.overlay.slides[slide].$el, constants.draggableClass);
             }
 
+            // add small-header class if configured
+            if (this.slides[slide].smallHeader === true) {
+                this.sandbox.dom.addClass(this.overlay.slides[slide].$header, constants.smallHeaderClass);
+            }
+
             // add classes for various styling
             this.sandbox.dom.addClass(this.overlay.slides[slide].$footer, this.options.buttonsDefaultAlign);
             this.sandbox.dom.addClass(this.overlay.slides[slide].$el, this.options.cssClass);
@@ -38713,7 +38750,7 @@ define('__component__$overlay@husky',[], function() {
             var $element = this.sandbox.dom.createElement('<div/>');
 
             this.overlay.slides[slide].$languageChanger = this.sandbox.dom.createElement(
-                    '<div class="' + constants.languageChangerClass + '"/>'
+                '<div class="' + constants.languageChangerClass + '"/>'
             );
             this.sandbox.dom.append(this.overlay.slides[slide].$header, this.overlay.slides[slide].$languageChanger);
             this.sandbox.dom.append(this.overlay.slides[slide].$languageChanger, $element);
@@ -38858,7 +38895,6 @@ define('__component__$overlay@husky',[], function() {
             this.sandbox.dom.on(this.$el, 'click',
                 this.okHandler.bind(this), constants.overlayOkSelector);
 
-
             this.sandbox.dom.on(this.sandbox.dom.$window, 'resize', function() {
                 if (this.dragged === false && this.overlay.opened === true) {
                     this.resizeHandler();
@@ -39000,7 +39036,7 @@ define('__component__$overlay@husky',[], function() {
          */
         setCoordinates: function() {
             this.updateCoordinates((this.sandbox.dom.$window.height() - this.overlay.$el.outerHeight()) / 2,
-                    (this.sandbox.dom.$window.width() - this.overlay.$el.outerWidth()) / 2);
+                (this.sandbox.dom.$window.width() - this.overlay.$el.outerWidth()) / 2);
         },
 
         /**
@@ -40375,11 +40411,9 @@ define('__component__$toggler@husky',[], function() {
  * @params {Function} [options.beforeSendingCallback] callback which gets called before a file gets uploaded. First parameter is the file.
  * @params {Function} [options.removeFileCallback] callback which gets called after a file got removed. First parameter is the file.
  * @params {Object} [options.pluginOptions] Options to pass to the dropzone-plugin to completely override all options set by husky. Use with care.
- * @params {Number} [options.showOverlayOnScrollTop] number of scroll-top on which the overlay will be displayed
- * @params {Object|String} [options.scrollContainer] element to check to scroll-top on
  * @params {Boolean} [options.showOverlay] if true the dropzone will be displayed in an overlay if its not visible any more or the passed scroll-top is reached
  */
-define('__component__$dropzone@husky',[], function() {
+define('__component__$dropzone@husky',[], function () {
 
     
 
@@ -40403,9 +40437,6 @@ define('__component__$dropzone@husky',[], function() {
             pluginOptions: {},
             fadeOutDuration: 200, //ms
             fadeOutDelay: 1500, //ms
-            showOverlayOnScrollTop: 50,
-            scrollContainer: 'body',
-            overlayTitle: 'sulu.dropzone.overlay-title',
             showOverlay: true
         },
 
@@ -40418,30 +40449,30 @@ define('__component__$dropzone@husky',[], function() {
         },
 
         /** templates for component */
-        templates = {
+            templates = {
             basic: [
-                '<div class="'+ constants.descriptionClass +'">',
-                    '<div class="fa-<%= icon %> icon"></div>',
-                    '<span class="title"><%= title %></span>',
-                    '<span><%= description %></span>',
+                '<div class="' + constants.descriptionClass + '">',
+                '<div class="fa-<%= icon %> icon"></div>',
+                '<span class="title"><%= title %></span>',
+                '<span><%= description %></span>',
                 '</div>',
-                '<div class="'+ constants.uploadedItemContainerClass +'"></div>'
+                '<div class="' + constants.uploadedItemContainerClass + '"></div>'
             ].join(''),
             uploadItem: [
-                '<div class="'+ constants.uploadItemClass +'">' +
+                '<div class="' + constants.uploadItemClass + '">' +
                     '<div class="loading-content">',
-                        '<div class="fa-<%= cancelIcon %> icon" data-dz-remove></div>',
-                        '<div class="file-size" data-dz-size></div>',
-                        '<div class="progress">',
-                            '<div class="bar" data-dz-uploadprogress></div>',
-                        '</div>',
-                    '</div>',
-                    '<div class="success-content">',
-                        '<div class="image">',
-                            '<img data-dz-thumbnail />',
-                        '</div>',
-                        '<div class="fa-check tick"></div>',
-                    '</div>',
+                '<div class="fa-<%= cancelIcon %> icon" data-dz-remove></div>',
+                '<div class="file-size" data-dz-size></div>',
+                '<div class="progress">',
+                '<div class="bar" data-dz-uploadprogress></div>',
+                '</div>',
+                '</div>',
+                '<div class="success-content">',
+                '<div class="image">',
+                '<img data-dz-thumbnail />',
+                '</div>',
+                '<div class="fa-check tick"></div>',
+                '</div>',
                 '</div>'
             ].join('')
         },
@@ -40456,7 +40487,7 @@ define('__component__$dropzone@husky',[], function() {
          * raised after initialization process
          * @event husky.dropzone.<instance-name>.initialize
          */
-            INITIALIZED = function() {
+            INITIALIZED = function () {
             return createEventName.call(this, 'initialized');
         },
 
@@ -40465,7 +40496,7 @@ define('__component__$dropzone@husky',[], function() {
          * @event husky.dropzone.<instance-name>.uploading
          * @param {Object} the file
          */
-            UPLOADING = function() {
+            UPLOADING = function () {
             return createEventName.call(this, 'uploading');
         },
 
@@ -40475,7 +40506,7 @@ define('__component__$dropzone@husky',[], function() {
          * @param {Object} the file
          * @param {Object} the response
          */
-            SUCCESS = function() {
+            SUCCESS = function () {
             return createEventName.call(this, 'success');
         },
 
@@ -40483,8 +40514,24 @@ define('__component__$dropzone@husky',[], function() {
          * listens on and opens the data-source folder-overlay
          * @event husky.dropzone.<instance-name>.open-data-source
          */
-            OPEN_DATA_SOURCE = function() {
+            OPEN_DATA_SOURCE = function () {
             return createEventName.call(this, 'open-data-source');
+        },
+
+        /**
+         * listens on and prevents an overlay with the dropzone from poping up
+         * @event husky.dropzone.<instance-name>.open-data-source
+         */
+            LOCK_POPUP = function () {
+            return createEventName.call(this, 'lock-popup');
+        },
+
+        /**
+         * listens on and enables overlays with the dropzone to pop up
+         * @event husky.dropzone.<instance-name>.open-data-source
+         */
+            UNLOCK_POPUP = function () {
+            return createEventName.call(this, 'unlock-popup');
         },
 
         /**
@@ -40492,12 +40539,12 @@ define('__component__$dropzone@husky',[], function() {
          * @event husky.dropzone.<instance-name>.files-added
          * @param {Array} all newly added files
          */
-            FILES_ADDED = function() {
+            FILES_ADDED = function () {
             return createEventName.call(this, 'files-added');
         },
 
         /** returns normalized event names */
-            createEventName = function(postFix) {
+            createEventName = function (postFix) {
             return eventNamespace + (this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
         };
 
@@ -40506,7 +40553,7 @@ define('__component__$dropzone@husky',[], function() {
         /**
          * Initialize component
          */
-        initialize: function() {
+        initialize: function () {
             this.sandbox.logger.log('initialize', this);
 
             // merge defaults, type defaults and options
@@ -40515,6 +40562,7 @@ define('__component__$dropzone@husky',[], function() {
             this.$dropzone = null;
             this.lastUploadedFile = null;
             this.overlayOpened = false;
+            this.lockPopUp = false;
 
             this.bindCustomEvents();
             this.render();
@@ -40526,15 +40574,15 @@ define('__component__$dropzone@husky',[], function() {
         /**
          * Binds dom related events
          */
-        bindDomEvents: function() {
+        bindDomEvents: function () {
             // delegate click on elements children to element
-            this.sandbox.dom.on(this.sandbox.dom.find('*', this.$dropzone), 'click', function(event) {
+            this.sandbox.dom.on(this.sandbox.dom.find('*', this.$dropzone), 'click', function (event) {
                 this.sandbox.dom.stopPropagation(event);
                 this.sandbox.dom.trigger(this.$dropzone, 'click');
             }.bind(this));
 
             if (this.options.showOverlay) {
-                this.sandbox.dom.on(this.sandbox.dom.$document, 'dragenter', function() {
+                this.sandbox.dom.on(this.sandbox.dom.$document, 'dragenter', function () {
                     this.openOverlay();
                 }.bind(this));
             }
@@ -40543,53 +40591,62 @@ define('__component__$dropzone@husky',[], function() {
         /**
          * Binds custom-related events
          */
-        bindCustomEvents: function() {
+        bindCustomEvents: function () {
             // opens the data-source folder-overlay
-            this.sandbox.on(OPEN_DATA_SOURCE.call(this), function() {
+            this.sandbox.on(OPEN_DATA_SOURCE.call(this), function () {
                 this.sandbox.dom.trigger(this.$dropzone, 'click');
             }.bind(this));
+
+            if (this.options.showOverlay) {
+                this.sandbox.on(LOCK_POPUP.call(this), function() {
+                    this.lockPopUp = true;
+                }.bind(this));
+
+                this.sandbox.on(UNLOCK_POPUP.call(this), function() {
+                    this.lockPopUp = false;
+                }.bind(this));
+            }
         },
 
         /**
          * Opens the dropzone in an overlay
          */
-        openOverlay: function() {
+        openOverlay: function () {
             // open the overlay only if it's not already opened and if the dropzone is not visible
-            if (this.overlayOpened === false) {
-                if (this.sandbox.dom.visible(this.$dropzone) === false ||
-                    this.sandbox.dom.scrollTop(this.options.scrollContainer) > this.options.showOverlayOnScrollTop) {
+            if (this.overlayOpened === false && this.lockPopUp === false) {
+                // set height of components element to prevent the site from bumping
+                this.sandbox.dom.height(this.$el, this.sandbox.dom.outerHeight(this.$el));
 
-                    // set height of components element to prevent the site from bumping
-                    this.sandbox.dom.height(this.$el, this.sandbox.dom.outerHeight(this.$el));
-
-                    var $container = this.sandbox.dom.createElement('<div/>');
-                    this.sandbox.dom.append(this.$el, $container);
-                    this.sandbox.start([{
+                var $container = this.sandbox.dom.createElement('<div/>');
+                this.sandbox.dom.append(this.$el, $container);
+                this.sandbox.start([
+                    {
                         name: 'overlay@husky',
                         options: {
                             el: $container,
                             openOnStart: true,
                             removeOnClose: true,
+                            draggable: false,
                             data: this.$dropzone,
-                            title: this.options.overlayTitle,
                             skin: 'dropzone',
-                            closeCallback: function() {
+                            smallHeader: true,
+                            closeCallback: function () {
                                 this.sandbox.dom.append(this.$el, this.$dropzone);
                                 this.sandbox.dom.height(this.$el, '');
                                 this.overlayOpened = false;
                             }.bind(this)
                         }
-                    }]);
-                    this.overlayOpened = true;
-                }
+                    }
+                ]);
+                this.overlayOpened = true;
             }
         },
 
         /**
          * Renders the component
          */
-        render: function() {
-            this.$dropzone = this.sandbox.dom.createElement('<div class="'+ constants.contianerClass +'"/>');
+        render: function () {
+            this.$dropzone = this.sandbox.dom.createElement('<div class="' + constants.contianerClass + '"/>');
             this.sandbox.dom.html(this.$dropzone, this.sandbox.util.template(templates.basic)({
                 description: this.sandbox.translate(this.options.descriptionKey),
                 title: this.sandbox.translate(this.options.titleKey),
@@ -40603,7 +40660,7 @@ define('__component__$dropzone@husky',[], function() {
         /**
          * Starts the dropzone component
          */
-        startDropzone: function() {
+        startDropzone: function () {
             var that = this,
                 options = {
                     url: this.options.url,
@@ -40615,22 +40672,22 @@ define('__component__$dropzone@husky',[], function() {
                         cancelIcon: this.options.cancelLoadingIcon
                     }),
                     previewsContainer: this.sandbox.dom.find('.' + constants.uploadedItemContainerClass, this.$dropzone)[0],
-                    init: function() {
+                    init: function () {
                         // store dropzone context
                         that.dropzone = this;
 
                         // gets called if file gets added (drop or via the upload window)
-                        this.on('addedfile', function(file) {
+                        this.on('addedfile', function (file) {
                             this.sandbox.dom.addClass(this.$dropzone, constants.droppedClass);
 
                             // prevent the the upload window to open on click on the preview item
-                            this.sandbox.dom.on(file.previewElement, 'click', function(event) {
+                            this.sandbox.dom.on(file.previewElement, 'click', function (event) {
                                 this.sandbox.dom.stopPropagation(event);
                             }.bind(this));
                         }.bind(that));
 
                         // gets called before the file is sent
-                        this.on('sending', function(file) {
+                        this.on('sending', function (file) {
                             if (typeof this.options.beforeSendingCallback === 'function') {
                                 this.options.beforeSendingCallback(file);
                             } else {
@@ -40639,7 +40696,7 @@ define('__component__$dropzone@husky',[], function() {
                         }.bind(that));
 
                         // gets called if the file was uploaded successfully
-                        this.on('success', function(file, response) {
+                        this.on('success', function (file, response) {
                             if (this.lastUploadedFile !== file) {
                                 file.response = response;
                                 this.lastUploadedFile = file;
@@ -40653,14 +40710,14 @@ define('__component__$dropzone@husky',[], function() {
                         }.bind(that));
 
                         // gets called if a file gets removed from the zone
-                        this.on('removedfile', function(file) {
+                        this.on('removedfile', function (file) {
                             if (typeof this.options.removeFileCallback === 'function') {
                                 this.options.removeFileCallback(file);
                             }
                         }.bind(that));
 
                         // gets called if all files are removed from the zone
-                        this.on('reset', function() {
+                        this.on('reset', function () {
                             this.sandbox.dom.removeClass(this.$dropzone, constants.droppedClass);
                         }.bind(that));
                     }
@@ -40675,15 +40732,15 @@ define('__component__$dropzone@husky',[], function() {
          * Removes all files from the dropzone
          * but only if all dropped files got uploaded
          */
-        removeAllFiles: function() {
+        removeAllFiles: function () {
             // if all files got uploaded
             if (this.dropzone.getUploadingFiles.call(this.dropzone).length === 0) {
                 this.sandbox.util.delay(
-                    function() {
+                    function () {
                         this.sandbox.dom.fadeOut(
                             this.sandbox.dom.find('.' + constants.uploadItemClass, this.$dropzone),
                             this.options.fadeOutDuration,
-                            function() {
+                            function () {
                                 if (this.sandbox.dom.find('.' + constants.uploadItemClass + ':animated', this.$dropzone).length === 0) {
                                     this.afterFadeOut();
                                 }
@@ -40699,7 +40756,7 @@ define('__component__$dropzone@husky',[], function() {
          * Function gets called after all dropped files
          * have faded out
          */
-        afterFadeOut: function() {
+        afterFadeOut: function () {
             this.sandbox.dom.removeClass(this.$dropzone, constants.droppedClass);
             this.sandbox.emit(FILES_ADDED.call(this), this.getResponseArray(this.dropzone.files));
             this.dropzone.removeAllFiles();
@@ -40710,7 +40767,7 @@ define('__component__$dropzone@husky',[], function() {
          * @param files {Array} array of files with response properties
          * @returns {Array} array of responses
          */
-        getResponseArray: function(files) {
+        getResponseArray: function (files) {
             var arrReturn = [], i, length;
             for (i = -1, length = files.length; ++i < length;) {
                 arrReturn.push(files[i].response);
@@ -42161,4 +42218,3 @@ define('husky_extensions/util',[],function() {
         }
     };
 });
-

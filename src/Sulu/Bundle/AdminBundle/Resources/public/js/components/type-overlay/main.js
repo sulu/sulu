@@ -15,6 +15,7 @@
  * @param {String} [options.url] url to fetch data from
  * @param {Array} [options.data] data to display in the template
  * @param {String} [options.template] underscore template
+ * @param {String} [options.addButtonText] String of translation key for adding new entries
  */
 
 define([], function() {
@@ -27,22 +28,7 @@ define([], function() {
             overlay: {
                 instanceName: null
             },
-
-            templateRow: ['<div class="grid-row type-row" data-id="">',
-                '   <div class="grid-col-8 pull-left"><input class="form-element" type="text" value=""/></div>',
-                '   <div class="grid-col-2 pull-right"><div class="remove-row btn gray-dark fit only-icon pull-right"><div class="icon-circle-minus"></div></div></div>',
-                '</div>'].join(''),
-
-            template: ['<div class="content-inner">',
-                '   <% _.each(data, function(item) { %>',
-                '       <div class="grid-row type-row" data-id="<%= item.id %>">',
-                '           <div class="grid-col-8 pull-left"><input class="form-element" type="text" value="<%= item.category %>"/></div>',
-                '           <div class="grid-col-2 pull-right"><div class="remove-row btn gray-dark fit only-icon pull-right"><div class="icon-circle-minus"></div></div></div>',
-                '       </div>',
-                ' <% }); %>',
-                '</div>',
-                '<div class="grid-row"><div id="addRow" class="addButton"></div></div>'].join('')
-
+            addButtonText: 'public.add-entry'
         },
 
         constants = {
@@ -53,13 +39,40 @@ define([], function() {
             contentInnerSelector: '.content-inner'
         },
 
+        templates = {
+            row: function() {
+                return[
+                    '<div class="grid-row type-row" data-id="">',
+                    '   <div class="grid-col-8 pull-left"><input class="form-element" type="text" value=""/></div>',
+                    '   <div class="grid-col-2 pull-right"><div class="remove-row btn gray-dark fit only-icon pull-right"><div class="icon-circle-minus"></div></div></div>',
+                    '</div>'].join('');
+            },
+            skeleton: function() {
+                return [
+                    '<div class="content-inner">',
+                    '   <% _.each(data, function(item) { %>',
+                    '       <div class="grid-row type-row" data-id="<%= item.id %>">',
+                    '           <div class="grid-col-8 pull-left"><input class="form-element" type="text" value="<%= item.category %>"/></div>',
+                    '           <div class="grid-col-2 pull-right"><div class="remove-row btn gray-dark fit only-icon pull-right"><div class="fa-minus-circle"></div></div></div>',
+                    '       </div>',
+                    ' <% }); %>',
+                    '</div>',
+                    '<div class="grid-row">',
+                    '   <div id="addRow" class="addButton">',
+                            this.sandbox.translate(this.options.addButtonText),
+                    '   </div>',
+                    '</div>'
+                ].join('');
+            }
+        },
+
         eventNamespace = 'sulu.types.',
 
         /**
          * Initialized event
          * @event sulu.types.initialzed
          */
-        INITIALIZED = function() {
+            INITIALIZED = function() {
             return createEventName.call(this, 'initialized');
         },
 
@@ -67,7 +80,7 @@ define([], function() {
          * Loaded event
          * @event sulu.types.loaded
          */
-        LOADED = function() {
+            LOADED = function() {
             return createEventName.call(this, 'loaded');
         },
 
@@ -75,7 +88,7 @@ define([], function() {
          * Saved event
          * @event sulu.types.saved
          */
-        SAVED = function() {
+            SAVED = function() {
             return createEventName.call(this, 'saved');
         },
 
@@ -83,7 +96,7 @@ define([], function() {
          * Remove event
          * @event sulu.types.remove
          */
-        REMOVE = function() {
+            REMOVE = function() {
             return createEventName.call(this, 'remove');
         },
 
@@ -91,7 +104,7 @@ define([], function() {
          * Removed event
          * @event sulu.types.removed
          */
-        REMOVED = function() {
+            REMOVED = function() {
             return createEventName.call(this, 'removed');
         },
 
@@ -99,7 +112,7 @@ define([], function() {
          * Open event
          * @event sulu.types.open
          */
-        OPEN = function() {
+            OPEN = function() {
             return createEventName.call(this, 'open');
         },
 
@@ -107,7 +120,7 @@ define([], function() {
          * Closed event
          * @event sulu.types.closed
          */
-        CLOSED = function() {
+            CLOSED = function() {
             return createEventName.call(this, 'closed');
         },
 
@@ -280,13 +293,13 @@ define([], function() {
             this.sandbox.dom.off(constants.templateRemoveSelector, 'click');
 
             // bind click on remove icon
-            this.sandbox.dom.on(this.$overlayInnerContent, 'click', function(event){
+            this.sandbox.dom.on(this.$overlayInnerContent, 'click', function(event) {
                 this.markElementForRemoval(event);
             }.bind(this), constants.templateRemoveSelector);
 
             // bind click on add icon
             this.sandbox.dom.on(constants.templateAddSelector, 'click', function() {
-                this.sandbox.dom.append(this.$overlayInnerContent, this.options.templateRow);
+                this.sandbox.dom.append(this.$overlayInnerContent, templates.row.call(this));
             }.bind(this), this.$overlay);
 
         },
@@ -389,7 +402,7 @@ define([], function() {
                 this.options.data = config.data;
             }
 
-            config.data = this.sandbox.util.template(this.options.template, {data: this.options.data});
+            config.data = this.sandbox.util.template(templates.skeleton.call(this), {data: this.options.data});
 
             config.okCallback = function(data) {
                 this.onCloseWithOk(data);
