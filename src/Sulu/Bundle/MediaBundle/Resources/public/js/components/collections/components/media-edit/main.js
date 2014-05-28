@@ -17,23 +17,38 @@ define(function () {
 
     'use strict';
 
-    var defaults = {
+    var namespace = 'sulu.media-edit.',
 
+        defaults = {
+            titleKey: 'public.title',
+            descriptionKey: 'public.description',
+            infoKey: 'public.info'
         },
+
         constants = {
-
+            titleId: 'media-edit-title',
+            descriptionId: 'media-edit-description'
         },
-
-        namespace = 'sulu.media-edit.',
 
         templates = {
-
+            info: [
+                '<div class="grid">',
+                '   <div class="grid-row">',
+                '       <label for="', constants.titleId ,'"><%= titleDesc %></label>',
+                '       <input class="form-element" type="text" id="', constants.titleId ,'" value="<%= title %>"/>',
+                '   </div>',
+                '   <div class="grid-row">',
+                '       <label for="', constants.descriptionId ,'"><%= descriptionDesc %></label>',
+                '       <textarea class="small noResize form-element" id="', constants.descriptionId ,'"><%= description %></textarea>',
+                '   </div>',
+                '</div>'
+            ].join('')
         },
 
         /**
          * listens on and shows an overlay to edit the media for a given id
          * @event sulu.media-edit.edit
-         * @param id {Number|String} id of the media to edit
+         * @param media {Object} the media model to edit
          */
             EDIT = function() {
             return createEventName.call(this, 'edit');
@@ -53,7 +68,9 @@ define(function () {
             // extend defaults with options
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
             this.bindCustomEvents();
-            this.sandbox.dom.hide(this.$el);
+            this.sandbox.dom.width(this.$el, 0);
+            this.sandbox.dom.height(this.$el, 0);
+            this.media = null;
         },
 
         /**
@@ -68,7 +85,47 @@ define(function () {
          * @param media {Object} the media model
          */
         editMedia: function(media) {
-            console.log(media);
+            this.media = media;
+            this.$info = this.sandbox.dom.createElement(this.sandbox.util.template(templates.info)({
+                titleDesc: this.sandbox.translate(this.options.titleKey),
+                descriptionDesc: this.sandbox.translate(this.options.descriptionKey),
+                title: (!!media.title) ? media.title : '',
+                description: (!!media.description) ? media.description : ''
+            }));
+            this.startOverlay();
+        },
+
+        /**
+         * Starts the actual overlay
+         */
+        startOverlay: function() {
+            var $container = this.sandbox.dom.createElement('<div/>');
+            this.sandbox.dom.append(this.$el, $container);
+            this.sandbox.start([{
+                name: 'overlay@husky',
+                options: {
+                   el: $container,
+                   title: this.media.title,
+                   tabs: [
+                       {title: this.sandbox.translate(this.options.infoKey), data: this.$info}
+                   ],
+                   openOnStart: true,
+                   removeOnClose: true,
+                   okCallback: this.changeModel.bind(this)
+                }
+            }]);
+        },
+
+        /**
+         * Maps the overlay inputs back on the model
+         */
+        changeModel: function() {
+            var title = this.sandbox.dom.val(this.sandbox.dom.find('#' + constants.titleId, this.$info)),
+                description = this.sandbox.dom.html(this.sandbox.dom.find('#' + constants.descriptionId, this.$info));
+            this.media.title = title;
+            this.media.description = description;
+            this.sandbox.emit('sulu.media.collections.save-media', this.media);
+            this.media = null;
         }
     };
 });

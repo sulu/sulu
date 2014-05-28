@@ -60,11 +60,11 @@ define(function () {
             '<div class="grid">',
             '   <div class="grid-row">',
             '       <label for="', constants.titleChangerId ,'"><%= titleDesc %></label>',
-            '       <input class="form-element" type="text" id="', constants.titleChangerId ,'" value="<%= title %>">',
+            '       <input class="form-element" type="text" id="', constants.titleChangerId ,'" value="<%= title %>"/>',
             '   </div>',
             '   <div class="grid-row">',
             '       <label for="', constants.colorChangerId ,'"><%= colorDesc %></label>',
-            '       <input class="form-element" type="text" id="', constants.colorChangerId ,'" value="<%= color %>">',
+            '       <input class="form-element" type="text" id="', constants.colorChangerId ,'" value="<%= color %>"/>',
             '   </div>',
             '</div>'
         ].join(''),
@@ -127,6 +127,7 @@ define(function () {
             // stores key value paires of an array of selected elements as value and the corresponding datagrid-name as key
             this.selectedMedias = {};
             this.$overlayContent = null;
+            this.lastClickedGrid = null;
 
             this.bindCustomEvents();
             this.render();
@@ -145,6 +146,11 @@ define(function () {
             this.sandbox.on('sulu.media.collections.collection-changed', this.updateCollection.bind(this));
             // delete media if list-toolbar delete is clicked
             this.sandbox.on('sulu.list-toolbar.delete', this.deleteMedia.bind(this));
+
+            // update the last clicked grid if a media got changed
+            this.sandbox.on('sulu.media.collections.media-saved', function() {
+                this.sandbox.emit('husky.datagrid.'+ this.lastClickedGrid +'.update');
+            }.bind(this));
         },
 
         /**
@@ -243,12 +249,8 @@ define(function () {
 
             // render collection items
             $collections = this.sandbox.dom.createElement('<div class="'+ constants.collectionsClass +'"/>');
-            this.sandbox.util.foreach(this.options.data._embedded, function(collection) {
+            this.sandbox.util.foreach(this.options.data, function(collection) {
                 this.renderCollection(collection, $collections);
-                this.startCollectionDatagrid(
-                        collection.id,
-                        this.sandbox.dom.find('.' + constants.collectionSlideClass, this.collections[collection.id].$el)
-                );
             }.bind(this));
             this.initializeOverlay();
             this.sandbox.dom.append(this.$el, $collections);
@@ -313,10 +315,12 @@ define(function () {
 
             this.sandbox.dom.append($container, $collection);
             this.collections[collection.id] = {
+                id: collection.id,
                 $el: $collection,
                 data: collection,
                 selectedElements: 0,
-                datagridName: null
+                datagridName: null,
+                datagridLoaded: false
             };
             this.bindCollectionDomEvents(collection.id);
         },
@@ -375,7 +379,14 @@ define(function () {
                 this.refreshDeleteState();
             }.bind(this));
 
+            // edit single media on datagrid click
+            this.sandbox.on('husky.datagrid.'+ this.options.instanceName + id +'.item.click', function(mediaId) {
+                this.lastClickedGrid = this.collections[id].datagridName;
+                this.sandbox.emit('sulu.media.collections.edit-media', mediaId);
+            }.bind(this));
+
             this.collections[id].datagridName = this.options.instanceName + id;
+            this.collections[id].datagridLoaded = true;
             this.sandbox.sulu.initList.call(this, 'mediaFields', '/admin/api/media/fields',
                 {
                     el: $container,
@@ -520,6 +531,12 @@ define(function () {
                 this.sandbox.dom.find('.head .icon', collection.$el),
                 'fa-' + constants.slideUpIcon
             );
+            if (collection.datagridLoaded === false) {
+                this.startCollectionDatagrid(
+                    collection.id,
+                    this.sandbox.dom.find('.' + constants.collectionSlideClass, collection.$el)
+                );
+            }
         }
     };
 });
