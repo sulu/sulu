@@ -16,7 +16,7 @@ use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\TestBundle\Entity\TestUser;
 use DateTime;
 
-class Collection extends ApiEntity implements RestObject
+class Collection extends ApiEntity implements RestObjectInterface
 {
 
     /**
