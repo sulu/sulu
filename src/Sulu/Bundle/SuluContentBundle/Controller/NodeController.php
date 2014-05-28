@@ -91,10 +91,24 @@ class NodeController extends RestController implements ClassResourceInterface
      */
     public function getAction(Request $request, $uuid)
     {
-        if ($uuid === 'tree') {
-            return $this->cgetTree($request);
+        $tree = $this->getBooleanRequestParameter($request, 'tree', false, false);
+
+        if ($tree === false) {
+            $response = $this->getSingleNode($request, $uuid);
+        } else {
+            $response = $this->getTreeForUuid($request, $uuid);
         }
 
+        return $response;
+    }
+
+    /**
+     * @param Request $request
+     * @param string $uuid
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    private function getSingleNode(Request $request, $uuid)
+    {
         $language = $this->getLanguage($request);
         $webspace = $this->getWebspace($request);
         $breadcrumb = $this->getBooleanRequestParameter($request, 'breadcrumb', false, false);
@@ -125,15 +139,15 @@ class NodeController extends RestController implements ClassResourceInterface
     /**
      * return a tree for given path
      * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param string $uuid
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function cgetTree(Request $request)
+    public function getTreeForUuid(Request $request, $uuid)
     {
         $language = $this->getLanguage($request);
         $webspace = $this->getWebspace($request);
         $excludeGhosts = $this->getBooleanRequestParameter($request, 'exclude-ghosts', false, false);
 
-        $uuid = $request->get('uuid');
         $appendWebspaceNode = $this->getBooleanRequestParameter($request, 'webspace-node', false, false);
 
         if ($uuid !== null && $uuid !== '') {
@@ -175,6 +189,12 @@ class NodeController extends RestController implements ClassResourceInterface
      */
     public function cgetAction(Request $request)
     {
+        $tree = $this->getBooleanRequestParameter($request, 'tree', false, false);
+
+        if ($tree === true) {
+            return $this->getTreeForUuid($request, null);
+        }
+
         $language = $this->getLanguage($request);
         $webspace = $this->getWebspace($request);
         $excludeGhosts = $this->getBooleanRequestParameter($request, 'exclude-ghosts', false, false);
