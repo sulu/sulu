@@ -549,7 +549,6 @@ class MediaControllerTest extends DatabaseTestCase
 
         $client = $this->createTestClient();
 
-        /*
         $client->request(
             'GET',
             '/api/media/1'
@@ -560,7 +559,6 @@ class MediaControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(0, $response->code);
         $this->assertTrue(isset($response->message));
-        */
     }
 
     /**

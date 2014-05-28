@@ -79,6 +79,11 @@ define(function () {
                 this.sandbox.emit('sulu.media.collections.edit-media', id);
             }.bind(this));
 
+            // reload datagrid of media has changed
+            this.sandbox.on('sulu.media.collections.media-saved', function() {
+                this.sandbox.emit('husky.datagrid.update');
+            }.bind(this));
+
             // delete clicked
             this.sandbox.on('sulu.list-toolbar.delete', this.deleteMedia.bind(this));
         },
