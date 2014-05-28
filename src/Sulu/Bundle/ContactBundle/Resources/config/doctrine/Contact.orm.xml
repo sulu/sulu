@@ -17,8 +17,8 @@
         <field name="changed" type="datetime" column="changed"/>
 
         <field name="salutation" type="string" column="salutation" length="255" nullable="true"/>
-        <field name="formOfAddress" type="integer" column="formOfAddress" nullable="false"/>
-        <field name="disabled" type="boolean" column="disabled" nullable="false"/>
+        <field name="formOfAddress" type="integer" column="formOfAddress" nullable="true"/>
+        <field name="disabled" type="boolean" column="disabled" nullable="true"/>
 
         <one-to-many field="locales" target-entity="Sulu\Bundle\ContactBundle\Entity\ContactLocale"
                      mapped-by="contact"/>

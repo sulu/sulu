@@ -206,7 +206,7 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
 
         getDataById = function(array, id) {
             for (var i = -1, len = array.length; ++i < len;) {
-                if (array[i].id === id) {
+                if (array[i].id.toString() === id.toString()) {
                     return array[i];
                 }
             }
@@ -268,7 +268,7 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
                     this.sandbox.emit(EVENT_CHANGED.call(this));
                 } else {
 
-                    newTypeId = parseInt(this.sandbox.dom.attr(this.editFieldsData[i].$dropdown, 'data-selection'), 10);
+                    newTypeId = parseInt(this.sandbox.dom.data(this.editFieldsData[i].$dropdown, 'selection'), 10);
                     if (newTypeId !== this.editFieldsData[i].type.id) {
 
                         newType = getTypeById.call(this, this.editFieldsData[i].types, newTypeId);
