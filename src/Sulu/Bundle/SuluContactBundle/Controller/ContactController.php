@@ -99,15 +99,6 @@ class ContactController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * persists a setting
-     * @Put("contacts/fields")
-     */
-    public function putFieldsAction()
-    {
-        return $this->responsePersistSettings();
-    }
-
-    /**
      * lists all contacts
      * optional parameter 'flat' calls listAction
      * @param Request $request
