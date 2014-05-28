@@ -118,6 +118,7 @@ interface NodeRepositoryInterface
     public function deleteNode($uuid, $webspaceKey);
 
     /**
+     * returns history for given content node uuid
      * @param string $uuid
      * @param string $webspaceKey
      * @param string $languageCode
@@ -126,11 +127,12 @@ interface NodeRepositoryInterface
     public function getHistory($uuid, $webspaceKey, $languageCode);
 
     /**
+     * returns tree to content node given by uuid
      * @param string $uuid
      * @param string $webspaceKey
      * @param string $languageCode
      * @param boolean $excludeGhosts
-     * @param bool $appendWebspaceNode
+     * @param bool $appendWebspaceNode if TRUE webspace will added as own node in first layer
      * @return array
      */
     public function getNodesTree(
