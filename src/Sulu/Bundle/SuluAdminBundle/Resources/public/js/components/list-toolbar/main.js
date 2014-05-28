@@ -82,7 +82,7 @@ define([], function () {
                                     ]);
                                     instanceName = this.options.instanceName ? this.options.instanceName + '.' : '';
                                     this.sandbox.once('husky.column-options.' + instanceName + 'saved', function (data) {
-                                        this.sandbox.sulu.saveUserSetting(this.options.columnOptions.key, data, this.options.columnOptions.url);
+                                        this.sandbox.sulu.saveUserSetting(this.options.columnOptions.key, data);
                                     }.bind(this));
                                 }.bind(this)
                             }
