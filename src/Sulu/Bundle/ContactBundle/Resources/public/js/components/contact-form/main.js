@@ -229,6 +229,10 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
                 fieldTypeId = this.sandbox.dom.data(fieldType, 'selection'),
                 data, dataType, dataObject;
 
+            if (typeof fieldTypeId === 'object' && fieldTypeId.length > 0) {
+                fieldTypeId = fieldTypeId[0];
+            }
+
             data = this.dropdownDataArray[fieldId];
             dataType = getDataById(this.dropdownDataArray[fieldId].items, fieldTypeId);
             dataObject = {};
