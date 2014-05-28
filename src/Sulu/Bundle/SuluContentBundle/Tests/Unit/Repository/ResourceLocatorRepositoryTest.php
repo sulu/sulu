@@ -175,7 +175,7 @@ class ResourceLocatorRepositoryTest extends PhpcrTestCase
 
         $this->repository->delete('/asdf', 'default', 'en');
         $result = $this->repository->getHistory($structure->getUuid(), 'default', 'en');
-        
+
         $this->assertEquals(1, sizeof($result['_embedded']));
         $this->assertEquals('/asdf-1', $result['_embedded'][0]['resourceLocator']);
     }
