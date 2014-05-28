@@ -76,7 +76,7 @@ class NodeResourcelocatorController extends RestController implements ClassResou
     }
 
     /**
-     *
+     * restores url with given path
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function putRestoreAction()
