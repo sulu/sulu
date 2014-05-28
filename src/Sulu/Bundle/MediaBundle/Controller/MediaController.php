@@ -252,17 +252,11 @@ class MediaController extends RestController implements ClassResourceInterface
      */
     public function deleteAction($id)
     {
-        try {
-            $delete = function ($id) {
-                $this->getMediaManager()->remove($id, $this->getUser()->getId());
-            };
+        $delete = function ($id) {
+            $this->getMediaManager()->remove($id, $this->getUser()->getId());
+        };
 
-            $view = $this->responseDelete($id, $delete);
-        } catch (EntityNotFoundException $enfe) {
-            $view = $this->view($enfe->toArray(), 404);
-        } catch (RestException $re) {
-            $view = $this->view($re->toArray(), 400);
-        }
+        $view = $this->responseDelete($id, $delete);
 
         return $this->handleView($view);
     }
