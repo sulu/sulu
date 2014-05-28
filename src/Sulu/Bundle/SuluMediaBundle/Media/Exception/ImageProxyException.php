@@ -14,7 +14,7 @@ namespace Sulu\Bundle\MediaBundle\Media\Exception;
  * This Exception is thrown when a Uploaded File is not valid
  * @package Sulu\Bundle\MediaBundle\Media\Exception
  */
-class UploadFileException extends MediaException
+class ImageProxyException extends MediaException
 {
     /**
      * @param string $message
