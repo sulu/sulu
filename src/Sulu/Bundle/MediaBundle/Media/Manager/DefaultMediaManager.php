@@ -480,8 +480,8 @@ class DefaultMediaManager implements MediaManagerInterface
             foreach ($fileVersion->getContentLanguages() as $oldContentLanguage) {
                 $exists = false;
                 foreach ($contentLanguages as $key => $contentLanguage) {
-                    if (isset($contentLanguage) && $oldContentLanguage->getId() == $contentLanguage) {
-                        unset($contentLanguage[$key]);
+                    if ($oldContentLanguage->getId() == $contentLanguage) {
+                        unset($contentLanguages[$key]);
                         $exists = true;
                         break;
                     }
@@ -517,8 +517,8 @@ class DefaultMediaManager implements MediaManagerInterface
             foreach ($fileVersion->getPublishLanguages() as $oldPublishLanguage) {
                 $exists = false;
                 foreach ($publishLanguages as $key => $publishLanguage) {
-                    if (isset($publishLanguage) && $oldPublishLanguage->getLocale() == $publishLanguage) {
-                        unset($publishLanguage[$key]);
+                    if ($oldPublishLanguage->getLocale() == $publishLanguage) {
+                        unset($publishLanguages[$key]);
                         $exists = true;
                         break;
                     }
