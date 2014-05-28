@@ -117,15 +117,6 @@ class AccountController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * persists a setting
-     * @Put("accounts/fields")
-     */
-    public function putFieldsAction()
-    {
-        return $this->responsePersistSettings();
-    }
-
-    /**
      * Shows a single account with the given id
      * @param $id
      * @param Request $request
