@@ -20,7 +20,7 @@ use Sulu\Bundle\MediaBundle\Entity\Media as Entity;
 use DateTime;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 
-class Media extends ApiEntity implements RestObject
+class Media extends ApiEntity implements RestObjectInterface
 {
 
     /**
