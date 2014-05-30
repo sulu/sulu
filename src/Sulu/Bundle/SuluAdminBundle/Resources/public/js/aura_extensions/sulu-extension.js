@@ -67,10 +67,12 @@
             /**
              * Actually shows a success label if delete description and title. But only
              * if a node actually got deleted beforehand
+             * @param description {String} the description of the label
              */
-                app.sandbox.sulu.triggerDeleteSuccessLabel = function () {
+                app.sandbox.sulu.triggerDeleteSuccessLabel = function (description) {
                     if (app.sandbox.sulu.viewStates.nodeDeleted === true) {
-                        app.sandbox.emit('sulu.labels.success.show', 'labels.success.content-deleted-desc', 'labels.success');
+                        description = description || 'labels.success.content-deleted-desc';
+                        app.sandbox.emit('sulu.labels.success.show', description, 'labels.success');
                         delete app.sandbox.sulu.viewStates.nodeDeleted;
                     }
                 },
