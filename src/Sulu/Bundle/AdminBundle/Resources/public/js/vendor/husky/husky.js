@@ -1,3 +1,4 @@
+
 /** vim: et:ts=4:sw=4:sts=4
  * @license RequireJS 2.1.9 Copyright (c) 2010-2012, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
@@ -17572,13 +17573,19 @@ define('form/mapper',[
                     var template = this.templates[propertyName],
                         element = template.collection.$element,
                         insertAfterLast = false,
-                        lastElement;
+                        lastElement,
+                        dfd = $.Deferred();
+
                     // check if element exists and put it after last
                     if (!append && (lastElement = element.find('*[data-mapper-property-tpl="' + template.tpl.id + '"]').last()).length > 0) {
                         element = lastElement;
                         insertAfterLast = true;
                     }
-                    that.appendChildren.call(this, element, template.tpl, data, data, insertAfterLast);
+                    that.appendChildren.call(this, element, template.tpl, data, data, insertAfterLast).then(function($element) {
+                        dfd.resolve($element);
+                    }.bind(this));
+
+                    return dfd;
                 },
 
                 /**
@@ -41658,6 +41665,10 @@ define('husky_extensions/collection',[],function() {
                 return $(selector).show();
             };
 
+            app.core.dom.trim = function(string) {
+                return $.trim(string);
+            };
+
             app.core.dom.map = function(selector, callback) {
                 return $(selector).map(callback);
             };
@@ -42201,6 +42212,26 @@ define('husky_extensions/util',[],function() {
                 return text.slice(0, substrLength) + delimiter + text.slice(-substrLength);
             },
 
+            app.core.util.cropFront = function(text, maxLength, delimiter) {
+                if (!text || text.length <= maxLength) {
+                    return text;
+                }
+
+                delimiter = delimiter || '...';
+
+                return delimiter + text.slice(-(maxLength - delimiter.length));
+            },
+
+            app.core.util.cropTail = function(text, maxLength, delimiter) {
+                if (!text || text.length <= maxLength) {
+                    return text;
+                }
+
+                delimiter = delimiter || '...';
+
+                return text.slice(0, (maxLength - delimiter.length)) + delimiter;
+            },
+
             app.core.util.contains = function(list, value) {
                 return _.contains(list, value);
             };
@@ -42217,4 +42248,3 @@ define('husky_extensions/util',[],function() {
         }
     };
 });
-
