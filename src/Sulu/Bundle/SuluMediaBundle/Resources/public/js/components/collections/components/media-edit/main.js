@@ -20,29 +20,11 @@ define(function () {
     var namespace = 'sulu.media-edit.',
 
         defaults = {
-            titleKey: 'public.title',
-            descriptionKey: 'public.description',
             infoKey: 'public.info'
         },
 
         constants = {
-            titleId: 'media-edit-title',
-            descriptionId: 'media-edit-description'
-        },
-
-        templates = {
-            info: [
-                '<div class="grid">',
-                '   <div class="grid-row">',
-                '       <label for="', constants.titleId ,'"><%= titleDesc %></label>',
-                '       <input class="form-element" type="text" id="', constants.titleId ,'" value="<%= title %>"/>',
-                '   </div>',
-                '   <div class="grid-row">',
-                '       <label for="', constants.descriptionId ,'"><%= descriptionDesc %></label>',
-                '       <textarea class="small noResize form-element" id="', constants.descriptionId ,'"><%= description %></textarea>',
-                '   </div>',
-                '</div>'
-            ].join('')
+            infoFormId: 'media-info'
         },
 
         /**
@@ -60,6 +42,9 @@ define(function () {
         };
 
     return {
+        view: true,
+
+        templates: ['/admin/media/template/media/media-info'],
 
         /**
          * Initializes the collections list
@@ -86,12 +71,7 @@ define(function () {
          */
         editMedia: function(media) {
             this.media = media;
-            this.$info = this.sandbox.dom.createElement(this.sandbox.util.template(templates.info)({
-                titleDesc: this.sandbox.translate(this.options.titleKey),
-                descriptionDesc: this.sandbox.translate(this.options.descriptionKey),
-                title: (!!media.title) ? media.title : '',
-                description: (!!media.description) ? media.description : ''
-            }));
+            this.$info = this.renderTemplate('/admin/media/template/media/media-info');
             this.startOverlay();
         },
 
@@ -101,6 +81,10 @@ define(function () {
         startOverlay: function() {
             var $container = this.sandbox.dom.createElement('<div/>');
             this.sandbox.dom.append(this.$el, $container);
+            this.sandbox.once('husky.overlay.media-edit.opened', function() {
+                this.sandbox.form.create('#' + constants.infoFormId);
+                this.sandbox.form.setData('#' + constants.infoFormId, this.media);
+            }.bind(this));
             this.sandbox.start([{
                 name: 'overlay@husky',
                 options: {
@@ -111,6 +95,7 @@ define(function () {
                    ],
                    openOnStart: true,
                    removeOnClose: true,
+                   instanceName: 'media-edit',
                    okCallback: this.changeModel.bind(this)
                 }
             }]);
@@ -120,12 +105,14 @@ define(function () {
          * Maps the overlay inputs back on the model
          */
         changeModel: function() {
-            var title = this.sandbox.dom.val(this.sandbox.dom.find('#' + constants.titleId, this.$info)),
-                description = this.sandbox.dom.html(this.sandbox.dom.find('#' + constants.descriptionId, this.$info));
-            this.media.title = title;
-            this.media.description = description;
-            this.sandbox.emit('sulu.media.collections.save-media', this.media);
-            this.media = null;
+            if (this.sandbox.form.validate('#' + constants.infoFormId)) {
+                var data = this.sandbox.form.getData('#' + constants.infoFormId);
+                this.media = this.sandbox.util.extend(true, {}, this.media, data);
+                this.sandbox.emit('sulu.media.collections.save-media', this.media);
+                this.media = null;
+            } else {
+                return false;
+            }
         }
     };
 });

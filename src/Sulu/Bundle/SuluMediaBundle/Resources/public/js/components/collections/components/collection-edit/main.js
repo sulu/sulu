@@ -17,17 +17,26 @@ define(function () {
             instanceName: 'collection'
         },
 
+        tabs = {
+            FILES: 'files',
+            SETTINGS: 'settings'
+        },
+
         constants = {
             dropzoneSelector: '.dropzone-container',
             toolbarSelector: '.list-toolbar-container',
-            datagridSelector: '.datagrid-container'
+            datagridSelector: '.datagrid-container',
+            settingsFormId: 'collection-settings'
         };
 
     return {
 
         view: true,
 
-        templates: ['/admin/media/template/media/collection'],
+        templates: [
+            '/admin/media/template/media/collection-files',
+            '/admin/media/template/media/collection-settings'
+        ],
 
         /**
          * Initializes the collections list
@@ -35,6 +44,7 @@ define(function () {
         initialize: function () {
             // extend defaults with options
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
+            this.saved = true;
 
             this.bindCustomEvents();
             this.render();
@@ -44,19 +54,19 @@ define(function () {
          * Binds custom related events
          */
         bindCustomEvents: function () {
-            // change datagrid to small thumbnails
+            // change datagrid to table
+            this.sandbox.on('sulu.list-toolbar.change.table', function () {
+                this.sandbox.emit('husky.datagrid.view.change', 'table');
+            }.bind(this));
+
+            // change datagrid to thumbnail small
             this.sandbox.on('sulu.list-toolbar.change.thumbnail-small', function () {
                 this.sandbox.emit('husky.datagrid.view.change', 'thumbnail', {large: false});
             }.bind(this));
 
-            // change datagrid to big thumbnails
+            // change datagrid to thumbnail large
             this.sandbox.on('sulu.list-toolbar.change.thumbnail-large', function () {
                 this.sandbox.emit('husky.datagrid.view.change', 'thumbnail', {large: true});
-            }.bind(this));
-
-            // change datagrid to table
-            this.sandbox.on('sulu.list-toolbar.change.table', function () {
-                this.sandbox.emit('husky.datagrid.view.change', 'table');
             }.bind(this));
 
             // load collections list if back icon is clicked
@@ -84,8 +94,14 @@ define(function () {
                 this.sandbox.emit('husky.datagrid.update');
             }.bind(this));
 
-            // delete clicked
+            // delete a media
             this.sandbox.on('sulu.list-toolbar.delete', this.deleteMedia.bind(this));
+
+            // save button clicked
+            this.sandbox.on('sulu.header.toolbar.save', this.saveSettings.bind(this));
+
+            // delete the collection
+            this.sandbox.on('sulu.header.toolbar.delete', this.deleteCollection.bind(this));
         },
 
         /**
@@ -100,13 +116,66 @@ define(function () {
         },
 
         /**
+         * Deletes the current collection
+         */
+        deleteCollection: function() {
+            this.sandbox.emit('sulu.media.collections.delete-collection', this.options.data.id, function() {
+                this.sandbox.sulu.unlockDeleteSuccessLabel();
+                this.sandbox.emit('sulu.media.collections.collection-list');
+            }.bind(this));
+        },
+
+        /**
          * Renders the component
          */
         render: function () {
-            this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/media/template/media/collection'));
             this.setHeaderInfos();
+            if (this.options.activeTab === tabs.FILES) {
+                this.renderFiles();
+            } else if (this.options.activeTab === tabs.SETTINGS)  {
+                this.renderSettings();
+            }
+        },
+
+        /**
+         * Renderes the files tab
+         */
+        renderFiles: function() {
+            this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/media/template/media/collection-files'));
             this.startDropzone();
             this.startDatagrid();
+        },
+
+        /**
+         * Renderes the files tab
+         */
+        renderSettings: function() {
+            this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/media/template/media/collection-settings'));
+            this.options.data.color = this.options.data.style.color;
+            this.sandbox.form.create('#' + constants.settingsFormId);
+            this.sandbox.form.setData('#' + constants.settingsFormId, this.options.data);
+            this.startSettingsToolbar();
+            this.bindSettingsDomEvents();
+        },
+
+        /**
+         * Binds dom events concerning the settings tab
+         */
+        bindSettingsDomEvents: function() {
+            // activate save-button on key input
+            this.sandbox.dom.on(this.$el, 'keyup', function() {
+                if (this.saved === true) {
+                    this.sandbox.emit('sulu.header.toolbar.state.change', 'edit', false);
+                    this.saved = false;
+                }
+            }.bind(this));
+        },
+
+        /**
+         * Starts the Toolbar for the settings-tab
+         */
+        startSettingsToolbar: function() {
+            this.sandbox.emit('sulu.header.set-toolbar', {template: 'default'});
         },
 
         /**
@@ -139,6 +208,30 @@ define(function () {
                     }
                 }
             ]);
+        },
+
+        /**
+         * Saves the settings-tab
+         */
+        saveSettings: function() {
+            if (this.sandbox.form.validate('#' + constants.settingsFormId)) {
+                var data = this.sandbox.form.getData('#' + constants.settingsFormId);
+                data.style = {color: data.color};
+                this.options.data = this.sandbox.util.extend(true, {}, this.options.data, data);
+                this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
+                this.sandbox.once('sulu.media.collections.collection-changed', this.savedCallback.bind(this));
+                this.sandbox.emit('sulu.media.collections.save-collection', this.options.data);
+            }
+        },
+
+        /**
+         * Method which gets called after the save-process has finished
+         */
+        savedCallback: function() {
+            this.setHeaderInfos();
+            this.sandbox.emit('sulu.header.toolbar.state.change', 'edit', true, true);
+            this.saved = true;
+            this.sandbox.emit('sulu.labels.success.show', 'labels.success.collection-save-desc', 'labels.success');
         },
 
         /**
