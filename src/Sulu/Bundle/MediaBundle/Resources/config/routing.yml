@@ -6,6 +6,18 @@ sulu_media.collection_navigation:
     path: /navigation/collection
     defaults: { _controller: SuluMediaBundle:Navigation:collection }
 
-sulu_media.template.collection:
-    pattern: /template/media/collection.html
-    defaults: { _controller: SuluMediaBundle:Template:collection }
+sulu_media.template.collection.files:
+    pattern: /template/media/collection-files.html
+    defaults: { _controller: SuluMediaBundle:Template:collectionFiles }
+
+sulu_media.template.collection.settings:
+    pattern: /template/media/collection-settings.html
+    defaults: { _controller: SuluMediaBundle:Template:collectionSettings }
+
+sulu_media.template.collection.new:
+    pattern: /template/media/collection-new.html
+    defaults: { _controller: SuluMediaBundle:Template:collectionNew }
+
+sulu_media.template.media.info:
+    pattern: /template/media/media-info.html
+    defaults: { _controller: SuluMediaBundle:Template:mediaInfo }

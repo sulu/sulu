@@ -17,7 +17,7 @@ define([
         model: CollectionModel,
 
         url: function() {
-            return '/admin/api/collections';
+            return '/admin/api/collections?depth=0';
         },
 
         parse: function(resp) {
