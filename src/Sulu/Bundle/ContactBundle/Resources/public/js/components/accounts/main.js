@@ -45,6 +45,7 @@ define([
             this.bindCustomEvents();
             this.account = null;
             this.accountType = null;
+            this.accountTypes = null;
 
             if (this.options.display === 'list') {
                 this.renderList();
@@ -95,6 +96,17 @@ define([
                 }
                 this.sandbox.emit('sulu.router.navigate', 'contacts/accounts' + typeString, !noReload ? true : false, true);
             }, this);
+
+            this.sandbox.on('sulu.contacts.account.types', function(data){
+                this.accountType = data.accountType;
+                this.accountTypes = data.accountTypes;
+            }.bind(this));
+
+            this.sandbox.on('sulu.contacts.account.get.types', function(callback){
+                if(typeof callback === 'function'){
+                    callback(this.accountType, this.accountTypes);
+                }
+            }.bind(this));
         },
 
         // show confirmation and delete account

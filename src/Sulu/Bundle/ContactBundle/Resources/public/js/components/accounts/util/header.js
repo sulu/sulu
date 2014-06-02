@@ -95,15 +95,22 @@ define(['app-config'], function(AppConfig) {
          * @param {String} [accountTypeName] Name of account entity
          */
         setHeader: function(account, accountTypeName) {
+
+            var accountTypes = AppConfig.getSection('sulu-contact').accountTypes,
+                accountType;
+
             // parse to json
             account = account.toJSON();
 
             // get account type
-            var accountType = getAccountType.call(this, account, accountTypeName);
+            accountType = getAccountType.call(this, account, accountTypeName);
             // enable tabs based on type
             enableTabsByType.call(this, accountType);
             // set headline based on type and account
             setHeadlinesAndBreadCrumb.call(this, accountType, account.name);
+
+            this.sandbox.emit('sulu.contacts.account.types', {accountType: accountType, accountTypes: accountTypes});
+
         },
 
         /**
