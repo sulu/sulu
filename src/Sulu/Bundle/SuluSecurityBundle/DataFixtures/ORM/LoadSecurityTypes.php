@@ -24,7 +24,6 @@ class LoadSecurityTypes extends ContainerAware implements FixtureInterface, Orde
         // force id = 1
         $metadata = $manager->getClassMetaData(get_class(new SecurityType()));
         $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
-        $i = 1;
 
         $file = $this->container->getParameter('sulu_security.security_types.fixture');
         $doc = new DOMDocument();
@@ -37,11 +36,13 @@ class LoadSecurityTypes extends ContainerAware implements FixtureInterface, Orde
             /** @var $element DOMNode */
             foreach ($elements as $element) {
                 $securityType = new SecurityType();
-                $securityType->setId($i++);
                 $children = $element->childNodes;
                 /** @var $child DOMNode */
                 foreach ($children as $child) {
                     if (isset($child->nodeName)) {
+                        if ($child->nodeName == 'id') {
+                            $securityType->setId($child->nodeValue);
+                        }
                         if ($child->nodeName == 'name') {
                             $securityType->setName($child->nodeValue);
                         }
