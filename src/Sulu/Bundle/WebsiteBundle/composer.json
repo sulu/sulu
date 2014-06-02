@@ -15,7 +15,7 @@
         "php": ">=5.4",
 
         "sulu/sulu": "dev-develop",
-        "friendsofsymfony/rest-bundle": "dev-master",
+        "friendsofsymfony/rest-bundle": "@dev",
 
         "doctrine/orm": ">=2.2.3,<2.4-dev",
         "liip/theme-bundle": "1.0.*@dev",
@@ -23,7 +23,7 @@
         "symfony-cmf/routing": "1.2.*@dev"
     },
     "require-dev": {
-        "symfony/symfony": "2.4.*",
+        "symfony/symfony": "2.5.*",
         "symfony/monolog-bundle": "2.4.*",
         "phpunit/phpunit": "3.7.*",
         "sulu/test-bundle": "dev-develop"
