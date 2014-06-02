@@ -18,7 +18,7 @@
     "require-dev": {
         "symfony/symfony": "2.5.*",
         "phpunit/phpunit": "4.0.*",
-        "friendsofsymfony/rest-bundle": "dev-master"
+        "friendsofsymfony/rest-bundle": "@dev"
     },
     "autoload": {
         "psr-0": {
