@@ -20,15 +20,64 @@ define([], function() {
             tagsId: '#tags'
         },
 
+        getItemsForConvertOperation = function(){
+            var items = [];
+            this.sandbox.util.each(this.accountType.convertableTo, function(key,enabled){
+                this.sandbox.util.each(this.accountTypes, function(name, el){
+                    if(el.name === key && !!enabled){
+                        items.push( {
+                            title: el.translation+'.conversion',
+                            callback: function(){
+                                this.sandbox.emit('sulu.contacts.account.convert', el);
+                            }.bind(this)
+                        }
+                    );
+                    }
+                }.bind(this));
+            }.bind(this));
+
+            return items;
+        },
+
     // sets toolbar
         setHeaderToolbar = function() {
 
-            // TODO
+            var items = [],
+                options = {
+                    icon: 'gear',
+                    iconSize: 'large',
+                    group: 'left',
+                    id: 'options-button',
+                    position: 30
+                };
 
-
-            this.sandbox.emit('sulu.header.set-toolbar', {
-                template: 'default'
+            // save button
+            items.push({
+                id: 'save-button',
+                icon: 'floppy-o',
+                iconSize: 'large',
+                class: 'highlight',
+                position: 1,
+                group: 'left',
+                disabled: true,
+                callback: function() {
+                    this.sandbox.emit('sulu.header.toolbar.save');
+                }.bind(this)
             });
+
+            options.items = getItemsForConvertOperation.call(this);
+
+            // delete select item
+            options.items.push({
+                title: this.sandbox.translate('toolbar.delete'),
+                callback: function() {
+                    this.sandbox.emit('sulu.header.toolbar.delete');
+                }.bind(this)
+            });
+
+            items.push(options);
+
+            this.sandbox.emit('sulu.header.set-toolbar', {data: items});
         };
 
     return {
