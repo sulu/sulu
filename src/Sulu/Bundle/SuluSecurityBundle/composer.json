@@ -4,7 +4,7 @@
     "description": "Security Bundle for the Sulu CMS",
     "license": "MIT",
     "keywords": ["sulu", "security"],
-    "version": "0.3.0",
+    "version": "dev-develop",
     "authors": [
         {
             "name": "Sulu Community",
@@ -20,12 +20,15 @@
 
         "sulu/sulu": "dev-develop",
         "sulu/admin-bundle": "dev-develop",
-        "sulu/contact-bundle": "dev-develop"
+        "sulu/contact-bundle": "dev-develop",
+
+        "sulu/tag-bundle": "@dev"
     },
     "require-dev": {
         "sensio/framework-extra-bundle":  "~3.0",
         "symfony/symfony": "2.4.*",
         "doctrine/doctrine-bundle": "1.2.*",
+        "doctrine/doctrine-fixtures-bundle": "dev-master",
         "symfony/monolog-bundle": "2.4.*",
         "phpunit/phpunit": "3.7.*",
         "sulu/test-bundle": "dev-develop"
