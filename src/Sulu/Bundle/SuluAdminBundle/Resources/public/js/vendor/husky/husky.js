@@ -28259,6 +28259,8 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             if (this.options.fullWidth === true) {
                 this.sandbox.dom.removeClass(this.$el, constants.fullWidthClass);
             }
+            // remove inline-styles
+            this.sandbox.dom.removeAttr(this.$el, 'style');
             this.sandbox.dom.remove(this.$tableContainer);
         },
 
@@ -29117,7 +29119,9 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
 
             // if contentContainer is set, adapt maximum size
             if (!!this.options.contentContainer) {
-                this.sandbox.dom.css(this.options.contentContainer, 'max-width', finalWidth + contentPaddings);
+                if (this.options.fullWidth === true) {
+                    this.sandbox.dom.css(this.options.contentContainer, 'max-width', finalWidth + contentPaddings);
+                }
                 finalWidth = this.sandbox.dom.width(this.options.contentContainer);
                 if (!overlaps) {
                     // if table does not overlap border, set content to original width
