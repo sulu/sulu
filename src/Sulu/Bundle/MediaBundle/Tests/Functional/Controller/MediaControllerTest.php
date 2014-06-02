@@ -562,6 +562,30 @@ class MediaControllerTest extends DatabaseTestCase
     }
 
     /**
+     * @description Test DELETE Collection
+     */
+    public function testDeleteCollection()
+    {
+        $client = $this->createTestClient();
+
+        $client->request('DELETE', '/api/collections/1');
+        $this->assertEquals('204', $client->getResponse()->getStatusCode());
+
+        $client = $this->createTestClient();
+
+        $client->request(
+            'GET',
+            '/api/media/1'
+        );
+
+        $this->assertEquals(404, $client->getResponse()->getStatusCode());
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(0, $response->code);
+        $this->assertTrue(isset($response->message));
+    }
+
+    /**
      * @description Test DELETE on none existing Object
      */
     public function testDeleteByIdNotExisting()

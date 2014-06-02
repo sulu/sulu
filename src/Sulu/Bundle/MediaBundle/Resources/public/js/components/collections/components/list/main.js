@@ -32,7 +32,8 @@ define(function () {
             titleClass: 'collection-title',
             colorPointClass: 'collection-color',
             newCollectionId: 'new',
-            newFormId: 'collection-new'
+            newFormId: 'collection-new',
+            gridContainerClass: 'thumbnail-grid'
         },
 
         namespace = 'sulu.collection-list.',
@@ -62,6 +63,11 @@ define(function () {
 
         view: true,
 
+        fullSize: {
+            width: true,
+            keepPaddings: true
+        },
+
         header: {
             title: 'media.collections.title',
             noBack: true,
@@ -89,7 +95,7 @@ define(function () {
                 allOpen: false
             };
             // stores all colleciton objects with the corresponding id
-            this.collections = {}
+            this.collections = {};
             // stores key value paires of an array of selected elements as value and the corresponding datagrid-name as key
             this.selectedMedias = {};
             this.$overlayContent = null;
@@ -378,9 +384,12 @@ define(function () {
 
             this.collections[id].datagridName = this.options.instanceName + id;
             this.collections[id].datagridLoaded = true;
+
+            var $element = this.sandbox.dom.createElement('<div class="'+ constants.gridContainerClass +'"/>');
+            this.sandbox.dom.html($container, $element);
             this.sandbox.sulu.initList.call(this, 'mediaFields', '/admin/api/media/fields',
                 {
-                    el: $container,
+                    el: $element,
                     url: '/admin/api/media?collection=' + id,
                     view: 'thumbnail',
                     pagination: 'showall',
