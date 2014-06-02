@@ -283,7 +283,7 @@ class CollectionController extends RestController implements ClassResourceInterf
 
         foreach ($collections as $collection) {
             $flatCollection = new Collection();
-            array_push($flatCollections, $flatCollection->setDataByEntityArray($collection, $locale, $fields));
+            $flatCollections[] = $flatCollection->setDataByEntityArray($collection, $locale, $fields);
         }
 
         return $flatCollections;
@@ -340,7 +340,7 @@ class CollectionController extends RestController implements ClassResourceInterf
 
         // Set Parent
         if ($object->getParent()) {
-            // / @var CollectionEntity $parent
+            /** @var CollectionEntity $parent */
             $parent = $this->getDoctrine()
                 ->getRepository($this->entityName)
                 ->findCollectionById($object->getParent());
