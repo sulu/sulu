@@ -10,7 +10,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\RestObject;
 
-interface RestObject {
+interface RestObjectInterface {
 
     /**
      * will set the RestObject by an Entity Array
