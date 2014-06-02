@@ -120,8 +120,21 @@ define([
             this.confirmConversionDialog(function(wasConfirmed) {
                 if (wasConfirmed) {
                     this.sandbox.emit('sulu.header.toolbar.item.loading', 'options-button');
-                    //TODO Change and save and navigate
-                    //this.sandbox.emit('sulu.router.navigate', 'contacts/accounts/edit:'+this.options.id+'/details');
+                    this.account.set({type: data.id});
+                    this.account.save(null, {
+
+                        // on success save contacts id
+                        success: function(response) {
+                            var model = response.toJSON();
+                            this.sandbox.emit('sulu.router.navigate', 'contacts/accounts/edit:' + model.id + '/details', false);
+                            this.sandbox.emit('sulu.header.toolbar.item.enable', 'options-button');
+                            AccountsUtilHeader.setHeader.call(this, this.account, this.options.accountType);
+                        }.bind(this),
+
+                        error: function() {
+                            this.sandbox.logger.log("error while saving profile");
+                        }.bind(this)
+                    });
                 }
             }.bind(this));
         },
@@ -140,12 +153,11 @@ define([
             // show dialog
             this.sandbox.emit('sulu.overlay.show-warning',
                 'sulu.overlay.be-careful',
-                'sulu.contacts.accounts.type.conversion.message',
+                'contact.account.type.conversion.message',
                 callbackFunction.bind(this, false),
                 callbackFunction.bind(this, true)
             );
         },
-
 
         // show confirmation and delete account
         del: function() {
