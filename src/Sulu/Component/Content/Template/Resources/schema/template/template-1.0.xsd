@@ -21,7 +21,20 @@
         <xs:choice minOccurs="1" maxOccurs="unbounded">
             <xs:element type="propertyType" name="property" minOccurs="1" maxOccurs="unbounded"/>
             <xs:element type="blockType" name="block" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="sectionType" name="section" minOccurs="0" maxOccurs="unbounded"/>
         </xs:choice>
+    </xs:complexType>
+
+    <xs:complexType name="sectionType">
+        <xs:sequence minOccurs="1" maxOccurs="unbounded">
+            <xs:element type="propertyType" name="property" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="blockType" name="block" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+
+        <xs:attribute type="xs:string" name="name" use="required"/>
+        <xs:attribute type="xs:string" name="title" use="optional"/>
+        <xs:attribute type="xs:string" name="cssClass" use="optional"/>
+        <xs:attribute type="xs:integer" name="col" use="optional"/>
     </xs:complexType>
 
     <xs:complexType name="blockPropertiesType">
@@ -44,6 +57,8 @@
         <xs:attribute type="xs:string" name="multilingual" use="optional"/>
         <xs:attribute type="xs:byte" name="minOccurs" use="optional"/>
         <xs:attribute type="xs:byte" name="maxOccurs" use="optional"/>
+        <xs:attribute type="xs:string" name="cssClass" use="optional"/>
+        <xs:attribute type="xs:integer" name="col" use="optional"/>
     </xs:complexType>
 
     <xs:complexType name="blockType">
@@ -59,6 +74,8 @@
         <xs:attribute type="xs:string" name="multilingual" use="optional"/>
         <xs:attribute type="xs:byte" name="minOccurs" use="optional"/>
         <xs:attribute type="xs:byte" name="maxOccurs" use="optional"/>
+        <xs:attribute type="xs:string" name="cssClass" use="optional"/>
+        <xs:attribute type="xs:integer" name="col" use="optional"/>
     </xs:complexType>
 
     <xs:complexType name="blockTypesType">

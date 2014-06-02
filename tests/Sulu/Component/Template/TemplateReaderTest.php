@@ -429,4 +429,72 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($template, $result);
     }
 
+    public function testSections()
+    {
+        $template = array(
+            'key' => 'template',
+            'view' => 'page.html.twig',
+            'controller' => 'SuluContentBundle:Default:index',
+            'cacheLifetime' => 2400,
+            'properties' => array(
+                'title' => array(
+                    'name' => 'title',
+                    'title' => 'properties.title',
+                    'type' => 'text_line',
+                    'mandatory' => 1,
+                    'col' => 6,
+                    'tags' => array(
+                        '0' => array(
+                            'name' => 'sulu.node.name'
+                        ),
+                        '1' => array(
+                            'name' => 'sulu.node.title',
+                            'priority' => 10
+                        )
+                    )
+                ),
+                'test' => array(
+                    'name' => 'test',
+                    'type' => 'section',
+                    'title' => 'sections.test',
+                    'cssClass' => 'test',
+                    'properties' => array()
+                ),
+                'pages' => array(
+                    'name' => 'pages',
+                    'type' => 'smart_content_selection',
+                    'mandatory' => false,
+                    'tags' => array(
+                        '0' => array(
+                            'name' => 'sulu.node.title'
+                        )
+                    ),
+
+                ),
+                'images' => array(
+                    'name' => 'images',
+                    'type' => 'image_selection',
+                    'minOccurs' => 0,
+                    'maxOccurs' => 2,
+                    'col' => 6,
+                    'params' => array(
+                        '0' => array(
+                            'name' => 'minLinks',
+                            'value' => 1
+                        ),
+                        '1' => array(
+                            'name' => 'maxLinks',
+                            'value' => 10
+                        )
+                    )
+                )
+            )
+        );
+
+        $templateReader = new TemplateReader();
+        $result = $templateReader->load(__DIR__ . '/../../../Resources/DataFixtures/Template/template_sections.xml');
+
+        $this->assertEquals($template, $result);
+    }
+
 }
