@@ -38,6 +38,7 @@ define([], function() {
 
             this.form = '#contact-form';
             this.saved = true;
+            this.autoCompleteInstanceName = 'contacts-';
 
             this.dfdListenForChange = this.sandbox.data.deferred();
             this.dfdFormIsSet = this.sandbox.data.deferred();
@@ -89,7 +90,7 @@ define([], function() {
             this.initCategorySelect(data);
             this.startCategoryOverlay();
 
-            this.setTags(data);
+            this.setTags();
 
             this.bindDomEvents();
             this.bindCustomEvents();
@@ -97,14 +98,20 @@ define([], function() {
         },
 
         // show tags and activate keylistener
-        setTags: function(data) {
+        setTags: function() {
+            var uid = this.sandbox.util.uniqueId();
+            if (this.options.data.id) {
+                uid += this.options.data.id;
+            }
+            this.autoCompleteInstanceName += uid;
+
             this.dfdFormIsSet.then(function() {
                 this.sandbox.start([
                     {
                         name: 'auto-complete-list@husky',
                         options: {
                             el: '#tags',
-                            instanceName: 'contacts',
+                            instanceName: this.autoCompleteInstanceName,
                             getParameter: 'search',
                             remoteUrl: '/admin/api/tags?flat=true&sortBy=name',
                             completeIcon: 'tag',
@@ -118,11 +125,11 @@ define([], function() {
         bindTagEvents: function(data) {
             if (!!data.tags && data.tags.length > 0) {
                 // set tags after auto complete list was initialized
-                this.sandbox.on('husky.auto-complete-list.contacts.initialized', function() {
-                    this.sandbox.emit('husky.auto-complete-list.contacts.set-tags', data.tags);
+                this.sandbox.on('husky.auto-complete-list.' + this.autoCompleteInstanceName + '.initialized', function() {
+                    this.sandbox.emit('husky.auto-complete-list.' + this.autoCompleteInstanceName + '.set-tags', data.tags);
                 }.bind(this));
                 // listen for change after items have been added
-                this.sandbox.on('husky.auto-complete-list.contacts.items-added', function() {
+                this.sandbox.on('husky.auto-complete-list.' + this.autoCompleteInstanceName + '.items-added', function() {
                     this.dfdListenForChange.resolve();
                 }.bind(this));
             } else {
@@ -148,7 +155,6 @@ define([], function() {
                     this.sandbox.util.foreach(data, function(el) {
                         el.category = this.sandbox.translate(el.category);
                     }.bind(this));
-
 
                     this.addDividerAndActionsForSelect(data);
 
@@ -417,7 +423,6 @@ define([], function() {
         submit: function() {
             if (this.sandbox.form.validate(this.form)) {
                 var data = this.sandbox.form.getData(this.form);
-
 
                 if (data.id === '') {
                     delete data.id;
