@@ -107,7 +107,45 @@ define([
                     callback(this.accountType, this.accountTypes);
                 }
             }.bind(this));
+
+            this.sandbox.on('sulu.contacts.account.convert', function(data){
+                this.convertAccount(data);
+            }.bind(this));
         },
+
+        /**
+         * Converts an account
+         */
+        convertAccount: function(data) {
+            this.confirmConversionDialog(function(wasConfirmed) {
+                if (wasConfirmed) {
+                    this.sandbox.emit('sulu.header.toolbar.item.loading', 'options-button');
+                    //TODO Change and save and navigate
+                    //this.sandbox.emit('sulu.router.navigate', 'contacts/accounts/edit:'+this.options.id+'/details');
+                }
+            }.bind(this));
+        },
+
+        /**
+         * @var ids - array of ids to delete
+         * @var callback - callback function returns true or false if data got deleted
+         */
+        confirmConversionDialog: function(callbackFunction) {
+
+            // check if callback is a function
+            if (!!callbackFunction && typeof(callbackFunction) !== 'function') {
+                throw 'callback is not a function';
+            }
+
+            // show dialog
+            this.sandbox.emit('sulu.overlay.show-warning',
+                'sulu.overlay.be-careful',
+                'sulu.contacts.accounts.type.conversion.message',
+                callbackFunction.bind(this, false),
+                callbackFunction.bind(this, true)
+            );
+        },
+
 
         // show confirmation and delete account
         del: function() {
