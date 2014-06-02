@@ -82,6 +82,7 @@ class NodeControllerTest extends DatabaseTestCase
         $userRole1->setUser($user);
         $userRole1->setLocale(json_encode(array('de', 'en')));
         self::$em->persist($userRole1);
+        self::$em->flush();
 
         $permission1 = new Permission();
         $permission1->setPermissions(122);
@@ -135,6 +136,7 @@ class NodeControllerTest extends DatabaseTestCase
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Address'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AddressType'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ContactLocale'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\BankAccount'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Country'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Note'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Phone'),
@@ -147,10 +149,12 @@ class NodeControllerTest extends DatabaseTestCase
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\EmailType'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Contact'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Account'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AccountCategory'),
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\User'),
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\UserRole'),
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Role'),
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Permission'),
+            self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\SecurityType'),
             self::$em->getClassMetadata('Sulu\Bundle\TagBundle\Entity\Tag')
         );
 
@@ -347,8 +351,9 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent(), true);
 
-        $this->assertEquals(17, sizeof($response));
+        $this->assertEquals(18, sizeof($response));
         $this->assertEquals($data[0]['title'], $response['title']);
+        $this->assertEquals($data[0]['path'], $response['path']);
         $this->assertEquals($data[0]['tags'], $response['tags']);
         $this->assertEquals($data[0]['url'], $response['url']);
         $this->assertEquals($data[0]['article'], $response['article']);
@@ -705,7 +710,7 @@ class NodeControllerTest extends DatabaseTestCase
 
     public function testSmartContent()
     {
-        $this->buildTree();
+        $data = $this->buildTree();
 
         $client = $this->createClient(
             array(),
@@ -716,37 +721,59 @@ class NodeControllerTest extends DatabaseTestCase
         );
 
         $client->request('GET', '/api/nodes/filter?webspace=sulu_io&language=en');
-        $response = json_decode($client->getResponse()->getContent())->_embedded;
+        $response = json_decode($client->getResponse()->getContent());
+        $items = $response->_embedded;
 
-        $this->assertEquals(6, sizeof($response));
+        $this->assertEquals('', $response->title);
+        $this->assertEquals(6, sizeof($items));
 
-        $client->request('GET', '/api/nodes/filter?webspace=sulu_io&language=en&dataSource=%2Ftest2');
-        $response = json_decode($client->getResponse()->getContent())->_embedded;
+        $client->request('GET', '/api/nodes/filter?webspace=sulu_io&language=en&dataSource=' . $data[1]['id']);
+        $response = json_decode($client->getResponse()->getContent());
+        $items = $response->_embedded;
 
-        $this->assertEquals(2, sizeof($response));
+        $this->assertEquals(2, sizeof($items));
+        $this->assertEquals($data[1]['title'], $response->title);
 
-        $client->request('GET', '/api/nodes/filter?webspace=sulu_io&language=en&dataSource=%2Ftest2&includeSubFolders=true');
-        $response = json_decode($client->getResponse()->getContent())->_embedded;
+        $client->request(
+            'GET',
+            '/api/nodes/filter?webspace=sulu_io&language=en&dataSource=' . $data[1]['id'] . '&includeSubFolders=true'
+        );
+        $response = json_decode($client->getResponse()->getContent());
+        $items = $response->_embedded;
 
-        $this->assertEquals(3, sizeof($response));
+        $this->assertEquals(3, sizeof($items));
+        $this->assertEquals($data[1]['title'], $response->title);
 
-        $client->request('GET', '/api/nodes/filter?webspace=sulu_io&language=en&dataSource=%2Ftest2&includeSubFolders=true&limitResult=2');
-        $response = json_decode($client->getResponse()->getContent())->_embedded;
+        $client->request(
+            'GET',
+            '/api/nodes/filter?webspace=sulu_io&language=en&dataSource=' . $data[1]['id'] . '&includeSubFolders=true&limitResult=2'
+        );
+        $response = json_decode($client->getResponse()->getContent());
+        $items = $response->_embedded;
 
-        $this->assertEquals(2, sizeof($response));
+        $this->assertEquals(2, sizeof($items));
+        $this->assertEquals($data[1]['title'], $response->title);
 
         $client->request('GET', '/api/nodes/filter?webspace=sulu_io&language=en&tags=tag1');
-        $response = json_decode($client->getResponse()->getContent())->_embedded;
+        $response = json_decode($client->getResponse()->getContent());
+        $items = $response->_embedded;
 
-        $this->assertEquals(4, sizeof($response));
+        $this->assertEquals('', $response->title);
+        $this->assertEquals(4, sizeof($items));
 
         $client->request('GET', '/api/nodes/filter?webspace=sulu_io&language=en&tags=tag2');
-        $response = json_decode($client->getResponse()->getContent())->_embedded;
-        $this->assertEquals(3, sizeof($response));
+        $response = json_decode($client->getResponse()->getContent());
+        $items = $response->_embedded;
+
+        $this->assertEquals('', $response->title);
+        $this->assertEquals(3, sizeof($items));
 
         $client->request('GET', '/api/nodes/filter?webspace=sulu_io&language=en&tags=tag1,tag2');
-        $response = json_decode($client->getResponse()->getContent())->_embedded;
-        $this->assertEquals(2, sizeof($response));
+        $response = json_decode($client->getResponse()->getContent());
+        $items = $response->_embedded;
+
+        $this->assertEquals('', $response->title);
+        $this->assertEquals(2, sizeof($items));
     }
 
     public function testBreadcrumb()
@@ -797,9 +824,10 @@ class NodeControllerTest extends DatabaseTestCase
 
         $this->assertEquals(2, sizeof($items));
 
-        $this->assertEquals(9, sizeof($items[0]));
+        $this->assertEquals(10, sizeof($items[0]));
         $this->assertArrayHasKey('id', $items[0]);
         $this->assertEquals('test1', $items[0]['title']);
+        $this->assertEquals('/test1', $items[0]['path']);
         $this->assertEquals(1, $items[0]['nodeState']);
         $this->assertEquals(1, $items[0]['globalState']);
         $this->assertFalse($items[0]['publishedState']);
@@ -808,9 +836,10 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertEquals(0, sizeof($items[0]['_embedded']));
         $this->assertArrayHasKey('_links', $items[0]);
 
-        $this->assertEquals(9, sizeof($items[1]));
+        $this->assertEquals(10, sizeof($items[1]));
         $this->assertArrayHasKey('id', $items[1]);
         $this->assertEquals('test2', $items[1]['title']);
+        $this->assertEquals('/test2', $items[1]['path']);
         $this->assertEquals(1, $items[1]['nodeState']);
         $this->assertEquals(1, $items[1]['globalState']);
         $this->assertFalse($items[1]['publishedState']);
