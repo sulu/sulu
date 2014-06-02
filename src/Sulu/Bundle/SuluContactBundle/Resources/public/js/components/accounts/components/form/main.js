@@ -22,6 +22,10 @@ define([], function() {
 
     // sets toolbar
         setHeaderToolbar = function() {
+
+            // TODO
+
+
             this.sandbox.emit('sulu.header.set-toolbar', {
                 template: 'default'
             });
@@ -46,9 +50,17 @@ define([], function() {
             this.accountCategoryURL = 'api/account/categories';
 
             this.render();
+            this.getAccountTypeData();
             this.setHeaderBar(true);
             setHeaderToolbar.call(this);
             this.listenForChange();
+        },
+        
+        getAccountTypeData: function(){
+            this.sandbox.emit('sulu.contacts.account.get.types',function(accountType, accountTypes){
+                this.accountType = accountType;
+                this.accountTypes = accountTypes;
+            }.bind(this));
         },
 
         render: function() {
@@ -62,6 +74,8 @@ define([], function() {
             this.titleField = this.$find('#name');
 
             data = this.initContactData();
+            this.accountType = null;
+            this.accountTypes = null;
 
             excludeItem = [];
             if (!!this.options.data.id) {
