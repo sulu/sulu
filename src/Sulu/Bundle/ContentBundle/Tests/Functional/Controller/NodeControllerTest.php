@@ -82,6 +82,7 @@ class NodeControllerTest extends DatabaseTestCase
         $userRole1->setUser($user);
         $userRole1->setLocale(json_encode(array('de', 'en')));
         self::$em->persist($userRole1);
+        self::$em->flush();
 
         $permission1 = new Permission();
         $permission1->setPermissions(122);
