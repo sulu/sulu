@@ -146,8 +146,7 @@ class FilterNodesQueryBuilder
     private function getDatasource()
     {
         $dataSource = $this->getConfig('dataSource');
-
-        $sqlFunction = $this->hasConfig('includeSubFolders') ? 'ISDESCENDANTNODE' : 'ISCHILDNODE';
+        $sqlFunction = $this->getConfig('includeSubFolders', false) ? 'ISDESCENDANTNODE' : 'ISCHILDNODE';
 
         if ($this->webspaceManager->findWebspaceByKey($dataSource) !== null) {
             $node = $this->sessionManager->getContentNode($dataSource);
@@ -166,7 +165,7 @@ class FilterNodesQueryBuilder
     private function getTags($languageCode)
     {
         $sql2Where = array();
-        foreach ($this->getConfig('tags') as $tag) {
+        foreach ($this->getConfig('tags', array()) as $tag) {
             $sql2Where[] = 'c.[sulu_locale:' . $languageCode . '-tags] = ' . $tag;
         }
 
@@ -180,7 +179,7 @@ class FilterNodesQueryBuilder
      */
     private function hasConfig($name)
     {
-        return isset($filterConfig[$name]) && !empty($filterConfig[$name]);
+        return isset($this->filterConfig[$name]);
     }
 
     /**
