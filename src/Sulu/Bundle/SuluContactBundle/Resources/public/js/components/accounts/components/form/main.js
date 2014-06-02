@@ -103,7 +103,7 @@ define([], function() {
             if (this.options.data.id) {
                 uid += this.options.data.id;
             }
-            this.autoCompleteInstanceName += uid;
+            this.autoCompleteInstanceName += '-' + uid;
 
             this.dfdFormIsSet.then(function() {
                 this.sandbox.start([
