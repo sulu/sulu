@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define([], function() {
+define(['accountsutil/header'], function(AccountsUtilHeader) {
 
     'use strict';
 
@@ -19,6 +19,8 @@ define([], function() {
         constants = {
             tagsId: '#tags'
         },
+
+    // TODO move following 2 methods to header.js?
 
         getItemsForConvertOperation = function(){
             var items = [];
@@ -471,6 +473,14 @@ define([], function() {
 
                 this.sandbox.emit('husky.select.account-category.update', data, selected);
             }, this);
+
+            this.sandbox.on('sulu.account.type.converted', function(){
+
+                //TODO remove event and move code to accounts/main.js
+
+                AccountsUtilHeader.setHeader.call(this, this.account, this.options.accountType);
+                setHeaderToolbar.call(this);
+            }.bind(this));
         },
 
         /**
