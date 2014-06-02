@@ -10,12 +10,13 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\RestObject;
 
-use Sulu\Bundle\MediaBundle\Entity\Collection;
+use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
+use Sulu\Bundle\MediaBundle\Entity\Collection as Entity;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\TestBundle\Entity\TestUser;
 use DateTime;
 
-class CollectionRestObject implements RestObject
+class Collection extends ApiEntity implements RestObjectInterface
 {
 
     /**
@@ -179,6 +180,7 @@ class CollectionRestObject implements RestObject
     }
 
     /**
+     * @var Entity $object
      * {@inheritdoc}
      */
     public function setDataByEntity($object, $locale, $properties = array())
@@ -203,7 +205,7 @@ class CollectionRestObject implements RestObject
         // set children and get media counts
         $childIds = array();
         /**
-         * @var Collection $child
+         * @var Entity $child
          */
         foreach ($object->getChildren() as $child) {
             array_push($childIds, $child->getId());

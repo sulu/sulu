@@ -14,10 +14,9 @@ use DateTime;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Put;
-use Sulu\Bundle\MediaBundle\Entity\Collection;
+use Sulu\Bundle\MediaBundle\Entity\Collection as CollectionEntity;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
-use Sulu\Bundle\MediaBundle\Entity\CollectionType;
-use Sulu\Bundle\MediaBundle\Media\RestObject\CollectionRestObject;
+use Sulu\Bundle\MediaBundle\Media\RestObject\Collection;
 use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
@@ -118,11 +117,11 @@ class CollectionController extends RestController implements ClassResourceInterf
      */
     public function getAction($id, Request $request)
     {
-        $collection = $this->getDoctrine()
+        $collectionEntity = $this->getDoctrine()
             ->getRepository($this->entityName)
             ->findCollectionById($id, true);
 
-        if (!$collection) {
+        if (!$collectionEntity) {
             $exception = new EntityNotFoundException($this->entityName, $id);
             // Return a 404 together with an error message, given by the exception, if the entity is not found
             $view = $this->view(
@@ -131,7 +130,7 @@ class CollectionController extends RestController implements ClassResourceInterf
             );
         } else {
             $locale = $this->getLocale($request->get('locale'));
-            $collectionRestObject = new CollectionRestObject();
+            $collection = new Collection();
 
             $view = $this->view(
                 array_merge(
@@ -140,7 +139,7 @@ class CollectionController extends RestController implements ClassResourceInterf
                             'self' => $request->getRequestUri()
                         )
                     ),
-                    $collectionRestObject->setDataByEntityArray($collection, $locale)->toArray()
+                    $collection->setDataByEntityArray($collectionEntity, $locale)->toArray()
                 )
                 , 200);
         }
@@ -160,8 +159,8 @@ class CollectionController extends RestController implements ClassResourceInterf
         $parentId = $request->get('parent');
         $depth = $request->get('depth');
 
-        $collections = $this->getDoctrine()->getRepository($this->entityName)->findCollections($parentId, $depth);
-        $collections = $this->flatCollections($collections, $locale, $request->get('fields', array()));
+        $collectionEntities = $this->getDoctrine()->getRepository($this->entityName)->findCollections($parentId, $depth);
+        $collections = $this->flatCollections($collectionEntities, $locale, $request->get('fields', array()));
         $view = $this->view($this->createHalResponse($collections), 200);
 
         return $this->handleView($view);
@@ -177,21 +176,21 @@ class CollectionController extends RestController implements ClassResourceInterf
         try {
             $em = $this->getDoctrine()->getManager();
 
-            $collectionRestObject = $this->getRestObject($request);
+            $collection = $this->getRestObject($request);
 
-            $collection = new Collection();
-            $collection->setCreated(new DateTime());
-            $collection->setCreator($this->getUser());
-            $this->createCollectionByRestObject($collectionRestObject, $collection, $em);
+            $collectionEntity = new CollectionEntity();
+            $collectionEntity->setCreated(new DateTime());
+            $collectionEntity->setCreator($this->getUser());
+            $this->createCollectionByRestObject($collection, $collectionEntity, $em);
 
-            $em->persist($collection);
+            $em->persist($collectionEntity);
             $em->flush();
 
             $locale = $this->getLocale($request->get('locale'));
 
-            $collectionRestObject = new CollectionRestObject();
+            $collection = new Collection();
 
-            $view = $this->view($collectionRestObject->setDataByEntity($collection, $locale)->toArray(), 200);
+            $view = $this->view($collection->setDataByEntity($collectionEntity, $locale)->toArray(), 200);
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
         } catch (RestException $re) {
@@ -210,29 +209,27 @@ class CollectionController extends RestController implements ClassResourceInterf
      */
     public function putAction($id, Request $request)
     {
-        $collectionEntity = 'SuluMediaBundle:Collection';
-
         try {
-            /** @var Collection $collection */
-            $collection = $this->getDoctrine()
-                ->getRepository($collectionEntity)
+            /** @var CollectionEntity $collection */
+            $collectionEntity = $this->getDoctrine()
+                ->getRepository($this->entityName)
                 ->findCollectionById($id);
 
-            if (!$collection) {
-                throw new EntityNotFoundException($collectionEntity, $id);
+            if (!$collectionEntity) {
+                throw new EntityNotFoundException($this->entityName, $id);
             } else {
                 $em = $this->getDoctrine()->getManager();
 
-                $collectionRestObject = $this->getRestObject($request);
-                $this->createCollectionByRestObject($collectionRestObject, $collection, $em);
+                $collection = $this->getRestObject($request);
+                $this->createCollectionByRestObject($collection, $collectionEntity, $em);
 
-                $em->persist($collection);
+                $em->persist($collectionEntity);
                 $em->flush();
 
-                $collectionRestObject = new CollectionRestObject();
+                $collection = new Collection();
                 $locale = $this->getLocale($request->get('locale'));
 
-                $view = $this->view($collectionRestObject->setDataByEntity($collection, $locale)->toArray(), 200);
+                $view = $this->view($collection->setDataByEntity($collectionEntity, $locale)->toArray(), 200);
             }
         } catch (EntityNotFoundException $exc) {
             $view = $this->view($exc->toArray(), 404);
@@ -253,18 +250,18 @@ class CollectionController extends RestController implements ClassResourceInterf
         $delete = function ($id) {
             $entityName = 'SuluMediaBundle:Collection';
 
-            /* @var Collection $collection */
-            $collection = $this->getDoctrine()
-                ->getRepository($entityName)
+            /* @var CollectionEntity $collection */
+            $collectionEntity = $this->getDoctrine()
+                ->getRepository($this->entityName)
                 ->findCollectionByIdForDelete($id);
 
-            if (!$collection) {
-                throw new EntityNotFoundException($entityName, $id);
+            if (!$collectionEntity) {
+                throw new EntityNotFoundException($this->entityName, $id);
             }
 
             $em = $this->getDoctrine()->getManager();
 
-            $em->remove($collection);
+            $em->remove($collectionEntity);
             $em->flush();
         };
 
@@ -285,8 +282,8 @@ class CollectionController extends RestController implements ClassResourceInterf
         $flatCollections = array();
 
         foreach ($collections as $collection) {
-            $flatCollection = new CollectionRestObject();
-            array_push($flatCollections, $flatCollection->setDataByEntityArray($collection, $locale, $fields));
+            $flatCollection = new Collection();
+            $flatCollections[] = $flatCollection->setDataByEntityArray($collection, $locale, $fields);
         }
 
         return $flatCollections;
@@ -294,39 +291,45 @@ class CollectionController extends RestController implements ClassResourceInterf
 
     /**
      * @param Request $request
-     * @return CollectionRestObject
+     * @return Collection
      */
     protected function getRestObject(Request $request)
     {
-        $collectionRestObject = new CollectionRestObject();
-        $collectionRestObject->setId($request->get('id'));
-        $collectionRestObject->setStyle($request->get('style', array(
-            'type'  => 'circle',
-            'color' => Collection::generateColor()
-        )));
-        $collectionRestObject->setType($request->get('type', Collection::TYPE_DEFAULT));
-        $collectionRestObject->setParent($request->get('parent'));
-        $collectionRestObject->setLocale($request->get('locale', $this->getLocale($request->get('locale'))));
-        $collectionRestObject->setTitle($request->get('title'));
-        $collectionRestObject->setDescription($request->get('description'));
-        $collectionRestObject->setChanger($request->get('changer'));
-        $collectionRestObject->setCreator($request->get('creator'));
-        $collectionRestObject->setChanged($request->get('changed'));
-        $collectionRestObject->setCreated($request->get('created'));
+        $collection = new Collection();
+        $collection->setId($request->get('id'));
+        $collection->setStyle($request->get('style'));
+        $collection->setType($request->get('type', $this->container->getParameter('sulu_media.collection.type.default')));
+        $collection->setParent($request->get('parent'));
+        $collection->setLocale($request->get('locale', $this->getLocale($request->get('locale'))));
+        $collection->setTitle($request->get('title'));
+        $collection->setDescription($request->get('description'));
+        $collection->setChanger($request->get('changer'));
+        $collection->setCreator($request->get('creator'));
+        $collection->setChanged($request->get('changed'));
+        $collection->setCreated($request->get('created'));
 
-        return $collectionRestObject;
+        return $collection;
     }
 
     /**
-     * @param CollectionRestObject $object
-     * @param Collection $collection
+     * @param Collection $object
+     * @param CollectionEntity $collection
      * @param $em
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      */
-    protected function createCollectionByRestObject(CollectionRestObject $object, Collection &$collection, &$em)
+    protected function createCollectionByRestObject(Collection $object, CollectionEntity &$collection, &$em)
     {
         // Set Style
-        $collection->setStyle(json_encode($object->getStyle()));
+        if ($object->getStyle()) {
+            $collection->setStyle(json_encode($object->getStyle()));
+        } elseif (!$collection->getStyle()) { // if no style was set generate one
+            $generatedStyle = array(
+                'type' => $this->container->getParameter('sulu_media.collection.style.type.default'),
+                'color' => CollectionEntity::generateColor()
+            );
+
+            $collection->setStyle(json_encode($generatedStyle));
+        }
 
         // Set Type
         $type = $this->getDoctrine()->getRepository('SuluMediaBundle:CollectionType')->find($object->getType());
@@ -337,7 +340,7 @@ class CollectionController extends RestController implements ClassResourceInterf
 
         // Set Parent
         if ($object->getParent()) {
-            // / @var Collection $parent
+            /** @var CollectionEntity $parent */
             $parent = $this->getDoctrine()
                 ->getRepository($this->entityName)
                 ->findCollectionById($object->getParent());
@@ -363,7 +366,9 @@ class CollectionController extends RestController implements ClassResourceInterf
                 if ($meta->getLocale() == $object->getLocale()) {
                     $metaSet = true;
                     $meta->setTitle($object->getTitle());
-                    $meta->setDescription($object->getDescription());
+                    if ($object->getDescription()) {
+                        $meta->setDescription($object->getDescription());
+                    }
                     $meta->setLocale($object->getLocale());
                     $em->persist($meta);
                 }
@@ -372,7 +377,9 @@ class CollectionController extends RestController implements ClassResourceInterf
                 $meta = new CollectionMeta();
                 $meta->setTitle($object->getTitle());
                 $meta->setLocale($object->getLocale());
-                $meta->setDescription($object->getDescription());
+                if ($object->getDescription()) {
+                    $meta->setDescription($object->getDescription());
+                }
                 $meta->setCollection($collection);
                 $collection->addMeta($meta);
                 $em->persist($meta);

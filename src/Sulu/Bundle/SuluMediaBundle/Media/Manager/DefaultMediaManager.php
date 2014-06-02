@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\MediaBundle\Media\Manager;
 
 use Doctrine\Common\Persistence\ObjectManager;
+use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
@@ -259,10 +260,20 @@ class DefaultMediaManager implements MediaManagerInterface
         /**
          * @var FileVersion $fileVersion
          */
+        $oldMeta = array();
+        $oldTags = array();
+        $oldContentLanguages = array();
+        $oldPublishLanguages = array();
         foreach ($file->getFileVersions() as $fileVersion) {
             if ($version == $file->getVersion()) {
                 $fileName = $fileVersion->getName();
                 $oldStorageOptions = $fileVersion->getStorageOptions();
+
+                $oldMeta = $fileVersion->getMeta();
+                $oldTags = $fileVersion->getTags();
+                $oldContentLanguages = $fileVersion->getContentLanguages();
+                $oldPublishLanguages = $fileVersion->getPublishLanguages();
+
                 break;
             }
         }
@@ -287,6 +298,8 @@ class DefaultMediaManager implements MediaManagerInterface
             $file->setVersion($version);
             $fileVersion->setStorageOptions($storageOptions);
             $fileVersion->setFile($file);
+
+            $this->setNewVersionProperties($fileVersion, $oldMeta, $oldTags, $oldContentLanguages, $oldPublishLanguages);
         }
 
         if ($uploadedFile) {
@@ -302,6 +315,41 @@ class DefaultMediaManager implements MediaManagerInterface
         $this->em->flush();
 
         return $media;
+    }
+
+    /**
+     * @param FileVersion $fileVersion
+     * @param FileVersionMeta[] $metas
+     * @param Tag[] $tags
+     * @param FileVersionContentLanguage[] $contentLanguages
+     * @param FileVersionPublishLanguage[] $publishLanguages
+     */
+    protected function setNewVersionProperties(&$fileVersion, $metas = array(), $tags = array(), $contentLanguages = array(), $publishLanguages = array())
+    {
+        foreach ($metas as $meta) {
+            $newMedia = clone $meta;
+            $newMedia->setFileVersion($fileVersion);
+            $this->em->persist($newMedia);
+            $fileVersion->addMeta($newMedia);
+        }
+
+        foreach ($tags as $tag) {
+            $fileVersion->addTag($tag);
+        }
+
+        foreach ($contentLanguages as $contentLanguage) {
+            $newContentLanguage = clone $contentLanguage;
+            $newContentLanguage->setFileVersion($fileVersion);
+            $this->em->persist($newContentLanguage);
+            $fileVersion->addContentLanguage($newContentLanguage);
+        }
+
+        foreach ($publishLanguages as $publishLanguage) {
+            $newPublishLanguage = clone $publishLanguage;
+            $newPublishLanguage->setFileVersion($fileVersion);
+            $this->em->persist($newPublishLanguage);
+            $fileVersion->addPublishLanguage($newPublishLanguage);
+        }
     }
 
     /**
@@ -381,6 +429,7 @@ class DefaultMediaManager implements MediaManagerInterface
                         if (isset($meta['description'])) {
                             $oldMeta->setDescription($meta['description']);
                         }
+                        $fileVersion->addMeta($oldMeta);
                         $this->em->persist($oldMeta);
 
                         unset($metaList[$key]);
@@ -423,8 +472,8 @@ class DefaultMediaManager implements MediaManagerInterface
             foreach ($fileVersion->getContentLanguages() as $oldContentLanguage) {
                 $exists = false;
                 foreach ($contentLanguages as $key => $contentLanguage) {
-                    if (isset($contentLanguage) && $oldContentLanguage->getId() == $contentLanguage) {
-                        unset($contentLanguage[$key]);
+                    if ($oldContentLanguage->getId() == $contentLanguage) {
+                        unset($contentLanguages[$key]);
                         $exists = true;
                         break;
                     }
@@ -460,8 +509,8 @@ class DefaultMediaManager implements MediaManagerInterface
             foreach ($fileVersion->getPublishLanguages() as $oldPublishLanguage) {
                 $exists = false;
                 foreach ($publishLanguages as $key => $publishLanguage) {
-                    if (isset($publishLanguage) && $oldPublishLanguage->getLocale() == $publishLanguage) {
-                        unset($publishLanguage[$key]);
+                    if ($oldPublishLanguage->getLocale() == $publishLanguage) {
+                        unset($publishLanguages[$key]);
                         $exists = true;
                         break;
                     }
