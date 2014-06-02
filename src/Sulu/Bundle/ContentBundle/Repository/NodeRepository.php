@@ -253,6 +253,9 @@ class NodeRepository implements NodeRepositoryInterface
             )
         );
 
+        // init result
+        $data = array();
+
         // add default empty embedded property
         $data['_embedded'] = array(
             $node
