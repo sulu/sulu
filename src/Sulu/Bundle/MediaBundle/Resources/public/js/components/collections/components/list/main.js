@@ -78,7 +78,7 @@ define(function () {
             ]
         },
 
-        templates: ['/admin/media/template/media/collection-new'],
+        templates: ['/admin/media/template/collection/new'],
 
         /**
          * Initializes the collections list
@@ -135,11 +135,13 @@ define(function () {
                 this.sandbox.sulu.showDeleteDialog(function(confirmed) {
                     if (confirmed === true) {
                         for (var key in this.selectedMedias) {
-                            this.sandbox.emit('sulu.media.collections.delete-media', this.selectedMedias[key], function (key, mediaId) {
-                                this.sandbox.emit('husky.datagrid.' + this.collections[key].datagridName + '.record.remove', mediaId);
-                                this.collections[key].selectedElements = 0;
-                                delete this.selectedMedias[key];
-                            }.bind(this, key), true);
+                            if (this.selectedMedias.hasOwnProperty(key)) {
+                                this.sandbox.emit('sulu.media.collections.delete-media', this.selectedMedias[key], function(key, mediaId) {
+                                    this.sandbox.emit('husky.datagrid.' + this.collections[key].datagridName + '.record.remove', mediaId);
+                                    this.collections[key].selectedElements = 0;
+                                    delete this.selectedMedias[key];
+                                }.bind(this, key), true);
+                            }
                         }
                     }
                 }.bind(this));
@@ -151,11 +153,11 @@ define(function () {
          * element-ids and stores them in the global array
          */
         setSelectedMedias: function () {
-            var key, count = 0, length = Object.keys(this.collections).length,
+            var count = 0, length = Object.keys(this.collections).length,
                 dfd = this.sandbox.data.deferred();
 
             for (var key in this.collections) {
-                if (this.collections[key].selectedElements > 0) {
+                if (this.collections.hasOwnProperty(key) && this.collections[key].selectedElements > 0) {
                     this.sandbox.emit('husky.datagrid.' + this.collections[key].datagridName + '.items.get-selected', function (ids) {
                         // stores the selected media-ids with the id of the corresponding datagrid
                         this.selectedMedias[key] = ids;
@@ -176,7 +178,6 @@ define(function () {
 
         /**
          * Adds a new collection the the list
-         * @param name {String} the title of the new collection - optional
          * @returns {Boolean} returns false if a new and unsafed colleciton exists
          */
         addCollection: function () {
@@ -250,7 +251,7 @@ define(function () {
             var $container = this.sandbox.dom.createElement('<div class="overlay-element"/>');
             this.sandbox.dom.append(this.$el, $container);
 
-            this.$overlayContent = this.renderTemplate('/admin/media/template/media/collection-new');
+            this.$overlayContent = this.renderTemplate('/admin/media/template/collection/new');
 
             this.sandbox.once('husky.overlay.add-collection.opened', function () {
                 this.sandbox.form.create('#' + constants.newFormId);
@@ -328,12 +329,11 @@ define(function () {
          * @param collection
          */
         updateCollection: function (collection) {
-            // if the passed collection already exists override the data property
             if (!!this.collections[collection.id]) {
+                // if the passed collection already exists override the data property
                 this.collections[collection.id].data = collection;
-
-                // else, if a placeholder collection (new one) exists create a new collection object and delete the placeholder
             } else if (!!this.collections[constants.newCollectionId]) {
+                // else, if a placeholder collection (new one) exists create a new collection object and delete the placeholder
                 this.collections[collection.id] = {
                     id: collection.id,
                     $el: this.collections[constants.newCollectionId].$el,

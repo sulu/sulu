@@ -266,7 +266,6 @@ class CollectionController extends RestController implements ClassResourceInterf
         };
 
         $view = $this->responseDelete($id, $delete);
-        $view->setFormat('json');
 
         return $this->handleView($view);
     }

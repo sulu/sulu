@@ -8,12 +8,12 @@
  */
 
 define([
-    'sulumedia/collection/collections',
-    'sulumedia/collection/medias',
-    'sulumedia/model/collection',
-    'sulumedia/model/media'
-],
-    function (Collections, Medias, Collection, Media) {
+        'sulumedia/collection/collections',
+        'sulumedia/collection/medias',
+        'sulumedia/model/collection',
+        'sulumedia/model/media'
+    ],
+    function(Collections, Medias, Collection, Media) {
 
         'use strict';
 
@@ -24,7 +24,7 @@ define([
              * @event sulu.media.collections.list
              * @param noReload {Boolean} if false page reloads
              */
-                ROUTE_TO_LIST = function () {
+            ROUTE_TO_LIST = function() {
                 return createEventName.call(this, 'list');
             },
 
@@ -35,7 +35,7 @@ define([
              * @param callback {Function} callback to execute after a media got deleted
              * @param noDialog {Boolean} if true no dialog will be shown
              */
-                DELETE_MEDIA = function () {
+            DELETE_MEDIA = function() {
                 return createEventName.call(this, 'delete-media');
             },
 
@@ -45,7 +45,7 @@ define([
              * @param id {Number|String} the id of the collection to delete
              * @param callback {Function} callback to execute after a media got deleted
              */
-                DELETE_COLLECTION = function () {
+            DELETE_COLLECTION = function() {
                 return createEventName.call(this, 'delete-collection');
             },
 
@@ -54,7 +54,7 @@ define([
              * @event sulu.media.collections.media-deleted
              * @param id {Number|String} the id of the deleted media
              */
-                SINGLE_MEDIA_DELETED = function () {
+            SINGLE_MEDIA_DELETED = function() {
                 return createEventName.call(this, 'media-deleted');
             },
 
@@ -63,7 +63,7 @@ define([
              * @event sulu.media.collections.collection-deleted
              * @param id {Number|String} the id of the deleted media
              */
-                COLLECTION_DELETED = function () {
+            COLLECTION_DELETED = function() {
                 return createEventName.call(this, 'collection-deleted');
             },
 
@@ -72,7 +72,7 @@ define([
              * @event sulu.media.collections.media-saved
              * @param {Object} the changed media object
              */
-                MEDIA_SAVED = function () {
+            MEDIA_SAVED = function() {
                 return createEventName.call(this, 'media-saved');
             },
 
@@ -81,7 +81,7 @@ define([
              * @event sulu.media.collections.edit-media
              * @param id {Number|String} the id of the media to edit
              */
-                EDIT_MEDIA = function () {
+            EDIT_MEDIA = function() {
                 return createEventName.call(this, 'edit-media');
             },
 
@@ -90,7 +90,7 @@ define([
              * @event sulu.media.collections.save-media
              * @param media {Object} a media object with at least an id property
              */
-                SAVE_MEDIA = function () {
+            SAVE_MEDIA = function() {
                 return createEventName.call(this, 'save-media');
             },
 
@@ -99,7 +99,7 @@ define([
              * @event sulu.media.collections.save-collection
              * @param collection {Object} a collection object with at least an id property
              */
-                SAVE_COLLECTION = function () {
+            SAVE_COLLECTION = function() {
                 return createEventName.call(this, 'save-collection');
             },
 
@@ -108,7 +108,7 @@ define([
              * @event sulu.media.collections.collection-changed
              * @param {Object} the changed collection object
              */
-                COLLECTION_CHANGED = function () {
+            COLLECTION_CHANGED = function() {
                 return createEventName.call(this, 'collection-changed');
             },
 
@@ -118,7 +118,7 @@ define([
              * @param {Number|String} the id of the collection
              * @param {String} the tab to navigate to
              */
-                NAVIGATE_COLLECTION_EDIT = function () {
+            NAVIGATE_COLLECTION_EDIT = function() {
                 return createEventName.call(this, 'collection-edit');
             },
 
@@ -126,18 +126,18 @@ define([
              * listens on and navigates to collection list
              * @event sulu.media.collections.collection-list
              */
-                NAVIGATE_COLLECTION_LIST = function () {
+            NAVIGATE_COLLECTION_LIST = function() {
                 return createEventName.call(this, 'collection-list');
             },
 
             /** returns normalized event names */
-                createEventName = function (postFix) {
+            createEventName = function(postFix) {
                 return namespace + postFix;
             };
 
         return {
 
-            initialize: function () {
+            initialize: function() {
                 // store backbone-models in global backbone-collections
                 this.collections = new Collections();
                 this.medias = new Medias();
@@ -165,7 +165,7 @@ define([
              * @param id {String|Number} id of the model
              * @returns {Object} the backbone model
              */
-            getMediaModel: function (id) {
+            getMediaModel: function(id) {
                 if (!!this.medias.get(id)) {
                     return this.medias.get(id);
                 } else {
@@ -183,7 +183,7 @@ define([
              * @param id {String|Number} id of the model
              * @returns {Object} the backbone model
              */
-            getCollectionModel: function (id) {
+            getCollectionModel: function(id) {
                 if (!!this.collections.get(id)) {
                     return this.collections.get(id);
                 } else {
@@ -199,9 +199,9 @@ define([
             /**
              * Bind custom events concerning collections
              */
-            bindCustomEvents: function () {
+            bindCustomEvents: function() {
                 // navigate to list view
-                this.sandbox.on(ROUTE_TO_LIST.call(this), function (noReload) {
+                this.sandbox.on(ROUTE_TO_LIST.call(this), function(noReload) {
                     this.sandbox.emit('sulu.router.navigate', 'media/collections', !noReload ? true : false, true);
                 }, this);
 
@@ -221,14 +221,14 @@ define([
                 this.sandbox.on(SAVE_COLLECTION.call(this), this.saveCollection.bind(this));
 
                 // navigate to collection edit
-                this.sandbox.on(NAVIGATE_COLLECTION_EDIT.call(this), function (collectionId, tab) {
+                this.sandbox.on(NAVIGATE_COLLECTION_EDIT.call(this), function(collectionId, tab) {
                     // default tab is files
                     tab = (!!tab) ? tab : 'files';
                     this.sandbox.emit('sulu.router.navigate', 'media/collections/edit:' + collectionId + '/' + tab, true, true);
                 }.bind(this));
 
                 // navigate to collection list
-                this.sandbox.on(NAVIGATE_COLLECTION_LIST.call(this), function () {
+                this.sandbox.on(NAVIGATE_COLLECTION_LIST.call(this), function() {
                     this.sandbox.emit('sulu.router.navigate', 'media/collections', true, true);
                 }.bind(this));
             },
@@ -237,15 +237,15 @@ define([
              * Saves data for an existing collection
              * @param data {Object} object with the data to update
              */
-            saveCollection: function (data) {
+            saveCollection: function(data) {
                 var collection = this.getCollectionModel(data.id);
                 collection.set(data);
 
                 collection.save(null, {
-                    success: function (collection) {
+                    success: function(collection) {
                         this.sandbox.emit(COLLECTION_CHANGED.call(this), collection.toJSON());
                     }.bind(this),
-                    error: function () {
+                    error: function() {
                         this.sandbox.logger.log('Error while saving collection');
                     }.bind(this)
                 });
@@ -257,20 +257,20 @@ define([
              * @param callback {Function} callback to execute after deleting a media
              * @param noDialog {Boolean} if true no dialog box will be shown
              */
-            deleteMedia: function (mediaIds, callback, noDialog) {
+            deleteMedia: function(mediaIds, callback, noDialog) {
                 var media,
-                    action = function () {
-                        this.sandbox.util.foreach(mediaIds, function (id) {
+                    action = function() {
+                        this.sandbox.util.foreach(mediaIds, function(id) {
                             media = this.getMediaModel(id);
                             media.destroy({
-                                success: function () {
+                                success: function() {
                                     if (typeof callback === 'function') {
                                         callback(id);
                                     } else {
                                         this.sandbox.emit(SINGLE_MEDIA_DELETED.call(this), id);
                                     }
                                 }.bind(this),
-                                error: function () {
+                                error: function() {
                                     this.sandbox.logger.log('Error while deleting a single media');
                                 }.bind(this)
                             });
@@ -280,7 +280,7 @@ define([
                 if (noDialog === true) {
                     action();
                 } else {
-                    this.sandbox.sulu.showDeleteDialog(function (confirmed) {
+                    this.sandbox.sulu.showDeleteDialog(function(confirmed) {
                         if (confirmed === true) {
                             action();
                         }
@@ -293,19 +293,19 @@ define([
              * @param id {Number|String} the id of the collection to delete
              * @param callback {Function} callback to execute after deleting the collection
              */
-            deleteCollection: function (id, callback) {
-                this.sandbox.sulu.showDeleteDialog(function (confirmed) {
+            deleteCollection: function(id, callback) {
+                this.sandbox.sulu.showDeleteDialog(function(confirmed) {
                     if (confirmed === true) {
                         var collection = this.getCollectionModel(id);
                         collection.destroy({
-                            success: function () {
+                            success: function() {
                                 if (typeof callback === 'function') {
                                     callback(id);
                                 } else {
                                     this.sandbox.emit(COLLECTION_DELETED.call(this), id);
                                 }
                             }.bind(this),
-                            error: function () {
+                            error: function() {
                                 this.sandbox.logger.log('Error while deleting a collection');
                             }.bind(this)
                         });
@@ -318,17 +318,17 @@ define([
              * another component
              * @param id {Number|String} the id of the media
              */
-            editMedia: function (id) {
+            editMedia: function(id) {
                 var media;
                 // if media exists there is no need to fetch the media again - the local one is up to date
                 if (!this.medias.get(id)) {
                     media = this.getMediaModel(id);
                     media.fetch({
-                        success: function (media) {
+                        success: function(media) {
                             // forward media to media-edit component
                             this.sandbox.emit('sulu.media-edit.edit', media.toJSON());
                         }.bind(this),
-                        error: function () {
+                        error: function() {
                             this.sandbox.logger.log('Error while fetching a single media');
                         }.bind(this)
                     });
@@ -342,15 +342,15 @@ define([
              * Takes a media and saves it
              * @param media {Object} the media object
              */
-            saveMedia: function (media) {
+            saveMedia: function(media) {
                 var model = this.getMediaModel(media.id);
                 model.set(media);
 
                 model.save(null, {
-                    success: function (media) {
+                    success: function(media) {
                         this.sandbox.emit(MEDIA_SAVED.call(this), media);
                     }.bind(this),
-                    error: function () {
+                    error: function() {
                         this.sandbox.logger.log('Error while saving a single media');
                     }.bind(this)
                 });
@@ -359,12 +359,12 @@ define([
             /**
              * Inserts a container and starts the collections list in it
              */
-            renderList: function () {
+            renderList: function() {
                 var $list = this.sandbox.dom.createElement('<div id="collections-list-container"/>');
                 this.sandbox.dom.append(this.$el, $list);
 
                 this.collections.fetch({
-                    success: function (collections) {
+                    success: function(collections) {
                         this.sandbox.start([
                             {
                                 name: 'collections/components/list@sulumedia',
@@ -375,7 +375,7 @@ define([
                             }
                         ]);
                     }.bind(this),
-                    error: function () {
+                    error: function() {
                         this.sandbox.logger.log('Error while fetching all collections');
                     }.bind(this)
                 });
@@ -386,13 +386,13 @@ define([
              * collection in it
              * @param options {Object} options to pass to the component
              */
-            renderCollectionEdit: function (options) {
+            renderCollectionEdit: function(options) {
                 var $files = this.sandbox.dom.createElement('<div id="collection-files-container"/>'),
                     collection = this.getCollectionModel(this.options.id);
                 this.sandbox.dom.append(this.$el, $files);
 
                 collection.fetch({
-                    success: function (collection) {
+                    success: function(collection) {
                         this.sandbox.start([
                             {
                                 name: 'collections/components/collection-edit@sulumedia',
@@ -404,7 +404,7 @@ define([
                             }
                         ]);
                     }.bind(this),
-                    error: function () {
+                    error: function() {
                         this.sandbox.logger.log('Error while fetching a single collection');
                     }.bind(this)
                 });
@@ -413,7 +413,7 @@ define([
             /**
              * Starts the media-edit-component
              */
-            startMediaEdit: function () {
+            startMediaEdit: function() {
                 var $container = this.sandbox.dom.createElement('<div/>');
                 this.sandbox.dom.append(this.$el, $container);
                 this.sandbox.start([
