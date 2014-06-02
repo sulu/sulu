@@ -15,27 +15,13 @@ use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Put;
 
-use Sulu\Bundle\MediaBundle\Entity\Collection;
-use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
-use Sulu\Bundle\MediaBundle\Entity\CollectionType;
-use Sulu\Bundle\MediaBundle\Entity\Media;
-use Sulu\Bundle\MediaBundle\Entity\File;
-use Sulu\Bundle\MediaBundle\Entity\FileVersion;
-use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
-use Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage;
-use Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage;
-
-use Sulu\Bundle\MediaBundle\Entity\MediaRepository;
-use Sulu\Bundle\MediaBundle\Entity\MediaType;
-use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\UploadFileException;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
-use Sulu\Bundle\MediaBundle\Media\RestObject\MediaRestObject;
+use Sulu\Bundle\MediaBundle\Media\RestObject\Media;
 use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\RestController;
-use \DateTime;
 use Sulu\Component\Security\UserInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Config\Definition\Exception\Exception;
@@ -122,11 +108,11 @@ class MediaController extends RestController implements ClassResourceInterface
     {
         $locale = $this->getLocale($request->get('locale'));
 
-        $media = $this->getDoctrine()
+        $mediaEntity = $this->getDoctrine()
             ->getRepository($this->entityName)
             ->findMediaById($id, true);
 
-        if (!$media) {
+        if (!$mediaEntity) {
             $exception = new EntityNotFoundException($this->entityName, $id);
             // Return a 404 together with an error message, given by the exception, if the entity is not found
             $view = $this->view(
@@ -134,7 +120,7 @@ class MediaController extends RestController implements ClassResourceInterface
                 404
             );
         } else {
-            $mediaRestObject = new MediaRestObject();
+            $media = new Media();
 
             $view = $this->view(
                 array_merge(
@@ -143,7 +129,7 @@ class MediaController extends RestController implements ClassResourceInterface
                             'self' => $request->getRequestUri()
                         )
                     ),
-                    $mediaRestObject->setDataByEntityArray($media, $locale, $request->get('version', null))
+                    $media->setDataByEntityArray($mediaEntity, $locale, $request->get('version', null))->toArray()
                 )
                 , 200);
         }
@@ -185,24 +171,24 @@ class MediaController extends RestController implements ClassResourceInterface
             $locale = $this->getLocale($request->get('locale'));
 
             // get collection id
-            $mediaRestObject = $this->getRestObject($request);
+            $media = $this->getRestObject($request);
 
             // get fileversions properties
-            $properties = $this->getProperties($mediaRestObject);
+            $properties = $this->getProperties($media);
 
             // generate media
             $uploadFiles = $this->getUploadedFiles($request, 'fileVersion');
             if (count($uploadFiles)) {
                 foreach ($uploadFiles as $uploadFile) {
-                    $media = $this->getMediaManager()->add($uploadFile, $this->getUser()->getId(), $mediaRestObject->getCollection(), $properties);
+                    $mediaEntity = $this->getMediaManager()->add($uploadFile, $this->getUser()->getId(), $media->getCollection(), $properties);
                     break;
                 }
             } else {
                 throw new RestException('Uploaded file not found', UploadFileException::EXCEPTION_CODE_UPLOADED_FILE_NOT_FOUND);
             }
 
-            $mediaRestObject = new MediaRestObject();
-            $view = $this->view($mediaRestObject->setDataByEntity($media, $locale)->toArray(), 200);
+            $media = new Media();
+            $view = $this->view($media->setDataByEntity($mediaEntity, $locale)->toArray(), 200);
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
         } catch (RestException $re) {
@@ -228,26 +214,26 @@ class MediaController extends RestController implements ClassResourceInterface
             $locale = $this->getLocale($request->get('locale'));
 
             // get collection id
-            $mediaRestObject = $this->getRestObject($request);
+            $media = $this->getRestObject($request);
 
             // get fileversions properties
-            $properties = $this->getProperties($mediaRestObject);
+            $properties = $this->getProperties($media);
 
             // update media
             $uploadFiles = $this->getUploadedFiles($request, 'fileVersion');
             if (count($uploadFiles)) {
                 // Add new Fileversion
                 foreach ($uploadFiles as $uploadFile) {
-                    $media = $this->getMediaManager()->update($uploadFile, $this->getUser()->getId(), $id, $mediaRestObject->getCollection(), $properties);
+                    $mediaEntity = $this->getMediaManager()->update($uploadFile, $this->getUser()->getId(), $id, $media->getCollection(), $properties);
                     break;
                 }
             } else {
                 // Update only properties
-                $media = $this->getMediaManager()->update(null, $this->getUser()->getId(), $id, $mediaRestObject->getCollection(), $properties);
+                $mediaEntity = $this->getMediaManager()->update(null, $this->getUser()->getId(), $id, $media->getCollection(), $properties);
             }
 
-            $mediaRestObject = new MediaRestObject();
-            $view = $this->view($mediaRestObject->setDataByEntity($media, $locale)->toArray(), 200);
+            $media = new Media();
+            $view = $this->view($media->setDataByEntity($mediaEntity, $locale)->toArray(), 200);
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
         } catch (RestException $exc) {
@@ -266,34 +252,28 @@ class MediaController extends RestController implements ClassResourceInterface
      */
     public function deleteAction($id)
     {
-        try {
-            $delete = function ($id) {
-                $this->getMediaManager()->remove($id, $this->getUser()->getId());
-            };
+        $delete = function ($id) {
+            $this->getMediaManager()->remove($id, $this->getUser()->getId());
+        };
 
-            $view = $this->responseDelete($id, $delete);
-        } catch (EntityNotFoundException $enfe) {
-            $view = $this->view($enfe->toArray(), 404);
-        } catch (RestException $re) {
-            $view = $this->view($re->toArray(), 400);
-        }
+        $view = $this->responseDelete($id, $delete);
 
         return $this->handleView($view);
     }
 
     /**
      * @param Request $request
-     * @return MediaRestObject
+     * @return Media
      */
     protected function getRestObject(Request $request)
     {
-        $object = new MediaRestObject();
+        $object = new Media();
         $object->setId($request->get('id'));
         $object->setLocale($request->get('locale', $this->getLocale($request->get('locale'))));
         $object->setType($request->get('type'));
         $object->setCollection($request->get('collection'));
         $object->setVersions($request->get('versions', array()));
-        $object->setLocale($request->get('version', 1));
+        $object->setVersion($request->get('version'));
         $object->setSize($request->get('size'));
         $object->setContentLanguages($request->get('contentLanguages', array()));
         $object->setPublishLanguages($request->get('publishLanguages', array()));
@@ -342,8 +322,8 @@ class MediaController extends RestController implements ClassResourceInterface
         $flatMediaList = array();
 
         foreach ($mediaList as $media) {
-            $flatMedia = new MediaRestObject();
-            array_push($flatMediaList, $flatMedia->setDataByEntityArray($media, $locale)->toArray($fields));
+            $flatMedia = new Media();
+            $flatMediaList[] = $flatMedia->setDataByEntityArray($media, $locale)->toArray($fields);
         }
 
         return $flatMediaList;

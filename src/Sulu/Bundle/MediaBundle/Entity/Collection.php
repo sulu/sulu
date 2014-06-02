@@ -18,8 +18,6 @@ use JMS\Serializer\Annotation\Exclude;
  */
 class Collection
 {
-    const TYPE_DEFAULT = 1; // TODO change this to config
-
     /**
      * @var string
      */
