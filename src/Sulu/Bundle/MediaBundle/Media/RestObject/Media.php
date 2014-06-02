@@ -10,16 +10,17 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\RestObject;
 
+use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage;
-use Sulu\Bundle\MediaBundle\Entity\Media;
+use Sulu\Bundle\MediaBundle\Entity\Media as Entity;
 use DateTime;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 
-class MediaRestObject implements RestObject
+class Media extends ApiEntity implements RestObjectInterface
 {
 
     /**
@@ -225,7 +226,7 @@ class MediaRestObject implements RestObject
     }
 
     /**
-     * @var Media $object
+     * @var Entity $object
      * {@inheritdoc}
      */
     public function setDataByEntity($object, $locale, $version = null)
@@ -402,12 +403,10 @@ class MediaRestObject implements RestObject
         if (!$this->thumbnails) {
             $data['thumbnails'] = array(
                 '50x50' => array(
-                    'url' => 'http://lorempixel.com/50/50/',
-                    'alt' => 'Description of the Image'
+                    'url' => 'http://lorempixel.com/50/50/'
                 ),
                 '170x170' => array(
-                    'url' => 'http://lorempixel.com/170/170/',
-                    'alt' => 'Description of the Image'
+                    'url' => 'http://lorempixel.com/170/170/'
                 )
             );
         }

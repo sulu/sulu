@@ -18,13 +18,6 @@ use JMS\Serializer\Annotation\Exclude;
  */
 class MediaType
 {
-    const TYPE_DEFAULT = 1; // TODO change this to config
-
-    const TYPE_IMAGE = 2; // TODO change this to config
-
-    const TYPE_VIDEO = 3; // TODO change this to config
-
-    const TYPE_AUDIO = 4; // TODO change this to config
 
     /**
      * @var string
