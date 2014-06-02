@@ -25,6 +25,11 @@
                 <join-column name="idUsersCreator" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
             </join-columns>
         </many-to-one>
+        <many-to-one field="securityType" target-entity="Sulu\Bundle\SecurityBundle\Entity\SecurityType">
+            <join-columns>
+                <join-column name="idSecurityTypes" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
+            </join-columns>
+        </many-to-one>
 
         <many-to-many field="groups" target-entity="Sulu\Bundle\SecurityBundle\Entity\Group" mapped-by="roles"/>
     </entity>

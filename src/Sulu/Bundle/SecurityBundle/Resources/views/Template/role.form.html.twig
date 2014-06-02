@@ -18,24 +18,44 @@
                      data-aura-default-label="<%=translate('dropdown.please-choose')%>"
                      data-aura-data='{{ systems|json_encode() }}'
                     <% if(data.system == '') { %>
-                     data-aura-pre-selected-elements='["{{ systems[0] }}"]"'
+                     data-aura-pre-selected-elements='["{{ systems[0] }}"]'
                     <% } else { %>
-                     data-aura-pre-selected-elements='["<%= data.system %>"]"'
+                     data-aura-pre-selected-elements='["<%= data.system %>"]'
                     <% } %>
                      ></div>
             </div>
         </div>
     </div>
 
-    <div class="form-group grid-row">
-        <span></span>
-        <div>
-            <div class="custom-checkbox">
-                <input class="form-element" type="checkbox" id="god" <% if(data.god) print('checked="checked"') %>/>
-                <span class="icon"></span>
+    <div class="grid-row">
+        <div class="grid-col-6">
+            <div class="form-group">
+                <span></span>
+                <div>
+                    <div class="custom-checkbox">
+                        <input class="form-element" type="checkbox" id="god" <% if(data.god) print('checked="checked"') %>/>
+                        <span class="icon"></span>
+                    </div>
+                    <label for="god" class="inline clickable"><%= translate('security.roles.godMode') %></label>
+                </div>
             </div>
-            <label for="god" class="inline clickable"><%= translate('security.roles.godMode') %></label>
         </div>
+        {% if (security_types) %}
+        <div class="grid-col-6">
+            <div class="form-group">
+                <label for="security-type"><%= translate('security.roles.security-type') %></label>
+                <div id="security-type"
+                     data-aura-component="select@husky"
+                     data-aura-instance-name="security-type"
+                     data-aura-default-label="<%=translate('dropdown.please-choose')%>"
+                     data-aura-data='{{ security_types|json_encode() }}'
+                    <% if(data.securityType) { %>
+                    data-aura-pre-selected-elements='["<%= data.securityType.name %>"]'
+                    <% } %>
+                ></div>
+        </div>
+        {% endif %}
+    </div>
     </div>
 
     <div class="grid-row">

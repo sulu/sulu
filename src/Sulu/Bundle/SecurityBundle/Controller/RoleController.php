@@ -59,11 +59,12 @@ class RoleController extends RestController implements ClassResourceInterface
 
     /**
      * returns all roles
+     * @param \Symfony\Component\HttpFoundation\Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function cgetAction()
+    public function cgetAction(Request $request)
     {
-        if ($this->getRequest()->get('flat') == 'true') {
+        if ($request->get('flat') == 'true') {
             // flat structure
             $view = $this->responseList();
         } else {
@@ -107,12 +108,15 @@ class RoleController extends RestController implements ClassResourceInterface
 
     /**
      * Creates a new role with the given data
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @throws \Sulu\Component\Rest\Exception\EntityIdAlreadySetException
+     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function postAction()
+    public function postAction(Request $request)
     {
-        $name = $this->getRequest()->get('name');
-        $system = $this->getRequest()->get('system');
+        $name = $request->get('name');
+        $system = $request->get('system');
 
         if ($name != null && $system != null) {
             $em = $this->getDoctrine()->getManager();
@@ -124,11 +128,16 @@ class RoleController extends RestController implements ClassResourceInterface
             $role->setCreated(new \DateTime());
             $role->setChanged(new \DateTime());
 
-            $permissions = $this->getRequest()->get('permissions');
+            $permissions = $request->get('permissions');
             if (!empty($permissions)) {
                 foreach ($permissions as $permissionData) {
                     $this->addPermission($role, $permissionData);
                 }
+            }
+
+            $securityTypeData = $request->get('securityType');
+            if ($this->checkSecurityTypeData($securityTypeData)) {
+                $this->setSecurityType($role, $securityTypeData);
             }
 
             $em->persist($role);
@@ -144,10 +153,11 @@ class RoleController extends RestController implements ClassResourceInterface
 
     /**
      * Updates the role with the given id and the data given by the request
+     * @param \Symfony\Component\HttpFoundation\Request $request
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function putAction($id)
+    public function putAction(Request $request, $id)
     {
         /** @var Role $role */
         $role = $this->getDoctrine()
@@ -160,15 +170,22 @@ class RoleController extends RestController implements ClassResourceInterface
             } else {
                 $em = $this->getDoctrine()->getManager();
 
-                $name = $this->getRequest()->get('name');
+                $name = $request->get('name');
 
                 $role->setName($name);
-                $role->setSystem($this->getRequest()->get('system'));
+                $role->setSystem($request->get('system'));
 
                 $role->setChanged(new \DateTime());
 
-                if (!$this->processPermissions($role)) {
+                if (!$this->processPermissions($role, $request->get('permissions'))) {
                     throw new RestException("Could not update dependencies!");
+                }
+
+                $securityTypeData = $request->get('securityType');
+                if ($this->checkSecurityTypeData($securityTypeData)) {
+                    $this->setSecurityType($role, $securityTypeData);
+                } else {
+                    $role->setSecurityType(null);
                 }
 
                 $em->flush();
@@ -212,12 +229,11 @@ class RoleController extends RestController implements ClassResourceInterface
     /**
      * Process all permissions from request
      * @param Role $role The contact on which is worked
+     * @param $permissions
      * @return bool True if the processing was successful, otherwise false
      */
-    protected function processPermissions(Role $role)
+    protected function processPermissions(Role $role, $permissions)
     {
-        $permissions = $this->getRequest()->get('permissions');
-
         $delete = function ($permission) use ($role) {
             $this->getDoctrine()->getManager()->remove($permission);
         };
@@ -307,6 +323,42 @@ class RoleController extends RestController implements ClassResourceInterface
             }
         }
 
+        $securityType = $role->getSecurityType();
+        if ($securityType) {
+            $roleData['securityType'] = array(
+                'id' => $securityType->getId(),
+                'name' => $securityType->getName()
+            );
+        }
+
         return $roleData;
+    }
+
+    /**
+     * Checks if the data of the security type is correct
+     * @param $securityTypeData
+     * @return bool
+     */
+    private function checkSecurityTypeData($securityTypeData)
+    {
+        return $securityTypeData != null && $securityTypeData['id'] != null && $securityTypeData['id'] != '';
+    }
+
+    /**
+     * Sets the securityType from the given data to the role
+     * @param $role
+     * @param $securityTypeData
+     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
+     */
+    private function setSecurityType($role, $securityTypeData)
+    {
+        $securityType = $this->getDoctrine()
+            ->getRepository('SuluSecurityBundle:SecurityType')
+            ->findSecurityTypeById($securityTypeData['id']);
+
+        if (!$securityType) {
+            throw new EntityNotFoundException('SuluSecurityBundle:SecurityType', $securityTypeData['id']);
+        }
+        $role->setSecurityType($securityType);
     }
 }
