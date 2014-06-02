@@ -16,7 +16,11 @@ use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\Types\ResourceLocator;
 use Sulu\Component\Content\Types\ResourceLocatorInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
+/**
+ * repository for node objects
+ */
 class NodeRepository implements NodeRepositoryInterface
 {
     /**
@@ -45,17 +49,23 @@ class NodeRepository implements NodeRepositoryInterface
      */
     private $resourceLocator;
 
+    /**
+     * @var WebspaceManagerInterface
+     */
+    private $webspaceManager;
+
     function __construct(
         ContentMapperInterface $mapper,
         SessionManagerInterface $sessionManager,
         UserManagerInterface $userManager,
-        ResourceLocatorInterface $resourceLocator
-    )
-    {
+        ResourceLocatorInterface $resourceLocator,
+        WebspaceManagerInterface $webspaceManager
+    ) {
         $this->mapper = $mapper;
         $this->sessionManager = $sessionManager;
         $this->userManager = $userManager;
         $this->resourceLocator = $resourceLocator;
+        $this->webspaceManager = $webspaceManager;
     }
 
     /**
@@ -94,8 +104,7 @@ class NodeRepository implements NodeRepositoryInterface
         $depth = 1,
         $complete = true,
         $excludeGhosts = false
-    )
-    {
+    ) {
         $result = $structure->toArray($complete);
 
         // add default empty embedded property
@@ -119,17 +128,16 @@ class NodeRepository implements NodeRepositoryInterface
     }
 
     /**
-     * returns node for given uuid
-     * @param string $uuid
-     * @param string $webspaceKey
-     * @param string $languageCode
-     * @param bool $breadcrumb
-     * @param bool $complete
-     * @param bool $loadGhostContent
-     * @return array
+     * {@inheritdoc}
      */
-    public function getNode($uuid, $webspaceKey, $languageCode, $breadcrumb = false, $complete = true, $loadGhostContent = false)
-    {
+    public function getNode(
+        $uuid,
+        $webspaceKey,
+        $languageCode,
+        $breadcrumb = false,
+        $complete = true,
+        $loadGhostContent = false
+    ) {
         $structure = $this->getMapper()->load($uuid, $webspaceKey, $languageCode, $loadGhostContent);
 
         $result = $this->prepareNode($structure, $webspaceKey, $languageCode, 1, $complete);
@@ -140,14 +148,12 @@ class NodeRepository implements NodeRepositoryInterface
                 $result['breadcrumb'][$item->getDepth()] = $item->toArray();
             }
         }
+
         return $result;
     }
 
     /**
-     * returns start node for given portal
-     * @param string $webspaceKey
-     * @param string $languageCode
-     * @return array
+     * {@inheritdoc}
      */
     public function getIndexNode($webspaceKey, $languageCode)
     {
@@ -157,13 +163,7 @@ class NodeRepository implements NodeRepositoryInterface
     }
 
     /**
-     * save start page of given portal
-     * @param array $data
-     * @param string $templateKey
-     * @param string $webspaceKey
-     * @param string $languageCode
-     * @param integer $userId
-     * @return array
+     * {@inheritdoc}
      */
     public function saveIndexNode($data, $templateKey, $webspaceKey, $languageCode, $userId)
     {
@@ -179,9 +179,7 @@ class NodeRepository implements NodeRepositoryInterface
     }
 
     /**
-     * removes given node
-     * @param $uuid
-     * @param $webspaceKey
+     * {@inheritdoc}
      */
     public function deleteNode($uuid, $webspaceKey)
     {
@@ -189,25 +187,28 @@ class NodeRepository implements NodeRepositoryInterface
     }
 
     /**
-     * returns a list of nodes
-     * @param string $parent uuid of parent node
-     * @param string $webspaceKey key of current portal
-     * @param string $languageCode
-     * @param int $depth
-     * @param bool $flat
-     * @param bool $complete
-     * @param bool $excludeGhosts
-     * @return array
+     * {@inheritdoc}
      */
-    public function getNodes($parent, $webspaceKey, $languageCode, $depth = 1, $flat = true, $complete = true, $excludeGhosts = false)
-    {
-        $nodes = $this->getMapper()->loadByParent($parent, $webspaceKey, $languageCode, $depth, $flat, false, $excludeGhosts);
+    public function getNodes(
+        $parent,
+        $webspaceKey,
+        $languageCode,
+        $depth = 1,
+        $flat = true,
+        $complete = true,
+        $excludeGhosts = false
+    ) {
+        $nodes = $this->getMapper()->loadByParent(
+            $parent,
+            $webspaceKey,
+            $languageCode,
+            $depth,
+            $flat,
+            false,
+            $excludeGhosts
+        );
 
-        if ($parent != null) {
-            $parentNode = $this->getMapper()->load($parent, $webspaceKey, $languageCode);
-        } else {
-            $parentNode = $this->getMapper()->loadStartPage($webspaceKey, $languageCode);
-        }
+        $parentNode = $this->getParentNode($parent, $webspaceKey, $languageCode);
         $result = $this->prepareNode($parentNode, $webspaceKey, $languageCode, 1, $complete, $excludeGhosts);
         $result['_embedded'] = $this->prepareNodesTree($nodes, $webspaceKey, $languageCode, $complete, $excludeGhosts);
         $result['total'] = sizeof($result['_embedded']);
@@ -216,73 +217,95 @@ class NodeRepository implements NodeRepositoryInterface
     }
 
     /**
-     * Returns the content of a smart content configuration
-     * @param array $filterConfig The config of the smart content
-     * @param string $languageCode The desired language code
-     * @param string $webspaceKey The webspace key
-     * @param boolean $preview If true also  unpublished pages will be returned
-     * @return mixed
+     * {@inheritdoc}
      */
-    public function getFilteredNodes(array $filterConfig, $languageCode, $webspaceKey, $preview = false)
+    public function getWebspaceNode(
+        $webspaceKey,
+        $languageCode,
+        $depth = 1,
+        $excludeGhosts = false
+    ) {
+        $webspace = $this->webspaceManager->getWebspaceCollection()->getWebspace($webspaceKey);
+
+        if ($depth > 0) {
+            $nodes = $this->getMapper()->loadByParent(
+                null,
+                $webspaceKey,
+                $languageCode,
+                $depth,
+                false,
+                false,
+                $excludeGhosts
+            );
+            $embedded = $this->prepareNodesTree($nodes, $webspaceKey, $languageCode, true, $excludeGhosts);
+        } else {
+            $embedded = array();
+        }
+
+        $node = array(
+            'id' => $webspace->getKey(),
+            'path' => '/',
+            'title' => $webspace->getName(),
+            'hasSub' => true,
+            '_embedded' => $embedded,
+            '_links' => array(
+                'children' => $this->apiBasePath . '?depth=' . $depth . '&webspace=' . $webspaceKey . '&language=' . $languageCode . ($excludeGhosts === true ? '&exclude-ghosts=true' : '')
+            )
+        );
+
+        // init result
+        $data = array();
+
+        // add default empty embedded property
+        $data['_embedded'] = array(
+            $node
+        );
+        // add api links
+        $data['_links'] = array(
+            'self' => $this->apiBasePath . '/entry?depth=' . $depth . '&webspace=' . $webspaceKey . '&language=' . $languageCode . ($excludeGhosts === true ? '&exclude-ghosts=true' : ''),
+        );
+
+        return $data;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFilteredNodes(array $filterConfig, $languageCode, $webspaceKey, $preview = false, $api = false)
     {
         // build sql2 query
-        $sql2 = 'SELECT * FROM [sulu:content] AS c';
-        $sql2Where = array();
-        $sql2Order = array();
-
-        // build where clause for datasource
-        if (isset($filterConfig['dataSource']) && !empty($filterConfig['dataSource'])) {
-            $sqlFunction =
-                (isset($filterConfig['includeSubFolders']) && $filterConfig['includeSubFolders'])
-                    ? 'ISDESCENDANTNODE' : 'ISCHILDNODE';
-            $node = $this->sessionManager->getContentNode($webspaceKey);
-            $dataSource = $node->getPath();
-            $dataSource .= $filterConfig['dataSource'];
-            $sql2Where[] = $sqlFunction . '(\'' . $dataSource . '\')';
-        }
-
-        // build where clause for tags
-        if (!empty($filterConfig['tags'])) {
-            foreach ($filterConfig['tags'] as $tag) {
-                $sql2Where[] = 'c.[sulu_locale:' . $languageCode . '-tags] = ' . $tag;
-            }
-        }
-
-        // search only for published pages
-        if (!$preview) {
-            $sql2Where[] = 'c.[sulu_locale:' . $languageCode . '-sulu-state] = ' . StructureInterface::STATE_PUBLISHED;
-        }
-
-        // build order clause
-        if (!empty($filterConfig['sortBy'])) {
-            foreach ($filterConfig['sortBy'] as $sortColumn) {
-                // TODO implement more generic
-                $sql2Order[] = 'c.[sulu_locale:' . $languageCode . '-sulu-' . $sortColumn . ']';
-            }
-        }
-
-        // append where clause to sql2 query
-        if (!empty($sql2Where)) {
-            $sql2 .= ' WHERE ' . join(' AND ', $sql2Where);
-        }
-
-        // append order clause
-        if (!empty($sql2Order)) {
-            $sortOrder = (isset($filterConfig['sortMethod']) && $filterConfig['sortMethod'] == 'asc')
-                ? 'ASC' : 'DESC';
-            $sql2 .= ' ORDER BY ' . join(', ', $sql2Order) . ' ' . $sortOrder;
-        }
-
-        // set limit if given
-        $limit = null;
-        if (isset($filterConfig['limitResult'])) {
-            $limit = $filterConfig['limitResult'];
-        }
+        $queryBuilder = new FilterNodesQueryBuilder($filterConfig, $this->sessionManager, $this->webspaceManager);
+        $sql2 = $queryBuilder->build($languageCode, $preview);
 
         // execute query and return results
-        $nodes = $this->getMapper()->loadBySql2($sql2, $languageCode, $webspaceKey, $limit);
+        $nodes = $this->getMapper()->loadBySql2($sql2, $languageCode, $webspaceKey, $queryBuilder->getLimit());
 
-        return $nodes;
+        if ($api) {
+            $parentNode = $this->getParentNode($queryBuilder->getParent(), $webspaceKey, $languageCode);
+            $result = $this->prepareNode($parentNode, $webspaceKey, $languageCode, 1, false);
+            $result['_embedded'] = $this->prepareNodesTree($nodes, $webspaceKey, $languageCode, false);
+            $result['total'] = sizeof($result['_embedded']);
+
+            return $result;
+        } else {
+            return $nodes;
+        }
+    }
+
+    /**
+     * if parent is null return home page else the page with given uuid
+     * @param string|null $parent uuid of parent node
+     * @param string $webspaceKey
+     * @param string $languageCode
+     * @return StructureInterface
+     */
+    private function getParentNode($parent, $webspaceKey, $languageCode)
+    {
+        if ($parent != null) {
+            return $this->getMapper()->load($parent, $webspaceKey, $languageCode);
+        } else {
+            return $this->getMapper()->loadStartPage($webspaceKey, $languageCode);
+        }
     }
 
     /**
@@ -326,8 +349,7 @@ class NodeRepository implements NodeRepositoryInterface
         $parentUuid = null,
         $state = null,
         $showInNavigation = null
-    )
-    {
+    ) {
         $node = $this->getMapper()->save(
             $data,
             $templateKey,
@@ -350,6 +372,7 @@ class NodeRepository implements NodeRepositoryInterface
     public function getHistory($uuid, $webspaceKey, $languageCode)
     {
         $result = $this->resourceLocator->loadHistoryByUuid($uuid, $webspaceKey, $languageCode);
+
         return array(
             '_embedded' => $result,
             '_links' => array(
@@ -357,5 +380,53 @@ class NodeRepository implements NodeRepositoryInterface
             ),
             'total' => sizeof($result)
         );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getNodesTree(
+        $uuid,
+        $webspaceKey,
+        $languageCode,
+        $excludeGhosts = false,
+        $appendWebspaceNode = false
+    ) {
+        $nodes = $this->getMapper()->loadTreeByUuid($uuid, $languageCode, $webspaceKey, $excludeGhosts, false);
+
+        if ($appendWebspaceNode) {
+            $webspace = $this->webspaceManager->getWebspaceCollection()->getWebspace($webspaceKey);
+            $result = array(
+                '_embedded' => array(
+                    array(
+                        'id' => $webspace->getKey(),
+                        'path' => '/',
+                        'title' => $webspace->getName(),
+                        'hasSub' => true,
+                        '_embedded' => $this->prepareNodesTree(
+                                $nodes,
+                                $webspaceKey,
+                                $languageCode,
+                                false,
+                                $excludeGhosts
+                            ),
+                        '_links' => array(
+                            'children' => $this->apiBasePath . '?depth=1&webspace=' . $webspaceKey . '&language=' . $languageCode . ($excludeGhosts === true ? '&exclude-ghosts=true' : '')
+                        )
+                    )
+                )
+            );
+        } else {
+            $result = array(
+                '_embedded' => $this->prepareNodesTree($nodes, $webspaceKey, $languageCode, false, $excludeGhosts)
+            );
+        }
+
+        // add api links
+        $result['_links'] = array(
+            'self' => $this->apiBasePath . '/tree?uuid=' . $uuid . '&webspace=' . $webspaceKey . '&language=' . $languageCode . ($excludeGhosts === true ? '&exclude-ghosts=true' : '') . ($appendWebspaceNode === true ? '&webspace-node=true' : ''),
+        );
+
+        return $result;
     }
 }
