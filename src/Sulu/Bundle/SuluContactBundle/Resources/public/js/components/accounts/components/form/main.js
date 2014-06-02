@@ -48,7 +48,8 @@ define([], function() {
                     iconSize: 'large',
                     group: 'left',
                     id: 'options-button',
-                    position: 30
+                    position: 30,
+                    items: []
                 };
 
             // save button
@@ -65,7 +66,10 @@ define([], function() {
                 }.bind(this)
             });
 
-            options.items = getItemsForConvertOperation.call(this);
+            // only for saved accounts
+            if(!!this.options.data.id) {
+                options.items = getItemsForConvertOperation.call(this);
+            }
 
             // delete select item
             options.items.push({
