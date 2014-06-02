@@ -16,6 +16,7 @@ use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\RestController;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Makes the groups accessible through a REST-API
@@ -29,11 +30,12 @@ class GroupController extends RestController implements ClassResourceInterface
 
     /**
      * returns all groups
+     * @param \Symfony\Component\HttpFoundation\Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function cgetAction()
+    public function cgetAction(Request $request)
     {
-        if ($this->getRequest()->get('flat') == 'true') {
+        if ($request->get('flat') == 'true') {
             // flat structure
             $view = $this->responseList();
         } else {
@@ -67,11 +69,13 @@ class GroupController extends RestController implements ClassResourceInterface
 
     /**
      * Creates a new group with the given data
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function postAction()
+    public function postAction(Request $request)
     {
-        $name = $this->getRequest()->get('name');
+        $name = $request->get('name');
 
         if ($name != null) {
             $em = $this->getDoctrine()->getManager();
@@ -84,7 +88,7 @@ class GroupController extends RestController implements ClassResourceInterface
             $group->setCreated(new \DateTime());
             $group->setChanged(new \DateTime());
 
-            $roles = $this->getRequest()->get('roles');
+            $roles = $request->get('roles');
             if (!empty($roles)) {
                 foreach ($roles as $roleData) {
                     $this->addRole($group, $roleData);
@@ -104,10 +108,11 @@ class GroupController extends RestController implements ClassResourceInterface
 
     /**
      * Updates the group with the given id and the data given by the request
+     * @param \Symfony\Component\HttpFoundation\Request $request
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function putAction($id)
+    public function putAction(Request $request, $id)
     {
         /** @var Group $group */
         $group = $this->getDoctrine()
@@ -120,7 +125,7 @@ class GroupController extends RestController implements ClassResourceInterface
             } else {
                 $em = $this->getDoctrine()->getManager();
 
-                $name = $this->getRequest()->get('name');
+                $name = $request->get('name');
 
                 $group->setName($name);
 
@@ -128,7 +133,7 @@ class GroupController extends RestController implements ClassResourceInterface
 
                 $group->setChanged(new \DateTime());
 
-                if (!$this->processRoles($group)) {
+                if (!$this->processRoles($group, $request->get('roles'))) {
                     throw new RestException('Could not update dependencies!');
                 }
 
@@ -147,12 +152,11 @@ class GroupController extends RestController implements ClassResourceInterface
     /**
      * Process all roles from request
      * @param Group $group The contact on which is worked
+     * @param array $roles The roles to process
      * @return bool True if the processing was successful, otherwise false
      */
-    protected function processRoles(Group $group)
+    protected function processRoles(Group $group, $roles)
     {
-        $roles = $this->getRequest()->get('roles');
-
         $delete = function ($role) use ($group) {
             $this->getDoctrine()->getManager()->remove($role);
         };
