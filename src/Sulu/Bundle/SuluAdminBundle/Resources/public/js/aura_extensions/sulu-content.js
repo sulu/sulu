@@ -84,7 +84,7 @@ define([], function() {
          */
         handleFullSizeMarked = function(fullSize) {
             if (fullSize.width === true || fullSize.height === true) {
-                this.sandbox.emit('sulu.app.full-size', !!fullSize.width, !!fullSize.height);
+                this.sandbox.emit('sulu.app.full-size', !!fullSize.width, !!fullSize.height, !!fullSize.keepPaddings);
             }
         },
 
@@ -158,7 +158,7 @@ define([], function() {
                 tabsFullControl = (!!header.tabs && typeof header.tabs.fullControl === 'boolean') ? header.tabs.fullControl : false;
                 toolbarLanguageChanger = (!!header.toolbar && !!header.toolbar.languageChanger) ? header.toolbar.languageChanger : true;
                 noBack = (typeof header.noBack !== 'undefined') ? header.noBack : false;
-                squeezed = (!!this.fullSize && this.fullSize.width === true) ? true : false;
+                squeezed = (!!this.fullSize && this.fullSize.width === true && this.fullSize.keepPaddings !== true) ? true : false;
                 titleColor = (!!header.titleColor) ? header.titleColor : null;
 
                 this.sandbox.start([

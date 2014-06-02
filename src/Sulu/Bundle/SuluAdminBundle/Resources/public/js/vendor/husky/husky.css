@@ -5403,15 +5403,11 @@ table {
 .table.is-selectable thead tr {
   cursor: auto;
 }
-/* line 77, ../scss/modules/tables.scss */
-.table .thumb {
-  text-align: center;
-}
-/* line 80, ../scss/modules/tables.scss */
+/* line 78, ../scss/modules/tables.scss */
 .table .thumb img {
   vertical-align: middle;
 }
-/* line 85, ../scss/modules/tables.scss */
+/* line 83, ../scss/modules/tables.scss */
 .table .remove-row {
   text-align: center;
 }

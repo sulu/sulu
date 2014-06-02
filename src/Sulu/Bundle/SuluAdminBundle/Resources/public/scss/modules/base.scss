@@ -39,8 +39,10 @@ body {
     &.fullwidth {
         max-width: none;
         min-width: 0;
-        padding-left: $contentPaddingLeftFullWidth;
-        padding-right: $contentPaddingRightFullWidth;
+        &.no-padding {
+          padding-left: $contentPaddingLeftFullWidth;
+          padding-right: $contentPaddingRightFullWidth;
+        }
     }
 
     &.fullheight {
