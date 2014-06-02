@@ -3,7 +3,7 @@
     "type": "sulu-bundle",
     "description": "The Sulu Bundle for managing tags",
     "license": "MIT",
-    "version": "0.3.0",
+    "version": "dev-develop",
     "keywords": ["sulu", "tags"],
     "authors": [
         {
