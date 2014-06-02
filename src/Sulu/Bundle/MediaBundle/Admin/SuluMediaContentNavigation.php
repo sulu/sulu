@@ -27,7 +27,13 @@ class SuluMediaContentNavigation extends ContentNavigation
         $files->setContentType('collection');
         $files->setContentComponent('collections@sulumedia');
         $files->setContentComponentOptions(array('display'=>'files'));
-
         $this->addNavigationItem($files);
+
+        $settings = new NavigationItem('content-navigation.media.settings');
+        $settings->setAction('settings');
+        $settings->setContentType('collection');
+        $settings->setContentComponent('collections@sulumedia');
+        $settings->setContentComponentOptions(array('display'=>'settings'));
+        $this->addNavigationItem($settings);
     }
 }

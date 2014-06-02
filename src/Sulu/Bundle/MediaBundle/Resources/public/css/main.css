@@ -15,19 +15,23 @@
   padding-top: 35px;
 }
 /* line 19, ../scss/modules/collections.scss */
-#collections-list-container .slide {
+#collections-list-container .collection-slide {
   width: 100%;
   padding-left: 18px;
   padding-bottom: 40px;
 }
-/* line 27, ../scss/modules/collections.scss */
+/* line 23, ../scss/modules/collections.scss */
+#collections-list-container .collection-slide .thumbnail-grid {
+  min-height: 140px;
+}
+/* line 30, ../scss/modules/collections.scss */
 #collections-list-container .collection .head {
   height: 40px;
   line-height: 40px;
   border-bottom: 1px solid #cccccc;
   cursor: pointer;
 }
-/* line 33, ../scss/modules/collections.scss */
+/* line 36, ../scss/modules/collections.scss */
 #collections-list-container .collection .head .icon {
   float: left;
   font-size: 18px;
@@ -36,20 +40,20 @@
   line-height: 40px;
   text-align: center;
 }
-/* line 41, ../scss/modules/collections.scss */
+/* line 44, ../scss/modules/collections.scss */
 #collections-list-container .collection .head .change-title {
   width: 200px;
   display: none;
   float: left;
   margin-top: 5px;
 }
-/* line 47, ../scss/modules/collections.scss */
+/* line 50, ../scss/modules/collections.scss */
 #collections-list-container .collection .head::after {
   display: table;
   content: "";
   clear: both;
 }
-/* line 53, ../scss/modules/collections.scss */
+/* line 56, ../scss/modules/collections.scss */
 #collections-list-container .collection .collection-color {
   float: left;
   width: 20px;
@@ -57,28 +61,21 @@
   border-radius: 10px;
   margin-top: 10px;
 }
-/* line 60, ../scss/modules/collections.scss */
+/* line 63, ../scss/modules/collections.scss */
 #collections-list-container .collection .collection-title {
   float: left;
   font-size: 18px;
-  cursor: default;
-  min-width: 200px;
   margin-top: 5px;
   padding-left: 5px;
   padding-right: 5px;
   border-radius: 3px;
   line-height: 28px;
-  border: 1px solid transparent;
 }
-/* line 71, ../scss/modules/collections.scss */
-#collections-list-container .collection .collection-title:hover {
-  border-color: #cccccc;
-}
-/* line 75, ../scss/modules/collections.scss */
+/* line 72, ../scss/modules/collections.scss */
 #collections-list-container .collection .rightContent {
   float: right;
 }
-/* line 77, ../scss/modules/collections.scss */
+/* line 74, ../scss/modules/collections.scss */
 #collections-list-container .collection .rightContent .total {
   color: #999999;
   font-size: 12px;

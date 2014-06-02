@@ -16,10 +16,13 @@
   .collections {
     padding-top: 35px;
   }
-  .slide {
+  .collection-slide {
     width: 100%;
     padding-left: 18px;
     padding-bottom: 40px;
+    .thumbnail-grid {
+      min-height: 140px;
+    }
   }
   .collection {
       $collectionHeight: 40px;
@@ -60,17 +63,11 @@
     .collection-title {
       float: left;
       font-size: 18px;
-      cursor: default;
-      min-width: 200px;
       margin-top: 5px;
       padding-left: 5px;
       padding-right: 5px;
       border-radius: 3px;
       line-height: $collectionHeight - 12px;
-      border: 1px solid transparent;
-      &:hover {
-        border-color: #cccccc;
-      }
     }
     .rightContent {
       float: right;
