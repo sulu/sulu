@@ -159,7 +159,7 @@ class UserController extends RestController implements ClassResourceInterface
             $user->setContact($this->getContact($request->get('contact')['id']));
             $user->setUsername($request->get('username'));
 
-            if ($this->getRequest()->get('password') != '') {
+            if ($request->get('password') != '') {
                 $user->setSalt($this->generateSalt());
                 $user->setPassword(
                     $this->encodePassword($user, $request->get('password'), $user->getSalt())
