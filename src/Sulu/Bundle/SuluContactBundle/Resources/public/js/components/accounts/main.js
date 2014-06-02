@@ -128,7 +128,13 @@ define([
                             var model = response.toJSON();
                             this.sandbox.emit('sulu.router.navigate', 'contacts/accounts/edit:' + model.id + '/details', false);
                             this.sandbox.emit('sulu.header.toolbar.item.enable', 'options-button');
+
+                            // update tabs and breadcrumb
                             AccountsUtilHeader.setHeader.call(this, this.account, this.options.accountType);
+
+                            // update toolbar
+                            this.sandbox.emit('sulu.account.type.converted');
+
                         }.bind(this),
 
                         error: function() {
