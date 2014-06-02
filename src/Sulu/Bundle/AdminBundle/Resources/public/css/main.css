@@ -40,16 +40,19 @@ body {
 #content.fullwidth {
   max-width: none;
   min-width: 0;
+}
+/* line 42, ../scss/modules/base.scss */
+#content.fullwidth.no-padding {
   padding-left: 0;
   padding-right: 0;
 }
-/* line 46, ../scss/modules/base.scss */
+/* line 48, ../scss/modules/base.scss */
 #content.fullheight {
   margin-top: 0;
 }
 
 /*----------------------------------------*/
-/* line 53, ../scss/modules/base.scss */
+/* line 55, ../scss/modules/base.scss */
 .control-label {
   padding-left: 5px;
   padding-right: 5px;
@@ -57,30 +60,30 @@ body {
 }
 
 /*----------------------------------------*/
-/* line 61, ../scss/modules/base.scss */
+/* line 63, ../scss/modules/base.scss */
 input, select {
   font-family: Helvetica, Arial;
 }
 
 /*----------------------------------------*/
-/* line 68, ../scss/modules/base.scss */
+/* line 70, ../scss/modules/base.scss */
 .navigation-container {
   z-index: 101;
 }
 
 /*----------------------------------------*/
-/* line 75, ../scss/modules/base.scss */
+/* line 77, ../scss/modules/base.scss */
 .pointer {
   cursor: pointer;
 }
 
-/* line 79, ../scss/modules/base.scss */
+/* line 81, ../scss/modules/base.scss */
 .block {
   display: block;
 }
 
 /*----------------------------------------*/
-/* line 86, ../scss/modules/base.scss */
+/* line 88, ../scss/modules/base.scss */
 .m-top-1 {
   margin-top: 1px !important;
 }
