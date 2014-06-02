@@ -33,6 +33,11 @@ define(function () {
 
         view: true,
 
+        fullSize: {
+            width: true,
+            keepPaddings: true
+        },
+
         templates: [
             '/admin/media/template/media/collection-files',
             '/admin/media/template/media/collection-settings'
@@ -252,7 +257,12 @@ define(function () {
                     el: this.$find(constants.datagridSelector),
                     url: '/admin/api/media?collection=' + this.options.data.id,
                     view: 'thumbnail',
-                    pagination: false
+                    pagination: false,
+                    viewOptions: {
+                        table: {
+                            fullWidth: false
+                        }
+                    }
                 });
         },
 

@@ -20,6 +20,9 @@
     width: 100%;
     padding-left: 18px;
     padding-bottom: 40px;
+    .thumbnail-grid {
+      min-height: 140px;
+    }
   }
   .collection {
       $collectionHeight: 40px;
