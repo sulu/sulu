@@ -13,7 +13,7 @@
  * @constructor
  *
  **/
-define(function () {
+define(function() {
 
     'use strict';
 
@@ -32,24 +32,24 @@ define(function () {
          * @event sulu.media-edit.edit
          * @param media {Object} the media model to edit
          */
-            EDIT = function() {
+        EDIT = function() {
             return createEventName.call(this, 'edit');
         },
 
         /** returns normalized event names */
-            createEventName = function(postFix) {
+        createEventName = function(postFix) {
             return namespace + (this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
         };
 
     return {
         view: true,
 
-        templates: ['/admin/media/template/media/media-info'],
+        templates: ['/admin/media/template/media/info'],
 
         /**
          * Initializes the collections list
          */
-        initialize: function () {
+        initialize: function() {
             // extend defaults with options
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
             this.bindCustomEvents();
@@ -71,7 +71,7 @@ define(function () {
          */
         editMedia: function(media) {
             this.media = media;
-            this.$info = this.renderTemplate('/admin/media/template/media/media-info');
+            this.$info = this.renderTemplate('/admin/media/template/media/info');
             this.startOverlay();
         },
 
@@ -85,20 +85,22 @@ define(function () {
                 this.sandbox.form.create('#' + constants.infoFormId);
                 this.sandbox.form.setData('#' + constants.infoFormId, this.media);
             }.bind(this));
-            this.sandbox.start([{
-                name: 'overlay@husky',
-                options: {
-                   el: $container,
-                   title: this.media.title,
-                   tabs: [
-                       {title: this.sandbox.translate(this.options.infoKey), data: this.$info}
-                   ],
-                   openOnStart: true,
-                   removeOnClose: true,
-                   instanceName: 'media-edit',
-                   okCallback: this.changeModel.bind(this)
+            this.sandbox.start([
+                {
+                    name: 'overlay@husky',
+                    options: {
+                        el: $container,
+                        title: this.media.title,
+                        tabs: [
+                            {title: this.sandbox.translate(this.options.infoKey), data: this.$info}
+                        ],
+                        openOnStart: true,
+                        removeOnClose: true,
+                        instanceName: 'media-edit',
+                        okCallback: this.changeModel.bind(this)
+                    }
                 }
-            }]);
+            ]);
         },
 
         /**

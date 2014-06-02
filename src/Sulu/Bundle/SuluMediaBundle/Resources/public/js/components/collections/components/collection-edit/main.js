@@ -39,8 +39,8 @@ define(function () {
         },
 
         templates: [
-            '/admin/media/template/media/collection-files',
-            '/admin/media/template/media/collection-settings'
+            '/admin/media/template/collection/files',
+            '/admin/media/template/collection/settings'
         ],
 
         /**
@@ -146,7 +146,7 @@ define(function () {
          * Renderes the files tab
          */
         renderFiles: function() {
-            this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/media/template/media/collection-files'));
+            this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/media/template/collection/files'));
             this.startDropzone();
             this.startDatagrid();
         },
@@ -155,7 +155,7 @@ define(function () {
          * Renderes the files tab
          */
         renderSettings: function() {
-            this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/media/template/media/collection-settings'));
+            this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/media/template/collection/settings'));
             this.options.data.color = this.options.data.style.color;
             this.sandbox.form.create('#' + constants.settingsFormId);
             this.sandbox.form.setData('#' + constants.settingsFormId, this.options.data);

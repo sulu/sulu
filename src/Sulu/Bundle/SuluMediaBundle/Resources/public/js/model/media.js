@@ -7,11 +7,11 @@
  * with this source code in the file LICENSE.
  */
 
-define(['mvc/relationalmodel'], function (relationalModel) {
+define(['mvc/relationalmodel'], function (RelationalModel) {
 
     'use strict';
 
-    return relationalModel({
+    return RelationalModel({
         urlRoot: '/admin/api/media',
 
         defaults: function () {
