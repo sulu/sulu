@@ -86,9 +86,82 @@ define(['app-config'], function(AppConfig) {
             }
 
             return accountType;
+        },
+
+        /**
+         * Generates array of conversion options for a specific account type
+         * @param accountType of specific account
+         * @param accountTypes
+         * @returns {Array}
+         */
+            getItemsForConvertOperation = function(accountType, accountTypes) {
+            var items = [];
+            this.sandbox.util.each(accountType.convertableTo, function(key, enabled) {
+                this.sandbox.util.each(accountTypes, function(name, el) {
+                    if (el.name === key && !!enabled) {
+                        items.push({
+                                title: el.translation + '.conversion',
+                                callback: function() {
+                                    this.sandbox.emit('sulu.contacts.account.convert', el);
+                                }.bind(this)
+                            }
+                        );
+                    }
+                }.bind(this));
+            }.bind(this));
+
+            return items;
+        },
+
+        /**
+         * Sets header toolbar with conversion options according to configuration
+         */
+            setHeaderToolbar = function(accountType, accountTypes) {
+
+            var items = [],
+                options = {
+                    icon: 'gear',
+                    iconSize: 'large',
+                    group: 'left',
+                    id: 'options-button',
+                    position: 30,
+                    items: []
+                };
+
+            // save button
+            items.push({
+                id: 'save-button',
+                icon: 'floppy-o',
+                iconSize: 'large',
+                class: 'highlight',
+                position: 1,
+                group: 'left',
+                disabled: true,
+                callback: function() {
+                    this.sandbox.emit('sulu.header.toolbar.save');
+                }.bind(this)
+            });
+
+            // only for saved accounts
+            if (!!this.account.id) {
+                options.items = getItemsForConvertOperation.call(this, accountType, accountTypes);
+            }
+
+            // delete select item
+            options.items.push({
+                title: this.sandbox.translate('toolbar.delete'),
+                callback: function() {
+                    this.sandbox.emit('sulu.header.toolbar.delete');
+                }.bind(this)
+            });
+
+            items.push(options);
+
+            this.sandbox.emit('sulu.header.set-toolbar', {data: items});
         };
 
     return {
+
         /**
          * sets header data: breadcrumb, headline and content tabs for account
          * @param {Object} account Backbone-Entity
@@ -96,8 +169,8 @@ define(['app-config'], function(AppConfig) {
          */
         setHeader: function(account, accountTypeName) {
 
-            var accountTypes = AppConfig.getSection('sulu-contact').accountTypes,
-                accountType;
+            var accountType,
+                accountTypes = AppConfig.getSection('sulu-contact').accountTypes;
 
             // parse to json
             account = account.toJSON();
@@ -108,6 +181,8 @@ define(['app-config'], function(AppConfig) {
             enableTabsByType.call(this, accountType);
             // set headline based on type and account
             setHeadlinesAndBreadCrumb.call(this, accountType, account.name);
+
+            setHeaderToolbar.call(this, accountType, accountTypes);
 
             this.sandbox.emit('sulu.contacts.account.types', {accountType: accountType, accountTypes: accountTypes});
 
@@ -120,7 +195,7 @@ define(['app-config'], function(AppConfig) {
          * @returns {}
          */
         getAccountType: function(account, accountTypeName) {
-            return getAccountType.call(this, account, accountTypeName) ;
+            return getAccountType.call(this, account, accountTypeName);
         },
 
         /**

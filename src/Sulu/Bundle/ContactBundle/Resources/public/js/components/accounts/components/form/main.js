@@ -18,72 +18,6 @@ define(['accountsutil/header'], function(AccountsUtilHeader) {
 
         constants = {
             tagsId: '#tags'
-        },
-
-    // TODO move following 2 methods to header.js?
-
-        getItemsForConvertOperation = function(){
-            var items = [];
-            this.sandbox.util.each(this.accountType.convertableTo, function(key,enabled){
-                this.sandbox.util.each(this.accountTypes, function(name, el){
-                    if(el.name === key && !!enabled){
-                        items.push( {
-                            title: el.translation+'.conversion',
-                            callback: function(){
-                                this.sandbox.emit('sulu.contacts.account.convert', el);
-                            }.bind(this)
-                        }
-                    );
-                    }
-                }.bind(this));
-            }.bind(this));
-
-            return items;
-        },
-
-    // sets toolbar
-        setHeaderToolbar = function() {
-
-            var items = [],
-                options = {
-                    icon: 'gear',
-                    iconSize: 'large',
-                    group: 'left',
-                    id: 'options-button',
-                    position: 30,
-                    items: []
-                };
-
-            // save button
-            items.push({
-                id: 'save-button',
-                icon: 'floppy-o',
-                iconSize: 'large',
-                class: 'highlight',
-                position: 1,
-                group: 'left',
-                disabled: true,
-                callback: function() {
-                    this.sandbox.emit('sulu.header.toolbar.save');
-                }.bind(this)
-            });
-
-            // only for saved accounts
-            if(!!this.options.data.id) {
-                options.items = getItemsForConvertOperation.call(this);
-            }
-
-            // delete select item
-            options.items.push({
-                title: this.sandbox.translate('toolbar.delete'),
-                callback: function() {
-                    this.sandbox.emit('sulu.header.toolbar.delete');
-                }.bind(this)
-            });
-
-            items.push(options);
-
-            this.sandbox.emit('sulu.header.set-toolbar', {data: items});
         };
 
     return {
@@ -107,7 +41,6 @@ define(['accountsutil/header'], function(AccountsUtilHeader) {
             this.render();
             this.getAccountTypeData();
             this.setHeaderBar(true);
-            setHeaderToolbar.call(this);
             this.listenForChange();
         },
         
