@@ -16,21 +16,24 @@
         </property>
 
         <section name="test" title="sections.test" cssClass="test">
-            <property name="url" title="properties.url" type="resource_locator" mandatory="true" cssClass="test" col="6">
-                <tag name="sulu.rlp.part" priority="1"/>
-            </property>
-            <property name="article" type="text_area" mandatory="false" col="6">
-                <tag name="sulu.node.title" priority="5"/>
-            </property>
-            <block name="block" title="properties.block" default-type="test">
-               <types>
-                   <type name="test">
-                       <properties>
-                           <property name="name" type="text_line"/>
-                       </properties>
-                   </type>
-               </types>
-            </block>
+            <properties>
+                <property name="url" title="properties.url" type="resource_locator" mandatory="true" cssClass="test"
+                          col="6">
+                    <tag name="sulu.rlp.part" priority="1"/>
+                </property>
+                <property name="article" type="text_area" mandatory="false" col="6">
+                    <tag name="sulu.node.title" priority="5"/>
+                </property>
+                <block name="block" title="properties.block" default-type="test">
+                    <types>
+                        <type name="test">
+                            <properties>
+                                <property name="name" type="text_line"/>
+                            </properties>
+                        </type>
+                    </types>
+                </block>
+            </properties>
         </section>
 
         <property name="pages" type="smart_content_selection" mandatory="false">

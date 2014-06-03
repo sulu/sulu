@@ -643,16 +643,85 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                 ),
                 'test' => array(
                     'name' => 'test',
-                    'type' => 'section',
                     'title' => 'sections.test',
-                    'minOccurs' => null,
-                    'maxOccurs' => null,
                     'col' => null,
                     'cssClass' => 'test',
-                    'mandatory' => false,
-                    'properties' => array(),
-                    'tags' => array(),
-                    'params' => array()
+                    'type' => 'section',
+                    'params' => array(),
+                    'properties' => array(
+                        'url' => array(
+                            'name' => 'url',
+                            'title' => 'properties.url',
+                            'type' => 'resource_locator',
+                            'minOccurs' => null,
+                            'maxOccurs' => null,
+                            'col' => 6,
+                            'cssClass' => 'test',
+                            'mandatory' => true,
+                            'tags' => array(
+                                '0' => Array
+                                (
+                                    'name' => 'sulu.rlp.part',
+                                    'priority' => 1
+                                )
+
+                            ),
+                            'params' => array()
+                        ),
+                        'article' => array(
+                            'name' => 'article',
+                            'title' => null,
+                            'type' => 'text_area',
+                            'minOccurs' => null,
+                            'maxOccurs' => null,
+                            'col' => 6,
+                            'cssClass' => null,
+                            'mandatory' => null,
+                            'tags' => array(
+                                '0' => Array
+                                (
+                                    'name' => 'sulu.node.title',
+                                    'priority' => 5
+                                )
+
+                            ),
+                            'params' => array()
+                        ),
+                        'block' => array(
+                            'name' => 'block',
+                            'title' => 'properties.block',
+                            'default-type' => 'test',
+                            'minOccurs' => null,
+                            'maxOccurs' => null,
+                            'col' => null,
+                            'cssClass' => null,
+                            'mandatory' => null,
+                            'type' => 'block',
+                            'tags' => array(),
+                            'params' => array(),
+                            'types' => array(
+                                'test' => Array
+                                (
+                                    'name' => 'test',
+                                    'title' => null,
+                                    'properties' => array(
+                                        'name' => array(
+                                            'name' => 'name',
+                                            'title' => null,
+                                            'type' => 'text_line',
+                                            'minOccurs' => null,
+                                            'maxOccurs' => null,
+                                            'col' => null,
+                                            'cssClass' => null,
+                                            'mandatory' => null,
+                                            'tags' => array(),
+                                            'params' => array()
+                                        )
+                                    )
+                                )
+                            )
+                        ),
+                    )
                 ),
                 'pages' => array(
                     'name' => 'pages',

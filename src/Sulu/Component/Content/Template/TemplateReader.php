@@ -103,6 +103,9 @@ class TemplateReader implements LoaderInterface
             } elseif ($node->tagName === 'block') {
                 $value = $this->loadBlock($xpath, $node);
                 $result[$value['name']] = $value;
+            } elseif ($node->tagName === 'section') {
+                $value = $this->loadSection($xpath, $node);
+                $result[$value['name']] = $value;
             }
         }
 
@@ -143,6 +146,24 @@ class TemplateReader implements LoaderInterface
         $result['tags'] = $this->loadTags('x:tag', $xpath, $node);
         $result['params'] = $this->loadParams('x:params/x:param', $xpath, $node);
         $result['types'] = $this->loadTypes('x:types/x:type', $xpath, $node);
+
+        return $result;
+    }
+
+    /**
+     * load single block
+     */
+    private function loadSection(\DOMXPath $xpath, \DOMNode $node)
+    {
+        $result = $this->loadValues(
+            $xpath,
+            $node,
+            array('name', 'title', 'col', 'cssClass')
+        );
+
+        $result['type'] = 'section';
+        $result['params'] = $this->loadParams('x:params/x:param', $xpath, $node);
+        $result['properties'] = $this->loadProperties('x:properties/x:*', $xpath, $node);
 
         return $result;
     }

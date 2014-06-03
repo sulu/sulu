@@ -13,11 +13,11 @@
             <xs:element type="xs:string" name="view" minOccurs="1" maxOccurs="1"/>
             <xs:element type="xs:string" name="controller" minOccurs="1" maxOccurs="1"/>
             <xs:element type="xs:integer" name="cacheLifetime" minOccurs="1" maxOccurs="1"/>
-            <xs:element type="propertiesType" name="properties" minOccurs="1" maxOccurs="1"/>
+            <xs:element type="rootPropertiesType" name="properties" minOccurs="1" maxOccurs="1"/>
         </xs:choice>
     </xs:complexType>
 
-    <xs:complexType name="propertiesType">
+    <xs:complexType name="rootPropertiesType">
         <xs:choice minOccurs="1" maxOccurs="unbounded">
             <xs:element type="propertyType" name="property" minOccurs="1" maxOccurs="unbounded"/>
             <xs:element type="blockType" name="block" minOccurs="0" maxOccurs="unbounded"/>
@@ -26,9 +26,8 @@
     </xs:complexType>
 
     <xs:complexType name="sectionType">
-        <xs:sequence minOccurs="1" maxOccurs="unbounded">
-            <xs:element type="propertyType" name="property" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element type="blockType" name="block" minOccurs="0" maxOccurs="unbounded"/>
+        <xs:sequence minOccurs="1" maxOccurs="1">
+            <xs:element type="propertiesType" name="properties" minOccurs="1" maxOccurs="1"/>
         </xs:sequence>
 
         <xs:attribute type="xs:string" name="name" use="required"/>
@@ -37,7 +36,7 @@
         <xs:attribute type="xs:integer" name="col" use="optional"/>
     </xs:complexType>
 
-    <xs:complexType name="blockPropertiesType">
+    <xs:complexType name="propertiesType">
         <xs:choice minOccurs="1" maxOccurs="unbounded">
             <xs:element type="propertyType" name="property"/>
             <xs:element type="blockType" name="block"/>
@@ -86,7 +85,7 @@
 
     <xs:complexType name="blockTypeType">
         <xs:sequence minOccurs="1" maxOccurs="1">
-            <xs:element type="blockPropertiesType" name="properties" minOccurs="1" maxOccurs="1"/>
+            <xs:element type="propertiesType" name="properties" minOccurs="1" maxOccurs="1"/>
         </xs:sequence>
 
         <xs:attribute type="xs:string" name="name" use="required"/>
