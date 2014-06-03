@@ -85,6 +85,42 @@ class Address
     private $accounts;
 
     /**
+     * @var boolean
+     * @Expose
+     */
+    private $primaryAddress;
+
+    /**
+     * @var boolean
+     * @Expose
+     */
+    private $deliveryAddress;
+
+    /**
+     * @var boolean
+     * @Expose
+     */
+    private $billingAddress;
+
+    /**
+     * @var string
+     * @Expose
+     */
+    private $postboxNumber;
+
+    /**
+     * @var string
+     * @Expose
+     */
+    private $postboxPostcode;
+
+    /**
+     * @var string
+     * @Expose
+     */
+    private $postboxCity;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -352,36 +388,6 @@ class Address
     {
         return $this->accounts;
     }
-    /**
-     * @var boolean
-     */
-    private $primaryAddress;
-
-    /**
-     * @var boolean
-     */
-    private $deliveryAddress;
-
-    /**
-     * @var boolean
-     */
-    private $billingAddress;
-
-    /**
-     * @var string
-     */
-    private $postboxNumber;
-
-    /**
-     * @var string
-     */
-    private $postboxPostcode;
-
-    /**
-     * @var string
-     */
-    private $postboxCity;
-
 
     /**
      * Set primaryAddress
