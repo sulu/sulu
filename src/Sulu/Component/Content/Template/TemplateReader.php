@@ -248,8 +248,7 @@ class TemplateReader implements LoaderInterface
     private function loadType(\DOMXPath $xpath, \DOMNode $node)
     {
         $result= $this->loadValues($xpath, $node, array('name', 'title'));
-        $result['properties'] = $this->loadProperties('x:properties/x:property', $xpath, $node);
-
+        $result['properties'] = $this->loadProperties('x:properties/x:*', $xpath, $node);
 
         return $result;
     }

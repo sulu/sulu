@@ -178,33 +178,51 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'name' => 'title',
                     'title' => 'properties.title',
                     'type' => 'text_line',
+                    'minOccurs' => null,
+                    'maxOccurs' => null,
+                    'col' => null,
+                    'cssClass' => null,
                     'mandatory' => true,
                     'tags' => array(
                         array(
-                            'name' => 'sulu.node.name'
+                            'name' => 'sulu.node.name',
+                            'priority' => null
                         ),
                         array(
                             'name' => 'sulu.node.title',
                             'priority' => 10
                         )
-                    )
+                    ),
+                    'params' => array()
                 ),
                 'url' => array(
                     'name' => 'url',
                     'title' => 'properties.url',
                     'type' => 'resource_locator',
+                    'minOccurs' => null,
+                    'maxOccurs' => null,
+                    'col' => null,
+                    'cssClass' => null,
                     'mandatory' => true,
                     'tags' => array(
                         array(
                             'name' => 'sulu.rlp.part',
                             'priority' => 1
                         )
-                    )
+                    ),
+                    'params' => array()
                 ),
                 'article' => array(
                     'name' => 'article',
+                    'title' => null,
                     'type' => 'text_editor',
-                    'mandatory' => true
+                    'minOccurs' => null,
+                    'maxOccurs' => null,
+                    'col' => null,
+                    'cssClass' => null,
+                    'mandatory' => true,
+                    'tags' => array(),
+                    'params' => array()
                 ),
                 'block1' => array(
                     'name' => 'block1',
@@ -212,6 +230,8 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'default-type' => 'default',
                     'minOccurs' => '2',
                     'maxOccurs' => '10',
+                    'col' => null,
+                    'cssClass' => null,
                     'mandatory' => true,
                     'type' => 'block',
                     'tags' => array(
@@ -224,69 +244,127 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                             'priority' => 1
                         )
                     ),
+                    'params' => array(),
                     'types' => array(
                         'default' => array(
                             'name' => 'default',
+                            'title' => null,
                             'properties' => array(
                                 'title1.1' => array(
                                     'name' => 'title1.1',
+                                    'title' => null,
                                     'type' => 'text_line',
-                                    'mandatory' => true
+                                    'minOccurs' => null,
+                                    'maxOccurs' => null,
+                                    'col' => null,
+                                    'cssClass' => null,
+                                    'mandatory' => true,
+                                    'tags' => array(),
+                                    'params' => array()
                                 ),
                                 'article1.1' => array(
                                     'name' => 'article1.1',
+                                    'title' => null,
                                     'type' => 'text_area',
                                     'mandatory' => true,
-                                    'minOccurs' => 2
+                                    'minOccurs' => 2,
+                                    'maxOccurs' => null,
+                                    'col' => null,
+                                    'cssClass' => null,
+                                    'tags' => array(),
+                                    'params' => array()
                                 ),
                                 'block1.1' => array(
                                     'name' => 'block1.1',
+                                    'title' => null,
                                     'default-type' => 'default',
+                                    'minOccurs' => null,
+                                    'maxOccurs' => null,
+                                    'col' => null,
+                                    'cssClass' => null,
+                                    'mandatory' => false,
                                     'type' => 'block',
+                                    'tags' => array(),
+                                    'params' => array(),
                                     'types' => array(
                                         'default' => array(
                                             'name' => 'default',
+                                            'title' => null,
                                             'properties' => array(
                                                 'block1.1.1' => array(
                                                     'name' => 'block1.1.1',
+                                                    'title' => null,
                                                     'default-type' => 'default',
+                                                    'minOccurs' => null,
+                                                    'maxOccurs' => null,
+                                                    'col' => null,
+                                                    'cssClass' => null,
+                                                    'mandatory' => false,
                                                     'type' => 'block',
+                                                    'tags' => array(),
+                                                    'params' => array(),
                                                     'types' => array(
                                                         'default' => array(
                                                             'name' => 'default',
+                                                            'title' => null,
                                                             'properties' => array(
                                                                 'article1.1.1' => array(
                                                                     'name' => 'article1.1.1',
                                                                     'title' => 'properties.title1',
                                                                     'type' => 'text_area',
-                                                                    'mandatory' => true,
                                                                     'minOccurs' => 2,
+                                                                    'maxOccurs' => null,
+                                                                    'col' => null,
+                                                                    'cssClass' => null,
+                                                                    'mandatory' => true,
                                                                     'tags' => array(
                                                                         array(
                                                                             'name' => 'sulu.node.title',
                                                                             'priority' => 5
                                                                         )
                                                                     ),
+                                                                    'params' => array()
                                                                 ),
                                                                 'article2.1.2' => array(
                                                                     'name' => 'article2.1.2',
+                                                                    'title' => null,
                                                                     'type' => 'text_area',
+                                                                    'minOccurs' => 2,
+                                                                    'maxOccurs' => null,
+                                                                    'col' => null,
+                                                                    'cssClass' => null,
                                                                     'mandatory' => true,
-                                                                    'minOccurs' => 2
+                                                                    'tags' => array(),
+                                                                    'params' => array()
                                                                 ),
                                                                 'block1.1.3' => array(
                                                                     'name' => 'block1.1.3',
+                                                                    'title' => null,
                                                                     'default-type' => 'default',
+                                                                    'minOccurs' => null,
+                                                                    'maxOccurs' => null,
+                                                                    'col' => null,
+                                                                    'cssClass' => null,
+                                                                    'mandatory' => false,
                                                                     'type' => 'block',
+                                                                    'tags' => array(),
+                                                                    'params' => array(),
                                                                     'types' => array(
                                                                         'default' => array(
                                                                             'name' => 'default',
+                                                                            'title' => null,
                                                                             'properties' => array(
                                                                                 'article1.1.3.1' => array(
                                                                                     'name' => 'article1.1.3.1',
+                                                                                    'title' => null,
                                                                                     'type' => 'text_area',
+                                                                                    'minOccurs' => 2,
+                                                                                    'maxOccurs' => null,
+                                                                                    'col' => null,
+                                                                                    'cssClass' => null,
                                                                                     'mandatory' => true,
-                                                                                    'minOccurs' => 2
+                                                                                    'tags' => array(),
+                                                                                    'params' => array()
                                                                                 )
                                                                             )
                                                                         )
@@ -298,17 +376,32 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                                 ),
                                                 'block1.1.2' => array(
                                                     'name' => 'block1.1.2',
+                                                    'title' => null,
                                                     'default-type' => 'default',
                                                     'type' => 'block',
+                                                    'minOccurs' => null,
+                                                    'maxOccurs' => null,
+                                                    'col' => null,
+                                                    'cssClass' => null,
+                                                    'mandatory' => false,
+                                                    'tags' => array(),
+                                                    'params' => array(),
                                                     'types' => array(
                                                         'default' => array(
                                                             'name' => 'default',
+                                                            'title' => null,
                                                             'properties' => array(
                                                                 'article1.1.2.1' => array(
                                                                     'name' => 'article1.1.2.1',
+                                                                    'title' => null,
                                                                     'type' => 'text_area',
+                                                                    'minOccurs' => 2,
+                                                                    'maxOccurs' => null,
+                                                                    'col' => null,
+                                                                    'cssClass' => null,
                                                                     'mandatory' => true,
-                                                                    'minOccurs' => '2'
+                                                                    'tags' => array(),
+                                                                    'params' => array()
                                                                 )
                                                             )
                                                         )
@@ -324,14 +417,23 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                 ),
                 'blog' => array(
                     'name' => 'blog',
+                    'title' => null,
                     'type' => 'text_editor',
-                    'mandatory' => true
+                    'minOccurs' => null,
+                    'maxOccurs' => null,
+                    'col' => null,
+                    'cssClass' => null,
+                    'mandatory' => true,
+                    'tags' => array(),
+                    'params' => array()
                 ),
             )
         );
 
         $templateReader = new TemplateReader();
         $result = $templateReader->load(__DIR__ . '/../../../Resources/DataFixtures/Template/template_block.xml');
+
+
         $this->assertEquals($template, $result);
     }
 
