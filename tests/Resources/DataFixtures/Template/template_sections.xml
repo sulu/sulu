@@ -10,21 +10,45 @@
     <cacheLifetime>2400</cacheLifetime>
 
     <properties>
-        <property name="title" title="properties.title" type="text_line" mandatory="true" col="6">
+        <property name="title" type="text_line" mandatory="true" col="6">
+            <meta>
+                <title lang="de">Titel</title>
+                <title lang="en">Title</title>
+
+                <info_text lang="de">Titel-Info-DE</info_text>
+                <info_text lang="en">Title-Info-EN</info_text>
+
+                <placeholder lang="de">Platzhalter-Info-DE</placeholder>
+                <placeholder lang="en">Placeholder-Info-EN</placeholder>
+            </meta>
             <tag name="sulu.node.name"/>
             <tag name="sulu.node.title" priority="10"/>
         </property>
 
-        <section name="test" title="sections.test" cssClass="test">
+        <section name="test" cssClass="test">
+            <meta>
+                <title lang="de">Test-DE</title>
+                <title lang="en">Test-EN</title>
+
+                <info_text lang="de">Info-DE</info_text>
+                <info_text lang="en">Info-EN</info_text>
+            </meta>
             <properties>
-                <property name="url" title="properties.url" type="resource_locator" mandatory="true" cssClass="test"
+                <property name="url" type="resource_locator" mandatory="true" cssClass="test"
                           col="6">
                     <tag name="sulu.rlp.part" priority="1"/>
                 </property>
                 <property name="article" type="text_area" mandatory="false" col="6">
                     <tag name="sulu.node.title" priority="5"/>
                 </property>
-                <block name="block" title="properties.block" default-type="test">
+                <block name="block" default-type="test">
+                    <meta>
+                        <title lang="de">Block-DE</title>
+                        <title lang="en">Block-EN</title>
+
+                        <info_text lang="de">Block-Info-DE</info_text>
+                        <info_text lang="en">Block-Info-EN</info_text>
+                    </meta>
                     <types>
                         <type name="test">
                             <properties>

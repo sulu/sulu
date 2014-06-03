@@ -17,6 +17,22 @@
         </xs:choice>
     </xs:complexType>
 
+    <xs:complexType name="metaType">
+        <xs:choice maxOccurs="unbounded">
+            <xs:element type="langType" name="title"/>
+            <xs:element type="langType" name="info_text"/>
+            <xs:element type="langType" name="placeholder"/>
+        </xs:choice>
+    </xs:complexType>
+
+    <xs:complexType name="langType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="lang" use="required" type="xs:string" />
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
     <xs:complexType name="rootPropertiesType">
         <xs:choice minOccurs="1" maxOccurs="unbounded">
             <xs:element type="propertyType" name="property" minOccurs="1" maxOccurs="unbounded"/>
@@ -27,11 +43,11 @@
 
     <xs:complexType name="sectionType">
         <xs:sequence minOccurs="1" maxOccurs="1">
+            <xs:element type="metaType" name="meta" minOccurs="0" maxOccurs="1"/>
             <xs:element type="propertiesType" name="properties" minOccurs="1" maxOccurs="1"/>
         </xs:sequence>
 
         <xs:attribute type="xs:string" name="name" use="required"/>
-        <xs:attribute type="xs:string" name="title" use="optional"/>
         <xs:attribute type="xs:string" name="cssClass" use="optional"/>
         <xs:attribute type="xs:integer" name="col" use="optional"/>
     </xs:complexType>
@@ -45,12 +61,12 @@
 
     <xs:complexType name="propertyType" mixed="true">
         <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element type="metaType" name="meta" minOccurs="0" maxOccurs="1"/>
             <xs:element type="tagType" name="tag" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="paramsType" name="params" minOccurs="0" maxOccurs="1"/>
         </xs:choice>
 
         <xs:attribute type="xs:string" name="name" use="required"/>
-        <xs:attribute type="xs:string" name="title" use="optional"/>
         <xs:attribute type="xs:string" name="type" use="required"/>
         <xs:attribute type="xs:string" name="mandatory" use="optional"/>
         <xs:attribute type="xs:string" name="multilingual" use="optional"/>
@@ -62,12 +78,12 @@
 
     <xs:complexType name="blockType">
         <xs:sequence minOccurs="1" maxOccurs="unbounded">
+            <xs:element type="metaType" name="meta" minOccurs="0" maxOccurs="1"/>
             <xs:element type="tagType" name="tag" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="blockTypesType" name="types" minOccurs="1" maxOccurs="1"/>
         </xs:sequence>
 
         <xs:attribute type="xs:string" name="name" use="required"/>
-        <xs:attribute type="xs:string" name="title" use="optional"/>
         <xs:attribute type="xs:string" name="default-type" use="required"/>
         <xs:attribute type="xs:string" name="mandatory" use="optional"/>
         <xs:attribute type="xs:string" name="multilingual" use="optional"/>
@@ -85,11 +101,11 @@
 
     <xs:complexType name="blockTypeType">
         <xs:sequence minOccurs="1" maxOccurs="1">
+            <xs:element type="metaType" name="meta" minOccurs="0" maxOccurs="1"/>
             <xs:element type="propertiesType" name="properties" minOccurs="1" maxOccurs="1"/>
         </xs:sequence>
 
         <xs:attribute type="xs:string" name="name" use="required"/>
-        <xs:attribute type="xs:string" name="title" use="optional"/>
     </xs:complexType>
 
     <xs:complexType name="tagType">

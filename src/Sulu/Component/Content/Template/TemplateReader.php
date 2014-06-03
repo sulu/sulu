@@ -120,12 +120,13 @@ class TemplateReader implements LoaderInterface
         $result = $this->loadValues(
             $xpath,
             $node,
-            array('name', 'title', 'type', 'minOccurs', 'maxOccurs', 'col', 'cssClass')
+            array('name', 'type', 'minOccurs', 'maxOccurs', 'col', 'cssClass')
         );
 
         $result['mandatory'] = $this->getBooleanValueFromXPath('@mandatory', $xpath, $node);
         $result['tags'] = $this->loadTags('x:tag', $xpath, $node);
         $result['params'] = $this->loadParams('x:params/x:param', $xpath, $node);
+        $result['meta'] =$this->loadMeta('x:meta/x:*', $xpath, $node);
 
         return $result;
     }
@@ -138,13 +139,14 @@ class TemplateReader implements LoaderInterface
         $result = $this->loadValues(
             $xpath,
             $node,
-            array('name', 'title', 'default-type', 'minOccurs', 'maxOccurs', 'col', 'cssClass')
+            array('name', 'default-type', 'minOccurs', 'maxOccurs', 'col', 'cssClass')
         );
 
         $result['mandatory'] = $this->getBooleanValueFromXPath('@mandatory', $xpath, $node);
         $result['type'] = 'block';
         $result['tags'] = $this->loadTags('x:tag', $xpath, $node);
         $result['params'] = $this->loadParams('x:params/x:param', $xpath, $node);
+        $result['meta'] =$this->loadMeta('x:meta/x:*', $xpath, $node);
         $result['types'] = $this->loadTypes('x:types/x:type', $xpath, $node);
 
         return $result;
@@ -158,11 +160,12 @@ class TemplateReader implements LoaderInterface
         $result = $this->loadValues(
             $xpath,
             $node,
-            array('name', 'title', 'col', 'cssClass')
+            array('name', 'col', 'cssClass')
         );
 
         $result['type'] = 'section';
         $result['params'] = $this->loadParams('x:params/x:param', $xpath, $node);
+        $result['meta'] =$this->loadMeta('x:meta/x:*', $xpath, $node);
         $result['properties'] = $this->loadProperties('x:properties/x:*', $xpath, $node);
 
         return $result;
@@ -268,8 +271,28 @@ class TemplateReader implements LoaderInterface
      */
     private function loadType(\DOMXPath $xpath, \DOMNode $node)
     {
-        $result= $this->loadValues($xpath, $node, array('name', 'title'));
+        $result = $this->loadValues($xpath, $node, array('name'));
+
+        $result['meta'] =$this->loadMeta('x:meta/x:*', $xpath, $node);
         $result['properties'] = $this->loadProperties('x:properties/x:*', $xpath, $node);
+
+        return $result;
+    }
+
+    private function loadMeta($path, \DOMXPath $xpath, \DOMNode $context)
+    {
+        $result = array();
+
+        /** @var \DOMElement $node */
+        foreach ($xpath->query($path, $context) as $node) {
+            $attribute = $node->tagName;
+            $lang = $this->getValueFromXPath('@lang', $xpath, $node);
+
+            if (!isset($result[$node->tagName])) {
+                $result[$attribute] = array();
+            }
+            $result[$attribute][$lang] = $node->textContent;
+        }
 
         return $result;
     }

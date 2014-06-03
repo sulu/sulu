@@ -518,6 +518,17 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         // should implement interface
         $this->assertInstanceOf('\Sulu\Component\Content\StructureInterface', $structure);
 
+        $this->assertEquals(6, sizeof($structure->getProperties()));
+        $this->assertEquals('title', $structure->getProperty('title')->getName());
+        $this->assertEquals('url', $structure->getProperty('url')->getName());
+        $this->assertEquals('article', $structure->getProperty('article')->getName());
+        $this->assertEquals('pages', $structure->getProperty('pages')->getName());
+        $this->assertEquals('images', $structure->getProperty('images')->getName());
 
+        $this->assertEquals('block', $structure->getProperty('block')->getName());
+        $this->assertEquals(
+            'name',
+            $structure->getProperty('block')->getType('test')->getChildProperties()[0]->getName()
+        );
     }
 }
