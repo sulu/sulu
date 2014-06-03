@@ -28,9 +28,11 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'name' => 'title',
                     'title' => 'properties.title',
                     'type' => 'text_line',
-                    'mandatory' => true,
                     'minOccurs' => null,
                     'maxOccurs' => null,
+                    'col' => null,
+                    'cssClass' => null,
+                    'mandatory' => true,
                     'tags' => array(
                         array(
                             'name' => 'sulu.node.name',
@@ -47,9 +49,11 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'name' => 'url',
                     'title' => 'properties.url',
                     'type' => 'resource_locator',
-                    'mandatory' => true,
                     'minOccurs' => null,
                     'maxOccurs' => null,
+                    'col' => null,
+                    'cssClass' => null,
+                    'mandatory' => true,
                     'tags' => array(
                         array(
                             'name' => 'sulu.rlp.part',
@@ -62,9 +66,11 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'name' => 'article',
                     'title' => null,
                     'type' => 'text_area',
-                    'mandatory' => false,
                     'minOccurs' => null,
                     'maxOccurs' => null,
+                    'col' => null,
+                    'cssClass' => null,
+                    'mandatory' => false,
                     'tags' => array(
                         array(
                             'name' => 'sulu.node.title',
@@ -77,9 +83,11 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'name' => 'pages',
                     'title' => null,
                     'type' => 'smart_content_selection',
-                    'mandatory' => false,
                     'minOccurs' => null,
                     'maxOccurs' => null,
+                    'col' => null,
+                    'cssClass' => null,
+                    'mandatory' => false,
                     'tags' => array(
                         array(
                             'name' => 'sulu.node.title',
@@ -92,9 +100,11 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'name' => 'images',
                     'title' => null,
                     'type' => 'image_selection',
-                    'mandatory' => null,
                     'minOccurs' => 0,
                     'maxOccurs' => 2,
+                    'col' => null,
+                    'cssClass' => null,
+                    'mandatory' => null,
                     'tags' => array(),
                     'params' => array(
                         array(
