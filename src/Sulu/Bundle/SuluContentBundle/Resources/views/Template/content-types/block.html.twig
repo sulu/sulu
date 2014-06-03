@@ -2,7 +2,7 @@
      id="{{ id|raw }}"
      data-form="true"
      data-type="block"
-     data-type-config='[{% for type in property.types %}{"data": "{{ type.name }}", "title": "{{ type.title is defined ? type.title:type.name|capitalize }}", "tpl": "{{ type.name }}-{{ id|raw }}-tpl"}{{ loop.last==false?',':'' }}{% endfor %}]'
+     data-type-config='[{% for type in property.types %}{"data": "{{ type.name }}", "title": "{{ type.getTitle(languageCode) }}", "tpl": "{{ type.name }}-{{ id|raw }}-tpl"}{{ loop.last==false?',':'' }}{% endfor %}]'
      data-type-min="{{ property.minOccurs }}"
      data-type-max="{{ property.maxOccurs }}"
      data-type-default="{{ property.defaultTypeName }}"
@@ -16,8 +16,9 @@
                 <input type="hidden" data-mapper-property="type" value="{{ type.name }}"/>
 
                 <div class="head">
-                    <label class="move"><%=translate('{{ property.title is defined ? property.title:property.name|capitalize }}')%>
-                        (<%=translate('{{ type.title is defined ? type.title:type.name|capitalize }}')%>)</label>
+                    <label class="move">
+                        {{ property.getTitle(languageCode) }} ({{ type.getTitle(languageCode) }})
+                    </label>
 
                     <div data-mapper-remove="{{ property.name }}"
                          class="fa-times options-remove mapper-remove-{{ type.name }}"></div>
