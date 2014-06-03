@@ -13,15 +13,15 @@ namespace Sulu\Bundle\MediaBundle\Controller;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class ImageProxyController extends Controller {
+class WebsiteMediaController extends Controller {
 
     /**
-     * @param $url
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
-    public function getImageAction($url)
+    public function getImageAction()
     {
         try {
-            // TODO
+            
         } catch (ImageProxyException $e) {
             // error 404
             throw $this->createNotFoundException('Image create error. Code: ' . $e->getCode());

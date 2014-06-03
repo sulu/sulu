@@ -9,3 +9,8 @@ sulu_media.collection_navigation:
 sulu_media.template.collection:
     pattern: /template/media/collection.html
     defaults: { _controller: SuluMediaBundle:Template:collection }
+
+sulu_media.website.image.proxy:
+    path: /image-proxy
+    defaults:
+        _controller: SuluMediaBundle:WebsiteMedia:getImage
