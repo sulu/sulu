@@ -111,16 +111,15 @@ class TemplateReader implements LoaderInterface
      */
     private function loadProperty(\DOMXPath $xpath, \DOMNode $node)
     {
-        $result = array(
-            'name' => $this->getValueFromXPath('@name', $xpath, $node),
-            'title' => $this->getValueFromXPath('@title', $xpath, $node),
-            'type' => $this->getValueFromXPath('@type', $xpath, $node),
-            'mandatory' => $this->getBooleanValueFromXPath('@mandatory', $xpath, $node),
-            'minOccurs' => $this->getValueFromXPath('@minOccurs', $xpath, $node),
-            'maxOccurs' => $this->getValueFromXPath('@maxOccurs', $xpath, $node),
-            'tags' => $this->loadTags('x:tag', $xpath, $node),
-            'params' => $this->loadParams('x:params/x:param', $xpath, $node)
+        $result = $this->loadValues(
+            $xpath,
+            $node,
+            array('name', 'title', 'type', 'minOccurs', 'maxOccurs')
         );
+        
+        $result['mandatory'] = $this->getBooleanValueFromXPath('@mandatory', $xpath, $node);
+        $result['tags'] = $this->loadTags('x:tag', $xpath, $node);
+        $result['params'] = $this->loadParams('x:params/x:param', $xpath, $node);
 
         return $result;
     }
@@ -178,12 +177,7 @@ class TemplateReader implements LoaderInterface
      */
     private function loadTag(\DOMXPath $xpath, \DOMNode $node)
     {
-        $result = array(
-            'name' => $this->getValueFromXPath('@name', $xpath, $node),
-            'priority' => $this->getValueFromXPath('@priority', $xpath, $node),
-        );
-
-        return $result;
+        return $this->loadValues($xpath, $node, array('name', 'priority'));
     }
 
     /**
@@ -206,10 +200,19 @@ class TemplateReader implements LoaderInterface
      */
     private function loadParam(\DOMXPath $xpath, \DOMNode $node)
     {
-        $result = array(
-            'name' => $this->getValueFromXPath('@name', $xpath, $node),
-            'value' => $this->getValueFromXPath('@value', $xpath, $node),
-        );
+        return $this->loadValues($xpath, $node, array('name', 'value'));
+    }
+
+    /**
+     * load values defined by key from given node
+     */
+    private function loadValues(\DOMXPath $xpath, \DOMNode $node, $keys, $prefix = '@')
+    {
+        $result = array();
+
+        foreach ($keys as $key) {
+            $result[$key] = $this->getValueFromXPath($prefix . $key, $xpath, $node);
+        }
 
         return $result;
     }
