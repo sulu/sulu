@@ -100,6 +100,9 @@ class TemplateReader implements LoaderInterface
             if ($node->tagName === 'property') {
                 $value = $this->loadProperty($xpath, $node);
                 $result[$value['name']] = $value;
+            } elseif ($node->tagName === 'block') {
+                $value = $this->loadBlock($xpath, $node);
+                $result[$value['name']] = $value;
             }
         }
 
@@ -114,12 +117,32 @@ class TemplateReader implements LoaderInterface
         $result = $this->loadValues(
             $xpath,
             $node,
-            array('name', 'title', 'type', 'minOccurs', 'maxOccurs')
+            array('name', 'title', 'type', 'minOccurs', 'maxOccurs', 'col', 'cssClass')
         );
-        
+
         $result['mandatory'] = $this->getBooleanValueFromXPath('@mandatory', $xpath, $node);
         $result['tags'] = $this->loadTags('x:tag', $xpath, $node);
         $result['params'] = $this->loadParams('x:params/x:param', $xpath, $node);
+
+        return $result;
+    }
+
+    /**
+     * load single block
+     */
+    private function loadBlock(\DOMXPath $xpath, \DOMNode $node)
+    {
+        $result = $this->loadValues(
+            $xpath,
+            $node,
+            array('name', 'title', 'default-type', 'minOccurs', 'maxOccurs', 'col', 'cssClass')
+        );
+
+        $result['mandatory'] = $this->getBooleanValueFromXPath('@mandatory', $xpath, $node);
+        $result['type'] = 'block';
+        $result['tags'] = $this->loadTags('x:tag', $xpath, $node);
+        $result['params'] = $this->loadParams('x:params/x:param', $xpath, $node);
+        $result['types'] = $this->loadTypes('x:types/x:type', $xpath, $node);
 
         return $result;
     }
@@ -201,6 +224,34 @@ class TemplateReader implements LoaderInterface
     private function loadParam(\DOMXPath $xpath, \DOMNode $node)
     {
         return $this->loadValues($xpath, $node, array('name', 'value'));
+    }
+
+    /**
+     * load types from given node
+     */
+    private function loadTypes($path, \DOMXPath $xpath, \DOMNode $context = null)
+    {
+        $result = array();
+
+        /** @var \DOMElement $node */
+        foreach ($xpath->query($path, $context) as $node) {
+            $value = $this->loadType($xpath, $node);
+            $result[$value['name']] = $value;
+        }
+
+        return $result;
+    }
+
+    /**
+     * load single param
+     */
+    private function loadType(\DOMXPath $xpath, \DOMNode $node)
+    {
+        $result= $this->loadValues($xpath, $node, array('name', 'title'));
+        $result['properties'] = $this->loadProperties('x:properties/x:property', $xpath, $node);
+
+
+        return $result;
     }
 
     /**

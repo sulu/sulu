@@ -349,28 +349,39 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'name' => 'title',
                     'title' => 'properties.title',
                     'type' => 'text_line',
+                    'minOccurs' => null,
+                    'maxOccurs' => null,
+                    'col' => null,
+                    'cssClass' => null,
                     'mandatory' => true,
                     'tags' => array(
                         array(
-                            'name' => 'sulu.node.name'
+                            'name' => 'sulu.node.name',
+                            'priority' => null
                         ),
                         array(
                             'name' => 'sulu.node.title',
                             'priority' => 10
                         )
-                    )
+                    ),
+                    'params' => array()
                 ),
                 'url' => array(
                     'name' => 'url',
                     'title' => 'properties.url',
                     'type' => 'resource_locator',
+                    'minOccurs' => null,
+                    'maxOccurs' => null,
+                    'col' => null,
+                    'cssClass' => null,
                     'mandatory' => true,
                     'tags' => array(
                         array(
                             'name' => 'sulu.rlp.part',
                             'priority' => 1
                         )
-                    )
+                    ),
+                    'params' => array()
                 ),
                 'block1' => array(
                     'name' => 'block1',
@@ -378,6 +389,8 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'default-type' => 'default',
                     'minOccurs' => '2',
                     'maxOccurs' => '10',
+                    'col' => null,
+                    'cssClass' => null,
                     'mandatory' => true,
                     'type' => 'block',
                     'tags' => array(
@@ -390,6 +403,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                             'priority' => 1
                         )
                     ),
+                    'params' => array(),
                     'types' => array(
                         'default' => array(
                             'name' => 'default',
@@ -397,14 +411,27 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                             'properties' => array(
                                 'title' => array(
                                     'name' => 'title',
+                                    'title' => null,
                                     'type' => 'text_line',
-                                    'mandatory' => true
+                                    'minOccurs' => null,
+                                    'maxOccurs' => null,
+                                    'col' => null,
+                                    'cssClass' => null,
+                                    'mandatory' => true,
+                                    'tags'=>array(),
+                                    'params'=>array()
                                 ),
                                 'article' => array(
                                     'name' => 'article',
+                                    'title' => null,
                                     'type' => 'text_area',
+                                    'minOccurs' => 2,
+                                    'maxOccurs' => null,
+                                    'col' => null,
+                                    'cssClass' => null,
                                     'mandatory' => true,
-                                    'minOccurs' => 2
+                                    'tags'=>array(),
+                                    'params'=>array()
                                 )
                             )
                         ),
@@ -414,20 +441,39 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                             'properties' => array(
                                 'title' => array(
                                     'name' => 'title',
+                                    'title'=>null,
                                     'type' => 'text_line',
-                                    'mandatory' => true
+                                    'minOccurs' => null,
+                                    'maxOccurs' => null,
+                                    'col' => null,
+                                    'cssClass' => null,
+                                    'mandatory' => true,
+                                    'tags'=>array(),
+                                    'params'=>array()
                                 ),
                                 'name' => array(
                                     'name' => 'name',
+                                    'title'=>null,
                                     'type' => 'text_line',
+                                    'minOccurs' => 2,
+                                    'maxOccurs' => null,
+                                    'col' => null,
+                                    'cssClass' => null,
                                     'mandatory' => true,
-                                    'minOccurs' => 2
+                                    'tags'=>array(),
+                                    'params'=>array()
                                 ),
                                 'article' => array(
                                     'name' => 'article',
+                                    'title'=>null,
                                     'type' => 'text_editor',
+                                    'minOccurs' => 2,
+                                    'maxOccurs' => null,
+                                    'col' => null,
+                                    'cssClass' => null,
                                     'mandatory' => true,
-                                    'minOccurs' => 2
+                                    'tags'=>array(),
+                                    'params'=>array()
                                 )
                             )
                         )
@@ -435,9 +481,16 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                 ),
                 'blog' => array(
                     'name' => 'blog',
+                    'title' => null,
                     'type' => 'text_editor',
-                    'mandatory' => true
-                ),
+                    'minOccurs' => null,
+                    'maxOccurs' => null,
+                    'col' => null,
+                    'cssClass' => null,
+                    'mandatory' => true,
+                    'tags' => array(),
+                    'params' => array()
+                )
             )
         );
 
@@ -459,42 +512,63 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'name' => 'title',
                     'title' => 'properties.title',
                     'type' => 'text_line',
-                    'mandatory' => 1,
+                    'minOccurs' => null,
+                    'maxOccurs' => null,
                     'col' => 6,
+                    'cssClass' => null,
+                    'mandatory' => 1,
                     'tags' => array(
                         '0' => array(
-                            'name' => 'sulu.node.name'
+                            'name' => 'sulu.node.name',
+                            'priority' => null
                         ),
                         '1' => array(
                             'name' => 'sulu.node.title',
                             'priority' => 10
                         )
-                    )
+                    ),
+                    'params' => array()
                 ),
                 'test' => array(
                     'name' => 'test',
                     'type' => 'section',
                     'title' => 'sections.test',
+                    'minOccurs' => null,
+                    'maxOccurs' => null,
+                    'col' => null,
                     'cssClass' => 'test',
-                    'properties' => array()
+                    'mandatory' => false,
+                    'properties' => array(),
+                    'tags' => array(),
+                    'params' => array()
                 ),
                 'pages' => array(
                     'name' => 'pages',
+                    'title' => null,
                     'type' => 'smart_content_selection',
+                    'minOccurs' => null,
+                    'maxOccurs' => null,
+                    'col' => null,
+                    'cssClass' => null,
                     'mandatory' => false,
                     'tags' => array(
                         '0' => array(
-                            'name' => 'sulu.node.title'
+                            'name' => 'sulu.node.title',
+                            'priority' => null
                         )
                     ),
-
+                    'params' => array()
                 ),
                 'images' => array(
                     'name' => 'images',
+                    'title' => null,
                     'type' => 'image_selection',
                     'minOccurs' => 0,
                     'maxOccurs' => 2,
                     'col' => 6,
+                    'cssClass' => null,
+                    'mandatory' => false,
+                    'tags' => array(),
                     'params' => array(
                         '0' => array(
                             'name' => 'minLinks',
