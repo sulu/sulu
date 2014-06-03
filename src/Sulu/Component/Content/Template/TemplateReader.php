@@ -25,11 +25,24 @@ class TemplateReader implements LoaderInterface
 {
     const SCHEME_PATH = '/Resources/schema/template/template-1.0.xsd';
 
+    private $requiredTags = array(
+        'sulu.node.name'
+    );
+
+    private $runningRequiredTags;
+
+    private $runningTags;
+
     /**
      * {@inheritdoc}
      */
     public function load($resource, $type = null)
     {
+        // init running vars
+        // DEEP COPY
+        $this->runningRequiredTags = array_merge(array(), $this->requiredTags);
+        $this->runningTags = array();
+
         // read file
         $xmlDocument = XmlUtils::loadFile($resource, __DIR__ . static::SCHEME_PATH);
 
@@ -38,15 +51,36 @@ class TemplateReader implements LoaderInterface
         $xpath->registerNamespace('x', 'http://schemas.sulu.io/template/template');
 
         // init result
-        $result = array();
+        $result = $this->loadTemplateAttributes($xpath);
 
-        // root attributes
-        $result['key'] = $this->getValueFromXPath('/x:template/x:key', $xpath);
-        $result['view'] = $this->getValueFromXPath('/x:template/x:view', $xpath);
-        $result['controller'] = $this->getValueFromXPath('/x:template/x:controller', $xpath);
-        $result['cacheLifetime'] = $this->getValueFromXPath('/x:template/x:cacheLifetime', $xpath);
-
+        // load properties
         $result['properties'] = $this->loadProperties('/x:template/x:properties/x:*', $xpath);
+
+        if (sizeof($this->runningRequiredTags) > 0) {
+            throw new InvalidXmlException(
+                sprintf(
+                    'Tag(s) %s required but not found',
+                    join(',', $this->runningRequiredTags)
+                )
+            );
+        }
+
+        return $result;
+    }
+
+    private function loadTemplateAttributes(\DOMXPath $xpath)
+    {
+        $result = array(
+            'key' => $this->getValueFromXPath('/x:template/x:key', $xpath),
+            'view' => $this->getValueFromXPath('/x:template/x:view', $xpath),
+            'controller' => $this->getValueFromXPath('/x:template/x:controller', $xpath),
+            'cacheLifetime' => $this->getValueFromXPath('/x:template/x:cacheLifetime', $xpath),
+        );
+
+        $result = array_filter($result);
+        if (sizeof($result) < 4) {
+            throw new InvalidXmlException();
+        }
 
         return $result;
     }
@@ -88,10 +122,40 @@ class TemplateReader implements LoaderInterface
 
         /** @var \DOMElement $node */
         foreach ($xpath->query($path, $context) as $node) {
-            $result[] = $this->loadTag($xpath, $node);
+            $tag = $this->loadTag($xpath, $node);
+            $this->validateTag($tag);
+
+            $result[] = $tag;
         }
 
         return $result;
+    }
+
+    private function validateTag($tag)
+    {
+        // remove tag from required tags
+        $this->runningRequiredTags = array_diff($this->runningRequiredTags, array($tag['name']));
+
+        // check for duplicated priority
+        if (
+            isset($this->runningTags[$tag['name']]) &&
+            in_array(
+                $tag['priority'],
+                $this->runningTags[$tag['name']]
+            )
+        ) {
+            throw new InvalidXmlException(
+                sprintf(
+                    'Priority %s of tag %s exists duplicated',
+                    $tag['priority'],
+                    $tag['name']
+                )
+            );
+        } elseif (!isset($this->runningTags[$tag['name']])) {
+            $this->runningTags[$tag['name']] = array();
+        }
+
+        $this->runningTags[$tag['name']][] = $tag['priority'];
     }
 
     private function loadTag(\DOMXPath $xpath, \DOMNode $node)
