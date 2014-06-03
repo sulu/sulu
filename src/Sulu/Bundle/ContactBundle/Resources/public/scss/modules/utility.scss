@@ -29,15 +29,14 @@
   }
 
   .address-add {
-      display:none;
-  }
-
-  .address-row:last-child .address-add {
-      display:inline;
+     margin-left:140px;
+     height: 30px;
+     padding: 3px;
   }
 
   .address-remove {
     display: none;
+    padding: 3px;
   }
 
   .address-row:hover .address-remove {

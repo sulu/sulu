@@ -29,56 +29,55 @@
 }
 /* line 31, ../scss/modules/utility.scss */
 #contact-form .address-add {
-  display: none;
+  margin-left: 140px;
+  height: 30px;
+  padding: 3px;
 }
-/* line 35, ../scss/modules/utility.scss */
-#contact-form .address-row:last-child .address-add {
-  display: inline;
-}
-/* line 39, ../scss/modules/utility.scss */
+/* line 37, ../scss/modules/utility.scss */
 #contact-form .address-remove {
   display: none;
+  padding: 3px;
 }
-/* line 43, ../scss/modules/utility.scss */
+/* line 42, ../scss/modules/utility.scss */
 #contact-form .address-row:hover .address-remove {
   display: inline;
 }
 
-/* line 49, ../scss/modules/utility.scss */
+/* line 48, ../scss/modules/utility.scss */
 #contact-options-dropdown {
   display: none;
 }
-/* line 52, ../scss/modules/utility.scss */
+/* line 51, ../scss/modules/utility.scss */
 #contact-options-dropdown.is-active {
   display: block;
 }
 
-/* line 59, ../scss/modules/utility.scss */
+/* line 58, ../scss/modules/utility.scss */
 #contact-edit-form:hover #contact-options-dropdown {
   display: block;
 }
-/* line 65, ../scss/modules/utility.scss */
+/* line 64, ../scss/modules/utility.scss */
 #contact-edit-form .comma-before:before {
   content: ',';
   margin-left: -4px;
   margin-right: 4px;
 }
-/* line 72, ../scss/modules/utility.scss */
+/* line 71, ../scss/modules/utility.scss */
 #contact-edit-form label {
   line-height: 14px;
   text-overflow: hidden;
 }
-/* line 77, ../scss/modules/utility.scss */
+/* line 76, ../scss/modules/utility.scss */
 #contact-edit-form .label-container {
   display: block;
   font-size: 11px;
 }
 
-/* line 84, ../scss/modules/utility.scss */
+/* line 83, ../scss/modules/utility.scss */
 .type-value:before {
   content: '(';
 }
-/* line 87, ../scss/modules/utility.scss */
+/* line 86, ../scss/modules/utility.scss */
 .type-value:after {
   content: ')';
 }
