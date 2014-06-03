@@ -82,7 +82,65 @@ class MediaRepository extends EntityRepository
     }
 
     /**
-     *
+     * Get medias by ids
+     * @param string[] $ids
+     * @param bool $asArray
+     * @return Media[]|array
+     */
+    public function findMediaByIds($ids, $asArray = false)
+    {
+        try {
+            $qb = $this->createQueryBuilder('media')
+                ->leftJoin('media.type', 'type')
+                ->leftJoin('media.collection', 'collection')
+                ->leftJoin('media.files', 'file')
+                ->leftJoin('file.fileVersions', 'fileVersion')
+                ->leftJoin('fileVersion.tags', 'tag')
+                ->leftJoin('fileVersion.meta', 'fileVersionMeta')
+                ->leftJoin('fileVersion.contentLanguages', 'fileVersionContentLanguage')
+                ->leftJoin('fileVersion.publishLanguages', 'fileVersionPublishLanguage')
+                /*
+                ->leftJoin('media.creator', 'creator')
+                ->leftJoin('creator.contact', 'creatorContact')
+                ->leftJoin('media.changer', 'changer')
+                ->leftJoin('changer.contact', 'changerContact')
+                */
+                ->addSelect('type')
+                ->addSelect('collection')
+                ->addSelect('file')
+                ->addSelect('tag')
+                ->addSelect('fileVersion')
+                ->addSelect('fileVersionMeta')
+                ->addSelect('fileVersionContentLanguage')
+                ->addSelect('fileVersionPublishLanguage')
+                /*
+                ->addSelect('creator')
+                ->addSelect('changer')
+                ->addSelect('creatorContact')
+                ->addSelect('changerContact')
+                */
+                ->where('media.id IN :mediaIds');
+
+            $query = $qb->getQuery();
+            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+            $query->setParameter('mediaIds', $ids);
+
+            if ($asArray) {
+                if (isset($query->getArrayResult()[0])) {
+                    return $query->getArrayResult()[0];
+                } else {
+                    return null;
+                }
+            } else {
+                return $query->getSingleResult();
+            }
+        } catch (NoResultException $ex) {
+            return null;
+        }
+    }
+
+    /**
+     * returns media filtered by collection
      */
     public function findMedia($collection = null)
     {
