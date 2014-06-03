@@ -11,7 +11,7 @@
         <div class="text-block {{ property.name }}-element">
             <div class="head">
                 <label class="move">
-                    <%=translate('{{ property.title is defined and property.title != '' ? property.title : property.name|capitalize }}')%>
+                    {{ property.getTitle(languageCode) }}
                 </label>
 
                 <div data-mapper-remove="{{ property.name }}" class="fa-times options-remove mapper-remove-{{ property.name }}"></div>
