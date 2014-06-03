@@ -18,6 +18,7 @@ use FOS\RestBundle\Controller\Annotations\Put;
 use Sulu\Bundle\MediaBundle\Media\Exception\UploadFileException;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\RestObject\Media;
+use Sulu\Bundle\MediaBundle\Media\RestObject\RestObjectHelper;
 use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
@@ -131,7 +132,9 @@ class MediaController extends RestController implements ClassResourceInterface
                     ),
                     $media->setDataByEntityArray($mediaEntity, $locale, $request->get('version', null))->toArray()
                 )
-                , 200);
+                ,
+                200
+            );
         }
 
         return $this->handleView($view);
@@ -152,7 +155,7 @@ class MediaController extends RestController implements ClassResourceInterface
             $fields = explode(',', $fields);
         }
         $mediaList = $this->getDoctrine()->getRepository($this->entityName)->findMedia($collection);
-        $mediaList = $this->flatMedia($mediaList, $locale, $fields);
+        $mediaList = RestObjectHelper::convertMediasToRestObjects($mediaList, $locale, $fields);
         $view = $this->view($this->createHalResponse($mediaList), 200);
 
         return $this->handleView($view);
@@ -180,11 +183,19 @@ class MediaController extends RestController implements ClassResourceInterface
             $uploadFiles = $this->getUploadedFiles($request, 'fileVersion');
             if (count($uploadFiles)) {
                 foreach ($uploadFiles as $uploadFile) {
-                    $mediaEntity = $this->getMediaManager()->add($uploadFile, $this->getUser()->getId(), $media->getCollection(), $properties);
+                    $mediaEntity = $this->getMediaManager()->add(
+                        $uploadFile,
+                        $this->getUser()->getId(),
+                        $media->getCollection(),
+                        $properties
+                    );
                     break;
                 }
             } else {
-                throw new RestException('Uploaded file not found', UploadFileException::EXCEPTION_CODE_UPLOADED_FILE_NOT_FOUND);
+                throw new RestException(
+                    'Uploaded file not found',
+                    UploadFileException::EXCEPTION_CODE_UPLOADED_FILE_NOT_FOUND
+                );
             }
 
             $media = new Media();
@@ -224,12 +235,24 @@ class MediaController extends RestController implements ClassResourceInterface
             if (count($uploadFiles)) {
                 // Add new Fileversion
                 foreach ($uploadFiles as $uploadFile) {
-                    $mediaEntity = $this->getMediaManager()->update($uploadFile, $this->getUser()->getId(), $id, $media->getCollection(), $properties);
+                    $mediaEntity = $this->getMediaManager()->update(
+                        $uploadFile,
+                        $this->getUser()->getId(),
+                        $id,
+                        $media->getCollection(),
+                        $properties
+                    );
                     break;
                 }
             } else {
                 // Update only properties
-                $mediaEntity = $this->getMediaManager()->update(null, $this->getUser()->getId(), $id, $media->getCollection(), $properties);
+                $mediaEntity = $this->getMediaManager()->update(
+                    null,
+                    $this->getUser()->getId(),
+                    $id,
+                    $media->getCollection(),
+                    $properties
+                );
             }
 
             $media = new Media();
@@ -303,30 +326,11 @@ class MediaController extends RestController implements ClassResourceInterface
          * @var UploadedFile $uploadedFile
          */
         foreach ($this->getUploadedFiles($request, 'fileVersion') as $uploadedFile) {
-            $title = $part   = implode('.', explode('.', $uploadedFile->getClientOriginalName(), -1));;
+            $title = $part = implode('.', explode('.', $uploadedFile->getClientOriginalName(), -1));;
             break;
         }
 
         return $title;
-    }
-
-    /**
-     * convert media entities array to flat media rest object array
-     * @param $mediaList
-     * @param $locale
-     * @param array $fields
-     * @return array
-     */
-    protected function flatMedia ($mediaList, $locale, $fields = array())
-    {
-        $flatMediaList = array();
-
-        foreach ($mediaList as $media) {
-            $flatMedia = new Media();
-            $flatMediaList[] = $flatMedia->setDataByEntityArray($media, $locale)->toArray($fields);
-        }
-
-        return $flatMediaList;
     }
 
     /**
