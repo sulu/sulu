@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define(['accountsutil/header'], function(AccountsUtilHeader) {
+define([], function() {
 
     'use strict';
 
@@ -457,6 +457,7 @@ define(['accountsutil/header'], function(AccountsUtilHeader) {
                 this.sandbox.dom.on('#contact-form', 'change', function() {
                     this.setHeaderBar(false);
                 }.bind(this), "select, input, textarea");
+
                 this.sandbox.dom.on('#contact-form', 'keyup', function() {
                     this.setHeaderBar(false);
                 }.bind(this), "input, textarea");

@@ -100,7 +100,7 @@ define(['app-config'], function(AppConfig) {
                 this.sandbox.util.each(accountTypes, function(name, el) {
                     if (el.name === key && !!enabled) {
                         items.push({
-                                title: el.translation + '.conversion',
+                                title: this.sandbox.translate(el.translation + '.conversion'),
                                 callback: function() {
                                     this.sandbox.emit('sulu.contacts.account.convert', el);
                                 }.bind(this)
@@ -156,7 +156,6 @@ define(['app-config'], function(AppConfig) {
             });
 
             items.push(options);
-
             this.sandbox.emit('sulu.header.set-toolbar', {data: items});
         };
 

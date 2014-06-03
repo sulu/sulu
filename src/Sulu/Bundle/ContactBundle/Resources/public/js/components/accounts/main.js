@@ -159,7 +159,7 @@ define([
             // show dialog
             this.sandbox.emit('sulu.overlay.show-warning',
                 'sulu.overlay.be-careful',
-                'contact.account.type.conversion.message',
+                'contact.accounts.type.conversion.message',
                 callbackFunction.bind(this, false),
                 callbackFunction.bind(this, true)
             );
