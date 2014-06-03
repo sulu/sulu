@@ -106,8 +106,8 @@ class ImageSelectionContentType extends ComplexContentType
         $value = $property->getValue();
 
         // if whole smart-content container is pushed
-        if (isset($value['ids'])) {
-            $value = $value['ids'];
+        if (isset($value['data'])) {
+            unset($value['data']);
         }
 
         // set value to node
