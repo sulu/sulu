@@ -55,7 +55,8 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
             $cacheDir . '/TemplateStructureCache.php',
             $cacheDir . '/Template_Structure_template.php',
             $cacheDir . '/Template_blockStructureCache.php',
-            $cacheDir . '/Template_block_typesStructureCache.php'
+            $cacheDir . '/Template_block_typesStructureCache.php',
+            $cacheDir . '/Template_SectionsStructureCache.php'
         );
 
         if (!is_dir($cacheDir)) {
@@ -507,5 +508,16 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('text_line', $properties[1]->getContentTypeName());
         $this->assertEquals('article', $properties[2]->getName());
         $this->assertEquals('text_editor', $properties[2]->getContentTypeName());
+    }
+
+    public function testSections()
+    {
+        /** @var StructureInterface $structure */
+        $structure = $this->structureManager->getStructure('template_sections');
+
+        // should implement interface
+        $this->assertInstanceOf('\Sulu\Component\Content\StructureInterface', $structure);
+
+
     }
 }

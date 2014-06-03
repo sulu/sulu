@@ -30,10 +30,19 @@ class {{ cache_class }} extends {{ base_class }}
 {% for type in property.types %}
 {{ _self.buildTypes(type, child, layer, loop.index) }}
 {% endfor %}
+{% elseif property.type == 'section' %}
+{{ _self.buildSection(property, parent, layer) }}
 {% else %}
         {{ child }} = {{ _self.propertyConstructor(property) }}
         {{ parent }}->addChild({{ child }});
 {% endif %}
+{% endmacro %}
+
+{% macro buildSection(section, parent, layer) %}
+        // section {{ section.name }}
+{% for property in section.properties %}
+{{ _self.buildProperty(property, parent, layer) }}
+{% endfor %}
 {% endmacro %}
 
 {% macro buildTypes(type, parent, layer, typeIndex) %}
@@ -50,10 +59,10 @@ new Property(
             '{{ property.name }}',
             '{{ property.title }}',
             '{{ property.type }}',
-            {{ property.mandatory is defined and property.mandatory ? 'true' : 'false' }},
-            {{ property.multilingual is defined ? (property.multilingual? 'true':'false') : 'true' }},
-            {{ property.maxOccurs is defined ? property.maxOccurs : 1 }},
-            {{ property.minOccurs is defined ? property.minOccurs : 1 }},
+            {{ property.mandatory != null and property.mandatory ? 'true' : 'false' }},
+            {{ property.multilingual != null ? (property.multilingual? 'true':'false') : 'true' }},
+            {{ property.maxOccurs != null ? property.maxOccurs : 1 }},
+            {{ property.minOccurs != null ? property.minOccurs : 1 }},
             array(
 {% for param in property.params %}
                 '{{ param.name }}' => '{{ param.value }}',
@@ -71,10 +80,10 @@ new BlockProperty(
             '{{ property.name }}',
             '{{ property.title }}',
             '{{ property['default-type'] }}',
-            {{ property.mandatory is defined and property.mandatory ? 'true' : 'false' }},
-            {{ property.multilingual is defined ? (property.multilingual? 'true':'false') : 'true' }},
-            {{ property.maxOccurs is defined ? property.maxOccurs : 1 }},
-            {{ property.minOccurs is defined ? property.minOccurs : 1 }},
+            {{ property.mandatory != null and property.mandatory ? 'true' : 'false' }},
+            {{ property.multilingual != null ? (property.multilingual? 'true':'false') : 'true' }},
+            {{ property.maxOccurs != null ? property.maxOccurs : 1 }},
+            {{ property.minOccurs != null ? property.minOccurs : 1 }},
             array(
 {% for param in property.params %}
                 '{{ param.name }}' => '{{ param.value }}',
