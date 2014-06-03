@@ -1,0 +1,4 @@
+sulu_media.website.image.proxy:
+    path: /image-proxy
+    defaults:
+        _controller: SuluMediaBundle:WebsiteMedia:getImage
