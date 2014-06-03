@@ -49,7 +49,7 @@ class {{ cache_class }} extends {{ base_class }}
 {% set typeVar = '$type'~layer~typeIndex %}
         {{ typeVar }} = new BlockPropertyType(
             '{{ type.name }}',
-{{ _self.renderArray(property.meta) }}
+{{ _self.renderArray(type.meta) }}
         );
         {{ parent }}->addType({{ typeVar }});
 {% for childProperty in type.properties %}

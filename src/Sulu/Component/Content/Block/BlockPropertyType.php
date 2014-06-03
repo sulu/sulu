@@ -38,7 +38,7 @@ class BlockPropertyType
     function __construct($name, $metadata)
     {
         $this->name = $name;
-        $this->metadata = $metadata;
+        $this->metadata = new Metadata($metadata);
     }
 
     /**
@@ -88,7 +88,7 @@ class BlockPropertyType
      */
     public function getTitle($languageCode)
     {
-        return $this->metadata->get('title', $languageCode);
+        return $this->metadata->get('title', $languageCode, ucfirst($this->getName()));
     }
 
     /**
