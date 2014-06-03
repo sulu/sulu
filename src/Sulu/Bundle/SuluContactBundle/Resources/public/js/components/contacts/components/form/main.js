@@ -34,7 +34,7 @@ define([], function() {
             initialize: function() {
                 this.saved = true;
                 this.formId = '#contact-form';
-                this.autoCompleteInstanceName = 'accounts-'
+                this.autoCompleteInstanceName = 'accounts-';
 
                 this.dfdListenForChange = this.sandbox.data.deferred();
                 this.dfdFormIsSet = this.sandbox.data.deferred();

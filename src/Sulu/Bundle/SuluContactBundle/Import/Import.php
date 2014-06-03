@@ -32,7 +32,7 @@ class Import
     /**
      * @var \Doctrine\ORM\EntityManager
      */
-    private $em;
+    protected $em;
 
     /**
      * location of contacts import file
@@ -67,7 +67,7 @@ class Import
     /**
      * @var array $defaultTypes
      */
-    private $defaultTypes = array();
+    protected $defaultTypes = array();
 
     /**
      * import options
@@ -139,13 +139,13 @@ class Import
      * used as temp storage for newly created accounts
      * @var array
      */
-    private $accounts = array();
+    protected $accounts = array();
 
     /**
      * used as temp associative storage for newly created accounts
      * @var array
      */
-    private $associativeAccounts = array();
+    protected $associativeAccounts = array();
 
     /**
      * @param EntityManager $em
@@ -304,8 +304,12 @@ class Import
 
     /**
      * creates an account for given row data
+     * @param $data
+     * @param $row
+     * @return Account
+     * @throws \Exception
      */
-    private function createAccount($data, $row)
+    protected function createAccount($data, $row)
     {
         // check if account already exists
         $account = new Account();
@@ -421,9 +425,11 @@ class Import
         }
 
         $this->em->persist($account);
+
+        return $account;
     }
 
-    private function addAddress($data, $entity)
+    protected function addAddress($data, $entity)
     {
         // set address
         $address = new Address();
@@ -482,8 +488,11 @@ class Import
 
     /**
      * creates an contact for given row data
+     * @param $data
+     * @param $row
+     * @return Contact
      */
-    private function createContact($data, $row)
+    protected function createContact($data, $row)
     {
         $contact = new Contact();
         // $contact->addEmail();
@@ -591,12 +600,14 @@ class Import
         }
 
         $this->em->persist($contact);
+
+        return $contact;
     }
 
     /**
      * checks data for validity
      */
-    private function checkData($index, $data)
+    protected function checkData($index, $data)
     {
         return array_key_exists($index, $data) && $data[$index] !== '';
     }
@@ -604,7 +615,7 @@ class Import
     /**
      * creates relation between parent and account
      */
-    private function createAccountParentRelation($data, $row)
+    protected function createAccountParentRelation($data, $row)
     {
         // if account has parent
         if ($this->checkData('account_parent', $data)) {
@@ -621,7 +632,7 @@ class Import
     /**
      * truncate table for account and contact
      */
-    private function clearDatabase()
+    protected function clearDatabase()
     {
         $this->clearTable('SuluContactBundle:Account');
         $this->clearTable('SuluContactBundle:Contact');
@@ -631,7 +642,7 @@ class Import
      * truncate one single table for given entity name
      * @param string $entityName name of entity
      */
-    private function clearTable($entityName)
+    protected function clearTable($entityName)
     {
         $connection = $this->em->getConnection();
         $platform = $connection->getDatabasePlatform();
@@ -648,7 +659,7 @@ class Import
      * @param array $headerData header data of csv containing column names
      * @return array
      */
-    private function mapRowToAssociativeArray($data, $headerData)
+    protected function mapRowToAssociativeArray($data, $headerData)
     {
         $associativeData = array();
         foreach ($data as $index => $value) {
@@ -667,7 +678,7 @@ class Import
      * @param $countryCode
      * @return mixed|string
      */
-    private function mapCountryCode($countryCode)
+    protected function mapCountryCode($countryCode)
     {
         if ($mappingIndex = array_search($countryCode, $this->countryMappings)) {
             return $mappingIndex;
@@ -681,7 +692,7 @@ class Import
      * @param $typeString
      * @return int|mixed
      */
-    private function mapAccountType($typeString)
+    protected function mapAccountType($typeString)
     {
         if ($mappingIndex = array_search($typeString, $this->accountTypeMappings)) {
             return $mappingIndex;
@@ -843,7 +854,7 @@ class Import
      * Returns the default values for the dropdowns
      * @return array
      */
-    private function getDefaults()
+    protected function getDefaults()
     {
         $config = $this->configDefaults;
         $defaults = array();
