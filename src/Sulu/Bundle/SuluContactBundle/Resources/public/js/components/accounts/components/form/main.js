@@ -43,9 +43,9 @@ define(['accountsutil/header'], function(AccountsUtilHeader) {
             this.setHeaderBar(true);
             this.listenForChange();
         },
-        
-        getAccountTypeData: function(){
-            this.sandbox.emit('sulu.contacts.account.get.types',function(accountType, accountTypes){
+
+        getAccountTypeData: function() {
+            this.sandbox.emit('sulu.contacts.account.get.types', function(accountType, accountTypes) {
                 this.accountType = accountType;
                 this.accountTypes = accountTypes;
             }.bind(this));
@@ -406,14 +406,6 @@ define(['accountsutil/header'], function(AccountsUtilHeader) {
 
                 this.sandbox.emit('husky.select.account-category.update', data, selected);
             }, this);
-
-            this.sandbox.on('sulu.account.type.converted', function(){
-
-                //TODO remove event and move code to accounts/main.js
-
-                AccountsUtilHeader.setHeader.call(this, this.account, this.options.accountType);
-                setHeaderToolbar.call(this);
-            }.bind(this));
         },
 
         /**
