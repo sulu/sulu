@@ -68,6 +68,9 @@ class TemplateReader implements LoaderInterface
         return $result;
     }
 
+    /**
+     * load basic template attributes
+     */
     private function loadTemplateAttributes(\DOMXPath $xpath)
     {
         $result = array(
@@ -85,6 +88,9 @@ class TemplateReader implements LoaderInterface
         return $result;
     }
 
+    /**
+     * load properties from given context
+     */
     private function loadProperties($path, \DOMXPath $xpath, \DOMNode $context = null)
     {
         $result = array();
@@ -100,6 +106,9 @@ class TemplateReader implements LoaderInterface
         return $result;
     }
 
+    /**
+     * load single property
+     */
     private function loadProperty(\DOMXPath $xpath, \DOMNode $node)
     {
         $result = array(
@@ -116,6 +125,9 @@ class TemplateReader implements LoaderInterface
         return $result;
     }
 
+    /**
+     * load tags from given tag and validates them
+     */
     private function loadTags($path, \DOMXPath $xpath, \DOMNode $context = null)
     {
         $result = array();
@@ -131,6 +143,9 @@ class TemplateReader implements LoaderInterface
         return $result;
     }
 
+    /**
+     * validates a single tag
+     */
     private function validateTag($tag)
     {
         // remove tag from required tags
@@ -158,6 +173,9 @@ class TemplateReader implements LoaderInterface
         $this->runningTags[$tag['name']][] = $tag['priority'];
     }
 
+    /**
+     * load single tag
+     */
     private function loadTag(\DOMXPath $xpath, \DOMNode $node)
     {
         $result = array(
@@ -168,6 +186,9 @@ class TemplateReader implements LoaderInterface
         return $result;
     }
 
+    /**
+     * load params from given node
+     */
     private function loadParams($path, \DOMXPath $xpath, \DOMNode $context = null)
     {
         $result = array();
@@ -180,6 +201,9 @@ class TemplateReader implements LoaderInterface
         return $result;
     }
 
+    /**
+     * load single param
+     */
     private function loadParam(\DOMXPath $xpath, \DOMNode $node)
     {
         $result = array(
@@ -190,6 +214,9 @@ class TemplateReader implements LoaderInterface
         return $result;
     }
 
+    /**
+     * returns boolean value of path
+     */
     private function getBooleanValueFromXPath($path, \DOMXPath $xpath, \DomNode $context = null)
     {
         return $this->getValueFromXPath($path, $xpath, $context) === 'true' ? true : false;
