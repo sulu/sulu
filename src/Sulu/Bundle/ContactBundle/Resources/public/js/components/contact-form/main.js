@@ -82,7 +82,13 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
         },
 
         bindDomEvents = function() {
+
             this.sandbox.dom.on(this.$el, 'click', editAddressClicked.bind(this), constants.addressRowTemplateSelector);
+            this.sandbox.dom.on(this.$el, 'click', removeAddress.bind(this), '');
+        },
+
+        removeAddress = function(event){
+            this.sandbox.logger.log("tsetset:", event);
         },
 
         bindAddEvents = function() {
@@ -467,7 +473,7 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
         createAddressOverlay = function(data, mapperId) {
 
             var addressTemplate, formObject, $overlay, title,
-                isNew = !!data ? false : true;
+                isNew = !data;
 
             // remove add overlay
             this.sandbox.emit('husky.overlay.add-fields.remove');
@@ -477,7 +483,7 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
             // extend address data by additional variables
             this.sandbox.util.extend(true, data, {
                 translate: this.sandbox.translate,
-                countries: this.options.fieldTypes['countries']
+                countries: this.options.fieldTypes.countries
             });
 
             // parse template
@@ -552,7 +558,7 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
             if (!mapperId) {
                 this.sandbox.form.addToCollection(this.form, 'addresses', formData);
             } else {
-                this.sandbox.form.editInCollection(this.form, mapperId, formData)
+                this.sandbox.form.editInCollection(this.form, mapperId, formData);
             }
 
             // set changed to be able to save
@@ -568,25 +574,25 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
 
             this.dropdownDataArray = [];
 
-            this.$addOverlay = this.sandbox.dom.createElement(templates.add),
+            this.$addOverlay = this.sandbox.dom.createElement(templates.add);
 
-                // create object
-                this.sandbox.util.foreach(this.options.fields, function(type, index) {
-                    if (!!this.options.fieldTypes && this.options.fieldTypes[type]) {
-                        // TODO: USE ARRAY INSTEAD OF OBJECT WHEN DATA HAS NOT TO BE MANIPULATED ANYMORE
-                        data = {
-                            id: index,
-                            name: this.sandbox.translate('public.' + type),
-                            type: type,
-                            collection: type + 's',
-                            items: this.options.translatedFieldTypes[type]
-                        };
-                        dropdownData[type] = (data);
+            // create object
+            this.sandbox.util.foreach(this.options.fields, function(type, index) {
+                if (!!this.options.fieldTypes && this.options.fieldTypes[type]) {
+                    // TODO: USE ARRAY INSTEAD OF OBJECT WHEN DATA HAS NOT TO BE MANIPULATED ANYMORE
+                    data = {
+                        id: index,
+                        name: this.sandbox.translate('public.' + type),
+                        type: type,
+                        collection: type + 's',
+                        items: this.options.translatedFieldTypes[type]
+                    };
+                    dropdownData[type] = (data);
 
-                    } else {
-                        throw 'contact-form@sulu: fieldTypes not defined for type ' + type;
-                    }
-                }.bind(this));
+                } else {
+                    throw 'contact-form@sulu: fieldTypes not defined for type ' + type;
+                }
+            }.bind(this));
 
             // change data
             dropdownData.fax.collection = 'faxes';
