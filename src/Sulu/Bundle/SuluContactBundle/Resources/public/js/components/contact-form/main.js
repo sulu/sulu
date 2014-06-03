@@ -82,13 +82,40 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
         },
 
         bindDomEvents = function() {
-
             this.sandbox.dom.on(this.$el, 'click', editAddressClicked.bind(this), constants.addressRowTemplateSelector);
-            this.sandbox.dom.on(this.$el, 'click', removeAddress.bind(this), '');
+
+            this.sandbox.dom.on(this.$el, 'click', function(event){
+                event.stopPropagation();
+                removeAddress.call(this, event.currentTarget);
+            }.bind(this), '.address-remove');
+
+            this.sandbox.dom.on(this.$el, 'click', function(event){
+                event.stopPropagation();
+                addAddress.call(this,event.currentTarget);
+            }.bind(this), '.address-add');
         },
 
-        removeAddress = function(event){
-            this.sandbox.logger.log("tsetset:", event);
+        /**
+         * Removes the clicked address
+         */
+        removeAddress = function(){
+
+            // remove from dom
+            // remove from datamapper
+
+            this.sandbox.logger.log("remove");
+            this.sandbox.form.removeField()
+        },
+
+        /**
+         * Triggers the process to add a new address
+         */
+        addAddress = function(){
+
+            // add to dom
+            // add to datamapper
+
+            this.sandbox.logger.log("add");
         },
 
         bindAddEvents = function() {
