@@ -66,9 +66,11 @@
 
                     <select id="country" class="country-value form-element" data-mapper-property="country"
                             data-type="select">
-                        <% _.each(countries, function(country) { %>
+                        <% _.each(countries, function(country) { if(country.id === 15) { %>
+                        <option value="<%= country.id %>" selected><%=translate(country.name)%></option>
+                        <% } else { %>
                         <option value="<%= country.id %>"><%=translate(country.name)%></option>
-                        <% }); %>
+                        <% } }); %>
                     </select>
                     <div id="country-select"></div>
                 </div>
