@@ -214,10 +214,11 @@ class BlockPropertyWrapper implements PropertyInterface
 
     /**
      * returns title of property
+     * @param string $languageCode
      * @return string
      */
-    public function getTitle()
+    public function getTitle($languageCode)
     {
-        return $this->property->getTitle();
+        return $this->property->getTitle($languageCode);
     }
 }

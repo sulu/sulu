@@ -83,11 +83,11 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
 
     public function tearDown()
     {
-        foreach ($this->cacheFiles as $cacheFile) {
+        /*foreach ($this->cacheFiles as $cacheFile) {
             if (is_file($cacheFile)) {
                 unlink($cacheFile);
             }
-        }
+        }*/
     }
 
     public function testGetStructure()
@@ -112,6 +112,16 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('title', $properties);
         $property = $structure->getProperty('title');
         $this->assertEquals('title', $property->getName());
+
+        $this->assertEquals('Titel', $property->getTitle('de'));
+        $this->assertEquals('Title', $property->getTitle('en'));
+
+        $this->assertEquals('Titel-Info-DE', $property->getInfoText('de'));
+        $this->assertEquals('Title-Info-EN', $property->getInfoText('en'));
+
+        $this->assertEquals('Platzhalter-Info-DE', $property->getPlaceholder('de'));
+        $this->assertEquals('Placeholder-Info-EN', $property->getPlaceholder('en'));
+
         $this->assertEquals('text_line', $property->getContentTypeName());
         $this->assertEquals(true, $property->isMandatory());
         $this->assertEquals(true, $property->isMultilingual());
@@ -487,7 +497,6 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         // test properties of block types
         $type1 = $block->getType('default');
         $this->assertEquals('default', $type1->getName());
-        $this->assertEquals('type.default', $type1->getTitle());
         $this->assertEquals(2, sizeof($type1->getChildProperties()));
 
         $properties = $type1->getChildProperties();
@@ -498,7 +507,6 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
 
         $type2 = $block->getType('test');
         $this->assertEquals('test', $type2->getName());
-        $this->assertEquals('type.test', $type2->getTitle());
         $this->assertEquals(3, sizeof($type2->getChildProperties()));
 
         $properties = $type2->getChildProperties();

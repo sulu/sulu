@@ -36,7 +36,7 @@ class BlockProperty extends Property implements BlockPropertyInterface
 
     function __construct(
         $name,
-        $title,
+        $metadata,
         $defaultTypeName,
         $mandatory = false,
         $multilingual = false,
@@ -45,7 +45,7 @@ class BlockProperty extends Property implements BlockPropertyInterface
         $params = array()
     )
     {
-        parent::__construct($name, $title, 'block', $mandatory, $multilingual, $maxOccurs, $minOccurs, $params);
+        parent::__construct($name, $metadata, 'block', $mandatory, $multilingual, $maxOccurs, $minOccurs, $params);
         $this->defaultTypeName = $defaultTypeName;
     }
 
@@ -191,7 +191,7 @@ class BlockProperty extends Property implements BlockPropertyInterface
     {
         $clone = new BlockProperty(
             $this->getName(),
-            $this->getTitle(),
+            $this->getMetadata(),
             $this->getDefaultTypeName(),
             $this->getMandatory(),
             $this->getMultilingual(),

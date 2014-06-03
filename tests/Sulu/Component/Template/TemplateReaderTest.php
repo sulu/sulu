@@ -43,7 +43,20 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                         )
                     ),
                     'params' => array(),
-                    'meta' => array()
+                    'meta' => array(
+                        'title' => array(
+                            'de' => 'Titel',
+                            'en' => 'Title'
+                        ),
+                        'info_text' => array(
+                            'de' => 'Titel-Info-DE',
+                            'en' => 'Title-Info-EN'
+                        ),
+                        'placeholder' => array(
+                            'de' => 'Platzhalter-Info-DE',
+                            'en' => 'Placeholder-Info-EN'
+                        )
+                    )
                 ),
                 'url' => array(
                     'name' => 'url',

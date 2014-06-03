@@ -108,7 +108,22 @@ interface PropertyInterface
 
     /**
      * returns title of property
+     * @param string $languageCode
      * @return string
      */
-    public function getTitle();
+    public function getTitle($languageCode);
+
+    /**
+     * returns infoText of property
+     * @param string $languageCode
+     * @return string
+     */
+    public function getInfoText($languageCode);
+
+    /**
+     * returns placeholder of property
+     * @param string $languageCode
+     * @return string
+     */
+    public function getPlaceholder($languageCode);
 }

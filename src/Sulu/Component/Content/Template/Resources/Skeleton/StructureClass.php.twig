@@ -47,7 +47,10 @@ class {{ cache_class }} extends {{ base_class }}
 
 {% macro buildTypes(type, parent, layer, typeIndex) %}
 {% set typeVar = '$type'~layer~typeIndex %}
-        {{ typeVar }} = new BlockPropertyType('{{ type.name }}', '{{ type.title }}');
+        {{ typeVar }} = new BlockPropertyType(
+            '{{ type.name }}',
+{{ _self.renderArray(property.meta) }}
+        );
         {{ parent }}->addType({{ typeVar }});
 {% for childProperty in type.properties %}
 {{ _self.buildProperty(childProperty, typeVar, layer+1) }}
@@ -57,7 +60,7 @@ class {{ cache_class }} extends {{ base_class }}
 {% macro propertyConstructor(property) %}
 new Property(
             '{{ property.name }}',
-            '{{ property.title }}',
+{{ _self.renderArray(property.meta) }},
             '{{ property.type }}',
             {{ property.mandatory != null and property.mandatory ? 'true' : 'false' }},
             {{ property.multilingual != null ? (property.multilingual? 'true':'false') : 'true' }},
@@ -78,7 +81,7 @@ new Property(
 {% macro blockPropertyConstructor(property) %}
 new BlockProperty(
             '{{ property.name }}',
-            '{{ property.title }}',
+{{ _self.renderArray(property.meta) }},
             '{{ property['default-type'] }}',
             {{ property.mandatory != null and property.mandatory ? 'true' : 'false' }},
             {{ property.multilingual != null ? (property.multilingual? 'true':'false') : 'true' }},
@@ -95,3 +98,15 @@ new BlockProperty(
 {% endfor %}
             )
         );{% endmacro %}
+
+{% macro renderArray(array) %}
+            array(
+{% for key, value in array %}
+{% if is_array(value) %}
+                '{{ key }}' => {{ _self.renderArray(value) }},
+{% else %}
+                '{{ key }}' => '{{ value }}',
+{% endif %}
+{% endfor %}
+            )
+{% endmacro %}
