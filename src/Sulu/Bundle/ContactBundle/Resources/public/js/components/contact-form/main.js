@@ -104,7 +104,8 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
             // remove from datamapper
 
             this.sandbox.logger.log("remove");
-            this.sandbox.form.removeField()
+
+//            this.sandbox.form.removeFromCollection(this.form, this.editFieldsData[i].mapperId);
         },
 
         /**
@@ -116,6 +117,9 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
             // add to datamapper
 
             this.sandbox.logger.log("add");
+
+//            this.sandbox.form.addToCollection(this.form, 'addresses', formData);
+//            this.sandbox.form.editInCollection(this.form, mapperId, formData);
         },
 
         bindAddEvents = function() {

@@ -932,6 +932,26 @@ class AccountController extends RestController implements ClassResourceInterface
             $address->setZip($addressData['zip']);
             $address->setCity($addressData['city']);
             $address->setState($addressData['state']);
+
+            if (isset($addressData['primaryAddress'])) {
+                $address->setPrimaryAddress($addressData['primaryAddress']);
+            }
+            if (isset($addressData['billingAddress'])) {
+                $address->setBillingAddress($addressData['billingAddress']);
+            }
+            if (isset($addressData['deliveryAddress'])) {
+                $address->setDeliveryAddress($addressData['deliveryAddress']);
+            }
+            if (isset($addressData['postboxCity'])) {
+                $address->setPostboxCity($addressData['postboxCity']);
+            }
+            if (isset($addressData['postboxNumber'])) {
+                $address->setPostboxNumber($addressData['postboxNumber']);
+            }
+            if (isset($addressData['postboxPostcode'])) {
+                $address->setPostboxPostcode($addressData['postboxPostcode']);
+            }
+
             $address->setCountry($country);
             $address->setAddressType($addressType);
 
@@ -980,6 +1000,25 @@ class AccountController extends RestController implements ClassResourceInterface
                 $address->setState($entry['state']);
                 $address->setCountry($country);
                 $address->setAddressType($addressType);
+
+                if (isset($entry['primaryAddress'])) {
+                    $address->setPrimaryAddress($entry['primaryAddress']);
+                }
+                if (isset($entry['billingAddress'])) {
+                    $address->setBillingAddress($entry['billingAddress']);
+                }
+                if (isset($entry['deliveryAddress'])) {
+                    $address->setDeliveryAddress($entry['deliveryAddress']);
+                }
+                if (isset($entry['postboxCity'])) {
+                    $address->setPostboxCity($entry['postboxCity']);
+                }
+                if (isset($entry['postboxNumber'])) {
+                    $address->setPostboxNumber($entry['postboxNumber']);
+                }
+                if (isset($entry['postboxPostcode'])) {
+                    $address->setPostboxPostcode($entry['postboxPostcode']);
+                }
 
                 if (isset($entry['addition'])) {
                     $address->setAddition($entry['addition']);
