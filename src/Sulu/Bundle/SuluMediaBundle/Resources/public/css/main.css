@@ -1,85 +1,14 @@
-/* line 6, ../scss/modules/collections.scss */
+/* line 6, ../scss/modules/collection-list.scss */
 #collections-list-container .toggle-all {
   display: inline-block;
   cursor: pointer;
   font-size: 12px;
 }
-/* line 10, ../scss/modules/collections.scss */
+/* line 10, ../scss/modules/collection-list.scss */
 #collections-list-container .toggle-all .icon {
   font-size: 14px;
   color: #3E3E3E;
   margin-right: 5px;
-}
-/* line 16, ../scss/modules/collections.scss */
-#collections-list-container .collections {
-  padding-top: 35px;
-}
-/* line 19, ../scss/modules/collections.scss */
-#collections-list-container .collection-slide {
-  width: 100%;
-  padding-left: 18px;
-  padding-bottom: 40px;
-}
-/* line 23, ../scss/modules/collections.scss */
-#collections-list-container .collection-slide .thumbnail-grid {
-  min-height: 140px;
-}
-/* line 30, ../scss/modules/collections.scss */
-#collections-list-container .collection .head {
-  height: 40px;
-  line-height: 40px;
-  border-bottom: 1px solid #cccccc;
-  cursor: pointer;
-}
-/* line 36, ../scss/modules/collections.scss */
-#collections-list-container .collection .head .icon {
-  float: left;
-  font-size: 18px;
-  width: 25px;
-  color: #3E3E3E;
-  line-height: 40px;
-  text-align: center;
-}
-/* line 44, ../scss/modules/collections.scss */
-#collections-list-container .collection .head .change-title {
-  width: 200px;
-  display: none;
-  float: left;
-  margin-top: 5px;
-}
-/* line 50, ../scss/modules/collections.scss */
-#collections-list-container .collection .head::after {
-  display: table;
-  content: "";
-  clear: both;
-}
-/* line 56, ../scss/modules/collections.scss */
-#collections-list-container .collection .collection-color {
-  float: left;
-  width: 20px;
-  height: 20px;
-  border-radius: 10px;
-  margin-top: 10px;
-}
-/* line 63, ../scss/modules/collections.scss */
-#collections-list-container .collection .collection-title {
-  float: left;
-  font-size: 18px;
-  margin-top: 5px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-radius: 3px;
-  line-height: 28px;
-}
-/* line 72, ../scss/modules/collections.scss */
-#collections-list-container .collection .rightContent {
-  float: right;
-}
-/* line 74, ../scss/modules/collections.scss */
-#collections-list-container .collection .rightContent .total {
-  color: #999999;
-  font-size: 12px;
-  line-height: 12px;
 }
 
 /* line 1, ../scss/modules/collection.scss */
