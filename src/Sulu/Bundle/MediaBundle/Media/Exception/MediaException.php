@@ -77,4 +77,28 @@ class MediaException extends Exception
      * @description original image not found
      */
     const EXCEPTION_CODE_IMAGE_PROXY_ORIGINAL_NOT_FOUND = 5010;
+
+    /**
+     * @var int
+     * @description the image url was not found
+     */
+    const EXCEPTION_CODE_IMAGE_PROXY_URL_NOT_FOUND = 5011;
+
+    /**
+     * @var int
+     * @description the image url was not valid
+     */
+    const EXCEPTION_CODE_IMAGE_PROXY_INVALID_URL = 5012;
+
+    /**
+     * @var int
+     * @description the image format was not found
+     */
+    const EXCEPTION_CODE_IMAGE_PROXY_INVALID_IMAGE_FORMAT = 5013;
+
+    /**
+     * @var int
+     * @description the configured format options are invalid
+     */
+    const EXCEPTION_CODE_IMAGE_PROXY_INVALID_FORMAT_OPTIONS = 5014;
 }

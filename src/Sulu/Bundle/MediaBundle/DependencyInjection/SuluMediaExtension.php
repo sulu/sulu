@@ -34,9 +34,52 @@ class SuluMediaExtension extends Extension
         $container->setParameter('sulu_media.collection.type.default', 1);
         $container->setParameter('sulu_media.media.max_file_size', '16MB');
         $container->setParameter('sulu_media.media.blocked_file_types', array('file/exe'));
-        $container->setParameter('sulu_media.media.storage.local.path', '%kernel.root_dir%/../../uploads/sulumedia');
+        $container->setParameter('sulu_media.media.storage.local.path', '%kernel.root_dir%/../../uploads/media');
         $container->setParameter('sulu_media.media.storage.local.segments', '10');
-
+        $container->setParameter('sulu_media.image.proxy.save', true);
+        $container->setParameter('sulu_media.image.proxy.storage.local.path', '%kernel.root_dir%/../../web/uploads/media');
+        $container->setParameter('sulu.media.image.command.prefix', 'image.converter.prefix');
+        $container->setParameter('sulu_media.image.formats', array(
+            array(
+                'name' => '1480x',
+                'commands' => array(
+                    array(
+                        'action' => 'scale',
+                        'parameters' => array(
+                            'x' => '1480'
+                        )
+                    )
+                )
+            ),
+            array(
+                'name' => '80x80',
+                'commands' => array(
+                    array(
+                        'action' => 'scale',
+                        'parameters' => array(
+                            'x' => '80',
+                            'y' => '80',
+                        )
+                    )
+                )
+            ),
+            array(
+                'name' => '80x80r',
+                'commands' => array(
+                    array(
+                        'action' => 'scale',
+                        'parameters' =>array(
+                            'x' => '80',
+                            'y' => '80',
+                            'background' => 'transparent'
+                        )
+                    ),
+                    array(
+                        'action' => 'circle'
+                    )
+                )
+            ),
+        ));
         $container->setParameter('sulu_media.media.types', array(
             array(
                 'id' => 1,
