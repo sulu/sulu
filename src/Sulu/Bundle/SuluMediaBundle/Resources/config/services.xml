@@ -8,6 +8,10 @@
         <parameter key="sulu_media.collection_repository.class">Sulu\Bundle\MediaBundle\Entity\CollectionRepository</parameter>
         <parameter key="sulu_media.storage.class">Sulu\Bundle\MediaBundle\Media\Storage\LocalStorage</parameter>
         <parameter key="sulu_media.file_validator.class">Sulu\Bundle\MediaBundle\Media\FileValidator\DefaultFileValidator</parameter>
+        <parameter key="sulu_media.image_manager.class">Sulu\Bundle\MediaBundle\Media\ImageManager\DefaultImageManager</parameter>
+        <parameter key="sulu_media.cache.storage">Sulu\Bundle\MediaBundle\Media\CacheStorage\LocalCacheStorage</parameter>
+        <parameter key="sulu_media.image.converter">Sulu\Bundle\MediaBundle\Media\ImageConverter\ImagineImageConverter</parameter>
+        <parameter key="sulu.media.image.command_manager.class">Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\Manager\DefaultCommandManager</parameter>
     </parameters>
     <services>
         <service id="sulu_media.admin" class="%sulu_media.admin.class%">
@@ -32,6 +36,19 @@
             <argument>%sulu_media.media.storage.local.segments%</argument>
         </service>
         <service id="sulu_media.file_validator" class="%sulu_media.file_validator.class%" />
+        <service id="sulu_media.cache.storage" class="%sulu_media.cache.storage%" />
+        <service id="sulu_media.image.converter" class="%sulu_media.image.converter%">
+            <argument>%sulu_media.image.formats%</argument>
+        </service>
+
+        <service id="sulu.media.image.command_manager" class="%sulu.media.image.command_manager.class%">
+            <argument type="service" id="service_container"/>
+            <argument>%sulu.media.image.command.prefix%</argument>
+        </service>
+
+        <service id="%image.converter.prefix%.scale" alias="" />
+        <service id="%image.converter.prefix%.resize" alias="" />
+        <service id="%image.converter.prefix%.test" alias="" />
 
         <service id="sulu_media.media_manager" class="%sulu_media.media_manager.class%">
             <argument type="service" id="sulu_media.media_repository" />
@@ -43,6 +60,13 @@
             <argument>%sulu_media.media.max_file_size%</argument>
             <argument>%sulu_media.media.blocked_file_types%</argument>
             <argument>%sulu_media.media.types%</argument>
+        </service>
+
+        <service id="sulu_media.image_manager" class="%sulu_media.image_manager.class%">
+            <argument type="service" id="sulu_media.media_repository" />
+            <argument type="service" id="sulu_media.storage" />
+            <argument type="service" id="sulu_media.cache.storage" />
+            <argument type="service" id="sulu_media.image.converter" />
         </service>
     </services>
 </container>
