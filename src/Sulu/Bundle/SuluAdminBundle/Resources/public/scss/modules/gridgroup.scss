@@ -1,0 +1,64 @@
+//
+// Collections-list style
+// --------------------------------------------------
+
+.sulu-grid-group {
+  padding-top: 35px;
+
+  .group-slide {
+    width: 100%;
+    padding-left: 18px;
+    padding-bottom: 40px;
+    .grid-container {
+      min-height: 140px;
+    }
+  }
+  .entity {
+    $collectionHeight: 40px;
+
+    .head {
+      height: $collectionHeight;
+      line-height: $collectionHeight;
+      border-bottom: 1px solid #cccccc;
+      cursor: pointer;
+
+      .icon {
+        float: left;
+        font-size: 18px;
+        width: 25px;
+        color: #3E3E3E;
+        line-height: 40px;
+        text-align: center;
+      }
+      &::after {
+        display: table;
+        content: "";
+        clear: both;
+      }
+    }
+    .color {
+      float: left;
+      width: 20px;
+      height: 20px;
+      border-radius: 10px;
+      margin-top: 10px;
+    }
+    .entity-title {
+      float: left;
+      font-size: 18px;
+      margin-top: 5px;
+      padding-left: 5px;
+      padding-right: 5px;
+      border-radius: 3px;
+      line-height: $collectionHeight - 12px;
+    }
+    .rightContent {
+      float: right;
+      .total {
+        color: #999999;
+        font-size: 12px;
+        line-height: 12px;
+      }
+    }
+  }
+}
