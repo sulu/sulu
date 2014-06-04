@@ -34,6 +34,7 @@ define([], function() {
             initialize: function() {
                 this.saved = true;
                 this.formId = '#contact-form';
+                this.autoCompleteInstanceName = 'accounts-'
 
                 this.dfdListenForChange = this.sandbox.data.deferred();
                 this.dfdFormIsSet = this.sandbox.data.deferred();
@@ -103,13 +104,19 @@ define([], function() {
 
             // show tags and activate keylistener
             setTags: function() {
+                var uid = this.sandbox.util.uniqueId();
+                if (this.options.data.id) {
+                    uid += '-' + this.options.data.id;
+                }
+                this.autoCompleteInstanceName += uid;
+
                 this.dfdFormIsSet.then(function() {
                     this.sandbox.start([
                         {
                             name: 'auto-complete-list@husky',
                             options: {
                                 el: '#tags',
-                                instanceName: 'contacts',
+                                instanceName: this.autoCompleteInstanceName,
                                 getParameter: 'search',
                                 remoteUrl: '/admin/api/tags?flat=true&sortBy=name',
                                 completeIcon: 'tag',
@@ -123,11 +130,11 @@ define([], function() {
             bindTagEvents: function(data) {
                 if (!!data.tags && data.tags.length > 0) {
                     // set tags after auto complete list was initialized
-                    this.sandbox.on('husky.auto-complete-list.contacts.initialized', function() {
-                        this.sandbox.emit('husky.auto-complete-list.contacts.set-tags', data.tags);
+                    this.sandbox.on('husky.auto-complete-list.' + this.autoCompleteInstanceName + '.initialized', function() {
+                        this.sandbox.emit('husky.auto-complete-list.' + this.autoCompleteInstanceName + '.set-tags', data.tags);
                     }.bind(this));
                     // listen for change after items have been added
-                    this.sandbox.on('husky.auto-complete-list.contacts.items-added', function() {
+                    this.sandbox.on('husky.auto-complete-list.' + this.autoCompleteInstanceName + '.items-added', function() {
                         this.dfdListenForChange.resolve();
                     }.bind(this));
                 } else {
@@ -152,13 +159,13 @@ define([], function() {
                 // add collection filters to form
                 this.sandbox.emit('sulu.contact-form.add-collectionfilters', form);
                 this.sandbox.form.setData(form, data).then(function() {
-                    this.sandbox.start(form);
-                    this.sandbox.emit('sulu.contact-form.add-required',['email']);
-                    this.sandbox.emit('sulu.contact-form.content-set');
+                        this.sandbox.start(form);
+                        this.sandbox.emit('sulu.contact-form.add-required', ['email']);
+                        this.sandbox.emit('sulu.contact-form.content-set');
                         this.dfdFormIsSet.resolve();
-                }.bind(this)).fail(function(error){
-                    this.sandbox.logger.error("An error occured when setting data!", error);
-                }.bind(this));
+                    }.bind(this)).fail(function(error) {
+                        this.sandbox.logger.error("An error occured when setting data!", error);
+                    }.bind(this));
             },
 
             initForm: function(data) {
