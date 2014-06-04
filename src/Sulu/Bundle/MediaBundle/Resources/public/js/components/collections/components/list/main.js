@@ -254,6 +254,7 @@ define(function () {
             this.$overlayContent = this.renderTemplate('/admin/media/template/collection/new');
 
             this.sandbox.once('husky.overlay.add-collection.opened', function () {
+                this.sandbox.start('#' + constants.newFormId);
                 this.sandbox.form.create('#' + constants.newFormId);
                 this.sandbox.form.setData('#' + constants.newFormId, {
                     title: this.sandbox.translate(this.options.newCollectionTitle),
