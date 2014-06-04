@@ -157,10 +157,12 @@ define(function () {
         renderSettings: function() {
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/media/template/collection/settings'));
             this.options.data.color = this.options.data.style.color;
+            this.sandbox.start('#' + constants.settingsFormId);
             this.sandbox.form.create('#' + constants.settingsFormId);
-            this.sandbox.form.setData('#' + constants.settingsFormId, this.options.data);
-            this.startSettingsToolbar();
-            this.bindSettingsDomEvents();
+            this.sandbox.form.setData('#' + constants.settingsFormId, this.options.data).then(function() {
+                this.startSettingsToolbar();
+                this.bindSettingsDomEvents();
+            }.bind(this));
         },
 
         /**
@@ -168,7 +170,7 @@ define(function () {
          */
         bindSettingsDomEvents: function() {
             // activate save-button on key input
-            this.sandbox.dom.on(this.$el, 'keyup', function() {
+            this.sandbox.dom.on('#' + constants.settingsFormId, 'change', function() {
                 if (this.saved === true) {
                     this.sandbox.emit('sulu.header.toolbar.state.change', 'edit', false);
                     this.saved = false;

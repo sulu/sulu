@@ -9,10 +9,13 @@
         </div>
         <div class="grid-row">
             <label for="change-color"><%= translate('public.color') %></label>
-            <input class="form-element" type="text" id="change-color" value=""
-                   data-validation-required="true"
-                   data-validation-min-length="6"
-                   data-mapper-property="color"/>
+            <div data-aura-component="input@husky"
+                 data-aura-skin="color"
+                 data-aura-instance-name="collection-color"
+                 data-form="true"
+                 data-type="husky-input"
+                 data-validation-required="true"
+                 data-mapper-property="color"></div>
         </div>
     </div>
 </form>
