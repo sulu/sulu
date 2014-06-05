@@ -91,8 +91,14 @@ define(function () {
             this.sandbox.on('sulu.list-toolbar.delete', this.deleteMedia.bind(this));
             // route to collection-edit
             this.sandbox.on('sulu.grid-group.collections.show-group', this.showAllFiles.bind(this));
+            // edit selected media
+            this.sandbox.on('sulu.list-toolbar.edit', this.editSelectedMedia.bind(this));
+
             // activate/deactive delete button
-            this.sandbox.on('sulu.grid-group.collections.elements-selected', this.toggleDeleteButton.bind(this));
+            this.sandbox.on('sulu.grid-group.collections.elements-selected', function(selected) {
+                this.toggleToolbarButton(selected, 'delete');
+                this.toggleToolbarButton(selected, 'edit');
+            }.bind(this));
 
             // update a group in grid if collection was changed
             this.sandbox.on('sulu.media.collections.collection-changed', function(collectionId) {
@@ -126,6 +132,19 @@ define(function () {
                         }
                     }.bind(this));
                 }
+            }.bind(this));
+        },
+
+        /**
+         * Edit the selected medias
+         */
+        editSelectedMedia: function() {
+            var key, array = [];
+            this.sandbox.emit('sulu.grid-group.collections.get-selected', function(medias) {
+                this.sandbox.util.each(medias, function(key, mediaIds) {
+                    array = array.concat(mediaIds);
+                }.bind(this));
+                this.sandbox.emit('sulu.media.collections.edit-media', array);
             }.bind(this));
         },
 
@@ -164,7 +183,7 @@ define(function () {
                         options: {
                             el: $listtoolbar,
                             instanceName: this.options.instanceName,
-                            template: 'defaultNoSettings',
+                            template: 'defaultEditable',
                             inHeader: true
                         }
                     }
@@ -284,14 +303,15 @@ define(function () {
         },
 
         /**
-         * Activates/Deactivates delete-button
-         * @param activate {Boolean} if true activates if false deactivates delete button
+         * Activates/Deactivates a button in the toolbar
+         * @param activate {Boolean} if true activates if false deactivates the button
+         * @param buttonId {String} the id of the button to toggle
          */
-        toggleDeleteButton: function(activate) {
+        toggleToolbarButton: function(activate, buttonId) {
             if (activate === true) {
-                this.sandbox.emit('sulu.list-toolbar.' + this.options.instanceName + '.delete.state-change', true);
+                this.sandbox.emit('sulu.list-toolbar.' + this.options.instanceName + '.'+ buttonId +'.state-change', true);
             } else {
-                this.sandbox.emit('sulu.list-toolbar.' + this.options.instanceName + '.delete.state-change', false);
+                this.sandbox.emit('sulu.list-toolbar.' + this.options.instanceName + '.'+ buttonId +'.state-change', false);
             }
         }
     };

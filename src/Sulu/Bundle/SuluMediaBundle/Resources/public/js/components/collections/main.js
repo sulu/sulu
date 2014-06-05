@@ -316,13 +316,15 @@ define([
             /**
              * Takes the id of a media, loads the model and forwards it to
              * another component
-             * @param id {Number|String} the id of the media
+             * @param record {Number|String|Array} the id of the media or an array of ids
              */
-            editMedia: function(id) {
+            editMedia: function(record) {
                 var media;
+                // todo: implement multiple edit
+                record = (typeof record === 'object') ? record[0] : record;
                 // if media exists there is no need to fetch the media again - the local one is up to date
-                if (!this.medias.get(id)) {
-                    media = this.getMediaModel(id);
+                if (!this.medias.get(record)) {
+                    media = this.getMediaModel(record);
                     media.fetch({
                         success: function(media) {
                             // forward media to media-edit component
@@ -333,7 +335,7 @@ define([
                         }.bind(this)
                     });
                 } else {
-                    media = this.getMediaModel(id);
+                    media = this.getMediaModel(record);
                     this.sandbox.emit('sulu.media-edit.edit', media.toJSON());
                 }
             },
