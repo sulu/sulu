@@ -20,7 +20,10 @@ define(function () {
     var defaults = {
             data: {},
             slideDuration: 250, //ms
-            instanceName: 'undefined'
+            instanceName: 'undefined',
+            gridUrl: '',
+            fieldsUrl: '',
+            fieldsKey: ''
         },
         constants = {
             elementsKey: 'public.elements',
@@ -29,7 +32,6 @@ define(function () {
             componentClass: 'sulu-grid-group',
             groupClass: 'entity',
             slideClass: 'group-slide',
-            rightContentClass: 'rightContent',
             titleClass: 'entity-title',
             colorPointClass: 'color',
             newGroupId: 'new',
@@ -45,13 +47,9 @@ define(function () {
                 '       <div class="', constants.colorPointClass , '" style="background-color: <%= color %>"></div>',
                 '       <div class="fa-<%= icon %> icon"></div>',
                 '       <div class="', constants.titleClass , '"><%= title %></div>',
-                '       <div class="', constants.rightContentClass , '"></div>',
                 '   </div>',
                 '   <div class="', constants.slideClass , '"></div>',
                 '</div>'
-            ].join(''),
-            totalElements: [
-                '<span class="total"><%= total %> <%= elements %></span>'
             ].join('')
         },
 
@@ -60,7 +58,7 @@ define(function () {
          *
          * @event sulu.grid-group.[INSTANCE_NAME].initialized
          */
-            INITIALIZED = function() {
+            INITIALIZED = function () {
             return createEventName.call(this, 'initialized');
         },
 
@@ -69,8 +67,18 @@ define(function () {
          *
          * @event sulu.grid-group.[INSTANCE_NAME].show-all-groups
          */
-            SHOW_ALL_GROUPS = function() {
+            SHOW_ALL_GROUPS = function () {
             return createEventName.call(this, 'show-all-groups');
+        },
+
+        /**
+         * listens on and passes the selected records to a callback
+         *
+         * @event sulu.grid-group.[INSTANCE_NAME].get-selected
+         * @param {Function} callback to pass the selected records to
+         */
+            GET_SELECTED = function () {
+            return createEventName.call(this, 'get-selected');
         },
 
         /**
@@ -78,7 +86,7 @@ define(function () {
          *
          * @event sulu.grid-group.[INSTANCE_NAME].close-all-groups
          */
-            CLOSE_ALL_GROUPS = function() {
+            CLOSE_ALL_GROUPS = function () {
             return createEventName.call(this, 'close-all-groups');
         },
 
@@ -88,8 +96,19 @@ define(function () {
          * @event sulu.grid-group.[INSTANCE_NAME].elements-selected
          * @param selected {Boolean} true if there are selected elements
          */
-            ELEMENTS_SELECTED = function() {
+            ELEMENTS_SELECTED = function () {
             return createEventName.call(this, 'elements-selected');
+        },
+
+        /**
+         * removes a record from a group
+         *
+         * @event sulu.grid-group.[INSTANCE_NAME].elements-selected
+         * @param groupId {Number|String} id of the group to remove the recrod from
+         * @param recordId {Number|String} id of the record to remove
+         */
+            REMOVE_RECORD = function () {
+            return createEventName.call(this, 'remove-record');
         },
 
         /**
@@ -98,11 +117,49 @@ define(function () {
          * @event sulu.grid-group.[INSTANCE_NAME].initialized
          * @param id {Number|String} id of the group
          */
-            SHOW_GROUP = function() {
+            SHOW_GROUP = function () {
             return createEventName.call(this, 'show-group');
         },
 
-        createEventName = function(postfix) {
+        /**
+         * triggered after a datagrid emits a clicked event
+         *
+         * @event sulu.grid-group.[INSTANCE_NAME].record-clicked
+         * @param id {Number|String} id of the record
+         */
+            RECORD_CLICKED = function () {
+            return createEventName.call(this, 'record-clicked');
+        },
+
+        /**
+         * listens on and updates a group
+         *
+         * @event sulu.grid-group.[INSTANCE_NAME].update-group
+         */
+            UPDATE_GROUP = function () {
+            return createEventName.call(this, 'update-group');
+        },
+
+        /**
+         * listens on and adds a group to the list
+         *
+         * @event sulu.grid-group.[INSTANCE_NAME].add-group
+         * @param {Object} the group object to add
+         */
+            ADD_GROUP = function () {
+            return createEventName.call(this, 'add-group');
+        },
+
+        /**
+         * listens on and updates the last-clicked datagrid
+         *
+         * @event sulu.grid-group.[INSTANCE_NAME].update-last-clicked
+         */
+            UPDATE_LAST_CLICKED = function () {
+            return createEventName.call(this, 'update-last-clicked');
+        },
+
+        createEventName = function (postfix) {
             return namespace + ((!!this.options.instanceName) ? this.options.instanceName + '.' : '') + postfix;
         };
 
@@ -132,38 +189,45 @@ define(function () {
          */
         bindCustomEvents: function () {
             // update a collection in the list if the data-record has changed
-            this.sandbox.on('sulu.media.collections.collection-changed', this.updateGroup.bind(this));
-
+            this.sandbox.on(UPDATE_GROUP.call(this), this.updateGroup.bind(this));
             // slide all up
             this.sandbox.on(CLOSE_ALL_GROUPS.call(this), this.slideUpAll.bind(this));
             // slide all down
             this.sandbox.on(SHOW_ALL_GROUPS.call(this), this.slideDownAll.bind(this));
+            // get selected records
+            this.sandbox.on(GET_SELECTED.call(this), this.getSelected.bind(this));
+            // remove a record
+            this.sandbox.on(REMOVE_RECORD.call(this), this.removeRecord.bind(this));
+            // add a new group
+            this.sandbox.on(ADD_GROUP.call(this), this.addGroup.bind(this));
 
-            // update the last clicked grid if a media got changed
-            /*this.sandbox.on('sulu.media.collections.media-saved', function () {
-             this.sandbox.emit('husky.datagrid.' + this.lastClickedGrid + '.update');
-             }.bind(this));*/
+            // update the last clicked grid
+            this.sandbox.on(UPDATE_LAST_CLICKED.call(this), function () {
+                this.sandbox.emit('husky.datagrid.' + this.lastClickedGrid + '.update');
+            }.bind(this));
         },
 
         /**
-         * Deletes all the selected records
+         * Passes all the selected records to a callback
+         * @param callback {Function} to pass the selected elements to
          */
-        deleteRecords: function () {
+        getSelected: function (callback) {
             this.setSelectedRecords().then(function () {
-                this.sandbox.sulu.showDeleteDialog(function (confirmed) {
-                    if (confirmed === true) {
-                        for (var key in this.selectedRecords) {
-                            if (this.selectedRecords.hasOwnProperty(key)) {
-                                this.sandbox.emit('sulu.media.collections.delete-media', this.selectedRecords[key], function (key, recordId) {
-                                    this.sandbox.emit('husky.datagrid.' + this.group[key].datagridName + '.record.remove', recordId);
-                                    this.group[key].selectedElements = 0;
-                                    delete this.selectedRecords[key];
-                                }.bind(this, key), true);
-                            }
-                        }
-                    }
-                }.bind(this));
+                if (typeof callback === 'function') {
+                    callback(this.selectedRecords);
+                }
             }.bind(this));
+        },
+
+        /**
+         * Removes a record from a datagrid
+         * @param groupId {Number|String} id of the group
+         * @param recordId {Number|String} id of the record
+         */
+        removeRecord: function (groupId, recordId) {
+            this.sandbox.emit('husky.datagrid.' + this.group[groupId].datagridName + '.record.remove', recordId);
+            this.group[groupId].selectedElements = 0;
+            delete this.selectedRecords[groupId];
         },
 
         /**
@@ -196,25 +260,18 @@ define(function () {
 
         /**
          * Adds a new group the the list
-         * @returns {Boolean} returns false if a new and unsafed colleciton exists
+         * @param data {Object} new group to add
          */
-        addGroup: function () {
-            if (this.sandbox.form.validate('#' + constants.newFormId)) {
-                var data = this.sandbox.form.getData('#' + constants.newFormId),
-                    group = {
-                        mediaNumber: 0,
-                        style: {
-                            color: data.color
-                        }
-                    };
-                group = this.sandbox.util.extend(true, {}, group, data);
-                // note that the first argument is a copy of group. It needs to be a copy, otherwise the id of the group gets set and so the group
-                // couldn't be saved in the next step
-                this.renderGroup(this.sandbox.util.extend(false, {}, group), this.$find('.' + constants.componentClass), true);
-                this.sandbox.emit('sulu.media.collections.save-collection', group);
-            } else {
-                return false;
-            }
+        addGroup: function (data) {
+            var group = {
+                style: {
+                    color: data.color
+                }
+            };
+            group = this.sandbox.util.extend(true, {}, group, data);
+            // note that the first argument is a copy of group. It needs to be a copy, otherwise the id of the group gets set and so the group
+            // couldn't be saved in the next step
+            this.renderGroup(this.sandbox.util.extend(false, {}, group), this.$el, true);
         },
 
 
@@ -245,15 +302,6 @@ define(function () {
             if (newCollection === true) {
                 group.id = constants.newGroupId;
             }
-
-            // insert the total-elements markup
-            this.sandbox.dom.html(
-                this.sandbox.dom.find('.' + constants.rightContentClass, $group),
-                this.sandbox.util.template(templates.totalElements)({
-                    total: group.mediaNumber,
-                    elements: this.sandbox.translate(constants.elementsKey)
-                })
-            );
 
             // hide the slide-container
             this.sandbox.dom.hide(this.sandbox.dom.find('.' + constants.slideClass, $group));
@@ -326,7 +374,7 @@ define(function () {
             // edit single record on datagrid click
             this.sandbox.on('husky.datagrid.' + this.options.instanceName + id + '.item.click', function (recordId) {
                 this.lastClickedGrid = this.group[id].datagridName;
-                this.sandbox.emit('sulu.media.collections.edit-media', recordId);
+                this.sandbox.emit(RECORD_CLICKED.call(this), recordId);
             }.bind(this));
 
             this.group[id].datagridName = this.options.instanceName + id;
@@ -334,10 +382,10 @@ define(function () {
 
             var $element = this.sandbox.dom.createElement('<div class="' + constants.gridContainerClass + '"/>');
             this.sandbox.dom.html($container, $element);
-            this.sandbox.sulu.initList.call(this, 'mediaFields', '/admin/api/media/fields',
+            this.sandbox.sulu.initList.call(this, this.options.fieldsKey, this.options.fieldsUrl,
                 {
                     el: $element,
-                    url: '/admin/api/media?collection=' + id,
+                    url: this.options.gridUrl + id,
                     view: 'thumbnail',
                     pagination: 'showall',
                     instanceName: this.options.instanceName + id,
@@ -387,7 +435,7 @@ define(function () {
         /**
          * Slides all groups up
          */
-        slideUpAll: function() {
+        slideUpAll: function () {
             for (var id in this.group) {
                 if (this.group.hasOwnProperty(id)) {
                     this.slideUp(this.group[id]);
@@ -398,7 +446,7 @@ define(function () {
         /**
          * Slides all groups down
          */
-        slideDownAll: function() {
+        slideDownAll: function () {
             for (var id in this.group) {
                 if (this.group.hasOwnProperty(id)) {
                     this.slideDown(this.group[id]);
@@ -471,7 +519,7 @@ define(function () {
          * Called if the show all pagination is clicked
          * @param id {Number|String} id of the group
          */
-        showAllRecords: function(id) {
+        showAllRecords: function (id) {
             this.sandbox.emit(SHOW_GROUP.call(this), id);
         }
     };
