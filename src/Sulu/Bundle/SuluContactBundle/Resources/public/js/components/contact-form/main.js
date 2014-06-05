@@ -524,6 +524,7 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
                 countries: this.options.fieldTypes.countries
             });
 
+            // TODO
             // parse template
             addressTemplate = this.sandbox.util.template(AddressForm, data);
 
@@ -554,6 +555,34 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
                     }
                 }
             ]);
+
+//            this.sandbox.start([
+//                {
+//                    name: 'select@husky',
+//                    options: {
+//                        el: '#addressType',
+//                        defaultLabel: this.sandbox.translate('contact.address.type.select'),
+//                        valueName:
+//                    }
+//                }
+//            ]);
+//
+//            data-mapper-property="addressType"-->
+//                <!--data-type="label"-->
+//                <!--data-type-label="name"-->
+//                <!--data-type-id="id">-->
+//
+//            data-aura-data="[]"
+//            data-aura-value-name="translation"
+//            data-aura-multiple-select="false"
+//            data-aura-instance-name="addressType"
+//            data-type-label="translation"
+//            data-type-required="translation"
+//            data-mapper-property="addressType"
+//            data-type="husky-select"
+//            data-validation-required="true"
+//            data-aura-pre-selected-elements="[]"
+//            data-form="true">
 
             // after everything was added to dom
             this.sandbox.on('husky.overlay.add-address.opened', function() {
