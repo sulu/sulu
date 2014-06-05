@@ -170,7 +170,7 @@ define(function () {
          */
         bindSettingsDomEvents: function() {
             // activate save-button on key input
-            this.sandbox.dom.on('#' + constants.settingsFormId, 'change', function() {
+            this.sandbox.dom.on('#' + constants.settingsFormId, 'change keyup', function() {
                 if (this.saved === true) {
                     this.sandbox.emit('sulu.header.toolbar.state.change', 'edit', false);
                     this.saved = false;

@@ -257,6 +257,7 @@ class MediaController extends RestController implements ClassResourceInterface
         };
 
         $view = $this->responseDelete($id, $delete);
+        $view->setFormat('json');
 
         return $this->handleView($view);
     }
