@@ -36,6 +36,7 @@ define([], function () {
                         icon: 'plus-circle',
                         class: 'highlight-white',
                         title: 'add',
+                        position: 10,
                         callback: function () {
                             this.sandbox.emit('sulu.list-toolbar.add');
                         }.bind(this)
@@ -44,6 +45,7 @@ define([], function () {
                         id: 'delete',
                         icon: 'trash-o',
                         title: 'delete',
+                        position: 20,
                         disabled: true,
                         callback: function () {
                             this.sandbox.emit('sulu.list-toolbar.delete');
@@ -52,6 +54,7 @@ define([], function () {
                     {
                         id: 'settings',
                         icon: 'gear',
+                        position: 30,
                         items: [
                             {
                                 title: this.sandbox.translate('sulu.list-toolbar.import'),
@@ -90,20 +93,21 @@ define([], function () {
                     }
                 ];
             },
-            editable: function() {
-              return [
-                  {
-                      id: 'edit',
-                      icon: 'pencil',
-                      title: 'edit',
-                      disabled: true,
-                      callback: function() {
-                          this.sandbox.emit('sulu.list-toolbar.edit');
-                      }.bind(this)
-                  }
-              ];
+            defaultEditable: function () {
+                return templates.default.call(this).concat([
+                    {
+                        id: 'edit',
+                        icon: 'pencil',
+                        title: 'edit',
+                        position: 25,
+                        disabled: true,
+                        callback: function () {
+                            this.sandbox.emit('sulu.list-toolbar.edit');
+                        }.bind(this)
+                    }
+                ]);
             },
-            defaultNoSettings: function() {
+            defaultNoSettings: function () {
                 var defaults = templates.default.call(this);
                 defaults.splice(2, 1);
                 return defaults;
@@ -160,12 +164,12 @@ define([], function () {
                     this.sandbox.emit('husky.toolbar.' + instanceName + 'item.' + postfix, 'delete', false);
                 }.bind(this));
 
-                this.sandbox.on('sulu.list-toolbar.'+ instanceName +'delete.state-change', function (enable) {
+                this.sandbox.on('sulu.list-toolbar.' + instanceName + 'delete.state-change', function (enable) {
                     postfix = !!enable ? 'enable' : 'disable';
                     this.sandbox.emit('husky.toolbar.' + instanceName + 'item.' + postfix, 'delete', false);
                 }.bind(this));
 
-                this.sandbox.on('sulu.list-toolbar.'+ instanceName +'edit.state-change', function (enable) {
+                this.sandbox.on('sulu.list-toolbar.' + instanceName + 'edit.state-change', function (enable) {
                     postfix = !!enable ? 'enable' : 'disable';
                     this.sandbox.emit('husky.toolbar.' + instanceName + 'item.' + postfix, 'edit', false);
                 }.bind(this));
