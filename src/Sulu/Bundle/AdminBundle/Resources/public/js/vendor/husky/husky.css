@@ -9880,6 +9880,11 @@ a.btn-black, a.btn-highlight {
   cursor: pointer;
 }
 
+/* line 78, ../scss/modules/input.scss */
+.husky-validate-error .husky-input input {
+  height: 26px;
+}
+
 /* line 32, ../scss/mixins.scss */
 .husky-thumbnails:after {
   clear: both;
