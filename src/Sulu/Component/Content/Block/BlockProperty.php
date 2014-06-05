@@ -42,10 +42,23 @@ class BlockProperty extends Property implements BlockPropertyInterface
         $multilingual = false,
         $maxOccurs = 1,
         $minOccurs = 1,
-        $params = array()
+        $params = array(),
+        $tags = array(),
+        $col = null
     )
     {
-        parent::__construct($name, $metadata, 'block', $mandatory, $multilingual, $maxOccurs, $minOccurs, $params);
+        parent::__construct(
+            $name,
+            $metadata,
+            'block',
+            $mandatory,
+            $multilingual,
+            $maxOccurs,
+            $minOccurs,
+            $params,
+            $tags,
+            $col
+        );
         $this->defaultTypeName = $defaultTypeName;
     }
 

@@ -28,10 +28,11 @@ class SectionProperty extends Property implements PropertySectionInterface
     /**
      * @param string $name
      * @param array $metadata
+     * @param string $col
      */
-    function __construct($name, $metadata)
+    function __construct($name, $metadata, $col)
     {
-        parent::__construct($name, $metadata, 'section');
+        parent::__construct($name, $metadata, 'section', false, false, 1, 1, array(), array(), $col);
     }
 
     /**

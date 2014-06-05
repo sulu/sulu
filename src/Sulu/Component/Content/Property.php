@@ -69,6 +69,12 @@ class Property implements PropertyInterface, \JsonSerializable
     private $tags;
 
     /**
+     * column span
+     * @var string
+     */
+    private $col;
+
+    /**
      * value of property
      * @var mixed
      */
@@ -83,7 +89,8 @@ class Property implements PropertyInterface, \JsonSerializable
         $maxOccurs = 1,
         $minOccurs = 1,
         $params = array(),
-        $tags = array()
+        $tags = array(),
+        $col = null
     )
     {
         $this->contentTypeName = $contentTypeName;
@@ -95,6 +102,7 @@ class Property implements PropertyInterface, \JsonSerializable
         $this->metadata = new Metadata($metaData);
         $this->params = $params;
         $this->tags =$tags;
+        $this->col = $col;
     }
 
     /**
@@ -177,6 +185,15 @@ class Property implements PropertyInterface, \JsonSerializable
     public function getTag($tagName)
     {
         return $this->tags[$tagName];
+    }
+
+    /**
+     * returns column span
+     * @return string
+     */
+    public function getCol()
+    {
+        return $this->col;
     }
 
     /**
