@@ -164,6 +164,11 @@ define([], function () {
                     postfix = !!enable ? 'enable' : 'disable';
                     this.sandbox.emit('husky.toolbar.' + instanceName + 'item.' + postfix, 'delete', false);
                 }.bind(this));
+
+                this.sandbox.on('sulu.list-toolbar.'+ instanceName +'edit.state-change', function (enable) {
+                    postfix = !!enable ? 'enable' : 'disable';
+                    this.sandbox.emit('husky.toolbar.' + instanceName + 'item.' + postfix, 'edit', false);
+                }.bind(this));
             },
             defaultEditableList: function () {
                 var instanceName = this.options.instanceName ? this.options.instanceName + '.' : '';
