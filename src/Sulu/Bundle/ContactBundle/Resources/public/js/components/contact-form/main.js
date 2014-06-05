@@ -34,8 +34,8 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
         templates = {
             add: [
                 '<div class="grid-row">',
-                '   <div id="' + constants.fieldId + '" class="grid-col-6"></div>',
-                '   <div id="' + constants.fieldTypeId + '" class="grid-col-6"></div>',
+                    '   <div id="' + constants.fieldId + '" class="grid-col-6"></div>',
+                    '   <div id="' + constants.fieldTypeId + '" class="grid-col-6"></div>',
                 '</div>',
                 '<div class="grid-row m-bottom-0"></div>'
             ].join(''),
@@ -61,7 +61,7 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
          * is emited after initialization
          * @event sulu.contact-form.initialized
          */
-            EVENT_INITIALIZED = function() {
+        EVENT_INITIALIZED = function() {
             return eventNamespace + '.initialized';
         },
 
@@ -69,7 +69,7 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
          * is emited when a field-type gets changed or a field gets deleted
          * @event sulu.contact-form.initialized
          */
-            EVENT_CHANGED = function() {
+        EVENT_CHANGED = function() {
             return eventNamespace + '.changed';
         },
 
@@ -85,22 +85,22 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
         bindDomEvents = function() {
             this.sandbox.dom.on(this.$el, 'click', editAddressClicked.bind(this), constants.addressRowTemplateSelector);
 
-            this.sandbox.dom.on(this.$el, 'click', function(event){
+            this.sandbox.dom.on(this.$el, 'click', function(event) {
                 event.stopPropagation();
                 removeAddress.call(this, event.currentTarget);
             }.bind(this), '.address-remove');
 
-            this.sandbox.dom.on(this.$el, 'click', function(event){
+            this.sandbox.dom.on(this.$el, 'click', function(event) {
                 event.stopPropagation();
-                addAddress.call(this,event.currentTarget);
+                addAddress.call(this, event.currentTarget);
             }.bind(this), '.address-add');
         },
 
         /**
          * Removes the clicked address
          */
-        removeAddress = function($el){
-            var mapperID = this.sandbox.dom.data(this.sandbox.dom.closest($el, constants.addressComponentSelector),'mapper-id');
+        removeAddress = function($el) {
+            var mapperID = this.sandbox.dom.data(this.sandbox.dom.closest($el, constants.addressComponentSelector), 'mapper-id');
             this.sandbox.form.removeFromCollection(this.form, mapperID);
             this.sandbox.emit(EVENT_CHANGED.call(this));
         },
@@ -108,7 +108,7 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
         /**
          * Triggers the process to add a new address
          */
-        addAddress = function(){
+        addAddress = function() {
 
             // add to dom
             // add to datamapper
@@ -132,7 +132,7 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
         /**
          * Binds events related to the edit-fields overlay
          */
-            bindEditEvents = function() {
+        bindEditEvents = function() {
             if (this.$editOverlayContent !== null) {
                 this.sandbox.dom.on(this.sandbox.dom.find('.grid-row', this.$editOverlayContent),
                     'click', deleteFieldHandler.bind(this),
@@ -143,7 +143,7 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
         /**
          * Handles the click on the edit-fields
          */
-            deleteFieldHandler = function(event) {
+        deleteFieldHandler = function(event) {
             var $row = this.sandbox.dom.$(event.delegateTarget),
                 $icon = this.sandbox.dom.find('[class^="icon"]', event.currentTarget),
                 deleted = JSON.parse(this.sandbox.dom.attr($row, 'data-deleted'));
@@ -166,7 +166,7 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
         /**
          * Unbinds events related to the edit-fields overlay
          */
-            unbindEditEvents = function() {
+        unbindEditEvents = function() {
             this.sandbox.dom.off(this.$editOverlayContent);
         },
 
@@ -295,7 +295,7 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
          * Handles the logic when the overlay to edit fields is closed with
          * a click on ok
          */
-            editOkClicked = function() {
+        editOkClicked = function() {
             var i, length, newTypeId, newType, dataObject, deleted;
             // loop through all editable fields get the selected type and map it back into the array
             for (i = -1, length = this.editFieldsData.length; ++i < length;) {
@@ -338,7 +338,7 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
          * @param id
          * @returns {Object|null}
          */
-            getTypeById = function(types, id) {
+        getTypeById = function(types, id) {
             for (var i = -1, length = types.length; ++i < length;) {
                 if (types[i].id === id) {
                     return types[i];
@@ -363,7 +363,7 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
          * for the edit-fields overlay
          * @returns {*|HTMLElement}
          */
-            createEditOverlayContent = function() {
+        createEditOverlayContent = function() {
             this.editFieldsData = [];
             removeCollectionFilters.call(this);
             var data = this.sandbox.form.getData(this.form, true),
@@ -427,7 +427,7 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
         /**
          * Generate the Data for the all Edit-fields dropdowns
          */
-            generateEditFieldsDropdownData = function() {
+        generateEditFieldsDropdownData = function() {
             var i, length, x, xlength;
 
             //foreach edit-field
@@ -447,7 +447,7 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
         /**
          * Start all edit-fields dropdowns
          */
-            startEditFieldsDropdowns = function() {
+        startEditFieldsDropdowns = function() {
             generateEditFieldsDropdownData.call(this);
             for (var i = -1, length = this.editFieldsData.length; ++i < length;) {
 
@@ -471,7 +471,7 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
         /**
          * Create the edit-fields overlay
          */
-            createEditOverlay = function() {
+        createEditOverlay = function() {
 
             // create container for overlay
             var $overlay = this.sandbox.dom.createElement('<div>');
