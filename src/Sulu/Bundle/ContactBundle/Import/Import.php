@@ -71,7 +71,17 @@ class Import
      * Default values for different types, as defined in config (emailType, phoneType,..)
      * @var $configDefaults
      */
-    private $configDefaults;
+    protected $configDefaults;
+    /**
+     * Account Types
+     * @var $configAccountTypes
+     */
+    protected $configAccountTypes;
+    /**
+     * different forms of address
+     * @var $configFormOfAddress
+     */
+    protected $configFormOfAddress;
 
     /**
      * limit of rows to import
@@ -136,6 +146,12 @@ class Import
     protected $countryMappings = array();
 
     /**
+     * mappings for form of address
+     * @var array
+     */
+    protected $formOfAddressMappings = array();
+
+    /**
      * defines mappings of accountTypes in import file
      * @var array
      */
@@ -173,11 +189,15 @@ class Import
     /**
      * @param EntityManager $em
      * @param $configDefaults
+     * @param $configAccountTypes
+     * @param $configFormOfAddress
      */
-    function __construct(EntityManager $em, $configDefaults)
+    function __construct(EntityManager $em, $configDefaults, $configAccountTypes, $configFormOfAddress)
     {
         $this->em = $em;
         $this->configDefaults = $configDefaults;
+        $this->configAccountTypes = $configAccountTypes;
+        $this->configFormOfAddress = $configFormOfAddress;
 
         // load account categories
         $this->loadAccountCategories();
@@ -196,7 +216,7 @@ class Import
                 ($this->mappingsFile && !file_exists($this->mappingsFile)) ||
                 ($this->contactFile && !file_exists($this->contactFile))
             ) {
-                throw new NotFoundResourceException;
+                throw new NotFoundResourceException('one of the specified files was not found at the specified path!');
             }
 
             // set default types
@@ -253,6 +273,9 @@ class Import
             }
             if (array_key_exists('accountTypes', $mappings)) {
                 $this->setAccountTypeMappings($mappings['accountTypes']);
+            }
+            if (array_key_exists('formOfAddress', $mappings)) {
+                $this->setFormOfAddressMappings($mappings['formOfAddress']);
             }
             return $mappings;
         }
@@ -677,7 +700,7 @@ class Import
         }
 
         if ($this->checkData('contact_formOfAddress', $data)) {
-            $contact->setFormOfAddress($data['contact_formOfAddress']);
+            $contact->setFormOfAddress($this->mapFormOfAddress($data['contact_formOfAddress']));
         }
 
         if ($this->checkData('contact_salutation', $data)) {
@@ -866,7 +889,6 @@ class Import
     }
 
     /**
-     * TODO
      * @param $countryCode
      * @return mixed|string
      */
@@ -880,7 +902,23 @@ class Import
     }
 
     /**
-     * TODO
+     * returns form of addresses id, if defined
+     * @param $formOfAddress
+     * @return mixed
+     */
+    protected function mapFormOfAddress($formOfAddress)
+    {
+        if ($mappingIndex = array_search($formOfAddress, $this->formOfAddressMappings)) {
+            if (array_key_exists($mappingIndex, $this->configFormOfAddress)) {
+                return $this->configFormOfAddress[$mappingIndex]['id'];
+            }
+            return $mappingIndex;
+        } else {
+            return $formOfAddress;
+        }
+    }
+
+    /**
      * @param $typeString
      * @return int|mixed
      */
@@ -894,7 +932,14 @@ class Import
     }
 
     /**
-     * TODO
+     * @param array $formOfAddressMappings
+     */
+    public function setFormOfAddressMappings($formOfAddressMappings)
+    {
+        $this->formOfAddressMappings = $formOfAddressMappings;
+    }
+
+    /**
      * @param mixed $contactFile
      */
     public function setContactFile($contactFile)
@@ -903,7 +948,6 @@ class Import
     }
 
     /**
-     * TODO
      * @return mixed
      */
     public function getContactFile()
@@ -921,7 +965,6 @@ class Import
     }
 
     /**
-     * TODO
      * @return mixed
      */
     public function getAccountFile()
@@ -930,7 +973,6 @@ class Import
     }
 
     /**
-     * TODO
      * @param mixed $limit
      */
     public function setLimit($limit)
@@ -939,7 +981,6 @@ class Import
     }
 
     /**
-     * TODO
      * @return mixed
      */
     public function getLimit()
@@ -964,7 +1005,6 @@ class Import
     }
 
     /**
-     * TODO
      * @param $key
      * @return null
      */
@@ -1039,7 +1079,6 @@ class Import
     {
         $this->mappingsFile = $mappingsFile;
     }
-
 
     /**
      * TODO outsource this into a service! also used in template controller
