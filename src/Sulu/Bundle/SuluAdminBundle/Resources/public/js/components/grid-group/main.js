@@ -238,6 +238,7 @@ define(function () {
             var count = 0, length = Object.keys(this.group).length,
                 dfd = this.sandbox.data.deferred();
 
+            this.selectedRecords = {};
             for (var key in this.group) {
                 if (this.group.hasOwnProperty(key) && this.group[key].selectedElements > 0) {
                     this.sandbox.emit('husky.datagrid.' + this.group[key].datagridName + '.items.get-selected', function (ids) {
