@@ -90,6 +90,19 @@ define([], function () {
                     }
                 ];
             },
+            editable: function() {
+              return [
+                  {
+                      id: 'edit',
+                      icon: 'pencil',
+                      title: 'edit',
+                      disabled: true,
+                      callback: function() {
+                          this.sandbox.emit('sulu.list-toolbar.edit');
+                      }.bind(this)
+                  }
+              ];
+            },
             defaultNoSettings: function() {
                 var defaults = templates.default.call(this);
                 defaults.splice(2, 1);
