@@ -87,8 +87,6 @@ define(function () {
             this.sandbox.on('sulu.list-toolbar.add', this.openOverlay.bind(this));
             // start list-toolbar after header has initialized
             this.sandbox.on('sulu.header.initialized', this.startListToolbar.bind(this));
-            // update a collection in the list if the data-record has changed
-            this.sandbox.on('sulu.media.collections.collection-changed', this.updateCollection.bind(this));
             // delete media if list-toolbar delete is clicked
             this.sandbox.on('sulu.list-toolbar.delete', this.deleteMedia.bind(this));
             // route to collection-edit
@@ -96,9 +94,19 @@ define(function () {
             // activate/deactive delete button
             this.sandbox.on('sulu.grid-group.collections.elements-selected', this.toggleDeleteButton.bind(this));
 
+            // update a group in grid if collection was changed
+            this.sandbox.on('sulu.media.collections.collection-changed', function(collectionId) {
+                this.sandbox.emit('sulu.grid-group.collections.update-group', collectionId);
+            }.bind(this));
+
+            // edit media on click
+            this.sandbox.on('sulu.grid-group.collections.record-clicked', function(recordId) {
+                this.sandbox.emit('sulu.media.collections.edit-media', recordId);
+            }.bind(this));
+
             // update the last clicked grid if a media got changed
             this.sandbox.on('sulu.media.collections.media-saved', function () {
-                // delegate to grid-group
+                this.sandbox.emit('sulu.grid-group.collections.update-last-clicked');
             }.bind(this));
         },
 
@@ -106,7 +114,19 @@ define(function () {
          * Deletes all the selected media
          */
         deleteMedia: function () {
-            // delegate to grid-group
+            this.sandbox.sulu.showDeleteDialog(function (confirmed) {
+                if (confirmed === true) {
+                    this.sandbox.emit('sulu.grid-group.collections.get-selected', function(selectedMedias) {
+                        for (var groupId in selectedMedias) {
+                            if (selectedMedias.hasOwnProperty(groupId)) {
+                                this.sandbox.emit('sulu.media.collections.delete-media', selectedMedias[groupId], function (groupId, recordId) {
+                                    this.sandbox.emit('sulu.grid-group.collections.remove-record', groupId, recordId);
+                                }.bind(this, groupId), true);
+                            }
+                        }
+                    }.bind(this));
+                }
+            }.bind(this));
         },
 
         /**
@@ -123,7 +143,7 @@ define(function () {
                         }
                     };
                 collection = this.sandbox.util.extend(true, {}, collection, data);
-                // delegate rendering to grid-group
+                this.sandbox.emit('sulu.grid-group.collections.add-group', collection);
                 this.sandbox.emit('sulu.media.collections.save-collection', collection);
             } else {
                 return false;
@@ -164,7 +184,7 @@ define(function () {
             }));
             this.sandbox.dom.append(this.$el, this.toggleAll.$element);
 
-            this.initializeGridGroup()
+            this.initializeGridGroup();
             this.initializeOverlay();
         },
 
@@ -178,7 +198,10 @@ define(function () {
                 options: {
                     data: this.options.data,
                     el: $collections,
-                    instanceName: 'collections'
+                    instanceName: 'collections',
+                    gridUrl: '/admin/api/media?collection=',
+                    fieldsUrl: '/admin/api/media/fields',
+                    fieldsKey: 'mediaFields'
                 }
             }]);
             this.sandbox.dom.append(this.$el, $collections);
@@ -217,24 +240,16 @@ define(function () {
         },
 
         /**
-         * Opens the add colleciton overlay
+         * Opens the add collection overlay
          */
         openOverlay: function () {
             this.sandbox.emit('husky.overlay.add-collection.open');
         },
 
         /**
-         * Replaces a collection with a passed one
-         * @param collection
-         */
-        updateCollection: function (collection) {
-            // delegate to grid-group
-        },
-
-        /**
          * Handles the click on the show-all pagination
          * navigates to another view where all files are accessable
-         * @param collectionId {Nubmer|String} the id of the collection
+         * @param collectionId {Number|String} the id of the collection
          */
         showAllFiles: function (collectionId) {
             this.sandbox.emit('sulu.media.collections.collection-edit', collectionId);
@@ -257,7 +272,6 @@ define(function () {
                     icon: constants.slideDownIcon,
                     text: this.sandbox.translate(constants.openAllKey)
                 }));
-                // delegate to grid-group
                 this.sandbox.emit('sulu.grid-group.collections.close-all-groups');
             } else {
                 this.toggleAll.allOpen = true;
