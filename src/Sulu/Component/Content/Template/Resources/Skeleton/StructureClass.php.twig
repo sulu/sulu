@@ -3,6 +3,7 @@ use Sulu\Component\Content\Property;
 use Sulu\Component\Content\Block\BlockProperty;
 use Sulu\Component\Content\Block\BlockPropertyType;
 use Sulu\Component\Content\PropertyTag;
+use Sulu\Component\Content\Section\SectionProperty;
 
 /**
  * {{ cache_class }}
@@ -40,8 +41,14 @@ class {{ cache_class }} extends {{ base_class }}
 
 {% macro buildSection(section, parent, layer) %}
         // section {{ section.name }}
-{% for property in section.properties %}
-{{ _self.buildProperty(property, parent, layer) }}
+        {% set sectionVar = '$section'~layer~typeIndex %}
+        {{ sectionVar }} = new SectionProperty(
+            '{{ section.name }}',
+            {{ _self.renderArray(section.meta) }}
+        );
+        {{ parent }}->addChild({{ sectionVar }});
+    {% for property in section.properties %}
+{{ _self.buildProperty(property, sectionVar, layer) }}
 {% endfor %}
 {% endmacro %}
 

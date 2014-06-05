@@ -11,7 +11,9 @@
 namespace Sulu\Component\Content\Mapper;
 
 use Psr\Log\LoggerInterface;
+use Sulu\Component\Content\Block\BlockProperty;
 use Sulu\Component\Content\PropertyTag;
+use Sulu\Component\Content\Section\SectionProperty;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManager;
 use Sulu\Component\Content\StructureManagerInterface;
@@ -526,17 +528,20 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         // should implement interface
         $this->assertInstanceOf('\Sulu\Component\Content\StructureInterface', $structure);
 
-        $this->assertEquals(6, sizeof($structure->getProperties()));
+        $this->assertEquals(4, sizeof($structure->getProperties()));
         $this->assertEquals('title', $structure->getProperty('title')->getName());
-        $this->assertEquals('url', $structure->getProperty('url')->getName());
-        $this->assertEquals('article', $structure->getProperty('article')->getName());
-        $this->assertEquals('pages', $structure->getProperty('pages')->getName());
-        $this->assertEquals('images', $structure->getProperty('images')->getName());
 
-        $this->assertEquals('block', $structure->getProperty('block')->getName());
-        $this->assertEquals(
-            'name',
-            $structure->getProperty('block')->getType('test')->getChildProperties()[0]->getName()
-        );
+        /** @var SectionProperty $section */
+        $section = $structure->getProperty('test');
+        $this->assertInstanceOf('\Sulu\Component\Content\Section\PropertySectionInterface', $section);
+        $this->assertEquals('url', $section->getChildProperties()[0]->getName());
+        $this->assertEquals('article', $section->getChildProperties()[1]->getName());
+        $this->assertEquals('block', $section->getChildProperties()[2]->getName());
+        /** @var BlockProperty $block */
+        $block = $section->getChildProperties()[2];
+        $this->assertEquals('name', $block->getType('test')->getChildProperties()[0]->getName());
+
+        $this->assertEquals('images', $structure->getProperty('images')->getName());
+        $this->assertEquals('pages', $structure->getProperty('pages')->getName());
     }
 }
