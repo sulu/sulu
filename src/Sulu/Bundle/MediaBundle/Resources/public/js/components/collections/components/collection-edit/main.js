@@ -107,6 +107,12 @@ define(function () {
 
             // delete the collection
             this.sandbox.on('sulu.header.toolbar.delete', this.deleteCollection.bind(this));
+
+            // toggle edit button
+            this.sandbox.on('husky.datagrid.number.selections', this.toggleEditButton.bind(this));
+
+            // edit media
+            this.sandbox.on('sulu.list-toolbar.edit', this.editSelectedMedia.bind(this));
         },
 
         /**
@@ -117,6 +123,15 @@ define(function () {
                 this.sandbox.emit('sulu.media.collections.delete-media', ids, function(mediaId) {
                     this.sandbox.emit('husky.datagrid.record.remove', mediaId);
                 }.bind(this));
+            }.bind(this));
+        },
+
+        /**
+         * Edits the selected medias
+         */
+        editSelectedMedia: function() {
+            this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
+                this.sandbox.emit('sulu.media.collections.edit-media', ids);
             }.bind(this));
         },
 
@@ -250,7 +265,7 @@ define(function () {
                 {
                     el: this.$find(constants.toolbarSelector),
                     instanceName: this.options.instanceName,
-                    parentTemplate: 'default',
+                    parentTemplate: 'defaultEditable',
                     template: 'changeable',
                     inHeader: true
 
@@ -266,6 +281,15 @@ define(function () {
                         }
                     }
                 });
+        },
+
+        /**
+         * Enables or dsiables the edit button
+         * @param selectedElements {Number} number of selected elements
+         */
+        toggleEditButton: function(selectedElements) {
+            var enable = selectedElements > 0;
+            this.sandbox.emit('sulu.list-toolbar.' + this.options.instanceName + '.edit.state-change', enable);
         },
 
         /**
