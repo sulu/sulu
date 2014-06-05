@@ -1,5 +1,5 @@
 <div class="grid-row form-group">
-    <label for="{{ id|raw }}" class="pointer {{ (property.mandatory) ? 'required' : '' }}">
+    <label for="{{ id|raw }}" class="pointer {{ (property.mandatory) ? 'required' : '' }}" title="{{ property.getInfoText(languageCode) }}">
         {{ property.getTitle(languageCode) }}
     </label>
 

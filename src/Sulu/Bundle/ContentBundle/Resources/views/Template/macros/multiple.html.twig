@@ -10,7 +10,7 @@
     <script id="{{ id|raw }}-tpl" type="text/template">
         <div class="text-block {{ property.name }}-element">
             <div class="head">
-                <label class="move">
+                <label class="move" title="{{ property.getInfoText(languageCode) }}">
                     {{ property.getTitle(languageCode) }}
                 </label>
 
