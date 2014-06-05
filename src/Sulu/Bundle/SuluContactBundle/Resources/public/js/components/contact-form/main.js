@@ -379,7 +379,6 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
                 fax: data.faxes,
                 phone: data.phones,
                 url: data.urls
-
             };
 
             //loop through object properties

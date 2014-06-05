@@ -24,7 +24,13 @@ define([
             city: '',
             state: '',
             country: null,
-            addressType: null
+            addressType: null,
+            primaryAddress: null,
+            billingAddress: null,
+            deliveryAddress: null,
+            postboxNumber: null,
+            postboxPostcode: null,
+            postboxCity: null
         }, relations: [
             {
                 type: HasOne,
