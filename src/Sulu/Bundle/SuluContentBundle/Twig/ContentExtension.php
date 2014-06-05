@@ -49,9 +49,13 @@ class ContentExtension extends \Twig_Extension
      */
     public function getParamsFunction($property)
     {
-        $type = $this->getTypeFunction($property->getContentTypeName());
+        $typeParams = array();
+        if ($this->contentTypeManager->has($property->getContentTypeName())) {
+            $type = $this->getTypeFunction($property->getContentTypeName());
+            $typeParams = $type->getDefaultParams();
+        }
 
-        return array_merge($type->getDefaultParams(), $property->getParams());
+        return array_merge($typeParams, $property->getParams());
     }
 
     /**
