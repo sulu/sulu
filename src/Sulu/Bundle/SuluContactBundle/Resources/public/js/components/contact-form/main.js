@@ -27,7 +27,8 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
             fadedClass: 'faded',
             addressFormId: '#address-form',
             dropdownContainerId: '#contact-options-dropdown',
-            addressRowTemplateSelector: '[data-mapper-property-tpl="address-tpl"]'
+            addressRowTemplateSelector: '[data-mapper-property-tpl="address-tpl"]',
+            addressComponentSelector: '.address-component'
         },
 
         templates = {
@@ -98,14 +99,10 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
         /**
          * Removes the clicked address
          */
-        removeAddress = function(){
-
-            // remove from dom
-            // remove from datamapper
-
-            this.sandbox.logger.log("remove");
-
-//            this.sandbox.form.removeFromCollection(this.form, this.editFieldsData[i].mapperId);
+        removeAddress = function($el){
+            var mapperID = this.sandbox.dom.data(this.sandbox.dom.closest($el, constants.addressComponentSelector),'mapper-id');
+            this.sandbox.form.removeFromCollection(this.form, mapperID);
+            this.sandbox.emit(EVENT_CHANGED.call(this));
         },
 
         /**
