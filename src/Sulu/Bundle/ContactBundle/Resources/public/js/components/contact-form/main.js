@@ -109,14 +109,21 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
          * Triggers the process to add a new address
          */
         addAddress = function() {
+//            createAddOverlay.call(this);
+//            addAddressOkClicked.call(this);
+//
+//            var data = this.dropdownDataArray[fieldId],
+//                dataType = getDataById(this.dropdownDataArray[fieldId].items, fieldTypeId),
+//                dataObject = {};
+//
+//            dataObject[data.type] = '';
+//            dataObject[data.type + 'Type'] = {
+//                id: fieldTypeId,
+//                name: dataType.name
+//            };
+//            dataObject.attributes = {};
 
-            // add to dom
-            // add to datamapper
-
-            this.sandbox.logger.log("add");
-
-//            this.sandbox.form.addToCollection(this.form, 'addresses', formData);
-//            this.sandbox.form.editInCollection(this.form, mapperId, formData);
+            createAddressOverlay.call(this, null);
         },
 
         bindAddEvents = function() {
@@ -506,6 +513,10 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
             this.sandbox.emit('husky.overlay.add-fields.remove');
             // remove edit overlay
             this.sandbox.emit('husky.overlay.edit-fields.remove');
+
+            if(!data){
+                data = {};
+            }
 
             // extend address data by additional variables
             this.sandbox.util.extend(true, data, {
