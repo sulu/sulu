@@ -34,7 +34,7 @@ define([], function() {
             initialize: function() {
                 this.saved = true;
                 this.formId = '#contact-form';
-                this.autoCompleteInstanceName = 'accounts-'
+                this.autoCompleteInstanceName = 'accounts-';
 
                 this.dfdListenForChange = this.sandbox.data.deferred();
                 this.dfdFormIsSet = this.sandbox.data.deferred();
@@ -329,15 +329,19 @@ define([], function() {
 
             listenForChange: function() {
                 this.dfdListenForChange.then(function() {
+
                     this.sandbox.dom.on('#contact-form', 'change', function() {
                         this.setHeaderBar(false);
                     }.bind(this), "select, input, textarea");
+
                     this.sandbox.dom.on('#contact-form', 'keyup', function() {
                         this.setHeaderBar(false);
                     }.bind(this), "input, textarea");
+
                     this.sandbox.on('sulu.contact-form.changed', function() {
                         this.setHeaderBar(false);
                     }.bind(this));
+
                 }.bind(this));
                 this.sandbox.on('husky.select.form-of-address.selected.item', function() {
                     this.setHeaderBar(false);

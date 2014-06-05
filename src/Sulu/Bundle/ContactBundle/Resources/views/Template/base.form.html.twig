@@ -11,23 +11,23 @@
                 <div class="pos-rel">
                     <h2 class="divider"><%=translate('contact.contacts.details')%></h2>
                     <span id="contact-options-dropdown" class="options-dropdown-container">
-                        <a href="javascript:void(0)" class="contact-options-toggle options-toggle"><span class="fa-gear"/></a>
+                        <a class="contact-options-toggle options-toggle"><span class="fa-gear"/></a>
                     </span>
                 </div>
 
-                <div class="grid-row small" data-type="collection" data-mapper-property='[{"data":"addresses","tpl":"address-tpl"}]'>
+                <div class="grid-row small m-bottom-0" data-type="collection" data-mapper-property='[{"data":"addresses","tpl":"address-tpl"}]'>
                     <script type="text/template" id="address-tpl">
-                        <div class="grid-col-12 floating">
+                        <div class="grid-col-12 floating m-top-0 address-component">
                             <~ var uid = _.uniqueId('address_'), first = true; ~>
                             <~ var checkIfFirstField = function(field) { if (typeof field !== 'undefined' && !!field) { if(first) {first = false; return false;} else {return true;} } }~>
                             <div class="form-group">
                                 <label>
                                     <%=translate('public.address')%>
-                                    <span class="label-container">
+                                    {#<span class="label-container">#}
                                         <span class="type-value" data-form="true" data-mapper-property="addressType" data-type="label" data-type-label="name" data-type-id="id" data-id="{{ defaultAddressType.id }}">
                                             <%= translate('{{ defaultAddressType.name }}') %>
                                         </span>
-                                    </span>
+                                    {#</span>#}
                                 </label>
 
                                 <div class="address-row clickable pointer">
