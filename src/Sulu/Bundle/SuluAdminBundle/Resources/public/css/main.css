@@ -302,13 +302,3 @@ input, select {
   border-radius: 3px;
   line-height: 28px;
 }
-/* line 55, ../scss/modules/gridgroup.scss */
-.sulu-grid-group .entity .rightContent {
-  float: right;
-}
-/* line 57, ../scss/modules/gridgroup.scss */
-.sulu-grid-group .entity .rightContent .total {
-  color: #999999;
-  font-size: 12px;
-  line-height: 12px;
-}

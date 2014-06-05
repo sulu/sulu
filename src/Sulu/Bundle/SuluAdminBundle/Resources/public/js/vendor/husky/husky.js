@@ -41155,9 +41155,9 @@ define('__component__$input@husky',[], function () {
          * @param value {String} new value
          */
         setValue: function(value) {
-            if (this.options.skin === 'color') {
+            if (this.options.renderMethod === 'colorpicker') {
                 this.sandbox.colorpicker.value(this.input.$input, value);
-            } else if (this.options.skin === 'date') {
+            } else if (this.options.renderMethod === 'datepicker') {
                 this.sandbox.datepicker.setValue(this.input.$input, value);
             } else {
                 this.sandbox.dom.val(this.input.$input, value);
@@ -41170,7 +41170,7 @@ define('__component__$input@husky',[], function () {
          */
         updateValue: function() {
             this.setValue(this.sandbox.dom.data(this.$el, 'value'));
-        },
+        }
     };
 
 });
