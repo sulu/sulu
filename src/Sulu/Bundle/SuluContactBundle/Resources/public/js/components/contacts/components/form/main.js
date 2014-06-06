@@ -204,10 +204,6 @@ define([], function() {
                     this.options.data = data;
                     this.initContactData();
                     this.setHeaderBar(true);
-
-                    // TODO update address fields
-
-
                 }, this);
 
                 // contact save

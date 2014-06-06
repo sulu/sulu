@@ -78,7 +78,7 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
             this.sandbox.on('sulu.contact-form.add-required', addRequires.bind(this));
             this.sandbox.on('sulu.contact-form.is.initialized', isInitialized.bind(this));
 
-            this.sandbox.on('husky.overlay.add-address.initialized', initialzeDropdownForAddressTypes.bind(this));
+            this.sandbox.on('husky.overlay.add-address.initialized', initializeDropdownForAddressTypes.bind(this));
 
             // bind events for add-fields overlay
             bindAddEvents.call(this);
@@ -101,12 +101,7 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
         /**
          * Initializes the husky select component when overlay is loaded
          */
-        initialzeDropdownForAddressTypes = function(){
-
-//            var preselected = [];
-//            if(!!this.data.addressType){
-//                preselected.push(this.data.addressType.id);
-//            }
+        initializeDropdownForAddressTypes = function() {
 
             this.sandbox.start([
                 {
@@ -529,7 +524,7 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
             // remove edit overlay
             this.sandbox.emit('husky.overlay.edit-fields.remove');
 
-            if(!data){
+            if (!data) {
                 data = {};
             }
 
@@ -577,7 +572,6 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
                     this.sandbox.form.setData(constants.addressFormId, data);
                 }.bind(this));
             }.bind(this));
-
 
             this.data = data;
         },
@@ -707,7 +701,7 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
                 $dropdownContainer = this.$find(constants.dropdownContainerId);
 
             // add new container
-//            this.sandbox.dom.append(this.$el, $container);
+            // this.sandbox.dom.append(this.$el, $container);
             this.sandbox.dom.append($dropdownContainer, $container);
 
             // TODO: implement options dropdown functionality for adding and editing contact details
