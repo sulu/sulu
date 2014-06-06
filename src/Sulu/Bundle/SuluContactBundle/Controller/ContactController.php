@@ -89,6 +89,16 @@ class ContactController extends RestController implements ClassResourceInterface
     protected $bundlePrefix = 'contact.contacts.';
 
     /**
+     * @var
+     */
+    protected $currentContact;
+
+    /**
+     * @var
+     */
+    protected $newPrimaryAddress;
+
+    /**
      * returns all fields that can be used by list
      * @Get("contacts/fields")
      * @return mixed
@@ -317,6 +327,7 @@ class ContactController extends RestController implements ClassResourceInterface
                 }
             }
 
+            $this->setNewPrimaryAddress($this->currentContact, $this->newPrimaryAddress);
             $em->persist($contact);
 
             $em->flush();
@@ -407,6 +418,8 @@ class ContactController extends RestController implements ClassResourceInterface
                 if (!empty($birthday)) {
                     $contact->setBirthday(new DateTime($birthday));
                 }
+
+                $this->setNewPrimaryAddress($this->currentContact, $this->newPrimaryAddress);
 
                 $em->flush();
 
@@ -789,8 +802,8 @@ class ContactController extends RestController implements ClassResourceInterface
             return $contact->removeAddresse($address);
         };
 
-        $update = function ($address, $matchedEntry) {
-            return $this->updateAddress($address, $matchedEntry);
+        $update = function ($address, $matchedEntry) use ($contact) {
+            return $this->updateAddress($contact, $address, $matchedEntry);
         };
 
         $add = function ($address) use ($contact) {
@@ -832,7 +845,15 @@ class ContactController extends RestController implements ClassResourceInterface
             $address->setAddressType($addressType);
 
             if (isset($addressData['primaryAddress'])) {
-                $address->setPrimaryAddress($this->getBooleanValue($addressData['primaryAddress']));
+
+                // remember changed primary address
+                $value = $this->getBooleanValue($addressData['primaryAddress']);
+                if($value && !$address->getPrimaryAddress()) {
+                    $this->currentContact = $contact;
+                    $this->newPrimaryAddress = $address;
+                } else if(!$value) {
+                    $address->setPrimaryAddress($value);
+                }
             }
             if (isset($addressData['billingAddress'])) {
                 $address->setBillingAddress($this->getBooleanValue($addressData['billingAddress']));
@@ -864,11 +885,12 @@ class ContactController extends RestController implements ClassResourceInterface
 
     /**
      * Updates the given address
+     * @param Contact $contact
      * @param Address $address The phone object to update
      * @param array $entry The entry with the new data
      * @return bool True if successful, otherwise false
      */
-    protected function updateAddress(Address $address, $entry)
+    protected function updateAddress(Contact $contact, Address $address, $entry)
     {
         $success = true;
 
@@ -893,7 +915,14 @@ class ContactController extends RestController implements ClassResourceInterface
 
             if (isset($entry['primaryAddress'])) {
 
-                $address->setPrimaryAddress($this->getBooleanValue($entry['primaryAddress']));
+                // remember changed primary address
+                $value = $this->getBooleanValue($entry['primaryAddress']);
+                if($value && !$address->getPrimaryAddress()) {
+                    $this->currentContact = $contact;
+                    $this->newPrimaryAddress = $address;
+                } else if(!$value) {
+                    $address->setPrimaryAddress($value);
+                }
             }
             if (isset($entry['billingAddress'])) {
                 $address->setBillingAddress($this->getBooleanValue($entry['billingAddress']));
@@ -917,6 +946,24 @@ class ContactController extends RestController implements ClassResourceInterface
         }
 
         return $success;
+    }
+
+    /**
+     * Sets primary address flag of all addresses of a contact to false and sets new primary
+     * @param $contact
+     * @param $address
+     */
+    protected function setNewPrimaryAddress(Contact $contact, Address $address)
+    {
+        if ($contact && $address) {
+
+            $addresses = $contact->getAddresses();
+            /** @var Address $address */
+            foreach ($addresses as $addr) {
+                $addr->setPrimaryAddress(false);
+            }
+            $address->setPrimaryAddress(true);
+        }
     }
 
     /**
