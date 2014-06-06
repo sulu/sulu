@@ -248,7 +248,9 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
                 createAddressOverlay.call(this, dataObject);
             } else {
                 // insert field
-                this.sandbox.form.addToCollection(this.form, data.collection, dataObject);
+                this.sandbox.form.addToCollection(this.form, data.collection, dataObject).then(function($element) {
+                    this.sandbox.start($element);
+                }.bind(this));
             }
 
             // TODO: focus on just inserted field

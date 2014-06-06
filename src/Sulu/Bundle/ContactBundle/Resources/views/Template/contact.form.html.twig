@@ -73,7 +73,15 @@
         <div class="grid-col-6">
             <div class="form-group">
                 <label for="birthday"><%=translate('contact.contacts.birthday')%></label>
-                <input class="form-element" type="text" id="birthday" data-mapper-property="birthday"/>
+                <div data-form="true"
+                     data-type="husky-input"
+                     data-aura-component="input@husky"
+                     data-aura-skin="date"
+                     data-aura-instance-name="birthday"
+                     data-aura-input-id="<~= uid ~>"
+                     data-aura-input-name="<~= uid ~>"
+                     data-validation-required="true"
+                     data-mapper-property="birthday"></div>
             </div>
         </div>
         <div class="grid-col-6">
