@@ -31,6 +31,15 @@ define([], function() {
 
             templates: ['/admin/contact/template/contact/form'],
 
+            customTemplates: {
+                    addAddressesIcon: [
+                        '<div class="grid-row small">',
+                        '    <div class="grid-col-12">',
+                        '       <span class="fa-plus-circle icon address-add clickable pointer"></span>',
+                        '   </div>',
+                        '</div>'].join('')
+            },
+
             initialize: function() {
                 this.saved = true;
                 this.formId = '#contact-form';
@@ -168,6 +177,14 @@ define([], function() {
             },
 
             initForm: function(data) {
+
+                var addIcon;
+
+                if(!!data.addresses && data.addresses.length > 0) {
+                    addIcon = this.sandbox.dom.$(this.customTemplates.addAddressesIcon);
+                    this.sandbox.dom.after(this.sandbox.dom.$('#addresses'), addIcon);
+                }
+
                 // when  contact-form is initalized
                 this.sandbox.on('sulu.contact-form.initialized', function() {
                     // set form data
