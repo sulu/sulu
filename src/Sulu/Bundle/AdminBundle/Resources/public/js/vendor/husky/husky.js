@@ -40507,6 +40507,7 @@ define('__component__$toggler@husky',[], function() {
  * @params {Function} [options.removeFileCallback] callback which gets called after a file got removed. First parameter is the file.
  * @params {Object} [options.pluginOptions] Options to pass to the dropzone-plugin to completely override all options set by husky. Use with care.
  * @params {Boolean} [options.showOverlay] if true the dropzone will be displayed in an overlay if its not visible any more or the passed scroll-top is reached
+ * @params {String} [options.skin] skin class for the dropzone. currently available: 'small' or '' (default)
  */
 define('__component__$dropzone@husky',[], function () {
 
@@ -40532,7 +40533,8 @@ define('__component__$dropzone@husky',[], function () {
             pluginOptions: {},
             fadeOutDuration: 200, //ms
             fadeOutDelay: 1500, //ms
-            showOverlay: true
+            showOverlay: true,
+            skin: ''
         },
 
         constants = {
@@ -40549,7 +40551,7 @@ define('__component__$dropzone@husky',[], function () {
                 '<div class="' + constants.descriptionClass + '">',
                 '<div class="fa-<%= icon %> icon"></div>',
                 '<span class="title"><%= title %></span>',
-                '<span><%= description %></span>',
+                '<span class="addition"><%= description %></span>',
                 '</div>',
                 '<div class="' + constants.uploadedItemContainerClass + '"></div>'
             ].join(''),
@@ -40748,6 +40750,7 @@ define('__component__$dropzone@husky',[], function () {
                 icon: this.options.descriptionIcon,
                 instanceName: this.options.instanceName
             }));
+            this.sandbox.dom.addClass(this.$dropzone, this.options.skin);
             this.sandbox.dom.append(this.$el, this.$dropzone);
             this.startDropzone();
         },
@@ -41138,7 +41141,7 @@ define('__component__$input@husky',[], function () {
             this.sandbox.dom.addClass(this.$el, constants.datepickerClass);
             this.sandbox.dom.attr(this.input.$input, 'placeholder', this.sandbox.globalize.getDatePattern());
             this.sandbox.datepicker.init(this.input.$input, this.options.datepickerOptions).on('changeDate', function(event) {
-                this.sandbox.dom.data(this.$el, 'value', event.date.toISOString());
+                this.setDatepickerValueAttr(event.date);
             }.bind(this));
             this.updateValue();
         },
@@ -41168,13 +41171,36 @@ define('__component__$input@husky',[], function () {
             if (this.options.renderMethod === 'colorpicker') {
                 this.sandbox.colorpicker.value(this.input.$input, value);
             } else if (this.options.renderMethod === 'datepicker') {
+                // if a date-time was passed, extract the date
+                value = this.isoToDate(value);
                 value = new Date(value);
-                value = new Date(value.valueOf() - value.getTimezoneOffset() * 60000);
                 this.sandbox.datepicker.setDate(this.input.$input, value);
-                this.sandbox.dom.data(this.$el, 'value', this.sandbox.datepicker.getDate(this.input.$input).toISOString());
+                this.setDatepickerValueAttr(this.sandbox.datepicker.getDate(this.input.$input));
             } else {
                 this.sandbox.dom.val(this.input.$input, value);
             }
+        },
+
+        /**
+         * Takes a iso date-time string and returns only the date part
+         * @param datetime {String} iso-datetime-string
+         */
+        isoToDate: function(datetime) {
+            if (datetime.indexOf('T') > 0) {
+                return datetime.substr(0, datetime.indexOf('T'));
+            }
+            return datetime;
+        },
+
+        /**
+         * Sets the value attribute for the datepicker
+         * @param date {Object} a UTC date pbject
+         */
+        setDatepickerValueAttr: function(date) {
+            date = date.getFullYear() + '-' +
+                   ('0' + (date.getMonth()+1)).slice(-2) + '-' +
+                   ('0' + date.getDate()).slice(-2);
+            this.sandbox.dom.data(this.$el, 'value', date);
         },
 
         /**
