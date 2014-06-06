@@ -934,13 +934,13 @@ class AccountController extends RestController implements ClassResourceInterface
             $address->setState($addressData['state']);
 
             if (isset($addressData['primaryAddress'])) {
-                $address->setPrimaryAddress($addressData['primaryAddress']);
+                $address->setPrimaryAddress($this->getBooleanValue($addressData['primaryAddress']));
             }
             if (isset($addressData['billingAddress'])) {
-                $address->setBillingAddress($addressData['billingAddress']);
+                $address->setBillingAddress($this->getBooleanValue($addressData['billingAddress']));
             }
             if (isset($addressData['deliveryAddress'])) {
-                $address->setDeliveryAddress($addressData['deliveryAddress']);
+                $address->setDeliveryAddress($this->getBooleanValue($addressData['deliveryAddress']));
             }
             if (isset($addressData['postboxCity'])) {
                 $address->setPostboxCity($addressData['postboxCity']);
@@ -1002,13 +1002,13 @@ class AccountController extends RestController implements ClassResourceInterface
                 $address->setAddressType($addressType);
 
                 if (isset($entry['primaryAddress'])) {
-                    $address->setPrimaryAddress($entry['primaryAddress']);
+                    $address->setPrimaryAddress($this->getBooleanValue($entry['primaryAddress']));
                 }
                 if (isset($entry['billingAddress'])) {
-                    $address->setBillingAddress($entry['billingAddress']);
+                    $address->setBillingAddress($this->getBooleanValue($entry['billingAddress']));
                 }
                 if (isset($entry['deliveryAddress'])) {
-                    $address->setDeliveryAddress($entry['deliveryAddress']);
+                    $address->setDeliveryAddress($this->getBooleanValue($entry['deliveryAddress']));
                 }
                 if (isset($entry['postboxCity'])) {
                     $address->setPostboxCity($entry['postboxCity']);
@@ -1027,6 +1027,21 @@ class AccountController extends RestController implements ClassResourceInterface
         }
 
         return $success;
+    }
+
+    /**
+     * Checks if a value is a boolean and converts it if necessary and returns it
+     * @param $value
+     * @return bool
+     */
+    protected function getBooleanValue($value){
+        if(is_string($value)){
+            return $value === 'true' ? true : false;
+        } else if(is_bool($value)){
+            return $value;
+        } else if(is_numeric($value)){
+            return $value === 1 ? true : false;
+        }
     }
 
     /**

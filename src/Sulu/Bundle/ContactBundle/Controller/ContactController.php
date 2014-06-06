@@ -832,13 +832,13 @@ class ContactController extends RestController implements ClassResourceInterface
             $address->setAddressType($addressType);
 
             if (isset($addressData['primaryAddress'])) {
-                $address->setPrimaryAddress($addressData['primaryAddress']);
+                $address->setPrimaryAddress($this->getBooleanValue($addressData['primaryAddress']));
             }
             if (isset($addressData['billingAddress'])) {
-                $address->setBillingAddress($addressData['billingAddress']);
+                $address->setBillingAddress($this->getBooleanValue($addressData['billingAddress']));
             }
             if (isset($addressData['deliveryAddress'])) {
-                $address->setDeliveryAddress($addressData['deliveryAddress']);
+                $address->setDeliveryAddress($this->getBooleanValue($addressData['deliveryAddress']));
             }
             if (isset($addressData['postboxCity'])) {
                 $address->setPostboxCity($addressData['postboxCity']);
@@ -920,6 +920,7 @@ class ContactController extends RestController implements ClassResourceInterface
     }
 
     /**
+     * Checks if a value is a boolean and converts it if necessary and returns it
      * @param $value
      * @return bool
      */
