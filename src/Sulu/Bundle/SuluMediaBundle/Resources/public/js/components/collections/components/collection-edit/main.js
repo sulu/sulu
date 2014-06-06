@@ -90,13 +90,16 @@ define(function () {
             }.bind(this));
 
            // open edit overlay on datagrid click
-            this.sandbox.on('husky.datagrid.item.click', function(id) {
-                this.sandbox.emit('sulu.media.collections.edit-media', id);
-            }.bind(this));
+            this.sandbox.on('husky.datagrid.item.click', this.editMedia.bind(this));
 
             // reload datagrid of media has changed
             this.sandbox.on('sulu.media.collections.media-saved', function() {
                 this.sandbox.emit('husky.datagrid.update');
+            }.bind(this));
+
+            // unlock the dropzone pop-up if the media-edit overlay was closed
+            this.sandbox.on('sulu.media-edit.closed', function() {
+                this.sandbox.emit('husky.dropzone.'+ this.options.instanceName +'.unlock-popup');
             }.bind(this));
 
             // delete a media
@@ -112,7 +115,7 @@ define(function () {
             this.sandbox.on('husky.datagrid.number.selections', this.toggleEditButton.bind(this));
 
             // edit media
-            this.sandbox.on('sulu.list-toolbar.edit', this.editSelectedMedia.bind(this));
+            this.sandbox.on('sulu.list-toolbar.edit', this.editMedia.bind(this));
         },
 
         /**
@@ -123,15 +126,6 @@ define(function () {
                 this.sandbox.emit('sulu.media.collections.delete-media', ids, function(mediaId) {
                     this.sandbox.emit('husky.datagrid.record.remove', mediaId);
                 }.bind(this));
-            }.bind(this));
-        },
-
-        /**
-         * Edits the selected medias
-         */
-        editSelectedMedia: function() {
-            this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
-                this.sandbox.emit('sulu.media.collections.edit-media', ids);
             }.bind(this));
         },
 
@@ -164,6 +158,21 @@ define(function () {
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/media/template/collection/files'));
             this.startDropzone();
             this.startDatagrid();
+        },
+
+        /**
+         * Edits all selected medias
+         * @param additionalMedia {Number|String} id of a media which should, besides the selected ones, also be edited (e.g. if it was clicked)
+         */
+        editMedia: function(additionalMedia) {
+            this.sandbox.emit('husky.datagrid.items.get-selected', function(selected) {
+                this.sandbox.emit('husky.dropzone.'+ this.options.instanceName +'.lock-popup');
+                // add additional media to the edit-list, but only if its not already contained
+                if (!!additionalMedia && selected.indexOf(additionalMedia) === -1) {
+                    selected.push(additionalMedia);
+                }
+                this.sandbox.emit('sulu.media.collections.edit-media', selected);
+            }.bind(this));
         },
 
         /**

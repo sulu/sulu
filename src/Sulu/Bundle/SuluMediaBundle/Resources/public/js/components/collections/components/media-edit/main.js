@@ -20,11 +20,15 @@ define(function() {
     var namespace = 'sulu.media-edit.',
 
         defaults = {
-            infoKey: 'public.info'
+            infoKey: 'public.info',
+            multipleEditTitle: 'sulu.media.multiple-edit.title',
+            instanceName: ''
         },
 
         constants = {
-            infoFormId: 'media-info'
+            infoFormId: 'media-info',
+            multipleEditFormId: 'media-multiple-edit',
+            dropzoneId: 'file-version-change'
         },
 
         /**
@@ -36,6 +40,14 @@ define(function() {
             return createEventName.call(this, 'edit');
         },
 
+        /**
+         * raised if the media-edit overlay got closed
+         * @event sulu.media-edit.closed
+         */
+        CLOSED = function() {
+            return createEventName.call(this, 'closed');
+        },
+
         /** returns normalized event names */
         createEventName = function(postFix) {
             return namespace + (this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
@@ -44,7 +56,8 @@ define(function() {
     return {
         view: true,
 
-        templates: ['/admin/media/template/media/info'],
+        templates: ['/admin/media/template/media/info',
+                    '/admin/media/template/media/multiple-edit'],
 
         /**
          * Initializes the collections list
@@ -55,7 +68,16 @@ define(function() {
             this.bindCustomEvents();
             this.sandbox.dom.width(this.$el, 0);
             this.sandbox.dom.height(this.$el, 0);
+
+            // for single edit
             this.media = null;
+            // for multiple edit
+            this.medias = null;
+
+            // stores info-tab html
+            this.$info = null;
+            // stores the multiple edit-form
+            this.$multiple = null;
         },
 
         /**
@@ -63,27 +85,55 @@ define(function() {
          */
         bindCustomEvents: function() {
             this.sandbox.on(EDIT.call(this), this.editMedia.bind(this));
+
+            // emit finished event if overlay gets closed
+            this.sandbox.on('husky.overlay.media-edit.closed', function() {
+                this.sandbox.emit(CLOSED.call(this));
+            }.bind(this));
         },
 
         /**
-         * Shows an overlay to edit a media
-         * @param media {Object} the media model
+         * Shows an overlay to edit media
+         * @param media {Object|Array} the media model or an array with media models
          */
         editMedia: function(media) {
-            this.media = media;
-            this.$info = this.renderTemplate('/admin/media/template/media/info');
-            this.startOverlay();
+            if (this.sandbox.dom.isArray(media)) {
+                this.editMultipleMedia(media);
+            } else {
+                this.editSingleMedia(media);
+            }
         },
 
         /**
-         * Starts the actual overlay
+         * Edits a single media
+         * @param media {Object} the id of the media to edit
          */
-        startOverlay: function() {
+        editSingleMedia: function(media) {
+            this.media = media;
+            this.$info = this.renderTemplate('/admin/media/template/media/info');
+            this.startSingleOverlay();
+        },
+
+        /**
+         * Edits multiple media
+         * @param media {Array} array with the ids of the media to edit
+         */
+        editMultipleMedia: function(data) {
+            this.medias = data;
+            this.$multiple = this.renderTemplate('/admin/media/template/media/multiple-edit');
+            this.startMultipleEditOverlay();
+        },
+
+        /**
+         * Starts the actual overlay for single-edit
+         */
+        startSingleOverlay: function() {
             var $container = this.sandbox.dom.createElement('<div/>');
             this.sandbox.dom.append(this.$el, $container);
             this.sandbox.once('husky.overlay.media-edit.opened', function() {
                 this.sandbox.form.create('#' + constants.infoFormId);
                 this.sandbox.form.setData('#' + constants.infoFormId, this.media);
+                this.startDropzone();
             }.bind(this));
             this.sandbox.start([
                 {
@@ -97,24 +147,92 @@ define(function() {
                         openOnStart: true,
                         removeOnClose: true,
                         instanceName: 'media-edit',
-                        okCallback: this.changeModel.bind(this)
+                        okCallback: this.changeSingleModel.bind(this)
                     }
                 }
             ]);
         },
 
         /**
-         * Maps the overlay inputs back on the model
+         * Starts the actual overlay for multiple-edit
          */
-        changeModel: function() {
+        startMultipleEditOverlay: function() {
+            var $container = this.sandbox.dom.createElement('<div/>');
+            this.sandbox.dom.append(this.$el, $container);
+            this.sandbox.once('husky.overlay.media-multiple-edit.opened', function() {
+                this.sandbox.form.create('#' + constants.multipleEditFormId).initialized.then(function() {
+                    this.sandbox.form.setData('#' + constants.multipleEditFormId, {
+                        records: this.medias
+                    });
+                }.bind(this));
+            }.bind(this));
+            this.sandbox.start([
+                {
+                    name: 'overlay@husky',
+                    options: {
+                        el: $container,
+                        title: this.options.multipleEditTitle,
+                        data: this.$multiple,
+                        openOnStart: true,
+                        removeOnClose: true,
+                        instanceName: 'media-multiple-edit',
+                        okCallback: this.changeMultipleModel.bind(this)
+                    }
+                }
+            ]);
+        },
+
+        /**
+         * Starts the dropzone for changeing the file-version
+         */
+        startDropzone: function() {
+            this.sandbox.start([
+                {
+                    name: 'dropzone@husky',
+                    options: {
+                        el: '#' + constants.dropzoneId,
+                        url: '/admin/api/media/' + this.media.id,
+                        method: 'PUT',
+                        paramName: 'fileVersion',
+                        showOverlay: false,
+                        skin: 'small',
+                        title: this.sandbox.translate('sulu.upload.small-dropzone-title'),
+                        instanceName: 'file-version-' + this.media.id
+                    }
+                }
+            ]);
+        },
+
+        /**
+         * Maps the overlay inputs back on a single model
+         * @returns {Boolean} returns false if form is invalid, true if valid
+         */
+        changeSingleModel: function() {
             if (this.sandbox.form.validate('#' + constants.infoFormId)) {
                 var data = this.sandbox.form.getData('#' + constants.infoFormId);
                 this.media = this.sandbox.util.extend(true, {}, this.media, data);
                 this.sandbox.emit('sulu.media.collections.save-media', this.media);
                 this.media = null;
+                return true;
             } else {
                 return false;
             }
-        }
+        },
+
+        /**
+         * Maps the overlay input back on multiple models
+         * @returns {Boolean} returns false if form is invalid, true if valid
+         */
+        changeMultipleModel: function() {
+            if (this.sandbox.form.validate('#' + constants.multipleEditFormId)) {
+                var data = this.sandbox.form.getData('#' + constants.multipleEditFormId);
+                this.medias = this.sandbox.util.extend(true, [], this.medias, data.records);
+                this.sandbox.emit('sulu.media.collections.save-media', this.medias);
+                this.medias = null;
+                return true;
+            } else {
+                return false;
+            }
+        },
     };
 });

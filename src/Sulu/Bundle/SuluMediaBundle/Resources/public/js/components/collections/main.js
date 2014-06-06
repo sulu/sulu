@@ -314,14 +314,28 @@ define([
             },
 
             /**
-             * Takes the id of a media, loads the model and forwards it to
-             * another component
-             * @param record {Number|String|Array} the id of the media or an array of ids
+             * Edit media. A single one or more at once
+             * @param data {Number|String|Array} the id of the media or an array of ids
              */
-            editMedia: function(record) {
+            editMedia: function(data) {
+                if (this.sandbox.dom.isArray(data)) {
+                    if (data.length === 1) {
+                        this.editSingleMedia(data[0]);
+                    } else {
+                        this.editMultipleMedia(data);
+                    }
+                } else {
+                    this.editSingleMedia(data);
+                }
+            },
+
+            /**
+             * Edits a single media - Takes the id of a media, loads the model and forwards it to
+             * another component
+             * @param record {Number|String} id of the media to edit
+             */
+            editSingleMedia: function(record) {
                 var media;
-                // todo: implement multiple edit
-                record = (typeof record === 'object') ? record[0] : record;
                 // if media exists there is no need to fetch the media again - the local one is up to date
                 if (!this.medias.get(record)) {
                     media = this.getMediaModel(record);
@@ -341,21 +355,67 @@ define([
             },
 
             /**
-             * Takes a media and saves it
-             * @param media {Object} the media object
+             * Edits a multiple - Loads all the media and forwards it to another component
+             * @param records {Array} array with ids of the media to edit
              */
-            saveMedia: function(media) {
-                var model = this.getMediaModel(media.id);
-                model.set(media);
+            editMultipleMedia: function(records) {
+                var mediaList = [],
+                    media,
+                    action = function() {
+                        if (mediaList.length === records.length) {
+                            this.sandbox.emit('sulu.media-edit.edit', mediaList);
+                        }
+                    }.bind(this);
 
-                model.save(null, {
-                    success: function(media) {
-                        this.sandbox.emit(MEDIA_SAVED.call(this), media);
-                    }.bind(this),
-                    error: function() {
-                        this.sandbox.logger.log('Error while saving a single media');
-                    }.bind(this)
-                });
+                // loop through ids - if model is already loaded take it else load it
+                this.sandbox.util.foreach(records, function(mediaId) {
+                    if (!this.medias.get(mediaId)) {
+                        media = this.getMediaModel(mediaId);
+                        media.fetch({
+                            success: function(media) {
+                                mediaList.push(media.toJSON());
+                                action();
+                            }.bind(this),
+                            error: function() {
+                                this.sandbox.logger.log('Error while fetching a single media');
+                            }.bind(this)
+                        });
+                    } else {
+                        mediaList.push(this.getMediaModel(mediaId).toJSON());
+                        action();
+                    }
+                }.bind(this));
+            },
+
+            /**
+             * Takes a media or an array of media and saves it/them
+             * @param media {Object|Array} the media object or an array of media objects
+             */
+            //todo: here the MEDIA_SAVED event is only emited after the last media got saved, because the whole datagrid reloads itself.
+            //todo: emit the event after every save and learn the datagrid to update a single data-record
+            saveMedia: function(media) {
+                var model, length = 0;
+
+                // if passed argument is a single media object make an array with it
+                if (!this.sandbox.dom.isArray(media)) {
+                    media = [media];
+                }
+
+                this.sandbox.util.foreach(media, function(mediaEntity) {
+                    model = this.getMediaModel(mediaEntity.id);
+                    model.set(mediaEntity);
+
+                    model.save(null, {
+                        success: function(savedMedia) {
+                            if (++length === media.length) {
+                                this.sandbox.emit(MEDIA_SAVED.call(this), savedMedia);
+                            }
+                        }.bind(this),
+                        error: function() {
+                            this.sandbox.logger.log('Error while saving a single media');
+                        }.bind(this)
+                    });
+                }.bind(this));
             },
 
             /**
