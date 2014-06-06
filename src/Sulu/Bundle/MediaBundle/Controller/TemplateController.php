@@ -60,4 +60,13 @@ class TemplateController extends Controller
         return $this->render('SuluMediaBundle:Template:collection-new.html.twig');
     }
 
+    /**
+     * renders template for a media in the multiple-edit form
+     * @return Response
+     */
+    public function multipleEditAction()
+    {
+        return $this->render('SuluMediaBundle:Template:media-multiple-edit.html.twig');
+    }
+
 }
