@@ -15,6 +15,7 @@ use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Put;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\ContactBundle\Entity\Account;
+use Sulu\Bundle\ContactBundle\Entity\AccountContact;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\Fax;
 use Sulu\Bundle\ContactBundle\Entity\FaxType;
@@ -157,13 +158,13 @@ class ContactController extends RestController implements ClassResourceInterface
                 }
             }
 
-//            $urls = $contact->getUrls()->toArray();
-//            /** @var Url $url */
-//            foreach ($urls as $url) {
-//                if ($url->getAccounts()->count() == 0 && $url->getContacts()->count() == 1) {
-//                    $em->remove($url);
-//                }
-//            }
+            $urls = $contact->getUrls()->toArray();
+            /** @var Url $url */
+            foreach ($urls as $url) {
+                if ($url->getAccounts()->count() == 0 && $url->getContacts()->count() == 1) {
+                    $em->remove($url);
+                }
+            }
 
             $faxes = $contact->getFaxes()->toArray();
             /** @var Fax $fax */
@@ -247,18 +248,23 @@ class ContactController extends RestController implements ClassResourceInterface
                 if (!$parent) {
                     throw new EntityNotFoundException('SuluContactBundle:Account', $parentData['id']);
                 }
-                $contact->setAccount($parent);
+                // create new account-contact relation
+                $accountContact = new AccountContact();
+                $accountContact->setAccount($parent);
+                $accountContact->setMain(true);
+                $em->persist($accountContact);
+                $contact->addAccountContact($accountContact);
             }
 
             $contact->setCreated(new DateTime());
             $contact->setChanged(new DateTime());
 
-//            $urls = $request->get('urls');
-//            if (!empty($urls)) {
-//                foreach ($urls as $urlData) {
-//                    $this->addUrl($contact, $urlData);
-//                }
-//            }
+            $urls = $request->get('urls');
+            if (!empty($urls)) {
+                foreach ($urls as $urlData) {
+                    $this->addUrl($contact, $urlData);
+                }
+            }
 
             $faxes = $request->get('faxes');
             if (!empty($faxes)) {
@@ -332,6 +338,20 @@ class ContactController extends RestController implements ClassResourceInterface
     }
 
     /**
+     * returns the main account-contact relation
+     * @param Contact $contact
+     * @return AccountContact|bool
+     */
+    private function getMainAccountContacts(Contact $contact) {
+        foreach ($contact->getAccountContacts() as $accountContact) {
+            if ($accountContact->getMain()) {
+                return $accountContact;
+            }
+        }
+        return false;
+    }
+
+    /**
      * @param $id
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
@@ -369,9 +389,25 @@ class ContactController extends RestController implements ClassResourceInterface
                     if (!$parent) {
                         throw new EntityNotFoundException('SuluContactBundle:Account', $parentData['id']);
                     }
-                    $contact->setAccount($parent);
+
+                    // check if account-contact relation exists, or create new
+                    if (sizeof($contact->getAccountContacts()>0)) {
+                        // create new account-contact relation if not existent
+                        $accountContact = new AccountContact();
+                        $accountContact->setAccount($parent);
+                        $accountContact->setMain(true);
+                        $em->persist($accountContact);
+                        $contact->addAccountContact($accountContact);
+                    } else {
+                        $accountContact = $this->getMainAccountContacts($contact);
+                    }
+                    if ($accountContact) {
+                        $accountContact->setAccount($parent);
+                    }
                 } else {
-                    $contact->setAccount(null);
+                    if ($accountContact = $this->getMainAccountContacts($contact)) {
+                        $contact->removeAccountContact($accountContact);
+                    }
                 }
 
                 $contact->setChanged(new DateTime());

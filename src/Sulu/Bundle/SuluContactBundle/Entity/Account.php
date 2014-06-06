@@ -66,11 +66,6 @@ class Account extends ApiEntity
     private $id;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $contacts;
-
-    /**
      * @var \Sulu\Component\Security\UserInterface
      * @Exclude
      */
@@ -160,11 +155,15 @@ class Account extends ApiEntity
     private $tags;
 
     /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $accountContacts;
+
+    /**
      * Constructor
      */
     public function __construct()
     {
-        $this->contacts = new \Doctrine\Common\Collections\ArrayCollection();
         $this->urls = new \Doctrine\Common\Collections\ArrayCollection();
         $this->addresses = new \Doctrine\Common\Collections\ArrayCollection();
         $this->phones = new \Doctrine\Common\Collections\ArrayCollection();
@@ -172,6 +171,7 @@ class Account extends ApiEntity
         $this->notes = new \Doctrine\Common\Collections\ArrayCollection();
         $this->faxes = new \Doctrine\Common\Collections\ArrayCollection();
         $this->tags = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->accountContacts = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -320,39 +320,6 @@ class Account extends ApiEntity
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Add contacts
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Contact $contacts
-     * @return Account
-     */
-    public function addContact(\Sulu\Bundle\ContactBundle\Entity\Contact $contacts)
-    {
-        $this->contacts[] = $contacts;
-
-        return $this;
-    }
-
-    /**
-     * Remove contacts
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Contact $contacts
-     */
-    public function removeContact(\Sulu\Bundle\ContactBundle\Entity\Contact $contacts)
-    {
-        $this->contacts->removeElement($contacts);
-    }
-
-    /**
-     * Get contacts
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getContacts()
-    {
-        return $this->contacts;
     }
 
     /**
@@ -902,5 +869,38 @@ class Account extends ApiEntity
             }
         }
         return $tags;
+    }
+
+    /**
+     * Add accountContacts
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\AccountContact $accountContacts
+     * @return Account
+     */
+    public function addAccountContact(\Sulu\Bundle\ContactBundle\Entity\AccountContact $accountContacts)
+    {
+        $this->accountContacts[] = $accountContacts;
+    
+        return $this;
+    }
+
+    /**
+     * Remove accountContacts
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\AccountContact $accountContacts
+     */
+    public function removeAccountContact(\Sulu\Bundle\ContactBundle\Entity\AccountContact $accountContacts)
+    {
+        $this->accountContacts->removeElement($accountContacts);
+    }
+
+    /**
+     * Get accountContacts
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getAccountContacts()
+    {
+        return $this->accountContacts;
     }
 }
