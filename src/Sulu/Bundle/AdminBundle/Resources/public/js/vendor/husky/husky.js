@@ -25967,7 +25967,11 @@ define('type/husky-input',[
                 },
 
                 getValue: function() {
-                    return this.$el.find('input').val();
+                    if (this.$el.data('auraSkin') === 'date') {
+                        return this.$el.data('value');
+                    } else {
+                        return this.$el.find('input').val();
+                    }
                 },
 
                 needsValidation: function() {
@@ -29561,8 +29565,7 @@ define('husky_components/datagrid/decorators/thumbnail-view',[],function() {
          * @param id {Number|String} the identifier of the thumbnail to bind events on
          */
         bindThumbnailDomEvents: function(id) {
-            this.sandbox.dom.on(this.$thumbnails[id], 'click', function(event) {
-                this.sandbox.dom.preventDefault(event);
+            this.sandbox.dom.on(this.$thumbnails[id], 'click', function() {
                 this.toggleItemSelected(id);
             }.bind(this));
 
@@ -29595,7 +29598,9 @@ define('husky_components/datagrid/decorators/thumbnail-view',[],function() {
          */
         selectItem: function(id, onlyView) {
             this.sandbox.dom.addClass(this.$thumbnails[id], constants.selectedClass);
-            this.sandbox.dom.prop(this.sandbox.dom.find('input[type="checkbox"]', this.$thumbnails[id]), 'checked', true);
+            if (!this.sandbox.dom.is(this.sandbox.dom.find('input[type="checkbox"]', this.$thumbnails[id]), ':checked')) {
+                this.sandbox.dom.prop(this.sandbox.dom.find('input[type="checkbox"]', this.$thumbnails[id]), 'checked', true);
+            }
             if (onlyView !== true) {
                 this.datagrid.setItemSelected.call(this.datagrid, id);
             }
@@ -29607,7 +29612,9 @@ define('husky_components/datagrid/decorators/thumbnail-view',[],function() {
          */
         unselectItem: function(id) {
             this.sandbox.dom.removeClass(this.$thumbnails[id], constants.selectedClass);
-            this.sandbox.dom.prop(this.sandbox.dom.find('input[type="checkbox"]', this.$thumbnails[id]), 'checked', false);
+            if (this.sandbox.dom.is(this.sandbox.dom.find('input[type="checkbox"]', this.$thumbnails[id]), ':checked')) {
+                this.sandbox.dom.prop(this.sandbox.dom.find('input[type="checkbox"]', this.$thumbnails[id]), 'checked', false);
+            }
             this.datagrid.setItemUnselected.call(this.datagrid, id);
         },
 
@@ -31969,9 +31976,9 @@ define('__component__$matrix@husky',[],function() {
                         title = '';
                     }
                     $span = sandbox.dom.createElement(
-                        '<span ' + title + ' class="fa-' + this.options.values.horizontal[j] + ' matrix-icon pointer"/>'
+                        '<span ' + title + ' class="fa-' + this.options.values.horizontal[j].icon + ' matrix-icon pointer"/>'
                     );
-                    sandbox.dom.data($span, 'value', this.options.values.horizontal[j]);
+                    sandbox.dom.data($span, 'value', this.options.values.horizontal[j].value);
                     sandbox.dom.data($span, 'section', this.options.values.vertical[i]);
 
                     // set activated if set in delivered data
@@ -40500,6 +40507,7 @@ define('__component__$toggler@husky',[], function() {
  * @params {Function} [options.removeFileCallback] callback which gets called after a file got removed. First parameter is the file.
  * @params {Object} [options.pluginOptions] Options to pass to the dropzone-plugin to completely override all options set by husky. Use with care.
  * @params {Boolean} [options.showOverlay] if true the dropzone will be displayed in an overlay if its not visible any more or the passed scroll-top is reached
+ * @params {String} [options.skin] skin class for the dropzone. currently available: 'small' or '' (default)
  */
 define('__component__$dropzone@husky',[], function () {
 
@@ -40525,7 +40533,8 @@ define('__component__$dropzone@husky',[], function () {
             pluginOptions: {},
             fadeOutDuration: 200, //ms
             fadeOutDelay: 1500, //ms
-            showOverlay: true
+            showOverlay: true,
+            skin: ''
         },
 
         constants = {
@@ -40542,7 +40551,7 @@ define('__component__$dropzone@husky',[], function () {
                 '<div class="' + constants.descriptionClass + '">',
                 '<div class="fa-<%= icon %> icon"></div>',
                 '<span class="title"><%= title %></span>',
-                '<span><%= description %></span>',
+                '<span class="addition"><%= description %></span>',
                 '</div>',
                 '<div class="' + constants.uploadedItemContainerClass + '"></div>'
             ].join(''),
@@ -40741,6 +40750,7 @@ define('__component__$dropzone@husky',[], function () {
                 icon: this.options.descriptionIcon,
                 instanceName: this.options.instanceName
             }));
+            this.sandbox.dom.addClass(this.$dropzone, this.options.skin);
             this.sandbox.dom.append(this.$el, this.$dropzone);
             this.startDropzone();
         },
@@ -41007,10 +41017,11 @@ define('__component__$input@husky',[], function () {
          */
         initialize: function () {
             this.sandbox.logger.log('initialize', this);
+            var defaults = defaults;
 
             // merge skin defaults with defaults
             if (!!this.options.skin && !!skins[this.options.skin]) {
-                var defaults = this.sandbox.util.extend(true, {}, defaults, skins[this.options.skin]);
+                defaults = this.sandbox.util.extend(true, {}, defaults, skins[this.options.skin]);
             }
             // merge defaults, skin defaults and options
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
@@ -41129,7 +41140,10 @@ define('__component__$input@husky',[], function () {
         renderDatePicker: function() {
             this.sandbox.dom.addClass(this.$el, constants.datepickerClass);
             this.sandbox.dom.attr(this.input.$input, 'placeholder', this.sandbox.globalize.getDatePattern());
-            this.sandbox.datepicker.init(this.input.$input, this.options.datepickerOptions);
+            this.sandbox.datepicker.init(this.input.$input, this.options.datepickerOptions).on('changeDate', function(event) {
+                this.setDatepickerValueAttr(event.date);
+            }.bind(this));
+            this.updateValue();
         },
 
         /**
@@ -41157,10 +41171,36 @@ define('__component__$input@husky',[], function () {
             if (this.options.renderMethod === 'colorpicker') {
                 this.sandbox.colorpicker.value(this.input.$input, value);
             } else if (this.options.renderMethod === 'datepicker') {
-                this.sandbox.datepicker.setValue(this.input.$input, value);
+                // if a date-time was passed, extract the date
+                value = this.isoToDate(value);
+                value = new Date(value);
+                this.sandbox.datepicker.setDate(this.input.$input, value);
+                this.setDatepickerValueAttr(this.sandbox.datepicker.getDate(this.input.$input));
             } else {
                 this.sandbox.dom.val(this.input.$input, value);
             }
+        },
+
+        /**
+         * Takes a iso date-time string and returns only the date part
+         * @param datetime {String} iso-datetime-string
+         */
+        isoToDate: function(datetime) {
+            if (datetime.indexOf('T') > 0) {
+                return datetime.substr(0, datetime.indexOf('T'));
+            }
+            return datetime;
+        },
+
+        /**
+         * Sets the value attribute for the datepicker
+         * @param date {Object} a UTC date pbject
+         */
+        setDatepickerValueAttr: function(date) {
+            date = date.getFullYear() + '-' +
+                   ('0' + (date.getMonth()+1)).slice(-2) + '-' +
+                   ('0' + date.getDate()).slice(-2);
+            this.sandbox.dom.data(this.$el, 'value', date);
         },
 
         /**
@@ -44991,6 +45031,22 @@ define("datepicker-zh-TW", function(){});
 
                 setValue: function(selector, value) {
                     return app.core.dom.$(selector).datepicker('update', value);
+                },
+
+                getUTCDate: function(selector) {
+                    return app.core.dom.$(selector).datepicker('getUTCDate');
+                },
+
+                getDate: function(selector) {
+                    return app.core.dom.$(selector).datepicker('getDate');
+                },
+
+                setUTCDate: function(selector, date) {
+                    return app.core.dom.$(selector).datepicker('setUTCDate', date);
+                },
+
+                setDate: function(selector, date) {
+                    return app.core.dom.$(selector).datepicker('setDate', date);
                 }
             };
         }
