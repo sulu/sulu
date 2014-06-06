@@ -201,7 +201,6 @@ class AccountController extends RestController implements ClassResourceInterface
 
             $account->setType($request->get('type'));
 
-
             $disabled = $request->get('disabled');
             if (is_null($disabled)) {
                 $disabled = false;

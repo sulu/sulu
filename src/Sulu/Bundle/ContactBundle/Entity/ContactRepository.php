@@ -30,7 +30,8 @@ class ContactRepository extends EntityRepository
     {
         // create basic query
         $qb = $this->createQueryBuilder('u')
-            ->leftJoin('u.account', 'account')
+            ->leftJoin('u.accountContacts', 'accountContacts', 'WITH', 'accountContacts.main = true')
+            ->leftJoin('accountContacts.account', 'account')
             ->leftJoin('u.activities', 'activities')
             ->leftJoin('activities.activityStatus', 'activityStatus')
             ->leftJoin('u.addresses', 'addresses')
@@ -46,6 +47,8 @@ class ContactRepository extends EntityRepository
             ->leftJoin('phones.phoneType', 'phoneType')
             ->leftJoin('u.tags', 'tags')
             ->leftJoin('u.urls', 'urls')
+            ->addSelect('accountContacts')
+            ->addSelect('account')
             ->addSelect('urls')
             ->addSelect('partial tags.{id,name}')
             ->addSelect('account')
@@ -86,7 +89,8 @@ class ContactRepository extends EntityRepository
     {
         // create basic query
         $qb = $this->createQueryBuilder('u')
-            ->leftJoin('u.account', 'account')
+            ->leftJoin('u.accountContacts', 'accountContacts', 'WITH', 'accountContacts.main = true')
+            ->leftJoin('accountContacts.account', 'account')
             ->leftJoin('u.activities', 'activities')
             ->leftJoin('activities.activityStatus', 'activityStatus')
             ->leftJoin('u.addresses', 'addresses')
@@ -112,6 +116,7 @@ class ContactRepository extends EntityRepository
             ->leftJoin('u.urls', 'urls')
             ->addSelect('urls')
             ->addSelect('tags')
+            ->addSelect('accountContacts')
             ->addSelect('account')
             ->addSelect('activities')
             ->addSelect('activityStatus')
@@ -193,7 +198,7 @@ class ContactRepository extends EntityRepository
      */
     public function findByAccountId($accountId, $excludeContactId = null ) {
         $qb = $this->createQueryBuilder('c')
-            ->join('c.account','a', 'WITH', 'a.id = :accountId')
+            ->join('u.accountContacts', 'accountContacts', 'WITH', 'accountContacts.idAccounts = :accountId AND accountContacts.main = true')
             ->setParameter('accountId', $accountId);
 
         if (!is_null($excludeContactId)) {
