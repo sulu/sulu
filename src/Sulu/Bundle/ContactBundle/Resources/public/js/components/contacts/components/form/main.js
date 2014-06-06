@@ -12,7 +12,7 @@ define([], function() {
     'use strict';
 
     var form = '#contact-form',
-        fields = ['urls', 'emails', 'faxes', 'phones', 'notes', 'addresses'],
+        fields = ['urls', 'emails', 'faxes', 'phones', 'notes'],
 
         constants = {
             tagsId: '#tags'
