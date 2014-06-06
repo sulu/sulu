@@ -2,23 +2,6 @@
     <div id="addresses">
         <div class="addresses-item m-bottom-10">
 
-
-            <!-- TODO remove old address type -->
-            <!--<div class="grid-row m-bottom-0">-->
-                <!--<div class="m-bottom-10 pull-left">-->
-                    <!--<input type="hidden" data-mapper-property="id" class="id-value"/>-->
-                    <!--<label class="pull-left hidden">-->
-                            <!--<span class=""-->
-                                  <!--data-form="true"-->
-                                  <!--data-mapper-property="addressType"-->
-                                  <!--data-type="label"-->
-                                  <!--data-type-label="name"-->
-                                  <!--data-type-id="id">-->
-                            <!--</span>-->
-                    <!--</label>-->
-                <!--</div>-->
-            <!--</div>-->
-
             <div class="grid-row small">
                 <div class="grid-col-6">
                     <label for="addressType"><%=translate('contact.address.type')%></label>
@@ -39,7 +22,14 @@
 
             <div class="grid-row small">
                 <div class="grid-col-6">
-                    <div id="addressType"></div>
+                    <div id="addressType"
+                         data-mapper-property="addressType"
+                         data-type="husky-select"
+                         data-type-label="name"
+                         data-type-required="name"
+                         data-aura-pre-selected-elements="[]"
+                         data-validation-required="true"
+                         data-form="true"></div>
                 </div>
 
                 <div class="grid-col-6 form-horizontal">
