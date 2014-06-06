@@ -78,6 +78,8 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
             this.sandbox.on('sulu.contact-form.add-required', addRequires.bind(this));
             this.sandbox.on('sulu.contact-form.is.initialized', isInitialized.bind(this));
 
+            this.sandbox.on('husky.overlay.add-address.initialized', initialzeDropdownForAddressTypes.bind(this));
+
             // bind events for add-fields overlay
             bindAddEvents.call(this);
         },
@@ -97,6 +99,34 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
         },
 
         /**
+         * Initializes the husky select component when overlay is loaded
+         */
+        initialzeDropdownForAddressTypes = function(){
+
+            // TODO
+            var preselected = [];
+
+            if(!!this.data.addressType){
+                preselected.push(this.data.addressType.id);
+            }
+
+            this.sandbox.start([
+                {
+                    name: 'select@husky',
+                    options: {
+                        el: '#addressType',
+                        instanceName: 'addressTypes',
+                        data: this.options.fieldTypes.address,
+                        preSelectedElements: preselected,
+                        valueName: 'name',
+                        multipleSelect: false,
+                        emitValues: true
+                    }
+                }
+            ]);
+        },
+
+        /**
          * Removes the clicked address
          */
         removeAddress = function($el) {
@@ -109,20 +139,6 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
          * Triggers the process to add a new address
          */
         addAddress = function() {
-//            createAddOverlay.call(this);
-//            addAddressOkClicked.call(this);
-//
-//            var data = this.dropdownDataArray[fieldId],
-//                dataType = getDataById(this.dropdownDataArray[fieldId].items, fieldTypeId),
-//                dataObject = {};
-//
-//            dataObject[data.type] = '';
-//            dataObject[data.type + 'Type'] = {
-//                id: fieldTypeId,
-//                name: dataType.name
-//            };
-//            dataObject.attributes = {};
-
             createAddressOverlay.call(this, null);
         },
 
@@ -524,8 +540,6 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
                 countries: this.options.fieldTypes.countries
             });
 
-            // TODO
-            // parse template
             addressTemplate = this.sandbox.util.template(AddressForm, data);
 
             // create container for overlay
@@ -556,34 +570,6 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
                 }
             ]);
 
-//            this.sandbox.start([
-//                {
-//                    name: 'select@husky',
-//                    options: {
-//                        el: '#addressType',
-//                        defaultLabel: this.sandbox.translate('contact.address.type.select'),
-//                        valueName:
-//                    }
-//                }
-//            ]);
-//
-//            data-mapper-property="addressType"-->
-//                <!--data-type="label"-->
-//                <!--data-type-label="name"-->
-//                <!--data-type-id="id">-->
-//
-//            data-aura-data="[]"
-//            data-aura-value-name="translation"
-//            data-aura-multiple-select="false"
-//            data-aura-instance-name="addressType"
-//            data-type-label="translation"
-//            data-type-required="translation"
-//            data-mapper-property="addressType"
-//            data-type="husky-select"
-//            data-validation-required="true"
-//            data-aura-pre-selected-elements="[]"
-//            data-form="true">
-
             // after everything was added to dom
             this.sandbox.on('husky.overlay.add-address.opened', function() {
                 // start form and set data
@@ -593,19 +579,8 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
                 }.bind(this));
             }.bind(this));
 
-//            // use husky select
-//            this.sandbox.start([
-//                {
-//                    name: 'select@husky',
-//                    options: {
-//                        el: '#country-select',
-//                        instanceName: 'country-select',
-//                        data: this.options.fieldTypes['countries'],
-//                        preSelectedElements: !!data.country ? [data.country.id]: [this.options.defaultTypes.country.id]
-//                    }
-//                }
-//            ]);
 
+            this.data = data;
         },
 
     // removes listeners of addressform
