@@ -102,6 +102,16 @@ class AccountController extends RestController implements ClassResourceInterface
     );
 
     /**
+     * @var
+     */
+    protected $currentAccount;
+
+    /**
+     * @var
+     */
+    protected $newPrimaryAddress;
+
+    /**
      * {@inheritdoc}
      */
     protected $bundlePrefix = 'contact.accounts.';
@@ -270,6 +280,7 @@ class AccountController extends RestController implements ClassResourceInterface
                 }
             }
 
+            $this->setNewPrimaryAddress($this->currentAccount, $this->newPrimaryAddress);
             $em->persist($account);
 
             $em->flush();
@@ -339,6 +350,7 @@ class AccountController extends RestController implements ClassResourceInterface
                     throw new RestException('Updating dependencies is not possible', 0);
                 }
 
+                $this->setNewPrimaryAddress($this->currentAccount, $this->newPrimaryAddress);
                 $em->flush();
 
                 $view = $this->view($account, 200);
@@ -884,8 +896,8 @@ class AccountController extends RestController implements ClassResourceInterface
             return true;
         };
 
-        $update = function ($address, $matchedEntry) {
-            return $this->updateAddress($address, $matchedEntry);
+        $update = function ($address, $matchedEntry) use ($account) {
+            return $this->updateAddress($account, $address, $matchedEntry);
         };
 
         $add = function ($address) use ($account) {
@@ -934,7 +946,14 @@ class AccountController extends RestController implements ClassResourceInterface
             $address->setState($addressData['state']);
 
             if (isset($addressData['primaryAddress'])) {
-                $address->setPrimaryAddress($this->getBooleanValue($addressData['primaryAddress']));
+                // remember changed primary address
+                $value = $this->getBooleanValue($addressData['primaryAddress']);
+                if($value && !$address->getPrimaryAddress()) {
+                    $this->currentAccount = $account;
+                    $this->newPrimaryAddress = $address;
+                } else if(!$value) {
+                    $address->setPrimaryAddress($value);
+                }
             }
             if (isset($addressData['billingAddress'])) {
                 $address->setBillingAddress($this->getBooleanValue($addressData['billingAddress']));
@@ -968,12 +987,13 @@ class AccountController extends RestController implements ClassResourceInterface
 
     /**
      * Updates the given address
+     * @param $account
      * @param Address $address The phone object to update
      * @param mixed $entry The entry with the new data
      * @return bool True if successful, otherwise false
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      */
-    protected function updateAddress(Address $address, $entry)
+    protected function updateAddress(Account $account, Address $address, $entry)
     {
         $success = true;
         $addressTypeEntity = 'SuluContactBundle:AddressType';
@@ -1002,7 +1022,14 @@ class AccountController extends RestController implements ClassResourceInterface
                 $address->setAddressType($addressType);
 
                 if (isset($entry['primaryAddress'])) {
-                    $address->setPrimaryAddress($this->getBooleanValue($entry['primaryAddress']));
+                    // remember changed primary address
+                    $value = $this->getBooleanValue($entry['primaryAddress']);
+                    if($value && !$address->getPrimaryAddress()) {
+                        $this->currentAccount = $account;
+                        $this->newPrimaryAddress = $address;
+                    } else if(!$value) {
+                        $address->setPrimaryAddress($value);
+                    }
                 }
                 if (isset($entry['billingAddress'])) {
                     $address->setBillingAddress($this->getBooleanValue($entry['billingAddress']));
@@ -1027,6 +1054,24 @@ class AccountController extends RestController implements ClassResourceInterface
         }
 
         return $success;
+    }
+
+    /**
+     * Sets primary address flag of all addresses of an account to false and sets new primary
+     * @param $account
+     * @param $address
+     */
+    protected function setNewPrimaryAddress(Account $account, Address $address)
+    {
+        if ($account && $address) {
+
+            $addresses = $account->getAddresses();
+            /** @var Address $address */
+            foreach ($addresses as $addr) {
+                $addr->setPrimaryAddress(false);
+            }
+            $address->setPrimaryAddress(true);
+        }
     }
 
     /**
