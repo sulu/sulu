@@ -103,21 +103,20 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
          */
         initialzeDropdownForAddressTypes = function(){
 
-            // TODO
-            var preselected = [];
-
-            if(!!this.data.addressType){
-                preselected.push(this.data.addressType.id);
-            }
+//            var preselected = [];
+//            if(!!this.data.addressType){
+//                preselected.push(this.data.addressType.id);
+//            }
 
             this.sandbox.start([
                 {
                     name: 'select@husky',
                     options: {
                         el: '#addressType',
+                        defaultLabel: this.sandbox.translate('contact.address.type.select'),
                         instanceName: 'addressTypes',
                         data: this.options.fieldTypes.address,
-                        preSelectedElements: preselected,
+                        preSelectedElements: [],
                         valueName: 'name',
                         multipleSelect: false,
                         emitValues: true
@@ -687,6 +686,7 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
             this.$addOverlay = null;
             this.dropdownDataArray = [];
             this.editFieldsData = [];
+            this.data = null;
 
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 

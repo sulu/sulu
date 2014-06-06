@@ -892,13 +892,14 @@ class ContactController extends RestController implements ClassResourceInterface
             $address->setAddressType($addressType);
 
             if (isset($entry['primaryAddress'])) {
-                $address->setPrimaryAddress($entry['primaryAddress']);
+
+                $address->setPrimaryAddress($this->getBooleanValue($entry['primaryAddress']));
             }
             if (isset($entry['billingAddress'])) {
-                $address->setBillingAddress($entry['billingAddress']);
+                $address->setBillingAddress($this->getBooleanValue($entry['billingAddress']));
             }
             if (isset($entry['deliveryAddress'])) {
-                $address->setDeliveryAddress($entry['deliveryAddress']);
+                $address->setDeliveryAddress($this->getBooleanValue($entry['deliveryAddress']));
             }
             if (isset($entry['postboxCity'])) {
                 $address->setPostboxCity($entry['postboxCity']);
@@ -916,6 +917,20 @@ class ContactController extends RestController implements ClassResourceInterface
         }
 
         return $success;
+    }
+
+    /**
+     * @param $value
+     * @return bool
+     */
+    protected function getBooleanValue($value){
+        if(is_string($value)){
+            return $value === 'true' ? true : false;
+        } else if(is_bool($value)){
+            return $value;
+        } else if(is_numeric($value)){
+            return $value === 1 ? true : false;
+        }
     }
 
     /**
