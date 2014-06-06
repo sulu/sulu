@@ -12,7 +12,7 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
     'use strict';
 
     var defaults = {
-            fields: ['address', 'email', 'fax', 'phone', 'url'],
+            fields: ['email', 'fax', 'phone', 'url'],
             fieldTypes: [],
             defaultTypes: [],
             trigger: '.contact-options-toggle'
