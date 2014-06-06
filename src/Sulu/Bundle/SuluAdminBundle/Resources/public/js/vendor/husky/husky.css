@@ -9655,7 +9655,7 @@ a.btn-black, a.btn-highlight {
   -o-transition: opacity 300ms;
   transition: opacity 300ms;
 }
-/* line 22, ../scss/modules/dropzone.scss */
+/* line 25, ../scss/modules/dropzone.scss */
 .husky-dropzone .description {
   text-align: center;
   height: 130px;
@@ -9668,7 +9668,7 @@ a.btn-black, a.btn-highlight {
   -o-transition: margin-top 300ms;
   transition: margin-top 300ms;
 }
-/* line 31, ../scss/modules/dropzone.scss */
+/* line 34, ../scss/modules/dropzone.scss */
 .husky-dropzone .description .icon {
   color: #52b6ca;
   font-size: 72px;
@@ -9676,16 +9676,16 @@ a.btn-black, a.btn-highlight {
   margin-bottom: 5px;
   margin-top: 10px;
 }
-/* line 38, ../scss/modules/dropzone.scss */
+/* line 41, ../scss/modules/dropzone.scss */
 .husky-dropzone .description .title {
   font-size: 24px;
   line-height: 24px;
 }
-/* line 42, ../scss/modules/dropzone.scss */
+/* line 45, ../scss/modules/dropzone.scss */
 .husky-dropzone .description span {
   display: block;
 }
-/* line 47, ../scss/modules/dropzone.scss */
+/* line 50, ../scss/modules/dropzone.scss */
 .husky-dropzone .upload-items {
   height: 130px;
   padding: 20px 0 0 20px;
@@ -9696,7 +9696,7 @@ a.btn-black, a.btn-highlight {
   content: ' ';
   display: block;
 }
-/* line 52, ../scss/modules/dropzone.scss */
+/* line 55, ../scss/modules/dropzone.scss */
 .husky-dropzone .upload-items .item {
   width: 70px;
   height: 90px;
@@ -9707,15 +9707,15 @@ a.btn-black, a.btn-highlight {
   margin-bottom: 20px;
   float: left;
 }
-/* line 62, ../scss/modules/dropzone.scss */
+/* line 65, ../scss/modules/dropzone.scss */
 .husky-dropzone .upload-items .item .success-content {
   display: none;
 }
-/* line 65, ../scss/modules/dropzone.scss */
+/* line 68, ../scss/modules/dropzone.scss */
 .husky-dropzone .upload-items .item .loading-content {
   padding-top: 20px;
 }
-/* line 68, ../scss/modules/dropzone.scss */
+/* line 71, ../scss/modules/dropzone.scss */
 .husky-dropzone .upload-items .item .file-size {
   text-align: center;
   font-size: 9px;
@@ -9724,11 +9724,11 @@ a.btn-black, a.btn-highlight {
   padding-top: 15px;
   padding-bottom: 5px;
 }
-/* line 75, ../scss/modules/dropzone.scss */
+/* line 78, ../scss/modules/dropzone.scss */
 .husky-dropzone .upload-items .item .file-size * {
   font-weight: normal;
 }
-/* line 79, ../scss/modules/dropzone.scss */
+/* line 82, ../scss/modules/dropzone.scss */
 .husky-dropzone .upload-items .item .progress {
   width: 50px;
   height: 6px;
@@ -9737,13 +9737,13 @@ a.btn-black, a.btn-highlight {
   border-radius: 3px;
   overflow: hidden;
 }
-/* line 86, ../scss/modules/dropzone.scss */
+/* line 89, ../scss/modules/dropzone.scss */
 .husky-dropzone .upload-items .item .progress .bar {
   height: 100%;
   background: #52b6ca;
   width: 0%;
 }
-/* line 92, ../scss/modules/dropzone.scss */
+/* line 95, ../scss/modules/dropzone.scss */
 .husky-dropzone .upload-items .item .icon {
   height: 25px;
   color: #999999;
@@ -9755,20 +9755,20 @@ a.btn-black, a.btn-highlight {
   -moz-animation: ROTATE-ANIMATION 1s linear 0 infinite;
   -o-animation: ROTATE-ANIMATION 1s linear 0 infinite;
 }
-/* line 103, ../scss/modules/dropzone.scss */
+/* line 106, ../scss/modules/dropzone.scss */
 .husky-dropzone .upload-items .item .image {
   padding: 10px 10px 5px 10px;
   height: 65px;
   line-height: 45px;
   text-align: center;
 }
-/* line 108, ../scss/modules/dropzone.scss */
+/* line 111, ../scss/modules/dropzone.scss */
 .husky-dropzone .upload-items .item .image img {
   vertical-align: bottom;
   max-width: 100%;
   max-height: 100%;
 }
-/* line 114, ../scss/modules/dropzone.scss */
+/* line 117, ../scss/modules/dropzone.scss */
 .husky-dropzone .upload-items .item .tick {
   text-align: center;
   color: #999999;
@@ -9776,24 +9776,24 @@ a.btn-black, a.btn-highlight {
   line-height: 15px;
   display: block;
 }
-/* line 122, ../scss/modules/dropzone.scss */
+/* line 125, ../scss/modules/dropzone.scss */
 .husky-dropzone .upload-items .item.dz-success {
   border-color: #cccccc;
   background: transparent;
 }
-/* line 125, ../scss/modules/dropzone.scss */
+/* line 128, ../scss/modules/dropzone.scss */
 .husky-dropzone .upload-items .item.dz-success .success-content {
   display: block;
 }
-/* line 128, ../scss/modules/dropzone.scss */
+/* line 131, ../scss/modules/dropzone.scss */
 .husky-dropzone .upload-items .item.dz-success .loading-content {
   display: none;
 }
-/* line 136, ../scss/modules/dropzone.scss */
+/* line 139, ../scss/modules/dropzone.scss */
 .husky-dropzone.dz-drag-hover {
   opacity: 0.5;
 }
-/* line 140, ../scss/modules/dropzone.scss */
+/* line 143, ../scss/modules/dropzone.scss */
 .husky-dropzone.dropped {
   padding-bottom: 0;
   -webkit-transition: padding 300ms;
@@ -9801,9 +9801,44 @@ a.btn-black, a.btn-highlight {
   -o-transition: padding 300ms;
   transition: padding 300ms;
 }
-/* line 144, ../scss/modules/dropzone.scss */
+/* line 147, ../scss/modules/dropzone.scss */
 .husky-dropzone.dropped .description {
   margin-top: -150px;
+}
+/* line 152, ../scss/modules/dropzone.scss */
+.husky-dropzone.small {
+  padding-bottom: 0;
+  height: 70px;
+  -webkit-transition: height 300ms;
+  -moz-transition: height 300ms;
+  -o-transition: height 300ms;
+  transition: height 300ms;
+}
+/* line 157, ../scss/modules/dropzone.scss */
+.husky-dropzone.small .addition {
+  display: none;
+}
+/* line 160, ../scss/modules/dropzone.scss */
+.husky-dropzone.small .description {
+  height: 70px;
+}
+/* line 163, ../scss/modules/dropzone.scss */
+.husky-dropzone.small .description .icon {
+  font-size: 25px;
+  line-height: 25px;
+}
+/* line 167, ../scss/modules/dropzone.scss */
+.husky-dropzone.small .description .title {
+  font-size: 18px;
+  line-height: 18px;
+}
+/* line 172, ../scss/modules/dropzone.scss */
+.husky-dropzone.small .upload-items {
+  height: 70px;
+}
+/* line 176, ../scss/modules/dropzone.scss */
+.husky-dropzone.small.dropped {
+  height: 130px;
 }
 
 /* line 5, ../scss/modules/input.scss */
@@ -9838,7 +9873,11 @@ a.btn-black, a.btn-highlight {
   display: inline-block;
   margin-top: 2px;
 }
-/* line 34, ../scss/modules/input.scss */
+/* line 33, ../scss/modules/input.scss */
+.husky-input .front span {
+  padding-top: 1px;
+}
+/* line 37, ../scss/modules/input.scss */
 .husky-input .back {
   position: absolute;
   top: 0px;
@@ -9849,38 +9888,38 @@ a.btn-black, a.btn-highlight {
   color: #999999;
   font-size: 16px;
 }
-/* line 44, ../scss/modules/input.scss */
+/* line 47, ../scss/modules/input.scss */
 .husky-input .input {
   overflow: hidden;
   padding-left: 5px;
 }
-/* line 47, ../scss/modules/input.scss */
+/* line 50, ../scss/modules/input.scss */
 .husky-input .input input {
   height: 28px;
   border: none;
   outline-width: 0;
   width: 100%;
 }
-/* line 54, ../scss/modules/input.scss */
+/* line 57, ../scss/modules/input.scss */
 .husky-input .text {
   font-size: 14px;
 }
-/* line 59, ../scss/modules/input.scss */
+/* line 62, ../scss/modules/input.scss */
 .husky-input.colorpicker .input {
   overflow: visible;
 }
-/* line 62, ../scss/modules/input.scss */
+/* line 65, ../scss/modules/input.scss */
 .husky-input.colorpicker .front {
   color: black;
   cursor: pointer;
 }
-/* line 69, ../scss/modules/input.scss */
+/* line 72, ../scss/modules/input.scss */
 .husky-input.pickdate .front {
   color: black;
   cursor: pointer;
 }
 
-/* line 78, ../scss/modules/input.scss */
+/* line 81, ../scss/modules/input.scss */
 .husky-validate-error .husky-input input {
   height: 26px;
 }
