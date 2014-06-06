@@ -1696,4 +1696,233 @@ class AccountControllerTest extends DatabaseTestCase
         $this->assertEquals('6850',$response->addresses[0]->postboxPostcode);
         $this->assertEquals('4711',$response->addresses[0]->postboxNumber);
     }
+
+    public function testPrimaryAddressHandlingPost()
+    {
+        $client = $this->createTestClient();
+
+        $client->request(
+            'POST',
+            '/api/accounts',
+            array(
+                'name' => 'ExampleCompany',
+                'parent' => array('id' => self::$account->getId()),
+                'type' => Account::TYPE_BASIC,
+                'urls' => array(
+                    array(
+                        'url' => 'http://example.company.com',
+                        'urlType' => array(
+                            'id' => '1',
+                            'name' => 'Private'
+                        )
+                    )
+                ),
+                'emails' => array(
+                    array(
+                        'email' => 'erika.mustermann@muster.at',
+                        'emailType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        )
+                    ),
+                    array(
+                        'email' => 'erika.mustermann@muster.de',
+                        'emailType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        )
+                    )
+                ),
+                'addresses' => array(
+                    array(
+                        'street' => 'Musterstraße',
+                        'number' => '1',
+                        'zip' => '0000',
+                        'city' => 'Musterstadt',
+                        'state' => 'Musterstate',
+                        'country' => array(
+                            'id' => 1,
+                            'name' => 'Musterland',
+                            'code' => 'ML'
+                        ),
+                        'addressType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        ),
+                        'billingAddress' => true,
+                        'primaryAddress' => true,
+                        'deliveryAddress' => false,
+                        'postboxCity' => 'Dornbirn',
+                        'postboxPostcode' => '6850',
+                        'postboxNumber' => '4711',
+                    ),
+                    array(
+                        'street' => 'Musterstraße',
+                        'number' => '1',
+                        'zip' => '0000',
+                        'city' => 'Musterstadt',
+                        'state' => 'Musterstate',
+                        'country' => array(
+                            'id' => 1,
+                            'name' => 'Musterland',
+                            'code' => 'ML'
+                        ),
+                        'addressType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        ),
+                        'billingAddress' => true,
+                        'primaryAddress' => true,
+                        'deliveryAddress' => false,
+                        'postboxCity' => 'Dornbirn',
+                        'postboxPostcode' => '6850',
+                        'postboxNumber' => '4711',
+                    )
+                )
+            )
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(true,$response->addresses[0]->primaryAddress);
+        $this->assertEquals(false,$response->addresses[1]->primaryAddress);
+
+        $client->request('GET', '/api/accounts/' . $response->id);
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(true,$response->addresses[0]->primaryAddress);
+        $this->assertEquals(false,$response->addresses[1]->primaryAddress);
+
+    }
+
+    public function testPrimaryAddressHandlingPut()
+    {
+        $client = $this->createTestClient();
+        $client->request(
+            'PUT',
+            '/api/accounts/1',
+            array(
+                'name' => 'ExampleCompany',
+                'urls' => array(
+                    array(
+                        'id' => 1,
+                        'url' => 'http://example.company.com',
+                        'urlType' => array(
+                            'id' => '1',
+                            'name' => 'Private'
+                        )
+                    ),
+                    array(
+                        'url' => 'http://test.company.com',
+                        'urlType' => array(
+                            'id' => '1',
+                            'name' => 'Private'
+                        )
+                    )
+                ),
+                'emails' => array(
+                    array(
+                        'email' => 'office@company.com',
+                        'emailType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        )
+                    ),
+                    array(
+                        'email' => 'erika.mustermann@company.com',
+                        'emailType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        )
+                    )
+                ),
+                'addresses' => array(
+                    array(
+                        'id' => '1',
+                        'street' => 'Bahnhofstraße',
+                        'number' => '2',
+                        'zip' => '0022',
+                        'city' => 'Dornbirn',
+                        'state' => 'state1',
+                        'country' => array(
+                            'id' => 1,
+                            'name' => 'Musterland',
+                            'code' => 'ML'
+                        ),
+                        'addressType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        ),
+                        'billingAddress' => true,
+                        'primaryAddress' => true,
+                        'deliveryAddress' => false,
+                        'postboxCity' => 'Dornbirn',
+                        'postboxPostcode' => '6850',
+                        'postboxNumber' => '4711'
+                    ),
+                    array(
+                        'street' => 'Rathausgasse 1',
+                        'number' => '3',
+                        'zip' => '2222',
+                        'city' => 'Dornbirn',
+                        'state' => 'state1',
+                        'country' => array(
+                            'id' => 1,
+                            'name' => 'Musterland',
+                            'code' => 'ML'
+                        ),
+                        'addressType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        ),
+                        'billingAddress' => true,
+                        'primaryAddress' => true,
+                        'deliveryAddress' => false,
+                        'postboxCity' => 'Dornbirn',
+                        'postboxPostcode' => '6850',
+                        'postboxNumber' => '4711'
+                    ),
+                    array(
+                        'street' => 'Rathausgasse 2',
+                        'number' => '3',
+                        'zip' => '2222',
+                        'city' => 'Dornbirn',
+                        'state' => 'state1',
+                        'country' => array(
+                            'id' => 1,
+                            'name' => 'Musterland',
+                            'code' => 'ML'
+                        ),
+                        'addressType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        ),
+                        'billingAddress' => true,
+                        'primaryAddress' => true,
+                        'deliveryAddress' => false,
+                        'postboxCity' => 'Dornbirn',
+                        'postboxPostcode' => '6850',
+                        'postboxNumber' => '4711'
+                    )
+                )
+            )
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertEquals(false,$response->addresses[0]->primaryAddress);
+        $this->assertEquals(true,$response->addresses[1]->primaryAddress);
+        $this->assertEquals(false,$response->addresses[2]->primaryAddress);
+
+        $client->request(
+            'GET',
+            '/api/accounts/1'
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertEquals(false,$response->addresses[0]->primaryAddress);
+        $this->assertEquals(true,$response->addresses[1]->primaryAddress);
+        $this->assertEquals(false,$response->addresses[2]->primaryAddress);
+    }
 }

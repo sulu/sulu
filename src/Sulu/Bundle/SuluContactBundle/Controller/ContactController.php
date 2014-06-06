@@ -91,12 +91,12 @@ class ContactController extends RestController implements ClassResourceInterface
     /**
      * @var
      */
-    protected $currentContact;
+    protected $currentContact = null;
 
     /**
      * @var
      */
-    protected $newPrimaryAddress;
+    protected $newPrimaryAddress = null;
 
     /**
      * returns all fields that can be used by list
@@ -845,15 +845,8 @@ class ContactController extends RestController implements ClassResourceInterface
             $address->setAddressType($addressType);
 
             if (isset($addressData['primaryAddress'])) {
-
-                // remember changed primary address
                 $value = $this->getBooleanValue($addressData['primaryAddress']);
-                if($value && !$address->getPrimaryAddress()) {
-                    $this->currentContact = $contact;
-                    $this->newPrimaryAddress = $address;
-                } else if(!$value) {
-                    $address->setPrimaryAddress($value);
-                }
+                $this->handlePrimaryAddress($contact, $address, $value);
             }
             if (isset($addressData['billingAddress'])) {
                 $address->setBillingAddress($this->getBooleanValue($addressData['billingAddress']));
@@ -914,15 +907,8 @@ class ContactController extends RestController implements ClassResourceInterface
             $address->setAddressType($addressType);
 
             if (isset($entry['primaryAddress'])) {
-
-                // remember changed primary address
                 $value = $this->getBooleanValue($entry['primaryAddress']);
-                if($value && !$address->getPrimaryAddress()) {
-                    $this->currentContact = $contact;
-                    $this->newPrimaryAddress = $address;
-                } else if(!$value) {
-                    $address->setPrimaryAddress($value);
-                }
+                $this->handlePrimaryAddress($contact, $address, $value);
             }
             if (isset($entry['billingAddress'])) {
                 $address->setBillingAddress($this->getBooleanValue($entry['billingAddress']));
@@ -946,6 +932,21 @@ class ContactController extends RestController implements ClassResourceInterface
         }
 
         return $success;
+    }
+
+    /**
+     * Handles the primary flag of addresses
+     * @param Contact $contact
+     * @param Address $address
+     * @param $value
+     */
+    protected function handlePrimaryAddress(Contact $contact, Address $address, $value){
+        if($value && !$address->getPrimaryAddress() && !$this->newPrimaryAddress) {
+            $this->currentContact = $contact;
+            $this->newPrimaryAddress = $address;
+        } else if(!$value) {
+            $address->setPrimaryAddress($value);
+        }
     }
 
     /**

@@ -104,12 +104,12 @@ class AccountController extends RestController implements ClassResourceInterface
     /**
      * @var
      */
-    protected $currentAccount;
+    protected $currentAccount = null;
 
     /**
      * @var
      */
-    protected $newPrimaryAddress;
+    protected $newPrimaryAddress = null;
 
     /**
      * {@inheritdoc}
@@ -946,14 +946,8 @@ class AccountController extends RestController implements ClassResourceInterface
             $address->setState($addressData['state']);
 
             if (isset($addressData['primaryAddress'])) {
-                // remember changed primary address
                 $value = $this->getBooleanValue($addressData['primaryAddress']);
-                if($value && !$address->getPrimaryAddress()) {
-                    $this->currentAccount = $account;
-                    $this->newPrimaryAddress = $address;
-                } else if(!$value) {
-                    $address->setPrimaryAddress($value);
-                }
+                $this->handlePrimaryAddress($account, $address, $value);
             }
             if (isset($addressData['billingAddress'])) {
                 $address->setBillingAddress($this->getBooleanValue($addressData['billingAddress']));
@@ -1022,14 +1016,8 @@ class AccountController extends RestController implements ClassResourceInterface
                 $address->setAddressType($addressType);
 
                 if (isset($entry['primaryAddress'])) {
-                    // remember changed primary address
                     $value = $this->getBooleanValue($entry['primaryAddress']);
-                    if($value && !$address->getPrimaryAddress()) {
-                        $this->currentAccount = $account;
-                        $this->newPrimaryAddress = $address;
-                    } else if(!$value) {
-                        $address->setPrimaryAddress($value);
-                    }
+                    $this->handlePrimaryAddress($account, $address, $value);
                 }
                 if (isset($entry['billingAddress'])) {
                     $address->setBillingAddress($this->getBooleanValue($entry['billingAddress']));
@@ -1054,6 +1042,21 @@ class AccountController extends RestController implements ClassResourceInterface
         }
 
         return $success;
+    }
+
+    /**
+     * Handles the primary flag of addresses
+     * @param Account $account
+     * @param Address $address
+     * @param $value
+     */
+    protected function handlePrimaryAddress(Account $account, Address $address, $value){
+        if($value && !$address->getPrimaryAddress() && !$this->newPrimaryAddress) {
+            $this->currentAccount = $account;
+            $this->newPrimaryAddress = $address;
+        } else if(!$value) {
+            $address->setPrimaryAddress($value);
+        }
     }
 
     /**

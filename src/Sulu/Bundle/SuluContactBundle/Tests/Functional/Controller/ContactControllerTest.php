@@ -1605,4 +1605,221 @@ class ContactControllerTest extends DatabaseTestCase
         $this->assertEquals('Sehr geehrter John', $response->salutation);
         $this->assertEquals(0, $response->disabled);
     }
+
+    public function testPrimaryAddressHandlingPost()
+    {
+        $client = $this->createTestClient();
+
+        $client->request(
+            'POST',
+            '/api/contacts',
+            array(
+                'firstName' => 'Erika',
+                'lastName' => 'Mustermann',
+                'title' => 'MSc',
+                'position' => 'Manager',
+                'account' => array(
+                    'id' => 2
+                ),
+                'emails' => array(
+                    array(
+                        'email' => 'erika.mustermann@muster.at',
+                        'emailType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        )
+                    ),
+                    array(
+                        'email' => 'erika.mustermann@muster.de',
+                        'emailType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        )
+                    )
+                ),
+                'addresses' => array(
+                    array(
+                        'street' => 'Musterstraße',
+                        'number' => '1',
+                        'zip' => '0000',
+                        'city' => 'Musterstadt',
+                        'state' => 'Musterstate',
+                        'country' => array(
+                            'id' => 1,
+                            'name' => 'Musterland',
+                            'code' => 'ML'
+                        ),
+                        'addressType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        ),
+                        'billingAddress' => true,
+                        'primaryAddress' => true,
+                        'deliveryAddress' => false,
+                        'postboxCity' => 'Dornbirn',
+                        'postboxPostcode' => '6850',
+                        'postboxNumber' => '4711'
+                    ),
+                    array(
+                        'street' => 'Musterstraße 2',
+                        'number' => '1',
+                        'zip' => '0000',
+                        'city' => 'Musterstadt',
+                        'state' => 'Musterstate',
+                        'country' => array(
+                            'id' => 1,
+                            'name' => 'Musterland',
+                            'code' => 'ML'
+                        ),
+                        'addressType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        ),
+                        'billingAddress' => true,
+                        'primaryAddress' => true,
+                        'deliveryAddress' => false,
+                        'postboxCity' => 'Dornbirn',
+                        'postboxPostcode' => '6850',
+                        'postboxNumber' => '4711'
+                    )
+                ),
+                'notes' => array(
+                    array('value' => 'Note 1'),
+                    array('value' => 'Note 2')
+                ),
+                'disabled' => 0,
+                'salutation' => 'Sehr geehrte Frau Dr Mustermann',
+                'formOfAddress' => array(
+                    'id' => 0
+                )
+            )
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(2, $response->account->id);
+
+        $this->assertEquals(true,$response->addresses[0]->primaryAddress);
+        $this->assertEquals(false,$response->addresses[1]->primaryAddress);
+
+        $client->request('GET', '/api/contacts/' . $response->id);
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(true,$response->addresses[0]->primaryAddress);
+        $this->assertEquals(false,$response->addresses[1]->primaryAddress);
+    }
+
+    public function testPrimaryAddressHandlingPut()
+    {
+        $client = $this->createTestClient();
+
+        $client->request(
+            'PUT',
+            '/api/contacts/1',
+            array(
+                'firstName' => 'John',
+                'lastName' => 'Doe',
+                'title' => 'MBA',
+                'position' => 'Manager',
+                'emails' => array(
+                    array(
+                        'id' => 1,
+                        'email' => 'john.doe@muster.at',
+                        'emailType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        )
+                    )
+                ),
+                'addresses' => array(
+                    array(
+                        'id' => 1,
+                        'street' => 'Street',
+                        'number' => '2',
+                        'zip' => '9999',
+                        'city' => 'Springfield',
+                        'state' => 'Colorado',
+                        'country' => array(
+                            'id' => 1,
+                            'name' => 'Musterland',
+                            'code' => 'ML'
+                        ),
+                        'addressType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        ),
+                        'billingAddress' => true,
+                        'primaryAddress' => true,
+                        'deliveryAddress' => false,
+                        'postboxCity' => 'Dornbirn',
+                        'postboxPostcode' => '6850',
+                        'postboxNumber' => '4711',
+                    ),
+                    array(
+                        'street' => 'Street 1',
+                        'number' => '2',
+                        'zip' => '9999',
+                        'city' => 'Springfield',
+                        'state' => 'Colorado',
+                        'country' => array(
+                            'id' => 1,
+                            'name' => 'Musterland',
+                            'code' => 'ML'
+                        ),
+                        'addressType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        ),
+                        'billingAddress' => true,
+                        'primaryAddress' => true,
+                        'deliveryAddress' => false,
+                        'postboxCity' => 'Dornbirn',
+                        'postboxPostcode' => '6850',
+                        'postboxNumber' => '4711',
+                    ),
+                    array(
+                        'street' => 'Street 2',
+                        'number' => '2',
+                        'zip' => '9999',
+                        'city' => 'Springfield',
+                        'state' => 'Colorado',
+                        'country' => array(
+                            'id' => 1,
+                            'name' => 'Musterland',
+                            'code' => 'ML'
+                        ),
+                        'addressType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        ),
+                        'billingAddress' => true,
+                        'primaryAddress' => true,
+                        'deliveryAddress' => false,
+                        'postboxCity' => 'Dornbirn',
+                        'postboxPostcode' => '6850',
+                        'postboxNumber' => '4711',
+                    )
+                ),
+                'disabled' => 0,
+                'salutation' => 'Sehr geehrter John',
+                'formOfAddress' => array(
+                    'id' => 0
+                )
+            )
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(false,$response->addresses[0]->primaryAddress);
+        $this->assertEquals(true,$response->addresses[1]->primaryAddress);
+        $this->assertEquals(false,$response->addresses[2]->primaryAddress);
+
+        $client->request('GET', '/api/contacts/' . $response->id);
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(false,$response->addresses[0]->primaryAddress);
+        $this->assertEquals(true,$response->addresses[1]->primaryAddress);
+        $this->assertEquals(false,$response->addresses[2]->primaryAddress);
+
+    }
 }
