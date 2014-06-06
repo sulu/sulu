@@ -33,9 +33,9 @@ define([], function() {
 
             customTemplates: {
                     addAddressesIcon: [
-                        '<div class="grid-row small">',
+                        '<div class="grid-row">',
                         '    <div class="grid-col-12">',
-                        '       <span class="fa-plus-circle icon address-add clickable pointer"></span>',
+                        '       <span class="fa-plus-circle icon address-add clickable pointer m-left-140"></span>',
                         '   </div>',
                         '</div>'].join('')
             },

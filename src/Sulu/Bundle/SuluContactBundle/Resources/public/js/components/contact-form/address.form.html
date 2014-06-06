@@ -4,7 +4,7 @@
 
             <div class="grid-row small">
                 <div class="grid-col-6">
-
+                    <label for="addressType" class="required"><%=translate('contact.address.type')%></label>
                 </div>
 
                 <div class="grid-col-6 form-horizontal">
@@ -21,7 +21,6 @@
             </div> <!-- first row -->
 
             <div class="grid-row small">
-                <label for="addressType" class="required"><%=translate('contact.address.type')%></label>
                 <div class="grid-col-6">
                     <div id="addressType"
                          data-mapper-property="addressType"
@@ -96,9 +95,9 @@
                 </div>
                 <div class="grid-col-4">
                     <div class="form-group-vertical">
-                        <label for="city"><%=translate('contact.address.city')%></label>
-                        <input id="city" type="text" class="form-element city-value required"
-                               data-mapper-property="city"/>
+                        <label for="city" class="required"><%=translate('contact.address.city')%></label>
+                        <input id="city" type="text" class="form-element city-value"
+                               data-mapper-property="city" data-validation-required="true"/>
                     </div>
                 </div>
                 <div class="grid-col-2">
