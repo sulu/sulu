@@ -13,6 +13,7 @@ namespace Sulu\Bundle\ContactBundle\Controller;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Put;
+use FOS\RestBundle\Controller\Annotations\Post;
 use Sulu\Bundle\ContactBundle\Entity\BankAccount;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\Account;
@@ -31,6 +32,9 @@ use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\RestController;
 use \DateTime;
 use Symfony\Component\HttpFoundation\Request;
+
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 /**
  * Makes accounts available through a REST API
@@ -200,7 +204,6 @@ class AccountController extends RestController implements ClassResourceInterface
             $account->setName($request->get('name'));
 
             $account->setType($request->get('type'));
-
 
             $disabled = $request->get('disabled');
             if (is_null($disabled)) {
@@ -658,7 +661,6 @@ class AccountController extends RestController implements ClassResourceInterface
         }
     }
 
-
     /**
      * @param Fax $fax
      * @param $entry
@@ -866,7 +868,6 @@ class AccountController extends RestController implements ClassResourceInterface
 
         return $success;
     }
-
 
     /**
      * Process all addresses from request
@@ -1156,7 +1157,6 @@ class AccountController extends RestController implements ClassResourceInterface
             $numContacts += $account->getContacts()->count();
         }
 
-
         $response['numContacts'] = $numContacts;
         $response['numChildren'] = $numChildren;
 
@@ -1180,7 +1180,6 @@ class AccountController extends RestController implements ClassResourceInterface
         $account = $this->getDoctrine()
             ->getRepository('SuluContactBundle:Account')
             ->find($id);
-
 
         if ($account != null) {
 
@@ -1224,6 +1223,127 @@ class AccountController extends RestController implements ClassResourceInterface
         }
 
         return $this->handleView($view);
+    }
+
+    /**
+     * Converts an account to a different account type
+     * @Post("/accounts/{id}")
+     * @param $id
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function postTriggerAction($id, Request $request)
+    {
+
+        $action = $request->get('action');
+        $em = $this->getDoctrine()->getManager();
+        $view = null;
+
+        try {
+            switch ($action) {
+                case 'convertAccountType':
+                    $accountType = $request->get('type');
+                    $accountEntity = $this->getDoctrine()
+                        ->getRepository('SuluContactBundle:Account')
+                        ->find($id);
+
+                    if (!$accountEntity) {
+                        throw new EntityNotFoundException($accountEntity, $id);
+                    }
+
+                    if (!$accountType) {
+                        throw new RestException("There is no type to convert to given!");
+                    }
+
+                    $this->convertToType($accountEntity, $accountType);
+                    $em->flush();
+
+                    $view = $this->view($accountEntity, 200);
+                    break;
+                default:
+                    throw new RestException("Unrecognized action: " . $action);
+
+            }
+        } catch (EntityNotFoundException $enfe) {
+            $view = $this->view($enfe->toArray(), 404);
+        } catch (RestException $exc) {
+            $view = $this->view($exc->toArray(), 400);
+        }
+
+        return $this->handleView($view);
+    }
+
+    /**
+     * Converts an account to another account type when allowed
+     * @param $account
+     * @param $type string representation
+     * @throws RestException
+     */
+    protected function convertToType(Account $account, $type)
+    {
+        $config = $this->container->getParameter('sulu_contact.account_types');
+        $types = $this->getAccountTypes($config);
+        $transitionsForType = $this->getAccountTypeTransitions(
+            $config,
+            $types,
+            array_search($account->getType(), $types)
+        );
+
+        if ($type && $this->isTransitionAllowed($transitionsForType, $type, $types)) {
+            $account->setType($types[$type]);
+        } else {
+            throw new RestException("Unrecognized type for type conversion or conversion not allowed:" . $type);
+        }
+    }
+
+    /**
+     * Checks whether transition from one type to another is allowed
+     * @param $transitionsForType
+     * @param $newAccountType
+     * @param $types
+     * @return bool
+     */
+    protected function isTransitionAllowed($transitionsForType, $newAccountType, $types)
+    {
+        foreach ($transitionsForType as $trans) {
+            if ($trans === intval($types[$newAccountType])) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Returns valid transitions for a specific accoun type
+     * @param $config
+     * @param $types
+     * @param $accountTypeName
+     * @return array
+     */
+    protected function getAccountTypeTransitions($config, $types, $accountTypeName)
+    {
+        $transitions = [];
+        foreach ($config[$accountTypeName]['convertableTo'] as $transTypeKey => $transTypeValue) {
+            if (!!$transTypeValue) {
+                $transitions[] = $types[$transTypeKey];
+            }
+        }
+
+        return $transitions;
+    }
+
+    /**
+     * Gets the account types and their numeric representation
+     * @param $config
+     * @return array
+     */
+    protected function getAccountTypes($config)
+    {
+        $types = [];
+        foreach ($config as $confType) {
+            $types[$confType['name']] = $confType['id'];
+        }
+        return $types;
     }
 
 }

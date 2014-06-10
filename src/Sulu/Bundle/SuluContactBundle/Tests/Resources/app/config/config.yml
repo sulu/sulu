@@ -48,3 +48,46 @@ sulu_core:
         ~
     webspace:
         ~
+
+# define the account types and form of address
+# tabs key must match tab-id specified in content-navigation
+sulu_contact:
+    account_types:
+        basic:
+            id: 0
+            name: basic
+            translation: contact.account.type.basic
+            tabs:
+                financials: false
+            convertableTo:
+                lead: true
+                customer: true
+        lead:
+            id: 1
+            name: lead
+            translation: contact.account.type.lead
+            tabs:
+                financials: false
+            convertableTo:
+                customer: true
+        customer:
+            id: 2
+            name: customer
+            translation: contact.account.type.customer
+            tabs:
+                financials: true
+        supplier:
+            id: 3
+            name: supplier
+            translation: contact.account.type.supplier
+            tabs:
+                financials: true
+    form_of_address:
+        male:
+            id: 0
+            name: male
+            translation: contact.contacts.formOfAddress.male
+        female:
+            id: 1
+            name: female
+            translation: contact.contacts.formOfAddress.female
