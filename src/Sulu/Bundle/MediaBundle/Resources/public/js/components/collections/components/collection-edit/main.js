@@ -92,14 +92,14 @@ define(function () {
            // open edit overlay on datagrid click
             this.sandbox.on('husky.datagrid.item.click', this.editMedia.bind(this));
 
-            // reload datagrid of media has changed
-            this.sandbox.on('sulu.media.collections.media-saved', function() {
-                this.sandbox.emit('husky.datagrid.update');
-            }.bind(this));
-
             // unlock the dropzone pop-up if the media-edit overlay was closed
             this.sandbox.on('sulu.media-edit.closed', function() {
                 this.sandbox.emit('husky.dropzone.'+ this.options.instanceName +'.unlock-popup');
+            }.bind(this));
+
+            // update datagrid if media-edit is finished
+            this.sandbox.on('sulu.media.collections.save-media', function(media) {
+                this.sandbox.emit('husky.datagrid.records.change', media);
             }.bind(this));
 
             // delete a media
