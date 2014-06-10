@@ -94,23 +94,40 @@ define(['app-config'], function(AppConfig) {
          * @param accountTypes
          * @returns {Array}
          */
-            getItemsForConvertOperation = function(accountType, accountTypes) {
+        getItemsForConvertOperation = function(accountType, accountTypes) {
             var items = [];
             this.sandbox.util.each(accountType.convertableTo, function(key, enabled) {
-                this.sandbox.util.each(accountTypes, function(name, el) {
-                    if (el.name === key && !!enabled) {
-                        items.push({
-                                title: this.sandbox.translate(el.translation + '.conversion'),
-                                callback: function() {
-                                    this.sandbox.emit('sulu.contacts.account.convert', el);
-                                }.bind(this)
-                            }
-                        );
-                    }
-                }.bind(this));
+                if (!!enabled) {
+                    var item = getHeaderItem.call(this, accountTypes, key);
+                    items.push(item);
+                }
             }.bind(this));
 
             return items;
+        },
+
+        /**
+         * Returns items for header
+         * @param accountTypes
+         * @param key
+         * @returns {Object}
+         */
+        getHeaderItem = function(accountTypes, key) {
+
+            var item;
+            this.sandbox.util.each(accountTypes, function(name, el) {
+                if (el.name === key) {
+                    item = {
+                        title: this.sandbox.translate(el.translation + '.conversion'),
+                        callback: function() {
+                            this.sandbox.emit('sulu.contacts.account.convert', el);
+                        }.bind(this)
+                    };
+                    return false;
+                }
+            }.bind(this));
+
+            return item;
         },
 
         /**
