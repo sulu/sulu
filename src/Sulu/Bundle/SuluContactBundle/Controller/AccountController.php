@@ -149,7 +149,11 @@ class AccountController extends RestController implements ClassResourceInterface
     {
         if ($request->get('flat') == 'true') {
             // flat structure
-            $view = $this->responseList(array('account_id' => $id), $this->contactsEntityName);
+//            // FIXME: responseList should be capeable of doing this
+//            $fields = $request->get('fields');
+//            $request->query->add(array('fields' => $fields .= ',accountContacts_position'));
+
+            $view = $this->responseList(array('accountContacts_account_id' => $id), $this->contactsEntityName);
         } else {
             $contacts = $this->getDoctrine()->getRepository($this->contactsEntityName)->findByAccountId($id);
             $view = $this->view($this->createHalResponse($contacts), 200);

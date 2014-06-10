@@ -51,7 +51,6 @@ class ContactRepository extends EntityRepository
             ->addSelect('account')
             ->addSelect('urls')
             ->addSelect('partial tags.{id,name}')
-            ->addSelect('account')
             ->addSelect('activities')
             ->addSelect('activityStatus')
             ->addSelect('locales')

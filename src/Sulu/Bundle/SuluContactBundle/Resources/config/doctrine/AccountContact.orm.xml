@@ -3,8 +3,10 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
     <entity name="Sulu\Bundle\ContactBundle\Entity\AccountContact" table="co_account_contacts">
-        <id name="account" association-key="true" />
-        <id name="contact" association-key="true" />
+
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
 
         <field name="main" type="boolean" column="main" nullable="false" />
         <field name="position" type="string" column="position" nullable="true" />
