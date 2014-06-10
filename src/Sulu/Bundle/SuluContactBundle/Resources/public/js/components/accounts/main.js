@@ -119,7 +119,7 @@ define([
         convertAccount: function(data) {
             this.confirmConversionDialog(function(wasConfirmed) {
                 if (wasConfirmed) {
-//                    this.account.set({type: data.id});
+                    this.account.set({type: data.id});
                     this.sandbox.emit('sulu.header.toolbar.item.loading', 'options-button');
                     this.sandbox.util.ajax('/admin/api/accounts/'+this.account.id+'?action=convertAccountType&type='+data.name, {
 
@@ -127,7 +127,6 @@ define([
 
                         success: function(response){
                             var model = response;
-//                            this.sandbox.emit('sulu.router.navigate', 'contacts/accounts/edit:' + model.id + '/details', false);
                             this.sandbox.emit('sulu.header.toolbar.item.enable', 'options-button');
 
                             // update tabs and breadcrumb
