@@ -460,6 +460,11 @@ define([], function() {
             // merge defaults
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
+            // set default callback when no callback is provided
+            if(!this.options.changeStateCallback){
+                this.options.changeStateCallback = getChangeToolbarStateCallback('default');
+            }
+
             this.$inner = null;
             this.$tabs = null;
             this.toolbarInstanceName = null;
@@ -855,9 +860,11 @@ define([], function() {
          * @param highlight {boolean} true to change with a highlight effect
          */
         changeToolbarState: function(type, saved, highlight) {
+
             if (typeof this.options.changeStateCallback === 'function') {
                 this.options.changeStateCallback.call(this, saved, type, highlight);
             }
+
             if (typeof this.options.parentChangeStateCallback === 'function') {
                 this.options.parentChangeStateCallback.call(this, saved, type, highlight);
             }
