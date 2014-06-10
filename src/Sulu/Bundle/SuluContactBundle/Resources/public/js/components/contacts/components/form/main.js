@@ -15,7 +15,9 @@ define([], function() {
         fields = ['urls', 'emails', 'faxes', 'phones', 'notes'],
 
         constants = {
-            tagsId: '#tags'
+            tagsId: '#tags',
+            addressAddId: '#address-add',
+            addAddressWrapper: '.grid-row'
         },
 
         setHeaderToolbar = function() {
@@ -35,7 +37,7 @@ define([], function() {
                     addAddressesIcon: [
                         '<div class="grid-row">',
                         '    <div class="grid-col-12">',
-                        '       <span class="fa-plus-circle icon address-add clickable pointer m-left-140"></span>',
+                        '       <span id="address-add" class="fa-plus-circle icon address-add clickable pointer m-left-140"></span>',
                         '   </div>',
                         '</div>'].join('')
             },
@@ -178,12 +180,8 @@ define([], function() {
 
             initForm: function(data) {
 
-                var addIcon;
-
-                if(!!data.addresses && data.addresses.length > 0) {
-                    addIcon = this.sandbox.dom.$(this.customTemplates.addAddressesIcon);
-                    this.sandbox.dom.after(this.sandbox.dom.$('#addresses'), addIcon);
-                }
+                this.numberOfAddresses = data.addresses.length;
+                this.updateAddressesAddIcon(this.numberOfAddresses);
 
                 // when  contact-form is initalized
                 this.sandbox.on('sulu.contact-form.initialized', function() {
@@ -207,10 +205,37 @@ define([], function() {
                 ]);
             },
 
+            /**
+             * Adds or removes icon to add addresses
+             * @param numberOfAddresses
+             */
+            updateAddressesAddIcon: function(numberOfAddresses){
+                var $addIcon = this.sandbox.dom.find(constants.addressAddId),
+                    addIcon;
+
+                if(!!numberOfAddresses && numberOfAddresses > 0 && $addIcon.length === 0) {
+                    addIcon = this.sandbox.dom.$(this.customTemplates.addAddressesIcon);
+                    this.sandbox.dom.after(this.sandbox.dom.$('#addresses'), addIcon);
+                } else if (numberOfAddresses === 0 && $addIcon.length > 0) {
+                    this.sandbox.dom.remove(this.sandbox.dom.closest($addIcon, constants.addAddressWrapper));
+                }
+            },
+
             bindDomEvents: function() {
             },
 
             bindCustomEvents: function() {
+
+                this.sandbox.on('sulu.contact-form.added.address', function(){
+                    this.numberOfAddresses++;
+                    this.updateAddressesAddIcon(this.numberOfAddresses);
+                }, this);
+
+                this.sandbox.on('sulu.contact-form.removed.address', function(){
+                    this.numberOfAddresses--;
+                    this.updateAddressesAddIcon(this.numberOfAddresses);
+                }, this);
+
                 // delete contact
                 this.sandbox.on('sulu.header.toolbar.delete', function() {
                     this.sandbox.emit('sulu.contacts.contact.delete', this.options.data.id);
