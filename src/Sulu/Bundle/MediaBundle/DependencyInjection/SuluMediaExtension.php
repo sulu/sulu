@@ -38,7 +38,7 @@ class SuluMediaExtension extends Extension
         $container->setParameter('sulu_media.media.storage.local.segments', '10');
         $container->setParameter('sulu_media.image.proxy.save', true);
         $container->setParameter('sulu_media.image.proxy.storage.local.path', '%kernel.root_dir%/../../web/uploads/media');
-        $container->setParameter('sulu.media.image.command.prefix', 'image.converter.prefix');
+        $container->setParameter('sulu_media.image.command.prefix', 'image.converter.prefix.');
         $container->setParameter('sulu_media.image.formats', array(
             array(
                 'name' => '1480x',
@@ -47,6 +47,18 @@ class SuluMediaExtension extends Extension
                         'action' => 'scale',
                         'parameters' => array(
                             'x' => '1480'
+                        )
+                    )
+                )
+            ),
+            array(
+                'name' => '1480x400',
+                'commands' => array(
+                    array(
+                        'action' => 'scale',
+                        'parameters' => array(
+                            'x' => '1480',
+                            'y' => '400'
                         )
                     )
                 )

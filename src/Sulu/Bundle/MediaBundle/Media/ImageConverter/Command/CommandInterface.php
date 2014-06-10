@@ -10,11 +10,12 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\ImageConverter\Command;
 
+use Imagine\Image\ImageInterface;
 
 interface CommandInterface {
 
     /**
-     * @param $image
+     * @param ImageInterface $image
      * @param $parameters
      * @return mixed
      */

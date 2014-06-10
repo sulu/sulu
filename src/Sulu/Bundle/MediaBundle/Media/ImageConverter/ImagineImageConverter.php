@@ -13,7 +13,7 @@ namespace Sulu\Bundle\MediaBundle\Media\ImageConverter;
 use Imagine\Gd\Imagine;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyInvalidFormatOptionsException;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyInvalidImageFormat;
-use Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\CommandInterface;
+use Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\Manager\ManagerInterface;
 
 class ImagineImageConverter implements ImageConverterInterface {
 
@@ -28,15 +28,15 @@ class ImagineImageConverter implements ImageConverterInterface {
     protected $image;
 
     /**
-     * @var TODO
+     * @var ManagerInterface
      */
     protected $commandManager;
 
     /**
      * @param $formats
-     * @param $commandManager
+     * @param ManagerInterface $commandManager
      */
-    public function __construct($formats, $commandManager)
+    public function __construct($formats, ManagerInterface $commandManager)
     {
         $this->formats = $formats;
         $this->commandManager = $commandManager;
@@ -49,16 +49,21 @@ class ImagineImageConverter implements ImageConverterInterface {
     {
         $formatOptions = $this->getFormatOptions($format);
 
-        $this->image = new Imagine();
-        $this->image->open($originalPath);
-        if (!isset($formatOptions['command']) && !isset($formatOptions['parameters'])) {
-            throw new ImageProxyInvalidFormatOptionsException('Command or parameters not found.');
+        $imagine = new Imagine();
+        $this->image = $imagine->open($originalPath);
+        if (!isset($formatOptions['commands'])) {
+            throw new ImageProxyInvalidFormatOptionsException('Commands not found.');
         }
         if (isset($formatOptions['commands'])) {
             foreach ($formatOptions['commands'] as $command) {
+                if (!isset($command['parameters']) && !isset($command['action'])) {
+                    throw new ImageProxyInvalidFormatOptionsException('Action or parameters not found.');
+                }
                 $this->call($command['action'], $command['parameters']);
             }
         }
+
+        return $this->image;
     }
 
     /**

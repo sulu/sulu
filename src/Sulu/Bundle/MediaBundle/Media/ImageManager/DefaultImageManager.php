@@ -69,7 +69,12 @@ class DefaultImageManager implements ImageManagerInterface {
         $uri = $this->getOriginal($id);
         $original = $this->createTmpOriginalFile($uri);
 
-        $this->converter->convert($original, $format);
+        $image = $this->converter->convert($original, $format);
+
+        // only test
+        header('Content-Type: image/png');
+        echo $image->get('png');
+        exit;
     }
 
     /**

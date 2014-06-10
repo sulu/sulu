@@ -10,8 +10,10 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\Manager;
 
+use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class DefaultCommandManager implements ManagerInterface
+class DefaultCommandManager extends ContainerAware implements ManagerInterface
 {
 
     /**

@@ -10,13 +10,15 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\ImageConverter;
 
+use Imagine\Image\ImageInterface;
+
 interface ImageConverterInterface {
 
     /**
      * Convert an image and return the tmpPath
      * @param $originalPath
      * @param $format
-     * @return mixed
+     * @return ImageInterface
      */
     public function convert($originalPath, $format);
 
