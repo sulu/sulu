@@ -1282,11 +1282,67 @@ class AccountController extends RestController implements ClassResourceInterface
     /**
      * Converts an account to another account type when allowed
      * @param $account
-     * @param $type
+     * @param $type string representation
+     * @throws RestException
      */
     protected function convertToType(Account $account, $type)
     {
-        $account->setType(intval($type));
+        $config = $this->container->getParameter('sulu_contact.account_types');
+        $types = $this->getAccountTypes($config);
+        $transitionsForType = $this->getAccountTypeTransitions($config, $types, array_search($account->getType(), $types));
+
+        if($type && $this->isTransitionAllowed($transitionsForType, $type, $types)) {
+            $account->setType($types[$type]);
+        } else {
+            throw new RestException("Unrecognized type for type conversion or conversion not allowed:" . $type);
+        }
+    }
+
+    /**
+     * Checks whether transition from one type to another is allowed
+     * @param $transitionsForType
+     * @param $newAccountType
+     * @param $types
+     * @return bool
+     */
+    protected function isTransitionAllowed($transitionsForType, $newAccountType, $types){
+        foreach($transitionsForType as $trans){
+            if($trans === intval($types[$newAccountType])){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Returns valid transitions for a specific accoun type
+     * @param $config
+     * @param $types
+     * @param $accountTypeName
+     * @return array
+     */
+    protected function getAccountTypeTransitions($config, $types, $accountTypeName){
+        $transitions = [];
+        foreach ($config[$accountTypeName]['convertableTo'] as $transTypeKey => $transTypeValue) {
+            if (!!$transTypeValue) {
+                 $transitions[] = $types[$transTypeKey];
+            }
+        }
+
+        return $transitions;
+    }
+
+    /**
+     * Gets the account types and their numeric representation
+     * @param $config
+     * @return array
+     */
+    protected function getAccountTypes($config){
+        $types = [];
+        foreach ($config as $confType) {
+            $types[$confType['name']] = $confType['id'];
+        }
+        return $types;
     }
 
 }

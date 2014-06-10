@@ -118,26 +118,27 @@ define([
          */
         convertAccount: function(data) {
             this.confirmConversionDialog(function(wasConfirmed) {
+                this.account.set({type: data.id});
                 if (wasConfirmed) {
                     this.sandbox.emit('sulu.header.toolbar.item.loading', 'options-button');
-                    this.account.set({type: data.id});
-                    this.account.save(null, {
+                    this.sandbox.util.ajax('/admin/api/accounts/'+this.account.id+'?action=convertAccountType&type='+data.name, {
 
-                        // on success save contacts id
-                        success: function(response) {
-                            var model = response.toJSON();
+                        type: 'POST',
+
+                        success: function(response){
+                            var model = response;
                             this.sandbox.emit('sulu.router.navigate', 'contacts/accounts/edit:' + model.id + '/details', false);
                             this.sandbox.emit('sulu.header.toolbar.item.enable', 'options-button');
 
                             // update tabs and breadcrumb
+                            this.account.set({type: model.type});
                             AccountsUtilHeader.setHeader.call(this, this.account, this.options.accountType);
 
                             // update toolbar
                             this.sandbox.emit('sulu.account.type.converted');
-
                         }.bind(this),
 
-                        error: function() {
+                        error: function(){
                             this.sandbox.logger.log("error while saving profile");
                         }.bind(this)
                     });

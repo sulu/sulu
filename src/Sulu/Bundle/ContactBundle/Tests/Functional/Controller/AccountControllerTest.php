@@ -1606,14 +1606,14 @@ class AccountControllerTest extends DatabaseTestCase
 
         $client->request(
             'POST',
-            '/api/accounts/1?action=convertAccountType&type=' . Account::TYPE_CUSTOMER
+            '/api/accounts/1?action=convertAccountType&type=lead'
         );
 
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
         $this->assertEquals(self::$account->getId(), $response->id);
-        $this->assertEquals(2, $response->type);
+        $this->assertEquals(1, $response->type);
 
     }
 
@@ -1623,7 +1623,7 @@ class AccountControllerTest extends DatabaseTestCase
 
         $client->request(
             'POST',
-            '/api/accounts/1?action=xyz&type=' . Account::TYPE_CUSTOMER
+            '/api/accounts/1?action=xyz&type=lead'
         );
 
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
@@ -1635,7 +1635,7 @@ class AccountControllerTest extends DatabaseTestCase
 
         $client->request(
             'POST',
-            '/api/accounts/999?action=convertAccountType&type=' . Account::TYPE_CUSTOMER
+            '/api/accounts/999?action=convertAccountType&type=lead'
         );
 
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
