@@ -13,6 +13,7 @@ namespace Sulu\Bundle\ContactBundle\Controller;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Put;
+use FOS\RestBundle\Controller\Annotations\Post;
 use Sulu\Bundle\ContactBundle\Entity\BankAccount;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\Account;
@@ -31,6 +32,9 @@ use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\RestController;
 use \DateTime;
 use Symfony\Component\HttpFoundation\Request;
+
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 /**
  * Makes accounts available through a REST API
@@ -201,7 +205,6 @@ class AccountController extends RestController implements ClassResourceInterface
 
             $account->setType($request->get('type'));
 
-
             $disabled = $request->get('disabled');
             if (is_null($disabled)) {
                 $disabled = false;
@@ -314,12 +317,6 @@ class AccountController extends RestController implements ClassResourceInterface
                 $disabled = $request->get('disabled');
                 if (!is_null($disabled)) {
                     $account->setDisabled($disabled);
-                }
-
-                // set disabled
-                $type = $request->get('type');
-                if (!is_null($type)) {
-                    $account->setType($type);
                 }
 
                 // set category
@@ -1230,6 +1227,66 @@ class AccountController extends RestController implements ClassResourceInterface
         }
 
         return $this->handleView($view);
+    }
+
+    /**
+     * Converts an account to a different account type
+     * @Post("/accounts/{id}")
+     * @param $id
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function postTriggerAction($id, Request $request)
+    {
+
+        $action = $request->get('action');
+        $em = $this->getDoctrine()->getManager();
+        $view = null;
+
+        try {
+            switch ($action) {
+                case 'convertAccountType':
+
+                    $accountType = $request->get('type');
+                    $accountEntity = $this->getDoctrine()
+                        ->getRepository('SuluContactBundle:Account')
+                        ->find($id);
+
+                    if (!$accountEntity) {
+                        throw new EntityNotFoundException($accountEntity, $id);
+                    }
+
+                    if (!$accountType) {
+                        throw new RestException("There is no type to convert to given!");
+                    }
+
+                    $this->convertToType($accountEntity, $accountType);
+                    $em->persist($accountEntity);
+                    $em->flush();
+
+                    $view = $this->view($accountEntity, 200);
+                    break;
+                default:
+                    throw new RestException("Unrecognized action: " . $action);
+                    break;
+            }
+        } catch (EntityNotFoundException $enfe) {
+                $view = $this->view($enfe->toArray(), 404);
+        } catch (RestException $exc) {
+            $view = $this->view($exc->toArray(), 400);
+        }
+
+        return $this->handleView($view);
+    }
+
+    /**
+     * Converts an account to another account type when allowed
+     * @param $account
+     * @param $type
+     */
+    protected function convertToType(Account $account, $type)
+    {
+        $account->setType(intval($type));
     }
 
 }
