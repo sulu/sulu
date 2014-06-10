@@ -462,6 +462,7 @@ define([], function() {
 
             this.$inner = null;
             this.$tabs = null;
+            this.toolbarInstanceName = null;
 
             this.render();
             this.setPosition();
@@ -677,6 +678,9 @@ define([], function() {
             // merge default tabs-options with passed ones
             componentOptions = this.sandbox.util.extend(true, {}, componentOptions, options);
 
+            // store the instance-name of the toolbar
+            this.toolbarInstanceName = componentOptions.instanceName;
+
             this.sandbox.start([
                 {
                     name: 'toolbar@husky',
@@ -737,27 +741,27 @@ define([], function() {
          */
         bindAbstractToolbarEvents: function() {
             this.sandbox.on(TOOLBAR_ITEMS_SET.call(this), function(id, items) {
-                this.sandbox.emit('husky.toolbar.header'+ this.options.instanceName +'.items.set', id, items);
+                this.sandbox.emit('husky.toolbar.'+ this.toolbarInstanceName +'.items.set', id, items);
             }.bind(this));
 
             this.sandbox.on(TOOLBAR_BUTTON_SET.call(this), function(id, object) {
-                this.sandbox.emit('husky.toolbar.header'+ this.options.instanceName +'.button.set', id, object);
+                this.sandbox.emit('husky.toolbar.'+ this.toolbarInstanceName +'.button.set', id, object);
             }.bind(this));
 
             this.sandbox.on(TOOLBAR_ITEM_LOADING.call(this), function(id) {
-                this.sandbox.emit('husky.toolbar.header'+ this.options.instanceName +'.item.loading', id);
+                this.sandbox.emit('husky.toolbar.'+ this.toolbarInstanceName +'.item.loading', id);
             }.bind(this));
 
             this.sandbox.on(TOOLBAR_ITEM_CHANGE.call(this), function(id, name) {
-                this.sandbox.emit('husky.toolbar.header'+ this.options.instanceName +'.item.change', id, name);
+                this.sandbox.emit('husky.toolbar.'+ this.toolbarInstanceName +'.item.change', id, name);
             }.bind(this));
 
             this.sandbox.on(TOOLBAR_ITEM_SHOW.call(this), function(id, name) {
-                this.sandbox.emit('husky.toolbar.header'+ this.options.instanceName +'.item.show', id, name);
+                this.sandbox.emit('husky.toolbar.'+ this.toolbarInstanceName +'.item.show', id, name);
             }.bind(this));
 
             this.sandbox.on(TOOLBAR_ITEM_ENABLE.call(this), function(id, highlight) {
-                this.sandbox.emit('husky.toolbar.header'+ this.options.instanceName +'.item.enable', id, highlight);
+                this.sandbox.emit('husky.toolbar.'+ this.toolbarInstanceName +'.item.enable', id, highlight);
             }.bind(this));
         },
 
