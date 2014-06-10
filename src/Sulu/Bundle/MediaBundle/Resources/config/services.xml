@@ -8,7 +8,7 @@
         <parameter key="sulu_media.collection_repository.class">Sulu\Bundle\MediaBundle\Entity\CollectionRepository</parameter>
         <parameter key="sulu_media.storage.class">Sulu\Bundle\MediaBundle\Media\Storage\LocalStorage</parameter>
         <parameter key="sulu_media.file_validator.class">Sulu\Bundle\MediaBundle\Media\FileValidator\DefaultFileValidator</parameter>
-        <parameter key="sulu_media.image_selection.class">Sulu\Bundle\MediaBundle\Content\Types\ImageSelectionContentType</parameter>
+        <parameter key="sulu_media.media_selection.class">Sulu\Bundle\MediaBundle\Content\Types\MediaSelectionContentType</parameter>
     </parameters>
     <services>
         <service id="sulu_media.admin" class="%sulu_media.admin.class%">
@@ -46,9 +46,9 @@
             <argument>%sulu_media.media.types%</argument>
         </service>
 
-        <service id="sulu.content.type.image_selection" class="%sulu_media.image_selection.class%">
+        <service id="sulu.content.type.media_selection" class="%sulu_media.media_selection.class%">
             <argument type="service" id="sulu_media.media_manager"/>
-            <argument type="string">SuluMediaBundle:Template:content-types/image-selection.html.twig</argument>
+            <argument type="string">SuluMediaBundle:Template:content-types/media-selection.html.twig</argument>
         </service>
     </services>
 </container>

@@ -11,7 +11,7 @@
 namespace Sulu\Bundle\MediaBundle\Content\Types;
 
 use PHPCR\NodeInterface;
-use Sulu\Bundle\MediaBundle\Content\ImageSelectionContainer;
+use Sulu\Bundle\MediaBundle\Content\MediaSelectionContainer;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\PropertyInterface;
@@ -19,7 +19,7 @@ use Sulu\Component\Content\PropertyInterface;
 /**
  * content type for image selection
  */
-class ImageSelectionContentType extends ComplexContentType
+class MediaSelectionContentType extends ComplexContentType
 {
     /**
      * @var MediaManagerInterface
@@ -81,10 +81,10 @@ class ImageSelectionContentType extends ComplexContentType
      */
     private function setData($data, PropertyInterface $property, $languageCode)
     {
-        $container = new ImageSelectionContainer(
-            $data['config'],
-            $data['direction'],
-            $data['ids'],
+        $container = new MediaSelectionContainer(
+            isset($data['config']) ?  $data['config'] : array(),
+            isset($data['direction']) ? $data['direction'] : array(),
+            isset($data['ids']) ? $data['ids'] : array(),
             $languageCode,
             $this->mediaManager
         );
