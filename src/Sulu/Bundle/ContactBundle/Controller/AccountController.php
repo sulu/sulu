@@ -281,7 +281,7 @@ class AccountController extends RestController implements ClassResourceInterface
             }
 
             // set new primary address
-            if($this->newPrimaryAddress && $this->currentContact){
+            if($this->newPrimaryAddress && $this->currentAccount){
                 $this->setNewPrimaryAddress($this->currentAccount, $this->newPrimaryAddress);
             }
 
@@ -355,7 +355,7 @@ class AccountController extends RestController implements ClassResourceInterface
                 }
 
                 // set new primary address
-                if($this->newPrimaryAddress && $this->currentContact){
+                if($this->newPrimaryAddress && $this->currentAccount){
                     $this->setNewPrimaryAddress($this->currentAccount, $this->newPrimaryAddress);
                 }
 
