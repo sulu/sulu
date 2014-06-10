@@ -280,7 +280,11 @@ class AccountController extends RestController implements ClassResourceInterface
                 }
             }
 
-            $this->setNewPrimaryAddress($this->currentAccount, $this->newPrimaryAddress);
+            // set new primary address
+            if($this->newPrimaryAddress && $this->currentContact){
+                $this->setNewPrimaryAddress($this->currentAccount, $this->newPrimaryAddress);
+            }
+
             $em->persist($account);
 
             $em->flush();
@@ -350,7 +354,11 @@ class AccountController extends RestController implements ClassResourceInterface
                     throw new RestException('Updating dependencies is not possible', 0);
                 }
 
-                $this->setNewPrimaryAddress($this->currentAccount, $this->newPrimaryAddress);
+                // set new primary address
+                if($this->newPrimaryAddress && $this->currentContact){
+                    $this->setNewPrimaryAddress($this->currentAccount, $this->newPrimaryAddress);
+                }
+
                 $em->flush();
 
                 $view = $this->view($account, 200);

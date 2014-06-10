@@ -327,7 +327,11 @@ class ContactController extends RestController implements ClassResourceInterface
                 }
             }
 
-            $this->setNewPrimaryAddress($this->currentContact, $this->newPrimaryAddress);
+            // set new primary address
+            if($this->newPrimaryAddress && $this->currentContact){
+                $this->setNewPrimaryAddress($this->currentContact, $this->newPrimaryAddress);
+            }
+
             $em->persist($contact);
 
             $em->flush();
@@ -419,7 +423,10 @@ class ContactController extends RestController implements ClassResourceInterface
                     $contact->setBirthday(new DateTime($birthday));
                 }
 
-                $this->setNewPrimaryAddress($this->currentContact, $this->newPrimaryAddress);
+                // set new primary address
+                if($this->newPrimaryAddress && $this->currentContact){
+                    $this->setNewPrimaryAddress($this->currentContact, $this->newPrimaryAddress);
+                }
 
                 $em->flush();
 
