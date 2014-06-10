@@ -165,6 +165,13 @@ define(function () {
          * @param additionalMedia {Number|String} id of a media which should, besides the selected ones, also be edited (e.g. if it was clicked)
          */
         editMedia: function(additionalMedia) {
+            // show a loading icon
+            this.sandbox.emit('sulu.header.toolbar.item.loading', 'edit');
+            // stop loading icon if editing of the media has started
+            this.sandbox.once('sulu.media-edit.edit', function() {
+                this.sandbox.emit('sulu.header.toolbar.item.enable', 'edit', false);
+            }.bind(this));
+
             this.sandbox.emit('husky.datagrid.items.get-selected', function(selected) {
                 this.sandbox.emit('husky.dropzone.'+ this.options.instanceName +'.lock-popup');
                 // add additional media to the edit-list, but only if its not already contained

@@ -13,7 +13,7 @@
  * @constructor
  *
  **/
-define(function() {
+define(function () {
 
     'use strict';
 
@@ -28,7 +28,9 @@ define(function() {
         constants = {
             infoFormId: 'media-info',
             multipleEditFormId: 'media-multiple-edit',
-            dropzoneId: 'file-version-change'
+            dropzoneId: 'file-version-change',
+            multipleEditDescClass: 'media-description',
+            descriptionCheckboxId: 'show-descriptions'
         },
 
         /**
@@ -36,7 +38,7 @@ define(function() {
          * @event sulu.media-edit.edit
          * @param media {Object} the media model to edit
          */
-        EDIT = function() {
+            EDIT = function () {
             return createEventName.call(this, 'edit');
         },
 
@@ -44,12 +46,12 @@ define(function() {
          * raised if the media-edit overlay got closed
          * @event sulu.media-edit.closed
          */
-        CLOSED = function() {
+            CLOSED = function () {
             return createEventName.call(this, 'closed');
         },
 
         /** returns normalized event names */
-        createEventName = function(postFix) {
+            createEventName = function (postFix) {
             return namespace + (this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
         };
 
@@ -57,12 +59,12 @@ define(function() {
         view: true,
 
         templates: ['/admin/media/template/media/info',
-                    '/admin/media/template/media/multiple-edit'],
+            '/admin/media/template/media/multiple-edit'],
 
         /**
          * Initializes the collections list
          */
-        initialize: function() {
+        initialize: function () {
             // extend defaults with options
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
             this.bindCustomEvents();
@@ -83,11 +85,11 @@ define(function() {
         /**
          * Bind custom-related events
          */
-        bindCustomEvents: function() {
+        bindCustomEvents: function () {
             this.sandbox.on(EDIT.call(this), this.editMedia.bind(this));
 
             // emit finished event if overlay gets closed
-            this.sandbox.on('husky.overlay.media-edit.closed', function() {
+            this.sandbox.on('husky.overlay.media-edit.closed', function () {
                 this.sandbox.emit(CLOSED.call(this));
             }.bind(this));
         },
@@ -96,7 +98,7 @@ define(function() {
          * Shows an overlay to edit media
          * @param media {Object|Array} the media model or an array with media models
          */
-        editMedia: function(media) {
+        editMedia: function (media) {
             if (this.sandbox.dom.isArray(media)) {
                 this.editMultipleMedia(media);
             } else {
@@ -108,9 +110,9 @@ define(function() {
          * Edits a single media
          * @param media {Object} the id of the media to edit
          */
-        editSingleMedia: function(media) {
+        editSingleMedia: function (media) {
             this.media = media;
-            this.$info = this.renderTemplate('/admin/media/template/media/info');
+            this.$info = this.sandbox.dom.createElement(this.renderTemplate('/admin/media/template/media/info'));
             this.startSingleOverlay();
         },
 
@@ -118,19 +120,20 @@ define(function() {
          * Edits multiple media
          * @param media {Array} array with the ids of the media to edit
          */
-        editMultipleMedia: function(data) {
+        editMultipleMedia: function (data) {
             this.medias = data;
-            this.$multiple = this.renderTemplate('/admin/media/template/media/multiple-edit');
+            this.$multiple = this.sandbox.dom.createElement(this.renderTemplate('/admin/media/template/media/multiple-edit'));
+            this.bindMultipleEditDomEvents();
             this.startMultipleEditOverlay();
         },
 
         /**
          * Starts the actual overlay for single-edit
          */
-        startSingleOverlay: function() {
+        startSingleOverlay: function () {
             var $container = this.sandbox.dom.createElement('<div/>');
             this.sandbox.dom.append(this.$el, $container);
-            this.sandbox.once('husky.overlay.media-edit.opened', function() {
+            this.sandbox.once('husky.overlay.media-edit.opened', function () {
                 this.sandbox.form.create('#' + constants.infoFormId);
                 this.sandbox.form.setData('#' + constants.infoFormId, this.media);
                 this.startDropzone();
@@ -156,14 +159,16 @@ define(function() {
         /**
          * Starts the actual overlay for multiple-edit
          */
-        startMultipleEditOverlay: function() {
+        startMultipleEditOverlay: function () {
             var $container = this.sandbox.dom.createElement('<div/>');
             this.sandbox.dom.append(this.$el, $container);
-            this.sandbox.once('husky.overlay.media-multiple-edit.opened', function() {
-                this.sandbox.form.create('#' + constants.multipleEditFormId).initialized.then(function() {
+            this.sandbox.once('husky.overlay.media-multiple-edit.opened', function () {
+                this.sandbox.form.create('#' + constants.multipleEditFormId).initialized.then(function () {
                     this.sandbox.form.setData('#' + constants.multipleEditFormId, {
                         records: this.medias
-                    });
+                    }).then(function () {
+                            this.sandbox.emit('husky.overlay.media-multiple-edit.set-position');
+                        }.bind(this));
                 }.bind(this));
             }.bind(this));
             this.sandbox.start([
@@ -171,10 +176,11 @@ define(function() {
                     name: 'overlay@husky',
                     options: {
                         el: $container,
-                        title: this.options.multipleEditTitle,
+                        title: this.sandbox.translate(this.options.multipleEditTitle),
                         data: this.$multiple,
                         openOnStart: true,
                         removeOnClose: true,
+                        draggable: false,
                         instanceName: 'media-multiple-edit',
                         okCallback: this.changeMultipleModel.bind(this)
                     }
@@ -183,9 +189,34 @@ define(function() {
         },
 
         /**
+         * Binds Dom Events on the multiple-edit element
+         */
+        bindMultipleEditDomEvents: function() {
+            // toggle all descriptions on click on related checkbox
+            this.sandbox.dom.on(
+                this.sandbox.dom.find('#' + constants.descriptionCheckboxId, this.$multiple),
+                'change',
+                this.toggleDescriptions.bind(this)
+            );
+        },
+
+        /**
+         * Toggles the descriptions in the multiple-edit element
+         */
+        toggleDescriptions: function() {
+            var checked = this.sandbox.dom.is(this.sandbox.dom.find('#' + constants.descriptionCheckboxId, this.$multiple), ':checked');
+            if (checked === true) {
+                this.sandbox.dom.show(this.sandbox.dom.find('.' + constants.multipleEditDescClass, this.$multiple));
+            } else {
+                this.sandbox.dom.hide(this.sandbox.dom.find('.' + constants.multipleEditDescClass, this.$multiple));
+            }
+            this.sandbox.emit('husky.overlay.media-multiple-edit.set-position');
+        },
+
+        /**
          * Starts the dropzone for changeing the file-version
          */
-        startDropzone: function() {
+        startDropzone: function () {
             this.sandbox.start([
                 {
                     name: 'dropzone@husky',
@@ -196,7 +227,7 @@ define(function() {
                         paramName: 'fileVersion',
                         showOverlay: false,
                         skin: 'small',
-                        title: this.sandbox.translate('sulu.upload.small-dropzone-title'),
+                        titleKey: 'sulu.upload.small-dropzone-title',
                         instanceName: 'file-version-' + this.media.id
                     }
                 }
@@ -207,7 +238,7 @@ define(function() {
          * Maps the overlay inputs back on a single model
          * @returns {Boolean} returns false if form is invalid, true if valid
          */
-        changeSingleModel: function() {
+        changeSingleModel: function () {
             if (this.sandbox.form.validate('#' + constants.infoFormId)) {
                 var data = this.sandbox.form.getData('#' + constants.infoFormId);
                 this.media = this.sandbox.util.extend(true, {}, this.media, data);
@@ -223,7 +254,7 @@ define(function() {
          * Maps the overlay input back on multiple models
          * @returns {Boolean} returns false if form is invalid, true if valid
          */
-        changeMultipleModel: function() {
+        changeMultipleModel: function () {
             if (this.sandbox.form.validate('#' + constants.multipleEditFormId)) {
                 var data = this.sandbox.form.getData('#' + constants.multipleEditFormId);
                 this.medias = this.sandbox.util.extend(true, [], this.medias, data.records);
