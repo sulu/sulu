@@ -114,8 +114,25 @@ define(['sulumedia/collection/collections'], function(Collections) {
                                     el: this.sandbox.dom.find(getId.call(this, 'chooseTab')),
                                     instanceName: 'collections',
                                     gridUrl: '/admin/api/media?collection=',
-                                    fieldsUrl: '/admin/api/media/fields',
-                                    fieldsKey: 'mediaFields'
+                                    dataGridOptions: {
+                                        view: 'table',
+                                        pagination: false,
+                                        matchings: [
+                                            {
+                                                id: 'thumbnails',
+                                                translation: 'thumbnails',
+                                                type: 'thumbnails'
+                                            },
+                                            {
+                                                id: 'title',
+                                                translation: 'title'
+                                            },
+                                            {
+                                                id: 'description',
+                                                translation: 'description'
+                                            }
+                                        ]
+                                    }
                                 }
                             }
                         ]);
