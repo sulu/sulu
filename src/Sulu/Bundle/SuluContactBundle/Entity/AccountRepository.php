@@ -204,4 +204,58 @@ class AccountRepository extends EntityRepository
             return null;
         }
     }
+
+    /**
+     * distinct count account's children and contacts
+     * @param $id
+     * @return mixed
+     */
+    public function countDistinctAccountChildrenAndContacts($id)
+    {
+        try {
+            $qb = $this->createQueryBuilder('account')
+                ->leftJoin('account.children', 'children')
+                ->leftJoin('account.accountContacts','accountContacts')
+                ->leftJoin('accountContacts.contact','contacts')
+                ->select('count(DISTINCT children.id) AS numChildren')
+                ->addSelect('count(DISTINCT contacts.id) AS numContacts')
+                ->where('account.id = :accountId');
+
+            $query = $qb->getQuery();
+            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+            $query->setParameter('accountId', $id);
+
+            return $query->getSingleResult();
+        } catch (NoResultException $ex) {
+            return null;
+        }
+    }
+
+    /**
+     * distinct count account's children and contacts
+     * @param $id
+     * @return mixed
+     */
+    public function findChildrenAndContacts($id)
+    {
+        try {
+            $qb = $this->createQueryBuilder('account')
+                ->leftJoin('account.children', 'children')
+                ->leftJoin('account.accountContacts','accountContacts')
+                ->leftJoin('accountContacts.contact','contacts')
+                ->select('account')
+                ->addSelect('children')
+                ->addSelect('accountContacts')
+                ->addSelect('contacts')
+                ->where('account.id = :accountId');
+
+            $query = $qb->getQuery();
+            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+            $query->setParameter('accountId', $id);
+
+            return $query->getSingleResult();
+        } catch (NoResultException $ex) {
+            return null;
+        }
+    }
 }

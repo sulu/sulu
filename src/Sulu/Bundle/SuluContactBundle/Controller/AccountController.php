@@ -473,8 +473,8 @@ class AccountController extends RestController implements ClassResourceInterface
             if (!is_null($request->get('removeContacts')) &&
                 $request->get('removeContacts') == "true"
             ) {
-                foreach ($account->getContacts() as $contact) {
-                    $em->remove($contact);
+                foreach ($account->getAccountContacts() as $accountContact) {
+                    $em->remove($accountContact->getContact());
                 }
             }
 
@@ -1150,13 +1150,14 @@ class AccountController extends RestController implements ClassResourceInterface
             /** @var Account $account */
             $account = $this->getDoctrine()
                 ->getRepository('SuluContactBundle:Account')
-                ->find($id);
+                ->countDistinctAccountChildrenAndContacts($id);
 
             // get number of subaccounts
-            $numChildren += $account->getChildren()->count();
+            $numChildren += $account['numChildren'];
 
+            // FIXME: distinct contacts: (currently the same contacts could be counted multiple times)
             // get full number of contacts
-            $numContacts += $account->getContacts()->count();
+            $numContacts += $account['numContacts'];;
         }
 
 
@@ -1182,13 +1183,25 @@ class AccountController extends RestController implements ClassResourceInterface
         /** @var Account $account */
         $account = $this->getDoctrine()
             ->getRepository('SuluContactBundle:Account')
-            ->find($id);
-
+            ->findChildrenAndContacts($id);
 
         if ($account != null) {
-
             // return a maximum of 3 accounts
-            $slicedContacts = $account->getContacts()->slice(0, 3);
+            $slicedContacts = array();
+            $accountContacts = $account->getAccountContacts();
+            $numContacts = 0;
+            if (!is_null($accountContacts)) {
+                $idsCache = array();
+                foreach ($accountContacts as $accountContacts) {
+                    $contactId = $accountContacts->getContact()->getId();
+                    if (!array_key_exists($contactId, $slicedContacts)) {
+                        if (sizeof($idsCache) < 3) {
+                            $slicedContacts[$contactId] = $accountContacts->getContact();
+                        }
+                        $numContacts++;
+                    }
+                }
+            }
 
             foreach ($slicedContacts as $contact) {
                 /** @var Contact $contact */
@@ -1201,7 +1214,7 @@ class AccountController extends RestController implements ClassResourceInterface
             }
 
             // return number of contact
-            $response['numContacts'] = $account->getContacts()->count();
+            $response['numContacts'] = $numContacts;
 
             // get number of sub companies
             $response['numChildren'] = $account->getChildren()->count();
