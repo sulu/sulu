@@ -349,6 +349,7 @@ define([], function() {
             this.sandbox.form.setData(this.form, data).then(function() {
                 this.sandbox.start(this.form);
                 this.sandbox.emit('sulu.contact-form.add-required', ['email']);
+                this.sandbox.emit('sulu.contact-form.content-set');
                 this.dfdFormIsSet.resolve();
             }.bind(this));
         },

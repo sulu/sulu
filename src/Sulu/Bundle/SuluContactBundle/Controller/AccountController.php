@@ -1261,7 +1261,6 @@ class AccountController extends RestController implements ClassResourceInterface
                     }
 
                     $this->convertToType($accountEntity, $accountType);
-                    $em->persist($accountEntity);
                     $em->flush();
 
                     $view = $this->view($accountEntity, 200);
