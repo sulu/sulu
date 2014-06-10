@@ -1,0 +1,1 @@
+define(["type/default"],function(a){"use strict";return function(b,c){var d={},e={initializeSub:function(){},setValue:function(){},getValue:function(){},needsValidation:function(){return!1},validate:function(){return!0}};return new a(b,d,c,"smartContent",e)}});
