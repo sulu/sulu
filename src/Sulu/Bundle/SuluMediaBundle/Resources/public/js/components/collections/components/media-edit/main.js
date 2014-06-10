@@ -242,7 +242,7 @@ define(function () {
             if (this.sandbox.form.validate('#' + constants.infoFormId)) {
                 var data = this.sandbox.form.getData('#' + constants.infoFormId);
                 this.media = this.sandbox.util.extend(true, {}, this.media, data);
-                this.sandbox.emit('sulu.media.collections.save-media', this.media);
+                this.sandbox.emit('sulu.media.collections.save-media', this.media, this.savedCallback.bind(this));
                 this.media = null;
                 return true;
             } else {
@@ -258,12 +258,19 @@ define(function () {
             if (this.sandbox.form.validate('#' + constants.multipleEditFormId)) {
                 var data = this.sandbox.form.getData('#' + constants.multipleEditFormId);
                 this.medias = this.sandbox.util.extend(true, [], this.medias, data.records);
-                this.sandbox.emit('sulu.media.collections.save-media', this.medias);
+                this.sandbox.emit('sulu.media.collections.save-media', this.medias, this.savedCallback.bind(this));
                 this.medias = null;
                 return true;
             } else {
                 return false;
             }
         },
+
+        /**
+         * Method to use for as a callback when one or more medias got saved
+         */
+        savedCallback: function() {
+            this.sandbox.emit('sulu.labels.success.show', 'labels.success.media-save-desc', 'labels.success');
+        }
     };
 });

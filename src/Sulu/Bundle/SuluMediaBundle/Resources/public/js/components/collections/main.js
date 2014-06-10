@@ -88,7 +88,8 @@ define([
             /**
              * listens on saves a given media
              * @event sulu.media.collections.save-media
-             * @param media {Object} a media object with at least an id property
+             * @param media {Object|Array} a media object with at least an id property. Can be an array of media objects
+             * @param callback {Function} a callback-method to execute after all media got saved
              */
             SAVE_MEDIA = function() {
                 return createEventName.call(this, 'save-media');
@@ -390,10 +391,9 @@ define([
             /**
              * Takes a media or an array of media and saves it/them
              * @param media {Object|Array} the media object or an array of media objects
+             * @param callback {Function} callback to execute after all media got saved
              */
-            //todo: here the MEDIA_SAVED event is only emited after the last media got saved, because the whole datagrid reloads itself.
-            //todo: emit the event after every save and learn the datagrid to update a single data-record
-            saveMedia: function(media) {
+            saveMedia: function(media, callback) {
                 var model, length = 0;
 
                 // if passed argument is a single media object make an array with it
@@ -407,8 +407,9 @@ define([
 
                     model.save(null, {
                         success: function(savedMedia) {
+                            this.sandbox.emit(MEDIA_SAVED.call(this), savedMedia);
                             if (++length === media.length) {
-                                this.sandbox.emit(MEDIA_SAVED.call(this), savedMedia);
+                                callback(media);
                             }
                         }.bind(this),
                         error: function() {
