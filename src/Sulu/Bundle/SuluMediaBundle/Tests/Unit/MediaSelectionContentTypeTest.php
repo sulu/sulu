@@ -12,18 +12,18 @@ namespace Sulu\Bundle\MediaBundle\Tests\Unit\Content\Types;
 
 //FIXME remove on update to phpunit 3.8, caused by https://github.com/sebastianbergmann/phpunit/issues/604
 use PHPUnit_Framework_TestCase;
-use Sulu\Bundle\MediaBundle\Content\ImageSelectionContainer;
+use Sulu\Bundle\MediaBundle\Content\MediaSelectionContainer;
 
 interface NodeInterface extends \PHPCR\NodeInterface, \Iterator
 {
 }
 
-class ImageSelectionContentTypeTest extends PHPUnit_Framework_TestCase
+class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * @var \Sulu\Bundle\MediaBundle\Content\Types\ImageSelectionContentType
+     * @var \Sulu\Bundle\MediaBundle\Content\Types\MediaSelectionContentType
      */
-    private $imageSelection;
+    private $mediaSelection;
 
     /**
      * @var \Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface
@@ -34,14 +34,14 @@ class ImageSelectionContentTypeTest extends PHPUnit_Framework_TestCase
     {
         $this->mediaManager = $this->getMock('\Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface');
 
-        $this->imageSelection = new \Sulu\Bundle\MediaBundle\Content\Types\ImageSelectionContentType(
+        $this->mediaSelection = new \Sulu\Bundle\MediaBundle\Content\Types\MediaSelectionContentType(
             $this->mediaManager, 'SuluMediaBundle:Template:image-selection.html.twig'
         );
     }
 
     public function testTemplate()
     {
-        $this->assertEquals('SuluMediaBundle:Template:image-selection.html.twig', $this->imageSelection->getTemplate());
+        $this->assertEquals('SuluMediaBundle:Template:image-selection.html.twig', $this->mediaSelection->getTemplate());
     }
 
     public function testWrite()
@@ -89,7 +89,7 @@ class ImageSelectionContentTypeTest extends PHPUnit_Framework_TestCase
             )
         );
 
-        $this->imageSelection->write($node, $property, 0, 'test', 'en', 's');
+        $this->mediaSelection->write($node, $property, 0, 'test', 'en', 's');
     }
 
     public function testWriteWithPassedContainer()
@@ -138,12 +138,12 @@ class ImageSelectionContentTypeTest extends PHPUnit_Framework_TestCase
             )
         );
 
-        $this->imageSelection->write($node, $property, 0, 'test', 'en', 's');
+        $this->mediaSelection->write($node, $property, 0, 'test', 'en', 's');
     }
 
     public function testRead()
     {
-        $container = new ImageSelectionContainer(
+        $container = new MediaSelectionContainer(
             array('conf1' => 1, 'conf2' => 2),
             'right',
             array(1, 2, 3, 4),
@@ -187,12 +187,12 @@ class ImageSelectionContentTypeTest extends PHPUnit_Framework_TestCase
 
         $property->expects($this->exactly(1))->method('setValue')->with($container);
 
-        $this->imageSelection->read($node, $property, 'test', 'en', 's');
+        $this->mediaSelection->read($node, $property, 'test', 'en', 's');
     }
 
     public function testReadPreview()
     {
-        $container = new ImageSelectionContainer(
+        $container = new MediaSelectionContainer(
             array('conf1' => 1, 'conf2' => 2),
             'right',
             array(1, 2, 3, 4),
@@ -236,7 +236,7 @@ class ImageSelectionContentTypeTest extends PHPUnit_Framework_TestCase
 
         $property->expects($this->exactly(1))->method('setValue')->with($container);
 
-        $this->imageSelection->readForPreview(
+        $this->mediaSelection->readForPreview(
             array(
                 'config' => array('conf1' => 1, 'conf2' => 2),
                 'direction' => 'right',

@@ -18,7 +18,7 @@ use Sulu\Bundle\MediaBundle\Media\RestObject\RestObjectHelper;
  * Container for Image selection, holds config for image selection and lazy loads images matches the ids
  * @package Sulu\Bundle\MediaBundle\Content
  */
-class ImageSelectionContainer implements \Serializable
+class MediaSelectionContainer implements \Serializable
 {
     /**
      * @var string[]
