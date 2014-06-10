@@ -38506,6 +38506,14 @@ define('__component__$overlay@husky',[], function() {
         },
 
         /**
+         * calls the resize handler of the overlay to set the position, height etc.
+         * @event husky.overlay.<instance-name>.set-position
+         */
+            SET_POSITION = function() {
+            return createEventName.call(this, 'set-position');
+        },
+
+        /**
          * emited after the language changer is changed
          * @event husky.overlay.<instance-name>.language-changed
          * @param {String} selected language
@@ -38612,6 +38620,11 @@ define('__component__$overlay@husky',[], function() {
             this.sandbox.on(OKBUTTON_DEACTIVATE.call(this), this.deactivateOkButtons.bind(this));
             this.sandbox.on(OPEN.call(this), this.triggerHandler.bind(this));
             this.sandbox.on(CLOSE.call(this), this.closeHandler.bind(this));
+
+            this.sandbox.on(SET_POSITION.call(this), function() {
+                this.resetResizeVariables();
+                this.resizeHandler();
+            }.bind(this));
 
             // emit language-changed-event when language dropdown gets changed
             this.sandbox.on('husky.select.' + this.options.instanceName + '.selected.item', function(localeIndex) {
@@ -38818,7 +38831,7 @@ define('__component__$overlay@husky',[], function() {
             this.sandbox.dom.append(this.$el, this.overlay.$el);
 
             //ensures that the overlay box fits the window form the beginning
-            this.overlay.normalHeight = this.sandbox.dom.height(this.overlay.$el);
+            this.resetResizeVariables();
             this.resizeHandler();
 
             this.setCoordinates();
@@ -39146,12 +39159,21 @@ define('__component__$overlay@husky',[], function() {
         },
 
         /**
+         * Sets all properties and variables responsible for the correct resize experience back
+         * to their initial state or re-initializes them
+         */
+        resetResizeVariables: function() {
+            this.overlay.normalHeight = this.sandbox.dom.height(this.overlay.$el);
+            this.overlay.collapsed = false;
+            this.sandbox.dom.css(this.overlay.$content, {'overflow': 'visible'});
+            this.sandbox.dom.height(this.overlay.$content, '');
+        },
+
+        /**
          * Handles the shrinking and enlarging of the overlay
          * if the window gets smaller
          */
         resizeHandler: function() {
-            this.setCoordinates();
-
             //window is getting smaller - make overlay smaller
             if (this.sandbox.dom.height(this.sandbox.dom.$window) < this.sandbox.dom.outerHeight(this.overlay.$el)) {
                 this.sandbox.dom.height(this.overlay.$content,
@@ -39176,6 +39198,9 @@ define('__component__$overlay@husky',[], function() {
                     );
                 }
             }
+
+            // update position
+            this.setCoordinates();
         },
 
         /**
