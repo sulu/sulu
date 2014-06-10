@@ -1267,7 +1267,7 @@ class AccountController extends RestController implements ClassResourceInterface
                     break;
                 default:
                     throw new RestException("Unrecognized action: " . $action);
-                    break;
+
             }
         } catch (EntityNotFoundException $enfe) {
                 $view = $this->view($enfe->toArray(), 404);
