@@ -106,7 +106,7 @@ define([], function() {
             setTags: function() {
                 var uid = this.sandbox.util.uniqueId();
                 if (this.options.data.id) {
-                    uid +=  '-' + this.options.data.id;
+                    uid += '-' + this.options.data.id;
                 }
                 this.autoCompleteInstanceName += uid;
 
@@ -161,6 +161,7 @@ define([], function() {
                 this.sandbox.form.setData(form, data).then(function() {
                         this.sandbox.start(form);
                         this.sandbox.emit('sulu.contact-form.add-required', ['email']);
+                        this.sandbox.emit('sulu.contact-form.content-set');
                         this.dfdFormIsSet.resolve();
                     }.bind(this)).fail(function(error) {
                         this.sandbox.logger.error("An error occured when setting data!", error);
