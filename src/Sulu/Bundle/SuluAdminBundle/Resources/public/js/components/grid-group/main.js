@@ -22,8 +22,11 @@ define(function() {
             slideDuration: 250, //ms
             instanceName: 'undefined',
             gridUrl: '',
-            fieldsUrl: '',
-            fieldsKey: ''
+            dataGridOptions:{
+                view: 'thumbnail',
+                pagination: 'showall',
+                matchings: []
+            }
         },
         constants = {
             elementsKey: 'public.elements',
@@ -382,21 +385,27 @@ define(function() {
 
             var $element = this.sandbox.dom.createElement('<div class="' + constants.gridContainerClass + '"/>');
             this.sandbox.dom.html($container, $element);
-            this.sandbox.sulu.initList.call(this, this.options.fieldsKey, this.options.fieldsUrl,
+
+            //start list-toolbar and datagrid
+            this.sandbox.start([
                 {
-                    el: $element,
-                    url: this.options.gridUrl + id,
-                    view: 'thumbnail',
-                    pagination: 'showall',
-                    instanceName: this.options.instanceName + id,
-                    searchInstanceName: this.options.instanceName,
-                    paginationOptions: {
-                        showall: {
-                            showAllHandler: this.showAllRecords.bind(this, id)
+                    name: 'datagrid@husky',
+                    options: {
+                        el: $element,
+                        url: this.options.gridUrl + id,
+                        view: this.options.dataGridOptions.view,
+                        pagination: this.options.dataGridOptions.pagination,
+                        matchings: this.options.dataGridOptions.matchings,
+                        instanceName: this.options.instanceName + id,
+                        searchInstanceName: this.options.instanceName,
+                        paginationOptions: {
+                            showall: {
+                                showAllHandler: this.showAllRecords.bind(this, id)
+                            }
                         }
                     }
                 }
-            );
+            ]);
         },
 
         /**
