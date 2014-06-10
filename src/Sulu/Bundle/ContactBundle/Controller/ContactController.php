@@ -422,7 +422,7 @@ class ContactController extends RestController implements ClassResourceInterface
                     }
                 } else {
                     if ($accountContact = $this->getMainAccountContacts($contact)) {
-                        $contact->removeAccountContact($accountContact);
+                        $em->remove($accountContact);
                     }
                 }
 
