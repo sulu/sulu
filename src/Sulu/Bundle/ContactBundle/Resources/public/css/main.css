@@ -92,3 +92,9 @@
 .type-value:after {
   content: ')';
 }
+
+/* line 102, ../scss/modules/utility.scss */
+.form-horizontal .form-group .checkbox-container-left {
+  text-align: left;
+  width: 35px;
+}
