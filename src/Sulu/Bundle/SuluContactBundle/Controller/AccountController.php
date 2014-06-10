@@ -661,7 +661,6 @@ class AccountController extends RestController implements ClassResourceInterface
         }
     }
 
-
     /**
      * @param Fax $fax
      * @param $entry
@@ -869,7 +868,6 @@ class AccountController extends RestController implements ClassResourceInterface
 
         return $success;
     }
-
 
     /**
      * Process all addresses from request
@@ -1159,7 +1157,6 @@ class AccountController extends RestController implements ClassResourceInterface
             $numContacts += $account->getContacts()->count();
         }
 
-
         $response['numContacts'] = $numContacts;
         $response['numChildren'] = $numChildren;
 
@@ -1183,7 +1180,6 @@ class AccountController extends RestController implements ClassResourceInterface
         $account = $this->getDoctrine()
             ->getRepository('SuluContactBundle:Account')
             ->find($id);
-
 
         if ($account != null) {
 
@@ -1246,7 +1242,6 @@ class AccountController extends RestController implements ClassResourceInterface
         try {
             switch ($action) {
                 case 'convertAccountType':
-
                     $accountType = $request->get('type');
                     $accountEntity = $this->getDoctrine()
                         ->getRepository('SuluContactBundle:Account')
@@ -1270,7 +1265,7 @@ class AccountController extends RestController implements ClassResourceInterface
 
             }
         } catch (EntityNotFoundException $enfe) {
-                $view = $this->view($enfe->toArray(), 404);
+            $view = $this->view($enfe->toArray(), 404);
         } catch (RestException $exc) {
             $view = $this->view($exc->toArray(), 400);
         }
@@ -1288,9 +1283,13 @@ class AccountController extends RestController implements ClassResourceInterface
     {
         $config = $this->container->getParameter('sulu_contact.account_types');
         $types = $this->getAccountTypes($config);
-        $transitionsForType = $this->getAccountTypeTransitions($config, $types, array_search($account->getType(), $types));
+        $transitionsForType = $this->getAccountTypeTransitions(
+            $config,
+            $types,
+            array_search($account->getType(), $types)
+        );
 
-        if($type && $this->isTransitionAllowed($transitionsForType, $type, $types)) {
+        if ($type && $this->isTransitionAllowed($transitionsForType, $type, $types)) {
             $account->setType($types[$type]);
         } else {
             throw new RestException("Unrecognized type for type conversion or conversion not allowed:" . $type);
@@ -1304,9 +1303,10 @@ class AccountController extends RestController implements ClassResourceInterface
      * @param $types
      * @return bool
      */
-    protected function isTransitionAllowed($transitionsForType, $newAccountType, $types){
-        foreach($transitionsForType as $trans){
-            if($trans === intval($types[$newAccountType])){
+    protected function isTransitionAllowed($transitionsForType, $newAccountType, $types)
+    {
+        foreach ($transitionsForType as $trans) {
+            if ($trans === intval($types[$newAccountType])) {
                 return true;
             }
         }
@@ -1320,11 +1320,12 @@ class AccountController extends RestController implements ClassResourceInterface
      * @param $accountTypeName
      * @return array
      */
-    protected function getAccountTypeTransitions($config, $types, $accountTypeName){
+    protected function getAccountTypeTransitions($config, $types, $accountTypeName)
+    {
         $transitions = [];
         foreach ($config[$accountTypeName]['convertableTo'] as $transTypeKey => $transTypeValue) {
             if (!!$transTypeValue) {
-                 $transitions[] = $types[$transTypeKey];
+                $transitions[] = $types[$transTypeKey];
             }
         }
 
@@ -1336,7 +1337,8 @@ class AccountController extends RestController implements ClassResourceInterface
      * @param $config
      * @return array
      */
-    protected function getAccountTypes($config){
+    protected function getAccountTypes($config)
+    {
         $types = [];
         foreach ($config as $confType) {
             $types[$confType['name']] = $confType['id'];
