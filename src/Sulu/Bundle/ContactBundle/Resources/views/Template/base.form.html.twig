@@ -64,6 +64,7 @@
                                         <span data-mapper-property="postboxNumber"></span>
                                         <span data-mapper-property="postboxPostcode"></span>
                                         <span data-mapper-property="postboxCity"></span>
+                                        <span data-mapper-property="country" data-form="true" data-type="readonly-select" data-type-id-property="id" data-type-output-property="name" data-type-data="{{ countries | json_encode() }}"></span>
                                     <~ } ~>
 
                                     <~ if(billingAddress && deliveryAddress) { ~>

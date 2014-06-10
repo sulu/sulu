@@ -67,10 +67,26 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
 
         /**
          * is emited when a field-type gets changed or a field gets deleted
-         * @event sulu.contact-form.initialized
+         * @event sulu.contact-form.changed
          */
         EVENT_CHANGED = function() {
             return eventNamespace + '.changed';
+        },
+
+        /**
+         * is emitted when a new address is added
+         * @constructor sulu.contact-form.added.address
+         */
+        EVENT_ADDED_ADDRESS = function(){
+            return eventNamespace + '.added.address';
+        },
+
+        /**
+         * is emitted when a new address is added
+         * @constructor sulu.contact-form.removed.address
+         */
+        EVENT_REMOVED_ADDRESS = function(){
+            return eventNamespace + '.removed.address';
         },
 
         bindCustomEvents = function() {
@@ -111,7 +127,7 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
                         defaultLabel: this.sandbox.translate('contact.address.type.select'),
                         instanceName: 'addressTypes',
                         data: this.options.fieldTypes.address,
-                        preSelectedElements: [],
+                        preSelectedElements: [this.options.defaultTypes.addressType.id],
                         valueName: 'name',
                         multipleSelect: false,
                         emitValues: true
@@ -127,6 +143,7 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
             var mapperID = this.sandbox.dom.data(this.sandbox.dom.closest($el, constants.addressComponentSelector), 'mapper-id');
             this.sandbox.form.removeFromCollection(this.form, mapperID);
             this.sandbox.emit(EVENT_CHANGED.call(this));
+            this.sandbox.emit(EVENT_REMOVED_ADDRESS.call(this));
         },
 
         /**
@@ -525,7 +542,15 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
             this.sandbox.emit('husky.overlay.edit-fields.remove');
 
             if (!data) {
-                data = {};
+                // init data object and set defaults
+                data = {
+                    country: {
+                        id: this.options.defaultTypes.country.id
+                    },
+                    addressType: {
+                        id: this.options.defaultTypes.addressType.id
+                    }
+                };
             }
 
             // extend address data by additional variables
@@ -564,16 +589,16 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
                 }
             ]);
 
+            this.data = data;
+
             // after everything was added to dom
             this.sandbox.on('husky.overlay.add-address.opened', function() {
                 // start form and set data
                 formObject = this.sandbox.form.create(constants.addressFormId);
                 formObject.initialized.then(function() {
-                    this.sandbox.form.setData(constants.addressFormId, data);
+                    this.sandbox.form.setData(constants.addressFormId, this.data);
                 }.bind(this));
             }.bind(this));
-
-            this.data = data;
         },
 
     // removes listeners of addressform
@@ -598,6 +623,7 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
 
             // set changed to be able to save
             this.sandbox.emit(EVENT_CHANGED.call(this));
+            this.sandbox.emit(EVENT_ADDED_ADDRESS.call(this));
 
             // remove change listener
             removeAddressFormEvents.call(this);
