@@ -847,7 +847,7 @@ class Contact extends ApiEntity
     public function addAccountContact(\Sulu\Bundle\ContactBundle\Entity\AccountContact $accountContacts)
     {
         $this->accountContacts[] = $accountContacts;
-    
+
         return $this;
     }
 
@@ -864,7 +864,7 @@ class Contact extends ApiEntity
     /**
      * Get accountContacts
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getAccountContacts()
     {
@@ -878,10 +878,12 @@ class Contact extends ApiEntity
     {
         $accountContacts = $this->getAccountContacts();
 
-        /** @var AccountContact $accountContact */
-        foreach ($accountContacts as $accountContact) {
-            if ($accountContact->getMain()) {
-                return $accountContact->getAccount();
+        if (!is_null($accountContacts)) {
+            /** @var AccountContact $accountContact */
+            foreach ($accountContacts as $accountContact) {
+                if ($accountContact->getMain()) {
+                    return $accountContact->getAccount();
+                }
             }
         }
         return null;

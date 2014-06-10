@@ -28,7 +28,7 @@ class AccountRepository extends EntityRepository
     public function findOneByContactId($contactId)
     {
         $qb = $this->createQueryBuilder('a')
-            ->join('a.accountContacts', 'accountContacts', 'WITH', 'accountContacts.idContacts = :contactId AND accountContacts.main = true')
+            ->join('a.accountContacts', 'accountContacts', 'WITH', 'accountContacts.idContacts = :contactId AND accountContacts.main = TRUE')
             ->setParameter('contactId', $contactId);
         $query = $qb->getQuery();
 
@@ -98,7 +98,8 @@ class AccountRepository extends EntityRepository
 
             if ($contacts === true) {
                 $qb->leftJoin('account.accountContacts', 'accountContacts')
-                    ->leftJoin('accountContacts.contact', 'contact')
+                    ->leftJoin('accountContacts.contact', 'contacts')
+                    ->addSelect('accountContacts')
                     ->addSelect('contacts');
             }
 
@@ -170,6 +171,7 @@ class AccountRepository extends EntityRepository
                 ->addSelect('bankAccounts')
                 ->addSelect('addresses')
                 ->addSelect('children')
+                ->addSelect('accountContacts')
                 ->addSelect('contacts')
                 ->addSelect('addressType')
                 ->addSelect('country')
