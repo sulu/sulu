@@ -18,13 +18,6 @@ define([], function() {
 
         constants = {
             tagsId: '#tags'
-        },
-
-    // sets toolbar
-        setHeaderToolbar = function() {
-            this.sandbox.emit('sulu.header.set-toolbar', {
-                template: 'default'
-            });
         };
 
     return {
@@ -46,9 +39,16 @@ define([], function() {
             this.accountCategoryURL = 'api/account/categories';
 
             this.render();
+            this.getAccountTypeData();
             this.setHeaderBar(true);
-            setHeaderToolbar.call(this);
             this.listenForChange();
+        },
+
+        getAccountTypeData: function() {
+            this.sandbox.emit('sulu.contacts.account.get.types', function(accountType, accountTypes) {
+                this.accountType = accountType;
+                this.accountTypes = accountTypes;
+            }.bind(this));
         },
 
         render: function() {
@@ -62,6 +62,8 @@ define([], function() {
             this.titleField = this.$find('#name');
 
             data = this.initContactData();
+            this.accountType = null;
+            this.accountTypes = null;
 
             excludeItem = [];
             if (!!this.options.data.id) {
@@ -347,6 +349,7 @@ define([], function() {
             this.sandbox.form.setData(this.form, data).then(function() {
                 this.sandbox.start(this.form);
                 this.sandbox.emit('sulu.contact-form.add-required', ['email']);
+                this.sandbox.emit('sulu.contact-form.content-set');
                 this.dfdFormIsSet.resolve();
             }.bind(this));
         },
@@ -455,6 +458,7 @@ define([], function() {
                 this.sandbox.dom.on('#contact-form', 'change', function() {
                     this.setHeaderBar(false);
                 }.bind(this), "select, input, textarea");
+
                 this.sandbox.dom.on('#contact-form', 'keyup', function() {
                     this.setHeaderBar(false);
                 }.bind(this), "input, textarea");

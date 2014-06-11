@@ -17,12 +17,6 @@ define([], function() {
         constants = {
             addBankAccountButtonId: '#add-bank-account'
         },
-        // sets toolbar
-        setHeaderToolbar = function() {
-            this.sandbox.emit('sulu.header.set-toolbar', {
-                template: 'default'
-            });
-        },
 
         addBankAccount = function() {
             this.sandbox.form.addToCollection(this.form, 'bankAccounts', {});
@@ -41,8 +35,6 @@ define([], function() {
 
             this.form = '#financials-form';
 
-            // set header toolbar
-            setHeaderToolbar.call(this);
             this.setHeaderBar(true);
 
             this.render();
