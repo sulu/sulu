@@ -137,7 +137,6 @@ class Contact extends ApiEntity
     private $tags;
 
     /**
-     * <<<<<<< HEAD
      * main account
      * @Accessor(getter="getMainAccount")
      * @var string
@@ -149,16 +148,16 @@ class Contact extends ApiEntity
      * @Exclude
      */
     private $accountContacts;
-====== =
-* @var boolean
-*/
+
+    /**
+     * @var boolean
+     */
     private $newsletter;
 
     /**
      * @var string
      */
     private $gender;
->>>>>>> 2d32354cdcaf7477e6ee24deb69958254dc63a08
 
     /**
      * Constructor
