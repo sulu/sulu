@@ -13,27 +13,18 @@ define(function () {
 
     var defaults = {
             data: {},
-            instanceName: 'undefined',
-            newCollectionColor: '#cccccc',
-            newCollectionTitle: 'sulu.media.new-collection'
+            instanceName: '',
+            newCollectionTitle: 'sulu.media.new-collection',
+            newThumbnailSrc: 'http://lorempixel.com/150/100/',
+            newThumbnailTitel: ''
         },
         constants = {
-            openAllKey: 'public.open-all',
-            closeAllKey: 'public.close-all',
-            toggleAllClass: 'toggle-all',
-            slideDownIcon: 'caret-right',
-            slideUpIcon: 'caret-down',
+            datagridSelector: '.datagrid-container',
+            toolbarSelector: '.list-toolbar-container',
             newFormId: 'collection-new'
         },
 
-        namespace = 'sulu.collection-list.',
-
-        templates = {
-            toggleAll: [
-                '<span class="fa-<%= icon %> icon"></span>',
-                '<span><%= text %></span>'
-            ].join('')
-        };
+        namespace = 'sulu.collection-list.';
 
     return {
 
@@ -54,7 +45,10 @@ define(function () {
             ]
         },
 
-        templates: ['/admin/media/template/collection/new'],
+        templates: [
+            '/admin/media/template/collection/new',
+            '/admin/media/template/collection/list'
+        ],
 
         /**
          * Initializes the collections list
@@ -66,17 +60,8 @@ define(function () {
             // show success-label if collection just got deleted
             this.sandbox.sulu.triggerDeleteSuccessLabel('labels.success.collection-deleted-desc');
 
-            this.toggleAll = {
-                $element: null,
-                allOpen: false
-            };
-            this.$overlayContent = null;
-            this.toolbarStarted = false;
-
             this.bindCustomEvents();
             this.render();
-            this.startListToolbar();
-            this.bindDomEvents();
         },
 
         /**
@@ -85,67 +70,8 @@ define(function () {
         bindCustomEvents: function () {
             // add a new collection to the list
             this.sandbox.on('sulu.list-toolbar.add', this.openOverlay.bind(this));
-            // start list-toolbar after header has initialized
-            this.sandbox.on('sulu.header.initialized', this.startListToolbar.bind(this));
-            // delete media if list-toolbar delete is clicked
-            this.sandbox.on('sulu.list-toolbar.delete', this.deleteMedia.bind(this));
-            // route to collection-edit
-            this.sandbox.on('sulu.grid-group.collections.show-group', this.showAllFiles.bind(this));
-            // edit selected media
-            this.sandbox.on('sulu.list-toolbar.edit', this.editSelectedMedia.bind(this));
-
-            // activate/deactive delete button
-            this.sandbox.on('sulu.grid-group.collections.elements-selected', function(selected) {
-                this.toggleToolbarButton(selected, 'delete');
-                this.toggleToolbarButton(selected, 'edit');
-            }.bind(this));
-
-            // update a group in grid if collection was changed
-            this.sandbox.on('sulu.media.collections.collection-changed', function(collectionId) {
-                this.sandbox.emit('sulu.grid-group.collections.update-group', collectionId);
-            }.bind(this));
-
-            // edit media on click
-            this.sandbox.on('sulu.grid-group.collections.record-clicked', function(recordId) {
-                this.sandbox.emit('sulu.media.collections.edit-media', recordId);
-            }.bind(this));
-
-            // update the last clicked grid if a media got changed
-            this.sandbox.on('sulu.media.collections.media-saved', function () {
-                this.sandbox.emit('sulu.grid-group.collections.update-last-clicked');
-            }.bind(this));
-        },
-
-        /**
-         * Deletes all the selected media
-         */
-        deleteMedia: function () {
-            this.sandbox.sulu.showDeleteDialog(function (confirmed) {
-                if (confirmed === true) {
-                    this.sandbox.emit('sulu.grid-group.collections.get-selected', function(selectedMedias) {
-                        for (var groupId in selectedMedias) {
-                            if (selectedMedias.hasOwnProperty(groupId)) {
-                                this.sandbox.emit('sulu.media.collections.delete-media', selectedMedias[groupId], function (groupId, recordId) {
-                                    this.sandbox.emit('sulu.grid-group.collections.remove-record', groupId, recordId);
-                                }.bind(this, groupId), true);
-                            }
-                        }
-                    }.bind(this));
-                }
-            }.bind(this));
-        },
-
-        /**
-         * Edit the selected medias
-         */
-        editSelectedMedia: function() {
-            var key, array = [];
-            this.sandbox.emit('sulu.grid-group.collections.get-selected', function(medias) {
-                this.sandbox.util.each(medias, function(key, mediaIds) {
-                    array = array.concat(mediaIds);
-                }.bind(this));
-                this.sandbox.emit('sulu.media.collections.edit-media', array);
-            }.bind(this));
+            // navigate to colleciton-edit view
+            this.sandbox.on('husky.datagrid.item.click', this.navigateToCollecction.bind(this));
         },
 
         /**
@@ -154,40 +80,12 @@ define(function () {
          */
         addCollection: function () {
             if (this.sandbox.form.validate('#' + constants.newFormId)) {
-                var data = this.sandbox.form.getData('#' + constants.newFormId),
-                    collection = {
-                        mediaNumber: 0,
-                        style: {
-                            color: data.color
-                        }
-                    };
-                collection = this.sandbox.util.extend(true, {}, collection, data);
-                this.sandbox.emit('sulu.grid-group.collections.add-group', collection);
-                this.sandbox.emit('sulu.media.collections.save-collection', collection);
+                var collection = this.sandbox.form.getData('#' + constants.newFormId);
+                this.sandbox.emit('sulu.media.collections.save-collection', collection, function(collection) {
+                    this.sandbox.emit('husky.datagrid.record.add', collection);
+                }.bind(this));
             } else {
                 return false;
-            }
-        },
-
-        /**
-         * Starts the list toolbar in the header
-         */
-        startListToolbar: function () {
-            if (this.toolbarStarted === false) {
-                this.toolbarStarted = true;
-                var $listtoolbar = this.sandbox.dom.createElement('</div>');
-                this.sandbox.dom.append(this.$el, $listtoolbar);
-                this.sandbox.start([
-                    {
-                        name: 'list-toolbar@suluadmin',
-                        options: {
-                            el: $listtoolbar,
-                            instanceName: this.options.instanceName,
-                            template: 'defaultEditable',
-                            inHeader: true
-                        }
-                    }
-                ]);
             }
         },
 
@@ -195,35 +93,50 @@ define(function () {
          * Renders the collections-list
          */
         render: function () {
-            // render toggle all button
-            this.toggleAll.$element = this.sandbox.dom.createElement('<div class="' + constants.toggleAllClass + '"/>');
-            this.sandbox.dom.html(this.toggleAll.$element, this.sandbox.util.template(templates.toggleAll)({
-                icon: constants.slideDownIcon,
-                text: this.sandbox.translate(constants.openAllKey)
-            }));
-            this.sandbox.dom.append(this.$el, this.toggleAll.$element);
-
-            this.initializeGridGroup();
+            this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/media/template/collection/list'));
+            this.initializeGrid();
             this.initializeOverlay();
         },
 
         /**
-         * Initializes the grid-group
+         * Initializes the acutal grid
          */
-        initializeGridGroup: function() {
-            var $collections = this.sandbox.dom.createElement('<div/>');
-            this.sandbox.start([{
-                name: 'grid-group@suluadmin',
-                options: {
-                    data: this.options.data,
-                    el: $collections,
-                    instanceName: 'collections',
-                    gridUrl: '/admin/api/media?collection=',
-                    fieldsUrl: '/admin/api/media/fields',
-                    fieldsKey: 'mediaFields'
+        initializeGrid: function() {
+            //todo: fetch matchings from url. don't hardcode them in the JS-Code
+            this.sandbox.start([
+                {
+                    name: 'datagrid@husky',
+                    options: {
+                        el: this.$find(constants.datagridSelector),
+                        url: '/admin/api/collections',
+                        view: 'group',
+                        pagination: false,
+                        matchings: [
+                            {
+                                id: 'title',
+                                type: 'title'
+                            },
+                            {
+                                id: 'mediaNumber',
+                                type: 'elements'
+                            },
+                            {
+                                id: 'thumbnails',
+                                type: 'thumbnails'
+                            }
+                        ]
+                    }
+                },
+                {
+                    name: 'list-toolbar@suluadmin',
+                    options: {
+                        el: this.$find(constants.toolbarSelector),
+                        instanceName: this.options.instanceName,
+                        template: 'defaultNoSettings',
+                        inHeader: true
+                    }
                 }
-            }]);
-            this.sandbox.dom.append(this.$el, $collections);
+            ]);
         },
 
         /**
@@ -239,8 +152,7 @@ define(function () {
                 this.sandbox.start('#' + constants.newFormId);
                 this.sandbox.form.create('#' + constants.newFormId);
                 this.sandbox.form.setData('#' + constants.newFormId, {
-                    title: this.sandbox.translate(this.options.newCollectionTitle),
-                    color: this.options.newCollectionColor
+                    title: this.sandbox.translate(this.options.newCollectionTitle)
                 });
             }.bind(this));
 
@@ -266,53 +178,11 @@ define(function () {
         },
 
         /**
-         * Handles the click on the show-all pagination
-         * navigates to another view where all files are accessable
+         * Navigates to the colleciton-edit view
          * @param collectionId {Number|String} the id of the collection
          */
-        showAllFiles: function (collectionId) {
+        navigateToCollecction: function (collectionId) {
             this.sandbox.emit('sulu.media.collections.collection-edit', collectionId);
-        },
-
-        /**
-         * Binds dom related events
-         */
-        bindDomEvents: function () {
-            this.sandbox.dom.on(this.toggleAll.$element, 'click', this.toggleAllCollections.bind(this));
-        },
-
-        /**
-         * Opens are closes all collections
-         */
-        toggleAllCollections: function () {
-            if (this.toggleAll.allOpen === true) {
-                this.toggleAll.allOpen = false;
-                this.sandbox.dom.html(this.toggleAll.$element, this.sandbox.util.template(templates.toggleAll)({
-                    icon: constants.slideDownIcon,
-                    text: this.sandbox.translate(constants.openAllKey)
-                }));
-                this.sandbox.emit('sulu.grid-group.collections.close-all-groups');
-            } else {
-                this.toggleAll.allOpen = true;
-                this.sandbox.dom.html(this.toggleAll.$element, this.sandbox.util.template(templates.toggleAll)({
-                    icon: constants.slideUpIcon,
-                    text: this.sandbox.translate(constants.closeAllKey)
-                }));
-                this.sandbox.emit('sulu.grid-group.collections.show-all-groups');
-            }
-        },
-
-        /**
-         * Activates/Deactivates a button in the toolbar
-         * @param activate {Boolean} if true activates if false deactivates the button
-         * @param buttonId {String} the id of the button to toggle
-         */
-        toggleToolbarButton: function(activate, buttonId) {
-            if (activate === true) {
-                this.sandbox.emit('sulu.list-toolbar.' + this.options.instanceName + '.'+ buttonId +'.state-change', true);
-            } else {
-                this.sandbox.emit('sulu.list-toolbar.' + this.options.instanceName + '.'+ buttonId +'.state-change', false);
-            }
         }
     };
 });

@@ -25,3 +25,7 @@ sulu_media.template.media.info:
 sulu_media.template.media.multiple_edit:
     pattern: /template/media/multiple-edit.html
     defaults: { _controller: SuluMediaBundle:Template:multipleEdit }
+
+sulu_media.template.collection.list:
+    pattern: /template/collection/list.html
+    defaults: { _controller: SuluMediaBundle:Template:collectionList }

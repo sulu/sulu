@@ -99,6 +99,7 @@ define([
              * listens on saves a given collection
              * @event sulu.media.collections.save-collection
              * @param collection {Object} a collection object with at least an id property
+             * @param callback {Function} callback to call after collection has been saved
              */
             SAVE_COLLECTION = function() {
                 return createEventName.call(this, 'save-collection');
@@ -237,14 +238,16 @@ define([
             /**
              * Saves data for an existing collection
              * @param data {Object} object with the data to update
+             * @param callback {Function} callback to call if collection has been saved
              */
-            saveCollection: function(data) {
+            saveCollection: function(data, callback) {
                 var collection = this.getCollectionModel(data.id);
                 collection.set(data);
 
                 collection.save(null, {
                     success: function(collection) {
                         this.sandbox.emit(COLLECTION_CHANGED.call(this), collection.toJSON());
+                        callback(collection.toJSON());
                     }.bind(this),
                     error: function() {
                         this.sandbox.logger.log('Error while saving collection');
@@ -407,9 +410,9 @@ define([
 
                     model.save(null, {
                         success: function(savedMedia) {
-                            this.sandbox.emit(MEDIA_SAVED.call(this), savedMedia);
+                            this.sandbox.emit(MEDIA_SAVED.call(this), savedMedia.toJSON());
                             if (++length === media.length) {
-                                callback(media);
+                                callback(savedMedia.toJSON());
                             }
                         }.bind(this),
                         error: function() {
