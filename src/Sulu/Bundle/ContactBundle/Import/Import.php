@@ -12,8 +12,10 @@ namespace Sulu\Bundle\ContactBundle\Import;
 
 use Doctrine\Common\Proxy\Exception\InvalidArgumentException;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\NonUniqueResultException;
 use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\AccountCategory;
+use Sulu\Bundle\ContactBundle\Entity\AccountContact;
 use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\BankAccount;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
@@ -33,6 +35,8 @@ use Symfony\Component\Validator\Constraints\DateTime;
  */
 class Import
 {
+    const DEBUG = true;
+
     /**
      * import options
      * @var array
@@ -43,6 +47,14 @@ class Import
         'importIds' => true,
         'streetNumberSplit' => false,
     );
+
+    /**
+     * define entity names
+     * @var string
+     */
+    protected $contactEntityName = 'SuluContactBundle:Contact';
+    protected $accountEntityName = 'SuluContactBundle:Account';
+
 
     /**
      * @var \Doctrine\ORM\EntityManager
@@ -293,6 +305,7 @@ class Import
         };
 
         // create accounts
+        $this->debug("Create Accounts:\n");
         $this->processCsvLoop(
             $filename,
             function ($data, $row) {
@@ -301,6 +314,7 @@ class Import
         );
 
         // check for parents
+        $this->debug("Creating Account Parent Relations:\n");
         $this->processCsvLoop($filename, $createParentRelations);
     }
 
@@ -314,7 +328,8 @@ class Import
             $this->createContact($data, $row);
         };
 
-        // create accounts
+        // create contacts
+        $this->debug("Create Contacts:\n");
         $this->processCsvLoop($filename, $createContact);
     }
 
@@ -347,20 +362,22 @@ class Import
                     // now save to database
                     $this->em->flush();
                 }
-
-                // check limit and break loop if necessary
-                $limit = $this->getLimit();
-                if (!is_null($limit) && $row >= $limit) {
-                    break;
-                }
-
-                $row++;
             } catch (\Exception $e) {
                 print("error while processing data row $row \n");
             }
-        }
-        fclose($handle);
 
+            // check limit and break loop if necessary
+            $limit = $this->getLimit();
+            if (!is_null($limit) && $row >= $limit) {
+                break;
+            }
+            $row++;
+
+
+            $this->debug(sprintf("%d ", $row));
+        }
+        $this->debug("\n");
+        fclose($handle);
     }
 
     /**
@@ -445,6 +462,36 @@ class Import
         $this->em->persist($account);
 
         return $account;
+    }
+
+    /**
+     * returns the first email that is found
+     * @param $data
+     * @return string|bool
+     */
+    protected function getFirstEmail($data)
+    {
+        for ($i = 0, $len = 10; ++$i < $len;) {
+            if ($this->checkData('email' . $i, $data)) {
+                return $data['email' . $i];
+            }
+        }
+        return false;
+    }
+
+    /**
+     * returns the first email that is found
+     * @param $data
+     * @return string|bool
+     */
+    protected function getFirstPhone($data)
+    {
+        for ($i = 0, $len = 10; ++$i < $len;) {
+            if ($this->checkData('phone' . $i, $data)) {
+                return $data['phone' . $i];
+            }
+        }
+        return false;
     }
 
     /**
@@ -559,6 +606,7 @@ class Import
             $category = new AccountCategory();
             $category->setCategory($categoryName);
             $this->em->persist($category);
+            $this->accountCategories[$category->getCategory()] = $category;
         }
         $account->setAccountCategory($category);
     }
@@ -575,7 +623,10 @@ class Import
         } else {
             $tag = new Tag();
             $tag->setName($tagName);
+            $tag->setCreated(new \DateTime());
+            $tag->setChanged(new \DateTime());
             $this->em->persist($tag);
+            $this->tags[$tag->getName()] = $tag;
         }
         $entity->addTag($tag);
     }
@@ -708,8 +759,33 @@ class Import
      */
     protected function createContact($data, $row)
     {
-        $contact = new Contact();
+        try {
+            // check if contact already exists
+            $contact = $this->getContactByData($data);
 
+            // or create a new one
+            if (!$contact) {
+                $contact = new Contact();
+                $this->em->persist($contact);
+                $this->setContactData($data, $contact);
+            }
+            // create account relation
+            $this->setAccountContactRelation($data, $contact, $row);
+
+            return $contact;
+
+        } catch (NonUniqueResultException $nur) {
+            printf("Non unique result for contact at row %d \n", $row);
+        }
+
+    }
+
+    /**
+     * @param Contact $contact
+     * @param $data
+     */
+    protected function setContactData($data, Contact $contact)
+    {
         if ($this->checkData('contact_firstname', $data)) {
             $contact->setFirstName($data['contact_firstname']);
         } else {
@@ -754,29 +830,75 @@ class Import
         $contact->setCreated(new \DateTime());
 
         // check company
-        if ($this->checkData('contact_parent', $data)) {
-            $account = $this->getAccountByKey($data['contact_parent']);
-
-            if (!$account) {
-                // throw new \Exception('could not find '.$data['contact_parent'].' in accounts');
-                printf('could not assign contact at row %d to %s. (account could not be found)', $row, $data['contact_parent']);
-            } else {
-//                $contact->setAccount($account);
-                $accountContact = new AccountContact();
-            }
-        }
+        $this->em->persist($contact);
 
         // add address if set
         $this->addAddress($data, $contact);
 
         // process emails, phones, faxes, urls and notes
-        $this->processEmails($data, $account);
-        $this->processPhones($data, $account);
-        $this->processFaxes($data, $account);
-        $this->processUrls($data, $account);
-        $this->processNotes($data, $account);
+        $this->processEmails($data, $contact);
+        $this->processPhones($data, $contact);
+        $this->processFaxes($data, $contact);
+        $this->processUrls($data, $contact);
+        $this->processNotes($data, $contact);
+    }
 
-        $this->em->persist($contact);
+    /**
+     * @param $data
+     * @param $contact
+     * @param $row
+     */
+    protected function setAccountContactRelation($data, $contact, $row)
+    {
+        if ($this->checkData('contact_parent', $data)) {
+            $account = $this->getAccountByKey($data['contact_parent']);
+
+            if (!$account) {
+                // throw new \Exception('could not find '.$data['contact_parent'].' in accounts');
+                printf("Could not assign contact at row %d to %s. (account could not be found)\n", $row, $data['contact_parent']);
+            } else {
+                // account contact relation
+                $accountContact = new AccountContact();
+                $accountContact->setContact($contact);
+                $accountContact->setAccount($account);
+                // TODO: set main if this is the main relation;
+                $accountContact->setMain(false);
+                $this->em->persist($accountContact);
+
+                $contact->addAccountContact($accountContact);
+                $account->addAccountContact($accountContact);
+            }
+        }
+    }
+
+    /**
+     * returns a contact based on data array if it already exists in DB
+     * @param $data
+     * @return mixed
+     */
+    protected function getContactByData($data)
+    {
+
+        $criteria = array();
+
+        if ($this->options['importIds'] == true && $this->checkData('contact_id', $data)) {
+            $criteria['id'] = $data['contact_id'];
+        } else {
+            // TODO:
+            // check if contacts already exists
+            if ($this->checkData('contact_firstname', $data)) {
+                $criteria['firstName'] = $data['contact_firstname'];
+            }
+            if ($this->checkData('contact_lastname', $data)) {
+                $criteria['lastName'] = $data['contact_lastname'];
+            }
+            $email = $this->getFirstEmail($data);
+            $phone = $this->getFirstPhone($data);
+        }
+
+        $contact = $this->em
+            ->getRepository($this->contactEntityName)
+            ->findByCriteriaEmailAndPhone($criteria, $email, $phone);
 
         return $contact;
     }
@@ -811,8 +933,8 @@ class Import
      */
     protected function clearDatabase()
     {
-        $this->clearTable('SuluContactBundle:Account');
-        $this->clearTable('SuluContactBundle:Contact');
+        $this->clearTable($this->accountEntityName);
+        $this->clearTable($this->contactEntityName);
     }
 
     /**
@@ -841,8 +963,10 @@ class Import
         $associativeData = array();
         foreach ($data as $index => $value) {
             // search index in mapping config
-            if ($mappingIndex = array_search($headerData[$index], $this->columnMappings)) {
-                $associativeData[$mappingIndex] = $value;
+            if (sizeof($resultArray = array_keys($this->columnMappings, $headerData[$index])) > 0) {
+                foreach ($resultArray as $key) {
+                    $associativeData[$key] = $value;
+                }
             } else {
                 $associativeData[($headerData[$index])] = $value;
             }
@@ -1111,4 +1235,14 @@ class Import
         return $defaults;
     }
 
+    /**
+     * prints messages if debug is set to true
+     * @param $message
+     */
+    protected function debug($message)
+    {
+        if (self::DEBUG) {
+            print($message);
+        }
+    }
 }
