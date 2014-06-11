@@ -196,11 +196,13 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
                 tplSelector = '#contact-fields *[data-mapper-property-tpl="<%= selector %>"]:first',
                 emailSelector;
 
+            // TODO: set required to first email field
+
             if (data.indexOf('email') !== -1) {
-                emailSelector = this.sandbox.util.template(tplSelector, {selector: tplNames.email});
-                this.sandbox.form.addConstraint(this.form, emailSelector + ' input.email-value', 'required', {required: true});
-                this.sandbox.dom.addClass(emailSelector + ' label span:first', 'required');
-                this.sandbox.dom.attr(emailSelector, 'data-contactform-required', true);
+//                emailSelector = this.sandbox.util.template(tplSelector, {selector: tplNames.email});
+//                this.sandbox.form.addConstraint(this.form, emailSelector+ "  *[data-type=husky-input]", 'required', {required: true});
+//                this.sandbox.dom.addClass(emailSelector + ' label span:first', 'required');
+//                this.sandbox.dom.attr(emailSelector, 'data-contactform-required', true);
             }
         },
 
