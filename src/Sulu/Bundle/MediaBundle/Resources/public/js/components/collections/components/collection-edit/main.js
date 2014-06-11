@@ -187,7 +187,6 @@ define(function () {
          */
         renderSettings: function() {
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/media/template/collection/settings'));
-            this.options.data.color = this.options.data.style.color;
             this.sandbox.start('#' + constants.settingsFormId);
             this.sandbox.form.create('#' + constants.settingsFormId);
             this.sandbox.form.setData('#' + constants.settingsFormId, this.options.data).then(function() {
@@ -227,7 +226,6 @@ define(function () {
                 {title: 'media.collections.title', event: 'sulu.media.collections.list'},
                 {title: this.options.data.title}
             ]);
-            this.sandbox.emit('sulu.header.set-title-color', this.options.data.style.color);
         },
 
         /**
@@ -254,7 +252,6 @@ define(function () {
         saveSettings: function() {
             if (this.sandbox.form.validate('#' + constants.settingsFormId)) {
                 var data = this.sandbox.form.getData('#' + constants.settingsFormId);
-                data.style = {color: data.color};
                 this.options.data = this.sandbox.util.extend(true, {}, this.options.data, data);
                 this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
                 this.sandbox.once('sulu.media.collections.collection-changed', this.savedCallback.bind(this));
