@@ -24,6 +24,7 @@ use JMS\Serializer\Annotation\Accessor;
  */
 class Contact extends ApiEntity
 {
+
     /**
      * @var string
      */
@@ -136,6 +137,7 @@ class Contact extends ApiEntity
     private $tags;
 
     /**
+     * <<<<<<< HEAD
      * main account
      * @Accessor(getter="getMainAccount")
      * @var string
@@ -147,6 +149,16 @@ class Contact extends ApiEntity
      * @Exclude
      */
     private $accountContacts;
+====== =
+* @var boolean
+*/
+    private $newsletter;
+
+    /**
+     * @var string
+     */
+    private $gender;
+>>>>>>> 2d32354cdcaf7477e6ee24deb69958254dc63a08
 
     /**
      * Constructor
@@ -869,6 +881,52 @@ class Contact extends ApiEntity
     public function getAccountContacts()
     {
         return $this->accountContacts;
+    }
+
+    /**
+     * Set newsletter
+     *
+     * @param boolean $newsletter
+     * @return Contact
+     */
+    public function setNewsletter($newsletter)
+    {
+        $this->newsletter = $newsletter;
+
+        return $this;
+    }
+
+    /**
+     * Get newsletter
+     *
+     * @return boolean
+     */
+    public function getNewsletter()
+    {
+        return $this->newsletter;
+    }
+
+    /**
+     * Set gender
+     *
+     * @param string $gender
+     * @return Contact
+     */
+    public function setGender($gender)
+    {
+        $this->gender = $gender;
+
+        return $this;
+    }
+
+    /**
+     * Get gender
+     *
+     * @return string
+     */
+    public function getGender()
+    {
+        return $this->gender;
     }
 
     /**
