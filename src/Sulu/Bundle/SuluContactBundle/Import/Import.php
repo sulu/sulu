@@ -482,8 +482,11 @@ class Import
 
     /**
      * creates an contact for given row data
+     * @param $data
+     * @param $row
+     * @return Contact
      */
-    private function createContact($data, $row)
+    protected function createContact($data, $row)
     {
         $contact = new Contact();
         // $contact->addEmail();
@@ -522,8 +525,10 @@ class Import
 
             if (!$account) {
                 // throw new \Exception('could not find '.$data['contact_parent'].' in accounts');
+                printf('could not assign contact at row %d to %s. (account could not be found)', $row, $data['contact_parent']);
             } else {
-                $contact->setAccount($account);
+//                $contact->setAccount($account);
+                $accountContact = new AccountContact();
             }
         }
 
