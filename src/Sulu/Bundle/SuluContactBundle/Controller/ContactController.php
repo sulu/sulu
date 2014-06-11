@@ -365,6 +365,7 @@ class ContactController extends RestController implements ClassResourceInterface
      * creates a new main Account Contacts relation
      * @param Contact $contact
      * @param Account $account
+     * @return AccountContact
      */
     private function createMainAccountContacts(Contact $contact, Account $account)
     {
@@ -374,6 +375,7 @@ class ContactController extends RestController implements ClassResourceInterface
         $accountContact->setMain(true);
         $this->getDoctrine()->getManager()->persist($accountContact);
         $contact->addAccountContact($accountContact);
+        return $accountContact;
     }
 
     /**

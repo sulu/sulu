@@ -19,6 +19,7 @@ use Sulu\Bundle\ContactBundle\Entity\AccountContact;
 use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\BankAccount;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
+use Sulu\Bundle\ContactBundle\Entity\ContactRepository;
 use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\ContactBundle\Entity\Fax;
 use Sulu\Bundle\ContactBundle\Entity\Note;
@@ -465,30 +466,16 @@ class Import
     }
 
     /**
-     * returns the first email that is found
+     * iterate through data and find first of a specific type (which is enumerable
+     * @param $identifier
      * @param $data
      * @return string|bool
      */
-    protected function getFirstEmail($data)
+    protected function getFirstOf($identifier, $data)
     {
         for ($i = 0, $len = 10; ++$i < $len;) {
-            if ($this->checkData('email' . $i, $data)) {
-                return $data['email' . $i];
-            }
-        }
-        return false;
-    }
-
-    /**
-     * returns the first email that is found
-     * @param $data
-     * @return string|bool
-     */
-    protected function getFirstPhone($data)
-    {
-        for ($i = 0, $len = 10; ++$i < $len;) {
-            if ($this->checkData('phone' . $i, $data)) {
-                return $data['phone' . $i];
+            if ($this->checkData($identifier . $i, $data)) {
+                return $data[$identifier . $i];
             }
         }
         return false;
@@ -880,6 +867,8 @@ class Import
     {
 
         $criteria = array();
+        $email = null;
+        $phone = null;
 
         if ($this->options['importIds'] == true && $this->checkData('contact_id', $data)) {
             $criteria['id'] = $data['contact_id'];
@@ -892,13 +881,13 @@ class Import
             if ($this->checkData('contact_lastname', $data)) {
                 $criteria['lastName'] = $data['contact_lastname'];
             }
-            $email = $this->getFirstEmail($data);
-            $phone = $this->getFirstPhone($data);
+            $email = $this->getFirstOf('email',$data);
+            $phone = $this->getFirstOf('phone',$data);
         }
 
-        $contact = $this->em
-            ->getRepository($this->contactEntityName)
-            ->findByCriteriaEmailAndPhone($criteria, $email, $phone);
+        /** @var ContactRepository $repo */
+        $repo = $this->em->getRepository($this->contactEntityName);
+        $contact = $repo->findByCriteriaEmailAndPhone($criteria, $email, $phone);
 
         return $contact;
     }
