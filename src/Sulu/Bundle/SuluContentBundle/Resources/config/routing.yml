@@ -26,9 +26,9 @@ sulu_content.content_column:
     pattern: /template/content/column/{webspaceKey}/{languageCode}.html
     defaults: { _controller: SuluContentBundle:Template:column }
 
-sulu_content.resource_locator_post:
-    pattern: /resourcelocator.json
-    defaults: { _controller: SuluContentBundle:ResourceLocator:post }
+#sulu_content.resource_locator_post:
+#    pattern: /resourcelocator.json
+#    defaults: { _controller: SuluContentBundle:ResourceLocator:post }
 
 sulu_content.preview.changes:
     pattern: /preview/{contentUuid}.json

@@ -3,9 +3,9 @@
         width: 200px;
     }
     .show {
-      padding-left: 5px;
+        padding-left: 5px;
 
-      .icon {
+        .icon {
             font-size: 14px;
             padding-right: 2px;
         }
@@ -18,30 +18,51 @@
 }
 
 .resource-locator-history {
-  list-style-type: none;
-  padding: 0 40px 0 30px;
+    list-style-type: none;
+    padding: 0 40px 0 30px;
 
-  &::after {
-      display: table;
-      content: "";
-      clear: both;
-  }
+    &::after {
+        display: table;
+        content: "";
+        clear: both;
+    }
 
-  .url,
-  .date {
-      display: block;
-      width: 50%;
-      padding-top: 10px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid #ddd;
-  }
+    li::after {
+        clear: both;
+    }
 
-  .url {
-      float: left;
-      text-align: left;
-  }
-  .date {
-      float: right;
-      text-align: right;
-  }
+    .url,
+    .date,
+    .options-restore,
+    .options-delete {
+        display: block;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .url,
+    .date {
+        float: left;
+        width: 45%;
+    }
+
+    .options-restore {
+        float: left;
+        width: 5%;
+        text-align: center;
+    }
+
+    .options-delete {
+        float: right;
+        width: 5%;
+        text-align: center;
+    }
+
+    .url {
+        text-align: left;
+    }
+    .date {
+        text-align: center;
+    }
 }
