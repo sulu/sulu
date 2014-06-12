@@ -15,6 +15,7 @@ use DateTime;
 use Doctrine\ORM\Tools\SchemaTool;
 use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\AccountCategory;
+use Sulu\Bundle\ContactBundle\Entity\AccountContact;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\AddressType;
@@ -110,10 +111,14 @@ class AccountControllerTest extends DatabaseTestCase
         $contact->setMiddleName("Mittelname");
         $contact->setCreated(new \DateTime());
         $contact->setChanged(new \DateTime());
-        $contact->setAccount(self::$account);
         $contact->setDisabled(0);
         $contact->setFormOfAddress(0);
-        self::$account->addContact($contact);
+
+        $accountContact = new AccountContact();
+        $accountContact->setContact($contact);
+        $accountContact->setAccount(self::$account);
+        $accountContact->setMain(true);
+        self::$account->addAccountContact($accountContact);
 
         $note = new Note();
         $note->setValue('Note');
@@ -123,6 +128,7 @@ class AccountControllerTest extends DatabaseTestCase
         self::$em->persist($urlType);
         self::$em->persist($url);
         self::$em->persist($emailType);
+        self::$em->persist($accountContact);
         self::$em->persist($email);
         self::$em->persist($phoneType);
         self::$em->persist($phone);
@@ -173,13 +179,15 @@ class AccountControllerTest extends DatabaseTestCase
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\UrlType'),
             self::$em->getClassMetadata('Sulu\Bundle\TagBundle\Entity\Tag'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AccountCategory'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AccountContact'),
         );
 
         self::$tool->dropSchema(self::$entities);
         self::$tool->createSchema(self::$entities);
     }
 
-    private function createTestClient() {
+    private function createTestClient()
+    {
         return $this->createClient(
             array(),
             array(
@@ -224,7 +232,7 @@ class AccountControllerTest extends DatabaseTestCase
 
     public function testGetByIdNotExisting()
     {
-       $client = $this->createTestClient();
+        $client = $this->createTestClient();
         $client->request(
             'GET',
             '/api/accounts/10'
@@ -1167,22 +1175,25 @@ class AccountControllerTest extends DatabaseTestCase
         $this->assertEquals(1, $response->total);
     }
 
-
     public function testDeleteByIdAndDeleteContacts()
     {
-
         $contact = new Contact();
         $contact->setFirstName("Vorname");
         $contact->setLastName("Nachname");
         $contact->setMiddleName("Mittelname");
         $contact->setCreated(new \DateTime());
         $contact->setChanged(new \DateTime());
-        $contact->setAccount(self::$account);
         $contact->setDisabled(0);
         $contact->setFormOfAddress(0);
         self::$em->persist($contact);
-        self::$em->flush();
+        $accountContact = new AccountContact();
+        $accountContact->setContact($contact);
+        $accountContact->setAccount(self::$account);
+        $accountContact->setMain(true);
+        self::$account->addAccountContact($accountContact);
+        self::$em->persist($accountContact);
 
+        self::$em->flush();
 
         $client = $this->createTestClient();
 
@@ -1237,11 +1248,16 @@ class AccountControllerTest extends DatabaseTestCase
             $contact->setMiddleName("Mittelname " . $i);
             $contact->setCreated(new \DateTime());
             $contact->setChanged(new \DateTime());
-            $contact->setAccount(self::$account);
             $contact->setDisabled(0);
             $contact->setFormOfAddress(0);
-            $acc->addContact($contact);
             self::$em->persist($contact);
+
+            $accountContact = new AccountContact();
+            $accountContact->setContact($contact);
+            $accountContact->setAccount(self::$account);
+            $accountContact->setMain(true);
+            self::$em->persist($accountContact);
+            self::$account->addAccountContact($accountContact);
         }
 
         // add subaccount to self::$account
@@ -1256,7 +1272,7 @@ class AccountControllerTest extends DatabaseTestCase
         self::$em->flush();
 
         // get number of contacts from both accounts
-        $numContacts = self::$account->getContacts()->count() + $acc->getContacts()->count();
+        $numContacts = self::$account->getAccountContacts()->count() + $acc->getAccountContacts()->count();
 
         $client = $this->createTestClient();
         $client->request(
@@ -1295,17 +1311,21 @@ class AccountControllerTest extends DatabaseTestCase
             $contact->setMiddleName("Mittelname " . $i);
             $contact->setCreated(new \DateTime());
             $contact->setChanged(new \DateTime());
-            $contact->setAccount(self::$account);
             $contact->setDisabled(0);
             $contact->setFormOfAddress(0);
-            self::$account->addContact($contact);
-
             self::$em->persist($contact);
+
+            $accountContact = new AccountContact();
+            $accountContact->setContact($contact);
+            $accountContact->setAccount(self::$account);
+            $accountContact->setMain(true);
+            self::$em->persist($accountContact);
+            self::$account->addAccountContact($accountContact);
         }
 
         self::$em->flush();
 
-        $numContacts = self::$account->getContacts()->count();
+        $numContacts = self::$account->getAccountContacts()->count();
 
         $client = $this->createTestClient();
 
@@ -1315,7 +1335,7 @@ class AccountControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         // number of returned contacts has to be less or equal 3
-        $this->assertLessThanOrEqual(3, sizeof($response->contacts));
+        $this->assertEquals(3, sizeof($response->contacts));
 
         // return full number of contacts related to account
         $this->assertEquals($numContacts, $response->numContacts);

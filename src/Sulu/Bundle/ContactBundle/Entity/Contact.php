@@ -91,11 +91,6 @@ class Contact extends ApiEntity
     private $creator;
 
     /**
-     * @var \Sulu\Bundle\ContactBundle\Entity\Account
-     */
-    private $account;
-
-    /**
      * @var \Doctrine\Common\Collections\Collection
      */
     private $notes;
@@ -142,6 +137,19 @@ class Contact extends ApiEntity
     private $tags;
 
     /**
+     * main account
+     * @Accessor(getter="getMainAccount")
+     * @var string
+     */
+    private $account;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     * @Exclude
+     */
+    private $accountContacts;
+
+    /**
      * @var boolean
      */
     private $newsletter;
@@ -164,6 +172,7 @@ class Contact extends ApiEntity
         $this->phones = new \Doctrine\Common\Collections\ArrayCollection();
         $this->faxes = new \Doctrine\Common\Collections\ArrayCollection();
         $this->tags = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->accountContacts = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -480,29 +489,6 @@ class Contact extends ApiEntity
     public function getCreator()
     {
         return $this->creator;
-    }
-
-    /**
-     * Set account
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Account $account
-     * @return Contact
-     */
-    public function setAccount(\Sulu\Bundle\ContactBundle\Entity\Account $account = null)
-    {
-        $this->account = $account;
-
-        return $this;
-    }
-
-    /**
-     * Get account
-     *
-     * @return \Sulu\Bundle\ContactBundle\Entity\Account
-     */
-    public function getAccount()
-    {
-        return $this->account;
     }
 
     /**
@@ -864,6 +850,39 @@ class Contact extends ApiEntity
     }
 
     /**
+     * Add accountContacts
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\AccountContact $accountContacts
+     * @return Contact
+     */
+    public function addAccountContact(\Sulu\Bundle\ContactBundle\Entity\AccountContact $accountContacts)
+    {
+        $this->accountContacts[] = $accountContacts;
+
+        return $this;
+    }
+
+    /**
+     * Remove accountContacts
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\AccountContact $accountContacts
+     */
+    public function removeAccountContact(\Sulu\Bundle\ContactBundle\Entity\AccountContact $accountContacts)
+    {
+        $this->accountContacts->removeElement($accountContacts);
+    }
+
+    /**
+     * Get accountContacts
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getAccountContacts()
+    {
+        return $this->accountContacts;
+    }
+
+    /**
      * Set newsletter
      *
      * @param boolean $newsletter
@@ -907,5 +926,23 @@ class Contact extends ApiEntity
     public function getGender()
     {
         return $this->gender;
+    }
+
+    /**
+     * returns main account
+     */
+    public function getMainAccount()
+    {
+        $accountContacts = $this->getAccountContacts();
+
+        if (!is_null($accountContacts)) {
+            /** @var AccountContact $accountContact */
+            foreach ($accountContacts as $accountContact) {
+                if ($accountContact->getMain()) {
+                    return $accountContact->getAccount();
+                }
+            }
+        }
+        return null;
     }
 }
