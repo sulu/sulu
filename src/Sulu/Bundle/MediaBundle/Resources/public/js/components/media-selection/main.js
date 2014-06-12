@@ -20,11 +20,31 @@ define(['sulumedia/collection/collections'], function(Collections) {
     var defaults = {
             instanceName: null,
             url: null,
+            preselected: [1],
             translations: {
                 noMediaSelected: 'media-selection.nomedia-selected',
                 addImages: 'media-selection.add-images',
                 choose: 'media-selection.choose'
             }
+        },
+
+        /**
+         * namespace for events
+         * @type {string}
+         */
+        eventNamespace = 'sulu.media-selection.',
+
+        /**
+         * raised when all overlay components returned their value
+         * @event sulu.media-selection.input-retrieved
+         */
+        INPUT_RETRIEVED = function() {
+            return createEventName.call(this, 'input-retrieved');
+        },
+
+        /** returns normalized event names */
+        createEventName = function(postFix) {
+            return eventNamespace + (this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
         },
 
         templates = {
@@ -81,12 +101,14 @@ define(['sulumedia/collection/collections'], function(Collections) {
             // render no images selected
             renderStartContent.call(this);
 
+            // sandbox event handling
             bindCustomEvents.call(this);
 
             // init overlays
             // TODO config overlay
             startAddOverlay.call(this);
 
+            // dom event handling
             bindDomEvents.call(this);
         },
 
@@ -114,10 +136,14 @@ define(['sulumedia/collection/collections'], function(Collections) {
                                     el: this.sandbox.dom.find(getId.call(this, 'chooseTab')),
                                     instanceName: 'collections',
                                     gridUrl: '/admin/api/media?collection=',
+                                    preselected: this.options.preselected,
                                     dataGridOptions: {
                                         view: 'table',
                                         pagination: false,
                                         matchings: [
+                                            {
+                                                id: 'id'
+                                            },
                                             {
                                                 id: 'thumbnails',
                                                 translation: 'thumbnails',
@@ -138,6 +164,14 @@ define(['sulumedia/collection/collections'], function(Collections) {
                         ]);
                     }.bind(this)
                 });
+            }.bind(this));
+
+            // data from overlay retrieved
+            this.sandbox.on(INPUT_RETRIEVED.call(this), function() {
+                // TODO if data changed load
+                this.sandbox.logger.log(this.ids);
+
+                this.sandbox.util.load()
             }.bind(this));
         },
 
@@ -162,6 +196,7 @@ define(['sulumedia/collection/collections'], function(Collections) {
                         slides: [
                             {
                                 title: this.sandbox.translate(this.options.translations.addImages),
+                                okCallback: getAddOverlayData.bind(this),
                                 tabs: [
                                     {
                                         title: this.sandbox.translate(this.options.translations.choose),
@@ -177,6 +212,19 @@ define(['sulumedia/collection/collections'], function(Collections) {
 
         getChooseTabData = function() {
             return this.sandbox.dom.createElement('<div id="' + this.options.ids.chooseTab + '" style="max-height: 500px;"/>');
+        },
+
+        getAddOverlayData = function() {
+            var idsDef = this.sandbox.data.deferred();
+
+            this.sandbox.emit('sulu.grid-group.collections.get-selected-ids', function(ids) {
+                this.ids = ids;
+                idsDef.resolve();
+            }.bind(this));
+
+            idsDef.then(function() {
+                this.sandbox.emit(INPUT_RETRIEVED.call(this));
+            }.bind(this));
         };
 
     return {
