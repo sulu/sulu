@@ -6,7 +6,6 @@
         {% endblock %}
 
         {% block contact %}
-            <% var phonePattern = '^[0-9 \\(\\)/+-]*$' %>
             <div id="contact-edit-form">
                 <div class="pos-rel">
                     <h2 class="divider"><%=translate('contact.contacts.details')%></h2>
@@ -61,9 +60,16 @@
                                 </label>
 
                                 <div>
+                                    <div data-form="true"
+                                         data-type="husky-input"
+                                         data-aura-component="input@husky"
+                                         data-aura-skin="email"
+                                         data-aura-instance-name="email"
+                                         data-aura-input-id="<~= uid ~>"
+                                         data-aura-input-name="<~= uid ~>"
+                                         data-mapper-property="email"></div>
                                     <span class="hidden" data-mapper-property="attributes" data-form="true" data-type="attributes"></span>
                                     <input type="hidden" data-mapper-property="id" class="id-value"/>
-                                    <input id="<~= uid ~>" type="text" class="form-element email-value" data-type="email" data-mapper-property="email">
                                 </div>
                             </div>
                         </div>
@@ -83,9 +89,17 @@
                                 </label>
 
                                 <div>
+                                    <div data-form="true"
+                                         data-type="husky-input"
+                                         data-aura-component="input@husky"
+                                         data-aura-skin="phone"
+                                         data-aura-front-icon="fax"
+                                         data-aura-instance-name="fax"
+                                         data-aura-input-id="<~= uid ~>"
+                                         data-aura-input-name="<~= uid ~>"
+                                         data-mapper-property="fax"></div>
                                     <span class="hidden" data-mapper-property="attributes" data-form="true" data-type="attributes"></span>
                                     <input type="hidden" data-mapper-property="id" class="id-value"/>
-                                    <input id="<~= uid ~>" pattern="<%= phonePattern %>" type="text" class="form-element" data-mapper-property="fax">
                                 </div>
                             </div>
                         </div>
@@ -105,9 +119,16 @@
                                 </label>
 
                                 <div>
+                                    <div data-form="true"
+                                         data-type="husky-input"
+                                         data-aura-component="input@husky"
+                                         data-aura-skin="phone"
+                                         data-aura-instance-name="phone"
+                                         data-aura-input-id="<~= uid ~>"
+                                         data-aura-input-name="<~= uid ~>"
+                                         data-mapper-property="phone"></div>
                                     <span class="hidden" data-mapper-property="attributes" data-form="true" data-type="attributes"></span>
                                     <input type="hidden" data-mapper-property="id" class="id-value"/>
-                                    <input id="<~= uid ~>" pattern="<%= phonePattern %>" type="text" class="form-element phone-value" data-mapper-property="phone">
                                 </div>
                             </div>
                         </div>
@@ -125,9 +146,16 @@
                                 </label>
 
                                 <div>
+                                    <div data-form="true"
+                                         data-type="husky-input"
+                                         data-aura-component="input@husky"
+                                         data-aura-skin="url"
+                                         data-aura-instance-name="url"
+                                         data-aura-input-id="<~= uid ~>"
+                                         data-aura-input-name="<~= uid ~>"
+                                         data-mapper-property="url"></div>
                                     <span class="hidden" data-mapper-property="attributes" data-form="true" data-type="attributes"></span>
                                     <input type="hidden" data-mapper-property="id" class="id-value"/>
-                                    <input id="<~= uid ~>" type="text" class="form-element" data-type="url" data-mapper-property="url"/>
                                 </div>
                             </div>
                         </div>
@@ -156,8 +184,10 @@
     {% block tags %}
         <div class="form-horizontal">
             <h2 class="divider"><%= translate('tag.tags.title') %></h2>
+
             <div class="form-group">
                 <label></label>
+
                 <div id="tags"></div>
             </div>
         </div>

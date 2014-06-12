@@ -206,9 +206,12 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
                 tplSelector = '#contact-fields *[data-mapper-property-tpl="<%= selector %>"]:first',
                 emailSelector;
 
+            // TODO: set required to first email field
+
             if (data.indexOf('email') !== -1) {
                 emailSelector = this.sandbox.util.template(tplSelector, {selector: tplNames.email});
-                this.sandbox.form.addConstraint(this.form, emailSelector + ' input.email-value', 'required', {required: true});
+                this.sandbox.form.addConstraint(this.form, emailSelector + ' *[data-type=husky-input]', 'required', {required: true});
+//                this.sandbox.dom.attr(emailSelector + ' *[data-type=husky-input]', 'data-validation-required','true');
                 this.sandbox.dom.addClass(emailSelector + ' label.visible', 'required');
                 this.sandbox.dom.attr(emailSelector, 'data-contactform-required', true);
             }
@@ -259,12 +262,14 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
             } else {
                 // insert field
                 this.sandbox.form.addToCollection(this.form, data.collection, dataObject).then(function($element) {
+                    // start new field
+                    this.sandbox.start($element);
                     // crop the label
                     cropLabelOfElement.call(this, $element);
                 }.bind(this));
             }
 
-            // TODO: focus on just inserted fieldf
+            // TODO: focus on just inserted field
 
             // remove overlay
             this.sandbox.emit('husky.overlay.add-fields.remove');
