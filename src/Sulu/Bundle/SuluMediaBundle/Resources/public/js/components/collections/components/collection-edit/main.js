@@ -90,13 +90,16 @@ define(function () {
             }.bind(this));
 
            // open edit overlay on datagrid click
-            this.sandbox.on('husky.datagrid.item.click', function(id) {
-                this.sandbox.emit('sulu.media.collections.edit-media', id);
+            this.sandbox.on('husky.datagrid.item.click', this.editMedia.bind(this));
+
+            // unlock the dropzone pop-up if the media-edit overlay was closed
+            this.sandbox.on('sulu.media-edit.closed', function() {
+                this.sandbox.emit('husky.dropzone.'+ this.options.instanceName +'.unlock-popup');
             }.bind(this));
 
-            // reload datagrid of media has changed
-            this.sandbox.on('sulu.media.collections.media-saved', function() {
-                this.sandbox.emit('husky.datagrid.update');
+            // update datagrid if media-edit is finished
+            this.sandbox.on('sulu.media.collections.save-media', function(media) {
+                this.sandbox.emit('husky.datagrid.records.change', media);
             }.bind(this));
 
             // delete a media
@@ -107,6 +110,12 @@ define(function () {
 
             // delete the collection
             this.sandbox.on('sulu.header.toolbar.delete', this.deleteCollection.bind(this));
+
+            // toggle edit button
+            this.sandbox.on('husky.datagrid.number.selections', this.toggleEditButton.bind(this));
+
+            // edit media
+            this.sandbox.on('sulu.list-toolbar.edit', this.editMedia.bind(this));
         },
 
         /**
@@ -152,15 +161,38 @@ define(function () {
         },
 
         /**
+         * Edits all selected medias
+         * @param additionalMedia {Number|String} id of a media which should, besides the selected ones, also be edited (e.g. if it was clicked)
+         */
+        editMedia: function(additionalMedia) {
+            // show a loading icon
+            this.sandbox.emit('sulu.header.toolbar.item.loading', 'edit');
+            // stop loading icon if editing of the media has started
+            this.sandbox.once('sulu.media-edit.edit', function() {
+                this.sandbox.emit('sulu.header.toolbar.item.enable', 'edit', false);
+            }.bind(this));
+
+            this.sandbox.emit('husky.datagrid.items.get-selected', function(selected) {
+                this.sandbox.emit('husky.dropzone.'+ this.options.instanceName +'.lock-popup');
+                // add additional media to the edit-list, but only if its not already contained
+                if (!!additionalMedia && selected.indexOf(additionalMedia) === -1) {
+                    selected.push(additionalMedia);
+                }
+                this.sandbox.emit('sulu.media.collections.edit-media', selected);
+            }.bind(this));
+        },
+
+        /**
          * Renderes the files tab
          */
         renderSettings: function() {
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/media/template/collection/settings'));
-            this.options.data.color = this.options.data.style.color;
+            this.sandbox.start('#' + constants.settingsFormId);
             this.sandbox.form.create('#' + constants.settingsFormId);
-            this.sandbox.form.setData('#' + constants.settingsFormId, this.options.data);
-            this.startSettingsToolbar();
-            this.bindSettingsDomEvents();
+            this.sandbox.form.setData('#' + constants.settingsFormId, this.options.data).then(function() {
+                this.startSettingsToolbar();
+                this.bindSettingsDomEvents();
+            }.bind(this));
         },
 
         /**
@@ -168,7 +200,7 @@ define(function () {
          */
         bindSettingsDomEvents: function() {
             // activate save-button on key input
-            this.sandbox.dom.on(this.$el, 'keyup', function() {
+            this.sandbox.dom.on('#' + constants.settingsFormId, 'change keyup', function() {
                 if (this.saved === true) {
                     this.sandbox.emit('sulu.header.toolbar.state.change', 'edit', false);
                     this.saved = false;
@@ -194,7 +226,6 @@ define(function () {
                 {title: 'media.collections.title', event: 'sulu.media.collections.list'},
                 {title: this.options.data.title}
             ]);
-            this.sandbox.emit('sulu.header.set-title-color', this.options.data.style.color);
         },
 
         /**
@@ -221,7 +252,6 @@ define(function () {
         saveSettings: function() {
             if (this.sandbox.form.validate('#' + constants.settingsFormId)) {
                 var data = this.sandbox.form.getData('#' + constants.settingsFormId);
-                data.style = {color: data.color};
                 this.options.data = this.sandbox.util.extend(true, {}, this.options.data, data);
                 this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
                 this.sandbox.once('sulu.media.collections.collection-changed', this.savedCallback.bind(this));
@@ -248,7 +278,7 @@ define(function () {
                 {
                     el: this.$find(constants.toolbarSelector),
                     instanceName: this.options.instanceName,
-                    parentTemplate: 'default',
+                    parentTemplate: 'defaultEditable',
                     template: 'changeable',
                     inHeader: true
 
@@ -264,6 +294,15 @@ define(function () {
                         }
                     }
                 });
+        },
+
+        /**
+         * Enables or dsiables the edit button
+         * @param selectedElements {Number} number of selected elements
+         */
+        toggleEditButton: function(selectedElements) {
+            var enable = selectedElements > 0;
+            this.sandbox.emit('sulu.list-toolbar.' + this.options.instanceName + '.edit.state-change', enable);
         },
 
         /**
