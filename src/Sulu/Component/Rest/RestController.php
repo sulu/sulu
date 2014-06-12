@@ -251,9 +251,10 @@ abstract class RestController extends FOSRestController
      * route /contacts/list
      * @param array $where
      * @param String $entityName
+     * @param Function $entityFilter function for filtering entities
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    protected function responseList($where = array(), $entityName = null)
+    protected function responseList($where = array(), $entityName = null, $entityFilter = null)
     {
         /** @var ListRestHelper $listHelper */
         $listHelper = $this->get('sulu_core.list_rest_helper');
@@ -265,6 +266,11 @@ abstract class RestController extends FOSRestController
         $entities = $listHelper->find($entityName, $where);
         $numberOfAll = $listHelper->getTotalNumberOfElements($entityName, $where);
         $pages = $listHelper->getTotalPages($numberOfAll);
+
+        // filter entities
+        if (!is_null($entityFilter)) {
+            $entities = array_map($entityFilter, $entities);
+        }
 
         $response = array(
             '_links' => $this->getHalLinks($entities, $pages, true),
@@ -300,7 +306,7 @@ abstract class RestController extends FOSRestController
      * @param bool $returnListLinks
      * @return array
      */
-    private function getHalLinks(array $entities, $pages = 1, $returnListLinks = false)
+    protected function getHalLinks(array $entities, $pages = 1, $returnListLinks = false)
     {
         /** @var ListRestHelper $listHelper */
         $listHelper = $this->get('sulu_core.list_rest_helper');
