@@ -238,7 +238,6 @@ class NodeRepositoryTest extends PhpcrTestCase
             $this->mapper,
             $this->sessionManager,
             $this->userManager,
-            $this->containerValueMap['sulu.content.type.resource_locator'],
             $this->webspaceManager
         );
     }

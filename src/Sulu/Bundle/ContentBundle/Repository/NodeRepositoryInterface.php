@@ -122,9 +122,6 @@ interface NodeRepositoryInterface
      * @param string $uuid
      * @param string $webspaceKey
      * @param string $languageCode
-     * @return array
-     */
-    public function getHistory($uuid, $webspaceKey, $languageCode);
 
     /**
      * returns tree to content node given by uuid
