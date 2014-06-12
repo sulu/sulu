@@ -72,10 +72,6 @@ define([], function() {
         },
 
         setFormData: function(data) {
-            // this guarantees that one bankaccount field is shown
-            if (!!data && !data.bankAccounts.length) {
-                delete data.bankAccounts;
-            }
 
             // set formdata
             this.sandbox.form.setData(this.form, data).then(function() {
