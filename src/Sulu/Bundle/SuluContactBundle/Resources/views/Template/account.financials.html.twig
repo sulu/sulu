@@ -20,50 +20,43 @@
 
             <h2 class="divider"><%=translate('contact.accounts.bank-accounts')%></h2>
 
-            <div class="grid-row m-bottom-0" data-type="collection" data-type-min="1" data-mapper-property='[{"data":"bankAccounts","tpl":"bank-account-tpl"}]'>
+            <div class="grid-row" id="bankAccounts" data-type="collection" data-mapper-property='[{"data":"bankAccounts","tpl":"bank-account-tpl","empty-tpl":"bank-account-empty-tpl"}]'>
+
+                <script type="text/template" id="bank-account-empty-tpl">
+                    <div class="grid-col-12 floating">
+                        <div class="form-group">
+                            <label>
+                                <%=translate('contact.accounts.bankAccounts.add.label')%>
+                            </label>
+                            <div class="m-top-5">
+                                <span class="fa-plus-circle icon clickable pointer bank-add"></span>
+                            </div>
+                        </div>
+                    </div>
+                </script>
+
                 <script type="text/template" id="bank-account-tpl">
-                    <div class="grid-row">
-                        <div class="grid-row small">
-                            <div class="grid-col-12">
-                                <div class="form-group">
-                                    <label for="bank-name"><%=translate('contact.accounts.bankName')%></label>
-                                    <input id="bank-name" class="form-element" type="text" data-mapper-property="bankName"/>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="grid-row small">
-                            <div class="grid-col-7">
-                                <div class="form-group">
-                                    <label for="iban"><%=translate('public.iban')%></label>
-                                    <input id="iban" class="form-element" type="text" data-mapper-property="iban"/>
-                                </div>
-                            </div>
-                            <div class="grid-col-5">
-                                <div class="form-group">
-                                    <label for="bic"><%=translate('public.bic')%></label>
-                                    <input id="bic" class="form-element" type="text" data-mapper-property="bic"/>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="grid-row m-bottom-0">
-                            <div class="grid-col-6 floating">
-                                <div class="form-group">
-                                    <label for="public"><%=translate('public.public')%></label>
-                                    <div>
-                                        <div class="custom-checkbox">
-                                            <input class="form-element husky-validate" type="checkbox" id="public" data-mapper-property="public">
-                                            <span class="icon"></span>
-                                        </div>
-                                    </div>
+                    <div class="grid-row small">
+                        <div class="grid-col-12 floating">
+                            <div class="form-group">
+                                <label><%=translate('contact.accounts.bankAccount.label')%></label>
+
+                                <div class="bank-account-row clickable pointer">
+                                    <span data-mapper-property="bankName" data-form="true"></span>
+                                    <span data-mapper-property="iban" data-form="true"></span>
+                                    <span data-mapper-property="bic" data-form="true"></span>
+
+                                    <~ if(public) { ~>
+                                        <span>(<%=translate('public.public')%>)</span>
+                                    <~ } ~>
+
+                                    <span class="fa-times icon bank-account-remove"></span>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </script>
-            </div>
-            <div id="add-bank-account" class="btn action fit">
-                <span class="fa-plus-circle"></span>
-                <span class="text"><%=translate('contact.accounts.add-bank-account')%></span>
+
             </div>
 
         </div>
