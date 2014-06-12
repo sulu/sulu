@@ -119,7 +119,7 @@ class MediaRepository extends EntityRepository
                 ->addSelect('creatorContact')
                 ->addSelect('changerContact')
                 */
-                ->where('media.id IN :mediaIds');
+                ->where('media.id IN (:mediaIds)');
 
             $query = $qb->getQuery();
             $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
@@ -142,7 +142,7 @@ class MediaRepository extends EntityRepository
     /**
      * returns media filtered by collection
      */
-    public function findMedia($collection = null)
+    public function findMedia($collection = null, $ids = null)
     {
         try {
             $qb = $this->createQueryBuilder('media')
@@ -174,6 +174,10 @@ class MediaRepository extends EntityRepository
                 ->addSelect('creatorContact')
                 ->addSelect('changerContact')*/;
 
+            if ($ids !== null) {
+                $qb->where('media.id IN (:mediaIds)');
+            }
+
             if ($collection !== null) {
                 $qb->where('collection.id = :collection');
             }
@@ -182,6 +186,9 @@ class MediaRepository extends EntityRepository
             $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
             if ($collection !== null) {
                 $query->setParameter('collection', $collection);
+            }
+            if ($ids !== null) {
+                $query->setParameter('mediaIds', $ids);
             }
 
             return $query->getArrayResult();

@@ -131,8 +131,7 @@ class MediaController extends RestController implements ClassResourceInterface
                         )
                     ),
                     $media->setDataByEntityArray($mediaEntity, $locale, $request->get('version', null))->toArray()
-                )
-                ,
+                ),
                 200
             );
         }
@@ -150,11 +149,15 @@ class MediaController extends RestController implements ClassResourceInterface
         $locale = $this->getLocale($request->get('locale'));
 
         $collection = $request->get('collection');
+        $ids = $request->get('ids');
+        if ($ids !== null) {
+            $ids = explode(',', $ids);
+        }
         $fields = $request->get('fields', null);
         if ($fields !== null) {
             $fields = explode(',', $fields);
         }
-        $mediaList = $this->getDoctrine()->getRepository($this->entityName)->findMedia($collection);
+        $mediaList = $this->getDoctrine()->getRepository($this->entityName)->findMedia($collection, $ids);
         $mediaList = RestObjectHelper::convertMediasToRestObjects($mediaList, $locale, $fields);
         $view = $this->view($this->createHalResponse($mediaList), 200);
 
