@@ -1188,11 +1188,11 @@ class AccountController extends RestController implements ClassResourceInterface
             $accountContacts = $account->getAccountContacts();
             $numContacts = 0;
             if (!is_null($accountContacts)) {
-                foreach ($accountContacts as $accountContacts) {
-                    $contactId = $accountContacts->getContact()->getId();
+                foreach ($accountContacts as $accountContact) {
+                    $contactId = $accountContact->getContact()->getId();
                     if (!array_key_exists($contactId, $slicedContacts)) {
                         if ($numContacts++ < 3) {
-                            $slicedContacts[$contactId] = $accountContacts->getContact();
+                            $slicedContacts[$contactId] = $accountContact->getContact();
                         }
                     }
                 }
