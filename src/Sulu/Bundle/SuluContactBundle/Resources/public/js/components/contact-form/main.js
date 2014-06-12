@@ -77,7 +77,7 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
          * is emitted when a new address is added
          * @constructor sulu.contact-form.added.address
          */
-        EVENT_ADDED_ADDRESS = function(){
+        EVENT_ADDED_ADDRESS = function() {
             return eventNamespace + '.added.address';
         },
 
@@ -85,8 +85,16 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
          * is emitted when a new address is added
          * @constructor sulu.contact-form.removed.address
          */
-        EVENT_REMOVED_ADDRESS = function(){
+        EVENT_REMOVED_ADDRESS = function() {
             return eventNamespace + '.removed.address';
+        },
+
+        /**
+         * listens on and starts cropping the labels
+         * @event sulu.contact-form.content-set
+         */
+        CONTENT_SET = function() {
+            return eventNamespace + '.content-set';
         },
 
         bindCustomEvents = function() {
@@ -95,6 +103,7 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
             this.sandbox.on('sulu.contact-form.is.initialized', isInitialized.bind(this));
 
             this.sandbox.on('husky.overlay.add-address.initialized', initializeDropdownForAddressTypes.bind(this));
+            this.sandbox.on(CONTENT_SET.call(this), cropAllLabels.bind(this));
 
             // bind events for add-fields overlay
             bindAddEvents.call(this);
@@ -267,7 +276,7 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
             if (data.indexOf('email') !== -1) {
                 emailSelector = this.sandbox.util.template(tplSelector, {selector: tplNames.email});
                 this.sandbox.form.addConstraint(this.form, emailSelector + ' input.email-value', 'required', {required: true});
-                this.sandbox.dom.addClass(emailSelector + ' label span:first', 'required');
+                this.sandbox.dom.addClass(emailSelector + ' label.visible', 'required');
                 this.sandbox.dom.attr(emailSelector, 'data-contactform-required', true);
             }
         },
@@ -316,10 +325,13 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
                 createAddressOverlay.call(this, dataObject);
             } else {
                 // insert field
-                this.sandbox.form.addToCollection(this.form, data.collection, dataObject);
+                this.sandbox.form.addToCollection(this.form, data.collection, dataObject).then(function($element) {
+                    // crop the label
+                    cropLabelOfElement.call(this, $element);
+                }.bind(this));
             }
 
-            // TODO: focus on just inserted field
+            // TODO: focus on just inserted fieldf
 
             // remove overlay
             this.sandbox.emit('husky.overlay.add-fields.remove');
@@ -330,7 +342,7 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
          * a click on ok
          */
         editOkClicked = function() {
-            var i, length, newTypeId, newType, dataObject, deleted;
+            var i, length, newTypeId, newType, dataObject, deleted, $element;
             // loop through all editable fields get the selected type and map it back into the array
             for (i = -1, length = this.editFieldsData.length; ++i < length;) {
                 // first check if field got marked as deleted and if so delete it
@@ -350,6 +362,9 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
                             dataObject = {};
                             dataObject[this.editFieldsData[i].typeName] = newType;
                             this.sandbox.form.editInCollection(this.form, this.editFieldsData[i].mapperId, dataObject);
+                            $element = this.$find('[data-mapper-id="' + this.editFieldsData[i].mapperId + '"]');
+                            // crop the label
+                            cropLabelOfElement.call(this, $element);
                             this.sandbox.emit(EVENT_CHANGED.call(this));
                         }
                     }
@@ -607,7 +622,7 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
         },
 
         addAddressOkClicked = function(mapperId) {
-            var formData;
+            var formData, $element;
 
             if (!this.sandbox.form.validate(constants.addressFormId)) {
                 return false;
@@ -616,9 +631,16 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
 
             // add to collection
             if (!mapperId) {
-                this.sandbox.form.addToCollection(this.form, 'addresses', formData);
+                this.sandbox.form.addToCollection(this.form, 'addresses', formData).then(function($element) {
+                    // crop the label
+                    cropLabelOfElement.call(this, $element);
+                }.bind(this));
             } else {
                 this.sandbox.form.editInCollection(this.form, mapperId, formData);
+
+                $element = this.$find('[data-mapper-id="' + mapperId + '"]');
+                // crop the label
+                cropLabelOfElement.call(this, $element);
             }
 
             // set changed to be able to save
@@ -694,6 +716,28 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
                     }
                 }
             ]);
+        },
+
+        /**
+         * Crops all labels, gets called at the beginning
+         */
+        cropAllLabels = function() {
+            var elements = this.sandbox.dom.find('label.hidden', '#contact-edit-form'), i, length;
+            for (i = -1, length = elements.length; ++i < length;) {
+                cropLabelOfElement.call(this, this.sandbox.dom.parent(elements[i]));
+            }
+        },
+
+        /**
+         * Takes a form-element and crops its label
+         * @param $element {Object} the dom object of the form-element
+         */
+        cropLabelOfElement = function($element) {
+            var original = this.sandbox.dom.trim(this.sandbox.dom.text(this.sandbox.dom.find('label.hidden', $element)));
+            // replace multiple spaces with single
+            original = original.replace(/\s{2,}/g, ' ');
+            this.sandbox.dom.attr(this.sandbox.dom.find('label.visible', $element), 'title', original);
+            this.sandbox.dom.html(this.sandbox.dom.find('label.visible', $element), this.sandbox.util.cropMiddle(original, 20));
         };
 
     return {

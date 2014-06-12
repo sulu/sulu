@@ -107,16 +107,31 @@ class ImportTest extends DatabaseTestCase
         self::$em->flush();
 
         // TODO: use fixtures
-        $this->import = new Import(self::$em, array(
-            'emailType' => 1,
-            'phoneType' => 1,
-            'phoneTypeIsdn' => 2,
-            'phoneTypeMobile' => 3,
-            'addressType' => 1,
-            'urlType' => 1,
-            'faxType' => 1,
-            'country' => 1,
-        ));
+        $this->import = new Import(self::$em,
+            array(
+                'emailType' => 1,
+                'phoneType' => 1,
+                'phoneTypeIsdn' => 2,
+                'phoneTypeMobile' => 3,
+                'addressType' => 1,
+                'urlType' => 1,
+                'faxType' => 1,
+                'country' => 1,
+            ),
+            array(), // FIXME: this is not beeing used by import currently (fill in when needed)
+            array(
+                'male' => array(
+                    'id' => 0,
+                    'name' => 'male',
+                    'translation' => 'male'
+                ),
+                'female' => array(
+                    'id' => 1,
+                    'name' => 'female',
+                    'translation' => 'female'
+                ),
+            )
+        );
     }
 
     public function tearDown()
