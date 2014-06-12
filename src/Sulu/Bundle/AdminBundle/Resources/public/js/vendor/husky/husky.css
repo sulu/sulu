@@ -9090,18 +9090,23 @@ a.btn-black, a.btn-highlight {
   font-weight: bold;
 }
 /* line 47, ../scss/modules/datagrid.scss */
+.husky-datagrid thead .sort-loader {
+  display: inline-block;
+  padding-left: 3px;
+}
+/* line 52, ../scss/modules/datagrid.scss */
 .husky-datagrid thead .table-container {
   width: 100%;
 }
-/* line 53, ../scss/modules/datagrid.scss */
+/* line 58, ../scss/modules/datagrid.scss */
 .husky-datagrid tbody tr:last-child {
   border-width: 2px;
 }
-/* line 58, ../scss/modules/datagrid.scss */
+/* line 63, ../scss/modules/datagrid.scss */
 .husky-datagrid .table-container {
   overflow: auto;
 }
-/* line 61, ../scss/modules/datagrid.scss */
+/* line 66, ../scss/modules/datagrid.scss */
 .husky-datagrid .table-container.overflow:after {
   content: "\f061";
   color: #cccccc;
@@ -9110,36 +9115,36 @@ a.btn-black, a.btn-highlight {
   right: -26px;
   top: 40%;
 }
-/* line 72, ../scss/modules/datagrid.scss */
+/* line 77, ../scss/modules/datagrid.scss */
 .husky-datagrid .datagrid-loader {
   position: absolute;
   top: 50%;
   left: 50%;
   margin: -50px 0 0 -50px;
 }
-/* line 79, ../scss/modules/datagrid.scss */
+/* line 84, ../scss/modules/datagrid.scss */
 .husky-datagrid .dropdown-menu {
   margin-top: 5px;
 }
-/* line 82, ../scss/modules/datagrid.scss */
+/* line 87, ../scss/modules/datagrid.scss */
 .husky-datagrid .dropdown-toggle::after {
   margin-left: 12px;
 }
-/* line 86, ../scss/modules/datagrid.scss */
+/* line 91, ../scss/modules/datagrid.scss */
 .husky-datagrid.loading {
   min-height: 150px;
 }
-/* line 95, ../scss/modules/datagrid.scss */
+/* line 100, ../scss/modules/datagrid.scss */
 .husky-datagrid.fullwidth th:first-child,
 .husky-datagrid.fullwidth td:first-child {
   padding-left: 60px;
 }
-/* line 99, ../scss/modules/datagrid.scss */
+/* line 104, ../scss/modules/datagrid.scss */
 .husky-datagrid.fullwidth .pagination-wrapper {
   padding-left: 50px;
   padding-right: 30px;
 }
-/* line 103, ../scss/modules/datagrid.scss */
+/* line 108, ../scss/modules/datagrid.scss */
 .husky-datagrid.fullwidth .overflow + .pagination-wrapper {
   padding-right: 0;
 }
@@ -9934,28 +9939,36 @@ a.btn-black, a.btn-highlight {
   height: 26px;
 }
 
+/* line 5, ../scss/modules/thumbnails.scss */
+.husky-thumbnails {
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+}
 /* line 32, ../scss/mixins.scss */
 .husky-thumbnails:after {
   clear: both;
   content: ' ';
   display: block;
 }
-/* line 16, ../scss/modules/thumbnails.scss */
+/* line 17, ../scss/modules/thumbnails.scss */
 .husky-thumbnails .download {
   font-size: 15px;
   height: 15px;
   width: 15px;
 }
-/* line 21, ../scss/modules/thumbnails.scss */
+/* line 22, ../scss/modules/thumbnails.scss */
 .husky-thumbnails .description {
   font-size: 10px;
   color: #999999;
 }
-/* line 25, ../scss/modules/thumbnails.scss */
+/* line 26, ../scss/modules/thumbnails.scss */
 .husky-thumbnails .text {
   line-height: 14px;
 }
-/* line 29, ../scss/modules/thumbnails.scss */
+/* line 30, ../scss/modules/thumbnails.scss */
 .husky-thumbnails .item {
   float: left;
   position: relative;
@@ -9967,14 +9980,14 @@ a.btn-black, a.btn-highlight {
   content: ' ';
   display: block;
 }
-/* line 35, ../scss/modules/thumbnails.scss */
+/* line 36, ../scss/modules/thumbnails.scss */
 .husky-thumbnails .item.small {
   width: 259px;
   height: 70px;
   margin-bottom: 20px;
   margin-right: 8px;
 }
-/* line 41, ../scss/modules/thumbnails.scss */
+/* line 42, ../scss/modules/thumbnails.scss */
 .husky-thumbnails .item.small .image {
   float: left;
   width: 70px;
@@ -9982,19 +9995,19 @@ a.btn-black, a.btn-highlight {
   line-height: 50px;
   padding: 10px;
 }
-/* line 47, ../scss/modules/thumbnails.scss */
+/* line 48, ../scss/modules/thumbnails.scss */
 .husky-thumbnails .item.small .image img {
   vertical-align: middle;
   max-width: 100%;
   max-height: 100%;
 }
-/* line 53, ../scss/modules/thumbnails.scss */
+/* line 54, ../scss/modules/thumbnails.scss */
 .husky-thumbnails .item.small .text {
   float: left;
   padding-top: 20px;
   width: 190px -1px;
 }
-/* line 58, ../scss/modules/thumbnails.scss */
+/* line 59, ../scss/modules/thumbnails.scss */
 .husky-thumbnails .item.small .checkbox {
   position: absolute;
   top: 10px;
@@ -10002,14 +10015,14 @@ a.btn-black, a.btn-highlight {
   left: auto;
   display: none;
 }
-/* line 65, ../scss/modules/thumbnails.scss */
+/* line 66, ../scss/modules/thumbnails.scss */
 .husky-thumbnails .item.small .download {
   position: absolute;
   right: 10px;
   bottom: 10px;
   display: none;
 }
-/* line 73, ../scss/modules/thumbnails.scss */
+/* line 74, ../scss/modules/thumbnails.scss */
 .husky-thumbnails .item.large {
   width: 187px;
   height: 248px;
@@ -10018,7 +10031,7 @@ a.btn-black, a.btn-highlight {
   border: 1px solid #cccccc;
   padding: 10px;
 }
-/* line 81, ../scss/modules/thumbnails.scss */
+/* line 82, ../scss/modules/thumbnails.scss */
 .husky-thumbnails .item.large .image {
   width: 100%;
   height: 170px;
@@ -10026,42 +10039,166 @@ a.btn-black, a.btn-highlight {
   line-height: 170px;
   margin-bottom: 10px;
 }
-/* line 87, ../scss/modules/thumbnails.scss */
+/* line 88, ../scss/modules/thumbnails.scss */
 .husky-thumbnails .item.large .image img {
   vertical-align: bottom;
   max-width: 100%;
   max-height: 100%;
 }
-/* line 93, ../scss/modules/thumbnails.scss */
+/* line 94, ../scss/modules/thumbnails.scss */
 .husky-thumbnails .item.large .text {
   text-align: center;
 }
-/* line 96, ../scss/modules/thumbnails.scss */
+/* line 97, ../scss/modules/thumbnails.scss */
 .husky-thumbnails .item.large .checkbox {
   position: absolute;
   left: 10px;
   bottom: 10px;
   top: auto;
 }
-/* line 102, ../scss/modules/thumbnails.scss */
+/* line 103, ../scss/modules/thumbnails.scss */
 .husky-thumbnails .item.large .download {
   position: absolute;
   bottom: 10px;
   right: 10px;
 }
-/* line 110, ../scss/modules/thumbnails.scss */
+/* line 111, ../scss/modules/thumbnails.scss */
 .husky-thumbnails .item:hover, .husky-thumbnails .item.is-selected {
   background: white;
 }
-/* line 113, ../scss/modules/thumbnails.scss */
+/* line 114, ../scss/modules/thumbnails.scss */
 .husky-thumbnails .item:hover .checkbox, .husky-thumbnails .item.is-selected .checkbox {
   display: block;
 }
-/* line 116, ../scss/modules/thumbnails.scss */
+/* line 117, ../scss/modules/thumbnails.scss */
 .husky-thumbnails .item:hover .download, .husky-thumbnails .item.is-selected .download {
   display: block;
 }
-/* line 119, ../scss/modules/thumbnails.scss */
+/* line 120, ../scss/modules/thumbnails.scss */
 .husky-thumbnails .item:hover.large, .husky-thumbnails .item.is-selected.large {
   border-color: white;
+}
+
+/* line 32, ../scss/mixins.scss */
+.husky-groups:after {
+  clear: both;
+  content: ' ';
+  display: block;
+}
+/* line 138, ../scss/modules/thumbnails.scss */
+.husky-groups .grid-group {
+  width: 190px;
+  margin-right: 20px;
+  margin-bottom: 30px;
+  float: left;
+  cursor: pointer;
+}
+/* line 145, ../scss/modules/thumbnails.scss */
+.husky-groups .grid-group .thumbnails {
+  position: relative;
+  width: 100%;
+  height: 125px;
+}
+/* line 150, ../scss/modules/thumbnails.scss */
+.husky-groups .grid-group .thumbnails .thumbnail {
+  position: absolute;
+  width: 150px;
+  height: 100px;
+  -webkit-box-sizing: border-box;
+  /* Safari/Chrome, other WebKit */
+  -moz-box-sizing: border-box;
+  /* Firefox, other Gecko */
+  box-sizing: border-box;
+  /* Opera/IE 8+ */
+  border: 3px solid white;
+  border-radius: 2px;
+  -webkit-transition: all 200ms ease;
+  -webkit-transition-delay: 200ms;
+  -moz-transition: all 200ms ease 200ms;
+  -o-transition: all 200ms ease 200ms;
+  transition: all 200ms ease 200ms;
+}
+/* line 159, ../scss/modules/thumbnails.scss */
+.husky-groups .grid-group .thumbnails .thumbnail img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  border: 1px solid #dddddd;
+}
+/* line 166, ../scss/modules/thumbnails.scss */
+.husky-groups .grid-group .thumbnails .thumbnail.first {
+  top: 0px;
+  right: 0px;
+  z-index: 50;
+  transform: rotate(0deg);
+  -ms-transform: rotate(0deg);
+  /* IE 9 */
+  -webkit-transform: rotate(0deg);
+  /* Opera, Chrome, and Safari */
+}
+/* line 173, ../scss/modules/thumbnails.scss */
+.husky-groups .grid-group .thumbnails .thumbnail.second {
+  right: 10px;
+  top: 3px;
+  z-index: 40;
+  transform: rotate(-3deg);
+  -ms-transform: rotate(-3deg);
+  /* IE 9 */
+  -webkit-transform: rotate(-3deg);
+  /* Opera, Chrome, and Safari */
+}
+/* line 180, ../scss/modules/thumbnails.scss */
+.husky-groups .grid-group .thumbnails .thumbnail.third {
+  right: 20px;
+  top: 6px;
+  z-index: 30;
+  transform: rotate(-5deg);
+  -ms-transform: rotate(-5deg);
+  /* IE 9 */
+  -webkit-transform: rotate(-5deg);
+  /* Opera, Chrome, and Safari */
+}
+/* line 190, ../scss/modules/thumbnails.scss */
+.husky-groups .grid-group .thumbnails:hover .thumbnail.first {
+  top: -10px;
+  right: -20px;
+  transform: rotate(5deg);
+  -ms-transform: rotate(5deg);
+  /* IE 9 */
+  -webkit-transform: rotate(5deg);
+  /* Opera, Chrome, and Safari */
+}
+/* line 196, ../scss/modules/thumbnails.scss */
+.husky-groups .grid-group .thumbnails:hover .thumbnail.second {
+  right: 10px;
+  top: -2px;
+  transform: rotate(-2deg);
+  -ms-transform: rotate(-2deg);
+  /* IE 9 */
+  -webkit-transform: rotate(-2deg);
+  /* Opera, Chrome, and Safari */
+}
+/* line 202, ../scss/modules/thumbnails.scss */
+.husky-groups .grid-group .thumbnails:hover .thumbnail.third {
+  top: 15px;
+  right: 35px;
+  transform: rotate(-8deg);
+  -ms-transform: rotate(-8deg);
+  /* IE 9 */
+  -webkit-transform: rotate(-8deg);
+  /* Opera, Chrome, and Safari */
+}
+/* line 210, ../scss/modules/thumbnails.scss */
+.husky-groups .grid-group .title {
+  display: block;
+  line-height: 14px;
+  text-align: center;
+}
+/* line 215, ../scss/modules/thumbnails.scss */
+.husky-groups .grid-group .addition {
+  display: block;
+  text-align: center;
+  font-size: 10px;
+  color: #999999;
+  line-height: 14px;
 }
