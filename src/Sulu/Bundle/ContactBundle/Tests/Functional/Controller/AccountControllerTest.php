@@ -1925,4 +1925,47 @@ class AccountControllerTest extends DatabaseTestCase
         $this->assertEquals(true,$response->addresses[1]->primaryAddress);
         $this->assertEquals(false,$response->addresses[2]->primaryAddress);
     }
+
+    public function testTriggerAction()
+    {
+
+        $client = $this->createTestClient();
+
+        $client->request(
+            'POST',
+            '/api/accounts/1?action=convertAccountType&type=lead'
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $this->assertEquals(self::$account->getId(), $response->id);
+        $this->assertEquals(1, $response->type);
+
+    }
+
+    public function testTriggerActionUnknownTrigger()
+    {
+        $client = $this->createTestClient();
+
+        $client->request(
+            'POST',
+            '/api/accounts/1?action=xyz&type=lead'
+        );
+
+        $this->assertEquals(400, $client->getResponse()->getStatusCode());
+    }
+
+    public function testTriggerActionUnknownEntity()
+    {
+        $client = $this->createTestClient();
+
+        $client->request(
+            'POST',
+            '/api/accounts/999?action=convertAccountType&type=lead'
+        );
+
+        $this->assertEquals(404, $client->getResponse()->getStatusCode());
+    }
+
 }

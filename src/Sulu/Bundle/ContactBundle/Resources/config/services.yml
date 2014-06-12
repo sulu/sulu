@@ -15,7 +15,11 @@ services:
 
     sulu_contact.import:
         class: %sulu_contact.import.class%
-        arguments: [@doctrine.orm.entity_manager, %sulu_contact.defaults%]
+        arguments:
+          - @doctrine.orm.entity_manager
+          - %sulu_contact.defaults%
+          - %sulu_contact.account_types%
+          - %sulu_contact.form_of_address%
 
     sulu_contact.js_config:
         class: %sulu_contact.js_config.class%

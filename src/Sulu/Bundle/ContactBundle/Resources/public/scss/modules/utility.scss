@@ -81,20 +81,9 @@
     label {
         line-height:14px;
         text-overflow: hidden;
-    }
-
-    .label-container {
-        display: block;
-        font-size: 11px;
-    }
-}
-
-.type-value {
-    &:before {
-        content: '(';
-    }
-    &:after {
-        content: ')';
+        &.hidden {
+          display: none;
+        }
     }
 }
 

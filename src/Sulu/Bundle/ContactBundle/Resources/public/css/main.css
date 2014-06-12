@@ -78,22 +78,12 @@
   line-height: 14px;
   text-overflow: hidden;
 }
-/* line 86, ../scss/modules/utility.scss */
-#contact-edit-form .label-container {
-  display: block;
-  font-size: 11px;
+/* line 84, ../scss/modules/utility.scss */
+#contact-edit-form label.hidden {
+  display: none;
 }
 
-/* line 93, ../scss/modules/utility.scss */
-.type-value:before {
-  content: '(';
-}
-/* line 96, ../scss/modules/utility.scss */
-.type-value:after {
-  content: ')';
-}
-
-/* line 102, ../scss/modules/utility.scss */
+/* line 91, ../scss/modules/utility.scss */
 .form-horizontal .form-group .checkbox-container-left {
   text-align: left;
   width: 35px;

@@ -45,6 +45,7 @@ define([
             this.bindCustomEvents();
             this.account = null;
             this.accountType = null;
+            this.accountTypes = null;
 
             if (this.options.display === 'list') {
                 this.renderList();
@@ -95,6 +96,73 @@ define([
                 }
                 this.sandbox.emit('sulu.router.navigate', 'contacts/accounts' + typeString, !noReload ? true : false, true);
             }, this);
+
+            this.sandbox.on('sulu.contacts.account.types', function(data) {
+                this.accountType = data.accountType;
+                this.accountTypes = data.accountTypes;
+            }.bind(this));
+
+            this.sandbox.on('sulu.contacts.account.get.types', function(callback) {
+                if (typeof callback === 'function') {
+                    callback(this.accountType, this.accountTypes);
+                }
+            }.bind(this));
+
+            this.sandbox.on('sulu.contacts.account.convert', function(data) {
+                this.convertAccount(data);
+            }.bind(this));
+        },
+
+        /**
+         * Converts an account
+         */
+        convertAccount: function(data) {
+            this.confirmConversionDialog(function(wasConfirmed) {
+                if (wasConfirmed) {
+                    this.account.set({type: data.id});
+                    this.sandbox.emit('sulu.header.toolbar.item.loading', 'options-button');
+                    this.sandbox.util.ajax('/admin/api/accounts/'+this.account.id+'?action=convertAccountType&type='+data.name, {
+
+                        type: 'POST',
+
+                        success: function(response){
+                            var model = response;
+                            this.sandbox.emit('sulu.header.toolbar.item.enable', 'options-button');
+
+                            // update tabs and breadcrumb
+                            this.sandbox.emit('sulu.contacts.accounts.saved', model);
+                            AccountsUtilHeader.setHeader.call(this, this.account, this.options.accountType);
+
+                            // update toolbar
+                            this.sandbox.emit('sulu.account.type.converted');
+                        }.bind(this),
+
+                        error: function(){
+                            this.sandbox.logger.log("error while saving profile");
+                        }.bind(this)
+                    });
+                }
+            }.bind(this));
+        },
+
+        /**
+         * @var ids - array of ids to delete
+         * @var callback - callback function returns true or false if data got deleted
+         */
+        confirmConversionDialog: function(callbackFunction) {
+
+            // check if callback is a function
+            if (!!callbackFunction && typeof(callbackFunction) !== 'function') {
+                throw 'callback is not a function';
+            }
+
+            // show dialog
+            this.sandbox.emit('sulu.overlay.show-warning',
+                'sulu.overlay.be-careful',
+                'contact.accounts.type.conversion.message',
+                callbackFunction.bind(this, false),
+                callbackFunction.bind(this, true)
+            );
         },
 
         // show confirmation and delete account

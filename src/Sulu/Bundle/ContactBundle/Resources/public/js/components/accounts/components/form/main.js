@@ -20,14 +20,14 @@ define([], function() {
             tagsId: '#tags',
             addressAddId: '#address-add',
             addAddressWrapper: '.grid-row'
-        },
-
-    // sets toolbar
-        setHeaderToolbar = function() {
-            this.sandbox.emit('sulu.header.set-toolbar', {
-                template: 'default'
-            });
         };
+
+//    // sets toolbar
+//        setHeaderToolbar = function() {
+//            this.sandbox.emit('sulu.header.set-toolbar', {
+//                template: 'default'
+//            });
+//        };
 
     return {
 
@@ -57,9 +57,16 @@ define([], function() {
             this.accountCategoryURL = 'api/account/categories';
 
             this.render();
+            this.getAccountTypeData();
             this.setHeaderBar(true);
-            setHeaderToolbar.call(this);
             this.listenForChange();
+        },
+
+        getAccountTypeData: function() {
+            this.sandbox.emit('sulu.contacts.account.get.types', function(accountType, accountTypes) {
+                this.accountType = accountType;
+                this.accountTypes = accountTypes;
+            }.bind(this));
         },
 
         render: function() {
@@ -73,6 +80,8 @@ define([], function() {
             this.titleField = this.$find('#name');
 
             data = this.initContactData();
+            this.accountType = null;
+            this.accountTypes = null;
 
             excludeItem = [];
             if (!!this.options.data.id) {
@@ -159,7 +168,7 @@ define([], function() {
                 .then(function(response) {
 
                     // data is data for select but not for overlay
-                    var data = response['_embedded'];
+                    var data = response._embedded;
                     this.accountCategoryData = this.copyArrayOfObjects(data);
 
                     // translate values for select but not for overlay
@@ -362,6 +371,7 @@ define([], function() {
             this.sandbox.form.setData(this.form, data).then(function() {
                 this.sandbox.start(this.form);
                 this.sandbox.emit('sulu.contact-form.add-required', ['email']);
+                this.sandbox.emit('sulu.contact-form.content-set');
                 this.dfdFormIsSet.resolve();
             }.bind(this));
         },
@@ -375,11 +385,11 @@ define([], function() {
          * Adds or removes icon to add addresses
          * @param numberOfAddresses
          */
-        updateAddressesAddIcon: function(numberOfAddresses){
+        updateAddressesAddIcon: function(numberOfAddresses) {
             var $addIcon = this.sandbox.dom.find(constants.addressAddId),
                 addIcon;
 
-            if(!!numberOfAddresses && numberOfAddresses > 0 && $addIcon.length === 0) {
+            if (!!numberOfAddresses && numberOfAddresses > 0 && $addIcon.length === 0) {
                 addIcon = this.sandbox.dom.$(this.customTemplates.addAddressesIcon);
                 this.sandbox.dom.after(this.sandbox.dom.$('#addresses'), addIcon);
             } else if (numberOfAddresses === 0 && $addIcon.length > 0) {
@@ -398,12 +408,12 @@ define([], function() {
 
         bindCustomEvents: function() {
 
-            this.sandbox.on('sulu.contact-form.added.address', function(){
+            this.sandbox.on('sulu.contact-form.added.address', function() {
                 this.numberOfAddresses++;
                 this.updateAddressesAddIcon(this.numberOfAddresses);
             }, this);
 
-            this.sandbox.on('sulu.contact-form.removed.address', function(){
+            this.sandbox.on('sulu.contact-form.removed.address', function() {
                 this.numberOfAddresses--;
                 this.updateAddressesAddIcon(this.numberOfAddresses);
             }, this);
@@ -497,6 +507,7 @@ define([], function() {
                 this.sandbox.dom.on('#contact-form', 'change', function() {
                     this.setHeaderBar(false);
                 }.bind(this), "select, input, textarea");
+
                 this.sandbox.dom.on('#contact-form', 'keyup', function() {
                     this.setHeaderBar(false);
                 }.bind(this), "input, textarea");
