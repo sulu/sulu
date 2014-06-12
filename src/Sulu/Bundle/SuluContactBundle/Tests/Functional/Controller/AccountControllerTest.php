@@ -118,6 +118,7 @@ class AccountControllerTest extends DatabaseTestCase
         $accountContact->setContact($contact);
         $accountContact->setAccount(self::$account);
         $accountContact->setMain(true);
+        self::$account->addAccountContact($accountContact);
 
         $note = new Note();
         $note->setValue('Note');
@@ -1189,6 +1190,7 @@ class AccountControllerTest extends DatabaseTestCase
         $accountContact->setContact($contact);
         $accountContact->setAccount(self::$account);
         $accountContact->setMain(true);
+        self::$account->addAccountContact($accountContact);
         self::$em->persist($accountContact);
 
         self::$em->flush();
@@ -1255,6 +1257,7 @@ class AccountControllerTest extends DatabaseTestCase
             $accountContact->setAccount(self::$account);
             $accountContact->setMain(true);
             self::$em->persist($accountContact);
+            self::$account->addAccountContact($accountContact);
         }
 
         // add subaccount to self::$account
@@ -1269,7 +1272,6 @@ class AccountControllerTest extends DatabaseTestCase
         self::$em->flush();
 
         // get number of contacts from both accounts
-        $numContacts->
         $numContacts = self::$account->getAccountContacts()->count() + $acc->getAccountContacts()->count();
 
         $client = $this->createTestClient();
@@ -1318,6 +1320,7 @@ class AccountControllerTest extends DatabaseTestCase
             $accountContact->setAccount(self::$account);
             $accountContact->setMain(true);
             self::$em->persist($accountContact);
+            self::$account->addAccountContact($accountContact);
         }
 
         self::$em->flush();
@@ -1332,7 +1335,7 @@ class AccountControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         // number of returned contacts has to be less or equal 3
-        $this->assertLessThanOrEqual(3, sizeof($response->contacts));
+        $this->assertEquals(3, sizeof($response->contacts));
 
         // return full number of contacts related to account
         $this->assertEquals($numContacts, $response->numContacts);
