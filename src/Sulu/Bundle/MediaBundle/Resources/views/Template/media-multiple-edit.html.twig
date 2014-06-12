@@ -1,0 +1,39 @@
+<div class="grid">
+    <div class="grid-row">
+        <label>
+            <div class="custom-checkbox">
+                <input id="show-descriptions" type="checkbox">
+                <span class="icon"></span>
+            </div>
+            <span class="clickable"><%= translate('public.show-descriptions') %></span>
+        </label>
+    </div>
+</div>
+<form id="media-multiple-edit">
+    <div class="grid">
+        <div data-type="collection" data-mapper-property='[{"data": "records", "tpl": "media-tpl"}]'>
+            <script type="text/template" id="media-tpl">
+                <div>
+                    <div class="grid-row">
+                        <div class="grid-col-2">
+                            <img src="<~= thumbnails['50x50'].url ~>"/>
+                        </div>
+                        <div class="grid-col-10">
+                            <label for="media-edit-title-<~= id ~>"><%= translate('public.title') %></label>
+                            <input class="form-element" type="text" id="media-edit-title-<~= id ~>" value=""
+                                   data-validation-required="true"
+                                   data-validation-min-length="3"
+                                   data-mapper-property="title"/>
+                        </div>
+                    </div>
+                    <div class="grid-row media-description hidden">
+                        <label for="media-edit-description-<~= id ~>"><%= translate('public.description') %></label>
+                        <textarea class="small noResize form-element" id="media-edit-description-<~= id ~>"
+                                  data-mapper-property="description"></textarea>
+                    </div>
+                    <hr class="divider dark small"></hr>
+                </div>
+            </script>
+        </div>
+    </div>
+</form>

@@ -13,50 +13,15 @@ define(function () {
 
     var defaults = {
             data: {},
-            slideDuration: 250, //ms
-            instanceName: 'collections',
-            newCollectionColor: '#cccccc',
-            newCollectionTitle: 'sulu.media.new-collection'
+            instanceName: '',
+            newCollectionTitle: 'sulu.media.new-collection',
+            newThumbnailSrc: 'http://lorempixel.com/150/100/',
+            newThumbnailTitel: ''
         },
         constants = {
-            openAllKey: 'public.open-all',
-            closeAllKey: 'public.close-all',
-            elementsKey: 'public.elements',
-            toggleAllClass: 'toggle-all',
-            slideDownIcon: 'caret-right',
-            slideUpIcon: 'caret-down',
-            collectionsClass: 'collections',
-            collectionClass: 'collection',
-            collectionSlideClass: 'collection-slide',
-            rightContentClass: 'rightContent',
-            titleClass: 'collection-title',
-            colorPointClass: 'collection-color',
-            newCollectionId: 'new',
-            newFormId: 'collection-new',
-            gridContainerClass: 'thumbnail-grid'
-        },
-
-        namespace = 'sulu.collection-list.',
-
-        templates = {
-            toggleAll: [
-                '<span class="fa-<%= icon %> icon"></span>',
-                '<span><%= text %></span>'
-            ].join(''),
-            collection: [
-                '<div class="', constants.collectionClass , '">',
-                '   <div class="head">',
-                '       <div class="', constants.colorPointClass , '" style="background-color: <%= color %>"></div>',
-                '       <div class="fa-<%= icon %> icon"></div>',
-                '       <div class="', constants.titleClass , '"><%= title %></div>',
-                '       <div class="', constants.rightContentClass , '"></div>',
-                '   </div>',
-                '   <div class="', constants.collectionSlideClass , '"></div>',
-                '</div>'
-            ].join(''),
-            totalElements: [
-                '<span class="total"><%= total %> <%= elements %></span>'
-            ].join('')
+            datagridSelector: '.datagrid-container',
+            toolbarSelector: '.list-toolbar-container',
+            newFormSelector: '#collection-new'
         };
 
     return {
@@ -78,7 +43,10 @@ define(function () {
             ]
         },
 
-        templates: ['/admin/media/template/collection/new'],
+        templates: [
+            '/admin/media/template/collection/new',
+            '/admin/media/template/collection/list'
+        ],
 
         /**
          * Initializes the collections list
@@ -90,22 +58,8 @@ define(function () {
             // show success-label if collection just got deleted
             this.sandbox.sulu.triggerDeleteSuccessLabel('labels.success.collection-deleted-desc');
 
-            this.toggleAll = {
-                $element: null,
-                allOpen: false
-            };
-            // stores all colleciton objects with the corresponding id
-            this.collections = {};
-            // stores key value paires of an array of selected elements as value and the corresponding datagrid-name as key
-            this.selectedMedias = {};
-            this.$overlayContent = null;
-            this.lastClickedGrid = null;
-            this.toolbarStarted = false;
-
             this.bindCustomEvents();
             this.render();
-            this.startListToolbar();
-            this.bindDomEvents();
         },
 
         /**
@@ -114,66 +68,8 @@ define(function () {
         bindCustomEvents: function () {
             // add a new collection to the list
             this.sandbox.on('sulu.list-toolbar.add', this.openOverlay.bind(this));
-            // start list-toolbar after header has initialized
-            this.sandbox.on('sulu.header.initialized', this.startListToolbar.bind(this));
-            // update a collection in the list if the data-record has changed
-            this.sandbox.on('sulu.media.collections.collection-changed', this.updateCollection.bind(this));
-            // delete media if list-toolbar delete is clicked
-            this.sandbox.on('sulu.list-toolbar.delete', this.deleteMedia.bind(this));
-
-            // update the last clicked grid if a media got changed
-            this.sandbox.on('sulu.media.collections.media-saved', function () {
-                this.sandbox.emit('husky.datagrid.' + this.lastClickedGrid + '.update');
-            }.bind(this));
-        },
-
-        /**
-         * Deletes all the selected media
-         */
-        deleteMedia: function () {
-            this.setSelectedMedias().then(function () {
-                this.sandbox.sulu.showDeleteDialog(function(confirmed) {
-                    if (confirmed === true) {
-                        for (var key in this.selectedMedias) {
-                            if (this.selectedMedias.hasOwnProperty(key)) {
-                                this.sandbox.emit('sulu.media.collections.delete-media', this.selectedMedias[key], function(key, mediaId) {
-                                    this.sandbox.emit('husky.datagrid.' + this.collections[key].datagridName + '.record.remove', mediaId);
-                                    this.collections[key].selectedElements = 0;
-                                    delete this.selectedMedias[key];
-                                }.bind(this, key), true);
-                            }
-                        }
-                    }
-                }.bind(this));
-            }.bind(this));
-        },
-
-        /**
-         * Asks each datagrid with selected elements for the selected
-         * element-ids and stores them in the global array
-         */
-        setSelectedMedias: function () {
-            var count = 0, length = Object.keys(this.collections).length,
-                dfd = this.sandbox.data.deferred();
-
-            for (var key in this.collections) {
-                if (this.collections.hasOwnProperty(key) && this.collections[key].selectedElements > 0) {
-                    this.sandbox.emit('husky.datagrid.' + this.collections[key].datagridName + '.items.get-selected', function (ids) {
-                        // stores the selected media-ids with the id of the corresponding datagrid
-                        this.selectedMedias[key] = ids;
-                        count++;
-                        if (count === length) {
-                            dfd.resolve();
-                        }
-                    }.bind(this));
-                } else {
-                    length--;
-                    if (count === length) {
-                        dfd.resolve();
-                    }
-                }
-            }
-            return dfd.promise();
+            // navigate to colleciton-edit view
+            this.sandbox.on('husky.datagrid.item.click', this.navigateToCollection.bind(this));
         },
 
         /**
@@ -181,43 +77,13 @@ define(function () {
          * @returns {Boolean} returns false if a new and unsafed colleciton exists
          */
         addCollection: function () {
-            if (this.sandbox.form.validate('#' + constants.newFormId)) {
-                var data = this.sandbox.form.getData('#' + constants.newFormId),
-                    collection = {
-                        mediaNumber: 0,
-                        style: {
-                            color: data.color
-                        }
-                    };
-                collection = this.sandbox.util.extend(true, {}, collection, data);
-                // note that the first argument is a copy of collection. It needs to be a copy, otherwise the id of the collection gets set and so the collection
-                // couldn't be saved in the next step
-                this.renderCollection(this.sandbox.util.extend(false, {}, collection), this.$find('.' + constants.collectionsClass), true);
-                this.sandbox.emit('sulu.media.collections.save-collection', collection);
+            if (this.sandbox.form.validate(constants.newFormSelector)) {
+                var collection = this.sandbox.form.getData(constants.newFormSelector);
+                this.sandbox.emit('sulu.media.collections.save-collection', collection, function(collection) {
+                    this.sandbox.emit('husky.datagrid.record.add', collection);
+                }.bind(this));
             } else {
                 return false;
-            }
-        },
-
-        /**
-         * Starts the list toolbar in the header
-         */
-        startListToolbar: function () {
-            if (this.toolbarStarted === false) {
-                this.toolbarStarted = true;
-                var $listtoolbar = this.sandbox.dom.createElement('</div>');
-                this.sandbox.dom.append(this.$el, $listtoolbar);
-                this.sandbox.start([
-                    {
-                        name: 'list-toolbar@suluadmin',
-                        options: {
-                            el: $listtoolbar,
-                            instanceName: this.options.instanceName,
-                            template: 'defaultNoSettings',
-                            inHeader: true
-                        }
-                    }
-                ]);
             }
         },
 
@@ -225,23 +91,50 @@ define(function () {
          * Renders the collections-list
          */
         render: function () {
-            var $collections;
-
-            // render toggle all button
-            this.toggleAll.$element = this.sandbox.dom.createElement('<div class="' + constants.toggleAllClass + '"/>');
-            this.sandbox.dom.html(this.toggleAll.$element, this.sandbox.util.template(templates.toggleAll)({
-                icon: constants.slideDownIcon,
-                text: this.sandbox.translate(constants.openAllKey)
-            }));
-            this.sandbox.dom.append(this.$el, this.toggleAll.$element);
-
-            // render collection items
-            $collections = this.sandbox.dom.createElement('<div class="' + constants.collectionsClass + '"/>');
-            this.sandbox.util.foreach(this.options.data, function (collection) {
-                this.renderCollection(collection, $collections, false);
-            }.bind(this));
+            this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/media/template/collection/list'));
+            this.initializeGrid();
             this.initializeOverlay();
-            this.sandbox.dom.append(this.$el, $collections);
+        },
+
+        /**
+         * Initializes the acutal grid
+         */
+        initializeGrid: function() {
+            //todo: fetch matchings from url. don't hardcode them in the JS-Code
+            this.sandbox.start([
+                {
+                    name: 'datagrid@husky',
+                    options: {
+                        el: this.$find(constants.datagridSelector),
+                        url: '/admin/api/collections',
+                        view: 'group',
+                        pagination: false,
+                        matchings: [
+                            {
+                                id: 'title',
+                                type: 'title'
+                            },
+                            {
+                                id: 'mediaNumber',
+                                type: 'count'
+                            },
+                            {
+                                id: 'thumbnails',
+                                type: 'thumbnails'
+                            }
+                        ]
+                    }
+                },
+                {
+                    name: 'list-toolbar@suluadmin',
+                    options: {
+                        el: this.$find(constants.toolbarSelector),
+                        instanceName: this.options.instanceName,
+                        template: 'defaultNoSettings',
+                        inHeader: true
+                    }
+                }
+            ]);
         },
 
         /**
@@ -254,10 +147,10 @@ define(function () {
             this.$overlayContent = this.renderTemplate('/admin/media/template/collection/new');
 
             this.sandbox.once('husky.overlay.add-collection.opened', function () {
-                this.sandbox.form.create('#' + constants.newFormId);
-                this.sandbox.form.setData('#' + constants.newFormId, {
-                    title: this.sandbox.translate(this.options.newCollectionTitle),
-                    color: this.options.newCollectionColor
+                this.sandbox.start(constants.newFormSelector);
+                this.sandbox.form.create(constants.newFormSelector);
+                this.sandbox.form.setData(constants.newFormSelector, {
+                    title: this.sandbox.translate(this.options.newCollectionTitle)
                 });
             }.bind(this));
 
@@ -276,267 +169,18 @@ define(function () {
         },
 
         /**
-         * Opens the add colleciton overlay
+         * Opens the add collection overlay
          */
         openOverlay: function () {
             this.sandbox.emit('husky.overlay.add-collection.open');
         },
 
         /**
-         * Renders a single collection object
-         * @param collection {Object} the collection to render
-         * @param $container {Object} the dom element to append to rendred collection to
-         * @param newCollection {Boolean} set true if the rendered colleciton is an unsaved new collection
+         * Navigates to the colleciton-edit view
+         * @param collectionId {Number|String} the id of the collection
          */
-        renderCollection: function (collection, $container, newCollection) {
-            var $collection = this.sandbox.dom.createElement(this.sandbox.util.template(templates.collection)({
-                color: collection.style.color,
-                icon: constants.slideDownIcon,
-                title: collection.title
-            }));
-
-            if (newCollection === true) {
-                collection.id = constants.newCollectionId;
-            }
-
-            // insert the total-elements markup
-            this.sandbox.dom.html(
-                this.sandbox.dom.find('.' + constants.rightContentClass, $collection),
-                this.sandbox.util.template(templates.totalElements)({
-                    total: collection.mediaNumber,
-                    elements: this.sandbox.translate(constants.elementsKey)
-                })
-            );
-
-            // hide the slide-container
-            this.sandbox.dom.hide(this.sandbox.dom.find('.' + constants.collectionSlideClass, $collection));
-
-            this.sandbox.dom.append($container, $collection);
-            this.collections[collection.id] = {
-                id: collection.id,
-                $el: $collection,
-                data: collection,
-                selectedElements: 0,
-                datagridName: null,
-                datagridLoaded: false
-            };
-            this.bindCollectionDomEvents(collection.id);
-        },
-
-        /**
-         * Replaces a collection with a passed one. If the id of the passed one isn't contained
-         * in the global collections object it assumes that the passed collection got newly added
-         * @param collection
-         */
-        updateCollection: function (collection) {
-            if (!!this.collections[collection.id]) {
-                // if the passed collection already exists override the data property
-                this.collections[collection.id].data = collection;
-            } else if (!!this.collections[constants.newCollectionId]) {
-                // else, if a placeholder collection (new one) exists create a new collection object and delete the placeholder
-                this.collections[collection.id] = {
-                    id: collection.id,
-                    $el: this.collections[constants.newCollectionId].$el,
-                    data: collection,
-                    selectedElements: 0,
-                    datagridName: null,
-                    datagridLoaded: false
-                };
-
-                // rebind events
-                this.sandbox.dom.off(this.collections[constants.newCollectionId].$el);
-                delete this.collections[constants.newCollectionId];
-                this.bindCollectionDomEvents(collection.id);
-            } else {
-                this.sandbox.logger.log('Error. Undefined collection cannot be updated');
-                return false;
-            }
-
-            // update title in dom
-            this.sandbox.dom.html(
-                this.sandbox.dom.find('.' + constants.titleClass, this.collections[collection.id].$el),
-                this.collections[collection.id].data.title
-            );
-            // update color in dom
-            this.sandbox.dom.css(
-                this.sandbox.dom.find('.' + constants.colorPointClass, this.collections[collection.id].$el),
-                {'background-color': this.collections[collection.id].data.style.color}
-            );
-        },
-
-        /**
-         * Starts the preview-datagrid for a collection
-         * @param id {Number|String} the collections identifier
-         * @param $container {Object} the dom container to start the datagrid in
-         */
-        startCollectionDatagrid: function (id, $container) {
-            // store number of selected elements
-            this.sandbox.on('husky.datagrid.' + this.options.instanceName + id + '.number.selections', function (number) {
-                this.collections[id].selectedElements = number;
-                this.refreshDeleteState();
-            }.bind(this));
-
-            // edit single media on datagrid click
-            this.sandbox.on('husky.datagrid.' + this.options.instanceName + id + '.item.click', function (mediaId) {
-                this.lastClickedGrid = this.collections[id].datagridName;
-                this.sandbox.emit('sulu.media.collections.edit-media', mediaId);
-            }.bind(this));
-
-            this.collections[id].datagridName = this.options.instanceName + id;
-            this.collections[id].datagridLoaded = true;
-
-            var $element = this.sandbox.dom.createElement('<div class="'+ constants.gridContainerClass +'"/>');
-            this.sandbox.dom.html($container, $element);
-            this.sandbox.sulu.initList.call(this, 'mediaFields', '/admin/api/media/fields',
-                {
-                    el: $element,
-                    url: '/admin/api/media?collection=' + id,
-                    view: 'thumbnail',
-                    pagination: 'showall',
-                    instanceName: this.options.instanceName + id,
-                    searchInstanceName: this.options.instanceName,
-                    paginationOptions: {
-                        showall: {
-                            showAllHandler: this.showAllFiles.bind(this, id)
-                        }
-                    }
-                }
-            );
-        },
-
-        /**
-         * Looks if any collection has selected elements and enbalbes or disables the delete button
-         * @param {Boolean} returns true if the button got enabled
-         */
-        refreshDeleteState: function () {
-            for (var key in this.collections) {
-                if (this.collections[key].selectedElements > 0) {
-                    this.sandbox.emit('sulu.list-toolbar.' + this.options.instanceName + '.delete.state-change', true);
-                    return true;
-                }
-            }
-            this.sandbox.emit('sulu.list-toolbar.' + this.options.instanceName + '.delete.state-change', false);
-            return false;
-        },
-
-        /**
-         * Handles the click on the show-all pagination
-         * navigates to another view where all files are accessable
-         * @param collectionId {Nubmer|String} the id of the collection
-         */
-        showAllFiles: function (collectionId) {
+        navigateToCollection: function (collectionId) {
             this.sandbox.emit('sulu.media.collections.collection-edit', collectionId);
-        },
-
-        /**
-         * Binds dom related events
-         */
-        bindDomEvents: function () {
-            this.sandbox.dom.on(this.toggleAll.$element, 'click', this.toggleAllCollections.bind(this));
-        },
-
-        /**
-         * Binds dom events on a collection element
-         * @param id {Number|String} the identifier of the collection
-         */
-        bindCollectionDomEvents: function (id) {
-            if (id !== constants.newCollectionId) {
-                // toggle slide-container
-                this.sandbox.dom.on(this.collections[id].$el, 'click', function () {
-                    this.toggleCollection(this.collections[id]);
-                }.bind(this), '.head');
-
-                this.sandbox.dom.on(this.collections[id].$el, 'click', function (event) {
-                    this.sandbox.dom.stopPropagation(event);
-                    this.showAllFiles(id);
-                }.bind(this), '.' + constants.titleClass);
-            }
-        },
-
-        /**
-         * Opens are closes all collections
-         */
-        toggleAllCollections: function () {
-            var action, id;
-            if (this.toggleAll.allOpen === true) {
-                action = this.slideUp.bind(this);
-                this.toggleAll.allOpen = false;
-                this.sandbox.dom.html(this.toggleAll.$element, this.sandbox.util.template(templates.toggleAll)({
-                    icon: constants.slideDownIcon,
-                    text: this.sandbox.translate(constants.openAllKey)
-                }));
-            } else {
-                action = this.slideDown.bind(this);
-                this.toggleAll.allOpen = true;
-                this.sandbox.dom.html(this.toggleAll.$element, this.sandbox.util.template(templates.toggleAll)({
-                    icon: constants.slideUpIcon,
-                    text: this.sandbox.translate(constants.closeAllKey)
-                }));
-            }
-            for (id in this.collections) {
-                action(this.collections[id]);
-            }
-        },
-
-        /**
-         * Slides a collection up or down
-         * @param collection {Object} the object of the collection
-         */
-        toggleCollection: function (collection) {
-            // if slide-container is visible slide it up
-            if (this.sandbox.dom.is(
-                this.sandbox.dom.find('.' + constants.collectionSlideClass, collection.$el),
-                ':visible'
-            )) {
-                this.slideUp(collection);
-                // else slide it down
-            } else {
-                this.slideDown(collection);
-            }
-        },
-
-        /**
-         * Slides a colleciton down
-         * @param $collection {Object} the object of the collection
-         */
-        slideUp: function (collection) {
-            this.sandbox.dom.slideUp(
-                this.sandbox.dom.find('.' + constants.collectionSlideClass, collection.$el),
-                this.options.slideDuration
-            );
-            this.sandbox.dom.removeClass(
-                this.sandbox.dom.find('.head .icon', collection.$el),
-                'fa-' + constants.slideUpIcon
-            );
-            this.sandbox.dom.prependClass(
-                this.sandbox.dom.find('.head .icon', collection.$el),
-                'fa-' + constants.slideDownIcon
-            );
-        },
-
-        /**
-         * Slides a colleciton down
-         * @param $collection {Object} the object of the collection
-         */
-        slideDown: function (collection) {
-            this.sandbox.dom.slideDown(
-                this.sandbox.dom.find('.' + constants.collectionSlideClass, collection.$el),
-                this.options.slideDuration
-            );
-            this.sandbox.dom.removeClass(
-                this.sandbox.dom.find('.head .icon', collection.$el),
-                'fa-' + constants.slideDownIcon
-            );
-            this.sandbox.dom.prependClass(
-                this.sandbox.dom.find('.head .icon', collection.$el),
-                'fa-' + constants.slideUpIcon
-            );
-            if (collection.datagridLoaded === false) {
-                this.startCollectionDatagrid(
-                    collection.id,
-                    this.sandbox.dom.find('.' + constants.collectionSlideClass, collection.$el)
-                );
-            }
         }
     };
 });
