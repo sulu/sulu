@@ -262,6 +262,8 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
             } else {
                 // insert field
                 this.sandbox.form.addToCollection(this.form, data.collection, dataObject).then(function($element) {
+                    // start new field
+                    this.sandbox.start($element);
                     // crop the label
                     cropLabelOfElement.call(this, $element);
                 }.bind(this));
