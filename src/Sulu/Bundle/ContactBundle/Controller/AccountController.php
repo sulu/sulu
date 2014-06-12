@@ -153,10 +153,6 @@ class AccountController extends RestController implements ClassResourceInterface
     {
         if ($request->get('flat') == 'true') {
             // flat structure
-//            // FIXME: responseList should be capeable of doing this
-//            $fields = $request->get('fields');
-//            $request->query->add(array('fields' => $fields .= ',accountContacts_position'));
-
             $view = $this->responseList(array('accountContacts_account_id' => $id), $this->contactsEntityName);
         } else {
             $contacts = $this->getDoctrine()->getRepository($this->contactsEntityName)->findByAccountId($id);
@@ -1192,14 +1188,12 @@ class AccountController extends RestController implements ClassResourceInterface
             $accountContacts = $account->getAccountContacts();
             $numContacts = 0;
             if (!is_null($accountContacts)) {
-                $idsCache = array();
                 foreach ($accountContacts as $accountContacts) {
                     $contactId = $accountContacts->getContact()->getId();
                     if (!array_key_exists($contactId, $slicedContacts)) {
-                        if (sizeof($idsCache) < 3) {
+                        if ($numContacts++ < 3) {
                             $slicedContacts[$contactId] = $accountContacts->getContact();
                         }
-                        $numContacts++;
                     }
                 }
             }

@@ -1,7 +1,7 @@
 {
     "options" : {
         "streetNumberSplit" : "true",
-        "importIds": "false"
+        "importIds": "true"
     },
     "accountTypes" : {
         "0" : "",

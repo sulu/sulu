@@ -160,6 +160,7 @@ class ImportTest extends DatabaseTestCase
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Note'),
             self::$em->getClassMetadata('Sulu\Bundle\TagBundle\Entity\Tag'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AccountCategory'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AccountContact'),
         );
 
         self::$tool->createSchema(self::$entities);
@@ -346,7 +347,7 @@ class ImportTest extends DatabaseTestCase
         $this->assertEquals('John', $contact->getFirstName());
         $this->assertEquals('Doe', $contact->getLastName());
         $this->assertEquals('Secretary', $contact->getPosition());
-        $this->assertEquals(1, $contact->getAccount()->getId());
+        $this->assertEquals(1, $contact->getAccountContacts()[0]->getAccount()->getId());
 
         // addresss
         /** @var Address $address */
@@ -359,11 +360,9 @@ class ImportTest extends DatabaseTestCase
         $this->assertEquals('Bregenz', $address->getCity());
 
         // phones
-        $this->assertEquals(2, sizeof($contact->getPhones()));
+        $this->assertEquals(1, sizeof($contact->getPhones()));
         $this->assertEquals('+43 (123) 456', $contact->getPhones()->get(0)->getPhone());
         $this->assertEquals('Business', $contact->getPhones()->get(0)->getPhoneType()->getName());
-        $this->assertEquals('+43 (456) 789', $contact->getPhones()->get(1)->getPhone());
-        $this->assertEquals('Mobile', $contact->getPhones()->get(1)->getPhoneType()->getName());
         // notes
         $this->assertEquals(1, sizeof($contact->getNotes()));
         $this->assertEquals('Simple Note', $contact->getNotes()->get(0)->getValue());
@@ -383,7 +382,7 @@ class ImportTest extends DatabaseTestCase
         $this->assertEquals('Exemplary', $contact->getLastName());
         $this->assertEquals('CEO', $contact->getPosition());
         $this->assertEquals('Master', $contact->getTitle());
-        $this->assertEquals(2, $contact->getAccount()->getId());
+        $this->assertEquals(2, $contact->getAccountContacts()[0]->getAccount()->getId());
 
         // addresss
         /** @var Address $address */
@@ -396,11 +395,9 @@ class ImportTest extends DatabaseTestCase
         $this->assertEquals('Berlin', $address->getCity());
 
         // phones
-        $this->assertEquals(2, sizeof($contact->getPhones()));
+        $this->assertEquals(1, sizeof($contact->getPhones()));
         $this->assertEquals('+43 (123) 654', $contact->getPhones()->get(0)->getPhone());
         $this->assertEquals('Business', $contact->getPhones()->get(0)->getPhoneType()->getName());
-        $this->assertEquals('+43 (456) 987', $contact->getPhones()->get(1)->getPhone());
-        $this->assertEquals('Mobile', $contact->getPhones()->get(1)->getPhoneType()->getName());
         // notes
         $this->assertEquals(0, sizeof($contact->getNotes()));
         // faxes
