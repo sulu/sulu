@@ -82,6 +82,7 @@ class NodeControllerTest extends DatabaseTestCase
         $userRole1->setUser($user);
         $userRole1->setLocale(json_encode(array('de', 'en')));
         self::$em->persist($userRole1);
+        self::$em->flush();
 
         $permission1 = new Permission();
         $permission1->setPermissions(122);
@@ -153,6 +154,7 @@ class NodeControllerTest extends DatabaseTestCase
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\UserRole'),
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Role'),
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Permission'),
+            self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\SecurityType'),
             self::$em->getClassMetadata('Sulu\Bundle\TagBundle\Entity\Tag')
         );
 

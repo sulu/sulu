@@ -25,7 +25,7 @@
         "jackalope/jackalope-jackrabbit": "1.1.*",
 
         "doctrine/orm": ">=2.2.3,<2.4-dev",
-        "friendsofsymfony/rest-bundle": "dev-master@dev",
+        "friendsofsymfony/rest-bundle": "@dev",
 
         "jms/serializer-bundle": "@dev",
 
@@ -38,7 +38,7 @@
         "symfony-cmf/routing": "1.2.*@dev"
     },
     "require-dev": {
-        "symfony/symfony": "2.4.*",
+        "symfony/symfony": "2.5.*",
         "doctrine/doctrine-bundle": "1.2.*",
         "symfony/monolog-bundle": "2.4.*",
         "phpunit/phpunit": "3.7.*",
