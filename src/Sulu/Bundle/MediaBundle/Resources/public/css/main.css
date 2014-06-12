@@ -232,3 +232,22 @@
   color: black;
   cursor: pointer;
 }
+
+/* line 141, ../scss/modules/media-selection.scss */
+.media-selection-overlay-add .head-container {
+  width: 100%;
+  padding-top: 10px;
+  border-bottom: 2px #cccccc solid;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
+/* line 149, ../scss/modules/media-selection.scss */
+.media-selection-overlay-add h1 {
+  margin-bottom: 0px;
+  font-size: 20px;
+  color: #999999;
+}
+/* line 156, ../scss/modules/media-selection.scss */
+.media-selection-overlay-add .sulu-grid-group {
+  padding-top: 0px;
+}
