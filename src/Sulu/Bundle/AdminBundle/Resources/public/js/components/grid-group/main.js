@@ -26,6 +26,7 @@ define(function() {
             dataGridOptions:{
                 view: 'thumbnail',
                 pagination: 'showall',
+                showHead: false,
                 matchings: []
             }
         },
@@ -422,6 +423,7 @@ define(function() {
                         view: this.options.dataGridOptions.view,
                         pagination: this.options.dataGridOptions.pagination,
                         matchings: this.options.dataGridOptions.matchings,
+                        showHead: this.options.dataGridOptions.showHead,
                         preselected: this.options.preselected,
                         instanceName: instanceName,
                         searchInstanceName: this.options.instanceName,
