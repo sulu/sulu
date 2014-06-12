@@ -27,7 +27,8 @@ define(function() {
                 view: 'thumbnail',
                 pagination: 'showall',
                 showHead: false,
-                matchings: []
+                matchings: [],
+                viewOptions: null
             }
         },
         constants = {
@@ -424,6 +425,7 @@ define(function() {
                         pagination: this.options.dataGridOptions.pagination,
                         matchings: this.options.dataGridOptions.matchings,
                         showHead: this.options.dataGridOptions.showHead,
+                        viewOptions: this.options.dataGridOptions.viewOptions,
                         preselected: this.options.preselected,
                         instanceName: instanceName,
                         searchInstanceName: this.options.instanceName,
