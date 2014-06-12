@@ -139,7 +139,9 @@ define(['sulumedia/collection/collections'], function(Collections) {
                                     preselected: this.options.preselected,
                                     dataGridOptions: {
                                         view: 'table',
+                                        viewOptions: {table: {excludeFields: ['id']}},
                                         pagination: false,
+                                        showHead: false,
                                         matchings: [
                                             {
                                                 id: 'id'
@@ -170,8 +172,6 @@ define(['sulumedia/collection/collections'], function(Collections) {
             this.sandbox.on(INPUT_RETRIEVED.call(this), function() {
                 // TODO if data changed load
                 this.sandbox.logger.log(this.ids);
-
-                this.sandbox.util.load()
             }.bind(this));
         },
 
