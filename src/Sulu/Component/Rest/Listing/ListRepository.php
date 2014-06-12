@@ -104,7 +104,7 @@ class ListRepository extends EntityRepository
         if (sizeof($filters = $queryBuilder->getRelationalFilters()) > 0) {
             $filteredResults = array();
             // check if fields do contain id, else skip
-            if (array_search('id', $this->helper->getFields())!==false) {
+            if (sizeof($fields = $this->helper->getFields()) > 0 && array_search('id', $fields)!==false) {
                 $ids = array();
                 foreach($results as $result) {
                     $id = $result['id'];
