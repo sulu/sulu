@@ -28,14 +28,15 @@ class AccountRepository extends EntityRepository
     public function findOneByContactId($contactId)
     {
         $qb = $this->createQueryBuilder('a')
-            ->join('a.contacts', 'c', 'WITH', 'c.id = :contactId')
+            ->join('a.accountContacts', 'accountContacts', 'WITH', 'accountContacts.idContacts = :contactId AND accountContacts.main = TRUE')
             ->setParameter('contactId', $contactId);
         $query = $qb->getQuery();
 
         return $query->getSingleResult();
     }
 
-    public function findAccountOnly($id) {
+    public function findAccountOnly($id)
+    {
         try {
             $qb = $this->createQueryBuilder('account')
                 ->where('account.id = :accountId');
@@ -75,7 +76,7 @@ class AccountRepository extends EntityRepository
                 ->leftJoin('faxes.faxType', 'faxType')
                 ->leftJoin('account.accountCategory', 'accountCategory')
                 ->leftJoin('account.bankAccounts', 'bankAccounts')
-                ->leftJoin('account.tags','tags')
+                ->leftJoin('account.tags', 'tags')
                 ->addSelect('partial tags.{id, name}')
                 ->addSelect('bankAccounts')
                 ->addSelect('addresses')
@@ -96,8 +97,10 @@ class AccountRepository extends EntityRepository
 
 
             if ($contacts === true) {
-                $qb->leftJoin('account.contacts', 'contacts')
-                ->addSelect('contacts');
+                $qb->leftJoin('account.accountContacts', 'accountContacts')
+                    ->leftJoin('accountContacts.contact', 'contacts')
+                    ->addSelect('accountContacts')
+                    ->addSelect('contacts');
             }
 
             $query = $qb->getQuery();
@@ -142,7 +145,6 @@ class AccountRepository extends EntityRepository
             $qb = $this->createQueryBuilder('account')
                 ->leftJoin('account.addresses', 'addresses')
                 ->leftJoin('account.children', 'children')
-                ->leftJoin('account.contacts', 'contacts')
                 ->leftJoin('addresses.country', 'country')
                 ->leftJoin('addresses.addressType', 'addressType')
                 ->leftJoin('addresses.contacts', 'addressContacts')
@@ -164,9 +166,12 @@ class AccountRepository extends EntityRepository
                 ->leftJoin('emails.accounts', 'emailsAccounts')
                 ->leftJoin('account.notes', 'notes')
                 ->leftJoin('account.bankAccounts', 'bankAccounts')
+                ->leftJoin('account.accountContacts','accountContacts')
+                ->leftJoin('accountContacts.contact','contacts')
                 ->addSelect('bankAccounts')
                 ->addSelect('addresses')
                 ->addSelect('children')
+                ->addSelect('accountContacts')
                 ->addSelect('contacts')
                 ->addSelect('addressType')
                 ->addSelect('country')
@@ -188,6 +193,60 @@ class AccountRepository extends EntityRepository
                 ->addSelect('phonesAccounts')
                 ->addSelect('addressAccounts')
                 ->addSelect('notes')
+                ->where('account.id = :accountId');
+
+            $query = $qb->getQuery();
+            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+            $query->setParameter('accountId', $id);
+
+            return $query->getSingleResult();
+        } catch (NoResultException $ex) {
+            return null;
+        }
+    }
+
+    /**
+     * distinct count account's children and contacts
+     * @param $id
+     * @return mixed
+     */
+    public function countDistinctAccountChildrenAndContacts($id)
+    {
+        try {
+            $qb = $this->createQueryBuilder('account')
+                ->leftJoin('account.children', 'children')
+                ->leftJoin('account.accountContacts','accountContacts')
+                ->leftJoin('accountContacts.contact','contacts')
+                ->select('count(DISTINCT children.id) AS numChildren')
+                ->addSelect('count(DISTINCT contacts.id) AS numContacts')
+                ->where('account.id = :accountId');
+
+            $query = $qb->getQuery();
+            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+            $query->setParameter('accountId', $id);
+
+            return $query->getSingleResult();
+        } catch (NoResultException $ex) {
+            return null;
+        }
+    }
+
+    /**
+     * distinct count account's children and contacts
+     * @param $id
+     * @return mixed
+     */
+    public function findChildrenAndContacts($id)
+    {
+        try {
+            $qb = $this->createQueryBuilder('account')
+                ->leftJoin('account.children', 'children')
+                ->leftJoin('account.accountContacts','accountContacts')
+                ->leftJoin('accountContacts.contact','contacts')
+                ->select('account')
+                ->addSelect('children')
+                ->addSelect('accountContacts')
+                ->addSelect('contacts')
                 ->where('account.id = :accountId');
 
             $query = $qb->getQuery();
