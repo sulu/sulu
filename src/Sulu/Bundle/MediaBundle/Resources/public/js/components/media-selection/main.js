@@ -24,7 +24,8 @@ define(['sulumedia/collection/collections'], function(Collections) {
             translations: {
                 noMediaSelected: 'media-selection.nomedia-selected',
                 addImages: 'media-selection.add-images',
-                choose: 'media-selection.choose'
+                choose: 'media-selection.choose',
+                collections: 'media-selection.collections'
             }
         },
 
@@ -73,6 +74,15 @@ define(['sulumedia/collection/collections'], function(Collections) {
                     '   <div class="text">', noContentString, '</div>',
                     '</div>'
                 ].join('');
+            },
+
+            addTab: function(options, header) {
+                return[
+                    '<div id="', options.ids.chooseTab, '">',
+                    '   <h1>', header, '</h1>',
+                    '   <div id="', options.ids.gridGroup, '"/>',
+                    '</div>'
+                ].join('');
             }
         },
 
@@ -85,11 +95,12 @@ define(['sulumedia/collection/collections'], function(Collections) {
             this.collections = new Collections();
 
             this.options.ids = {
-                addButton: 'resource-locator-' + this.options.instanceName + '-add',
-                configButton: 'resource-locator-' + this.options.instanceName + '-config',
-                position: 'resource-locator-' + this.options.instanceName + '-position',
-                content: 'resource-locator-' + this.options.instanceName + '-content',
-                chooseTab: 'resource-locator-' + this.options.instanceName + '-choose-tab'
+                addButton: 'media-selection-' + this.options.instanceName + '-add',
+                configButton: 'media-selection-' + this.options.instanceName + '-config',
+                position: 'media-selection-' + this.options.instanceName + '-position',
+                content: 'media-selection-' + this.options.instanceName + '-content',
+                chooseTab: 'media-selection-' + this.options.instanceName + '-choose-tab',
+                gridGroup: 'media-selection-' + this.options.instanceName + '-grid-group'
             };
             this.sandbox.dom.html(this.$el, templates.skeleton(this.options));
 
@@ -133,7 +144,7 @@ define(['sulumedia/collection/collections'], function(Collections) {
                                 name: 'grid-group@suluadmin',
                                 options: {
                                     data: collections.toJSON(),
-                                    el: this.sandbox.dom.find(getId.call(this, 'chooseTab')),
+                                    el: this.sandbox.dom.find(getId.call(this, 'gridGroup')),
                                     instanceName: 'collections',
                                     gridUrl: '/admin/api/media?collection=',
                                     preselected: this.options.preselected,
@@ -179,7 +190,7 @@ define(['sulumedia/collection/collections'], function(Collections) {
          * Starts the overlay component
          */
         startAddOverlay = function() {
-            var chooseTabData = getChooseTabData.call(this);
+            var chooseTabData = templates.addTab(this.options, this.sandbox.translate(this.options.translations.collections));
 
             var $element = this.sandbox.dom.createElement('<div/>');
             this.sandbox.dom.append(this.$el, $element);
@@ -208,10 +219,6 @@ define(['sulumedia/collection/collections'], function(Collections) {
                     }
                 }
             ]);
-        },
-
-        getChooseTabData = function() {
-            return this.sandbox.dom.createElement('<div id="' + this.options.ids.chooseTab + '" style="max-height: 500px;"/>');
         },
 
         getAddOverlayData = function() {
