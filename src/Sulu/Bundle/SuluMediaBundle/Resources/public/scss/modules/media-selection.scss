@@ -136,5 +136,23 @@
     }
 }
 
-.media-selection-overlay-content {
+.media-selection-overlay-add {
+    .head-container {
+        width: 100%;
+        padding-top: 10px;
+        border-bottom: 2px $grayLighter solid;
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+    }
+
+    h1 {
+        margin-bottom: 0px;
+
+        font-size: 20px;
+        color: $grayLight;
+    }
+
+    .sulu-grid-group {
+        padding-top: 0px;
+    }
 }

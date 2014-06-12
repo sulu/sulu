@@ -79,7 +79,7 @@ define(['sulumedia/collection/collections'], function(Collections) {
             addTab: function(options, header) {
                 return[
                     '<div id="', options.ids.chooseTab, '">',
-                    '   <h1>', header, '</h1>',
+                    '   <div class="head-container"><h1>', header, '</h1></div>',
                     '   <div id="', options.ids.gridGroup, '"/>',
                     '</div>'
                 ].join('');
@@ -200,6 +200,7 @@ define(['sulumedia/collection/collections'], function(Collections) {
                     name: 'overlay@husky',
                     options: {
                         triggerEl: this.$addButton,
+                        cssClass: 'media-selection-overlay',
                         el: $element,
                         container: this.$el,
                         instanceName: 'media-selection.' + this.options.instanceName + '.add',
@@ -208,6 +209,7 @@ define(['sulumedia/collection/collections'], function(Collections) {
                             {
                                 title: this.sandbox.translate(this.options.translations.addImages),
                                 okCallback: getAddOverlayData.bind(this),
+                                cssClass: 'media-selection-overlay-add',
                                 tabs: [
                                     {
                                         title: this.sandbox.translate(this.options.translations.choose),
