@@ -22,6 +22,7 @@ define(function() {
             slideDuration: 250, //ms
             instanceName: 'undefined',
             gridUrl: '',
+            preselected: [],
             dataGridOptions:{
                 view: 'thumbnail',
                 pagination: 'showall',
@@ -82,6 +83,16 @@ define(function() {
          */
         GET_SELECTED = function() {
             return createEventName.call(this, 'get-selected');
+        },
+
+        /**
+         * listens on and passes the selected ids to a callback
+         *
+         * @event sulu.grid-group.[INSTANCE_NAME].get-selected-ids
+         * @param {Function} callback to pass the selected ids to
+         */
+        GET_SELECTED_IDS = function() {
+            return createEventName.call(this, 'get-selected-ids');
         },
 
         /**
@@ -180,6 +191,8 @@ define(function() {
             // stores key value paires of an array of selected elements as value and the corresponding datagrid-name as key
             this.selectedRecords = {};
             this.lastClickedGrid = null;
+            // save selected items
+            this.selected = this.options.preselected;
 
             this.bindCustomEvents();
             this.render();
@@ -199,6 +212,8 @@ define(function() {
             this.sandbox.on(SHOW_ALL_GROUPS.call(this), this.slideDownAll.bind(this));
             // get selected records
             this.sandbox.on(GET_SELECTED.call(this), this.getSelected.bind(this));
+            // get selected ids
+            this.sandbox.on(GET_SELECTED_IDS.call(this), this.getSelectedIds.bind(this));
             // remove a record
             this.sandbox.on(REMOVE_RECORD.call(this), this.removeRecord.bind(this));
             // add a new group
@@ -220,6 +235,16 @@ define(function() {
                     callback(this.selectedRecords);
                 }
             }.bind(this));
+        },
+
+        /**
+         * Passes all the selected ids to a callback
+         * @param callback {Function} to pass the selected elements to
+         */
+        getSelectedIds: function(callback) {
+            if (typeof callback === 'function') {
+                callback(this.selected);
+            }
         },
 
         /**
@@ -383,7 +408,8 @@ define(function() {
             this.group[id].datagridName = this.options.instanceName + id;
             this.group[id].datagridLoaded = true;
 
-            var $element = this.sandbox.dom.createElement('<div class="' + constants.gridContainerClass + '"/>');
+            var $element = this.sandbox.dom.createElement('<div class="' + constants.gridContainerClass + '"/>'),
+                instanceName = this.options.instanceName + id;
             this.sandbox.dom.html($container, $element);
 
             //start list-toolbar and datagrid
@@ -396,7 +422,8 @@ define(function() {
                         view: this.options.dataGridOptions.view,
                         pagination: this.options.dataGridOptions.pagination,
                         matchings: this.options.dataGridOptions.matchings,
-                        instanceName: this.options.instanceName + id,
+                        preselected: this.options.preselected,
+                        instanceName: instanceName,
                         searchInstanceName: this.options.instanceName,
                         paginationOptions: {
                             showall: {
@@ -406,6 +433,16 @@ define(function() {
                     }
                 }
             ]);
+
+            // item deselected
+            this.sandbox.on('husky.datagrid.' + instanceName + '.item.deselect', function(id) {
+                var index = this.selected.indexOf(id);
+                this.selected.splice(index, 1);
+            }.bind(this));
+            // item selected
+            this.sandbox.on('husky.datagrid.' + instanceName + '.item.select', function(id) {
+                this.selected.push(id);
+            }.bind(this));
         },
 
         /**
