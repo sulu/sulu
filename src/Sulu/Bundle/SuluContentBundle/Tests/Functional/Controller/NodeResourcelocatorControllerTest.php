@@ -12,7 +12,7 @@ use Sulu\Component\PHPCR\NodeTypes\Path\PathNodeType;
 use Sulu\Bundle\TestBundle\Testing\DatabaseTestCase;
 use Symfony\Bundle\FrameworkBundle\Client;
 
-class ResourceLocatorControllerTest extends DatabaseTestCase
+class NodeResourcelocatorControllerTest extends DatabaseTestCase
 {
     /**
      * @var array
@@ -166,11 +166,11 @@ class ResourceLocatorControllerTest extends DatabaseTestCase
         return $data;
     }
 
-    public function testGet()
+    public function testGenerate()
     {
         $this->client->request(
-            'GET',
-            '/content/resourcelocator.json?webspace=sulu_io&language=en&template=default',
+            'POST',
+            '/api/nodes/resourcelocators/generates?webspace=sulu_io&language=en&template=default',
             array('parts' => array('title' => 'test'))
         );
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
@@ -178,8 +178,8 @@ class ResourceLocatorControllerTest extends DatabaseTestCase
         $this->assertEquals('/test', $response->resourceLocator);
 
         $this->client->request(
-            'GET',
-            '/content/resourcelocator.json?parent=' . $this->data[0]['id'] . '&webspace=sulu_io&language=en&template=default',
+            'POST',
+            '/api/nodes/resourcelocators/generates?parent=' . $this->data[0]['id'] . '&webspace=sulu_io&language=en&template=default',
             array('parts' => array('title' => 'test'))
         );
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
@@ -187,8 +187,8 @@ class ResourceLocatorControllerTest extends DatabaseTestCase
         $this->assertEquals('/products/test', $response->resourceLocator);
 
         $this->client->request(
-            'GET',
-            '/content/resourcelocator.json?parent=' . $this->data[1]['id'] . '&webspace=sulu_io&language=en&template=default',
+            'POST',
+            '/api/nodes/resourcelocators/generates?parent=' . $this->data[1]['id'] . '&webspace=sulu_io&language=en&template=default',
             array('parts' => array('title' => 'test'))
         );
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
@@ -196,12 +196,105 @@ class ResourceLocatorControllerTest extends DatabaseTestCase
         $this->assertEquals('/news/test-2', $response->resourceLocator);
 
         $this->client->request(
-            'GET',
-            '/content/resourcelocator.json?parent=' . $this->data[3]['id'] . '&webspace=sulu_io&language=en&template=default',
+            'POST',
+            '/api/nodes/resourcelocators/generates?parent=' . $this->data[3]['id'] . '&webspace=sulu_io&language=en&template=default',
             array('parts' => array('title' => 'test'))
         );
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals('/news/test-1/test-1', $response->resourceLocator);
+    }
+
+    public function testGetAction()
+    {
+        // prepare history nodes
+        $newsData = $this->data[1];
+        $newsData['url'] = '/test';
+        $this->client->request(
+            'PUT',
+            '/api/nodes/' . $newsData['id'] . '?webspace=sulu_io&language=en&template=default',
+            $newsData
+        );
+        $newsData = (array)json_decode($this->client->getResponse()->getContent());
+
+        $this->client->request(
+            'GET',
+            '/api/nodes/' . $newsData['id'] . '/resourcelocators?webspace=sulu_io&language=en'
+        );
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $result = (array)json_decode($this->client->getResponse()->getContent(), true);
+
+        $this->assertEquals(1, sizeof($result['_embedded']));
+        $this->assertEquals(1, $result['total']);
+        $this->assertEquals('/news', $result['_embedded'][0]['resourceLocator']);
+    }
+
+    public function testDelete()
+    {
+        // prepare history nodes
+        $newsData = $this->data[1];
+        $newsData['url'] = '/test';
+        $this->client->request(
+            'PUT',
+            '/api/nodes/' . $newsData['id'] . '?webspace=sulu_io&language=en&template=default',
+            $newsData
+        );
+        $newsData = (array)json_decode($this->client->getResponse()->getContent());
+
+        $this->client->request(
+            'GET',
+            '/api/nodes/' . $newsData['id'] . '/resourcelocators?webspace=sulu_io&language=en'
+        );
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $history = (array)json_decode($this->client->getResponse()->getContent(), true);
+
+        $url = $history['_embedded'][0]['_links']['delete'];
+        $url = substr($url, 6);
+        $this->client->request('DELETE', $url);
+        $this->assertEquals(204, $this->client->getResponse()->getStatusCode());
+
+        $this->client->request(
+            'GET',
+            '/api/nodes/' . $newsData['id'] . '/resourcelocators?webspace=sulu_io&language=en'
+        );
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $result = (array)json_decode($this->client->getResponse()->getContent(), true);
+
+        $this->assertEquals(0, sizeof($result['_embedded']));
+        $this->assertEquals(0, $result['total']);
+    }
+
+    public function testRestore()
+    {
+        // prepare history nodes
+        $newsData = $this->data[1];
+        $newsData['url'] = '/test';
+        $this->client->request(
+            'PUT',
+            '/api/nodes/' . $newsData['id'] . '?webspace=sulu_io&language=en&template=default',
+            $newsData
+        );
+        $newsData = (array)json_decode($this->client->getResponse()->getContent());
+
+        $this->client->request(
+            'GET',
+            '/api/nodes/' . $newsData['id'] . '/resourcelocators?webspace=sulu_io&language=en'
+        );
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $history = (array)json_decode($this->client->getResponse()->getContent(), true);
+
+        $url = $history['_embedded'][0]['_links']['restore'];
+        $url = substr($url, 6);
+        $this->client->request('PUT', $url);
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+
+        $this->client->request(
+            'GET',
+            '/api/nodes/' . $newsData['id'] . '?webspace=sulu_io&language=en'
+        );
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $node = (array)json_decode($this->client->getResponse()->getContent(), true);
+
+        $this->assertEquals('/news', $node['url']);
     }
 }
