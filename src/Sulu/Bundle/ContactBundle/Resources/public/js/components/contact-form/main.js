@@ -581,7 +581,7 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
             this.sandbox.dom.append('body', $overlay);
 
             if (isNew) {
-                title = this.sandbox.translate('contacts.add-address');
+                title = this.sandbox.translate('contact.address.add.label');
             } else {
                 title = this.sandbox.translate('contacts.edit-address');
             }
