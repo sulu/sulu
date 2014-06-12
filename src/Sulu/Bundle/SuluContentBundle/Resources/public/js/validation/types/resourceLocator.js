@@ -31,12 +31,8 @@ define([
                 },
 
                 validate: function() {
-                    if (this.needsValidation()) {
-                        var val = this.getValue();
-                        return val.length > 0 && val !== '/';
-                    } else {
-                        return true;
-                    }
+                    var val = this.getValue();
+                    return val.length > 0 && val !== '/';
                 }
             };
 
