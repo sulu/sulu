@@ -60,7 +60,7 @@ class ContactController extends RestController implements ClassResourceInterface
     /**
      * {@inheritdoc}
      */
-    protected $fieldsExcluded = array();
+    protected $fieldsExcluded = array('gender', 'newsletter');
 
     /**
      * {@inheritdoc}
@@ -70,18 +70,27 @@ class ContactController extends RestController implements ClassResourceInterface
     /**
      * {@inheritdoc}
      */
-    protected $fieldsRelations = array();
+    protected $fieldsRelations = array('email','account');
 
     /**
      * {@inheritdoc}
      */
-    protected $fieldsSortOrder = array(0 => 'id', 1 => 'title');
+    protected $fieldsSortOrder = array(
+        0 => 'id',
+        1 => 'title',
+        2 => 'firstName',
+        3 => 'lastName',
+        4 => 'email',
+        5 => 'account',
+    );
 
     /**
      * {@inheritdoc}
      */
     protected $fieldsTranslationKeys = array(
-        'disabled' => 'public.deactivate'
+        'disabled' => 'public.deactivate',
+        'email' => 'public.email',
+        'account' => 'contacts.contact.account',
     );
 
     /**
@@ -107,9 +116,49 @@ class ContactController extends RestController implements ClassResourceInterface
      */
     public function cgetAction(Request $request)
     {
+        $where = array();
+
+        // flat structure
         if ($request->get('flat') == 'true') {
-            // flat structure
-            $view = $this->responseList();
+
+            /** @var ListRestHelper $listHelper */
+            $listHelper = $this->get('sulu_core.list_rest_helper');
+
+            // if fields are set
+            if ($fields = $listHelper->getFields()) {
+                $newFields = array();
+                $where = array();
+
+                foreach ($fields as $field) {
+                    switch ($field) {
+                        case 'email':
+                            $newFields[] = 'emails[0]_email';
+                            break;
+                        case 'account':
+                            $newFields[] = 'accountContacts[0]_account_name';
+//                            $where['accountContacts_main'] = 'TRUE';
+                            break;
+                        default:
+                            $newFields[] = $field;
+                    }
+                }
+                $request->query->add(array('fields' => implode($newFields, ',')));
+            }
+
+            $filter = function($res) {
+                if (array_key_exists('emails_email', $res)) {
+                    $res['email'] = $res['emails_email'];
+                    unset($res['emails_email']);
+                }
+                if (array_key_exists('accountContacts_account_name', $res)) {
+                    $res['account'] = $res['accountContacts_account_name'];
+                    unset($res['accountContacts_account_name']);
+                }
+                return $res;
+            };
+
+            $view = $this->responseList($where, $this->entityName, $filter);
+
         } else {
             $contacts = $this->getDoctrine()->getRepository($this->entityName)->findAll();
             $view = $this->view($this->createHalResponse($contacts), 200);
@@ -975,6 +1024,31 @@ class ContactController extends RestController implements ClassResourceInterface
         $contact->addNote($note);
 
         return $success;
+    }
+
+    protected function customResponseList($where, $entityName = null) {
+        /** @var ListRestHelper $listHelper */
+        $listHelper = $this->get('sulu_core.list_rest_helper');
+
+        if (is_null($entityName)) {
+            $entityName = $this->entityName;
+        }
+
+        $entities = $listHelper->find($entityName, $where);
+        $numberOfAll = $listHelper->getTotalNumberOfElements($entityName, $where);
+        $pages = $listHelper->getTotalPages($numberOfAll);
+
+        $response = array(
+            '_links' => $this->getHalLinks($entities, $pages, true),
+            '_embedded' => $entities,
+            'total' => sizeof($entities),
+            'page' => $listHelper->getPage(),
+            'pages' => $pages,
+            'pageSize' => $listHelper->getLimit(),
+            'numberOfAll' => $numberOfAll
+        );
+
+        return $response;
     }
 
     /**
