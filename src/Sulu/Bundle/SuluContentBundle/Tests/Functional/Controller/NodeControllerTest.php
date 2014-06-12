@@ -894,10 +894,10 @@ class NodeControllerTest extends DatabaseTestCase
         );
         $client->request('PUT', '/api/nodes/' . $uuid . '?template=default&webspace=sulu_io&language=en', $data);
 
-        $client->request('GET', '/api/nodes/' . $uuid . '/history?template=default&webspace=sulu_io&language=en');
+        $client->request('GET', '/api/nodes/' . $uuid . '/resourcelocators?template=default&webspace=sulu_io&language=en');
         $response = json_decode($client->getResponse()->getContent(), true);
 
-        $this->assertEquals('/a2', $response['_embedded'][0]['resource_locator']);
-        $this->assertEquals('/a1', $response['_embedded'][1]['resource_locator']);
+        $this->assertEquals('/a2', $response['_embedded'][0]['resourceLocator']);
+        $this->assertEquals('/a1', $response['_embedded'][1]['resourceLocator']);
     }
 }
