@@ -50,7 +50,6 @@ define(function() {
             group: [
                 '<div class="', constants.groupClass , '">',
                 '   <div class="head">',
-                '       <div class="', constants.colorPointClass , '" style="background-color: <%= color %>"></div>',
                 '       <div class="fa-<%= icon %> icon"></div>',
                 '       <div class="', constants.titleClass , '"><%= title %></div>',
                 '   </div>',
