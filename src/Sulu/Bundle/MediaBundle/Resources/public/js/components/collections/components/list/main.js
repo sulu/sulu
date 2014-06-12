@@ -118,7 +118,7 @@ define(function () {
                             },
                             {
                                 id: 'mediaNumber',
-                                type: 'elements'
+                                type: 'count'
                             },
                             {
                                 id: 'thumbnails',
