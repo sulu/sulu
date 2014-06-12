@@ -551,7 +551,8 @@ define(['app-config'], function(AppConfig) {
                             var data = this.initData(),
                                 defaults = {
                                     translate: this.sandbox.translate,
-                                    content: data
+                                    content: data,
+                                    options: this.options
                                 },
                                 context = this.sandbox.util.extend({}, defaults),
                                 tpl = this.sandbox.util.template(template, context);

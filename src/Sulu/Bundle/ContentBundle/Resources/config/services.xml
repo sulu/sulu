@@ -4,14 +4,23 @@
     <parameters>
         <parameter key="sulu_content.admin.class">Sulu\Bundle\ContentBundle\Admin\SuluContentAdmin</parameter>
         <parameter key="sulu_content.twig_extension.class">Sulu\Bundle\ContentBundle\Twig\ContentExtension</parameter>
-        <parameter key="sulu_content.admin.content_navigation.class">Sulu\Bundle\ContentBundle\Admin\SuluContentContentNavigation</parameter>
-        <parameter key="sulu_content.preview.message_component.class">Sulu\Bundle\ContentBundle\Preview\PreviewMessageComponent</parameter>
+        <parameter key="sulu_content.admin.content_navigation.class">
+            Sulu\Bundle\ContentBundle\Admin\SuluContentContentNavigation
+        </parameter>
+        <parameter key="sulu_content.preview.message_component.class">
+            Sulu\Bundle\ContentBundle\Preview\PreviewMessageComponent
+        </parameter>
         <parameter key="sulu_content.preview.class">Sulu\Bundle\ContentBundle\Preview\Preview</parameter>
         <parameter key="sulu_content.preview.lifetime">3600</parameter>
         <parameter key="sulu_content.preview.template-namespace">ClientWebsiteBundle:Website:</parameter>
         <parameter key="sulu_content.preview.cache.class">Doctrine\Common\Cache\FilesystemCache</parameter>
-        <parameter key="sulu_content.node_repository.class">Sulu\Bundle\ContentBundle\Repository\NodeRepository</parameter>
-        <parameter key="sulu.content.type.smart_content.class">Sulu\Bundle\ContentBundle\Content\Types\SmartContent</parameter>
+        <parameter key="sulu_content.node_repository.class">Sulu\Bundle\ContentBundle\Repository\NodeRepository
+        </parameter>
+        <parameter key="sulu_content.rl_repository.class">
+            Sulu\Bundle\ContentBundle\Repository\ResourceLocatorRepository
+        </parameter>
+        <parameter key="sulu.content.type.smart_content.class">Sulu\Bundle\ContentBundle\Content\Types\SmartContent
+        </parameter>
         <parameter key="sulu.content.type.phone.class">Sulu\Bundle\ContentBundle\Content\Types\Phone</parameter>
         <parameter key="sulu.content.type.password.class">Sulu\Bundle\ContentBundle\Content\Types\Password</parameter>
         <parameter key="sulu.content.type.url.class">Sulu\Bundle\ContentBundle\Content\Types\Url</parameter>
@@ -60,8 +69,14 @@
             <argument type="service" id="sulu.content.mapper"/>
             <argument type="service" id="sulu.phpcr.session"/>
             <argument type="service" id="sulu_security.user_manager"/>
-            <argument type="service" id="sulu.content.type.resource_locator"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+        </service>
+
+        <!-- resource locator -->
+        <service id="sulu_content.rl_repository" class="%sulu_content.rl_repository.class%">
+            <argument type="service" id="sulu.content.rlp.strategy.tree"/>
+            <argument type="service" id="sulu.content.structure_manager"/>
+            <argument type="service" id="sulu.content.type.resource_locator"/>
         </service>
 
         <!-- content-types -->
@@ -70,6 +85,7 @@
             <argument type="service" id="sulu_tag.tag_manager"/>
             <argument>%sulu.content.type.smart_content.template%</argument>
         </service>
+
         <service id="sulu.content.type.phone" class="%sulu.content.type.phone.class%">
             <argument>%sulu.content.type.phone.template%</argument>
         </service>
