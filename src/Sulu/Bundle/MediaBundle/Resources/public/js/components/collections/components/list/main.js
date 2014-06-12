@@ -21,10 +21,8 @@ define(function () {
         constants = {
             datagridSelector: '.datagrid-container',
             toolbarSelector: '.list-toolbar-container',
-            newFormId: 'collection-new'
-        },
-
-        namespace = 'sulu.collection-list.';
+            newFormSelector: '#collection-new'
+        };
 
     return {
 
@@ -71,7 +69,7 @@ define(function () {
             // add a new collection to the list
             this.sandbox.on('sulu.list-toolbar.add', this.openOverlay.bind(this));
             // navigate to colleciton-edit view
-            this.sandbox.on('husky.datagrid.item.click', this.navigateToCollecction.bind(this));
+            this.sandbox.on('husky.datagrid.item.click', this.navigateToCollection.bind(this));
         },
 
         /**
@@ -79,8 +77,8 @@ define(function () {
          * @returns {Boolean} returns false if a new and unsafed colleciton exists
          */
         addCollection: function () {
-            if (this.sandbox.form.validate('#' + constants.newFormId)) {
-                var collection = this.sandbox.form.getData('#' + constants.newFormId);
+            if (this.sandbox.form.validate(constants.newFormSelector)) {
+                var collection = this.sandbox.form.getData(constants.newFormSelector);
                 this.sandbox.emit('sulu.media.collections.save-collection', collection, function(collection) {
                     this.sandbox.emit('husky.datagrid.record.add', collection);
                 }.bind(this));
@@ -149,9 +147,9 @@ define(function () {
             this.$overlayContent = this.renderTemplate('/admin/media/template/collection/new');
 
             this.sandbox.once('husky.overlay.add-collection.opened', function () {
-                this.sandbox.start('#' + constants.newFormId);
-                this.sandbox.form.create('#' + constants.newFormId);
-                this.sandbox.form.setData('#' + constants.newFormId, {
+                this.sandbox.start(constants.newFormSelector);
+                this.sandbox.form.create(constants.newFormSelector);
+                this.sandbox.form.setData(constants.newFormSelector, {
                     title: this.sandbox.translate(this.options.newCollectionTitle)
                 });
             }.bind(this));
@@ -181,7 +179,7 @@ define(function () {
          * Navigates to the colleciton-edit view
          * @param collectionId {Number|String} the id of the collection
          */
-        navigateToCollecction: function (collectionId) {
+        navigateToCollection: function (collectionId) {
             this.sandbox.emit('sulu.media.collections.collection-edit', collectionId);
         }
     };
