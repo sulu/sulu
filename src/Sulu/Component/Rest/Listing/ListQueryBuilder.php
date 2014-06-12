@@ -98,6 +98,12 @@ class ListQueryBuilder
     private $searchNumberFields;
 
     /**
+     * used as a storage for saving relational fields
+     * @var $relationalFilters
+     */
+    private $relationalFilters = array();
+
+    /**
      * @param $associationNames
      * @param $fieldNames
      * @param $entityName
@@ -207,11 +213,18 @@ class ListQueryBuilder
         // Relation name and field delimited by underscore
         $fieldParts = explode('_', $field);
 
+        // temporary variable for saving field name (needed for array results like [0])
+        $realFieldName = $field;
+        // check if a certain field number is searched
+        if (preg_match('/^(.*)\[(\d+)\]$/', $fieldParts[0], $regresult)) {
+            $fieldParts[0] = $regresult[1];
+            $realFieldName = implode('_', $fieldParts);
+            $this->relationalFilters[$realFieldName] = $regresult[2];
+        }
+
         // If field is delimited and is a Relation
         if (sizeof($fieldParts) >= 2 && $this->isRelation($fieldParts[0])) {
             $this->joins .= $this->generateJoins($fieldParts, $prefix);
-
-
             if (in_array($field, $this->fields)) {
                 // last element is column name and next-to-last is the associationPrefix
                 $i = sizeof($fieldParts) - 1;
@@ -219,7 +232,7 @@ class ListQueryBuilder
                 // {associationPrefix}.{columnName} {alias}
                 $parent = $fieldParts[$i - 1];
                 $tempField = $fieldParts[$i];
-                $alias = $field;
+                $alias = $realFieldName;
 
                 $this->addToSelect($parent, $tempField, $alias);
             }
@@ -402,5 +415,13 @@ class ListQueryBuilder
         }
 
         return $result;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRelationalFilters()
+    {
+        return $this->relationalFilters;
     }
 }
