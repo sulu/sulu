@@ -10,19 +10,38 @@
                 <div class="pos-rel">
                     <h2 class="divider"><%=translate('contact.contacts.details')%></h2>
                     <span id="contact-options-dropdown" class="options-dropdown-container">
-                        <a href="javascript:void(0)" class="contact-options-toggle options-toggle"><span class="fa-gear"/></a>
+                        <a class="contact-options-toggle options-toggle"><span class="fa-gear"/></a>
                     </span>
                 </div>
 
-                <div class="grid-row small" data-type="collection" data-mapper-property='[{"data":"addresses","tpl":"address-tpl"}]'>
-                    <script type="text/template" id="address-tpl">
+                <div class="grid-row small" id="addresses" data-type="collection" data-mapper-property='[{"data":"addresses","tpl":"address-tpl","empty-tpl":"address-empty-tpl"}]'>
+
+                    <script type="text/template" id="address-empty-tpl">
                         <div class="grid-col-12 floating">
+                            <div class="form-group">
+                                <label>
+                                    <%=translate('contact.address.add.label')%>
+                                </label>
+                                <div class="grid-col-12 m-top-5">
+                                    <span class="fa-plus-circle icon clickable pointer address-add"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </script>
+
+                    <script type="text/template" id="address-tpl">
+                        <div class="grid-col-12 floating m-top-0 address-component">
                             <~ var uid = _.uniqueId('address_'), first = true; ~>
                             <~ var checkIfFirstField = function(field) { if (typeof field !== 'undefined' && !!field) { if(first) {first = false; return false;} else {return true;} } }~>
                             <div class="form-group">
+
                                 <label class="visible"></label>
                                 <label class="hidden">
-                                    <%=translate('public.address')%>
+                                    <~ if(primaryAddress) { ~>
+                                        <%=translate('contact.address.primaryAddress')%>
+                                    <~ } else { ~>
+                                        <%=translate('public.address')%>
+                                    <~ } ~>
                                     <span class="label-container">
                                         (<span class="type-value" data-form="true" data-mapper-property="addressType" data-type="label" data-type-label="name" data-type-id="id" data-id="{{ defaultAddressType.id }}">
                                             <%= translate('{{ defaultAddressType.name }}') %>
@@ -32,18 +51,46 @@
 
                                 <div class="address-row clickable pointer">
                                     <input type="hidden" data-mapper-property="id" class="id-value"/>
-                                    <span data-mapper-property="street" data-form="true"></span><~ checkIfFirstField(street); ~>
-                                    <span data-mapper-property="number" data-form="true"></span><~ checkIfFirstField(number); ~>
-                                    <span data-mapper-property="addition" data-form="true" <~ if (checkIfFirstField(addition)) { print('class="comma-before"') } ~>></span>
-                                    <span data-mapper-property="zip" data-form="true" <~ if (checkIfFirstField(zip)) { print('class="comma-before"') } ~>></span>
-                                    <span data-mapper-property="city" data-form="true" <~ if (checkIfFirstField(city)) { print('class="comma-before"') } ~>></span>
-                                    <span data-mapper-property="state" data-form="true" <~ if (checkIfFirstField(state)) { print('class="comma-before"') } ~>></span>
-                                    <span data-mapper-property="country" class="comma-before" data-form="true" data-type="readonly-select" data-type-id-property="id" data-type-output-property="name" data-type-data="{{ countries | json_encode() }}"></span>
+
+                                    <~ if(city) { ~>
+                                        <span data-mapper-property="street" data-form="true"></span><~ checkIfFirstField(street); ~>
+                                        <span data-mapper-property="number" data-form="true"></span><~ checkIfFirstField(number); ~>
+                                        <span data-mapper-property="addition" data-form="true" <~ if (checkIfFirstField(addition)) { print('class="comma-before"') } ~>></span>
+                                        <span data-mapper-property="zip" data-form="true" <~ if (checkIfFirstField(zip)) { print('class="comma-before"') } ~>></span>
+                                        <span data-mapper-property="city" data-form="true" <~ if (checkIfFirstField(city)) { print('class="comma-before"') } ~>></span>
+                                        <span data-mapper-property="state" data-form="true" <~ if (checkIfFirstField(state)) { print('class="comma-before"') } ~>></span>
+                                        <span data-mapper-property="country" class="comma-before" data-form="true" data-type="readonly-select" data-type-id-property="id" data-type-output-property="name" data-type-data="{{ countries | json_encode() }}"></span>
+                                    <~ } else { ~>
+                                        <span data-mapper-property="postboxNumber"></span>
+                                        <span data-mapper-property="postboxPostcode"></span>
+                                        <span data-mapper-property="postboxCity"></span>
+                                        <span data-mapper-property="country" data-form="true" data-type="readonly-select" data-type-id-property="id" data-type-output-property="name" data-type-data="{{ countries | json_encode() }}"></span>
+                                    <~ } ~>
+
+                                    <~ if(billingAddress && deliveryAddress) { ~>
+                                    <span>(<%=translate('contact.address.billingAddress')%>, <%=translate('contact.address.deliveryAddress')%>)</span>
+                                    <~ } if (deliveryAddress && !billingAddress) { ~>
+                                    <span>(<%=translate('contact.address.deliveryAddress')%>)</span>
+                                    <~ } if (!deliveryAddress && billingAddress) { ~>
+                                    <span>(<%=translate('contact.address.billingAddress')%>)</span>
+                                    <~ }  ~>
+
+                                    <div class="hidden">
+                                        <span data-mapper-property="primaryAddress" data-form="true"></span>
+                                        <span data-mapper-property="billingAddress" data-form="true"></span>
+                                        <span data-mapper-property="deliveryAddress" data-form="true"></span>
+                                        <span data-mapper-property="postboxNumber" data-form="true"></span>
+                                        <span data-mapper-property="postboxPostcode" data-form="true"></span>
+                                        <span data-mapper-property="postboxCity" data-form="true"></span>
+                                    </div>
+
+                                    <span class="fa-times icon address-remove"></span>
                                 </div>
                             </div>
                         </div>
                     </script>
                 </div>
+
                 <div class="grid-row small" id="contact-fields" data-type="collection" data-mapper-property='[{"data":"emails","tpl":"email-tpl"},{"data":"phones","tpl":"phone-tpl"},{"data":"urls","tpl":"url-tpl"},{"data":"faxes","tpl":"fax-tpl"}]'>
                     <script type="text/template" id="email-tpl">
                         <div class="grid-col-6 floating">

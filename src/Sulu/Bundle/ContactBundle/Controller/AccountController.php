@@ -226,6 +226,11 @@ class AccountController extends AbstractContactController
             // add urls, phones, emails, tags, bankAccounts, notes, addresses,..
             $this->addNewContactRelations($account, $request);
 
+            // set new primary address
+            if($this->newPrimaryAddress && $this->currentContact){
+                $this->setNewPrimaryAddress($this->currentContact, $this->newPrimaryAddress);
+            }
+
             $em->persist($account);
 
             $em->flush();
@@ -293,6 +298,11 @@ class AccountController extends AbstractContactController
                     && $this->processNotes($account, $request->get('notes')))
                 ) {
                     throw new RestException('Updating dependencies is not possible', 0);
+                }
+
+                // set new primary address
+                if($this->newPrimaryAddress && $this->currentContact){
+                    $this->setNewPrimaryAddress($this->currentContact, $this->newPrimaryAddress);
                 }
 
                 $em->flush();
@@ -440,7 +450,7 @@ class AccountController extends AbstractContactController
         return $this->handleView($view);
     }
 
-       /**
+    /**
      * returns delete info for multiple ids
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response

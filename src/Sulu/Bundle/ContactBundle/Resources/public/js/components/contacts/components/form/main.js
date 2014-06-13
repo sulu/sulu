@@ -12,10 +12,12 @@ define([], function() {
     'use strict';
 
     var form = '#contact-form',
-        fields = ['urls', 'emails', 'faxes', 'phones', 'notes', 'addresses'],
+        fields = ['urls', 'emails', 'faxes', 'phones', 'notes'],
 
         constants = {
-            tagsId: '#tags'
+            tagsId: '#tags',
+            addressAddId: '#address-add',
+            addAddressWrapper: '.grid-row'
         },
 
         setHeaderToolbar = function() {
@@ -30,6 +32,15 @@ define([], function() {
             view: true,
 
             templates: ['/admin/contact/template/contact/form'],
+
+            customTemplates: {
+                    addAddressesIcon: [
+                        '<div class="grid-row">',
+                        '    <div class="grid-col-12">',
+                        '       <span id="address-add" class="fa-plus-circle icon address-add clickable pointer m-left-140"></span>',
+                        '   </div>',
+                        '</div>'].join('')
+            },
 
             initialize: function() {
                 this.saved = true;
@@ -159,16 +170,20 @@ define([], function() {
                 // add collection filters to form
                 this.sandbox.emit('sulu.contact-form.add-collectionfilters', form);
                 this.sandbox.form.setData(form, data).then(function() {
-                        this.sandbox.start(form);
-                        this.sandbox.emit('sulu.contact-form.add-required', ['email']);
-                        this.sandbox.emit('sulu.contact-form.content-set');
-                        this.dfdFormIsSet.resolve();
-                    }.bind(this)).fail(function(error) {
-                        this.sandbox.logger.error("An error occured when setting data!", error);
-                    }.bind(this));
+                    this.sandbox.start(form);
+                    this.sandbox.emit('sulu.contact-form.add-required', ['email']);
+                    this.sandbox.emit('sulu.contact-form.content-set');
+                    this.dfdFormIsSet.resolve();
+                }.bind(this)).fail(function(error) {
+                    this.sandbox.logger.error("An error occured when setting data!", error);
+                }.bind(this));
             },
 
             initForm: function(data) {
+
+                this.numberOfAddresses = data.addresses.length;
+                this.updateAddressesAddIcon(this.numberOfAddresses);
+
                 // when  contact-form is initalized
                 this.sandbox.on('sulu.contact-form.initialized', function() {
                     // set form data
@@ -191,10 +206,37 @@ define([], function() {
                 ]);
             },
 
+            /**
+             * Adds or removes icon to add addresses
+             * @param numberOfAddresses
+             */
+            updateAddressesAddIcon: function(numberOfAddresses){
+                var $addIcon = this.sandbox.dom.find(constants.addressAddId),
+                    addIcon;
+
+                if(!!numberOfAddresses && numberOfAddresses > 0 && $addIcon.length === 0) {
+                    addIcon = this.sandbox.dom.$(this.customTemplates.addAddressesIcon);
+                    this.sandbox.dom.after(this.sandbox.dom.$('#addresses'), addIcon);
+                } else if (numberOfAddresses === 0 && $addIcon.length > 0) {
+                    this.sandbox.dom.remove(this.sandbox.dom.closest($addIcon, constants.addAddressWrapper));
+                }
+            },
+
             bindDomEvents: function() {
             },
 
             bindCustomEvents: function() {
+
+                this.sandbox.on('sulu.contact-form.added.address', function(){
+                    this.numberOfAddresses++;
+                    this.updateAddressesAddIcon(this.numberOfAddresses);
+                }, this);
+
+                this.sandbox.on('sulu.contact-form.removed.address', function(){
+                    this.numberOfAddresses--;
+                    this.updateAddressesAddIcon(this.numberOfAddresses);
+                }, this);
+
                 // delete contact
                 this.sandbox.on('sulu.header.toolbar.delete', function() {
                     this.sandbox.emit('sulu.contacts.contact.delete', this.options.data.id);
@@ -333,15 +375,19 @@ define([], function() {
 
             listenForChange: function() {
                 this.dfdListenForChange.then(function() {
+
                     this.sandbox.dom.on('#contact-form', 'change', function() {
                         this.setHeaderBar(false);
                     }.bind(this), "select, input, textarea");
+
                     this.sandbox.dom.on('#contact-form', 'keyup', function() {
                         this.setHeaderBar(false);
                     }.bind(this), "input, textarea");
+
                     this.sandbox.on('sulu.contact-form.changed', function() {
                         this.setHeaderBar(false);
                     }.bind(this));
+
                 }.bind(this));
                 this.sandbox.on('husky.select.form-of-address.selected.item', function() {
                     this.setHeaderBar(false);
