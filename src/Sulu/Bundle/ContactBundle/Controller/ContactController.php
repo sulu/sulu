@@ -84,6 +84,7 @@ class ContactController extends AbstractContactController
         3 => 'lastName',
         4 => 'email',
         5 => 'account',
+        6 => 'phone',
     );
 
     /**
@@ -92,6 +93,7 @@ class ContactController extends AbstractContactController
     protected $fieldsTranslationKeys = array(
         'disabled' => 'public.deactivate',
         'email' => 'public.email',
+        'phone' => 'public.phone',
         'account' => 'contact.contacts.company',
     );
 
@@ -138,6 +140,10 @@ class ContactController extends AbstractContactController
                             $newFields[] = 'emails_email';
                             $joinConditions['emails'] = 'emails.main = TRUE';
                             break;
+                        case 'phone':
+                            $newFields[] = 'phones_phone';
+                            $joinConditions['phones'] = 'phones.main = TRUE';
+                            break;
                         case 'account':
                             $newFields[] = 'accountContacts_account_name';
                             $joinConditions['accountContacts'] = 'accountContacts.main = TRUE';
@@ -153,6 +159,10 @@ class ContactController extends AbstractContactController
                 if (array_key_exists('emails_email', $res)) {
                     $res['email'] = $res['emails_email'];
                     unset($res['emails_email']);
+                }
+                if (array_key_exists('phones_phone', $res)) {
+                    $res['phone'] = $res['phones_phone'];
+                    unset($res['phones_phone']);
                 }
                 if (array_key_exists('accountContacts_account_name', $res)) {
                     $res['account'] = $res['accountContacts_account_name'];
