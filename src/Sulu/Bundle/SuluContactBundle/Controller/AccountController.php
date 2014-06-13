@@ -380,7 +380,7 @@ class AccountController extends AbstractContactController
 
                 // process details
                 if (!is_null($request->get('bankAccounts'))) {
-                    $this->processBankAccounts($account, $request);
+                    $this->processBankAccounts($account, $request->get('bankAccounts'));
                 }
 
                 $em->flush();
