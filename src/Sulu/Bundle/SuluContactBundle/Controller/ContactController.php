@@ -335,6 +335,11 @@ class ContactController extends AbstractContactController
             // add urls, phones, emails, tags, bankAccounts, notes, addresses,..
             $this->addNewContactRelations($contact, $request);
 
+            // set new primary address
+            if($this->newPrimaryAddress && $this->currentContact){
+                $this->setNewPrimaryAddress($this->currentContact, $this->newPrimaryAddress);
+            }
+
             $em->persist($contact);
             $em->flush();
 
@@ -474,6 +479,11 @@ class ContactController extends AbstractContactController
                 $birthday = $request->get('birthday');
                 if (!empty($birthday)) {
                     $contact->setBirthday(new DateTime($birthday));
+                }
+
+                // set new primary address
+                if($this->newPrimaryAddress && $this->currentContact){
+                    $this->setNewPrimaryAddress($this->currentContact, $this->newPrimaryAddress);
                 }
 
                 $em->flush();

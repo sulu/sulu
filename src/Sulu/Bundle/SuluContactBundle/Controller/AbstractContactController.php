@@ -9,6 +9,7 @@
  */
 
 namespace Sulu\Bundle\ContactBundle\Controller;
+
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\ContactBundle\Entity\Note;
@@ -31,12 +32,16 @@ use Symfony\Component\HttpFoundation\Request;
 class AbstractContactController extends RestController implements ClassResourceInterface
 {
 
+    protected $currentContact;
+    protected $newPrimaryAddress;
+
     /**
      * checks if a primary email exists
      * @param $emails
      * @return mixed
      */
-    protected function hasMainEmail($emails) {
+    protected function hasMainEmail($emails)
+    {
         return $this->checkMainExistence($emails);
     }
 
@@ -45,7 +50,8 @@ class AbstractContactController extends RestController implements ClassResourceI
      * @param $phones
      * @return mixed
      */
-    protected function hasMainPhone($phones) {
+    protected function hasMainPhone($phones)
+    {
         return $this->checkMainExistence($phones);
     }
 
@@ -54,7 +60,8 @@ class AbstractContactController extends RestController implements ClassResourceI
      * @param $urls
      * @return mixed
      */
-    protected function hasMainUrl($urls) {
+    protected function hasMainUrl($urls)
+    {
         return $this->checkMainExistence($urls);
     }
 
@@ -63,7 +70,8 @@ class AbstractContactController extends RestController implements ClassResourceI
      * @param $faxes
      * @return mixed
      */
-    protected function hasMainFax($faxes) {
+    protected function hasMainFax($faxes)
+    {
         return $this->checkMainExistence($faxes);
     }
 
@@ -72,9 +80,10 @@ class AbstractContactController extends RestController implements ClassResourceI
      * @param $arrayCollection
      * @return mixed
      */
-    private function checkMainExistence($arrayCollection) {
+    private function checkMainExistence($arrayCollection)
+    {
         if ($arrayCollection && !$arrayCollection->isEmpty()) {
-            return $arrayCollection->exists(function($index, $entity) {
+            return $arrayCollection->exists(function ($index, $entity) {
                 return $entity->getMain() === true;
             });
         }
@@ -85,7 +94,8 @@ class AbstractContactController extends RestController implements ClassResourceI
      * sets the first element to main, if none is set
      * @param $arrayCollection
      */
-    private function setMainForCollection($arrayCollection) {
+    private function setMainForCollection($arrayCollection)
+    {
         if ($arrayCollection && !$arrayCollection->isEmpty() && !$this->checkMainExistence($arrayCollection)) {
             $arrayCollection->first()->setMain(true);
         }
@@ -95,10 +105,11 @@ class AbstractContactController extends RestController implements ClassResourceI
      * @param $arrayCollection
      * @return boolean returns true if a element was unset
      */
-    private function unsetMain($arrayCollection) {
+    private function unsetMain($arrayCollection)
+    {
         if ($arrayCollection && !$arrayCollection->isEmpty()) {
             return $arrayCollection->forAll(
-                function($index, $entry) {
+                function ($index, $entry) {
                     if ($entry->getMain() === true) {
                         $entry->setMain(false);
                         return false;
@@ -113,32 +124,36 @@ class AbstractContactController extends RestController implements ClassResourceI
      * checks if entity has main email or sets one
      * @param $emails
      */
-    protected function checkAndSetMainEmail($emails) {
-       $this->setMainForCollection($emails);
+    protected function checkAndSetMainEmail($emails)
+    {
+        $this->setMainForCollection($emails);
     }
 
     /**
      * checks if entity has main phone or sets one
      * @param $phones
      */
-    protected function checkAndSetMainPhone($phones) {
-       $this->setMainForCollection($phones);
+    protected function checkAndSetMainPhone($phones)
+    {
+        $this->setMainForCollection($phones);
     }
 
     /**
      * checks if entity has main fax or sets one
      * @param $faxes
      */
-    protected function checkAndSetMainFax($faxes) {
-       $this->setMainForCollection($faxes);
+    protected function checkAndSetMainFax($faxes)
+    {
+        $this->setMainForCollection($faxes);
     }
 
     /**
      * checks if entity has main url or sets one
      * @param $urls
      */
-    protected function checkAndSetMainUrl($urls) {
-       $this->setMainForCollection($urls);
+    protected function checkAndSetMainUrl($urls)
+    {
+        $this->setMainForCollection($urls);
     }
 
     /**
@@ -590,31 +605,33 @@ class AbstractContactController extends RestController implements ClassResourceI
     protected function processAddresses($contact, $addresses)
     {
         $delete = function ($address) use ($contact) {
-            return $contact->removeAddresse($address);
+            $contact->removeAddresse($address);
+
+            return true;
         };
 
-        $update = function ($address, $matchedEntry) {
-            return $this->updateAddress($address, $matchedEntry);
+        $update = function ($address, $matchedEntry) use ($contact) {
+            return $this->updateAddress($contact, $address, $matchedEntry);
         };
 
         $add = function ($address) use ($contact) {
-            return $this->addAddress($contact, $address);
+            $this->addAddress($contact, $address);
+
+            return true;
         };
 
         return $this->processPut($contact->getAddresses(), $addresses, $delete, $update, $add);
     }
 
     /**
-     * Add a new address to the given contact and persist it with the given object manager
+     * Adds an address to an account
      * @param $contact
      * @param $addressData
-     * @return bool
-     * @throws \Sulu\Component\Rest\Exception\EntityIdAlreadySetException
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
+     * @throws \Sulu\Component\Rest\Exception\EntityIdAlreadySetException
      */
-    protected function addAddress($contact, $addressData)
+    private function addAddress($contact, $addressData)
     {
-        $result = true;
         $em = $this->getDoctrine()->getManager();
         $addressEntity = 'SuluContactBundle:Address';
         $addressTypeEntity = 'SuluContactBundle:AddressType';
@@ -641,6 +658,27 @@ class AbstractContactController extends RestController implements ClassResourceI
             $address->setZip($addressData['zip']);
             $address->setCity($addressData['city']);
             $address->setState($addressData['state']);
+
+            if (isset($addressData['primaryAddress'])) {
+                $value = $this->getBooleanValue($addressData['primaryAddress']);
+                $this->handlePrimaryAddress($contact, $address, $value);
+            }
+            if (isset($addressData['billingAddress'])) {
+                $address->setBillingAddress($this->getBooleanValue($addressData['billingAddress']));
+            }
+            if (isset($addressData['deliveryAddress'])) {
+                $address->setDeliveryAddress($this->getBooleanValue($addressData['deliveryAddress']));
+            }
+            if (isset($addressData['postboxCity'])) {
+                $address->setPostboxCity($addressData['postboxCity']);
+            }
+            if (isset($addressData['postboxNumber'])) {
+                $address->setPostboxNumber($addressData['postboxNumber']);
+            }
+            if (isset($addressData['postboxPostcode'])) {
+                $address->setPostboxPostcode($addressData['postboxPostcode']);
+            }
+
             $address->setCountry($country);
             $address->setAddressType($addressType);
 
@@ -653,17 +691,17 @@ class AbstractContactController extends RestController implements ClassResourceI
 
             $contact->addAddresse($address);
         }
-        return $result;
     }
 
     /**
      * Updates the given address
+     * @param $contact
      * @param Address $address The phone object to update
-     * @param array $entry The entry with the new data
+     * @param mixed $entry The entry with the new data
      * @return bool True if successful, otherwise false
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      */
-    protected function updateAddress(Address $address, $entry)
+    protected function updateAddress($contact, Address $address, $entry)
     {
         $success = true;
         $addressTypeEntity = 'SuluContactBundle:AddressType';
@@ -691,6 +729,26 @@ class AbstractContactController extends RestController implements ClassResourceI
                 $address->setCountry($country);
                 $address->setAddressType($addressType);
 
+                if (isset($entry['primaryAddress'])) {
+                    $value = $this->getBooleanValue($entry['primaryAddress']);
+                    $this->handlePrimaryAddress($contact, $address, $value);
+                }
+                if (isset($entry['billingAddress'])) {
+                    $address->setBillingAddress($this->getBooleanValue($entry['billingAddress']));
+                }
+                if (isset($entry['deliveryAddress'])) {
+                    $address->setDeliveryAddress($this->getBooleanValue($entry['deliveryAddress']));
+                }
+                if (isset($entry['postboxCity'])) {
+                    $address->setPostboxCity($entry['postboxCity']);
+                }
+                if (isset($entry['postboxNumber'])) {
+                    $address->setPostboxNumber($entry['postboxNumber']);
+                }
+                if (isset($entry['postboxPostcode'])) {
+                    $address->setPostboxPostcode($entry['postboxPostcode']);
+                }
+
                 if (isset($entry['addition'])) {
                     $address->setAddition($entry['addition']);
                 }
@@ -698,6 +756,54 @@ class AbstractContactController extends RestController implements ClassResourceI
         }
 
         return $success;
+    }
+
+    /**
+     * Handles the primary flag of addresses
+     * @param $contact
+     * @param Address $address
+     * @param $value
+     */
+    protected function handlePrimaryAddress($contact, Address $address, $value){
+        if($value && !$address->getPrimaryAddress() && !$this->newPrimaryAddress) {
+            $this->currentContact = $contact;
+            $this->newPrimaryAddress = $address;
+        } else if(!$value) {
+            $address->setPrimaryAddress($value);
+        }
+    }
+
+    /**
+     * Sets primary address flag of all addresses of an account to false and sets new primary
+     * @param $contact
+     * @param $address
+     */
+    protected function setNewPrimaryAddress($contact, Address $address)
+    {
+        if ($contact && $address) {
+
+            $addresses = $contact->getAddresses();
+            /** @var Address $address */
+            foreach ($addresses as $addr) {
+                $addr->setPrimaryAddress(false);
+            }
+            $address->setPrimaryAddress(true);
+        }
+    }
+
+    /**
+     * Checks if a value is a boolean and converts it if necessary and returns it
+     * @param $value
+     * @return bool
+     */
+    protected function getBooleanValue($value){
+        if(is_string($value)){
+            return $value === 'true' ? true : false;
+        } else if(is_bool($value)){
+            return $value;
+        } else if(is_numeric($value)){
+            return $value === 1 ? true : false;
+        }
     }
 
     /**
