@@ -252,9 +252,10 @@ abstract class RestController extends FOSRestController
      * @param array $where
      * @param String $entityName
      * @param Function $entityFilter function for filtering entities
+     * @param array $joinConditions to specify join conditions
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    protected function responseList($where = array(), $entityName = null, $entityFilter = null)
+    protected function responseList($where = array(), $entityName = null, $entityFilter = null, $joinConditions = array())
     {
         /** @var ListRestHelper $listHelper */
         $listHelper = $this->get('sulu_core.list_rest_helper');
@@ -263,8 +264,8 @@ abstract class RestController extends FOSRestController
             $entityName = $this->entityName;
         }
 
-        $entities = $listHelper->find($entityName, $where);
-        $numberOfAll = $listHelper->getTotalNumberOfElements($entityName, $where);
+        $entities = $listHelper->find($entityName, $where, $joinConditions);
+        $numberOfAll = $listHelper->getTotalNumberOfElements($entityName, $where, $joinConditions);
         $pages = $listHelper->getTotalPages($numberOfAll);
 
         // filter entities
