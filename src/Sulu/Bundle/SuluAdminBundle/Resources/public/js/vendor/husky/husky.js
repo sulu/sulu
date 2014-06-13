@@ -41457,7 +41457,7 @@ define('__component__$input@husky',[], function () {
                 this.sandbox.dom.focus(this.input.$input);
             }.bind(this));
 
-            // delegat labels on input
+            // delegate labels on input
             if(!!this.sandbox.dom.attr(this.$el, 'id')) {
                 this.sandbox.dom.on('label[for="'+ this.sandbox.dom.attr(this.$el, 'id') +'"]', 'click', function() {
                     this.sandbox.dom.focus(this.input.$input);
@@ -41543,6 +41543,17 @@ define('__component__$input@husky',[], function () {
                 this.setDatepickerValueAttr(event.date);
             }.bind(this));
             this.updateValue();
+
+            this.bindDatepickerDomEvents();
+        },
+
+        /**
+         * Binds Dom-events for the datepicker
+         */
+        bindDatepickerDomEvents: function() {
+            this.sandbox.dom.on(this.input.$input, 'focusout', function() {
+                this.setDatepickerValueAttr(this.sandbox.datepicker.getDate(this.input.$input));
+            }.bind(this));
         },
 
         /**
@@ -41603,9 +41614,14 @@ define('__component__$input@husky',[], function () {
          */
         setDatepickerValueAttr: function(date) {
             if (!!date) {
-                date = date.getFullYear() + '-' +
-                   ('0' + (date.getMonth()+1)).slice(-2) + '-' +
-                   ('0' + date.getDate()).slice(-2);
+                if (this.sandbox.dom.isNumeric(date.valueOf())) {
+                    date = date.getFullYear() + '-' +
+                        ('0' + (date.getMonth()+1)).slice(-2) + '-' +
+                        ('0' + date.getDate()).slice(-2);
+                } else {
+                    date = '';
+                    this.sandbox.dom.val(this.input.$input, '');
+                }
             }
             this.sandbox.dom.data(this.$el, 'value', date);
         },
@@ -46009,6 +46025,10 @@ define("datepicker-zh-TW", function(){});
 
             app.core.dom.isArray = function(selector) {
                 return $.isArray(selector);
+            };
+
+            app.core.dom.isNumeric = function(number) {
+                return $.isNumeric(number);
             };
 
             app.core.dom.data = function(selector, key, value) {
