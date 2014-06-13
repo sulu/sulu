@@ -82,9 +82,9 @@ class ContactController extends AbstractContactController
         1 => 'title',
         2 => 'firstName',
         3 => 'lastName',
-        4 => 'email',
         5 => 'account',
-        6 => 'phone',
+//        4 => 'email',
+//        6 => 'phone',
     );
 
     /**
