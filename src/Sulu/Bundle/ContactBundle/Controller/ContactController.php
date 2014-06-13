@@ -18,7 +18,6 @@ use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\AccountContact;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\Fax;
-use Sulu\Bundle\ContactBundle\Entity\FaxType;
 use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\ContactBundle\Entity\Phone;
 use Sulu\Bundle\ContactBundle\Entity\Address;
@@ -306,58 +305,15 @@ class ContactController extends AbstractContactController
                 $this->createMainAccountContact($contact, $parent);
             }
 
-            $contact->setCreated(new DateTime());
-            $contact->setChanged(new DateTime());
-
-            $urls = $request->get('urls');
-            if (!empty($urls)) {
-                foreach ($urls as $urlData) {
-                    $this->addUrl($contact, $urlData);
-                }
-            }
-
-            $faxes = $request->get('faxes');
-            if (!empty($faxes)) {
-                foreach ($faxes as $faxData) {
-                    $this->addFax($contact, $faxData);
-                }
-            }
-
-            $emails = $request->get('emails');
-            if (!empty($emails)) {
-                foreach ($emails as $emailData) {
-                    $this->addEmail($contact, $emailData);
-                }
-            }
-            $this->checkAndSetMainEmail($contact->getEmails());
-
-            $phones = $request->get('phones');
-            if (!empty($phones)) {
-                foreach ($phones as $phoneData) {
-                    $this->addPhone($contact, $phoneData);
-                }
-            }
-
-            $addresses = $request->get('addresses');
-            if (!empty($addresses)) {
-                foreach ($addresses as $addressData) {
-                    $this->addAddress($contact, $addressData);
-                }
-            }
-
-            $notes = $request->get('notes');
-            if (!empty($notes)) {
-                foreach ($notes as $noteData) {
-                    $this->addNote($contact, $noteData);
-                }
-            }
-
             $birthday = $request->get('birthday');
             if (!empty($birthday)) {
                 $contact->setBirthday(new DateTime($birthday));
             }
 
-            $contact->setFormOfAddress($formOfAddress['id']);
+            $contact->setCreated(new DateTime());
+            $contact->setChanged(new DateTime());
+
+            $contact->setFormOfAddress($formOfAddress[ 'id']);
 
             $contact->setDisabled($disabled);
 
@@ -366,13 +322,8 @@ class ContactController extends AbstractContactController
                 $contact->setSalutation($salutation);
             }
 
-            // handle tags
-            $tags = $request->get('tags');
-            if (!empty($tags)) {
-                foreach ($tags as $tag) {
-                    $this->addTag($contact, $tag);
-                }
-            }
+            // add urls, phones, emails, tags, bankAccounts, notes, addresses,..
+            $this->addNewContactRelations($contact, $request);
 
             $em->persist($contact);
             $em->flush();
@@ -484,13 +435,13 @@ class ContactController extends AbstractContactController
                 }
 
                 // process details
-                if (!($this->processEmails($contact, $request)
-                    && $this->processPhones($contact, $request)
-                    && $this->processAddresses($contact, $request)
-                    && $this->processNotes($contact, $request)
-                    && $this->processFaxes($contact, $request)
-                    && $this->processTags($contact, $request)
-                    && $this->processUrls($contact, $request))
+                if (!($this->processEmails($contact, $request->get('emails'))
+                    && $this->processPhones($contact, $request->get('phones'))
+                    && $this->processAddresses($contact, $request->get('addresses'))
+                    && $this->processNotes($contact, $request->get('notes'))
+                    && $this->processFaxes($contact, $request->get('faxes'))
+                    && $this->processTags($contact, $request->get('tags'))
+                    && $this->processUrls($contact, $request->get('urls')))
                 ) {
                     throw new RestException('Updating dependencies is not possible', 0);
                 }
@@ -527,46 +478,4 @@ class ContactController extends AbstractContactController
 
         return $this->handleView($view);
     }
-
-    /**
-     * Process all tags of request
-     * @param Contact $contact The contact on which is worked
-     * @param Request $request
-     * @return bool True if the processing was successful, otherwise false
-     */
-    protected function processTags(Contact $contact, Request $request)
-    {
-        $tags = $request->get('tags');
-
-        $delete = function ($tag) use ($contact) {
-            return $contact->removeTag($tag);
-        };
-
-        $update = function () {
-            return true;
-        };
-
-        $add = function ($tag) use ($contact) {
-            return $this->addTag($contact, $tag);
-        };
-
-        return $this->processPut($contact->getTags(), $tags, $delete, $update, $add);
-    }
-
-    /**
-     * Adds a new tag to the given contact and persist it with the given object manager
-     * @param Contact $contact
-     * @param $data
-     * @return bool True if there was no error, otherwise false
-     */
-    protected function addTag(Contact $contact, $data)
-    {
-        $success = true;
-        $tagManager = $this->get('sulu_tag.tag_manager');
-        $resolvedTag = $tagManager->findByName($data);
-        $contact->addTag($resolvedTag);
-
-        return $success;
-    }
-
 }
