@@ -836,6 +836,17 @@ class Import
     }
 
     /**
+     * checks if a main account-contact relation exists
+     * @param $entity
+     * @return mixed
+     */
+    private function mainRelationExists($entity) {
+        return $entity->getAccountContacts()->exists(function($index, $entity) {
+            return $entity->getMain() === true;
+        });
+    }
+
+    /**
      * @param $data
      * @param $contact
      * @param $row
@@ -853,8 +864,16 @@ class Import
                 $accountContact = new AccountContact();
                 $accountContact->setContact($contact);
                 $accountContact->setAccount($account);
-                // TODO: set main if this is the main relation;
-                $accountContact->setMain(false);
+
+                $main = false;
+                // check if main relation exists
+                if (!$this->mainRelationExists($contact))
+                {
+                    $main = true;
+                }
+
+                $accountContact->setMain($main);
+
                 $this->em->persist($accountContact);
 
                 $contact->addAccountContact($accountContact);
