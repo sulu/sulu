@@ -71,6 +71,7 @@ class ContactControllerTest extends DatabaseTestCase
         $phone = new Phone();
         $phone->setPhone('123456789');
         $phone->setPhoneType($phoneType);
+        $phone->setMain(true);
         $contact->addPhone($phone);
 
         $emailType = new EmailType();
@@ -79,6 +80,7 @@ class ContactControllerTest extends DatabaseTestCase
         $email = new Email();
         $email->setEmail('max.mustermann@muster.at');
         $email->setEmailType($emailType);
+        $email->setMain(true);
         $contact->addEmail($email);
 
         $faxType = new FaxType();
@@ -87,6 +89,7 @@ class ContactControllerTest extends DatabaseTestCase
         $fax = new Fax();
         $fax->setFax('123654789');
         $fax->setFaxType($faxType);
+        $fax->setMain(true);
         $contact->addFax($fax);
 
         $country1 = new Country();
