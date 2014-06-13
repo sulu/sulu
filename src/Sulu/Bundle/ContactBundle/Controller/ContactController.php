@@ -15,6 +15,7 @@ use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Put;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\ContactBundle\Entity\Account;
+use Sulu\Bundle\ContactBundle\Entity\AccountContact;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\Fax;
 use Sulu\Bundle\ContactBundle\Entity\FaxType;
@@ -64,7 +65,7 @@ class ContactController extends RestController implements ClassResourceInterface
     /**
      * {@inheritdoc}
      */
-    protected $fieldsHidden = array('middleName', 'created', 'changed', 'birthday','salutation','formOfAddress','id', 'title','disabled');
+    protected $fieldsHidden = array('middleName', 'created', 'changed', 'birthday', 'salutation', 'formOfAddress', 'id', 'title', 'disabled');
 
     /**
      * {@inheritdoc}
@@ -167,13 +168,13 @@ class ContactController extends RestController implements ClassResourceInterface
                 }
             }
 
-//            $urls = $contact->getUrls()->toArray();
-//            /** @var Url $url */
-//            foreach ($urls as $url) {
-//                if ($url->getAccounts()->count() == 0 && $url->getContacts()->count() == 1) {
-//                    $em->remove($url);
-//                }
-//            }
+            $urls = $contact->getUrls()->toArray();
+            /** @var Url $url */
+            foreach ($urls as $url) {
+                if ($url->getAccounts()->count() == 0 && $url->getContacts()->count() == 1) {
+                    $em->remove($url);
+                }
+            }
 
             $faxes = $contact->getFaxes()->toArray();
             /** @var Fax $fax */
@@ -257,18 +258,19 @@ class ContactController extends RestController implements ClassResourceInterface
                 if (!$parent) {
                     throw new EntityNotFoundException('SuluContactBundle:Account', $parentData['id']);
                 }
-                $contact->setAccount($parent);
+                // create new account-contact relation
+                $this->createMainAccountContacts($contact, $parent);
             }
 
             $contact->setCreated(new DateTime());
             $contact->setChanged(new DateTime());
 
-//            $urls = $request->get('urls');
-//            if (!empty($urls)) {
-//                foreach ($urls as $urlData) {
-//                    $this->addUrl($contact, $urlData);
-//                }
-//            }
+            $urls = $request->get('urls');
+            if (!empty($urls)) {
+                foreach ($urls as $urlData) {
+                    $this->addUrl($contact, $urlData);
+                }
+            }
 
             $faxes = $request->get('faxes');
             if (!empty($faxes)) {
@@ -307,7 +309,7 @@ class ContactController extends RestController implements ClassResourceInterface
 
             $birthday = $request->get('birthday');
             if (!empty($birthday)) {
-               $contact->setBirthday(new DateTime($birthday));
+                $contact->setBirthday(new DateTime($birthday));
             }
 
             $contact->setFormOfAddress($formOfAddress['id']);
@@ -333,7 +335,6 @@ class ContactController extends RestController implements ClassResourceInterface
             }
 
             $em->persist($contact);
-
             $em->flush();
 
             $view = $this->view($contact, 200);
@@ -344,6 +345,52 @@ class ContactController extends RestController implements ClassResourceInterface
         }
 
         return $this->handleView($view);
+    }
+
+    /**
+     * returns the main account-contact relation or creates a new one
+     * @param Contact $contact
+     * @param Account $account
+     * @return bool
+     */
+    private function getMainAccountContactsOrCreateNew(Contact $contact, Account $account)
+    {
+        if (!$accountContact = $this->getMainAccountContacts($contact)) {
+            $accountContact = $this->createMainAccountContacts($contact, $account);
+        }
+        return $accountContact;
+    }
+
+    /**
+     * returns the main account-contact relation
+     * @param Contact $contact
+     * @return AccountContact|bool
+     */
+    private function getMainAccountContacts(Contact $contact)
+    {
+        foreach ($contact->getAccountContacts() as $accountContact) {
+            if ($accountContact->getMain()) {
+                return $accountContact;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * creates a new main Account Contacts relation
+     * @param Contact $contact
+     * @param Account $account
+     * @return AccountContact
+     */
+    private function createMainAccountContacts(Contact $contact, Account $account)
+    {
+        $accountContact = new AccountContact();
+        $accountContact->setAccount($account);
+        $accountContact->setContact($contact);
+        $accountContact->setMain(true);
+        $this->getDoctrine()->getManager()->persist($accountContact);
+        $contact->addAccountContact($accountContact);
+        return $accountContact;
     }
 
     /**
@@ -373,7 +420,9 @@ class ContactController extends RestController implements ClassResourceInterface
 
                 $contact->setTitle($request->get('title'));
                 $contact->setPosition($request->get('position'));
+                $contact->setChanged(new DateTime());
 
+                // set account relation
                 $parentData = $request->get('account');
                 if ($parentData != null && $parentData['id'] != null && $parentData['id'] != 'null' && $parentData['id'] != '') {
                     /** @var Account $parent */
@@ -384,12 +433,15 @@ class ContactController extends RestController implements ClassResourceInterface
                     if (!$parent) {
                         throw new EntityNotFoundException('SuluContactBundle:Account', $parentData['id']);
                     }
-                    $contact->setAccount($parent);
+                    $accountContact = $this->getMainAccountContactsOrCreateNew($contact, $parent);
+                    if ($accountContact) {
+                        $accountContact->setAccount($parent);
+                    }
                 } else {
-                    $contact->setAccount(null);
+                    if ($accountContact = $this->getMainAccountContacts($contact)) {
+                        $em->remove($accountContact);
+                    }
                 }
-
-                $contact->setChanged(new DateTime());
 
                 // process details
                 if (!($this->processEmails($contact, $request)
@@ -404,12 +456,12 @@ class ContactController extends RestController implements ClassResourceInterface
                 }
 
                 $formOfAddress = $request->get('formOfAddress');
-                if(!is_null($formOfAddress) && array_key_exists('id', $formOfAddress)){
+                if (!is_null($formOfAddress) && array_key_exists('id', $formOfAddress)) {
                     $contact->setFormOfAddress($formOfAddress['id']);
                 }
 
                 $disabled = $request->get('disabled');
-                if(!is_null($disabled)){
+                if (!is_null($disabled)) {
                     $contact->setDisabled($disabled);
                 }
 
