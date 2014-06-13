@@ -12,7 +12,7 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
     'use strict';
 
     var defaults = {
-            fields: ['address', 'email', 'fax', 'phone', 'url'],
+            fields: ['email', 'fax', 'phone', 'url'],
             fieldTypes: [],
             defaultTypes: [],
             trigger: '.contact-options-toggle'
@@ -27,14 +27,15 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
             fadedClass: 'faded',
             addressFormId: '#address-form',
             dropdownContainerId: '#contact-options-dropdown',
-            addressRowTemplateSelector: '[data-mapper-property-tpl="address-tpl"]'
+            addressRowTemplateSelector: '[data-mapper-property-tpl="address-tpl"]',
+            addressComponentSelector: '.address-component'
         },
 
         templates = {
             add: [
                 '<div class="grid-row">',
-                '   <div id="' + constants.fieldId + '" class="grid-col-6"></div>',
-                '   <div id="' + constants.fieldTypeId + '" class="grid-col-6"></div>',
+                    '   <div id="' + constants.fieldId + '" class="grid-col-6"></div>',
+                    '   <div id="' + constants.fieldTypeId + '" class="grid-col-6"></div>',
                 '</div>',
                 '<div class="grid-row m-bottom-0"></div>'
             ].join(''),
@@ -60,23 +61,39 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
          * is emited after initialization
          * @event sulu.contact-form.initialized
          */
-            EVENT_INITIALIZED = function() {
+        EVENT_INITIALIZED = function() {
             return eventNamespace + '.initialized';
         },
 
         /**
          * is emited when a field-type gets changed or a field gets deleted
-         * @event sulu.contact-form.initialized
+         * @event sulu.contact-form.changed
          */
-            EVENT_CHANGED = function() {
+        EVENT_CHANGED = function() {
             return eventNamespace + '.changed';
+        },
+
+        /**
+         * is emitted when a new address is added
+         * @constructor sulu.contact-form.added.address
+         */
+        EVENT_ADDED_ADDRESS = function() {
+            return eventNamespace + '.added.address';
+        },
+
+        /**
+         * is emitted when a new address is added
+         * @constructor sulu.contact-form.removed.address
+         */
+        EVENT_REMOVED_ADDRESS = function() {
+            return eventNamespace + '.removed.address';
         },
 
         /**
          * listens on and starts cropping the labels
          * @event sulu.contact-form.content-set
          */
-            CONTENT_SET = function() {
+        CONTENT_SET = function() {
             return eventNamespace + '.content-set';
         },
 
@@ -85,6 +102,7 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
             this.sandbox.on('sulu.contact-form.add-required', addRequires.bind(this));
             this.sandbox.on('sulu.contact-form.is.initialized', isInitialized.bind(this));
 
+            this.sandbox.on('husky.overlay.add-address.initialized', initializeDropdownForAddressTypes.bind(this));
             this.sandbox.on(CONTENT_SET.call(this), cropAllLabels.bind(this));
 
             // bind events for add-fields overlay
@@ -93,6 +111,55 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
 
         bindDomEvents = function() {
             this.sandbox.dom.on(this.$el, 'click', editAddressClicked.bind(this), constants.addressRowTemplateSelector);
+
+            this.sandbox.dom.on(this.$el, 'click', function(event) {
+                event.stopPropagation();
+                removeAddress.call(this, event.currentTarget);
+            }.bind(this), '.address-remove');
+
+            this.sandbox.dom.on(this.$el, 'click', function(event) {
+                event.stopPropagation();
+                addAddress.call(this, event.currentTarget);
+            }.bind(this), '.address-add');
+        },
+
+        /**
+         * Initializes the husky select component when overlay is loaded
+         */
+        initializeDropdownForAddressTypes = function() {
+
+            this.sandbox.start([
+                {
+                    name: 'select@husky',
+                    options: {
+                        el: '#addressType',
+                        defaultLabel: this.sandbox.translate('contact.address.type.select'),
+                        instanceName: 'addressTypes',
+                        data: this.options.fieldTypes.address,
+                        preSelectedElements: [this.options.defaultTypes.addressType.id],
+                        valueName: 'name',
+                        multipleSelect: false,
+                        emitValues: true
+                    }
+                }
+            ]);
+        },
+
+        /**
+         * Removes the clicked address
+         */
+        removeAddress = function($el) {
+            var mapperID = this.sandbox.dom.data(this.sandbox.dom.closest($el, constants.addressComponentSelector), 'mapper-id');
+            this.sandbox.form.removeFromCollection(this.form, mapperID);
+            this.sandbox.emit(EVENT_CHANGED.call(this));
+            this.sandbox.emit(EVENT_REMOVED_ADDRESS.call(this));
+        },
+
+        /**
+         * Triggers the process to add a new address
+         */
+        addAddress = function() {
+            createAddressOverlay.call(this, null);
         },
 
         bindAddEvents = function() {
@@ -108,7 +175,7 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
         /**
          * Binds events related to the edit-fields overlay
          */
-            bindEditEvents = function() {
+        bindEditEvents = function() {
             if (this.$editOverlayContent !== null) {
                 this.sandbox.dom.on(this.sandbox.dom.find('.grid-row', this.$editOverlayContent),
                     'click', deleteFieldHandler.bind(this),
@@ -119,7 +186,7 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
         /**
          * Handles the click on the edit-fields
          */
-            deleteFieldHandler = function(event) {
+        deleteFieldHandler = function(event) {
             var $row = this.sandbox.dom.$(event.delegateTarget),
                 $icon = this.sandbox.dom.find('[class^="icon"]', event.currentTarget),
                 deleted = JSON.parse(this.sandbox.dom.attr($row, 'data-deleted'));
@@ -142,7 +209,7 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
         /**
          * Unbinds events related to the edit-fields overlay
          */
-            unbindEditEvents = function() {
+        unbindEditEvents = function() {
             this.sandbox.dom.off(this.$editOverlayContent);
         },
 
@@ -240,7 +307,7 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
                 fieldType = this.sandbox.dom.children('#' + constants.fieldTypeId)[0],
                 fieldId = this.sandbox.dom.data(field, 'selection'),
                 fieldTypeId = this.sandbox.dom.data(fieldType, 'selection'),
-                data, dataType, dataObject, $element;
+                data, dataType, dataObject;
 
             if (typeof fieldTypeId === 'object' && fieldTypeId.length > 0) {
                 fieldTypeId = fieldTypeId[0];
@@ -279,7 +346,7 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
          * Handles the logic when the overlay to edit fields is closed with
          * a click on ok
          */
-            editOkClicked = function() {
+        editOkClicked = function() {
             var i, length, newTypeId, newType, dataObject, deleted, $element;
             // loop through all editable fields get the selected type and map it back into the array
             for (i = -1, length = this.editFieldsData.length; ++i < length;) {
@@ -325,7 +392,7 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
          * @param id
          * @returns {Object|null}
          */
-            getTypeById = function(types, id) {
+        getTypeById = function(types, id) {
             for (var i = -1, length = types.length; ++i < length;) {
                 if (types[i].id === id) {
                     return types[i];
@@ -350,7 +417,7 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
          * for the edit-fields overlay
          * @returns {*|HTMLElement}
          */
-            createEditOverlayContent = function() {
+        createEditOverlayContent = function() {
             this.editFieldsData = [];
             removeCollectionFilters.call(this);
             var data = this.sandbox.form.getData(this.form, true),
@@ -366,7 +433,6 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
                 fax: data.faxes,
                 phone: data.phones,
                 url: data.urls
-
             };
 
             //loop through object properties
@@ -414,7 +480,7 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
         /**
          * Generate the Data for the all Edit-fields dropdowns
          */
-            generateEditFieldsDropdownData = function() {
+        generateEditFieldsDropdownData = function() {
             var i, length, x, xlength;
 
             //foreach edit-field
@@ -434,7 +500,7 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
         /**
          * Start all edit-fields dropdowns
          */
-            startEditFieldsDropdowns = function() {
+        startEditFieldsDropdowns = function() {
             generateEditFieldsDropdownData.call(this);
             for (var i = -1, length = this.editFieldsData.length; ++i < length;) {
 
@@ -458,7 +524,7 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
         /**
          * Create the edit-fields overlay
          */
-            createEditOverlay = function() {
+        createEditOverlay = function() {
 
             // create container for overlay
             var $overlay = this.sandbox.dom.createElement('<div>');
@@ -488,20 +554,31 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
         createAddressOverlay = function(data, mapperId) {
 
             var addressTemplate, formObject, $overlay, title,
-                isNew = !!data ? false : true;
+                isNew = !data;
 
             // remove add overlay
             this.sandbox.emit('husky.overlay.add-fields.remove');
             // remove edit overlay
             this.sandbox.emit('husky.overlay.edit-fields.remove');
 
+            if (!data) {
+                // init data object and set defaults
+                data = {
+                    country: {
+                        id: this.options.defaultTypes.country.id
+                    },
+                    addressType: {
+                        id: this.options.defaultTypes.addressType.id
+                    }
+                };
+            }
+
             // extend address data by additional variables
             this.sandbox.util.extend(true, data, {
                 translate: this.sandbox.translate,
-                countries: this.options.fieldTypes['countries']
+                countries: this.options.fieldTypes.countries
             });
 
-            // parse template
             addressTemplate = this.sandbox.util.template(AddressForm, data);
 
             // create container for overlay
@@ -509,7 +586,7 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
             this.sandbox.dom.append('body', $overlay);
 
             if (isNew) {
-                title = this.sandbox.translate('contacts.add-address');
+                title = this.sandbox.translate('contact.address.add.label');
             } else {
                 title = this.sandbox.translate('contacts.edit-address');
             }
@@ -532,28 +609,16 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
                 }
             ]);
 
+            this.data = data;
+
             // after everything was added to dom
             this.sandbox.on('husky.overlay.add-address.opened', function() {
                 // start form and set data
                 formObject = this.sandbox.form.create(constants.addressFormId);
                 formObject.initialized.then(function() {
-                    this.sandbox.form.setData(constants.addressFormId, data);
+                    this.sandbox.form.setData(constants.addressFormId, this.data);
                 }.bind(this));
             }.bind(this));
-
-//            // use husky select
-//            this.sandbox.start([
-//                {
-//                    name: 'select@husky',
-//                    options: {
-//                        el: '#country-select',
-//                        instanceName: 'country-select',
-//                        data: this.options.fieldTypes['countries'],
-//                        preSelectedElements: !!data.country ? [data.country.id]: [this.options.defaultTypes.country.id]
-//                    }
-//                }
-//            ]);
-
         },
 
     // removes listeners of addressform
@@ -577,6 +642,7 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
                 }.bind(this));
             } else {
                 this.sandbox.form.editInCollection(this.form, mapperId, formData);
+
                 $element = this.$find('[data-mapper-id="' + mapperId + '"]');
                 // crop the label
                 cropLabelOfElement.call(this, $element);
@@ -584,6 +650,7 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
 
             // set changed to be able to save
             this.sandbox.emit(EVENT_CHANGED.call(this));
+            this.sandbox.emit(EVENT_ADDED_ADDRESS.call(this));
 
             // remove change listener
             removeAddressFormEvents.call(this);
@@ -595,25 +662,25 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
 
             this.dropdownDataArray = [];
 
-            this.$addOverlay = this.sandbox.dom.createElement(templates.add),
+            this.$addOverlay = this.sandbox.dom.createElement(templates.add);
 
-                // create object
-                this.sandbox.util.foreach(this.options.fields, function(type, index) {
-                    if (!!this.options.fieldTypes && this.options.fieldTypes[type]) {
-                        // TODO: USE ARRAY INSTEAD OF OBJECT WHEN DATA HAS NOT TO BE MANIPULATED ANYMORE
-                        data = {
-                            id: index,
-                            name: this.sandbox.translate('public.' + type),
-                            type: type,
-                            collection: type + 's',
-                            items: this.options.translatedFieldTypes[type]
-                        };
-                        dropdownData[type] = (data);
+            // create object
+            this.sandbox.util.foreach(this.options.fields, function(type, index) {
+                if (!!this.options.fieldTypes && this.options.fieldTypes[type]) {
+                    // TODO: USE ARRAY INSTEAD OF OBJECT WHEN DATA HAS NOT TO BE MANIPULATED ANYMORE
+                    data = {
+                        id: index,
+                        name: this.sandbox.translate('public.' + type),
+                        type: type,
+                        collection: type + 's',
+                        items: this.options.translatedFieldTypes[type]
+                    };
+                    dropdownData[type] = (data);
 
-                    } else {
-                        throw 'contact-form@sulu: fieldTypes not defined for type ' + type;
-                    }
-                }.bind(this));
+                } else {
+                    throw 'contact-form@sulu: fieldTypes not defined for type ' + type;
+                }
+            }.bind(this));
 
             // change data
             dropdownData.fax.collection = 'faxes';
@@ -688,6 +755,7 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
             this.$addOverlay = null;
             this.dropdownDataArray = [];
             this.editFieldsData = [];
+            this.data = null;
 
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
@@ -708,7 +776,7 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
                 $dropdownContainer = this.$find(constants.dropdownContainerId);
 
             // add new container
-//            this.sandbox.dom.append(this.$el, $container);
+            // this.sandbox.dom.append(this.$el, $container);
             this.sandbox.dom.append($dropdownContainer, $container);
 
             // TODO: implement options dropdown functionality for adding and editing contact details
