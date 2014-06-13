@@ -53,6 +53,7 @@ class UserControllerTest extends DatabaseTestCase
 
         $email = new Email();
         $email->setEmail('max.mustermann@muster.at');
+        $email->setMain(true);
         $email->setEmailType($emailType);
         self::$em->persist($email);
 

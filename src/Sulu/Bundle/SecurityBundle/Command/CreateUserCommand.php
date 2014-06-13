@@ -64,6 +64,7 @@ class CreateUserCommand extends ContainerAwareCommand
 
         $email = new Email();
         $email->setEmail($emailText);
+        $email->setMain(true);
         $email->setEmailType($emailTypes[0]);
 
         $em->persist($email);
