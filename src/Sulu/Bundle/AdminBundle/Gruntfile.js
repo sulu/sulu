@@ -34,8 +34,9 @@ module.exports = function(grunt) {
                     {expand: true, cwd: 'Resources/public', src: ['**'], dest: 'Resources/public/bundles/suluadmin/'},
                     // copy cultures
                     {expand: true, cwd: 'Resources/public/js/vendor/globalize', src: ['cultures/**'], dest: 'Resources/public/dist/vendor/globalize'},
-                    // copy colorpicker image
-                    {src: ['Resources/public/js/vendor/husky/vendor/jquery.minicolors.png'], dest: 'Resources/public/dist/vendor/jquery.minicolors.png'}
+                    // copy files
+                    {expand: true, cwd: 'Resources/public/js/vendor/husky/vendor', src: ['*'], dest: 'Resources/public/dist/vendor', filter: 'isFile'}
+
                 ]
             },
             buildResult: {
