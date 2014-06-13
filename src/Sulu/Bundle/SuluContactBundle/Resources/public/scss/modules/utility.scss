@@ -27,6 +27,36 @@
   #addresses .husky-validate-success label::after {
     content: "";
   }
+
+  .address-add {
+      padding: 3px;
+  }
+
+  .m-left-140{
+      margin-left:140px;
+  }
+
+  .address-remove {
+    display: none;
+    padding: 3px;
+  }
+
+  .address-row {
+      padding-top: 5px;
+  }
+
+  .address-row:hover .address-remove {
+    display:inline;
+  }
+
+}
+
+.dark-divider {
+    height: 0;
+    margin:0 0 20px 0;
+    border: 0;
+    outline:none;
+    border-bottom:1px solid #ccc;
 }
 
 #contact-options-dropdown {
@@ -59,4 +89,10 @@
           display: none;
         }
     }
+}
+
+
+.form-horizontal .form-group .checkbox-container-left {
+    text-align: left;
+    width: 35px;
 }

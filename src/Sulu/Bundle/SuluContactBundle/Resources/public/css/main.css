@@ -27,32 +27,68 @@
 #contact-form #addresses .husky-validate-success label::after {
   content: "";
 }
+/* line 31, ../scss/modules/utility.scss */
+#contact-form .address-add {
+  padding: 3px;
+}
+/* line 35, ../scss/modules/utility.scss */
+#contact-form .m-left-140 {
+  margin-left: 140px;
+}
+/* line 39, ../scss/modules/utility.scss */
+#contact-form .address-remove {
+  display: none;
+  padding: 3px;
+}
+/* line 44, ../scss/modules/utility.scss */
+#contact-form .address-row {
+  padding-top: 5px;
+}
+/* line 48, ../scss/modules/utility.scss */
+#contact-form .address-row:hover .address-remove {
+  display: inline;
+}
 
-/* line 32, ../scss/modules/utility.scss */
+/* line 54, ../scss/modules/utility.scss */
+.dark-divider {
+  height: 0;
+  margin: 0 0 20px 0;
+  border: 0;
+  outline: none;
+  border-bottom: 1px solid #ccc;
+}
+
+/* line 62, ../scss/modules/utility.scss */
 #contact-options-dropdown {
   display: none;
 }
-/* line 35, ../scss/modules/utility.scss */
+/* line 65, ../scss/modules/utility.scss */
 #contact-options-dropdown.is-active {
   display: block;
 }
 
-/* line 42, ../scss/modules/utility.scss */
+/* line 72, ../scss/modules/utility.scss */
 #contact-edit-form:hover #contact-options-dropdown {
   display: block;
 }
-/* line 48, ../scss/modules/utility.scss */
+/* line 78, ../scss/modules/utility.scss */
 #contact-edit-form .comma-before:before {
   content: ',';
   margin-left: -4px;
   margin-right: 4px;
 }
-/* line 55, ../scss/modules/utility.scss */
+/* line 85, ../scss/modules/utility.scss */
 #contact-edit-form label {
   line-height: 14px;
   text-overflow: hidden;
 }
-/* line 58, ../scss/modules/utility.scss */
+/* line 88, ../scss/modules/utility.scss */
 #contact-edit-form label.hidden {
   display: none;
+}
+
+/* line 95, ../scss/modules/utility.scss */
+.form-horizontal .form-group .checkbox-container-left {
+  text-align: left;
+  width: 35px;
 }

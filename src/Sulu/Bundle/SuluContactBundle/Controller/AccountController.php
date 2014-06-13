@@ -106,6 +106,16 @@ class AccountController extends RestController implements ClassResourceInterface
     );
 
     /**
+     * @var
+     */
+    protected $currentAccount = null;
+
+    /**
+     * @var
+     */
+    protected $newPrimaryAddress = null;
+
+    /**
      * {@inheritdoc}
      */
     protected $bundlePrefix = 'contact.accounts.';
@@ -273,6 +283,11 @@ class AccountController extends RestController implements ClassResourceInterface
                 }
             }
 
+            // set new primary address
+            if($this->newPrimaryAddress && $this->currentAccount){
+                $this->setNewPrimaryAddress($this->currentAccount, $this->newPrimaryAddress);
+            }
+
             $em->persist($account);
 
             $em->flush();
@@ -340,6 +355,11 @@ class AccountController extends RestController implements ClassResourceInterface
                     && $this->processNotes($account, $request))
                 ) {
                     throw new RestException('Updating dependencies is not possible', 0);
+                }
+
+                // set new primary address
+                if($this->newPrimaryAddress && $this->currentAccount){
+                    $this->setNewPrimaryAddress($this->currentAccount, $this->newPrimaryAddress);
                 }
 
                 $em->flush();
@@ -885,8 +905,8 @@ class AccountController extends RestController implements ClassResourceInterface
             return true;
         };
 
-        $update = function ($address, $matchedEntry) {
-            return $this->updateAddress($address, $matchedEntry);
+        $update = function ($address, $matchedEntry) use ($account) {
+            return $this->updateAddress($account, $address, $matchedEntry);
         };
 
         $add = function ($address) use ($account) {
@@ -933,6 +953,27 @@ class AccountController extends RestController implements ClassResourceInterface
             $address->setZip($addressData['zip']);
             $address->setCity($addressData['city']);
             $address->setState($addressData['state']);
+
+            if (isset($addressData['primaryAddress'])) {
+                $value = $this->getBooleanValue($addressData['primaryAddress']);
+                $this->handlePrimaryAddress($account, $address, $value);
+            }
+            if (isset($addressData['billingAddress'])) {
+                $address->setBillingAddress($this->getBooleanValue($addressData['billingAddress']));
+            }
+            if (isset($addressData['deliveryAddress'])) {
+                $address->setDeliveryAddress($this->getBooleanValue($addressData['deliveryAddress']));
+            }
+            if (isset($addressData['postboxCity'])) {
+                $address->setPostboxCity($addressData['postboxCity']);
+            }
+            if (isset($addressData['postboxNumber'])) {
+                $address->setPostboxNumber($addressData['postboxNumber']);
+            }
+            if (isset($addressData['postboxPostcode'])) {
+                $address->setPostboxPostcode($addressData['postboxPostcode']);
+            }
+
             $address->setCountry($country);
             $address->setAddressType($addressType);
 
@@ -949,12 +990,13 @@ class AccountController extends RestController implements ClassResourceInterface
 
     /**
      * Updates the given address
+     * @param $account
      * @param Address $address The phone object to update
      * @param mixed $entry The entry with the new data
      * @return bool True if successful, otherwise false
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      */
-    protected function updateAddress(Address $address, $entry)
+    protected function updateAddress(Account $account, Address $address, $entry)
     {
         $success = true;
         $addressTypeEntity = 'SuluContactBundle:AddressType';
@@ -982,6 +1024,26 @@ class AccountController extends RestController implements ClassResourceInterface
                 $address->setCountry($country);
                 $address->setAddressType($addressType);
 
+                if (isset($entry['primaryAddress'])) {
+                    $value = $this->getBooleanValue($entry['primaryAddress']);
+                    $this->handlePrimaryAddress($account, $address, $value);
+                }
+                if (isset($entry['billingAddress'])) {
+                    $address->setBillingAddress($this->getBooleanValue($entry['billingAddress']));
+                }
+                if (isset($entry['deliveryAddress'])) {
+                    $address->setDeliveryAddress($this->getBooleanValue($entry['deliveryAddress']));
+                }
+                if (isset($entry['postboxCity'])) {
+                    $address->setPostboxCity($entry['postboxCity']);
+                }
+                if (isset($entry['postboxNumber'])) {
+                    $address->setPostboxNumber($entry['postboxNumber']);
+                }
+                if (isset($entry['postboxPostcode'])) {
+                    $address->setPostboxPostcode($entry['postboxPostcode']);
+                }
+
                 if (isset($entry['addition'])) {
                     $address->setAddition($entry['addition']);
                 }
@@ -989,6 +1051,54 @@ class AccountController extends RestController implements ClassResourceInterface
         }
 
         return $success;
+    }
+
+    /**
+     * Handles the primary flag of addresses
+     * @param Account $account
+     * @param Address $address
+     * @param $value
+     */
+    protected function handlePrimaryAddress(Account $account, Address $address, $value){
+        if($value && !$address->getPrimaryAddress() && !$this->newPrimaryAddress) {
+            $this->currentAccount = $account;
+            $this->newPrimaryAddress = $address;
+        } else if(!$value) {
+            $address->setPrimaryAddress($value);
+        }
+    }
+
+    /**
+     * Sets primary address flag of all addresses of an account to false and sets new primary
+     * @param $account
+     * @param $address
+     */
+    protected function setNewPrimaryAddress(Account $account, Address $address)
+    {
+        if ($account && $address) {
+
+            $addresses = $account->getAddresses();
+            /** @var Address $address */
+            foreach ($addresses as $addr) {
+                $addr->setPrimaryAddress(false);
+            }
+            $address->setPrimaryAddress(true);
+        }
+    }
+
+    /**
+     * Checks if a value is a boolean and converts it if necessary and returns it
+     * @param $value
+     * @return bool
+     */
+    protected function getBooleanValue($value){
+        if(is_string($value)){
+            return $value === 'true' ? true : false;
+        } else if(is_bool($value)){
+            return $value;
+        } else if(is_numeric($value)){
+            return $value === 1 ? true : false;
+        }
     }
 
     /**

@@ -39,7 +39,7 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('addressType')->defaultValue('1')->end()
                         ->scalarNode('urlType')->defaultValue('1')->end()
                         ->scalarNode('faxType')->defaultValue('1')->end()
-                        ->scalarNode('country')->defaultValue('1')->end()
+                        ->scalarNode('country')->defaultValue('15')->end()
                     ->end()
                 ->end()
                 ->arrayNode('account_types')
