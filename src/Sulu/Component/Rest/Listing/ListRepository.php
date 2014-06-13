@@ -38,9 +38,10 @@ class ListRepository extends EntityRepository
      * @param array $where
      * @param string $prefix
      * @param bool $justCount Defines, if find should just return the total number of results
+     * @param array $joinConditions optionally specify conditions on join
      * @return array|object|int
      */
-    public function find($where = array(), $prefix = 'u', $justCount = false)
+    public function find($where = array(), $prefix = 'u', $justCount = false, $joinConditions = array())
     {
         $searchPattern = $this->helper->getSearchPattern();
         $searchFields = $this->helper->getSearchFields();
@@ -65,7 +66,8 @@ class ListRepository extends EntityRepository
             $this->helper->getSorting(),
             $where,
             $textFields,
-            $numberFields
+            $numberFields,
+            $joinConditions
         );
 
         if ($justCount) {
@@ -149,12 +151,13 @@ class ListRepository extends EntityRepository
     /**
      * returns the amount of data
      * @param array $where
+     * @param array $joinConditions
      * @param string $prefix
      * @return int
      */
-    public function getCount($where = array(), $prefix = 'u')
+    public function getCount($where = array(), $joinConditions = array(), $prefix = 'u')
     {
-        return $this->find($where, $prefix, true);
+        return $this->find($where, $prefix, true, $joinConditions);
     }
 
     /**

@@ -104,6 +104,12 @@ class ListQueryBuilder
     private $relationalFilters = array();
 
     /**
+     * contains all join conditions
+     * @var $relationalFilters
+     */
+    private $joinConditions = array();
+
+    /**
      * @param $associationNames
      * @param $fieldNames
      * @param $entityName
@@ -112,6 +118,7 @@ class ListQueryBuilder
      * @param $where
      * @param array $searchTextFields
      * @param array $searchNumberFields
+     * @param array $joinConditions - specify a custom join condition
      */
     function __construct(
         $associationNames,
@@ -121,7 +128,8 @@ class ListQueryBuilder
         $sorting,
         $where,
         $searchTextFields = array(),
-        $searchNumberFields = array()
+        $searchNumberFields = array(),
+        $joinConditions = array()
     )
     {
         $this->associationNames = $associationNames;
@@ -133,6 +141,7 @@ class ListQueryBuilder
         $this->searchFields = array_merge($searchTextFields, $searchNumberFields);
         $this->searchTextFields = $searchTextFields;
         $this->searchNumberFields = $searchNumberFields;
+        $this->joinConditions = $joinConditions;
     }
 
     /**
@@ -306,11 +315,28 @@ class ListQueryBuilder
      */
     private function generateJoin($parent, $field, $alias)
     {
-        // JOIN {parent}.{associationName} {associationPrefix}
+        // JOIN {parent}.{associationName} {associationPrefix} [ ON {joinCondition}]
         $format = '
-                LEFT JOIN %s.%s %s';
+                LEFT JOIN %s.%s %s %s';
 
-        return sprintf($format, $parent, $field, $alias);
+        return sprintf($format, $parent, $field, $alias, $this->generateJoinCondition($field));
+    }
+
+    /**
+     * generates the join condition
+     * @param $field
+     * @return string
+     */
+    private function generateJoinCondition($field)
+    {
+        if (!array_key_exists($field, $this->joinConditions)) {
+            return '';
+        }
+
+        // ON {joinConditino}
+        $format = ' WITH %s';
+
+        return sprintf($format, $this->joinConditions[$field]);
     }
 
     /**
