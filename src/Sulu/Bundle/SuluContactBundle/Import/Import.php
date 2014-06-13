@@ -492,6 +492,7 @@ class Import
         for ($i = 0, $len = 10; ++$i < $len;) {
             if ($this->checkData('email' . $i, $data)) {
                 $email = new Email();
+                $email->setMain(false);
                 $email->setEmail($data['email' . $i]);
                 $email->setEmailType($this->defaultTypes['emailType']);
                 $this->em->persist($email);
@@ -511,6 +512,7 @@ class Import
         for ($i = 0, $len = 10; ++$i < $len;) {
             if ($this->checkData('phone' . $i, $data)) {
                 $phone = new Phone();
+                $phone->setMain(false);
                 $phone->setPhone($data['phone' . $i]);
                 $phone->setPhoneType($this->defaultTypes['phoneType']);
                 $this->em->persist($phone);
@@ -530,6 +532,7 @@ class Import
         for ($i = 0, $len = 10; ++$i < $len;) {
             if ($this->checkData('fax' . $i, $data)) {
                 $fax = new Fax();
+                $fax->setMain(false);
                 $fax->setFax($data['fax' . $i]);
                 $fax->setFaxType($this->defaultTypes['faxType']);
                 $this->em->persist($fax);
@@ -549,6 +552,7 @@ class Import
         for ($i = 0, $len = 10; ++$i < $len;) {
             if ($this->checkData('url' . $i, $data)) {
                 $url = new Url();
+                $url->setMain(false);
                 $url->setUrl($data['url' . $i]);
                 $url->setUrlType($this->defaultTypes['urlType']);
                 $this->em->persist($url);

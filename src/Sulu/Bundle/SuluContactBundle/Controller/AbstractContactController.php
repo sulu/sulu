@@ -10,11 +10,16 @@
 
 namespace Sulu\Bundle\ContactBundle\Controller;
 use FOS\RestBundle\Routing\ClassResourceInterface;
-use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\Email;
+use Sulu\Bundle\ContactBundle\Entity\Note;
 use Sulu\Bundle\ContactBundle\Entity\Fax;
 use Sulu\Bundle\ContactBundle\Entity\Phone;
 use Sulu\Bundle\ContactBundle\Entity\Url;
+use Sulu\Bundle\ContactBundle\Entity\Address;
+use Sulu\Bundle\ContactBundle\Entity\BankAccount;
+use Sulu\Bundle\TagBundle\Entity\Tag;
+use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
+use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\RestController;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -81,8 +86,26 @@ class AbstractContactController extends RestController implements ClassResourceI
      * @param $arrayCollection
      */
     private function setMainForCollection($arrayCollection) {
-        if (!$arrayCollection->isEmpty() && !$this->checkMainExistence($arrayCollection)) {
+        if ($arrayCollection && !$arrayCollection->isEmpty() && !$this->checkMainExistence($arrayCollection)) {
             $arrayCollection->first()->setMain(true);
+        }
+    }
+
+    /** unsets main of all elements of arraycollection
+     * @param $arrayCollection
+     * @return boolean returns true if a element was unset
+     */
+    private function unsetMain($arrayCollection) {
+        if ($arrayCollection && !$arrayCollection->isEmpty()) {
+            return $arrayCollection->forAll(
+                function($index, $entry) {
+                    if ($entry->getMain() === true) {
+                        $entry->setMain(false);
+                        return false;
+                    }
+                    return true;
+                }
+            );
         }
     }
 
@@ -95,15 +118,105 @@ class AbstractContactController extends RestController implements ClassResourceI
     }
 
     /**
+     * checks if entity has main phone or sets one
+     * @param $phones
+     */
+    protected function checkAndSetMainPhone($phones) {
+       $this->setMainForCollection($phones);
+    }
+
+    /**
+     * checks if entity has main fax or sets one
+     * @param $faxes
+     */
+    protected function checkAndSetMainFax($faxes) {
+       $this->setMainForCollection($faxes);
+    }
+
+    /**
+     * checks if entity has main url or sets one
+     * @param $urls
+     */
+    protected function checkAndSetMainUrl($urls) {
+       $this->setMainForCollection($urls);
+    }
+
+    /**
+     * adds new relations
+     * @param Contact|Account $contact
+     * @param Request $request
+     */
+    protected function addNewContactRelations($contact, Request $request)
+    {
+        // urls
+        $urls = $request->get('urls');
+        if (!empty($urls)) {
+            foreach ($urls as $urlData) {
+                $this->addUrl($contact, $urlData);
+            }
+            $this->checkAndSetMainUrl($contact->getUrls());
+        }
+
+        //faxes
+        $faxes = $request->get('faxes');
+        if (!empty($faxes)) {
+            foreach ($faxes as $faxData) {
+                $this->addFax($contact, $faxData);
+            }
+            $this->checkAndSetMainFax($contact->getFaxes());
+        }
+
+        // emails
+        $emails = $request->get('emails');
+        if (!empty($emails)) {
+            foreach ($emails as $emailData) {
+                $this->addEmail($contact, $emailData);
+            }
+            $this->checkAndSetMainEmail($contact->getEmails());
+        }
+
+        // phones
+        $phones = $request->get('phones');
+        if (!empty($phones)) {
+            foreach ($phones as $phoneData) {
+                $this->addPhone($contact, $phoneData);
+            }
+            $this->checkAndSetMainPhone($contact->getPhones());
+        }
+
+        // addresses
+        $addresses = $request->get('addresses');
+        if (!empty($addresses)) {
+            foreach ($addresses as $addressData) {
+                $this->addAddress($contact, $addressData);
+            }
+        }
+
+        // notes
+        $notes = $request->get('notes');
+        if (!empty($notes)) {
+            foreach ($notes as $noteData) {
+                $this->addNote($contact, $noteData);
+            }
+        }
+
+        // handle tags
+        $tags = $request->get('tags');
+        if (!empty($tags)) {
+            foreach ($tags as $tag) {
+                $this->addTag($contact, $tag);
+            }
+        }
+    }
+
+    /**
      * Process all emails from request
      * @param $contact The contact on which is worked
-     * @param Request $request
+     * @param $emails
      * @return bool True if the processing was successful, otherwise false
      */
-    protected function processEmails($contact, Request $request)
+    protected function processEmails($contact, $emails)
     {
-        $emails = $request->get('emails');
-
         $delete = function ($email) use ($contact) {
             return $contact->removeEmail($email);
         };
@@ -117,7 +230,6 @@ class AbstractContactController extends RestController implements ClassResourceI
         };
 
         $result = $this->processPut($contact->getEmails(), $emails, $delete, $update, $add);
-
         // check main
         $this->checkAndSetMainEmail($contact->getEmails());
 
@@ -126,26 +238,39 @@ class AbstractContactController extends RestController implements ClassResourceI
 
     /**
      * Adds a new email to the given contact and persist it with the given object manager
-     * @param Contact $contact
+     * @param $contact
      * @param $emailData
-     * @return bool True if there was no error, otherwise false
+     * @return bool
+     * @throws EntityNotFoundException
+     * @throws EntityIdAlreadySetException
      */
-    protected function addEmail(Contact $contact, $emailData)
+    protected function addEmail($contact, $emailData)
     {
         $success = true;
         $em = $this->getDoctrine()->getManager();
+        $emailEntity = 'SuluContactBundle:Email';
+        $emailTypeEntity = 'SuluContactBundle:EmailType';
 
         $emailType = $this->getDoctrine()
-            ->getRepository('SuluContactBundle:EmailType')
+            ->getRepository($emailTypeEntity)
             ->find($emailData['emailType']['id']);
 
-        if (!$emailType || isset($emailData['id'])) {
-            $success = false;
+        if (isset($emailData['id'])) {
+            throw new EntityIdAlreadySetException($emailEntity, $emailData['id']);
+        } elseif (!$emailType) {
+            throw new EntityNotFoundException($emailTypeEntity, $emailData['emailType']['id']);
         } else {
             $email = new Email();
             $email->setEmail($emailData['email']);
             $email->setEmailType($emailType);
-            $email->setMain(false);
+
+            $main = false;
+            if (array_key_exists('main', $emailData) && $emailData['main'] == true) {
+                $main = true;
+                $this->unsetMain($contact->getEmails());
+            }
+            $email->setMain($main);
+
             $em->persist($email);
             $contact->addEmail($email);
         }
@@ -158,17 +283,19 @@ class AbstractContactController extends RestController implements ClassResourceI
      * @param Email $email The email object to update
      * @param array $entry The entry with the new data
      * @return bool True if successful, otherwise false
+     * @throws EntityNotFoundException
      */
     protected function updateEmail(Email $email, $entry)
     {
         $success = true;
+        $emailTypeEntity = 'SuluContactBundle:EmailType';
 
         $emailType = $this->getDoctrine()
-            ->getRepository('SuluContactBundle:EmailType')
+            ->getRepository($emailTypeEntity)
             ->find($entry['emailType']['id']);
 
         if (!$emailType) {
-            $success = false;
+            throw new EntityNotFoundException($emailTypeEntity, $entry['emailType']['id']);
         } else {
             $email->setEmail($entry['email']);
             $email->setEmailType($emailType);
@@ -180,14 +307,12 @@ class AbstractContactController extends RestController implements ClassResourceI
 
     /**
      * Process all urls of request
-     * @param Contact $contact The contact on which is worked
-     * @param Request $request
+     * @param $contact The contact on which is processed
+     * @param $urls
      * @return bool True if the processing was successful, otherwise false
      */
-    protected function processUrls(Contact $contact, Request $request)
+    protected function processUrls($contact, $urls)
     {
-        $urls = $request->get('urls');
-
         $delete = function ($url) use ($contact) {
             return $contact->removeUrl($url);
         };
@@ -200,25 +325,31 @@ class AbstractContactController extends RestController implements ClassResourceI
             return $this->addUrl($contact, $url);
         };
 
-        return $this->processPut($contact->getUrls(), $urls, $delete, $update, $add);
+        $result = $this->processPut($contact->getUrls(), $urls, $delete, $update, $add);
+        // check main
+        $this->checkAndSetMainUrl($contact->getUrls());
+
+        return $result;
     }
 
     /**
-     * Updates the given url
-     * @param Url $url The phone object to update
-     * @param $entry The entry with the new data
-     * @return bool True if successful, otherwise false
+     * @param Url $url
+     * @param $entry
+     * @return bool
+     * @throws EntityNotFoundException
      */
     protected function updateUrl(Url $url, $entry)
     {
         $success = true;
+        $urlTypeEntity = 'SuluContactBundle:UrlType';
 
+        /** @var UrlType $urlType */
         $urlType = $this->getDoctrine()
-            ->getRepository('SuluContactBundle:UrlType')
+            ->getRepository($urlTypeEntity)
             ->find($entry['urlType']['id']);
 
         if (!$urlType) {
-            $success = false;
+            throw new EntityNotFoundException($urlTypeEntity, $entry['urlType']['id']);
         } else {
             $url->setUrl($entry['url']);
             $url->setUrlType($urlType);
@@ -229,24 +360,35 @@ class AbstractContactController extends RestController implements ClassResourceI
 
     /**
      * Adds a new tag to the given contact
-     * @param Contact $contact
+     * @param $contact
      * @param $data
-     * @return bool True if there was no error, otherwise false
+     * @return bool
+     * @throws EntityNotFoundException
+     * @throws EntityIdAlreadySetException
      */
-    protected function addUrl(Contact $contact, $data)
+    protected function addUrl($contact, $data)
     {
         $success = true;
         $em = $this->getDoctrine()->getManager();
+        $urlEntity = 'SuluContactBundle:Url';
+        $urlTypeEntity = 'SuluContactBundle:UrlType';
 
         $urlType = $this->getDoctrine()
-            ->getRepository('SuluContactBundle:UrlType')
+            ->getRepository($urlTypeEntity)
             ->find($data['urlType']['id']);
 
-        if (!$urlType || isset($data['id'])) {
-            $success = false;
+        if (isset($data['id'])) {
+            throw new EntityIdAlreadySetException($urlEntity, $data['id']);
+        } elseif (!$urlType) {
+            throw new EntityNotFoundException($urlTypeEntity, $data['urlType']['id']);
         } else {
             $url = new Url();
-            $url->setMain(false);
+            $main = false;
+            if (array_key_exists('main', $data) && $data['main'] == true) {
+                $main = true;
+                $this->unsetMain($contact->getUrls());
+            }
+            $url->setMain($main);
             $url->setUrl($data['url']);
             $url->setUrlType($urlType);
             $em->persist($url);
@@ -258,14 +400,12 @@ class AbstractContactController extends RestController implements ClassResourceI
 
     /**
      * Process all phones from request
-     * @param Contact $contact The contact on which is worked
-     * @param Request $request
+     * @param $contact The contact on which is processed
+     * @param $phones
      * @return bool True if the processing was successful, otherwise false
      */
-    protected function processPhones(Contact $contact, Request $request)
+    protected function processPhones($contact, $phones)
     {
-        $phones = $request->get('phones');
-
         $delete = function ($phone) use ($contact) {
             return $contact->removePhone($phone);
         };
@@ -278,29 +418,44 @@ class AbstractContactController extends RestController implements ClassResourceI
             return $this->addPhone($contact, $phone);
         };
 
-        return $this->processPut($contact->getPhones(), $phones, $delete, $update, $add);
+        $result = $this->processPut($contact->getPhones(), $phones, $delete, $update, $add);
+        // check main
+        $this->checkAndSetMainPhone($contact->getPhones());
+
+        return $result;
     }
 
     /**
      * Add a new phone to the given contact and persist it with the given object manager
-     * @param Contact $contact
+     * @param $contact
      * @param $phoneData
      * @return bool True if there was no error, otherwise false
+     * @throws EntityNotFoundException
+     * @throws EntityIdAlreadySetException
      */
-    protected function addPhone(Contact $contact, $phoneData)
+    protected function addPhone($contact, $phoneData)
     {
         $success = true;
         $em = $this->getDoctrine()->getManager();
+        $phoneTypeEntity = 'SuluContactBundle:PhoneType';
+        $phoneEntity = 'SuluContactBundle:Phone';
 
         $phoneType = $this->getDoctrine()
-            ->getRepository('SuluContactBundle:PhoneType')
+            ->getRepository($phoneTypeEntity)
             ->find($phoneData['phoneType']['id']);
 
-        if (!$phoneType || isset($phoneData['id'])) {
-            $success = false;
+        if (isset($phoneData['id'])) {
+            throw new EntityIdAlreadySetException($phoneEntity, $phoneData['id']);
+        } elseif (!$phoneType) {
+            throw new EntityNotFoundException($phoneTypeEntity, $phoneData['phoneType']['id']);
         } else {
             $phone = new Phone();
-            $phone->setMain(false);
+            $main = false;
+            if (array_key_exists('main', $phoneData) && $phoneData['main'] == true) {
+                $main = true;
+                $this->unsetMain($contact->getPhones());
+            }
+            $phone->setMain($main);
             $phone->setPhone($phoneData['phone']);
             $phone->setPhoneType($phoneType);
             $em->persist($phone);
@@ -315,17 +470,19 @@ class AbstractContactController extends RestController implements ClassResourceI
      * @param Phone $phone The phone object to update
      * @param $entry The entry with the new data
      * @return bool True if successful, otherwise false
+     * @throws EntityNotFoundException
      */
     protected function updatePhone(Phone $phone, $entry)
     {
         $success = true;
+        $phoneTypeEntity = 'SuluContactBundle:PhoneType';
 
         $phoneType = $this->getDoctrine()
-            ->getRepository('SuluContactBundle:PhoneType')
+            ->getRepository($phoneTypeEntity)
             ->find($entry['phoneType']['id']);
 
         if (!$phoneType) {
-            $success = false;
+            throw new EntityNotFoundException($phoneTypeEntity, $entry['phoneType']['id']);
         } else {
             $phone->setPhone($entry['phone']);
             $phone->setPhoneType($phoneType);
@@ -335,14 +492,12 @@ class AbstractContactController extends RestController implements ClassResourceI
     }
 
     /**
-     * @param Contact $contact
-     * @param Request $request
+     * @param $contact
+     * @param $faxes
      * @return bool
      */
-    protected function processFaxes(Contact $contact, Request $request)
+    protected function processFaxes($contact, $faxes)
     {
-        $faxes = $request->get('faxes');
-
         $delete = function ($fax) use ($contact) {
             $contact->removeFax($fax);
 
@@ -359,16 +514,20 @@ class AbstractContactController extends RestController implements ClassResourceI
             return true;
         };
 
-        return $this->processPut($contact->getFaxes(), $faxes, $delete, $update, $add);
+        $result = $this->processPut($contact->getFaxes(), $faxes, $delete, $update, $add);
+        // check main
+        $this->checkAndSetMainFax($contact->getFaxes());
+
+        return $result;
     }
 
     /**
-     * @param Contact $contact
+     * @param $contact
      * @param $faxData
      * @throws EntityNotFoundException
      * @throws EntityIdAlreadySetException
      */
-    protected function addFax(Contact $contact, $faxData)
+    protected function addFax($contact, $faxData)
     {
         $em = $this->getDoctrine()->getManager();
         $faxEntity = 'SuluContactBundle:Fax';
@@ -384,7 +543,12 @@ class AbstractContactController extends RestController implements ClassResourceI
             throw new EntityNotFoundException($faxTypeEntity, $faxData['faxType']['id']);
         } else {
             $fax = new Fax();
-            $fax->setMain(false);
+            $main = false;
+            if (array_key_exists('main', $faxData) && $faxData['main'] == true) {
+                $main = true;
+                $this->unsetMain($contact->getFaxes());
+            }
+            $fax->setMain($main);
             $fax->setFax($faxData['fax']);
             $fax->setFaxType($faxType);
             $em->persist($fax);
@@ -419,14 +583,12 @@ class AbstractContactController extends RestController implements ClassResourceI
 
     /**
      * Process all addresses from request
-     * @param Contact $contact The contact on which is worked
-     * @param Request $request
+     * @param $contact The contact on which is worked
+     * @param $addresses
      * @return bool True if the processing was sucessful, otherwise false
      */
-    protected function processAddresses(Contact $contact, Request $request)
+    protected function processAddresses($contact, $addresses)
     {
-        $addresses = $request->get('addresses');
-
         $delete = function ($address) use ($contact) {
             return $contact->removeAddresse($address);
         };
@@ -444,25 +606,32 @@ class AbstractContactController extends RestController implements ClassResourceI
 
     /**
      * Add a new address to the given contact and persist it with the given object manager
-     * @param Contact $contact
+     * @param $contact
      * @param $addressData
-     * @return bool True if there was no error, otherwise false
+     * @throws EntityNotFoundException
+     * @throws EntityIdAlreadySetException
      */
-    protected function addAddress(Contact $contact, $addressData)
+    protected function addAddress($contact, $addressData)
     {
-        $success = true;
         $em = $this->getDoctrine()->getManager();
+        $addressEntity = 'SuluContactBundle:Address';
+        $addressTypeEntity = 'SuluContactBundle:AddressType';
+        $countryEntity = 'SuluContactBundle:Country';
 
         $addressType = $this->getDoctrine()
-            ->getRepository('SuluContactBundle:AddressType')
+            ->getRepository($addressTypeEntity)
             ->find($addressData['addressType']['id']);
 
         $country = $this->getDoctrine()
-            ->getRepository('SuluContactBundle:Country')
+            ->getRepository($countryEntity)
             ->find($addressData['country']['id']);
 
-        if (!$addressType || !$country) {
-            $success = false;
+        if (isset($addressData['id'])) {
+            throw new EntityIdAlreadySetException($addressEntity, $addressData['id']);
+        } elseif (!$country) {
+            throw new EntityNotFoundException($countryEntity, $addressData['country']['id']);
+        } elseif (!$addressType) {
+            throw new EntityNotFoundException($addressTypeEntity, $addressData['addressType']['id']);
         } else {
             $address = new Address();
             $address->setStreet($addressData['street']);
@@ -479,10 +648,9 @@ class AbstractContactController extends RestController implements ClassResourceI
             }
 
             $em->persist($address);
+
             $contact->addAddresse($address);
         }
-
-        return $success;
     }
 
     /**
@@ -490,32 +658,39 @@ class AbstractContactController extends RestController implements ClassResourceI
      * @param Address $address The phone object to update
      * @param array $entry The entry with the new data
      * @return bool True if successful, otherwise false
+     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      */
     protected function updateAddress(Address $address, $entry)
     {
         $success = true;
+        $addressTypeEntity = 'SuluContactBundle:AddressType';
+        $countryEntity = 'SuluContactBundle:Country';
 
         $addressType = $this->getDoctrine()
-            ->getRepository('SuluContactBundle:AddressType')
+            ->getRepository($addressTypeEntity)
             ->find($entry['addressType']['id']);
 
         $country = $this->getDoctrine()
-            ->getRepository('SuluContactBundle:Country')
+            ->getRepository($countryEntity)
             ->find($entry['country']['id']);
 
-        if (!$addressType || !$country) {
-            $success = false;
+        if (!$addressType) {
+            throw new EntityNotFoundException($addressTypeEntity, $entry['addressType']['id']);
         } else {
-            $address->setStreet($entry['street']);
-            $address->setNumber($entry['number']);
-            $address->setZip($entry['zip']);
-            $address->setCity($entry['city']);
-            $address->setState($entry['state']);
-            $address->setCountry($country);
-            $address->setAddressType($addressType);
+            if (!$country) {
+                throw new EntityNotFoundException($countryEntity, $entry['country']['id']);
+            } else {
+                $address->setStreet($entry['street']);
+                $address->setNumber($entry['number']);
+                $address->setZip($entry['zip']);
+                $address->setCity($entry['city']);
+                $address->setState($entry['state']);
+                $address->setCountry($country);
+                $address->setAddressType($addressType);
 
-            if (isset($entry['addition'])) {
-                $address->setAddition($entry['addition']);
+                if (isset($entry['addition'])) {
+                    $address->setAddition($entry['addition']);
+                }
             }
         }
 
@@ -524,14 +699,12 @@ class AbstractContactController extends RestController implements ClassResourceI
 
     /**
      * Process all notes from request
-     * @param Contact $contact The contact on which is worked
-     * @param Request $request
+     * @param $contact The contact on which is worked
+     * @param $notes
      * @return bool True if the processing was successful, otherwise false
      */
-    protected function processNotes(Contact $contact, Request $request)
+    protected function processNotes($contact, $notes)
     {
-        $notes = $request->get('notes');
-
         $delete = function ($note) use ($contact) {
             return $contact->removeNote($note);
         };
@@ -549,22 +722,27 @@ class AbstractContactController extends RestController implements ClassResourceI
 
     /**
      * Add a new note to the given contact and persist it with the given object manager
-     * @param Contact $contact
+     * @param $contact
      * @param $noteData
      * @return bool True if there was no error, otherwise false
+     * @throws \Sulu\Component\Rest\Exception\EntityIdAlreadySetException
      */
-    protected function addNote(Contact $contact, $noteData)
+    protected function addNote($contact, $noteData)
     {
-        $success = true;
         $em = $this->getDoctrine()->getManager();
+        $noteEntity = 'SuluContactBundle:Note';
 
-        $note = new Note();
-        $note->setValue($noteData['value']);
+        if (isset($noteData['id'])) {
+            throw new EntityIdAlreadySetException($noteEntity, $noteData['id']);
+        } else {
+            $note = new Note();
+            $note->setValue($noteData['value']);
 
-        $em->persist($note);
-        $contact->addNote($note);
+            $em->persist($note);
+            $contact->addNote($note);
+        }
 
-        return $success;
+        return true;
     }
 
     /**
@@ -582,4 +760,112 @@ class AbstractContactController extends RestController implements ClassResourceI
         return $success;
     }
 
+    /**
+     * Process all tags of request
+     * @param $contact The contact on which is worked
+     * @param $tags
+     * @return bool True if the processing was successful, otherwise false
+     */
+    protected function processTags($contact, $tags)
+    {
+        $delete = function ($tag) use ($contact) {
+            return $contact->removeTag($tag);
+        };
+
+        $update = function () {
+            return true;
+        };
+
+        $add = function ($tag) use ($contact) {
+            return $this->addTag($contact, $tag);
+        };
+
+        return $this->processPut($contact->getTags(), $tags, $delete, $update, $add);
+    }
+
+    /**
+     * Adds a new tag to the given contact and persist it with the given object manager
+     * @param $contact
+     * @param $data
+     * @return bool True if there was no error, otherwise false
+     */
+    protected function addTag($contact, $data)
+    {
+        $success = true;
+        $tagManager = $this->get('sulu_tag.tag_manager');
+        $resolvedTag = $tagManager->findByName($data);
+        $contact->addTag($resolvedTag);
+
+        return $success;
+    }
+
+    /**
+     * Process all bankAccounts of a request
+     * @param $contact
+     * @param $bankAccounts
+     * @return bool True if the processing was sucessful, otherwise false
+     */
+    protected function processBankAccounts($contact, $bankAccounts)
+    {
+        $delete = function ($bankAccounts) use ($contact) {
+            $contact->removeBankAccount($bankAccounts);
+            return true;
+        };
+
+        $update = function ($bankAccounts, $matchedEntry) {
+            return $this->updateBankAccount($bankAccounts, $matchedEntry);
+        };
+
+        $add = function ($bankAccounts) use ($contact) {
+            return $this->addBankAccount($contact, $bankAccounts);
+        };
+
+        return $this->processPut($contact->getBankAccounts(), $bankAccounts, $delete, $update, $add);
+    }
+
+    /**
+     * Add a new note to the given contact and persist it with the given object manager
+     * @param $contact
+     * @param $data
+     * @return bool
+     * @throws EntityIdAlreadySetException
+     */
+    protected function addBankAccount($contact, $data)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $entityName = 'SuluContactBundle:BankAccount';
+
+        if (isset($data['id'])) {
+            throw new EntityIdAlreadySetException($entityName, $data['id']);
+        } else {
+            $entity = new BankAccount();
+            $entity->setBankName($data['bankName']);
+            $entity->setBic($data['bic']);
+            $entity->setIban($data['iban']);
+            $entity->setPublic($data['public']);
+
+            $em->persist($entity);
+            $contact->addBankAccount($entity);
+        }
+
+        return true;
+    }
+
+    /**
+     * Updates the given note
+     * @param BankAccount $entity The phone object to update
+     * @param string $data The entry with the new data
+     * @return bool True if successful, otherwise false
+     */
+    protected function updateBankAccount(BankAccount $entity, $data)
+    {
+        $success = true;
+
+        $entity->setBankName($data['bankName']);
+        $entity->setBic($data['bic']);
+        $entity->setIban($data['iban']);
+        $entity->setPublic($data['public']);
+
+        return $success;
+    }
 }

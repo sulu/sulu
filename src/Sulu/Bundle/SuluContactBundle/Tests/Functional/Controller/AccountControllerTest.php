@@ -61,6 +61,7 @@ class AccountControllerTest extends DatabaseTestCase
         $url = new Url();
         $url->setUrl('http://www.company.example');
         $url->setUrlType($urlType);
+        $url->setMain(true);
         self::$account->addUrl($url);
 
         $emailType = new EmailType();
@@ -69,12 +70,14 @@ class AccountControllerTest extends DatabaseTestCase
         $email = new Email();
         $email->setEmail('office@company.example');
         $email->setEmailType($emailType);
+        $email->setMain(true);
         self::$account->addEmail($email);
 
         $phoneType = new PhoneType();
         $phoneType->setName('Private');
 
         $phone = new Phone();
+        $phone->setMain(true);
         $phone->setPhone('123456789');
         $phone->setPhoneType($phoneType);
         self::$account->addPhone($phone);
@@ -85,6 +88,7 @@ class AccountControllerTest extends DatabaseTestCase
         $fax = new Fax();
         $fax->setFax('123654789');
         $fax->setFaxType($faxType);
+        $fax->setMain(true);
         self::$account->addFax($fax);
 
         $country = new Country();
@@ -262,7 +266,8 @@ class AccountControllerTest extends DatabaseTestCase
                         'urlType' => array(
                             'id' => '1',
                             'name' => 'Private'
-                        )
+                        ),
+                        'main' => 'true'
                     )
                 ),
                 'emails' => array(
@@ -271,14 +276,16 @@ class AccountControllerTest extends DatabaseTestCase
                         'emailType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        )
+                        ),
+                        'main' => 'true'
                     ),
                     array(
                         'email' => 'erika.mustermann@muster.de',
                         'emailType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        )
+                        ),
+                        'main' => 'false'
                     )
                 ),
                 'phones' => array(
@@ -287,14 +294,16 @@ class AccountControllerTest extends DatabaseTestCase
                         'phoneType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        )
+                        ),
+                        'main' => 'true'
                     ),
                     array(
                         'phone' => '987654321',
                         'phoneType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        )
+                        ),
+                        'main' => 'false'
                     )
                 ),
                 'faxes' => array(
@@ -303,14 +312,16 @@ class AccountControllerTest extends DatabaseTestCase
                         'faxType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        )
+                        ),
+                        'main' => 'true'
                     ),
                     array(
                         'fax' => '987654321-1',
                         'faxType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        )
+                        ),
+                        'main' => 'false'
                     )
                 ),
                 'addresses' => array(
@@ -399,7 +410,8 @@ class AccountControllerTest extends DatabaseTestCase
                         'urlType' => array(
                             'id' => '1',
                             'name' => 'Private'
-                        )
+                        ),
+                        'main' => 'true'
                     )
                 ),
                 'emails' => array(
@@ -408,14 +420,16 @@ class AccountControllerTest extends DatabaseTestCase
                         'emailType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        )
+                        ),
+                        'main' => 'true'
                     ),
                     array(
                         'email' => 'erika.mustermann@muster.de',
                         'emailType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        )
+                        ),
+                        'main' => 'false'
                     )
                 ),
                 'phones' => array(
@@ -424,14 +438,16 @@ class AccountControllerTest extends DatabaseTestCase
                         'phoneType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        )
+                        ),
+                        'main' => 'true'
                     ),
                     array(
                         'phone' => '987654321',
                         'phoneType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        )
+                        ),
+                        'main' => 'false'
                     )
                 ),
                 'faxes' => array(
@@ -440,14 +456,16 @@ class AccountControllerTest extends DatabaseTestCase
                         'faxType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        )
+                        ),
+                        'main' => 'true'
                     ),
                     array(
                         'fax' => '987654321-1',
                         'faxType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        )
+                        ),
+                        'main' => 'false'
                     )
                 ),
                 'addresses' => array(
@@ -562,14 +580,16 @@ class AccountControllerTest extends DatabaseTestCase
                         'emailType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        )
+                        ),
+                        'main' => 'false'
                     ),
                     array(
                         'email' => 'erika.mustermann@muster.de',
                         'emailType' => array(
                             'id' => 1,
                             'name' => 'Work'
-                        )
+                        ),
+                        'main' => 'false'
                     )
                 ),
             )
@@ -591,14 +611,16 @@ class AccountControllerTest extends DatabaseTestCase
                         'phoneType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        )
+                        ),
+                        'main' => 'true'
                     ),
                     array(
                         'phone' => '987654321',
                         'phoneType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        )
+                        ),
+                        'main' => 'false'
                     )
                 ),
             )
@@ -672,7 +694,8 @@ class AccountControllerTest extends DatabaseTestCase
                         'urlType' => array(
                             'id' => '2',
                             'name' => 'Work'
-                        )
+                        ),
+                        'main' => 'false'
                     )
                 )
             )
@@ -697,14 +720,16 @@ class AccountControllerTest extends DatabaseTestCase
                         'emailType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        )
+                        ),
+                        'main' => 'false'
                     ),
                     array(
                         'email' => 'erika.mustermann@muster.de',
                         'emailType' => array(
                             'id' => 2,
                             'name' => 'Work'
-                        )
+                        ),
+                        'main' => 'false'
                     )
                 ),
             )
@@ -729,14 +754,16 @@ class AccountControllerTest extends DatabaseTestCase
                         'phoneType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        )
+                        ),
+                        'main' => 'false'
                     ),
                     array(
                         'phone' => '987654321',
                         'phoneType' => array(
                             'id' => 2,
                             'name' => 'Work'
-                        )
+                        ),
+                        'main' => 'false'
                     )
                 ),
             )
@@ -795,7 +822,8 @@ class AccountControllerTest extends DatabaseTestCase
                         'faxType' => array(
                             'id' => 2,
                             'name' => 'Work'
-                        )
+                        ),
+                        'main' => 'false'
                     )
                 ),
             )
