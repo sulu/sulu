@@ -11,7 +11,15 @@ define([], function() {
 
     'use strict';
 
-    var permissions = ['view', 'add', 'edit', 'delete', 'archive', 'live', 'security'],
+    var permissions = [
+            {value: 'view', icon: 'eye'},
+            {value: 'add', icon: 'plus-circle'},
+            {value: 'edit', icon: 'pencil'},
+            {value: 'delete', icon: 'trash-o'},
+            {value: 'archive', icon: 'archive'},
+            {value: 'live', icon: 'signal'},
+            {value: 'security', icon: 'unlock-alt'}
+        ],
         permissionTitles = [
             'security.permissions.view',
             'security.permissions.add',
