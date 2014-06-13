@@ -524,8 +524,8 @@ class AbstractContactController extends RestController implements ClassResourceI
     /**
      * @param $contact
      * @param $faxData
-     * @throws EntityNotFoundException
-     * @throws EntityIdAlreadySetException
+     * @throws \Sulu\Component\Rest\Exception\EntityIdAlreadySetException
+     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      */
     protected function addFax($contact, $faxData)
     {
@@ -608,11 +608,13 @@ class AbstractContactController extends RestController implements ClassResourceI
      * Add a new address to the given contact and persist it with the given object manager
      * @param $contact
      * @param $addressData
-     * @throws EntityNotFoundException
-     * @throws EntityIdAlreadySetException
+     * @return bool
+     * @throws \Sulu\Component\Rest\Exception\EntityIdAlreadySetException
+     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      */
     protected function addAddress($contact, $addressData)
     {
+        $result = true;
         $em = $this->getDoctrine()->getManager();
         $addressEntity = 'SuluContactBundle:Address';
         $addressTypeEntity = 'SuluContactBundle:AddressType';
@@ -651,6 +653,7 @@ class AbstractContactController extends RestController implements ClassResourceI
 
             $contact->addAddresse($address);
         }
+        return $result;
     }
 
     /**
