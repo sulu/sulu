@@ -448,6 +448,7 @@ class Import
         // phone with type isdn
         if ($this->checkData('phone_isdn', $data)) {
             $phone = new Phone();
+            $phone->setMain(false);
             $phone->setPhone($data['phone_isdn']);
             $phone->setPhoneType($this->defaultTypes['phoneTypeIsdn']);
             $this->em->persist($phone);
