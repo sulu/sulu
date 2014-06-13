@@ -44,7 +44,7 @@ define([], function() {
                 return[
                     '<div class="grid-row type-row" data-id="">',
                     '   <div class="grid-col-8 pull-left"><input class="form-element" type="text" value=""/></div>',
-                    '   <div class="grid-col-2 pull-right"><div class="remove-row btn gray-dark fit only-icon pull-right"><div class="icon-circle-minus"></div></div></div>',
+                    '   <div class="grid-col-2 pull-right"><div class="remove-row btn gray-dark fit only-icon pull-right"><div class="fa-minus-circle"></div></div></div>',
                     '</div>'].join('');
             },
             skeleton: function() {
