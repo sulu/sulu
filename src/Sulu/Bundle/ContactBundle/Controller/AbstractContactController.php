@@ -973,7 +973,7 @@ class AbstractContactController extends RestController implements ClassResourceI
         $entity->setBankName($data['bankName']);
         $entity->setBic($data['bic']);
         $entity->setIban($data['iban']);
-        $entity->setPublic($data['public']);
+        $entity->setPublic($this->getBooleanValue($data['public']));
 
         return $success;
     }
