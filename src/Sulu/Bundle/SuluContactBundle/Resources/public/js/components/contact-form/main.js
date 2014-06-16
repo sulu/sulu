@@ -129,6 +129,22 @@ define([
             this.sandbox.on('husky.overlay.add-address.initialized', initializeDropdownForAddressTypes.bind(this));
             this.sandbox.on(CONTENT_SET.call(this), cropAllLabels.bind(this));
 
+            this.sandbox.on('husky.overlay.add-address.opened', function() {
+                // start form and set data
+                var formObject = this.sandbox.form.create(constants.addressFormId);
+                formObject.initialized.then(function() {
+                    this.sandbox.form.setData(constants.addressFormId, this.data);
+                }.bind(this));
+            }.bind(this));
+
+            this.sandbox.on('husky.overlay.add-bank-account.opened', function() {
+                // start form and set data
+                var formObject = this.sandbox.form.create(constants.bankAccountFormId);
+                formObject.initialized.then(function() {
+                    this.sandbox.form.setData(constants.bankAccountFormId, this.data);
+                }.bind(this));
+            }.bind(this));
+
             // bind events for add-fields overlay
             bindAddEvents.call(this);
         },
@@ -405,7 +421,6 @@ define([
             }
 
             // TODO: focus on just inserted field
-
             // remove overlay
             this.sandbox.emit('husky.overlay.add-fields.remove');
         },
@@ -631,7 +646,7 @@ define([
 
         createAddressOverlay = function(data, mapperId) {
 
-            var addressTemplate, formObject, $overlay, title,
+            var addressTemplate, $overlay, title,
                 isNew = !data;
 
             // remove add overlay
@@ -688,15 +703,6 @@ define([
             ]);
 
             this.data = data;
-
-            // after everything was added to dom
-            this.sandbox.on('husky.overlay.add-address.opened', function() {
-                // start form and set data
-                formObject = this.sandbox.form.create(constants.addressFormId);
-                formObject.initialized.then(function() {
-                    this.sandbox.form.setData(constants.addressFormId, this.data);
-                }.bind(this));
-            }.bind(this));
         },
 
         /**
@@ -706,7 +712,7 @@ define([
          */
         createBankAccountOverlay = function(data, mapperId) {
 
-            var bankAccountTemplate, formObject, $overlay, title,
+            var bankAccountTemplate, $overlay, title,
                 isNew = !data;
 
             if (!data) {
@@ -749,15 +755,6 @@ define([
             ]);
 
             this.data = data;
-
-            // after everything was added to dom
-            this.sandbox.on('husky.overlay.add-bank-account.opened', function() {
-                // start form and set data
-                formObject = this.sandbox.form.create(constants.bankAccountFormId);
-                formObject.initialized.then(function() {
-                    this.sandbox.form.setData(constants.bankAccountFormId, this.data);
-                }.bind(this));
-            }.bind(this));
         },
 
         addBankAccountOkClicked = function(mapperId) {
