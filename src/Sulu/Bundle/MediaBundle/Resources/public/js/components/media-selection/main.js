@@ -102,7 +102,7 @@ define(['sulumedia/collection/collections'], function(Collections) {
                     '               <option value="leftBottom">left bottom</option>',
                     '           </select>',
                     '       </div>',
-                    '       <a href="#" class="fa-cog config" id="', options.ids.configButton, '"></a>',
+                    '       <a href="#" class="fa-cog config" id="', options.ids.configButton, '" style="display: none;"></a>',
                     '   </div>',
                     '   <div class="media-selection" id="', options.ids.content, '"></div>',
                     '</div>'
@@ -192,12 +192,18 @@ define(['sulumedia/collection/collections'], function(Collections) {
             // generate URI for data
             setURI.call(this);
 
+            // set display-option value
+            setDisplayOption.call(this);
+
             // init overlays
             // TODO config overlay
             startAddOverlay.call(this);
 
             // load preselected items
             loadContent.call(this);
+
+            // handle dom events
+            bindDomEvents.call(this);
         },
 
         /**
@@ -222,7 +228,7 @@ define(['sulumedia/collection/collections'], function(Collections) {
                                 options: {
                                     data: collections.toJSON(),
                                     el: this.sandbox.dom.find(getId.call(this, 'gridGroup')),
-                                    instanceName: 'collections',
+                                    instanceName: this.options.instanceName,
                                     gridUrl: '/admin/api/media?collection=',
                                     preselected: this.data.ids,
                                     dataGridOptions: {
@@ -269,6 +275,16 @@ define(['sulumedia/collection/collections'], function(Collections) {
         },
 
         /**
+         * handle dom events
+         */
+        bindDomEvents = function() {
+            this.sandbox.dom.on(getId.call(this, 'displayOption'), 'change', function() {
+                setData.call(this, {displayOption: this.sandbox.dom.val(getId.call(this, 'displayOption'))});
+                this.sandbox.emit(DATA_CHANGED.call(this), this.data, this.$el);
+            }.bind(this));
+        },
+
+        /**
          * renders the content decides whether the footer is rendered or not
          */
         renderContent = function() {
@@ -309,9 +325,7 @@ define(['sulumedia/collection/collections'], function(Collections) {
                 '</span>'
             ].join(''));
 
-            // TODO appendViewToggler.call(this);
             this.sandbox.dom.append(this.$container, this.$footer);
-            // TODO bindFooterEvents.call(this);
         },
 
         /**
@@ -357,7 +371,7 @@ define(['sulumedia/collection/collections'], function(Collections) {
         getAddOverlayData = function() {
             var idsDef = this.sandbox.data.deferred();
 
-            this.sandbox.emit('sulu.grid-group.collections.get-selected-ids', function(ids) {
+            this.sandbox.emit('sulu.grid-group.' + this.options.instanceName + '.get-selected-ids', function(ids) {
                 setData.call(this, {ids: ids});
                 idsDef.resolve();
             }.bind(this));
@@ -443,13 +457,19 @@ define(['sulumedia/collection/collections'], function(Collections) {
             if (this.data.ids.length > 0 && newURI !== this.URI.str) {
                 //emit data changed event only if old URI is not null (not at the startup)
                 if (this.URI.str !== '') {
-                    this.sandbox.emit(DATA_CHANGED.call(this), this.sandbox.dom.data(this.$el, 'media-selection'), this.$el);
+                    this.sandbox.emit(DATA_CHANGED.call(this), this.data, this.$el);
                 }
                 this.URI.str = newURI;
                 this.URI.hasChanged = true;
             } else {
                 this.URI.hasChanged = false;
             }
+        },
+        /**
+         * set display option to element
+         */
+        setDisplayOption = function() {
+            this.sandbox.dom.val(getId.call(this, 'displayOption'), this.data.displayOption);
         };
 
     return {
