@@ -29,7 +29,7 @@
                                 <%=translate('contact.accounts.bankAccounts.add.label')%>
                             </label>
                             <div class="m-top-5">
-                                <span class="fa-plus-circle icon clickable pointer bank-add"></span>
+                                <span class="fa-plus-circle icon clickable pointer bank-account-add"></span>
                             </div>
                         </div>
                     </div>
@@ -42,6 +42,8 @@
                                 <label><%=translate('contact.accounts.bankAccount.label')%></label>
 
                                 <div class="bank-account-row clickable pointer">
+                                    <span data-mapper-property="id" data-form="true" class="hidden"></span>
+
                                     <span data-mapper-property="bankName" data-form="true"></span>
                                     <span data-mapper-property="iban" data-form="true"></span>
                                     <span data-mapper-property="bic" data-form="true"></span>

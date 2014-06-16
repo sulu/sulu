@@ -98,6 +98,22 @@ define([
         },
 
         /**
+         * is emitted when a new address is added
+         * @constructor sulu.contact-form.added.bank-account
+         */
+        EVENT_ADDED_BANK_ACCOUNT = function() {
+            return eventNamespace + '.added.bank-account';
+        },
+
+        /**
+         * is emitted when a new address is added
+         * @constructor sulu.contact-form.removed.bank-account
+         */
+        EVENT_REMOVED_BANK_ACCOUNT = function() {
+            return eventNamespace + '.removed.bank-account';
+        },
+
+        /**
          * listens on and starts cropping the labels
          * @event sulu.contact-form.content-set
          */
@@ -173,7 +189,7 @@ define([
             var mapperID = this.sandbox.dom.data(this.sandbox.dom.closest($el, constants.bankAccountComponentSelector), 'mapper-id');
             this.sandbox.form.removeFromCollection(this.form, mapperID);
             this.sandbox.emit(EVENT_CHANGED.call(this));
-            this.sandbox.emit(EVENT_REMOVED_ADDRESS.call(this));
+            this.sandbox.emit(EVENT_REMOVED_BANK_ACCOUNT.call(this));
         },
 
         /**
@@ -272,7 +288,7 @@ define([
                     delete bankAccount.id;
                 }
 
-                return bankAccount.iban !== '' && bankAccount.bic !== '';
+                return (bankAccount.iban !== '' && bankAccount.bic !== '');
             });
 
             this.sandbox.form.addCollectionFilter(this.form, 'addresses', function(address) {
@@ -747,7 +763,7 @@ define([
         addBankAccountOkClicked = function(mapperId) {
             var formData;
 
-            if (!this.sandbox.form.validate(constants.bankAccountFormId)) {
+            if (!this.sandbox.form.validate(constants.bankAccountFormId, true)) {
                 return false;
             }
 
@@ -762,7 +778,7 @@ define([
 
             // set changed to be able to save
             this.sandbox.emit(EVENT_CHANGED.call(this));
-            this.sandbox.emit(EVENT_ADDED_ADDRESS.call(this));
+            this.sandbox.emit(EVENT_ADDED_BANK_ACCOUNT.call(this));
 
             // remove change listener
             removeBankAccountFormEvents.call(this);
