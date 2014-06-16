@@ -5,7 +5,7 @@
         {% set params = getParams(property) %}
 
         {% if property.contentTypeName == 'section' %}
-            {% include 'SuluContentBundle:Template:macros/section.html.twig' with {'property': property, 'params': params, 'type': type, 'id': property.name, 'webspaceKey': webspaceKey, 'languageCode': languageCode} only %}
+            {% include 'SuluContentBundle:Template:macros/section.html.twig' with {'property': property, 'params': params, 'id': property.name, 'webspaceKey': webspaceKey, 'languageCode': languageCode} only %}
         {% else %}
             {# get type for property #}
             {% set type = getType(property.contentTypeName) %}
