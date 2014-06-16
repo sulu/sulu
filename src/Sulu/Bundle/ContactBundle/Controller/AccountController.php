@@ -227,8 +227,8 @@ class AccountController extends AbstractContactController
             $this->addNewContactRelations($account, $request);
 
             // set new primary address
-            if($this->newPrimaryAddress && $this->currentContact){
-                $this->setNewPrimaryAddress($this->currentContact, $this->newPrimaryAddress);
+            if($this->newPrimaryAddress){
+                $this->setNewPrimaryAddress($account, $this->newPrimaryAddress);
             }
 
             $em->persist($account);
@@ -301,8 +301,8 @@ class AccountController extends AbstractContactController
                 }
 
                 // set new primary address
-                if($this->newPrimaryAddress && $this->currentContact){
-                    $this->setNewPrimaryAddress($this->currentContact, $this->newPrimaryAddress);
+                if($this->newPrimaryAddress){
+                    $this->setNewPrimaryAddress($account, $this->newPrimaryAddress);
                 }
 
                 $em->flush();

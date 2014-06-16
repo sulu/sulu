@@ -48,20 +48,18 @@
   display: none;
   padding: 3px;
 }
-/* line 46, ../scss/modules/utility.scss */
-#contact-form .bank-account-row,
-#contact-form .address-row, #financials-form .bank-account-row,
-#financials-form .address-row {
+/* line 45, ../scss/modules/utility.scss */
+#contact-form .address-row, #financials-form .address-row {
   padding-top: 5px;
 }
-/* line 51, ../scss/modules/utility.scss */
+/* line 50, ../scss/modules/utility.scss */
 #contact-form .bank-account-row:hover .bank-account-remove,
 #contact-form .address-row:hover .address-remove, #financials-form .bank-account-row:hover .bank-account-remove,
 #financials-form .address-row:hover .address-remove {
   display: inline;
 }
 
-/* line 57, ../scss/modules/utility.scss */
+/* line 56, ../scss/modules/utility.scss */
 .dark-divider {
   height: 0;
   margin: 0 0 20px 0;
@@ -70,36 +68,36 @@
   border-bottom: 1px solid #ccc;
 }
 
-/* line 65, ../scss/modules/utility.scss */
+/* line 64, ../scss/modules/utility.scss */
 #contact-options-dropdown {
   display: none;
 }
-/* line 68, ../scss/modules/utility.scss */
+/* line 67, ../scss/modules/utility.scss */
 #contact-options-dropdown.is-active {
   display: block;
 }
 
-/* line 75, ../scss/modules/utility.scss */
+/* line 74, ../scss/modules/utility.scss */
 #contact-edit-form:hover #contact-options-dropdown {
   display: block;
 }
-/* line 81, ../scss/modules/utility.scss */
+/* line 80, ../scss/modules/utility.scss */
 #contact-edit-form .comma-before:before {
   content: ',';
   margin-left: -4px;
   margin-right: 4px;
 }
-/* line 88, ../scss/modules/utility.scss */
+/* line 87, ../scss/modules/utility.scss */
 #contact-edit-form label {
   line-height: 14px;
   text-overflow: hidden;
 }
-/* line 91, ../scss/modules/utility.scss */
+/* line 90, ../scss/modules/utility.scss */
 #contact-edit-form label.hidden {
   display: none;
 }
 
-/* line 98, ../scss/modules/utility.scss */
+/* line 97, ../scss/modules/utility.scss */
 .form-horizontal .form-group .checkbox-container-left {
   text-align: left;
   width: 35px;
