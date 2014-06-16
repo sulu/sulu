@@ -11,7 +11,7 @@ define([], function() {
 
     'use strict';
 
-    var form = '#bank-account-form',
+    var bankAccountForm = '#bank-account-form',
 
         defaults = {
             headline: 'contact.accounts.title'
@@ -87,11 +87,12 @@ define([], function() {
 //        },
 
         setFormData: function(data) {
-
-            // set formdata
+            // add collection filters to form
+            this.sandbox.emit('sulu.contact-form.add-collectionfilters', this.form);
             this.sandbox.form.setData(this.form, data).then(function() {
                 this.sandbox.start(this.form);
-                // TODO: mark required fields
+            }.bind(this)).fail(function(error) {
+                this.sandbox.logger.error("An error occured when setting data!", error);
             }.bind(this));
         },
 
@@ -186,8 +187,9 @@ define([], function() {
 
             // when  contact-form is initalized
             this.sandbox.on('sulu.contact-form.initialized', function() {
-                // set form data
-                var formObject = this.sandbox.form.create(form);
+
+                this.sandbox.emit('sulu.contact-form.add-collectionfilters', this.form);
+                var formObject = this.sandbox.form.create(bankAccountForm);
                 formObject.initialized.then(function() {
                     this.setFormData(data);
                 }.bind(this));
