@@ -126,13 +126,9 @@ class MediaRepository extends EntityRepository
             $query->setParameter('mediaIds', $ids);
 
             if ($asArray) {
-                if (isset($query->getArrayResult()[0])) {
-                    return $query->getArrayResult()[0];
-                } else {
-                    return null;
-                }
+                return $query->getArrayResult();
             } else {
-                return $query->getSingleResult();
+                return $query->getResult();
             }
         } catch (NoResultException $ex) {
             return null;
