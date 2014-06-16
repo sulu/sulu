@@ -165,6 +165,16 @@ class Account extends ApiEntity
     private $placeOfJurisdiction;
 
     /**
+     * @var \Sulu\Bundle\ContactBundle\Entity\TermsOfPayment
+     */
+    private $termsOfPayment;
+
+    /**
+     * @var \Sulu\Bundle\ContactBundle\Entity\TermsOfDelivery
+     */
+    private $termsOfDelivery;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -930,5 +940,51 @@ class Account extends ApiEntity
     public function getPlaceOfJurisdiction()
     {
         return $this->placeOfJurisdiction;
+    }
+
+    /**
+     * Set termsOfPayment
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\TermsOfPayment $termsOfPayment
+     * @return Account
+     */
+    public function setTermsOfPayment(\Sulu\Bundle\ContactBundle\Entity\TermsOfPayment $termsOfPayment = null)
+    {
+        $this->termsOfPayment = $termsOfPayment;
+    
+        return $this;
+    }
+
+    /**
+     * Get termsOfPayment
+     *
+     * @return \Sulu\Bundle\ContactBundle\Entity\TermsOfPayment 
+     */
+    public function getTermsOfPayment()
+    {
+        return $this->termsOfPayment;
+    }
+
+    /**
+     * Set termsOfDelivery
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\TermsOfDelivery $termsOfDelivery
+     * @return Account
+     */
+    public function setTermsOfDelivery(\Sulu\Bundle\ContactBundle\Entity\TermsOfDelivery $termsOfDelivery = null)
+    {
+        $this->termsOfDelivery = $termsOfDelivery;
+    
+        return $this;
+    }
+
+    /**
+     * Get termsOfDelivery
+     *
+     * @return \Sulu\Bundle\ContactBundle\Entity\TermsOfDelivery 
+     */
+    public function getTermsOfDelivery()
+    {
+        return $this->termsOfDelivery;
     }
 }
