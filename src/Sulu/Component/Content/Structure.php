@@ -630,9 +630,9 @@ abstract class Structure implements StructureInterface
             foreach ($this->properties as $property) {
                 if ($property instanceof SectionPropertyInterface) {
                     $result = array_merge($result, $property->getChildProperties());
-                } else {
-                    $result[] = $property;
                 }
+
+                $result[] = $property;
             }
 
             return $result;
