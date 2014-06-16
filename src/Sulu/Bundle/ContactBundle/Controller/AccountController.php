@@ -40,7 +40,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
  * Makes accounts available through a REST API
  * @package Sulu\Bundle\ContactBundle\Controller
  */
-class AccountController extends RestController implements ClassResourceInterface
+class AccountController extends AbstractContactController
 {
     /**
      * {@inheritdoc}
@@ -106,16 +106,6 @@ class AccountController extends RestController implements ClassResourceInterface
     );
 
     /**
-     * @var
-     */
-    protected $currentAccount = null;
-
-    /**
-     * @var
-     */
-    protected $newPrimaryAddress = null;
-
-    /**
      * {@inheritdoc}
      */
     protected $bundlePrefix = 'contact.accounts.';
@@ -163,7 +153,7 @@ class AccountController extends RestController implements ClassResourceInterface
     {
         if ($request->get('flat') == 'true') {
             // flat structure
-            $view = $this->responseList(array('account_id' => $id), $this->contactsEntityName);
+            $view = $this->responseList(array('accountContacts_account_id' => $id), $this->contactsEntityName);
         } else {
             $contacts = $this->getDoctrine()->getRepository($this->contactsEntityName)->findByAccountId($id);
             $view = $this->view($this->createHalResponse($contacts), 200);
@@ -213,7 +203,7 @@ class AccountController extends RestController implements ClassResourceInterface
 
             $account->setName($request->get('name'));
 
-            $account->setType($request->get('type'));
+            $account->setType($request->get('type', 0));
 
             $disabled = $request->get('disabled');
             if (is_null($disabled)) {
@@ -233,59 +223,12 @@ class AccountController extends RestController implements ClassResourceInterface
             $account->setCreator($this->getUser());
             $account->setChanger($this->getUser());
 
-            $urls = $request->get('urls');
-            if (!empty($urls)) {
-                foreach ($urls as $urlData) {
-                    $this->addUrl($account, $urlData);
-                }
-            }
-
-            $emails = $request->get('emails');
-            if (!empty($emails)) {
-                foreach ($emails as $emailData) {
-                    $this->addEmail($account, $emailData);
-                }
-            }
-
-            $phones = $request->get('phones');
-            if (!empty($phones)) {
-                foreach ($phones as $phoneData) {
-                    $this->addPhone($account, $phoneData);
-                }
-            }
-
-            $faxes = $request->get('faxes');
-            if (!empty($faxes)) {
-                foreach ($faxes as $faxData) {
-                    $this->addFax($account, $faxData);
-                }
-            }
-
-            $addresses = $request->get('addresses');
-            if (!empty($addresses)) {
-                foreach ($addresses as $addressData) {
-                    $this->addAddress($account, $addressData);
-                }
-            }
-
-            $notes = $request->get('notes');
-            if (!empty($notes)) {
-                foreach ($notes as $noteData) {
-                    $this->addNote($account, $noteData);
-                }
-            }
-
-            // handle tags
-            $tags = $request->get('tags');
-            if (!empty($tags)) {
-                foreach ($tags as $tag) {
-                    $this->addTag($account, $tag);
-                }
-            }
+            // add urls, phones, emails, tags, bankAccounts, notes, addresses,..
+            $this->addNewContactRelations($account, $request);
 
             // set new primary address
-            if($this->newPrimaryAddress && $this->currentAccount){
-                $this->setNewPrimaryAddress($this->currentAccount, $this->newPrimaryAddress);
+            if($this->newPrimaryAddress && $this->currentContact){
+                $this->setNewPrimaryAddress($this->currentContact, $this->newPrimaryAddress);
             }
 
             $em->persist($account);
@@ -346,20 +289,20 @@ class AccountController extends RestController implements ClassResourceInterface
                 $account->setChanger($user);
 
                 // process details
-                if (!($this->processUrls($account, $request)
-                    && $this->processEmails($account, $request)
-                    && $this->processFaxes($account, $request)
-                    && $this->processPhones($account, $request)
-                    && $this->processAddresses($account, $request)
-                    && $this->processTags($account, $request)
-                    && $this->processNotes($account, $request))
+                if (!($this->processUrls($account, $request->get('urls'))
+                    && $this->processEmails($account, $request->get('emails'))
+                    && $this->processFaxes($account, $request->get('faxes'))
+                    && $this->processPhones($account, $request->get('phones'))
+                    && $this->processAddresses($account, $request->get('addresses'))
+                    && $this->processTags($account, $request->get('tags'))
+                    && $this->processNotes($account, $request->get('notes')))
                 ) {
                     throw new RestException('Updating dependencies is not possible', 0);
                 }
 
                 // set new primary address
-                if($this->newPrimaryAddress && $this->currentAccount){
-                    $this->setNewPrimaryAddress($this->currentAccount, $this->newPrimaryAddress);
+                if($this->newPrimaryAddress && $this->currentContact){
+                    $this->setNewPrimaryAddress($this->currentContact, $this->newPrimaryAddress);
                 }
 
                 $em->flush();
@@ -447,7 +390,7 @@ class AccountController extends RestController implements ClassResourceInterface
 
                 // process details
                 if (!is_null($request->get('bankAccounts'))) {
-                    $this->processBankAccounts($account, $request);
+                    $this->processBankAccounts($account, $request->get('bankAccounts'));
                 }
 
                 $em->flush();
@@ -493,8 +436,8 @@ class AccountController extends RestController implements ClassResourceInterface
             if (!is_null($request->get('removeContacts')) &&
                 $request->get('removeContacts') == "true"
             ) {
-                foreach ($account->getContacts() as $contact) {
-                    $em->remove($contact);
+                foreach ($account->getAccountContacts() as $accountContact) {
+                    $em->remove($accountContact->getContact());
                 }
             }
 
@@ -505,739 +448,6 @@ class AccountController extends RestController implements ClassResourceInterface
         $view = $this->responseDelete($id, $delete);
 
         return $this->handleView($view);
-    }
-
-    /**
-     * Process all urls from request
-     * @param Account $account The contact on which is worked
-     * @param Request $request
-     * @return bool True if the processing was sucessful, otherwise false
-     */
-    protected function processUrls(Account $account, Request $request)
-    {
-        $urls = $request->get('urls');
-
-        $delete = function ($url) use ($account) {
-            $account->removeUrl($url);
-
-            return true;
-        };
-
-        $update = function ($url, $matchedEntry) {
-            return $this->updateUrl($url, $matchedEntry);
-        };
-
-        $add = function ($url) use ($account) {
-            $this->addUrl($account, $url);
-
-            return true;
-        };
-
-        return $this->processPut($account->getUrls(), $urls, $delete, $update, $add);
-    }
-
-    /**
-     * Adds URL to an account
-     * @param Account $account
-     * @param $urlData
-     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
-     * @throws \Sulu\Component\Rest\Exception\EntityIdAlreadySetException
-     */
-    private function addUrl(Account $account, $urlData)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $urlEntity = 'SuluContactBundle:Url';
-        $urlTypeEntity = 'SuluContactBundle:UrlType';
-
-        $urlType = $this->getDoctrine()
-            ->getRepository($urlTypeEntity)
-            ->find($urlData['urlType']['id']);
-
-        if (isset($urlData['id'])) {
-            throw new EntityIdAlreadySetException($urlEntity, $urlData['id']);
-        } elseif (!$urlType) {
-            throw new EntityNotFoundException($urlTypeEntity, $urlData['urlType']['id']);
-        } else {
-            $url = new Url();
-            $url->setUrl($urlData['url']);
-            $url->setUrlType($urlType);
-            $em->persist($url);
-            $account->addUrl($url);
-        }
-    }
-
-    /**
-     * Updates the given url address
-     * @param Url $url The email object to update
-     * @param string $entry The entry with the new data
-     * @return bool True if successful, otherwise false
-     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
-     */
-    protected function updateUrl(Url $url, $entry)
-    {
-        $success = true;
-        $urlTypeEntity = 'SuluContactBundle:UrlType';
-
-        /** @var UrlType $urlType */
-        $urlType = $this->getDoctrine()
-            ->getRepository($urlTypeEntity)
-            ->find($entry['urlType']['id']);
-
-        if (!$urlType) {
-            throw new EntityNotFoundException($urlTypeEntity, $entry['urlType']['id']);
-        } else {
-            $url->setUrl($entry['url']);
-            $url->setUrlType($urlType);
-        }
-
-        return $success;
-    }
-
-    /**
-     * Process all emails from request
-     * @param Account $account The contact on which is worked
-     * @param Request $request
-     * @return bool True if the processing was sucessful, otherwise false
-     */
-    protected function processEmails(Account $account, Request $request)
-    {
-        $emails = $request->get('emails');
-
-        $delete = function ($email) use ($account) {
-            $account->removeEmail($email);
-
-            return true;
-        };
-
-        $update = function ($email, $matchedEntry) {
-            return $this->updateEmail($email, $matchedEntry);
-        };
-
-        $add = function ($email) use ($account) {
-            $this->addEmail($account, $email);
-
-            return true;
-        };
-
-        return $this->processPut($account->getEmails(), $emails, $delete, $update, $add);
-    }
-
-    /**
-     * Process all faxes from request
-     * @param Account $account The contact on which is worked
-     * @param Request $request
-     * @return bool True if the processing was sucessful, otherwise false
-     */
-    protected function processFaxes(Account $account, Request $request)
-    {
-        $faxes = $request->get('faxes');
-
-        $delete = function ($fax) use ($account) {
-            $account->removeFax($fax);
-
-            return true;
-        };
-
-        $update = function ($fax, $matchedEntry) {
-            return $this->updateFax($fax, $matchedEntry);
-        };
-
-        $add = function ($fax) use ($account) {
-            $this->addFax($account, $fax);
-
-            return true;
-        };
-
-        return $this->processPut($account->getFaxes(), $faxes, $delete, $update, $add);
-    }
-
-    /**
-     * Adds an email address to an account
-     * @param Account $account
-     * @param $faxData
-     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
-     * @throws \Sulu\Component\Rest\Exception\EntityIdAlreadySetException
-     */
-    private function addFax(Account $account, $faxData)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $faxEntity = 'SuluContactBundle:Fax';
-        $faxTypeEntity = 'SuluContactBundle:FaxType';
-
-        $faxType = $this->getDoctrine()
-            ->getRepository($faxTypeEntity)
-            ->find($faxData['faxType']['id']);
-
-        if (isset($faxData['id'])) {
-            throw new EntityIdAlreadySetException($faxEntity, $faxData['id']);
-        } elseif (!$faxType) {
-            throw new EntityNotFoundException($faxTypeEntity, $faxData['faxType']['id']);
-        } else {
-            $fax = new Fax();
-            $fax->setFax($faxData['fax']);
-            $fax->setFaxType($faxType);
-            $em->persist($fax);
-            $account->addFax($fax);
-        }
-    }
-
-    /**
-     * @param Fax $fax
-     * @param $entry
-     * @return bool
-     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
-     */
-    protected function updateFax(Fax $fax, $entry)
-    {
-        $success = true;
-        $faxTypeEntity = 'SuluContactBundle:FaxType';
-
-        $faxType = $this->getDoctrine()
-            ->getRepository($faxTypeEntity)
-            ->find($entry['faxType']['id']);
-
-        if (!$faxType) {
-            throw new EntityNotFoundException($faxTypeEntity, $entry['faxType']['id']);
-        } else {
-            $fax->setFax($entry['fax']);
-            $fax->setFaxType($faxType);
-        }
-
-        return $success;
-    }
-
-    /**
-     * Adds an email address to an account
-     * @param Account $account
-     * @param $emailData
-     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
-     * @throws \Sulu\Component\Rest\Exception\EntityIdAlreadySetException
-     */
-    private function addEmail(Account $account, $emailData)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $emailEntity = 'SuluContactBundle:Email';
-        $emailTypeEntity = 'SuluContactBundle:EmailType';
-
-        $emailType = $this->getDoctrine()
-            ->getRepository($emailTypeEntity)
-            ->find($emailData['emailType']['id']);
-
-        if (isset($emailData['id'])) {
-            throw new EntityIdAlreadySetException($emailEntity, $emailData['id']);
-        } elseif (!$emailType) {
-            throw new EntityNotFoundException($emailTypeEntity, $emailData['emailType']['id']);
-        } else {
-            $email = new Email();
-            $email->setEmail($emailData['email']);
-            $email->setEmailType($emailType);
-            $em->persist($email);
-            $account->addEmail($email);
-        }
-    }
-
-    /**
-     * Updates the given email address
-     * @param Email $email The email object to update
-     * @param string $entry The entry with the new data
-     * @return bool True if successful, otherwise false
-     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
-     */
-    protected function updateEmail(Email $email, $entry)
-    {
-        $success = true;
-        $emailTypeEntity = 'SuluContactBundle:EmailType';
-
-        $emailType = $this->getDoctrine()
-            ->getRepository($emailTypeEntity)
-            ->find($entry['emailType']['id']);
-
-        if (!$emailType) {
-            throw new EntityNotFoundException($emailTypeEntity, $entry['emailType']['id']);
-        } else {
-            $email->setEmail($entry['email']);
-            $email->setEmailType($emailType);
-        }
-
-        return $success;
-    }
-
-    /**
-     * Process all tags of request
-     * @param Account $account The contact on which is worked
-     * @param Request $request
-     * @return bool True if the processing was successful, otherwise false
-     */
-    protected function processTags(Account $account, Request $request)
-    {
-        $tags = $request->get('tags');
-
-        $delete = function ($tag) use ($account) {
-            return $account->removeTag($tag);
-        };
-
-        $update = function () {
-            return true;
-        };
-
-        $add = function ($tag) use ($account) {
-            return $this->addTag($account, $tag);
-        };
-
-        return $this->processPut($account->getTags(), $tags, $delete, $update, $add);
-    }
-
-    /**
-     * Adds a new tag to the given contact
-     * @param Account $account
-     * @param $data
-     * @return bool True if there was no error, otherwise false
-     */
-    protected function addTag(Account $account, $data)
-    {
-        $success = true;
-        $tagManager = $this->get('sulu_tag.tag_manager');
-        $resolvedTag = $tagManager->findByName($data);
-        $account->addTag($resolvedTag);
-
-        return $success;
-    }
-
-    /**
-     * Process all phones from request
-     * @param Account $account The contact on which is worked
-     * @param Request $request
-     * @return bool True if the processing was sucessful, otherwise false
-     */
-    protected function processPhones(Account $account, Request $request)
-    {
-        $phones = $request->get('phones');
-
-        $delete = function ($phone) use ($account) {
-            $account->removePhone($phone);
-
-            return true;
-        };
-
-        $update = function ($phone, $matchedEntry) {
-            return $this->updatePhone($phone, $matchedEntry);
-        };
-
-        $add = function ($phone) use ($account) {
-            return $this->addPhone($account, $phone);
-        };
-
-        return $this->processPut($account->getPhones(), $phones, $delete, $update, $add);
-    }
-
-    /**
-     * Adds a phone number to an account
-     * @param Account $account
-     * @param $phoneData
-     * @return bool
-     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
-     * @throws \Sulu\Component\Rest\Exception\EntityIdAlreadySetException
-     */
-    private function addPhone(Account $account, $phoneData)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $phoneTypeEntity = 'SuluContactBundle:PhoneType';
-        $phoneEntity = 'SuluContactBundle:Phone';
-
-        $phoneType = $this->getDoctrine()
-            ->getRepository($phoneTypeEntity)
-            ->find($phoneData['phoneType']['id']);
-
-        if (isset($phoneData['id'])) {
-            throw new EntityIdAlreadySetException($phoneEntity, $phoneData['id']);
-        } elseif (!$phoneType) {
-            throw new EntityNotFoundException($phoneTypeEntity, $phoneData['phoneType']['id']);
-        } else {
-            $url = new Phone();
-            $url->setPhone($phoneData['phone']);
-            $url->setPhoneType($phoneType);
-            $em->persist($url);
-            $account->addPhone($url);
-        }
-
-        return true;
-    }
-
-    /**
-     * Updates the given phone
-     * @param Phone $phone The phone object to update
-     * @param string $entry The entry with the new data
-     * @return bool True if successful, otherwise false
-     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
-     */
-    protected function updatePhone(Phone $phone, $entry)
-    {
-        $success = true;
-        $phoneTypeEntity = 'SuluContactBundle:PhoneType';
-
-        $phoneType = $this->getDoctrine()
-            ->getRepository($phoneTypeEntity)
-            ->find($entry['phoneType']['id']);
-
-        if (!$phoneType) {
-            throw new EntityNotFoundException($phoneTypeEntity, $entry['phoneType']['id']);
-        } else {
-            $phone->setPhone($entry['phone']);
-            $phone->setPhoneType($phoneType);
-        }
-
-        return $success;
-    }
-
-    /**
-     * Process all addresses from request
-     * @param Account $account The contact on which is worked
-     * @param Request $request
-     * @return bool True if the processing was sucessful, otherwise false
-     */
-    protected function processAddresses(Account $account, Request $request)
-    {
-        $addresses = $request->get('addresses');
-
-        $delete = function ($address) use ($account) {
-            $account->removeAddresse($address);
-
-            return true;
-        };
-
-        $update = function ($address, $matchedEntry) use ($account) {
-            return $this->updateAddress($account, $address, $matchedEntry);
-        };
-
-        $add = function ($address) use ($account) {
-            $this->addAddress($account, $address);
-
-            return true;
-        };
-
-        return $this->processPut($account->getAddresses(), $addresses, $delete, $update, $add);
-    }
-
-    /**
-     * Adds an address to an account
-     * @param Account $account
-     * @param $addressData
-     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
-     * @throws \Sulu\Component\Rest\Exception\EntityIdAlreadySetException
-     */
-    private function addAddress(Account $account, $addressData)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $addressEntity = 'SuluContactBundle:Address';
-        $addressTypeEntity = 'SuluContactBundle:AddressType';
-        $countryEntity = 'SuluContactBundle:Country';
-
-        $addressType = $this->getDoctrine()
-            ->getRepository($addressTypeEntity)
-            ->find($addressData['addressType']['id']);
-
-        $country = $this->getDoctrine()
-            ->getRepository($countryEntity)
-            ->find($addressData['country']['id']);
-
-        if (isset($addressData['id'])) {
-            throw new EntityIdAlreadySetException($addressEntity, $addressData['id']);
-        } elseif (!$country) {
-            throw new EntityNotFoundException($countryEntity, $addressData['country']['id']);
-        } elseif (!$addressType) {
-            throw new EntityNotFoundException($addressTypeEntity, $addressData['addressType']['id']);
-        } else {
-            $address = new Address();
-            $address->setStreet($addressData['street']);
-            $address->setNumber($addressData['number']);
-            $address->setZip($addressData['zip']);
-            $address->setCity($addressData['city']);
-            $address->setState($addressData['state']);
-
-            if (isset($addressData['primaryAddress'])) {
-                $value = $this->getBooleanValue($addressData['primaryAddress']);
-                $this->handlePrimaryAddress($account, $address, $value);
-            }
-            if (isset($addressData['billingAddress'])) {
-                $address->setBillingAddress($this->getBooleanValue($addressData['billingAddress']));
-            }
-            if (isset($addressData['deliveryAddress'])) {
-                $address->setDeliveryAddress($this->getBooleanValue($addressData['deliveryAddress']));
-            }
-            if (isset($addressData['postboxCity'])) {
-                $address->setPostboxCity($addressData['postboxCity']);
-            }
-            if (isset($addressData['postboxNumber'])) {
-                $address->setPostboxNumber($addressData['postboxNumber']);
-            }
-            if (isset($addressData['postboxPostcode'])) {
-                $address->setPostboxPostcode($addressData['postboxPostcode']);
-            }
-
-            $address->setCountry($country);
-            $address->setAddressType($addressType);
-
-            // add additional fields
-            if (isset($addressData['addition'])) {
-                $address->setAddition($addressData['addition']);
-            }
-
-            $em->persist($address);
-
-            $account->addAddresse($address);
-        }
-    }
-
-    /**
-     * Updates the given address
-     * @param $account
-     * @param Address $address The phone object to update
-     * @param mixed $entry The entry with the new data
-     * @return bool True if successful, otherwise false
-     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
-     */
-    protected function updateAddress(Account $account, Address $address, $entry)
-    {
-        $success = true;
-        $addressTypeEntity = 'SuluContactBundle:AddressType';
-        $countryEntity = 'SuluContactBundle:Country';
-
-        $addressType = $this->getDoctrine()
-            ->getRepository($addressTypeEntity)
-            ->find($entry['addressType']['id']);
-
-        $country = $this->getDoctrine()
-            ->getRepository($countryEntity)
-            ->find($entry['country']['id']);
-
-        if (!$addressType) {
-            throw new EntityNotFoundException($addressTypeEntity, $entry['addressType']['id']);
-        } else {
-            if (!$country) {
-                throw new EntityNotFoundException($countryEntity, $entry['country']['id']);
-            } else {
-                $address->setStreet($entry['street']);
-                $address->setNumber($entry['number']);
-                $address->setZip($entry['zip']);
-                $address->setCity($entry['city']);
-                $address->setState($entry['state']);
-                $address->setCountry($country);
-                $address->setAddressType($addressType);
-
-                if (isset($entry['primaryAddress'])) {
-                    $value = $this->getBooleanValue($entry['primaryAddress']);
-                    $this->handlePrimaryAddress($account, $address, $value);
-                }
-                if (isset($entry['billingAddress'])) {
-                    $address->setBillingAddress($this->getBooleanValue($entry['billingAddress']));
-                }
-                if (isset($entry['deliveryAddress'])) {
-                    $address->setDeliveryAddress($this->getBooleanValue($entry['deliveryAddress']));
-                }
-                if (isset($entry['postboxCity'])) {
-                    $address->setPostboxCity($entry['postboxCity']);
-                }
-                if (isset($entry['postboxNumber'])) {
-                    $address->setPostboxNumber($entry['postboxNumber']);
-                }
-                if (isset($entry['postboxPostcode'])) {
-                    $address->setPostboxPostcode($entry['postboxPostcode']);
-                }
-
-                if (isset($entry['addition'])) {
-                    $address->setAddition($entry['addition']);
-                }
-            }
-        }
-
-        return $success;
-    }
-
-    /**
-     * Handles the primary flag of addresses
-     * @param Account $account
-     * @param Address $address
-     * @param $value
-     */
-    protected function handlePrimaryAddress(Account $account, Address $address, $value){
-        if($value && !$address->getPrimaryAddress() && !$this->newPrimaryAddress) {
-            $this->currentAccount = $account;
-            $this->newPrimaryAddress = $address;
-        } else if(!$value) {
-            $address->setPrimaryAddress($value);
-        }
-    }
-
-    /**
-     * Sets primary address flag of all addresses of an account to false and sets new primary
-     * @param $account
-     * @param $address
-     */
-    protected function setNewPrimaryAddress(Account $account, Address $address)
-    {
-        if ($account && $address) {
-
-            $addresses = $account->getAddresses();
-            /** @var Address $address */
-            foreach ($addresses as $addr) {
-                $addr->setPrimaryAddress(false);
-            }
-            $address->setPrimaryAddress(true);
-        }
-    }
-
-    /**
-     * Checks if a value is a boolean and converts it if necessary and returns it
-     * @param $value
-     * @return bool
-     */
-    protected function getBooleanValue($value){
-        if(is_string($value)){
-            return $value === 'true' ? true : false;
-        } else if(is_bool($value)){
-            return $value;
-        } else if(is_numeric($value)){
-            return $value === 1 ? true : false;
-        }
-    }
-
-    /**
-     * Process all notes from request
-     * @param Account $account The contact on which is worked
-     * @param Request $request
-     * @return bool True if the processing was sucessful, otherwise false
-     */
-    protected function processNotes(Account $account, Request $request)
-    {
-        $notes = $request->get('notes');
-
-        $delete = function ($note) use ($account) {
-            $account->removeNote($note);
-
-            return true;
-        };
-
-        $update = function ($note, $matchedEntry) {
-            return $this->updateNote($note, $matchedEntry);
-        };
-
-        $add = function ($note) use ($account) {
-            return $this->addNote($account, $note);
-        };
-
-        return $this->processPut($account->getNotes(), $notes, $delete, $update, $add);
-    }
-
-    /**
-     * Process all bankAccounts of a request
-     * @param Account $account
-     * @param Request $request
-     * @return bool True if the processing was sucessful, otherwise false
-     */
-    protected function processBankAccounts(Account $account, Request $request)
-    {
-        $bankAccounts = $request->get('bankAccounts');
-
-        $delete = function ($bankAccounts) use ($account) {
-            $account->removeBankAccount($bankAccounts);
-            return true;
-        };
-
-        $update = function ($bankAccounts, $matchedEntry) {
-            return $this->updateBankAccount($bankAccounts, $matchedEntry);
-        };
-
-        $add = function ($bankAccounts) use ($account) {
-            return $this->addBankAccount($account, $bankAccounts);
-        };
-
-        return $this->processPut($account->getBankAccounts(), $bankAccounts, $delete, $update, $add);
-    }
-
-    /**
-     * Add a new note to the given contact and persist it with the given object manager
-     * @param Account $account
-     * @param $data
-     * @return bool
-     * @throws \Sulu\Component\Rest\Exception\EntityIdAlreadySetException
-     */
-    protected function addBankAccount(Account $account, $data)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $entityName = 'SuluContactBundle:BankAccount';
-
-        if (isset($data['id'])) {
-            throw new EntityIdAlreadySetException($entityName, $data['id']);
-        } else {
-            $entity = new BankAccount();
-            $entity->setBankName($data['bankName']);
-            $entity->setBic($data['bic']);
-            $entity->setIban($data['iban']);
-            $entity->setPublic($data['public']);
-
-            $em->persist($entity);
-            $account->addBankAccount($entity);
-        }
-
-        return true;
-    }
-
-    /**
-     * Updates the given note
-     * @param BankAccount $entity The phone object to update
-     * @param string $data The entry with the new data
-     * @return bool True if successful, otherwise false
-     */
-    protected function updateBankAccount(BankAccount $entity, $data)
-    {
-        $success = true;
-
-        $entity->setBankName($data['bankName']);
-        $entity->setBic($data['bic']);
-        $entity->setIban($data['iban']);
-        $entity->setPublic($data['public']);
-
-        return $success;
-    }
-
-    /**
-     * Add a new note to the given contact and persist it with the given object manager
-     * @param Account $account
-     * @param $noteData
-     * @return bool
-     * @throws \Sulu\Component\Rest\Exception\EntityIdAlreadySetException
-     */
-    protected function addNote(Account $account, $noteData)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $noteEntity = 'SuluContactBundle:Note';
-
-        if (isset($noteData['id'])) {
-            throw new EntityIdAlreadySetException($noteEntity, $noteData['id']);
-        } else {
-            $note = new Note();
-            $note->setValue($noteData['value']);
-
-            $em->persist($note);
-            $account->addNote($note);
-        }
-
-        return true;
-    }
-
-    /**
-     * Updates the given note
-     * @param Note $note The phone object to update
-     * @param string $entry The entry with the new data
-     * @return bool True if successful, otherwise false
-     */
-    protected function updateNote(Note $note, $entry)
-    {
-        $success = true;
-
-        $note->setValue($entry['value']);
-
-        return $success;
     }
 
     /**
@@ -1258,13 +468,14 @@ class AccountController extends RestController implements ClassResourceInterface
             /** @var Account $account */
             $account = $this->getDoctrine()
                 ->getRepository('SuluContactBundle:Account')
-                ->find($id);
+                ->countDistinctAccountChildrenAndContacts($id);
 
             // get number of subaccounts
-            $numChildren += $account->getChildren()->count();
+            $numChildren += $account['numChildren'];
 
+            // FIXME: distinct contacts: (currently the same contacts could be counted multiple times)
             // get full number of contacts
-            $numContacts += $account->getContacts()->count();
+            $numContacts += $account['numContacts'];;
         }
 
         $response['numContacts'] = $numContacts;
@@ -1289,12 +500,23 @@ class AccountController extends RestController implements ClassResourceInterface
         /** @var Account $account */
         $account = $this->getDoctrine()
             ->getRepository('SuluContactBundle:Account')
-            ->find($id);
+            ->findChildrenAndContacts($id);
 
         if ($account != null) {
-
             // return a maximum of 3 accounts
-            $slicedContacts = $account->getContacts()->slice(0, 3);
+            $slicedContacts = array();
+            $accountContacts = $account->getAccountContacts();
+            $numContacts = 0;
+            if (!is_null($accountContacts)) {
+                foreach ($accountContacts as $accountContact) {
+                    $contactId = $accountContact->getContact()->getId();
+                    if (!array_key_exists($contactId, $slicedContacts)) {
+                        if ($numContacts++ < 3) {
+                            $slicedContacts[$contactId] = $accountContact->getContact();
+                        }
+                    }
+                }
+            }
 
             foreach ($slicedContacts as $contact) {
                 /** @var Contact $contact */
@@ -1307,7 +529,7 @@ class AccountController extends RestController implements ClassResourceInterface
             }
 
             // return number of contact
-            $response['numContacts'] = $account->getContacts()->count();
+            $response['numContacts'] = $numContacts;
 
             // get number of sub companies
             $response['numChildren'] = $account->getChildren()->count();

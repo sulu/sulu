@@ -349,9 +349,12 @@ define([], function() {
                         delete data.id;
                     }
 
+                    // set tags
                     data.tags = this.sandbox.dom.data(this.$find(constants.tagsId), 'tags');
 
                     // FIXME auto complete in mapper
+                    // only get id, if auto-complete is not empty:
+
                     data.account = {
                         id: this.sandbox.dom.attr('#' + this.companyInstanceName, 'data-id')
                     };
