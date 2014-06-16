@@ -271,7 +271,8 @@ define([
                 if (bankAccount.id === "") {
                     delete bankAccount.id;
                 }
-                return true;
+
+                return bankAccount.iban !== '' && bankAccount.bic !== '';
             });
 
             this.sandbox.form.addCollectionFilter(this.form, 'addresses', function(address) {

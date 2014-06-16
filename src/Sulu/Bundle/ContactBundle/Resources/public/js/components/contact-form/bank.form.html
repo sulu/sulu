@@ -3,22 +3,10 @@
         <div class="bank-account-item m-bottom-10">
 
             <div class="grid-row small">
-                <div class="grid-col-6">
+                <div class="grid-col-12">
                     <div class="form-group">
                         <label for="bankName"><%=translate('contact.accounts.bankName')%></label>
-                        <input id="bankName" type="text" class="form-element"
-                               data-mapper-property="bankName"/>
-                    </div>
-                </div>
-                <div class="grid-col-6">
-                    <div class="form-group">
-                        <label for="public"><%=translate('public.public')%></label>
-                        <div class="checkbox-container-left">
-                            <div class="custom-checkbox">
-                                <input id="public" type="checkbox" class="form-element" data-mapper-property="public"/>
-                                <span class="icon"></span>
-                            </div>
-                        </div>
+                        <input id="bankName" type="text" class="form-element" data-mapper-property="bankName"/>
                     </div>
                 </div>
             </div>
@@ -26,14 +14,14 @@
             <div class="grid-row m-bottom-40">
                 <div class="grid-col-6">
                     <div class="form-group-vertical">
-                        <label for="iban"><%=translate('public.iban')%></label>
-                        <input id="iban" type="text" class="form-element" data-mapper-property="iban"/>
+                        <label for="iban" class="required"><%=translate('public.iban')%></label>
+                        <input id="iban" type="text" class="form-element" data-mapper-property="iban" data-type-required="true"/>
                     </div>
                 </div>
                 <div class="grid-col-6">
                     <div class="form-group-vertical">
-                        <label for="bic"><%=translate('public.bic')%></label>
-                        <input id="bic" type="text" class="form-element" data-mapper-property="bic"/>
+                        <label for="bic" class="required"><%=translate('public.bic')%></label>
+                        <input id="bic" type="text" class="form-element" data-mapper-property="bic" data-type-required="true"/>
                     </div>
                 </div>
             </div>
