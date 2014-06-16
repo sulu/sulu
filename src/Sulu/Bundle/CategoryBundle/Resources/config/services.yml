@@ -1,0 +1,9 @@
+parameters:
+    sulu_category.admin.class: Sulu\Bundle\CategoryBundle\Admin\SuluCategoryAdmin
+
+services:
+    sulu_category.admin:
+        class: %sulu_category.admin.class%
+        arguments: [%sulu_admin.name%]
+        tags:
+        - { name: sulu.admin }

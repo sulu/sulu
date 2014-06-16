@@ -1,0 +1,3 @@
+sulu_category:
+    resource: "@SuluCategoryBundle/Resources/config/routing.yml"
+    prefix: /sulu_category
