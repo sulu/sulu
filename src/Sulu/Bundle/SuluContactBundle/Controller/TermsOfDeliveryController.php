@@ -13,7 +13,7 @@ namespace Sulu\Bundle\ContactBundle\Controller;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Put;
-use Sulu\Bundle\ContactBundle\Entity\TermsOfPayment;
+use Sulu\Bundle\ContactBundle\Entity\TermsOfDelivery;
 use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
@@ -26,18 +26,18 @@ use FOS\RestBundle\Controller\Annotations\Route;
  * Used RouteResource annotation to prevent automatic parenting of rest controllers
  * @package Sulu\Bundle\ContactBundle\Controller
  */
-class TermsOfPaymentController extends RestController implements ClassResourceInterface
+class TermsOfDeliveryController extends RestController implements ClassResourceInterface
 {
     /**
      * {@inheritdoc}
      */
-    protected $entityName = 'SuluContactBundle:TermsOfPayment';
+    protected $entityName = 'SuluContactBundle:TermsOfDelivery';
 
     /**
-     * Shows a single terms of payment
+     * Shows a single terms of delivery
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
-     * @Route("/termsofpayment/{id}")
+     * @Route("/termsofdelivery/{id}")
      */
     public function getAction($id)
     {
@@ -54,23 +54,23 @@ class TermsOfPaymentController extends RestController implements ClassResourceIn
     }
 
     /**
-     * lists all terms of payment
+     * lists all terms of deliveries
      * optional parameter 'flat' calls listAction
      * @return \Symfony\Component\HttpFoundation\Response
-     * @Route("/termsofpayments")
+     * @Route("/termsofdeliveries")
      */
     public function cgetAction()
     {
-        $termsOfPayment = $this->getDoctrine()->getRepository($this->entityName)->findAll();
-        $view = $this->view($this->createHalResponse($termsOfPayment), 200);
+        $termsOfDelivery = $this->getDoctrine()->getRepository($this->entityName)->findAll();
+        $view = $this->view($this->createHalResponse($termsOfDelivery), 200);
 
         return $this->handleView($view);
     }
 
     /**
-     * Creates a terms of payment
+     * Creates a terms of delivery
      * @return \Symfony\Component\HttpFoundation\Response
-     * @Route("/termsofpayment")
+     * @Route("/termsofdelivery")
      */
     public function postAction()
     {
@@ -78,17 +78,17 @@ class TermsOfPaymentController extends RestController implements ClassResourceIn
 
         try {
             if ($terms == null) {
-                throw new RestException('There is no term-name for the term-of-payment given');
+                throw new RestException('There is no term-name for the term-of-delivery given');
             }
 
             $em = $this->getDoctrine()->getManager();
-            $termsOfPayment = new TermsOfPayment();
-            $termsOfPayment->setTerms($terms);
+            $termsOfDelivery = new TermsOfDelivery();
+            $termsOfDelivery->setTerms($terms);
 
-            $em->persist($termsOfPayment);
+            $em->persist($termsOfDelivery);
             $em->flush();
 
-            $view = $this->view($termsOfPayment, 200);
+            $view = $this->view($termsOfDelivery, 200);
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
         } catch (RestException $re) {
@@ -99,33 +99,33 @@ class TermsOfPaymentController extends RestController implements ClassResourceIn
     }
 
     /**
-     * Edits the existing terms-of-payment with the given id
+     * Edits the existing terms-of-delivery with the given id
      * @param integer $id
      * @return \Symfony\Component\HttpFoundation\Response
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
-     * @Route("/termsofpayment/{id}")
+     * @Route("/termsofdelivery/{id}")
      */
     public function putAction($id)
     {
         try {
-            /** @var TermsOfPayment $termsOfPayment */
-            $termsOfPayment = $this->getDoctrine()
+            /** @var TermsOfDelivery $termsOfDelivery */
+            $termsOfDelivery = $this->getDoctrine()
                 ->getRepository($this->entityName)
                 ->find($id);
 
-            if (!$termsOfPayment) {
+            if (!$termsOfDelivery) {
                 throw new EntityNotFoundException($this->entityName, $id);
             } else {
                 $terms = $this->getRequest()->get('terms');
 
                 if ($terms == null || $terms == '') {
-                    throw new RestException('There is no category-name for the account-category given');
+                    throw new RestException('There is no category-name for the terms of delivery given');
                 } else {
                     $em = $this->getDoctrine()->getManager();
-                    $termsOfPayment->setTerms($terms);
+                    $termsOfDelivery->setTerms($terms);
 
                     $em->flush();
-                    $view = $this->view($termsOfPayment, 200);
+                    $view = $this->view($termsOfDelivery, 200);
                 }
             }
         } catch (EntityNotFoundException $enfe) {
@@ -138,27 +138,27 @@ class TermsOfPaymentController extends RestController implements ClassResourceIn
     }
 
     /**
-     * Delete terms-of-payment with the given id
+     * Delete terms-of-delivery with the given id
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
-     * @Route("/termsofpayment/{id}")
+     * @Route("/termsofdelivery/{id}")
      */
     public function deleteAction($id)
     {
         try {
             $delete = function ($id) {
 
-                /* @var TermsOfPayment $termsOfPayment */
-                $termsOfPayment = $this->getDoctrine()
+                /* @var TermsOfDelivery $termsOfDelivery */
+                $termsOfDelivery = $this->getDoctrine()
                     ->getRepository($this->entityName)
                     ->find($id);
 
-                if (!$termsOfPayment) {
+                if (!$termsOfDelivery) {
                     throw new EntityNotFoundException($this->entityName, $id);
                 }
 
                 $em = $this->getDoctrine()->getManager();
-                $em->remove($termsOfPayment);
+                $em->remove($termsOfDelivery);
                 $em->flush();
             };
 
@@ -172,9 +172,9 @@ class TermsOfPaymentController extends RestController implements ClassResourceIn
     }
 
     /**
-     * Add or update a bunch of terms of payment
+     * Add or update a bunch of terms of delivery
      * @return \Symfony\Component\HttpFoundation\Response
-     * @Route("/termsofpayment")
+     * @Route("/termsofdelivery")
      */
     public function patchAction()
     {
@@ -213,23 +213,23 @@ class TermsOfPaymentController extends RestController implements ClassResourceIn
     private function addAndUpdateCategories($item)
     {
         if (isset($item['id']) && !empty($item['id'])) {
-            /* @var TermsOfPayment $termsOfPayment */
-            $termsOfPayment = $this->getDoctrine()
+            /* @var TermsOfDelivery $termsOfDelivery */
+            $termsOfDelivery = $this->getDoctrine()
                 ->getRepository($this->entityName)
                 ->find($item['id']);
 
-            if ($termsOfPayment == null) {
+            if ($termsOfDelivery == null) {
                 throw new EntityNotFoundException($this->entityName, $item['id']);
             } else {
-                $termsOfPayment->setTerms($item['terms']);
+                $termsOfDelivery->setTerms($item['terms']);
             }
 
         } else {
-            $termsOfPayment = new TermsOfPayment();
-            $termsOfPayment->setTerms($item['terms']);
-            $this->getDoctrine()->getManager()->persist($termsOfPayment);
+            $termsOfDelivery = new TermsOfDelivery();
+            $termsOfDelivery->setTerms($item['terms']);
+            $this->getDoctrine()->getManager()->persist($termsOfDelivery);
         }
 
-        return $termsOfPayment;
+        return $termsOfDelivery;
     }
 }

@@ -11,10 +11,10 @@
 namespace Sulu\Bundle\ContactBundle\Tests\Functional\Controller;
 
 use Doctrine\ORM\Tools\SchemaTool;
-use Sulu\Bundle\ContactBundle\Entity\TermsOfPayment;
+use Sulu\Bundle\ContactBundle\Entity\TermsOfDelivery;
 use Sulu\Bundle\TestBundle\Testing\DatabaseTestCase;
 
-class TermsOfPaymentControllerTest extends DatabaseTestCase
+class TermsOfDeliveryControllerTest extends DatabaseTestCase
 {
     /**
      * @var array
@@ -26,10 +26,10 @@ class TermsOfPaymentControllerTest extends DatabaseTestCase
     {
         $this->setUpSchema();
 
-        $term1 = new TermsOfPayment();
+        $term1 = new TermsOfDelivery();
         $term1->setTerms('Term 1');
 
-        $term2 = new TermsOfPayment();
+        $term2 = new TermsOfDelivery();
         $term2->setTerms('Term 2');
 
         self::$em->persist($term1);
@@ -50,7 +50,7 @@ class TermsOfPaymentControllerTest extends DatabaseTestCase
 
         self::$entities = array(
             self::$em->getClassMetadata('Sulu\Bundle\TestBundle\Entity\TestUser'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\TermsOfPayment'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\TermsOfDelivery'),
         );
 
         self::$tool->dropSchema(self::$entities);
@@ -74,7 +74,7 @@ class TermsOfPaymentControllerTest extends DatabaseTestCase
 
         $client->request(
             'GET',
-            '/api/termsofpayment/1'
+            '/api/termsofdelivery/1'
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -96,7 +96,7 @@ class TermsOfPaymentControllerTest extends DatabaseTestCase
 
         $client->request(
             'POST',
-            '/api/termsofpayment',
+            '/api/termsofdelivery',
             array(
                 'terms' => 'Term 3',
             )
@@ -111,7 +111,7 @@ class TermsOfPaymentControllerTest extends DatabaseTestCase
         $client2 = $this->createTestClient();
         $client2->request(
             'GET',
-            '/api/termsofpayments'
+            '/api/termsofdeliveries'
         );
 
         $response2 = json_decode($client2->getResponse()->getContent());
@@ -133,7 +133,7 @@ class TermsOfPaymentControllerTest extends DatabaseTestCase
         $client = $this->createTestClient();
         $client->request(
             'POST',
-            '/api/termsofpayment',
+            '/api/termsofdelivery',
             array(
                 'terms' => 'Term 1',
             )
@@ -149,7 +149,7 @@ class TermsOfPaymentControllerTest extends DatabaseTestCase
         $client = $this->createTestClient();
         $client->request(
             'POST',
-            '/api/termsofpayment',
+            '/api/termsofdelivery',
             array(
                 'terms',
             )
@@ -164,7 +164,7 @@ class TermsOfPaymentControllerTest extends DatabaseTestCase
         $client = $this->createTestClient();
         $client->request(
             'POST',
-            '/api/termsofpayment',
+            '/api/termsofdelivery',
             array(
                 'terms' => '',
             )
@@ -179,7 +179,7 @@ class TermsOfPaymentControllerTest extends DatabaseTestCase
         $client = $this->createTestClient();
         $client->request(
             'PUT',
-            '/api/termsofpayment/1',
+            '/api/termsofdelivery/1',
             array(
                 'terms' => 'Term 1.1'
             )
@@ -194,7 +194,7 @@ class TermsOfPaymentControllerTest extends DatabaseTestCase
         $client2 = $this->createTestClient();
         $client2->request(
             'GET',
-            '/api/termsofpayments'
+            '/api/termsofdeliveries'
         );
 
         $response2 = json_decode($client2->getResponse()->getContent());
@@ -213,7 +213,7 @@ class TermsOfPaymentControllerTest extends DatabaseTestCase
         $client = $this->createTestClient();
         $client->request(
             'PUT',
-            '/api/termsofpayment/100',
+            '/api/termsofdelivery/100',
             array(
                 'terms' => 'Term 3'
             )
@@ -226,13 +226,13 @@ class TermsOfPaymentControllerTest extends DatabaseTestCase
     public function testDelete()
     {
         $client = $this->createTestClient();
-        $client->request('DELETE', '/api/termsofpayment/1');
+        $client->request('DELETE', '/api/termsofdelivery/1');
 
         $this->assertEquals('204', $client->getResponse()->getStatusCode());
         $client2 = $this->createTestClient();
         $client2->request(
             'GET',
-            '/api/termsofpayments'
+            '/api/termsofdeliveries'
         );
 
         $response2 = json_decode($client2->getResponse()->getContent());
@@ -244,14 +244,14 @@ class TermsOfPaymentControllerTest extends DatabaseTestCase
     public function testDeleteInvalidId()
     {
         $client = $this->createTestClient();
-        $client->request('DELETE', '/api/termsofpayment/1000');
+        $client->request('DELETE', '/api/termsofdelivery/1000');
         $this->assertEquals('404', $client->getResponse()->getStatusCode());
 
         $client2 = $this->createTestClient();
 
         $client2->request(
             'GET',
-            '/api/termsofpayments'
+            '/api/termsofdeliveries'
         );
 
         $response2 = json_decode($client2->getResponse()->getContent());
@@ -266,7 +266,7 @@ class TermsOfPaymentControllerTest extends DatabaseTestCase
         $client = $this->createTestClient();
         $client->request(
             'PATCH',
-            '/api/termsofpayment',
+            '/api/termsofdelivery',
             array(
                 array(
                     'id' => 1,
@@ -289,7 +289,7 @@ class TermsOfPaymentControllerTest extends DatabaseTestCase
         $client2 = $this->createTestClient();
         $client2->request(
             'GET',
-            '/api/termsofpayments'
+            '/api/termsofdeliveries'
         );
 
         $response2 = json_decode($client2->getResponse()->getContent());
@@ -323,7 +323,7 @@ class TermsOfPaymentControllerTest extends DatabaseTestCase
         $client = $this->createTestClient();
         $client->request(
             'PATCH',
-            '/api/termsofpayment',
+            '/api/termsofdelivery',
             array(
                 array(
                     'id' => 1,
@@ -345,7 +345,7 @@ class TermsOfPaymentControllerTest extends DatabaseTestCase
         $client = $this->createTestClient();
         $client->request(
             'PATCH',
-            '/api/termsofpayment',
+            '/api/termsofdelivery',
             array(
                 array(
                     'id' => 1,
@@ -367,7 +367,7 @@ class TermsOfPaymentControllerTest extends DatabaseTestCase
 
         $client2->request(
             'GET',
-            '/api/termsofpayments'
+            '/api/termsofdeliveries'
         );
 
         $response2 = json_decode($client2->getResponse()->getContent());
