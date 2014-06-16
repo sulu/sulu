@@ -1,4 +1,4 @@
-<div class="grid-col-{{ property.col != "" ? property.col : '12' }} m-top-20">
+<div class="grid-col-{{ property.col != "" ? property.col : '12' }} floating m-top-20">
     <div class="grid">
         <div class="sortable grid-row"
              id="{{ id|raw }}"
@@ -13,7 +13,7 @@
              data-mapper-empty-class="empty">
             {% for type in property.types %}
                 <script id="{{ type.name }}-{{ id|raw }}-tpl" type="text/template">
-                    <div class="text-block {{ type.name }}-element {{ property.name }}-element grid-col-12"
+                    <div class="text-block {{ type.name }}-element {{ property.name }}-element grid-col-12 floating"
                          data-mapper-property-tpl="{{ type.name }}">
                         <input type="hidden" data-mapper-property="type" value="{{ type.name }}"/>
 
