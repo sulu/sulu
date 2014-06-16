@@ -31,10 +31,6 @@ define([], function() {
                 '</div>'].join('')
         };
 
-//        addBankAccount = function() {
-//            this.sandbox.form.addToCollection(this.form, 'bankAccounts', {});
-//        };
-
     return {
 
         view: true,
@@ -68,23 +64,12 @@ define([], function() {
 
         initForm: function(data) {
             var formObject = this.sandbox.form.create(this.form);
-//            this.addCollectionFilters(data);
             this.initBankAccountHandling(data);
 
             formObject.initialized.then(function() {
                 this.setFormData(data);
             }.bind(this));
         },
-
-//        addCollectionFilters : function(data) {
-//            // add collection filters
-//            this.sandbox.form.addCollectionFilter(this.form, 'bankAccounts', function(bankAccount) {
-//                if (bankAccount.id === "") {
-//                    delete bankAccount.id;
-//                }
-//                return bankAccount.bankName !== "" && bankAccount.bic !== "" && bankAccount.iban !== "";
-//            });
-//        },
 
         setFormData: function(data) {
             // add collection filters to form
@@ -103,8 +88,6 @@ define([], function() {
                     this.submit();
                 }
             }.bind(this));
-
-//            this.sandbox.dom.on(constants.addBankAccountButtonId, 'click', addBankAccount.bind(this));
         },
 
         bindCustomEvents: function() {
@@ -133,12 +116,12 @@ define([], function() {
                 this.sandbox.emit('sulu.contacts.accounts.list');
             }, this);
 
-            this.sandbox.on('sulu.contact-form.added.bank-account', function(){
+            this.sandbox.on('sulu.contact-form.added.bank-account', function() {
                 this.numberOfBankAccounts++;
                 this.updateBankAccountAddIcon(this.numberOfBankAccounts);
             }, this);
 
-            this.sandbox.on('sulu.contact-form.removed.bank-account', function(){
+            this.sandbox.on('sulu.contact-form.removed.bank-account', function() {
                 this.numberOfBankAccounts--;
                 this.updateBankAccountAddIcon(this.numberOfBankAccounts);
             }, this);
@@ -181,7 +164,7 @@ define([], function() {
         /**
          * Initializes the component responsible for handling bank accounts
          */
-        initBankAccountHandling: function(data){
+        initBankAccountHandling: function(data) {
             this.numberOfBankAccounts = data.bankAccounts.length;
             this.updateBankAccountAddIcon(this.numberOfBankAccounts);
 
@@ -211,11 +194,11 @@ define([], function() {
          * Adds or removes icon to add bank accounts depending on the number of bank accounts
          * @param numberOfBankAccounts
          */
-        updateBankAccountAddIcon: function(numberOfBankAccounts){
+        updateBankAccountAddIcon: function(numberOfBankAccounts) {
             var $addIcon = this.sandbox.dom.find(constants.bankAccountAddId),
                 addIcon;
 
-            if(!!numberOfBankAccounts && numberOfBankAccounts > 0 && $addIcon.length === 0) {
+            if (!!numberOfBankAccounts && numberOfBankAccounts > 0 && $addIcon.length === 0) {
                 addIcon = this.sandbox.dom.createElement(customTemplates.addBankAccountsIcon);
                 this.sandbox.dom.after(this.sandbox.dom.find(constants.bankAccountsId), addIcon);
             } else if (numberOfBankAccounts === 0 && $addIcon.length > 0) {
