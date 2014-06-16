@@ -67,7 +67,7 @@ class AccountController extends AbstractContactController
     /**
      * {@inheritdoc}
      */
-    protected $fieldsHidden = array('created', 'type', 'division', 'disabled', 'uid', 'registerNumber');
+    protected $fieldsHidden = array('created', 'type', 'division', 'disabled', 'uid', 'registerNumber', 'placeOfJurisdiction');
 
     /**
      * {@inheritdoc}
@@ -386,6 +386,10 @@ class AccountController extends AbstractContactController
                 }
                 if (!is_null($request->get('registerNumber'))) {
                     $account->setRegisterNumber($request->get('registerNumber'));
+                }
+
+                if (!is_null($request->get('placeOfJurisdiction'))) {
+                    $account->setPlaceOfJurisdiction($request->get('placeOfJurisdiction'));
                 }
 
                 // process details

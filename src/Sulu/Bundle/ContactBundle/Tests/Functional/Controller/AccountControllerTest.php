@@ -54,6 +54,7 @@ class AccountControllerTest extends DatabaseTestCase
         self::$account->setDisabled(0);
         self::$account->setCreated(new DateTime());
         self::$account->setChanged(new DateTime());
+        self::$account->setPlaceOfJurisdiction('Feldkirch');
 
         $urlType = new UrlType();
         $urlType->setName('Private');
@@ -238,6 +239,7 @@ class AccountControllerTest extends DatabaseTestCase
         $this->assertEquals('Musterland', $response->addresses[0]->country->name);
         $this->assertEquals('ML', $response->addresses[0]->country->code);
         $this->assertEquals('Private', $response->addresses[0]->addressType->name);
+        $this->assertEquals('Feldkirch', $response->placeOfJurisdiction);
 
         $this->assertEquals(true,$response->addresses[0]->billingAddress);
         $this->assertEquals(true,$response->addresses[0]->primaryAddress);
