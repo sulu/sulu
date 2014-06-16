@@ -13,3 +13,7 @@ sulu_contact.accountcategory:
 sulu_contact.termsofpayment:
     type: rest
     resource: Sulu\Bundle\ContactBundle\Controller\TermsOfPaymentController
+
+sulu_contact.termsofdelivers:
+    type: rest
+    resource: Sulu\Bundle\ContactBundle\Controller\TermsOfDeliveryController
