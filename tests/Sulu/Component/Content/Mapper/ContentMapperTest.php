@@ -73,7 +73,17 @@ class ContentMapperTest extends PhpcrTestCase
         $method->invokeArgs(
             $structureMock,
             array(
-                new Property('name', '', 'text_line', false, true, 1, 1, array(), array(new PropertyTag('sulu.node.name', 10)))
+                new Property(
+                    'name',
+                    '',
+                    'text_line',
+                    false,
+                    true,
+                    1,
+                    1,
+                    array(),
+                    $type !== 5 ? array(new PropertyTag('sulu.node.name', 10)) : array()
+                )
             )
         );
 
@@ -128,7 +138,19 @@ class ContentMapperTest extends PhpcrTestCase
             );
         } elseif ($type == 5) {
             $section = new SectionProperty('test',array(), '6');
-            $section->addChild(new Property('blog', '', 'text_line', true, true));
+            $section->addChild(
+                new Property(
+                    'blog',
+                    '',
+                    'text_line',
+                    true,
+                    true,
+                    1,
+                    1,
+                    array(),
+                    array(new PropertyTag('sulu.node.name', 10))
+                )
+            );
 
             $method->invokeArgs(
                 $structureMock,
@@ -2115,7 +2137,7 @@ class ContentMapperTest extends PhpcrTestCase
         $structure = $this->mapper->save($data, 'section', 'default', 'en', 1);
         $resultSave = $structure->toArray();
 
-        $this->assertEquals('/test', $resultSave['path']);
+        $this->assertEquals('/thats-a-good-test', $resultSave['path']);
         $this->assertEquals('section', $resultSave['template']);
         $this->assertEquals('Test', $resultSave['name']);
         $this->assertEquals('Thats a good test', $resultSave['blog']);
@@ -2124,7 +2146,7 @@ class ContentMapperTest extends PhpcrTestCase
         $structure = $this->mapper->load($structure->getUuid(), 'default', 'en');
         $resultLoad = $structure->toArray();
 
-        $this->assertEquals('/test', $resultLoad['path']);
+        $this->assertEquals('/thats-a-good-test', $resultLoad['path']);
         $this->assertEquals('section', $resultLoad['template']);
         $this->assertEquals('Test', $resultLoad['name']);
         $this->assertEquals('Thats a good test', $resultLoad['blog']);

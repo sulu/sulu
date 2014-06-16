@@ -178,6 +178,19 @@ abstract class Structure implements StructureInterface
      */
     protected function addChild(PropertyInterface $property)
     {
+        if ($property instanceof SectionPropertyInterface) {
+            foreach ($property->getChildProperties() as $childProperty) {
+                $this->addPropertyTags($childProperty);
+            }
+        } else {
+            $this->addPropertyTags($property);
+        }
+
+        $this->properties[$property->getName()] = $property;
+    }
+
+    protected function addPropertyTags(PropertyInterface $property)
+    {
         foreach ($property->getTags() as $tag) {
             if (!array_key_exists($tag->getName(), $this->tags)) {
                 $this->tags[$tag->getName()] = array(
@@ -202,7 +215,6 @@ abstract class Structure implements StructureInterface
                 }
             }
         }
-        $this->properties[$property->getName()] = $property;
     }
 
     /**
@@ -742,6 +754,7 @@ abstract class Structure implements StructureInterface
             if ($this->type !== null) {
                 $result['type'] = $this->getType()->toArray();
             }
+
             return $result;
         }
     }

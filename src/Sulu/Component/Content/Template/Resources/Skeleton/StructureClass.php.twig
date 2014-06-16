@@ -47,10 +47,10 @@ class {{ cache_class }} extends {{ base_class }}
             {{ _self.renderArray(section.meta) }},
             '{{ section.col }}'
         );
-        {{ parent }}->addChild({{ sectionVar }});
-    {% for property in section.properties %}
+{% for property in section.properties %}
 {{ _self.buildProperty(property, sectionVar, layer) }}
 {% endfor %}
+        {{ parent }}->addChild({{ sectionVar }});
 {% endmacro %}
 
 {% macro buildTypes(type, parent, layer, typeIndex) %}
