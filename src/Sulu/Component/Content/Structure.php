@@ -390,8 +390,10 @@ abstract class Structure implements StructureInterface
      */
     public function getProperty($name)
     {
-        if ($this->hasProperty($name)) {
-            return $this->properties[$name];
+        $result = $this->findProperty($name);
+
+        if ($result !== null) {
+            return $result;
         } else {
             throw new NoSuchPropertyException();
         }
@@ -455,7 +457,23 @@ abstract class Structure implements StructureInterface
      */
     public function hasProperty($name)
     {
-        return isset($this->properties[$name]);
+        return $this->findProperty($name) !== null;
+    }
+
+    /**
+     * find property in flatten properties
+     * @param string $name
+     * @return null|PropertyInterface
+     */
+    private function findProperty($name)
+    {
+        foreach ($this->getProperties(true) as $property) {
+            if ($property->getName() === $name) {
+                return $property;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -588,11 +606,25 @@ abstract class Structure implements StructureInterface
 
     /**
      * returns an array of properties
-     * @return array
+     * @param bool $flatten
+     * @return PropertyInterface[]
      */
-    public function getProperties()
+    public function getProperties($flatten = false)
     {
-        return $this->properties;
+        if ($flatten === false) {
+            return $this->properties;
+        } else {
+            $result = array();
+            foreach ($this->properties as $property) {
+                if ($property instanceof SectionPropertyInterface) {
+                    $result = array_merge($result, $property->getChildProperties());
+                } else {
+                    $result[] = $property;
+                }
+            }
+
+            return $result;
+        }
     }
 
     /**

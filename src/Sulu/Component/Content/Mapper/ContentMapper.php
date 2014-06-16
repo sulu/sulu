@@ -26,8 +26,6 @@ use Sulu\Component\Content\Mapper\LocalizationFinder\LocalizationFinderInterface
 use Sulu\Component\Content\Mapper\Translation\MultipleTranslatedProperties;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\PropertyInterface;
-use Sulu\Component\Content\Section\SectionProperty;
-use Sulu\Component\Content\Section\SectionPropertyInterface;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManagerInterface;
 use Sulu\Component\Content\StructureType;
@@ -256,17 +254,48 @@ class ContentMapper implements ContentMapperInterface
             $node->setProperty($this->properties->getName('navigation'), $showInNavigation);
         }
 
+        $postSave = array();
+
         // go through every property in the template
-        $postSave = $this->saveProperties(
-            $structure->getProperties(),
-            $node,
-            $data,
-            $userId,
-            $templateKey,
-            $partialUpdate,
-            $webspaceKey,
-            $languageCode
-        );
+        /** @var PropertyInterface $property */
+        foreach ($structure->getProperties(true) as $property) {
+            // allow null values in data
+            if (isset($data[$property->getName()])) {
+                $type = $this->getContentType($property->getContentTypeName());
+                $value = $data[$property->getName()];
+                $property->setValue($value);
+
+                // add property to post save action
+                if ($type->getType() == ContentTypeInterface::POST_SAVE) {
+                    $postSave[] = array(
+                        'type' => $type,
+                        'property' => $property
+                    );
+                } else {
+                    $type->write(
+                        $node,
+                        new TranslatedProperty($property, $languageCode, $this->languageNamespace),
+                        $userId,
+                        $webspaceKey,
+                        $languageCode,
+                        null
+                    );
+                }
+            } elseif ($property->getMandatory()) {
+                throw new MandatoryPropertyException($templateKey, $property);
+            } elseif (!$partialUpdate) {
+                $type = $this->getContentType($property->getContentTypeName());
+                // if it is not a partial update remove property
+                $type->remove(
+                    $node,
+                    new TranslatedProperty($property, $languageCode, $this->languageNamespace),
+                    $webspaceKey,
+                    $languageCode,
+                    null
+                );
+            }
+            // if it is a partial update ignore property
+        }
 
         // save node now
         $session->save();
@@ -320,86 +349,6 @@ class ContentMapper implements ContentMapperInterface
         $this->eventDispatcher->dispatch(ContentEvents::NODE_SAVE, $event);
 
         return $structure;
-    }
-
-    /**
-     * save properties
-     * @param PropertyInterface[] $properties
-     * @param \PHPCR\NodeInterface $node
-     * @param $data
-     * @param integer $userId
-     * @param string $templateKey
-     * @param boolean $partialUpdate
-     * @param string $webspaceKey
-     * @param string $languageCode
-     * @throws \Sulu\Component\Content\Exception\MandatoryPropertyException
-     * @return array of post save properties
-     */
-    private function saveProperties(
-        $properties,
-        NodeInterface $node,
-        $data,
-        $userId,
-        $templateKey,
-        $partialUpdate,
-        $webspaceKey,
-        $languageCode
-    ) {
-        $postSave = array();
-
-        /** @var PropertyInterface $property */
-        foreach ($properties as $property) {
-            if ($property instanceof SectionPropertyInterface) { // flatten sections
-                $childPostSave = $this->saveProperties(
-                    $property->getChildProperties(),
-                    $node,
-                    $data,
-                    $userId,
-                    $templateKey,
-                    $partialUpdate,
-                    $webspaceKey,
-                    $languageCode
-                );
-
-                $postSave = array_merge($postSave, $childPostSave);
-            } elseif (isset($data[$property->getName()])) { // allow null values in data
-                $type = $this->getContentType($property->getContentTypeName());
-                $value = $data[$property->getName()];
-                $property->setValue($value);
-
-                // add property to post save action
-                if ($type->getType() == ContentTypeInterface::POST_SAVE) {
-                    $postSave[] = array(
-                        'type' => $type,
-                        'property' => $property
-                    );
-                } else {
-                    $type->write(
-                        $node,
-                        new TranslatedProperty($property, $languageCode, $this->languageNamespace),
-                        $userId,
-                        $webspaceKey,
-                        $languageCode,
-                        null
-                    );
-                }
-            } elseif ($property->getMandatory()) { // value is mandatory
-                throw new MandatoryPropertyException($templateKey, $property);
-            } elseif (!$partialUpdate) { // if no partial update remove property
-                $type = $this->getContentType($property->getContentTypeName());
-                // if it is not a partial update remove property
-                $type->remove(
-                    $node,
-                    new TranslatedProperty($property, $languageCode, $this->languageNamespace),
-                    $webspaceKey,
-                    $languageCode,
-                    null
-                );
-            }
-            // if it is a partial update ignore property
-        }
-
-        return $postSave;
     }
 
     /**
@@ -743,7 +692,7 @@ class ContentMapper implements ContentMapperInterface
         if ($path === '') {
             $node = $this->getContentNode($webspaceKey);
         } else {
-        $node = $this->getContentNode($webspaceKey)->getNode($path);
+            $node = $this->getContentNode($webspaceKey)->getNode($path);
         }
 
         if ($this->stopwatch) {
@@ -911,7 +860,22 @@ class ContentMapper implements ContentMapperInterface
             $contentNode->getPropertyValueWithDefault($this->properties->getName('published'), null)
         );
 
-        $this->loadProperties($structure->getProperties(), $contentNode, $webspaceKey, $availableLocalization);
+        // go through every property in the template
+        /** @var PropertyInterface $property */
+        foreach ($structure->getProperties(true) as $property) {
+            $type = $this->getContentType($property->getContentTypeName());
+            $type->read(
+                $contentNode,
+                new TranslatedProperty(
+                    $property,
+                    $availableLocalization,
+                    $this->languageNamespace
+                ),
+                $webspaceKey,
+                $availableLocalization,
+                null
+            );
+        }
 
         // throw an content.node.load event (disabled for now)
         //$event = new ContentNodeEvent($contentNode, $structure);
@@ -922,37 +886,6 @@ class ContentMapper implements ContentMapperInterface
         }
 
         return $structure;
-    }
-
-    /**
-     * load properties
-     * @param PropertyInterface[] $properties
-     * @param NodeInterface $contentNode
-     * @param string $webspaceKey
-     * @param string $languageCode
-     */
-    private function loadProperties($properties, NodeInterface $contentNode, $webspaceKey, $languageCode)
-    {
-        // go through every property in the template
-        /** @var PropertyInterface $property */
-        foreach ($properties as $property) {
-            if ($property instanceof SectionProperty) {
-                $this->loadProperties($property->getChildProperties(), $contentNode, $webspaceKey, $languageCode);
-            } else {
-                $type = $this->getContentType($property->getContentTypeName());
-                $type->read(
-                    $contentNode,
-                    new TranslatedProperty(
-                        $property,
-                        $languageCode,
-                        $this->languageNamespace
-                    ),
-                    $webspaceKey,
-                    $languageCode,
-                    null
-                );
-            }
-        }
     }
 
     /**
