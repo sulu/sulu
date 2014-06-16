@@ -72,7 +72,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
             $this->returnValue(
                 array(
                     'ids' => array(1, 2, 3, 4),
-                    'direction' => 'right',
+                    'displayOption' => 'right',
                     'config' => array('conf1' => 1, 'conf2' => 2)
                 )
             )
@@ -83,7 +83,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
             json_encode(
                 array(
                     'ids' => array(1, 2, 3, 4),
-                    'direction' => 'right',
+                    'displayOption' => 'right',
                     'config' => array('conf1' => 1, 'conf2' => 2)
                 )
             )
@@ -120,7 +120,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
             $this->returnValue(
                 array(
                     'ids' => array(1, 2, 3, 4),
-                    'direction' => 'right',
+                    'displayOption' => 'right',
                     'config' => array('conf1' => 1, 'conf2' => 2),
                     'data' => array('data1', 'data2')
                 )
@@ -132,7 +132,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
             json_encode(
                 array(
                     'ids' => array(1, 2, 3, 4),
-                    'direction' => 'right',
+                    'displayOption' => 'right',
                     'config' => array('conf1' => 1, 'conf2' => 2)
                 )
             )
@@ -177,7 +177,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
                     array(
                         'property',
                         '{}',
-                        '{"config":{"conf1": 1, "conf2": 2}, "direction": "right", "ids": [1,2,3,4]}'
+                        '{"config":{"conf1": 1, "conf2": 2}, "displayOption": "right", "ids": [1,2,3,4]}'
                     )
                 )
             )
@@ -226,7 +226,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
                     array(
                         'property',
                         '{}',
-                        '{"config":{"conf1": 1, "conf2": 2}, "direction": "right", "ids": [1,2,3,4]}'
+                        '{"config":{"conf1": 1, "conf2": 2}, "displayOption": "right", "ids": [1,2,3,4]}'
                     )
                 )
             )
@@ -239,7 +239,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
         $this->mediaSelection->readForPreview(
             array(
                 'config' => array('conf1' => 1, 'conf2' => 2),
-                'direction' => 'right',
+                'displayOption' => 'right',
                 'ids' => array(1, 2, 3, 4)
             ),
             $property,
