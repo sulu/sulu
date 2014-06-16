@@ -22,13 +22,6 @@ define([], function() {
             addAddressWrapper: '.grid-row'
         };
 
-//    // sets toolbar
-//        setHeaderToolbar = function() {
-//            this.sandbox.emit('sulu.header.set-toolbar', {
-//                template: 'default'
-//            });
-//        };
-
     return {
 
         view: true,
@@ -390,8 +383,8 @@ define([], function() {
                 addIcon;
 
             if (!!numberOfAddresses && numberOfAddresses > 0 && $addIcon.length === 0) {
-                addIcon = this.sandbox.dom.$(this.customTemplates.addAddressesIcon);
-                this.sandbox.dom.after(this.sandbox.dom.$('#addresses'), addIcon);
+                addIcon = this.sandbox.dom.createElement(this.customTemplates.addAddressesIcon);
+                this.sandbox.dom.after(this.sandbox.dom.find('#addresses'), addIcon);
             } else if (numberOfAddresses === 0 && $addIcon.length > 0) {
                 this.sandbox.dom.remove(this.sandbox.dom.closest($addIcon, constants.addAddressWrapper));
             }
