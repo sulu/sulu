@@ -32,6 +32,7 @@
         <!-- financial infos -->
         <field name="uid" type="string" column="uid" length="50" nullable="true" />
         <field name="registerNumber" type="string" column="registerNumber" nullable="true" />
+        <field name="placeOfJurisdiction" type="string" column="placeOfJurisdiction" nullable="true" />
 
         <one-to-many field="accountContacts" target-entity="Sulu\Bundle\ContactBundle\Entity\AccountContact" mapped-by="account"/>
 

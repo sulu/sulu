@@ -160,6 +160,11 @@ class Account extends ApiEntity
     private $accountContacts;
 
     /**
+     * @var string
+     */
+    private $placeOfJurisdiction;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -902,5 +907,28 @@ class Account extends ApiEntity
     public function getAccountContacts()
     {
         return $this->accountContacts;
+    }
+
+    /**
+     * Set placeOfJurisdiction
+     *
+     * @param string $placeOfJurisdiction
+     * @return Account
+     */
+    public function setPlaceOfJurisdiction($placeOfJurisdiction)
+    {
+        $this->placeOfJurisdiction = $placeOfJurisdiction;
+    
+        return $this;
+    }
+
+    /**
+     * Get placeOfJurisdiction
+     *
+     * @return string 
+     */
+    public function getPlaceOfJurisdiction()
+    {
+        return $this->placeOfJurisdiction;
     }
 }
