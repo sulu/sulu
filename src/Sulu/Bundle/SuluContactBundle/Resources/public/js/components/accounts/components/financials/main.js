@@ -44,6 +44,9 @@ define([], function() {
 
             this.form = '#financials-form';
 
+            this.termsOfDeliveryURL = 'api/termsofdeliveries';
+            this.termsOfPaymentURL = 'api/termsofpayments';
+
             this.setHeaderBar(true);
 
             this.render();
@@ -57,9 +60,183 @@ define([], function() {
             this.html(this.renderTemplate(this.templates[0]));
 
             this.initForm(data);
+            this.initTermsSelect(data);
+            this.startTermsOfPaymentOverlay();
 
             this.bindDomEvents();
             this.bindCustomEvents();
+        },
+
+        /**
+         * Shows the overlay to manage account categories
+         */
+        startTermsOfPaymentOverlay: function() {
+            this.sandbox.start([
+                {
+                    name: 'type-overlay@suluadmin',
+                    options: {
+                        overlay: {
+                            el: '#overlayContainer',
+                            instanceName: 'terms-overlay',
+                            removeOnClose: true
+                        },
+                        url: this.termsOfPaymentURL,
+                        data: this.termsOfPaymentData
+                    }
+                }
+            ]);
+        },
+
+        /**
+         * Inits the select for the account category
+         */
+        initTermsSelect: function(formData) {
+            this.preselectedTermsOfPaymentId = !!formData.termsOfPayment ? formData.termsOfPayment.id : null;
+            this.termsOfPaymentData = null;
+            this.preselectedTermsOfDeliveryId = !!formData.termsOfDelivery ? formData.termsOfDelivery.id : null;
+            this.termsOfDeliveryData = null;
+
+            this.sandbox.util.load(this.termsOfPaymentURL)
+                .then(function(response) {
+
+                    // data is data for select but not for overlay
+                    var data = response._embedded;
+                    this.termsOfPaymentData = this.copyArrayOfObjects(data);
+
+                    // translate values for select but not for overlay
+                    this.sandbox.util.foreach(data, function(el) {
+                        el.terms = this.sandbox.translate(el.terms);
+                    }.bind(this));
+
+                    this.addDividerAndActionsForPaymentSelect(data);
+
+                    this.sandbox.start([
+                        {
+                            name: 'select@husky',
+                            options: {
+                                el: '#termsOfPayment',
+                                instanceName: 'terms-of-payment',
+                                multipleSelect: false,
+                                defaultLabel: this.sandbox.translate('contact.accounts.termsOfPayment.select'),
+                                valueName: 'terms',
+                                repeatSelect: false,
+                                preSelectedElements: [this.preselectedTermsOfPaymentId],
+                                data: data
+                            }
+                        }
+                    ]);
+
+                }.bind(this))
+                .fail(function(textStatus, error) {
+                    this.sandbox.logger.error(textStatus, error);
+                }.bind(this));
+
+            this.sandbox.util.load(this.termsOfDeliveryURL)
+                .then(function(response) {
+
+                    // data is data for select but not for overlay
+                    var data = response._embedded;
+                    this.termsOfDeliveryData = this.copyArrayOfObjects(data);
+
+                    // translate values for select but not for overlay
+                    this.sandbox.util.foreach(data, function(el) {
+                        el.terms = this.sandbox.translate(el.terms);
+                    }.bind(this));
+
+                    this.addDividerAndActionsForDeliverySelect(data);
+
+                    this.sandbox.start([
+                        {
+                            name: 'select@husky',
+                            options: {
+                                el: '#termsOfDelivery',
+                                instanceName: 'terms-of-delivery',
+                                multipleSelect: false,
+                                defaultLabel: this.sandbox.translate('contact.accounts.termsOfDelivery.select'),
+                                valueName: 'terms',
+                                repeatSelect: false,
+                                preSelectedElements: [this.preselectedTermsOfDeliveryId],
+                                data: data
+                            }
+                        }
+                    ]);
+
+                }.bind(this))
+                .fail(function(textStatus, error) {
+                    this.sandbox.logger.error(textStatus, error);
+                }.bind(this));
+        },
+
+        /**
+         * Copies array of objects
+         * @param data
+         * @returns {Array}
+         */
+        copyArrayOfObjects: function(data) {
+            var newArray = [];
+            this.sandbox.util.foreach(data, function(el) {
+                newArray.push(this.sandbox.util.extend(true, {}, el));
+            }.bind(this));
+
+            return newArray;
+        },
+
+        /**
+         * Adds divider and actions to dropdown elements
+         * @param data
+         */
+        addDividerAndActionsForPaymentSelect: function(data) {
+            data.push({divider: true});
+            data.push({id: -1, terms: this.sandbox.translate('public.edit-entries'), callback: this.showTermsOfPaymentOverlay.bind(this), updateLabel: false});
+        },
+
+        /**
+         * Adds divider and actions to dropdown elements
+         * @param data
+         */
+        addDividerAndActionsForDeliverySelect: function(data) {
+            data.push({divider: true});
+            data.push({id: -1, terms: this.sandbox.translate('public.edit-entries'), callback: this.showTermsOfDeliveryOverlay.bind(this), updateLabel: false});
+        },
+
+        /**
+         * Triggers event to show overlay
+         */
+        showTermsOfDeliveryOverlay: function() {
+            var $overlayContainer = this.sandbox.dom.$('<div id="overlayContainer"></div>'),
+                config = {
+                    instanceName: 'termsOfDelivery',
+                    el: '#overlayContainer',
+                    openOnStart: true,
+                    removeOnClose: true,
+                    triggerEl: null,
+                    title: this.sandbox.translate('public.edit-entries'),
+                    data: this.termsOfPaymentData
+                };
+
+            this.sandbox.dom.remove('#overlayContainer');
+            this.sandbox.dom.append('body', $overlayContainer);
+            this.sandbox.emit('sulu.types.open', config);
+        },
+
+        /**
+         * Triggers event to show overlay
+         */
+        showTermsOfPaymentOverlay: function() {
+            var $overlayContainer = this.sandbox.dom.$('<div id="overlayContainer"></div>'),
+                config = {
+                    instanceName: 'termsOfPayment',
+                    el: '#overlayContainer',
+                    openOnStart: true,
+                    removeOnClose: true,
+                    triggerEl: null,
+                    title: this.sandbox.translate('public.edit-entries'),
+                    data: this.termsOfPaymentData
+                };
+
+            this.sandbox.dom.remove('#overlayContainer');
+            this.sandbox.dom.append('body', $overlayContainer);
+            this.sandbox.emit('sulu.types.open', config);
         },
 
         initForm: function(data) {
