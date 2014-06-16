@@ -38,6 +38,11 @@ class TemplateReader implements LoaderInterface
     /**
      * @var string
      */
+    private $typesKey = 'types';
+
+    /**
+     * @var string
+     */
     private $paramsKey = 'params';
 
     /**
@@ -123,7 +128,7 @@ class TemplateReader implements LoaderInterface
             $template[$this->propertiesKey][$name] = array_merge($attributes, $tags, $params);
 
             if (in_array($node->tagName, $this->complexNodeTypes)) {
-                $template[$this->propertiesKey][$name][$this->propertiesKey] = $this->parseSubproperties($xpath, $node);
+                $template[$this->propertiesKey][$name][$this->typesKey] = $this->parseSubproperties($xpath, $node);
             }
         }
 
@@ -177,34 +182,41 @@ class TemplateReader implements LoaderInterface
      */
     private function parseSubproperties($xpath, $node)
     {
+        $types = array();
 
-        $properties = array();
+        $typeNodes = $xpath->query('x:types/*', $node);
 
-        /** @var \DOMNodeList $children */
-        $children = $xpath->query('x:properties/*', $node);
+        /** @var \DOMNode $type */
+        foreach ($typeNodes as $type) {
+            $attributes = $this->getAllAttributesOfNode($type);
 
+            $typeName = $type->attributes->item(0)->nodeValue;
+            $types[$typeName] = $attributes;
 
-        /** @var \DOMNode $child */
-        foreach ($children as $child) {
+            /** @var \DOMNodeList $children */
+            $children = $xpath->query('x:properties/*', $type);
 
-            $attributes = $this->getAllAttributesOfNode($child);
+            /** @var \DOMNode $child */
+            foreach ($children as $child) {
+                $attributes = $this->getAllAttributesOfNode($child);
 
-            if (in_array($child->tagName, $this->complexNodeTypes)) {
-                $attributes['type'] = $child->tagName;
+                if (in_array($child->tagName, $this->complexNodeTypes)) {
+                    $attributes['type'] = $child->tagName;
+                }
+
+                $name = $attributes[$this->nameKey];
+                $params = $this->getChildrenOfNode($child, $this->pathToParams, $xpath, $this->paramsKey);
+                $tags = $this->getChildrenOfNode($child, $this->pathToTags, $xpath, $this->tagKey);
+                $types[$typeName][$this->propertiesKey][$name] = array_merge($attributes, $tags, $params);
+
+                if (in_array($child->tagName, $this->complexNodeTypes)) {
+                    $types[$typeName][$this->propertiesKey][$name][$this->typesKey] = $this->parseSubproperties($xpath, $child);
+                }
+
             }
-
-            $name = $attributes[$this->nameKey];
-            $params = $this->getChildrenOfNode($child, $this->pathToParams, $xpath, $this->paramsKey);
-            $tags = $this->getChildrenOfNode($child, $this->pathToTags, $xpath, $this->tagKey);
-            $properties[$name] = array_merge($attributes, $tags, $params);
-
-            if (in_array($child->tagName, $this->complexNodeTypes)) {
-                $properties[$name][$this->propertiesKey] = $this->parseSubproperties($xpath, $child);
-            }
-
         }
 
-        return $properties;
+        return $types;
     }
 
     /**

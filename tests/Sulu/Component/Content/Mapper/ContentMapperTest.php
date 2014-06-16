@@ -17,6 +17,7 @@ use PHPCR\Util\NodeHelper;
 use ReflectionMethod;
 use Sulu\Bundle\TestBundle\Testing\PhpcrTestCase;
 use Sulu\Component\Content\Block\BlockProperty;
+use Sulu\Component\Content\Block\BlockPropertyType;
 use Sulu\Component\Content\BreadcrumbItemInterface;
 use Sulu\Component\Content\ContentEvents;
 use Sulu\Component\Content\Property;
@@ -62,7 +63,7 @@ class ContentMapperTest extends PhpcrTestCase
         );
 
         $method = new ReflectionMethod(
-            get_class($structureMock), 'add'
+            get_class($structureMock), 'addChild'
         );
 
         $method->setAccessible(true);
@@ -103,9 +104,11 @@ class ContentMapperTest extends PhpcrTestCase
                 )
             );
         } elseif ($type == 3) {
-            $blockProperty = new BlockProperty('block1', '', false, true, 2, 10);
-            $blockProperty->addChild(new Property('name', '', 'text_line', false, true));
-            $blockProperty->addChild(new Property('article', '', 'text_area', false, true));
+            $blockProperty = new BlockProperty('block1', '', 'default', false, true, 2, 10);
+            $type = new BlockPropertyType('default', '');
+            $type->addChild(new Property('name', '', 'text_line', false, true));
+            $type->addChild(new Property('article', '', 'text_area', false, true));
+            $blockProperty->addType($type);
 
             $method->invokeArgs(
                 $structureMock,
@@ -227,6 +230,7 @@ class ContentMapperTest extends PhpcrTestCase
         $content = $this->mapper->load($structure->getUuid(), 'default', 'de');
 
         $this->assertNotNull($content->getUuid());
+        $this->assertEquals('/testname', $content->getPath());
         $this->assertEquals('default', $content->getWebspaceKey());
         $this->assertEquals('de', $content->getLanguageCode());
         $this->assertEquals('overview', $content->getKey());
@@ -1042,43 +1046,51 @@ class ContentMapperTest extends PhpcrTestCase
         // /News
         $this->assertEquals(1, sizeof($children));
         $this->assertEquals('News', $children[0]->name);
+        $this->assertEquals('/news', $children[0]->path);
 
         // /News/Testnews-1
         $tmp = $children[0]->getChildren()[0];
         $this->assertEquals(0, sizeof($tmp->getChildren()));
         $this->assertEquals('Testnews-1', $tmp->name);
+        $this->assertEquals('/news/testnews-1', $tmp->path);
 
         // /News/Testnews-2
         $tmp = $children[0]->getChildren()[1];
         $this->assertEquals(null, $tmp->getChildren());
         $this->assertTrue($tmp->getHasChildren());
         $this->assertEquals('Testnews-2', $tmp->name);
+        $this->assertEquals('/news/testnews-2', $tmp->path);
 
 
         $children = $this->mapper->loadByParent(null, 'default', 'de', 3, false);
         // /News
         $this->assertEquals(1, sizeof($children));
         $this->assertEquals('News', $children[0]->name);
+        $this->assertEquals('/news', $children[0]->path);
 
         // /News/Testnews-1
         $tmp = $children[0]->getChildren()[0];
         $this->assertEquals(0, sizeof($tmp->getChildren()));
         $this->assertEquals('Testnews-1', $tmp->name);
+        $this->assertEquals('/news/testnews-1', $tmp->path);
 
         // /News/Testnews-2
         $tmp = $children[0]->getChildren()[1];
         $this->assertEquals(1, sizeof($tmp->getChildren()));
         $this->assertEquals('Testnews-2', $tmp->name);
+        $this->assertEquals('/news/testnews-2', $tmp->path);
 
         // /News/Testnews-2/Testnews-2-1
         $tmp = $children[0]->getChildren()[1]->getChildren()[0];
         $this->assertEquals(null, $tmp->getChildren());
         $this->assertFalse($tmp->getHasChildren());
         $this->assertEquals('Testnews-2-1', $tmp->name);
+        $this->assertEquals('/news/testnews-2/testnews-2-1', $tmp->path);
 
         $children = $this->mapper->loadByParent($child->getUuid(), 'default', 'de', 3, false);
         $this->assertEquals(1, sizeof($children));
         $this->assertEquals('Testnews-2-1', $children[0]->name);
+        $this->assertEquals('/news/testnews-2/testnews-2-1', $children[0]->path);
     }
 
     public function testStartPage()
@@ -1767,10 +1779,12 @@ class ContentMapperTest extends PhpcrTestCase
             'url' => '/test',
             'block1' => array(
                 array(
+                    'type' => 'default',
                     'name' => 'Block-name-1',
                     'article' => 'Block-Article-1'
                 ),
                 array(
+                    'type' => 'default',
                     'name' => 'Block-name-2',
                     'article' => 'Block-Article-2'
                 )
@@ -1880,5 +1894,200 @@ class ContentMapperTest extends PhpcrTestCase
             'url' => '/news/test'
         );
         $this->mapper->save($data, 'mandatory', 'default', 'de', 1);
+    }
+
+    private function prepareBigTreeTestData()
+    {
+        $data = array(
+            array(
+                'data' => array(
+                    'name' => 'Products',
+                    'url' => '/products'
+                ),
+                'children' => array(
+                    array(
+                        'data' => array(
+                            'name' => 'Products1',
+                            'url' => '/products/products-1'
+                        ),
+                        'children' => array()
+                    )
+                )
+            ),
+            array(
+                'data' => array(
+                    'name' => 'News',
+                    'url' => '/news'
+                ),
+                'children' => array(
+                    array(
+                        'data' => array(
+                            'name' => 'News-1',
+                            'url' => '/news/news-1'
+                        ),
+                        'children' => array(
+                            array(
+                                'data' => array(
+                                    'name' => 'SubNews-1',
+                                    'url' => '/news/news-1/subnews-1'
+                                ),
+                                'children' => array()
+                            ),
+                            array(
+                                'data' => array(
+                                    'name' => 'SubNews-2',
+                                    'url' => '/news/news-1/subnews-2'
+                                ),
+                                'children' => array()
+                            ),
+                            array(
+                                'data' => array(
+                                    'name' => 'SubNews-3',
+                                    'url' => '/news/news-1/subnews-3'
+                                ),
+                                'children' => array(
+                                    array(
+                                        'data' => array(
+                                            'name' => 'SubSubNews-1',
+                                            'url' => '/news/news-1/subnews-3/subsubnews-1'
+                                        ),
+                                        'children' => array()
+                                    ),
+                                    array(
+                                        'data' => array(
+                                            'name' => 'SubSubNews-2',
+                                            'url' => '/news/news-1/subnews-3/subsubnews-2'
+                                        ),
+                                        'children' => array()
+                                    ),
+                                    array(
+                                        'data' => array(
+                                            'name' => 'SubSubNews-3',
+                                            'url' => '/news/news-1/subnews-3/subsubnews-3'
+                                        ),
+                                        'children' => array()
+                                    )
+                                )
+                            )
+                        )
+                    ),
+                    array(
+                        'data' => array(
+                            'name' => 'News-2',
+                            'url' => '/news/news-2'
+                        ),
+                        'children' => array()
+                    ),
+                    array(
+                        'data' => array(
+                            'name' => 'News-3',
+                            'url' => '/news/news-3'
+                        ),
+                        'children' => array()
+                    ),
+                )
+            ),
+            array(
+                'data' => array(
+                    'name' => 'About Us',
+                    'url' => '/about-us'
+                ),
+                'children' => array()
+            ),
+        );
+
+        $this->eventDispatcher->expects($this->atLeastOnce())
+            ->method('dispatch')
+            ->with(
+                $this->equalTo(ContentEvents::NODE_SAVE),
+                $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeEvent')
+            );
+
+        return $this->saveData($data);
+    }
+
+    private function saveData($data, $uuid = null)
+    {
+        $result = array();
+        foreach ($data as $item) {
+            $itemStructure = $this->mapper->save($item['data'], 'overview', 'default', 'de', 1, true, null, $uuid);
+            $itemStructure->setChildren($this->saveData($item['children'], $itemStructure->getUuid()));
+
+            $result[] = $itemStructure;
+        }
+        return $result;
+    }
+
+    public function testLoadTree()
+    {
+        $data = $this->prepareBigTreeTestData();
+        $child = $data[1]->getChildren()[0]->getChildren()[2]->getChildren()[1];
+
+        $result = $this->mapper->loadTreeByPath($child->getPath(), 'de', 'default');
+        $this->checkTreeResult($result);
+
+        $result = $this->mapper->loadTreeByUuid($child->getUuid(), 'de', 'default');
+        $this->checkTreeResult($result);
+    }
+
+    private function checkTreeResult($result)
+    {
+        // layer 0
+        $this->assertEquals(3, sizeof($result));
+
+        // layer 1
+        $layer1 = $result[1]->getChildren();
+        $this->assertEquals(0, sizeof($result[0]->getChildren()));
+        $this->assertEquals('Products', $result[0]->name);
+        $this->assertTrue($result[0]->getHasChildren());
+
+        $this->assertEquals(3, sizeof($result[1]->getChildren()));
+        $this->assertEquals('News', $result[1]->name);
+        $this->assertTrue($result[1]->getHasChildren());
+
+        $this->assertEquals(0, sizeof($result[2]->getChildren()));
+        $this->assertEquals('About Us', $result[2]->name);
+        $this->assertFalse($result[2]->getHasChildren());
+
+        // layer 2
+        $layer2 = $layer1[0]->getChildren();
+        $this->assertEquals(3, sizeof($layer1[0]->getChildren()));
+        $this->assertEquals('News-1', $layer1[0]->name);
+        $this->assertTrue($layer1[0]->getHasChildren());
+
+        $this->assertEquals(0, sizeof($layer1[1]->getChildren()));
+        $this->assertEquals('News-2', $layer1[1]->name);
+        $this->assertFalse($layer1[1]->getHasChildren());
+
+        $this->assertEquals(0, sizeof($layer1[2]->getChildren()));
+        $this->assertEquals('News-3', $layer1[2]->name);
+        $this->assertFalse($layer1[2]->getHasChildren());
+
+        // layer 3
+        $layer3 = $layer2[2]->getChildren();
+        $this->assertEquals(0, sizeof($layer2[0]->getChildren()));
+        $this->assertEquals('SubNews-1', $layer2[0]->name);
+        $this->assertFalse($layer2[0]->getHasChildren());
+
+        $this->assertEquals(0, sizeof($layer2[1]->getChildren()));
+        $this->assertEquals('SubNews-2', $layer2[1]->name);
+        $this->assertFalse($layer2[1]->getHasChildren());
+
+        $this->assertEquals(3, sizeof($layer2[2]->getChildren()));
+        $this->assertEquals('SubNews-3', $layer2[2]->name);
+        $this->assertTrue($layer2[2]->getHasChildren());
+
+        // layer 4
+        $this->assertEquals(0, sizeof($layer3[0]->getChildren()));
+        $this->assertEquals('SubSubNews-1', $layer3[0]->name);
+        $this->assertFalse($layer3[0]->getHasChildren());
+
+        $this->assertEquals(0, sizeof($layer3[1]->getChildren()));
+        $this->assertEquals('SubSubNews-2', $layer3[1]->name);
+        $this->assertFalse($layer3[1]->getHasChildren());
+
+        $this->assertEquals(0, sizeof($layer3[2]->getChildren()));
+        $this->assertEquals('SubSubNews-3', $layer3[2]->name);
+        $this->assertFalse($layer3[2]->getHasChildren());
     }
 }

@@ -101,7 +101,6 @@ class ContentMapper implements ContentMapperInterface
 
     private $properties;
 
-
     public function __construct(
         ContentTypeManager $contentTypeManager,
         StructureManagerInterface $structureManager,
@@ -328,6 +327,7 @@ class ContentMapper implements ContentMapperInterface
         $session->save();
 
         $structure->setUuid($node->getPropertyValue('jcr:uuid'));
+        $structure->setPath(str_replace($this->getContentNode($webspaceKey)->getPath(), '', $node->getPath()));
         $structure->setWebspaceKey($webspaceKey);
         $structure->setLanguageCode($languageCode);
         $structure->setCreator($node->getPropertyValue($this->properties->getName('creator')));
@@ -641,6 +641,130 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
+     * load tree from root to given path
+     * @param string $uuid
+     * @param string $languageCode
+     * @param string $webspaceKey
+     * @param bool $excludeGhost
+     * @param bool $loadGhostContent
+     * @return StructureInterface[]
+     */
+    public function loadTreeByUuid(
+        $uuid,
+        $languageCode,
+        $webspaceKey,
+        $excludeGhost = true,
+        $loadGhostContent = false
+    )
+    {
+        $node = $this->getSession()->getNodeByIdentifier($uuid);
+
+        if ($this->stopwatch) {
+            $this->stopwatch->start('contentManager.loadTreeByUuid');
+        }
+
+        list($result) = $this->loadTreeByNode($node, $languageCode, $webspaceKey, $excludeGhost, $loadGhostContent);
+
+        if ($this->stopwatch) {
+            $this->stopwatch->stop('contentManager.loadTreeByUuid');
+        }
+
+        return $result;
+    }
+
+    /**
+     * load tree from root to given path
+     * @param string $path
+     * @param string $languageCode
+     * @param string $webspaceKey
+     * @param bool $excludeGhost
+     * @param bool $loadGhostContent
+     * @return StructureInterface[]
+     */
+    public function loadTreeByPath(
+        $path,
+        $languageCode,
+        $webspaceKey,
+        $excludeGhost = true,
+        $loadGhostContent = false
+    )
+    {
+        $path = ltrim($path, '/');
+        if ($path === '') {
+            $node = $this->getContentNode($webspaceKey);
+        } else {
+        $node = $this->getContentNode($webspaceKey)->getNode($path);
+        }
+
+        if ($this->stopwatch) {
+            $this->stopwatch->start('contentManager.loadTreeByPath');
+        }
+
+        list($result) = $this->loadTreeByNode($node, $languageCode, $webspaceKey, $excludeGhost, $loadGhostContent);
+
+        if ($this->stopwatch) {
+            $this->stopwatch->stop('contentManager.loadTreeByPath');
+        }
+
+        return $result;
+    }
+
+    /**
+     * returns a tree of nodes with the given endpoint
+     * @param NodeInterface $node
+     * @param string $languageCode
+     * @param string $webspaceKey
+     * @param bool $excludeGhost
+     * @param bool $loadGhostContent
+     * @param NodeInterface $childNode
+     * @return StructureInterface[]
+     */
+    private function loadTreeByNode(
+        NodeInterface $node,
+        $languageCode,
+        $webspaceKey,
+        $excludeGhost = true,
+        $loadGhostContent = false,
+        NodeInterface $childNode = null
+    )
+    {
+        // go up to content node
+        if ($node->getDepth() > $this->getContentNode($webspaceKey)->getDepth()) {
+            list($globalResult, $nodeStructure) = $this->loadTreeByNode(
+                $node->getParent(),
+                $languageCode,
+                $webspaceKey,
+                $excludeGhost,
+                $loadGhostContent,
+                $node
+            );
+        }
+
+        // load children of node
+        $result = array();
+        $childStructure = null;
+        foreach ($node as $child) {
+            $structure = $this->loadByNode($child, $languageCode, $webspaceKey, $excludeGhost, $loadGhostContent);
+            $result[] = $structure;
+            // search structure for child node
+            if ($childNode !== null && $childNode === $child) {
+                $childStructure = $structure;
+            }
+        }
+
+        // set global result once
+        if (!isset($globalResult)) {
+            $globalResult = $result;
+        }
+        // set children of structure
+        if (isset($nodeStructure)) {
+            $nodeStructure->setChildren($result);
+        }
+
+        return array($globalResult, $childStructure);
+    }
+
+    /**
      * returns a sql2 query
      * @param string $sql2 The query, which returns the content
      * @param int $limit Limits the number of returned rows
@@ -708,6 +832,7 @@ class ContentMapper implements ContentMapperInterface
         $structure->setHasTranslation($contentNode->hasProperty($this->properties->getName('template')));
 
         $structure->setUuid($contentNode->getPropertyValue('jcr:uuid'));
+        $structure->setPath(str_replace($this->getContentNode($webspaceKey)->getPath(), '', $contentNode->getPath()));
         $structure->setWebspaceKey($webspaceKey);
         $structure->setLanguageCode($localization);
         $structure->setCreator($contentNode->getPropertyValueWithDefault($this->properties->getName('creator'), 0));
@@ -810,6 +935,7 @@ class ContentMapper implements ContentMapperInterface
             );
             $nodeName = $property->getValue();
             $structure->setUuid($node->getPropertyValue('jcr:uuid'));
+            $structure->setPath(str_replace($this->getContentNode($webspaceKey)->getPath(), '', $node->getPath()));
 
             // throw an content.node.load event (disabled for now)
             //$event = new ContentNodeEvent($node, $structure);

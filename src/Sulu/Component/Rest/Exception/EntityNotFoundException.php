@@ -39,4 +39,22 @@ class EntityNotFoundException extends RestException
         $message = 'Entity with the type "' . $entity . '" and the id "' . $id . '" not found.';
         parent::__construct($message, 0);
     }
+
+    /**
+     * Returns the type of the entity, which was not found
+     * @return string
+     */
+    public function getEntity()
+    {
+        return $this->entity;
+    }
+
+    /**
+     * Returns the id of the entity, which was not found
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 }

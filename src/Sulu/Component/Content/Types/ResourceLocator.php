@@ -10,16 +10,17 @@
 
 namespace Sulu\Component\Content\Types;
 
-
 use PHPCR\NodeInterface;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\ContentTypeInterface;
-use Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\Types\Rlp\Strategy\RLPStrategyInterface;
-use Sulu\Component\PHPCR\SessionFactory\SessionManagerInterface;
 
+/**
+ * Class ResourceLocator
+ * @package Sulu\Component\Content\Types
+ */
 class ResourceLocator extends ComplexContentType implements ResourceLocatorInterface
 {
     /**
@@ -92,6 +93,34 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
         }
 
         return $value;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function loadHistoryByUuid($uuid, $webspaceKey, $languageCode, $segmentKey = null)
+    {
+        return $this->getStrategy()->loadHistoryByContentUuid($uuid, $webspaceKey, $languageCode, $segmentKey);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function deleteByPath($path, $webspaceKey, $languageCode, $segmentKey = null)
+    {
+        $this->getStrategy()->deleteByPath($path, $webspaceKey, $languageCode, $segmentKey);
+    }
+
+    /**
+     * restore given resource locator
+     * @param string $path of resource locator
+     * @param string $webspaceKey key of portal
+     * @param string $languageCode
+     * @param string $segmentKey
+     */
+    public function restoreByPath($path, $webspaceKey, $languageCode, $segmentKey = null)
+    {
+        $this->getStrategy()->restoreByPath($path, $webspaceKey, $languageCode, $segmentKey);
     }
 
     /**

@@ -86,6 +86,16 @@ interface RlpStrategyInterface
     public function loadByContentUuid($uuid, $webspaceKey, $languageCode, $segmentKey = null);
 
     /**
+     * returns history for given contentNode
+     * @param string $uuid uuid of contentNode
+     * @param string $webspaceKey key of portal
+     * @param string $languageCode
+     * @param string $segmentKey
+     * @return mixed
+     */
+    public function loadHistoryByContentUuid($uuid, $webspaceKey, $languageCode, $segmentKey = null);
+
+    /**
      * returns the uuid of referenced content node
      * @param string $resourceLocator requested RL
      * @param string $webspaceKey key of portal
@@ -104,4 +114,22 @@ interface RlpStrategyInterface
      * @return bool
      */
     public function isValid($path, $webspaceKey, $languageCode, $segmentKey = null);
+
+    /**
+     * deletes given resource locator node
+     * @param string $path of resource locator node
+     * @param string $webspaceKey key of portal
+     * @param string $languageCode
+     * @param string $segmentKey
+     */
+    public function deleteByPath($path, $webspaceKey, $languageCode, $segmentKey = null);
+
+    /**
+     * restore given resource locator
+     * @param string $path of resource locator
+     * @param string $webspaceKey key of portal
+     * @param string $languageCode
+     * @param string $segmentKey
+     */
+    public function restoreByPath($path, $webspaceKey, $languageCode, $segmentKey = null);
 }

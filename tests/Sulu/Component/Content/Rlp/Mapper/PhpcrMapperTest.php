@@ -24,6 +24,11 @@ class PhpcrMapperTest extends PhpcrTestCase
     private $content1;
 
     /**
+     * @var NodeInterface
+     */
+    private $content2;
+
+    /**
      * @var RlpMapperInterface
      */
     private $rlpMapper;
@@ -55,6 +60,9 @@ class PhpcrMapperTest extends PhpcrTestCase
 
         $this->content1 = $this->contents->addNode('content1');
         $this->content1->addMixin('mix:referenceable');
+
+        $this->content2 = $this->contents->addNode('content2');
+        $this->content2->addMixin('mix:referenceable');
 
         $this->session->save();
     }
@@ -347,5 +355,197 @@ class PhpcrMapperTest extends PhpcrTestCase
 
         $result = $this->rlpMapper->getParentPath($c4->getIdentifier(), 'default', 'de');
         $this->assertEquals('/news/news-1', $result);
+
+        $result = $this->rlpMapper->getParentPath($c4->getIdentifier(), 'default', 'en');
+        $this->assertNull($result);
+    }
+
+    public function testLoadHistoryByContentUuid()
+    {
+        // create route for content
+        $this->rlpMapper->save($this->content1, '/products/news/content1-news', 'default', 'de');
+        $this->sessionManager->getSession()->save();
+
+        sleep(1);
+
+        // move
+        $this->rlpMapper->move('/products/news/content1-news', '/products/asdf/content2-news', 'default', 'de');
+        $this->sessionManager->getSession()->save();
+
+        sleep(1);
+
+        // move
+        $this->rlpMapper->move('/products/asdf/content2-news', '/products/content2-news', 'default', 'de');
+        $this->sessionManager->getSession()->save();
+
+        sleep(1);
+
+        // move
+        $this->rlpMapper->move('/products/content2-news', '/content2-news', 'default', 'de');
+        $this->sessionManager->getSession()->save();
+
+        sleep(1);
+
+        // move
+        $this->rlpMapper->move('/content2-news', '/best-url-ever', 'default', 'de');
+        $this->sessionManager->getSession()->save();
+
+        $result = $this->rlpMapper->loadHistoryByContentUuid($this->content1->getIdentifier(), 'default', 'de');
+
+        $this->assertEquals(4, sizeof($result));
+        $this->assertEquals('/content2-news', $result[0]->getResourceLocator());
+        $this->assertEquals('/products/content2-news', $result[1]->getResourceLocator());
+        $this->assertEquals('/products/asdf/content2-news', $result[2]->getResourceLocator());
+        $this->assertEquals('/products/news/content1-news', $result[3]->getResourceLocator());
+
+        $this->assertTrue($result[0]->getCreated() > $result[1]->getCreated());
+        $this->assertTrue($result[1]->getCreated() > $result[2]->getCreated());
+        $this->assertTrue($result[2]->getCreated() > $result[3]->getCreated());
+    }
+
+    public function testDeleteByPath()
+    {
+        $session = $this->sessionManager->getSession();
+        $rootNode = $session->getNode('/cmf/default/routes/de');
+
+        // create routes for content
+        $this->rlpMapper->save($this->content1, '/news', 'default', 'de');
+        $this->rlpMapper->save($this->content1, '/news/news-1', 'default', 'de');
+        $this->rlpMapper->save($this->content1, '/news/news-1/sub-1', 'default', 'de');
+        $this->rlpMapper->save($this->content1, '/news/news-1/sub-2', 'default', 'de');
+
+// FIXME  issue: https://github.com/jackalope/jackalope/issues/227
+// FIXME  pr: https://github.com/jackalope/jackalope/pull/228
+//        $this->rlpMapper->save($this->content1, '/news/news-2', 'default', 'de');
+//        $this->rlpMapper->save($this->content1, '/news/news-2/sub-1', 'default', 'de');
+//        $this->rlpMapper->save($this->content1, '/news/news-2/sub-2', 'default', 'de');
+        $session->save();
+
+        // move route
+        $this->rlpMapper->move('/news', '/test', 'default', 'de');
+        $session->save();
+        $session->refresh(false);
+
+        // delete a history url
+        $this->rlpMapper->deleteByPath('/news/news-1/sub-1', 'default', 'de');
+        $this->assertFalse($rootNode->hasNode('news/news-1/sub-1'));
+        $this->assertTrue($rootNode->hasNode('news/news-1/sub-2'));
+        $this->assertTrue($rootNode->hasNode('test/news-1/sub-1'));
+        $this->assertTrue($rootNode->hasNode('test/news-1/sub-2'));
+
+        // delete a normal url
+        $this->rlpMapper->deleteByPath('/test/news-1/sub-2', 'default', 'de');
+        $this->assertFalse($rootNode->hasNode('news/news-1/sub-1'));
+        $this->assertFalse($rootNode->hasNode('news/news-1/sub-2'));
+
+        $this->assertTrue($rootNode->hasNode('news/news-1'));
+        $this->assertTrue($rootNode->hasNode('test/news-1/sub-1'));
+        $this->assertFalse($rootNode->hasNode('test/news-1/sub-2'));
+    }
+
+    public function testTreeDeleteByPath()
+    {
+        $session = $this->sessionManager->getSession();
+        $rootNode = $session->getNode('/cmf/default/routes/de');
+
+        // create routes for content
+        $this->rlpMapper->save($this->content1, '/news', 'default', 'de');
+        $this->rlpMapper->save($this->content1, '/news/news-1', 'default', 'de');
+
+// FIXME  issue: https://github.com/jackalope/jackalope/issues/227
+// FIXME  pr: https://github.com/jackalope/jackalope/pull/228
+//        $this->rlpMapper->save($this->content1, '/news/news-1/sub-1', 'default', 'de');
+//        $this->rlpMapper->save($this->content1, '/news/news-1/sub-2', 'default', 'de');
+//
+//        $this->rlpMapper->save($this->content1, '/news/news-2', 'default', 'de');
+//        $this->rlpMapper->save($this->content1, '/news/news-2/sub-1', 'default', 'de');
+//        $this->rlpMapper->save($this->content1, '/news/news-2/sub-2', 'default', 'de');
+        $session->save();
+
+        // move route
+        $this->rlpMapper->move('/news', '/test', 'default', 'de');
+        $session->save();
+        $session->refresh(false);
+
+        // delete all
+        $this->rlpMapper->deleteByPath('/test', 'default', 'de');
+        $this->assertFalse($rootNode->hasNode('test'));
+        $this->assertFalse($rootNode->hasNode('news'));
+    }
+
+    public function testRestore()
+    {
+        $session = $this->sessionManager->getSession();
+        $rootNode = $session->getNode('/cmf/default/routes/de');
+
+        // create routes for content
+        $this->rlpMapper->save($this->content2, '/news', 'default', 'de');
+        $this->rlpMapper->save($this->content1, '/news/news-1', 'default', 'de');
+
+// FIXME  issue: https://github.com/jackalope/jackalope/issues/227
+// FIXME  pr: https://github.com/jackalope/jackalope/pull/228
+//        $this->rlpMapper->save($this->content1, '/news/news-1/sub-1', 'default', 'de');
+//        $this->rlpMapper->save($this->content1, '/news/news-1/sub-2', 'default', 'de');
+//
+//        $this->rlpMapper->save($this->content1, '/news/news-2', 'default', 'de');
+//        $this->rlpMapper->save($this->content1, '/news/news-2/sub-1', 'default', 'de');
+//        $this->rlpMapper->save($this->content1, '/news/news-2/sub-2', 'default', 'de');
+        $session->save();
+
+        // move route
+        $this->rlpMapper->move('/news', '/asdf', 'default', 'de');
+        $session->save();
+        $session->refresh(false);
+
+        // move route
+        $this->rlpMapper->move('/asdf', '/test', 'default', 'de');
+        $session->save();
+        $session->refresh(false);
+
+        // load history
+        $result = $this->rlpMapper->loadHistoryByContentUuid($this->content2->getIdentifier(), 'default', 'de');
+        $this->assertEquals(2, sizeof($result));
+
+        $news = $rootNode->getNode('news');
+        $news1 = $rootNode->getNode('news/news-1');
+        $test = $rootNode->getNode('test');
+        $test1 = $rootNode->getNode('test/news-1');
+
+        // before
+        $this->assertTrue($news->getPropertyValue('sulu:history'));
+        $this->assertEquals($test, $news->getPropertyValue('sulu:content'));
+
+        $this->assertTrue($news1->getPropertyValue('sulu:history'));
+        $this->assertEquals($test1, $news1->getPropertyValue('sulu:content'));
+
+        $this->assertFalse($test->getPropertyValue('sulu:history'));
+        $this->assertEquals($this->content2, $test->getPropertyValue('sulu:content'));
+
+        $this->assertFalse($test1->getPropertyValue('sulu:history'));
+        $this->assertEquals($this->content1, $test1->getPropertyValue('sulu:content'));
+
+        sleep(1);
+        $this->rlpMapper->restoreByPath('/news', 'default', 'de');
+
+        // after
+        $this->assertFalse($news->getPropertyValue('sulu:history'));
+        $this->assertEquals($this->content2, $news->getPropertyValue('sulu:content'));
+
+        $this->assertTrue($news1->getPropertyValue('sulu:history'));
+        $this->assertEquals($test1, $news1->getPropertyValue('sulu:content'));
+
+        $this->assertTrue($test->getPropertyValue('sulu:history'));
+        $this->assertEquals($news, $test->getPropertyValue('sulu:content'));
+
+        $this->assertFalse($test1->getPropertyValue('sulu:history'));
+        $this->assertEquals($this->content1, $test1->getPropertyValue('sulu:content'));
+
+        // load history
+        $result = $this->rlpMapper->loadHistoryByContentUuid($this->content2->getIdentifier(), 'default', 'de');
+
+        $this->assertEquals(2, sizeof($result));
+        $this->assertEquals('/test', $result[0]->getResourceLocator());
+        $this->assertTrue($result[0]->getCreated() > $result[1]->getCreated());
+        $this->assertEquals('/asdf', $result[1]->getResourceLocator());
     }
 }

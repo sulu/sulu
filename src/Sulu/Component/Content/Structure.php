@@ -80,6 +80,12 @@ abstract class Structure implements StructureInterface
     private $uuid;
 
     /**
+     * absolute path of node
+     * @var string
+     */
+    private $path;
+
+    /**
      * user id of creator
      * @var int
      */
@@ -168,7 +174,7 @@ abstract class Structure implements StructureInterface
      * adds a property to structure
      * @param PropertyInterface $property
      */
-    protected function add(PropertyInterface $property)
+    protected function addChild(PropertyInterface $property)
     {
         foreach ($property->getTags() as $tag) {
             if (!array_key_exists($tag->getName(), $this->tags)) {
@@ -283,6 +289,22 @@ abstract class Structure implements StructureInterface
     public function setUuid($uuid)
     {
         $this->uuid = $uuid;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPath()
+    {
+        return $this->path;
+    }
+
+    /**
+     * @param string $path
+     */
+    public function setPath($path)
+    {
+        $this->path = $path;
     }
 
     /**
@@ -651,6 +673,7 @@ abstract class Structure implements StructureInterface
         if ($complete) {
             $result = array(
                 'id' => $this->uuid,
+                'path' => $this->path,
                 'nodeState' => $this->getNodeState(),
                 'published' => $this->getPublished(),
                 'globalState' => $this->getGlobalState(),
@@ -677,6 +700,7 @@ abstract class Structure implements StructureInterface
         } else {
             $result = array(
                 'id' => $this->uuid,
+                'path' => $this->path,
                 'nodeState' => $this->getNodeState(),
                 'globalState' => $this->getGlobalState(),
                 'publishedState' => $this->getPublishedState(),

@@ -55,7 +55,10 @@ abstract class RestController extends FOSRestController
     protected $fieldTypes = array(
         'created' => 'date',
         'changed' => 'date',
-        'birthday' => 'date'
+        'birthday' => 'date',
+        'title' => 'title',
+        'size' => 'bytes',
+        'thumbnails' => 'thumbnails'
     );
 
     /**
@@ -247,16 +250,28 @@ abstract class RestController extends FOSRestController
      * Special function for lists
      * route /contacts/list
      * @param array $where
+     * @param String $entityName
+     * @param Function $entityFilter function for filtering entities
+     * @param array $joinConditions to specify join conditions
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    protected function responseList($where = array())
+    protected function responseList($where = array(), $entityName = null, $entityFilter = null, $joinConditions = array())
     {
         /** @var ListRestHelper $listHelper */
         $listHelper = $this->get('sulu_core.list_rest_helper');
 
-        $entities = $listHelper->find($this->entityName, $where);
-        $numberOfAll = $listHelper->getTotalNumberOfElements($this->entityName, $where);
+        if (is_null($entityName)) {
+            $entityName = $this->entityName;
+        }
+
+        $entities = $listHelper->find($entityName, $where, $joinConditions);
+        $numberOfAll = $listHelper->getTotalNumberOfElements($entityName, $where, $joinConditions);
         $pages = $listHelper->getTotalPages($numberOfAll);
+
+        // filter entities
+        if (!is_null($entityFilter)) {
+            $entities = array_map($entityFilter, $entities);
+        }
 
         $response = array(
             '_links' => $this->getHalLinks($entities, $pages, true),
@@ -292,7 +307,7 @@ abstract class RestController extends FOSRestController
      * @param bool $returnListLinks
      * @return array
      */
-    private function getHalLinks(array $entities, $pages = 1, $returnListLinks = false)
+    protected function getHalLinks(array $entities, $pages = 1, $returnListLinks = false)
     {
         /** @var ListRestHelper $listHelper */
         $listHelper = $this->get('sulu_core.list_rest_helper');

@@ -34,4 +34,15 @@ class TextEditor extends SimpleContentType
     {
         return $this->template;
     }
+
+    /**
+     * returns default parameters
+     * @return array
+     */
+    public function getDefaultParams()
+    {
+        return array(
+            'godMode' => false
+        );
+    }
 }

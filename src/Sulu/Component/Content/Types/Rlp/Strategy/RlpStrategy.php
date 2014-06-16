@@ -19,7 +19,6 @@ use Sulu\Component\PHPCR\PathCleanupInterface;
  */
 abstract class RlpStrategy implements RlpStrategyInterface
 {
-
     /**
      * @var string name of strategy
      */
@@ -160,6 +159,14 @@ abstract class RlpStrategy implements RlpStrategyInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function loadHistoryByContentUuid($uuid, $webspaceKey, $languageCode, $segmentKey = null)
+    {
+        return $this->mapper->loadHistoryByContentUuid($uuid, $webspaceKey, $languageCode, $segmentKey);
+    }
+
+    /**
      * returns the uuid of referenced content node
      * @param string $resourceLocator requested RL
      * @param string $webspaceKey key of portal
@@ -191,4 +198,29 @@ abstract class RlpStrategy implements RlpStrategyInterface
             $segmentKey
         );
     }
+
+    /**
+     * deletes given resource locator node
+     * @param string $path of resource locator node
+     * @param string $webspaceKey key of portal
+     * @param string $languageCode
+     * @param string $segmentKey
+     */
+    public function deleteByPath($path, $webspaceKey, $languageCode, $segmentKey = null)
+    {
+        $this->mapper->deleteByPath($path, $webspaceKey, $languageCode, $segmentKey);
+    }
+
+    /**
+     * restore given resource locator
+     * @param string $path of resource locator
+     * @param string $webspaceKey key of portal
+     * @param string $languageCode
+     * @param string $segmentKey
+     */
+    public function restoreByPath($path, $webspaceKey, $languageCode, $segmentKey = null)
+    {
+        $this->mapper->restoreByPath($path, $webspaceKey, $languageCode, $segmentKey);
+    }
 }
+
