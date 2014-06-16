@@ -15,9 +15,9 @@ use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Put;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\ContactBundle\Entity\Account;
+use Sulu\Bundle\ContactBundle\Entity\AccountContact;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\Fax;
-use Sulu\Bundle\ContactBundle\Entity\FaxType;
 use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\ContactBundle\Entity\Phone;
 use Sulu\Bundle\ContactBundle\Entity\Address;
@@ -34,7 +34,7 @@ use Symfony\Component\HttpFoundation\Request;
  * Makes contacts available through a REST API
  * @package Sulu\Bundle\ContactBundle\Controller
  */
-class ContactController extends RestController implements ClassResourceInterface
+class ContactController extends AbstractContactController
 {
     /**
      * {@inheritdoc}
@@ -59,44 +59,48 @@ class ContactController extends RestController implements ClassResourceInterface
     /**
      * {@inheritdoc}
      */
-    protected $fieldsExcluded = array();
+    protected $fieldsExcluded = array('gender', 'newsletter');
 
     /**
      * {@inheritdoc}
      */
-    protected $fieldsHidden = array('middleName', 'created', 'changed', 'birthday','salutation','formOfAddress','id', 'title','disabled');
+    protected $fieldsHidden = array('middleName', 'created', 'changed', 'birthday', 'salutation', 'formOfAddress', 'id', 'title', 'disabled');
 
     /**
      * {@inheritdoc}
      */
-    protected $fieldsRelations = array();
+    protected $fieldsRelations = array(
+//        'email',
+        'account',
+    );
 
     /**
      * {@inheritdoc}
      */
-    protected $fieldsSortOrder = array(0 => 'id', 1 => 'title');
+    protected $fieldsSortOrder = array(
+        0 => 'id',
+        1 => 'title',
+        2 => 'firstName',
+        3 => 'lastName',
+        5 => 'account',
+//        4 => 'email',
+//        6 => 'phone',
+    );
 
     /**
      * {@inheritdoc}
      */
     protected $fieldsTranslationKeys = array(
-        'disabled' => 'public.deactivate'
+        'disabled' => 'public.deactivate',
+        'email' => 'public.email',
+        'phone' => 'public.phone',
+        'account' => 'contact.contacts.company',
     );
 
     /**
      * {@inheritdoc}
      */
     protected $bundlePrefix = 'contact.contacts.';
-
-    /**
-     * @var
-     */
-    protected $currentContact = null;
-
-    /**
-     * @var
-     */
-    protected $newPrimaryAddress = null;
 
     /**
      * returns all fields that can be used by list
@@ -116,9 +120,59 @@ class ContactController extends RestController implements ClassResourceInterface
      */
     public function cgetAction(Request $request)
     {
+        $where = array();
+        $joinConditions = array();
+
+        // flat structure
         if ($request->get('flat') == 'true') {
-            // flat structure
-            $view = $this->responseList();
+
+            /** @var ListRestHelper $listHelper */
+            $listHelper = $this->get('sulu_core.list_rest_helper');
+
+            // if fields are set
+            if ($fields = $listHelper->getFields()) {
+                $newFields = array();
+                $where = array();
+
+                foreach ($fields as $field) {
+                    switch ($field) {
+                        case 'email':
+                            $newFields[] = 'emails_email';
+                            $joinConditions['emails'] = 'emails.main = TRUE';
+                            break;
+                        case 'phone':
+                            $newFields[] = 'phones_phone';
+                            $joinConditions['phones'] = 'phones.main = TRUE';
+                            break;
+                        case 'account':
+                            $newFields[] = 'accountContacts_account_name';
+                            $joinConditions['accountContacts'] = 'accountContacts.main = TRUE';
+                            break;
+                        default:
+                            $newFields[] = $field;
+                    }
+                }
+                $request->query->add(array('fields' => implode($newFields, ',')));
+            }
+
+            $filter = function($res) {
+                if (array_key_exists('emails_email', $res)) {
+                    $res['email'] = $res['emails_email'];
+                    unset($res['emails_email']);
+                }
+                if (array_key_exists('phones_phone', $res)) {
+                    $res['phone'] = $res['phones_phone'];
+                    unset($res['phones_phone']);
+                }
+                if (array_key_exists('accountContacts_account_name', $res)) {
+                    $res['account'] = $res['accountContacts_account_name'];
+                    unset($res['accountContacts_account_name']);
+                }
+                return $res;
+            };
+
+            $view = $this->responseList($where, $this->entityName, $filter, $joinConditions);
+
         } else {
             $contacts = $this->getDoctrine()->getRepository($this->entityName)->findAll();
             $view = $this->view($this->createHalResponse($contacts), 200);
@@ -167,13 +221,13 @@ class ContactController extends RestController implements ClassResourceInterface
                 }
             }
 
-//            $urls = $contact->getUrls()->toArray();
-//            /** @var Url $url */
-//            foreach ($urls as $url) {
-//                if ($url->getAccounts()->count() == 0 && $url->getContacts()->count() == 1) {
-//                    $em->remove($url);
-//                }
-//            }
+            $urls = $contact->getUrls()->toArray();
+            /** @var Url $url */
+            foreach ($urls as $url) {
+                if ($url->getAccounts()->count() == 0 && $url->getContacts()->count() == 1) {
+                    $em->remove($url);
+                }
+            }
 
             $faxes = $contact->getFaxes()->toArray();
             /** @var Fax $fax */
@@ -257,60 +311,19 @@ class ContactController extends RestController implements ClassResourceInterface
                 if (!$parent) {
                     throw new EntityNotFoundException('SuluContactBundle:Account', $parentData['id']);
                 }
-                $contact->setAccount($parent);
+                // create new account-contact relation
+                $this->createMainAccountContact($contact, $parent);
+            }
+
+            $birthday = $request->get('birthday');
+            if (!empty($birthday)) {
+                $contact->setBirthday(new DateTime($birthday));
             }
 
             $contact->setCreated(new DateTime());
             $contact->setChanged(new DateTime());
 
-//            $urls = $request->get('urls');
-//            if (!empty($urls)) {
-//                foreach ($urls as $urlData) {
-//                    $this->addUrl($contact, $urlData);
-//                }
-//            }
-
-            $faxes = $request->get('faxes');
-            if (!empty($faxes)) {
-                foreach ($faxes as $faxData) {
-                    $this->addFax($contact, $faxData);
-                }
-            }
-
-            $emails = $request->get('emails');
-            if (!empty($emails)) {
-                foreach ($emails as $emailData) {
-                    $this->addEmail($contact, $emailData);
-                }
-            }
-
-            $phones = $request->get('phones');
-            if (!empty($phones)) {
-                foreach ($phones as $phoneData) {
-                    $this->addPhone($contact, $phoneData);
-                }
-            }
-
-            $addresses = $request->get('addresses');
-            if (!empty($addresses)) {
-                foreach ($addresses as $addressData) {
-                    $this->addAddress($contact, $addressData);
-                }
-            }
-
-            $notes = $request->get('notes');
-            if (!empty($notes)) {
-                foreach ($notes as $noteData) {
-                    $this->addNote($contact, $noteData);
-                }
-            }
-
-            $birthday = $request->get('birthday');
-            if (!empty($birthday)) {
-               $contact->setBirthday(new DateTime($birthday));
-            }
-
-            $contact->setFormOfAddress($formOfAddress['id']);
+            $contact->setFormOfAddress($formOfAddress[ 'id']);
 
             $contact->setDisabled($disabled);
 
@@ -319,13 +332,8 @@ class ContactController extends RestController implements ClassResourceInterface
                 $contact->setSalutation($salutation);
             }
 
-            // handle tags
-            $tags = $request->get('tags');
-            if (!empty($tags)) {
-                foreach ($tags as $tag) {
-                    $this->addTag($contact, $tag);
-                }
-            }
+            // add urls, phones, emails, tags, bankAccounts, notes, addresses,..
+            $this->addNewContactRelations($contact, $request);
 
             // set new primary address
             if($this->newPrimaryAddress && $this->currentContact){
@@ -333,7 +341,6 @@ class ContactController extends RestController implements ClassResourceInterface
             }
 
             $em->persist($contact);
-
             $em->flush();
 
             $view = $this->view($contact, 200);
@@ -344,6 +351,52 @@ class ContactController extends RestController implements ClassResourceInterface
         }
 
         return $this->handleView($view);
+    }
+
+    /**
+     * returns the main account-contact relation or creates a new one
+     * @param Contact $contact
+     * @param Account $account
+     * @return bool
+     */
+    private function getMainAccountContactOrCreateNew(Contact $contact, Account $account)
+    {
+        if (!$accountContact = $this->getMainAccountContact($contact)) {
+            $accountContact = $this->createMainAccountContact($contact, $account);
+        }
+        return $accountContact;
+    }
+
+    /**
+     * returns the main account-contact relation
+     * @param Contact $contact
+     * @return AccountContact|bool
+     */
+    private function getMainAccountContact(Contact $contact)
+    {
+        foreach ($contact->getAccountContacts() as $accountContact) {
+            if ($accountContact->getMain()) {
+                return $accountContact;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * creates a new main Account Contacts relation
+     * @param Contact $contact
+     * @param Account $account
+     * @return AccountContact
+     */
+    private function createMainAccountContact(Contact $contact, Account $account)
+    {
+        $accountContact = new AccountContact();
+        $accountContact->setAccount($account);
+        $accountContact->setContact($contact);
+        $accountContact->setMain(true);
+        $this->getDoctrine()->getManager()->persist($accountContact);
+        $contact->addAccountContact($accountContact);
+        return $accountContact;
     }
 
     /**
@@ -373,7 +426,9 @@ class ContactController extends RestController implements ClassResourceInterface
 
                 $contact->setTitle($request->get('title'));
                 $contact->setPosition($request->get('position'));
+                $contact->setChanged(new DateTime());
 
+                // set account relation
                 $parentData = $request->get('account');
                 if ($parentData != null && $parentData['id'] != null && $parentData['id'] != 'null' && $parentData['id'] != '') {
                     /** @var Account $parent */
@@ -384,32 +439,35 @@ class ContactController extends RestController implements ClassResourceInterface
                     if (!$parent) {
                         throw new EntityNotFoundException('SuluContactBundle:Account', $parentData['id']);
                     }
-                    $contact->setAccount($parent);
+                    $accountContact = $this->getMainAccountContactOrCreateNew($contact, $parent);
+                    if ($accountContact) {
+                        $accountContact->setAccount($parent);
+                    }
                 } else {
-                    $contact->setAccount(null);
+                    if ($accountContact = $this->getMainAccountContact($contact)) {
+                        $em->remove($accountContact);
+                    }
                 }
 
-                $contact->setChanged(new DateTime());
-
                 // process details
-                if (!($this->processEmails($contact, $request)
-                    && $this->processPhones($contact, $request)
-                    && $this->processAddresses($contact, $request)
-                    && $this->processNotes($contact, $request)
-                    && $this->processFaxes($contact, $request)
-                    && $this->processTags($contact, $request)
-                    && $this->processUrls($contact, $request))
+                if (!($this->processEmails($contact, $request->get('emails'))
+                    && $this->processPhones($contact, $request->get('phones'))
+                    && $this->processAddresses($contact, $request->get('addresses'))
+                    && $this->processNotes($contact, $request->get('notes'))
+                    && $this->processFaxes($contact, $request->get('faxes'))
+                    && $this->processTags($contact, $request->get('tags'))
+                    && $this->processUrls($contact, $request->get('urls')))
                 ) {
                     throw new RestException('Updating dependencies is not possible', 0);
                 }
 
                 $formOfAddress = $request->get('formOfAddress');
-                if(!is_null($formOfAddress) && array_key_exists('id', $formOfAddress)){
+                if (!is_null($formOfAddress) && array_key_exists('id', $formOfAddress)) {
                     $contact->setFormOfAddress($formOfAddress['id']);
                 }
 
                 $disabled = $request->get('disabled');
-                if(!is_null($disabled)){
+                if (!is_null($disabled)) {
                     $contact->setDisabled($disabled);
                 }
 
@@ -439,613 +497,5 @@ class ContactController extends RestController implements ClassResourceInterface
         }
 
         return $this->handleView($view);
-    }
-
-    /**
-     * Process all emails from request
-     * @param Contact $contact The contact on which is worked
-     * @param Request $request
-     * @return bool True if the processing was successful, otherwise false
-     */
-    protected function processEmails(Contact $contact, Request $request)
-    {
-        $emails = $request->get('emails');
-
-        $delete = function ($email) use ($contact) {
-            return $contact->removeEmail($email);
-        };
-
-        $update = function ($email, $matchedEntry) {
-            return $this->updateEmail($email, $matchedEntry);
-        };
-
-        $add = function ($email) use ($contact) {
-            return $this->addEmail($contact, $email);
-        };
-
-        return $this->processPut($contact->getEmails(), $emails, $delete, $update, $add);
-    }
-
-    /**
-     * Adds a new email to the given contact and persist it with the given object manager
-     * @param Contact $contact
-     * @param $emailData
-     * @return bool True if there was no error, otherwise false
-     */
-    protected function addEmail(Contact $contact, $emailData)
-    {
-        $success = true;
-        $em = $this->getDoctrine()->getManager();
-
-        $emailType = $this->getDoctrine()
-            ->getRepository('SuluContactBundle:EmailType')
-            ->find($emailData['emailType']['id']);
-
-        if (!$emailType || isset($emailData['id'])) {
-            $success = false;
-        } else {
-            $email = new Email();
-            $email->setEmail($emailData['email']);
-            $email->setEmailType($emailType);
-            $em->persist($email);
-            $contact->addEmail($email);
-        }
-
-        return $success;
-    }
-
-    /**
-     * Updates the given email address
-     * @param Email $email The email object to update
-     * @param array $entry The entry with the new data
-     * @return bool True if successful, otherwise false
-     */
-    protected function updateEmail(Email $email, $entry)
-    {
-        $success = true;
-
-        $emailType = $this->getDoctrine()
-            ->getRepository('SuluContactBundle:EmailType')
-            ->find($entry['emailType']['id']);
-
-        if (!$emailType) {
-            $success = false;
-        } else {
-            $email->setEmail($entry['email']);
-            $email->setEmailType($emailType);
-        }
-
-        return $success;
-    }
-
-    /**
-     * Process all tags of request
-     * @param Contact $contact The contact on which is worked
-     * @param Request $request
-     * @return bool True if the processing was successful, otherwise false
-     */
-    protected function processTags(Contact $contact, Request $request)
-    {
-        $tags = $request->get('tags');
-
-        $delete = function ($tag) use ($contact) {
-            return $contact->removeTag($tag);
-        };
-
-        $update = function () {
-            return true;
-        };
-
-        $add = function ($tag) use ($contact) {
-            return $this->addTag($contact, $tag);
-        };
-
-        return $this->processPut($contact->getTags(), $tags, $delete, $update, $add);
-    }
-
-    /**
-     * Adds a new tag to the given contact and persist it with the given object manager
-     * @param Contact $contact
-     * @param $data
-     * @return bool True if there was no error, otherwise false
-     */
-    protected function addTag(Contact $contact, $data)
-    {
-        $success = true;
-        $tagManager = $this->get('sulu_tag.tag_manager');
-        $resolvedTag = $tagManager->findByName($data);
-        $contact->addTag($resolvedTag);
-
-        return $success;
-    }
-
-    /**
-     * Process all urls of request
-     * @param Contact $contact The contact on which is worked
-     * @param Request $request
-     * @return bool True if the processing was successful, otherwise false
-     */
-    protected function processUrls(Contact $contact, Request $request)
-    {
-        $urls = $request->get('urls');
-
-        $delete = function ($url) use ($contact) {
-            return $contact->removeUrl($url);
-        };
-
-        $update = function ($url, $matchedEntry) {
-            return $this->updateUrl($url, $matchedEntry);
-        };
-
-        $add = function ($url) use ($contact) {
-            return $this->addUrl($contact, $url);
-        };
-
-        return $this->processPut($contact->getUrls(), $urls, $delete, $update, $add);
-    }
-
-    /**
-     * Updates the given url
-     * @param Url $url The phone object to update
-     * @param $entry The entry with the new data
-     * @return bool True if successful, otherwise false
-     */
-    protected function updateUrl(Url $url, $entry)
-    {
-        $success = true;
-
-        $urlType = $this->getDoctrine()
-            ->getRepository('SuluContactBundle:UrlType')
-            ->find($entry['urlType']['id']);
-
-        if (!$urlType) {
-            $success = false;
-        } else {
-            $url->setUrl($entry['url']);
-            $url->setUrlType($urlType);
-        }
-
-        return $success;
-    }
-
-    /**
-     * Adds a new tag to the given contact
-     * @param Contact $contact
-     * @param $data
-     * @return bool True if there was no error, otherwise false
-     */
-    protected function addUrl(Contact $contact, $data)
-    {
-        $success = true;
-        $em = $this->getDoctrine()->getManager();
-
-        $urlType = $this->getDoctrine()
-            ->getRepository('SuluContactBundle:UrlType')
-            ->find($data['urlType']['id']);
-
-        if (!$urlType || isset($data['id'])) {
-            $success = false;
-        } else {
-            $url = new Url();
-            $url->setUrl($data['url']);
-            $url->setUrlType($urlType);
-            $em->persist($url);
-            $contact->addUrl($url);
-        }
-
-        return $success;
-    }
-
-    /**
-     * Process all phones from request
-     * @param Contact $contact The contact on which is worked
-     * @param Request $request
-     * @return bool True if the processing was successful, otherwise false
-     */
-    protected function processPhones(Contact $contact, Request $request)
-    {
-        $phones = $request->get('phones');
-
-        $delete = function ($phone) use ($contact) {
-            return $contact->removePhone($phone);
-        };
-
-        $update = function ($phone, $matchedEntry) {
-            return $this->updatePhone($phone, $matchedEntry);
-        };
-
-        $add = function ($phone) use ($contact) {
-            return $this->addPhone($contact, $phone);
-        };
-
-        return $this->processPut($contact->getPhones(), $phones, $delete, $update, $add);
-    }
-
-    /**
-     * Add a new phone to the given contact and persist it with the given object manager
-     * @param Contact $contact
-     * @param $phoneData
-     * @return bool True if there was no error, otherwise false
-     */
-    protected function addPhone(Contact $contact, $phoneData)
-    {
-        $success = true;
-        $em = $this->getDoctrine()->getManager();
-
-        $phoneType = $this->getDoctrine()
-            ->getRepository('SuluContactBundle:PhoneType')
-            ->find($phoneData['phoneType']['id']);
-
-        if (!$phoneType || isset($phoneData['id'])) {
-            $success = false;
-        } else {
-            $phone = new Phone();
-            $phone->setPhone($phoneData['phone']);
-            $phone->setPhoneType($phoneType);
-            $em->persist($phone);
-            $contact->addPhone($phone);
-        }
-
-        return $success;
-    }
-
-    /**
-     * Updates the given phone
-     * @param Phone $phone The phone object to update
-     * @param $entry The entry with the new data
-     * @return bool True if successful, otherwise false
-     */
-    protected function updatePhone(Phone $phone, $entry)
-    {
-        $success = true;
-
-        $phoneType = $this->getDoctrine()
-            ->getRepository('SuluContactBundle:PhoneType')
-            ->find($entry['phoneType']['id']);
-
-        if (!$phoneType) {
-            $success = false;
-        } else {
-            $phone->setPhone($entry['phone']);
-            $phone->setPhoneType($phoneType);
-        }
-
-        return $success;
-    }
-
-    /**
-     * @param Contact $contact
-     * @param Request $request
-     * @return bool
-     */
-    protected function processFaxes(Contact $contact, Request $request)
-    {
-        $faxes = $request->get('faxes');
-
-        $delete = function ($fax) use ($contact) {
-            $contact->removeFax($fax);
-
-            return true;
-        };
-
-        $update = function ($fax, $matchedEntry) {
-            return $this->updateFax($fax, $matchedEntry);
-        };
-
-        $add = function ($fax) use ($contact) {
-            $this->addFax($contact, $fax);
-
-            return true;
-        };
-
-        return $this->processPut($contact->getFaxes(), $faxes, $delete, $update, $add);
-    }
-
-    /**
-     * @param Contact $contact
-     * @param $faxData
-     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
-     * @throws EntityIdAlreadySetException
-     */
-    private function addFax(Contact $contact, $faxData)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $faxEntity = 'SuluContactBundle:Fax';
-        $faxTypeEntity = 'SuluContactBundle:FaxType';
-
-        $faxType = $this->getDoctrine()
-            ->getRepository($faxTypeEntity)
-            ->find($faxData['faxType']['id']);
-
-        if (isset($faxData['id'])) {
-            throw new EntityIdAlreadySetException($faxEntity, $faxData['id']);
-        } elseif (!$faxType) {
-            throw new EntityNotFoundException($faxTypeEntity, $faxData['faxType']['id']);
-        } else {
-            $fax = new Fax();
-            $fax->setFax($faxData['fax']);
-            $fax->setFaxType($faxType);
-            $em->persist($fax);
-            $contact->addFax($fax);
-        }
-    }
-
-    /**
-     * @param Fax $fax
-     * @param $entry
-     * @return bool
-     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
-     */
-    protected function updateFax(Fax $fax, $entry)
-    {
-        $success = true;
-        $faxTypeEntity = 'SuluContactBundle:FaxType';
-
-        $faxType = $this->getDoctrine()
-            ->getRepository($faxTypeEntity)
-            ->find($entry['faxType']['id']);
-
-        if (!$faxType) {
-            throw new EntityNotFoundException($faxTypeEntity, $entry['faxType']['id']);
-        } else {
-            $fax->setFax($entry['fax']);
-            $fax->setFaxType($faxType);
-        }
-
-        return $success;
-    }
-
-    /**
-     * Process all addresses from request
-     * @param Contact $contact The contact on which is worked
-     * @param Request $request
-     * @return bool True if the processing was sucessful, otherwise false
-     */
-    protected function processAddresses(Contact $contact, Request $request)
-    {
-        $addresses = $request->get('addresses');
-
-        $delete = function ($address) use ($contact) {
-            return $contact->removeAddresse($address);
-        };
-
-        $update = function ($address, $matchedEntry) use ($contact) {
-            return $this->updateAddress($contact, $address, $matchedEntry);
-        };
-
-        $add = function ($address) use ($contact) {
-            return $this->addAddress($contact, $address);
-        };
-
-        return $this->processPut($contact->getAddresses(), $addresses, $delete, $update, $add);
-    }
-
-    /**
-     * Add a new address to the given contact and persist it with the given object manager
-     * @param Contact $contact
-     * @param $addressData
-     * @return bool True if there was no error, otherwise false
-     */
-    protected function addAddress(Contact $contact, $addressData)
-    {
-        $success = true;
-        $em = $this->getDoctrine()->getManager();
-
-        $addressType = $this->getDoctrine()
-            ->getRepository('SuluContactBundle:AddressType')
-            ->find($addressData['addressType']['id']);
-
-        $country = $this->getDoctrine()
-            ->getRepository('SuluContactBundle:Country')
-            ->find($addressData['country']['id']);
-
-        if (!$addressType || !$country) {
-            $success = false;
-        } else {
-            $address = new Address();
-            $address->setStreet($addressData['street']);
-            $address->setNumber($addressData['number']);
-            $address->setZip($addressData['zip']);
-            $address->setCity($addressData['city']);
-            $address->setState($addressData['state']);
-            $address->setCountry($country);
-            $address->setAddressType($addressType);
-
-            if (isset($addressData['primaryAddress'])) {
-                $value = $this->getBooleanValue($addressData['primaryAddress']);
-                $this->handlePrimaryAddress($contact, $address, $value);
-            }
-            if (isset($addressData['billingAddress'])) {
-                $address->setBillingAddress($this->getBooleanValue($addressData['billingAddress']));
-            }
-            if (isset($addressData['deliveryAddress'])) {
-                $address->setDeliveryAddress($this->getBooleanValue($addressData['deliveryAddress']));
-            }
-            if (isset($addressData['postboxCity'])) {
-                $address->setPostboxCity($addressData['postboxCity']);
-            }
-            if (isset($addressData['postboxNumber'])) {
-                $address->setPostboxNumber($addressData['postboxNumber']);
-            }
-            if (isset($addressData['postboxPostcode'])) {
-                $address->setPostboxPostcode($addressData['postboxPostcode']);
-            }
-
-            // add additional fields
-            if (isset($addressData['addition'])) {
-                $address->setAddition($addressData['addition']);
-            }
-
-            $em->persist($address);
-            $contact->addAddresse($address);
-        }
-
-        return $success;
-    }
-
-    /**
-     * Updates the given address
-     * @param Contact $contact
-     * @param Address $address The phone object to update
-     * @param array $entry The entry with the new data
-     * @return bool True if successful, otherwise false
-     */
-    protected function updateAddress(Contact $contact, Address $address, $entry)
-    {
-        $success = true;
-
-        $addressType = $this->getDoctrine()
-            ->getRepository('SuluContactBundle:AddressType')
-            ->find($entry['addressType']['id']);
-
-        $country = $this->getDoctrine()
-            ->getRepository('SuluContactBundle:Country')
-            ->find($entry['country']['id']);
-
-        if (!$addressType || !$country) {
-            $success = false;
-        } else {
-            $address->setStreet($entry['street']);
-            $address->setNumber($entry['number']);
-            $address->setZip($entry['zip']);
-            $address->setCity($entry['city']);
-            $address->setState($entry['state']);
-            $address->setCountry($country);
-            $address->setAddressType($addressType);
-
-            if (isset($entry['primaryAddress'])) {
-                $value = $this->getBooleanValue($entry['primaryAddress']);
-                $this->handlePrimaryAddress($contact, $address, $value);
-            }
-            if (isset($entry['billingAddress'])) {
-                $address->setBillingAddress($this->getBooleanValue($entry['billingAddress']));
-            }
-            if (isset($entry['deliveryAddress'])) {
-                $address->setDeliveryAddress($this->getBooleanValue($entry['deliveryAddress']));
-            }
-            if (isset($entry['postboxCity'])) {
-                $address->setPostboxCity($entry['postboxCity']);
-            }
-            if (isset($entry['postboxNumber'])) {
-                $address->setPostboxNumber($entry['postboxNumber']);
-            }
-            if (isset($entry['postboxPostcode'])) {
-                $address->setPostboxPostcode($entry['postboxPostcode']);
-            }
-
-            if (isset($entry['addition'])) {
-                $address->setAddition($entry['addition']);
-            }
-        }
-
-        return $success;
-    }
-
-    /**
-     * Handles the primary flag of addresses
-     * @param Contact $contact
-     * @param Address $address
-     * @param $value
-     */
-    protected function handlePrimaryAddress(Contact $contact, Address $address, $value){
-        if($value && !$address->getPrimaryAddress() && !$this->newPrimaryAddress) {
-            $this->currentContact = $contact;
-            $this->newPrimaryAddress = $address;
-        } else if(!$value) {
-            $address->setPrimaryAddress($value);
-        }
-    }
-
-    /**
-     * Sets primary address flag of all addresses of a contact to false and sets new primary
-     * @param $contact
-     * @param $address
-     */
-    protected function setNewPrimaryAddress(Contact $contact, Address $address)
-    {
-        if ($contact && $address) {
-
-            $addresses = $contact->getAddresses();
-            /** @var Address $address */
-            foreach ($addresses as $addr) {
-                $addr->setPrimaryAddress(false);
-            }
-            $address->setPrimaryAddress(true);
-        }
-    }
-
-    /**
-     * Checks if a value is a boolean and converts it if necessary and returns it
-     * @param $value
-     * @return bool
-     */
-    protected function getBooleanValue($value){
-        if(is_string($value)){
-            return $value === 'true' ? true : false;
-        } else if(is_bool($value)){
-            return $value;
-        } else if(is_numeric($value)){
-            return $value === 1 ? true : false;
-        }
-    }
-
-    /**
-     * Process all notes from request
-     * @param Contact $contact The contact on which is worked
-     * @param Request $request
-     * @return bool True if the processing was successful, otherwise false
-     */
-    protected function processNotes(Contact $contact, Request $request)
-    {
-        $notes = $request->get('notes');
-
-        $delete = function ($note) use ($contact) {
-            return $contact->removeNote($note);
-        };
-
-        $update = function ($note, $matchedEntry) {
-            return $this->updateNote($note, $matchedEntry);
-        };
-
-        $add = function ($note) use ($contact) {
-            return $this->addNote($contact, $note);
-        };
-
-        return $this->processPut($contact->getNotes(), $notes, $delete, $update, $add);
-    }
-
-    /**
-     * Add a new note to the given contact and persist it with the given object manager
-     * @param Contact $contact
-     * @param $noteData
-     * @return bool True if there was no error, otherwise false
-     */
-    protected function addNote(Contact $contact, $noteData)
-    {
-        $success = true;
-        $em = $this->getDoctrine()->getManager();
-
-        $note = new Note();
-        $note->setValue($noteData['value']);
-
-        $em->persist($note);
-        $contact->addNote($note);
-
-        return $success;
-    }
-
-    /**
-     * Updates the given note
-     * @param Note $note
-     * @param array $entry The entry with the new data
-     * @return bool True if successful, otherwise false
-     */
-    protected function updateNote(Note $note, $entry)
-    {
-        $success = true;
-
-        $note->setValue($entry['value']);
-
-        return $success;
     }
 }

@@ -29,6 +29,11 @@ class Phone
     private $id;
 
     /**
+     * @var boolean
+     */
+    private $main;
+
+    /**
      * @var \Sulu\Bundle\ContactBundle\Entity\PhoneType
      */
     private $phoneType;
@@ -174,5 +179,28 @@ class Phone
     public function getAccounts()
     {
         return $this->accounts;
+    }
+
+    /**
+     * Set main
+     *
+     * @param boolean $main
+     * @return Phone
+     */
+    public function setMain($main)
+    {
+        $this->main = $main;
+    
+        return $this;
+    }
+
+    /**
+     * Get main
+     *
+     * @return boolean 
+     */
+    public function getMain()
+    {
+        return $this->main;
     }
 }
