@@ -36,7 +36,8 @@ define([
             addressRowTemplateSelector: '[data-mapper-property-tpl="address-tpl"]',
             bankAccountRowTemplateSelector: '[data-mapper-property-tpl="bank-account-tpl"]',
             addressComponentSelector: '.address-component',
-            bankAccountComponentSelector: '.bank-account-component'
+            bankAccountComponentSelector: '.bank-account-component',
+            addressTypeSelector: '#addressType'
         },
 
         templates = {
@@ -126,7 +127,9 @@ define([
             this.sandbox.on('sulu.contact-form.add-required', addRequires.bind(this));
             this.sandbox.on('sulu.contact-form.is.initialized', isInitialized.bind(this));
 
+            this.sandbox.off('husky.overlay.add-address.initialized');
             this.sandbox.on('husky.overlay.add-address.initialized', initializeDropdownForAddressTypes.bind(this));
+
             this.sandbox.on(CONTENT_SET.call(this), cropAllLabels.bind(this));
 
             this.sandbox.on('husky.overlay.add-address.opened', function() {
@@ -184,7 +187,7 @@ define([
                 {
                     name: 'select@husky',
                     options: {
-                        el: '#addressType',
+                        el: constants.addressTypeSelector,
                         defaultLabel: this.sandbox.translate('contact.address.type.select'),
                         instanceName: 'addressTypes',
                         data: this.options.fieldTypes.address,
