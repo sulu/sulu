@@ -27,6 +27,24 @@
                 </div>
             </div>
 
+            <div class="grid-row small">
+                <div class="grid-col-12">
+                    <div class="form-group">
+                        <label for="termsOfDelivery"><%=translate('contact.termsOfDelivery')%></label>
+                        <div id="termsOfDelivery" data-type-label="terms" data-mapper-property="termsOfDelivery" data-type="husky-select" data-form="true"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid-row small">
+                <div class="grid-col-12">
+                    <div class="form-group">
+                        <label for="termsOfPayment"><%=translate('contact.termsOfPayment')%></label>
+                        <div id="termsOfPayment" data-type-label="terms" data-mapper-property="termsOfPayment" data-type="husky-select" data-form="true"></div>
+                    </div>
+                </div>
+            </div>
+
             <h2 class="divider"><%=translate('contact.accounts.bank-accounts')%></h2>
 
             <div class="grid-row small" id="bankAccounts" data-type="collection" data-mapper-property='[{"data":"bankAccounts","tpl":"bank-account-tpl","empty-tpl":"bank-account-empty-tpl"}]'>
