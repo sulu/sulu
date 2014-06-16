@@ -11,6 +11,8 @@
 namespace Sulu\Component\Content;
 
 use DateTime;
+use Sulu\Component\Content\Section\SectionProperty;
+use Sulu\Component\Content\Section\SectionPropertyInterface;
 use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
 
 /**
@@ -691,10 +693,7 @@ abstract class Structure implements StructureInterface
                 $result['type'] = $this->getType()->toArray();
             }
 
-            /** @var PropertyInterface $property */
-            foreach ($this->getProperties() as $property) {
-                $result[$property->getName()] = $property->getValue();
-            }
+            $this->appendProperties($this->getProperties(), $result);
 
             return $result;
         } else {
@@ -712,6 +711,18 @@ abstract class Structure implements StructureInterface
                 $result['type'] = $this->getType()->toArray();
             }
             return $result;
+        }
+    }
+
+    private function appendProperties($properties, &$array)
+    {
+        /** @var PropertyInterface $property */
+        foreach ($properties as $property) {
+            if ($property instanceof SectionPropertyInterface) {
+                $this->appendProperties($property->getChildProperties(), $array);
+            } else {
+                $array[$property->getName()] = $property->getValue();
+            }
         }
     }
 

@@ -62,7 +62,7 @@ class ContentMapperTest extends PhpcrTestCase
     {
         $structureMock = $this->getMockForAbstractClass(
             '\Sulu\Component\Content\Structure',
-            array('overview', 'asdf', 'asdf', 2400)
+            array($type !== 5 ? 'overview' : 'section', 'asdf', 'asdf', 2400)
         );
 
         $method = new ReflectionMethod(
@@ -2107,11 +2107,27 @@ class ContentMapperTest extends PhpcrTestCase
     public function testSection()
     {
         $data = array(
-            'title' =>'Test',
-            'url' => '/test',
+            'name' => 'Test',
+            'url' => '/test/test',
             'blog' => 'Thats a good test'
         );
 
-        $resultSave = $this->mapper->save($data, 'section', 'default', 'en', 1);
+        $structure = $this->mapper->save($data, 'section', 'default', 'en', 1);
+        $resultSave = $structure->toArray();
+
+        $this->assertEquals('/test', $resultSave['path']);
+        $this->assertEquals('section', $resultSave['template']);
+        $this->assertEquals('Test', $resultSave['name']);
+        $this->assertEquals('Thats a good test', $resultSave['blog']);
+        $this->assertEquals('/test/test', $resultSave['url']);
+
+        $structure = $this->mapper->load($structure->getUuid(), 'default', 'en');
+        $resultLoad = $structure->toArray();
+
+        $this->assertEquals('/test', $resultLoad['path']);
+        $this->assertEquals('section', $resultLoad['template']);
+        $this->assertEquals('Test', $resultLoad['name']);
+        $this->assertEquals('Thats a good test', $resultLoad['blog']);
+        $this->assertEquals('/test/test', $resultLoad['url']);
     }
 }
