@@ -1,5 +1,3 @@
-@import "variables.scss";
-
-@import "modules/collections";
-@import "modules/collection";
-@import "modules/media-selection";
+@import "modules/collection-list",
+        "modules/collection",
+        "modules/media-selection";

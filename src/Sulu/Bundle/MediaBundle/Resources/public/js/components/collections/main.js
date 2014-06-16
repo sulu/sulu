@@ -88,7 +88,8 @@ define([
             /**
              * listens on saves a given media
              * @event sulu.media.collections.save-media
-             * @param media {Object} a media object with at least an id property
+             * @param media {Object|Array} a media object with at least an id property. Can be an array of media objects
+             * @param callback {Function} a callback-method to execute after all media got saved
              */
             SAVE_MEDIA = function() {
                 return createEventName.call(this, 'save-media');
@@ -98,6 +99,7 @@ define([
              * listens on saves a given collection
              * @event sulu.media.collections.save-collection
              * @param collection {Object} a collection object with at least an id property
+             * @param callback {Function} callback to call after collection has been saved
              */
             SAVE_COLLECTION = function() {
                 return createEventName.call(this, 'save-collection');
@@ -236,14 +238,16 @@ define([
             /**
              * Saves data for an existing collection
              * @param data {Object} object with the data to update
+             * @param callback {Function} callback to call if collection has been saved
              */
-            saveCollection: function(data) {
+            saveCollection: function(data, callback) {
                 var collection = this.getCollectionModel(data.id);
                 collection.set(data);
 
                 collection.save(null, {
                     success: function(collection) {
                         this.sandbox.emit(COLLECTION_CHANGED.call(this), collection.toJSON());
+                        callback(collection.toJSON());
                     }.bind(this),
                     error: function() {
                         this.sandbox.logger.log('Error while saving collection');
@@ -314,15 +318,31 @@ define([
             },
 
             /**
-             * Takes the id of a media, loads the model and forwards it to
-             * another component
-             * @param id {Number|String} the id of the media
+             * Edit media. A single one or more at once
+             * @param data {Number|String|Array} the id of the media or an array of ids
              */
-            editMedia: function(id) {
+            editMedia: function(data) {
+                if (this.sandbox.dom.isArray(data)) {
+                    if (data.length === 1) {
+                        this.editSingleMedia(data[0]);
+                    } else {
+                        this.editMultipleMedia(data);
+                    }
+                } else {
+                    this.editSingleMedia(data);
+                }
+            },
+
+            /**
+             * Edits a single media - Takes the id of a media, loads the model and forwards it to
+             * another component
+             * @param record {Number|String} id of the media to edit
+             */
+            editSingleMedia: function(record) {
                 var media;
                 // if media exists there is no need to fetch the media again - the local one is up to date
-                if (!this.medias.get(id)) {
-                    media = this.getMediaModel(id);
+                if (!this.medias.get(record)) {
+                    media = this.getMediaModel(record);
                     media.fetch({
                         success: function(media) {
                             // forward media to media-edit component
@@ -333,27 +353,73 @@ define([
                         }.bind(this)
                     });
                 } else {
-                    media = this.getMediaModel(id);
+                    media = this.getMediaModel(record);
                     this.sandbox.emit('sulu.media-edit.edit', media.toJSON());
                 }
             },
 
             /**
-             * Takes a media and saves it
-             * @param media {Object} the media object
+             * Edits a multiple - Loads all the media and forwards it to another component
+             * @param records {Array} array with ids of the media to edit
              */
-            saveMedia: function(media) {
-                var model = this.getMediaModel(media.id);
-                model.set(media);
+            editMultipleMedia: function(records) {
+                var mediaList = [],
+                    media,
+                    action = function() {
+                        if (mediaList.length === records.length) {
+                            this.sandbox.emit('sulu.media-edit.edit', mediaList);
+                        }
+                    }.bind(this);
 
-                model.save(null, {
-                    success: function(media) {
-                        this.sandbox.emit(MEDIA_SAVED.call(this), media);
-                    }.bind(this),
-                    error: function() {
-                        this.sandbox.logger.log('Error while saving a single media');
-                    }.bind(this)
-                });
+                // loop through ids - if model is already loaded take it else load it
+                this.sandbox.util.foreach(records, function(mediaId) {
+                    if (!this.medias.get(mediaId)) {
+                        media = this.getMediaModel(mediaId);
+                        media.fetch({
+                            success: function(media) {
+                                mediaList.push(media.toJSON());
+                                action();
+                            }.bind(this),
+                            error: function() {
+                                this.sandbox.logger.log('Error while fetching a single media');
+                            }.bind(this)
+                        });
+                    } else {
+                        mediaList.push(this.getMediaModel(mediaId).toJSON());
+                        action();
+                    }
+                }.bind(this));
+            },
+
+            /**
+             * Takes a media or an array of media and saves it/them
+             * @param media {Object|Array} the media object or an array of media objects
+             * @param callback {Function} callback to execute after all media got saved
+             */
+            saveMedia: function(media, callback) {
+                var model, length = 0;
+
+                // if passed argument is a single media object make an array with it
+                if (!this.sandbox.dom.isArray(media)) {
+                    media = [media];
+                }
+
+                this.sandbox.util.foreach(media, function(mediaEntity) {
+                    model = this.getMediaModel(mediaEntity.id);
+                    model.set(mediaEntity);
+
+                    model.save(null, {
+                        success: function(savedMedia) {
+                            this.sandbox.emit(MEDIA_SAVED.call(this), savedMedia.toJSON());
+                            if (++length === media.length) {
+                                callback(savedMedia.toJSON());
+                            }
+                        }.bind(this),
+                        error: function() {
+                            this.sandbox.logger.log('Error while saving a single media');
+                        }.bind(this)
+                    });
+                }.bind(this));
             },
 
             /**
