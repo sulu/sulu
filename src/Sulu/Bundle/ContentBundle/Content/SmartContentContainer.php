@@ -71,6 +71,7 @@ class SmartContentContainer implements \Serializable
      * @param TagManagerInterface $tagManager
      * @param string $webspaceKey
      * @param string $languageCode
+     * @param string $segmentKey
      * @param bool $preview
      */
     public function __construct(
@@ -120,17 +121,32 @@ class SmartContentContainer implements \Serializable
                 $config['tags'] = $this->tagManager->resolveTagNames($config['tags']);
             }
 
-            $this->data = $this->nodeRepository->getFilteredNodes(
-                $config,
-                $this->languageCode,
-                $this->webspaceKey,
-                $this->preview
-            );
+            $this->data = $this->loadData($config);
         }
 
         return $this->data;
     }
 
+    /**
+     * lazy load data
+     */
+    private function loadData($config)
+    {
+        if ($config['dataSource'] !== '') {
+            return $this->nodeRepository->getFilteredNodes(
+                $config,
+                $this->languageCode,
+                $this->webspaceKey,
+                $this->preview
+            );
+        } else {
+            return array();
+        }
+    }
+
+    /**
+     * magic getter
+     */
     public function __get($name)
     {
         switch ($name) {
@@ -139,8 +155,12 @@ class SmartContentContainer implements \Serializable
             case 'config':
                 return $this->getConfig();
         }
+        return null;
     }
 
+    /**
+     * magic isset
+     */
     public function __isset($name)
     {
         return ($name == 'data' || $name == 'config');
