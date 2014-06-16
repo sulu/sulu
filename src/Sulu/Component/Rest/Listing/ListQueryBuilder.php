@@ -98,6 +98,18 @@ class ListQueryBuilder
     private $searchNumberFields;
 
     /**
+     * used as a storage for saving relational fields
+     * @var $relationalFilters
+     */
+    private $relationalFilters = array();
+
+    /**
+     * contains all join conditions
+     * @var $relationalFilters
+     */
+    private $joinConditions = array();
+
+    /**
      * @param $associationNames
      * @param $fieldNames
      * @param $entityName
@@ -106,6 +118,7 @@ class ListQueryBuilder
      * @param $where
      * @param array $searchTextFields
      * @param array $searchNumberFields
+     * @param array $joinConditions - specify a custom join condition
      */
     function __construct(
         $associationNames,
@@ -115,7 +128,8 @@ class ListQueryBuilder
         $sorting,
         $where,
         $searchTextFields = array(),
-        $searchNumberFields = array()
+        $searchNumberFields = array(),
+        $joinConditions = array()
     )
     {
         $this->associationNames = $associationNames;
@@ -127,6 +141,7 @@ class ListQueryBuilder
         $this->searchFields = array_merge($searchTextFields, $searchNumberFields);
         $this->searchTextFields = $searchTextFields;
         $this->searchNumberFields = $searchNumberFields;
+        $this->joinConditions = $joinConditions;
     }
 
     /**
@@ -207,11 +222,18 @@ class ListQueryBuilder
         // Relation name and field delimited by underscore
         $fieldParts = explode('_', $field);
 
+        // temporary variable for saving field name (needed for array results like [0])
+        $realFieldName = $field;
+        // check if a certain field number is searched
+        if (preg_match('/^(.*)\[(\d+)\]$/', $fieldParts[0], $regresult)) {
+            $fieldParts[0] = $regresult[1];
+            $realFieldName = implode('_', $fieldParts);
+            $this->relationalFilters[$realFieldName] = $regresult[2];
+        }
+
         // If field is delimited and is a Relation
         if (sizeof($fieldParts) >= 2 && $this->isRelation($fieldParts[0])) {
             $this->joins .= $this->generateJoins($fieldParts, $prefix);
-
-
             if (in_array($field, $this->fields)) {
                 // last element is column name and next-to-last is the associationPrefix
                 $i = sizeof($fieldParts) - 1;
@@ -219,7 +241,7 @@ class ListQueryBuilder
                 // {associationPrefix}.{columnName} {alias}
                 $parent = $fieldParts[$i - 1];
                 $tempField = $fieldParts[$i];
-                $alias = $field;
+                $alias = $realFieldName;
 
                 $this->addToSelect($parent, $tempField, $alias);
             }
@@ -293,11 +315,28 @@ class ListQueryBuilder
      */
     private function generateJoin($parent, $field, $alias)
     {
-        // JOIN {parent}.{associationName} {associationPrefix}
+        // JOIN {parent}.{associationName} {associationPrefix} [ ON {joinCondition}]
         $format = '
-                LEFT JOIN %s.%s %s';
+                LEFT JOIN %s.%s %s %s';
 
-        return sprintf($format, $parent, $field, $alias);
+        return sprintf($format, $parent, $field, $alias, $this->generateJoinCondition($field));
+    }
+
+    /**
+     * generates the join condition
+     * @param $field
+     * @return string
+     */
+    private function generateJoinCondition($field)
+    {
+        if (!array_key_exists($field, $this->joinConditions)) {
+            return '';
+        }
+
+        // ON {joinConditino}
+        $format = ' WITH %s';
+
+        return sprintf($format, $this->joinConditions[$field]);
     }
 
     /**
@@ -402,5 +441,13 @@ class ListQueryBuilder
         }
 
         return $result;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRelationalFilters()
+    {
+        return $this->relationalFilters;
     }
 }
