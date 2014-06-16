@@ -137,10 +137,16 @@ define(['sulumedia/collection/collections'], function(Collections) {
             }
         },
 
+        /**
+         * returns id for given type
+         */
         getId = function(type) {
             return '#' + this.options.ids[type];
         },
 
+        /**
+         * render component
+         */
         render = function() {
             // init collection
             this.collections = new Collections();
@@ -203,6 +209,9 @@ define(['sulumedia/collection/collections'], function(Collections) {
             this.sandbox.dom.html(this.$content, templates.noContent(noMedia));
         },
 
+        /**
+         * custom event handling
+         */
         bindCustomEvents = function() {
             this.sandbox.on('husky.tabs.overlaymedia-selection.' + this.options.instanceName + '.add.initialized', function() {
                 this.collections.fetch({
@@ -306,7 +315,7 @@ define(['sulumedia/collection/collections'], function(Collections) {
         },
 
         /**
-         * Starts the overlay component
+         * starts the overlay component
          */
         startAddOverlay = function() {
             var chooseTabData = templates.addTab(this.options, this.sandbox.translate(this.options.translations.collections));
@@ -342,6 +351,9 @@ define(['sulumedia/collection/collections'], function(Collections) {
             ]);
         },
 
+        /**
+         * extract data from overlay
+         */
         getAddOverlayData = function() {
             var idsDef = this.sandbox.data.deferred();
 
@@ -385,6 +397,9 @@ define(['sulumedia/collection/collections'], function(Collections) {
             }
         },
 
+        /**
+         * load content from generated uri
+         */
         loadContent = function() {
             //only request if URI has changed
             if (this.URI.hasChanged === true) {
