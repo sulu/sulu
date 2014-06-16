@@ -3,20 +3,21 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
-    <entity name="Sulu\Bundle\CategoryBundle\Entity\Name" table="ca_names">
+    <entity name="Sulu\Bundle\CategoryBundle\Entity\CategoryMeta" table="ca_metas">
 
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
         </id>
 
-        <many-to-one field="category" target-entity="Sulu\Bundle\CategoryBundle\Entity\Category" inversed-by="name">
+        <many-to-one field="category" target-entity="Sulu\Bundle\CategoryBundle\Entity\Category" inversed-by="meta">
             <join-columns>
                 <join-column name="idCategories" referenced-column-name="id" nullable="false" on-delete="CASCADE"/>
             </join-columns>
         </many-to-one>
 
-        <field name="name" column="name" type="string" length="45"/>
-        <field name="locale" column="locale" type="string" length="5"/>
+        <field name="key" column="key" type="string" length="45"/>
+        <field name="value" column="value" type="string" length="255"/>
+        <field name="locale" column="locale" type="string" length="5" nullable="true"/>
 
     </entity>
 </doctrine-mapping>

@@ -8,30 +8,62 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\CategoryBundle\Tests\Functional\Controller;
+namespace Sulu\Bundle\TagBundle\Tests\Functional\Controller;
 
 use Doctrine\ORM\Tools\SchemaTool;
+use Sulu\Bundle\CategoryBundle\Entity\Category;
+use Sulu\Bundle\CategoryBundle\Entity\Meta;
+use Sulu\Bundle\CategoryBundle\Entity\Name;
 use Sulu\Bundle\TestBundle\Testing\DatabaseTestCase;
 
 class CategoryControllerTest extends DatabaseTestCase
 {
+    /**
+     * @var array
+     */
+    protected static $entities;
+
     public function setUp()
     {
+        $this->setUpSchema();
 
+        $category = new Category();
+        $category->setName('Category 1');
+        $category->setCreated(new \DateTime());
+        $category->setChanged(new \DateTime());
+        self::$em->persist($category);
+
+        $category = new Category();
+        $category->setCreated(new \DateTime());
+        $category->setChanged(new \DateTime());
+        self::$em->persist($category);
+
+        self::$em->flush();
     }
 
-    private function createTestClient()
+    public function setUpSchema()
     {
-        return $this->createClient(
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test',
-            )
+        self::$tool = new SchemaTool(self::$em);
+
+        self::$entities = array(
+            self::$em->getClassMetadata('Sulu\Bundle\CategoryBundle\Entity\Category'),
+            self::$em->getClassMetadata('Sulu\Bundle\CategoryBundle\Entity\Meta'),
+            self::$em->getClassMetadata('Sulu\Bundle\CategoryBundle\Entity\Name'),
+            self::$em->getClassMetadata('Sulu\Bundle\TestBundle\Entity\TestUser')
         );
+
+        self::$tool->dropSchema(self::$entities);
+        self::$tool->createSchema(self::$entities);
     }
 
-    public function testGet() {
+    public function tearDown()
+    {
+        parent::tearDown();
+        self::$tool->dropSchema(self::$entities);
+    }
+
+    public function testGetById()
+    {
         $this->assertEquals(true, true);
     }
 }
