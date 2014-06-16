@@ -39,4 +39,22 @@ class EntityIdAlreadySetException extends RestException
         $message = 'The id-field of the  "' . $entity . '"-Entity already has an id with the value "' . $id . '" .';
         parent::__construct($message, 0);
     }
+
+    /**
+     * Returns the type of the entity, for which the id was already set
+     * @return string
+     */
+    public function getEntity()
+    {
+        return $this->entity;
+    }
+
+    /**
+     * Returns the id of the entity, for which the id was already set
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 }
