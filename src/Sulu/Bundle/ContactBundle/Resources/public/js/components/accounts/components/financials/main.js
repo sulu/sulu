@@ -11,16 +11,29 @@ define([], function() {
 
     'use strict';
 
-    var defaults = {
+    var form = '#bank-account-form',
+
+        defaults = {
             headline: 'contact.accounts.title'
         },
         constants = {
-            addBankAccountButtonId: '#add-bank-account'
+            bankAccountsId: '#bankAccounts',
+            bankAccountAddId: '#bank-account-add',
+            addBankAccountsWrapper: '.grid-row'
         },
 
-        addBankAccount = function() {
-            this.sandbox.form.addToCollection(this.form, 'bankAccounts', {});
+        customTemplates = {
+            addBankAccountsIcon: [
+                '<div class="grid-row">',
+                '    <div class="grid-col-12">',
+                '       <span id="bank-account-add" class="fa-plus-circle icon bank-account-add clickable pointer m-left-140"></span>',
+                '   </div>',
+                '</div>'].join('')
         };
+
+//        addBankAccount = function() {
+//            this.sandbox.form.addToCollection(this.form, 'bankAccounts', {});
+//        };
 
     return {
 
@@ -55,21 +68,23 @@ define([], function() {
 
         initForm: function(data) {
             var formObject = this.sandbox.form.create(this.form);
-            this.addCollectionFilters(data);
+//            this.addCollectionFilters(data);
+            this.initBankAccountHandling(data);
+
             formObject.initialized.then(function() {
                 this.setFormData(data);
             }.bind(this));
         },
 
-        addCollectionFilters : function(data) {
-            // add collection filters
-            this.sandbox.form.addCollectionFilter(this.form, 'bankAccounts', function(bankAccount) {
-                if (bankAccount.id === "") {
-                    delete bankAccount.id;
-                }
-                return bankAccount.bankName !== "" && bankAccount.bic !== "" && bankAccount.iban !== "";
-            });
-        },
+//        addCollectionFilters : function(data) {
+//            // add collection filters
+//            this.sandbox.form.addCollectionFilter(this.form, 'bankAccounts', function(bankAccount) {
+//                if (bankAccount.id === "") {
+//                    delete bankAccount.id;
+//                }
+//                return bankAccount.bankName !== "" && bankAccount.bic !== "" && bankAccount.iban !== "";
+//            });
+//        },
 
         setFormData: function(data) {
 
@@ -88,7 +103,7 @@ define([], function() {
                 }
             }.bind(this));
 
-            this.sandbox.dom.on(constants.addBankAccountButtonId, 'click', addBankAccount.bind(this));
+//            this.sandbox.dom.on(constants.addBankAccountButtonId, 'click', addBankAccount.bind(this));
         },
 
         bindCustomEvents: function() {
@@ -101,6 +116,8 @@ define([], function() {
             this.sandbox.on('sulu.contacts.accounts.financials.saved', function(data) {
                 // reset forms data
                 this.options.data = data;
+
+                // TODO needed? problems?
                 this.setFormData(data);
                 this.setHeaderBar(true);
             }, this);
@@ -113,6 +130,16 @@ define([], function() {
             // back to list
             this.sandbox.on('sulu.header.back', function() {
                 this.sandbox.emit('sulu.contacts.accounts.list');
+            }, this);
+
+            this.sandbox.on('sulu.contact-form.added.bank-account', function(){
+                this.numberOfBankAccounts++;
+                this.updateBankAccountAddIcon(this.numberOfBankAccounts);
+            }, this);
+
+            this.sandbox.on('sulu.contact-form.removed.bank-account', function(){
+                this.numberOfBankAccounts--;
+                this.updateBankAccountAddIcon(this.numberOfBankAccounts);
             }, this);
         },
 
@@ -146,6 +173,52 @@ define([], function() {
             this.sandbox.on('sulu.contact-form.changed', function() {
                 this.setHeaderBar(false);
             }.bind(this));
+        },
+
+        //FIXME Following code should be moved to a component (more abstract contact-form component which could also handle some of the following actions)
+
+        /**
+         * Initializes the component responsible for handling bank accounts
+         */
+        initBankAccountHandling: function(data){
+            this.numberOfBankAccounts = data.bankAccounts.length;
+            this.updateBankAccountAddIcon(this.numberOfBankAccounts);
+
+            // when  contact-form is initalized
+            this.sandbox.on('sulu.contact-form.initialized', function() {
+                // set form data
+                var formObject = this.sandbox.form.create(form);
+                formObject.initialized.then(function() {
+                    this.setFormData(data);
+                }.bind(this));
+
+            }.bind(this));
+
+            // initialize contact form
+            this.sandbox.start([
+                {
+                    name: 'contact-form@sulucontact',
+                    options: {
+                        el: '#financials-form'
+                    }
+                }
+            ]);
+        },
+
+        /**
+         * Adds or removes icon to add bank accounts depending on the number of bank accounts
+         * @param numberOfBankAccounts
+         */
+        updateBankAccountAddIcon: function(numberOfBankAccounts){
+            var $addIcon = this.sandbox.dom.find(constants.bankAccountAddId),
+                addIcon;
+
+            if(!!numberOfBankAccounts && numberOfBankAccounts > 0 && $addIcon.length === 0) {
+                addIcon = this.sandbox.dom.createElement(customTemplates.addBankAccountsIcon);
+                this.sandbox.dom.after(this.sandbox.dom.find(constants.bankAccountsId), addIcon);
+            } else if (numberOfBankAccounts === 0 && $addIcon.length > 0) {
+                this.sandbox.dom.remove(this.sandbox.dom.closest($addIcon, constants.addBankAccountsWrapper));
+            }
         }
 
     };

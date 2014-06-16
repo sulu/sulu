@@ -7,7 +7,10 @@
  * with this source code in the file LICENSE.
  */
 
-define(['text!sulucontact/components/contact-form/address.form.html'], function(AddressForm) {
+define([
+    'text!sulucontact/components/contact-form/address.form.html',
+    'text!sulucontact/components/contact-form/bank.form.html'
+], function(AddressForm, BankForm) {
 
     'use strict';
 
@@ -121,6 +124,20 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
                 event.stopPropagation();
                 addAddress.call(this, event.currentTarget);
             }.bind(this), '.address-add');
+
+            this.sandbox.dom.on(this.$el, 'click', function(event) {
+                event.stopPropagation();
+                // TODO bank remove
+                this.sandbox.logger.warn("bank remove");
+//                removeAddress.call(this, event.currentTarget);
+            }.bind(this), '.bank-account-remove');
+
+            this.sandbox.dom.on(this.$el, 'click', function(event) {
+                event.stopPropagation();
+                // TODO bank add
+                this.sandbox.logger.warn("bank add");
+//                addAddress.call(this, event.currentTarget);
+            }.bind(this), '.bank-account-add');
         },
 
         /**
