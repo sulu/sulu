@@ -17,7 +17,7 @@ use Sulu\Component\Content\PropertyInterface;
  * defines a section for properties
  * @package Sulu\Component\Content
  */
-class SectionProperty extends Property implements PropertySectionInterface
+class SectionProperty extends Property implements SectionPropertyInterface
 {
     /**
      * properties managed by this block

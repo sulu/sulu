@@ -22,6 +22,7 @@ use Sulu\Component\Content\BreadcrumbItemInterface;
 use Sulu\Component\Content\ContentEvents;
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyTag;
+use Sulu\Component\Content\Section\SectionProperty;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Webspace\Localization;
 use Sulu\Component\Webspace\Webspace;
@@ -50,6 +51,8 @@ class ContentMapperTest extends PhpcrTestCase
             return $this->getStructureMock(3);
         } elseif ($structureKey == 'mandatory') {
             return $this->getStructureMock(4);
+        } elseif ($structureKey == 'section') {
+            return $this->getStructureMock(5);
         }
 
         return null;
@@ -121,6 +124,16 @@ class ContentMapperTest extends PhpcrTestCase
                 $structureMock,
                 array(
                     new Property('blog', '', 'text_line', true, true)
+                )
+            );
+        } elseif ($type == 5) {
+            $section = new SectionProperty('test',array(), '6');
+            $section->addChild(new Property('blog', '', 'text_line', true, true));
+
+            $method->invokeArgs(
+                $structureMock,
+                array(
+                    $section
                 )
             );
         }
@@ -2089,5 +2102,16 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals(0, sizeof($layer3[2]->getChildren()));
         $this->assertEquals('SubSubNews-3', $layer3[2]->name);
         $this->assertFalse($layer3[2]->getHasChildren());
+    }
+
+    public function testSection()
+    {
+        $data = array(
+            'title' =>'Test',
+            'url' => '/test',
+            'blog' => 'Thats a good test'
+        );
+
+        $resultSave = $this->mapper->save($data, 'section', 'default', 'en', 1);
     }
 }

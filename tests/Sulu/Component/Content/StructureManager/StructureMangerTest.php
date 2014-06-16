@@ -533,7 +533,8 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
 
         /** @var SectionProperty $section */
         $section = $structure->getProperty('test');
-        $this->assertInstanceOf('\Sulu\Component\Content\Section\PropertySectionInterface', $section);
+        $this->assertInstanceOf('\Sulu\Component\Content\Section\SectionPropertyInterface', $section);
+        $this->assertInstanceOf('\Sulu\Component\Content\PropertyInterface', $section);
         $this->assertEquals('url', $section->getChildProperties()[0]->getName());
         $this->assertEquals('article', $section->getChildProperties()[1]->getName());
         $this->assertEquals('block', $section->getChildProperties()[2]->getName());
