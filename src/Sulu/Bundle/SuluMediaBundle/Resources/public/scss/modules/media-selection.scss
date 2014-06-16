@@ -38,12 +38,12 @@
         border-radius: $borderRadiusSmall;
     }
 
-    .position-outer {
+    .display-option-outer {
         position: relative;
         width: 120px;
         margin: 0 auto;
 
-        .position {
+        .display-option {
             position: absolute;
             width: 100px;
             top: 10px;
@@ -103,17 +103,29 @@
         list-style-type: none;
         margin: 0;
         padding: 0 20px;
+
         li {
             font-size: $baseFontSize;
-            line-height: 50px;
+            padding-bottom: 4px;
             border-bottom: 1px solid $grayLighter;
 
             .num {
                 color: $grayLight;
                 padding-right: 10px;
+
+                bottom: 18px;
+                position: relative;
+            }
+            .image {
+                color: $grayLight;
+                padding-right: 10px;
+                padding-top: 10px;
             }
             .value {
                 color: $grayLight;
+
+                bottom: 18px;
+                position: relative;
             }
             &:last-child {
                 border-width: 2px;
