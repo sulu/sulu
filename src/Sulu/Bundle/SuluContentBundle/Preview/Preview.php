@@ -173,26 +173,17 @@ class Preview implements PreviewInterface
         $languageCode
     ) {
         /** @var PropertyInterface $property */
-        foreach ($newContent->getProperties() as $property) {
-            if ($property->getContentTypeName() === 'section') {
-                $this->copyProperties(
-                    $property,
-                    $content->getProperty($property->getName()),
-                    $webspaceKey,
-                    $languageCode
-                );
-            } else {
-                $value = $content->hasProperty($property->getName()) ?
-                    $content->getProperty($property->getName())->getValue() : null;
+        foreach ($newContent->getProperties(true) as $property) {
+            $value = $content->hasProperty($property->getName()) ?
+                $content->getProperty($property->getName())->getValue() : null;
 
-                $this->setValue(
-                    $newContent,
-                    $property->getName(),
-                    $value,
-                    $webspaceKey,
-                    $languageCode
-                );
-            }
+            $this->setValue(
+                $newContent,
+                $property->getName(),
+                $value,
+                $webspaceKey,
+                $languageCode
+            );
         }
     }
 
