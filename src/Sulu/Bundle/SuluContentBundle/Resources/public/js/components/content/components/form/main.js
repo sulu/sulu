@@ -616,12 +616,7 @@ define(['app-config'], function(AppConfig) {
 
         listenForChange: function() {
             this.dfdListenForChange.then(function() {
-                this.sandbox.dom.on(this.formId, 'keyup', function() {
-                    this.setHeaderBar(false);
-                    this.contentChanged = true;
-                }.bind(this), '.trigger-save-button');
-
-                this.sandbox.dom.on(this.formId, 'change', function() {
+                this.sandbox.dom.on(this.formId, 'keyup change', function() {
                     this.setHeaderBar(false);
                     this.contentChanged = true;
                 }.bind(this), '.trigger-save-button');
@@ -722,7 +717,7 @@ define(['app-config'], function(AppConfig) {
                 this.sandbox.logger.log('Connection established!');
                 this.opened = true;
 
-                this.sandbox.dom.on(this.formId, 'keyup', this.updateEvent.bind(this), '.preview-update');
+                this.sandbox.dom.on(this.formId, 'keyup change', this.updateEvent.bind(this), '.preview-update');
 
                 // write start message
                 this.writeStartMessage();
