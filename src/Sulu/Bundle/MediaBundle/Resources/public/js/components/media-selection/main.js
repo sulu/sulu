@@ -22,7 +22,7 @@ define(['sulumedia/collection/collections'], function(Collections) {
             instanceName: null,
             url: '',
             idsParameter: 'ids',
-            preselected: {ids: [1], displayOption: 'top', config: {}},
+            preselected: {ids: [], displayOption: 'top', config: {}},
             idKey: 'id',
             titleKey: 'title',
             thumbnailKey: 'thumbnails',

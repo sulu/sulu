@@ -14,17 +14,27 @@ define([
 
     'use strict';
 
+    var dataChangedHandler = function(data, $el) {
+        App.emit('sulu.preview.update', $el, data);
+        App.emit('sulu.content.changed');
+    };
+
     return function($el, options) {
         var defaults = {},
 
             subType = {
                 initializeSub: function() {
+                    var eventName = 'sulu.media-selection.' + options.instanceName + '.data-changed';
+                    App.off(eventName, dataChangedHandler);
+                    App.on(eventName, dataChangedHandler);
                 },
 
                 setValue: function(value) {
+                    App.dom.data($el, 'media-selection', value);
                 },
 
                 getValue: function() {
+                    return App.dom.data($el, 'media-selection');
                 },
 
                 needsValidation: function() {

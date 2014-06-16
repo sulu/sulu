@@ -13,6 +13,7 @@ namespace Sulu\Bundle\MediaBundle\Content;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\RestObject\Media;
 use Sulu\Bundle\MediaBundle\Media\RestObject\RestObjectHelper;
+use JMS\Serializer\Annotation\Exclude;
 
 /**
  * Container for Image selection, holds config for image selection and lazy loads images matches the ids
@@ -31,29 +32,32 @@ class MediaSelectionContainer implements \Serializable
     private $config;
 
     /**
-     * @var mixed
+     * @var string
      */
-    private $direction;
+    private $displayOption;
 
     /**
+     * @Exclude
      * @var string
      */
     private $localization;
 
     /**
+     * @Exclude
      * @var Media[]
      */
     private $data;
 
     /**
+     * @Exclude
      * @var MediaManagerInterface
      */
     private $mediaManager;
 
-    function __construct($config, $direction, $ids, $localization, $mediaManager)
+    function __construct($config, $displayOption, $ids, $localization, $mediaManager)
     {
         $this->config = $config;
-        $this->direction = $direction;
+        $this->displayOption = $displayOption;
         $this->ids = $ids;
         $this->localization = $localization;
         $this->mediaManager = $mediaManager;
@@ -102,9 +106,9 @@ class MediaSelectionContainer implements \Serializable
     /**
      * @return mixed
      */
-    public function getDirection()
+    public function getDisplayOption()
     {
-        return $this->direction;
+        return $this->displayOption;
     }
 
     public function __get($name)
@@ -116,15 +120,15 @@ class MediaSelectionContainer implements \Serializable
                 return $this->getConfig();
             case 'ids':
                 return $this->getIds();
-            case 'direction':
-                return $this->getDirection();
+            case 'displayOption':
+                return $this->getDisplayOption();
         }
         return null;
     }
 
     public function __isset($name)
     {
-        return ($name == 'data' || $name == 'config' || $name == 'ids' || $name == 'direction');
+        return ($name == 'data' || $name == 'config' || $name == 'ids' || $name == 'displayOption');
     }
 
     /**
@@ -137,7 +141,7 @@ class MediaSelectionContainer implements \Serializable
                 'data' => $this->getData(),
                 'config' => $this->getConfig(),
                 'ids' => $this->getIds(),
-                'direction' => $this->getDirection()
+                'displayOption' => $this->getDisplayOption()
             )
         );
     }
@@ -151,6 +155,6 @@ class MediaSelectionContainer implements \Serializable
         $this->data = $values['data'];
         $this->config = $values['config'];
         $this->ids = $values['ids'];
-        $this->direction = $values['direction'];
+        $this->displayOption = $values['displayOption'];
     }
 }

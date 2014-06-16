@@ -214,36 +214,38 @@
   color: #999999;
   padding-right: 10px;
   padding-top: 10px;
+  width: 50px;
+  height: 50px;
 }
-/* line 124, ../scss/modules/media-selection.scss */
+/* line 127, ../scss/modules/media-selection.scss */
 .media-selection .items-list li .value {
   color: #999999;
   bottom: 18px;
   position: relative;
 }
-/* line 130, ../scss/modules/media-selection.scss */
+/* line 133, ../scss/modules/media-selection.scss */
 .media-selection .items-list li:last-child {
   border-width: 2px;
 }
 
-/* line 137, ../scss/modules/media-selection.scss */
+/* line 140, ../scss/modules/media-selection.scss */
 .media-selection-footer {
   padding: 15px 20px 30px 20px;
   line-height: 14px;
   color: #999999;
   font-size: 12px;
 }
-/* line 142, ../scss/modules/media-selection.scss */
+/* line 145, ../scss/modules/media-selection.scss */
 .media-selection-footer span {
   padding-right: 5px;
 }
-/* line 145, ../scss/modules/media-selection.scss */
+/* line 148, ../scss/modules/media-selection.scss */
 .media-selection-footer .view-toggler {
   color: black;
   cursor: pointer;
 }
 
-/* line 152, ../scss/modules/media-selection.scss */
+/* line 155, ../scss/modules/media-selection.scss */
 .media-selection-overlay-add .head-container {
   width: 100%;
   padding-top: 10px;
@@ -251,13 +253,13 @@
   padding-bottom: 10px;
   margin-bottom: 10px;
 }
-/* line 160, ../scss/modules/media-selection.scss */
+/* line 163, ../scss/modules/media-selection.scss */
 .media-selection-overlay-add h1 {
   margin-bottom: 0px;
   font-size: 20px;
   color: #999999;
 }
-/* line 167, ../scss/modules/media-selection.scss */
+/* line 170, ../scss/modules/media-selection.scss */
 .media-selection-overlay-add .sulu-grid-group {
   padding-top: 0px;
 }
