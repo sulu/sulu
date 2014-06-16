@@ -83,7 +83,7 @@ class MediaSelectionContentType extends ComplexContentType
     {
         $container = new MediaSelectionContainer(
             isset($data['config']) ?  $data['config'] : array(),
-            isset($data['displayOption']) ? $data['displayOption'] : array(),
+            isset($data['displayOption']) ? $data['displayOption'] : '',
             isset($data['ids']) ? $data['ids'] : array(),
             $languageCode,
             $this->mediaManager
