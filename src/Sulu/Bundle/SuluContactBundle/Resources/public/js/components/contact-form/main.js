@@ -7,6 +7,8 @@
  * with this source code in the file LICENSE.
  */
 
+// TODO convert to reuseable component
+
 define([
     'text!sulucontact/components/contact-form/address.form.html',
     'text!sulucontact/components/contact-form/bank.form.html'
@@ -29,8 +31,10 @@ define([
             editUndoDeleteIcon: 'fa-plus-circle',
             fadedClass: 'faded',
             addressFormId: '#address-form',
+            bankAccountFormId: '#bank-account-form',
             dropdownContainerId: '#contact-options-dropdown',
             addressRowTemplateSelector: '[data-mapper-property-tpl="address-tpl"]',
+            bankAccountRowTemplateSelector: '[data-mapper-property-tpl="bank-account-tpl"]',
             addressComponentSelector: '.address-component'
         },
 
@@ -125,6 +129,8 @@ define([
                 addAddress.call(this, event.currentTarget);
             }.bind(this), '.address-add');
 
+            this.sandbox.dom.on(this.$el, 'click', editBankAccountsClicked.bind(this), constants.bankAccountRowTemplateSelector);
+
             this.sandbox.dom.on(this.$el, 'click', function(event) {
                 event.stopPropagation();
                 // TODO bank remove
@@ -134,9 +140,7 @@ define([
 
             this.sandbox.dom.on(this.$el, 'click', function(event) {
                 event.stopPropagation();
-                // TODO bank add
-                this.sandbox.logger.warn("bank add");
-//                addAddress.call(this, event.currentTarget);
+                addBankAccount.call(this, event.currentTarget);
             }.bind(this), '.bank-account-add');
         },
 
@@ -177,6 +181,13 @@ define([
          */
         addAddress = function() {
             createAddressOverlay.call(this, null);
+        },
+
+        /**
+         * Triggers the process to add a new bank account
+         */
+        addBankAccount = function(){
+            createBankAccountOverlay.call(this, null);
         },
 
         bindAddEvents = function() {
@@ -232,6 +243,7 @@ define([
 
         removeCollectionFilters = function() {
             // add collection filters
+            this.sandbox.form.removeCollectionFilter(this.form, 'bankAccounts');
             this.sandbox.form.removeCollectionFilter(this.form, 'addresses');
             this.sandbox.form.removeCollectionFilter(this.form, 'emails');
             this.sandbox.form.removeCollectionFilter(this.form, 'phones');
@@ -245,36 +257,48 @@ define([
             this.form = form;
 
             // add collection filters
+            this.sandbox.form.addCollectionFilter(this.form, 'bankAccounts', function(bankAccount) {
+                if (bankAccount.id === "") {
+                    delete bankAccount.id;
+                }
+                return true;
+            });
+
             this.sandbox.form.addCollectionFilter(this.form, 'addresses', function(address) {
                 if (address.id === "") {
                     delete address.id;
                 }
                 return address.city !== "";
             });
+
             this.sandbox.form.addCollectionFilter(this.form, 'emails', function(email) {
                 if (email.id === "") {
                     delete email.id;
                 }
                 return email.email !== "";
             });
+
             this.sandbox.form.addCollectionFilter(this.form, 'phones', function(phone) {
                 if (phone.id === "") {
                     delete phone.id;
                 }
                 return phone.phone !== "";
             });
+
             this.sandbox.form.addCollectionFilter(this.form, 'urls', function(url) {
                 if (url.id === "") {
                     delete url.id;
                 }
                 return url.url !== "";
             });
+
             this.sandbox.form.addCollectionFilter(this.form, 'faxes', function(fax) {
                 if (fax.id === "") {
                     delete fax.id;
                 }
                 return fax.fax !== "";
             });
+
             this.sandbox.form.addCollectionFilter(this.form, 'notes', function(note) {
                 if (note.id === "") {
                     delete note.id;
@@ -401,6 +425,19 @@ define([
             var $template = this.sandbox.dom.$(event.currentTarget),
                 data = this.sandbox.form.getData(this.form, true, $template);
             createAddressOverlay.call(this, data, this.sandbox.dom.data($template, 'mapperId'));
+        },
+
+        /**
+         * Edit bank account
+         * @param event
+         */
+        editBankAccountsClicked = function(event) {
+
+            // TODO
+
+            var $template = this.sandbox.dom.$(event.currentTarget),
+                data = this.sandbox.form.getData(this.form, true, $template);
+            createBankAccountOverlay.call(this, data, this.sandbox.dom.data($template, 'mapperId'));
         },
 
         /**
@@ -638,7 +675,98 @@ define([
             }.bind(this));
         },
 
-    // removes listeners of addressform
+        /**
+         * Creates an overlay to add/edit bank accounts
+         * @param data
+         * @param mapperId
+         */
+        createBankAccountOverlay = function(data, mapperId) {
+
+            var bankAccountTemplate, formObject, $overlay, title,
+                isNew = !data;
+
+            if (!data) {
+                data = {};
+            }
+
+            // extend address data by additional variables
+            this.sandbox.util.extend(true, data, {
+                translate: this.sandbox.translate
+            });
+
+            bankAccountTemplate = this.sandbox.util.template(BankForm, data);
+
+            // create container for overlay
+            $overlay = this.sandbox.dom.createElement('<div>');
+            this.sandbox.dom.append('body', $overlay);
+
+            if (isNew) {
+                title = this.sandbox.translate('contact.accounts.bankAccounts.add.label');
+            } else {
+                title = this.sandbox.translate('contact.accounts.bankAccounts.edit.label');
+            }
+
+            // create overlay with data
+            this.sandbox.start([
+                {
+                    name: 'overlay@husky',
+                    options: {
+                        el: $overlay,
+                        title: title,
+                        openOnStart: true,
+                        removeOnClose: true,
+                        instanceName: 'add-bank-account',
+                        data: bankAccountTemplate,
+                        skin: 'wide',
+                        okCallback: addBankAccountOkClicked.bind(this, mapperId),
+                        closeCallback: removeBankAccountFormEvents.bind(this)
+                    }
+                }
+            ]);
+
+            this.data = data;
+
+            // after everything was added to dom
+            this.sandbox.on('husky.overlay.add-bank-account.opened', function() {
+                // start form and set data
+                formObject = this.sandbox.form.create(constants.bankAccountFormId);
+                formObject.initialized.then(function() {
+                    this.sandbox.form.setData(constants.bankAccountFormId, this.data);
+                }.bind(this));
+            }.bind(this));
+        },
+
+        addBankAccountOkClicked = function(mapperId) {
+            var formData, $element;
+
+            if (!this.sandbox.form.validate(constants.bankAccountFormId)) {
+                return false;
+            }
+
+            formData = this.sandbox.form.getData(constants.bankAccountFormId, true);
+
+            // add to collection
+            if (!mapperId) {
+                this.sandbox.form.addToCollection(this.form, 'bankAccounts', formData);
+            } else {
+                this.sandbox.form.editInCollection(this.form, mapperId, formData);
+            }
+
+            // set changed to be able to save
+            this.sandbox.emit(EVENT_CHANGED.call(this));
+            this.sandbox.emit(EVENT_ADDED_ADDRESS.call(this));
+
+            // remove change listener
+            removeBankAccountFormEvents.call(this);
+        },
+
+        // removes listeners of addressform
+        removeBankAccountFormEvents = function() {
+            this.sandbox.dom.off(constants.bankAccountFormId);
+        },
+
+
+        // removes listeners of addressform
         removeAddressFormEvents = function() {
             this.sandbox.dom.off(constants.addressFormId);
         },
