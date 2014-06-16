@@ -169,7 +169,7 @@ define([
          * Removes bank account
          * @param $el
          */
-        removeBankAccount = function($el){
+        removeBankAccount = function($el) {
             var mapperID = this.sandbox.dom.data(this.sandbox.dom.closest($el, constants.bankAccountComponentSelector), 'mapper-id');
             this.sandbox.form.removeFromCollection(this.form, mapperID);
             this.sandbox.emit(EVENT_CHANGED.call(this));
@@ -196,7 +196,7 @@ define([
         /**
          * Triggers the process to add a new bank account
          */
-        addBankAccount = function(){
+        addBankAccount = function() {
             createBankAccountOverlay.call(this, null);
         },
 
@@ -767,13 +767,12 @@ define([
             removeBankAccountFormEvents.call(this);
         },
 
-        // removes listeners of addressform
+    // removes listeners of addressform
         removeBankAccountFormEvents = function() {
             this.sandbox.dom.off(constants.bankAccountFormId);
         },
 
-
-        // removes listeners of addressform
+    // removes listeners of addressform
         removeAddressFormEvents = function() {
             this.sandbox.dom.off(constants.addressFormId);
         },
