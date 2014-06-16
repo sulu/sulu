@@ -189,6 +189,9 @@ abstract class Structure implements StructureInterface
         $this->properties[$property->getName()] = $property;
     }
 
+    /**
+     * add tags of properties
+     */
     protected function addPropertyTags(PropertyInterface $property)
     {
         foreach ($property->getTags() as $tag) {
@@ -702,7 +705,7 @@ abstract class Structure implements StructureInterface
      */
     public function __isset($property)
     {
-        if (isset($this->properties[$property])) {
+        if ($this->findProperty($property) !== null) {
             return true;
         } else {
             return isset($this->$property);
