@@ -35,7 +35,8 @@ define([
             dropdownContainerId: '#contact-options-dropdown',
             addressRowTemplateSelector: '[data-mapper-property-tpl="address-tpl"]',
             bankAccountRowTemplateSelector: '[data-mapper-property-tpl="bank-account-tpl"]',
-            addressComponentSelector: '.address-component'
+            addressComponentSelector: '.address-component',
+            bankAccountComponentSelector: '.bank-account-component'
         },
 
         templates = {
@@ -133,9 +134,7 @@ define([
 
             this.sandbox.dom.on(this.$el, 'click', function(event) {
                 event.stopPropagation();
-                // TODO bank remove
-                this.sandbox.logger.warn("bank remove");
-//                removeAddress.call(this, event.currentTarget);
+                removeBankAccount.call(this, event.currentTarget);
             }.bind(this), '.bank-account-remove');
 
             this.sandbox.dom.on(this.$el, 'click', function(event) {
@@ -164,6 +163,17 @@ define([
                     }
                 }
             ]);
+        },
+
+        /**
+         * Removes bank account
+         * @param $el
+         */
+        removeBankAccount = function($el){
+            var mapperID = this.sandbox.dom.data(this.sandbox.dom.closest($el, constants.bankAccountComponentSelector), 'mapper-id');
+            this.sandbox.form.removeFromCollection(this.form, mapperID);
+            this.sandbox.emit(EVENT_CHANGED.call(this));
+            this.sandbox.emit(EVENT_REMOVED_ADDRESS.call(this));
         },
 
         /**
@@ -432,9 +442,6 @@ define([
          * @param event
          */
         editBankAccountsClicked = function(event) {
-
-            // TODO
-
             var $template = this.sandbox.dom.$(event.currentTarget),
                 data = this.sandbox.form.getData(this.form, true, $template);
             createBankAccountOverlay.call(this, data, this.sandbox.dom.data($template, 'mapperId'));
@@ -737,7 +744,7 @@ define([
         },
 
         addBankAccountOkClicked = function(mapperId) {
-            var formData, $element;
+            var formData;
 
             if (!this.sandbox.form.validate(constants.bankAccountFormId)) {
                 return false;
