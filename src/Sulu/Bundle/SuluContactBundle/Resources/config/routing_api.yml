@@ -9,3 +9,7 @@ sulu_contact.accounts:
 sulu_contact.accountcategory:
     type: rest
     resource: Sulu\Bundle\ContactBundle\Controller\AccountCategoryController
+
+sulu_contact.termsofpayment:
+    type: rest
+    resource: Sulu\Bundle\ContactBundle\Controller\TermsOfPaymentController
