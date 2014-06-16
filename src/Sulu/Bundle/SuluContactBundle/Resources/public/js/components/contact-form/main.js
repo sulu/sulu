@@ -311,7 +311,7 @@ define([
                 if (address.id === "") {
                     delete address.id;
                 }
-                return address.city !== "";
+                return true;
             });
 
             this.sandbox.form.addCollectionFilter(this.form, 'emails', function(email) {
