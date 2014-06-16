@@ -44,6 +44,12 @@ class RestObjectHelper
     {
         $flatMedia = new Media();
 
-        return $flatMedia->setDataByEntityArray($media, $locale)->toArray($fields);
+        if ($media instanceof \Sulu\Bundle\MediaBundle\Entity\Media) {
+            $flatMedia->setDataByEntity($media, $locale);
+        } else {
+            $flatMedia->setDataByEntityArray($media, $locale);
+        }
+
+        return $flatMedia->toArray($fields);
     }
 } 
