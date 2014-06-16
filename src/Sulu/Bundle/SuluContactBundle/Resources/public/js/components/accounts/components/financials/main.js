@@ -159,7 +159,7 @@ define([], function() {
             }.bind(this));
         },
 
-        //FIXME Following code should be moved (partially) to a component (more abstract contact-form component which could also handle some of the following actions)
+        //FIXME Following code should be moved (partially) to a component (more abstract contact-form component)
 
         /**
          * Initializes the component responsible for handling bank accounts
