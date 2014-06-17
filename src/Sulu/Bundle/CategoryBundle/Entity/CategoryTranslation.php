@@ -5,14 +5,14 @@ namespace Sulu\Bundle\CategoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * CategoryName
+ * CategoryTranslation
  */
-class CategoryName
+class CategoryTranslation
 {
     /**
      * @var string
      */
-    private $name;
+    private $translation;
 
     /**
      * @var string
@@ -31,33 +31,33 @@ class CategoryName
 
 
     /**
-     * Set name
+     * Set translation
      *
-     * @param string $name
-     * @return Name
+     * @param string $translation
+     * @return CategoryTranslation
      */
-    public function setName($name)
+    public function setTranslation($translation)
     {
-        $this->name = $name;
+        $this->translation = $translation;
     
         return $this;
     }
 
     /**
-     * Get name
+     * Get translation
      *
      * @return string 
      */
-    public function getName()
+    public function getTranslation()
     {
-        return $this->name;
+        return $this->translation;
     }
 
     /**
      * Set locale
      *
      * @param string $locale
-     * @return Name
+     * @return CategoryTranslation
      */
     public function setLocale($locale)
     {
@@ -90,7 +90,7 @@ class CategoryName
      * Set category
      *
      * @param \Sulu\Bundle\CategoryBundle\Entity\Category $category
-     * @return Name
+     * @return CategoryTranslation
      */
     public function setCategory(\Sulu\Bundle\CategoryBundle\Entity\Category $category)
     {
