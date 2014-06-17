@@ -17,6 +17,7 @@ use FOS\RestBundle\Controller\Annotations\Put;
 use Sulu\Bundle\MediaBundle\Entity\Collection as CollectionEntity;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Media\RestObject\Collection;
+use Sulu\Bundle\MediaBundle\Media\ThumbnailManager\ThumbnailManagerInterface;
 use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
@@ -29,10 +30,19 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class CollectionController extends RestController implements ClassResourceInterface
 {
+    const THUMBNAIL_LIMIT = 3;
+
+    const THUMBNAIL_FORMAT = '150x100';
+
     /**
      * {@inheritdoc}
      */
     protected $entityName = 'SuluMediaBundle:Collection';
+
+    /**
+     * @var string
+     */
+    protected $entityMediaName = 'SuluMediaBundle:Media';
 
     /**
      * {@inheritdoc}
@@ -131,6 +141,9 @@ class CollectionController extends RestController implements ClassResourceInterf
         } else {
             $locale = $this->getLocale($request->get('locale'));
             $collection = new Collection();
+            $collection->setDataByEntityArray($collectionEntity, $locale);
+            $collection->getId();
+            $collection->setThumbnails($this->getThumbnails($collection->getId()));
 
             $view = $this->view(
                 array_merge(
@@ -139,7 +152,7 @@ class CollectionController extends RestController implements ClassResourceInterf
                             'self' => $request->getRequestUri()
                         )
                     ),
-                    $collection->setDataByEntityArray($collectionEntity, $locale)->toArray()
+                    $collection->toArray()
                 )
                 , 200);
         }
@@ -398,5 +411,61 @@ class CollectionController extends RestController implements ClassResourceInterf
         }
 
         return $this->getUser()->getLocale();
+    }
+
+    /**
+     * getThumbnailManager
+     * @return ThumbnailManagerInterface
+     */
+    protected function getThumbnailManager()
+    {
+        return $this->get('sulu_media.thumbnail_manager');
+    }
+
+    /**
+     * @param $id
+     * @return array
+     */
+    protected function getThumbnails($id)
+    {
+        $thumbnails = array();
+
+        $medias = $this->getDoctrine()
+            ->getRepository($this->entityMediaName)
+            ->findMedia($id, self::THUMBNAIL_LIMIT);
+
+
+        foreach ($medias as $media) {
+            foreach ($media['files'] as $file) {
+                foreach ($file['fileVersions'] as $fileVersion) {
+                    if ($fileVersion['version'] == $file['version']) {
+                        $title = '';
+                        foreach ($fileVersion['meta'] as $key => $meta) {
+                            if ($meta['locale'] == $this->getUser()->getLocale()) {
+                                $title = $meta['title'];
+                                break;
+                            } elseif ($key == 0) { // fallback title
+                                $title = $meta['title'];
+                            }
+                        }
+
+                        $mediaThumbnails = $this->getThumbnailManager()->getThumbNails($media['id'], $fileVersion['name'], $fileVersion['storageOptions']);
+
+                        foreach ($mediaThumbnails as $format => $thumbnail) {
+                            if ($format == self::THUMBNAIL_FORMAT) {
+                                $thumbnails[] = array(
+                                    'url' => $thumbnail,
+                                    'title' => $title
+                                );
+                                break;
+                            }
+                        }
+                    }
+                }
+                break;
+            }
+        }
+
+        return $thumbnails;
     }
 }

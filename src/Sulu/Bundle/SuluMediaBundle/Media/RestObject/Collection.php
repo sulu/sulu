@@ -65,6 +65,11 @@ class Collection extends ApiEntity implements RestObjectInterface
     protected $description;
 
     /**
+     * @var array
+     */
+    protected $thumbnails = array();
+
+    /**
      * @var string
      */
     protected $changer;
@@ -277,6 +282,7 @@ class Collection extends ApiEntity implements RestObjectInterface
                 'parent' => $this->parent,
                 'title' => $this->title,
                 'description' => $this->description,
+                'thumbnails' => $this->thumbnails,
                 'properties' => $this->properties,
                 'changer' => $this->changer,
                 'creator' => $this->creator,
@@ -543,6 +549,31 @@ class Collection extends ApiEntity implements RestObjectInterface
     public function getProperties()
     {
         return $this->properties;
+    }
+
+    /**
+     * @return array
+     */
+    public function getThumbnails()
+    {
+        return $this->thumbnails;
+    }
+
+    /**
+     * @param array $thumbnails
+     */
+    public function setThumbnails($thumbnails)
+    {
+        $this->thumbnails = $thumbnails;
+    }
+
+
+    /**
+     * @param $thumbnail
+     */
+    public function addThumbnail($thumbnail)
+    {
+        $this->thumbnails[] = $thumbnail;
     }
 
 } 

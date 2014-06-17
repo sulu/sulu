@@ -84,7 +84,7 @@ class MediaRepository extends EntityRepository
     /**
      *
      */
-    public function findMedia($collection = null)
+    public function findMedia($collection = null, $limit = null)
     {
         try {
             $qb = $this->createQueryBuilder('media')
@@ -118,6 +118,10 @@ class MediaRepository extends EntityRepository
 
             if ($collection !== null) {
                 $qb->where('collection.id = :collection');
+            }
+
+            if ($limit !== null) {
+                $qb->setMaxResults($limit);
             }
 
             $query = $qb->getQuery();

@@ -404,14 +404,14 @@ class MediaController extends RestController implements ClassResourceInterface
      */
     protected function getNewMedia()
     {
-        return new Media($this->getCacheManager());
+        return new Media($this->getThumbnailManager());
     }
 
     /**
-     * getCacheManager
+     * getThumbnailManager
      * @return ThumbnailManagerInterface
      */
-    protected function getCacheManager()
+    protected function getThumbnailManager()
     {
         return $this->get('sulu_media.thumbnail_manager');
     }
