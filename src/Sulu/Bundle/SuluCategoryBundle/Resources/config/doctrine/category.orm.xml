@@ -22,6 +22,17 @@
         <field name="created" type="datetime" column="created"/>
         <field name="changed" type="datetime" column="changed"/>
 
+        <one-to-many field="meta" target-entity="Sulu\Bundle\CategoryBundle\Entity\CategoryMeta" mapped-by="category">
+            <cascade>
+                <cascade-all/>
+            </cascade>
+        </one-to-many>
+        <one-to-many field="name" target-entity="Sulu\Bundle\CategoryBundle\Entity\CategoryName" mapped-by="category">
+            <cascade>
+                <cascade-all/>
+            </cascade>
+        </one-to-many>
+
         <one-to-many field="children" target-entity="Sulu\Bundle\CategoryBundle\Entity\Category" mapped-by="parent"/>
         <many-to-one field="parent" target-entity="Sulu\Bundle\CategoryBundle\Entity\Category" inversed-by="children">
             <join-columns>
