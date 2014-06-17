@@ -80,6 +80,30 @@ class CategoryControllerTest extends DatabaseTestCase
 
         self::$em->persist($category2);
 
+        /* Third Category (child of first)
+        -------------------------------------*/
+        $category3 = new Category();
+        $category3->setCreated(new \DateTime());
+        $category3->setChanged(new \DateTime());
+        $category3->setParent($category);
+
+        // name for second category
+        $categoryName3 = new CategoryName();
+        $categoryName3->setLocale('en');
+        $categoryName3->setName('Third Category');
+        $categoryName3->setCategory($category3);
+        $category3->addName($categoryName3);
+
+        // meta for second category
+        $categoryMeta4 = new CategoryMeta();
+        $categoryMeta4->setLocale('de');
+        $categoryMeta4->setKey('another');
+        $categoryMeta4->setValue('Description of third Category');
+        $categoryMeta4->setCategory($category3);
+        $category3->addMeta($categoryMeta4);
+
+        self::$em->persist($category3);
+
         self::$em->flush();
     }
 
