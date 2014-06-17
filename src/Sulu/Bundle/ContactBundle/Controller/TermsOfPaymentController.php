@@ -174,7 +174,7 @@ class TermsOfPaymentController extends RestController implements ClassResourceIn
     /**
      * Add or update a bunch of terms of payment
      * @return \Symfony\Component\HttpFoundation\Response
-     * @Route("/termsofpayment")
+     * @Route("/termsofpayments")
      */
     public function patchAction()
     {
@@ -187,7 +187,7 @@ class TermsOfPaymentController extends RestController implements ClassResourceIn
             while ($item = $request->get($i)) {
 
                 if (!isset($item['terms'])) {
-                    throw new RestException('There is no category-name for the account-category given');
+                    throw new RestException('There is no term-name for the terms-of-payment given');
                 }
 
                 $data[] = $this->addAndUpdateCategories($item);
