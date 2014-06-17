@@ -356,7 +356,7 @@ class CollectionController extends RestController implements ClassResourceInterf
 
         // Set Parent
         if ($object->getParent()) {
-            // / @var CollectionEntity $parent
+            /** @var CollectionEntity $parent */
             $parent = $this->getDoctrine()
                 ->getRepository($this->entityName)
                 ->findCollectionById($object->getParent());

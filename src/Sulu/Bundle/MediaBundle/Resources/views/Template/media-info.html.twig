@@ -1,0 +1,19 @@
+<form id="media-info">
+    <div class="grid">
+        <div class="grid-row">
+            <label for="media-edit-title"><%= translate('public.title') %></label>
+            <input class="form-element" type="text" id="media-edit-title" value=""
+                   data-validation-required="true"
+                   data-validation-min-length="3"
+                   data-mapper-property="title"/>
+        </div>
+        <div class="grid-row">
+            <label for="media-edit-description"><%= translate('public.description') %></label>
+            <textarea class="small noResize form-element" id="media-edit-description"
+                      data-mapper-property="description"></textarea>
+        </div>
+        <div class="grid-row">
+            <div id="file-version-change"></div>
+        </div>
+    </div>
+</form>

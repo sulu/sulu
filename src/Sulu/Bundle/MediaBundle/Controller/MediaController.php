@@ -326,7 +326,7 @@ class MediaController extends RestController implements ClassResourceInterface
 
         foreach ($mediaList as $media) {
             $flatMedia = new Media();
-            array_push($flatMediaList, $flatMedia->setDataByEntityArray($media, $locale)->toArray($fields));
+            $flatMediaList[] = $flatMedia->setDataByEntityArray($media, $locale)->toArray($fields);
         }
 
         return $flatMediaList;

@@ -11,7 +11,8 @@
 namespace Sulu\Bundle\MediaBundle\Media\Manager;
 
 use Doctrine\Common\Persistence\ObjectManager;
-use Sulu\Bundle\MediaBundle\Media\Thum;
+
+use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
@@ -25,7 +26,6 @@ use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\InvalidFileException;
 use Sulu\Bundle\MediaBundle\Media\Exception\InvalidMediaTypeException;
-use Sulu\Bundle\MediaBundle\Media\Exception\UploadFileValidationException;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Sulu\Bundle\MediaBundle\Media\FileValidator\FileValidatorInterface;
 use Sulu\Component\Security\UserRepositoryInterface;
@@ -319,40 +319,31 @@ class DefaultMediaManager implements MediaManagerInterface
 
     /**
      * @param FileVersion $fileVersion
-     * @param array $meta
-     * @param array $tags
-     * @param array $contentLanguages
-     * @param array $publishLanguages
+     * @param FileVersionMeta[] $metas
+     * @param Tag[] $tags
+     * @param FileVersionContentLanguage[] $contentLanguages
+     * @param FileVersionPublishLanguage[] $publishLanguages
      */
-    protected function setNewVersionProperties(&$fileVersion, $meta = array(), $tags = array(), $contentLanguages = array(), $publishLanguages = array())
+    protected function setNewVersionProperties(&$fileVersion, $metas = array(), $tags = array(), $contentLanguages = array(), $publishLanguages = array())
     {
-        /**
-         * @var FileVersionMeta $meta
-         */
-        foreach ($meta as $meta) {
+        foreach ($metas as $meta) {
             $newMedia = clone $meta;
             $newMedia->setFileVersion($fileVersion);
             $this->em->persist($newMedia);
             $fileVersion->addMeta($newMedia);
         }
-        /**
-         * @var Tag $meta
-         */
+
         foreach ($tags as $tag) {
             $fileVersion->addTag($tag);
         }
-        /**
-         * @var FileVersionContentLanguage $contentLanguage
-         */
+
         foreach ($contentLanguages as $contentLanguage) {
             $newContentLanguage = clone $contentLanguage;
             $newContentLanguage->setFileVersion($fileVersion);
             $this->em->persist($newContentLanguage);
             $fileVersion->addContentLanguage($newContentLanguage);
         }
-        /**
-         * @var FileVersionPublishLanguage $publishLanguage
-         */
+
         foreach ($publishLanguages as $publishLanguage) {
             $newPublishLanguage = clone $publishLanguage;
             $newPublishLanguage->setFileVersion($fileVersion);
