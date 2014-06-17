@@ -45,6 +45,11 @@ class Collection extends ApiEntity implements RestObjectInterface
     protected $children = array();
 
     /**
+     * @var array
+     */
+    protected $thumbnails = array();
+
+    /**
      * @var int
      */
     protected $mediaNumber;
@@ -181,6 +186,24 @@ class Collection extends ApiEntity implements RestObjectInterface
         }
         $this->mediaNumber = $mediaCount;
 
+        //todo: move sample pictures to media-proxy
+        if(!$this->thumbnails) {
+            $this->thumbnails = array(
+                array(
+                    'url' => 'http://lorempixel.com/150/100/sports',
+                    'title' => 'Media title'
+                ),
+                array(
+                    'url' => 'http://lorempixel.com/150/100/animals',
+                    'title' => 'Title of the media'
+                ),
+                array(
+                    'url' => 'http://lorempixel.com/150/100/technics',
+                    'title' => 'Media title'
+                )
+            );
+        }
+
         return $this;
     }
 
@@ -262,6 +285,24 @@ class Collection extends ApiEntity implements RestObjectInterface
         // set properties
         $this->properties = $properties;
 
+        //todo: move sample pictures to media-proxy
+        if(!$this->thumbnails) {
+            $this->thumbnails = array(
+                array(
+                    'url' => 'http://lorempixel.com/150/100/sports',
+                    'title' => 'Media title'
+                ),
+                array(
+                    'url' => 'http://lorempixel.com/150/100/animals',
+                    'title' => 'Title of the media'
+                ),
+                array(
+                    'url' => 'http://lorempixel.com/150/100/technics',
+                    'title' => 'Media title'
+                )
+            );
+        }
+
         return $this;
     }
 
@@ -287,7 +328,8 @@ class Collection extends ApiEntity implements RestObjectInterface
                 'changer' => $this->changer,
                 'creator' => $this->creator,
                 'changed' => $this->changed,
-                'created' => $this->created
+                'created' => $this->created,
+                'thumbnails' => $this->thumbnails
             );
         } else {
             // only get specific fields
@@ -298,6 +340,7 @@ class Collection extends ApiEntity implements RestObjectInterface
                 }
             }
         }
+
         return $data;
     }
 

@@ -1,0 +1,16 @@
+//
+// Collections-list style
+// --------------------------------------------------
+
+#collections-list-container {
+  .toggle-all {
+    display: inline-block;
+    cursor: pointer;
+    font-size: 12px;
+    .icon {
+      font-size: 14px;
+      color: #3E3E3E;
+      margin-right: 5px;
+    }
+  }
+}

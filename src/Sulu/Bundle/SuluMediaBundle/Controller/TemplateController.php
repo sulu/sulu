@@ -28,9 +28,54 @@ class TemplateController extends Controller
      * renders template for the collection files-view
      * @return Response
      */
-    public function collectionAction()
+    public function collectionFilesAction()
     {
-        return $this->render('SuluMediaBundle:Template:collection.html.twig');
+        return $this->render('SuluMediaBundle:Template:collection-files.html.twig');
+    }
+
+    /**
+     * renders template for the collection settings-view
+     * @return Response
+     */
+    public function collectionSettingsAction()
+    {
+        return $this->render('SuluMediaBundle:Template:collection-settings.html.twig');
+    }
+
+    /**
+     * renders template for the media info-view
+     * @return Response
+     */
+    public function mediaInfoAction()
+    {
+        return $this->render('SuluMediaBundle:Template:media-info.html.twig');
+    }
+
+    /**
+     * renders template for the new-collection-form
+     * @return Response
+     */
+    public function collectionNewAction()
+    {
+        return $this->render('SuluMediaBundle:Template:collection-new.html.twig');
+    }
+
+    /**
+     * renders template for a media in the multiple-edit form
+     * @return Response
+     */
+    public function multipleEditAction()
+    {
+        return $this->render('SuluMediaBundle:Template:media-multiple-edit.html.twig');
+    }
+
+    /**
+     * renders template for the collection list
+     * @return Response
+     */
+    public function collectionListAction()
+    {
+        return $this->render('SuluMediaBundle:Template:collection-list.html.twig');
     }
 
 }
