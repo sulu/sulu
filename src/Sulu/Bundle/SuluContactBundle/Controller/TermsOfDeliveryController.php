@@ -174,7 +174,7 @@ class TermsOfDeliveryController extends RestController implements ClassResourceI
     /**
      * Add or update a bunch of terms of delivery
      * @return \Symfony\Component\HttpFoundation\Response
-     * @Route("/termsofdelivery")
+     * @Route("/termsofdeliveries")
      */
     public function patchAction()
     {
