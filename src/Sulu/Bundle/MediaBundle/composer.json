@@ -14,6 +14,7 @@
         "php": ">=5.4",
         "doctrine/orm": ">=2.2.3,<2.4-dev",
         "friendsofsymfony/rest-bundle": "@dev",
+        "friendsofsymfony/http-cache": "@dev",
         "jms/serializer-bundle": "@dev",
         "stof/doctrine-extensions-bundle": "1.1.*@dev",
         "sulu/sulu": "dev-develop",
