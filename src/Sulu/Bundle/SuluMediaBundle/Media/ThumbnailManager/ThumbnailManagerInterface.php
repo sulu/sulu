@@ -8,9 +8,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\MediaBundle\Media\ImageManager;
+namespace Sulu\Bundle\MediaBundle\Media\ThumbnailManager;
 
-interface ImageManagerInterface {
+interface ThumbnailManagerInterface {
 
     /**
      * Return the image by a given url
@@ -26,4 +26,20 @@ interface ImageManagerInterface {
      * @return array
      */
     public function getMediaProperties($url);
+
+    /**
+     * @param $fileName
+     * @param $version
+     * @param $storageOptions
+     * @return string
+     */
+    public function getOriginal($fileName, $version, $storageOptions);
+
+    /**
+     * @param $id
+     * @param $fileName
+     * @param $options
+     * @return mixed
+     */
+    public function getThumbNails($id, $fileName, $options);
 } 

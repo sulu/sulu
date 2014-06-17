@@ -18,6 +18,7 @@ use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage;
 use Sulu\Bundle\MediaBundle\Entity\Media as Entity;
 use DateTime;
+use Sulu\Bundle\MediaBundle\Media\ImageManager\CacheManagerInterface;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 
 class Media extends ApiEntity implements RestObjectInterface
@@ -89,19 +90,14 @@ class Media extends ApiEntity implements RestObjectInterface
     protected $tags = array();
 
     /**
-     * @var string
-     */
-    protected $url;
-
-    /**
-     * @var array
-     */
-    protected $thumbnails = array();
-
-    /**
      * @var array
      */
     protected $properties = array();
+
+    /**
+     * @var string
+     */
+    protected $storageOptions;
 
     /**
      * @var string
@@ -122,6 +118,16 @@ class Media extends ApiEntity implements RestObjectInterface
      * @var
      */
     protected $created;
+
+    /**
+     * @var CacheManagerInterface
+     */
+    protected $cacheManager;
+
+    public function __construct($cacheManager)
+    {
+        $this->cacheManager = $cacheManager;
+    }
 
     /**
      * {@inheritdoc}
@@ -187,18 +193,8 @@ class Media extends ApiEntity implements RestObjectInterface
                                             }
                                         }
                                     }
-                                    // TODO url
-                                    // $this->url = $originPath . '/' . $fileVersion['id'];
-                                    $this->thumbnails = array();
-                                    // TODO thumbnails
-                                    /*
-                                    foreach ($fileFormats as $format) {
-                                        $this->thumbnails[] = array(
-                                            'format' => $format,
-                                            'url' => $uploadPath . '/'.$format.'/' . $fileVersion['name']
-                                        );
-                                    }
-                                    */
+
+                                    $this->storageOptions = $fileVersion['storageOptions'];
 
                                     if ($fileVersion['meta']) {
                                         $counter = 0;
@@ -241,7 +237,6 @@ class Media extends ApiEntity implements RestObjectInterface
         $contentLanguages = array();
         $publishLanguages = array();
         $tags = array();
-        $thumbnails = array();
 
         /**
          * @var File $file
@@ -302,12 +297,7 @@ class Media extends ApiEntity implements RestObjectInterface
                         }
                     }
 
-                    // TODO url
-                    $fileVersion->getStorageOptions();
-                    $this->url = null;
-
-                    // TODO thumbnails
-                    $thumbnails = array();
+                    $this->storageOptions = $fileVersion->getStorageOptions();
                 }
             }
         }
@@ -323,9 +313,6 @@ class Media extends ApiEntity implements RestObjectInterface
 
         // set tags
         $this->tags = $tags;
-
-        // set thumbnails
-        $this->thumbnails = $thumbnails;
 
         // set collection
         if ($object->getCollection()) {
@@ -381,8 +368,8 @@ class Media extends ApiEntity implements RestObjectInterface
                 'contentLanguages' => $this->contentLanguages,
                 'publishLanguages' => $this->publishLanguages,
                 'tags' => $this->tags,
-                'url' => $this->url,
-                'thumbnails' => $this->thumbnails,
+                'url' => $this->getUrl(),
+                'thumbnails' => $this->getThumbNails(),
                 'properties' => $this->properties,
                 'changer' => $this->changer,
                 'creator' => $this->creator,
@@ -399,19 +386,23 @@ class Media extends ApiEntity implements RestObjectInterface
             }
         }
 
-        // Todo: move the sample picture to media-proxy if implemented
-        if (!$this->thumbnails) {
-            $data['thumbnails'] = array(
-                '50x50' => array(
-                    'url' => 'http://lorempixel.com/50/50/'
-                ),
-                '170x170' => array(
-                    'url' => 'http://lorempixel.com/170/170/'
-                )
-            );
-        }
-
         return $data;
+    }
+
+    /**
+     * @return array
+     */
+    public function getThumbNails()
+    {
+        return $this->cacheManager->getThumbNails($this->id, $this->name, $this->storageOptions);
+    }
+
+    /**
+     * @return string
+     */
+    public function getUrl()
+    {
+        return $this->cacheManager->getOriginal($this->id, $this->version, $this->storageOptions);
     }
 
     /**
@@ -649,24 +640,6 @@ class Media extends ApiEntity implements RestObjectInterface
     }
 
     /**
-     * @param array $thumbnails
-     * @return $this
-     */
-    public function setThumbnails($thumbnails)
-    {
-        $this->thumbnails = $thumbnails;
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getThumbnails()
-    {
-        return $this->thumbnails;
-    }
-
-    /**
      * @param string $title
      * @return $this
      */
@@ -682,24 +655,6 @@ class Media extends ApiEntity implements RestObjectInterface
     public function getTitle()
     {
         return $this->title;
-    }
-
-    /**
-     * @param string $url
-     * @return $this
-     */
-    public function setUrl($url)
-    {
-        $this->url = $url;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getUrl()
-    {
-        return $this->url;
     }
 
     /**

@@ -15,6 +15,7 @@ use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Put;
 
+use Sulu\Bundle\MediaBundle\Media\ThumbnailManager\ThumbnailManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\Exception\UploadFileException;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\RestObject\Media;
@@ -120,7 +121,7 @@ class MediaController extends RestController implements ClassResourceInterface
                 404
             );
         } else {
-            $media = new Media();
+            $media = $this->getNewMedia();
 
             $view = $this->view(
                 array_merge(
@@ -187,7 +188,7 @@ class MediaController extends RestController implements ClassResourceInterface
                 throw new RestException('Uploaded file not found', UploadFileException::EXCEPTION_CODE_UPLOADED_FILE_NOT_FOUND);
             }
 
-            $media = new Media();
+            $media = $this->getNewMedia();
             $view = $this->view($media->setDataByEntity($mediaEntity, $locale)->toArray(), 200);
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
@@ -232,7 +233,7 @@ class MediaController extends RestController implements ClassResourceInterface
                 $mediaEntity = $this->getMediaManager()->update(null, $this->getUser()->getId(), $id, $media->getCollection(), $properties);
             }
 
-            $media = new Media();
+            $media = $this->getNewMedia();
             $view = $this->view($media->setDataByEntity($mediaEntity, $locale)->toArray(), 200);
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
@@ -267,7 +268,7 @@ class MediaController extends RestController implements ClassResourceInterface
      */
     protected function getRestObject(Request $request)
     {
-        $object = new Media();
+        $object = $this->getNewMedia();
         $object->setId($request->get('id'));
         $object->setLocale($request->get('locale', $this->getLocale($request->get('locale'))));
         $object->setType($request->get('type'));
@@ -322,7 +323,7 @@ class MediaController extends RestController implements ClassResourceInterface
         $flatMediaList = array();
 
         foreach ($mediaList as $media) {
-            $flatMedia = new Media();
+            $flatMedia = $this->getNewMedia();
             array_push($flatMediaList, $flatMedia->setDataByEntityArray($media, $locale)->toArray($fields));
         }
 
@@ -352,7 +353,7 @@ class MediaController extends RestController implements ClassResourceInterface
 
     /**
      * give back the fileversion properties
-     * @param MediaRestObject $restObject
+     * @param Media $restObject
      * @return array
      */
     protected function getProperties($restObject)
@@ -396,6 +397,23 @@ class MediaController extends RestController implements ClassResourceInterface
     protected function getMediaManager()
     {
         return $this->get('sulu_media.media_manager');
+    }
+
+    /**
+     * @return Media
+     */
+    protected function getNewMedia()
+    {
+        return new Media($this->getCacheManager());
+    }
+
+    /**
+     * getCacheManager
+     * @return ThumbnailManagerInterface
+     */
+    protected function getCacheManager()
+    {
+        return $this->get('sulu_media.thumbnail_manager');
     }
 
     /**

@@ -22,4 +22,10 @@ interface ImageConverterInterface {
      */
     public function convert($originalPath, $format);
 
+    /**
+     * Get all formats
+     * @return array
+     */
+    public function getFormats();
+
 } 

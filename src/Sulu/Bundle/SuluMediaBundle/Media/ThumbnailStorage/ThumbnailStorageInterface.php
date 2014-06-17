@@ -8,9 +8,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\MediaBundle\Media\CacheStorage;
+namespace Sulu\Bundle\MediaBundle\Media\ThumbnailStorage;
 
-interface CacheStorageInterface {
+interface ThumbnailStorageInterface {
 
     /**
      * Save image and return the url to the image
@@ -33,11 +33,13 @@ interface CacheStorageInterface {
 
     /**
      * Return the url to an specific format of an media
-     * @param $media
+     * @param $id
+     * @param $fileName
+     * @param $options
      * @param $format
      * @return mixed
      */
-    public function getMediaUrl($media, $format);
+    public function getMediaUrl($id, $fileName, $options, $format);
 
     /**
      * Return the id and the format of a media
