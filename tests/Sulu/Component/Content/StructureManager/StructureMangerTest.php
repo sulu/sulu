@@ -11,7 +11,9 @@
 namespace Sulu\Component\Content\Mapper;
 
 use Psr\Log\LoggerInterface;
+use Sulu\Component\Content\Block\BlockProperty;
 use Sulu\Component\Content\PropertyTag;
+use Sulu\Component\Content\Section\SectionProperty;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManager;
 use Sulu\Component\Content\StructureManagerInterface;
@@ -55,7 +57,8 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
             $cacheDir . '/TemplateStructureCache.php',
             $cacheDir . '/Template_Structure_template.php',
             $cacheDir . '/Template_blockStructureCache.php',
-            $cacheDir . '/Template_block_typesStructureCache.php'
+            $cacheDir . '/Template_block_typesStructureCache.php',
+            $cacheDir . '/Template_SectionsStructureCache.php'
         );
 
         if (!is_dir($cacheDir)) {
@@ -82,11 +85,11 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
 
     public function tearDown()
     {
-        foreach ($this->cacheFiles as $cacheFile) {
+        /*foreach ($this->cacheFiles as $cacheFile) {
             if (is_file($cacheFile)) {
                 unlink($cacheFile);
             }
-        }
+        }*/
     }
 
     public function testGetStructure()
@@ -111,6 +114,16 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('title', $properties);
         $property = $structure->getProperty('title');
         $this->assertEquals('title', $property->getName());
+
+        $this->assertEquals('Titel', $property->getTitle('de'));
+        $this->assertEquals('Title', $property->getTitle('en'));
+
+        $this->assertEquals('Titel-Info-DE', $property->getInfoText('de'));
+        $this->assertEquals('Title-Info-EN', $property->getInfoText('en'));
+
+        $this->assertEquals('Platzhalter-Info-DE', $property->getPlaceholder('de'));
+        $this->assertEquals('Placeholder-Info-EN', $property->getPlaceholder('en'));
+
         $this->assertEquals('text_line', $property->getContentTypeName());
         $this->assertEquals(true, $property->isMandatory());
         $this->assertEquals(true, $property->isMultilingual());
@@ -486,7 +499,6 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         // test properties of block types
         $type1 = $block->getType('default');
         $this->assertEquals('default', $type1->getName());
-        $this->assertEquals('type.default', $type1->getTitle());
         $this->assertEquals(2, sizeof($type1->getChildProperties()));
 
         $properties = $type1->getChildProperties();
@@ -497,7 +509,6 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
 
         $type2 = $block->getType('test');
         $this->assertEquals('test', $type2->getName());
-        $this->assertEquals('type.test', $type2->getTitle());
         $this->assertEquals(3, sizeof($type2->getChildProperties()));
 
         $properties = $type2->getChildProperties();
@@ -507,5 +518,31 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('text_line', $properties[1]->getContentTypeName());
         $this->assertEquals('article', $properties[2]->getName());
         $this->assertEquals('text_editor', $properties[2]->getContentTypeName());
+    }
+
+    public function testSections()
+    {
+        /** @var StructureInterface $structure */
+        $structure = $this->structureManager->getStructure('template_sections');
+
+        // should implement interface
+        $this->assertInstanceOf('\Sulu\Component\Content\StructureInterface', $structure);
+
+        $this->assertEquals(4, sizeof($structure->getProperties()));
+        $this->assertEquals('title', $structure->getProperty('title')->getName());
+
+        /** @var SectionProperty $section */
+        $section = $structure->getProperty('test');
+        $this->assertInstanceOf('\Sulu\Component\Content\Section\SectionPropertyInterface', $section);
+        $this->assertInstanceOf('\Sulu\Component\Content\PropertyInterface', $section);
+        $this->assertEquals('url', $section->getChildProperties()[0]->getName());
+        $this->assertEquals('article', $section->getChildProperties()[1]->getName());
+        $this->assertEquals('block', $section->getChildProperties()[2]->getName());
+        /** @var BlockProperty $block */
+        $block = $section->getChildProperties()[2];
+        $this->assertEquals('name', $block->getType('test')->getChildProperties()[0]->getName());
+
+        $this->assertEquals('images', $structure->getProperty('images')->getName());
+        $this->assertEquals('pages', $structure->getProperty('pages')->getName());
     }
 }

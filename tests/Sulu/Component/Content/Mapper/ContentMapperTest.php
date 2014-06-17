@@ -22,6 +22,7 @@ use Sulu\Component\Content\BreadcrumbItemInterface;
 use Sulu\Component\Content\ContentEvents;
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyTag;
+use Sulu\Component\Content\Section\SectionProperty;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Webspace\Localization;
 use Sulu\Component\Webspace\Webspace;
@@ -50,6 +51,8 @@ class ContentMapperTest extends PhpcrTestCase
             return $this->getStructureMock(3);
         } elseif ($structureKey == 'mandatory') {
             return $this->getStructureMock(4);
+        } elseif ($structureKey == 'section') {
+            return $this->getStructureMock(5);
         }
 
         return null;
@@ -59,7 +62,7 @@ class ContentMapperTest extends PhpcrTestCase
     {
         $structureMock = $this->getMockForAbstractClass(
             '\Sulu\Component\Content\Structure',
-            array('overview', 'asdf', 'asdf', 2400)
+            array($type !== 5 ? 'overview' : 'section', 'asdf', 'asdf', 2400)
         );
 
         $method = new ReflectionMethod(
@@ -70,7 +73,17 @@ class ContentMapperTest extends PhpcrTestCase
         $method->invokeArgs(
             $structureMock,
             array(
-                new Property('name', '', 'text_line', false, true, 1, 1, array(), array(new PropertyTag('sulu.node.name', 10)))
+                new Property(
+                    'name',
+                    '',
+                    'text_line',
+                    false,
+                    true,
+                    1,
+                    1,
+                    array(),
+                    $type !== 5 ? array(new PropertyTag('sulu.node.name', 10)) : array()
+                )
             )
         );
 
@@ -121,6 +134,28 @@ class ContentMapperTest extends PhpcrTestCase
                 $structureMock,
                 array(
                     new Property('blog', '', 'text_line', true, true)
+                )
+            );
+        } elseif ($type == 5) {
+            $section = new SectionProperty('test',array(), '6');
+            $section->addChild(
+                new Property(
+                    'blog',
+                    '',
+                    'text_line',
+                    true,
+                    true,
+                    1,
+                    1,
+                    array(),
+                    array(new PropertyTag('sulu.node.name', 10))
+                )
+            );
+
+            $method->invokeArgs(
+                $structureMock,
+                array(
+                    $section
                 )
             );
         }
@@ -2089,5 +2124,32 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals(0, sizeof($layer3[2]->getChildren()));
         $this->assertEquals('SubSubNews-3', $layer3[2]->name);
         $this->assertFalse($layer3[2]->getHasChildren());
+    }
+
+    public function testSection()
+    {
+        $data = array(
+            'name' => 'Test',
+            'url' => '/test/test',
+            'blog' => 'Thats a good test'
+        );
+
+        $structure = $this->mapper->save($data, 'section', 'default', 'en', 1);
+        $resultSave = $structure->toArray();
+
+        $this->assertEquals('/thats-a-good-test', $resultSave['path']);
+        $this->assertEquals('section', $resultSave['template']);
+        $this->assertEquals('Test', $resultSave['name']);
+        $this->assertEquals('Thats a good test', $resultSave['blog']);
+        $this->assertEquals('/test/test', $resultSave['url']);
+
+        $structure = $this->mapper->load($structure->getUuid(), 'default', 'en');
+        $resultLoad = $structure->toArray();
+
+        $this->assertEquals('/thats-a-good-test', $resultLoad['path']);
+        $this->assertEquals('section', $resultLoad['template']);
+        $this->assertEquals('Test', $resultLoad['name']);
+        $this->assertEquals('Thats a good test', $resultLoad['blog']);
+        $this->assertEquals('/test/test', $resultLoad['url']);
     }
 }

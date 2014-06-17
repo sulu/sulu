@@ -22,9 +22,9 @@ class Property implements PropertyInterface, \JsonSerializable
     private $name;
 
     /**
-     * @var string title of property
+     * @var Metadata
      */
-    private $title;
+    private $metadata;
 
     /**
      * is property mandatory
@@ -69,6 +69,12 @@ class Property implements PropertyInterface, \JsonSerializable
     private $tags;
 
     /**
+     * column span
+     * @var string
+     */
+    private $col;
+
+    /**
      * value of property
      * @var mixed
      */
@@ -76,14 +82,15 @@ class Property implements PropertyInterface, \JsonSerializable
 
     function __construct(
         $name,
-        $title,
+        $metaData,
         $contentTypeName,
         $mandatory = false,
         $multilingual = false,
         $maxOccurs = 1,
         $minOccurs = 1,
         $params = array(),
-        $tags = array()
+        $tags = array(),
+        $col = null
     )
     {
         $this->contentTypeName = $contentTypeName;
@@ -92,9 +99,10 @@ class Property implements PropertyInterface, \JsonSerializable
         $this->minOccurs = $minOccurs;
         $this->multilingual = $multilingual;
         $this->name = $name;
-        $this->title = $title;
+        $this->metadata = new Metadata($metaData);
         $this->params = $params;
         $this->tags =$tags;
+        $this->col = $col;
     }
 
     /**
@@ -180,12 +188,42 @@ class Property implements PropertyInterface, \JsonSerializable
     }
 
     /**
-     * returns title of property
+     * returns column span
      * @return string
      */
-    public function getTitle()
+    public function getColspan()
     {
-        return $this->title;
+        return $this->col;
+    }
+
+    /**
+     * returns title of property
+     * @param string $languageCode
+     * @return string
+     */
+    public function getTitle($languageCode)
+    {
+        return $this->metadata->get('title', $languageCode, ucfirst($this->name));
+    }
+
+    /**
+     * returns infoText of property
+     * @param string $languageCode
+     * @return string
+     */
+    public function getInfoText($languageCode)
+    {
+        return $this->metadata->get('info_text', $languageCode, '');
+    }
+
+    /**
+     * returns placeholder of property
+     * @param string $languageCode
+     * @return string
+     */
+    public function getPlaceholder($languageCode)
+    {
+        return $this->metadata->get('placeholder', $languageCode, '');
     }
 
     /**
@@ -243,6 +281,14 @@ class Property implements PropertyInterface, \JsonSerializable
     }
 
     /**
+     * @return Metadata
+     */
+    public function getMetadata()
+    {
+        return $this->metadata;
+    }
+
+    /**
      * magic getter for twig templates
      * @param $property
      * @return null
@@ -263,7 +309,7 @@ class Property implements PropertyInterface, \JsonSerializable
     {
         $result = array(
             'name' => $this->getName(),
-            'title' => $this->getTitle(),
+            'metadata' => $this->getMetadata()->getData(),
             'mandatory' => $this->getMandatory(),
             'multilingual' => $this->getMultilingual(),
             'minOccurs' => $this->getMinOccurs(),
@@ -286,7 +332,7 @@ class Property implements PropertyInterface, \JsonSerializable
     {
         $clone = new Property(
             $this->getName(),
-            $this->getTitle(),
+            $this->getMetadata(),
             $this->getMandatory(),
             $this->getMultilingual(),
             $this->getMaxOccurs(),

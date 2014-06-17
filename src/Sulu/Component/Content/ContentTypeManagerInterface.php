@@ -10,12 +10,23 @@
 
 namespace Sulu\Component\Content;
 
+/**
+ * content type manager interface
+ * @package Sulu\Component\Content
+ */
 interface ContentTypeManagerInterface
 {
     /**
+     * returns content type
      * @param string $contentTypeName The name of the content to load.
      * @return ContentTypeInterface
      */
     public function get($contentTypeName);
 
+    /**
+     * checks if contentType exists
+     * @param string $contentTypeName
+     * @return bool
+     */
+    public function has($contentTypeName);
 } 

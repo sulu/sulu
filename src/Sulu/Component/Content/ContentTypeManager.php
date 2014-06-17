@@ -13,6 +13,10 @@ namespace Sulu\Component\Content;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+/**
+ * manages content types
+ * @package Sulu\Component\Content
+ */
 class ContentTypeManager extends ContainerAware implements ContentTypeManagerInterface
 {
 
@@ -33,11 +37,18 @@ class ContentTypeManager extends ContainerAware implements ContentTypeManagerInt
     }
 
     /**
-     * @param string $contentTypeName A String with the name of the content to load
-     * @return ContentTypeInterface
+     * {@inheritdoc}
      */
-    public function get($contentTypeName = '')
+    public function get($contentTypeName)
     {
         return $this->container->get($this->prefix . $contentTypeName);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function has($contentTypeName)
+    {
+        return $this->container->has($this->prefix . $contentTypeName);
     }
 }

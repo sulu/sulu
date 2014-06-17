@@ -154,9 +154,10 @@ interface StructureInterface extends \JsonSerializable
 
     /**
      * returns an array of properties
-     * @return array
+     * @param bool $flatten
+     * @return PropertyInterface[]
      */
-    public function getProperties();
+    public function getProperties($flatten = false);
 
     /**
      * @param boolean $hasChildren

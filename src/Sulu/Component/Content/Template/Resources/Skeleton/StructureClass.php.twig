@@ -3,6 +3,7 @@ use Sulu\Component\Content\Property;
 use Sulu\Component\Content\Block\BlockProperty;
 use Sulu\Component\Content\Block\BlockPropertyType;
 use Sulu\Component\Content\PropertyTag;
+use Sulu\Component\Content\Section\SectionProperty;
 
 /**
  * {{ cache_class }}
@@ -30,15 +31,34 @@ class {{ cache_class }} extends {{ base_class }}
 {% for type in property.types %}
 {{ _self.buildTypes(type, child, layer, loop.index) }}
 {% endfor %}
+{% elseif property.type == 'section' %}
+{{ _self.buildSection(property, parent, layer) }}
 {% else %}
         {{ child }} = {{ _self.propertyConstructor(property) }}
         {{ parent }}->addChild({{ child }});
 {% endif %}
 {% endmacro %}
 
+{% macro buildSection(section, parent, layer) %}
+        // section {{ section.name }}
+        {% set sectionVar = '$section'~layer~typeIndex %}
+        {{ sectionVar }} = new SectionProperty(
+            '{{ section.name }}',
+            {{ _self.renderArray(section.meta) }},
+            '{{ section.colspan }}'
+        );
+{% for property in section.properties %}
+{{ _self.buildProperty(property, sectionVar, layer) }}
+{% endfor %}
+        {{ parent }}->addChild({{ sectionVar }});
+{% endmacro %}
+
 {% macro buildTypes(type, parent, layer, typeIndex) %}
 {% set typeVar = '$type'~layer~typeIndex %}
-        {{ typeVar }} = new BlockPropertyType('{{ type.name }}', '{{ type.title }}');
+        {{ typeVar }} = new BlockPropertyType(
+            '{{ type.name }}',
+{{ _self.renderArray(type.meta) }}
+        );
         {{ parent }}->addType({{ typeVar }});
 {% for childProperty in type.properties %}
 {{ _self.buildProperty(childProperty, typeVar, layer+1) }}
@@ -48,12 +68,12 @@ class {{ cache_class }} extends {{ base_class }}
 {% macro propertyConstructor(property) %}
 new Property(
             '{{ property.name }}',
-            '{{ property.title }}',
+{{ _self.renderArray(property.meta) }},
             '{{ property.type }}',
-            {{ property.mandatory is defined and property.mandatory ? 'true' : 'false' }},
-            {{ property.multilingual is defined ? (property.multilingual? 'true':'false') : 'true' }},
-            {{ property.maxOccurs is defined ? property.maxOccurs : 1 }},
-            {{ property.minOccurs is defined ? property.minOccurs : 1 }},
+            {{ property.mandatory != null and property.mandatory ? 'true' : 'false' }},
+            {{ property.multilingual != null ? (property.multilingual? 'true':'false') : 'true' }},
+            {{ property.maxOccurs != null ? property.maxOccurs : 1 }},
+            {{ property.minOccurs != null ? property.minOccurs : 1 }},
             array(
 {% for param in property.params %}
                 '{{ param.name }}' => '{{ param.value }}',
@@ -63,18 +83,19 @@ new Property(
 {% for tag in property.tags %}
                 '{{ tag.name }}' => new PropertyTag('{{ tag.name }}', {{ tag.priority is defined and tag.priority ? tag.priority : '1' }}),
 {% endfor %}
-            )
+            ),
+            '{{ property.colspan }}'
         );{% endmacro %}
 
 {% macro blockPropertyConstructor(property) %}
 new BlockProperty(
             '{{ property.name }}',
-            '{{ property.title }}',
+{{ _self.renderArray(property.meta) }},
             '{{ property['default-type'] }}',
-            {{ property.mandatory is defined and property.mandatory ? 'true' : 'false' }},
-            {{ property.multilingual is defined ? (property.multilingual? 'true':'false') : 'true' }},
-            {{ property.maxOccurs is defined ? property.maxOccurs : 1 }},
-            {{ property.minOccurs is defined ? property.minOccurs : 1 }},
+            {{ property.mandatory != null and property.mandatory ? 'true' : 'false' }},
+            {{ property.multilingual != null ? (property.multilingual? 'true':'false') : 'true' }},
+            {{ property.maxOccurs != null ? property.maxOccurs : 1 }},
+            {{ property.minOccurs != null ? property.minOccurs : 1 }},
             array(
 {% for param in property.params %}
                 '{{ param.name }}' => '{{ param.value }}',
@@ -84,5 +105,18 @@ new BlockProperty(
 {% for tag in property.tags %}
                 '{{ tag.name }}' => new PropertyTag('{{ tag.name }}', {{ tag.priority is defined and tag.priority ? tag.priority : '1' }}),
 {% endfor %}
-            )
+            ),
+            '{{ property.colspan }}'
         );{% endmacro %}
+
+{% macro renderArray(array) %}
+            array(
+{% for key, value in array %}
+{% if is_array(value) %}
+                '{{ key }}' => {{ _self.renderArray(value) }},
+{% else %}
+                '{{ key }}' => '{{ value }}',
+{% endif %}
+{% endfor %}
+            )
+{% endmacro %}
