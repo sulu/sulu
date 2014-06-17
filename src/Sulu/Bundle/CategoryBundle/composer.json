@@ -25,7 +25,8 @@
         "doctrine/doctrine-bundle": "1.2.*",
         "symfony/monolog-bundle": "2.4.*",
         "sulu/test-bundle": "dev-develop",
-        "phpunit/phpunit": "4.0.*"
+        "phpunit/phpunit": "4.0.*",
+        "friendsofsymfony/http-cache": "@dev"
     },
     "autoload": {
         "psr-0": {
