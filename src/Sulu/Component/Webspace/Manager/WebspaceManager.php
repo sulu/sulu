@@ -110,7 +110,7 @@ class WebspaceManager implements WebspaceManagerInterface
             $sameWebspace = $webspaceKey === null || $portalInformation->getWebspace()->getKey() === $webspaceKey;
             if ($sameLocalization && $sameWebspace) {
                 // TODO protocol
-                $urls[] = 'http://' . $url . $resourceLocator;
+                $urls[] = rtrim('http://' . $url . $resourceLocator, '/');
             }
         }
 
