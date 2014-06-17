@@ -31,6 +31,10 @@ define([
                 },
 
                 validate: function() {
+                    if (!this.needsValidation()) {
+                        return true;
+                    }
+
                     var val = this.getValue();
                     return val.length > 0 && val !== '/';
                 }

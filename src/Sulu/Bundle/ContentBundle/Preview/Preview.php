@@ -16,6 +16,7 @@ use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Content\Section\SectionPropertyInterface;
 use Sulu\Component\Content\StructureManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DomCrawler\Crawler;
@@ -152,8 +153,27 @@ class Preview implements PreviewInterface
         $newContent = $this->structureManager->getStructure($template);
         $newContent->setWebspaceKey($webspaceKey);
         $newContent->setLanguageCode($languageCode);
+
+        $this->copyProperties($newContent, $content, $webspaceKey, $languageCode);
+
+        return $newContent;
+    }
+
+    /**
+     * copies properties from one to another node
+     * @param StructureInterface|SectionPropertyInterface $newContent
+     * @param StructureInterface|SectionPropertyInterface $content
+     * @param string $webspaceKey
+     * @param string $languageCode
+     */
+    private function copyProperties(
+        $newContent,
+        $content,
+        $webspaceKey,
+        $languageCode
+    ) {
         /** @var PropertyInterface $property */
-        foreach ($newContent->getProperties() as $property) {
+        foreach ($newContent->getProperties(true) as $property) {
             $value = $content->hasProperty($property->getName()) ?
                 $content->getProperty($property->getName())->getValue() : null;
 
@@ -165,7 +185,6 @@ class Preview implements PreviewInterface
                 $languageCode
             );
         }
-        return $newContent;
     }
 
     /**

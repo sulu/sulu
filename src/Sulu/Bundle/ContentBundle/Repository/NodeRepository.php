@@ -234,7 +234,7 @@ class NodeRepository implements NodeRepositoryInterface
         }
 
         $node = array(
-            'id' => $webspace->getKey(),
+            'id' => $this->sessionManager->getContentNode($webspace->getKey())->getIdentifier(),
             'path' => '/',
             'title' => $webspace->getName(),
             'hasSub' => true,
