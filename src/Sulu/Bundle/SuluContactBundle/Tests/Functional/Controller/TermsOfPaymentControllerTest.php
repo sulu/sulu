@@ -266,7 +266,7 @@ class TermsOfPaymentControllerTest extends DatabaseTestCase
         $client = $this->createTestClient();
         $client->request(
             'PATCH',
-            '/api/termsofpayment',
+            '/api/termsofpayments',
             array(
                 array(
                     'id' => 1,
@@ -323,7 +323,7 @@ class TermsOfPaymentControllerTest extends DatabaseTestCase
         $client = $this->createTestClient();
         $client->request(
             'PATCH',
-            '/api/termsofpayment',
+            '/api/termsofpayments',
             array(
                 array(
                     'id' => 1,
@@ -345,7 +345,7 @@ class TermsOfPaymentControllerTest extends DatabaseTestCase
         $client = $this->createTestClient();
         $client->request(
             'PATCH',
-            '/api/termsofpayment',
+            '/api/termsofpayments',
             array(
                 array(
                     'id' => 1,

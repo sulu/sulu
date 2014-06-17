@@ -47,6 +47,7 @@ define([], function() {
             this.dfdListenForChange = this.sandbox.data.deferred();
             this.dfdFormIsSet = this.sandbox.data.deferred();
 
+            this.instanceNameTypeOverlay = 'accountCategories';
             this.accountCategoryURL = 'api/account/categories';
 
             this.render();
@@ -214,12 +215,13 @@ define([], function() {
                     removeOnClose: true,
                     triggerEl: null,
                     title: this.sandbox.translate('public.edit-entries'),
-                    data: this.accountCategoryData
+                    data: this.accountCategoryData,
+                    valueName: 'category'
                 };
 
             this.sandbox.dom.remove('#overlayContainer');
             this.sandbox.dom.append('body', $overlayContainer);
-            this.sandbox.emit('sulu.types.open', config);
+            this.sandbox.emit('sulu.types.'+this.instanceNameTypeOverlay+'.open', config);
         },
 
         /**
@@ -235,6 +237,7 @@ define([], function() {
                             instanceName: 'accountCategories',
                             removeOnClose: true
                         },
+                        instanceName: this.instanceNameTypeOverlay,
                         url: this.accountCategoryURL,
                         data: this.accountCategoryData
                     }
@@ -435,7 +438,7 @@ define([], function() {
                 this.sandbox.emit('sulu.contacts.accounts.list');
             }, this);
 
-            this.sandbox.on('sulu.types.closed', function(data) {
+            this.sandbox.on('sulu.types.'+this.instanceNameTypeOverlay+'.closed', function(data) {
                 var selected = [];
 
                 this.accountCategoryData = this.copyArrayOfObjects(data);
