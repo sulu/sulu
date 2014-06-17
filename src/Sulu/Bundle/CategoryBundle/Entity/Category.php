@@ -60,13 +60,23 @@ class Category
     private $changer;
 
     /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $meta;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $name;
+
+    /**
      * Constructor
      */
     public function __construct()
     {
         $this->children = new \Doctrine\Common\Collections\ArrayCollection();
     }
-    
+
     /**
      * Set lft
      *
@@ -76,14 +86,14 @@ class Category
     public function setLft($lft)
     {
         $this->lft = $lft;
-    
+
         return $this;
     }
 
     /**
      * Get lft
      *
-     * @return integer 
+     * @return integer
      */
     public function getLft()
     {
@@ -99,14 +109,14 @@ class Category
     public function setRgt($rgt)
     {
         $this->rgt = $rgt;
-    
+
         return $this;
     }
 
     /**
      * Get rgt
      *
-     * @return integer 
+     * @return integer
      */
     public function getRgt()
     {
@@ -122,14 +132,14 @@ class Category
     public function setDepth($depth)
     {
         $this->depth = $depth;
-    
+
         return $this;
     }
 
     /**
      * Get depth
      *
-     * @return integer 
+     * @return integer
      */
     public function getDepth()
     {
@@ -145,14 +155,14 @@ class Category
     public function setCreated($created)
     {
         $this->created = $created;
-    
+
         return $this;
     }
 
     /**
      * Get created
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getCreated()
     {
@@ -168,14 +178,14 @@ class Category
     public function setChanged($changed)
     {
         $this->changed = $changed;
-    
+
         return $this;
     }
 
     /**
      * Get changed
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getChanged()
     {
@@ -185,7 +195,7 @@ class Category
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -201,7 +211,7 @@ class Category
     public function addChildren(\Sulu\Bundle\CategoryBundle\Entity\Category $children)
     {
         $this->children[] = $children;
-    
+
         return $this;
     }
 
@@ -218,7 +228,7 @@ class Category
     /**
      * Get children
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getChildren()
     {
@@ -234,14 +244,14 @@ class Category
     public function setParent(\Sulu\Bundle\CategoryBundle\Entity\Category $parent = null)
     {
         $this->parent = $parent;
-    
+
         return $this;
     }
 
     /**
      * Get parent
      *
-     * @return \Sulu\Bundle\CategoryBundle\Entity\Category 
+     * @return \Sulu\Bundle\CategoryBundle\Entity\Category
      */
     public function getParent()
     {
@@ -257,14 +267,14 @@ class Category
     public function setCreator(\Sulu\Bundle\SecurityBundle\Entity\User $creator = null)
     {
         $this->creator = $creator;
-    
+
         return $this;
     }
 
     /**
      * Get creator
      *
-     * @return \Sulu\Bundle\SecurityBundle\Entity\User 
+     * @return \Sulu\Bundle\SecurityBundle\Entity\User
      */
     public function getCreator()
     {
@@ -280,17 +290,83 @@ class Category
     public function setChanger(\Sulu\Bundle\SecurityBundle\Entity\User $changer = null)
     {
         $this->changer = $changer;
+
+        return $this;
+    }
+    /**
+     * Get changer
+     *
+     * @return \Sulu\Bundle\SecurityBundle\Entity\User
+     */
+    public function getChanger()
+    {
+        return $this->changer;
+    }
+
+
+    /**
+     * Add meta
+     *
+     * @param \Sulu\Bundle\CategoryBundle\Entity\CategoryMeta $meta
+     * @return Category
+     */
+    public function addMeta(\Sulu\Bundle\CategoryBundle\Entity\CategoryMeta $meta)
+    {
+        $this->meta[] = $meta;
     
         return $this;
     }
 
     /**
-     * Get changer
+     * Remove meta
      *
-     * @return \Sulu\Bundle\SecurityBundle\Entity\User 
+     * @param \Sulu\Bundle\CategoryBundle\Entity\CategoryMeta $meta
      */
-    public function getChanger()
+    public function removeMeta(\Sulu\Bundle\CategoryBundle\Entity\CategoryMeta $meta)
     {
-        return $this->changer;
+        $this->meta->removeElement($meta);
+    }
+
+    /**
+     * Get meta
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getMeta()
+    {
+        return $this->meta;
+    }
+
+    /**
+     * Add name
+     *
+     * @param \Sulu\Bundle\CategoryBundle\Entity\CategoryName $name
+     * @return Category
+     */
+    public function addName(\Sulu\Bundle\CategoryBundle\Entity\CategoryName $name)
+    {
+        $this->name[] = $name;
+    
+        return $this;
+    }
+
+    /**
+     * Remove name
+     *
+     * @param \Sulu\Bundle\CategoryBundle\Entity\CategoryName $name
+     */
+    public function removeName(\Sulu\Bundle\CategoryBundle\Entity\CategoryName $name)
+    {
+        $this->name->removeElement($name);
+    }
+
+    /**
+     * Get name
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getName()
+    {
+        return $this->name;
     }
 }

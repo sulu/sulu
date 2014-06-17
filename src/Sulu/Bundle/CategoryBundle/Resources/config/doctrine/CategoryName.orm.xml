@@ -9,14 +9,18 @@
             <generator strategy="AUTO"/>
         </id>
 
+        <field name="name" column="name" type="string" length="45"/>
+        <field name="locale" column="locale" type="string" length="5"/>
+
         <many-to-one field="category" target-entity="Sulu\Bundle\CategoryBundle\Entity\Category" inversed-by="name">
+            <cascade>
+                <cascade-all/>
+            </cascade>
             <join-columns>
-                <join-column name="idCategories" referenced-column-name="id" nullable="false" on-delete="CASCADE"/>
+                <join-column name="idCategories" referenced-column-name="id" nullable="false"/>
             </join-columns>
         </many-to-one>
 
-        <field name="name" column="name" type="string" length="45"/>
-        <field name="locale" column="locale" type="string" length="5"/>
 
     </entity>
 </doctrine-mapping>
