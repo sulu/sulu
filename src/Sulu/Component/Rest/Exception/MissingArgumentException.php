@@ -17,7 +17,7 @@ namespace Sulu\Component\Rest\Exception;
 class MissingArgumentException extends RestException
 {
     /**
-     * The type of the entity, which was not found
+     * The type of the entity, which was concerned
      * @var string
      */
     protected $entity;
@@ -38,5 +38,23 @@ class MissingArgumentException extends RestException
         $this->argument = $argument;
         $message = 'The "' . $entity . '"-entity requires a "' . $argument . '"-argument';
         parent::__construct($message, 0);
+    }
+
+    /**
+     * Returns the argument of the entity, which was not passed
+     * @return string
+     */
+    public function getArgument()
+    {
+        return $this->argument;
+    }
+
+    /**
+     * Returns the type of the entity, which was concerned
+     * @return string
+     */
+    public function getEntity()
+    {
+        return $this->entity;
     }
 }

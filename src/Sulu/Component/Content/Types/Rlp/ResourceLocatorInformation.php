@@ -32,7 +32,7 @@ class ResourceLocatorInformation
      */
     private $id;
 
-    function __construct($resourceLocator, $created ,$id)
+    function __construct($resourceLocator, $created, $id)
     {
         $this->created = $created;
         $this->resourceLocator = $resourceLocator;

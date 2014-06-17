@@ -87,10 +87,9 @@ class PhpcrMapper extends RlpMapper
      */
     public function loadByContent(NodeInterface $contentNode, $webspaceKey, $languageCode, $segmentKey = null)
     {
-        $result = null;
-        $result = $this->loadPathNodeByContent(
+        $result = $this->iterateRouteNodes(
             $contentNode,
-            function ($resourceLocator, \PHPCR\NodeInterface $node) use (&$result) {
+            function ($resourceLocator, \PHPCR\NodeInterface $node) {
                 if (false === $node->getPropertyValue('sulu:history') && false !== $resourceLocator) {
                     return $resourceLocator;
                 } else {
@@ -110,17 +109,17 @@ class PhpcrMapper extends RlpMapper
     }
 
     /**
-     * return phpcr node path for given contentNode
-     * @param NodeInterface $contentNode
-     * @param callable $callback will be called foreach phpcr node (returns it true loop will be break)
+     * Iterates over all route nodes assigned by the given node, and executes the callback on it
+     * @param NodeInterface $node
+     * @param callable $callback will be called foreach route node (stops and return value if not false)
      * @param string $webspaceKey
      * @param string $languageCode
      * @param string $segmentKey
      *
      * @return \PHPCR\NodeInterface
      */
-    private function loadPathNodeByContent(
-        NodeInterface $contentNode,
+    private function iterateRouteNodes(
+        NodeInterface $node,
         $callback,
         $webspaceKey,
         $languageCode,
@@ -128,21 +127,24 @@ class PhpcrMapper extends RlpMapper
     )
     {
         // search for references with name 'content'
-        foreach ($contentNode->getReferences('sulu:content') as $ref) {
+        foreach ($node->getReferences('sulu:content') as $ref) {
             if ($ref instanceof \PHPCR\PropertyInterface) {
-                $node = $ref->getParent();
+                $routeNode = $ref->getParent();
+
                 $resourceLocator = $this->getResourceLocator(
                     $ref->getParent()->getPath(),
                     $webspaceKey,
                     $languageCode,
                     $segmentKey
                 );
-                $result = $callback($resourceLocator, $node);
+
+                $result = $callback($resourceLocator, $routeNode);
                 if (false !== $result) {
                     return $result;
                 }
             }
         }
+
         return null;
     }
 
@@ -175,7 +177,7 @@ class PhpcrMapper extends RlpMapper
         $contentNode = $session->getNodeByIdentifier($uuid);
 
         // get current path node
-        $pathNode = $this->loadPathNodeByContent(
+        $pathNode = $this->iterateRouteNodes(
             $contentNode,
             function ($resourceLocator, \PHPCR\NodeInterface $node) use (&$result) {
                 if (false === $node->getPropertyValue('sulu:history') && false !== $resourceLocator) {
@@ -191,14 +193,16 @@ class PhpcrMapper extends RlpMapper
 
         // iterate over history of path node
         $result = array();
-        $this->loadPathNodeByContent(
+        $this->iterateRouteNodes(
             $pathNode,
             function ($resourceLocator, NodeInterface $node) use (&$result) {
                 if (false !== $resourceLocator) {
                     // add resourceLocator
                     $result[] = new ResourceLocatorInformation(
-                        //                backward compability
-                        $resourceLocator, $node->getPropertyValueWithDefault('sulu:created', new DateTime()), $node->getIdentifier()
+                        //backward compability
+                        $resourceLocator,
+                        $node->getPropertyValueWithDefault('sulu:created', new DateTime()),
+                        $node->getIdentifier()
                     );
                 }
                 return false;
@@ -391,8 +395,8 @@ class PhpcrMapper extends RlpMapper
     {
         $session = $this->sessionManager->getSession();
 
-        $rootNode = $this->getRoutes($webspaceKey, $languageCode, $segmentKey);
-        $routeNode = $rootNode->getNode(ltrim($path, '/'));
+        $routeRootNode = $this->getRoutes($webspaceKey, $languageCode, $segmentKey);
+        $routeNode = $routeRootNode->getNode(ltrim($path, '/'));
 
         $this->deleteByNode($routeNode, $session, $webspaceKey, $languageCode, $segmentKey);
         $session->save();
@@ -411,7 +415,7 @@ class PhpcrMapper extends RlpMapper
     {
         if ($node->getPropertyValue('sulu:history') !== true) {
             // search for history nodes
-            $this->loadPathNodeByContent(
+            $this->iterateRouteNodes(
                 $node,
                 function ($resourceLocator, NodeInterface $historyNode) use (
                     $session,
@@ -464,7 +468,7 @@ class PhpcrMapper extends RlpMapper
         $contentNode = $currentRouteNode->getPropertyValue('sulu:content');
 
         // change other history connections
-        $this->loadPathNodeByContent(
+        $this->iterateRouteNodes(
             $currentRouteNode,
             function ($resourceLocator, NodeInterface $node) use (&$newRouteNode) {
                 if ($node->getPropertyValue('sulu:history') === true) {
