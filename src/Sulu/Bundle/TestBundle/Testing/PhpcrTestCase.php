@@ -138,7 +138,13 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
      * The language namespace
      * @var string
      */
-    protected $languageNamespace = 'sulu_locale';
+    protected $languageNamespace = 'i18n';
+
+    /**
+     * The language namespace
+     * @var string
+     */
+    protected $internalPrefix = '';
 
     /**
      * purge webspace at tear down
@@ -180,10 +186,13 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
                 $cleaner,
                 $this->language,
                 $this->defaultTemplate,
-                $this->languageNamespace
+                $this->languageNamespace,
+                $this->internalPrefix
             );
 
-            $resourceLocator = new ResourceLocator(new TreeStrategy(new PhpcrMapper($this->sessionManager, '/cmf/routes'), $cleaner), 'not in use');
+            $resourceLocator = new ResourceLocator(
+                new TreeStrategy(new PhpcrMapper($this->sessionManager, '/cmf/routes'), $cleaner), 'not in use'
+            );
             $this->containerValueMap = array_merge(
                 $this->containerValueMap,
                 array(
@@ -192,7 +201,11 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
                     'sulu.content.type.text_line' => new TextLine('not in use'),
                     'sulu.content.type.text_area' => new TextArea('not in use'),
                     'sulu.content.type.resource_locator' => $resourceLocator,
-                    'sulu.content.type.block' => new BlockContentType($this->contentTypeManager, 'not in use', $this->languageNamespace),
+                    'sulu.content.type.block' => new BlockContentType(
+                            $this->contentTypeManager,
+                            'not in use',
+                            $this->languageNamespace
+                        ),
                     'security.context' => $this->securityContext
                 )
             );
@@ -219,7 +232,7 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
     protected function prepareLocalizationFinder()
     {
         if ($this->localizationFinder === null) {
-            $this->localizationFinder = new ParentChildAnyFinder($this->webspaceManager, 'sulu_locale');
+            $this->localizationFinder = new ParentChildAnyFinder($this->webspaceManager, $this->languageNamespace, $this->internalPrefix);
         }
     }
 
@@ -357,7 +370,7 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
         if ($this->contents === null) {
             $this->session->getWorkspace()->getNamespaceRegistry()->registerNamespace('sulu', 'http://sulu.io/phpcr');
             $this->session->getWorkspace()->getNamespaceRegistry()->registerNamespace(
-                'sulu_locale',
+                $this->languageNamespace,
                 'http://sulu.io/phpcr/locale'
             );
             $this->session->getWorkspace()->getNodeTypeManager()->registerNodeType(new SuluNodeType(), true);
@@ -376,16 +389,16 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
             $this->session->save();
 
             $this->contents = $default->addNode('contents');
-            $this->contents->setProperty('sulu_locale:de-sulu-template', 'overview');
-            $this->contents->setProperty('sulu_locale:en-sulu-template', 'overview');
-            $this->contents->setProperty('sulu_locale:de-sulu-changer', 1);
-            $this->contents->setProperty('sulu_locale:en-sulu-changer', 1);
-            $this->contents->setProperty('sulu_locale:de-sulu-creator', 1);
-            $this->contents->setProperty('sulu_locale:en-sulu-creator', 1);
-            $this->contents->setProperty('sulu_locale:de-sulu-changed', new DateTime());
-            $this->contents->setProperty('sulu_locale:en-sulu-changed', new DateTime());
-            $this->contents->setProperty('sulu_locale:de-sulu-created', new DateTime());
-            $this->contents->setProperty('sulu_locale:en-sulu-created', new DateTime());
+            $this->contents->setProperty($this->languageNamespace . ':de-template', 'overview');
+            $this->contents->setProperty($this->languageNamespace . ':en-template', 'overview');
+            $this->contents->setProperty($this->languageNamespace . ':de-changer', 1);
+            $this->contents->setProperty($this->languageNamespace . ':en-changer', 1);
+            $this->contents->setProperty($this->languageNamespace . ':de-creator', 1);
+            $this->contents->setProperty($this->languageNamespace . ':en-creator', 1);
+            $this->contents->setProperty($this->languageNamespace . ':de-changed', new DateTime());
+            $this->contents->setProperty($this->languageNamespace . ':en-changed', new DateTime());
+            $this->contents->setProperty($this->languageNamespace . ':de-created', new DateTime());
+            $this->contents->setProperty($this->languageNamespace . ':en-created', new DateTime());
             $this->contents->addMixin('sulu:content');
             $this->session->save();
 
