@@ -249,7 +249,7 @@ define([], function() {
         parseDataFromDom: function(domData, excludeDeleted) {
             var $rows = this.sandbox.dom.find(constants.typeRowSelector, domData),
                 data = [],
-                id, value, deleted;
+                id, value, deleted, obj;
 
             this.sandbox.dom.each($rows, function(index, $el) {
 
@@ -260,14 +260,18 @@ define([], function() {
                         id = this.sandbox.dom.data($el, 'id');
                         value = this.sandbox.dom.val(this.sandbox.dom.find('input', $el));
                         if (value !== '') {
-                            data.push({id: id, category: value});
+                            obj = {id: id};
+                            obj[this.valueName] = value;
+                            data.push(obj);
                         }
                     }
                 } else {
                     id = this.sandbox.dom.data($el, 'id');
                     value = this.sandbox.dom.val(this.sandbox.dom.find('input', $el));
                     if (value !== '') {
-                        data.push({id: id, category: value});
+                        obj = {id: id};
+                        obj[this.valueName] = value;
+                        data.push(obj);
                     }
                 }
 
@@ -401,6 +405,8 @@ define([], function() {
             } else {
                 this.options.data = config.data;
             }
+
+            this.valueName = config.valueName;
 
             config.data = this.sandbox.util.template(templates.skeleton.call(this,config.valueName), {data: this.options.data});
 
