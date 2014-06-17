@@ -77,6 +77,10 @@ define(function() {
                 this.sandbox.emit('sulu.content.contents.load', item.id);
             }, this);
 
+            this.sandbox.on('husky.column-navigation.selected', function(item) {
+                this.sandbox.sulu.saveUserSetting('columnNavigationSelected', item.id);
+            }, this);
+
             this.sandbox.on('sulu.content.localizations', function(localizations) {
                 this.localizations = localizations;
             }, this);
@@ -101,6 +105,7 @@ define(function() {
                     name: 'column-navigation@husky',
                     options: {
                         el: this.$find('#content-column'),
+                        selected: this.getLastSelected(),
                         url: this.getUrl()
                     }
                 }
@@ -117,8 +122,16 @@ define(function() {
             return null;
         },
 
+        getLastSelected: function() {
+            return this.sandbox.sulu.getUserSetting('columnNavigationSelected');
+        },
+
         getUrl: function() {
-            return '/admin/api/nodes?depth=1&webspace=' + this.options.webspace + '&language=' + this.options.language + '&exclude-ghosts=' + (!this.showGhostPages ? 'true' : 'false');
+            if (this.getLastSelected() !== null) {
+                return '/admin/api/nodes/' + this.getLastSelected() + '?tree=true&webspace=' + this.options.webspace + '&language=' + this.options.language + '&exclude-ghosts=' + (!this.showGhostPages ? 'true' : 'false');
+            } else {
+                return '/admin/api/nodes?depth=1&webspace=' + this.options.webspace + '&language=' + this.options.language + '&exclude-ghosts=' + (!this.showGhostPages ? 'true' : 'false');
+            }
         },
 
         changeLanguage: function(item) {
