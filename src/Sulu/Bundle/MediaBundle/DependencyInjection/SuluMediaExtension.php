@@ -36,58 +36,45 @@ class SuluMediaExtension extends Extension
         $container->setParameter('sulu_media.media.blocked_file_types', array('file/exe'));
         $container->setParameter('sulu_media.media.storage.local.path', '%kernel.root_dir%/../../uploads/media');
         $container->setParameter('sulu_media.media.storage.local.segments', '10');
-        $container->setParameter('sulu_media.image.proxy.save', true);
-        $container->setParameter('sulu_media.image.proxy.storage.local.path', '%kernel.root_dir%/../../web/uploads/media');
         $container->setParameter('sulu_media.image.command.prefix', 'image.converter.prefix.');
+        $container->setParameter('sulu_media.thumbnail_storage.save_image', 'false');
+        $container->setParameter('sulu_media.thumbnail_storage.path', '%kernel.root_dir%/../../web/uploads/media');
+        $container->setParameter('sulu_media.thumbnail_storage.path.url', '/media/image-proxy?url=/uploads/media');
+        $container->setParameter('sulu_media.thumbnail_storage.segments', '10');
         $container->setParameter('sulu_media.image.formats', array(
             array(
-                'name' => '1480x',
+                'name' => '170x170',
                 'commands' => array(
                     array(
                         'action' => 'scale',
                         'parameters' => array(
-                            'x' => '1480'
+                            'x' => '170',
+                            'y' => '170',
                         )
                     )
                 )
             ),
             array(
-                'name' => '1480x400',
-                'commands' => array(
-                    array(
-                        'action' => 'scale',
-                        'parameters' => array(
-                            'x' => '1480',
-                            'y' => '400'
-                        )
-                    )
-                )
-            ),
-            array(
-                'name' => '80x80',
-                'commands' => array(
-                    array(
-                        'action' => 'scale',
-                        'parameters' => array(
-                            'x' => '80',
-                            'y' => '80',
-                        )
-                    )
-                )
-            ),
-            array(
-                'name' => '80x80r',
+                'name' => '50x50',
                 'commands' => array(
                     array(
                         'action' => 'scale',
                         'parameters' =>array(
-                            'x' => '80',
-                            'y' => '80',
-                            'background' => 'transparent'
+                            'x' => '50',
+                            'y' => '50',
                         )
-                    ),
+                    )
+                )
+            ),
+            array(
+                'name' => '150x100',
+                'commands' => array(
                     array(
-                        'action' => 'circle'
+                        'action' => 'scale',
+                        'parameters' =>array(
+                            'x' => '150',
+                            'y' => '100',
+                        )
                     )
                 )
             ),

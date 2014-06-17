@@ -10,7 +10,8 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\ImageConverter;
 
-use Imagine\Gd\Imagine;
+use Imagine\Gd\Imagine as GdImagine;
+use Imagine\Imagick\Imagine as ImagickImagine;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyInvalidFormatOptionsException;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyInvalidImageFormat;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\Manager\ManagerInterface;
@@ -23,7 +24,7 @@ class ImagineImageConverter implements ImageConverterInterface {
     private $formats;
 
     /**
-     * @var Imagine
+     * @var GdImagine|ImagickImagine
      */
     protected $image;
 
@@ -43,13 +44,24 @@ class ImagineImageConverter implements ImageConverterInterface {
     }
 
     /**
+     * @return GdImagine
+     */
+    protected function newImage()
+    {
+        if (!class_exists('Imagick')) {
+            return new GdImagine();
+        }
+        return new ImagickImagine();
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function convert($originalPath, $format)
     {
         $formatOptions = $this->getFormatOptions($format);
 
-        $imagine = new Imagine();
+        $imagine = $this->newImage();
         $this->image = $imagine->open($originalPath);
         if (!isset($formatOptions['commands'])) {
             throw new ImageProxyInvalidFormatOptionsException('Commands not found.');
@@ -64,6 +76,14 @@ class ImagineImageConverter implements ImageConverterInterface {
         }
 
         return $this->image;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFormats()
+    {
+        return $this->formats;
     }
 
     /**

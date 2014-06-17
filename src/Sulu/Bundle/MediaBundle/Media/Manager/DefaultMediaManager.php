@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\MediaBundle\Media\Manager;
 
 use Doctrine\Common\Persistence\ObjectManager;
+use Sulu\Bundle\MediaBundle\Media\Thum;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;

@@ -8,13 +8,35 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\MediaBundle\Media\CacheStorage;
+namespace Sulu\Bundle\MediaBundle\Media\ThumbnailStorage;
 
 
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyInvalidUrl;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyUrlNotFoundException;
 
-class LocalCacheStorage implements CacheStorageInterface {
+class LocalThumbnailStorage implements ThumbnailStorageInterface {
+
+    /**
+     * @var string
+     */
+    protected $path;
+
+    /**
+     * @var string
+     */
+    protected $pathUrl;
+
+    /**
+     * @var int
+     */
+    protected $segments;
+
+    public function __construct($path, $pathUrl, $segments)
+    {
+        $this->path = $path;
+        $this->pathUrl = $pathUrl;
+        $this->segments = intval($segments);
+    }
 
     /**
      * {@inheritdoc}
@@ -35,9 +57,10 @@ class LocalCacheStorage implements CacheStorageInterface {
     /**
      * {@inheritdoc}
      */
-    public function getMediaUrl($media, $format)
+    public function getMediaUrl($id, $fileName, $options, $format)
     {
-        // TODO: Implement getMediaUrl() method.
+        $segment = ($id % $this->segments) . '/';
+        return $this->pathUrl . '/' . $format . '/' . $segment . $id . '-' . $fileName;
     }
 
     /**

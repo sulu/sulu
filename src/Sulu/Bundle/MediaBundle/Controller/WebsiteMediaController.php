@@ -11,13 +11,13 @@
 namespace Sulu\Bundle\MediaBundle\Controller;
 
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyException;
-use Sulu\Bundle\MediaBundle\Media\ImageManager\ImageManagerInterface;
+use Sulu\Bundle\MediaBundle\Media\ImageManager\CacheManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
 class WebsiteMediaController extends Controller {
 
-    protected $imageManager = null;
+    protected $cacheManager = null;
 
     /**
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
@@ -25,26 +25,26 @@ class WebsiteMediaController extends Controller {
     public function getImageAction(Request $request)
     {
         try {
+            ob_clean(); // FIXME clean whitespaces and breaks
+
             $url = $request->get('url');
-            list($id, $format) = $this->getImageManager()->getMediaProperties($url);
-            $this->getImageManager()->returnImage($id, $format);
+            list($id, $format) = $this->getCacheManager()->getMediaProperties($url);
+
+            return $this->getCacheManager()->returnImage($id, $format);
         } catch (ImageProxyException $e) {
-            echo $e->getMessage();
-            exit;
-            // error 404
             throw $this->createNotFoundException('Image create error. Code: ' . $e->getCode());
         }
     }
 
     /**
      * getMediaManager
-     * @return ImageManagerInterface
+     * @return CacheManagerInterface
      */
-    protected function getImageManager()
+    protected function getCacheManager()
     {
-        if ($this->imageManager === null) {
-            $this->imageManager = $this->get('sulu_media.image_manager');
+        if ($this->cacheManager === null) {
+            $this->cacheManager = $this->get('sulu_media.thumbnail_manager');
         }
-        return $this->imageManager;
+        return $this->cacheManager;
     }
 }

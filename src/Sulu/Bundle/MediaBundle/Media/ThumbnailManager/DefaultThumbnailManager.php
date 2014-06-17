@@ -8,18 +8,18 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\MediaBundle\Media\ImageManager;
+namespace Sulu\Bundle\MediaBundle\Media\ThumbnailManager;
 
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepository;
-use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyMediaIdNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyMediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\ImageConverterInterface;
-use Sulu\Bundle\MediaBundle\Media\CacheStorage\CacheStorageInterface;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
+use Sulu\Bundle\MediaBundle\Media\ThumbnailStorage\ThumbnailStorageInterface;
+use Symfony\Component\HttpFoundation\Response;
 
-class DefaultImageManager implements ImageManagerInterface {
+class DefaultThumbnailManager implements ThumbnailManagerInterface {
 
     /**
      * The repository for communication with the database
@@ -28,7 +28,7 @@ class DefaultImageManager implements ImageManagerInterface {
     private $mediaRepository;
 
     /**
-     * @var ImageStorageInterface
+     * @var ThumbnailStorageInterface
      */
     private $imageStorage;
 
@@ -43,22 +43,30 @@ class DefaultImageManager implements ImageManagerInterface {
     private $converter;
 
     /**
+     * @var bool
+     */
+    private $saveImage = false;
+
+    /**
      * @param MediaRepository $mediaRepository
      * @param StorageInterface $originalStorage
-     * @param CacheStorageInterface $imageStorage
+     * @param ThumbnailStorageInterface $imageStorage
      * @param ImageConverterInterface $converter
+     * @param $saveImage
      */
     public function __construct(
         MediaRepository $mediaRepository,
         StorageInterface $originalStorage,
-        CacheStorageInterface $imageStorage,
-        ImageConverterInterface $converter
+        ThumbnailStorageInterface $imageStorage,
+        ImageConverterInterface $converter,
+        $saveImage
     )
     {
         $this->mediaRepository = $mediaRepository;
         $this->originalStorage = $originalStorage;
         $this->imageStorage = $imageStorage;
         $this->converter = $converter;
+        $this->saveImage = $saveImage == 'true' ? true : false;
     }
 
     /**
@@ -66,15 +74,29 @@ class DefaultImageManager implements ImageManagerInterface {
      */
     public function returnImage($id, $format)
     {
-        $uri = $this->getOriginal($id);
-        $original = $this->createTmpOriginalFile($uri);
+        $media = $this->mediaRepository->findMediaById($id);
+
+        if (!$media) {
+            throw new ImageProxyMediaNotFoundException('Media was not found');
+        }
+
+        $uri = $this->getOriginalByMedia($media);
+
+        $original = $this->createTmpFile($this->getFile($uri));
 
         $image = $this->converter->convert($original, $format);
 
-        // only test
-        header('Content-Type: image/png');
-        echo $image->get('png');
-        exit;
+        $headers = array(
+            'Content-Type' => 'image/jpeg'
+        );
+
+        $image = $image->get('jpeg');
+
+        if ($this->saveImage) {
+            // $this->imageStorage->save($this->createTmpFile($image), $media);
+        }
+
+        return new Response($image, 200, $headers);;
     }
 
     /**
@@ -86,35 +108,40 @@ class DefaultImageManager implements ImageManagerInterface {
     }
 
     /**
-     * create a local temp file for the original
+     * get file from namespace
      * @param $uri
      * @return string
      */
-    protected function createTmpOriginalFile($uri)
+    protected function getFile($uri)
+    {
+        return file_get_contents($uri);
+    }
+
+    /**
+     * create a local temp file for the original
+     * @param $content
+     * @return string
+     */
+    protected function createTmpFile($content)
     {
         $tempFile = tempnam('/tmp', 'media_original');
         $handle = fopen($tempFile, 'w');
-        fwrite($handle, file_get_contents($uri));
+        fwrite($handle, $content);
         fclose($handle);
 
         return $tempFile;
     }
 
     /**
-     * @param $id
+     * @param $media
      * @return mixed
      * @throws ImageProxyMediaNotFoundException
      */
-    protected function getOriginal($id)
+    protected function getOriginalByMedia($media)
     {
-        $media = $this->mediaRepository->findMediaById($id);
-
-        if (!$media) {
-            throw new ImageProxyMediaNotFoundException('Media was not found');
-        }
-
         $fileName = null;
         $storageOptions = null;
+        $version = null;
 
         /**
          * @var File $file
@@ -139,6 +166,37 @@ class DefaultImageManager implements ImageManagerInterface {
         }
 
         return $this->originalStorage->load($fileName, $version, $storageOptions);
+    }
+
+    /**
+     * @param $fileName
+     * @param $version
+     * @param $storageOptions
+     * @return mixed
+     */
+    public function getOriginal($fileName, $version, $storageOptions)
+    {
+        return $this->originalStorage->load($fileName, $version, $storageOptions);
+    }
+
+    /**
+     * @param $id
+     * @param $fileName
+     * @param $options
+     * @return array
+     */
+    public function getThumbNails($id, $fileName, $options)
+    {
+        $thumbNails = array();
+
+        $formats = $this->converter->getFormats();
+
+        foreach ($formats as $format) {
+            $format = $format['name'];
+            $thumbNails[] = $this->imageStorage->getMediaUrl($id, $fileName, $options, $format);
+        }
+
+        return $thumbNails;
     }
 
 } 
