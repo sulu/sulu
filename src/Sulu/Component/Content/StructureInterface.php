@@ -11,7 +11,7 @@
 namespace Sulu\Component\Content;
 
 use DateTime;
-use Sulu\Component\Content\Mapper\StructureExtensionInterface;
+use Sulu\Component\Content\StructureExtension\StructureExtensionInterface;
 use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
 
 /**

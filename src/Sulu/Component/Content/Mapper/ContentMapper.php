@@ -335,16 +335,15 @@ class ContentMapper implements ContentMapperInterface
         $session->save();
 
         // save data of extensions
-        if (isset($data['extensions'])) {
-            foreach ($structure->getExtensions() as $extension) {
-                if (isset($data['extensions'][$extension->getName()])) {
-                    $extension->setLanguageCode($languageCode, $this->languageNamespace, $this->internalPrefix);
-
-                    $extension->save($node, $data['extensions'][$extension->getName()], $webspaceKey, $languageCode);
-                }
+        foreach ($structure->getExtensions() as $extension) {
+            $extension->setLanguageCode($languageCode, $this->languageNamespace, $this->internalPrefix);
+            if (isset($data['extensions']) && isset($data['extensions'][$extension->getName()])) {
+                $extension->save($node, $data['extensions'][$extension->getName()], $webspaceKey, $languageCode);
+            } else {
+                $extension->load($node, $webspaceKey, $languageCode);
             }
-            $session->save();
         }
+        $session->save();
 
         $structure->setUuid($node->getPropertyValue('jcr:uuid'));
         $structure->setPath(str_replace($this->getContentNode($webspaceKey)->getPath(), '', $node->getPath()));
@@ -898,16 +897,8 @@ class ContentMapper implements ContentMapperInterface
 
         // save data of extensions
         foreach ($structure->getExtensions() as $extension) {
-            if (isset($data['extensions'][$extension->getName()])) {
-                $extension->setLanguageCode($localization, $this->languageNamespace, $this->internalPrefix);
-
-                $extension->save(
-                    $contentNode,
-                    $data['extensions'][$extension->getName()],
-                    $webspaceKey,
-                    $availableLocalization
-                );
-            }
+            $extension->setLanguageCode($localization, $this->languageNamespace, $this->internalPrefix);
+            $extension->load($contentNode, $webspaceKey, $availableLocalization);
         }
 
         // throw an content.node.load event (disabled for now)

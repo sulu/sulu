@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Mapper;
+namespace Sulu\Component\Content\StructureExtension;
 
 use Sulu\Component\Content\Mapper\Translation\MultipleTranslatedProperties;
 
@@ -83,7 +83,7 @@ abstract class StructureExtension implements StructureExtensionInterface
      */
     public function getData()
     {
-        return $this->getData();
+        return $this->data;
     }
 
     /**
