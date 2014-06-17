@@ -121,7 +121,9 @@ class MediaController extends RestController implements ClassResourceInterface
                 404
             );
         } else {
-            $media = $this->getNewMedia();
+            $media = new Media();
+            $media->setDataByEntityArray($mediaEntity, $locale, $request->get('version', null));
+            $media->setThumbnails($this->getThumbnails($media->getId(), $media->getName(), $media->getStorageOptions()));;
 
             $view = $this->view(
                 array_merge(
@@ -130,7 +132,7 @@ class MediaController extends RestController implements ClassResourceInterface
                             'self' => $request->getRequestUri()
                         )
                     ),
-                    $media->setDataByEntityArray($mediaEntity, $locale, $request->get('version', null))->toArray()
+                    $media->toArray()
                 )
                 , 200);
         }
@@ -188,7 +190,7 @@ class MediaController extends RestController implements ClassResourceInterface
                 throw new RestException('Uploaded file not found', UploadFileException::EXCEPTION_CODE_UPLOADED_FILE_NOT_FOUND);
             }
 
-            $media = $this->getNewMedia();
+            $media = new Media();
             $view = $this->view($media->setDataByEntity($mediaEntity, $locale)->toArray(), 200);
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
@@ -233,7 +235,7 @@ class MediaController extends RestController implements ClassResourceInterface
                 $mediaEntity = $this->getMediaManager()->update(null, $this->getUser()->getId(), $id, $media->getCollection(), $properties);
             }
 
-            $media = $this->getNewMedia();
+            $media = new Media();
             $view = $this->view($media->setDataByEntity($mediaEntity, $locale)->toArray(), 200);
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
@@ -268,7 +270,7 @@ class MediaController extends RestController implements ClassResourceInterface
      */
     protected function getRestObject(Request $request)
     {
-        $object = $this->getNewMedia();
+        $object = new Media();
         $object->setId($request->get('id'));
         $object->setLocale($request->get('locale', $this->getLocale($request->get('locale'))));
         $object->setType($request->get('type'));
@@ -323,7 +325,7 @@ class MediaController extends RestController implements ClassResourceInterface
         $flatMediaList = array();
 
         foreach ($mediaList as $media) {
-            $flatMedia = $this->getNewMedia();
+            $flatMedia = new Media();
             array_push($flatMediaList, $flatMedia->setDataByEntityArray($media, $locale)->toArray($fields));
         }
 
@@ -400,14 +402,6 @@ class MediaController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * @return Media
-     */
-    protected function getNewMedia()
-    {
-        return new Media($this->getThumbnailManager());
-    }
-
-    /**
      * getThumbnailManager
      * @return ThumbnailManagerInterface
      */
@@ -427,5 +421,27 @@ class MediaController extends RestController implements ClassResourceInterface
         }
 
         return $this->getUser()->getLocale();
+    }
+
+    /**
+     * @param $id
+     * @param $name
+     * @param $storageOptions
+     * @return mixed
+     */
+    public function getThumbNails($id, $name, $storageOptions)
+    {
+        return $this->getThumbnailManager()->getThumbNails($id, $name, $storageOptions);
+    }
+
+    /**
+     * @param $id
+     * @param $version
+     * @param $storageOptions
+     * @return mixed
+     */
+    public function getUrl($id, $version, $storageOptions)
+    {
+        return $this->getThumbnailManager()->getOriginal($id, $version, $storageOptions);
     }
 }
