@@ -32,7 +32,9 @@ define([
                 addresses: [],
                 notes: [],
                 bankAccount: [],
-                urls: []
+                urls: [],
+                termsOfPayment: null,
+                termsOfDelivery: null
             };
         }, relations: [
             {
