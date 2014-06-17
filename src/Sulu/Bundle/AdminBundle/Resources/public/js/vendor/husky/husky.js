@@ -16767,34 +16767,40 @@ define('form/element',['form/util'], function(Util) {
 
             result = {
                 validate: function(force) {
+                    var result = true,
+                        validated = false;
+
                     // only if value changed or force is set
                     if (force || that.needsValidation.call(this)) {
-                        if (!that.hasConstraints.call(this)) {
-                            // delete state
-                            //that.reset.call(this);
-                            return true;
+                        if (that.hasConstraints.call(this)) {
+                            // check each validator
+                            $.each(validators, function (key, validator) {
+                                if (!validator.validate()) {
+                                    result = false;
+                                    // TODO Messages
+                                }
+                            });
+                            validated = true;
                         }
+                    }
 
-                        var result = true;
-                        // check each validator
-                        $.each(validators, function(key, validator) {
-                            if (!validator.validate()) {
-                                result = false;
-                                // TODO Messages
-                            }
-                        });
-
-                        // check type
-                        if (type !== null && !type.validate()) {
+                    // check type
+                    if (!!type && type.needsValidation()) {
+                        if (!type.validate()) {
                             result = false;
                         }
+                        validated = true;
+                    }
 
+                    // set css classes
+                    if (validated === true) {
                         if (!result) {
                             Util.debug('Field validate', !!result ? 'true' : 'false', this.$el);
                         }
                         that.setValid.call(this, result);
                     }
-                    return this.isValid();
+
+                    return result;
                 },
 
                 update: function() {
@@ -25944,7 +25950,8 @@ define('type/husky-select',[
                 },
 
                 needsValidation: function() {
-                    return this.options.required;
+                    var val = this.getValue()
+                    return !!val;
                 },
 
                 validate: function() {
@@ -26024,13 +26031,14 @@ define('type/husky-input',[
                 },
 
                 needsValidation: function() {
-                    return this.options.required;
+                    var val = this.getValue();
+                    return val !== '';
                 },
 
                 validate: function() {
                     var value = this.getValue(),
                         type = this.$el.data('auraSkin');
-                    if (!!value && !!type && !!typeValidators[type]) {
+                    if (!!type && !!typeValidators[type]) {
                         return typeValidators[type].call(this, value);
                     } else {
                         return true;
@@ -37661,23 +37669,23 @@ define('__component__$smart-content@husky',[], function() {
 
                 dataSource: [
                     '<div class="item-half left">',
-                        '<span class="desc"><%= dataSourceLabelStr %></span>',
-                        '<div class="btn action fit" id="select-data-source-action"><%= dataSourceButtonStr %></div>',
-                        '<div><span class="sublabel"><%= dataSourceLabelStr %>:</span> <span class="sublabel data-source"><%= dataSourceValStr %></span></div>',
+                    '<span class="desc"><%= dataSourceLabelStr %></span>',
+                    '<div class="btn action fit" id="select-data-source-action"><%= dataSourceButtonStr %></div>',
+                    '<div><span class="sublabel"><%= dataSourceLabelStr %>:</span> <span class="sublabel data-source"><%= dataSourceValStr %></span></div>',
                     '</div>'
                 ].join(''),
 
                 subFolders: [
                     '<div class="item-half">',
-                        '<div class="check<%= disabled %>">',
-                        '<label>',
-                            '<div class="custom-checkbox">',
-                                '<input type="checkbox" class="includeSubCheck form-element"<%= includeSubCheckedStr %>/>',
-                                '<span class="icon"></span>',
-                            '</div>',
-                            '<span class="description"><%= includeSubStr %></span>',
-                        '</label>',
-                        '</div>',
+                    '<div class="check<%= disabled %>">',
+                    '<label>',
+                    '<div class="custom-checkbox">',
+                    '<input type="checkbox" class="includeSubCheck form-element"<%= includeSubCheckedStr %>/>',
+                    '<span class="icon"></span>',
+                    '</div>',
+                    '<span class="description"><%= includeSubStr %></span>',
+                    '</label>',
+                    '</div>',
                     '</div>'
                 ].join(''),
 
@@ -37710,15 +37718,15 @@ define('__component__$smart-content@husky',[], function() {
 
                 presentAs: [
                     '<div class="item-half left">',
-                        '<span class="desc"><%= presentAsStr %></span>',
+                    '<span class="desc"><%= presentAsStr %></span>',
                         '<div class="' + constants.presentAsDDClass + '"></div>',
                     '</div>'
                 ].join(''),
 
                 limitResult: [
                     '<div class="item-half">',
-                        '<span class="desc"><%= limitResultToStr %></span>',
-                        '<input type="text" value="<%= limitResult %>" class="limit-to form-element"<%= disabled %>/>',
+                    '<span class="desc"><%= limitResultToStr %></span>',
+                    '<input type="text" value="<%= limitResult %>" class="limit-to form-element"<%= disabled %>/>',
                     '</div>'
                 ].join('')
             }
@@ -38413,10 +38421,7 @@ define('__component__$smart-content@husky',[], function() {
                 ].join('');
             // min source must be selected
             if (this.overlayData.dataSource.length > 0 && newURI !== this.URI.str) {
-                //emit data changed event only if old URI is not null (not at the startup)
-                if (this.URI.str !== '') {
-                    this.sandbox.emit(DATA_CHANGED.call(this), this.sandbox.dom.data(this.$el, 'smart-content'), this.$el);
-                }
+                this.sandbox.emit(DATA_CHANGED.call(this), this.sandbox.dom.data(this.$el, 'smart-content'), this.$el);
                 this.URI.str = newURI;
                 this.URI.hasChanged = true;
             } else {
@@ -41454,6 +41459,13 @@ define('__component__$input@husky',[], function () {
                 this.sandbox.dom.focus(this.input.$input);
             }.bind(this));
 
+            // delegate labels on input
+            if(!!this.sandbox.dom.attr(this.$el, 'id')) {
+                this.sandbox.dom.on('label[for="'+ this.sandbox.dom.attr(this.$el, 'id') +'"]', 'click', function() {
+                    this.sandbox.dom.focus(this.input.$input);
+                }.bind(this));
+            }
+
             // change the input value if the data attribute got changed
             this.sandbox.dom.on(this.$el, 'data-changed', function() {
                 this.updateValue();
@@ -41533,6 +41545,17 @@ define('__component__$input@husky',[], function () {
                 this.setDatepickerValueAttr(event.date);
             }.bind(this));
             this.updateValue();
+
+            this.bindDatepickerDomEvents();
+        },
+
+        /**
+         * Binds Dom-events for the datepicker
+         */
+        bindDatepickerDomEvents: function() {
+            this.sandbox.dom.on(this.input.$input, 'focusout', function() {
+                this.setDatepickerValueAttr(this.sandbox.datepicker.getDate(this.input.$input));
+            }.bind(this));
         },
 
         /**
@@ -41593,9 +41616,14 @@ define('__component__$input@husky',[], function () {
          */
         setDatepickerValueAttr: function(date) {
             if (!!date) {
-                date = date.getFullYear() + '-' +
-                   ('0' + (date.getMonth()+1)).slice(-2) + '-' +
-                   ('0' + date.getDate()).slice(-2);
+                if (this.sandbox.dom.isNumeric(date.valueOf())) {
+                    date = date.getFullYear() + '-' +
+                        ('0' + (date.getMonth()+1)).slice(-2) + '-' +
+                        ('0' + date.getDate()).slice(-2);
+                } else {
+                    date = '';
+                    this.sandbox.dom.val(this.input.$input, '');
+                }
             }
             this.sandbox.dom.data(this.$el, 'value', date);
         },
@@ -45999,6 +46027,10 @@ define("datepicker-zh-TW", function(){});
 
             app.core.dom.isArray = function(selector) {
                 return $.isArray(selector);
+            };
+
+            app.core.dom.isNumeric = function(number) {
+                return $.isNumeric(number);
             };
 
             app.core.dom.data = function(selector, key, value) {
