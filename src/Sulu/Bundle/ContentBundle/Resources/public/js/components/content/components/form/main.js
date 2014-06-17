@@ -270,12 +270,19 @@ define(['app-config'], function(AppConfig) {
         },
 
         setFormData: function(data) {
-            var initialize = this.sandbox.form.setData(this.formId, data);
+            var initialize = this.sandbox.form.setData(this.formId, data),
+                titleAttr = 'title'; // default value
 
-            if (!!data.id && (data.title === '' || typeof data.title === 'undefined' || data.title === null)) {
+            this.getDomElementsForTagName('sulu.node.name', function(property) {
+                titleAttr = property.name;
+            }.bind(this));
+
+            if (!!data.id && (data[titleAttr] === '' || typeof data[titleAttr] === 'undefined' || data[titleAttr] === null)) {
                 this.sandbox.util.load('/admin/api/nodes/' + data.id + '?webspace=' + this.options.webspace + '&language=' + this.options.language + '&complete=false&ghost-content=true')
                     .then(function(data) {
-                        this.sandbox.dom.attr('#title', 'placeholder', data.type.value + ': ' + data.title);
+                        if (!!data.type) {
+                            this.sandbox.dom.attr('#title', 'placeholder', data.type.value + ': ' + data[titleAttr]);
+                        }
                     }.bind(this));
             }
 
@@ -308,7 +315,7 @@ define(['app-config'], function(AppConfig) {
 
         bindDomEvents: function() {
             this.startListening = false;
-                    this.getDomElementsForTagName('sulu.rlp', function(property) {
+            this.getDomElementsForTagName('sulu.rlp', function(property) {
                 var element = property.$el.data('element');
                 if (!element || element.getValue() === '' || element.getValue() === undefined || element.getValue() === null) {
                     this.startListening = true;
