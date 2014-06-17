@@ -110,7 +110,7 @@ class FilterNodesQueryBuilder
         $sql2Order = array();
         foreach ($this->getConfig('sortBy', array()) as $sortColumn) {
             // TODO implement more generic
-            $sql2Order[] = 'c.[sulu_locale:' . $languageCode . '-sulu-' . $sortColumn . ']';
+            $sql2Order[] = 'c.[i18n:' . $languageCode . '-' . $sortColumn . ']';
         }
 
         return $sql2Order;
