@@ -210,6 +210,8 @@ class UserController extends RestController implements ClassResourceInterface
             $password = $request->get('password');
             $contact = $request->get('contact');
             $locale = $request->get('locale');
+            $userRoles = $request->get('userRoles');
+            $userGroups = $request->get('userGroups');
 
             $em = $this->getDoctrine()->getManager();
 
@@ -230,8 +232,9 @@ class UserController extends RestController implements ClassResourceInterface
             }
 
             if (
-                !$this->processUserRoles($user, $request->get('userRoles')) ||
-                !$this->processUserGroups($user, $request->get('userGroups'))) {
+                ($userRoles !== null && !$this->processUserRoles($user, $userRoles)) ||
+                ($userGroups !== null && !$this->processUserGroups($user, $userGroups))
+            ) {
                 throw new RestException('Could not update dependencies!');
             }
 
