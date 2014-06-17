@@ -25,9 +25,43 @@ class TemplateReader implements LoaderInterface
 {
     const SCHEME_PATH = '/Resources/schema/template/template-1.0.xsd';
 
+    /**
+     * tags that are required in template
+     * TODO should be possible to inject from config
+     * @var array
+     */
     private $requiredTags = array(
         'sulu.node.name'
     );
+
+    /**
+     * reserved names for sulu internals
+     * TODO should be possible to inject from config
+     * @var array
+     */
+    private $reservedPropertyNames = array(
+        'template',
+        'changer',
+        'changed',
+        'creator',
+        'created',
+        'navigation',
+        'published',
+        'state'
+    );
+
+    /**
+     * running variable for required tags
+     * at begin deep copy of requiredTags, each tag found will be removed
+     * @var array
+     */
+    private $runningRequiredTags;
+
+    /**
+     * all tag found tags during a run
+     * @var array
+     */
+    private $runningTags;
 
     /**
      * {@inheritdoc}
@@ -70,9 +104,9 @@ class TemplateReader implements LoaderInterface
     private function loadTemplateAttributes(\DOMXPath $xpath)
     {
         $result = array(
-            'key' => $this->getValueFromXPath('/x:template/x:key', $xpath),
-            'view' => $this->getValueFromXPath('/x:template/x:view', $xpath),
-            'controller' => $this->getValueFromXPath('/x:template/x:controller', $xpath),
+            'key'           => $this->getValueFromXPath('/x:template/x:key', $xpath),
+            'view'          => $this->getValueFromXPath('/x:template/x:view', $xpath),
+            'controller'    => $this->getValueFromXPath('/x:template/x:controller', $xpath),
             'cacheLifetime' => $this->getValueFromXPath('/x:template/x:cacheLifetime', $xpath),
         );
 
@@ -119,10 +153,16 @@ class TemplateReader implements LoaderInterface
             array('name', 'type', 'minOccurs', 'maxOccurs', 'colspan', 'cssClass')
         );
 
+        if (in_array($result['name'], $this->reservedPropertyNames)) {
+            throw new InvalidXmlException(
+                sprintf('Property name %s is a reserved name', $result['name'])
+            );
+        }
+
         $result['mandatory'] = $this->getBooleanValueFromXPath('@mandatory', $xpath, $node);
         $result['tags'] = $this->loadTags('x:tag', $requiredTags, $tags, $xpath, $node);
         $result['params'] = $this->loadParams('x:params/x:param', $xpath, $node);
-        $result['meta'] =$this->loadMeta('x:meta/x:*', $xpath, $node);
+        $result['meta'] = $this->loadMeta('x:meta/x:*', $xpath, $node);
 
         return $result;
     }
@@ -142,7 +182,7 @@ class TemplateReader implements LoaderInterface
         $result['type'] = 'block';
         $result['tags'] = $this->loadTags('x:tag', $requiredTags, $tags, $xpath, $node);
         $result['params'] = $this->loadParams('x:params/x:param', $xpath, $node);
-        $result['meta'] =$this->loadMeta('x:meta/x:*', $xpath, $node);
+        $result['meta'] = $this->loadMeta('x:meta/x:*', $xpath, $node);
         $result['types'] = $this->loadTypes('x:types/x:type', $requiredTags, $tags, $xpath, $node);
 
         return $result;
@@ -161,7 +201,7 @@ class TemplateReader implements LoaderInterface
 
         $result['type'] = 'section';
         $result['params'] = $this->loadParams('x:params/x:param', $xpath, $node);
-        $result['meta'] =$this->loadMeta('x:meta/x:*', $xpath, $node);
+        $result['meta'] = $this->loadMeta('x:meta/x:*', $xpath, $node);
         $result['properties'] = $this->loadProperties('x:properties/x:*', $requiredTags, $tags, $xpath, $node);
 
         return $result;
@@ -269,7 +309,7 @@ class TemplateReader implements LoaderInterface
     {
         $result = $this->loadValues($xpath, $node, array('name'));
 
-        $result['meta'] =$this->loadMeta('x:meta/x:*', $xpath, $node);
+        $result['meta'] = $this->loadMeta('x:meta/x:*', $xpath, $node);
         $result['properties'] = $this->loadProperties('x:properties/x:*', $requiredTags, $tags, $xpath, $node);
 
         return $result;

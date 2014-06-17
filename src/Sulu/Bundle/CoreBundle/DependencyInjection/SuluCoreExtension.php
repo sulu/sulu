@@ -150,6 +150,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
     {
         // Default template
         $container->setParameter('sulu.content.template.default', $contentConfig['default_template']);
+        $container->setParameter('sulu.content.internal_prefix', $contentConfig['internal_prefix']);
 
         // Default Language
         $container->setParameter('sulu.content.language.namespace', $contentConfig['language']['namespace']);
