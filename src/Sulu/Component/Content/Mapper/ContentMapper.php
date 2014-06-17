@@ -70,6 +70,12 @@ class ContentMapper implements ContentMapperInterface
     private $languageNamespace;
 
     /**
+     * prefix for internal properties
+     * @var string
+     */
+    private $internalPrefix;
+
+    /**
      * default language of translation
      * @var string
      */
@@ -124,6 +130,7 @@ class ContentMapper implements ContentMapperInterface
         $this->defaultLanguage = $defaultLanguage;
         $this->defaultTemplate = $defaultTemplate;
         $this->languageNamespace = $languageNamespace;
+        $this->internalPrefix = $internalPrefix;
         $this->cleaner = $cleaner;
 
         // optional
@@ -142,7 +149,7 @@ class ContentMapper implements ContentMapperInterface
                 'published'
             ),
             $this->languageNamespace,
-            $internalPrefix
+            $this->internalPrefix
         );
     }
 
@@ -352,6 +359,40 @@ class ContentMapper implements ContentMapperInterface
         $this->eventDispatcher->dispatch(ContentEvents::NODE_SAVE, $event);
 
         return $structure;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function saveWithExtension(
+        $uuid,
+        ContentMapperExtensionInterface $extension,
+        $userId,
+        $webspaceKey,
+        $languageCode
+    ) {
+        // create translated properties
+        $this->properties->setLanguage($languageCode);
+
+        // sets current language
+        $extension->setLanguageCode($languageCode, $this->languageNamespace, $this->internalPrefix);
+
+        // init node
+        $session = $this->getSession();
+        $node = $session->getNodeByIdentifier($uuid);
+
+        // save with extension
+        $result = $extension->save($node, $webspaceKey, $languageCode);
+
+        // set changed
+        $dateTime = new DateTime();
+        $node->setProperty($this->properties->getName('changer'), $userId);
+        $node->setProperty($this->properties->getName('changed'), $dateTime);
+
+        // save node
+        $session->save();
+
+        return $result;
     }
 
     /**
@@ -579,6 +620,22 @@ class ContentMapper implements ContentMapperInterface
         }
 
         return $result;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function loadWithExtension($uuid, ContentMapperExtensionInterface $extension, $webspaceKey, $languageCode)
+    {
+        // sets current language
+        $extension->setLanguageCode($languageCode, $this->languageNamespace, $this->internalPrefix);
+
+        // init node
+        $session = $this->getSession();
+        $node = $session->getNodeByIdentifier($uuid);
+
+        // save with extension
+        return $extension->load($node, $webspaceKey, $languageCode);
     }
 
     /**

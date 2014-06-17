@@ -2179,4 +2179,130 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals('Thats a good test', $resultLoad['blog']);
         $this->assertEquals('/test/test', $resultLoad['url']);
     }
+
+    public function testExtensions()
+    {
+        $dataEN = array(
+            'name' => 'Test',
+            'url' => '/test/test',
+            'blog' => 'Thats a good test'
+        );
+        $dataDE = array(
+            'name' => 'Test',
+            'url' => '/test/test',
+            'blog' => 'Das ist ein guter Test'
+        );
+
+        $structure = $structure = $this->mapper->save($dataEN, 'section', 'default', 'en', 1);
+        $structure = $this->mapper->save($dataDE, 'section', 'default', 'de', 1, true, $structure->getUuid());
+
+        sleep(1);
+
+        $enExtension = new TestExtension('That´s a test', 'That´s a second test');
+        $result = $this->mapper->saveWithExtension(
+            $structure->getUuid(),
+            $enExtension,
+            1,
+            'default',
+            'en'
+        );
+        $this->assertEquals('That´s a test', $result);
+
+        $deExtension = new TestExtension('Das ist ein Test', 'Das ist ein zweiter Test', 'prefix');
+        $result = $this->mapper->saveWithExtension(
+            $structure->getUuid(),
+            $deExtension,
+            1,
+            'default',
+            'de'
+        );
+        $this->assertEquals('Das ist ein Test', $result);
+
+        list($test, $test1) = $this->mapper->loadWithExtension($structure->getUuid(), $enExtension, 'default', 'en');
+        $this->assertEquals('That´s a test', $test);
+        $this->assertEquals('That´s a second test', $test1);
+
+        list($test, $test1) = $this->mapper->loadWithExtension($structure->getUuid(), $deExtension, 'default', 'de');
+        $this->assertEquals('Das ist ein Test', $test);
+        $this->assertEquals('Das ist ein zweiter Test', $test1);
+
+        $session = $this->sessionManager->getSession();
+        /** @var NodeInterface $node */
+        $node = $session->getNodeByIdentifier($structure->getUuid());
+
+        // check content data in en
+        $this->assertEquals(1, $node->getPropertyValue($this->languageNamespace . ':en-creator'));
+        $this->assertEquals(1, $node->getPropertyValue($this->languageNamespace . ':en-changer'));
+        $this->assertTrue(
+            $node->getPropertyValue($this->languageNamespace . ':en-changed') > $node->getPropertyValue(
+                $this->languageNamespace . ':en-created'
+            )
+        );
+        $this->assertEquals($dataEN['name'], $node->getPropertyValue($this->languageNamespace . ':en-name'));
+        $this->assertEquals($dataEN['blog'], $node->getPropertyValue($this->languageNamespace . ':en-blog'));
+
+        // check content data in de
+        $this->assertEquals(1, $node->getPropertyValue($this->languageNamespace . ':de-creator'));
+        $this->assertEquals(1, $node->getPropertyValue($this->languageNamespace . ':de-changer'));
+        $this->assertTrue(
+            $node->getPropertyValue($this->languageNamespace . ':de-changed') > $node->getPropertyValue(
+                $this->languageNamespace . ':de-created'
+            )
+        );
+        $this->assertEquals($dataDE['name'], $node->getPropertyValue($this->languageNamespace . ':de-name'));
+        $this->assertEquals($dataDE['blog'], $node->getPropertyValue($this->languageNamespace . ':de-blog'));
+
+        // check extension data in en
+        $this->assertEquals('That´s a test', $node->getPropertyValue($this->languageNamespace . ':en-test'));
+        $this->assertEquals('That´s a second test', $node->getPropertyValue($this->languageNamespace . ':en-test1'));
+
+        // check extension data in de
+        $this->assertEquals('Das ist ein Test', $node->getPropertyValue($this->languageNamespace . ':de-prefix-test'));
+        $this->assertEquals(
+            'Das ist ein zweiter Test',
+            $node->getPropertyValue($this->languageNamespace . ':de-prefix-test1')
+        );
+    }
+}
+
+class TestExtension extends ContentMapperExtension
+{
+    protected $properties = array(
+        'test',
+        'test1'
+    );
+
+    private $dataTest;
+
+    private $dataTest1;
+
+    function __construct($dataTest, $dataTest1, $additionalPrefix = null)
+    {
+        $this->dataTest = $dataTest;
+        $this->dataTest1 = $dataTest1;
+
+        $this->additionalPrefix = $additionalPrefix;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function save(NodeInterface $node, $webspaceKey, $languageCode)
+    {
+        $node->setProperty($this->getPropertyName('test'), $this->dataTest);
+        $node->setProperty($this->getPropertyName('test1'), $this->dataTest1);
+
+        return $this->dataTest;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function load(NodeInterface $node, $webspaceKey, $languageCode)
+    {
+        return array(
+            $node->getPropertyValue($this->getPropertyName('test')),
+            $node->getPropertyValue($this->getPropertyName('test1'))
+        );
+    }
 }
