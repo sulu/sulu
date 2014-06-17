@@ -51,5 +51,4 @@ class Metadata
     {
         return $this->data;
     }
-
-} 
+}

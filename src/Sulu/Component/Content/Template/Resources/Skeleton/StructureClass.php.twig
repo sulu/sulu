@@ -45,7 +45,7 @@ class {{ cache_class }} extends {{ base_class }}
         {{ sectionVar }} = new SectionProperty(
             '{{ section.name }}',
             {{ _self.renderArray(section.meta) }},
-            '{{ section.col }}'
+            '{{ section.colspan }}'
         );
 {% for property in section.properties %}
 {{ _self.buildProperty(property, sectionVar, layer) }}
@@ -84,7 +84,7 @@ new Property(
                 '{{ tag.name }}' => new PropertyTag('{{ tag.name }}', {{ tag.priority is defined and tag.priority ? tag.priority : '1' }}),
 {% endfor %}
             ),
-            '{{ property.col }}'
+            '{{ property.colspan }}'
         );{% endmacro %}
 
 {% macro blockPropertyConstructor(property) %}
@@ -106,7 +106,7 @@ new BlockProperty(
                 '{{ tag.name }}' => new PropertyTag('{{ tag.name }}', {{ tag.priority is defined and tag.priority ? tag.priority : '1' }}),
 {% endfor %}
             ),
-            '{{ property.col }}'
+            '{{ property.colspan }}'
         );{% endmacro %}
 
 {% macro renderArray(array) %}
