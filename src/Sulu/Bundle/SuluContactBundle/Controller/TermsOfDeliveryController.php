@@ -37,7 +37,7 @@ class TermsOfDeliveryController extends RestController implements ClassResourceI
      * Shows a single terms of delivery
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
-     * @Route("/termsofdelivery/{id}")
+     * @Route("/termsofdeliveries/{id}")
      */
     public function getAction($id)
     {
@@ -70,7 +70,7 @@ class TermsOfDeliveryController extends RestController implements ClassResourceI
     /**
      * Creates a terms of delivery
      * @return \Symfony\Component\HttpFoundation\Response
-     * @Route("/termsofdelivery")
+     * @Route("/termsofdeliveries")
      */
     public function postAction()
     {
@@ -103,7 +103,7 @@ class TermsOfDeliveryController extends RestController implements ClassResourceI
      * @param integer $id
      * @return \Symfony\Component\HttpFoundation\Response
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
-     * @Route("/termsofdelivery/{id}")
+     * @Route("/termsofdeliveries/{id}")
      */
     public function putAction($id)
     {
@@ -141,7 +141,7 @@ class TermsOfDeliveryController extends RestController implements ClassResourceI
      * Delete terms-of-delivery with the given id
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
-     * @Route("/termsofdelivery/{id}")
+     * @Route("/termsofdeliveries/{id}")
      */
     public function deleteAction($id)
     {
