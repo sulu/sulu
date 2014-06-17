@@ -59,11 +59,9 @@ class SymfonyHttpCacheManager implements HttpCacheManagerInterface
         );
 
         if (count($urls) > 0) {
+
             foreach ($urls as $url) {
                 $this->invalidatePath($url);
-                if (($tmpUrl = rtrim($url, '/')) !== $url) {
-                    $this->invalidatePath($tmpUrl);
-                }
             }
 
             $this->flush();

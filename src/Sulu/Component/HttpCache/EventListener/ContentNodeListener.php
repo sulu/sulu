@@ -44,6 +44,8 @@ class ContentNodeListener
      */
     public function onContentNodeSave(ContentNodeEvent $event)
     {
-        $this->cacheManager->expire($event->getStructure(), $this->environment);
+        if ($this->environment != 'dev') {
+            $this->cacheManager->expire($event->getStructure(), $this->environment);
+        }
     }
 }
