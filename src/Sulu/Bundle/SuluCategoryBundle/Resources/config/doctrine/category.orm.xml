@@ -27,7 +27,7 @@
                 <cascade-all/>
             </cascade>
         </one-to-many>
-        <one-to-many field="name" target-entity="Sulu\Bundle\CategoryBundle\Entity\CategoryName" mapped-by="category">
+        <one-to-many field="translations" target-entity="Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation" mapped-by="category">
             <cascade>
                 <cascade-all/>
             </cascade>

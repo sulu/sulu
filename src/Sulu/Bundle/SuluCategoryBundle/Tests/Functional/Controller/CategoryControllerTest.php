@@ -13,7 +13,7 @@ namespace Sulu\Bundle\TagBundle\Tests\Functional\Controller;
 use Doctrine\ORM\Tools\SchemaTool;
 use Sulu\Bundle\CategoryBundle\Entity\Category;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryMeta;
-use Sulu\Bundle\CategoryBundle\Entity\CategoryName;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation;
 use Sulu\Bundle\TestBundle\Testing\DatabaseTestCase;
 
 class CategoryControllerTest extends DatabaseTestCase
@@ -34,11 +34,11 @@ class CategoryControllerTest extends DatabaseTestCase
         $category->setChanged(new \DateTime());
 
         // name for first category
-        $categoryName = new CategoryName();
-        $categoryName->setLocale('en');
-        $categoryName->setName('First Category');
-        $categoryName->setCategory($category);
-        $category->addName($categoryName);
+        $categoryTrans = new CategoryTranslation();
+        $categoryTrans->setLocale('en');
+        $categoryTrans->setTranslation('First Category');
+        $categoryTrans->setCategory($category);
+        $category->addTranslation($categoryTrans);
 
         // meta for first category
         $categoryMeta = new CategoryMeta();
@@ -57,11 +57,11 @@ class CategoryControllerTest extends DatabaseTestCase
         $category2->setChanged(new \DateTime());
 
         // name for second category
-        $categoryName2 = new CategoryName();
-        $categoryName2->setLocale('de');
-        $categoryName2->setName('Second Category');
-        $categoryName2->setCategory($category);
-        $category2->addName($categoryName2);
+        $categoryTrans2 = new CategoryTranslation();
+        $categoryTrans2->setLocale('de');
+        $categoryTrans2->setTranslation('Second Category');
+        $categoryTrans2->setCategory($category2);
+        $category2->addTranslation($categoryTrans2);
 
         // meta for second category
         $categoryMeta2 = new CategoryMeta();
@@ -88,11 +88,11 @@ class CategoryControllerTest extends DatabaseTestCase
         $category3->setParent($category);
 
         // name for second category
-        $categoryName3 = new CategoryName();
-        $categoryName3->setLocale('en');
-        $categoryName3->setName('Third Category');
-        $categoryName3->setCategory($category3);
-        $category3->addName($categoryName3);
+        $categoryTrans3 = new CategoryTranslation();
+        $categoryTrans3->setLocale('en');
+        $categoryTrans3->setTranslation('Third Category');
+        $categoryTrans3->setCategory($category3);
+        $category3->addTranslation($categoryTrans3);
 
         // meta for second category
         $categoryMeta4 = new CategoryMeta();
@@ -114,7 +114,7 @@ class CategoryControllerTest extends DatabaseTestCase
         self::$entities = array(
             self::$em->getClassMetadata('Sulu\Bundle\CategoryBundle\Entity\Category'),
             self::$em->getClassMetadata('Sulu\Bundle\CategoryBundle\Entity\CategoryMeta'),
-            self::$em->getClassMetadata('Sulu\Bundle\CategoryBundle\Entity\CategoryName'),
+            self::$em->getClassMetadata('Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation'),
             self::$em->getClassMetadata('Sulu\Bundle\TestBundle\Entity\TestUser')
         );
 
@@ -128,8 +128,62 @@ class CategoryControllerTest extends DatabaseTestCase
         self::$tool->dropSchema(self::$entities);
     }
 
+    private function createTestClient()
+    {
+        return $this->createClient(
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test',
+            )
+        );
+    }
+
     public function testGetById()
     {
-        $this->assertEquals(true, true);
+        $client = $this->createTestClient();
+
+        $client->request(
+            'GET',
+            '/api/categories/1'
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $this->assertEquals('First Category', $response->name);
+        $this->assertEquals('en', $response->locale);
+        $this->assertEquals(1, $response->id);
+        $this->assertEquals(1, count($response->meta));
+        $this->assertEquals('description', $response->meta[0]->key);
+        $this->assertEquals('Description of Category', $response->meta[0]->value);
+    }
+
+    public function testByIdNotExisting() {
+        $client = $this->createTestClient();
+        $client->request(
+            'GET',
+            '/api/categories/100'
+        );
+
+        $this->assertEquals(404, $client->getResponse()->getStatusCode());
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(0, $response->code);
+        $this->assertTrue(isset($response->message));
+    }
+
+    public function testCGet() {
+        $client = $this->createTestClient();
+        $client->request(
+            'GET',
+            '/api/categories'
+        );
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(3, count($response->_embedded));
     }
 }
