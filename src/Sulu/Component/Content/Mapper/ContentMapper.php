@@ -112,6 +112,7 @@ class ContentMapper implements ContentMapperInterface
         $defaultLanguage,
         $defaultTemplate,
         $languageNamespace,
+        $internalPrefix,
         $stopwatch = null
     )
     {
@@ -140,7 +141,8 @@ class ContentMapper implements ContentMapperInterface
                 'navigation',
                 'published'
             ),
-            $this->languageNamespace
+            $this->languageNamespace,
+            $internalPrefix
         );
     }
 
