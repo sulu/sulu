@@ -38230,7 +38230,7 @@ define('__component__$smart-content@husky',[], function() {
             // adopt height of column navigation once
             this.sandbox.once('husky.overlay.smart-content.' + this.options.instanceName + '.opened', function() {
                 // set height of smart-content column navigation slide (missing margins)
-                var height = this.sandbox.dom.outerHeight('.smart-content-overlay .slide-1 .overlay-content') + 24;
+                var height = this.sandbox.dom.outerHeight('.smart-content-overlay .slide-0 .overlay-content') + 24;
                 this.sandbox.dom.css('.smart-content-overlay .slide-1 .overlay-content', 'height', height + 'px');
             }.bind(this));
 
