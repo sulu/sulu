@@ -193,7 +193,7 @@ class DefaultThumbnailManager implements ThumbnailManagerInterface {
 
         foreach ($formats as $format) {
             $format = $format['name'];
-            $thumbNails[] = $this->imageStorage->getMediaUrl($id, $fileName, $options, $format);
+            $thumbNails[$format] = $this->imageStorage->getMediaUrl($id, $fileName, $options, $format);
         }
 
         return $thumbNails;
