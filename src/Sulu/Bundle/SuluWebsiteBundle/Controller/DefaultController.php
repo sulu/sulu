@@ -46,7 +46,7 @@ class DefaultController extends WebsiteController
     public function error404Action(Request $request)
     {
         return $this->renderError(
-            'ClientWebsiteBundle:Website:error404.html.twig',
+            'ClientWebsiteBundle:views:error404.html.twig',
             array(
                 'path'       => $request->get('path'),
                 'navigation' => array()
