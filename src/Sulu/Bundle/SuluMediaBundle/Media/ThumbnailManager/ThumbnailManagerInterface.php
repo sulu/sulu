@@ -38,8 +38,8 @@ interface ThumbnailManagerInterface {
     /**
      * @param $id
      * @param $fileName
-     * @param $options
+     * @param $storageOptions
      * @return mixed
      */
-    public function getThumbNails($id, $fileName, $options);
+    public function getThumbNails($id, $fileName, $storageOptions);
 } 

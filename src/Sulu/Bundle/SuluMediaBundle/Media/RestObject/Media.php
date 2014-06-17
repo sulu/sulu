@@ -18,7 +18,6 @@ use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage;
 use Sulu\Bundle\MediaBundle\Entity\Media as Entity;
 use DateTime;
-use Sulu\Bundle\MediaBundle\Media\ImageManager\CacheManagerInterface;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 
 class Media extends ApiEntity implements RestObjectInterface
@@ -102,6 +101,16 @@ class Media extends ApiEntity implements RestObjectInterface
     /**
      * @var string
      */
+    protected $url;
+
+    /**
+     * @var array
+     */
+    protected $thumbnails = array();
+
+    /**
+     * @var string
+     */
     protected $changer;
 
     /**
@@ -118,16 +127,6 @@ class Media extends ApiEntity implements RestObjectInterface
      * @var
      */
     protected $created;
-
-    /**
-     * @var CacheManagerInterface
-     */
-    protected $cacheManager;
-
-    public function __construct($cacheManager)
-    {
-        $this->cacheManager = $cacheManager;
-    }
 
     /**
      * {@inheritdoc}
@@ -368,8 +367,8 @@ class Media extends ApiEntity implements RestObjectInterface
                 'contentLanguages' => $this->contentLanguages,
                 'publishLanguages' => $this->publishLanguages,
                 'tags' => $this->tags,
-                'url' => $this->getUrl(),
-                'thumbnails' => $this->getThumbNails(),
+                'url' => $this->url,
+                'thumbnails' => $this->thumbnails,
                 'properties' => $this->properties,
                 'changer' => $this->changer,
                 'creator' => $this->creator,
@@ -387,22 +386,6 @@ class Media extends ApiEntity implements RestObjectInterface
         }
 
         return $data;
-    }
-
-    /**
-     * @return array
-     */
-    public function getThumbNails()
-    {
-        return $this->cacheManager->getThumbNails($this->id, $this->name, $this->storageOptions);
-    }
-
-    /**
-     * @return string
-     */
-    public function getUrl()
-    {
-        return $this->cacheManager->getOriginal($this->id, $this->version, $this->storageOptions);
     }
 
     /**
@@ -726,4 +709,53 @@ class Media extends ApiEntity implements RestObjectInterface
     {
         $this->type = $type;
     }
+
+    /**
+     * @return string
+     */
+    public function getStorageOptions()
+    {
+        return $this->storageOptions;
+    }
+
+    /**
+     * @param string $storageOptions
+     */
+    public function setStorageOptions($storageOptions)
+    {
+        $this->storageOptions = $storageOptions;
+    }
+
+    /**
+     * @return array
+     */
+    public function getThumbnails()
+    {
+        return $this->thumbnails;
+    }
+
+    /**
+     * @param array $thumbnails
+     */
+    public function setThumbnails($thumbnails)
+    {
+        $this->thumbnails = $thumbnails;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUrl()
+    {
+        return $this->url;
+    }
+
+    /**
+     * @param string $url
+     */
+    public function setUrl($url)
+    {
+        $this->url = $url;
+    }
+
 } 
