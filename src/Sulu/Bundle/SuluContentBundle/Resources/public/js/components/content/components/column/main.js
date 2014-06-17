@@ -78,7 +78,7 @@ define(function() {
             }, this);
 
             this.sandbox.on('husky.column-navigation.selected', function(item) {
-                this.sandbox.sulu.saveUserSetting('columnNavigationSelected', item.id);
+                this.sandbox.sulu.saveUserSetting(this.options.webspace + 'ColumnNavigationSelected', item.id);
             }, this);
 
             this.sandbox.on('sulu.content.localizations', function(localizations) {
@@ -123,7 +123,7 @@ define(function() {
         },
 
         getLastSelected: function() {
-            return this.sandbox.sulu.getUserSetting('columnNavigationSelected');
+            return this.sandbox.sulu.getUserSetting(this.options.webspace + 'ColumnNavigationSelected');
         },
 
         getUrl: function() {
