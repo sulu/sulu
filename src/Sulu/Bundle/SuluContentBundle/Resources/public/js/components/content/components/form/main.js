@@ -270,12 +270,19 @@ define(['app-config'], function(AppConfig) {
         },
 
         setFormData: function(data) {
-            var initialize = this.sandbox.form.setData(this.formId, data);
+            var initialize = this.sandbox.form.setData(this.formId, data),
+                titleAttr = 'title'; // default value
 
-            if (!!data.id && (data.title === '' || typeof data.title === 'undefined' || data.title === null)) {
+            this.getDomElementsForTagName('sulu.node.name', function(property) {
+                titleAttr = property.name;
+            }.bind(this));
+
+            if (!!data.id && (data[titleAttr] === '' || typeof data[titleAttr] === 'undefined' || data[titleAttr] === null)) {
                 this.sandbox.util.load('/admin/api/nodes/' + data.id + '?webspace=' + this.options.webspace + '&language=' + this.options.language + '&complete=false&ghost-content=true')
                     .then(function(data) {
-                        this.sandbox.dom.attr('#title', 'placeholder', data.type.value + ': ' + data.title);
+                        if (!!data.type) {
+                            this.sandbox.dom.attr('#title', 'placeholder', data.type.value + ': ' + data[titleAttr]);
+                        }
                     }.bind(this));
             }
 
@@ -308,7 +315,7 @@ define(['app-config'], function(AppConfig) {
 
         bindDomEvents: function() {
             this.startListening = false;
-                    this.getDomElementsForTagName('sulu.rlp', function(property) {
+            this.getDomElementsForTagName('sulu.rlp', function(property) {
                 var element = property.$el.data('element');
                 if (!element || element.getValue() === '' || element.getValue() === undefined || element.getValue() === null) {
                     this.startListening = true;
@@ -616,12 +623,7 @@ define(['app-config'], function(AppConfig) {
 
         listenForChange: function() {
             this.dfdListenForChange.then(function() {
-                this.sandbox.dom.on(this.formId, 'keyup', function() {
-                    this.setHeaderBar(false);
-                    this.contentChanged = true;
-                }.bind(this), '.trigger-save-button');
-
-                this.sandbox.dom.on(this.formId, 'change', function() {
+                this.sandbox.dom.on(this.formId, 'keyup change', function() {
                     this.setHeaderBar(false);
                     this.contentChanged = true;
                 }.bind(this), '.trigger-save-button');
@@ -722,7 +724,7 @@ define(['app-config'], function(AppConfig) {
                 this.sandbox.logger.log('Connection established!');
                 this.opened = true;
 
-                this.sandbox.dom.on(this.formId, 'keyup', this.updateEvent.bind(this), '.preview-update');
+                this.sandbox.dom.on(this.formId, 'keyup change', this.updateEvent.bind(this), '.preview-update');
 
                 // write start message
                 this.writeStartMessage();
