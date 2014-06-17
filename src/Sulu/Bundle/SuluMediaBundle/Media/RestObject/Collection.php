@@ -70,11 +70,6 @@ class Collection extends ApiEntity implements RestObjectInterface
     protected $description;
 
     /**
-     * @var array
-     */
-    protected $thumbnails = array();
-
-    /**
      * @var string
      */
     protected $changer;
@@ -186,24 +181,6 @@ class Collection extends ApiEntity implements RestObjectInterface
         }
         $this->mediaNumber = $mediaCount;
 
-        //todo: move sample pictures to media-proxy
-        if(!$this->thumbnails) {
-            $this->thumbnails = array(
-                array(
-                    'url' => 'http://lorempixel.com/150/100/sports',
-                    'title' => 'Media title'
-                ),
-                array(
-                    'url' => 'http://lorempixel.com/150/100/animals',
-                    'title' => 'Title of the media'
-                ),
-                array(
-                    'url' => 'http://lorempixel.com/150/100/technics',
-                    'title' => 'Media title'
-                )
-            );
-        }
-
         return $this;
     }
 
@@ -285,24 +262,6 @@ class Collection extends ApiEntity implements RestObjectInterface
         // set properties
         $this->properties = $properties;
 
-        //todo: move sample pictures to media-proxy
-        if(!$this->thumbnails) {
-            $this->thumbnails = array(
-                array(
-                    'url' => 'http://lorempixel.com/150/100/sports',
-                    'title' => 'Media title'
-                ),
-                array(
-                    'url' => 'http://lorempixel.com/150/100/animals',
-                    'title' => 'Title of the media'
-                ),
-                array(
-                    'url' => 'http://lorempixel.com/150/100/technics',
-                    'title' => 'Media title'
-                )
-            );
-        }
-
         return $this;
     }
 
@@ -329,7 +288,6 @@ class Collection extends ApiEntity implements RestObjectInterface
                 'creator' => $this->creator,
                 'changed' => $this->changed,
                 'created' => $this->created,
-                'thumbnails' => $this->thumbnails
             );
         } else {
             // only get specific fields
