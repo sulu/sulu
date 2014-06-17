@@ -25,12 +25,42 @@ class TemplateReader implements LoaderInterface
 {
     const SCHEME_PATH = '/Resources/schema/template/template-1.0.xsd';
 
+    /**
+     * tags that are required in template
+     * TODO should be possible to inject from config
+     * @var array
+     */
     private $requiredTags = array(
         'sulu.node.name'
     );
 
+    /**
+     * reserved names for sulu internals
+     * TODO should be possible to inject from config
+     * @var array
+     */
+    private $reservedPropertyNames = array(
+        'template',
+        'changer',
+        'changed',
+        'creator',
+        'created',
+        'navigation',
+        'published',
+        'state'
+    );
+
+    /**
+     * running variable for required tags
+     * at begin deep copy of requiredTags, each tag found will be removed
+     * @var array
+     */
     private $runningRequiredTags;
 
+    /**
+     * all tag found tags during a run
+     * @var array
+     */
     private $runningTags;
 
     /**
@@ -122,6 +152,12 @@ class TemplateReader implements LoaderInterface
             $node,
             array('name', 'type', 'minOccurs', 'maxOccurs', 'col', 'cssClass')
         );
+
+        if (in_array($result['name'], $this->reservedPropertyNames)) {
+            throw new InvalidXmlException(
+                sprintf('Property name %s is a reserved name', $result['name'])
+            );
+        }
 
         $result['mandatory'] = $this->getBooleanValueFromXPath('@mandatory', $xpath, $node);
         $result['tags'] = $this->loadTags('x:tag', $xpath, $node);

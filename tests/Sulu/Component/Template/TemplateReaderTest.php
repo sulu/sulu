@@ -826,6 +826,17 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($template, $result);
     }
 
+    function testReservedName()
+    {
+        $this->setExpectedException(
+            '\Sulu\Component\Content\Template\Exception\InvalidXmlException',
+            'The given XML is invalid! Property name changed is a reserved'
+        );
+
+        $templateReader = new TemplateReader();
+        $result = $templateReader->load(__DIR__ . '/../../../Resources/DataFixtures/Template/template_reserved.xml');
+    }
+
     function arrayRecursiveDiff($aArray1, $aArray2)
     {
         $aReturn = array();
