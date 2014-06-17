@@ -47,12 +47,12 @@ define([], function() {
                     '   <div class="grid-col-2 pull-right"><div class="remove-row btn gray-dark fit only-icon pull-right"><div class="fa-minus-circle"></div></div></div>',
                     '</div>'].join('');
             },
-            skeleton: function() {
+            skeleton: function(valueField) {
                 return [
                     '<div class="content-inner">',
                     '   <% _.each(data, function(item) { %>',
                     '       <div class="grid-row type-row" data-id="<%= item.id %>">',
-                    '           <div class="grid-col-8 pull-left"><input class="form-element" type="text" value="<%= item.category %>"/></div>',
+                    '           <div class="grid-col-8 pull-left"><input class="form-element" type="text" value="<%= item.',valueField,' %>"/></div>',
                     '           <div class="grid-col-2 pull-right"><div class="remove-row btn gray-dark fit only-icon pull-right"><div class="fa-minus-circle"></div></div></div>',
                     '       </div>',
                     ' <% }); %>',
@@ -402,7 +402,7 @@ define([], function() {
                 this.options.data = config.data;
             }
 
-            config.data = this.sandbox.util.template(templates.skeleton.call(this), {data: this.options.data});
+            config.data = this.sandbox.util.template(templates.skeleton.call(this,config.valueName), {data: this.options.data});
 
             config.okCallback = function(data) {
                 this.onCloseWithOk(data);
