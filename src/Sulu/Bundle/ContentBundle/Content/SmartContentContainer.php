@@ -132,7 +132,7 @@ class SmartContentContainer implements \Serializable
      */
     private function loadData($config)
     {
-        if ($config['dataSource'] !== '') {
+        if (array_key_exists('dataSource',$config) && $config['dataSource'] !== '') {
             return $this->nodeRepository->getFilteredNodes(
                 $config,
                 $this->languageCode,
