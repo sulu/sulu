@@ -1,7 +1,3 @@
-sulu_media:
-    resource: "@SuluMediaBundle/Resources/config/routing_api.yml"
-    prefix: /api
-
 sulu_media.collection_navigation:
     path: /navigation/collection
     defaults: { _controller: SuluMediaBundle:Navigation:collection }
