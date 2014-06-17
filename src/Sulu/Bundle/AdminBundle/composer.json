@@ -18,7 +18,8 @@
     "require-dev": {
         "symfony/symfony": "2.5.*",
         "phpunit/phpunit": "4.0.*",
-        "friendsofsymfony/rest-bundle": "@dev"
+        "friendsofsymfony/rest-bundle": "@dev",
+        "friendsofsymfony/http-cache": "@dev"
     },
     "autoload": {
         "psr-0": {
