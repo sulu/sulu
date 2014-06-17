@@ -266,7 +266,7 @@ class TermsOfDeliveryControllerTest extends DatabaseTestCase
         $client = $this->createTestClient();
         $client->request(
             'PATCH',
-            '/api/termsofdelivery',
+            '/api/termsofdeliveries',
             array(
                 array(
                     'id' => 1,
@@ -323,7 +323,7 @@ class TermsOfDeliveryControllerTest extends DatabaseTestCase
         $client = $this->createTestClient();
         $client->request(
             'PATCH',
-            '/api/termsofdelivery',
+            '/api/termsofdeliveries',
             array(
                 array(
                     'id' => 1,
@@ -345,7 +345,7 @@ class TermsOfDeliveryControllerTest extends DatabaseTestCase
         $client = $this->createTestClient();
         $client->request(
             'PATCH',
-            '/api/termsofdelivery',
+            '/api/termsofdeliveries',
             array(
                 array(
                     'id' => 1,
