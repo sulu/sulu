@@ -47,23 +47,6 @@ interface ContentMapperInterface
     );
 
     /**
-     * save data to node with a extension
-     * @param string $uuid
-     * @param ContentMapperExtensionInterface $extension
-     * @param integer $userId
-     * @param string $webspaceKey
-     * @param string $languageCode
-     * @return mixed
-     */
-    public function saveWithExtension(
-        $uuid,
-        ContentMapperExtensionInterface $extension,
-        $userId,
-        $webspaceKey,
-        $languageCode
-    );
-
-    /**
      * saves the given data in the content storage
      * @param array $data The data to be saved
      * @param string $templateKey Name of template
@@ -116,16 +99,6 @@ interface ContentMapperInterface
      * @return StructureInterface
      */
     public function load($uuid, $webspaceKey, $languageCode, $loadGhostContent = false);
-
-    /**
-     * load data from node with a extension
-     * @param string $uuid
-     * @param ContentMapperExtensionInterface $extension
-     * @param string $webspaceKey
-     * @param string $languageCode
-     * @return mixed
-     */
-    public function loadWithExtension($uuid, ContentMapperExtensionInterface $extension, $webspaceKey, $languageCode);
 
     /**
      * returns the data from the given id

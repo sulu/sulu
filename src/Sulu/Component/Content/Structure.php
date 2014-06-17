@@ -11,6 +11,7 @@
 namespace Sulu\Component\Content;
 
 use DateTime;
+use Sulu\Component\Content\Mapper\StructureExtensionInterface;
 use Sulu\Component\Content\Section\SectionProperty;
 use Sulu\Component\Content\Section\SectionPropertyInterface;
 use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
@@ -152,6 +153,11 @@ abstract class Structure implements StructureInterface
     private $tags = array();
 
     /**
+     * @var StructureExtensionInterface[]
+     */
+    private $extensions = array();
+
+    /**
      * @param $key string
      * @param $view string
      * @param $controller string
@@ -218,6 +224,22 @@ abstract class Structure implements StructureInterface
                 }
             }
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addExtension(StructureExtensionInterface $extension)
+    {
+        $this->extensions[] = $extension;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getExtensions()
+    {
+        return $this->extensions;
     }
 
     /**
@@ -741,6 +763,10 @@ abstract class Structure implements StructureInterface
             }
 
             $this->appendProperties($this->getProperties(), $result);
+
+            foreach ($this->getExtensions() as $extension) {
+                $result['extensions'][$extension->getName()] = $extension->getData();
+            }
 
             return $result;
         } else {

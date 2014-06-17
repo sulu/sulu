@@ -13,10 +13,10 @@ namespace Sulu\Component\Content\Mapper;
 use PHPCR\NodeInterface;
 
 /**
- * interface for content mapper extension
+ * interface for structure extension
  * @package Sulu\Component\Content\Mapper
  */
-interface ContentMapperExtensionInterface
+interface StructureExtensionInterface
 {
 
     /**
@@ -30,19 +30,31 @@ interface ContentMapperExtensionInterface
     /**
      * save data to node
      * @param NodeInterface $node
-     * @param $webspaceKey
-     * @param $languageCode
-     * @return mixed
+     * @param mixed $data
+     * @param string $webspaceKey
+     * @param string $languageCode
+     * @return
      */
-    public function save(NodeInterface $node, $webspaceKey, $languageCode);
+    public function save(NodeInterface $node, $data, $webspaceKey, $languageCode);
 
     /**
      * load data from node
      * @param NodeInterface $node
      * @param string $webspaceKey
      * @param string $languageCode
-     * @return mixed
      */
     public function load(NodeInterface $node, $webspaceKey, $languageCode);
+
+    /**
+     * returns name of extension
+     * @return string
+     */
+    public function getName();
+
+    /**
+     * returns data of extension
+     * @return array
+     */
+    public function getData();
 
 }

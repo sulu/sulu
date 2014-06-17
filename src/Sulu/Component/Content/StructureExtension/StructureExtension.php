@@ -16,7 +16,7 @@ use Sulu\Component\Content\Mapper\Translation\MultipleTranslatedProperties;
  * basic implementation of content mapper extension
  * @package Sulu\Component\Content\Mapper
  */
-abstract class ContentMapperExtension implements ContentMapperExtensionInterface
+abstract class StructureExtension implements StructureExtensionInterface
 {
 
     /**
@@ -24,7 +24,23 @@ abstract class ContentMapperExtension implements ContentMapperExtensionInterface
      */
     protected $properties;
 
+    /**
+     * additional prefix for properties
+     * @var string
+     */
     protected $additionalPrefix;
+
+    /**
+     * data of extension
+     * @var mixed
+     */
+    protected $data;
+
+    /**
+     * name of extension
+     * @var string
+     */
+    protected $name;
 
     /**
      * @var MultipleTranslatedProperties
@@ -59,6 +75,24 @@ abstract class ContentMapperExtension implements ContentMapperExtensionInterface
             $this->properties, $languageNamespace, implode('-', $namespaces)
         );
         $this->translatedProperties->setLanguage($languageCode);
+    }
+
+    /**
+     * returns data of extension
+     * @return array
+     */
+    public function getData()
+    {
+        return $this->getData();
+    }
+
+    /**
+     * returns name of extension
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
     }
 
 } 

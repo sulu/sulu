@@ -120,8 +120,7 @@ class ContentMapper implements ContentMapperInterface
         $languageNamespace,
         $internalPrefix,
         $stopwatch = null
-    )
-    {
+    ) {
         $this->contentTypeManager = $contentTypeManager;
         $this->structureManager = $structureManager;
         $this->sessionManager = $sessionManager;
@@ -180,8 +179,7 @@ class ContentMapper implements ContentMapperInterface
         $parentUuid = null,
         $state = null,
         $showInNavigation = null
-    )
-    {
+    ) {
         // create translated properties
         $this->properties->setLanguage($languageCode);
 
@@ -235,7 +233,9 @@ class ContentMapper implements ContentMapperInterface
                 $hasSameLanguage = ($languageCode == $this->defaultLanguage);
                 $hasSamePath = ($node->getPath() !== $this->getContentNode($webspaceKey)->getPath());
                 $hasDifferentTitle = !$node->hasProperty($translatedNodeNameProperty->getName()) ||
-                    $node->getPropertyValue($translatedNodeNameProperty->getName()) !== $data[$nodeNameProperty->getName()];
+                    $node->getPropertyValue(
+                        $translatedNodeNameProperty->getName()
+                    ) !== $data[$nodeNameProperty->getName()];
 
                 if ($hasSameLanguage && $hasSamePath && $hasDifferentTitle) {
                     $path = $this->getUniquePath($path, $node->getParent());
@@ -332,8 +332,19 @@ class ContentMapper implements ContentMapperInterface
                 throw $ex;
             }
         }
-
         $session->save();
+
+        // save data of extensions
+        if (isset($data['extensions'])) {
+            foreach ($structure->getExtensions() as $extension) {
+                if (isset($data['extensions'][$extension->getName()])) {
+                    $extension->setLanguageCode($languageCode, $this->languageNamespace, $this->internalPrefix);
+
+                    $extension->save($node, $data['extensions'][$extension->getName()], $webspaceKey, $languageCode);
+                }
+            }
+            $session->save();
+        }
 
         $structure->setUuid($node->getPropertyValue('jcr:uuid'));
         $structure->setPath(str_replace($this->getContentNode($webspaceKey)->getPath(), '', $node->getPath()));
@@ -362,40 +373,6 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function saveWithExtension(
-        $uuid,
-        ContentMapperExtensionInterface $extension,
-        $userId,
-        $webspaceKey,
-        $languageCode
-    ) {
-        // create translated properties
-        $this->properties->setLanguage($languageCode);
-
-        // sets current language
-        $extension->setLanguageCode($languageCode, $this->languageNamespace, $this->internalPrefix);
-
-        // init node
-        $session = $this->getSession();
-        $node = $session->getNodeByIdentifier($uuid);
-
-        // save with extension
-        $result = $extension->save($node, $webspaceKey, $languageCode);
-
-        // set changed
-        $dateTime = new DateTime();
-        $node->setProperty($this->properties->getName('changer'), $userId);
-        $node->setProperty($this->properties->getName('changed'), $dateTime);
-
-        // save node
-        $session->save();
-
-        return $result;
-    }
-
-    /**
      * change state of given node
      * @param NodeInterface $node node to change state
      * @param int $state new state
@@ -412,8 +389,7 @@ class ContentMapper implements ContentMapperInterface
         StructureInterface $structure,
         $statePropertyName,
         $publishedPropertyName
-    )
-    {
+    ) {
         if (!in_array($state, $this->states)) {
             throw new StateNotFoundException($state);
         }
@@ -479,9 +455,9 @@ class ContentMapper implements ContentMapperInterface
         $languageCode,
         $userId,
         $partialUpdate = true
-    )
-    {
+    ) {
         $uuid = $this->getContentNode($webspaceKey)->getIdentifier();
+
         return $this->save(
             $data,
             $templateKey,
@@ -507,13 +483,13 @@ class ContentMapper implements ContentMapperInterface
         $flat = true,
         $ignoreExceptions = false,
         $excludeGhosts = false
-    )
-    {
+    ) {
         if ($uuid != null) {
             $root = $this->getSession()->getNodeByIdentifier($uuid);
         } else {
             $root = $this->getContentNode($webspaceKey);
         }
+
         return $this->loadByParentNode(
             $root,
             $webspaceKey,
@@ -545,8 +521,7 @@ class ContentMapper implements ContentMapperInterface
         $flat = true,
         $ignoreExceptions = false,
         $excludeGhosts
-    )
-    {
+    ) {
         if ($this->stopwatch) {
             $this->stopwatch->start('contentManager.loadByParentNode');
         }
@@ -623,22 +598,6 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function loadWithExtension($uuid, ContentMapperExtensionInterface $extension, $webspaceKey, $languageCode)
-    {
-        // sets current language
-        $extension->setLanguageCode($languageCode, $this->languageNamespace, $this->internalPrefix);
-
-        // init node
-        $session = $this->getSession();
-        $node = $session->getNodeByIdentifier($uuid);
-
-        // save with extension
-        return $extension->load($node, $webspaceKey, $languageCode);
-    }
-
-    /**
      * returns the data from the given id
      * @param string $webspaceKey Key of webspace
      * @param string $languageCode Read data for given language
@@ -652,6 +611,7 @@ class ContentMapper implements ContentMapperInterface
         $startPage->setNodeState(StructureInterface::STATE_PUBLISHED);
         $startPage->setGlobalState(StructureInterface::STATE_PUBLISHED);
         $startPage->setNavigation(true);
+
         return $startPage;
     }
 
@@ -714,8 +674,7 @@ class ContentMapper implements ContentMapperInterface
         $webspaceKey,
         $excludeGhost = true,
         $loadGhostContent = false
-    )
-    {
+    ) {
         $node = $this->getSession()->getNodeByIdentifier($uuid);
 
         if ($this->stopwatch) {
@@ -746,8 +705,7 @@ class ContentMapper implements ContentMapperInterface
         $webspaceKey,
         $excludeGhost = true,
         $loadGhostContent = false
-    )
-    {
+    ) {
         $path = ltrim($path, '/');
         if ($path === '') {
             $node = $this->getContentNode($webspaceKey);
@@ -785,8 +743,7 @@ class ContentMapper implements ContentMapperInterface
         $excludeGhost = true,
         $loadGhostContent = false,
         NodeInterface $childNode = null
-    )
-    {
+    ) {
         // go up to content node
         if ($node->getDepth() > $this->getContentNode($webspaceKey)->getDepth()) {
             list($globalResult, $nodeStructure) = $this->loadTreeByNode(
@@ -836,6 +793,7 @@ class ContentMapper implements ContentMapperInterface
         if ($limit) {
             $query->setLimit($limit);
         }
+
         return $query;
     }
 
@@ -854,8 +812,7 @@ class ContentMapper implements ContentMapperInterface
         $webspaceKey,
         $excludeGhost = true,
         $loadGhostContent = false
-    )
-    {
+    ) {
         if ($this->stopwatch) {
             $this->stopwatch->start('contentManager.loadByNode');
         }
@@ -935,6 +892,20 @@ class ContentMapper implements ContentMapperInterface
                     $webspaceKey,
                     $availableLocalization,
                     null
+                );
+            }
+        }
+
+        // save data of extensions
+        foreach ($structure->getExtensions() as $extension) {
+            if (isset($data['extensions'][$extension->getName()])) {
+                $extension->setLanguageCode($localization, $this->languageNamespace, $this->internalPrefix);
+
+                $extension->save(
+                    $contentNode,
+                    $data['extensions'][$extension->getName()],
+                    $webspaceKey,
+                    $availableLocalization
                 );
             }
         }
@@ -1106,6 +1077,7 @@ class ContentMapper implements ContentMapperInterface
             do {
                 $i++;
             } while ($parent->hasNode($name . '-' . $i));
+
             return $name . '-' . $i;
         } else {
             return $name;

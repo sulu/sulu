@@ -2265,7 +2265,7 @@ class ContentMapperTest extends PhpcrTestCase
     }
 }
 
-class TestExtension extends ContentMapperExtension
+class TestExtension extends StructureExtension
 {
     protected $properties = array(
         'test',
@@ -2287,7 +2287,7 @@ class TestExtension extends ContentMapperExtension
     /**
      * {@inheritdoc}
      */
-    public function save(NodeInterface $node, $webspaceKey, $languageCode)
+    public function save(NodeInterface $node, $data, $webspaceKey, $languageCode)
     {
         $node->setProperty($this->getPropertyName('test'), $this->dataTest);
         $node->setProperty($this->getPropertyName('test1'), $this->dataTest1);
