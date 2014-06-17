@@ -14,9 +14,9 @@ use DateTime;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Put;
+use Sulu\Bundle\MediaBundle\Media\RestObject\Collection;
 use Sulu\Bundle\MediaBundle\Entity\Collection as CollectionEntity;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
-use Sulu\Bundle\MediaBundle\Media\RestObject\Collection;
 use Sulu\Bundle\MediaBundle\Media\ThumbnailManager\ThumbnailManagerInterface;
 use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
@@ -200,10 +200,11 @@ class CollectionController extends RestController implements ClassResourceInterf
             $em->flush();
 
             $locale = $this->getLocale($request->get('locale'));
-
             $collection = new Collection();
+            $collection->setDataByEntity($collectionEntity, $locale);
+            $collection->setThumbnails($this->getThumbnails($collection->getId()));
 
-            $view = $this->view($collection->setDataByEntity($collectionEntity, $locale)->toArray(), 200);
+            $view = $this->view($collection->toArray(), 200);
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
         } catch (RestException $re) {
@@ -239,10 +240,12 @@ class CollectionController extends RestController implements ClassResourceInterf
                 $em->persist($collectionEntity);
                 $em->flush();
 
-                $collection = new Collection();
                 $locale = $this->getLocale($request->get('locale'));
+                $collection = new Collection();
+                $collection->setDataByEntity($collectionEntity, $locale);
+                $collection->setThumbnails($this->getThumbnails($collection->getId()));
 
-                $view = $this->view($collection->setDataByEntity($collectionEntity, $locale)->toArray(), 200);
+                $view = $this->view($collection->toArray(), 200);
             }
         } catch (EntityNotFoundException $exc) {
             $view = $this->view($exc->toArray(), 404);
@@ -261,8 +264,6 @@ class CollectionController extends RestController implements ClassResourceInterf
     public function deleteAction($id)
     {
         $delete = function ($id) {
-            $entityName = 'SuluMediaBundle:Collection';
-
             /* @var CollectionEntity $collection */
             $collectionEntity = $this->getDoctrine()
                 ->getRepository($this->entityName)
@@ -296,7 +297,9 @@ class CollectionController extends RestController implements ClassResourceInterf
 
         foreach ($collections as $collection) {
             $flatCollection = new Collection();
-            array_push($flatCollections, $flatCollection->setDataByEntityArray($collection, $locale, $fields));
+            $flatCollection->setDataByEntityArray($collection, $locale, $fields);
+            $flatCollection->setThumbnails($this->getThumbnails($collection->getId()));
+            array_push($flatCollections, $flatCollection);
         }
 
         return $flatCollections;
