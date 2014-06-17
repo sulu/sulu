@@ -37,7 +37,7 @@ class TermsOfPaymentController extends RestController implements ClassResourceIn
      * Shows a single terms of payment
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
-     * @Route("/termsofpayment/{id}")
+     * @Route("/termsofpayments/{id}")
      */
     public function getAction($id)
     {
@@ -70,7 +70,7 @@ class TermsOfPaymentController extends RestController implements ClassResourceIn
     /**
      * Creates a terms of payment
      * @return \Symfony\Component\HttpFoundation\Response
-     * @Route("/termsofpayment")
+     * @Route("/termsofpayments")
      */
     public function postAction()
     {
@@ -103,7 +103,7 @@ class TermsOfPaymentController extends RestController implements ClassResourceIn
      * @param integer $id
      * @return \Symfony\Component\HttpFoundation\Response
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
-     * @Route("/termsofpayment/{id}")
+     * @Route("/termsofpayments/{id}")
      */
     public function putAction($id)
     {
@@ -141,7 +141,7 @@ class TermsOfPaymentController extends RestController implements ClassResourceIn
      * Delete terms-of-payment with the given id
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
-     * @Route("/termsofpayment/{id}")
+     * @Route("/termsofpayments/{id}")
      */
     public function deleteAction($id)
     {
