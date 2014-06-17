@@ -120,7 +120,7 @@ class TemplateReader implements LoaderInterface
         $result = $this->loadValues(
             $xpath,
             $node,
-            array('name', 'type', 'minOccurs', 'maxOccurs', 'col', 'cssClass')
+            array('name', 'type', 'minOccurs', 'maxOccurs', 'colspan', 'cssClass')
         );
 
         $result['mandatory'] = $this->getBooleanValueFromXPath('@mandatory', $xpath, $node);
@@ -139,7 +139,7 @@ class TemplateReader implements LoaderInterface
         $result = $this->loadValues(
             $xpath,
             $node,
-            array('name', 'default-type', 'minOccurs', 'maxOccurs', 'col', 'cssClass')
+            array('name', 'default-type', 'minOccurs', 'maxOccurs', 'colspan', 'cssClass')
         );
 
         $result['mandatory'] = $this->getBooleanValueFromXPath('@mandatory', $xpath, $node);
@@ -160,7 +160,7 @@ class TemplateReader implements LoaderInterface
         $result = $this->loadValues(
             $xpath,
             $node,
-            array('name', 'col', 'cssClass')
+            array('name', 'colspan', 'cssClass')
         );
 
         $result['type'] = 'section';

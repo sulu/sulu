@@ -216,9 +216,9 @@ class TranslatedProperty implements PropertyInterface
      * returns column span
      * @return string
      */
-    public function getCol()
+    public function getColspan()
     {
-        return $this->property->getCol();
+        return $this->property->getColspan();
     }
 
     /**
