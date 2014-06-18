@@ -221,7 +221,7 @@ define([], function() {
 
             this.sandbox.dom.remove('#overlayContainer');
             this.sandbox.dom.append('body', $overlayContainer);
-            this.sandbox.emit('sulu.types.'+this.instanceNameTypeOverlay+'.open', config);
+            this.sandbox.emit('sulu.types.' + this.instanceNameTypeOverlay + '.open', config);
         },
 
         /**
@@ -438,7 +438,7 @@ define([], function() {
                 this.sandbox.emit('sulu.contacts.accounts.list');
             }, this);
 
-            this.sandbox.on('sulu.types.'+this.instanceNameTypeOverlay+'.closed', function(data) {
+            this.sandbox.on('sulu.types.' + this.instanceNameTypeOverlay + '.closed', function(data) {
                 var selected = [];
 
                 this.accountCategoryData = this.copyArrayOfObjects(data);
