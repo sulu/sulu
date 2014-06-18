@@ -29757,13 +29757,20 @@ define('husky_components/datagrid/decorators/group-view',[],function () {
             additionClass: 'addition',
             firstPictureClass: 'first',
             secondPictureClass: 'second',
-            thirdPictureClass: 'third'
+            thirdPictureClass: 'third',
+            emptyThumbnailClass: 'empty',
+            emptyThumbnailIcon: 'coffee'
         },
 
         templates = {
             thumbnail: [
                 '<div class="'+ constants.thumbnailClass +'">',
                 '   <img src="<%= src %>" alt="<%= title %>" title="<%= title %>"/>',
+                '</div>'
+            ].join(''),
+            emptyThumbnail: [
+                '<div class="'+ constants.thumbnailClass +' '+ constants.emptyThumbnailClass +'">',
+                '   <span class="fa-'+ constants.emptyThumbnailIcon +'"></span>',
                 '</div>'
             ].join(''),
             group: [
@@ -29875,12 +29882,16 @@ define('husky_components/datagrid/decorators/group-view',[],function () {
             }));
 
             // render all thumbnails
-            this.sandbox.util.foreach(thumbnails, function(thumbnail) {
-                $thumbnails.push(this.sandbox.dom.createElement(this.sandbox.util.template(templates.thumbnail)({
-                    src: thumbnail.url,
-                    title: thumbnail.title
-                })));
-            }.bind(this));
+            if (!!thumbnails && thumbnails.length > 0) {
+                this.sandbox.util.foreach(thumbnails, function (thumbnail) {
+                    $thumbnails.push(this.sandbox.dom.createElement(this.sandbox.util.template(templates.thumbnail)({
+                        src: thumbnail.url,
+                        title: thumbnail.title
+                    })));
+                }.bind(this));
+            } else {
+                $thumbnails.push(this.sandbox.dom.createElement(templates.emptyThumbnail));
+            }
 
             // add classes to thumbnails
             !!$thumbnails[0] && this.sandbox.dom.addClass($thumbnails[0], constants.firstPictureClass);
@@ -30842,8 +30853,13 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
                     alt: null
                 };
                 if (!!thumbnails[format]) {
+                    if (typeof thumbnails[format] === 'object') {
                     thumbnail.url = thumbnails[format].url;
                     thumbnail.alt = thumbnails[format].alt;
+                    } else {
+                        thumbnail.url = thumbnails[format];
+                        thumbnail.alt = '';
+                    }
                 }
                 return thumbnail;
             };
@@ -37664,23 +37680,23 @@ define('__component__$smart-content@husky',[], function() {
 
                 dataSource: [
                     '<div class="item-half left">',
-                        '<span class="desc"><%= dataSourceLabelStr %></span>',
-                        '<div class="btn action fit" id="select-data-source-action"><%= dataSourceButtonStr %></div>',
-                        '<div><span class="sublabel"><%= dataSourceLabelStr %>:</span> <span class="sublabel data-source"><%= dataSourceValStr %></span></div>',
+                    '<span class="desc"><%= dataSourceLabelStr %></span>',
+                    '<div class="btn action fit" id="select-data-source-action"><%= dataSourceButtonStr %></div>',
+                    '<div><span class="sublabel"><%= dataSourceLabelStr %>:</span> <span class="sublabel data-source"><%= dataSourceValStr %></span></div>',
                     '</div>'
                 ].join(''),
 
                 subFolders: [
                     '<div class="item-half">',
-                        '<div class="check<%= disabled %>">',
-                        '<label>',
-                            '<div class="custom-checkbox">',
-                                '<input type="checkbox" class="includeSubCheck form-element"<%= includeSubCheckedStr %>/>',
-                                '<span class="icon"></span>',
-                            '</div>',
-                            '<span class="description"><%= includeSubStr %></span>',
-                        '</label>',
-                        '</div>',
+                    '<div class="check<%= disabled %>">',
+                    '<label>',
+                    '<div class="custom-checkbox">',
+                    '<input type="checkbox" class="includeSubCheck form-element"<%= includeSubCheckedStr %>/>',
+                    '<span class="icon"></span>',
+                    '</div>',
+                    '<span class="description"><%= includeSubStr %></span>',
+                    '</label>',
+                    '</div>',
                     '</div>'
                 ].join(''),
 
@@ -37713,15 +37729,15 @@ define('__component__$smart-content@husky',[], function() {
 
                 presentAs: [
                     '<div class="item-half left">',
-                        '<span class="desc"><%= presentAsStr %></span>',
+                    '<span class="desc"><%= presentAsStr %></span>',
                         '<div class="' + constants.presentAsDDClass + '"></div>',
                     '</div>'
                 ].join(''),
 
                 limitResult: [
                     '<div class="item-half">',
-                        '<span class="desc"><%= limitResultToStr %></span>',
-                        '<input type="text" value="<%= limitResult %>" class="limit-to form-element"<%= disabled %>/>',
+                    '<span class="desc"><%= limitResultToStr %></span>',
+                    '<input type="text" value="<%= limitResult %>" class="limit-to form-element"<%= disabled %>/>',
                     '</div>'
                 ].join('')
             }
@@ -38416,10 +38432,7 @@ define('__component__$smart-content@husky',[], function() {
                 ].join('');
             // min source must be selected
             if (this.overlayData.dataSource.length > 0 && newURI !== this.URI.str) {
-                //emit data changed event only if old URI is not null (not at the startup)
-                if (this.URI.str !== '') {
-                    this.sandbox.emit(DATA_CHANGED.call(this), this.sandbox.dom.data(this.$el, 'smart-content'), this.$el);
-                }
+                this.sandbox.emit(DATA_CHANGED.call(this), this.sandbox.dom.data(this.$el, 'smart-content'), this.$el);
                 this.URI.str = newURI;
                 this.URI.hasChanged = true;
             } else {
