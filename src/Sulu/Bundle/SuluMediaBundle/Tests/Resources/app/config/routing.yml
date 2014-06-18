@@ -1,3 +1,7 @@
 sulu_media:
     resource: "@SuluMediaBundle/Resources/config/routing.yml"
-    prefix: 
+    prefix:
+
+sulu_media_api:
+    resource: "@SuluMediaBundle/Resources/config/routing_api.yml"
+    prefix: /admin/api
