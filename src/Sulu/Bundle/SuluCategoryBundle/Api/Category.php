@@ -7,6 +7,8 @@ use Sulu\Bundle\CategoryBundle\Entity\Category as Entity;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntityWrapper;
 use JMS\Serializer\Annotation\VirtualProperty;
 use JMS\Serializer\Annotation\SerializedName;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryMeta;
 
 
 class Category extends ApiEntityWrapper
@@ -73,35 +75,160 @@ class Category extends ApiEntityWrapper
      * Returns the creator of the category
      * @VirtualProperty
      * @SerializedName("creator")
-     * @return array
+     * @return string
      */
     public function getCreator()
     {
+        $strReturn = '';
         $creator = $this->entity->getCreator();
         if ($creator) {
-            return [
-                'id' => $creator->getId(),
-            ];
-        } else {
-            return [];
+            return $this->getUserFullName($creator);
         }
+        return $strReturn;
     }
 
     /**
      * Returns the changer of the category
      * @VirtualProperty
      * @SerializedName("changer")
-     * @return array
+     * @return string
      */
     public function getChanger()
     {
+        $strReturn = '';
         $changer = $this->entity->getChanger();
         if ($changer) {
-            return [
-                'id' => $changer->getId(),
-            ];
-        } else {
-            return [];
+            return $this->getUserFullName($changer);
         }
+        return $strReturn;
+    }
+
+    /**
+     * Returns the created date for the category
+     * @VirtualProperty
+     * @SerializedName("created")
+     * @return string
+     */
+    public function getCreated()
+    {
+        return $this->entity->getCreated();
+    }
+
+    /**
+     * Returns the created date for the category
+     * @VirtualProperty
+     * @SerializedName("created")
+     * @return string
+     */
+    public function getChanged()
+    {
+        return $this->entity->getChanged();
+    }
+
+    /**
+     * Returns the id of the parent or null
+     * @VirtualProperty
+     * @SerializedName("parent")
+     * @return null|number
+     */
+    public function getParent()
+    {
+        $parent = $this->getEntity()->getParent();
+        if ($parent) {
+            return $parent->getId();
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Takes a name as string and sets it to the entity
+     * @param string $name
+     */
+    public function setName($name)
+    {
+        $translations = $this->entity->getTranslations();
+        $categoryName = null;
+        foreach ($translations as $translation) {
+            if ($translation->getLocale() === $this->locale) {
+                $categoryName = $translation;
+            }
+        }
+        if (!$categoryName) {
+            $categoryName = new CategoryTranslation();
+            $this->entity->addTranslation($categoryName);
+        }
+
+        $categoryName->setTranslation($name);
+        $categoryName->setLocale($this->locale);
+        $categoryName->setCategory($this->entity);
+    }
+
+    /**
+     * Takes meta as array and sets it to the entity
+     * @param array $meta
+     */
+    public function setMeta($meta)
+    {
+        $meta = (is_array($meta)) ? $meta : [];
+        $currentMeta = $this->entity->getMeta();
+        foreach ($meta as $singleMeta) {
+            $metaEntity = null;
+            if (isset($singleMeta['id'])) {
+                $metaEntity = $this->getSingleMetaById($currentMeta, $singleMeta['id']);
+            }
+            if (!$metaEntity) {
+                $metaEntity = new CategoryMeta();
+                $metaEntity->setCategory($this->entity);
+                $this->entity->addMeta($metaEntity);
+            }
+
+            $metaEntity->setKey($singleMeta['key']);
+            $metaEntity->setValue($singleMeta['value']);
+            if (array_key_exists('locale', $singleMeta)) {
+                $metaEntity->setLocale($singleMeta['locale']);
+            }
+        }
+    }
+
+    /**
+     * Sets a given category as the parent of the entity
+     * @param Entity $parent
+     */
+    public function setParent($parent)
+    {
+        $this->entity->setParent($parent);
+    }
+
+    /**
+     * Takes a user entity and returns the fullname
+     * @param $user
+     * @return string
+     */
+    private function getUserFullName($user)
+    {
+        $strReturn = '';
+        if ($user && method_exists($user, 'getContact')) {
+            $strReturn = $user->getContact()->getFirstName() . ' ' . $user->getContact()->getLastName();
+        }
+        return $strReturn;
+    }
+
+    /**
+     * Takes an array of CollectionMeta and returns a single meta for a given id
+     * @param $meta
+     * @param $id
+     * @return CollectionMeta
+     */
+    private function getSingleMetaById($meta, $id)
+    {
+        $return = null;
+        foreach ($meta as $singleMeta) {
+            if ($singleMeta->getId() === $id) {
+                $return = $singleMeta;
+                break;
+            }
+        }
+        return $return;
     }
 }

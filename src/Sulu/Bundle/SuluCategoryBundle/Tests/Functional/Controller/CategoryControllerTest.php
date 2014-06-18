@@ -160,7 +160,8 @@ class CategoryControllerTest extends DatabaseTestCase
         $this->assertEquals('Description of Category', $response->meta[0]->value);
     }
 
-    public function testByIdNotExisting() {
+    public function testByIdNotExisting()
+    {
         $client = $this->createTestClient();
         $client->request(
             'GET',
@@ -174,7 +175,8 @@ class CategoryControllerTest extends DatabaseTestCase
         $this->assertTrue(isset($response->message));
     }
 
-    public function testCGet() {
+    public function testCGet()
+    {
         $client = $this->createTestClient();
         $client->request(
             'GET',
@@ -185,5 +187,211 @@ class CategoryControllerTest extends DatabaseTestCase
 
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(3, count($response->_embedded));
+    }
+
+    public function testCGetWithParent()
+    {
+        $client = $this->createTestClient();
+        $client->request(
+            'GET',
+            '/api/categories?parent=1'
+        );
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(1, count($response->_embedded));
+        $this->assertEquals(3, $response->_embedded[0]->id);
+        $this->assertEquals('Third Category', $response->_embedded[0]->name);
+    }
+
+    public function testCGetWithDepth()
+    {
+        $client = $this->createTestClient();
+        $client->request(
+            'GET',
+            '/api/categories?depth=1'
+        );
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(1, count($response->_embedded));
+        $this->assertEquals(3, $response->_embedded[0]->id);
+        $this->assertEquals('Third Category', $response->_embedded[0]->name);
+    }
+
+    public function testPost()
+    {
+        $client = $this->createTestClient();
+        $client->request(
+            'POST',
+            '/api/categories',
+            array(
+                'name' => 'New Category',
+                'meta' => array(
+                    array(
+                        'key' => 'myKey',
+                        'value' => 'myValue'
+                    ),
+                    array(
+                        'key' => 'anotherKey',
+                        'value' => 'should not be visible due to locale',
+                        'locale' => 'de-ch'
+                    )
+                )
+            )
+        );
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals('New Category', $response->name);
+        $this->assertEquals(1, count($response->meta));
+        $this->assertEquals('myKey', $response->meta[0]->key);
+        $this->assertEquals('myValue', $response->meta[0]->value);
+
+        $client = $this->createTestClient();
+        $client->request(
+            'GET',
+            '/api/categories'
+        );
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(4, count($response->_embedded));
+    }
+
+    public function testPut()
+    {
+        $client = $this->createTestClient();
+        $client->request(
+            'PUT',
+            '/api/categories/1',
+            array(
+                'name' => 'Modified Category',
+                'meta' => array(
+                    array(
+                        'id' => 1,
+                        'key' => 'modifiedKey',
+                        'value' => 'This meta got overriden',
+                        'locale' => null
+                    ),
+                    array(
+                        'key' => 'newMeta',
+                        'value' => 'This meta got added'
+                    ),
+                )
+            )
+        );
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals('Modified Category', $response->name);
+        $this->assertEquals(2, count($response->meta));
+        $this->assertEquals('modifiedKey', $response->meta[0]->key);
+        $this->assertEquals('This meta got overriden', $response->meta[0]->value);
+        $this->assertEquals('newMeta', $response->meta[1]->key);
+        $this->assertEquals('This meta got added', $response->meta[1]->value);
+
+        $client->request(
+            'GET',
+            '/api/categories/1'
+        );
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals('Modified Category', $response->name);
+        $this->assertEquals(2, count($response->meta));
+        $this->assertEquals('modifiedKey', $response->meta[0]->key);
+        $this->assertEquals('This meta got overriden', $response->meta[0]->value);
+        $this->assertEquals('newMeta', $response->meta[1]->key);
+        $this->assertEquals('This meta got added', $response->meta[1]->value);
+    }
+
+    public function testPutWithDifferentLocale()
+    {
+        $client = $this->createTestClient();
+        $client->request(
+            'PUT',
+            '/api/categories/1?locale=cn',
+            array(
+                'name' => 'Imagine this is chinese'
+            )
+        );
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals('Imagine this is chinese', $response->name);
+
+        $client->request(
+            'GET',
+            '/api/categories/1?locale=cn'
+        );
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals('Imagine this is chinese', $response->name);
+
+        $client->request(
+            'GET',
+            '/api/categories/1'
+        );
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals('First Category', $response->name);
+    }
+
+    public function testPutWithMissingArgument()
+    {
+        $client = $this->createTestClient();
+        $client->request(
+            'PUT',
+            '/api/categories/1',
+            array(
+                'meta' => array(
+                    array(
+                        'key' => 'newMeta',
+                        'value' => 'This meta got added'
+                    ),
+                )
+            )
+        );
+
+        $this->assertEquals(400, $client->getResponse()->getStatusCode());
+    }
+
+    public function testPatch()
+    {
+        $client = $this->createTestClient();
+        $client->request(
+            'PATCH',
+            '/api/categories/1',
+            array(
+                'name' => 'Name changed through patch'
+            )
+        );
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(1, $response->id);
+        $this->assertEquals('Name changed through patch', $response->name);
+
+        $client->request(
+            'PATCH',
+            '/api/categories/1',
+            array(
+                'name' => 'Name changed through patch'
+            )
+        );
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(1, $response->id);
+        $this->assertEquals('Name changed through patch', $response->name);
     }
 }

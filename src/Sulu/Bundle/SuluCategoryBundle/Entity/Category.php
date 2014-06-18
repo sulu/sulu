@@ -60,12 +60,12 @@ class Category
     private $parent;
 
     /**
-     * @var \Sulu\Bundle\SecurityBundle\Entity\User
+     * @var \Sulu\Component\Security\UserInterface
      */
     private $creator;
 
     /**
-     * @var \Sulu\Bundle\SecurityBundle\Entity\User
+     * @var \Sulu\Component\Security\UserInterface
      */
     private $changer;
 
@@ -329,10 +329,10 @@ class Category
     /**
      * Set creator
      *
-     * @param \Sulu\Bundle\SecurityBundle\Entity\User $creator
+     * @param \Sulu\Component\Security\UserInterface $creator
      * @return Category
      */
-    public function setCreator(\Sulu\Bundle\SecurityBundle\Entity\User $creator = null)
+    public function setCreator(\Sulu\Component\Security\UserInterface $creator = null)
     {
         $this->creator = $creator;
     
@@ -342,7 +342,7 @@ class Category
     /**
      * Get creator
      *
-     * @return \Sulu\Bundle\SecurityBundle\Entity\User 
+     * @return \Sulu\Component\Security\UserInterface
      */
     public function getCreator()
     {
@@ -352,10 +352,10 @@ class Category
     /**
      * Set changer
      *
-     * @param \Sulu\Bundle\SecurityBundle\Entity\User $changer
+     * @param \Sulu\Component\Security\UserInterface $changer
      * @return Category
      */
-    public function setChanger(\Sulu\Bundle\SecurityBundle\Entity\User $changer = null)
+    public function setChanger(\Sulu\Component\Security\UserInterface $changer = null)
     {
         $this->changer = $changer;
     
@@ -365,7 +365,7 @@ class Category
     /**
      * Get changer
      *
-     * @return \Sulu\Bundle\SecurityBundle\Entity\User 
+     * @return \Sulu\Component\Security\UserInterface
      */
     public function getChanger()
     {
