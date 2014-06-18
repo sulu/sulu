@@ -99,16 +99,16 @@ class CategoryRepository extends EntityRepository
                 */
 
             if ($parent !== null) {
-                $qb->where('categoryParent.id = :parent');
+                $qb->andWhere('categoryParent.id = :parentId');
             }
             if ($depth !== null) {
-                $qb->where('category.depth = :depth');
+                $qb->andWhere('category.depth = :depth');
             }
 
             $query = $qb->getQuery();
             $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
             if ($parent !== null) {
-                $query->setParameter('parent', $parent);
+                $query->setParameter('parentId', $parent);
             }
             if ($depth !== null) {
                 $query->setParameter('depth', $depth);

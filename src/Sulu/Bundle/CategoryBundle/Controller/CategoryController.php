@@ -16,10 +16,9 @@ use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Put;
 use Sulu\Bundle\CategoryBundle\Api\Category as CategoryWrapper;
 use Sulu\Bundle\CategoryBundle\Entity\Category as CategoryEntity;
-use Sulu\Bundle\CategoryBundle\Entity\CategoryMeta;
-use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation;
 use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
+use Sulu\Component\Rest\Exception\MissingArgumentException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\RestController;
 use Symfony\Component\HttpFoundation\Request;
@@ -123,10 +122,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
         $view = $this->responseGetById(
             $id,
             function ($id) use ($locale) {
-                $categoryEntity = $this->getDoctrine()
-                    ->getRepository($this->entityName)
-                    ->findCategoryById($id);
-
+                $categoryEntity = $this->fetchEntity($id);
                 return $this->getCategoryWrapper($categoryEntity, $locale);
             }
         );
@@ -148,6 +144,80 @@ class CategoryController extends RestController implements ClassResourceInterfac
         $wrappers = $this->getCategoryWrappers($categories, $this->getLocale($request->get('locale')));
         $view = $this->view($this->createHalResponse($wrappers), 200);
         return $this->handleView($view);
+    }
+
+    /**
+     * Adds a new category
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function postAction(Request $request)
+    {
+        try {
+            $em = $this->getDoctrine()->getManager();
+
+            $categoryEntity = new CategoryEntity();
+            $categoryEntity->setCreator($this->getUser());
+            $categoryEntity->setChanger($this->getUser());
+            $categoryEntity->setCreated(new DateTime());
+            $categoryEntity->setChanged(new DateTime());
+
+            $categoryWrapper = new CategoryWrapper($categoryEntity, $this->getLocale($request->get('locale')));
+            $categoryWrapper->setName($request->get('name'));
+            $categoryWrapper->setMeta($request->get('meta'));
+
+            if ($request->get('parent')) {
+                $parentEntity = $this->fetchEntity($request->get('parent'));
+                $categoryWrapper->setParent($parentEntity);
+            }
+
+            $categoryEntity = $categoryWrapper->getEntity();
+            $em->persist($categoryEntity);
+            $em->flush();
+
+            $view = $this->view($categoryWrapper, 200);
+        } catch (EntityNotFoundException $enfe) {
+            $view = $this->view($enfe->toArray(), 404);
+        } catch (RestException $re) {
+            $view = $this->view($re->toArray(), 400);
+        }
+
+        return $this->handleView($view);
+    }
+
+    /**
+     * Changes an existing category
+     * @param $id
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function putAction($id, Request $request)
+    {
+        try {
+            if (!$request->get('name')) {
+                throw new MissingArgumentException($this->entityName, 'name');
+            }
+            return $this->changeEntity($id, $request);
+        } catch (MissingArgumentException $exc) {
+            $view = $this->view($exc->toArray(), 400);
+            return $this->handleView($view);
+        }
+    }
+
+    /**
+     * Partly changes an existing category
+     * @param $id
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function patchAction($id, Request $request)
+    {
+        return $this->changeEntity($id, $request);
+    }
+
+    public function deleteAction($id, Request $request)
+    {
+
     }
 
     /**
@@ -186,14 +256,63 @@ class CategoryController extends RestController implements ClassResourceInterfac
      */
     protected function getCategoryWrappers($entities, $locale)
     {
-        if (!$entities) {
-            return null;
-        } else {
-            $arrReturn = [];
-            foreach($entities as $entity) {
+        $arrReturn = [];
+        if ($entities) {
+            foreach ($entities as $entity) {
                 array_push($arrReturn, new CategoryWrapper($entity, $locale));
             }
-            return $arrReturn;
         }
+        return $arrReturn;
+    }
+
+    /**
+     * Returns a category entity for a given id
+     * @param $id
+     * @return CategoryEntity
+     */
+    protected function fetchEntity($id)
+    {
+        $entity = $this->getDoctrine()
+            ->getRepository($this->entityName)
+            ->findCategoryById($id);
+
+        return $entity;
+    }
+
+    /**
+     * Handles the change of a category. Used in PUT and PATCH
+     * @param $id
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    protected function changeEntity($id, Request $request)
+    {
+        try {
+            $categoryEntity = $this->fetchEntity($id);
+            if (!$categoryEntity) {
+                throw new EntityNotFoundException($categoryEntity, $id);
+            }
+
+            $em = $this->getDoctrine()->getManager();
+
+            $categoryEntity->setChanged(new DateTime());
+            $categoryEntity->setChanger($this->getUser());
+
+            $categoryWrapper = new CategoryWrapper($categoryEntity, $this->getLocale($request->get('locale')));
+            $categoryWrapper->setName($request->get('name'));
+            $categoryWrapper->setMeta($request->get('meta'));
+
+            $categoryEntity = $categoryWrapper->getEntity();
+            $em->persist($categoryEntity);
+            $em->flush();
+
+            $view = $this->view($categoryWrapper, 200);
+        } catch (EntityNotFoundException $enfe) {
+            $view = $this->view($enfe->toArray(), 404);
+        } catch (RestException $exc) {
+            $view = $this->view($exc->toArray(), 400);
+        }
+
+        return $this->handleView($view);
     }
 }
