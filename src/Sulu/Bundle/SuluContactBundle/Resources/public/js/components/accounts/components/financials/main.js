@@ -241,7 +241,7 @@ define([], function() {
          */
         showTermsOfDeliveryOverlay: function() {
 
-            var $overlayContainer = this.sandbox.dom.$('<div id="'+constants.overlayIdTermsOfDelivery+'"></div>'),
+            var $overlayContainer = this.sandbox.dom.$('<div id="' + constants.overlayIdTermsOfDelivery + '"></div>'),
                 config = {
                     instanceName: this.termsOfDeliveryInstanceName,
                     el: constants.overlaySelectorTermsOfDelivery,
@@ -255,7 +255,7 @@ define([], function() {
 
             this.sandbox.dom.remove(constants.overlaySelectorTermsOfDelivery);
             this.sandbox.dom.append('body', $overlayContainer);
-            this.sandbox.emit('sulu.types.'+this.termsOfDeliveryInstanceName+'.open', config);
+            this.sandbox.emit('sulu.types.' + this.termsOfDeliveryInstanceName + '.open', config);
         },
 
         /**
@@ -263,7 +263,7 @@ define([], function() {
          */
         showTermsOfPaymentOverlay: function() {
 
-            var $overlayContainer = this.sandbox.dom.$('<div id="'+constants.overlayIdTermsOfPayment+'"></div>'),
+            var $overlayContainer = this.sandbox.dom.$('<div id="' + constants.overlayIdTermsOfPayment + '"></div>'),
                 config = {
                     instanceName: this.termsOfPaymentInstanceName,
                     el: constants.overlaySelectorTermsOfPayment,
@@ -277,7 +277,7 @@ define([], function() {
 
             this.sandbox.dom.remove(constants.overlaySelectorTermsOfPayment);
             this.sandbox.dom.append('body', $overlayContainer);
-            this.sandbox.emit('sulu.types.'+this.termsOfPaymentInstanceName+'.open', config);
+            this.sandbox.emit('sulu.types.' + this.termsOfPaymentInstanceName + '.open', config);
         },
 
         initForm: function(data) {
@@ -344,7 +344,7 @@ define([], function() {
                 this.updateBankAccountAddIcon(this.numberOfBankAccounts);
             }, this);
 
-            this.sandbox.on('sulu.types.'+this.termsOfDeliveryInstanceName+'.closed', function(data) {
+            this.sandbox.on('sulu.types.' + this.termsOfDeliveryInstanceName + '.closed', function(data) {
                 var selected = [];
 
                 this.termsOfDeliveryData = this.copyArrayOfObjects(data);
@@ -356,10 +356,10 @@ define([], function() {
                     el.terms = this.sandbox.translate(el.terms);
                 }.bind(this));
 
-                this.sandbox.emit('husky.select.'+this.termsOfDeliveryInstanceName+'.update', data, selected);
+                this.sandbox.emit('husky.select.' + this.termsOfDeliveryInstanceName + '.update', data, selected);
             }, this);
 
-            this.sandbox.on('sulu.types.'+this.termsOfPaymentInstanceName+'.closed', function(data) {
+            this.sandbox.on('sulu.types.' + this.termsOfPaymentInstanceName + '.closed', function(data) {
                 var selected = [];
 
                 this.termsOfPaymentData = this.copyArrayOfObjects(data);
@@ -371,7 +371,7 @@ define([], function() {
                     el.terms = this.sandbox.translate(el.terms);
                 }.bind(this));
 
-                this.sandbox.emit('husky.select.'+this.termsOfPaymentInstanceName+'.update', data, selected);
+                this.sandbox.emit('husky.select.' + this.termsOfPaymentInstanceName + '.update', data, selected);
             }, this);
         },
 
@@ -406,14 +406,14 @@ define([], function() {
                 this.setHeaderBar(false);
             }.bind(this));
 
-            this.sandbox.on('husky.select.'+this.termsOfDeliveryInstanceName+'.selected.item', function(id) {
+            this.sandbox.on('husky.select.' + this.termsOfDeliveryInstanceName + '.selected.item', function(id) {
                 if (id > 0) {
                     this.selectedTermsOfDelivery = id;
                     this.setHeaderBar(false);
                 }
             }.bind(this));
 
-            this.sandbox.on('husky.select.'+this.termsOfPaymentInstanceName+'.selected.item', function(id) {
+            this.sandbox.on('husky.select.' + this.termsOfPaymentInstanceName + '.selected.item', function(id) {
                 if (id > 0) {
                     this.selectedTermsOfPayment = id;
                     this.setHeaderBar(false);
