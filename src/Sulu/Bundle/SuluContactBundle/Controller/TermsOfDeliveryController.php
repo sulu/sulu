@@ -20,6 +20,7 @@ use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\RestController;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Controller\Annotations\Route;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Makes account categories available through a REST API
@@ -70,11 +71,12 @@ class TermsOfDeliveryController extends RestController implements ClassResourceI
     /**
      * Creates a terms of delivery
      * @return \Symfony\Component\HttpFoundation\Response
+     * @param Request $request
      * @Route("/termsofdeliveries")
      */
-    public function postAction()
+    public function postAction(Request $request)
     {
-        $terms = $this->getRequest()->get('terms');
+        $terms = $request->get('terms');
 
         try {
             if ($terms == null) {
@@ -101,11 +103,12 @@ class TermsOfDeliveryController extends RestController implements ClassResourceI
     /**
      * Edits the existing terms-of-delivery with the given id
      * @param integer $id
+     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      * @Route("/termsofdeliveries/{id}")
      */
-    public function putAction($id)
+    public function putAction(Request $request, $id)
     {
         try {
             /** @var TermsOfDelivery $termsOfDelivery */
@@ -116,7 +119,7 @@ class TermsOfDeliveryController extends RestController implements ClassResourceI
             if (!$termsOfDelivery) {
                 throw new EntityNotFoundException($this->entityName, $id);
             } else {
-                $terms = $this->getRequest()->get('terms');
+                $terms = $request->get('terms');
 
                 if ($terms == null || $terms == '') {
                     throw new RestException('There is no category-name for the terms of delivery given');
@@ -173,16 +176,15 @@ class TermsOfDeliveryController extends RestController implements ClassResourceI
 
     /**
      * Add or update a bunch of terms of delivery
+     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      * @Route("/termsofdeliveries")
      */
-    public function patchAction()
+    public function patchAction(Request $request)
     {
         try {
             $data = [];
 
-            /** @var Request $request */
-            $request = $this->getRequest();
             $i = 0;
             while ($item = $request->get($i)) {
 
