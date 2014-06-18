@@ -15,7 +15,8 @@ use Sulu\Bundle\MediaBundle\Media\ImageManager\CacheManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
-class WebsiteMediaController extends Controller {
+class WebsiteMediaController extends Controller
+{
 
     protected $cacheManager = null;
 
@@ -25,9 +26,10 @@ class WebsiteMediaController extends Controller {
     public function getImageAction(Request $request)
     {
         try {
-            ob_clean(); // FIXME clean whitespaces and breaks
+            ob_end_clean();
 
-            $url = $request->get('url');
+            $url = $request->getPathInfo();;
+
             list($id, $format) = $this->getCacheManager()->getMediaProperties($url);
 
             return $this->getCacheManager()->returnImage($id, $format);
@@ -45,6 +47,7 @@ class WebsiteMediaController extends Controller {
         if ($this->cacheManager === null) {
             $this->cacheManager = $this->get('sulu_media.thumbnail_manager');
         }
+
         return $this->cacheManager;
     }
 }

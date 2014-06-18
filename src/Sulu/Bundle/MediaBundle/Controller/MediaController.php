@@ -310,7 +310,7 @@ class MediaController extends RestController implements ClassResourceInterface
          * @var UploadedFile $uploadedFile
          */
         foreach ($this->getUploadedFiles($request, 'fileVersion') as $uploadedFile) {
-            $title = $part   = implode('.', explode('.', $uploadedFile->getClientOriginalName(), -1));;
+            $title = $part = implode('.', explode('.', $uploadedFile->getClientOriginalName(), -1));;
             break;
         }
 
@@ -324,7 +324,7 @@ class MediaController extends RestController implements ClassResourceInterface
      * @param array $fields
      * @return array
      */
-    protected function flatMedia ($mediaList, $locale, $fields = array())
+    protected function flatMedia($mediaList, $locale, $fields = array())
     {
         $flatMediaList = array();
 
