@@ -22,13 +22,6 @@ define([], function() {
             addAddressWrapper: '.grid-row'
         };
 
-//    // sets toolbar
-//        setHeaderToolbar = function() {
-//            this.sandbox.emit('sulu.header.set-toolbar', {
-//                template: 'default'
-//            });
-//        };
-
     return {
 
         view: true,
@@ -54,6 +47,7 @@ define([], function() {
             this.dfdListenForChange = this.sandbox.data.deferred();
             this.dfdFormIsSet = this.sandbox.data.deferred();
 
+            this.instanceNameTypeOverlay = 'accountCategories';
             this.accountCategoryURL = 'api/account/categories';
 
             this.render();
@@ -221,12 +215,13 @@ define([], function() {
                     removeOnClose: true,
                     triggerEl: null,
                     title: this.sandbox.translate('public.edit-entries'),
-                    data: this.accountCategoryData
+                    data: this.accountCategoryData,
+                    valueName: 'category'
                 };
 
             this.sandbox.dom.remove('#overlayContainer');
             this.sandbox.dom.append('body', $overlayContainer);
-            this.sandbox.emit('sulu.types.open', config);
+            this.sandbox.emit('sulu.types.' + this.instanceNameTypeOverlay + '.open', config);
         },
 
         /**
@@ -242,6 +237,7 @@ define([], function() {
                             instanceName: 'accountCategories',
                             removeOnClose: true
                         },
+                        instanceName: this.instanceNameTypeOverlay,
                         url: this.accountCategoryURL,
                         data: this.accountCategoryData
                     }
@@ -390,8 +386,8 @@ define([], function() {
                 addIcon;
 
             if (!!numberOfAddresses && numberOfAddresses > 0 && $addIcon.length === 0) {
-                addIcon = this.sandbox.dom.$(this.customTemplates.addAddressesIcon);
-                this.sandbox.dom.after(this.sandbox.dom.$('#addresses'), addIcon);
+                addIcon = this.sandbox.dom.createElement(this.customTemplates.addAddressesIcon);
+                this.sandbox.dom.after(this.sandbox.dom.find('#addresses'), addIcon);
             } else if (numberOfAddresses === 0 && $addIcon.length > 0) {
                 this.sandbox.dom.remove(this.sandbox.dom.closest($addIcon, constants.addAddressWrapper));
             }
@@ -442,7 +438,7 @@ define([], function() {
                 this.sandbox.emit('sulu.contacts.accounts.list');
             }, this);
 
-            this.sandbox.on('sulu.types.closed', function(data) {
+            this.sandbox.on('sulu.types.' + this.instanceNameTypeOverlay + '.closed', function(data) {
                 var selected = [];
 
                 this.accountCategoryData = this.copyArrayOfObjects(data);

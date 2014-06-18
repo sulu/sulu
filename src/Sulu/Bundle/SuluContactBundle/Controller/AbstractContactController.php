@@ -31,8 +31,6 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class AbstractContactController extends RestController implements ClassResourceInterface
 {
-
-    protected $currentContact;
     protected $newPrimaryAddress;
 
     /**

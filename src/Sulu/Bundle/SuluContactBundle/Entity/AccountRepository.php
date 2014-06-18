@@ -77,6 +77,8 @@ class AccountRepository extends EntityRepository
                 ->leftJoin('account.accountCategory', 'accountCategory')
                 ->leftJoin('account.bankAccounts', 'bankAccounts')
                 ->leftJoin('account.tags', 'tags')
+                ->leftJoin('account.termsOfDelivery', 'termsOfDelivery')
+                ->leftJoin('account.termsOfPayment', 'termsOfPayment')
                 ->addSelect('partial tags.{id, name}')
                 ->addSelect('bankAccounts')
                 ->addSelect('addresses')
@@ -93,6 +95,8 @@ class AccountRepository extends EntityRepository
                 ->addSelect('faxType')
                 ->addSelect('notes')
                 ->addSelect('accountCategory')
+                ->addSelect('termsOfDelivery')
+                ->addSelect('termsOfPayment')
                 ->where('account.id = :accountId');
 
 
