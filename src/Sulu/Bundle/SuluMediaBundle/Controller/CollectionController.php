@@ -298,7 +298,7 @@ class CollectionController extends RestController implements ClassResourceInterf
         foreach ($collections as $collection) {
             $flatCollection = new Collection();
             $flatCollection->setDataByEntityArray($collection, $locale, $fields);
-            $flatCollection->setThumbnails($this->getThumbnails($collection['id']));
+            $flatCollection->setThumbnails($this->getThumbnails($flatCollection->getId()));
             array_push($flatCollections, $flatCollection);
         }
 
