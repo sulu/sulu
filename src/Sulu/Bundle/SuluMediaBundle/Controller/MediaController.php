@@ -191,7 +191,9 @@ class MediaController extends RestController implements ClassResourceInterface
             }
 
             $media = new Media();
-            $view = $this->view($media->setDataByEntity($mediaEntity, $locale)->toArray(), 200);
+            $media->setDataByEntity($mediaEntity, $locale);
+            $media->setThumbnails($this->getThumbNails($media->getId(), $media->getName(), $media->getStorageOptions()));
+            $view = $this->view($media->toArray(), 200);
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
         } catch (RestException $re) {
@@ -236,7 +238,9 @@ class MediaController extends RestController implements ClassResourceInterface
             }
 
             $media = new Media();
-            $view = $this->view($media->setDataByEntity($mediaEntity, $locale)->toArray(), 200);
+            $media->setDataByEntity($mediaEntity, $locale);
+            $media->setThumbnails($this->getThumbNails($media->getId(), $media->getName(), $media->getStorageOptions()));
+            $view = $this->view($media->toArray(), 200);
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
         } catch (RestException $exc) {
@@ -326,7 +330,9 @@ class MediaController extends RestController implements ClassResourceInterface
 
         foreach ($mediaList as $media) {
             $flatMedia = new Media();
-            $flatMediaList[] = $flatMedia->setDataByEntityArray($media, $locale)->toArray($fields);
+            $flatMedia->setDataByEntityArray($media, $locale);
+            $flatMedia->setThumbnails($this->getThumbNails($flatMedia->getId(), $flatMedia->getName(), $flatMedia->getStorageOptions()));
+            $flatMediaList[] = $flatMedia->toArray($fields);
         }
 
         return $flatMediaList;
