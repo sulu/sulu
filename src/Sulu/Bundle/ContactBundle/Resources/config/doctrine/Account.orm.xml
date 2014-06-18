@@ -32,6 +32,7 @@
         <!-- financial infos -->
         <field name="uid" type="string" column="uid" length="50" nullable="true" />
         <field name="registerNumber" type="string" column="registerNumber" nullable="true" />
+        <field name="placeOfJurisdiction" type="string" column="placeOfJurisdiction" nullable="true" />
 
         <one-to-many field="accountContacts" target-entity="Sulu\Bundle\ContactBundle\Entity\AccountContact" mapped-by="account"/>
 
@@ -59,6 +60,18 @@
         <many-to-one field="accountCategory" target-entity="Sulu\Bundle\ContactBundle\Entity\AccountCategory">
             <join-columns>
                 <join-column name="idAccountCategory" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
+            </join-columns>
+        </many-to-one>
+
+        <many-to-one field="termsOfPayment" target-entity="Sulu\Bundle\ContactBundle\Entity\TermsOfPayment">
+            <join-columns>
+                <join-column name="idTermsOfPayment" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
+            </join-columns>
+        </many-to-one>
+
+        <many-to-one field="termsOfDelivery" target-entity="Sulu\Bundle\ContactBundle\Entity\TermsOfDelivery">
+            <join-columns>
+                <join-column name="idTermsOfDelivery" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
             </join-columns>
         </many-to-one>
 

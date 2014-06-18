@@ -17,6 +17,8 @@ use FOS\RestBundle\Controller\Annotations\Post;
 use Sulu\Bundle\ContactBundle\Entity\BankAccount;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\Account;
+use Sulu\Bundle\ContactBundle\Entity\TermsOfDelivery;
+use Sulu\Bundle\ContactBundle\Entity\TermsOfPayment;
 use Sulu\Bundle\ContactBundle\Entity\AccountCategory;
 use Sulu\Bundle\ContactBundle\Entity\Fax;
 use Sulu\Bundle\ContactBundle\Entity\FaxType;
@@ -48,6 +50,8 @@ class AccountController extends AbstractContactController
     protected $entityName = 'SuluContactBundle:Account';
     protected $contactsEntityName = 'SuluContactBundle:Contact';
     protected $accountCategoryEntityName = 'SuluContactBundle:AccountCategory';
+    protected $termsOfPaymentEntityName = 'SuluContactBundle:TermsOfPayment';
+    protected $termsOfDeliveryEntityName = 'SuluContactBundle:TermsOfDelivery';
 
     /**
      * {@inheritdoc}
@@ -67,7 +71,7 @@ class AccountController extends AbstractContactController
     /**
      * {@inheritdoc}
      */
-    protected $fieldsHidden = array('created', 'type', 'division', 'disabled', 'uid', 'registerNumber');
+    protected $fieldsHidden = array('created', 'type', 'division', 'disabled', 'uid', 'registerNumber', 'placeOfJurisdiction');
 
     /**
      * {@inheritdoc}
@@ -212,6 +216,7 @@ class AccountController extends AbstractContactController
             $account->setDisabled($disabled);
 
             // set category
+            // FIXME: check if accountcategory with given value exists
             $this->setCategory($request->get('accountCategory'), $account);
 
             // set parent
@@ -227,9 +232,11 @@ class AccountController extends AbstractContactController
             $this->addNewContactRelations($account, $request);
 
             // set new primary address
-            if($this->newPrimaryAddress && $this->currentContact){
-                $this->setNewPrimaryAddress($this->currentContact, $this->newPrimaryAddress);
+            if($this->newPrimaryAddress){
+                $this->setNewPrimaryAddress($account, $this->newPrimaryAddress);
             }
+
+            $this->processTerms($request, $account);
 
             $em->persist($account);
 
@@ -278,6 +285,7 @@ class AccountController extends AbstractContactController
                 }
 
                 // set category
+                // FIXME: check if accountcategory with given value exists
                 $this->setCategory($request->get('accountCategory'), $account);
 
                 // set parent
@@ -301,9 +309,11 @@ class AccountController extends AbstractContactController
                 }
 
                 // set new primary address
-                if($this->newPrimaryAddress && $this->currentContact){
-                    $this->setNewPrimaryAddress($this->currentContact, $this->newPrimaryAddress);
+                if($this->newPrimaryAddress){
+                    $this->setNewPrimaryAddress($account, $this->newPrimaryAddress);
                 }
+
+                $this->processTerms($request, $account);
 
                 $em->flush();
 
@@ -388,10 +398,16 @@ class AccountController extends AbstractContactController
                     $account->setRegisterNumber($request->get('registerNumber'));
                 }
 
+                if (!is_null($request->get('placeOfJurisdiction'))) {
+                    $account->setPlaceOfJurisdiction($request->get('placeOfJurisdiction'));
+                }
+
                 // process details
                 if (!is_null($request->get('bankAccounts'))) {
                     $this->processBankAccounts($account, $request->get('bankAccounts'));
                 }
+
+                $this->processTerms($request, $account);
 
                 $em->flush();
                 $view = $this->view($account, 200);
@@ -403,6 +419,39 @@ class AccountController extends AbstractContactController
         }
 
         return $this->handleView($view);
+    }
+
+    /**
+     * Processes terms of delivery and terms of payment for an account
+     * @param Request $request
+     * @param Account $account
+     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
+     */
+    protected function processTerms(Request $request, Account $account){
+        if (!is_null($request->get('termsOfPayment'))) {
+            $id = $request->get('termsOfPayment')['id'];
+            /** @var TermsOfPayment $termsOfPayment */
+            $termsOfPayment = $this->getDoctrine()
+                ->getRepository($this->termsOfPaymentEntityName)
+                ->find($id);
+
+            if (!$termsOfPayment) {
+                throw new EntityNotFoundException($this->termsOfPaymentEntityName, $id);
+            }
+            $account->setTermsOfPayment($termsOfPayment);
+        }
+
+        if (!is_null($request->get('termsOfDelivery'))) {
+            $id = $request->get('termsOfDelivery')['id'];
+            /** @var TermsOfDelivery $termsOfDelivery */
+            $termsOfDelivery = $this->getDoctrine()
+                ->getRepository($this->termsOfDeliveryEntityName)
+                ->find($id);
+            if (!$termsOfDelivery) {
+                throw new EntityNotFoundException($this->termsOfDeliveryEntityName, $id);
+            }
+            $account->setTermsOfDelivery($termsOfDelivery);
+        }
     }
 
     /**

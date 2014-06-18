@@ -42,7 +42,7 @@ define([
          * Generates the options for the tabs in the header
          * @returns {object} tabs options
          */
-            getTabsOptions = function() {
+        getTabsOptions = function() {
             var returnObj = {
                     callback: selectFilter.bind(this),
                     preselect: false,

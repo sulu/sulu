@@ -19,7 +19,8 @@
                     <script type="text/template" id="address-empty-tpl">
                         <div class="grid-col-12 floating">
                             <div class="form-group">
-                                <label>
+                                <label class="visible"></label>
+                                <label class="hidden">
                                     <%=translate('contact.address.add.label')%>
                                 </label>
                                 <div class="grid-col-12 m-top-5">
@@ -52,19 +53,33 @@
                                 <div class="address-row clickable pointer">
                                     <input type="hidden" data-mapper-property="id" class="id-value"/>
 
-                                    <~ if(city) { ~>
+                                    <~ if(city || street || state || zip) { ~>
                                         <span data-mapper-property="street" data-form="true"></span><~ checkIfFirstField(street); ~>
                                         <span data-mapper-property="number" data-form="true"></span><~ checkIfFirstField(number); ~>
                                         <span data-mapper-property="addition" data-form="true" <~ if (checkIfFirstField(addition)) { print('class="comma-before"') } ~>></span>
                                         <span data-mapper-property="zip" data-form="true" <~ if (checkIfFirstField(zip)) { print('class="comma-before"') } ~>></span>
                                         <span data-mapper-property="city" data-form="true" <~ if (checkIfFirstField(city)) { print('class="comma-before"') } ~>></span>
                                         <span data-mapper-property="state" data-form="true" <~ if (checkIfFirstField(state)) { print('class="comma-before"') } ~>></span>
-                                        <span data-mapper-property="country" class="comma-before" data-form="true" data-type="readonly-select" data-type-id-property="id" data-type-output-property="name" data-type-data="{{ countries | json_encode() }}"></span>
-                                    <~ } else { ~>
-                                        <span data-mapper-property="postboxNumber"></span>
-                                        <span data-mapper-property="postboxPostcode"></span>
-                                        <span data-mapper-property="postboxCity"></span>
-                                        <span data-mapper-property="country" data-form="true" data-type="readonly-select" data-type-id-property="id" data-type-output-property="name" data-type-data="{{ countries | json_encode() }}"></span>
+                                        <span data-mapper-property="country" data-form="true" data-type="readonly-select" data-type-id-property="id" data-type-output-property="name" data-type-data="{{ countries | json_encode() }}" <~ if (checkIfFirstField(addition)) { print('class="comma-before"') } ~>>></span>
+
+                                        <div class="hidden">
+                                            <span data-mapper-property="postboxNumber" data-form="true"></span>
+                                            <span data-mapper-property="postboxPostcode" data-form="true"></span>
+                                            <span data-mapper-property="postboxCity" data-form="true"></span>
+                                        </div>
+                                        <~ } else { ~>
+                                        <div class="hidden">
+                                            <span data-mapper-property="street" data-form="true"></span><~ checkIfFirstField(street); ~>
+                                            <span data-mapper-property="number" data-form="true"></span><~ checkIfFirstField(number); ~>
+                                            <span data-mapper-property="addition" data-form="true" <~ if (checkIfFirstField(addition)) { print('class="comma-before"') } ~>></span>
+                                            <span data-mapper-property="zip" data-form="true" <~ if (checkIfFirstField(zip)) { print('class="comma-before"') } ~>></span>
+                                            <span data-mapper-property="city" data-form="true" <~ if (checkIfFirstField(city)) { print('class="comma-before"') } ~>></span>
+                                            <span data-mapper-property="state" data-form="true" <~ if (checkIfFirstField(state)) { print('class="comma-before"') } ~>></span>
+                                        </div>
+                                            <span data-mapper-property="postboxNumber" data-form="true"></span>
+                                            <span data-mapper-property="postboxPostcode" data-form="true" <~ if (checkIfFirstField(addition)) { print('class="comma-before"') } ~>></span>
+                                            <span data-mapper-property="postboxCity" data-form="true" <~ if (checkIfFirstField(addition)) { print('class="comma-before"') } ~>></span>
+                                            <span data-mapper-property="country" data-form="true" data-type="readonly-select" data-type-id-property="id" data-type-output-property="name" data-type-data="{{ countries | json_encode() }}" <~ if (checkIfFirstField(addition)) { print('class="comma-before"') } ~>>></span>
                                     <~ } ~>
 
                                     <~ if(billingAddress && deliveryAddress) { ~>
@@ -79,9 +94,6 @@
                                         <span data-mapper-property="primaryAddress" data-form="true"></span>
                                         <span data-mapper-property="billingAddress" data-form="true"></span>
                                         <span data-mapper-property="deliveryAddress" data-form="true"></span>
-                                        <span data-mapper-property="postboxNumber" data-form="true"></span>
-                                        <span data-mapper-property="postboxPostcode" data-form="true"></span>
-                                        <span data-mapper-property="postboxCity" data-form="true"></span>
                                     </div>
 
                                     <span class="fa-times icon address-remove"></span>
