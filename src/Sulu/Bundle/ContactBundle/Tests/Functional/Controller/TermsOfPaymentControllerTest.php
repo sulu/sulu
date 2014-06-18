@@ -208,10 +208,10 @@ class TermsOfPaymentControllerTest extends DatabaseTestCase
             $this->assertEquals(1, $response2->_embedded[0]->id);
         } else {
             $this->assertEquals('Term 1.1', $response2->_embedded[1]->terms);
-            $this->assertEquals(2, $response2->_embedded[1]->id);
+            $this->assertEquals(1, $response2->_embedded[1]->id);
 
             $this->assertEquals('Term 2', $response2->_embedded[0]->terms);
-            $this->assertEquals(1, $response2->_embedded[0]->id);
+            $this->assertEquals(2, $response2->_embedded[0]->id);
         }
     }
 
