@@ -41,17 +41,21 @@ class LocalThumbnailStorage implements ThumbnailStorageInterface {
     /**
      * {@inheritdoc}
      */
-    public function save($tmpPath, $id, $fileName, $options)
+    public function save($tmpPath, $id, $fileName, $options, $format)
     {
-        // TODO: Implement save() method.
+        $savePath = $this->getPath($this->path, $id, $fileName, $format);
+        if (!is_dir(dirname($savePath))) {
+            mkdir(dirname($savePath), 0775, true);
+        }
+        return copy($tmpPath, $savePath);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function purge($id, $fileName, $options)
+    public function purge($id, $fileName, $options, $format)
     {
-        // TODO: Implement purge() method.
+        return unlink($this->getPath($this->path, $id, $fileName, $format));
     }
 
     /**
@@ -59,8 +63,21 @@ class LocalThumbnailStorage implements ThumbnailStorageInterface {
      */
     public function getMediaUrl($id, $fileName, $options, $format)
     {
+        return $this->getPath($this->pathUrl, $id, $fileName, $format);
+    }
+
+    /**
+     * @param $prePath
+     * @param $id
+     * @param $fileName
+     * @param $format
+     * @return string
+     */
+    protected function getPath($prePath, $id, $fileName, $format)
+    {
         $segment = ($id % $this->segments) . '/';
-        return $this->pathUrl . '/' . $format . '/' . $segment . $id . '-' . $fileName;
+        $prePath = rtrim($prePath, '/');
+        return $prePath . '/' . $format . '/' . $segment . $id . '-' . $fileName;
     }
 
     /**

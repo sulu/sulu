@@ -93,10 +93,11 @@ class DefaultThumbnailManager implements ThumbnailManagerInterface {
         $image = $image->get('jpeg');
 
         if ($this->saveImage) {
-            // $this->imageStorage->save($this->createTmpFile($image), $media);
+            list($fileName, $version, $storageOptions) = $this->getMediaData($media);
+            $this->imageStorage->save($this->createTmpFile($image), $media->getId(), $fileName, $storageOptions, $format);
         }
 
-        return new Response($image, 200, $headers);;
+        return new Response($image, 200, $headers);
     }
 
     /**
@@ -139,6 +140,18 @@ class DefaultThumbnailManager implements ThumbnailManagerInterface {
      */
     protected function getOriginalByMedia($media)
     {
+        list($fileName, $version, $storageOptions) = $this->getMediaData($media);
+
+        return $this->originalStorage->load($fileName, $version, $storageOptions);
+    }
+
+    /**
+     * @param $media
+     * @return array
+     * @throws \Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyMediaNotFoundException
+     */
+    protected function getMediaData($media)
+    {
         $fileName = null;
         $storageOptions = null;
         $version = null;
@@ -165,7 +178,7 @@ class DefaultThumbnailManager implements ThumbnailManagerInterface {
             throw new ImageProxyMediaNotFoundException('Media file version was not found');
         }
 
-        return $this->originalStorage->load($fileName, $version, $storageOptions);
+        return array($fileName, $version, $storageOptions);
     }
 
     /**

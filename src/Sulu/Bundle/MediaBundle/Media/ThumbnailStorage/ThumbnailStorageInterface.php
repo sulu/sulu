@@ -18,18 +18,20 @@ interface ThumbnailStorageInterface {
      * @param $id
      * @param $fileName
      * @param $options
+     * @param $format
      * @return mixed
      */
-    public function save($tmpPath, $id, $fileName, $options);
+    public function save($tmpPath, $id, $fileName, $options, $format);
 
     /**
      * Delete the image by the given parameters
      * @param $id
      * @param $fileName
      * @param $options
+     * @param $format
      * @return mixed
      */
-    public function purge($id, $fileName, $options);
+    public function purge($id, $fileName, $options, $format);
 
     /**
      * Return the url to an specific format of an media

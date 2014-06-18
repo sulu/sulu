@@ -37,9 +37,9 @@ class SuluMediaExtension extends Extension
         $container->setParameter('sulu_media.media.storage.local.path', '%kernel.root_dir%/../../uploads/media');
         $container->setParameter('sulu_media.media.storage.local.segments', '10');
         $container->setParameter('sulu_media.image.command.prefix', 'image.converter.prefix.');
-        $container->setParameter('sulu_media.thumbnail_storage.save_image', 'false');
+        $container->setParameter('sulu_media.thumbnail_storage.save_image', 'true');
         $container->setParameter('sulu_media.thumbnail_storage.path', '%kernel.root_dir%/../../web/uploads/media');
-        $container->setParameter('sulu_media.thumbnail_storage.path.url', '/media/image-proxy?url=/uploads/media');
+        $container->setParameter('sulu_media.thumbnail_storage.path.url', '/uploads/media');
         $container->setParameter('sulu_media.thumbnail_storage.segments', '10');
         $container->setParameter('sulu_media.image.formats', array(
             array(
