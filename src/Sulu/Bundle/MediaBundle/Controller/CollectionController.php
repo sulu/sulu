@@ -139,7 +139,7 @@ class CollectionController extends RestController implements ClassResourceInterf
             $locale = $this->getLocale($request->get('locale'));
             $collection = new Collection();
             $collection->setDataByEntityArray($collectionEntity, $locale);
-            $collection->setFormats($this->getFormats($collection->getId()));
+            $collection->setPreviews($this->setPreviews($collection->getId()));
 
             $view = $this->view(
                 array_merge(
@@ -198,7 +198,7 @@ class CollectionController extends RestController implements ClassResourceInterf
             $locale = $this->getLocale($request->get('locale'));
             $collection = new Collection();
             $collection->setDataByEntity($collectionEntity, $locale);
-            $collection->setFormats($this->getFormats($collection->getId()));
+            $collection->setPreviews($this->setPreviews($collection->getId()));
 
             $view = $this->view($collection->toArray(), 200);
         } catch (EntityNotFoundException $enfe) {
@@ -239,7 +239,7 @@ class CollectionController extends RestController implements ClassResourceInterf
                 $locale = $this->getLocale($request->get('locale'));
                 $collection = new Collection();
                 $collection->setDataByEntity($collectionEntity, $locale);
-                $collection->setFormats($this->getFormats($collection->getId()));
+                $collection->setPreviews($this->setPreviews($collection->getId()));
 
                 $view = $this->view($collection->toArray(), 200);
             }
@@ -294,7 +294,7 @@ class CollectionController extends RestController implements ClassResourceInterf
         foreach ($collections as $collection) {
             $flatCollection = new Collection();
             $flatCollection->setDataByEntityArray($collection, $locale, $fields);
-            $flatCollection->setFormats($this->getFormats($flatCollection->getId()));
+            $flatCollection->setPreviews($this->setPreviews($flatCollection->getId()));
             array_push($flatCollections, $flatCollection);
         }
 
@@ -425,7 +425,7 @@ class CollectionController extends RestController implements ClassResourceInterf
      * @param $id
      * @return array
      */
-    protected function getFormats($id)
+    protected function setPreviews($id)
     {
         $formats = array();
 
