@@ -15,7 +15,7 @@ use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Put;
 
-use Sulu\Bundle\MediaBundle\Media\ThumbnailManager\ThumbnailManagerInterface;
+use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\Exception\UploadFileException;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\RestObject\Media;
@@ -73,7 +73,7 @@ class MediaController extends RestController implements ClassResourceInterface
     /**
      * {@inheritdoc}
      */
-    protected $fieldsRelations = array('title', 'name', 'description', 'thumbnails', 'size');
+    protected $fieldsRelations = array('title', 'name', 'description', 'formats', 'size');
 
     /**
      * {@inheritdoc}
@@ -123,7 +123,7 @@ class MediaController extends RestController implements ClassResourceInterface
         } else {
             $media = new Media();
             $media->setDataByEntityArray($mediaEntity, $locale, $request->get('version', null));
-            $media->setThumbnails($this->getThumbnails($media->getId(), $media->getName(), $media->getStorageOptions()));;
+            $media->setFormats($this->getFormats($media->getId(), $media->getName(), $media->getStorageOptions()));;
 
             $view = $this->view(
                 array_merge(
@@ -192,7 +192,7 @@ class MediaController extends RestController implements ClassResourceInterface
 
             $media = new Media();
             $media->setDataByEntity($mediaEntity, $locale);
-            $media->setThumbnails($this->getThumbNails($media->getId(), $media->getName(), $media->getStorageOptions()));
+            $media->setFormats($this->getFormats($media->getId(), $media->getName(), $media->getStorageOptions()));
             $view = $this->view($media->toArray(), 200);
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
@@ -239,7 +239,7 @@ class MediaController extends RestController implements ClassResourceInterface
 
             $media = new Media();
             $media->setDataByEntity($mediaEntity, $locale);
-            $media->setThumbnails($this->getThumbNails($media->getId(), $media->getName(), $media->getStorageOptions()));
+            $media->setFormats($this->getFormats($media->getId(), $media->getName(), $media->getStorageOptions()));
             $view = $this->view($media->toArray(), 200);
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
@@ -285,7 +285,7 @@ class MediaController extends RestController implements ClassResourceInterface
         $object->setContentLanguages($request->get('contentLanguages', array()));
         $object->setPublishLanguages($request->get('publishLanguages', array()));
         $object->setTags($request->get('tags', array()));
-        $object->setThumbnails($request->get('thumbnails', array()));
+        $object->setFormats($request->get('formats', array()));
         $object->setUrl($request->get('url'));
         $object->setName($request->get('name'));
         $object->setTitle($request->get('title', $this->getTitleFromUpload($request, 'fileVersion')));
@@ -331,7 +331,7 @@ class MediaController extends RestController implements ClassResourceInterface
         foreach ($mediaList as $media) {
             $flatMedia = new Media();
             $flatMedia->setDataByEntityArray($media, $locale);
-            $flatMedia->setThumbnails($this->getThumbNails($flatMedia->getId(), $flatMedia->getName(), $flatMedia->getStorageOptions()));
+            $flatMedia->setFormats($this->getFormats($flatMedia->getId(), $flatMedia->getName(), $flatMedia->getStorageOptions()));
             $flatMediaList[] = $flatMedia->toArray($fields);
         }
 
@@ -408,12 +408,12 @@ class MediaController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * getThumbnailManager
-     * @return ThumbnailManagerInterface
+     * getFormatManager
+     * @return FormatManagerInterface
      */
-    protected function getThumbnailManager()
+    protected function getFormatManager()
     {
-        return $this->get('sulu_media.thumbnail_manager');
+        return $this->get('sulu_media.format_manager');
     }
 
     /**
@@ -435,9 +435,9 @@ class MediaController extends RestController implements ClassResourceInterface
      * @param $storageOptions
      * @return mixed
      */
-    public function getThumbNails($id, $name, $storageOptions)
+    public function getFormats($id, $name, $storageOptions)
     {
-        return $this->getThumbnailManager()->getThumbNails($id, $name, $storageOptions);
+        return $this->getFormatManager()->getFormats($id, $name, $storageOptions);
     }
 
     /**
@@ -448,6 +448,6 @@ class MediaController extends RestController implements ClassResourceInterface
      */
     public function getUrl($id, $version, $storageOptions)
     {
-        return $this->getThumbnailManager()->getOriginal($id, $version, $storageOptions);
+        return $this->getFormatManager()->getOriginal($id, $version, $storageOptions);
     }
 }

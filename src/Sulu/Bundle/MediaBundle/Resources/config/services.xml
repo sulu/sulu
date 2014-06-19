@@ -8,8 +8,8 @@
         <parameter key="sulu_media.collection_repository.class">Sulu\Bundle\MediaBundle\Entity\CollectionRepository</parameter>
         <parameter key="sulu_media.storage.class">Sulu\Bundle\MediaBundle\Media\Storage\LocalStorage</parameter>
         <parameter key="sulu_media.file_validator.class">Sulu\Bundle\MediaBundle\Media\FileValidator\DefaultFileValidator</parameter>
-        <parameter key="sulu_media.thumbnail_manager.class">Sulu\Bundle\MediaBundle\Media\ThumbnailManager\DefaultThumbnailManager</parameter>
-        <parameter key="sulu_media.thumbnail_storage">Sulu\Bundle\MediaBundle\Media\ThumbnailStorage\LocalThumbnailStorage</parameter>
+        <parameter key="sulu_media.format_manager.class">Sulu\Bundle\MediaBundle\Media\FormatManager\DefaultFormatManager</parameter>
+        <parameter key="sulu_media.format_cache">Sulu\Bundle\MediaBundle\Media\FormatCache\LocalFormatCache</parameter>
         <parameter key="sulu_media.image.converter">Sulu\Bundle\MediaBundle\Media\ImageConverter\ImagineImageConverter</parameter>
         <parameter key="sulu_media.image.command_manager.class">Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\Manager\DefaultCommandManager</parameter>
         <parameter key="sulu_media.image.command.resize.class">Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\ResizeCommand</parameter>
@@ -38,10 +38,10 @@
             <argument>%sulu_media.media.storage.local.segments%</argument>
         </service>
         <service id="sulu_media.file_validator" class="%sulu_media.file_validator.class%" />
-        <service id="sulu_media.thumbnail_storage" class="%sulu_media.thumbnail_storage%">
-            <argument>%sulu_media.thumbnail_storage.path%</argument>
-            <argument>%sulu_media.thumbnail_storage.path.url%</argument>
-            <argument>%sulu_media.thumbnail_storage.segments%</argument>
+        <service id="sulu_media.format_cache" class="%sulu_media.format_cache%">
+            <argument>%sulu_media.format_cache.path%</argument>
+            <argument>%sulu_media.format_cache.path.url%</argument>
+            <argument>%sulu_media.format_cache.segments%</argument>
         </service>
         <service id="sulu_media.image.converter" class="%sulu_media.image.converter%">
             <argument>%sulu_media.image.formats%</argument>
@@ -71,12 +71,12 @@
             <argument>%sulu_media.media.types%</argument>
         </service>
 
-        <service id="sulu_media.thumbnail_manager" class="%sulu_media.thumbnail_manager.class%">
+        <service id="sulu_media.format_manager" class="%sulu_media.format_manager.class%">
             <argument type="service" id="sulu_media.media_repository" />
             <argument type="service" id="sulu_media.storage" />
-            <argument type="service" id="sulu_media.thumbnail_storage" />
+            <argument type="service" id="sulu_media.format_cache" />
             <argument type="service" id="sulu_media.image.converter" />
-            <argument>%sulu_media.thumbnail_storage.save_image%</argument>
+            <argument>%sulu_media.format_cache.save_image%</argument>
         </service>
     </services>
 </container>

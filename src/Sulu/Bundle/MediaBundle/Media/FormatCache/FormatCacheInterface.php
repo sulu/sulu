@@ -8,9 +8,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\MediaBundle\Media\ThumbnailStorage;
+namespace Sulu\Bundle\MediaBundle\Media\FormatCache;
 
-interface ThumbnailStorageInterface {
+interface FormatCacheInterface {
 
     /**
      * Save image and return the url to the image
