@@ -47,7 +47,7 @@ class Collection extends ApiEntity implements RestObjectInterface
     /**
      * @var array
      */
-    protected $formats = array();
+    protected $previews = array();
 
     /**
      * @var int
@@ -282,7 +282,7 @@ class Collection extends ApiEntity implements RestObjectInterface
                 'parent' => $this->parent,
                 'title' => $this->title,
                 'description' => $this->description,
-                'formats' => $this->formats,
+                'previews' => $this->previews,
                 'properties' => $this->properties,
                 'changer' => $this->changer,
                 'creator' => $this->creator,
@@ -555,17 +555,17 @@ class Collection extends ApiEntity implements RestObjectInterface
     /**
      * @return array
      */
-    public function getFormats()
+    public function getPreviews()
     {
-        return $this->formats;
+        return $this->previews;
     }
 
     /**
-     * @param array $formats
+     * @param array $previews
      */
-    public function setFormats($formats)
+    public function setPreviews($previews)
     {
-        $this->formats = $formats;
+        $this->previews = $previews;
     }
 
 } 
