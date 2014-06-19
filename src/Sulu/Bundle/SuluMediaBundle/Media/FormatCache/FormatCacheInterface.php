@@ -28,10 +28,9 @@ interface FormatCacheInterface {
      * @param $id
      * @param $fileName
      * @param $options
-     * @param $format
      * @return mixed
      */
-    public function purge($id, $fileName, $options, $format);
+    public function purge($id, $fileName, $options);
 
     /**
      * Return the url to an specific format of an media
