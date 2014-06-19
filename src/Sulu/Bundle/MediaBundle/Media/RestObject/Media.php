@@ -368,7 +368,7 @@ class Media extends ApiEntity implements RestObjectInterface
                 'publishLanguages' => $this->publishLanguages,
                 'tags' => $this->tags,
                 'url' => $this->url,
-                'formats' => $this->formats,
+                'thumbnails' => $this->formats, // TODO change to formats when it is changed in husky
                 'properties' => $this->properties,
                 'changer' => $this->changer,
                 'creator' => $this->creator,
