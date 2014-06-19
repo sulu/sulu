@@ -30,7 +30,6 @@ class SuluMediaExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $container->setParameter('sulu_media.collection.style.type.default', 'circle');
         $container->setParameter('sulu_media.collection.type.default', 1);
         $container->setParameter('sulu_media.collection.previews.limit', 3);
         $container->setParameter('sulu_media.collection.previews.format', '150x100');
