@@ -8,13 +8,13 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\MediaBundle\Media\ThumbnailStorage;
+namespace Sulu\Bundle\MediaBundle\Media\FormatCache;
 
 
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyInvalidUrl;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyUrlNotFoundException;
 
-class LocalThumbnailStorage implements ThumbnailStorageInterface {
+class LocalFormatCache implements FormatCacheInterface {
 
     /**
      * @var string

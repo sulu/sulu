@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\MediaBundle\Media\ThumbnailManager;
+namespace Sulu\Bundle\MediaBundle\Media\FormatManager;
 
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
@@ -16,10 +16,10 @@ use Sulu\Bundle\MediaBundle\Entity\MediaRepository;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyMediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\ImageConverterInterface;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
-use Sulu\Bundle\MediaBundle\Media\ThumbnailStorage\ThumbnailStorageInterface;
+use Sulu\Bundle\MediaBundle\Media\FormatCache\FormatCacheInterface;
 use Symfony\Component\HttpFoundation\Response;
 
-class DefaultThumbnailManager implements ThumbnailManagerInterface {
+class DefaultFormatManager implements FormatManagerInterface {
 
     /**
      * The repository for communication with the database
@@ -28,9 +28,9 @@ class DefaultThumbnailManager implements ThumbnailManagerInterface {
     private $mediaRepository;
 
     /**
-     * @var ThumbnailStorageInterface
+     * @var FormatCacheInterface
      */
-    private $imageStorage;
+    private $formatCache;
 
     /**
      * @var StorageInterface
@@ -50,21 +50,21 @@ class DefaultThumbnailManager implements ThumbnailManagerInterface {
     /**
      * @param MediaRepository $mediaRepository
      * @param StorageInterface $originalStorage
-     * @param ThumbnailStorageInterface $imageStorage
+     * @param FormatCacheInterface $formatCache
      * @param ImageConverterInterface $converter
      * @param $saveImage
      */
     public function __construct(
         MediaRepository $mediaRepository,
         StorageInterface $originalStorage,
-        ThumbnailStorageInterface $imageStorage,
+        FormatCacheInterface $formatCache,
         ImageConverterInterface $converter,
         $saveImage
     )
     {
         $this->mediaRepository = $mediaRepository;
         $this->originalStorage = $originalStorage;
-        $this->imageStorage = $imageStorage;
+        $this->formatCache = $formatCache;
         $this->converter = $converter;
         $this->saveImage = $saveImage == 'true' ? true : false;
     }
@@ -94,7 +94,7 @@ class DefaultThumbnailManager implements ThumbnailManagerInterface {
 
         if ($this->saveImage) {
             list($fileName, $version, $storageOptions) = $this->getMediaData($media);
-            $this->imageStorage->save($this->createTmpFile($image), $media->getId(), $fileName, $storageOptions, $format);
+            $this->formatCache->save($this->createTmpFile($image), $media->getId(), $fileName, $storageOptions, $format);
         }
 
         return new Response($image, 200, $headers);
@@ -105,7 +105,7 @@ class DefaultThumbnailManager implements ThumbnailManagerInterface {
      */
     public function getMediaProperties($url)
     {
-        return $this->imageStorage->analyzedMediaUrl($url);
+        return $this->formatCache->analyzedMediaUrl($url);
     }
 
     /**
@@ -198,7 +198,7 @@ class DefaultThumbnailManager implements ThumbnailManagerInterface {
      * @param $storageOptions
      * @return array
      */
-    public function getThumbNails($id, $fileName, $storageOptions)
+    public function getFormats($id, $fileName, $storageOptions)
     {
         $thumbNails = array();
 
@@ -206,7 +206,7 @@ class DefaultThumbnailManager implements ThumbnailManagerInterface {
 
         foreach ($formats as $format) {
             $format = $format['name'];
-            $thumbNails[$format] = $this->imageStorage->getMediaUrl($id, $fileName, $storageOptions, $format);
+            $thumbNails[$format] = $this->formatCache->getMediaUrl($id, $fileName, $storageOptions, $format);
         }
 
         return $thumbNails;

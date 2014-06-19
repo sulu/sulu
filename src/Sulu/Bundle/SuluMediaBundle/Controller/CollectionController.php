@@ -17,7 +17,7 @@ use FOS\RestBundle\Controller\Annotations\Put;
 use Sulu\Bundle\MediaBundle\Media\RestObject\Collection;
 use Sulu\Bundle\MediaBundle\Entity\Collection as CollectionEntity;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
-use Sulu\Bundle\MediaBundle\Media\ThumbnailManager\ThumbnailManagerInterface;
+use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
@@ -142,7 +142,7 @@ class CollectionController extends RestController implements ClassResourceInterf
             $locale = $this->getLocale($request->get('locale'));
             $collection = new Collection();
             $collection->setDataByEntityArray($collectionEntity, $locale);
-            $collection->setThumbnails($this->getThumbnails($collection->getId()));
+            $collection->setFormats($this->getFormats($collection->getId()));
 
             $view = $this->view(
                 array_merge(
@@ -201,7 +201,7 @@ class CollectionController extends RestController implements ClassResourceInterf
             $locale = $this->getLocale($request->get('locale'));
             $collection = new Collection();
             $collection->setDataByEntity($collectionEntity, $locale);
-            $collection->setThumbnails($this->getThumbnails($collection->getId()));
+            $collection->setFormats($this->getFormats($collection->getId()));
 
             $view = $this->view($collection->toArray(), 200);
         } catch (EntityNotFoundException $enfe) {
@@ -242,7 +242,7 @@ class CollectionController extends RestController implements ClassResourceInterf
                 $locale = $this->getLocale($request->get('locale'));
                 $collection = new Collection();
                 $collection->setDataByEntity($collectionEntity, $locale);
-                $collection->setThumbnails($this->getThumbnails($collection->getId()));
+                $collection->setFormats($this->getFormats($collection->getId()));
 
                 $view = $this->view($collection->toArray(), 200);
             }
@@ -297,7 +297,7 @@ class CollectionController extends RestController implements ClassResourceInterf
         foreach ($collections as $collection) {
             $flatCollection = new Collection();
             $flatCollection->setDataByEntityArray($collection, $locale, $fields);
-            $flatCollection->setThumbnails($this->getThumbnails($flatCollection->getId()));
+            $flatCollection->setFormats($this->getFormats($flatCollection->getId()));
             array_push($flatCollections, $flatCollection);
         }
 
@@ -416,25 +416,27 @@ class CollectionController extends RestController implements ClassResourceInterf
     }
 
     /**
-     * getThumbnailManager
-     * @return ThumbnailManagerInterface
+     * getFormatManager
+     * @return FormatManagerInterface
      */
-    protected function getThumbnailManager()
+    protected function getFormatManager()
     {
-        return $this->get('sulu_media.thumbnail_manager');
+        return $this->get('sulu_media.format_manager');
     }
 
     /**
      * @param $id
      * @return array
      */
-    protected function getThumbnails($id)
+    protected function getFormats($id)
     {
-        $thumbnails = array();
+        $formats = array();
+
+
 
         $medias = $this->getDoctrine()
             ->getRepository($this->entityMediaName)
-            ->findMedia($id, self::THUMBNAIL_LIMIT);
+            ->findMedia($id, $this->container->getParameter('sulu_media.collection.previews.limit'));
 
 
         foreach ($medias as $media) {
@@ -451,11 +453,11 @@ class CollectionController extends RestController implements ClassResourceInterf
                             }
                         }
 
-                        $mediaThumbnails = $this->getThumbnailManager()->getThumbNails($media['id'], $fileVersion['name'], $fileVersion['storageOptions']);
+                        $mediaFormats = $this->getFormatManager()->getFormats($media['id'], $fileVersion['name'], $fileVersion['storageOptions']);
 
-                        foreach ($mediaThumbnails as $format => $thumbnail) {
-                            if ($format == self::THUMBNAIL_FORMAT) {
-                                $thumbnails[] = array(
+                        foreach ($mediaFormats as $format => $thumbnail) {
+                            if ($format == $this->container->getParameter('sulu_media.collection.previews.format')) {
+                                $formats[] = array(
                                     'url' => $thumbnail,
                                     'title' => $title
                                 );
@@ -468,6 +470,6 @@ class CollectionController extends RestController implements ClassResourceInterf
             }
         }
 
-        return $thumbnails;
+        return $formats;
     }
 }

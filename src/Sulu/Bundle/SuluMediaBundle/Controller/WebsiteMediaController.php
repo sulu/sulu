@@ -11,7 +11,7 @@
 namespace Sulu\Bundle\MediaBundle\Controller;
 
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyException;
-use Sulu\Bundle\MediaBundle\Media\ImageManager\CacheManagerInterface;
+use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -28,7 +28,7 @@ class WebsiteMediaController extends Controller
         try {
             ob_end_clean();
 
-            $url = $request->getPathInfo();;
+            $url = $request->getPathInfo();
 
             list($id, $format) = $this->getCacheManager()->getMediaProperties($url);
 
@@ -40,12 +40,12 @@ class WebsiteMediaController extends Controller
 
     /**
      * getMediaManager
-     * @return CacheManagerInterface
+     * @return FormatManagerInterface
      */
     protected function getCacheManager()
     {
         if ($this->cacheManager === null) {
-            $this->cacheManager = $this->get('sulu_media.thumbnail_manager');
+            $this->cacheManager = $this->get('sulu_media.format_manager');
         }
 
         return $this->cacheManager;

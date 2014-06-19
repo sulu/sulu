@@ -8,9 +8,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\MediaBundle\Media\ThumbnailManager;
+namespace Sulu\Bundle\MediaBundle\Media\FormatManager;
 
-interface ThumbnailManagerInterface {
+interface FormatManagerInterface {
 
     /**
      * Return the image by a given url
@@ -41,5 +41,5 @@ interface ThumbnailManagerInterface {
      * @param $storageOptions
      * @return mixed
      */
-    public function getThumbNails($id, $fileName, $storageOptions);
+    public function getFormats($id, $fileName, $storageOptions);
 } 
