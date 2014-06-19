@@ -282,7 +282,7 @@ class Collection extends ApiEntity implements RestObjectInterface
                 'parent' => $this->parent,
                 'title' => $this->title,
                 'description' => $this->description,
-                'previews' => $this->previews,
+                'thumbnails' => $this->previews, // TODO change to previews when changed in husky
                 'properties' => $this->properties,
                 'changer' => $this->changer,
                 'creator' => $this->creator,
