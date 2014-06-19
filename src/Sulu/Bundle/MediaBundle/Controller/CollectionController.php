@@ -142,7 +142,6 @@ class CollectionController extends RestController implements ClassResourceInterf
             $locale = $this->getLocale($request->get('locale'));
             $collection = new Collection();
             $collection->setDataByEntityArray($collectionEntity, $locale);
-            $collection->getId();
             $collection->setThumbnails($this->getThumbnails($collection->getId()));
 
             $view = $this->view(
