@@ -200,16 +200,13 @@ class DefaultFormatManager implements FormatManagerInterface {
      */
     public function getFormats($id, $fileName, $storageOptions)
     {
-        $thumbNails = array();
+        $formats = array();
 
-        $formats = $this->converter->getFormats();
-
-        foreach ($formats as $format) {
-            $format = $format['name'];
-            $thumbNails[$format] = $this->formatCache->getMediaUrl($id, $fileName, $storageOptions, $format);
+        foreach ($this->converter->getFormats() as $format) {
+            $formats[$format['name']] = $this->formatCache->getMediaUrl($id, $fileName, $storageOptions, $format['name']);
         }
 
-        return $thumbNails;
+        return $formats;
     }
 
 } 

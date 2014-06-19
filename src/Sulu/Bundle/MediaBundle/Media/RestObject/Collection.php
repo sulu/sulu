@@ -568,13 +568,4 @@ class Collection extends ApiEntity implements RestObjectInterface
         $this->formats = $formats;
     }
 
-
-    /**
-     * @param $thumbnail
-     */
-    public function addThumbnail($thumbnail)
-    {
-        $this->formats[] = $thumbnail;
-    }
-
 } 
