@@ -429,8 +429,6 @@ class CollectionController extends RestController implements ClassResourceInterf
     {
         $formats = array();
 
-
-
         $medias = $this->getDoctrine()
             ->getRepository($this->entityMediaName)
             ->findMedia($id, $this->container->getParameter('sulu_media.collection.previews.limit'));
@@ -452,10 +450,10 @@ class CollectionController extends RestController implements ClassResourceInterf
 
                         $mediaFormats = $this->getFormatManager()->getFormats($media['id'], $fileVersion['name'], $fileVersion['storageOptions']);
 
-                        foreach ($mediaFormats as $format => $thumbnail) {
-                            if ($format == $this->container->getParameter('sulu_media.collection.previews.format')) {
+                        foreach ($mediaFormats as $formatName => $formatUrl) {
+                            if ($formatName == $this->container->getParameter('sulu_media.collection.previews.format')) {
                                 $formats[] = array(
-                                    'url' => $thumbnail,
+                                    'url' => $formatUrl,
                                     'title' => $title
                                 );
                                 break;
