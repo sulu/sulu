@@ -332,16 +332,7 @@ class CollectionController extends RestController implements ClassResourceInterf
     protected function createCollectionByRestObject(Collection $object, CollectionEntity &$collection, &$em)
     {
         // Set Style
-        if ($object->getStyle()) {
-            $collection->setStyle(json_encode($object->getStyle()));
-        } elseif (!$collection->getStyle()) { // if no style was set generate one
-            $generatedStyle = array(
-                'type' => $this->container->getParameter('sulu_media.collection.style.type.default'),
-                'color' => CollectionEntity::generateColor()
-            );
-
-            $collection->setStyle(json_encode($generatedStyle));
-        }
+        $collection->setStyle(json_encode($object->getStyle()));
 
         // Set Type
         $type = $this->getDoctrine()->getRepository('SuluMediaBundle:CollectionType')->find($object->getType());
