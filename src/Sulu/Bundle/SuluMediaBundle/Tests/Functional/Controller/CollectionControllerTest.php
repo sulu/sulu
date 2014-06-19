@@ -52,6 +52,7 @@ class CollectionControllerTest extends DatabaseTestCase
             self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\CollectionType'),
             self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\CollectionMeta'),
             self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\Media'),
+            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\MediaType'),
             self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\File'),
             self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersion'),
             self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersionMeta'),
