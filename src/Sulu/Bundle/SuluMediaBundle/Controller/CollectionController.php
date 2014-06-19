@@ -30,9 +30,6 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class CollectionController extends RestController implements ClassResourceInterface
 {
-    const THUMBNAIL_LIMIT = 3;
-
-    const THUMBNAIL_FORMAT = '150x100';
 
     /**
      * {@inheritdoc}
