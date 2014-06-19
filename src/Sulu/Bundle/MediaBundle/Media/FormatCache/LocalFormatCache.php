@@ -31,11 +31,17 @@ class LocalFormatCache implements FormatCacheInterface {
      */
     protected $segments;
 
-    public function __construct($path, $pathUrl, $segments)
+    /**
+     * @var array
+     */
+    protected $formats;
+
+    public function __construct($path, $pathUrl, $segments, $formats)
     {
         $this->path = $path;
         $this->pathUrl = $pathUrl;
         $this->segments = intval($segments);
+        $this->formats = $formats;
     }
 
     /**
@@ -53,9 +59,13 @@ class LocalFormatCache implements FormatCacheInterface {
     /**
      * {@inheritdoc}
      */
-    public function purge($id, $fileName, $options, $format)
+    public function purge($id, $fileName, $options)
     {
-        return unlink($this->getPath($this->path, $id, $fileName, $format));
+        foreach ($this->formats as $format) {
+            @unlink($this->getPath($this->path, $id, $fileName, $format['name']));
+        }
+
+        return true;
     }
 
     /**

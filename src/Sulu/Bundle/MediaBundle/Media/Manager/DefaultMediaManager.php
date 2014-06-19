@@ -12,6 +12,7 @@ namespace Sulu\Bundle\MediaBundle\Media\Manager;
 
 use Doctrine\Common\Persistence\ObjectManager;
 
+use Sulu\Bundle\MediaBundle\Media\FormatCache\FormatCacheInterface;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Bundle\MediaBundle\Entity\File;
@@ -62,6 +63,11 @@ class DefaultMediaManager implements MediaManagerInterface
     private $storage;
 
     /**
+     * @var FormatCacheInterface
+     */
+    private $formatCache;
+
+    /**
      * @var UserRepositoryInterface
      */
     private $userRepository;
@@ -87,6 +93,7 @@ class DefaultMediaManager implements MediaManagerInterface
      * @param UserRepositoryInterface $userRepository
      * @param ObjectManager $em
      * @param StorageInterface $storage
+     * @param FormatCacheInterface $formatCache
      * @param FileValidatorInterface $validator
      * @param string $maxFileSize
      * @param array $blockedMimeTypes
@@ -98,6 +105,7 @@ class DefaultMediaManager implements MediaManagerInterface
         UserRepositoryInterface $userRepository,
         ObjectManager $em,
         StorageInterface $storage,
+        FormatCacheInterface $formatCache,
         FileValidatorInterface $validator,
         $maxFileSize,
         $blockedMimeTypes,
@@ -109,6 +117,7 @@ class DefaultMediaManager implements MediaManagerInterface
         $this->em = $em;
         $this->userRepository = $userRepository;
         $this->storage = $storage;
+        $this->formatCache = $formatCache;
         $this->validator = $validator;
         $this->maxFileSize = $maxFileSize;
         $this->blockedMimeTypes = $blockedMimeTypes;
@@ -274,6 +283,8 @@ class DefaultMediaManager implements MediaManagerInterface
                 $oldContentLanguages = $fileVersion->getContentLanguages();
                 $oldPublishLanguages = $fileVersion->getPublishLanguages();
 
+                // delete old fileversion from cache
+                $this->formatCache->purge($media->getId(), $fileVersion->getName(), $fileVersion->getStorageOptions());
                 break;
             }
         }
@@ -300,9 +311,7 @@ class DefaultMediaManager implements MediaManagerInterface
             $fileVersion->setFile($file);
 
             $this->setNewVersionProperties($fileVersion, $oldMeta, $oldTags, $oldContentLanguages, $oldPublishLanguages);
-        }
 
-        if ($uploadedFile) {
             $file->addFileVersion($fileVersion);
         }
 
@@ -551,6 +560,7 @@ class DefaultMediaManager implements MediaManagerInterface
              */
             foreach ($file->getFileVersions() as $fileVersion) {
                 $this->storage->remove($fileVersion->getStorageOptions());
+                $this->formatCache->purge($media->getId(), $fileVersion->getName(), $fileVersion->getStorageOptions());
             }
         }
         $this->em->remove($media);
