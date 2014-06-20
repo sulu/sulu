@@ -189,7 +189,7 @@ define([], function() {
                 this.setPermission(data.section, data.value, data.activated);
             } else {
                 this.sandbox.dom.each(data.value, function(key, value) {
-                    this.setPermission(data.section, value, data.activated);
+                    this.setPermission(data.section, value.value, data.activated);
                 }.bind(this));
             }
 
@@ -233,10 +233,10 @@ define([], function() {
                     name: this.sandbox.dom.val('#name'),
                     // FIXME correct after selection component has been fixed (https://github.com/massiveart/husky/issues/310)
                     system: this.sandbox.dom.data('#system', 'selection-values')[0],
-                    permissions: permissionData,
+                    permissions: permissionData/*,
                     securityType: {
                         id: this.sandbox.dom.data('#security-type', 'selection')[0]
-                    }
+                    }*/
                 };
                 this.options.data = this.sandbox.util.extend(true, {}, this.options.data, data);
                 this.sandbox.emit('sulu.roles.save', data);
