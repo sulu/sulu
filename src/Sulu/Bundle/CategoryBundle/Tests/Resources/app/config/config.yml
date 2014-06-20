@@ -23,6 +23,11 @@ monolog:
             path:  %kernel.logs_dir%/%kernel.environment%.log
             level: debug
 
+stof_doctrine_extensions:
+    orm:
+        default:
+            tree: true
+
 sulu_core:
     phpcr:
         backend:
