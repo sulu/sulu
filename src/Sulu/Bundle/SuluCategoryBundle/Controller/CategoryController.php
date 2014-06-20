@@ -155,25 +155,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
      */
     public function postAction(Request $request)
     {
-        try {
-            $cm = $this->get('sulu_category.category_manager');
-            $data = [
-              'name' => $request->get('name'),
-              'meta' => $request->get('meta'),
-              'parent' => $request->get('parent'),
-              'locale' => $this->getLocale($request->get('locale'))
-            ];
-            $categoryEntity = $cm->save($data, $this->getUser()->getId());
-            $categoryWrapper = $cm->getApiObject($categoryEntity, $this->getLocale($request->get('locale')));
-
-            $view = $this->view($categoryWrapper, 200);
-        } catch (EntityNotFoundException $enfe) {
-            $view = $this->view($enfe->toArray(), 404);
-        } catch (RestException $re) {
-            $view = $this->view($re->toArray(), 400);
-        }
-
-        return $this->handleView($view);
+        return $this->saveEntity(null, $request);
     }
 
     /**
@@ -188,7 +170,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
             if (!$request->get('name')) {
                 throw new MissingArgumentException($this->entityName, 'name');
             }
-            return $this->changeEntity($id, $request);
+            return $this->saveEntity($id, $request);
         } catch (MissingArgumentException $exc) {
             $view = $this->view($exc->toArray(), 400);
             return $this->handleView($view);
@@ -203,16 +185,15 @@ class CategoryController extends RestController implements ClassResourceInterfac
      */
     public function patchAction($id, Request $request)
     {
-        return $this->changeEntity($id, $request);
+        return $this->saveEntity($id, $request);
     }
 
     /**
      * Deletes a category with a given id
      * @param $id
-     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function deleteAction($id, Request $request)
+    public function deleteAction($id)
     {
         $delete = function ($id) {
             $cm = $this->get('sulu_category.category_manager');
@@ -243,7 +224,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    protected function changeEntity($id, Request $request)
+    protected function saveEntity($id, Request $request)
     {
         try {
             $cm = $this->get('sulu_category.category_manager');
@@ -251,6 +232,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
                 'id' => $id,
                 'name' => $request->get('name'),
                 'meta' => $request->get('meta'),
+                'parent' => $request->get('parent'),
                 'locale' => $this->getLocale($request->get('locale'))
             ];
             $categoryEntity = $cm->save($data, $this->getUser()->getId());
