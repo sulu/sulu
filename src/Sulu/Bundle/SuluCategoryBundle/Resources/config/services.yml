@@ -1,5 +1,7 @@
 parameters:
     sulu_category.admin.class: Sulu\Bundle\CategoryBundle\Admin\SuluCategoryAdmin
+    sulu_category.category_manager.class: Sulu\Bundle\CategoryBundle\Category\CategoryManager
+    sulu_category.category_repository.class: Sulu\Bundle\CategoryBundle\Entity\CategoryRepository
 
 services:
     sulu_category.admin:
@@ -7,3 +9,17 @@ services:
         arguments: [%sulu_admin.name%]
         tags:
         - { name: sulu.admin }
+
+    sulu_category.category_repository:
+            class: %sulu_category.category_repository.class%
+            factory_service: doctrine.orm.entity_manager
+            factory_method: getRepository
+            arguments: ["SuluCategoryBundle:Category"]
+
+    sulu_category.category_manager:
+        class: %sulu_category.category_manager.class%
+        arguments:
+            - "@sulu_category.category_repository"
+            - "@sulu_security.user_repository"
+            - "@doctrine.orm.entity_manager"
+            - "@event_dispatcher"
