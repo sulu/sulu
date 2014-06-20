@@ -41346,7 +41346,8 @@ define('__component__$input@husky',[], function () {
             actionClass: 'action',
             colorFieldClass: 'color-field',
             colorpickerClass: 'colorpicker',
-            datepickerClass: 'pickdate'
+            datepickerClass: 'pickdate',
+            linkClickableClass: 'clickable'
         },
 
         templates = {
@@ -41363,6 +41364,12 @@ define('__component__$input@husky',[], function () {
             },
             time: function() {
                 this.renderTime();
+            },
+            url: function () {
+                this.renderLink('http://');
+            },
+            email: function () {
+                this.renderLink('mailto:');
             }
         },
 
@@ -41379,10 +41386,12 @@ define('__component__$input@husky',[], function () {
                 inputType: 'password'
             },
             url: {
-                frontText: 'http://'
+                frontText: 'http://',
+                renderMethod: 'url'
             },
             email: {
-                frontIcon: 'envelope'
+                frontIcon: 'envelope',
+                renderMethod: 'email'
             },
             date: {
                 frontIcon: 'calendar',
@@ -41436,6 +41445,7 @@ define('__component__$input@husky',[], function () {
                 $input: null,
                 $back: null
             };
+            this.linkProtocol = null;
 
             this.render();
             this.bindDomEvents();
@@ -41490,9 +41500,9 @@ define('__component__$input@husky',[], function () {
             if (!!this.options.frontIcon || !!this.options.frontText || !!this.options.frontHtml) {
                 this.input.$front = this.sandbox.dom.createElement('<div class="'+ constants.frontClass +'"/>');
                 if (!!this.options.frontIcon) {
-                    this.sandbox.dom.html(this.input.$front, '<span class="fa-'+ this.options.frontIcon +'"></span>');
+                    this.sandbox.dom.html(this.input.$front, '<a class="fa-' + this.options.frontIcon + '"></a>');
                 } else if (!!this.options.frontText) {
-                    this.sandbox.dom.html(this.input.$front, '<span class="'+ constants.textClass +'">'+ this.options.frontText +'</span>');
+                    this.sandbox.dom.html(this.input.$front, '<a class="' + constants.textClass + '">' + this.options.frontText + '</a>');
                 } else {
                     this.sandbox.dom.html(this.input.$front, this.options.frontHtml);
                 }
@@ -41561,6 +41571,33 @@ define('__component__$input@husky',[], function () {
         },
 
         /**
+         * Attaches an event-listner to the input which makes an a-tag with clickable
+         * @param protocol {String} a protocol to prepend to the input-value (e.g. 'http://' or 'mailto:')
+         */
+        renderLink: function (protocol) {
+            this.linkProtocol = protocol;
+            this.sandbox.dom.on(this.input.$input, 'keyup', this.changeFrontLink.bind(this));
+            this.changeFrontLink();
+        },
+
+        /**
+         * Changes the anchor-tag in the front-section
+         */
+        changeFrontLink: function() {
+            var value = this.sandbox.dom.val(this.input.$input);
+            if (!!value) {
+                this.sandbox.dom.addClass(this.sandbox.dom.find('a', this.input.$front), constants.linkClickableClass);
+                this.sandbox.dom.attr(this.sandbox.dom.find('a', this.input.$front), 'href', this.linkProtocol + value);
+                if (this.linkProtocol.indexOf('mailto') < 0) {
+                    this.sandbox.dom.attr(this.sandbox.dom.find('a', this.input.$front), 'target', '_blank');
+                }
+            } else {
+                this.sandbox.dom.removeClass(this.sandbox.dom.find('a', this.input.$front), constants.linkClickableClass);
+                this.sandbox.dom.removeAttr(this.sandbox.dom.find('a', this.input.$front), 'href');
+            }
+        },
+
+        /**
          * Binds Dom-events for the datepicker
          */
         bindDatepickerDomEvents: function() {
@@ -41607,6 +41644,9 @@ define('__component__$input@husky',[], function () {
                 this.setDatepickerValueAttr(this.sandbox.datepicker.getDate(this.input.$input));
             } else {
                 this.sandbox.dom.val(this.input.$input, value);
+                if (this.options.renderMethod === 'email' || this.options.renderMethod === 'url') {
+                    this.changeFrontLink();
+                }
             }
         },
 
