@@ -9889,10 +9889,17 @@ a.btn-black, a.btn-highlight {
   margin-top: 2px;
 }
 /* line 33, ../scss/modules/input.scss */
-.husky-input .front span {
+.husky-input .front a {
   padding-top: 1px;
+  text-decoration: none;
+  cursor: default;
 }
 /* line 37, ../scss/modules/input.scss */
+.husky-input .front a.clickable {
+  color: black;
+  cursor: pointer;
+}
+/* line 43, ../scss/modules/input.scss */
 .husky-input .back {
   position: absolute;
   top: 0px;
@@ -9903,38 +9910,38 @@ a.btn-black, a.btn-highlight {
   color: #999999;
   font-size: 16px;
 }
-/* line 47, ../scss/modules/input.scss */
+/* line 53, ../scss/modules/input.scss */
 .husky-input .input {
   overflow: hidden;
   padding-left: 5px;
 }
-/* line 50, ../scss/modules/input.scss */
+/* line 56, ../scss/modules/input.scss */
 .husky-input .input input {
   height: 28px;
   border: none;
   outline-width: 0;
   width: 100%;
 }
-/* line 57, ../scss/modules/input.scss */
+/* line 63, ../scss/modules/input.scss */
 .husky-input .text {
   font-size: 14px;
 }
-/* line 62, ../scss/modules/input.scss */
+/* line 68, ../scss/modules/input.scss */
 .husky-input.colorpicker .input {
   overflow: visible;
 }
-/* line 65, ../scss/modules/input.scss */
+/* line 71, ../scss/modules/input.scss */
 .husky-input.colorpicker .front {
   color: black;
   cursor: pointer;
 }
-/* line 72, ../scss/modules/input.scss */
+/* line 78, ../scss/modules/input.scss */
 .husky-input.pickdate .front {
   color: black;
   cursor: pointer;
 }
 
-/* line 81, ../scss/modules/input.scss */
+/* line 87, ../scss/modules/input.scss */
 .husky-validate-error .husky-input input {
   height: 26px;
 }
