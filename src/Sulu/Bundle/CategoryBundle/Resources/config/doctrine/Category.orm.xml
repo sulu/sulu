@@ -10,14 +10,6 @@
             <generator strategy="AUTO"/>
         </id>
 
-        <many-to-one field="parent" target-entity="Sulu\Bundle\CategoryBundle\Entity\Category" inversed-by="children">
-            <join-columns>
-                <join-column name="idCategoriesParent" referenced-column-name="id" on-delete="SET NULL"/>
-            </join-columns>
-            <gedmo:tree-parent/>
-        </many-to-one>
-        <one-to-many field="children" target-entity="Sulu\Bundle\CategoryBundle\Entity\Category" mapped-by="parent"/>
-
         <field name="lft" type="integer" column="lft">
             <gedmo:tree-left/>
         </field>
@@ -27,6 +19,27 @@
         <field name="depth" type="integer" column="depth">
             <gedmo:tree-level/>
         </field>
+        <field name="created" type="datetime" column="created"/>
+        <field name="changed" type="datetime" column="changed"/>
+
+        <one-to-many field="meta" target-entity="Sulu\Bundle\CategoryBundle\Entity\CategoryMeta" mapped-by="category">
+            <cascade>
+                <cascade-all/>
+            </cascade>
+        </one-to-many>
+        <one-to-many field="translations" target-entity="Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation" mapped-by="category">
+            <cascade>
+                <cascade-all/>
+            </cascade>
+        </one-to-many>
+
+        <one-to-many field="children" target-entity="Sulu\Bundle\CategoryBundle\Entity\Category" mapped-by="parent"/>
+        <many-to-one field="parent" target-entity="Sulu\Bundle\CategoryBundle\Entity\Category" inversed-by="children">
+            <join-columns>
+                <join-column name="idCategoriesParent" referenced-column-name="id" on-delete="SET NULL"/>
+            </join-columns>
+            <gedmo:tree-parent/>
+        </many-to-one>
 
         <many-to-one field="creator" target-entity="Sulu\Component\Security\UserInterface">
             <join-columns>
@@ -38,9 +51,6 @@
                 <join-column name="idUsersChanger" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
             </join-columns>
         </many-to-one>
-
-        <field name="created" type="datetime" column="created"/>
-        <field name="changed" type="datetime" column="changed"/>
 
         <gedmo:tree type="nested"/>
     </entity>
