@@ -382,16 +382,36 @@ class CategoryControllerTest extends DatabaseTestCase
         $this->assertEquals('Name changed through patch', $response->name);
 
         $client->request(
-            'PATCH',
-            '/api/categories/1',
-            array(
-                'name' => 'Name changed through patch'
-            )
+            'GET',
+            '/api/categories/1'
         );
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(1, $response->id);
         $this->assertEquals('Name changed through patch', $response->name);
+    }
+
+    public function testDelete()
+    {
+        $client = $this->createTestClient();
+        $client->request(
+            'DELETE',
+            '/api/categories/2'
+        );
+
+        $this->assertEquals(204, $client->getResponse()->getStatusCode());
+
+        $client = $this->createTestClient();
+        $client->request(
+            'GET',
+            '/api/categories'
+        );
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(2, count($response->_embedded));
+        $this->assertEquals(1, $response->_embedded[0]->id);
+        $this->assertEquals(3, $response->_embedded[1]->id);
     }
 }
