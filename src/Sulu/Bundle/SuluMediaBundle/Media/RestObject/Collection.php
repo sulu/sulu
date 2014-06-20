@@ -296,9 +296,9 @@ class Collection extends ApiEntity implements RestObjectInterface
                 $fieldValue = $field;
                 $fieldKey = $field;
                 // TODO Delete when changed
-                if (in_array($field, array('formats', 'thumbnails'))) {
+                if (in_array($field, array('previews', 'thumbnails'))) {
                     $fieldValue = 'thumbnails';
-                    $fieldKey =  'formats';
+                    $fieldKey =  'previews';
                 }
                 // TODO END
                 if (isset($this->$fieldKey)) {

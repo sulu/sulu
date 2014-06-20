@@ -295,7 +295,7 @@ class CollectionController extends RestController implements ClassResourceInterf
             $flatCollection = new Collection();
             $flatCollection->setDataByEntityArray($collection, $locale, $fields);
             $flatCollection->setPreviews($this->getPreviews($flatCollection->getId()));
-            array_push($flatCollections, $flatCollection);
+            array_push($flatCollections, $flatCollection->toArray());
         }
 
         return $flatCollections;
