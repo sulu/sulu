@@ -73,7 +73,7 @@ class MediaController extends RestController implements ClassResourceInterface
     /**
      * {@inheritdoc}
      */
-    protected $fieldsRelations = array('title', 'name', 'description', 'formats', 'size');
+    protected $fieldsRelations = array('title', 'name', 'description', 'thumbnails', 'size'); // TODO change thumbnails to format when husky updated
 
     /**
      * {@inheritdoc}
