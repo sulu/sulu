@@ -108,7 +108,7 @@ class CategoryManager implements CategoryManagerInterface
         $categoryEntity = $this->categoryRepository->findCategoryById($id);
 
         if (!$categoryEntity) {
-            throw new EntityNotFoundException($id);
+            throw new EntityNotFoundException('SuluCategoryBundle:Category', $id);
         }
 
         $this->em->remove($categoryEntity);

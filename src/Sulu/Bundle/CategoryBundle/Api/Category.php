@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Sulu\Bundle\CategoryBundle\Api;
 
 use Sulu\Bundle\CategoryBundle\Entity\Category as Entity;
@@ -9,7 +8,6 @@ use JMS\Serializer\Annotation\VirtualProperty;
 use JMS\Serializer\Annotation\SerializedName;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryMeta;
-
 
 class Category extends ApiEntityWrapper
 {

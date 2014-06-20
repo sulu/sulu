@@ -39,7 +39,7 @@ class CategoryMeta
      * Set key
      *
      * @param string $key
-     * @return Meta
+     * @return CategoryMeta
      */
     public function setKey($key)
     {
@@ -62,7 +62,7 @@ class CategoryMeta
      * Set value
      *
      * @param string $value
-     * @return Meta
+     * @return CategoryMeta
      */
     public function setValue($value)
     {
@@ -85,7 +85,7 @@ class CategoryMeta
      * Set locale
      *
      * @param string $locale
-     * @return Meta
+     * @return CategoryMeta
      */
     public function setLocale($locale)
     {
@@ -118,7 +118,7 @@ class CategoryMeta
      * Set category
      *
      * @param \Sulu\Bundle\CategoryBundle\Entity\Category $category
-     * @return Meta
+     * @return CategoryMeta
      */
     public function setCategory(\Sulu\Bundle\CategoryBundle\Entity\Category $category)
     {
