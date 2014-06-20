@@ -293,8 +293,16 @@ class Collection extends ApiEntity implements RestObjectInterface
             // only get specific fields
             $data = array();
             foreach ($fields as $field) {
-                if (isset($this->$field)) {
-                    $data[$field] = $this->$field;
+                $fieldValue = $field;
+                $fieldKey = $field;
+                // TODO Delete when changed
+                if (in_array($field, array('formats', 'thumbnails'))) {
+                    $fieldValue = 'thumbnails';
+                    $fieldKey =  'formats';
+                }
+                // TODO END
+                if (isset($this->$fieldKey)) {
+                    $data[$fieldValue] = $this->$fieldKey;
                 }
             }
         }
