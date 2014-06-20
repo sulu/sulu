@@ -291,10 +291,10 @@ class CategoryControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals('Modified Category', $response->name);
         $this->assertEquals(2, count($response->meta));
-        $this->assertEquals('modifiedKey', $response->meta[0]->key);
-        $this->assertEquals('This meta got overriden', $response->meta[0]->value);
-        $this->assertEquals('newMeta', $response->meta[1]->key);
-        $this->assertEquals('This meta got added', $response->meta[1]->value);
+        $this->assertTrue('modifiedKey' === $response->meta[0]->key || 'newMeta' === $response->meta[0]->key);
+        $this->assertTrue('This meta got overriden' === $response->meta[0]->value || 'This meta got added' === $response->meta[0]->value);
+        $this->assertTrue('modifiedKey' === $response->meta[1]->key || 'newMeta' === $response->meta[1]->key);
+        $this->assertTrue('This meta got overriden' === $response->meta[1]->value || 'This meta got added' === $response->meta[1]->value);
 
         $client->request(
             'GET',
