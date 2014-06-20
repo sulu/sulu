@@ -110,9 +110,10 @@ class WebspaceManager implements WebspaceManagerInterface
             $sameWebspace = $webspaceKey === null || $portalInformation->getWebspace()->getKey() === $webspaceKey;
             if ($sameLocalization && $sameWebspace) {
                 // TODO protocol
-                $urls[] = 'http://' . $url . $resourceLocator;
+                $urls[] = rtrim('http://' . $url . $resourceLocator, '/');
             }
         }
+
         return $urls;
     }
 
@@ -141,7 +142,7 @@ class WebspaceManager implements WebspaceManagerInterface
                     $dumper->dump(
                         array(
                             'cache_class' => $class,
-                            'base_class' => $this->options['base_class']
+                            'base_class'  => $this->options['base_class']
                         )
                     ),
                     $webspaceCollection->getResources()
@@ -163,11 +164,11 @@ class WebspaceManager implements WebspaceManagerInterface
     public function setOptions($options)
     {
         $this->options = array(
-            'config_dir' => null,
-            'cache_dir' => null,
-            'debug' => false,
+            'config_dir'  => null,
+            'cache_dir'   => null,
+            'debug'       => false,
             'cache_class' => 'WebspaceCollectionCache',
-            'base_class' => 'WebspaceCollection'
+            'base_class'  => 'WebspaceCollection'
         );
 
         // overwrite the default values with the given options

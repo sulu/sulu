@@ -107,8 +107,29 @@ interface PropertyInterface
     public function getTag($tagName);
 
     /**
-     * returns title of property
+     * returns column span
      * @return string
      */
-    public function getTitle();
+    public function getColspan();
+
+    /**
+     * returns title of property
+     * @param string $languageCode
+     * @return string
+     */
+    public function getTitle($languageCode);
+
+    /**
+     * returns infoText of property
+     * @param string $languageCode
+     * @return string
+     */
+    public function getInfoText($languageCode);
+
+    /**
+     * returns placeholder of property
+     * @param string $languageCode
+     * @return string
+     */
+    public function getPlaceholder($languageCode);
 }

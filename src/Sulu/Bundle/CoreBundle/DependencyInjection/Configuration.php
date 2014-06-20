@@ -34,6 +34,7 @@ class Configuration implements ConfigurationInterface
         $this->getPhpcrConfiguration($children);
         $this->getContentConfiguration($children);
         $this->getWebspaceConfiguration($children);
+        $this->getHttpCacheConfiguration($children);
         $this->getFieldsConfiguration($children);
         $children->end();
 
@@ -60,6 +61,17 @@ class Configuration implements ConfigurationInterface
                             ->defaultValue(300)
                         ->end()
                     ->end()
+                ->end()
+            ->end()
+        ->end();
+    }
+
+    private function getHttpCacheConfiguration(NodeBuilder $rootNode)
+    {
+        $rootNode->arrayNode('http_cache')
+            ->children()
+                ->scalarNode('type')
+                    ->defaultValue('SymfonyHttpCache')
                 ->end()
             ->end()
         ->end();
@@ -129,11 +141,14 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('default_template')
                     ->defaultValue('default')
                 ->end()
+                ->scalarNode('internal_prefix')
+                    ->defaultValue('')
+                ->end()
                 ->arrayNode('language')
                     ->addDefaultsIfNotSet()
                     ->children()
                         ->scalarNode('namespace')
-                            ->defaultValue('sulu_locale')
+                            ->defaultValue('i18n')
                         ->end()
                         ->scalarNode('default')
                             ->defaultValue('en')

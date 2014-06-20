@@ -19,4 +19,20 @@ class ContentTypeManagerTest extends \PHPUnit_Framework_TestCase
         $manager = new ContentTypeManager($container, 'foo.');
         $manager->get('bar');
     }
+
+    public function testHasContentType()
+    {
+        $container = $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface');
+        $container->expects($this->once())->method('has')->with('foo.bar')->will($this->returnValue(true));
+        $manager = new ContentTypeManager($container, 'foo.');
+        $this->assertTrue($manager->has('bar'));
+    }
+
+    public function testHasFalseContentType()
+    {
+        $container = $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface');
+        $container->expects($this->once())->method('has')->with('foo.x')->will($this->returnValue(false));
+        $manager = new ContentTypeManager($container, 'foo.');
+        $this->assertFalse($manager->has('x'));
+    }
 }

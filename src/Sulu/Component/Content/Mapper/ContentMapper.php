@@ -26,6 +26,7 @@ use Sulu\Component\Content\Mapper\LocalizationFinder\LocalizationFinderInterface
 use Sulu\Component\Content\Mapper\Translation\MultipleTranslatedProperties;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\PropertyInterface;
+use Sulu\Component\Content\Section\SectionPropertyInterface;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManagerInterface;
 use Sulu\Component\Content\StructureType;
@@ -111,6 +112,7 @@ class ContentMapper implements ContentMapperInterface
         $defaultLanguage,
         $defaultTemplate,
         $languageNamespace,
+        $internalPrefix,
         $stopwatch = null
     )
     {
@@ -139,7 +141,8 @@ class ContentMapper implements ContentMapperInterface
                 'navigation',
                 'published'
             ),
-            $this->languageNamespace
+            $this->languageNamespace,
+            $internalPrefix
         );
     }
 
@@ -258,8 +261,7 @@ class ContentMapper implements ContentMapperInterface
 
         // go through every property in the template
         /** @var PropertyInterface $property */
-        foreach ($structure->getProperties() as $property) {
-
+        foreach ($structure->getProperties(true) as $property) {
             // allow null values in data
             if (isset($data[$property->getName()])) {
                 $type = $this->getContentType($property->getContentTypeName());
@@ -693,7 +695,7 @@ class ContentMapper implements ContentMapperInterface
         if ($path === '') {
             $node = $this->getContentNode($webspaceKey);
         } else {
-        $node = $this->getContentNode($webspaceKey)->getNode($path);
+            $node = $this->getContentNode($webspaceKey)->getNode($path);
         }
 
         if ($this->stopwatch) {
@@ -863,19 +865,21 @@ class ContentMapper implements ContentMapperInterface
 
         // go through every property in the template
         /** @var PropertyInterface $property */
-        foreach ($structure->getProperties() as $property) {
-            $type = $this->getContentType($property->getContentTypeName());
-            $type->read(
-                $contentNode,
-                new TranslatedProperty(
-                    $property,
+        foreach ($structure->getProperties(true) as $property) {
+            if (!($property instanceof SectionPropertyInterface)) {
+                $type = $this->getContentType($property->getContentTypeName());
+                $type->read(
+                    $contentNode,
+                    new TranslatedProperty(
+                        $property,
+                        $availableLocalization,
+                        $this->languageNamespace
+                    ),
+                    $webspaceKey,
                     $availableLocalization,
-                    $this->languageNamespace
-                ),
-                $webspaceKey,
-                $availableLocalization,
-                null
-            );
+                    null
+                );
+            }
         }
 
         // throw an content.node.load event (disabled for now)

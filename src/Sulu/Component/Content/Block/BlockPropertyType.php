@@ -10,6 +10,7 @@
 
 namespace Sulu\Component\Content\Block;
 
+use Sulu\Component\Content\Metadata;
 use Sulu\Component\Content\PropertyInterface;
 use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
 
@@ -24,9 +25,9 @@ class BlockPropertyType
     private $name;
 
     /**
-     * @var string
+     * @var Metadata
      */
-    private $title;
+    private $metadata;
 
     /**
      * properties managed by this block
@@ -34,10 +35,10 @@ class BlockPropertyType
      */
     private $childProperties = array();
 
-    function __construct($name, $title)
+    function __construct($name, $metadata)
     {
         $this->name = $name;
-        $this->title = $title;
+        $this->metadata = new Metadata($metadata);
     }
 
     /**
@@ -82,16 +83,25 @@ class BlockPropertyType
     }
 
     /**
+     * @param string $languageCode
      * @return string
      */
-    public function getTitle()
+    public function getTitle($languageCode)
     {
-        return $this->title;
+        return $this->metadata->get('title', $languageCode, ucfirst($this->getName()));
+    }
+
+    /**
+     * @return Metadata
+     */
+    public function getMetadata()
+    {
+        return $this->metadata;
     }
 
     function __clone()
     {
-        $result = new BlockPropertyType($this->getName(), $this->getTitle());
+        $result = new BlockPropertyType($this->getName(), $this->getMetadata());
         $result->childProperties = array();
         foreach ($this->getChildProperties() as $childProperties) {
             $result->addChild(clone($childProperties));

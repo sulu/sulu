@@ -213,11 +213,41 @@ class BlockPropertyWrapper implements PropertyInterface
     }
 
     /**
-     * returns title of property
+     * returns column span
      * @return string
      */
-    public function getTitle()
+    public function getColspan()
     {
-        return $this->property->getTitle();
+        return $this->property->getColspan();
+    }
+
+    /**
+     * returns title of property
+     * @param string $languageCode
+     * @return string
+     */
+    public function getTitle($languageCode)
+    {
+        return $this->property->getTitle($languageCode);
+    }
+
+    /**
+     * returns infoText of property
+     * @param string $languageCode
+     * @return string
+     */
+    public function getInfoText($languageCode)
+    {
+        return $this->property->getInfoText($languageCode);
+    }
+
+    /**
+     * returns placeholder of property
+     * @param string $languageCode
+     * @return string
+     */
+    public function getPlaceholder($languageCode)
+    {
+        return $this->property->getPlaceholder($languageCode);
     }
 }

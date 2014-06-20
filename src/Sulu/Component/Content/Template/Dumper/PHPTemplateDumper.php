@@ -32,6 +32,14 @@ class PHPTemplateDumper
         }
         $this->twig = new \Twig_Environment(new \Twig_Loader_Filesystem($path), array('debug' => $debug));
 
+        $this->twig->addFunction(
+            new \Twig_SimpleFunction(
+                'is_array', function ($value) {
+                    return is_array($value);
+                }
+            )
+        );
+
         if ($debug) {
             $this->twig->addExtension(new \Twig_Extension_Debug());
         }

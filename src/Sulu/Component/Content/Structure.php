@@ -11,6 +11,8 @@
 namespace Sulu\Component\Content;
 
 use DateTime;
+use Sulu\Component\Content\Section\SectionProperty;
+use Sulu\Component\Content\Section\SectionPropertyInterface;
 use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
 
 /**
@@ -176,6 +178,22 @@ abstract class Structure implements StructureInterface
      */
     protected function addChild(PropertyInterface $property)
     {
+        if ($property instanceof SectionPropertyInterface) {
+            foreach ($property->getChildProperties() as $childProperty) {
+                $this->addPropertyTags($childProperty);
+            }
+        } else {
+            $this->addPropertyTags($property);
+        }
+
+        $this->properties[$property->getName()] = $property;
+    }
+
+    /**
+     * add tags of properties
+     */
+    protected function addPropertyTags(PropertyInterface $property)
+    {
         foreach ($property->getTags() as $tag) {
             if (!array_key_exists($tag->getName(), $this->tags)) {
                 $this->tags[$tag->getName()] = array(
@@ -200,7 +218,6 @@ abstract class Structure implements StructureInterface
                 }
             }
         }
-        $this->properties[$property->getName()] = $property;
     }
 
     /**
@@ -388,7 +405,11 @@ abstract class Structure implements StructureInterface
      */
     public function getProperty($name)
     {
-        if ($this->hasProperty($name)) {
+        $result = $this->findProperty($name);
+
+        if ($result !== null) {
+            return $result;
+        } elseif (isset($this->properties[$name])) {
             return $this->properties[$name];
         } else {
             throw new NoSuchPropertyException();
@@ -453,7 +474,23 @@ abstract class Structure implements StructureInterface
      */
     public function hasProperty($name)
     {
-        return isset($this->properties[$name]);
+        return $this->findProperty($name) !== null;
+    }
+
+    /**
+     * find property in flatten properties
+     * @param string $name
+     * @return null|PropertyInterface
+     */
+    private function findProperty($name)
+    {
+        foreach ($this->getProperties(true) as $property) {
+            if ($property->getName() === $name) {
+                return $property;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -586,11 +623,26 @@ abstract class Structure implements StructureInterface
 
     /**
      * returns an array of properties
-     * @return array
+     * @param bool $flatten
+     * @return PropertyInterface[]
      */
-    public function getProperties()
+    public function getProperties($flatten = false)
     {
-        return $this->properties;
+        if ($flatten === false) {
+            return $this->properties;
+        } else {
+            $result = array();
+            foreach ($this->properties as $property) {
+                if ($property instanceof SectionPropertyInterface) {
+                    $result = array_merge($result, $property->getChildProperties());
+                } else {
+
+                    $result[] = $property;
+                }
+            }
+
+            return $result;
+        }
     }
 
     /**
@@ -656,7 +708,7 @@ abstract class Structure implements StructureInterface
      */
     public function __isset($property)
     {
-        if (isset($this->properties[$property])) {
+        if ($this->findProperty($property) !== null) {
             return true;
         } else {
             return isset($this->$property);
@@ -691,10 +743,7 @@ abstract class Structure implements StructureInterface
                 $result['type'] = $this->getType()->toArray();
             }
 
-            /** @var PropertyInterface $property */
-            foreach ($this->getProperties() as $property) {
-                $result[$property->getName()] = $property->getValue();
-            }
+            $this->appendProperties($this->getProperties(), $result);
 
             return $result;
         } else {
@@ -711,7 +760,20 @@ abstract class Structure implements StructureInterface
             if ($this->type !== null) {
                 $result['type'] = $this->getType()->toArray();
             }
+
             return $result;
+        }
+    }
+
+    private function appendProperties($properties, &$array)
+    {
+        /** @var PropertyInterface $property */
+        foreach ($properties as $property) {
+            if ($property instanceof SectionPropertyInterface) {
+                $this->appendProperties($property->getChildProperties(), $array);
+            } else {
+                $array[$property->getName()] = $property->getValue();
+            }
         }
     }
 

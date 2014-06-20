@@ -77,9 +77,14 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
             $this->initContent($config['content'], $container, $loader);
         }
 
-        // Portal
+        // Webspace
         if (isset($config['webspace'])) {
             $this->initWebspace($config['webspace'], $container, $loader);
+        }
+
+        // Http Cache
+        if (isset($config['http_cache'])) {
+            $this->initHttpCache($config['http_cache'], $container, $loader);
         }
 
         // Default Fields
@@ -107,6 +112,12 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
             $webspaceConfig['request_analyzer']['priority']
         );
         $loader->load('webspace.xml');
+    }
+
+    private function initHttpCache($httpCacheConfig, ContainerBuilder $container, Loader\XmlFileLoader $loader)
+    {
+        $container->setParameter('sulu_core.http_cache.type', $httpCacheConfig['type']);
+        $loader->load('http-cache.xml');
     }
 
     /**
@@ -139,6 +150,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
     {
         // Default template
         $container->setParameter('sulu.content.template.default', $contentConfig['default_template']);
+        $container->setParameter('sulu.content.internal_prefix', $contentConfig['internal_prefix']);
 
         // Default Language
         $container->setParameter('sulu.content.language.namespace', $contentConfig['language']['namespace']);
