@@ -119,11 +119,12 @@ class CategoryController extends RestController implements ClassResourceInterfac
     public function getAction($id, Request $request)
     {
         $locale = $this->getLocale($request->get('locale'));
+        $cm = $this->get('sulu_category.category_manager');
         $view = $this->responseGetById(
             $id,
-            function ($id) use ($locale) {
-                $categoryEntity = $this->fetchEntity($id);
-                return $this->getCategoryWrapper($categoryEntity, $locale);
+            function ($id) use ($locale, $cm) {
+                $categoryEntity = $cm->findById($id);
+                return $cm->getApiObject($categoryEntity, $locale);
             }
         );
 
@@ -140,8 +141,9 @@ class CategoryController extends RestController implements ClassResourceInterfac
     {
         $parent = $request->get('parent');
         $depth = $request->get('depth');
-        $categories = $this->getDoctrine()->getRepository($this->entityName)->findCategories($parent, $depth);
-        $wrappers = $this->getCategoryWrappers($categories, $this->getLocale($request->get('locale')));
+        $cm = $this->get('sulu_category.category_manager');
+        $categories = $cm->find($parent, $depth);
+        $wrappers = $cm->getApiObjects($categories, $this->getLocale($request->get('locale')));
         $view = $this->view($this->createHalResponse($wrappers), 200);
         return $this->handleView($view);
     }
@@ -154,26 +156,15 @@ class CategoryController extends RestController implements ClassResourceInterfac
     public function postAction(Request $request)
     {
         try {
-            $em = $this->getDoctrine()->getManager();
-
-            $categoryEntity = new CategoryEntity();
-            $categoryEntity->setCreator($this->getUser());
-            $categoryEntity->setChanger($this->getUser());
-            $categoryEntity->setCreated(new DateTime());
-            $categoryEntity->setChanged(new DateTime());
-
-            $categoryWrapper = new CategoryWrapper($categoryEntity, $this->getLocale($request->get('locale')));
-            $categoryWrapper->setName($request->get('name'));
-            $categoryWrapper->setMeta($request->get('meta'));
-
-            if ($request->get('parent')) {
-                $parentEntity = $this->fetchEntity($request->get('parent'));
-                $categoryWrapper->setParent($parentEntity);
-            }
-
-            $categoryEntity = $categoryWrapper->getEntity();
-            $em->persist($categoryEntity);
-            $em->flush();
+            $cm = $this->get('sulu_category.category_manager');
+            $data = [
+              'name' => $request->get('name'),
+              'meta' => $request->get('meta'),
+              'parent' => $request->get('parent'),
+              'locale' => $this->getLocale($request->get('locale'))
+            ];
+            $categoryEntity = $cm->save($data, $this->getUser()->getId());
+            $categoryWrapper = $cm->getApiObject($categoryEntity, $this->getLocale($request->get('locale')));
 
             $view = $this->view($categoryWrapper, 200);
         } catch (EntityNotFoundException $enfe) {
@@ -215,9 +206,22 @@ class CategoryController extends RestController implements ClassResourceInterfac
         return $this->changeEntity($id, $request);
     }
 
+    /**
+     * Deletes a category with a given id
+     * @param $id
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function deleteAction($id, Request $request)
     {
+        $delete = function ($id) {
+            $cm = $this->get('sulu_category.category_manager');
+            $cm->delete($id);
+        };
 
+        $view = $this->responseDelete($id, $delete);
+
+        return $this->handleView($view);
     }
 
     /**
@@ -234,52 +238,6 @@ class CategoryController extends RestController implements ClassResourceInterfac
     }
 
     /**
-     * Returns the wrapper entity for a given entity or null
-     * @param $entity
-     * @param $locale
-     * @return null|CategoryWrapper
-     */
-    protected function getCategoryWrapper($entity, $locale)
-    {
-        if (!$entity) {
-            return null;
-        } else {
-            return new CategoryWrapper($entity, $locale);
-        }
-    }
-
-    /**
-     * Returns an array of CategoryWrappers for a given array of entities
-     * @param $entities
-     * @param $locale
-     * @return null|array
-     */
-    protected function getCategoryWrappers($entities, $locale)
-    {
-        $arrReturn = [];
-        if ($entities) {
-            foreach ($entities as $entity) {
-                array_push($arrReturn, new CategoryWrapper($entity, $locale));
-            }
-        }
-        return $arrReturn;
-    }
-
-    /**
-     * Returns a category entity for a given id
-     * @param $id
-     * @return CategoryEntity
-     */
-    protected function fetchEntity($id)
-    {
-        $entity = $this->getDoctrine()
-            ->getRepository($this->entityName)
-            ->findCategoryById($id);
-
-        return $entity;
-    }
-
-    /**
      * Handles the change of a category. Used in PUT and PATCH
      * @param $id
      * @param Request $request
@@ -288,23 +246,15 @@ class CategoryController extends RestController implements ClassResourceInterfac
     protected function changeEntity($id, Request $request)
     {
         try {
-            $categoryEntity = $this->fetchEntity($id);
-            if (!$categoryEntity) {
-                throw new EntityNotFoundException($categoryEntity, $id);
-            }
-
-            $em = $this->getDoctrine()->getManager();
-
-            $categoryEntity->setChanged(new DateTime());
-            $categoryEntity->setChanger($this->getUser());
-
-            $categoryWrapper = new CategoryWrapper($categoryEntity, $this->getLocale($request->get('locale')));
-            $categoryWrapper->setName($request->get('name'));
-            $categoryWrapper->setMeta($request->get('meta'));
-
-            $categoryEntity = $categoryWrapper->getEntity();
-            $em->persist($categoryEntity);
-            $em->flush();
+            $cm = $this->get('sulu_category.category_manager');
+            $data = [
+                'id' => $id,
+                'name' => $request->get('name'),
+                'meta' => $request->get('meta'),
+                'locale' => $this->getLocale($request->get('locale'))
+            ];
+            $categoryEntity = $cm->save($data, $this->getUser()->getId());
+            $categoryWrapper = $cm->getApiObject($categoryEntity, $this->getLocale($request->get('locale')));
 
             $view = $this->view($categoryWrapper, 200);
         } catch (EntityNotFoundException $enfe) {
