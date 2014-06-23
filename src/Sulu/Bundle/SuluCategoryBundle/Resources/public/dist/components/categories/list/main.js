@@ -1,0 +1,1 @@
+define(function(){"use strict";return{view:!0,fullSize:{width:!0},header:function(){return{title:"category.categories.title",noBack:!0,breadcrumb:[{title:"navigation.settings"},{title:"category.categories.title"}]}},templates:[],initialize:function(){this.render()},render:function(){}}});

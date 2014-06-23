@@ -25,12 +25,11 @@ define({
 
         app.components.addSource('sulucategory', '/bundles/sulucategory/js/components');
 
-        // Example: list all contacts
-        // sandbox.mvc.routes.push({
-        //     route: 'contacts/contacts',
-        //    callback: function(){
-        //         this.html('<div data-aura-component="contacts@sulucontact" data-aura-display="list"/>');
-        //     }
-        // });
+        sandbox.mvc.routes.push({
+            route: 'settings/categories',
+            callback: function(){
+                this.html('<div data-aura-component="categories@sulucategory" data-aura-display="list"/>');
+            }
+        });
     }
 });
