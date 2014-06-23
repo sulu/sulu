@@ -28207,7 +28207,7 @@ define('__component__$column-options@husky',[],function() {
  * @param {String|Object} [options.contentContainer] the container which holds the datagrid; this options resizes the contentContainer for responsiveness
  * @param {String} [options.fullWidth] If true datagrid style will be full-width mode
  * @param {Array} [options.excludeFields=['id']] array of fields to exclude by the view
- *
+ * @param {Boolean} [options.showHead] if TRUE head would be showed
  *
  * @param {Boolean} [rendered] property used by the datagrid-main class
  * @param {Function} [initialize] function which gets called once at the start of the view
@@ -28236,7 +28236,8 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             startTabIndex: 99999,
             excludeFields: [''],
             columnMinWidth: '70px',
-            thumbnailFormat: '50x50'
+            thumbnailFormat: '50x50',
+            showHead: true
         },
 
         constants = {
@@ -28269,38 +28270,38 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         templates = {
             removeRow: [
                 '<td class="remove-row">',
-                    '<span class="fa-trash-o pointer '+ constants.rowRemoverClass +'"></span>',
+                    '<span class="fa-trash-o pointer ' + constants.rowRemoverClass + '"></span>',
                 '</td>'
             ].join(''),
 
             checkbox: [
                 '<div class="custom-checkbox">',
-                    '<input id="<%= id %>" type="checkbox" data-form="false"<% if (!!checked) { %> checked<% } %>/>',
-                    '<span class="icon"></span>',
+                '<input id="<%= id %>" type="checkbox" data-form="false"<% if (!!checked) { %> checked<% } %>/>',
+                '<span class="icon"></span>',
                 '</div>'
             ].join(''),
 
             checkboxCell: [
                 '<td>',
-                    '<%= checkbox %>',
+                '<%= checkbox %>',
                 '</td>'
             ].join(''),
 
             radio: [
                 '<td>',
-                    '<div class="custom-radio">',
-                        '<input name="<%= name %>" type="radio"/>',
-                        '<span class="icon"></span>',
-                    '</div>',
+                '<div class="custom-radio">',
+                '<input name="<%= name %>" type="radio"/>',
+                '<span class="icon"></span>',
+                '</div>',
                 '</td>'
             ].join('')
-    },
+        },
 
         /**
          * used to update the table width and its containers due to responsiveness
          * @event husky.datagrid.update.table
          */
-            UPDATE_TABLE = function () {
+        UPDATE_TABLE = function() {
             return this.datagrid.createEventName.call(this.datagrid, 'update.table');
         },
 
@@ -28310,7 +28311,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * @param classArray
          * @param isSortable
          */
-            getTextWidth = function (text, classArray, isSortable) {
+        getTextWidth = function(text, classArray, isSortable) {
             var elWidth, el,
                 sortIconWidth = 0,
                 paddings = 20;
@@ -28369,7 +28370,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             this.data = data;
             this.$el = $container;
 
-            this.$tableContainer = this.sandbox.dom.createElement('<div class="'+ constants.viewClass +'"/>');
+            this.$tableContainer = this.sandbox.dom.createElement('<div class="' + constants.viewClass + '"/>');
             this.sandbox.dom.append(this.$el, this.$tableContainer);
             this.sandbox.dom.append(this.$tableContainer, this.prepareTable());
 
@@ -28459,15 +28460,19 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             // emits an event when a table row gets clicked
             this.sandbox.dom.on(
                 this.$tableContainer, 'click',
-                this.emitRowClickedEvent.bind(this), 'tr'
+                this.emitRowClickedEvent.bind(this), 'tbody tr'
             );
+
+            this.sandbox.dom.on(this.$tableContainer, 'click', function(event) {
+                this.sandbox.dom.stopPropagation(event);
+            }.bind(this));
 
             // add editable events if configured
             if (!!this.options.editable) {
                 this.sandbox.dom.on(
                     this.$tableContainer, 'click', this.editCellValues.bind(this), '.' + constants.editableClass
                 );
-                this.sandbox.dom.on(this.$tableContainer, 'click', this.focusOnRow.bind(this), 'tr');
+                this.sandbox.dom.on(this.$tableContainer, 'click', this.focusOnRow.bind(this), 'tbody tr');
 
                 // save on "blur"
                 this.sandbox.dom.on(window, 'click', function() {
@@ -28561,7 +28566,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             this.$table = $table = this.sandbox.dom.createElement('<table' + (!!this.options.validationDebug ? 'data-debug="true"' : '' ) + '/>');
 
             if (!!this.data.head || !!this.datagrid.matchings) {
-                $thead = this.sandbox.dom.createElement('<thead/>');
+                $thead = this.sandbox.dom.createElement('<thead style="' + (!this.options.showHead ? 'display:none;' : '' ) + '"/>');
                 this.sandbox.dom.append($thead, this.prepareTableHead());
                 this.sandbox.dom.append($table, $thead);
             }
@@ -28576,7 +28581,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             tblClasses = [];
             tblClasses.push(
                 (!!this.options.className && this.options.className !== constants.tableClass) ? constants.tableClass +
-                ' ' + this.options.className : constants.tableClass
+                    ' ' + this.options.className : constants.tableClass
             );
 
             // when list should not have the hover effect for whole rows do not set the is-selectable class
@@ -28610,8 +28615,8 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                 minWidth = checkboxValues.number + checkboxValues.unit;
 
                 tblColumns.push(
-                    '<th class="'+ constants.selectAllName +'" ',
-                    'style="width:' + minWidth + '; max-width:' + minWidth + '; min-width:' + minWidth + ';"',
+                        '<th class="' + constants.selectAllName + '" ',
+                        'style="width:' + minWidth + '; max-width:' + minWidth + '; min-width:' + minWidth + ';"',
                     ' >'
                 );
 
@@ -28683,7 +28688,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                     // add html to table header cell if sortable
                     if (!!isSortable) {
                         dataAttribute = ' data-attribute="' + column.attribute + '"';
-                        tblCellClass = ((!!column.class) ? ' class="' + column.class + ' "' + constants.sortableClass : ' class="'+ constants.sortableClass +'"');
+                        tblCellClass = ((!!column.class) ? ' class="' + column.class + ' "' + constants.sortableClass : ' class="' + constants.sortableClass + '"');
                         tblColumns.push('<th' + tblCellClass + ' style="' + tblColumnStyle.join(';') + '" ' + dataAttribute + '>' + column.content + '<span></span></th>');
                     } else {
                         tblCellClass = ((!!column.class) ? ' class="' + column.class + '"' : '');
@@ -28781,7 +28786,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                     this.tblColumns.push(this.sandbox.util.template(templates.removeRow)());
                 }
 
-                $tableRow = this.sandbox.dom.createElement('<tr'+ this.tblRowAttributes +'>'+ this.tblColumns.join('') +'</tr>');
+                $tableRow = this.sandbox.dom.createElement('<tr' + this.tblRowAttributes + '>' + this.tblColumns.join('') + '</tr>');
 
                 if (!!row.id) {
                     this.sandbox.dom.data($tableRow, 'id', row.id);
@@ -28834,7 +28839,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                 if (!!type) {
                     if (type === this.datagrid.types.THUMBNAILS) {
                         tblCellContent = this.datagrid.manipulateContent(tblCellContent, type, this.options.thumbnailFormat);
-                        tblCellContent = '<img alt="'+ tblCellContent[constants.thumbAltKey] +'" src="'+ tblCellContent[constants.thumbSrcKey] +'"/>';
+                        tblCellContent = '<img alt="' + tblCellContent[constants.thumbAltKey] + '" src="' + tblCellContent[constants.thumbSrcKey] + '"/>';
                     } else {
                         tblCellContent = this.datagrid.manipulateContent(tblCellContent, type);
                     }
@@ -28844,14 +28849,14 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                     if (!!triggeredByAddRow) {
                         // differentiate for tab index
                         if (!!this.options.addRowTop) {
-                            this.tblColumns.push('<td data-field="' + key + '" ' + tblCellClass + ' ><span class="'+ constants.editableClass +'" style="display: none">' + tblCellContent + '</span><input type="text" class="form-element editable-content" tabindex="' + this.bottomTabIndex + '" value="' + tblCellContent + '"  ' + validationAttr + '/></td>');
+                            this.tblColumns.push('<td data-field="' + key + '" ' + tblCellClass + ' ><span class="' + constants.editableClass + '" style="display: none">' + tblCellContent + '</span><input type="text" class="form-element editable-content" tabindex="' + this.bottomTabIndex + '" value="' + tblCellContent + '"  ' + validationAttr + '/></td>');
                             this.bottomTabIndex++;
                         } else {
-                            this.tblColumns.push('<td data-field="' + key + '" ' + tblCellClass + ' ><span class="'+ constants.editableClass +'" style="display: none">' + tblCellContent + '</span><input type="text" class="form-element editable-content" tabindex="' + this.topTabIndex + '" value="' + tblCellContent + '"  ' + validationAttr + '/></td>');
+                            this.tblColumns.push('<td data-field="' + key + '" ' + tblCellClass + ' ><span class="' + constants.editableClass + '" style="display: none">' + tblCellContent + '</span><input type="text" class="form-element editable-content" tabindex="' + this.topTabIndex + '" value="' + tblCellContent + '"  ' + validationAttr + '/></td>');
                             this.topTabIndex++;
                         }
                     } else {
-                        this.tblColumns.push('<td data-field="' + key + '" ' + tblCellClass + ' ><span class="'+ constants.editableClass +'">' + tblCellContent + '</span><input type="text" class="form-element editable-content hidden" value="' + tblCellContent + '" tabindex="' + this.topTabIndex + '" ' + validationAttr + '/></td>');
+                        this.tblColumns.push('<td data-field="' + key + '" ' + tblCellClass + ' ><span class="' + constants.editableClass + '">' + tblCellContent + '</span><input type="text" class="form-element editable-content hidden" value="' + tblCellContent + '" tabindex="' + this.topTabIndex + '" ' + validationAttr + '/></td>');
                         this.topTabIndex++;
 
                     }
@@ -29632,6 +29637,7 @@ define('husky_components/datagrid/decorators/thumbnail-view',[],function() {
          * Destroys the view
          */
         destroy: function() {
+            this.sandbox.dom.off('body', 'click.grid-thumbnails');
             this.sandbox.dom.remove(this.$el);
         },
 
@@ -29640,7 +29646,8 @@ define('husky_components/datagrid/decorators/thumbnail-view',[],function() {
          * @param id {Number|String} the identifier of the thumbnail to bind events on
          */
         bindThumbnailDomEvents: function(id) {
-            this.sandbox.dom.on(this.$thumbnails[id], 'click', function() {
+            this.sandbox.dom.on(this.$thumbnails[id], 'click', function(event) {
+                this.sandbox.dom.stopPropagation(event);
                 this.toggleItemSelected(id);
             }.bind(this));
 
@@ -29653,6 +29660,8 @@ define('husky_components/datagrid/decorators/thumbnail-view',[],function() {
                 this.datagrid.emitItemClickedEvent.call(this.datagrid, id);
                 this.selectItem(id);
             }.bind(this));
+
+            this.sandbox.dom.on('body', 'click.grid-thumbnails', this.unselectAll.bind(this));
         },
 
         /**
@@ -29724,6 +29733,15 @@ define('husky_components/datagrid/decorators/thumbnail-view',[],function() {
                 return true;
             }
             return false;
+        },
+
+        /**
+         * Unselects all thumbnails
+         */
+        unselectAll: function() {
+            this.sandbox.util.each(this.$thumbnails, function(id) {
+                this.unselectItem(id);
+            }.bind(this));
         }
     };
 });
@@ -30482,6 +30500,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
  * @param {String} [options.columnOptionsInstanceName=null] if set, a listener will be set for listening for column changes
  * @param {String} [options.url] url to fetch data from
  * @param {String} [options.instanceName] name of the datagrid instance
+ * @param {Array} [options.preselected] preselected ids
  *
  * @param {Array} [options.matchings] configuration array of columns if fieldsData isn't set
  * @param {String} [options.matchings.content] column title
@@ -30522,7 +30541,8 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
                 instanceName: '',
                 searchInstanceName: null,
                 columnOptionsInstanceName: null,
-                defaultMeasureUnit: 'px'
+                defaultMeasureUnit: 'px',
+                preselected: []
             },
 
             types = {
@@ -30688,6 +30708,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * used to add a data record
              * @event husky.datagrid.record.add
              * @param {Object} the data of the new record
+             * @param callback {Function} callback to execute after process has been finished
              */
             RECORDS_ADD = function() {
                 return this.createEventName('records.add');
@@ -30883,7 +30904,6 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
                 // extend default options and set variables
                 this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
-
                 this.matchings = [];
                 this.requestFields = [];
                 this.filterMatchings(this.options.matchings);
@@ -30996,6 +31016,9 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * Renders the data of the datagrid
              */
             render: function() {
+                var count = this.setSelectedItems(this.options.preselected);
+                this.sandbox.logger.log('Selected item:', count);
+
                 this.gridViews[this.viewId].render(this.data, this.$element);
                 if (!!this.paginations[this.paginationId]) {
                     this.paginations[this.paginationId].render(this.data, this.$element);
@@ -31434,8 +31457,9 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * Handles the event for adding multiple records
              * to a view
              * @param records {Array} array with new records to add
+             * @param callback {Function} callback to execute after process has been finished
              */
-            addRecordsHandler: function(records) {
+            addRecordsHandler: function(records, callback) {
                 if (!!this.gridViews[this.viewId].addRecord) {
                     this.sandbox.util.foreach(records, function(record) {
                         if (!!record.id) {
@@ -31443,6 +31467,9 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
                         }
                         this.gridViews[this.viewId].addRecord(record);
                     }.bind(this));
+                    if (typeof callback === 'function') {
+                        callback();
+                    }
                     this.sandbox.emit(NUMBER_SELECTIONS.call(this), this.getSelectedItemIds().length);
                 }
             },
@@ -31810,20 +31837,22 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * @param {String|Array} searchFields Fields that will be included into the search
              */
             searchGrid: function(searchString, searchFields) {
-                var template, url;
+                if (!!this.data.links.find) {
+                    var template, url;
 
-                template = this.sandbox.uritemplate.parse(this.data.links.find);
-                url = this.sandbox.uritemplate.expand(template, {searchString: searchString, searchFields: searchFields});
+                    template = this.sandbox.uritemplate.parse(this.data.links.find);
+                    url = this.sandbox.uritemplate.expand(template, {searchString: searchString, searchFields: searchFields});
 
-                this.destroy();
-                this.loading();
-                this.load({
-                    url: url,
-                    success: function() {
-                        this.stopLoading();
-                        this.sandbox.emit(UPDATED.call(this));
-                    }.bind(this)
-                });
+                    this.destroy();
+                    this.loading();
+                    this.load({
+                        url: url,
+                        success: function() {
+                            this.stopLoading();
+                            this.sandbox.emit(UPDATED.call(this));
+                        }.bind(this)
+                    });
+                }
             },
 
             /**
@@ -33111,8 +33140,8 @@ define('__component__$toolbar@husky',[],function() {
 
         /** events bound to dom */
         bindDOMEvents = function() {
-            this.sandbox.dom.on(this.options.el, 'click', toggleItem.bind(this), '.dropdown-toggle');
-            this.sandbox.dom.on(this.options.el, 'click', selectItem.bind(this), 'li');
+            this.sandbox.dom.on(this.$el, 'click', toggleItem.bind(this), '.dropdown-toggle');
+            this.sandbox.dom.on(this.$el, 'click', selectItem.bind(this), 'li');
         },
 
         /** events bound to sandbox */
@@ -33338,7 +33367,8 @@ define('__component__$toolbar@husky',[],function() {
          */
         selectItem = function(event) {
 
-            event.preventDefault();
+            this.sandbox.dom.stopPropagation(event);
+            this.sandbox.dom.preventDefault(event);
 
             var item = this.items[this.sandbox.dom.data(event.currentTarget, 'id')],
                 $parent = this.sandbox.dom.parents(event.currentTarget, 'li').eq(0);
@@ -38241,7 +38271,7 @@ define('__component__$smart-content@husky',[], function() {
             // adopt height of column navigation once
             this.sandbox.once('husky.overlay.smart-content.' + this.options.instanceName + '.opened', function() {
                 // set height of smart-content column navigation slide (missing margins)
-                var height = this.sandbox.dom.outerHeight('.smart-content-overlay .slide-1 .overlay-content') + 24;
+                var height = this.sandbox.dom.outerHeight('.smart-content-overlay .slide-0 .overlay-content') + 24;
                 this.sandbox.dom.css('.smart-content-overlay .slide-1 .overlay-content', 'height', height + 'px');
             }.bind(this));
 
@@ -38943,7 +38973,6 @@ define('__component__$overlay@husky',[], function() {
             }
 
             this.sandbox.on(REMOVE.call(this), this.removeComponent.bind(this));
-
             this.sandbox.on(OKBUTTON_ACTIVATE.call(this), this.activateOkButtons.bind(this));
             this.sandbox.on(OKBUTTON_DEACTIVATE.call(this), this.deactivateOkButtons.bind(this));
             this.sandbox.on(OPEN.call(this), this.triggerHandler.bind(this));
@@ -39147,6 +39176,8 @@ define('__component__$overlay@husky',[], function() {
 
             this.sandbox.emit(CLOSED.call(this));
 
+            this.sandbox.dom.off('body', 'keydown.' + this.options.instanceName);
+
             if (this.options.removeOnClose === true) {
                 this.removeComponent();
             }
@@ -39171,6 +39202,10 @@ define('__component__$overlay@husky',[], function() {
             if (!!emitEvent) {
                 this.sandbox.emit(OPENED.call(this));
             }
+
+            // listen on key-inputs
+            this.sandbox.dom.off('body', 'keydown.' + this.options.instanceName);
+            this.sandbox.dom.on('body', 'keydown.' + this.options.instanceName, this.keyHandler.bind(this));
         },
 
         /**
@@ -39362,6 +39397,19 @@ define('__component__$overlay@husky',[], function() {
         },
 
         /**
+         * Su
+         * @param event
+         */
+        keyHandler: function(event) {
+            // esc
+            if (event.keyCode === 27) {
+                this.closeHandler();
+            } else if (event.keyCode === 13) {
+                this.okHandler();
+            }
+        },
+
+        /**
          * Binds overlay events
          */
         bindOverlayEvents: function() {
@@ -39449,10 +39497,10 @@ define('__component__$overlay@husky',[], function() {
          */
         okHandler: function(event) {
             // do nothing, if button is inactive
-            if (this.sandbox.dom.hasClass(event.currentTarget, 'inactive')) {
+            if (!!event && this.sandbox.dom.hasClass(event.currentTarget, 'inactive')) {
                 return;
             }
-            this.sandbox.dom.preventDefault(event);
+            !!event && this.sandbox.dom.preventDefault(event);
 
             if (this.executeCallback(this.slides[this.activeSlide].okCallback, this.sandbox.dom.find(constants.contentSelector, this.overlay.$el)) !== false) {
                 this.closeOverlay();
@@ -41130,6 +41178,7 @@ define('__component__$dropzone@husky',[], function () {
                             removeOnClose: true,
                             draggable: false,
                             data: this.$dropzone,
+                            instanceName: 'dropzone-' + this.options.instanceName,
                             skin: 'dropzone',
                             smallHeader: true,
                             closeCallback: function () {
@@ -41260,6 +41309,9 @@ define('__component__$dropzone@husky',[], function () {
          * have faded out
          */
         afterFadeOut: function () {
+            if (this.overlayOpened === true) {
+                this.sandbox.emit('husky.overlay.dropzone-'+ this.options.instanceName +'.close');
+            }
             this.sandbox.dom.removeClass(this.$dropzone, constants.droppedClass);
             this.sandbox.emit(FILES_ADDED.call(this), this.getResponseArray(this.dropzone.files));
             this.dropzone.removeAllFiles();
