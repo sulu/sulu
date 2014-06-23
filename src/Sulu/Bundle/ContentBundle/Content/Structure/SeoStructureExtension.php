@@ -79,7 +79,7 @@ class SeoStructureExtension extends StructureExtension
      */
     public function load(NodeInterface $node, $webspaceKey, $languageCode)
     {
-        return array(
+        $this->data = array(
             'title' => $this->loadProperty($node, 'title'),
             'description' => $this->loadProperty($node, 'description'),
             'keywords' => $this->loadProperty($node, 'keywords'),
