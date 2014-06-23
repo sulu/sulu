@@ -52,17 +52,17 @@ class CategoryController extends RestController implements ClassResourceInterfac
     /**
      * {@inheritdoc}
      */
-    protected $fieldsHidden = array('');
+    protected $fieldsHidden = array('id', 'created', 'changed');
 
     /**
      * {@inheritdoc}
      */
-    protected $fieldsRelations = array();
+    protected $fieldsRelations = array('name');
 
     /**
      * {@inheritdoc}
      */
-    protected $fieldsSortOrder = array(0 => 'id');
+    protected $fieldsSortOrder = array(0 => 'id', 1 => 'name');
 
     /**
      * {@inheritdoc}
@@ -93,21 +93,12 @@ class CategoryController extends RestController implements ClassResourceInterfac
 
     /**
      * returns all fields that can be used by list
-     * @Get("collection/fields")
+     * @Get("categories/fields")
      * @return mixed
      */
     public function getFieldsAction()
     {
         return $this->responseFields();
-    }
-
-    /**
-     * persists a setting
-     * @Put("collection/fields")
-     */
-    public function putFieldsAction()
-    {
-        return $this->responsePersistSettings();
     }
 
     /**
