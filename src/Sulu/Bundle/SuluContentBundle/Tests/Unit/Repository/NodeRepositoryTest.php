@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Unit\Repository;
 
+use PHPCR\NodeInterface;
 use ReflectionMethod;
 use Sulu\Bundle\AdminBundle\UserManager\CurrentUserDataInterface;
 use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
@@ -18,7 +19,9 @@ use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
 use Sulu\Bundle\TestBundle\Testing\PhpcrTestCase;
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyTag;
+use Sulu\Component\Content\StructureExtension\StructureExtension;
 use Sulu\Component\Content\Types\ResourceLocator;
+use Sulu\Component\Webspace\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceCollection;
 use Sulu\Component\Webspace\Webspace;
 
@@ -211,6 +214,27 @@ class NodeRepositoryTest extends PhpcrTestCase
         $this->assertFalse($result['_embedded'][0]['_embedded'][0]['hasSub']);
     }
 
+    public function testExtensionData()
+    {
+        $data = $this->prepareGetTestData();
+        $extData = array('a' => 'A', 'b' => 'B');
+
+        $result = $this->nodeRepository->loadExtensionData($data->getUuid(), 'test1', 'default', 'en');
+        $this->assertEquals('', $result['a']);
+        $this->assertEquals('', $result['b']);
+        $this->assertEquals('/testtitle', $result['path']);
+
+        $result = $this->nodeRepository->saveExtensionData($data->getUuid(), $extData, 'test1', 'default', 'en', 1);
+        $this->assertEquals('A', $result['a']);
+        $this->assertEquals('B', $result['b']);
+        $this->assertEquals('/testtitle', $result['path']);
+
+        $result = $this->nodeRepository->loadExtensionData($data->getUuid(), 'test1', 'default', 'en');
+        $this->assertEquals('A', $result['a']);
+        $this->assertEquals('B', $result['b']);
+        $this->assertEquals('/testtitle', $result['path']);
+    }
+
     protected function setUp()
     {
         $this->prepareMapper();
@@ -225,13 +249,26 @@ class NodeRepositoryTest extends PhpcrTestCase
         $this->webspaceCollection = $this->getMock('Sulu\Component\Webspace\Manager\WebspaceCollection');
         $this->webspace = new Webspace();
         $this->webspace->setName('Test');
+        $this->webspace->setKey('default');
+
+        $locale = new Localization();
+        $locale->setLanguage('en');
+        $this->webspace->addLocalization($locale);
 
         $this->webspaceManager->expects($this->any())
             ->method('getWebspaceCollection')
             ->will($this->returnValue($this->webspaceCollection));
 
+        $this->webspaceManager->expects($this->any())
+            ->method('findWebspaceByKey')
+            ->will($this->returnValue($this->webspace));
+
         $this->webspaceCollection->expects($this->any())
             ->method('getWebspace')
+            ->will($this->returnValue($this->webspace));
+
+        $this->webspaceManager->expects($this->any())
+            ->method('findWebspaceByKey')
             ->will($this->returnValue($this->webspace));
 
         $this->nodeRepository = new NodeRepository(
@@ -291,6 +328,8 @@ class NodeRepositoryTest extends PhpcrTestCase
             array('overview', 'asdf', 'asdf', 2400)
         );
 
+        $structureMock->setExtensions(array(new TestExtension('test1', 'test1')));
+
         $method = new ReflectionMethod(
             get_class($structureMock), 'addChild'
         );
@@ -340,3 +379,39 @@ class NodeRepositoryTest extends PhpcrTestCase
         return $structureMock;
     }
 }
+
+class TestExtension extends StructureExtension
+{
+    protected $properties = array(
+        'a',
+        'b'
+    );
+
+    function __construct($name, $additionalPrefix = null)
+    {
+        $this->name = $name;
+        $this->additionalPrefix = $additionalPrefix;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function save(NodeInterface $node, $data, $webspaceKey, $languageCode)
+    {
+        $this->data = $data;
+        $node->setProperty($this->getPropertyName('a'), $data['a']);
+        $node->setProperty($this->getPropertyName('b'), $data['b']);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function load(NodeInterface $node, $webspaceKey, $languageCode)
+    {
+        $this->data = array(
+            'a' => $node->getPropertyValueWithDefault($this->getPropertyName('a'), ''),
+            'b' => $node->getPropertyValueWithDefault($this->getPropertyName('b'), '')
+        );
+    }
+}
+
