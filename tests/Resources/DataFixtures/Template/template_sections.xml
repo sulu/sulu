@@ -10,7 +10,7 @@
     <cacheLifetime>2400</cacheLifetime>
 
     <properties>
-        <property name="title" type="text_line" mandatory="true" col="6">
+        <property name="title" type="text_line" mandatory="true" colspan="6">
             <meta>
                 <title lang="de">Titel</title>
                 <title lang="en">Title</title>
@@ -35,10 +35,10 @@
             </meta>
             <properties>
                 <property name="url" type="resource_locator" mandatory="true" cssClass="test"
-                          col="6">
+                          colspan="6">
                     <tag name="sulu.rlp.part" priority="1"/>
                 </property>
-                <property name="article" type="text_area" mandatory="false" col="6">
+                <property name="article" type="text_area" mandatory="false" colspan="6">
                     <tag name="sulu.node.title" priority="5"/>
                 </property>
                 <block name="block" default-type="test">
@@ -64,7 +64,7 @@
             <tag name="sulu.node.title"/>
         </property>
 
-        <property name="images" type="image_selection" minOccurs="0" maxOccurs="2" col="6">
+        <property name="images" type="image_selection" minOccurs="0" maxOccurs="2" colspan="6">
             <params>
                 <param name="minLinks" value="1"/>
                 <param name="maxLinks" value="10"/>

@@ -191,7 +191,7 @@ class Property implements PropertyInterface, \JsonSerializable
      * returns column span
      * @return string
      */
-    public function getCol()
+    public function getColspan()
     {
         return $this->col;
     }

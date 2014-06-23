@@ -443,6 +443,8 @@ abstract class Structure implements StructureInterface
 
         if ($result !== null) {
             return $result;
+        } elseif (isset($this->properties[$name])) {
+            return $this->properties[$name];
         } else {
             throw new NoSuchPropertyException();
         }
@@ -667,9 +669,10 @@ abstract class Structure implements StructureInterface
             foreach ($this->properties as $property) {
                 if ($property instanceof SectionPropertyInterface) {
                     $result = array_merge($result, $property->getChildProperties());
-                }
+                } else {
 
-                $result[] = $property;
+                    $result[] = $property;
+                }
             }
 
             return $result;

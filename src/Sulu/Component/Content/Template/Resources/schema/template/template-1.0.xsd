@@ -49,7 +49,7 @@
 
         <xs:attribute type="xs:string" name="name" use="required"/>
         <xs:attribute type="xs:string" name="cssClass" use="optional"/>
-        <xs:attribute type="xs:integer" name="col" use="optional"/>
+        <xs:attribute type="xs:integer" name="colspan" use="optional"/>
     </xs:complexType>
 
     <xs:complexType name="propertiesType">
@@ -73,7 +73,7 @@
         <xs:attribute type="xs:byte" name="minOccurs" use="optional"/>
         <xs:attribute type="xs:byte" name="maxOccurs" use="optional"/>
         <xs:attribute type="xs:string" name="cssClass" use="optional"/>
-        <xs:attribute type="xs:integer" name="col" use="optional"/>
+        <xs:attribute type="xs:integer" name="colspan" use="optional"/>
     </xs:complexType>
 
     <xs:complexType name="blockType">
@@ -90,7 +90,7 @@
         <xs:attribute type="xs:byte" name="minOccurs" use="optional"/>
         <xs:attribute type="xs:byte" name="maxOccurs" use="optional"/>
         <xs:attribute type="xs:string" name="cssClass" use="optional"/>
-        <xs:attribute type="xs:integer" name="col" use="optional"/>
+        <xs:attribute type="xs:integer" name="colspan" use="optional"/>
     </xs:complexType>
 
     <xs:complexType name="blockTypesType">

@@ -110,7 +110,7 @@ interface PropertyInterface
      * returns column span
      * @return string
      */
-    public function getCol();
+    public function getColspan();
 
     /**
      * returns title of property
