@@ -1,3 +1,4 @@
+
 /** vim: et:ts=4:sw=4:sts=4
  * @license RequireJS 2.1.9 Copyright (c) 2010-2012, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
@@ -30707,6 +30708,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * used to add a data record
              * @event husky.datagrid.record.add
              * @param {Object} the data of the new record
+             * @param callback {Function} callback to execute after process has been finished
              */
             RECORDS_ADD = function() {
                 return this.createEventName('records.add');
@@ -31455,8 +31457,9 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * Handles the event for adding multiple records
              * to a view
              * @param records {Array} array with new records to add
+             * @param callback {Function} callback to execute after process has been finished
              */
-            addRecordsHandler: function(records) {
+            addRecordsHandler: function(records, callback) {
                 if (!!this.gridViews[this.viewId].addRecord) {
                     this.sandbox.util.foreach(records, function(record) {
                         if (!!record.id) {
@@ -31464,6 +31467,9 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
                         }
                         this.gridViews[this.viewId].addRecord(record);
                     }.bind(this));
+                    if (typeof callback === 'function') {
+                        callback();
+                    }
                     this.sandbox.emit(NUMBER_SELECTIONS.call(this), this.getSelectedItemIds().length);
                 }
             },
@@ -46845,4 +46851,3 @@ define('husky_extensions/util',[],function() {
         }
     };
 });
-
