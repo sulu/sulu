@@ -10,6 +10,8 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\Manager;
 
+use Sulu\Bundle\MediaBundle\Entity\Media;
+
 /**
  * Defines the operations of the MediaManager.
  * The MediaManager is responsible for the centralized management of our media.
@@ -20,10 +22,16 @@ interface MediaManagerInterface
     /**
      * Load the media object
      * @param $id
-     * @return mixed
+     * @return Media
      */
     public function get($id);
 
+    /**
+     * Loads multiple media objct
+     * @param string[] $ids
+     * @return Media[]
+     */
+    public function getMultiple($ids);
     /**
      * Adds a new file to a media
      * @param $uploadedFile

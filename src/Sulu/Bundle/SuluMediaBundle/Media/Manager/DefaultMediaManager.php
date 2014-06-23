@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\MediaBundle\Media\Manager;
 
 use Doctrine\Common\Persistence\ObjectManager;
+use string;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Bundle\MediaBundle\Entity\File;
@@ -123,6 +124,14 @@ class DefaultMediaManager implements MediaManagerInterface
         $media = $this->mediaRepository->findMediaById($id);
 
         return $media;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getMultiple($ids)
+    {
+        return $this->mediaRepository->findMediaByIds($ids);
     }
 
     /**
