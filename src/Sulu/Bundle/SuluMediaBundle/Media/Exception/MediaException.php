@@ -10,13 +10,13 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\Exception;
 
-use Exception;
+use Sulu\Component\Rest\Exception\RestException;
 
 /**
  * This Exception is thrown when a Uploaded File is not valid
  * @package Sulu\Bundle\MediaBundle\Media\Exception
  */
-class MediaException extends Exception
+class MediaException extends RestException
 {
     /**
      * @var int
