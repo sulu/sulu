@@ -127,7 +127,7 @@ define([
             this.sandbox.on('sulu.contact-form.add-required', addRequires.bind(this));
             this.sandbox.on('sulu.contact-form.is.initialized', isInitialized.bind(this));
 
-            this.sandbox.off('husky.overlay.add-address.initialized');
+            this.sandbox.off('husky.overlay.add-address.initialized', initializeDropdownForAddressTypes);
             this.sandbox.on('husky.overlay.add-address.initialized', initializeDropdownForAddressTypes.bind(this));
 
             this.sandbox.on(CONTENT_SET.call(this), cropAllLabels.bind(this));
@@ -183,6 +183,7 @@ define([
          */
         initializeDropdownForAddressTypes = function() {
 
+            this.sandbox.stop(constants.addressTypeSelector);
             this.sandbox.start([
                 {
                     name: 'select@husky',
@@ -792,6 +793,7 @@ define([
     // removes listeners of addressform
         removeAddressFormEvents = function() {
             this.sandbox.dom.off(constants.addressFormId);
+            this.sandbox.stop(constants.addressTypeSelector);
         },
 
         addAddressOkClicked = function(mapperId) {
