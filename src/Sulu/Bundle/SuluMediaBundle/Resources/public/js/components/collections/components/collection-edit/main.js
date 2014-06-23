@@ -22,11 +22,30 @@ define(function () {
             SETTINGS: 'settings'
         },
 
+        listViews = {
+            table: {
+                name: 'table'
+            },
+            thumbnailSmall: {
+                name: 'thumbnail',
+                thViewOptions: {
+                    large: false
+                }
+            },
+            thumbnailLarge: {
+                name: 'thumbnail',
+                thViewOptions: {
+                    large: true
+                }
+            }
+        },
+
         constants = {
             dropzoneSelector: '.dropzone-container',
             toolbarSelector: '.list-toolbar-container',
             datagridSelector: '.datagrid-container',
-            settingsFormId: 'collection-settings'
+            settingsFormId: 'collection-settings',
+            listViewStorageKey: 'collectionEditListView'
         };
 
     return {
@@ -51,6 +70,8 @@ define(function () {
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
             this.saved = true;
 
+            this.listView = this.sandbox.sulu.getUserSetting(constants.listViewStorageKey) || 'thumbnailSmall';
+
             this.bindCustomEvents();
             this.render();
         },
@@ -62,16 +83,19 @@ define(function () {
             // change datagrid to table
             this.sandbox.on('sulu.list-toolbar.change.table', function () {
                 this.sandbox.emit('husky.datagrid.view.change', 'table');
+                this.sandbox.sulu.saveUserSetting(constants.listViewStorageKey, 'table');
             }.bind(this));
 
             // change datagrid to thumbnail small
             this.sandbox.on('sulu.list-toolbar.change.thumbnail-small', function () {
                 this.sandbox.emit('husky.datagrid.view.change', 'thumbnail', {large: false});
+                this.sandbox.sulu.saveUserSetting(constants.listViewStorageKey, 'thumbnailSmall');
             }.bind(this));
 
             // change datagrid to thumbnail large
             this.sandbox.on('sulu.list-toolbar.change.thumbnail-large', function () {
                 this.sandbox.emit('husky.datagrid.view.change', 'thumbnail', {large: true});
+                this.sandbox.sulu.saveUserSetting(constants.listViewStorageKey, 'thumbnailLarge');
             }.bind(this));
 
             // load collections list if back icon is clicked
@@ -81,6 +105,7 @@ define(function () {
 
             // if files got uploaded to the server add them to the datagrid
             this.sandbox.on('husky.dropzone.'+ this.options.instanceName +'.files-added', function(files) {
+                this.sandbox.emit('sulu.labels.success.show', 'labels.success.media-upload-desc', 'labels.success');
                 this.addFilesToDatagrid(files);
             }.bind(this));
 
@@ -286,12 +311,13 @@ define(function () {
                 {
                     el: this.$find(constants.datagridSelector),
                     url: '/admin/api/media?collection=' + this.options.data.id,
-                    view: 'thumbnail',
+                    view: listViews[this.listView].name,
                     pagination: false,
                     viewOptions: {
                         table: {
                             fullWidth: false
-                        }
+                        },
+                        thumbnail: listViews[this.listView].thViewOptions || {}
                     }
                 });
         },
@@ -313,7 +339,14 @@ define(function () {
             for (var i = -1, length = files.length; ++i < length;) {
                 files[i].selected = true;
             }
-            this.sandbox.emit('husky.datagrid.records.add', files);
+            this.sandbox.emit('husky.datagrid.records.add', files, this.scrollToBottom.bind(this));
+        },
+
+        /**
+         * Scrolls the whole form the the bottom
+         */
+        scrollToBottom: function() {
+            this.sandbox.dom.scrollAnimate(this.sandbox.dom.height(this.sandbox.dom.$document), 'body');
         }
     };
 });
