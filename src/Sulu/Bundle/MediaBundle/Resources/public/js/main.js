@@ -9,7 +9,8 @@
 
 require.config({
     paths: {
-        sulumedia: '../../sulumedia/js'
+        sulumedia: '../../sulumedia/js',
+        "type/mediaSelection": '../../sulumedia/js/validation/types/mediaSelection'
     }
 });
 
