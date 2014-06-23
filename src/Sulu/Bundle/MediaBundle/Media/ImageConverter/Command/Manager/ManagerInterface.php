@@ -10,8 +10,12 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\Manager;
 
-
-interface ManagerInterface {
+/**
+ * TODO
+ * @package Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\Manager
+ */
+interface ManagerInterface
+{
 
     public function get($name);
 

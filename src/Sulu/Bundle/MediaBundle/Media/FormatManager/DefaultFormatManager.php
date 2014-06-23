@@ -19,7 +19,12 @@ use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Sulu\Bundle\MediaBundle\Media\FormatCache\FormatCacheInterface;
 use Symfony\Component\HttpFoundation\Response;
 
-class DefaultFormatManager implements FormatManagerInterface {
+/**
+ * TODO
+ * @package Sulu\Bundle\MediaBundle\Media\FormatManager
+ */
+class DefaultFormatManager implements FormatManagerInterface
+{
 
     /**
      * The repository for communication with the database
@@ -60,8 +65,7 @@ class DefaultFormatManager implements FormatManagerInterface {
         FormatCacheInterface $formatCache,
         ImageConverterInterface $converter,
         $saveImage
-    )
-    {
+    ) {
         $this->mediaRepository = $mediaRepository;
         $this->originalStorage = $originalStorage;
         $this->formatCache = $formatCache;
@@ -94,7 +98,13 @@ class DefaultFormatManager implements FormatManagerInterface {
 
         if ($this->saveImage) {
             list($fileName, $version, $storageOptions) = $this->getMediaData($media);
-            $this->formatCache->save($this->createTmpFile($image), $media->getId(), $fileName, $storageOptions, $format);
+            $this->formatCache->save(
+                $this->createTmpFile($image),
+                $media->getId(),
+                $fileName,
+                $storageOptions,
+                $format
+            );
         }
 
         return new Response($image, 200, $headers);
@@ -203,7 +213,12 @@ class DefaultFormatManager implements FormatManagerInterface {
         $formats = array();
 
         foreach ($this->converter->getFormats() as $format) {
-            $formats[$format['name']] = $this->formatCache->getMediaUrl($id, $fileName, $storageOptions, $format['name']);
+            $formats[$format['name']] = $this->formatCache->getMediaUrl(
+                $id,
+                $fileName,
+                $storageOptions,
+                $format['name']
+            );
         }
 
         return $formats;

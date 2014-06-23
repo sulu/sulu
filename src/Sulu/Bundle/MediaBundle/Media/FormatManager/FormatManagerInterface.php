@@ -10,7 +10,12 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\FormatManager;
 
-interface FormatManagerInterface {
+/**
+ * TODO
+ * @package Sulu\Bundle\MediaBundle\Media\FormatManager
+ */
+interface FormatManagerInterface
+{
 
     /**
      * Return the image by a given url
