@@ -22,6 +22,7 @@ use Sulu\Component\Content\ContentEvents;
 use Sulu\Component\Content\Event\ContentNodeEvent;
 use Sulu\Component\Content\Exception\MandatoryPropertyException;
 use Sulu\Component\Content\Exception\StateNotFoundException;
+use Sulu\Component\Content\Exception\TranslatedNodeNotFoundException;
 use Sulu\Component\Content\Mapper\LocalizationFinder\LocalizationFinderInterface;
 use Sulu\Component\Content\Mapper\Translation\MultipleTranslatedProperties;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
@@ -363,6 +364,64 @@ class ContentMapper implements ContentMapperInterface
         $structure->setPublished(
             $node->getPropertyValueWithDefault($this->properties->getName('published'), null)
         );
+
+        // throw an content.node.save event
+        $event = new ContentNodeEvent($node, $structure);
+        $this->eventDispatcher->dispatch(ContentEvents::NODE_SAVE, $event);
+
+        return $structure;
+    }
+
+    /**
+     * save a extension with given name and data to an existing node
+     * @param string $uuid
+     * @param array $data
+     * @param string $extensionName
+     * @param string $webspaceKey
+     * @param string $languageCode
+     * @param integer $userId
+     * @return StructureInterface
+     */
+    public function saveExtension(
+        $uuid,
+        $data,
+        $extensionName,
+        $webspaceKey,
+        $languageCode,
+        $userId
+    ) {
+        // create translated properties
+        $this->properties->setLanguage($languageCode);
+
+        // get node from session
+        $session = $this->getSession();
+        $node = $session->getNodeByIdentifier($uuid);
+
+        // load rest of node
+        $structure = $this->loadByNode($node, $languageCode, $webspaceKey, true, true);
+
+        if ($structure === null) {
+            throw new TranslatedNodeNotFoundException($uuid, $languageCode);
+        }
+
+        // check if extension exists
+        $structure->getExtension($extensionName);
+
+        // set changer / changed
+        $dateTime = new \DateTime();
+        $node->setProperty($this->properties->getName('changer'), $userId);
+        $node->setProperty($this->properties->getName('changed'), $dateTime);
+
+        // save data of extensions
+        foreach ($structure->getExtensions() as $extension) {
+            $extension->setLanguageCode($languageCode, $this->languageNamespace, $this->internalPrefix);
+            if ($extension->getName() === $extensionName) {
+                $extension->save($node, $data, $webspaceKey, $languageCode);
+            } else {
+                $extension->load($node, $webspaceKey, $languageCode);
+            }
+        }
+        $session->save();
 
         // throw an content.node.save event
         $event = new ContentNodeEvent($node, $structure);

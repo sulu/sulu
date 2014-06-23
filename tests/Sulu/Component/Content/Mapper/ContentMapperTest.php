@@ -2193,7 +2193,7 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals('/test/test', $resultLoad['url']);
     }
 
-    public function testExtensions()
+    public function testCompleteExtensions()
     {
         $data = array(
             'name' => 'Test',
@@ -2225,6 +2225,7 @@ class ContentMapperTest extends PhpcrTestCase
 
         $data = array(
             'name' => 'Test',
+            'blog' => 'Thats a good test',
             'extensions' => array(
                 'test2' => array(
                     'a' => 'a',
@@ -2399,6 +2400,154 @@ class ContentMapperTest extends PhpcrTestCase
             ),
             $resultEN['extensions']['test2']
         );
+    }
+
+    public function testExtensions()
+    {
+        $data = array(
+            'name' => 'Test',
+            'url' => '/test/test',
+            'blog' => 'Thats a good test'
+        );
+
+        $structure = $this->mapper->save($data, 'extension', 'default', 'en', 1);
+        $result = $structure->toArray();
+
+        $this->assertEquals('/test', $result['path']);
+        $this->assertEquals(1, $result['creator']);
+        $this->assertEquals(1, $result['changer']);
+        $this->assertEquals('Test', $result['name']);
+        $this->assertEquals('Thats a good test', $result['blog']);
+
+        $this->assertEquals(array('a' => '', 'b' => ''), $result['extensions']['test1']);
+        $this->assertEquals(array('a' => '', 'b' => ''), $result['extensions']['test2']);
+
+        $dataTest1EN = array(
+            'a' => 'en test1 a',
+            'b' => 'en test1 b'
+        );
+
+        $structure = $this->mapper->saveExtension($structure->getUuid(), $dataTest1EN, 'test1', 'default', 'en', 1);
+        $result = $structure->toArray();
+
+        $this->assertEquals('/test', $result['path']);
+        $this->assertEquals(1, $result['creator']);
+        $this->assertEquals(1, $result['changer']);
+        $this->assertEquals('Test', $result['name']);
+        $this->assertEquals('Thats a good test', $result['blog']);
+
+        $this->assertEquals($dataTest1EN, $result['extensions']['test1']);
+        $this->assertEquals(array('a' => '', 'b' => ''), $result['extensions']['test2']);
+
+        $structure = $this->mapper->load($structure->getUuid(), 'default', 'en');
+        $result = $structure->toArray();
+
+        $this->assertEquals('/test', $result['path']);
+        $this->assertEquals(1, $result['creator']);
+        $this->assertEquals(1, $result['changer']);
+        $this->assertEquals('Test', $result['name']);
+        $this->assertEquals('Thats a good test', $result['blog']);
+
+        $this->assertEquals($dataTest1EN, $result['extensions']['test1']);
+        $this->assertEquals(array('a' => '', 'b' => ''), $result['extensions']['test2']);
+
+        $dataTest2EN = array(
+            'a' => 'en test2 a',
+            'b' => 'en test2 b'
+        );
+
+        $structure = $this->mapper->saveExtension($structure->getUuid(), $dataTest2EN, 'test2', 'default', 'en', 1);
+        $result = $structure->toArray();
+
+        $this->assertEquals('/test', $result['path']);
+        $this->assertEquals(1, $result['creator']);
+        $this->assertEquals(1, $result['changer']);
+        $this->assertEquals('Test', $result['name']);
+        $this->assertEquals('Thats a good test', $result['blog']);
+
+        $this->assertEquals($dataTest1EN, $result['extensions']['test1']);
+        $this->assertEquals($dataTest2EN, $result['extensions']['test2']);
+
+        $structure = $this->mapper->load($structure->getUuid(), 'default', 'en');
+        $result = $structure->toArray();
+
+        $this->assertEquals('/test', $result['path']);
+        $this->assertEquals(1, $result['creator']);
+        $this->assertEquals(1, $result['changer']);
+        $this->assertEquals('Test', $result['name']);
+        $this->assertEquals('Thats a good test', $result['blog']);
+
+        $this->assertEquals($dataTest1EN, $result['extensions']['test1']);
+        $this->assertEquals($dataTest2EN, $result['extensions']['test2']);
+
+        $data = array(
+            'name' => 'Test',
+            'url' => '/test/test',
+            'blog' => 'Das ist ein guter Test'
+        );
+
+        $structure = $this->mapper->save($data, 'extension', 'default', 'de', 1, true, $structure->getUuid());
+        $result = $structure->toArray();
+
+        $this->assertEquals('/test', $result['path']);
+        $this->assertEquals(1, $result['creator']);
+        $this->assertEquals(1, $result['changer']);
+        $this->assertEquals('Test', $result['name']);
+        $this->assertEquals('Das ist ein guter Test', $result['blog']);
+
+        $this->assertEquals(array('a' => '', 'b' => ''), $result['extensions']['test1']);
+        $this->assertEquals(array('a' => '', 'b' => ''), $result['extensions']['test2']);
+
+        $dataTest2DE = array(
+            'a' => 'de test2 a',
+            'b' => 'de test2 b'
+        );
+
+        $structure = $this->mapper->saveExtension($structure->getUuid(), $dataTest2DE, 'test2', 'default', 'de', 1);
+        $result = $structure->toArray();
+
+        $this->assertEquals('/test', $result['path']);
+        $this->assertEquals(1, $result['creator']);
+        $this->assertEquals(1, $result['changer']);
+        $this->assertEquals('Test', $result['name']);
+        $this->assertEquals('Das ist ein guter Test', $result['blog']);
+
+        $this->assertEquals(array('a' => '', 'b' => ''), $result['extensions']['test1']);
+        $this->assertEquals($dataTest2DE, $result['extensions']['test2']);
+
+        $structure = $this->mapper->load($structure->getUuid(), 'default', 'de');
+        $result = $structure->toArray();
+
+        $this->assertEquals('/test', $result['path']);
+        $this->assertEquals(1, $result['creator']);
+        $this->assertEquals(1, $result['changer']);
+        $this->assertEquals('Test', $result['name']);
+        $this->assertEquals('Das ist ein guter Test', $result['blog']);
+
+        $this->assertEquals(array('a' => '', 'b' => ''), $result['extensions']['test1']);
+        $this->assertEquals($dataTest2DE, $result['extensions']['test2']);
+    }
+
+    public function testTranslatedNodeNotFound()
+    {
+        $data = array(
+            'name' => 'Test',
+            'url' => '/test/test',
+            'blog' => 'Thats a good test'
+        );
+
+        $structure = $this->mapper->save($data, 'extension', 'default', 'en', 1);
+        $dataTest2DE = array(
+            'a' => 'de test2 a',
+            'b' => 'de test2 b'
+        );
+
+        $this->setExpectedException(
+            'Sulu\Component\Content\Exception\TranslatedNodeNotFoundException',
+            'Node "' . $structure->getUuid() . '" not found in localization "de"'
+        );
+
+        $this->mapper->saveExtension($structure->getUuid(), $dataTest2DE, 'test2', 'default', 'de', 1);
     }
 }
 

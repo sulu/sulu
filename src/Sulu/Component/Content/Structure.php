@@ -11,6 +11,7 @@
 namespace Sulu\Component\Content;
 
 use DateTime;
+use Sulu\Component\Content\Exception\ExtensionNotFoundException;
 use Sulu\Component\Content\Section\SectionPropertyInterface;
 use Sulu\Component\Content\StructureExtension\StructureExtensionInterface;
 use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
@@ -230,7 +231,7 @@ abstract class Structure implements StructureInterface
      */
     public function addExtension(StructureExtensionInterface $extension)
     {
-        $this->extensions[] = $extension;
+        $this->extensions[$extension->getName()] = $extension;
     }
 
     /**
@@ -239,6 +240,18 @@ abstract class Structure implements StructureInterface
     public function getExtensions()
     {
         return $this->extensions;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getExtension($name)
+    {
+        if (isset($this->extensions[$name])) {
+            return $this->extensions[$name];
+        } else {
+            throw new ExtensionNotFoundException($this, $name);
+        }
     }
 
     /**
