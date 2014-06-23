@@ -233,9 +233,8 @@ define(['sulumedia/collection/collections'], function(Collections) {
                                     preselected: this.data.ids,
                                     dataGridOptions: {
                                         view: 'table',
-                                        viewOptions: {table: {excludeFields: ['id']}},
+                                        viewOptions: {table: {excludeFields: ['id'], showHead: false}},
                                         pagination: false,
-                                        showHead: false,
                                         matchings: [
                                             {
                                                 id: 'id'
