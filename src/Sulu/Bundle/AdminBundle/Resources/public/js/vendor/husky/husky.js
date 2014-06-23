@@ -28206,7 +28206,7 @@ define('__component__$column-options@husky',[],function() {
  * @param {String|Object} [options.contentContainer] the container which holds the datagrid; this options resizes the contentContainer for responsiveness
  * @param {String} [options.fullWidth] If true datagrid style will be full-width mode
  * @param {Array} [options.excludeFields=['id']] array of fields to exclude by the view
- *
+ * @param {Boolean} [options.showHead] if TRUE head would be showed
  *
  * @param {Boolean} [rendered] property used by the datagrid-main class
  * @param {Function} [initialize] function which gets called once at the start of the view
@@ -28235,7 +28235,8 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             startTabIndex: 99999,
             excludeFields: [''],
             columnMinWidth: '70px',
-            thumbnailFormat: '50x50'
+            thumbnailFormat: '50x50',
+            showHead: true
         },
 
         constants = {
@@ -28458,15 +28459,19 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             // emits an event when a table row gets clicked
             this.sandbox.dom.on(
                 this.$tableContainer, 'click',
-                this.emitRowClickedEvent.bind(this), 'tr'
+                this.emitRowClickedEvent.bind(this), 'tbody tr'
             );
+
+            this.sandbox.dom.on(this.$tableContainer, 'click', function(event) {
+                this.sandbox.dom.stopPropagation(event);
+            }.bind(this));
 
             // add editable events if configured
             if (!!this.options.editable) {
                 this.sandbox.dom.on(
                     this.$tableContainer, 'click', this.editCellValues.bind(this), '.' + constants.editableClass
                 );
-                this.sandbox.dom.on(this.$tableContainer, 'click', this.focusOnRow.bind(this), 'tr');
+                this.sandbox.dom.on(this.$tableContainer, 'click', this.focusOnRow.bind(this), 'tbody tr');
 
                 // save on "blur"
                 this.sandbox.dom.on(window, 'click', function() {
@@ -30495,7 +30500,6 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
  * @param {String} [options.url] url to fetch data from
  * @param {String} [options.instanceName] name of the datagrid instance
  * @param {Array} [options.preselected] preselected ids
- * @param {Boolean} [options.showHead] if TRUE head would be showed
  *
  * @param {Array} [options.matchings] configuration array of columns if fieldsData isn't set
  * @param {String} [options.matchings.content] column title
@@ -30537,8 +30541,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
                 searchInstanceName: null,
                 columnOptionsInstanceName: null,
                 defaultMeasureUnit: 'px',
-                preselected: [],
-                showHead: true
+                preselected: []
             },
 
             types = {
@@ -31828,20 +31831,22 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * @param {String|Array} searchFields Fields that will be included into the search
              */
             searchGrid: function(searchString, searchFields) {
-                var template, url;
+                if (!!this.data.links.find) {
+                    var template, url;
 
-                template = this.sandbox.uritemplate.parse(this.data.links.find);
-                url = this.sandbox.uritemplate.expand(template, {searchString: searchString, searchFields: searchFields});
+                    template = this.sandbox.uritemplate.parse(this.data.links.find);
+                    url = this.sandbox.uritemplate.expand(template, {searchString: searchString, searchFields: searchFields});
 
-                this.destroy();
-                this.loading();
-                this.load({
-                    url: url,
-                    success: function() {
-                        this.stopLoading();
-                        this.sandbox.emit(UPDATED.call(this));
-                    }.bind(this)
-                });
+                    this.destroy();
+                    this.loading();
+                    this.load({
+                        url: url,
+                        success: function() {
+                            this.stopLoading();
+                            this.sandbox.emit(UPDATED.call(this));
+                        }.bind(this)
+                    });
+                }
             },
 
             /**
