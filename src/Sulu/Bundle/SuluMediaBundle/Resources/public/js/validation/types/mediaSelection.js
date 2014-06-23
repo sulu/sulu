@@ -24,9 +24,10 @@ define([
 
             subType = {
                 initializeSub: function() {
-                    var eventName = 'sulu.media-selection.' + options.instanceName + '.data-changed';
-                    App.off(eventName, dataChangedHandler);
-                    App.on(eventName, dataChangedHandler);
+                    var dataChangedEvent = 'sulu.media-selection.' + options.instanceName + '.data-changed';
+
+                    App.off(dataChangedEvent, dataChangedHandler);
+                    App.on(dataChangedEvent, dataChangedHandler);
                 },
 
                 setValue: function(value) {
