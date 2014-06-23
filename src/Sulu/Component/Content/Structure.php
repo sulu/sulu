@@ -261,7 +261,7 @@ abstract class Structure implements StructureInterface
     {
         $this->extensions = array();
         foreach ($extensions as $extension) {
-            $this->extensions[$extension->getName()] = $extension;
+            $this->extensions[$extension->getName()] = clone($extension);
         }
     }
 

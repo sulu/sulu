@@ -12,6 +12,7 @@ namespace Sulu\Bundle\CoreBundle\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher;
@@ -35,7 +36,7 @@ class StructureExtensionCompilerPass implements CompilerPassInterface
         }
 
         $definition = $container->getDefinition(self::STRUCTURE_MANAGER_ID);
-        $taggedServices = $container->findTaggedServiceIds(self::STRUCTURE_MANAGER_ID);
+        $taggedServices = $container->findTaggedServiceIds(self::STRUCTURE_EXTENSION_TAG);
         foreach ($taggedServices as $id => $tagAttributes) {
             foreach ($tagAttributes as $attributes) {
                 if (isset($attributes['template'])) {
