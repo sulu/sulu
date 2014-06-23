@@ -29631,6 +29631,7 @@ define('husky_components/datagrid/decorators/thumbnail-view',[],function() {
          * Destroys the view
          */
         destroy: function() {
+            this.sandbox.dom.off('body', 'click.grid-thumbnails');
             this.sandbox.dom.remove(this.$el);
         },
 
@@ -29639,7 +29640,8 @@ define('husky_components/datagrid/decorators/thumbnail-view',[],function() {
          * @param id {Number|String} the identifier of the thumbnail to bind events on
          */
         bindThumbnailDomEvents: function(id) {
-            this.sandbox.dom.on(this.$thumbnails[id], 'click', function() {
+            this.sandbox.dom.on(this.$thumbnails[id], 'click', function(event) {
+                this.sandbox.dom.stopPropagation(event);
                 this.toggleItemSelected(id);
             }.bind(this));
 
@@ -29652,6 +29654,8 @@ define('husky_components/datagrid/decorators/thumbnail-view',[],function() {
                 this.datagrid.emitItemClickedEvent.call(this.datagrid, id);
                 this.selectItem(id);
             }.bind(this));
+
+            this.sandbox.dom.on('body', 'click.grid-thumbnails', this.unselectAll.bind(this));
         },
 
         /**
@@ -29723,6 +29727,15 @@ define('husky_components/datagrid/decorators/thumbnail-view',[],function() {
                 return true;
             }
             return false;
+        },
+
+        /**
+         * Unselects all thumbnails
+         */
+        unselectAll: function() {
+            this.sandbox.util.each(this.$thumbnails, function(id) {
+                this.unselectItem(id);
+            }.bind(this));
         }
     };
 });
@@ -29756,13 +29769,20 @@ define('husky_components/datagrid/decorators/group-view',[],function () {
             additionClass: 'addition',
             firstPictureClass: 'first',
             secondPictureClass: 'second',
-            thirdPictureClass: 'third'
+            thirdPictureClass: 'third',
+            emptyThumbnailClass: 'empty',
+            emptyThumbnailIcon: 'coffee'
         },
 
         templates = {
             thumbnail: [
                 '<div class="'+ constants.thumbnailClass +'">',
                 '   <img src="<%= src %>" alt="<%= title %>" title="<%= title %>"/>',
+                '</div>'
+            ].join(''),
+            emptyThumbnail: [
+                '<div class="'+ constants.thumbnailClass +' '+ constants.emptyThumbnailClass +'">',
+                '   <span class="fa-'+ constants.emptyThumbnailIcon +'"></span>',
                 '</div>'
             ].join(''),
             group: [
@@ -29874,12 +29894,16 @@ define('husky_components/datagrid/decorators/group-view',[],function () {
             }));
 
             // render all thumbnails
-            this.sandbox.util.foreach(thumbnails, function(thumbnail) {
-                $thumbnails.push(this.sandbox.dom.createElement(this.sandbox.util.template(templates.thumbnail)({
-                    src: thumbnail.url,
-                    title: thumbnail.title
-                })));
-            }.bind(this));
+            if (!!thumbnails && thumbnails.length > 0) {
+                this.sandbox.util.foreach(thumbnails, function (thumbnail) {
+                    $thumbnails.push(this.sandbox.dom.createElement(this.sandbox.util.template(templates.thumbnail)({
+                        src: thumbnail.url,
+                        title: thumbnail.title
+                    })));
+                }.bind(this));
+            } else {
+                $thumbnails.push(this.sandbox.dom.createElement(templates.emptyThumbnail));
+            }
 
             // add classes to thumbnails
             !!$thumbnails[0] && this.sandbox.dom.addClass($thumbnails[0], constants.firstPictureClass);
@@ -30845,8 +30869,13 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
                     alt: null
                 };
                 if (!!thumbnails[format]) {
+                    if (typeof thumbnails[format] === 'object') {
                     thumbnail.url = thumbnails[format].url;
                     thumbnail.alt = thumbnails[format].alt;
+                    } else {
+                        thumbnail.url = thumbnails[format];
+                        thumbnail.alt = '';
+                    }
                 }
                 return thumbnail;
             };
@@ -33100,8 +33129,8 @@ define('__component__$toolbar@husky',[],function() {
 
         /** events bound to dom */
         bindDOMEvents = function() {
-            this.sandbox.dom.on(this.options.el, 'click', toggleItem.bind(this), '.dropdown-toggle');
-            this.sandbox.dom.on(this.options.el, 'click', selectItem.bind(this), 'li');
+            this.sandbox.dom.on(this.$el, 'click', toggleItem.bind(this), '.dropdown-toggle');
+            this.sandbox.dom.on(this.$el, 'click', selectItem.bind(this), 'li');
         },
 
         /** events bound to sandbox */
@@ -33327,7 +33356,8 @@ define('__component__$toolbar@husky',[],function() {
          */
         selectItem = function(event) {
 
-            event.preventDefault();
+            this.sandbox.dom.stopPropagation(event);
+            this.sandbox.dom.preventDefault(event);
 
             var item = this.items[this.sandbox.dom.data(event.currentTarget, 'id')],
                 $parent = this.sandbox.dom.parents(event.currentTarget, 'li').eq(0);
@@ -38932,7 +38962,6 @@ define('__component__$overlay@husky',[], function() {
             }
 
             this.sandbox.on(REMOVE.call(this), this.removeComponent.bind(this));
-
             this.sandbox.on(OKBUTTON_ACTIVATE.call(this), this.activateOkButtons.bind(this));
             this.sandbox.on(OKBUTTON_DEACTIVATE.call(this), this.deactivateOkButtons.bind(this));
             this.sandbox.on(OPEN.call(this), this.triggerHandler.bind(this));
@@ -39136,6 +39165,8 @@ define('__component__$overlay@husky',[], function() {
 
             this.sandbox.emit(CLOSED.call(this));
 
+            this.sandbox.dom.off('body', 'keydown.' + this.options.instanceName);
+
             if (this.options.removeOnClose === true) {
                 this.removeComponent();
             }
@@ -39160,6 +39191,10 @@ define('__component__$overlay@husky',[], function() {
             if (!!emitEvent) {
                 this.sandbox.emit(OPENED.call(this));
             }
+
+            // listen on key-inputs
+            this.sandbox.dom.off('body', 'keydown.' + this.options.instanceName);
+            this.sandbox.dom.on('body', 'keydown.' + this.options.instanceName, this.keyHandler.bind(this));
         },
 
         /**
@@ -39351,6 +39386,19 @@ define('__component__$overlay@husky',[], function() {
         },
 
         /**
+         * Su
+         * @param event
+         */
+        keyHandler: function(event) {
+            // esc
+            if (event.keyCode === 27) {
+                this.closeHandler();
+            } else if (event.keyCode === 13) {
+                this.okHandler();
+            }
+        },
+
+        /**
          * Binds overlay events
          */
         bindOverlayEvents: function() {
@@ -39438,10 +39486,10 @@ define('__component__$overlay@husky',[], function() {
          */
         okHandler: function(event) {
             // do nothing, if button is inactive
-            if (this.sandbox.dom.hasClass(event.currentTarget, 'inactive')) {
+            if (!!event && this.sandbox.dom.hasClass(event.currentTarget, 'inactive')) {
                 return;
             }
-            this.sandbox.dom.preventDefault(event);
+            !!event && this.sandbox.dom.preventDefault(event);
 
             if (this.executeCallback(this.slides[this.activeSlide].okCallback, this.sandbox.dom.find(constants.contentSelector, this.overlay.$el)) !== false) {
                 this.closeOverlay();
@@ -41119,6 +41167,7 @@ define('__component__$dropzone@husky',[], function () {
                             removeOnClose: true,
                             draggable: false,
                             data: this.$dropzone,
+                            instanceName: 'dropzone-' + this.options.instanceName,
                             skin: 'dropzone',
                             smallHeader: true,
                             closeCallback: function () {
@@ -41249,6 +41298,9 @@ define('__component__$dropzone@husky',[], function () {
          * have faded out
          */
         afterFadeOut: function () {
+            if (this.overlayOpened === true) {
+                this.sandbox.emit('husky.overlay.dropzone-'+ this.options.instanceName +'.close');
+            }
             this.sandbox.dom.removeClass(this.$dropzone, constants.droppedClass);
             this.sandbox.emit(FILES_ADDED.call(this), this.getResponseArray(this.dropzone.files));
             this.dropzone.removeAllFiles();
@@ -41335,7 +41387,8 @@ define('__component__$input@husky',[], function () {
             actionClass: 'action',
             colorFieldClass: 'color-field',
             colorpickerClass: 'colorpicker',
-            datepickerClass: 'pickdate'
+            datepickerClass: 'pickdate',
+            linkClickableClass: 'clickable'
         },
 
         templates = {
@@ -41352,6 +41405,12 @@ define('__component__$input@husky',[], function () {
             },
             time: function() {
                 this.renderTime();
+            },
+            url: function () {
+                this.renderLink('http://');
+            },
+            email: function () {
+                this.renderLink('mailto:');
             }
         },
 
@@ -41368,10 +41427,12 @@ define('__component__$input@husky',[], function () {
                 inputType: 'password'
             },
             url: {
-                frontText: 'http://'
+                frontText: 'http://',
+                renderMethod: 'url'
             },
             email: {
-                frontIcon: 'envelope'
+                frontIcon: 'envelope',
+                renderMethod: 'email'
             },
             date: {
                 frontIcon: 'calendar',
@@ -41425,6 +41486,7 @@ define('__component__$input@husky',[], function () {
                 $input: null,
                 $back: null
             };
+            this.linkProtocol = null;
 
             this.render();
             this.bindDomEvents();
@@ -41479,9 +41541,9 @@ define('__component__$input@husky',[], function () {
             if (!!this.options.frontIcon || !!this.options.frontText || !!this.options.frontHtml) {
                 this.input.$front = this.sandbox.dom.createElement('<div class="'+ constants.frontClass +'"/>');
                 if (!!this.options.frontIcon) {
-                    this.sandbox.dom.html(this.input.$front, '<span class="fa-'+ this.options.frontIcon +'"></span>');
+                    this.sandbox.dom.html(this.input.$front, '<a class="fa-' + this.options.frontIcon + '"></a>');
                 } else if (!!this.options.frontText) {
-                    this.sandbox.dom.html(this.input.$front, '<span class="'+ constants.textClass +'">'+ this.options.frontText +'</span>');
+                    this.sandbox.dom.html(this.input.$front, '<a class="' + constants.textClass + '">' + this.options.frontText + '</a>');
                 } else {
                     this.sandbox.dom.html(this.input.$front, this.options.frontHtml);
                 }
@@ -41550,6 +41612,33 @@ define('__component__$input@husky',[], function () {
         },
 
         /**
+         * Attaches an event-listner to the input which makes an a-tag with clickable
+         * @param protocol {String} a protocol to prepend to the input-value (e.g. 'http://' or 'mailto:')
+         */
+        renderLink: function (protocol) {
+            this.linkProtocol = protocol;
+            this.sandbox.dom.on(this.input.$input, 'keyup', this.changeFrontLink.bind(this));
+            this.changeFrontLink();
+        },
+
+        /**
+         * Changes the anchor-tag in the front-section
+         */
+        changeFrontLink: function() {
+            var value = this.sandbox.dom.val(this.input.$input);
+            if (!!value) {
+                this.sandbox.dom.addClass(this.sandbox.dom.find('a', this.input.$front), constants.linkClickableClass);
+                this.sandbox.dom.attr(this.sandbox.dom.find('a', this.input.$front), 'href', this.linkProtocol + value);
+                if (this.linkProtocol.indexOf('mailto') < 0) {
+                    this.sandbox.dom.attr(this.sandbox.dom.find('a', this.input.$front), 'target', '_blank');
+                }
+            } else {
+                this.sandbox.dom.removeClass(this.sandbox.dom.find('a', this.input.$front), constants.linkClickableClass);
+                this.sandbox.dom.removeAttr(this.sandbox.dom.find('a', this.input.$front), 'href');
+            }
+        },
+
+        /**
          * Binds Dom-events for the datepicker
          */
         bindDatepickerDomEvents: function() {
@@ -41596,6 +41685,9 @@ define('__component__$input@husky',[], function () {
                 this.setDatepickerValueAttr(this.sandbox.datepicker.getDate(this.input.$input));
             } else {
                 this.sandbox.dom.val(this.input.$input, value);
+                if (this.options.renderMethod === 'email' || this.options.renderMethod === 'url') {
+                    this.changeFrontLink();
+                }
             }
         },
 
