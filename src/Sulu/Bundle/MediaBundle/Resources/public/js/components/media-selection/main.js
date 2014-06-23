@@ -455,10 +455,7 @@ define(['sulumedia/collection/collections'], function(Collections) {
                 ].join('');
             // min source must be selected
             if (this.data.ids.length > 0 && newURI !== this.URI.str) {
-                //emit data changed event only if old URI is not null (not at the startup)
-                if (this.URI.str !== '') {
-                    this.sandbox.emit(DATA_CHANGED.call(this), this.data, this.$el);
-                }
+                this.sandbox.emit(DATA_CHANGED.call(this), this.data, this.$el);
                 this.URI.str = newURI;
                 this.URI.hasChanged = true;
             } else {

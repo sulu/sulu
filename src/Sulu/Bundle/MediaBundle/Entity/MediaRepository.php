@@ -89,6 +89,10 @@ class MediaRepository extends EntityRepository
      */
     public function findMediaByIds($ids, $asArray = false)
     {
+        if (empty($ids)) {
+            return array();
+        }
+
         try {
             $qb = $this->createQueryBuilder('media')
                 ->leftJoin('media.type', 'type')
