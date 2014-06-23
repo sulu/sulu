@@ -16,6 +16,7 @@
  * @param {Array} [options.data] data to display in the template
  * @param {String} [options.template] underscore template
  * @param {String} [options.addButtonText] String of translation key for adding new entries
+ * @param {String} [options.instanceName] String for instance name of types-overlay
  */
 
 define([], function() {
@@ -28,7 +29,8 @@ define([], function() {
             overlay: {
                 instanceName: null
             },
-            addButtonText: 'public.add-entry'
+            addButtonText: 'public.add-entry',
+            instanceName: null
         },
 
         constants = {
@@ -47,12 +49,12 @@ define([], function() {
                     '   <div class="grid-col-2 pull-right"><div class="remove-row btn gray-dark fit only-icon pull-right"><div class="fa-minus-circle"></div></div></div>',
                     '</div>'].join('');
             },
-            skeleton: function() {
+            skeleton: function(valueField) {
                 return [
                     '<div class="content-inner">',
                     '   <% _.each(data, function(item) { %>',
                     '       <div class="grid-row type-row" data-id="<%= item.id %>">',
-                    '           <div class="grid-col-8 pull-left"><input class="form-element" type="text" value="<%= item.category %>"/></div>',
+                    '           <div class="grid-col-8 pull-left"><input class="form-element" type="text" value="<%= item.',valueField,' %>"/></div>',
                     '           <div class="grid-col-2 pull-right"><div class="remove-row btn gray-dark fit only-icon pull-right"><div class="fa-minus-circle"></div></div></div>',
                     '       </div>',
                     ' <% }); %>',
@@ -70,58 +72,58 @@ define([], function() {
 
         /**
          * Initialized event
-         * @event sulu.types.initialzed
+         * @event sulu.types.[instanceName].initialzed
          */
-            INITIALIZED = function() {
-            return createEventName.call(this, 'initialized');
+            INITIALIZED = function(instanceName) {
+            return createEventName.call(this, instanceName+'.initialized');
         },
 
         /**
          * Loaded event
-         * @event sulu.types.loaded
+         * @event sulu.types.[instanceName].loaded
          */
-            LOADED = function() {
-            return createEventName.call(this, 'loaded');
+            LOADED = function(instanceName) {
+            return createEventName.call(this, instanceName+'.loaded');
         },
 
         /**
          * Saved event
-         * @event sulu.types.saved
+         * @event sulu.types.[instanceName].saved
          */
-            SAVED = function() {
-            return createEventName.call(this, 'saved');
+            SAVED = function(instanceName) {
+            return createEventName.call(this, instanceName+'.saved');
         },
 
         /**
          * Remove event
-         * @event sulu.types.remove
+         * @event sulu.types.[instanceName].remove
          */
-            REMOVE = function() {
-            return createEventName.call(this, 'remove');
+            REMOVE = function(instanceName) {
+            return createEventName.call(this, instanceName+'.remove');
         },
 
         /**
          * Removed event
-         * @event sulu.types.removed
+         * @event sulu.types.[instanceName].removed
          */
-            REMOVED = function() {
-            return createEventName.call(this, 'removed');
+            REMOVED = function(instanceName) {
+            return createEventName.call(this, instanceName+'.removed');
         },
 
         /**
          * Open event
-         * @event sulu.types.open
+         * @event sulu.types.[instanceName].open
          */
-            OPEN = function() {
-            return createEventName.call(this, 'open');
+            OPEN = function(instanceName) {
+            return createEventName.call(this, instanceName+'.open');
         },
 
         /**
          * Closed event
-         * @event sulu.types.closed
+         * @event sulu.types.[instanceName].closed
          */
-            CLOSED = function() {
-            return createEventName.call(this, 'closed');
+            CLOSED = function(instanceName) {
+            return createEventName.call(this, instanceName+'.closed');
         },
 
         createEventName = function(postFix) {
@@ -140,6 +142,7 @@ define([], function() {
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
             this.elementsToRemove = [];
             this.$elementsToRemove = [];
+            this.instanceName = this.options.instanceName;
             this.bindCustomEvents();
         },
 
@@ -171,16 +174,14 @@ define([], function() {
             if (changedData.length > 0) {
                 this.sandbox.util.save(this.options.url, method, changedData)
                     .then(function(response) {
-
-                        this.sandbox.emit(SAVED.call(this), response);
-
+                        this.sandbox.emit(SAVED.call(this, this.instanceName), response);
                         var mergeData = this.mergeDomAndRequestData(response, this.parseDataFromDom(domData, true));
-                        this.sandbox.emit(CLOSED.call(this), mergeData);
+                        this.sandbox.emit(CLOSED.call(this, this.instanceName), mergeData);
                     }.bind(this)).fail(function(status, error) {
                         this.sandbox.logger.error(status, error);
                     }.bind(this));
             } else {
-                this.sandbox.emit(CLOSED.call(this), this.parseDataFromDom(domData, true));
+                this.sandbox.emit(CLOSED.call(this, this.instanceName), this.parseDataFromDom(domData, true));
             }
         },
 
@@ -211,7 +212,7 @@ define([], function() {
         deleteItem: function(id) {
             this.sandbox.util.save(this.options.url + '/' + id, 'DELETE')
                 .then(function() {
-                    this.sandbox.emit(REMOVED.call(this));
+                    this.sandbox.emit(REMOVED.call(this, this.instanceName));
                 }.bind(this)).fail(function(status, error) {
                     this.sandbox.logger.error(status, error);
                     return null;
@@ -249,7 +250,7 @@ define([], function() {
         parseDataFromDom: function(domData, excludeDeleted) {
             var $rows = this.sandbox.dom.find(constants.typeRowSelector, domData),
                 data = [],
-                id, value, deleted;
+                id, value, deleted, obj;
 
             this.sandbox.dom.each($rows, function(index, $el) {
 
@@ -260,14 +261,18 @@ define([], function() {
                         id = this.sandbox.dom.data($el, 'id');
                         value = this.sandbox.dom.val(this.sandbox.dom.find('input', $el));
                         if (value !== '') {
-                            data.push({id: id, category: value});
+                            obj = {id: id};
+                            obj[this.valueName] = value;
+                            data.push(obj);
                         }
                     }
                 } else {
                     id = this.sandbox.dom.data($el, 'id');
                     value = this.sandbox.dom.val(this.sandbox.dom.find('input', $el));
                     if (value !== '') {
-                        data.push({id: id, category: value});
+                        obj = {id: id};
+                        obj[this.valueName] = value;
+                        data.push(obj);
                     }
                 }
 
@@ -312,7 +317,7 @@ define([], function() {
                 id = this.sandbox.dom.data($row, 'id');
 
             if (!!id) {
-                this.sandbox.emit(REMOVE.call(this), id, $row);
+                this.sandbox.emit(REMOVE.call(this, this.instanceName), id, $row);
             }
 
             this.toggleStateOfRow($row);
@@ -360,14 +365,14 @@ define([], function() {
                 this.$overlayInnerContent = this.sandbox.dom.find(constants.contentInnerSelector, this.$overlayContent);
 
                 this.bindDomEvents();
-                this.sandbox.emit(INITIALIZED.call(this));
+                this.sandbox.emit(INITIALIZED.call(this, this.instanceName));
             }.bind(this));
 
-            this.sandbox.on(OPEN.call(this), function(config) {
+            this.sandbox.on(OPEN.call(this, this.instanceName), function(config) {
                 this.startOverlayComponent(config);
             }.bind(this));
 
-            this.sandbox.on(REMOVE.call(this), function(id, $row) {
+            this.sandbox.on(REMOVE.call(this, this.instanceName), function(id, $row) {
                 this.updateRemoveList(id, $row);
             }.bind(this));
         },
@@ -402,7 +407,9 @@ define([], function() {
                 this.options.data = config.data;
             }
 
-            config.data = this.sandbox.util.template(templates.skeleton.call(this), {data: this.options.data});
+            this.valueName = config.valueName;
+
+            config.data = this.sandbox.util.template(templates.skeleton.call(this,config.valueName), {data: this.options.data});
 
             config.okCallback = function(data) {
                 this.onCloseWithOk(data);
