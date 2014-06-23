@@ -343,6 +343,10 @@ define(function() {
             this.sandbox.on('husky.tabs.content.item.select', function(event) {
                 this.emitNavigationEvent(event, true);
             }.bind(this));
+            // content tabs event
+            this.sandbox.on('husky.tabs.header.item.select', function(event) {
+                this.emitNavigationEvent(event, true);
+            }.bind(this));
 
             // emit dimensions-changed event during transition
             this.sandbox.on('husky.navigation.size.change', function() {
