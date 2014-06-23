@@ -10,11 +10,21 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\FormatCache;
 
-
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyInvalidUrl;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyUrlNotFoundException;
+use Symfony\Component\Filesystem\Exception\IOException;
+use Symfony\Component\Filesystem\Filesystem;
 
-class LocalFormatCache implements FormatCacheInterface {
+/**
+ * TODO
+ * @package Sulu\Bundle\MediaBundle\Media\FormatCache
+ */
+class LocalFormatCache implements FormatCacheInterface
+{
+    /**
+     * @var Filesystem
+     */
+    private $filesystem;
 
     /**
      * @var string
@@ -36,8 +46,9 @@ class LocalFormatCache implements FormatCacheInterface {
      */
     protected $formats;
 
-    public function __construct($path, $pathUrl, $segments, $formats)
+    public function __construct(Filesystem $filesystem, $path, $pathUrl, $segments, $formats)
     {
+        $this->filesystem = $filesystem;
         $this->path = $path;
         $this->pathUrl = $pathUrl;
         $this->segments = intval($segments);
@@ -51,9 +62,16 @@ class LocalFormatCache implements FormatCacheInterface {
     {
         $savePath = $this->getPath($this->path, $id, $fileName, $format);
         if (!is_dir(dirname($savePath))) {
-            mkdir(dirname($savePath), 0775, true);
+            $this->filesystem->mkdir(dirname($savePath), 0775);
         }
-        return copy($tmpPath, $savePath);
+
+        try {
+            $this->filesystem->copy($tmpPath, $savePath);
+        } catch (IOException $ioException) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -62,7 +80,8 @@ class LocalFormatCache implements FormatCacheInterface {
     public function purge($id, $fileName, $options)
     {
         foreach ($this->formats as $format) {
-            @unlink($this->getPath($this->path, $id, $fileName, $format['name']));
+            $path = $this->getPath($this->path, $id, $fileName, $format['name']);
+            $this->filesystem->remove($path);
         }
 
         return true;
@@ -87,6 +106,7 @@ class LocalFormatCache implements FormatCacheInterface {
     {
         $segment = ($id % $this->segments) . '/';
         $prePath = rtrim($prePath, '/');
+
         return $prePath . '/' . $format . '/' . $segment . $id . '-' . $fileName;
     }
 
