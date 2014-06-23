@@ -22,8 +22,8 @@ use Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher;
  */
 class StructureExtensionCompilerPass implements CompilerPassInterface
 {
-    const STRUCTURE_MANAGER_ID = '';
-    const STRUCTURE_EXTENSION_TAG = '';
+    const STRUCTURE_MANAGER_ID = 'sulu.content.structure_manager';
+    const STRUCTURE_EXTENSION_TAG = 'sulu.structure.extension';
 
     /**
      * {@inheritDoc}
