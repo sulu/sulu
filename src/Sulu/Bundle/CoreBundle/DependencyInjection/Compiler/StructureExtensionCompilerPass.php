@@ -1,0 +1,51 @@
+<?php
+/*
+ * This file is part of the Sulu CMS.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+namespace Sulu\Bundle\CoreBundle\DependencyInjection\Compiler;
+
+use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher;
+
+/**
+ * CompilerPass, which adds structure extension to structure manager
+ * @package Sulu\Bundle\CoreBundle\DependencyInjection\Compiler
+ */
+class StructureExtensionCompilerPass implements CompilerPassInterface
+{
+    const STRUCTURE_MANAGER_ID = '';
+    const STRUCTURE_EXTENSION_TAG = '';
+
+    /**
+     * {@inheritDoc}
+     */
+    public function process(ContainerBuilder $container)
+    {
+        if (!$container->hasDefinition(self::STRUCTURE_MANAGER_ID)) {
+            return;
+        }
+
+        $definition = $container->getDefinition(self::STRUCTURE_MANAGER_ID);
+        $taggedServices = $container->findTaggedServiceIds(self::STRUCTURE_MANAGER_ID);
+        foreach ($taggedServices as $id => $tagAttributes) {
+            foreach ($tagAttributes as $attributes) {
+                if (isset($attributes['template'])) {
+                    $params = array(new Reference($id), $attributes['template']);
+                } else {
+                    $params = array(new Reference($id));
+                }
+
+                $definition->addMethodCall('addExtension', $params);
+            }
+        }
+    }
+}

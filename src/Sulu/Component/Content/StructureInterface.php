@@ -314,4 +314,10 @@ interface StructureInterface extends \JsonSerializable
      * @return StructureExtensionInterface
      */
     public function getExtension($name);
+
+    /**
+     * @param $extensions
+     * @return mixed
+     */
+    public function setExtensions($extensions);
 }

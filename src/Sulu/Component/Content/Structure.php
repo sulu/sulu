@@ -255,6 +255,17 @@ abstract class Structure implements StructureInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function setExtensions($extensions)
+    {
+        $this->extensions = array();
+        foreach ($extensions as $extension) {
+            $this->extensions[$extension->getName()] = $extension;
+        }
+    }
+
+    /**
      * @param string $language
      */
     public function setLanguageCode($language)

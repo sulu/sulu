@@ -12,6 +12,7 @@ namespace Sulu\Component\Content;
 
 
 use Psr\Log\LoggerInterface;
+use Sulu\Component\Content\StructureExtension\StructureExtensionInterface;
 use Sulu\Component\Content\Template\Dumper\PHPTemplateDumper;
 use Sulu\Component\Content\Template\Exception\InvalidXmlException;
 use Sulu\Component\Content\Template\Exception\TemplateNotFoundException;
@@ -45,6 +46,12 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
      * @var array
      */
     private $options;
+
+    /**
+     * contains all extension
+     * @var array
+     */
+    private $extensions = array();
 
     /**
      * @param LoaderInterface $loader XMLLoader to load xml templates
@@ -116,7 +123,17 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
 
         require_once $cache;
 
-        return new $class();
+        /** @var StructureInterface $structure */
+        $structure = new $class();
+
+        $extensions = isset($this->extensions['all']) ? $this->extensions['all'] : array();
+        if (isset($this->extensions[$key])) {
+            $extensions = array_merge($extensions, $this->extensions[$key]);
+        }
+
+        $structure->setExtensions($extensions);
+
+        return $structure;
     }
 
     /**
@@ -155,5 +172,17 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
             }
         }
         return $result;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addExtension(StructureExtensionInterface $extension, $template = 'all')
+    {
+        if (!isset($this->extensions[$template])) {
+            $this->extensions[$template] = array();
+        }
+
+        $this->extensions[$template][] = $extension;
     }
 }
