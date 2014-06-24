@@ -10,6 +10,8 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Controller;
 
+use Symfony\Component\HttpFoundation\Request;
+
 class DefaultControllerTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -22,18 +24,29 @@ class DefaultControllerTest extends \PHPUnit_Framework_TestCase
         $this->defaultController = new DefaultController();
     }
 
-    public function testRedirectActionWithTrailingSlash()
+    /**
+     * @param $getValueMap
+     * @param $uri
+     * @return \PHPUnit_Framework_MockObject_MockObject
+     */
+    private function getRequestMock($uri, $url, $redirect = null)
     {
         $request = $this->getMockBuilder('Symfony\Component\HttpFoundation\Request')->getMock();
         $request->expects($this->any())->method('get')->will(
             $this->returnValueMap(
                 array(
-                    array('url', null, false, 'sulu-redirect.lo'),
-                    array('redirect', null, false, 'sulu.lo')
+                    array('url', null, false, $url),
+                    array('redirect', null, false, $redirect)
                 )
             )
         );
-        $request->expects($this->any())->method('getUri')->will($this->returnValue('sulu-redirect.lo/'));
+        $request->expects($this->any())->method('getUri')->will($this->returnValue($uri));
+        return $request;
+    }
+
+    public function testRedirectActionWithTrailingSlash()
+    {
+        $request = $this->getRequestMock('sulu-redirect.lo/', 'sulu-redirect.lo', 'sulu.lo');
 
         $response = $this->defaultController->redirectAction($request);
 
