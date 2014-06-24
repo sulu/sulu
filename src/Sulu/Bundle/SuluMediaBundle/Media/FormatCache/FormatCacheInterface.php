@@ -10,7 +10,12 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\FormatCache;
 
-interface FormatCacheInterface {
+/**
+ * TODO
+ * @package Sulu\Bundle\MediaBundle\Media\FormatCache
+ */
+interface FormatCacheInterface
+{
 
     /**
      * Save image and return the url to the image
