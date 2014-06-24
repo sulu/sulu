@@ -112,12 +112,18 @@ define(['app-config'], function(AppConfig) {
          * Sets the title of the page and if in edit mode calls a method to set the breadcrumb
          */
         setTitle: function() {
-            var value = this.propertyConfiguration['sulu.node.name'].highestProperty.$el.data('element').getValue();
-            if (!!this.options.id && value !== '') {
-                this.sandbox.emit('sulu.header.set-title', value);
-                this.setBreadcrumb();
-            } else {
-                this.sandbox.emit('sulu.header.set-title', this.sandbox.translate('content.contents.title'));
+            var tag = this.propertyConfiguration['sulu.node.name'],
+                value;
+
+            if (!!tag) {
+                value = tag.highestProperty.$el.data('element').getValue();
+
+                if (!!this.options.id && value !== '') {
+                    this.sandbox.emit('sulu.header.set-title', value);
+                    this.setBreadcrumb();
+                } else {
+                    this.sandbox.emit('sulu.header.set-title', this.sandbox.translate('content.contents.title'));
+                }
             }
         },
 
