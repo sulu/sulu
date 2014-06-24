@@ -47,7 +47,8 @@ class PortalRouteProvider implements RouteProviderInterface
         ContentMapperInterface $contentMapper,
         RequestAnalyzerInterface $requestAnalyzer,
         ActiveTheme $activeTheme
-    ) {
+    )
+    {
         $this->contentMapper = $contentMapper;
         $this->requestAnalyzer = $requestAnalyzer;
         $this->activeTheme = $activeTheme;
@@ -68,13 +69,16 @@ class PortalRouteProvider implements RouteProviderInterface
         $collection = new RouteCollection();
 
         if ($this->requestAnalyzer->getCurrentMatchType() == RequestAnalyzerInterface::MATCH_TYPE_REDIRECT
-            || $this->requestAnalyzer->getCurrentMatchType() == RequestAnalyzerInterface::MATCH_TYPE_PARTIAL) {
+            || $this->requestAnalyzer->getCurrentMatchType() == RequestAnalyzerInterface::MATCH_TYPE_PARTIAL
+        ) {
             // redirect by information from webspace config
-            $route = new Route($request->getRequestUri(), array(
-                '_controller' => 'SuluWebsiteBundle:Default:redirect',
-                'url' => $this->requestAnalyzer->getCurrentPortalUrl(),
-                'redirect' => $this->requestAnalyzer->getCurrentRedirect()
-            ));
+            $route = new Route(
+                $request->getRequestUri(), array(
+                    '_controller' => 'SuluWebsiteBundle:Default:redirect',
+                    'url' => $this->requestAnalyzer->getCurrentPortalUrl(),
+                    'redirect' => $this->requestAnalyzer->getCurrentRedirect()
+                )
+            );
 
             $collection->add('redirect_' . uniqid(), $route);
         } else {
@@ -94,23 +98,26 @@ class PortalRouteProvider implements RouteProviderInterface
                 if (
                     $content->getGlobalState() === StructureInterface::STATE_TEST ||
                     !$content->getHasTranslation() ||
-                    // don't response to startpage with slash at the end (to avoid duplicate content)
-                    $this->requestAnalyzer->getCurrentResourceLocator() === '/'
+                    !$this->checkResourceLocator()
                 ) {
                     throw new ResourceLocatorNotFoundException();
                 } else {
-                    $route = new Route($request->getRequestUri(), array(
-                        '_controller' => $content->getController(),
-                        'structure' => $content
-                    ));
+                    $route = new Route(
+                        $request->getRequestUri(), array(
+                            '_controller' => $content->getController(),
+                            'structure' => $content
+                        )
+                    );
 
                     $collection->add($content->getKey() . '_' . uniqid(), $route);
                 }
             } catch (ResourceLocatorNotFoundException $rlnfe) {
-                $route = new Route($request->getRequestUri(), array(
-                    '_controller' => 'SuluWebsiteBundle:Default:error404',
-                    'path' => $request->getRequestUri()
-                ));
+                $route = new Route(
+                    $request->getRequestUri(), array(
+                        '_controller' => 'SuluWebsiteBundle:Default:error404',
+                        'path' => $request->getRequestUri()
+                    )
+                );
 
                 $collection->add('error404_' . uniqid(), $route);
             }
@@ -122,7 +129,7 @@ class PortalRouteProvider implements RouteProviderInterface
     /**
      * Find the route using the provided route name.
      *
-     * @param string $name       the route name to fetch
+     * @param string $name the route name to fetch
      * @param array $parameters DEPRECATED the parameters as they are passed
      *      to the UrlGeneratorInterface::generate call
      *
@@ -147,7 +154,7 @@ class PortalRouteProvider implements RouteProviderInterface
      * simple implementation could be to just repeatedly call
      * $this->getRouteByName() while catching and ignoring eventual exceptions.
      *
-     * @param array $names      the list of names to retrieve
+     * @param array $names the list of names to retrieve
      * @param array $parameters DEPRECATED the parameters as they are passed to
      *      the UrlGeneratorInterface::generate call. (Only one array, not one
      *      for each entry in $names.
@@ -158,5 +165,17 @@ class PortalRouteProvider implements RouteProviderInterface
     public function getRoutesByNames($names, $parameters = array())
     {
         // TODO: Implement getRoutesByNames() method.
+    }
+
+    /**
+     * Checks if the resource locator is valid.
+     * A resource locator with a slash only is not allowed, the only exception is when it is a single language
+     * website, where the browser automatically adds the slash
+     * @return bool
+     */
+    private function checkResourceLocator()
+    {
+        return !($this->requestAnalyzer->getCurrentResourceLocator() === '/'
+            && $this->requestAnalyzer->getCurrentResourceLocatorPrefix());
     }
 }
