@@ -422,7 +422,7 @@ class CollectionController extends RestController implements ClassResourceInterf
 
         $medias = $this->getDoctrine()
             ->getRepository($this->entityMediaName)
-            ->findMedia($id, $this->container->getParameter('sulu_media.collection.previews.limit'));
+            ->findMedia($id, null, $this->container->getParameter('sulu_media.collection.previews.limit'));
 
 
         foreach ($medias as $media) {

@@ -137,6 +137,14 @@ class DefaultMediaManager implements MediaManagerInterface
     /**
      * {@inheritdoc}
      */
+    public function getMultiple($ids)
+    {
+        return $this->mediaRepository->findMediaByIds($ids);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function add($uploadedFile, $userId, $collectionId, $properties = array())
     {
         if (!($uploadedFile instanceof UploadedFile)) {
