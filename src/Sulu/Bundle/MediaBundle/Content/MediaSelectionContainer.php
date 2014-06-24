@@ -83,7 +83,7 @@ class MediaSelectionContainer implements \Serializable
     {
         $medias = $this->mediaManager->getMultiple($this->ids);
 
-        return RestObjectHelper::convertMediasToRestObjects($medias, $this->localization);
+        return $this->getRestObjectHelper()->convertMediasToRestObjects($medias, $this->localization);
     }
 
     /**
@@ -156,5 +156,14 @@ class MediaSelectionContainer implements \Serializable
         $this->config = $values['config'];
         $this->ids = $values['ids'];
         $this->displayOption = $values['displayOption'];
+    }
+
+    /**
+     * getRestObjectHelper
+     * @return RestObjectHelper
+     */
+    protected function getRestObjectHelper()
+    {
+        return $this->get('sulu_media.rest_object_helper');
     }
 }
