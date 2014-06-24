@@ -41,6 +41,7 @@
         </service>
         <service id="sulu_media.file_validator" class="%sulu_media.file_validator.class%" />
         <service id="sulu_media.format_cache" class="%sulu_media.format_cache%">
+            <argument type="service" id="filesystem"/>
             <argument>%sulu_media.format_cache.path%</argument>
             <argument>%sulu_media.format_cache.path.url%</argument>
             <argument>%sulu_media.format_cache.segments%</argument>
