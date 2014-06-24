@@ -10,10 +10,13 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\ImageConverter;
 
+use Doctrine\Common\Proxy\Exception\InvalidArgumentException;
 use Imagine\Gd\Imagine as GdImagine;
 use Imagine\Imagick\Imagine as ImagickImagine;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyInvalidFormatOptionsException;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyInvalidImageFormat;
+use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyMediaNotFoundException;
+use Sulu\Bundle\MediaBundle\Media\Exception\InvalidFileTypeException;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\Manager\ManagerInterface;
 
 class ImagineImageConverter implements ImageConverterInterface {
@@ -62,7 +65,15 @@ class ImagineImageConverter implements ImageConverterInterface {
         $formatOptions = $this->getFormatOptions($format);
 
         $imagine = $this->newImage();
-        $this->image = $imagine->open($originalPath);
+
+        try {
+            $this->image = $imagine->open($originalPath);
+        } catch (\RuntimeException $e) {
+            if (file_exists($originalPath)) {
+                throw new InvalidFileTypeException($e->getMessage());
+            }
+            throw new ImageProxyMediaNotFoundException($e->getMessage());
+        }
         if (!isset($formatOptions['commands'])) {
             throw new ImageProxyInvalidFormatOptionsException('Commands not found.');
         }

@@ -48,6 +48,11 @@ class DefaultFormatManager implements FormatManagerInterface
     private $converter;
 
     /**
+     * @var string
+     */
+    private $ghostScriptPath;
+
+    /**
      * @var bool
      */
     private $saveImage = false;
@@ -57,6 +62,7 @@ class DefaultFormatManager implements FormatManagerInterface
      * @param StorageInterface $originalStorage
      * @param FormatCacheInterface $formatCache
      * @param ImageConverterInterface $converter
+     * @param $ghostScriptPath
      * @param $saveImage
      */
     public function __construct(
@@ -64,12 +70,14 @@ class DefaultFormatManager implements FormatManagerInterface
         StorageInterface $originalStorage,
         FormatCacheInterface $formatCache,
         ImageConverterInterface $converter,
+        $ghostScriptPath,
         $saveImage
     ) {
         $this->mediaRepository = $mediaRepository;
         $this->originalStorage = $originalStorage;
         $this->formatCache = $formatCache;
         $this->converter = $converter;
+        $this->ghostScriptPath = $ghostScriptPath;
         $this->saveImage = $saveImage == 'true' ? true : false;
     }
 
@@ -78,43 +86,82 @@ class DefaultFormatManager implements FormatManagerInterface
      */
     public function returnImage($id, $format)
     {
+        // load Media
         $media = $this->mediaRepository->findMediaById($id);
 
         if (!$media) {
             throw new ImageProxyMediaNotFoundException('Media was not found');
         }
 
-        $uri = $this->getOriginalByMedia($media);
-
-        $original = $this->createTmpFile($this->getFile($uri));
-
-        $image = $this->converter->convert($original, $format);
-
+        // load Media Data
         list($fileName, $version, $storageOptions) = $this->getMediaData($media);
 
-        $extension = $this->getFileExtension($fileName);
+        // load Original
+        $uri = $this->originalStorage->load($fileName, $version, $storageOptions);
+        $original = $this->createTmpFile($this->getFile($uri));
 
-        $image = $image->get($extension);
+        // prepare Media
+        $this->prepareMedia($fileName, $original);
 
+        // convert Media to format
+        $image = $this->converter->convert($original, $format);
+
+        // set extension
+        $imageExtension = $this->getFileExtension($fileName);
+        $image = $image->get($imageExtension);
+
+        // set header
         $headers = array(
-            'Content-Type' => 'image/' . $extension
+            'Content-Type' => 'image/' . $imageExtension
         );
 
+        // save image
         if ($this->saveImage) {
             $this->formatCache->save(
                 $this->createTmpFile($image),
                 $media->getId(),
-                $fileName,
+                $this->replaceExtension($fileName, $this->getFileExtension($fileName)),
                 $storageOptions,
                 $format
             );
         }
 
+        // return image
         return new Response($image, 200, $headers);
     }
 
     /**
-     * @param $fileName
+     * @param string $fileName
+     * @param string $path
+     */
+    protected function prepareMedia($fileName, $path)
+    {
+        if ('pdf' == pathinfo($fileName)['extension']) {
+            $this->convertPdfToImage($path);
+        }
+    }
+
+    /**
+     * @param string  $path
+     */
+    protected function convertPdfToImage($path)
+    {
+        $command = $this->ghostScriptPath . ' -dNOPAUSE -sDEVICE=jpeg -dFirstPage=1 -dLastPage=1 -sOutputFile=' . $path . ' -dJPEGQ=100 -r300x300 -q ' . $path . ' -c quit';
+        exec($command);
+    }
+
+    /**
+     * @param $filename
+     * @param $new_extension
+     * @return string
+     */
+    protected function replaceExtension($filename, $new_extension) {
+        $info = pathinfo($filename);
+        return $info['filename'] . '.' . $new_extension;
+    }
+
+    /**
+     * @param string $fileName
      * @return string
      */
     protected function getFileExtension($fileName)
@@ -165,18 +212,6 @@ class DefaultFormatManager implements FormatManagerInterface
         fclose($handle);
 
         return $tempFile;
-    }
-
-    /**
-     * @param Media $media
-     * @return string
-     * @throws ImageProxyMediaNotFoundException
-     */
-    protected function getOriginalByMedia($media)
-    {
-        list($fileName, $version, $storageOptions) = $this->getMediaData($media);
-
-        return $this->originalStorage->load($fileName, $version, $storageOptions);
     }
 
     /**
@@ -239,7 +274,7 @@ class DefaultFormatManager implements FormatManagerInterface
         foreach ($this->converter->getFormats() as $format) {
             $formats[$format['name']] = $this->formatCache->getMediaUrl(
                 $id,
-                $fileName,
+                $this->replaceExtension($fileName, $this->getFileExtension($fileName)),
                 $storageOptions,
                 $format['name']
             );
