@@ -38,12 +38,13 @@ class DefaultFileValidator implements FileValidatorInterface
             self::VALIDATOR_MAX_FILE_SIZE
         ))
     {
-        if (in_array(self::VALIDATOR_FILE_SET, $methods) && $file->getFilename() == '') {
-            throw new UploadFileNotSetException('No file was set');
-        }
 
         if (in_array(self::VALIDATOR_FILE_ERRORS, $methods) && $file->getError() > 0) {
             throw new InvalidFileException('The file upload had an error('.$file->getError().'): ' . $file->getErrorMessage());
+        }
+
+        if (in_array(self::VALIDATOR_FILE_SET, $methods) && $file->getFilename() == '') {
+            throw new UploadFileNotSetException('No file was set');
         }
 
         if (in_array(self::VALIDATOR_BLOCK_FILE_TYPES, $methods) && in_array($file->getMimeType(), $this->blockedMimeTypes)) {
