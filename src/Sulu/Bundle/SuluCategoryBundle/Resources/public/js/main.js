@@ -31,5 +31,19 @@ define({
                 this.html('<div data-aura-component="categories@sulucategory" data-aura-display="list"/>');
             }
         });
+
+        sandbox.mvc.routes.push({
+            route: 'settings/categories/new/:parent',
+            callback: function(parent){
+                this.html('<div data-aura-component="categories/content@sulucategory" data-aura-display="form" data-aura-parent="'+ parent +'"/>');
+            }
+        });
+
+        sandbox.mvc.routes.push({
+            route: 'settings/categories/edit::id/:content',
+            callback: function(id, content){
+                this.html('<div data-aura-component="categories/content@sulucategory" data-aura-display="form" data-aura-content="'+ content +'" data-aura-id="'+ id +'"/>');
+            }
+        });
     }
 });
