@@ -9,6 +9,7 @@
  */
 
 namespace Sulu\Bundle\MediaBundle\Media\RestObject;
+use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 
 /**
  * helper functions for rest objects
@@ -16,6 +17,21 @@ namespace Sulu\Bundle\MediaBundle\Media\RestObject;
  */
 class RestObjectHelper
 {
+
+    /**
+     * @var \Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface
+     */
+    protected $formatManager;
+
+    /**
+     * @param FormatManagerInterface $formatManager
+     */
+    public function __construct(FormatManagerInterface $formatManager)
+    {
+        $this->formatManager = $formatManager;
+    }
+
+
     /**
      * convert media entities array to flat media rest object array
      * @param \Sulu\Bundle\MediaBundle\Entity\Media[] $mediaList
@@ -23,12 +39,12 @@ class RestObjectHelper
      * @param string[] $fields
      * @return Media[]
      */
-    public static function convertMediasToRestObjects($mediaList, $locale, $fields = array())
+    public function convertMediasToRestObjects($mediaList, $locale, $fields = array())
     {
         $flatMediaList = array();
 
         foreach ($mediaList as $media) {
-            $flatMediaList[] = self::convertMediaToRestObject($media, $locale, $fields);
+            $flatMediaList[] = $this->convertMediaToRestObject($media, $locale, $fields);
         }
 
         return $flatMediaList;
@@ -38,9 +54,9 @@ class RestObjectHelper
      * @param \Sulu\Bundle\MediaBundle\Entity\Media $media
      * @param string $locale
      * @param string[] $fields
-     * @return Media
+     * @return array
      */
-    public static function convertMediaToRestObject($media, $locale, $fields = array())
+    public function convertMediaToRestObject($media, $locale, $fields = array())
     {
         $flatMedia = new Media();
 
@@ -49,7 +65,30 @@ class RestObjectHelper
         } else {
             $flatMedia->setDataByEntityArray($media, $locale);
         }
+        $flatMedia->setFormats($this->getFormats($flatMedia->getId(), $flatMedia->getName(), $flatMedia->getStorageOptions()));
 
         return $flatMedia->toArray($fields);
+    }
+
+    /**
+     * @param $id
+     * @param $name
+     * @param $storageOptions
+     * @return mixed
+     */
+    public function getFormats($id, $name, $storageOptions)
+    {
+        return $this->formatManager->getFormats($id, $name, $storageOptions);
+    }
+
+    /**
+     * @param $id
+     * @param $version
+     * @param $storageOptions
+     * @return mixed
+     */
+    public function getUrl($id, $version, $storageOptions)
+    {
+        return $this->formatManager->getOriginal($id, $version, $storageOptions);
     }
 } 

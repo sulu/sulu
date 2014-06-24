@@ -11,10 +11,9 @@
 namespace Sulu\Bundle\MediaBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * @package Sulu\Bundle\MediaBundle\Command
@@ -31,22 +30,29 @@ class InitCommand extends ContainerAwareCommand
     {
         $baseDir = dirname(dirname($this->getContainer()->get('kernel')->getRootDir()));
 
-        $output->writeln('Create Upload dir in ' . $baseDir);
+        /** @var Filesystem $fileSystem */
+        $fileSystem = $this->getContainer()->get('filesystem');
 
-        $uploadDir = $baseDir . '/uploads';
+        $output->writeln('Create media dirs in ' . $baseDir);
+
+        $uploadDir = $this->getContainer()->getParameter('sulu_media.media.storage.local.path');
+
+        $output->writeln('Create Upload dir in ' . $uploadDir);
 
         if (!is_dir($uploadDir)) {
-            mkdir($uploadDir);
+            $fileSystem->mkdir($uploadDir);
         } else {
             $output->writeLn('Directory ' . $uploadDir . ' already exists');
         }
 
-        $suluMediaDir = $uploadDir . '/sulumedia';
+        $mediaCacheDir = $this->getContainer()->getParameter('sulu_media.format_cache.path');
 
-        if (!is_dir($suluMediaDir)) {
-            mkdir($suluMediaDir);
+        $output->writeln('Create Media Cache dir in ' . $mediaCacheDir);
+
+        if (!is_dir($mediaCacheDir)) {
+            $fileSystem->mkdir($mediaCacheDir);
         } else {
-            $output->writeLn('Directory ' . $suluMediaDir . ' already exists');
+            $output->writeLn('Directory ' . $mediaCacheDir . ' already exists');
         }
     }
 }

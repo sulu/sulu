@@ -20,6 +20,11 @@ use Sulu\Bundle\MediaBundle\Entity\Media as Entity;
 use DateTime;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 
+/**
+ * Class Media
+ * The Media RestObject is the api entity for the MediaController.
+ * @package Sulu\Bundle\MediaBundle\Media\RestObject
+ */
 class Media extends ApiEntity implements RestObjectInterface
 {
 
@@ -89,6 +94,16 @@ class Media extends ApiEntity implements RestObjectInterface
     protected $tags = array();
 
     /**
+     * @var array
+     */
+    protected $properties = array();
+
+    /**
+     * @var string
+     */
+    protected $storageOptions;
+
+    /**
      * @var string
      */
     protected $url;
@@ -96,12 +111,7 @@ class Media extends ApiEntity implements RestObjectInterface
     /**
      * @var array
      */
-    protected $thumbnails = array();
-
-    /**
-     * @var array
-     */
-    protected $properties = array();
+    protected $formats = array();
 
     /**
      * @var string
@@ -187,18 +197,8 @@ class Media extends ApiEntity implements RestObjectInterface
                                             }
                                         }
                                     }
-                                    // TODO url
-                                    // $this->url = $originPath . '/' . $fileVersion['id'];
-                                    $this->thumbnails = array();
-                                    // TODO thumbnails
-                                    /*
-                                    foreach ($fileFormats as $format) {
-                                        $this->thumbnails[] = array(
-                                            'format' => $format,
-                                            'url' => $uploadPath . '/'.$format.'/' . $fileVersion['name']
-                                        );
-                                    }
-                                    */
+
+                                    $this->storageOptions = $fileVersion['storageOptions'];
 
                                     if ($fileVersion['meta']) {
                                         $counter = 0;
@@ -241,7 +241,6 @@ class Media extends ApiEntity implements RestObjectInterface
         $contentLanguages = array();
         $publishLanguages = array();
         $tags = array();
-        $thumbnails = array();
 
         /**
          * @var File $file
@@ -302,12 +301,7 @@ class Media extends ApiEntity implements RestObjectInterface
                         }
                     }
 
-                    // TODO url
-                    $fileVersion->getStorageOptions();
-                    $this->url = null;
-
-                    // TODO thumbnails
-                    $thumbnails = array();
+                    $this->storageOptions = $fileVersion->getStorageOptions();
                 }
             }
         }
@@ -323,9 +317,6 @@ class Media extends ApiEntity implements RestObjectInterface
 
         // set tags
         $this->tags = $tags;
-
-        // set thumbnails
-        $this->thumbnails = $thumbnails;
 
         // set collection
         if ($object->getCollection()) {
@@ -382,7 +373,7 @@ class Media extends ApiEntity implements RestObjectInterface
                 'publishLanguages' => $this->publishLanguages,
                 'tags' => $this->tags,
                 'url' => $this->url,
-                'thumbnails' => $this->thumbnails,
+                'thumbnails' => $this->formats, // TODO change to formats when it is changed in husky
                 'properties' => $this->properties,
                 'changer' => $this->changer,
                 'creator' => $this->creator,
@@ -393,22 +384,18 @@ class Media extends ApiEntity implements RestObjectInterface
             // only get specific fields
             $data = array();
             foreach ($fields as $field) {
-                if (isset($this->$field)) {
-                    $data[$field] = $this->$field;
+                $fieldValue = $field;
+                $fieldKey = $field;
+                // TODO Delete when changed
+                if (in_array($field, array('formats', 'thumbnails'))) {
+                    $fieldValue = 'thumbnails';
+                    $fieldKey =  'formats';
+                }
+                // TODO END
+                if (isset($this->$fieldKey)) {
+                    $data[$fieldValue] = $this->$fieldKey;
                 }
             }
-        }
-
-        // Todo: move the sample picture to media-proxy if implemented
-        if (!$this->thumbnails) {
-            $data['thumbnails'] = array(
-                '50x50' => array(
-                    'url' => 'http://lorempixel.com/50/50/'
-                ),
-                '170x170' => array(
-                    'url' => 'http://lorempixel.com/170/170/'
-                )
-            );
         }
 
         return $data;
@@ -649,24 +636,6 @@ class Media extends ApiEntity implements RestObjectInterface
     }
 
     /**
-     * @param array $thumbnails
-     * @return $this
-     */
-    public function setThumbnails($thumbnails)
-    {
-        $this->thumbnails = $thumbnails;
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getThumbnails()
-    {
-        return $this->thumbnails;
-    }
-
-    /**
      * @param string $title
      * @return $this
      */
@@ -682,24 +651,6 @@ class Media extends ApiEntity implements RestObjectInterface
     public function getTitle()
     {
         return $this->title;
-    }
-
-    /**
-     * @param string $url
-     * @return $this
-     */
-    public function setUrl($url)
-    {
-        $this->url = $url;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getUrl()
-    {
-        return $this->url;
     }
 
     /**
@@ -771,4 +722,53 @@ class Media extends ApiEntity implements RestObjectInterface
     {
         $this->type = $type;
     }
+
+    /**
+     * @return string
+     */
+    public function getStorageOptions()
+    {
+        return $this->storageOptions;
+    }
+
+    /**
+     * @param string $storageOptions
+     */
+    public function setStorageOptions($storageOptions)
+    {
+        $this->storageOptions = $storageOptions;
+    }
+
+    /**
+     * @return array
+     */
+    public function getFormats()
+    {
+        return $this->formats;
+    }
+
+    /**
+     * @param array $formats
+     */
+    public function setFormats($formats)
+    {
+        $this->formats = $formats;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUrl()
+    {
+        return $this->url;
+    }
+
+    /**
+     * @param string $url
+     */
+    public function setUrl($url)
+    {
+        $this->url = $url;
+    }
+
 } 

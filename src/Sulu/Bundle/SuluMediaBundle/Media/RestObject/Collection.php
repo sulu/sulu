@@ -16,6 +16,11 @@ use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\TestBundle\Entity\TestUser;
 use DateTime;
 
+/**
+ * Class Collection
+ * The Collection RestObject is the api entity for the CollectionController.
+ * @package Sulu\Bundle\MediaBundle\Media\RestObject
+ */
 class Collection extends ApiEntity implements RestObjectInterface
 {
 
@@ -47,7 +52,7 @@ class Collection extends ApiEntity implements RestObjectInterface
     /**
      * @var array
      */
-    protected $thumbnails = array();
+    protected $previews = array();
 
     /**
      * @var int
@@ -181,24 +186,6 @@ class Collection extends ApiEntity implements RestObjectInterface
         }
         $this->mediaNumber = $mediaCount;
 
-        //todo: move sample pictures to media-proxy
-        if(!$this->thumbnails) {
-            $this->thumbnails = array(
-                array(
-                    'url' => 'http://lorempixel.com/150/100/sports',
-                    'title' => 'Media title'
-                ),
-                array(
-                    'url' => 'http://lorempixel.com/150/100/animals',
-                    'title' => 'Title of the media'
-                ),
-                array(
-                    'url' => 'http://lorempixel.com/150/100/technics',
-                    'title' => 'Media title'
-                )
-            );
-        }
-
         return $this;
     }
 
@@ -280,24 +267,6 @@ class Collection extends ApiEntity implements RestObjectInterface
         // set properties
         $this->properties = $properties;
 
-        //todo: move sample pictures to media-proxy
-        if(!$this->thumbnails) {
-            $this->thumbnails = array(
-                array(
-                    'url' => 'http://lorempixel.com/150/100/sports',
-                    'title' => 'Media title'
-                ),
-                array(
-                    'url' => 'http://lorempixel.com/150/100/animals',
-                    'title' => 'Title of the media'
-                ),
-                array(
-                    'url' => 'http://lorempixel.com/150/100/technics',
-                    'title' => 'Media title'
-                )
-            );
-        }
-
         return $this;
     }
 
@@ -318,19 +287,27 @@ class Collection extends ApiEntity implements RestObjectInterface
                 'parent' => $this->parent,
                 'title' => $this->title,
                 'description' => $this->description,
+                'thumbnails' => $this->previews, // TODO change to previews when changed in husky
                 'properties' => $this->properties,
                 'changer' => $this->changer,
                 'creator' => $this->creator,
                 'changed' => $this->changed,
                 'created' => $this->created,
-                'thumbnails' => $this->thumbnails
             );
         } else {
             // only get specific fields
             $data = array();
             foreach ($fields as $field) {
-                if (isset($this->$field)) {
-                    $data[$field] = $this->$field;
+                $fieldValue = $field;
+                $fieldKey = $field;
+                // TODO Delete when changed
+                if (in_array($field, array('previews', 'thumbnails'))) {
+                    $fieldValue = 'thumbnails';
+                    $fieldKey =  'previews';
+                }
+                // TODO END
+                if (isset($this->$fieldKey)) {
+                    $data[$fieldValue] = $this->$fieldKey;
                 }
             }
         }
@@ -586,6 +563,22 @@ class Collection extends ApiEntity implements RestObjectInterface
     public function getProperties()
     {
         return $this->properties;
+    }
+
+    /**
+     * @return array
+     */
+    public function getPreviews()
+    {
+        return $this->previews;
+    }
+
+    /**
+     * @param array $previews
+     */
+    public function setPreviews($previews)
+    {
+        $this->previews = $previews;
     }
 
 } 
