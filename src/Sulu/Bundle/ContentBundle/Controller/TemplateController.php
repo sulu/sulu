@@ -31,7 +31,15 @@ class TemplateController extends Controller
     {
         /** @var StructureManagerInterface $structureManager */
         $structureManager = $this->get('sulu.content.structure_manager');
-        $templates = $structureManager->getStructures();
+        $structures = $structureManager->getStructures();
+
+        $templates = array();
+        foreach($structures as $structure){
+            $templates[] = array(
+                'template' =>$structure->getKey()
+            );
+        }
+
         $data = array(
             '_embedded' => $templates,
             'total' => sizeof($templates),
