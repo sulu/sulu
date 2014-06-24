@@ -12,6 +12,11 @@ namespace Sulu\Bundle\MediaBundle\Media\ImageConverter;
 
 use Imagine\Image\ImageInterface;
 
+/**
+ * Defines the operations of the ImageConverter
+ * The ImageConverter is a interface to manage conversions of an Image.
+ * @package Sulu\Bundle\MediaBundle\Media\ImageConverter
+ */
 interface ImageConverterInterface {
 
     /**

@@ -11,6 +11,8 @@
 namespace Sulu\Bundle\MediaBundle\Media\FormatCache;
 
 /**
+ * Defines the operations of the FormatCache
+ * The FormatCache is a interface to cache different Image Formats.
  * @package Sulu\Bundle\MediaBundle\Media\FormatCache
  */
 interface FormatCacheInterface
