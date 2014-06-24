@@ -29,12 +29,12 @@ use Sulu\Bundle\MediaBundle\Media\Exception\InvalidFileException;
 use Sulu\Bundle\MediaBundle\Media\Exception\InvalidMediaTypeException;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Sulu\Bundle\MediaBundle\Media\FileValidator\FileValidatorInterface;
+use Sulu\Component\Security\UserInterface;
 use Sulu\Component\Security\UserRepositoryInterface;
 use DateTime;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
- * TODO
  * @package Sulu\Bundle\MediaBundle\Media\Manager
  */
 class DefaultMediaManager implements MediaManagerInterface
@@ -392,10 +392,10 @@ class DefaultMediaManager implements MediaManagerInterface
     }
 
     /**
-     * @param $fileVersions
-     * @param $properties
-     * @param $user
-     * @param $version
+     * @param FileVersion $fileVersions
+     * @param array $properties
+     * @param UserInterface $user
+     * @param int $version
      */
     protected function setProperties($fileVersions, $properties, $user, $version)
     {
@@ -421,8 +421,8 @@ class DefaultMediaManager implements MediaManagerInterface
     }
 
     /**
-     * @param $fileVersion
-     * @param $fileVersionProperties
+     * @param FileVersion $fileVersion
+     * @param array $fileVersionProperties
      * @return bool
      */
     protected function updateFileVersionProperties(&$fileVersion, &$fileVersionProperties)
@@ -450,7 +450,7 @@ class DefaultMediaManager implements MediaManagerInterface
 
     /**
      * @param FileVersion $fileVersion
-     * @param $metaList
+     * @param array $metaList
      */
     protected function updateMeta(&$fileVersion, $metaList)
     {
@@ -499,7 +499,7 @@ class DefaultMediaManager implements MediaManagerInterface
 
     /**
      * @param FileVersion $fileVersion
-     * @param $contentLanguages
+     * @param array $contentLanguages
      */
     protected function updateContentLanguages(&$fileVersion, $contentLanguages)
     {
@@ -536,7 +536,7 @@ class DefaultMediaManager implements MediaManagerInterface
 
     /**
      * @param FileVersion $fileVersion
-     * @param $publishLanguages
+     * @param array $publishLanguages
      */
     protected function updatePublishLanguages(&$fileVersion, $publishLanguages)
     {

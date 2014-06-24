@@ -16,7 +16,6 @@ use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * TODO
  * @package Sulu\Bundle\MediaBundle\Media\FormatCache
  */
 class LocalFormatCache implements FormatCacheInterface
@@ -96,10 +95,10 @@ class LocalFormatCache implements FormatCacheInterface
     }
 
     /**
-     * @param $prePath
-     * @param $id
-     * @param $fileName
-     * @param $format
+     * @param string $prePath
+     * @param int $id
+     * @param string $fileName
+     * @param string $format
      * @return string
      */
     protected function getPath($prePath, $id, $fileName, $format)
@@ -127,8 +126,8 @@ class LocalFormatCache implements FormatCacheInterface
 
     /**
      * return the id of by a given url
-     * @param $url
-     * @return mixed
+     * @param string $url
+     * @return int
      * @throws \Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyInvalidUrl
      */
     protected function getIdFromUrl($url)
@@ -151,7 +150,8 @@ class LocalFormatCache implements FormatCacheInterface
 
     /**
      * return the format by a given url
-     * @param $url
+     * @param string $url
+     * @return string
      * @throws \Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyInvalidUrl
      */
     protected function getFormatFromUrl($url)

@@ -12,6 +12,7 @@ namespace Sulu\Bundle\MediaBundle\Media\FormatManager;
 
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
+use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepository;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyMediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\ImageConverterInterface;
@@ -19,7 +20,6 @@ use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Sulu\Bundle\MediaBundle\Media\FormatCache\FormatCacheInterface;
 
 /**
- * TODO
  * @package Sulu\Bundle\MediaBundle\Media\FormatManager
  */
 class DefaultFormatManager implements FormatManagerInterface
@@ -119,7 +119,7 @@ class DefaultFormatManager implements FormatManagerInterface
 
     /**
      * get file from namespace
-     * @param $uri
+     * @param string $uri
      * @return string
      */
     protected function getFile($uri)
@@ -143,8 +143,8 @@ class DefaultFormatManager implements FormatManagerInterface
     }
 
     /**
-     * @param $media
-     * @return mixed
+     * @param Media $media
+     * @return string
      * @throws ImageProxyMediaNotFoundException
      */
     protected function getOriginalByMedia($media)
@@ -155,7 +155,7 @@ class DefaultFormatManager implements FormatManagerInterface
     }
 
     /**
-     * @param $media
+     * @param Media $media
      * @return array
      * @throws \Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyMediaNotFoundException
      */
@@ -191,10 +191,10 @@ class DefaultFormatManager implements FormatManagerInterface
     }
 
     /**
-     * @param $fileName
-     * @param $version
-     * @param $storageOptions
-     * @return mixed
+     * @param string $fileName
+     * @param int $version
+     * @param array $storageOptions
+     * @return string
      */
     public function getOriginal($fileName, $version, $storageOptions)
     {
@@ -202,9 +202,9 @@ class DefaultFormatManager implements FormatManagerInterface
     }
 
     /**
-     * @param $id
-     * @param $fileName
-     * @param $storageOptions
+     * @param int $id
+     * @param string $fileName
+     * @param array $storageOptions
      * @return array
      */
     public function getFormats($id, $fileName, $storageOptions)
