@@ -30,29 +30,8 @@ define([
             this.model.fetch({
                 success: function(model) {
                     this.data = model.toJSON();
-
-                    this.setTitle()
                 }.bind(this)
             });
-        },
-
-        /**
-         * hack to simulate form component
-         * copied from form component
-         */
-
-        /**
-         * Sets the title of the page and if in edit mode calls a method to set the breadcrumb
-         */
-        setTitle: function() {
-            var value = this.data['sulu.node.name'];
-
-            if (!!this.options.id && value !== '') {
-                this.sandbox.emit('sulu.header.set-title', value);
-                this.setBreadcrumb();
-            } else {
-                this.sandbox.emit('sulu.header.set-title', this.sandbox.translate('content.contents.title'));
-            }
         }
     };
 });

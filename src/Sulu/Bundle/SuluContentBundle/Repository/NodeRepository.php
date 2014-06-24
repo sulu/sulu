@@ -100,6 +100,9 @@ class NodeRepository implements NodeRepositoryInterface
     ) {
         $result = $structure->toArray($complete);
 
+        // add node name
+        $result['sulu.node.name'] = $structure->getPropertyValueByTagName('sulu.node.name');
+
         // add default empty embedded property
         $result['_embedded'] = array();
         // add api links
