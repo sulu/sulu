@@ -44,7 +44,8 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
             $this->logger,
             array(
                 'cache_dir'  => __DIR__ . '/../../../../Resources/cache',
-                'config_dir' => __DIR__ . '/../../../../Resources/DataFixtures/Webspace/valid'
+                'config_dir' => __DIR__ . '/../../../../Resources/DataFixtures/Webspace/valid',
+                'cache_class' => 'WebspaceCollectionCache' . uniqid()
             )
         );
     }
@@ -377,7 +378,7 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
 
         $webspaces = $this->webspaceManager->getWebspaceCollection();
 
-        $this->assertEquals(3, $webspaces->length());
+        $this->assertEquals(2, $webspaces->length());
 
         $webspace = $webspaces->getWebspace('massiveart');
 

@@ -408,16 +408,12 @@ class XmlFileLoader extends FileLoader
             || (strpos($urlNode->nodeValue, '{language}') !== false)
             || $hasLocalization;
 
-        $hasCountry = ($urlNode->attributes->getNamedItem('country') != null)
-            || (strpos($urlNode->nodeValue, '{country}') !== false)
-            || $hasLocalization;
-
         $hasSegment = (count($this->webspace->getSegments()) == 0)
             || ($urlNode->attributes->getNamedItem('segment') != null)
             || (strpos($urlNode->nodeValue, '{segment}') !== false);
 
         $hasRedirect = ($urlNode->attributes->getNamedItem('redirect') != null);
 
-        return ($hasLanguage && $hasCountry && $hasSegment) || $hasRedirect;
+        return ($hasLanguage && $hasSegment) || $hasRedirect;
     }
 }
