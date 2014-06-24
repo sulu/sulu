@@ -1,0 +1,1 @@
+define([],function(){"use strict";return{initialize:function(){this.sandbox.emit("sulu.app.ui.reset",{navigation:"small",content:"auto"}),this.$el.html("HALLO")}}});
