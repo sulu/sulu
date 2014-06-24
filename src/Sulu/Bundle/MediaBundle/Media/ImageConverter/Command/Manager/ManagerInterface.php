@@ -9,14 +9,18 @@
  */
 
 namespace Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\Manager;
+use Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\CommandInterface;
 
 /**
- * TODO
  * @package Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\Manager
  */
 interface ManagerInterface
 {
 
+    /**
+     * @param string $name
+     * @return CommandInterface
+     */
     public function get($name);
 
 } 
