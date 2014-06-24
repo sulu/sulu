@@ -12,7 +12,9 @@ namespace Sulu\Bundle\MediaBundle\Media\ImageConverter;
 
 use Doctrine\Common\Proxy\Exception\InvalidArgumentException;
 use Imagine\Gd\Imagine as GdImagine;
+use Imagine\Image\Palette\CMYK;
 use Imagine\Image\Palette\RGB;
+use Imagine\Image\Profile;
 use Imagine\Imagick\Imagine as ImagickImagine;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyInvalidFormatOptionsException;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyInvalidImageFormat;
@@ -102,11 +104,13 @@ class ImagineImageConverter implements ImageConverterInterface {
     }
 
     /**
-     *
+     * set the image palette to RGB
      */
     protected function toRGB()
     {
-        // $this->image->usePalette(new RGB()); TODO
+        if ($this->image->palette()->name() == 'cmyk') {
+            $this->image->usePalette(new RGB());
+        }
     }
 
     /**
