@@ -168,8 +168,8 @@ define([
             }, this);
 
             // save the current package
-            this.sandbox.on('sulu.content.contents.save', function(data, template) {
-                this.save(data, template);
+            this.sandbox.on('sulu.content.contents.save', function(data) {
+                this.save(data);
             }, this);
 
             // wait for navigation events
@@ -188,8 +188,8 @@ define([
             }, this);
 
             // get resource locator
-            this.sandbox.once('sulu.content.contents.getRL', function(title, template, callback) {
-                this.getResourceLocator(title, template, callback);
+            this.sandbox.once('sulu.content.contents.get-rl', function(title, callback) {
+                this.getResourceLocator(title, this.template, callback);
             }, this);
 
             // load list view
@@ -305,12 +305,12 @@ define([
         save: function(data, template) {
             this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
 
-            if (!!template) {
-                template = this.template;
+            this.content = new Content(data);
+            if (!!this.options.id) {
+                this.content.set({id: this.options.id});
             }
 
-            this.content.set(data);
-            this.content.fullSave(template, this.options.webspace, this.options.language, this.options.parent, this.state, null, {
+            this.content.fullSave(this.template, this.options.webspace, this.options.language, this.options.parent, this.state, null, {
                 // on success save contents id
                 success: function(response) {
                     var model = response.toJSON();
@@ -527,19 +527,19 @@ define([
                                 'type': 'select',
                                 items: [
                                     {
-                                        'id': 2,
-                                        'title': this.sandbox.translate('toolbar.state-publish'),
-                                        'icon': 'husky-publish',
-                                        'callback': function() {
-                                            this.sandbox.emit('sulu.dropdown.state.item-clicked', 2);
-                                        }.bind(this)
-                                    },
-                                    {
                                         'id': 1,
                                         'title': this.sandbox.translate('toolbar.state-test'),
                                         'icon': 'husky-test',
                                         'callback': function() {
                                             this.sandbox.emit('sulu.dropdown.state.item-clicked', 1);
+                                        }.bind(this)
+                                    },
+                                    {
+                                        'id': 2,
+                                        'title': this.sandbox.translate('toolbar.state-publish'),
+                                        'icon': 'husky-publish',
+                                        'callback': function() {
+                                            this.sandbox.emit('sulu.dropdown.state.item-clicked', 2);
                                         }.bind(this)
                                     }
                                 ]

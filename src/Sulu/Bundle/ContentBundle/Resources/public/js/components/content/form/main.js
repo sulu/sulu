@@ -25,6 +25,8 @@ define(['app-config'], function(AppConfig) {
         contentChanged: false,
 
         initialize: function() {
+            this.sandbox.emit('sulu.app.ui.reset', { navigation: 'small', content: 'auto'});
+
             this.dfdListenForChange = this.sandbox.data.deferred();
 
             this.load();
@@ -384,7 +386,7 @@ define(['app-config'], function(AppConfig) {
 
             if (!!complete) {
                 this.startListening = true;
-                this.sandbox.emit('sulu.content.contents.getRL', parts, this.template, function(rl) {
+                this.sandbox.emit('sulu.content.contents.get-rl', parts, function(rl) {
                     // set resource locator to empty input fields
                     this.getDomElementsForTagName('sulu.rlp', function(property) {
                         var element = property.$el.data('element');
@@ -429,8 +431,7 @@ define(['app-config'], function(AppConfig) {
 
         submit: function() {
             this.sandbox.logger.log('save Model');
-            var data,
-                template = (this.template !== '') ? this.template : this.options.data.template;
+            var data;
 
             if (this.sandbox.form.validate(this.formId)) {
                 data = this.sandbox.form.getData(this.formId);
@@ -444,7 +445,7 @@ define(['app-config'], function(AppConfig) {
                 this.sandbox.logger.log('data', data);
 
                 this.options.data = this.sandbox.util.extend(true, {}, this.options.data, data);
-                this.sandbox.emit('sulu.content.contents.save', data, template);
+                this.sandbox.emit('sulu.content.contents.save', data);
             }
         },
 
