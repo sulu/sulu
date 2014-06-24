@@ -54,6 +54,10 @@
 
         <service id="sulu_media.image.command_manager" class="%sulu_media.image.command_manager.class%">
             <argument>%sulu_media.image.command.prefix%</argument>
+
+            <call method="setContainer">
+                <argument type="service" id="service_container" />
+            </call>
         </service>
 
         <service id="sulu_media.image.command.resize" class="%sulu_media.image.command.resize.class%" />
