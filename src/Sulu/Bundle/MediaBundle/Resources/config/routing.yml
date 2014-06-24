@@ -1,10 +1,15 @@
-sulu_media:
-    resource: "@SuluMediaBundle/Resources/config/routing_api.yml"
-    prefix: /api
-
 sulu_media.collection_navigation:
     path: /navigation/collection
     defaults: { _controller: SuluMediaBundle:Navigation:collection }
+
+sulu_media.template.collection:
+    pattern: /template/media/collection.html
+    defaults: { _controller: SuluMediaBundle:Template:collection }
+
+sulu_media.website.image.proxy:
+    path: /image-proxy
+    defaults:
+        _controller: SuluMediaBundle:WebsiteMedia:getImage
 
 sulu_media.template.collection.files:
     pattern: /template/collection/files.html

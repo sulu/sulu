@@ -14,9 +14,10 @@ use DateTime;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Put;
+use Sulu\Bundle\MediaBundle\Media\RestObject\Collection;
 use Sulu\Bundle\MediaBundle\Entity\Collection as CollectionEntity;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
-use Sulu\Bundle\MediaBundle\Media\RestObject\Collection;
+use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
@@ -29,10 +30,16 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class CollectionController extends RestController implements ClassResourceInterface
 {
+
     /**
      * {@inheritdoc}
      */
     protected $entityName = 'SuluMediaBundle:Collection';
+
+    /**
+     * @var string
+     */
+    protected $entityMediaName = 'SuluMediaBundle:Media';
 
     /**
      * {@inheritdoc}
@@ -131,6 +138,8 @@ class CollectionController extends RestController implements ClassResourceInterf
         } else {
             $locale = $this->getLocale($request->get('locale'));
             $collection = new Collection();
+            $collection->setDataByEntityArray($collectionEntity, $locale);
+            $collection->setPreviews($this->getPreviews($collection->getId()));
 
             $view = $this->view(
                 array_merge(
@@ -139,7 +148,7 @@ class CollectionController extends RestController implements ClassResourceInterf
                             'self' => $request->getRequestUri()
                         )
                     ),
-                    $collection->setDataByEntityArray($collectionEntity, $locale)->toArray()
+                    $collection->toArray()
                 )
                 , 200);
         }
@@ -187,10 +196,11 @@ class CollectionController extends RestController implements ClassResourceInterf
             $em->flush();
 
             $locale = $this->getLocale($request->get('locale'));
-
             $collection = new Collection();
+            $collection->setDataByEntity($collectionEntity, $locale);
+            $collection->setPreviews($this->getPreviews($collection->getId()));
 
-            $view = $this->view($collection->setDataByEntity($collectionEntity, $locale)->toArray(), 200);
+            $view = $this->view($collection->toArray(), 200);
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
         } catch (RestException $re) {
@@ -226,10 +236,12 @@ class CollectionController extends RestController implements ClassResourceInterf
                 $em->persist($collectionEntity);
                 $em->flush();
 
-                $collection = new Collection();
                 $locale = $this->getLocale($request->get('locale'));
+                $collection = new Collection();
+                $collection->setDataByEntity($collectionEntity, $locale);
+                $collection->setPreviews($this->getPreviews($collection->getId()));
 
-                $view = $this->view($collection->setDataByEntity($collectionEntity, $locale)->toArray(), 200);
+                $view = $this->view($collection->toArray(), 200);
             }
         } catch (EntityNotFoundException $exc) {
             $view = $this->view($exc->toArray(), 404);
@@ -248,8 +260,6 @@ class CollectionController extends RestController implements ClassResourceInterf
     public function deleteAction($id)
     {
         $delete = function ($id) {
-            $entityName = 'SuluMediaBundle:Collection';
-
             /* @var CollectionEntity $collection */
             $collectionEntity = $this->getDoctrine()
                 ->getRepository($this->entityName)
@@ -283,7 +293,9 @@ class CollectionController extends RestController implements ClassResourceInterf
 
         foreach ($collections as $collection) {
             $flatCollection = new Collection();
-            $flatCollections[] = $flatCollection->setDataByEntityArray($collection, $locale, $fields);
+            $flatCollection->setDataByEntityArray($collection, $locale, $fields);
+            $flatCollection->setPreviews($this->getPreviews($flatCollection->getId()));
+            array_push($flatCollections, $flatCollection->toArray());
         }
 
         return $flatCollections;
@@ -320,16 +332,7 @@ class CollectionController extends RestController implements ClassResourceInterf
     protected function createCollectionByRestObject(Collection $object, CollectionEntity &$collection, &$em)
     {
         // Set Style
-        if ($object->getStyle()) {
-            $collection->setStyle(json_encode($object->getStyle()));
-        } elseif (!$collection->getStyle()) { // if no style was set generate one
-            $generatedStyle = array(
-                'type' => $this->container->getParameter('sulu_media.collection.style.type.default'),
-                'color' => CollectionEntity::generateColor()
-            );
-
-            $collection->setStyle(json_encode($generatedStyle));
-        }
+        $collection->setStyle(json_encode($object->getStyle()));
 
         // Set Type
         $type = $this->getDoctrine()->getRepository('SuluMediaBundle:CollectionType')->find($object->getType());
@@ -399,4 +402,78 @@ class CollectionController extends RestController implements ClassResourceInterf
 
         return $this->getUser()->getLocale();
     }
+
+    /**
+     * getFormatManager
+     * @return FormatManagerInterface
+     */
+    protected function getFormatManager()
+    {
+        return $this->get('sulu_media.format_manager');
+    }
+
+    /**
+     * @param $id
+     * @return array
+     */
+    protected function getPreviews($id)
+    {
+        $formats = array();
+
+        $medias = $this->getDoctrine()
+            ->getRepository($this->entityMediaName)
+            ->findMedia($id, null, $this->container->getParameter('sulu_media.collection.previews.limit'));
+
+
+        foreach ($medias as $media) {
+            foreach ($media['files'] as $file) {
+                foreach ($file['fileVersions'] as $fileVersion) {
+                    if ($fileVersion['version'] == $file['version']) {
+                        $format = $this->getPreviewsFromFileVersion($media['id'], $fileVersion);
+                        if (!empty($format)) {
+                            $formats[] = $format;
+                        }
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+
+        return $formats;
+    }
+
+    /**
+     * @param int $mediaId
+     * @param array $fileVersion
+     * @return array
+     */
+    protected function getPreviewsFromFileVersion($mediaId, $fileVersion)
+    {
+        $title = '';
+        foreach ($fileVersion['meta'] as $key => $meta) {
+            if ($meta['locale'] == $this->getUser()->getLocale()) {
+                $title = $meta['title'];
+                break;
+            } elseif ($key == 0) { // fallback title
+                $title = $meta['title'];
+            }
+        }
+
+        $mediaFormats = $this->getFormatManager()->getFormats($mediaId, $fileVersion['name'], $fileVersion['storageOptions']);
+
+        foreach ($mediaFormats as $formatName => $formatUrl) {
+            if ($formatName == $this->container->getParameter('sulu_media.collection.previews.format')) {
+                return array(
+                    'url' => $formatUrl,
+                    'title' => $title
+                );
+                break;
+            }
+        }
+
+        return array();
+    }
+
+
 }

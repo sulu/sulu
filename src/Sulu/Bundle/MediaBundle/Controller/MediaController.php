@@ -73,7 +73,7 @@ class MediaController extends RestController implements ClassResourceInterface
     /**
      * {@inheritdoc}
      */
-    protected $fieldsRelations = array('title', 'name', 'description', 'thumbnails', 'size');
+    protected $fieldsRelations = array('title', 'name', 'description', 'thumbnails', 'size'); // TODO change thumbnails to format when husky updated
 
     /**
      * {@inheritdoc}
@@ -121,8 +121,6 @@ class MediaController extends RestController implements ClassResourceInterface
                 404
             );
         } else {
-            $media = new Media();
-
             $view = $this->view(
                 array_merge(
                     array(
@@ -130,10 +128,9 @@ class MediaController extends RestController implements ClassResourceInterface
                             'self' => $request->getRequestUri()
                         )
                     ),
-                    $media->setDataByEntityArray($mediaEntity, $locale, $request->get('version', null))->toArray()
-                ),
-                200
-            );
+                    $this->getRestObjectHelper()->convertMediaToRestObject($mediaEntity, $locale, $request->get('version', null))
+                )
+                , 200);
         }
 
         return $this->handleView($view);
@@ -158,7 +155,7 @@ class MediaController extends RestController implements ClassResourceInterface
             $fields = explode(',', $fields);
         }
         $mediaList = $this->getDoctrine()->getRepository($this->entityName)->findMedia($collection, $ids);
-        $mediaList = RestObjectHelper::convertMediasToRestObjects($mediaList, $locale, $fields);
+        $mediaList = $this->getRestObjectHelper()->convertMediasToRestObjects($mediaList, $locale, $fields);
         $view = $this->view($this->createHalResponse($mediaList), 200);
 
         return $this->handleView($view);
@@ -201,8 +198,10 @@ class MediaController extends RestController implements ClassResourceInterface
                 );
             }
 
-            $media = new Media();
-            $view = $this->view($media->setDataByEntity($mediaEntity, $locale)->toArray(), 200);
+            $view = $this->view(
+                $this->getRestObjectHelper()->convertMediaToRestObject($mediaEntity, $locale),
+                200
+            );
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
         } catch (RestException $re) {
@@ -257,9 +256,10 @@ class MediaController extends RestController implements ClassResourceInterface
                     $properties
                 );
             }
-
-            $media = new Media();
-            $view = $this->view($media->setDataByEntity($mediaEntity, $locale)->toArray(), 200);
+            $view = $this->view(
+                $this->getRestObjectHelper()->convertMediaToRestObject($mediaEntity, $locale),
+                200
+            );
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
         } catch (RestException $exc) {
@@ -304,7 +304,7 @@ class MediaController extends RestController implements ClassResourceInterface
         $object->setContentLanguages($request->get('contentLanguages', array()));
         $object->setPublishLanguages($request->get('publishLanguages', array()));
         $object->setTags($request->get('tags', array()));
-        $object->setThumbnails($request->get('thumbnails', array()));
+        $object->setFormats($request->get('formats', array()));
         $object->setUrl($request->get('url'));
         $object->setName($request->get('name'));
         $object->setTitle($request->get('title', $this->getTitleFromUpload($request, 'fileVersion')));
@@ -359,7 +359,7 @@ class MediaController extends RestController implements ClassResourceInterface
 
     /**
      * give back the fileversion properties
-     * @param MediaRestObject $restObject
+     * @param Media $restObject
      * @return array
      */
     protected function getProperties($restObject)
@@ -416,5 +416,14 @@ class MediaController extends RestController implements ClassResourceInterface
         }
 
         return $this->getUser()->getLocale();
+    }
+
+    /**
+     * getRestObjectHelper
+     * @return RestObjectHelper
+     */
+    protected function getRestObjectHelper()
+    {
+        return $this->get('sulu_media.rest_object_helper');
     }
 }
