@@ -53,7 +53,6 @@
         </service>
 
         <service id="sulu_media.image.command_manager" class="%sulu_media.image.command_manager.class%">
-            <argument type="service" id="service_container"/>
             <argument>%sulu_media.image.command.prefix%</argument>
         </service>
 
