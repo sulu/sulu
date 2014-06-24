@@ -37,6 +37,13 @@ abstract class RestController extends FOSRestController
     protected $unsortable = array();
 
     /**
+     * contains all attributes that are sortable
+     * if defined unsortable gets ignored
+     * @var array
+     */
+    protected $sortable = array();
+
+    /**
      * contains all fields that should be excluded from api
      * @var array
      */
@@ -289,12 +296,13 @@ abstract class RestController extends FOSRestController
     /**
      * creates HAL conform response-array out of an entity collection
      * @param array $entities
+     * @param boolean $returnListLinks
      * @return array
      */
-    protected function createHalResponse(array $entities)
+    protected function createHalResponse(array $entities, $returnListLinks = false)
     {
         return array(
-            '_links' => $this->getHalLinks($entities),
+            '_links' => $this->getHalLinks($entities, 1, $returnListLinks),
             '_embedded' => $entities,
             'total' => count($entities),
         );
@@ -338,7 +346,12 @@ abstract class RestController extends FOSRestController
         // create sort links
         $sortable = array();
         if ($returnListLinks && count($entities) > 0) {
-            $keys = array_keys($entities[0]);
+            $keys = array();
+            if (sizeof($this->sortable) > 0) {
+                $keys = $this->sortable;
+            } elseif (is_array($entities[0])) {
+                $keys = array_keys($entities[0]);
+            }
             // remove page
             $sortUrl = $this->replaceOrAddUrlString(
                 $path,
