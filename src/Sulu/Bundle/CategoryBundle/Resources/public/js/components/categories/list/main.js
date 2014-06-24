@@ -11,12 +11,10 @@ define(function () {
 
     'use strict';
 
-    var defaults = {},
-
-        constants = {
-            toolbarSelector: '#list-toolbar-container',
-            listSelector: '#categories-list'
-        };
+    var constants = {
+        toolbarSelector: '#list-toolbar-container',
+        listSelector: '#categories-list'
+    };
 
     return {
 
@@ -44,6 +42,9 @@ define(function () {
             this.render();
         },
 
+        /**
+         * Renderes the component
+         */
         render: function () {
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/category/template/category/list'));
 
@@ -51,20 +52,53 @@ define(function () {
             this.sandbox.sulu.initListToolbarAndList.call(this, 'categoriesFields', '/admin/api/categories/fields',
                 {
                     el: this.$find(constants.toolbarSelector),
-                    template: 'defaultEditable',
+                    template: 'default',
                     instanceName: this.instanceName,
                     inHeader: true
                 },
                 {
                     el: this.$find(constants.listSelector),
-                    url: '/admin/api/categories',
+                    url: '/admin/api/categories?depth=0',
                     viewOptions: {
                         table: {
-                            fullWidth: true
+                            fullWidth: true,
+                            selectItem: {
+                                type: 'checkbox',
+                                inFirstCell: true
+                            },
+                            childrenPropertyName: 'children',
+                            icons: [
+                                {
+                                    column: 'name',
+                                    icon: 'pencil',
+                                    callback: this.editCategory.bind(this)
+                                },
+                                {
+                                    column: 'name',
+                                    icon: 'plus-circle',
+                                    callback: this.addNewCategory.bind(this)
+                                }
+                            ]
                         }
                     }
                 }
             );
+        },
+
+        /**
+         * Navigates to the the form for adding a new category
+         * @param parent
+         */
+        addNewCategory: function (parent) {
+            //todo: implement
+        },
+
+        /**
+         * Navigates to the form for editing an existing category
+         * @param id
+         */
+        editCategory: function (id) {
+            //todo: implement
         }
     };
 });

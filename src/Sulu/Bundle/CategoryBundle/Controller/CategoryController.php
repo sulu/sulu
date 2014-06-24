@@ -37,7 +37,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
     /**
      * {@inheritdoc}
      */
-    protected $unsortable = array('lft', 'rgt', 'depth');
+    protected $sortable = array('name', 'created', 'changed');
 
     /**
      * {@inheritdoc}
@@ -135,7 +135,18 @@ class CategoryController extends RestController implements ClassResourceInterfac
         $cm = $this->get('sulu_category.category_manager');
         $categories = $cm->find($parent, $depth);
         $wrappers = $cm->getApiObjects($categories, $this->getLocale($request->get('locale')));
-        $view = $this->view($this->createHalResponse($wrappers), 200);
+        $halResponse = $this->createHalResponse($wrappers, true);
+        //add children link to hal-links array
+        $halResponse['_links']['children'] = $this->replaceOrAddUrlString(
+            $halResponse['_links']['self'],
+            'parent=', '{parentId}'
+        );
+        // remove depth parameter from children hal-link
+        $halResponse['_links']['children'] = $this->replaceOrAddUrlString(
+            $halResponse['_links']['children'],
+            'depth=', null
+        );
+        $view = $this->view($halResponse, 200);
         return $this->handleView($view);
     }
 
