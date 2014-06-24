@@ -122,14 +122,12 @@ class DefaultFormatManager implements FormatManagerInterface
         $extension = pathinfo($fileName)['extension'];
 
         switch ($extension) {
-            case 'jpg':
-            case 'jpeg':
             case 'png':
             case 'gif':
                 // do nothing
                 break;
             default:
-                $extension = 'png';
+                $extension = 'jpg';
                 break;
         }
 
