@@ -10,8 +10,9 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\FormatManager;
 
+use Symfony\Component\HttpFoundation\Response;
+
 /**
- * TODO
  * @package Sulu\Bundle\MediaBundle\Media\FormatManager
  */
 interface FormatManagerInterface
@@ -19,32 +20,32 @@ interface FormatManagerInterface
 
     /**
      * Return the image by a given url
-     * @param $id
-     * @param $format
-     * @return mixed
+     * @param int $id
+     * @param string $format
+     * @return Response
      */
     public function returnImage($id, $format);
 
     /**
      * Return media id and format
-     * @param $url
+     * @param string $url
      * @return array
      */
     public function getMediaProperties($url);
 
     /**
-     * @param $fileName
-     * @param $version
-     * @param $storageOptions
+     * @param string $fileName
+     * @param int $version
+     * @param array $storageOptions
      * @return string
      */
     public function getOriginal($fileName, $version, $storageOptions);
 
     /**
-     * @param $id
-     * @param $fileName
-     * @param $storageOptions
-     * @return mixed
+     * @param int $id
+     * @param string $fileName
+     * @param array $storageOptions
+     * @return array
      */
     public function getFormats($id, $fileName, $storageOptions);
 } 
