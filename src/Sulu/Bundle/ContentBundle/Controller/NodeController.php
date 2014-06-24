@@ -173,8 +173,7 @@ class NodeController extends RestController implements ClassResourceInterface
                         'tree' => 'true',
                         'language' => $language,
                         'webspace' => $webspace,
-                        'exclude-ghosts' => $excludeGhosts,
-                        'append-webspace-node' => $appendWebspaceNode
+                        'exclude-ghosts' => $excludeGhosts
                     )
                 )
             );
