@@ -16,6 +16,7 @@ define([], function() {
 
         initialize: function() {
             this.sandbox.emit('sulu.app.ui.reset', { navigation: 'small', content: 'auto'});
+            this.sandbox.emit('husky.toolbar.header.item.disable', 'template', false);
 
             this.formId = '#seo-form';
             this.load();
