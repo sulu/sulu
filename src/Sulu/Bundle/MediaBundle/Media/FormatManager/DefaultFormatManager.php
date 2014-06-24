@@ -90,14 +90,17 @@ class DefaultFormatManager implements FormatManagerInterface
 
         $image = $this->converter->convert($original, $format);
 
+        list($fileName, $version, $storageOptions) = $this->getMediaData($media);
+
+        $extension = $this->getFileExtension($fileName);
+
+        $image = $image->get($extension);
+
         $headers = array(
-            'Content-Type' => 'image/jpeg'
+            'Content-Type' => 'image/' . $extension
         );
 
-        $image = $image->get('jpeg');
-
         if ($this->saveImage) {
-            list($fileName, $version, $storageOptions) = $this->getMediaData($media);
             $this->formatCache->save(
                 $this->createTmpFile($image),
                 $media->getId(),
@@ -108,6 +111,29 @@ class DefaultFormatManager implements FormatManagerInterface
         }
 
         return new Response($image, 200, $headers);
+    }
+
+    /**
+     * @param $fileName
+     * @return string
+     */
+    protected function getFileExtension($fileName)
+    {
+        $extension = pathinfo($fileName)['extension'];
+
+        switch ($extension) {
+            case 'jpg':
+            case 'jpeg':
+            case 'png':
+            case 'gif':
+                // do nothing
+                break;
+            default:
+                $extension = 'png';
+                break;
+        }
+
+        return $extension;
     }
 
     /**
