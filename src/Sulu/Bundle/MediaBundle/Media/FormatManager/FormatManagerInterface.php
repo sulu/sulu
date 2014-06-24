@@ -13,6 +13,8 @@ namespace Sulu\Bundle\MediaBundle\Media\FormatManager;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
+ * Defines the operations of the FormatManager
+ * The FormatManager is a interface to manage Image Formats and Converts.
  * @package Sulu\Bundle\MediaBundle\Media\FormatManager
  */
 interface FormatManagerInterface

@@ -20,6 +20,11 @@ use Sulu\Bundle\MediaBundle\Entity\Media as Entity;
 use DateTime;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 
+/**
+ * Class Media
+ * The Media RestObject is the api entity for the MediaController.
+ * @package Sulu\Bundle\MediaBundle\Media\RestObject
+ */
 class Media extends ApiEntity implements RestObjectInterface
 {
 

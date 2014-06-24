@@ -10,6 +10,11 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\RestObject;
 
+/**
+ * Interface RestObjectInterface
+ * The RestObject Interface manage the conversions from an entity to the rest object
+ * @package Sulu\Bundle\MediaBundle\Media\RestObject
+ */
 interface RestObjectInterface {
 
     /**
