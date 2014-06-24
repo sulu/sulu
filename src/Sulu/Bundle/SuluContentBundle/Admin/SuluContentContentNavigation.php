@@ -26,16 +26,12 @@ class SuluContentContentNavigation extends ContentNavigation
         $content->setAction('content');
         $content->setContentType('content');
         $content->setContentComponent('content/form@sulucontent');
-        $content->setContentComponentOptions(array('display'=>'form'));
 
-        /*
         $seo = new NavigationItem('content-navigation.contents.seo');
         $seo->setAction('seo');
         $seo->setContentType('content');
-        $seo->setContentComponent('content@sulucontent');
-        $seo->setContentComponentOptions(array('display'=>'seo'));
+        $seo->setContentComponent('content/seo@sulucontent');
         $seo->setContentDisplay(array('edit'));
-        */
 
         $settings = new NavigationItem('content-navigation.contents.settings');
         $settings->setAction('settings');
@@ -44,9 +40,7 @@ class SuluContentContentNavigation extends ContentNavigation
         $settings->setContentDisplay(array('edit'));
 
         $this->addNavigationItem($content);
-        /*
         $this->addNavigationItem($seo);
-        */
         $this->addNavigationItem($settings);
     }
 }

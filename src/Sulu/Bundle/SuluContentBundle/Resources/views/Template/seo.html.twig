@@ -6,17 +6,17 @@
     </div>
     <div class="grid-row form-group">
         <label for="seo-description"><%=translate('sulu.content.seo.description')%></label>
-        <textarea id="seo-description" data-mapper-property="title"
+        <textarea id="seo-description" data-mapper-property="description"
                   class="form-element preview-update trigger-save-button"></textarea>
     </div>
     <div class="grid-row form-group">
         <label for="seo-keywords"><%=translate('sulu.content.seo.keywords')%></label>
-        <textarea id="seo-keywords" data-mapper-property="title"
+        <textarea id="seo-keywords" data-mapper-property="keywords"
                   class="form-element preview-update trigger-save-button"></textarea>
     </div>
     <div class="grid-row form-group">
         <label for="seo-canonical"><%=translate('sulu.content.seo.canonical')%></label>
-        <input type="text" id="seo-canonical" data-mapper-property="title"
+        <input type="text" id="seo-canonical" data-mapper-property="canonical"
                class="form-element preview-update trigger-save-button"/>
     </div>
     <div class="grid-row form-group">
@@ -28,7 +28,7 @@
             <label for="seo-no-index" class="inline-label"><%=translate('sulu.content.seo.robots.no-index')%></label>
         </div>
         <div>
-            <input type="checkbox" id="seo-no-follow" data-mapper-property="NoFollow"
+            <input type="checkbox" id="seo-no-follow" data-mapper-property="noFollow"
                    class="form-element inline-input preview-update trigger-save-button"/>
             <label for="seo-no-follow" class="inline-label"><%=translate('sulu.content.seo.robots.no-follow')%></label>
         </div>
