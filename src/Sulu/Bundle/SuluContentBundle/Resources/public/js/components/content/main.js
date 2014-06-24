@@ -483,7 +483,10 @@ define([
 
         header: function() {
             this.sandbox.once('sulu.header.initialized', function() {
-                this.headerInitialized.resolve();
+                // FIXME header and buttons is initialized!!!
+                setTimeout(function() {
+                    this.headerInitialized.resolve();
+                }.bind(this), 50);
             }.bind(this));
 
             var noBack = (this.options.id === 'index') ? true : false;
