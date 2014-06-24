@@ -68,6 +68,8 @@ define([
                 this.renderForm({
                     settings: true
                 });
+            } else if (this.options.display === 'seo') {
+                this.renderSeo();
             } else {
                 throw 'display type wrong';
             }
@@ -362,51 +364,51 @@ define([
 
                         var data = model.toJSON(),
                             components = [
-                            {
-                                name: 'content/components/form@sulucontent',
-                                options: {
-                                    el: $form,
-                                    id: this.options.id,
-                                    data: data,
-                                    webspace: this.options.webspace,
-                                    language: this.options.language,
-                                    preview: !!this.options.preview ? this.options.preview : false,
-                                    tab: tab
+                                {
+                                    name: 'content/components/form@sulucontent',
+                                    options: {
+                                        el: $form,
+                                        id: this.options.id,
+                                        data: data,
+                                        webspace: this.options.webspace,
+                                        language: this.options.language,
+                                        preview: !!this.options.preview ? this.options.preview : false,
+                                        tab: tab
+                                    }
                                 }
-                            }
-                        ];
+                            ];
 
 //                        // only start preview in content tab and at specific window width
 //                        if (this.sandbox.dom.width(window) >= MIN_CONTAINER_WIDTH && tab.content === true) {
 
 //                            this.sandbox.logger.log("window width:", this.sandbox.dom.width(window));
 
-                            components.push({
-                                name: 'content/components/preview@sulucontent',
-                                options: {
-                                    el: '#preview-container',
-                                    toolbar: {
-                                        resolutions: [
-                                            1680,
-                                            1440,
-                                            1024,
-                                            800,
-                                            600,
-                                            480
-                                        ],
-                                        showLeft: true,
-                                        showRight: true
-                                    },
-                                    mainContentElementIdentifier: 'content',
-                                    iframeSource: {
-                                        url: '/admin/content/preview/',
-                                        webspace: this.options.webspace,
-                                        language: this.options.language,
-                                        template: data.template,
-                                        id: this.options.id
-                                    }
+                        components.push({
+                            name: 'content/components/preview@sulucontent',
+                            options: {
+                                el: '#preview-container',
+                                toolbar: {
+                                    resolutions: [
+                                        1680,
+                                        1440,
+                                        1024,
+                                        800,
+                                        600,
+                                        480
+                                    ],
+                                    showLeft: true,
+                                    showRight: true
+                                },
+                                mainContentElementIdentifier: 'content',
+                                iframeSource: {
+                                    url: '/admin/content/preview/',
+                                    webspace: this.options.webspace,
+                                    language: this.options.language,
+                                    template: data.template,
+                                    id: this.options.id
                                 }
-                            });
+                            }
+                        });
 
                         this.sandbox.start(components);
                     }.bind(this),
@@ -434,6 +436,62 @@ define([
                 ]);
             }
 
+        },
+
+        renderSeo: function() {
+            var $form = this.sandbox.dom.createElement('<div id="seo-form-container"/>'),
+                $preview = this.sandbox.dom.createElement('<div id="preview-container"/>');
+
+            this.html($form);
+            this.sandbox.dom.append('#preview', $preview);
+
+            // collapse navigation
+            this.sandbox.emit('husky.navigation.collapse', true);
+            this.content = new Content({id: this.options.id});
+            this.content.fullFetch(this.options.webspace, this.options.language, true, {
+                success: function(model) {
+                    var data = model.toJSON(),
+                        components = [
+                            {
+                                name: 'seo@sulucontent',
+                                options: {
+                                    el: $form,
+                                    id: this.options.id,
+                                    webspace: this.options.webspace,
+                                    language: this.options.language
+                                }
+                            },
+                            {
+                                name: 'content/components/preview@sulucontent',
+                                options: {
+                                    el: '#preview-container',
+                                    toolbar: {
+                                        resolutions: [
+                                            1680,
+                                            1440,
+                                            1024,
+                                            800,
+                                            600,
+                                            480
+                                        ],
+                                        showLeft: true,
+                                        showRight: true
+                                    },
+                                    mainContentElementIdentifier: 'content',
+                                    iframeSource: {
+                                        url: '/admin/content/preview/',
+                                        webspace: this.options.webspace,
+                                        language: this.options.language,
+                                        id: this.options.id,
+                                        template: data.template
+                                    }
+                                }
+                            }
+                        ];
+
+                    this.sandbox.start(components);
+                }.bind(this)
+            });
         }
     };
 });

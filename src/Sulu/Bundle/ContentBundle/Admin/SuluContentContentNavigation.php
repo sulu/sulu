@@ -31,7 +31,8 @@ class SuluContentContentNavigation extends ContentNavigation
         $seo = new NavigationItem('content-navigation.contents.seo');
         $seo->setAction('seo');
         $seo->setContentType('content');
-        $seo->setContentComponent('seo@sulucontent');
+        $seo->setContentComponent('content@sulucontent');
+        $seo->setContentComponentOptions(array('display'=>'seo'));
         $seo->setContentDisplay(array('edit'));
 
         $settings = new NavigationItem('content-navigation.contents.settings');
