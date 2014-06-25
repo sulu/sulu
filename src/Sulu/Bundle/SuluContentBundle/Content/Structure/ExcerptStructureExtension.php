@@ -17,12 +17,12 @@ use Sulu\Component\Content\StructureExtension\StructureExtension;
  * extends structure with seo content
  * @package Sulu\Bundle\ContentBundle\Content\Structure
  */
-class SeoStructureExtension extends StructureExtension
+class ExcerptStructureExtension extends StructureExtension
 {
     /**
      * name of structure extension
      */
-    const SEO_EXTENSION_NAME = 'seo';
+    const EXCERPT_EXTENSION_NAME = 'excerpt';
 
     /**
      * {@inheritdoc}
@@ -30,21 +30,18 @@ class SeoStructureExtension extends StructureExtension
     protected $properties = array(
         'title',
         'description',
-        'keywords',
-        'canonicalUrl',
-        'noIndex',
-        'noFollow'
+        'images'
     );
 
     /**
      * {@inheritdoc}
      */
-    protected $name = self::SEO_EXTENSION_NAME;
+    protected $name = self::EXCERPT_EXTENSION_NAME;
 
     /**
      * {@inheritdoc}
      */
-    protected $additionalPrefix = 'seo';
+    protected $additionalPrefix = 'excerpt';
 
     /**
      * {@inheritdoc}
@@ -53,10 +50,9 @@ class SeoStructureExtension extends StructureExtension
     {
         $this->saveProperty($node, $data, 'title');
         $this->saveProperty($node, $data, 'description');
-        $this->saveProperty($node, $data, 'keywords');
-        $this->saveProperty($node, $data, 'canonicalUrl');
-        $this->saveProperty($node, $data, 'noIndex', false);
-        $this->saveProperty($node, $data, 'noFollow', false);
+
+        $value = isset($data['images']) ? $data['images'] : array();
+        $node->setProperty($this->getPropertyName('images'), json_encode($value));
     }
 
     /**
@@ -67,10 +63,21 @@ class SeoStructureExtension extends StructureExtension
         $this->data = array(
             'title' => $this->loadProperty($node, 'title'),
             'description' => $this->loadProperty($node, 'description'),
-            'keywords' => $this->loadProperty($node, 'keywords'),
-            'canonicalUrl' => $this->loadProperty($node, 'canonicalUrl'),
-            'noIndex' => $this->loadProperty($node, 'noIndex', false),
-            'noFollow' => $this->loadProperty($node, 'noFollow', false)
+            'images' =>
+                json_decode(
+                    $this->loadProperty(
+                        $node,
+                        'images',
+                        json_encode(
+                            array(
+                                'displayOption' => 'left',
+                                'ids' => array(),
+                                'config' => array()
+                            )
+                        )
+                    ),
+                    true
+                )
         );
     }
 }

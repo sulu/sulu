@@ -489,7 +489,7 @@ define([
                 }.bind(this), 50);
             }.bind(this));
 
-            var noBack = (this.options.id === 'index') ? true : false;
+            var noBack = (this.options.id === 'index');
 
             if (this.options.display === 'column') {
                 this.fullSize = {

@@ -8,6 +8,7 @@
         <parameter key="sulu_content.node_repository.class">Sulu\Bundle\ContentBundle\Repository\NodeRepository</parameter>
         <parameter key="sulu_content.rl_repository.class">Sulu\Bundle\ContentBundle\Repository\ResourceLocatorRepository</parameter>
         <parameter key="sulu_content.extension.seo.class">Sulu\Bundle\ContentBundle\Content\Structure\SeoStructureExtension</parameter>
+        <parameter key="sulu_content.extension.excerpt.class">Sulu\Bundle\ContentBundle\Content\Structure\ExcerptStructureExtension</parameter>
     </parameters>
     <services>
         <!-- admin class -->
@@ -42,6 +43,11 @@
 
         <!-- structure extension -->
         <service id="sulu_content.extension.seo" class="%sulu_content.extension.seo.class%">
+            <tag name="sulu.structure.extension"/>
+        </service>
+
+        <!-- structure extension -->
+        <service id="sulu_content.extension.excerpt" class="%sulu_content.extension.excerpt.class%">
             <tag name="sulu.structure.extension"/>
         </service>
     </services>
