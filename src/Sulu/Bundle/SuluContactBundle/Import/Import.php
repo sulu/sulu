@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\ContactBundle\Import;
 
 use Doctrine\Common\Proxy\Exception\InvalidArgumentException;
+use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NonUniqueResultException;
 use Sulu\Bundle\ContactBundle\Entity\Account;
@@ -106,6 +107,8 @@ class Import
      * @var array $defaultTypes
      */
     protected $defaultTypes = array();
+
+    protected $log = array();
 
 
     // TODO: split mappings for accounts and contacts
@@ -363,8 +366,11 @@ class Import
                     // now save to database
                     $this->em->flush();
                 }
+            } catch (DBALException $dbe) {
+                $this->debug(sprintf("ABORTING DUE TO DATABASE ERROR: %s \n",$dbe->getMessage()));
+                throw $dbe;
             } catch (\Exception $e) {
-                print("error while processing data row $row \n");
+                $this->debug(sprintf("ERROR while processing data row %d: %s \n", $row, $e->getMessage()));
             }
 
             // check limit and break loop if necessary
@@ -375,7 +381,7 @@ class Import
             $row++;
 
 
-            $this->debug(sprintf("%d ", $row));
+            print(sprintf("%d ", $row));
         }
         $this->debug("\n");
         fclose($handle);
@@ -767,7 +773,7 @@ class Import
             return $contact;
 
         } catch (NonUniqueResultException $nur) {
-            printf("Non unique result for contact at row %d \n", $row);
+            $this->debug(sprintf("Non unique result for contact at row %d \n", $row));
         }
 
     }
@@ -840,8 +846,9 @@ class Import
      * @param $entity
      * @return mixed
      */
-    private function mainRelationExists($entity) {
-        return $entity->getAccountContacts()->exists(function($index, $entity) {
+    private function mainRelationExists($entity)
+    {
+        return $entity->getAccountContacts()->exists(function ($index, $entity) {
             return $entity->getMain() === true;
         });
     }
@@ -858,7 +865,7 @@ class Import
 
             if (!$account) {
                 // throw new \Exception('could not find '.$data['contact_parent'].' in accounts');
-                printf("Could not assign contact at row %d to %s. (account could not be found)\n", $row, $data['contact_parent']);
+                $this->debug(sprintf("Could not assign contact at row %d to %s. (account could not be found)\n", $row, $data['contact_parent']));
             } else {
                 // account contact relation
                 $accountContact = new AccountContact();
@@ -867,8 +874,7 @@ class Import
 
                 $main = false;
                 // check if main relation exists
-                if (!$this->mainRelationExists($contact))
-                {
+                if (!$this->mainRelationExists($contact)) {
                     $main = true;
                 }
 
@@ -905,8 +911,8 @@ class Import
             if ($this->checkData('contact_lastname', $data)) {
                 $criteria['lastName'] = $data['contact_lastname'];
             }
-            $email = $this->getFirstOf('email',$data);
-            $phone = $this->getFirstOf('phone',$data);
+            $email = $this->getFirstOf('email', $data);
+            $phone = $this->getFirstOf('phone', $data);
         }
 
         /** @var ContactRepository $repo */
@@ -1254,8 +1260,21 @@ class Import
      */
     protected function debug($message)
     {
+        $this->log[] = $message;
         if (self::DEBUG) {
             print($message);
         }
+    }
+
+    /**
+     * creates a logfile in import-files folder
+     */
+    public function createLogFile()
+    {
+        $root = 'import-files/logs/';
+        $timestamp = time();
+        $file = fopen($root . 'log-' . $timestamp . '.txt', 'w');
+        fwrite($file, implode("\n", $this->log));
+        fclose($file);
     }
 }
