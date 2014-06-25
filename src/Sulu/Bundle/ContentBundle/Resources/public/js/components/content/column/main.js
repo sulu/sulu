@@ -24,11 +24,6 @@ define(function() {
 
         view: true,
 
-        fullSize: {
-            width: true,
-            height: true
-        },
-
         initialize: function() {
             this.render();
             // shows a delete success label. If a node just got deleted
@@ -130,9 +125,6 @@ define(function() {
 
                 // start column-navigation
                 this.startColumnNavigation();
-
-                // squeeze header
-                this.sandbox.emit('sulu.header.squeeze');
             }.bind(this));
         },
 
