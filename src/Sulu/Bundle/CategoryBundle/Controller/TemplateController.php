@@ -22,4 +22,12 @@ class TemplateController extends Controller
     {
         return $this->render('SuluCategoryBundle:Template:category.list.html.twig');
     }
+    /**
+     * Returns Template for the details-tab in the category-form
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function categoriesFormDetailsAction()
+    {
+        return $this->render('SuluCategoryBundle:Template:category.form.details.html.twig');
+    }
 } 

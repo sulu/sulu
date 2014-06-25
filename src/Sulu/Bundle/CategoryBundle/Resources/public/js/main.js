@@ -33,9 +33,16 @@ define({
         });
 
         sandbox.mvc.routes.push({
-            route: 'settings/categories/new/:parent',
-            callback: function(parent){
-                this.html('<div data-aura-component="categories/content@sulucategory" data-aura-display="form" data-aura-parent="'+ parent +'"/>');
+            route: 'settings/categories/new/:parent/:content',
+            callback: function(parent, content){
+                this.html('<div data-aura-component="categories/content@sulucategory" data-aura-display="form" data-aura-parent="'+ parent +'" data-aura-content="'+ content +'"/>');
+            }
+        });
+
+        sandbox.mvc.routes.push({
+            route: 'settings/categories/new/:content',
+            callback: function(content){
+                this.html('<div data-aura-component="categories/content@sulucategory" data-aura-display="form" data-aura-content="'+ content +'"/>');
             }
         });
 

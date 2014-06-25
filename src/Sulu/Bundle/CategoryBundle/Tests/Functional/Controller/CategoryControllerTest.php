@@ -414,4 +414,25 @@ class CategoryControllerTest extends DatabaseTestCase
         $this->assertEquals(1, $response->_embedded[0]->id);
         $this->assertEquals(3, $response->_embedded[1]->id);
     }
+
+    public function testDeleteOfParent() {
+        $client = $this->createTestClient();
+        $client->request(
+            'DELETE',
+            '/api/categories/1'
+        );
+
+        $this->assertEquals(204, $client->getResponse()->getStatusCode());
+
+        $client = $this->createTestClient();
+        $client->request(
+            'GET',
+            '/api/categories'
+        );
+
+        //$this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(1, count($response->_embedded));
+        $this->assertEquals(2, $response->_embedded[0]->id);
+    }
 }
