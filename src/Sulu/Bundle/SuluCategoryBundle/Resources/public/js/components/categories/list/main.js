@@ -39,7 +39,14 @@ define(function () {
         templates: ['/admin/category/template/category/list'],
 
         initialize: function () {
+            this.sandbox.sulu.triggerDeleteSuccessLabel('labels.success.category-delete-desc');
             this.render();
+            this.bindCustomEvents();
+        },
+
+        bindCustomEvents: function() {
+            this.sandbox.on('sulu.list-toolbar.add', this.addNewCategory.bind(this));
+            this.sandbox.on('sulu.list-toolbar.delete', this.deleteSelected.bind(this));
         },
 
         /**
@@ -90,7 +97,7 @@ define(function () {
          * @param parent
          */
         addNewCategory: function (parent) {
-            //todo: implement
+            this.sandbox.emit('sulu.category.categories.form-add', parent);
         },
 
         /**
@@ -98,7 +105,20 @@ define(function () {
          * @param id
          */
         editCategory: function (id) {
-            //todo: implement
+            this.sandbox.emit('sulu.category.categories.form', id);
+        },
+
+        /**
+         * Deletes all selected categories
+         */
+        deleteSelected: function() {
+            this.sandbox.emit('husky.datagrid.items.get-selected', function(categories) {
+                this.sandbox.emit('sulu.category.categories.delete', categories, function(deletedId) {
+                    this.sandbox.emit('husky.datagrid.record.remove', deletedId);
+                }.bind(this), function() {
+                    this.sandbox.emit('sulu.labels.success.show', 'labels.success.category-delete-desc', 'labels.success');
+                }.bind(this));
+            }.bind(this));
         }
     };
 });
