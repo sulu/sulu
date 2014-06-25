@@ -93,6 +93,17 @@ class TemplateController extends Controller
     }
 
     /**
+     * returns form for seo tab
+     * @return Response
+     */
+    public function excerptAction()
+    {
+        return $this->render(
+            'SuluContentBundle:Template:excerpt.html.twig'
+        );
+    }
+
+    /**
      * returns structure for given key
      * @param string $key template key
      * @return StructureInterface
