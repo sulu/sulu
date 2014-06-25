@@ -39,6 +39,12 @@ define(['sulumedia/collection/collections'], function(Collections) {
             }
         },
 
+        dataDefaults = {
+            ids: [],
+            displayOption: 'top',
+            config: {}
+        },
+
         /**
          * namespace for events
          * @type {string}
@@ -438,7 +444,7 @@ define(['sulumedia/collection/collections'], function(Collections) {
          * set data of media-selection
          */
         setData = function(data) {
-            data = this.sandbox.util.extend(true, {}, this.data, data);
+            data = this.sandbox.util.extend(true, {}, this.data, data, dataDefaults);
             this.sandbox.dom.data(this.$el, 'media-selection', data);
             this.data = data;
         },
