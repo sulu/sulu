@@ -9,8 +9,10 @@
 
 define([
     'sulucontact/model/account',
+    'sulucontact/model/contact',
+    'sulucontact/model/accountContact',
     'accountsutil/header'
-], function(Account, AccountsUtilHeader) {
+], function(Account, Contact, AccountContact, AccountsUtilHeader) {
 
     'use strict';
 
@@ -85,6 +87,9 @@ define([
             // delete selected contacts
             this.sandbox.on('sulu.contacts.accounts.delete', this.delAccounts.bind(this));
 
+            // adds a new accountContact Relation
+            this.sandbox.on('sulu.contacts.accounts.add-contact', this.addAccountContact.bind(this));
+
             // saves financial infos
             this.sandbox.on('sulu.contacts.accounts.financials.save', this.saveFinancials.bind(this));
 
@@ -111,6 +116,23 @@ define([
             this.sandbox.on('sulu.contacts.account.convert', function(data) {
                 this.convertAccount(data);
             }.bind(this));
+        },
+
+        addAccountContact: function(id) {
+            // TODO: create accountContact relation and save
+            var accountContact = new AccountContact({contact: new Contact({id: id}), account: this.account});
+            console.log(accountContact);
+
+            accountContact.save(null, {
+                // on success save contacts id
+                success: function(response) {
+                    var model = response.toJSON();
+                    this.sandbox.emit('sulu.contacts.accounts.contact.saved', model);
+                }.bind(this),
+                error: function() {
+                    this.sandbox.logger.log("error while saving contact");
+                }.bind(this)
+            });
         },
 
         /**
