@@ -302,7 +302,7 @@ define([
             });
         },
 
-        save: function(data, template) {
+        save: function(data) {
             this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
 
             this.content = new Content(data);
@@ -492,6 +492,11 @@ define([
             var noBack = (this.options.id === 'index') ? true : false;
 
             if (this.options.display === 'column') {
+                this.fullSize = {
+                    width: true,
+                    height: true
+                };
+
                 return {
                     title: this.options.webspace.replace(/_/g, '.'),
                     noBack: true,
