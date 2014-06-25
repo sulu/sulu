@@ -170,7 +170,8 @@ class NodeController extends RestController implements ClassResourceInterface
                 $this->generateUrl(
                     'get_nodes',
                     array(
-                        'tree' => 'true',
+                        'tree' => 'false',
+                        'depth' => 1,
                         'language' => $language,
                         'webspace' => $webspace,
                         'exclude-ghosts' => $excludeGhosts
