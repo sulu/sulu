@@ -8,12 +8,18 @@
  */
 
 define([
-    'mvc/relationalstore'
-], function(RelationalStore) {
+    'mvc/relationalstore',
+    'text!sulucontact/components/accounts/components/contacts/contact-relation.form.html'
+], function(RelationalStore, ContactRelationForm) {
 
     'use strict';
 
-    var bindCustomEvents = function() {
+    var constants = {
+            relationFormSelector: '#contact-relation-form',
+            contactSelector: '#contact-field'
+        },
+
+        bindCustomEvents = function() {
             // navigate to edit contact
             this.sandbox.on('husky.datagrid.item.click', function(item) {
                 this.sandbox.emit('sulu.contacts.contact.load', item);
@@ -32,8 +38,62 @@ define([
             }, this);
         },
 
+        createRelationOverlay = function(data) {
+            var template, $overlay;
+
+            // extend data by additional variables
+            data = this.sandbox.util.extend(true, {}, {
+                translate: this.sandbox.translate,
+                position: ''
+            }, data);
+
+            template = this.sandbox.util.template(ContactRelationForm, data);
+
+            // create container for overlay
+            $overlay = this.sandbox.dom.createElement('<div />');
+            this.sandbox.dom.append('body', $overlay);
+
+            // create overlay with data
+            this.sandbox.start([
+                {
+                    name: 'overlay@husky',
+                    options: {
+                        el: $overlay,
+                        title: this.sandbox.translate('contact.accounts.add-contact'),
+                        openOnStart: true,
+                        removeOnClose: true,
+                        instanceName: 'contact-relation',
+                        data: template,
+                        okCallback: addContactRelation.bind(this)
+                    }
+                },
+                {
+                    name: 'auto-complete@husky',
+                    options: {
+                        el: constants.contactSelector,
+                        remoteUrl: '/admin/api/contacts?flat=true&fields=id,firstName,lastName,fullName&searchFields=firstName,lastName',
+                        getParameter: 'search',
+//                        value: data.account,
+                        instanceName: 'contact',
+                        valueKey: 'fullName',
+                        noNewValues: true
+                    }
+                }
+            ]);
+
+            this.data = data;
+        },
+
         listTemplate = function() {
             return [
+                {
+                    id: 'add',
+                    icon: 'plus-circle',
+                    class: 'highlight-white',
+                    title: 'add',
+                    position: 10,
+                    callback: createRelationOverlay.bind(this)
+                },
                 {
                     id: 'settings',
                     icon: 'gear',
@@ -66,6 +126,13 @@ define([
                     ]
                 }
             ];
+        },
+
+    // adds a new contact relation
+        addContactRelation = function() {
+            var contactInput = this.sandbox.dom.find(constants.contactSelector + ' input', constants.relationFormSelector),
+                id = this.sandbox.dom.data(contactInput, 'id');
+            this.sandbox.emit('sulu.contacts.accounts.add-contact', id);
         };
 
     return {
