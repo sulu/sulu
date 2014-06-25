@@ -66,6 +66,7 @@ define(function () {
                 {
                     el: this.$find(constants.listSelector),
                     url: '/admin/api/categories?depth=0',
+                    childrenPropertyName: 'children',
                     viewOptions: {
                         table: {
                             fullWidth: true,
@@ -73,7 +74,6 @@ define(function () {
                                 type: 'checkbox',
                                 inFirstCell: true
                             },
-                            childrenPropertyName: 'children',
                             icons: [
                                 {
                                     column: 'name',
