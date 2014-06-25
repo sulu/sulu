@@ -196,7 +196,9 @@ define([], function() {
                     parseContentTabs.call(this, contentNavigation, this.options.id, startHeader.bind(this));
                 }.bind(this));
             } else {
-                startHeader.call(this, null);
+                setTimeout(function() {
+                    startHeader.call(this, null);
+                }.bind(this), 50)
             }
         };
 
