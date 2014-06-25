@@ -14,25 +14,17 @@ use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Put;
 use FOS\RestBundle\Controller\Annotations\Post;
-use Sulu\Bundle\ContactBundle\Entity\BankAccount;
+use Sulu\Bundle\ContactBundle\Entity\AccountContact;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\TermsOfDelivery;
 use Sulu\Bundle\ContactBundle\Entity\TermsOfPayment;
-use Sulu\Bundle\ContactBundle\Entity\AccountCategory;
-use Sulu\Bundle\ContactBundle\Entity\Fax;
-use Sulu\Bundle\ContactBundle\Entity\FaxType;
-use Sulu\Bundle\ContactBundle\Entity\Address;
-use Sulu\Bundle\ContactBundle\Entity\Email;
-use Sulu\Bundle\ContactBundle\Entity\Note;
-use Sulu\Bundle\ContactBundle\Entity\Phone;
-use Sulu\Bundle\ContactBundle\Entity\Url;
-use Sulu\Bundle\ContactBundle\Entity\UrlType;
 use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\RestController;
 use \DateTime;
+use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\Request;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -48,7 +40,7 @@ class AccountController extends AbstractContactController
      * {@inheritdoc}
      */
     protected $entityName = 'SuluContactBundle:Account';
-    protected $contactsEntityName = 'SuluContactBundle:Contact';
+    protected $contactEntityName = 'SuluContactBundle:Contact';
     protected $accountCategoryEntityName = 'SuluContactBundle:AccountCategory';
     protected $termsOfPaymentEntityName = 'SuluContactBundle:TermsOfPayment';
     protected $termsOfDeliveryEntityName = 'SuluContactBundle:TermsOfDelivery';
@@ -157,11 +149,70 @@ class AccountController extends AbstractContactController
     {
         if ($request->get('flat') == 'true') {
             // flat structure
-            $view = $this->responseList(array('accountContacts_account_id' => $id), $this->contactsEntityName);
+            $view = $this->responseList(array('accountContacts_account_id' => $id), $this->contactEntityName);
         } else {
-            $contacts = $this->getDoctrine()->getRepository($this->contactsEntityName)->findByAccountId($id);
+            $contacts = $this->getDoctrine()->getRepository($this->contactEntityName)->findByAccountId($id);
             $view = $this->view($this->createHalResponse($contacts), 200);
         }
+        return $this->handleView($view);
+    }
+
+    /**
+     * @param $accountId
+     * @param $contactId
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Exception
+     */
+    public function postContactsAction($accountId, $contactId, Request $request)
+    {
+        try {
+            // get account
+            /** @var Account $account */
+            $account = $this->getDoctrine()
+                ->getRepository($this->entityName)
+                ->find($accountId);
+            if (!$account) {
+                throw new EntityNotFoundException('contact', $accountId);
+            }
+            
+            // get contact
+            $contact = $this->getDoctrine()
+                ->getRepository($this->contactEntityName)
+                ->find($contactId);
+            if (!$contact) {
+                throw new EntityNotFoundException('contact', $contact);
+            }
+
+            // check if relation already exists
+            $accountContact = $this->getDoctrine()
+                ->getRepository('SuluContactBundle:AccountContact')
+                ->findOneBy(array('contact' => $contact, 'account' => $account));
+            if ($accountContact) {
+                throw new \Exception('Relation already exists');
+            }
+
+            // create relation
+            $accountContact = new AccountContact();
+            $accountContact->setMain($contact->getAccountContacts()->isEmpty());
+            $accountContact->setAccount($account);
+            $accountContact->setContact($contact);
+            // if contact has no main relation - set as main
+            $accountContact->setPosition($request->get('position'));
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($accountContact);
+            $em->flush();
+
+            $view = $this->view($contact, 200);
+        } catch (EntityNotFoundException $enfe) {
+            $view = $this->view($enfe->toArray(), 404);
+        } catch (RestException $exc) {
+            $view = $this->view($exc->toArray(), 400);
+        } catch (Exception $e) {
+            $view = $this->view($e->getMessage(), 400);
+        }
+
         return $this->handleView($view);
     }
 
@@ -169,7 +220,7 @@ class AccountController extends AbstractContactController
      * lists all accounts
      * optional parameter 'flat' calls listAction
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Responsed
      */
     public function cgetAction(Request $request)
     {

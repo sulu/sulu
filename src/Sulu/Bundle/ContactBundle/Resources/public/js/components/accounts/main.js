@@ -118,10 +118,9 @@ define([
             }.bind(this));
         },
 
-        addAccountContact: function(id) {
+        addAccountContact: function(id, position) {
             // TODO: create accountContact relation and save
-            var accountContact = new AccountContact({contact: new Contact({id: id}), account: this.account});
-            console.log(accountContact);
+            var accountContact = new AccountContact({contact: new Contact({id: id}), account: this.account, position: position});
 
             accountContact.save(null, {
                 // on success save contacts id

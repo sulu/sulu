@@ -16,7 +16,8 @@ define([
 
     var constants = {
             relationFormSelector: '#contact-relation-form',
-            contactSelector: '#contact-field'
+            contactSelector: '#contact-field',
+            positionSelector: '#position'
         },
 
         bindCustomEvents = function() {
@@ -35,6 +36,10 @@ define([
             // back to list
             this.sandbox.on('sulu.header.back', function() {
                 this.sandbox.emit('sulu.contacts.accounts.list');
+            }, this);
+
+            this.sandbox.on('sulu.contacts.accounts.contact.saved', function(model) {
+                // TODO: ADD contact to list
             }, this);
         },
 
@@ -131,8 +136,9 @@ define([
     // adds a new contact relation
         addContactRelation = function() {
             var contactInput = this.sandbox.dom.find(constants.contactSelector + ' input', constants.relationFormSelector),
-                id = this.sandbox.dom.data(contactInput, 'id');
-            this.sandbox.emit('sulu.contacts.accounts.add-contact', id);
+                id = this.sandbox.dom.data(contactInput, 'id'),
+                position = this.sandbox.dom.val(this.sandbox.dom.find(constants.positionSelector,constants.relationFormSelector));
+            this.sandbox.emit('sulu.contacts.accounts.add-contact', id, position);
         };
 
     return {
