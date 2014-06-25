@@ -10,6 +10,7 @@
 
 namespace Sulu\Component\Content\StructureExtension;
 
+use PHPCR\NodeInterface;
 use Sulu\Component\Content\Mapper\Translation\MultipleTranslatedProperties;
 
 /**
@@ -93,6 +94,32 @@ abstract class StructureExtension implements StructureExtensionInterface
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * save a single property value
+     * @param NodeInterface $node
+     * @param array $data data array
+     * @param string $name name of property in node an data array
+     * @param string $default value if no data exists with given name
+     * @param string $default
+     */
+    protected function saveProperty(NodeInterface $node, $data, $name, $default = '')
+    {
+        $value = isset($data[$name]) ? $data[$name] : $default;
+        $node->setProperty($this->getPropertyName($name), $value);
+    }
+
+    /**
+     * load a single property value
+     * @param NodeInterface $node
+     * @param string $name name of property in node
+     * @param string $default value if no property exists with given name
+     * @return mixed
+     */
+    protected function loadProperty(NodeInterface $node, $name, $default = '')
+    {
+        return $node->getPropertyValueWithDefault($this->getPropertyName($name), $default);
     }
 
 } 
