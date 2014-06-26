@@ -21,7 +21,8 @@ require.config({
         '__component__$overlay@suluadmin': 'components/overlay/main',
         '__component__$header@suluadmin': 'components/header/main',
         '__component__$list-toolbar@suluadmin': 'components/list-toolbar/main',
-        '__component__$labels@suluadmin': 'components/labels/main'
+        '__component__$labels@suluadmin': 'components/labels/main',
+        '__component__$grid-group@suluadmin': 'components/grid-group/main'
     },
     include: [
         'app-config',
@@ -35,7 +36,8 @@ require.config({
         '__component__$overlay@suluadmin',
         '__component__$header@suluadmin',
         '__component__$list-toolbar@suluadmin',
-        '__component__$labels@suluadmin'
+        '__component__$labels@suluadmin',
+        '__component__$grid-group@suluadmin'
     ],
     exclude: [
         'husky'

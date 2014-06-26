@@ -1,5 +1,5 @@
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Sulu CMF.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -36,6 +36,7 @@
  * @param {Boolean} [options.toolbarDisabled] if true the toolbar-component won't be initialized
  * @param {Boolean} [options.noBack] if true the back icon won't be displayed
  * @param {Boolean} [options.squeezed] if true the inner of the component will be squeezed. Used for the full-width mode of the content
+ * @param {String} [options.titleColor] hex-color for setting a colored point in front of the title
  */
 
 define([], function() {
@@ -59,11 +60,14 @@ define([], function() {
             breadcrumb: null,
             toolbarDisabled: false,
             noBack: false,
-            squeezed: false
+            squeezed: false,
+            titleColor: null
         },
 
         constants = {
             componentClass: 'sulu-header',
+            titleColorClass: 'title-color',
+            titleColorSetClass: 'color-set',
             infoClass: 'info',
             headlineClass: 'headline',
             backClass: 'back',
@@ -101,8 +105,7 @@ define([], function() {
                 return[
                     {
                         id: 'save-button',
-                        icon: 'floppy',
-                        disabledIcon: 'floppy-saved',
+                        icon: 'floppy-o',
                         iconSize: 'large',
                         class: 'highlight',
                         position: 1,
@@ -113,7 +116,7 @@ define([], function() {
                         }.bind(this)
                     },
                     {
-                        icon: 'cogwheel',
+                        icon: 'gear',
                         iconSize: 'large',
                         group: 'left',
                         id: 'options-button',
@@ -185,7 +188,8 @@ define([], function() {
                 '<div class="inner">',
                     '<div class="'+ constants.infoClass +'"></div>',
                     '<div class="'+ constants.headlineClass +'">',
-                        '<span class="icon-'+ constants.backIcon +' '+ constants.backClass +'"></span>',
+                        '<span class="fa-'+ constants.backIcon +' '+ constants.backClass +'"></span>',
+                        '<span class="'+ constants.titleColorClass +'"></span>',
                         '<h1 class="bright"><%= headline %></h1>',
                     '</div>',
                     '<div class="bottom-row">',
@@ -291,6 +295,16 @@ define([], function() {
         },
 
         /**
+         * listens on and sets a color-point in front of the title
+         *
+         * @event sulu.header.[INSTANCE_NAME].set-title-color
+         * @param {string} color to set
+         */
+        SET_TITLE_COLOR = function() {
+            return createEventName.call(this, 'set-title-color');
+        },
+
+        /**
          * listens on and hides back icon
          *
          * @event sulu.header.[INSTANCE_NAME].show-back
@@ -349,6 +363,15 @@ define([], function() {
          */
         SET_BOTTOM_CONTENT = function() {
             return createEventName.call(this, 'set-bottom-content');
+        },
+
+        /**
+         * listens on and squeezes the header
+         *
+         * @event sulu.header.[INSTANCE_NAME].squeeze
+         */
+        SQUEEZE = function() {
+            return createEventName.call(this, 'squeeze');
         },
 
         /*********************************************
@@ -446,8 +469,14 @@ define([], function() {
             // merge defaults
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
+            // set default callback when no callback is provided
+            if(!this.options.changeStateCallback){
+                this.options.changeStateCallback = getChangeToolbarStateCallback('default');
+            }
+
             this.$inner = null;
             this.$tabs = null;
+            this.toolbarInstanceName = null;
 
             this.render();
             this.setPosition();
@@ -509,6 +538,11 @@ define([], function() {
             // render breadcrumb if set
             if (this.options.breadcrumb !== null) {
                 this.setBreadcrumb(this.options.breadcrumb);
+            }
+
+            // set title-color if set
+            if (this.options.titleColor !== null) {
+                this.setTitleColor(this.options.titleColor);
             }
 
             // hide back if configured
@@ -642,11 +676,24 @@ define([], function() {
                     instanceName: 'header' + this.options.instanceName
                 };
 
+            // if passed template is a string get the corresponding default template
+            if (!!options.template && typeof options.template === 'string' && toolbarTemplates.hasOwnProperty(options.template)) {
+                options.data = toolbarTemplates[options.template];
+                if (typeof options.data === 'function') {
+                    options.data = options.data.call(this);
+                }
+                this.options.changeStateCallback = getChangeToolbarStateCallback.call(this, options.template);
+                this.options.parentChangeStateCallback = getChangeToolbarStateCallback.call(this, options.parentTemplate);
+            }
+
             this.sandbox.stop(this.$find('.' + constants.toolbarClass));
             this.sandbox.dom.html(this.$find('.' + constants.toolbarClass), $container);
 
             // merge default tabs-options with passed ones
             componentOptions = this.sandbox.util.extend(true, {}, componentOptions, options);
+
+            // store the instance-name of the toolbar
+            this.toolbarInstanceName = componentOptions.instanceName;
 
             this.sandbox.start([
                 {
@@ -685,6 +732,12 @@ define([], function() {
             // change the title
             this.sandbox.on(SET_TITLE.call(this), this.setTitle.bind(this));
 
+            // change the color-point in front of the title
+            this.sandbox.on(SET_TITLE_COLOR.call(this), this.setTitleColor.bind(this));
+
+            // squeezes the header
+            this.sandbox.on(SQUEEZE.call(this), this.squeeze.bind(this));
+
             // get height event
             this.sandbox.on(GET_HEIGHT.call(this), function(callback) {
                 callback(this.sandbox.dom.outerHeight(this.$el));
@@ -705,27 +758,27 @@ define([], function() {
          */
         bindAbstractToolbarEvents: function() {
             this.sandbox.on(TOOLBAR_ITEMS_SET.call(this), function(id, items) {
-                this.sandbox.emit('husky.toolbar.header'+ this.options.instanceName +'.items.set', id, items);
+                this.sandbox.emit('husky.toolbar.'+ this.toolbarInstanceName +'.items.set', id, items);
             }.bind(this));
 
             this.sandbox.on(TOOLBAR_BUTTON_SET.call(this), function(id, object) {
-                this.sandbox.emit('husky.toolbar.header'+ this.options.instanceName +'.button.set', id, object);
+                this.sandbox.emit('husky.toolbar.'+ this.toolbarInstanceName +'.button.set', id, object);
             }.bind(this));
 
             this.sandbox.on(TOOLBAR_ITEM_LOADING.call(this), function(id) {
-                this.sandbox.emit('husky.toolbar.header'+ this.options.instanceName +'.item.loading', id);
+                this.sandbox.emit('husky.toolbar.'+ this.toolbarInstanceName +'.item.loading', id);
             }.bind(this));
 
             this.sandbox.on(TOOLBAR_ITEM_CHANGE.call(this), function(id, name) {
-                this.sandbox.emit('husky.toolbar.header'+ this.options.instanceName +'.item.change', id, name);
+                this.sandbox.emit('husky.toolbar.'+ this.toolbarInstanceName +'.item.change', id, name);
             }.bind(this));
 
             this.sandbox.on(TOOLBAR_ITEM_SHOW.call(this), function(id, name) {
-                this.sandbox.emit('husky.toolbar.header'+ this.options.instanceName +'.item.show', id, name);
+                this.sandbox.emit('husky.toolbar.'+ this.toolbarInstanceName +'.item.show', id, name);
             }.bind(this));
 
             this.sandbox.on(TOOLBAR_ITEM_ENABLE.call(this), function(id, highlight) {
-                this.sandbox.emit('husky.toolbar.header'+ this.options.instanceName +'.item.enable', id, highlight);
+                this.sandbox.emit('husky.toolbar.'+ this.toolbarInstanceName +'.item.enable', id, highlight);
             }.bind(this));
         },
 
@@ -819,9 +872,11 @@ define([], function() {
          * @param highlight {boolean} true to change with a highlight effect
          */
         changeToolbarState: function(type, saved, highlight) {
+
             if (typeof this.options.changeStateCallback === 'function') {
                 this.options.changeStateCallback.call(this, saved, type, highlight);
             }
+
             if (typeof this.options.parentChangeStateCallback === 'function') {
                 this.options.parentChangeStateCallback.call(this, saved, type, highlight);
             }
@@ -849,6 +904,17 @@ define([], function() {
          */
         setTitle: function(title) {
             this.sandbox.dom.html(this.$find('h1'), this.sandbox.translate(title));
+        },
+
+        /**
+         * Changes the color-point in front of the title
+         * @param color {string} the new color
+         */
+        setTitleColor: function(color) {
+            this.sandbox.dom.addClass(this.$find('.' + constants.titleColorClass), constants.titleColorSetClass);
+            this.sandbox.dom.css(this.$find('.' + constants.titleColorClass), {
+               'background-color': color
+            });
         },
 
         /**

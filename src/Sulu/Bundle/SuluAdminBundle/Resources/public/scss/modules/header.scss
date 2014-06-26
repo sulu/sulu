@@ -21,15 +21,36 @@
         top: 45px;
         left: 0;
 
+        &::after {
+            display: table;
+            content: "";
+            clear: both;
+        }
+
         .back {
             position: absolute;
-            top: 18px;
+            top: 22px;
             left: -22px;
-            font-size: 15px;
+            font-size: 16px;
             color: $white;
             cursor: pointer;
             opacity: 1;
             @include single-transition(opacity, $transitionDuration);
+        }
+        .h1 {
+          float: left;
+        }
+        .title-color {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 10px;
+            float: left;
+            margin-top: 19px;
+            margin-right: 10px;
+            &.color-set {
+                display: block;
+            }
         }
     }
 

@@ -24,6 +24,7 @@ define(function() {
 
             suluNavigateAMark: '[data-sulu-navigate="true"]', //a tags which match this mark will use the sulu.navigate method
             fullWidthClass: 'fullwidth',
+            noPaddingClass: 'no-padding',
             fullHeightClass: 'fullheight'
         },
 
@@ -110,7 +111,8 @@ define(function() {
 
         /**
          * sets the container in full-width mode
-         * @event sulu.app.full-width
+         * @event sulu.app.full-size
+         * @param {Boolean} true for full width
          * @param {Boolean} true for full height
          */
         SET_FULL_SIZE = function() {
@@ -341,6 +343,10 @@ define(function() {
             this.sandbox.on('husky.tabs.content.item.select', function(event) {
                 this.emitNavigationEvent(event, true);
             }.bind(this));
+            // content tabs event
+            this.sandbox.on('husky.tabs.header.item.select', function(event) {
+                this.emitNavigationEvent(event, true);
+            }.bind(this));
 
             // emit dimensions-changed event during transition
             this.sandbox.on('husky.navigation.size.change', function() {
@@ -409,15 +415,19 @@ define(function() {
          * Sets the container in full-width mode
          * @param fullwidth {boolean} If true set container in full-width mode
          * @param fullheight {boolean} If true set container in full-height mode
+         * @param keepPaddings {boolean} If true paddings are kept
          */
-        setFullSize: function(fullwidth, fullheight) {
+        setFullSize: function(fullwidth, fullheight, keepPaddings) {
             if (fullheight === true) {
                 this.sandbox.dom.addClass(this.$el, constants.fullHeightClass);
             }
             if (fullwidth === true) {
                 this.sandbox.dom.addClass(this.$el, constants.fullWidthClass);
-                //
-                this.sandbox.dom.css(this.$el, {'padding-left': ''});
+                if (keepPaddings !== true) {
+                    this.sandbox.dom.addClass(this.$el, constants.noPaddingClass);
+                    this.sandbox.dom.css(this.$el, {'padding-left': ''});
+
+                }
                 this.emitContentDimensionsChangedEvent(true);
                 this.sandbox.dom.trigger(this.sandbox.dom.$window, 'resize');
             }
@@ -428,6 +438,7 @@ define(function() {
          */
         removeFullSize: function() {
             this.sandbox.dom.removeClass(this.$el, constants.fullHeightClass);
+            this.sandbox.dom.removeClass(this.$el, constants.noPaddingClass);
             this.sandbox.dom.removeClass(this.$el, constants.fullWidthClass);
         },
 
