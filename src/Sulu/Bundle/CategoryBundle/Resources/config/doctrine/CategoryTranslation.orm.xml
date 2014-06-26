@@ -17,7 +17,7 @@
                 <cascade-all/>
             </cascade>
             <join-columns>
-                <join-column name="idCategories" referenced-column-name="id" nullable="false"/>
+                <join-column name="idCategories" on-delete="CASCADE" referenced-column-name="id" nullable="false"/>
             </join-columns>
         </many-to-one>
 
