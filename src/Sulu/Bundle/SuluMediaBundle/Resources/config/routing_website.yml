@@ -1,0 +1,5 @@
+sulu_media.website.image.proxy:
+    path: /uploads/media/{slug}
+    defaults: { _controller: SuluMediaBundle:WebsiteMedia:getImage }
+    requirements:
+        slug: .*

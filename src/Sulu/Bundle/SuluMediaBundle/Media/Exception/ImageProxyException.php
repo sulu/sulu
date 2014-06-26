@@ -14,7 +14,7 @@ namespace Sulu\Bundle\MediaBundle\Media\Exception;
  * This Exception is thrown when a Uploaded File is not valid
  * @package Sulu\Bundle\MediaBundle\Media\Exception
  */
-class UploadFileException extends MediaException
+class ImageProxyException extends MediaException
 {
     /**
      * @param string $message
@@ -23,16 +23,5 @@ class UploadFileException extends MediaException
     public function __construct($message, $code)
     {
         parent::__construct($message, $code);
-    }
-
-    /**
-     * @return array
-     */
-    public function toArray()
-    {
-        return array(
-            'code' => $this->code,
-            'message' => $this->message
-        );
     }
 }

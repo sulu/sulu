@@ -12,8 +12,8 @@ namespace Sulu\Bundle\MediaBundle\Media\FileValidator;
 use Symfony\Component\HttpFoundation\File\File;
 
 /**
- * Defines the operations of the StorageLayer.
- * The StorageLayer is a interface to centralized management of media store
+ * Defines the operations of the FileValidator.
+ * The FileValidator is a interface to validate uploaded files
  * @package Sulu\Bundle\MediaBundle\Media
  */
 interface FileValidatorInterface

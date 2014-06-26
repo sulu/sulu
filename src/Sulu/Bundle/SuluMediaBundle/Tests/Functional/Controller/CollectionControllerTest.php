@@ -52,6 +52,7 @@ class CollectionControllerTest extends DatabaseTestCase
             self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\CollectionType'),
             self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\CollectionMeta'),
             self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\Media'),
+            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\MediaType'),
             self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\File'),
             self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersion'),
             self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersionMeta'),
@@ -207,7 +208,7 @@ class CollectionControllerTest extends DatabaseTestCase
     {
         $client = $this->createTestClient();
 
-        $generateColor = Collection::generateColor();
+        $generateColor = '#ffcc00';
 
         $this->assertNotEmpty($generateColor);
         $this->assertEquals(7, strlen($generateColor));
@@ -310,11 +311,6 @@ class CollectionControllerTest extends DatabaseTestCase
     {
         $client = $this->createTestClient();
 
-        $generateColor = Collection::generateColor();
-
-        $this->assertNotEmpty($generateColor);
-        $this->assertEquals(7, strlen($generateColor));
-
         $client->request(
             'POST',
             '/api/collections',
@@ -328,7 +324,6 @@ class CollectionControllerTest extends DatabaseTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
         $this->assertEquals('en', $response->locale);
-        $this->assertNotEmpty($response->style);
         $this->assertEquals(2, $response->id);
         $this->assertEquals(1, $response->type);
         $this->assertNotEmpty($response->created);
@@ -435,7 +430,7 @@ class CollectionControllerTest extends DatabaseTestCase
     {
         $client = $this->createTestClient();
 
-        $generateColor = Collection::generateColor();
+        $generateColor = '#ffcc00';
 
         $this->assertNotEmpty($generateColor);
         $this->assertEquals(7, strlen($generateColor));
