@@ -282,7 +282,7 @@ define(['sulucategory/model/category',
 
             if (!!category.get('id')) {
                 category.fetch({
-                    data: {locale: locale},
+                    data: {locale: locale, flat: true},
                     success: function (result) {
                         action(result.toJSON());
                     }.bind(this),
