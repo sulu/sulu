@@ -1,3 +1,4 @@
+
 /** vim: et:ts=4:sw=4:sts=4
  * @license RequireJS 2.1.9 Copyright (c) 2010-2012, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
@@ -28293,6 +28294,7 @@ define('__component__$column-options@husky',[],function() {
  * @param {Function} [options.icons.callback] a callback to execute if the icon got clicked. Gets the id of the data-record as first argument
  * @param {Boolean} [options.hideChildrenAtBeginning] if true children get hidden, if all children are loaded at the beginning
  * @param {String|Number|Null} [options.openChildId] the id of the children to open all parents for. (only relevant in a child-list)
+ * @param {String|Number|Null} [options.cssClass] css-class to give the the components element. (e.g. "white-box")
  *
  * @param {Boolean} [rendered] property used by the datagrid-main class
  * @param {Function} [initialize] function which gets called once at the start of the view
@@ -28320,6 +28322,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             addRowTop: true,
             startTabIndex: 99999,
             excludeFields: [''],
+            cssClass: null,
             columnMinWidth: '70px',
             thumbnailFormat: '50x50',
             showHead: true,
@@ -28356,6 +28359,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             noChildrenClass: 'no-children',
             childrenIndentClass: 'child-indent',
             childrenLoadedClass: 'children-loaded',
+            noHeadClass: 'no-head',
             childrenIndentPx: 25 //px
         },
 
@@ -28479,6 +28483,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Method to render data in table view
          */
         render: function(data, $container) {
+            var selected = null;
             this.data = data;
             this.$el = $container;
 
@@ -28489,6 +28494,11 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             // add full-width class if configured
             if (this.options.fullWidth === true) {
                 this.sandbox.dom.addClass(this.$el, constants.fullWidthClass);
+            }
+
+            // add custom-css class
+            if (!!this.options.cssClass) {
+                this.sandbox.dom.addClass(this.$el, this.options.cssClass);
             }
 
             this.bindDomEvents();
@@ -28506,6 +28516,11 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                 this.openAllParents(this.options.openChildId);
                 this.options.openChildId = null;
             }
+            // try to open all parents for selected records
+            selected = this.datagrid.getSelectedItemIds.call(this.datagrid);
+            this.sandbox.util.foreach(selected, function(recordId) {
+                this.openAllParents(recordId);
+            }.bind(this));
 
             this.rendered = true;
         },
@@ -28519,6 +28534,10 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             // remove full-width class if configured
             if (this.options.fullWidth === true) {
                 this.sandbox.dom.removeClass(this.$el, constants.fullWidthClass);
+            }
+            // remove configured css-class
+            if (!!this.options.cssClass) {
+                this.sandbox.dom.removeClass(this.options.cssClass);
             }
             // remove inline-styles
             this.sandbox.dom.removeAttr(this.$el, 'style');
@@ -28697,9 +28716,13 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             this.$table = $table = this.sandbox.dom.createElement('<table' + (!!this.options.validationDebug ? 'data-debug="true"' : '' ) + '/>');
 
             if (!!this.data.head || !!this.datagrid.matchings) {
-                $thead = this.sandbox.dom.createElement('<thead style="' + (!this.options.showHead ? 'display:none;' : '' ) + '"/>');
+                $thead = this.sandbox.dom.createElement('<thead/>');
                 this.sandbox.dom.append($thead, this.prepareTableHead());
                 this.sandbox.dom.append($table, $thead);
+            }
+
+            if (this.options.showHead === false) {
+                this.sandbox.dom.addClass(this.$tableContainer, constants.noHeadClass);
             }
 
             if (!!this.data.embedded) {
@@ -31385,8 +31408,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * Renders the data of the datagrid
              */
             render: function() {
-                var count = this.setSelectedItems(this.options.preselected);
-                this.sandbox.logger.log('Selected item:', count);
+                this.setSelectedItems(this.options.preselected);
 
                 this.gridViews[this.viewId].render(this.data, this.$element);
                 if (!!this.paginations[this.paginationId]) {
@@ -39005,6 +39027,7 @@ define('__component__$smart-content@husky',[], function() {
  * @params {Number} [options.backdropAlpha] Alpha-value of the backdrop
  * @params {String} [options.type] The type of the overlay ('normal', 'error' or 'warning')
  * @params {Array} [options.buttonsDefaultAlign] the align of the buttons in the footer ('center', 'left' or 'right'). Can be overriden by each button individually
+ * @params {Array} [options.supportKeyInput] if true pressing enter will submit the overlay and esc will close it
  *
  * @params {Array} [options.slides] array of slide objects, will be rendered in a row and can slided with events
  * @params {String} [options.slides[].title] the title of the overlay
@@ -39047,6 +39070,7 @@ define('__component__$overlay@husky',[], function() {
             backdropClose: true,
             backdropColor: '#000000',
             skin: '',
+            supportKeyInput: true,
             type: 'normal',
             backdropAlpha: 0.5,
             cssClass: '',
@@ -39612,8 +39636,10 @@ define('__component__$overlay@husky',[], function() {
             }
 
             // listen on key-inputs
-            this.sandbox.dom.off('body', 'keydown.' + this.options.instanceName);
-            this.sandbox.dom.on('body', 'keydown.' + this.options.instanceName, this.keyHandler.bind(this));
+            if (this.options.supportKeyInput === true) {
+                this.sandbox.dom.off('body', 'keydown.' + this.options.instanceName);
+                this.sandbox.dom.on('body', 'keydown.' + this.options.instanceName, this.keyHandler.bind(this));
+            }
         },
 
         /**
@@ -47269,4 +47295,3 @@ define('husky_extensions/util',[],function() {
         }
     };
 });
-
