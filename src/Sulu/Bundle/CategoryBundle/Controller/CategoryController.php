@@ -127,13 +127,23 @@ class CategoryController extends RestController implements ClassResourceInterfac
      * Can be filtered with "parent" and "depth" parameters
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Sulu\Component\Rest\Exception\MissingArgumentException
      */
     public function cgetAction(Request $request)
     {
         $parent = $request->get('parent');
         $depth = $request->get('depth');
+        $flat = $request->get('flat');
+        $sortBy = $request->get('sortBy');
+        $sortOrder = $request->get('sortOrder');
+
+        // todo: only return a flat response if the flat-parameter is set and return a nested result if it's not set
+        if (!$flat) {
+            throw new MissingArgumentException($this->entityName, 'flat');
+        }
+
         $cm = $this->get('sulu_category.category_manager');
-        $categories = $cm->find($parent, $depth);
+        $categories = $cm->find($parent, $depth, $sortBy, $sortOrder);
         $wrappers = $cm->getApiObjects($categories, $this->getLocale($request->get('locale')));
         $halResponse = $this->createHalResponse($wrappers, true);
         //add children link to hal-links array

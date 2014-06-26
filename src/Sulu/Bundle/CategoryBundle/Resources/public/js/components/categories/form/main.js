@@ -15,7 +15,7 @@ define(function () {
             activeTab: null,
             data: {},
             instanceName: 'category',
-            newCategoryTitle: 'sulu.category.new-category'
+            newCategoryTitle: 'sulu.category.new-category',
         },
 
         tabs = {
@@ -23,7 +23,8 @@ define(function () {
         },
 
         constants = {
-            detailsFromSelector: '#category-form'
+            detailsFromSelector: '#category-form',
+            lastClickedCategorySettingsKey: 'categoriesLastClicked'
         };
 
     return {
@@ -42,6 +43,10 @@ define(function () {
 
             this.bindCustomEvents();
             this.render();
+
+            if (!!this.options.data.id) {
+                this.sandbox.sulu.saveUserSetting(constants.lastClickedCategorySettingsKey, this.options.data.id);
+            }
         },
 
         /**

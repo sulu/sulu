@@ -13,7 +13,8 @@ define(function () {
 
     var constants = {
         toolbarSelector: '#list-toolbar-container',
-        listSelector: '#categories-list'
+        listSelector: '#categories-list',
+        lastClickedCategorySettingsKey: 'categoriesLastClicked'
     };
 
     return {
@@ -40,13 +41,14 @@ define(function () {
 
         initialize: function () {
             this.sandbox.sulu.triggerDeleteSuccessLabel('labels.success.category-delete-desc');
-            this.render();
             this.bindCustomEvents();
+            this.render();
         },
 
         bindCustomEvents: function() {
             this.sandbox.on('sulu.list-toolbar.add', this.addNewCategory.bind(this));
             this.sandbox.on('sulu.list-toolbar.delete', this.deleteSelected.bind(this));
+            this.sandbox.on('husky.datagrid.item.click', this.saveLastClickedCategory.bind(this));
         },
 
         /**
@@ -65,10 +67,11 @@ define(function () {
                 },
                 {
                     el: this.$find(constants.listSelector),
-                    url: '/admin/api/categories?depth=0',
+                    url: '/admin/api/categories?flat=true&sortBy=depth&sortOrder=asc',
                     childrenPropertyName: 'children',
                     viewOptions: {
                         table: {
+                            openChildId: this.sandbox.sulu.getUserSetting(constants.lastClickedCategorySettingsKey),
                             fullWidth: true,
                             selectItem: {
                                 type: 'checkbox',
@@ -97,6 +100,7 @@ define(function () {
          * @param parent
          */
         addNewCategory: function (parent) {
+            this.saveLastClickedCategory(parent);
             this.sandbox.emit('sulu.category.categories.form-add', parent);
         },
 
@@ -105,7 +109,16 @@ define(function () {
          * @param id
          */
         editCategory: function (id) {
+            this.saveLastClickedCategory(id);
             this.sandbox.emit('sulu.category.categories.form', id);
+        },
+
+        /**
+         * Saves an id as the last click category in the user-settings
+         * @param id {Number|String} the id of the category
+         */
+        saveLastClickedCategory: function(id) {
+            this.sandbox.sulu.saveUserSetting(constants.lastClickedCategorySettingsKey, id);
         },
 
         /**
