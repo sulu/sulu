@@ -4,7 +4,7 @@
     "description": "Security Bundle for the Sulu CMS",
     "license": "MIT",
     "keywords": ["sulu", "security"],
-    "version": "0.4.0",
+    "version": "dev-develop",
     "authors": [
         {
             "name": "Sulu Community",
@@ -19,9 +19,9 @@
         "jms/serializer-bundle": "@dev",
         "stof/doctrine-extensions-bundle": "1.1.*@dev",
 
-        "sulu/sulu": "0.4.*",
-        "sulu/admin-bundle": "0.4.*",
-        "sulu/contact-bundle": "0.4.*",
+        "sulu/sulu": "dev-develop",
+        "sulu/admin-bundle": "dev-develop",
+        "sulu/contact-bundle": "dev-develop",
 
         "sulu/tag-bundle": "@dev"
     },
@@ -32,7 +32,7 @@
         "doctrine/doctrine-fixtures-bundle": "dev-master",
         "symfony/monolog-bundle": "2.4.*",
         "phpunit/phpunit": "3.7.*",
-        "sulu/test-bundle": "0.4.*"
+        "sulu/test-bundle": "dev-develop"
     },
     "autoload": {
         "psr-0": {
