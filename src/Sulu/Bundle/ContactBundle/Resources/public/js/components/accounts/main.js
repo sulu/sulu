@@ -88,7 +88,10 @@ define([
             this.sandbox.on('sulu.contacts.accounts.delete', this.delAccounts.bind(this));
 
             // adds a new accountContact Relation
-            this.sandbox.on('sulu.contacts.accounts.add-contact', this.addAccountContact.bind(this));
+            this.sandbox.on('sulu.contacts.accounts.contact.save', this.addAccountContact.bind(this));
+
+            // removes accountContact Relation
+            this.sandbox.on('sulu.contacts.accounts.contacts.remove', this.removeAccountContacts.bind(this));
 
             // saves financial infos
             this.sandbox.on('sulu.contacts.accounts.financials.save', this.saveFinancials.bind(this));
@@ -119,7 +122,6 @@ define([
         },
 
         addAccountContact: function(id, position) {
-            // TODO: create accountContact relation and save
             var accountContact = new AccountContact({contact: new Contact({id: id}), account: this.account, position: position});
 
             accountContact.save(null, {
@@ -135,6 +137,30 @@ define([
         },
 
         /**
+         * removes mulitple AccountContacts
+         * @param ids
+         */
+        removeAccountContacts: function(ids) {
+            // show warning
+            this.sandbox.emit('sulu.overlay.show-warning', 'sulu.overlay.be-careful', 'sulu.overlay.delete-desc', null, function() {
+                // get ids of selected contacts
+                var accountContact;
+                this.sandbox.util.foreach(ids, function(id) {
+                    // set account and contact as well as a dummy id (so that request is going to be sent)
+                    accountContact = new AccountContact({id: 1, contact: new Contact({id: id}), account: this.account});
+                    accountContact.destroy({
+                        success: function() {
+                            this.sandbox.emit('sulu.contacts.accounts.contacts.removed', id);
+                        }.bind(this),
+                        error: function() {
+                            this.sandbox.logger.log("error while deleting AccountContact");
+                        }.bind(this)
+                    });
+                }.bind(this));
+            }.bind(this));
+        },
+
+        /**
          * Converts an account
          */
         convertAccount: function(data) {
@@ -142,11 +168,11 @@ define([
                 if (wasConfirmed) {
                     this.account.set({type: data.id});
                     this.sandbox.emit('sulu.header.toolbar.item.loading', 'options-button');
-                    this.sandbox.util.ajax('/admin/api/accounts/'+this.account.id+'?action=convertAccountType&type='+data.name, {
+                    this.sandbox.util.ajax('/admin/api/accounts/' + this.account.id + '?action=convertAccountType&type=' + data.name, {
 
                         type: 'POST',
 
-                        success: function(response){
+                        success: function(response) {
                             var model = response;
                             this.sandbox.emit('sulu.header.toolbar.item.enable', 'options-button');
 
@@ -158,7 +184,7 @@ define([
                             this.sandbox.emit('sulu.account.type.converted');
                         }.bind(this),
 
-                        error: function(){
+                        error: function() {
                             this.sandbox.logger.log("error while saving profile");
                         }.bind(this)
                     });

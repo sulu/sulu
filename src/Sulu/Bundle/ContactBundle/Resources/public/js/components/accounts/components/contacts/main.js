@@ -38,8 +38,14 @@ define([
                 this.sandbox.emit('sulu.contacts.accounts.list');
             }, this);
 
+            // add new record to datagrid
             this.sandbox.on('sulu.contacts.accounts.contact.saved', function(model) {
-                // TODO: ADD contact to list
+                this.sandbox.emit('husky.datagrid.record.add', model);
+            }, this);
+
+            // remove record from datagrid
+            this.sandbox.on('sulu.contacts.accounts.contacts.removed', function(id) {
+                this.sandbox.emit('husky.datagrid.record.remove', id);
             }, this);
         },
 
@@ -89,6 +95,39 @@ define([
             this.data = data;
         },
 
+        // triggers removal of account contact relation
+        removeContact = function() {
+            this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
+                if (ids.length > 0) {
+                    // and trigger deletion
+                    this.sandbox.emit('sulu.contacts.accounts.contacts.remove', ids);
+                }
+            }.bind(this));
+        },
+
+        // opens column options
+        openColumnOptions = function() {
+            var instanceName;
+            this.sandbox.dom.append('body', '<div id="column-options-overlay" />');
+            this.sandbox.start([
+                {
+                    name: 'column-options@husky',
+                    options: {
+                        el: '#column-options-overlay',
+                        data: this.sandbox.sulu.getUserSetting(this.options.columnOptions.key),
+                        hidden: false,
+                        instanceName: this.options.instanceName,
+                        trigger: '.toggle'
+                    }
+                }
+            ]);
+            instanceName = this.options.instanceName ? this.options.instanceName + '.' : '';
+            this.sandbox.once('husky.column-options.' + instanceName + 'saved', function(data) {
+                this.sandbox.sulu.saveUserSetting(this.options.columnOptions.key, data, this.options.columnOptions.url);
+            }.bind(this));
+        },
+
+        // list-toolbar template
         listTemplate = function() {
             return [
                 {
@@ -105,28 +144,11 @@ define([
                     items: [
                         {
                             title: this.sandbox.translate('list-toolbar.column-options'),
-                            disabled: false,
-                            callback: function() {
-                                var instanceName;
-
-                                this.sandbox.dom.append('body', '<div id="column-options-overlay" />');
-                                this.sandbox.start([
-                                    {
-                                        name: 'column-options@husky',
-                                        options: {
-                                            el: '#column-options-overlay',
-                                            data: this.sandbox.sulu.getUserSetting(this.options.columnOptions.key),
-                                            hidden: false,
-                                            instanceName: this.options.instanceName,
-                                            trigger: '.toggle'
-                                        }
-                                    }
-                                ]);
-                                instanceName = this.options.instanceName ? this.options.instanceName + '.' : '';
-                                this.sandbox.once('husky.column-options.' + instanceName + 'saved', function(data) {
-                                    this.sandbox.sulu.saveUserSetting(this.options.columnOptions.key, data, this.options.columnOptions.url);
-                                }.bind(this));
-                            }.bind(this)
+                            callback: openColumnOptions.bind(this)
+                        },
+                        {
+                            title: this.sandbox.translate('sulu.contact.accounts.contact-remove'),
+                            callback: removeContact.bind(this)
                         }
                     ]
                 }
@@ -137,12 +159,16 @@ define([
         addContactRelation = function() {
             var contactInput = this.sandbox.dom.find(constants.contactSelector + ' input', constants.relationFormSelector),
                 id = this.sandbox.dom.data(contactInput, 'id'),
-                position = this.sandbox.dom.val(this.sandbox.dom.find(constants.positionSelector,constants.relationFormSelector));
-            this.sandbox.emit('sulu.contacts.accounts.add-contact', id, position);
+                position = this.sandbox.dom.val(this.sandbox.dom.find(constants.positionSelector, constants.relationFormSelector));
+            this.sandbox.emit('sulu.contacts.accounts.contact.save', id, position);
         };
 
     return {
         view: true,
+
+        fullSize: {
+            width: true
+        },
 
         templates: ['/admin/contact/template/contact/list'],
 
@@ -174,7 +200,9 @@ define([
                     viewOptions: {
                         table: {
                             fullWidth: true,
-                            selectItem: false,
+                            selectItem: {
+                                type: 'checkbox'
+                            },
                             removeRow: false
                         }
                     }
