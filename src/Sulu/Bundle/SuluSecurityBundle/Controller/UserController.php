@@ -22,6 +22,7 @@ use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\SecurityBundle\Entity\UserSetting;
 use FOS\RestBundle\Controller\Annotations\Get;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Makes the users accessible through a rest api
@@ -67,32 +68,33 @@ class UserController extends RestController implements ClassResourceInterface
 
     /**
      * Creates a new user in the system
+     * @param \Symfony\Component\HttpFoundation\Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function postAction()
+    public function postAction(Request $request)
     {
         try {
-            $userRoles = $this->getRequest()->get('userRoles');
-            $userGroups = $this->getRequest()->get('userGroups');
+            $userRoles = $request->get('userRoles');
+            $userGroups = $request->get('userGroups');
 
-            $this->checkArguments();
+            $this->checkArguments($request);
 
             $em = $this->getDoctrine()->getManager();
 
             $user = new User();
-            $user->setContact($this->getContact($this->getRequest()->get('contact')['id']));
-            $user->setUsername($this->getRequest()->get('username'));
+            $user->setContact($this->getContact($request->get('contact')['id']));
+            $user->setUsername($request->get('username'));
             $user->setSalt($this->generateSalt());
 
-            if ($this->isValidPassword($this->getRequest()->get('password'))) {
+            if ($this->isValidPassword($request->get('password'))) {
                 $user->setPassword(
-                    $this->encodePassword($user, $this->getRequest()->get('password'), $user->getSalt())
+                    $this->encodePassword($user, $request->get('password'), $user->getSalt())
                 );
             } else {
                 throw new InvalidArgumentException($this->entityName, 'password');
             }
 
-            $user->setLocale($this->getRequest()->get('locale'));
+            $user->setLocale($request->get('locale'));
 
             $em->persist($user);
             $em->flush();
@@ -134,10 +136,11 @@ class UserController extends RestController implements ClassResourceInterface
 
     /**
      * Updates the given user with the given data
+     * @param \Symfony\Component\HttpFoundation\Request $request
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function putAction($id)
+    public function putAction(Request $request, $id)
     {
         /** @var User $user */
         $user = $this->getDoctrine()
@@ -149,23 +152,26 @@ class UserController extends RestController implements ClassResourceInterface
                 throw new EntityNotFoundException($this->entityName, $id);
             }
 
-            $this->checkArguments();
+            $this->checkArguments($request);
 
             $em = $this->getDoctrine()->getManager();
 
-            $user->setContact($this->getContact($this->getRequest()->get('contact')['id']));
-            $user->setUsername($this->getRequest()->get('username'));
+            $user->setContact($this->getContact($request->get('contact')['id']));
+            $user->setUsername($request->get('username'));
 
-            if ($this->getRequest()->get('password') != '') {
+            if ($request->get('password') != '') {
                 $user->setSalt($this->generateSalt());
                 $user->setPassword(
-                    $this->encodePassword($user, $this->getRequest()->get('password'), $user->getSalt())
+                    $this->encodePassword($user, $request->get('password'), $user->getSalt())
                 );
             }
 
-            $user->setLocale($this->getRequest()->get('locale'));
+            $user->setLocale($request->get('locale'));
 
-            if (!$this->processUserRoles($user) || !$this->processUserGroups($user)) {
+            if (
+                !$this->processUserRoles($user, $request->get('userRoles')) ||
+                !$this->processUserGroups($user, $request->get('userGroups'))
+            ) {
                 throw new RestException('Could not update dependencies!');
             }
 
@@ -184,10 +190,11 @@ class UserController extends RestController implements ClassResourceInterface
 
     /**
      * Partly updates a user entity for a given id
+     * @param \Symfony\Component\HttpFoundation\Request $request
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function patchAction($id)
+    public function patchAction(Request $request, $id)
     {
         /** @var User $user */
         $user = $this->getDoctrine()
@@ -199,10 +206,12 @@ class UserController extends RestController implements ClassResourceInterface
                 throw new EntityNotFoundException($this->entityName, $id);
             }
 
-            $username = $this->getRequest()->get('username');
-            $password = $this->getRequest()->get('password');
-            $contact = $this->getRequest()->get('contact');
-            $locale = $this->getRequest()->get('locale');
+            $username = $request->get('username');
+            $password = $request->get('password');
+            $contact = $request->get('contact');
+            $locale = $request->get('locale');
+            $userRoles = $request->get('userRoles');
+            $userGroups = $request->get('userGroups');
 
             $em = $this->getDoctrine()->getManager();
 
@@ -222,7 +231,10 @@ class UserController extends RestController implements ClassResourceInterface
                 $user->setLocale($locale);
             }
 
-            if (!$this->processUserRoles($user) || !$this->processUserGroups($user)) {
+            if (
+                ($userRoles !== null && !$this->processUserRoles($user, $userRoles)) ||
+                ($userGroups !== null && !$this->processUserGroups($user, $userGroups))
+            ) {
                 throw new RestException('Could not update dependencies!');
             }
 
@@ -241,13 +253,14 @@ class UserController extends RestController implements ClassResourceInterface
 
     /**
      * Takes a key, value pair and stores it as settings for the user
+     * @param \Symfony\Component\HttpFoundation\Request $request
      * @param Number $id the id of the user
      * @param String $key the settings key
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function putSettingsAction($id, $key)
+    public function putSettingsAction(Request $request, $id, $key)
     {
-        $value = $this->getRequest()->get('value');
+        $value = $request->get('value');
 
         try {
             if ($key === null || $value === null) {
@@ -346,12 +359,11 @@ class UserController extends RestController implements ClassResourceInterface
     /**
      * Process all user roles from request
      * @param User $user The user on which is worked
+     * @param array $userRoles
      * @return bool True if the processing was successful, otherwise false
      */
-    protected function processUserRoles(User $user)
+    protected function processUserRoles(User $user, $userRoles)
     {
-        $userRoles = $this->getRequest()->get('userRoles');
-
         $delete = function ($userRole) use ($user) {
             $user->removeUserRole($userRole);
             $this->getDoctrine()->getManager()->remove($userRole);
@@ -373,10 +385,8 @@ class UserController extends RestController implements ClassResourceInterface
      * @param User $user The user on which is worked
      * @return bool True if the processing was successful, otherwise false
      */
-    protected function processUserGroups(User $user)
+    protected function processUserGroups(User $user, $userGroups)
     {
-        $userGroups = $this->getRequest()->get('userGroups');
-
         $delete = function ($userGroup) use ($user) {
             $user->removeUserGroup($userGroup);
             $this->getDoctrine()->getManager()->remove($userGroup);
@@ -511,18 +521,18 @@ class UserController extends RestController implements ClassResourceInterface
      * Checks if all the arguments are given, and throws an exception if one is missing
      * @throws \Sulu\Component\Rest\Exception\MissingArgumentException
      */
-    private function checkArguments()
+    private function checkArguments(Request $request)
     {
-        if ($this->getRequest()->get('username') == null) {
+        if ($request->get('username') == null) {
             throw new MissingArgumentException($this->entityName, 'username');
         }
-        if ($this->getRequest()->get('password') === null) {
+        if ($request->get('password') === null) {
             throw new MissingArgumentException($this->entityName, 'password');
         }
-        if ($this->getRequest()->get('locale') == null) {
+        if ($request->get('locale') == null) {
             throw new MissingArgumentException($this->entityName, 'locale');
         }
-        if ($this->getRequest()->get('contact') == null) {
+        if ($request->get('contact') == null) {
             throw new MissingArgumentException($this->entityName, 'contact');
         }
     }
@@ -587,13 +597,13 @@ class UserController extends RestController implements ClassResourceInterface
      * optional parameter 'flat' calls listAction
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function cgetAction()
+    public function cgetAction(Request $request)
     {
-        if ($this->getRequest()->get('flat') == 'true') {
+        if ($request->get('flat') == 'true') {
             // flat structure
             $view = $this->responseList();
         } else {
-            $contactId = $this->getRequest()->get('contactId');
+            $contactId = $request->get('contactId');
 
             if ($contactId != null) {
                 $user = $this->getDoctrine()->getRepository($this->entityName)->findUserByContact($contactId);

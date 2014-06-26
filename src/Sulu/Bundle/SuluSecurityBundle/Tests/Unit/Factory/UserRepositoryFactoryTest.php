@@ -20,7 +20,7 @@ class UserRepositoryFactoryTest extends \PHPUnit_Framework_TestCase
     private function getUserRepositoryFactoryMock($system)
     {
         $userRepositoryMock = $this->getMockBuilder('Sulu\Component\Security\UserRepositoryInterface')->getMock();
-        $userRepositoryMock->expects($this->once())->method('setSystem')->with($system);
+        $userRepositoryMock->expects($this->once())->method('init')->with($system, null);
 
         $entityManagerMock = $this->getMockBuilder('Doctrine\ORM\EntityManager')
             ->disableOriginalConstructor()

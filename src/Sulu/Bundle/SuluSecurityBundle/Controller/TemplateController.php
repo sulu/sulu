@@ -9,18 +9,36 @@
 
 namespace Sulu\Bundle\SecurityBundle\Controller;
 
+use Sulu\Bundle\SecurityBundle\Entity\SecurityType;
+use Sulu\Bundle\SecurityBundle\Entity\SecurityTypeRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class TemplateController extends Controller
 {
-
     public function roleFormAction()
     {
         $pool = $this->get('sulu_admin.admin_pool');
         $contexts = $pool->getSecurityContexts();
         $systems = array_keys($contexts);
 
-        return $this->render('SuluSecurityBundle:Template:role.form.html.twig', array('systems' => $systems));
+        /** @var SecurityType[] $securityTypes */
+        $securityTypes = $this->getDoctrine()
+            ->getRepository('Sulu\Bundle\SecurityBundle\Entity\SecurityType')
+            ->findAll();
+
+        $securityTypeTitles = array();
+        foreach ($securityTypes as $securityType) {
+            $securityTypeTitles[] = array(
+                'id' => $securityType->getId(),
+                'name' => $securityType->getName()
+            );
+        }
+
+        return $this->render('SuluSecurityBundle:Template:role.form.html.twig', array(
+                'systems' => $systems,
+                'security_types' => $securityTypeTitles
+            )
+        );
     }
 
     public function permissionformAction()
