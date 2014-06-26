@@ -12,7 +12,7 @@ namespace Sulu\Bundle\CategoryBundle\Controller;
 
 use Sulu\Bundle\AdminBundle\Admin\ContentNavigation;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 
 /**
@@ -35,6 +35,6 @@ class NavigationController extends Controller
             $contentNavigation = $this->get(self::SERVICE_NAME);
         }
 
-        return new Response(json_encode($contentNavigation->toArray('category')));
+        return new JsonResponse(json_encode($contentNavigation->toArray('category')));
     }
 }
