@@ -10,7 +10,7 @@
 
 /**
  */
-define([], function() {
+define([], function () {
 
     'use strict';
 
@@ -29,29 +29,32 @@ define([], function() {
         },
 
         templates = {
-            default: function() {
+            default: function () {
                 return [
                     {
                         id: 'add',
-                        icon: 'user-add',
+                        icon: 'plus-circle',
                         class: 'highlight-white',
                         title: 'add',
-                        callback: function() {
+                        position: 10,
+                        callback: function () {
                             this.sandbox.emit('sulu.list-toolbar.add');
                         }.bind(this)
                     },
                     {
                         id: 'delete',
-                        icon: 'bin',
+                        icon: 'trash-o',
                         title: 'delete',
+                        position: 20,
                         disabled: true,
-                        callback: function() {
+                        callback: function () {
                             this.sandbox.emit('sulu.list-toolbar.delete');
                         }.bind(this)
                     },
                     {
                         id: 'settings',
-                        icon: 'cogwheel',
+                        icon: 'gear',
+                        position: 30,
                         items: [
                             {
                                 title: this.sandbox.translate('sulu.list-toolbar.import'),
@@ -64,7 +67,7 @@ define([], function() {
                             {
                                 title: this.sandbox.translate('list-toolbar.column-options'),
                                 disabled: false,
-                                callback: function() {
+                                callback: function () {
                                     var instanceName;
 
                                     this.sandbox.dom.append('body', '<div id="column-options-overlay" />');
@@ -81,8 +84,8 @@ define([], function() {
                                         }
                                     ]);
                                     instanceName = this.options.instanceName ? this.options.instanceName + '.' : '';
-                                    this.sandbox.once('husky.column-options.' + instanceName + 'saved', function(data) {
-                                        this.sandbox.sulu.saveUserSetting(this.options.columnOptions.key, data, this.options.columnOptions.url);
+                                    this.sandbox.once('husky.column-options.' + instanceName + 'saved', function (data) {
+                                        this.sandbox.sulu.saveUserSetting(this.options.columnOptions.key, data);
                                     }.bind(this));
                                 }.bind(this)
                             }
@@ -90,15 +93,62 @@ define([], function() {
                     }
                 ];
             },
-            defaultEditableList: function() {
+            defaultEditable: function () {
+                return templates.default.call(this).concat([
+                    {
+                        id: 'edit',
+                        icon: 'pencil',
+                        title: 'edit',
+                        position: 25,
+                        disabled: true,
+                        callback: function () {
+                            this.sandbox.emit('sulu.list-toolbar.edit');
+                        }.bind(this)
+                    }
+                ]);
+            },
+            defaultNoSettings: function () {
+                var defaults = templates.default.call(this);
+                defaults.splice(2, 1);
+                return defaults;
+            },
+            changeable: function () {
+                return [
+                    {
+                        id: 'change',
+                        icon: 'th-large',
+                        items: [
+                            {
+                                title: this.sandbox.translate('sulu.list-toolbar.small-thumbnails'),
+                                callback: function () {
+                                    this.sandbox.emit('sulu.list-toolbar.change.thumbnail-small');
+                                }.bind(this)
+                            },
+                            {
+                                title: this.sandbox.translate('sulu.list-toolbar.big-thumbnails'),
+                                callback: function () {
+                                    this.sandbox.emit('sulu.list-toolbar.change.thumbnail-large');
+                                }.bind(this)
+                            },
+                            {
+                                title: this.sandbox.translate('sulu.list-toolbar.table'),
+                                callback: function () {
+                                    this.sandbox.emit('sulu.list-toolbar.change.table');
+                                }.bind(this)
+                            }
+                        ]
+                    }
+                ];
+            },
+            defaultEditableList: function () {
                 var defaults = templates.default.call(this);
                 defaults.splice(1, 0, {
-                    icon: 'floppy-saved',
+                    icon: 'floppy-o',
                     iconSize: 'large',
                     disabled: true,
                     id: 'save',
                     title: this.sandbox.translate('sulu.list-toolbar.save'),
-                    callback: function() {
+                    callback: function () {
                         this.sandbox.emit('sulu.list-toolbar.save');
                     }.bind(this)
                 });
@@ -106,19 +156,29 @@ define([], function() {
             }
         },
         listener = {
-            default: function() {
+            default: function () {
                 var instanceName = this.options.instanceName ? this.options.instanceName + '.' : '',
                     postfix;
-                this.sandbox.on('husky.datagrid.number.selections', function(number) {
+                this.sandbox.on('husky.datagrid.number.selections', function (number) {
                     postfix = number > 0 ? 'enable' : 'disable';
                     this.sandbox.emit('husky.toolbar.' + instanceName + 'item.' + postfix, 'delete', false);
                 }.bind(this));
+
+                this.sandbox.on('sulu.list-toolbar.' + instanceName + 'delete.state-change', function (enable) {
+                    postfix = !!enable ? 'enable' : 'disable';
+                    this.sandbox.emit('husky.toolbar.' + instanceName + 'item.' + postfix, 'delete', false);
+                }.bind(this));
+
+                this.sandbox.on('sulu.list-toolbar.' + instanceName + 'edit.state-change', function (enable) {
+                    postfix = !!enable ? 'enable' : 'disable';
+                    this.sandbox.emit('husky.toolbar.' + instanceName + 'item.' + postfix, 'edit', false);
+                }.bind(this));
             },
-            defaultEditableList: function() {
+            defaultEditableList: function () {
                 var instanceName = this.options.instanceName ? this.options.instanceName + '.' : '';
                 listener.default.call(this);
 
-                this.sandbox.on('husky.datagrid.data.changed', function() {
+                this.sandbox.on('husky.datagrid.data.changed', function () {
                     this.sandbox.emit('husky.toolbar.' + instanceName + 'item.enable', 'save');
                 }.bind(this));
             }
@@ -130,17 +190,17 @@ define([], function() {
          * @param childTemplate
          * @returns {Array}
          */
-        mergeTemplates = function(parentTemplate, childTemplate) {
+            mergeTemplates = function (parentTemplate, childTemplate) {
             var template = parentTemplate.slice(0),
                 parentIds = [];
 
             // get parent ids
-            this.sandbox.util.foreach(parentTemplate, function(parent) {
+            this.sandbox.util.foreach(parentTemplate, function (parent) {
                 parentIds.push(parent.id);
             }.bind(this));
 
             // now merge arrays
-            this.sandbox.util.foreach(childTemplate, function(child) {
+            this.sandbox.util.foreach(childTemplate, function (child) {
                 var parentIndex = parentIds.indexOf(child.id);
                 if (parentIndex < 0) {
                     template.push(child);
@@ -158,7 +218,7 @@ define([], function() {
          * @param defaultTemplates
          * @returns {*}
          */
-        parseTemplate = function(template, defaultTemplates) {
+            parseTemplate = function (template, defaultTemplates) {
             // parse template, if it is a string
             if (typeof template === 'string') {
                 try {
@@ -180,7 +240,7 @@ define([], function() {
         /**
          * Delegates the start of the toolbar to the header
          */
-        startToolbarInHeader = function(options) {
+            startToolbarInHeader = function (options) {
             // remove configured el (let header decide which container to use)
             this.sandbox.emit('sulu.header.set-toolbar', options);
         },
@@ -189,7 +249,7 @@ define([], function() {
          * Starts the husky-toolbar with given options
          * @param options {object} options The options to pass to the toolbar-component
          */
-        startToolbarComponent = function(options) {
+            startToolbarComponent = function (options) {
             this.sandbox.start([
                 {
                     name: 'toolbar@husky',
@@ -201,7 +261,7 @@ define([], function() {
     return {
         view: true,
 
-        initialize: function() {
+        initialize: function () {
 
             // merge defaults
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
@@ -220,14 +280,14 @@ define([], function() {
 
             var $container,
                 options = {
-                        hasSearch: true,
-                        data: this.options.template,
-                        instanceName: this.options.instanceName,
-                        showTitleAsTooltip: true,
-                        searchOptions: {
-                            placeholderText: 'public.search'
-                        }
-                    };
+                    hasSearch: true,
+                    data: this.options.template,
+                    instanceName: this.options.instanceName,
+                    showTitleAsTooltip: true,
+                    searchOptions: {
+                        placeholderText: 'public.search'
+                    }
+                };
 
             // see if template has listener set
             if (this.options.listener) {

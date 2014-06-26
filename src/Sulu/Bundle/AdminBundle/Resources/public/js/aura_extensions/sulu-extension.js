@@ -1,10 +1,10 @@
-(function() {
+(function () {
 
     'use strict';
 
     define([], {
 
-        initialize: function(app) {
+        initialize: function (app) {
             /*********
              * Sulu namespace
              *********/
@@ -29,9 +29,9 @@
              * USER SETTINGS
              *********/
 
-            // load settings
+                // load settings
             app.sandbox.sulu.userSettings = app.sandbox.util.extend(true, {}, SULU.user.settings);
-            var getObjectIds = function(array, swap) {
+            var getObjectIds = function (array, swap) {
                     var temp = swap ? {} : [], i;
                     for (i = 0; i < array.length; i++) {
                         if (swap) {
@@ -60,20 +60,22 @@
              * Stores the info that a node got deleted, so other views are
              * able to display a success label
              */
-            app.sandbox.sulu.unlockDeleteSuccessLabel = function() {
+            app.sandbox.sulu.unlockDeleteSuccessLabel = function () {
                 app.sandbox.sulu.viewStates.nodeDeleted = true;
             },
 
             /**
              * Actually shows a success label if delete description and title. But only
              * if a node actually got deleted beforehand
+             * @param description {String} the description of the label
              */
-            app.sandbox.sulu.triggerDeleteSuccessLabel = function() {
-                if (app.sandbox.sulu.viewStates.nodeDeleted === true) {
-                    app.sandbox.emit('sulu.labels.success.show', 'labels.success.content-deleted-desc', 'labels.success');
-                    delete app.sandbox.sulu.viewStates.nodeDeleted;
-                }
-            },
+                app.sandbox.sulu.triggerDeleteSuccessLabel = function (description) {
+                    if (app.sandbox.sulu.viewStates.nodeDeleted === true) {
+                        description = description || 'labels.success.content-deleted-desc';
+                        app.sandbox.emit('sulu.labels.success.show', description, 'labels.success');
+                        delete app.sandbox.sulu.viewStates.nodeDeleted;
+                    }
+                },
 
             /**
              * load user settings
@@ -81,21 +83,21 @@
              * @param url Where to get data from, if not already available
              * @param callback Function to return settings value
              */
-            app.sandbox.sulu.loadUserSetting = function(key, url, callback) {
-                if (!!app.sandbox.sulu.userSettings[key]) {
-                    callback(app.sandbox.sulu.userSettings[key]);
-                } else {
-                    // get from server
-                    app.sandbox.util.load(url)
-                        .then(function(data) {
-                            app.sandbox.sulu.userSettings[key] = data;
-                            callback(data);
-                        }.bind(this))
-                        .fail(function(data) {
-                            app.sandbox.logger.log('data could not be loaded:', data);
-                        }.bind(this));
-                }
-            };
+                app.sandbox.sulu.loadUserSetting = function (key, url, callback) {
+                    if (!!app.sandbox.sulu.userSettings[key]) {
+                        callback(app.sandbox.sulu.userSettings[key]);
+                    } else {
+                        // get from server
+                        app.sandbox.util.load(url)
+                            .then(function (data) {
+                                app.sandbox.sulu.userSettings[key] = data;
+                                callback(data);
+                            }.bind(this))
+                            .fail(function (data) {
+                                app.sandbox.logger.log('data could not be loaded:', data);
+                            }.bind(this));
+                    }
+                };
 
             /**
              * loads an url and matches it against user settings
@@ -104,10 +106,10 @@
              * @param url Where
              * @param callback
              */
-            app.sandbox.sulu.loadUrlAndMergeWithSetting = function(key, attributesArray, url, callback) {
+            app.sandbox.sulu.loadUrlAndMergeWithSetting = function (key, attributesArray, url, callback) {
 
                 this.sandbox.util.load(url)
-                    .then(function(data) {
+                    .then(function (data) {
                         var userFields = app.sandbox.sulu.getUserSetting(key),
                             serverFields = data,
                             settingsArray = [],
@@ -121,14 +123,14 @@
                             userKeys = getObjectIds.call(this, userFields);
 
                             // keep all user settings if they still exist
-                            this.sandbox.util.foreach(userKeys, function(key, index) {
+                            this.sandbox.util.foreach(userKeys, function (key, index) {
                                 // get index of setting from server fields
                                 serverindex = serverKeys.indexOf(key);
                                 if (serverindex >= 0) {
 
                                     newSetting = serverFields[serverindex];
                                     for (var attrname in userFields[index]) {
-                                        if (attributesArray.indexOf(attrname)<0) {
+                                        if (attributesArray.indexOf(attrname) < 0) {
                                             newSetting[attrname] = userFields[index][attrname];
                                         }
                                     }
@@ -140,7 +142,7 @@
                                 }
                             }.bind(this));
                             // add new ones
-                            this.sandbox.util.foreach(serverKeysLeft, function(key) {
+                            this.sandbox.util.foreach(serverKeysLeft, function (key) {
                                 settingsArray.push(serverFields[serverKeysSwap[key]]);
                             }.bind(this));
                         } else {
@@ -159,7 +161,7 @@
              * @param key
              * @returns mixed
              */
-            app.sandbox.sulu.getUserSetting = function(key) {
+            app.sandbox.sulu.getUserSetting = function (key) {
                 return (typeof app.sandbox.sulu.userSettings[key] !== 'undefined') ? app.sandbox.sulu.userSettings[key] : null;
             };
 
@@ -169,11 +171,11 @@
              * @param value
              * @param url Defines where to save data to
              */
-            app.sandbox.sulu.saveUserSetting = function(key, value, url) {
+            app.sandbox.sulu.saveUserSetting = function (key, value, url) {
                 app.sandbox.sulu.userSettings[key] = value;
 
                 if (!url) {
-                    url = '/admin/api/users/'+ SULU.user.id +'/settings/' + key;
+                    url = '/admin/api/users/' + SULU.user.id + '/settings/' + key;
                 }
 
                 var data = {
@@ -186,13 +188,44 @@
                     url: url,
                     data: data,
                     processData: true,
-                    success: function(response) {
+                    success: function (response) {
 
                     }.bind(this),
-                    error: function(response) {
+                    error: function (response) {
                         app.sandbox.logger.log("error", response);
                     }
                 });
+            };
+
+            /**
+             * Shows a standard delete warning dialog
+             * @param callback {Function} callback function to execute after dialog got closed. The callback gets always executed (with true or false as first argument, whether the dialog got confirmed or not)
+             * @param title {String} custom title of the dialog
+             * @param description {String} custom description of the dialog
+             */
+            app.sandbox.sulu.showDeleteDialog = function(callback, title, description) {
+                // check if callback is a function
+                if (!!callback && typeof(callback) !== 'function') {
+                    throw 'callback is not a function';
+                }
+                title = (typeof title === 'string') ? title : 'sulu.overlay.be-careful';
+                description = (typeof description === 'string') ? description : 'sulu.overlay.delete-desc';
+
+                // show warning dialog
+                app.sandbox.emit('sulu.overlay.show-warning',
+                    title,
+                    description,
+
+                    function() {
+                        // cancel callback
+                        callback(false);
+                    }.bind(this),
+
+                    function() {
+                        // ok callback
+                        callback(true);
+                    }.bind(this)
+                );
             };
 
             /*********
@@ -201,14 +234,13 @@
 
             /**
              * initializes sulu list-toolbar with column options and datagrid
-             * @param key Settings key
-             * @param url Url to load fields from
-             * @param listToolbarOptions
-             * @param datagridOptions
+             * @param key {String} Settings key
+             * @param url {String} Url to load fields from
+             * @param listToolbarOptions {Object}
+             * @param datagridOptions {Object}
              */
-            app.sandbox.sulu.initListToolbarAndList = function(key, url, listToolbarOptions, datagridOptions) {
-                this.sandbox.sulu.loadUrlAndMergeWithSetting.call(this, key, ['translation', 'default', 'editable', 'validation', 'width'], url, function(data) {
-
+            app.sandbox.sulu.initListToolbarAndList = function (key, url, listToolbarOptions, datagridOptions) {
+                this.sandbox.sulu.loadUrlAndMergeWithSetting.call(this, key, ['translation', 'default', 'editable', 'validation', 'width'], url, function (data) {
                     var toolbarDefaults = {
                             columnOptions: {
                                 data: data,
@@ -219,41 +251,61 @@
                             inHeader: false
                         },
                         toolbarOptions = this.sandbox.util.extend(true, {}, toolbarDefaults, listToolbarOptions),
+
                         gridDefaults = {
-                            paginationOptions: {
-                                pageSize: 10
-                            },
-                            pagination: true,
-                            sortable: true,
-                            selectItem: {
-                                type: 'checkbox'
-                            },
-                            removeRow: false,
-                            excludeFields: ['']
+                            view: 'table',
+                            pagination: 'dropdown',
+                            matchings: data,
+                            viewOptions: {
+                                table: {
+                                    contentContainer: '#content'
+                                }
+                            }
                         },
                         gridOptions = this.sandbox.util.extend(true, {}, gridDefaults, datagridOptions);
 
-                    //start list-toolbar component
+                    gridOptions.searchInstanceName = gridOptions.searchInstanceName ? gridOptions.searchInstanceName : toolbarOptions.instanceName;
+                    gridOptions.columnOptionsInstanceName = gridOptions.columnOptionsInstanceName ? gridOptions.columnOptionsInstanceName : toolbarOptions.instanceName;
+
+                    //start list-toolbar and datagrid
                     this.sandbox.start([
                         {
                             name: 'list-toolbar@suluadmin',
                             options: toolbarOptions
-                        }
-                    ]);
-
-                    gridOptions.fieldsData = data;
-                    gridOptions.searchInstanceName = gridOptions.searchInstanceName ? gridOptions.searchInstanceName : toolbarOptions.instanceName;
-                    gridOptions.columnOptionsInstanceName = gridOptions.columnOptionsInstanceName ? gridOptions.columnOptionsInstanceName : toolbarOptions.instanceName;
-                    gridOptions.contentContainer = '#content';
-
-                    // start datagrid
-                    this.sandbox.start([
+                        },
                         {
                             name: 'datagrid@husky',
                             options: gridOptions
                         }
                     ]);
+                }.bind(this));
+            };
 
+            /**
+             * Gets matchings data from user-settings and initializes a datagrid only
+             * @param key {String} the user settings key
+             * @param url {String} url to load the matchings data from. (needed, but only used if matchings are not cached with the key)
+             * @param datagridOptions {Object} options to pass to the datagrid component
+             */
+            app.sandbox.sulu.initList = function(key, url, datagridOptions) {
+                this.sandbox.sulu.loadUrlAndMergeWithSetting.call(this, key, ['translation', 'default', 'editable', 'validation', 'width'], url, function (data) {
+                    // the default options
+                    var options = {
+                        view: 'table',
+                        pagination: 'dropdown',
+                        matchings: data
+                    };
+
+                    // merge default options with passed ones
+                    options = this.sandbox.util.extend(true, {}, options, datagridOptions);
+
+                    //start list-toolbar and datagrid
+                    this.sandbox.start([
+                        {
+                            name: 'datagrid@husky',
+                            options: options
+                        }
+                    ]);
                 }.bind(this));
             };
         }

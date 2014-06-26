@@ -33,7 +33,10 @@ module.exports = function(grunt) {
                     {src: ['Resources/views/Admin/index.html.twig'], dest: 'Resources/public/index.html.twig'},
                     {expand: true, cwd: 'Resources/public', src: ['**'], dest: 'Resources/public/bundles/suluadmin/'},
                     // copy cultures
-                    {expand: true, cwd: 'Resources/public/js/vendor/globalize', src: ['cultures/**'], dest: 'Resources/public/dist/vendor/globalize'}
+                    {expand: true, cwd: 'Resources/public/js/vendor/globalize', src: ['cultures/**'], dest: 'Resources/public/dist/vendor/globalize'},
+                    // copy files
+                    {expand: true, cwd: 'Resources/public/js/vendor/husky/vendor', src: ['*'], dest: 'Resources/public/dist/vendor', filter: 'isFile'}
+
                 ]
             },
             buildResult: {

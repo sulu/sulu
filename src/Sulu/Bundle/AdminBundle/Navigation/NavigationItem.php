@@ -96,6 +96,12 @@ class NavigationItem implements \Iterator
     protected $contentComponentOptions;
 
     /**
+     * Defines if item is disabled
+     * @var bool
+     */
+    protected $disabled;
+
+    /**
      * @param string $name The name of the item
      * @param NavigationItem $parent The parent of the item
      * @param array $contentDisplay if null -> default is array('new', 'edit')
@@ -103,6 +109,7 @@ class NavigationItem implements \Iterator
     function __construct($name, $parent = null, array $contentDisplay = null)
     {
         $this->name = $name;
+        $this->disabled = false;
 
         if ($parent != null) {
             $parent->addChild($this);
@@ -347,6 +354,22 @@ class NavigationItem implements \Iterator
     }
 
     /**
+     * @param boolean $disabled
+     */
+    public function setDisabled($disabled)
+    {
+        $this->disabled = $disabled;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getDisabled()
+    {
+        return $this->disabled;
+    }
+
+    /**
      * Returns a copy of this navigation item without its children
      * @return NavigationItem
      */
@@ -508,6 +531,7 @@ class NavigationItem implements \Iterator
             'icon' => $this->getIcon(),
             'action' => $this->getAction(),
             'hasSettings' => $this->getHasSettings(),
+            'disabled' => $this->getDisabled(),
             'id' => ($this->getId() != null) ? $this->getId() : uniqid(), //FIXME don't use uniqid()
         );
 
@@ -525,7 +549,6 @@ class NavigationItem implements \Iterator
                 'logo' => $this->getHeaderIcon()
             );
         }
-
 
         foreach ($this->getChildren() as $key => $child) {
             /** @var NavigationItem $child */

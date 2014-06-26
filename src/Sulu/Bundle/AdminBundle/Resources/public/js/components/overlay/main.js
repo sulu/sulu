@@ -52,7 +52,7 @@ define(function() {
         /**
          * listens on and shows an error overlay
          *
-         * @event sulu.header.show-error
+         * @event sulu.overlay.show-error
          * @param {String} title of the the overlay
          * @param {String} message of the overlay
          * @param {String} callback for cancel-button
@@ -63,9 +63,9 @@ define(function() {
         },
 
         /**
-         * listens on and shows an error overlay
+         * listens on and shows an warning overlay (ok/cancel)
          *
-         * @event sulu.header.show-error
+         * @event sulu.overlay.show-warning
          * @param {String} title of the the overlay
          * @param {String} message of the overlay
          * @param {String} callback for cancel-button
