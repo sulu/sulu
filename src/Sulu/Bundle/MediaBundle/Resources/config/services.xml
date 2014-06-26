@@ -90,6 +90,7 @@
 
         <service id="sulu.content.type.media_selection" class="%sulu_media.media_selection.class%">
             <argument type="service" id="sulu_media.media_manager"/>
+            <argument type="service" id="sulu_media.rest_object_helper"/>
             <argument type="string">SuluMediaBundle:Template:content-types/media-selection.html.twig</argument>
         </service>
 

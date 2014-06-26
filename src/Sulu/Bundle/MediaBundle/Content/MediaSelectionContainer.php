@@ -49,18 +49,24 @@ class MediaSelectionContainer implements \Serializable
     private $data;
 
     /**
+     * @var RestObjectHelper
+     */
+    private $restObjectHelper;
+
+    /**
      * @Exclude
      * @var MediaManagerInterface
      */
     private $mediaManager;
 
-    function __construct($config, $displayOption, $ids, $localization, $mediaManager)
+    function __construct($config, $displayOption, $ids, $localization, $mediaManager, $restObjectHelper)
     {
         $this->config = $config;
         $this->displayOption = $displayOption;
         $this->ids = $ids;
         $this->localization = $localization;
         $this->mediaManager = $mediaManager;
+        $this->restObjectHelper = $restObjectHelper;
     }
 
     /**
@@ -164,6 +170,6 @@ class MediaSelectionContainer implements \Serializable
      */
     protected function getRestObjectHelper()
     {
-        return $this->get('sulu_media.rest_object_helper');
+        return $this->restObjectHelper;
     }
 }
