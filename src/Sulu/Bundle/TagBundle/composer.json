@@ -3,7 +3,7 @@
     "type": "sulu-bundle",
     "description": "The Sulu Bundle for managing tags",
     "license": "MIT",
-    "version": "0.3.0",
+    "version": "0.4.0",
     "keywords": ["sulu", "tags"],
     "authors": [
         {
@@ -14,19 +14,21 @@
     "require": {
         "php": ">=5.4",
         "doctrine/orm": ">=2.2.3,<2.4-dev",
-        "friendsofsymfony/rest-bundle": "1.0.*",
+        "friendsofsymfony/rest-bundle": "@dev",
+        "friendsofsymfony/http-cache": "@dev",
         "jms/serializer-bundle": "@dev",
-        "sulu/contact-bundle": "0.3.*",
-        "sulu/sulu": "0.3.*",
-        "sulu/admin-bundle": "0.3.*",
-        "sulu/security-bundle": "0.3.*"
+	"sulu/sulu": "0.4.*",
+        "sulu/contact-bundle": "0.4.*",
+        "sulu/admin-bundle": "0.4.*",
+        "sulu/security-bundle": "0.4.*"
     },
     "require-dev": {
-        "symfony/symfony": "2.4.*",
+        "sensio/framework-extra-bundle":  "~3.0",
+        "symfony/symfony": "2.5.*",
         "doctrine/doctrine-bundle": "1.2.*",
         "symfony/monolog-bundle": "2.4.*",
         "phpunit/phpunit": "3.7.*",
-        "sulu/test-bundle": "0.3.*"
+        "sulu/test-bundle": "0.4.*"
     },
     "autoload": {
         "psr-0": {
