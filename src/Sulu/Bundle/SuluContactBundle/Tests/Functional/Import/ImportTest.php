@@ -23,6 +23,9 @@ use Sulu\Bundle\ContactBundle\Entity\UrlType;
 use Sulu\Bundle\ContactBundle\Entity\Note;
 use Sulu\Bundle\ContactBundle\Import\Import;
 use Sulu\Bundle\TestBundle\Testing\DatabaseTestCase;
+use Sulu\Bundle\ContactBundle\Entity\AccountCategory;
+use Sulu\Bundle\ContactBundle\Entity\TermsOfPayment;
+use Sulu\Bundle\ContactBundle\Entity\TermsOfDelivery;
 
 class ImportTest extends DatabaseTestCase
 {
@@ -106,16 +109,31 @@ class ImportTest extends DatabaseTestCase
         self::$em->flush();
 
         // TODO: use fixtures
-        $this->import = new Import(self::$em, array(
-            'emailType' => 1,
-            'phoneType' => 1,
-            'phoneTypeIsdn' => 2,
-            'phoneTypeMobile' => 3,
-            'addressType' => 1,
-            'urlType' => 1,
-            'faxType' => 1,
-            'country' => 1,
-        ));
+        $this->import = new Import(self::$em,
+            array(
+                'emailType' => 1,
+                'phoneType' => 1,
+                'phoneTypeIsdn' => 2,
+                'phoneTypeMobile' => 3,
+                'addressType' => 1,
+                'urlType' => 1,
+                'faxType' => 1,
+                'country' => 1,
+            ),
+            array(), // FIXME: this is not beeing used by import currently (fill in when needed)
+            array(
+                'male' => array(
+                    'id' => 0,
+                    'name' => 'male',
+                    'translation' => 'male'
+                ),
+                'female' => array(
+                    'id' => 1,
+                    'name' => 'female',
+                    'translation' => 'female'
+                ),
+            )
+        );
     }
 
     public function tearDown()
@@ -129,6 +147,7 @@ class ImportTest extends DatabaseTestCase
         self::$entities = array(
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Account'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Contact'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\BankAccount'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Phone'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\PhoneType'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Email'),
@@ -141,6 +160,11 @@ class ImportTest extends DatabaseTestCase
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AddressType'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Country'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Note'),
+            self::$em->getClassMetadata('Sulu\Bundle\TagBundle\Entity\Tag'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AccountCategory'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AccountContact'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\TermsOfDelivery'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\TermsOfPayment')
         );
 
         self::$tool->createSchema(self::$entities);
@@ -327,7 +351,7 @@ class ImportTest extends DatabaseTestCase
         $this->assertEquals('John', $contact->getFirstName());
         $this->assertEquals('Doe', $contact->getLastName());
         $this->assertEquals('Secretary', $contact->getPosition());
-        $this->assertEquals(1, $contact->getAccount()->getId());
+        $this->assertEquals(1, $contact->getAccountContacts()[0]->getAccount()->getId());
 
         // addresss
         /** @var Address $address */
@@ -340,11 +364,9 @@ class ImportTest extends DatabaseTestCase
         $this->assertEquals('Bregenz', $address->getCity());
 
         // phones
-        $this->assertEquals(2, sizeof($contact->getPhones()));
+        $this->assertEquals(1, sizeof($contact->getPhones()));
         $this->assertEquals('+43 (123) 456', $contact->getPhones()->get(0)->getPhone());
         $this->assertEquals('Business', $contact->getPhones()->get(0)->getPhoneType()->getName());
-        $this->assertEquals('+43 (456) 789', $contact->getPhones()->get(1)->getPhone());
-        $this->assertEquals('Mobile', $contact->getPhones()->get(1)->getPhoneType()->getName());
         // notes
         $this->assertEquals(1, sizeof($contact->getNotes()));
         $this->assertEquals('Simple Note', $contact->getNotes()->get(0)->getValue());
@@ -364,7 +386,7 @@ class ImportTest extends DatabaseTestCase
         $this->assertEquals('Exemplary', $contact->getLastName());
         $this->assertEquals('CEO', $contact->getPosition());
         $this->assertEquals('Master', $contact->getTitle());
-        $this->assertEquals(2, $contact->getAccount()->getId());
+        $this->assertEquals(2, $contact->getAccountContacts()[0]->getAccount()->getId());
 
         // addresss
         /** @var Address $address */
@@ -377,11 +399,9 @@ class ImportTest extends DatabaseTestCase
         $this->assertEquals('Berlin', $address->getCity());
 
         // phones
-        $this->assertEquals(2, sizeof($contact->getPhones()));
+        $this->assertEquals(1, sizeof($contact->getPhones()));
         $this->assertEquals('+43 (123) 654', $contact->getPhones()->get(0)->getPhone());
         $this->assertEquals('Business', $contact->getPhones()->get(0)->getPhoneType()->getName());
-        $this->assertEquals('+43 (456) 987', $contact->getPhones()->get(1)->getPhone());
-        $this->assertEquals('Mobile', $contact->getPhones()->get(1)->getPhoneType()->getName());
         // notes
         $this->assertEquals(0, sizeof($contact->getNotes()));
         // faxes

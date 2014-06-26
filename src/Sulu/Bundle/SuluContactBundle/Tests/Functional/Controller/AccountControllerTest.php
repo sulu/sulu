@@ -14,9 +14,12 @@ namespace Sulu\Bundle\ContactBundle\Tests\Functional\Controller;
 use DateTime;
 use Doctrine\ORM\Tools\SchemaTool;
 use Sulu\Bundle\ContactBundle\Entity\Account;
+use Sulu\Bundle\ContactBundle\Entity\AccountCategory;
+use Sulu\Bundle\ContactBundle\Entity\AccountContact;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\AddressType;
+use Sulu\Bundle\ContactBundle\Entity\BankAccount;
 use Sulu\Bundle\ContactBundle\Entity\Country;
 use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\ContactBundle\Entity\EmailType;
@@ -51,6 +54,7 @@ class AccountControllerTest extends DatabaseTestCase
         self::$account->setDisabled(0);
         self::$account->setCreated(new DateTime());
         self::$account->setChanged(new DateTime());
+        self::$account->setPlaceOfJurisdiction('Feldkirch');
 
         $urlType = new UrlType();
         $urlType->setName('Private');
@@ -58,6 +62,7 @@ class AccountControllerTest extends DatabaseTestCase
         $url = new Url();
         $url->setUrl('http://www.company.example');
         $url->setUrlType($urlType);
+        $url->setMain(true);
         self::$account->addUrl($url);
 
         $emailType = new EmailType();
@@ -66,12 +71,14 @@ class AccountControllerTest extends DatabaseTestCase
         $email = new Email();
         $email->setEmail('office@company.example');
         $email->setEmailType($emailType);
+        $email->setMain(true);
         self::$account->addEmail($email);
 
         $phoneType = new PhoneType();
         $phoneType->setName('Private');
 
         $phone = new Phone();
+        $phone->setMain(true);
         $phone->setPhone('123456789');
         $phone->setPhoneType($phoneType);
         self::$account->addPhone($phone);
@@ -82,6 +89,7 @@ class AccountControllerTest extends DatabaseTestCase
         $fax = new Fax();
         $fax->setFax('123654789');
         $fax->setFaxType($faxType);
+        $fax->setMain(true);
         self::$account->addFax($fax);
 
         $country = new Country();
@@ -99,6 +107,12 @@ class AccountControllerTest extends DatabaseTestCase
         $address->setState('Musterland');
         $address->setCountry($country);
         $address->setAddressType($addressType);
+        $address->setBillingAddress(true);
+        $address->setPrimaryAddress(true);
+        $address->setDeliveryAddress(false);
+        $address->setPostboxCity("Dornbirn");
+        $address->setPostboxPostcode("6850");
+        $address->setPostboxNumber("4711");
         self::$account->addAddresse($address);
 
 
@@ -108,8 +122,14 @@ class AccountControllerTest extends DatabaseTestCase
         $contact->setMiddleName("Mittelname");
         $contact->setCreated(new \DateTime());
         $contact->setChanged(new \DateTime());
-        $contact->setAccount(self::$account);
-        self::$account->addContact($contact);
+        $contact->setDisabled(0);
+        $contact->setFormOfAddress(0);
+
+        $accountContact = new AccountContact();
+        $accountContact->setContact($contact);
+        $accountContact->setAccount(self::$account);
+        $accountContact->setMain(true);
+        self::$account->addAccountContact($accountContact);
 
         $note = new Note();
         $note->setValue('Note');
@@ -119,6 +139,7 @@ class AccountControllerTest extends DatabaseTestCase
         self::$em->persist($urlType);
         self::$em->persist($url);
         self::$em->persist($emailType);
+        self::$em->persist($accountContact);
         self::$em->persist($email);
         self::$em->persist($phoneType);
         self::$em->persist($phone);
@@ -129,6 +150,10 @@ class AccountControllerTest extends DatabaseTestCase
         self::$em->persist($faxType);
         self::$em->persist($fax);
         self::$em->persist($contact);
+
+        $accountCategory = new AccountCategory();
+        $accountCategory->setCategory("Test");
+        self::$em->persist($accountCategory);
 
         self::$em->flush();
     }
@@ -150,6 +175,7 @@ class AccountControllerTest extends DatabaseTestCase
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ActivityStatus'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Address'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AddressType'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\BankAccount'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Contact'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ContactLocale'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Country'),
@@ -162,13 +188,19 @@ class AccountControllerTest extends DatabaseTestCase
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\PhoneType'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Url'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\UrlType'),
+            self::$em->getClassMetadata('Sulu\Bundle\TagBundle\Entity\Tag'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AccountCategory'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AccountContact'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\TermsOfPayment'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\TermsOfDelivery'),
         );
 
         self::$tool->dropSchema(self::$entities);
         self::$tool->createSchema(self::$entities);
     }
 
-    private function createTestClient() {
+    private function createTestClient()
+    {
         return $this->createClient(
             array(),
             array(
@@ -209,11 +241,19 @@ class AccountControllerTest extends DatabaseTestCase
         $this->assertEquals('Musterland', $response->addresses[0]->country->name);
         $this->assertEquals('ML', $response->addresses[0]->country->code);
         $this->assertEquals('Private', $response->addresses[0]->addressType->name);
+        $this->assertEquals('Feldkirch', $response->placeOfJurisdiction);
+
+        $this->assertEquals(true,$response->addresses[0]->billingAddress);
+        $this->assertEquals(true,$response->addresses[0]->primaryAddress);
+        $this->assertEquals(false,$response->addresses[0]->deliveryAddress);
+        $this->assertEquals('Dornbirn',$response->addresses[0]->postboxCity);
+        $this->assertEquals('6850',$response->addresses[0]->postboxPostcode);
+        $this->assertEquals('4711',$response->addresses[0]->postboxNumber);
     }
 
     public function testGetByIdNotExisting()
     {
-       $client = $this->createTestClient();
+        $client = $this->createTestClient();
         $client->request(
             'GET',
             '/api/accounts/10'
@@ -243,7 +283,8 @@ class AccountControllerTest extends DatabaseTestCase
                         'urlType' => array(
                             'id' => '1',
                             'name' => 'Private'
-                        )
+                        ),
+                        'main' => 'true'
                     )
                 ),
                 'emails' => array(
@@ -252,14 +293,16 @@ class AccountControllerTest extends DatabaseTestCase
                         'emailType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        )
+                        ),
+                        'main' => 'true'
                     ),
                     array(
                         'email' => 'erika.mustermann@muster.de',
                         'emailType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        )
+                        ),
+                        'main' => 'false'
                     )
                 ),
                 'phones' => array(
@@ -268,14 +311,16 @@ class AccountControllerTest extends DatabaseTestCase
                         'phoneType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        )
+                        ),
+                        'main' => 'true'
                     ),
                     array(
                         'phone' => '987654321',
                         'phoneType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        )
+                        ),
+                        'main' => 'false'
                     )
                 ),
                 'faxes' => array(
@@ -284,14 +329,16 @@ class AccountControllerTest extends DatabaseTestCase
                         'faxType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        )
+                        ),
+                        'main' => 'true'
                     ),
                     array(
                         'fax' => '987654321-1',
                         'faxType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        )
+                        ),
+                        'main' => 'false'
                     )
                 ),
                 'addresses' => array(
@@ -309,7 +356,13 @@ class AccountControllerTest extends DatabaseTestCase
                         'addressType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        )
+                        ),
+                        'billingAddress' => true,
+                        'primaryAddress' => true,
+                        'deliveryAddress' => false,
+                        'postboxCity' => 'Dornbirn',
+                        'postboxPostcode' => '6850',
+                        'postboxNumber' => '4711',
                     )
                 ),
                 'notes' => array(
@@ -340,6 +393,13 @@ class AccountControllerTest extends DatabaseTestCase
         $this->assertEquals('Note 1', $response->notes[0]->value);
         $this->assertEquals('Note 2', $response->notes[1]->value);
 
+        $this->assertEquals(true,$response->addresses[0]->billingAddress);
+        $this->assertEquals(true,$response->addresses[0]->primaryAddress);
+        $this->assertEquals(false,$response->addresses[0]->deliveryAddress);
+        $this->assertEquals('Dornbirn',$response->addresses[0]->postboxCity);
+        $this->assertEquals('6850',$response->addresses[0]->postboxPostcode);
+        $this->assertEquals('4711',$response->addresses[0]->postboxNumber);
+
         $client->request('GET', '/api/accounts/' . $response->id);
         $response = json_decode($client->getResponse()->getContent());
 
@@ -361,6 +421,183 @@ class AccountControllerTest extends DatabaseTestCase
         $this->assertEquals('Musterstate', $response->addresses[0]->state);
         $this->assertEquals('Note 1', $response->notes[0]->value);
         $this->assertEquals('Note 2', $response->notes[1]->value);
+
+        $this->assertEquals(true,$response->addresses[0]->billingAddress);
+        $this->assertEquals(true,$response->addresses[0]->primaryAddress);
+        $this->assertEquals(false,$response->addresses[0]->deliveryAddress);
+        $this->assertEquals('Dornbirn',$response->addresses[0]->postboxCity);
+        $this->assertEquals('6850',$response->addresses[0]->postboxPostcode);
+        $this->assertEquals('4711',$response->addresses[0]->postboxNumber);
+    }
+
+    public function testPostWithCategory()
+    {
+        $client = $this->createTestClient();
+
+        $client->request(
+            'POST',
+            '/api/accounts',
+            array(
+                'name' => 'ExampleCompany',
+                'parent' => array('id' => self::$account->getId()),
+                'type' => Account::TYPE_BASIC,
+                'urls' => array(
+                    array(
+                        'url' => 'http://example.company.com',
+                        'urlType' => array(
+                            'id' => '1',
+                            'name' => 'Private'
+                        ),
+                        'main' => 'true'
+                    )
+                ),
+                'emails' => array(
+                    array(
+                        'email' => 'erika.mustermann@muster.at',
+                        'emailType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        ),
+                        'main' => 'true'
+                    ),
+                    array(
+                        'email' => 'erika.mustermann@muster.de',
+                        'emailType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        ),
+                        'main' => 'false'
+                    )
+                ),
+                'phones' => array(
+                    array(
+                        'phone' => '123456789',
+                        'phoneType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        ),
+                        'main' => 'true'
+                    ),
+                    array(
+                        'phone' => '987654321',
+                        'phoneType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        ),
+                        'main' => 'false'
+                    )
+                ),
+                'faxes' => array(
+                    array(
+                        'fax' => '123456789-1',
+                        'faxType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        ),
+                        'main' => 'true'
+                    ),
+                    array(
+                        'fax' => '987654321-1',
+                        'faxType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        ),
+                        'main' => 'false'
+                    )
+                ),
+                'addresses' => array(
+                    array(
+                        'street' => 'Musterstraße',
+                        'number' => '1',
+                        'zip' => '0000',
+                        'city' => 'Musterstadt',
+                        'state' => 'Musterstate',
+                        'country' => array(
+                            'id' => 1,
+                            'name' => 'Musterland',
+                            'code' => 'ML'
+                        ),
+                        'addressType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        ),
+                        'billingAddress' => true,
+                        'primaryAddress' => true,
+                        'deliveryAddress' => false,
+                        'postboxCity' => 'Dornbirn',
+                        'postboxPostcode' => '6850',
+                        'postboxNumber' => '4711'
+                    )
+                ),
+                'notes' => array(
+                    array('value' => 'Note 1'),
+                    array('value' => 'Note 2')
+                ),
+                'accountCategory' => array(
+                    'id' => '1',
+                    'category' => 'test'
+                )
+            )
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals('ExampleCompany', $response->name);
+        $this->assertEquals(2, $response->lft);
+        $this->assertEquals(3, $response->rgt);
+        $this->assertEquals(1, $response->depth);
+        $this->assertEquals(self::$account->getId(), $response->parent->id);
+        $this->assertEquals('erika.mustermann@muster.at', $response->emails[0]->email);
+        $this->assertEquals('erika.mustermann@muster.de', $response->emails[1]->email);
+        $this->assertEquals('123456789', $response->phones[0]->phone);
+        $this->assertEquals('987654321', $response->phones[1]->phone);
+        $this->assertEquals('123456789-1', $response->faxes[0]->fax);
+        $this->assertEquals('987654321-1', $response->faxes[1]->fax);
+        $this->assertEquals('Musterstraße', $response->addresses[0]->street);
+        $this->assertEquals('1', $response->addresses[0]->number);
+        $this->assertEquals('0000', $response->addresses[0]->zip);
+        $this->assertEquals('Musterstadt', $response->addresses[0]->city);
+        $this->assertEquals('Musterstate', $response->addresses[0]->state);
+        $this->assertEquals('Note 1', $response->notes[0]->value);
+        $this->assertEquals('Note 2', $response->notes[1]->value);
+        $this->assertEquals(1, $response->accountCategory->id);
+
+        $this->assertEquals(true,$response->addresses[0]->billingAddress);
+        $this->assertEquals(true,$response->addresses[0]->primaryAddress);
+        $this->assertEquals(false,$response->addresses[0]->deliveryAddress);
+        $this->assertEquals('Dornbirn',$response->addresses[0]->postboxCity);
+        $this->assertEquals('6850',$response->addresses[0]->postboxPostcode);
+        $this->assertEquals('4711',$response->addresses[0]->postboxNumber);
+
+        $client->request('GET', '/api/accounts/' . $response->id);
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals('ExampleCompany', $response->name);
+        $this->assertEquals(2, $response->lft);
+        $this->assertEquals(3, $response->rgt);
+        $this->assertEquals(1, $response->depth);
+        $this->assertEquals(self::$account->getId(), $response->parent->id);
+        $this->assertEquals('erika.mustermann@muster.at', $response->emails[0]->email);
+        $this->assertEquals('erika.mustermann@muster.de', $response->emails[1]->email);
+        $this->assertEquals('123456789', $response->phones[0]->phone);
+        $this->assertEquals('987654321', $response->phones[1]->phone);
+        $this->assertEquals('123456789-1', $response->faxes[0]->fax);
+        $this->assertEquals('987654321-1', $response->faxes[1]->fax);
+        $this->assertEquals('Musterstraße', $response->addresses[0]->street);
+        $this->assertEquals('1', $response->addresses[0]->number);
+        $this->assertEquals('0000', $response->addresses[0]->zip);
+        $this->assertEquals('Musterstadt', $response->addresses[0]->city);
+        $this->assertEquals('Musterstate', $response->addresses[0]->state);
+        $this->assertEquals('Note 1', $response->notes[0]->value);
+        $this->assertEquals('Note 2', $response->notes[1]->value);
+        $this->assertEquals(1, $response->accountCategory->id);
+
+        $this->assertEquals(true,$response->addresses[0]->billingAddress);
+        $this->assertEquals(true,$response->addresses[0]->primaryAddress);
+        $this->assertEquals(false,$response->addresses[0]->deliveryAddress);
+        $this->assertEquals('Dornbirn',$response->addresses[0]->postboxCity);
+        $this->assertEquals('6850',$response->addresses[0]->postboxPostcode);
+        $this->assertEquals('4711',$response->addresses[0]->postboxNumber);
     }
 
     public function testPostWithIds()
@@ -400,14 +637,16 @@ class AccountControllerTest extends DatabaseTestCase
                         'emailType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        )
+                        ),
+                        'main' => 'false'
                     ),
                     array(
                         'email' => 'erika.mustermann@muster.de',
                         'emailType' => array(
                             'id' => 1,
                             'name' => 'Work'
-                        )
+                        ),
+                        'main' => 'false'
                     )
                 ),
             )
@@ -429,14 +668,16 @@ class AccountControllerTest extends DatabaseTestCase
                         'phoneType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        )
+                        ),
+                        'main' => 'true'
                     ),
                     array(
                         'phone' => '987654321',
                         'phoneType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        )
+                        ),
+                        'main' => 'false'
                     )
                 ),
             )
@@ -510,7 +751,8 @@ class AccountControllerTest extends DatabaseTestCase
                         'urlType' => array(
                             'id' => '2',
                             'name' => 'Work'
-                        )
+                        ),
+                        'main' => 'false'
                     )
                 )
             )
@@ -535,14 +777,16 @@ class AccountControllerTest extends DatabaseTestCase
                         'emailType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        )
+                        ),
+                        'main' => 'false'
                     ),
                     array(
                         'email' => 'erika.mustermann@muster.de',
                         'emailType' => array(
                             'id' => 2,
                             'name' => 'Work'
-                        )
+                        ),
+                        'main' => 'false'
                     )
                 ),
             )
@@ -567,14 +811,16 @@ class AccountControllerTest extends DatabaseTestCase
                         'phoneType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        )
+                        ),
+                        'main' => 'false'
                     ),
                     array(
                         'phone' => '987654321',
                         'phoneType' => array(
                             'id' => 2,
                             'name' => 'Work'
-                        )
+                        ),
+                        'main' => 'false'
                     )
                 ),
             )
@@ -633,7 +879,8 @@ class AccountControllerTest extends DatabaseTestCase
                         'faxType' => array(
                             'id' => 2,
                             'name' => 'Work'
-                        )
+                        ),
+                        'main' => 'false'
                     )
                 ),
             )
@@ -794,7 +1041,13 @@ class AccountControllerTest extends DatabaseTestCase
                         'addressType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        )
+                        ),
+                        'billingAddress' => true,
+                        'primaryAddress' => true,
+                        'deliveryAddress' => false,
+                        'postboxCity' => 'Dornbirn',
+                        'postboxPostcode' => '6850',
+                        'postboxNumber' => '4711'
                     ),
                     array(
                         'street' => 'Rathausgasse',
@@ -865,6 +1118,13 @@ class AccountControllerTest extends DatabaseTestCase
         $this->assertEquals('ML', $response->addresses[0]->country->code);
         $this->assertEquals('Private', $response->addresses[0]->addressType->name);
 
+        $this->assertEquals(true,$response->addresses[0]->billingAddress);
+        $this->assertEquals(true,$response->addresses[0]->primaryAddress);
+        $this->assertEquals(false,$response->addresses[0]->deliveryAddress);
+        $this->assertEquals('Dornbirn',$response->addresses[0]->postboxCity);
+        $this->assertEquals('6850',$response->addresses[0]->postboxPostcode);
+        $this->assertEquals('4711',$response->addresses[0]->postboxNumber);
+
         $this->assertEquals('Rathausgasse', $response->addresses[1]->street);
         $this->assertEquals('3', $response->addresses[1]->number);
         $this->assertEquals('2222', $response->addresses[1]->zip);
@@ -922,6 +1182,13 @@ class AccountControllerTest extends DatabaseTestCase
         $this->assertEquals('ML', $response->addresses[0]->country->code);
         $this->assertEquals('Private', $response->addresses[0]->addressType->name);
 
+        $this->assertEquals(true,$response->addresses[0]->billingAddress);
+        $this->assertEquals(true,$response->addresses[0]->primaryAddress);
+        $this->assertEquals(false,$response->addresses[0]->deliveryAddress);
+        $this->assertEquals('Dornbirn',$response->addresses[0]->postboxCity);
+        $this->assertEquals('6850',$response->addresses[0]->postboxPostcode);
+        $this->assertEquals('4711',$response->addresses[0]->postboxNumber);
+
         $this->assertEquals('Rathausgasse', $response->addresses[1]->street);
         $this->assertEquals('3', $response->addresses[1]->number);
         $this->assertEquals('2222', $response->addresses[1]->zip);
@@ -931,7 +1198,6 @@ class AccountControllerTest extends DatabaseTestCase
         $this->assertEquals('ML', $response->addresses[1]->country->code);
         $this->assertEquals('Private', $response->addresses[1]->addressType->name);
     }
-
 
     public function testPutNoDetails()
     {
@@ -1013,21 +1279,25 @@ class AccountControllerTest extends DatabaseTestCase
         $this->assertEquals(1, $response->total);
     }
 
-
     public function testDeleteByIdAndDeleteContacts()
     {
-
         $contact = new Contact();
         $contact->setFirstName("Vorname");
         $contact->setLastName("Nachname");
         $contact->setMiddleName("Mittelname");
         $contact->setCreated(new \DateTime());
         $contact->setChanged(new \DateTime());
-        $contact->setAccount(self::$account);
-
+        $contact->setDisabled(0);
+        $contact->setFormOfAddress(0);
         self::$em->persist($contact);
-        self::$em->flush();
+        $accountContact = new AccountContact();
+        $accountContact->setContact($contact);
+        $accountContact->setAccount(self::$account);
+        $accountContact->setMain(true);
+        self::$account->addAccountContact($accountContact);
+        self::$em->persist($accountContact);
 
+        self::$em->flush();
 
         $client = $this->createTestClient();
 
@@ -1082,10 +1352,16 @@ class AccountControllerTest extends DatabaseTestCase
             $contact->setMiddleName("Mittelname " . $i);
             $contact->setCreated(new \DateTime());
             $contact->setChanged(new \DateTime());
-            $contact->setAccount(self::$account);
-
-            $acc->addContact($contact);
+            $contact->setDisabled(0);
+            $contact->setFormOfAddress(0);
             self::$em->persist($contact);
+
+            $accountContact = new AccountContact();
+            $accountContact->setContact($contact);
+            $accountContact->setAccount(self::$account);
+            $accountContact->setMain(true);
+            self::$em->persist($accountContact);
+            self::$account->addAccountContact($accountContact);
         }
 
         // add subaccount to self::$account
@@ -1100,7 +1376,7 @@ class AccountControllerTest extends DatabaseTestCase
         self::$em->flush();
 
         // get number of contacts from both accounts
-        $numContacts = self::$account->getContacts()->count() + $acc->getContacts()->count();
+        $numContacts = self::$account->getAccountContacts()->count() + $acc->getAccountContacts()->count();
 
         $client = $this->createTestClient();
         $client->request(
@@ -1139,15 +1415,21 @@ class AccountControllerTest extends DatabaseTestCase
             $contact->setMiddleName("Mittelname " . $i);
             $contact->setCreated(new \DateTime());
             $contact->setChanged(new \DateTime());
-            $contact->setAccount(self::$account);
-            self::$account->addContact($contact);
-
+            $contact->setDisabled(0);
+            $contact->setFormOfAddress(0);
             self::$em->persist($contact);
+
+            $accountContact = new AccountContact();
+            $accountContact->setContact($contact);
+            $accountContact->setAccount(self::$account);
+            $accountContact->setMain(true);
+            self::$em->persist($accountContact);
+            self::$account->addAccountContact($accountContact);
         }
 
         self::$em->flush();
 
-        $numContacts = self::$account->getContacts()->count();
+        $numContacts = self::$account->getAccountContacts()->count();
 
         $client = $this->createTestClient();
 
@@ -1157,7 +1439,7 @@ class AccountControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         // number of returned contacts has to be less or equal 3
-        $this->assertLessThanOrEqual(3, sizeof($response->contacts));
+        $this->assertEquals(3, sizeof($response->contacts));
 
         // return full number of contacts related to account
         $this->assertEquals($numContacts, $response->numContacts);
@@ -1293,7 +1575,13 @@ class AccountControllerTest extends DatabaseTestCase
                         'addressType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        )
+                        ),
+                        'billingAddress' => true,
+                        'primaryAddress' => true,
+                        'deliveryAddress' => false,
+                        'postboxCity' => 'Dornbirn',
+                        'postboxPostcode' => '6850',
+                        'postboxNumber' => '4711'
                     )
                 ),
                 'notes' => array(
@@ -1321,6 +1609,13 @@ class AccountControllerTest extends DatabaseTestCase
         $this->assertEquals('Musterstate', $response->addresses[0]->state);
         $this->assertEquals('Note 1', $response->notes[0]->value);
         $this->assertEquals('Note 2', $response->notes[1]->value);
+
+        $this->assertEquals(true,$response->addresses[0]->billingAddress);
+        $this->assertEquals(true,$response->addresses[0]->primaryAddress);
+        $this->assertEquals(false,$response->addresses[0]->deliveryAddress);
+        $this->assertEquals('Dornbirn',$response->addresses[0]->postboxCity);
+        $this->assertEquals('6850',$response->addresses[0]->postboxPostcode);
+        $this->assertEquals('4711',$response->addresses[0]->postboxNumber);
 
         $client->request(
             'PUT',
@@ -1408,7 +1703,13 @@ class AccountControllerTest extends DatabaseTestCase
                         'addressType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        )
+                        ),
+                        'billingAddress' => true,
+                        'primaryAddress' => true,
+                        'deliveryAddress' => false,
+                        'postboxCity' => 'Dornbirn',
+                        'postboxPostcode' => '6850',
+                        'postboxNumber' => '4711'
                     )
                 ),
                 'notes' => array(
@@ -1439,5 +1740,284 @@ class AccountControllerTest extends DatabaseTestCase
         $this->assertEquals('Musterstate', $response->addresses[0]->state);
         $this->assertEquals('Note 1', $response->notes[0]->value);
         $this->assertEquals('Note 2', $response->notes[1]->value);
+
+        $this->assertEquals(true,$response->addresses[0]->billingAddress);
+        $this->assertEquals(true,$response->addresses[0]->primaryAddress);
+        $this->assertEquals(false,$response->addresses[0]->deliveryAddress);
+        $this->assertEquals('Dornbirn',$response->addresses[0]->postboxCity);
+        $this->assertEquals('6850',$response->addresses[0]->postboxPostcode);
+        $this->assertEquals('4711',$response->addresses[0]->postboxNumber);
     }
+
+    public function testPrimaryAddressHandlingPost()
+    {
+        $client = $this->createTestClient();
+
+        $client->request(
+            'POST',
+            '/api/accounts',
+            array(
+                'name' => 'ExampleCompany',
+                'parent' => array('id' => self::$account->getId()),
+                'type' => Account::TYPE_BASIC,
+                'urls' => array(
+                    array(
+                        'url' => 'http://example.company.com',
+                        'urlType' => array(
+                            'id' => '1',
+                            'name' => 'Private'
+                        )
+                    )
+                ),
+                'emails' => array(
+                    array(
+                        'email' => 'erika.mustermann@muster.at',
+                        'emailType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        )
+                    ),
+                    array(
+                        'email' => 'erika.mustermann@muster.de',
+                        'emailType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        )
+                    )
+                ),
+                'addresses' => array(
+                    array(
+                        'street' => 'Musterstraße',
+                        'number' => '1',
+                        'zip' => '0000',
+                        'city' => 'Musterstadt',
+                        'state' => 'Musterstate',
+                        'country' => array(
+                            'id' => 1,
+                            'name' => 'Musterland',
+                            'code' => 'ML'
+                        ),
+                        'addressType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        ),
+                        'billingAddress' => true,
+                        'primaryAddress' => true,
+                        'deliveryAddress' => false,
+                        'postboxCity' => 'Dornbirn',
+                        'postboxPostcode' => '6850',
+                        'postboxNumber' => '4711',
+                    ),
+                    array(
+                        'street' => 'Musterstraße',
+                        'number' => '1',
+                        'zip' => '0000',
+                        'city' => 'Musterstadt',
+                        'state' => 'Musterstate',
+                        'country' => array(
+                            'id' => 1,
+                            'name' => 'Musterland',
+                            'code' => 'ML'
+                        ),
+                        'addressType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        ),
+                        'billingAddress' => true,
+                        'primaryAddress' => true,
+                        'deliveryAddress' => false,
+                        'postboxCity' => 'Dornbirn',
+                        'postboxPostcode' => '6850',
+                        'postboxNumber' => '4711',
+                    )
+                )
+            )
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(true,$response->addresses[0]->primaryAddress);
+        $this->assertEquals(false,$response->addresses[1]->primaryAddress);
+
+        $client->request('GET', '/api/accounts/' . $response->id);
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(true,$response->addresses[0]->primaryAddress);
+        $this->assertEquals(false,$response->addresses[1]->primaryAddress);
+
+    }
+
+    public function testPrimaryAddressHandlingPut()
+    {
+        $client = $this->createTestClient();
+        $client->request(
+            'PUT',
+            '/api/accounts/1',
+            array(
+                'name' => 'ExampleCompany',
+                'urls' => array(
+                    array(
+                        'id' => 1,
+                        'url' => 'http://example.company.com',
+                        'urlType' => array(
+                            'id' => '1',
+                            'name' => 'Private'
+                        )
+                    ),
+                    array(
+                        'url' => 'http://test.company.com',
+                        'urlType' => array(
+                            'id' => '1',
+                            'name' => 'Private'
+                        )
+                    )
+                ),
+                'emails' => array(
+                    array(
+                        'email' => 'office@company.com',
+                        'emailType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        )
+                    ),
+                    array(
+                        'email' => 'erika.mustermann@company.com',
+                        'emailType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        )
+                    )
+                ),
+                'addresses' => array(
+                    array(
+                        'id' => '1',
+                        'street' => 'Bahnhofstraße',
+                        'number' => '2',
+                        'zip' => '0022',
+                        'city' => 'Dornbirn',
+                        'state' => 'state1',
+                        'country' => array(
+                            'id' => 1,
+                            'name' => 'Musterland',
+                            'code' => 'ML'
+                        ),
+                        'addressType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        ),
+                        'billingAddress' => true,
+                        'primaryAddress' => true,
+                        'deliveryAddress' => false,
+                        'postboxCity' => 'Dornbirn',
+                        'postboxPostcode' => '6850',
+                        'postboxNumber' => '4711'
+                    ),
+                    array(
+                        'street' => 'Rathausgasse 1',
+                        'number' => '3',
+                        'zip' => '2222',
+                        'city' => 'Dornbirn',
+                        'state' => 'state1',
+                        'country' => array(
+                            'id' => 1,
+                            'name' => 'Musterland',
+                            'code' => 'ML'
+                        ),
+                        'addressType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        ),
+                        'billingAddress' => true,
+                        'primaryAddress' => true,
+                        'deliveryAddress' => false,
+                        'postboxCity' => 'Dornbirn',
+                        'postboxPostcode' => '6850',
+                        'postboxNumber' => '4711'
+                    ),
+                    array(
+                        'street' => 'Rathausgasse 2',
+                        'number' => '3',
+                        'zip' => '2222',
+                        'city' => 'Dornbirn',
+                        'state' => 'state1',
+                        'country' => array(
+                            'id' => 1,
+                            'name' => 'Musterland',
+                            'code' => 'ML'
+                        ),
+                        'addressType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        ),
+                        'billingAddress' => true,
+                        'primaryAddress' => true,
+                        'deliveryAddress' => false,
+                        'postboxCity' => 'Dornbirn',
+                        'postboxPostcode' => '6850',
+                        'postboxNumber' => '4711'
+                    )
+                )
+            )
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertEquals(false,$response->addresses[0]->primaryAddress);
+        $this->assertEquals(true,$response->addresses[1]->primaryAddress);
+        $this->assertEquals(false,$response->addresses[2]->primaryAddress);
+
+        $client->request(
+            'GET',
+            '/api/accounts/1'
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertEquals(false,$response->addresses[0]->primaryAddress);
+        $this->assertEquals(true,$response->addresses[1]->primaryAddress);
+        $this->assertEquals(false,$response->addresses[2]->primaryAddress);
+    }
+
+    public function testTriggerAction()
+    {
+
+        $client = $this->createTestClient();
+
+        $client->request(
+            'POST',
+            '/api/accounts/1?action=convertAccountType&type=lead'
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $this->assertEquals(self::$account->getId(), $response->id);
+        $this->assertEquals(1, $response->type);
+
+    }
+
+    public function testTriggerActionUnknownTrigger()
+    {
+        $client = $this->createTestClient();
+
+        $client->request(
+            'POST',
+            '/api/accounts/1?action=xyz&type=lead'
+        );
+
+        $this->assertEquals(400, $client->getResponse()->getStatusCode());
+    }
+
+    public function testTriggerActionUnknownEntity()
+    {
+        $client = $this->createTestClient();
+
+        $client->request(
+            'POST',
+            '/api/accounts/999?action=convertAccountType&type=lead'
+        );
+
+        $this->assertEquals(404, $client->getResponse()->getStatusCode());
+    }
+
 }
