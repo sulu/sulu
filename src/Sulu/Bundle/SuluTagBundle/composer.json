@@ -17,10 +17,10 @@
         "friendsofsymfony/rest-bundle": "@dev",
         "friendsofsymfony/http-cache": "@dev",
         "jms/serializer-bundle": "@dev",
-	"sulu/sulu": "0.4.*",
-        "sulu/contact-bundle": "0.4.*",
-        "sulu/admin-bundle": "0.4.*",
-        "sulu/security-bundle": "0.4.*"
+	"sulu/sulu": "dev-develop",
+        "sulu/contact-bundle": "dev-develop",
+        "sulu/admin-bundle": "dev-develop",
+        "sulu/security-bundle": "dev-develop"
     },
     "require-dev": {
         "sensio/framework-extra-bundle":  "~3.0",
@@ -28,7 +28,7 @@
         "doctrine/doctrine-bundle": "1.2.*",
         "symfony/monolog-bundle": "2.4.*",
         "phpunit/phpunit": "3.7.*",
-        "sulu/test-bundle": "0.4.*"
+        "sulu/test-bundle": "dev-develop"
     },
     "autoload": {
         "psr-0": {
