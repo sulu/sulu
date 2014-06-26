@@ -25,12 +25,32 @@ define({
 
         app.components.addSource('sulucategory', '/bundles/sulucategory/js/components');
 
-        // Example: list all contacts
-        // sandbox.mvc.routes.push({
-        //     route: 'contacts/contacts',
-        //    callback: function(){
-        //         this.html('<div data-aura-component="contacts@sulucontact" data-aura-display="list"/>');
-        //     }
-        // });
+        sandbox.mvc.routes.push({
+            route: 'settings/categories',
+            callback: function(){
+                this.html('<div data-aura-component="categories@sulucategory" data-aura-display="list"/>');
+            }
+        });
+
+        sandbox.mvc.routes.push({
+            route: 'settings/categories/new/:parent/:content',
+            callback: function(parent, content){
+                this.html('<div data-aura-component="categories/content@sulucategory" data-aura-display="form" data-aura-parent="'+ parent +'" data-aura-content="'+ content +'"/>');
+            }
+        });
+
+        sandbox.mvc.routes.push({
+            route: 'settings/categories/new/:content',
+            callback: function(content){
+                this.html('<div data-aura-component="categories/content@sulucategory" data-aura-display="form" data-aura-content="'+ content +'"/>');
+            }
+        });
+
+        sandbox.mvc.routes.push({
+            route: 'settings/categories/edit::id/:content',
+            callback: function(id, content){
+                this.html('<div data-aura-component="categories/content@sulucategory" data-aura-display="form" data-aura-content="'+ content +'" data-aura-id="'+ id +'"/>');
+            }
+        });
     }
 });
