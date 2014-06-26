@@ -23,6 +23,7 @@ class PortalRouteProviderTest extends \PHPUnit_Framework_TestCase
     {
         // Set up test
         $path = '/';
+        $prefix = 'de';
         $uuid = 1;
         $portal = new Portal();
         $portal->setKey('portal');
@@ -35,7 +36,7 @@ class PortalRouteProviderTest extends \PHPUnit_Framework_TestCase
         $localization->setLanguage('de');
 
         $structure = $this->getStructureMock($uuid, 1);
-        $requestAnalyzer = $this->getRequestAnalyzerMock($portal, $path, $localization);
+        $requestAnalyzer = $this->getRequestAnalyzerMock($portal, $path, $prefix, $localization);
         $activeTheme = $this->getActiveThemeMock();
 
         $contentMapper = $this->getContentMapperMock($structure);
@@ -58,6 +59,7 @@ class PortalRouteProviderTest extends \PHPUnit_Framework_TestCase
     {
         // Set up test
         $path = '';
+        $prefix = '/de';
         $uuid = 1;
         $portal = new Portal();
         $portal->setKey('portal');
@@ -70,7 +72,7 @@ class PortalRouteProviderTest extends \PHPUnit_Framework_TestCase
         $localization->setLanguage('de');
 
         $structure = $this->getStructureMock($uuid);
-        $requestAnalyzer = $this->getRequestAnalyzerMock($portal, $path, $localization);
+        $requestAnalyzer = $this->getRequestAnalyzerMock($portal, $path, $prefix, $localization);
         $activeTheme = $this->getActiveThemeMock();
 
         $contentMapper = $this->getContentMapperMock($structure);
@@ -91,6 +93,7 @@ class PortalRouteProviderTest extends \PHPUnit_Framework_TestCase
     {
         // Set up test
         $path = '/';
+        $prefix = '/de';
         $uuid = 1;
         $portal = new Portal();
         $portal->setKey('portal');
@@ -103,7 +106,7 @@ class PortalRouteProviderTest extends \PHPUnit_Framework_TestCase
         $localization->setLanguage('de');
 
         $structure = $this->getStructureMock($uuid);
-        $requestAnalyzer = $this->getRequestAnalyzerMock($portal, $path, $localization, $path);
+        $requestAnalyzer = $this->getRequestAnalyzerMock($portal, $path, $prefix, $localization, $path);
         $activeTheme = $this->getActiveThemeMock();
 
         $contentMapper = $this->getContentMapperMock($structure);
@@ -122,10 +125,45 @@ class PortalRouteProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('/', $route->getDefaults()['path']);
     }
 
+    public function testGetCollectionForSingleLanguageRequestSlashOnly()
+    {
+        // Set up test
+        $path = '/';
+        $prefix = '';
+        $uuid = 1;
+        $portal = new Portal();
+        $portal->setKey('portal');
+        $theme = new Theme();
+        $theme->setKey('theme');
+        $webspace = new Webspace();
+        $webspace->setTheme($theme);
+        $portal->setWebspace($webspace);
+        $localization = new Localization();
+        $localization->setLanguage('de');
+
+        $structure = $this->getStructureMock($uuid);
+        $requestAnalyzer = $this->getRequestAnalyzerMock($portal, $path, $prefix, $localization, $path);
+        $activeTheme = $this->getActiveThemeMock();
+
+        $contentMapper = $this->getContentMapperMock($structure);
+        $contentMapper->expects($this->any())->method('loadByResourceLocator')->will($this->returnValue($structure));
+
+        $portalRouteProvider = new PortalRouteProvider($contentMapper, $requestAnalyzer, $activeTheme);
+
+        $request = $this->getRequestMock($path);
+
+        // Test the route provider
+        $routes = $portalRouteProvider->getRouteCollectionForRequest($request);
+
+        $this->assertCount(1, $routes);
+        $this->assertEquals(1, $routes->getIterator()->current()->getDefaults()['structure']->getUuid());
+    }
+
     public function testGetCollectionForPartialMatch()
     {
         // Set up test
         $path = '/';
+        $prefix = '/de';
         $uuid = 1;
         $portal = new Portal();
         $portal->setKey('portal');
@@ -139,6 +177,7 @@ class PortalRouteProviderTest extends \PHPUnit_Framework_TestCase
         $requestAnalyzer = $this->getRequestAnalyzerMock(
             $portal,
             $path,
+            $prefix,
             null,
             RequestAnalyzerInterface::MATCH_TYPE_PARTIAL,
             'sulu.lo',
@@ -167,6 +206,7 @@ class PortalRouteProviderTest extends \PHPUnit_Framework_TestCase
     {
         // Set up test
         $path = '/';
+        $prefix = '/de';
         $uuid = 1;
         $portal = new Portal();
         $portal->setKey('portal');
@@ -179,7 +219,7 @@ class PortalRouteProviderTest extends \PHPUnit_Framework_TestCase
         $localization->setLanguage('de');
 
         $structure = $this->getStructureMock($uuid);
-        $requestAnalyzer = $this->getRequestAnalyzerMock($portal, $path, $localization);
+        $requestAnalyzer = $this->getRequestAnalyzerMock($portal, $path, $prefix, $localization);
         $activeTheme = $this->getActiveThemeMock();
 
         $contentMapper = $this->getContentMapperMock($structure);
@@ -204,6 +244,7 @@ class PortalRouteProviderTest extends \PHPUnit_Framework_TestCase
     {
         // Set up test
         $path = '/';
+        $prefix = '/de';
         $uuid = 1;
         $portal = new Portal();
         $portal->setKey('portal');
@@ -217,6 +258,7 @@ class PortalRouteProviderTest extends \PHPUnit_Framework_TestCase
         $requestAnalyzer = $this->getRequestAnalyzerMock(
             $portal,
             $path,
+            $prefix,
             null,
             RequestAnalyzerInterface::MATCH_TYPE_REDIRECT,
             'sulu-redirect.lo',
@@ -269,6 +311,7 @@ class PortalRouteProviderTest extends \PHPUnit_Framework_TestCase
     protected function getRequestAnalyzerMock(
         $portal,
         $resourceLocator,
+        $resourceLocatorPrefix,
         $language = null,
         $matchType = RequestAnalyzerInterface::MATCH_TYPE_FULL,
         $url = null,
@@ -281,7 +324,8 @@ class PortalRouteProviderTest extends \PHPUnit_Framework_TestCase
             'getCurrentRedirect',
             'getCurrentPortalUrl',
             'getCurrentMatchType',
-            'getCurrentResourceLocator'
+            'getCurrentResourceLocator',
+            'getCurrentResourceLocatorPrefix'
         );
 
         if ($language != null) {
@@ -305,6 +349,9 @@ class PortalRouteProviderTest extends \PHPUnit_Framework_TestCase
         $portalManager->expects($this->any())->method('getCurrentMatchType')->will($this->returnValue($matchType));
         $portalManager->expects($this->any())->method('getCurrentResourceLocator')->will(
             $this->returnValue($resourceLocator)
+        );
+        $portalManager->expects($this->any())->method('getCurrentResourceLocatorPrefix')->will(
+            $this->returnValue($resourceLocatorPrefix)
         );
 
         return $portalManager;
@@ -337,12 +384,15 @@ class PortalRouteProviderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @param $path
+     * @param null $prefix
      * @return \PHPUnit_Framework_MockObject_MockObject
      */
-    protected function getRequestMock($path)
+    protected function getRequestMock($path, $prefix = null)
     {
         $request = $this->getMock('\Symfony\Component\HttpFoundation\Request', array('getRequestUri'));
         $request->expects($this->any())->method('getRequestUri')->will($this->returnValue($path));
+        $request->expects($this->any())->method('getCurrentResourceLocatorPrefix')->will($this->returnValue($prefix));
 
         return $request;
     }
