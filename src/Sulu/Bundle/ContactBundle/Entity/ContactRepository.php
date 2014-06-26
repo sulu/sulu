@@ -30,7 +30,8 @@ class ContactRepository extends EntityRepository
     {
         // create basic query
         $qb = $this->createQueryBuilder('u')
-            ->leftJoin('u.account', 'account')
+            ->leftJoin('u.accountContacts', 'accountContacts', 'WITH', 'accountContacts.main = true')
+            ->leftJoin('accountContacts.account', 'account')
             ->leftJoin('u.activities', 'activities')
             ->leftJoin('activities.activityStatus', 'activityStatus')
             ->leftJoin('u.addresses', 'addresses')
@@ -44,7 +45,12 @@ class ContactRepository extends EntityRepository
             ->leftJoin('u.notes', 'notes')
             ->leftJoin('u.phones', 'phones')
             ->leftJoin('phones.phoneType', 'phoneType')
+            ->leftJoin('u.tags', 'tags')
+            ->leftJoin('u.urls', 'urls')
+            ->addSelect('accountContacts')
             ->addSelect('account')
+            ->addSelect('urls')
+            ->addSelect('partial tags.{id,name}')
             ->addSelect('activities')
             ->addSelect('activityStatus')
             ->addSelect('locales')
@@ -82,7 +88,8 @@ class ContactRepository extends EntityRepository
     {
         // create basic query
         $qb = $this->createQueryBuilder('u')
-            ->leftJoin('u.account', 'account')
+            ->leftJoin('u.accountContacts', 'accountContacts', 'WITH', 'accountContacts.main = true')
+            ->leftJoin('accountContacts.account', 'account')
             ->leftJoin('u.activities', 'activities')
             ->leftJoin('activities.activityStatus', 'activityStatus')
             ->leftJoin('u.addresses', 'addresses')
@@ -104,6 +111,11 @@ class ContactRepository extends EntityRepository
             ->leftJoin('faxes.contacts', 'faxesContacts')
             ->leftJoin('faxes.accounts', 'faxesAccounts')
             ->leftJoin('faxes.faxType', 'faxType')
+            ->leftJoin('u.tags', 'tags')
+            ->leftJoin('u.urls', 'urls')
+            ->addSelect('urls')
+            ->addSelect('tags')
+            ->addSelect('accountContacts')
             ->addSelect('account')
             ->addSelect('activities')
             ->addSelect('activityStatus')
@@ -178,14 +190,15 @@ class ContactRepository extends EntityRepository
 
 
     /**
-     * Searches for contacts with a specific account and the ability to exclude a certain contact
+     * Searches for contacts with a specific account and the ability to exclude a certain contacts
      * @param $accountId
      * @param null $excludeContactId
      * @return array
      */
-    public function findByAccountId($accountId, $excludeContactId = null ) {
+    public function findByAccountId($accountId, $excludeContactId = null)
+    {
         $qb = $this->createQueryBuilder('c')
-            ->join('c.account','a', 'WITH', 'a.id = :accountId')
+            ->join('u.accountContacts', 'accountContacts', 'WITH', 'accountContacts.idAccounts = :accountId AND accountContacts.main = true')
             ->setParameter('accountId', $accountId);
 
         if (!is_null($excludeContactId)) {
@@ -235,16 +248,58 @@ class ContactRepository extends EntityRepository
      * add where to querybuilder
      * @param QueryBuilder $qb
      * @param array $where
+     * @param string $prefix
      * @return QueryBuilder
      */
-    private function addWhere($qb, $where)
+    private function addWhere($qb, $where, $prefix = '')
     {
+        $prefix = $prefix !== '' ? $prefix . '.' : '';
         $and = $qb->expr()->andX();
         foreach ($where as $k => $v) {
-            $and->add($qb->expr()->eq($k, $v));
+            $and->add($qb->expr()->eq($prefix . $k, "'" . $v . "'"));
         }
         $qb->where($and);
 
         return $qb;
+    }
+
+    /**
+     * finds a contact based on criteria and one email and one phone
+     * also joins account
+     * @param $where
+     * @param $email
+     * @param $phone
+     * @return mixed
+     */
+    public function findByCriteriaEmailAndPhone($where, $email = null, $phone = null)
+    {
+
+        // create basic query
+        $qb = $this->createQueryBuilder('contact')
+            ->leftJoin('contact.accountContacts', 'accountContacts')
+            ->leftJoin('accountContacts.account', 'account')
+            ->addSelect('accountContacts')
+            ->addSelect('account');
+
+        // if needed add where statements
+        if (is_array($where) && sizeof($where) > 0) {
+            $qb = $this->addWhere($qb, $where, 'contact');
+        }
+        if (!is_null($email)) {
+            $qb->join('contact.emails', 'emails', 'WITH', 'emails.email = :email');
+            $qb->setParameter('email', $email);
+        }
+        if (!is_null($email)) {
+            $qb->join('contact.phones', 'phones', 'WITH', 'phones.phone = :phone');
+            $qb->setParameter('phone', $phone);
+        }
+
+        try {
+            $query = $qb->getQuery();
+            $result = $query->getSingleResult();
+        } catch (NoResultException $nre) {
+            return null;
+        }
+        return $result;
     }
 }

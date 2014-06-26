@@ -6,24 +6,37 @@
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
         </id>
+
+        <field name="primaryAddress" type="boolean" column="primaryAddress" nullable="true"/>
+        <field name="deliveryAddress" type="boolean" column="deliveryAddress" nullable="true"/>
+        <field name="billingAddress" type="boolean" column="billingAddress" nullable="true"/>
+
         <field name="street" type="string" column="street" length="60" nullable="true"/>
         <field name="number" type="string" column="number" length="60"  nullable="true"/>
         <field name="addition" type="string" column="addition" length="60" nullable="true"/>
         <field name="zip" type="string" column="zip" length="60" nullable="true"/>
         <field name="city" type="string" column="city" length="60"/>
         <field name="state" type="string" column="state" length="60" nullable="true" />
+
+        <field name="postboxNumber" type="string" column="postboxNumber" length="100" nullable="true" />
+        <field name="postboxPostcode" type="string" column="postboxPostcode" length="100" nullable="true" />
+        <field name="postboxCity" type="string" column="postboxCity" length="100" nullable="true" />
+
         <many-to-one field="addressType" target-entity="Sulu\Bundle\ContactBundle\Entity\AddressType"
                      inversed-by="addresses">
             <join-columns>
                 <join-column name="idAdressTypes" referenced-column-name="id" nullable="false"/>
             </join-columns>
         </many-to-one>
+
         <many-to-one field="country" target-entity="Sulu\Bundle\ContactBundle\Entity\Country" inversed-by="addresses">
             <join-columns>
                 <join-column name="idCountries" referenced-column-name="id" nullable="false"/>
             </join-columns>
         </many-to-one>
+
         <many-to-many field="contacts" target-entity="Sulu\Bundle\ContactBundle\Entity\Contact" mapped-by="addresses"/>
         <many-to-many field="accounts" target-entity="Sulu\Bundle\ContactBundle\Entity\Account" mapped-by="addresses"/>
+
     </entity>
 </doctrine-mapping>

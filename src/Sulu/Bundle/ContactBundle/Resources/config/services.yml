@@ -1,7 +1,7 @@
 parameters:
     sulu_contact.admin.class: Sulu\Bundle\ContactBundle\Admin\SuluContactAdmin
     sulu_contact.admin.content_navigation.class: Sulu\Bundle\ContactBundle\Admin\SuluContactContentNavigation
-    sulu_contact.js_config.class: Sulu\Bundle\ContactBundle\Admin\SuluContactJsConfig
+    sulu_contact.js_config.class: Sulu\Bundle\AdminBundle\Admin\JsConfig
     sulu_contact.import.class: Sulu\Bundle\ContactBundle\Import\Import
 
 services:
@@ -15,11 +15,16 @@ services:
 
     sulu_contact.import:
         class: %sulu_contact.import.class%
-        arguments: [@doctrine.orm.entity_manager, %sulu_contact.defaults%]
+        arguments:
+          - @doctrine.orm.entity_manager
+          - %sulu_contact.defaults%
+          - %sulu_contact.account_types%
+          - %sulu_contact.form_of_address%
 
     sulu_contact.js_config:
         class: %sulu_contact.js_config.class%
         arguments:
-          - 'contact-bundle'
+          - 'sulu-contact'
+          - accountTypes: %sulu_contact.account_types%
         tags:
         - { name: sulu.js_config }

@@ -29,6 +29,11 @@ class Url
     private $id;
 
     /**
+     * @var boolean
+     */
+    private $main;
+
+    /**
      * @var \Sulu\Bundle\ContactBundle\Entity\UrlType
      */
     private $urlType;
@@ -173,5 +178,28 @@ class Url
     public function getContacts()
     {
         return $this->contacts;
+    }
+
+    /**
+     * Set main
+     *
+     * @param boolean $main
+     * @return Url
+     */
+    public function setMain($main)
+    {
+        $this->main = $main;
+    
+        return $this;
+    }
+
+    /**
+     * Get main
+     *
+     * @return boolean 
+     */
+    public function getMain()
+    {
+        return $this->main;
     }
 }

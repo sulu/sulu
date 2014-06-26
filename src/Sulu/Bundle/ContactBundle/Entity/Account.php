@@ -12,6 +12,7 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Exclude;
+use JMS\Serializer\Annotation\Accessor;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 
 
@@ -28,18 +29,6 @@ class Account extends ApiEntity
 
     const ENABLED = 0;
     const DISABLED = 1;
-
-    /**
-     * array containing all the translations for CRM types
-     * @Exclude
-     * @var array
-     */
-    public static $TYPE_TRANSLATIONS = array(
-        self::TYPE_BASIC => 'contact.account.type.basic',
-        self::TYPE_LEAD => 'contact.account.type.lead',
-        self::TYPE_CUSTOMER => 'contact.account.type.customer',
-        self::TYPE_SUPPLIER => 'contact.account.type.supplier',
-    );
 
     /**
      * @var integer
@@ -75,11 +64,6 @@ class Account extends ApiEntity
      * @var integer
      */
     private $id;
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $contacts;
 
     /**
      * @var \Sulu\Component\Security\UserInterface
@@ -154,19 +138,55 @@ class Account extends ApiEntity
      */
     private $uid;
 
+    /**
+     * @var string
+     */
+    private $registerNumber;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $bankAccounts;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     * @Accessor(getter="getTagNameArray")
+     */
+    private $tags;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $accountContacts;
+
+    /**
+     * @var string
+     */
+    private $placeOfJurisdiction;
+
+    /**
+     * @var \Sulu\Bundle\ContactBundle\Entity\TermsOfPayment
+     */
+    private $termsOfPayment;
+
+    /**
+     * @var \Sulu\Bundle\ContactBundle\Entity\TermsOfDelivery
+     */
+    private $termsOfDelivery;
 
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->contacts = new \Doctrine\Common\Collections\ArrayCollection();
         $this->urls = new \Doctrine\Common\Collections\ArrayCollection();
         $this->addresses = new \Doctrine\Common\Collections\ArrayCollection();
         $this->phones = new \Doctrine\Common\Collections\ArrayCollection();
         $this->emails = new \Doctrine\Common\Collections\ArrayCollection();
         $this->notes = new \Doctrine\Common\Collections\ArrayCollection();
         $this->faxes = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->tags = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->accountContacts = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -315,39 +335,6 @@ class Account extends ApiEntity
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Add contacts
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Contact $contacts
-     * @return Account
-     */
-    public function addContact(\Sulu\Bundle\ContactBundle\Entity\Contact $contacts)
-    {
-        $this->contacts[] = $contacts;
-
-        return $this;
-    }
-
-    /**
-     * Remove contacts
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Contact $contacts
-     */
-    public function removeContact(\Sulu\Bundle\ContactBundle\Entity\Contact $contacts)
-    {
-        $this->contacts->removeElement($contacts);
-    }
-
-    /**
-     * Get contacts
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getContacts()
-    {
-        return $this->contacts;
     }
 
     /**
@@ -766,5 +753,238 @@ class Account extends ApiEntity
     public function removeFaxe(\Sulu\Bundle\ContactBundle\Entity\Fax $faxes)
     {
         $this->faxes->removeElement($faxes);
+    }
+
+    /**
+     * @var \Sulu\Bundle\ContactBundle\Entity\AccountCategory
+     */
+    private $accountCategory;
+
+
+    /**
+     * Set accountCategory
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\AccountCategory $accountCategory
+     * @return Account
+     */
+    public function setAccountCategory(\Sulu\Bundle\ContactBundle\Entity\AccountCategory $accountCategory = null)
+    {
+        $this->accountCategory = $accountCategory;
+    }
+
+    /**
+     * Set registerNumber
+     *
+     * @param string $registerNumber
+     * @return Account
+     */
+    public function setRegisterNumber($registerNumber)
+    {
+        $this->registerNumber = $registerNumber;
+    
+        return $this;
+    }
+
+    /**
+     * Get registerNumber
+     *
+     * @return string 
+     */
+    public function getRegisterNumber()
+    {
+        return $this->registerNumber;
+    }
+
+    /**
+     * Add bankAccounts
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\BankAccount $bankAccounts
+     * @return Account
+     */
+    public function addBankAccount(\Sulu\Bundle\ContactBundle\Entity\BankAccount $bankAccounts)
+    {
+        $this->bankAccounts[] = $bankAccounts;
+    
+        return $this;
+    }
+
+    /**
+     * Get accountCategory
+     *
+     * @return \Sulu\Bundle\ContactBundle\Entity\AccountCategory 
+     */
+    public function getAccountCategory()
+    {
+        return $this->accountCategory;
+    }
+
+    /**
+     * Remove bankAccounts
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\BankAccount $bankAccounts
+     */
+    public function removeBankAccount(\Sulu\Bundle\ContactBundle\Entity\BankAccount $bankAccounts)
+    {
+        $this->bankAccounts->removeElement($bankAccounts);
+    }
+
+    /**
+     * Get bankAccounts
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getBankAccounts()
+    {
+        return $this->bankAccounts;
+    }
+
+    /**
+     * Add tags
+     *
+     * @param \Sulu\Bundle\TagBundle\Entity\Tag $tags
+     * @return Account
+     */
+    public function addTag(\Sulu\Bundle\TagBundle\Entity\Tag $tags)
+    {
+        $this->tags[] = $tags;
+    
+        return $this;
+    }
+
+    /**
+     * Remove tags
+     *
+     * @param \Sulu\Bundle\TagBundle\Entity\Tag $tags
+     */
+    public function removeTag(\Sulu\Bundle\TagBundle\Entity\Tag $tags)
+    {
+        $this->tags->removeElement($tags);
+    }
+
+    /**
+     * Get tags
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getTags()
+    {
+        return $this->tags;
+    }
+
+    /**
+     * parses tags to array containing tag names
+     * @return array
+     */
+    public function getTagNameArray()
+    {
+        $tags = array();
+        if (!is_null($this->getTags())) {
+            foreach ($this->getTags() as $tag) {
+                $tags[] = $tag->getName();
+            }
+        }
+        return $tags;
+    }
+
+    /**
+     * Add accountContacts
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\AccountContact $accountContacts
+     * @return Account
+     */
+    public function addAccountContact(\Sulu\Bundle\ContactBundle\Entity\AccountContact $accountContacts)
+    {
+        $this->accountContacts[] = $accountContacts;
+    
+        return $this;
+    }
+
+    /**
+     * Remove accountContacts
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\AccountContact $accountContacts
+     */
+    public function removeAccountContact(\Sulu\Bundle\ContactBundle\Entity\AccountContact $accountContacts)
+    {
+        $this->accountContacts->removeElement($accountContacts);
+    }
+
+    /**
+     * Get accountContacts
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getAccountContacts()
+    {
+        return $this->accountContacts;
+    }
+
+    /**
+     * Set placeOfJurisdiction
+     *
+     * @param string $placeOfJurisdiction
+     * @return Account
+     */
+    public function setPlaceOfJurisdiction($placeOfJurisdiction)
+    {
+        $this->placeOfJurisdiction = $placeOfJurisdiction;
+    
+        return $this;
+    }
+
+    /**
+     * Get placeOfJurisdiction
+     *
+     * @return string 
+     */
+    public function getPlaceOfJurisdiction()
+    {
+        return $this->placeOfJurisdiction;
+    }
+
+    /**
+     * Set termsOfPayment
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\TermsOfPayment $termsOfPayment
+     * @return Account
+     */
+    public function setTermsOfPayment(\Sulu\Bundle\ContactBundle\Entity\TermsOfPayment $termsOfPayment = null)
+    {
+        $this->termsOfPayment = $termsOfPayment;
+    
+        return $this;
+    }
+
+    /**
+     * Get termsOfPayment
+     *
+     * @return \Sulu\Bundle\ContactBundle\Entity\TermsOfPayment 
+     */
+    public function getTermsOfPayment()
+    {
+        return $this->termsOfPayment;
+    }
+
+    /**
+     * Set termsOfDelivery
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\TermsOfDelivery $termsOfDelivery
+     * @return Account
+     */
+    public function setTermsOfDelivery(\Sulu\Bundle\ContactBundle\Entity\TermsOfDelivery $termsOfDelivery = null)
+    {
+        $this->termsOfDelivery = $termsOfDelivery;
+    
+        return $this;
+    }
+
+    /**
+     * Get termsOfDelivery
+     *
+     * @return \Sulu\Bundle\ContactBundle\Entity\TermsOfDelivery 
+     */
+    public function getTermsOfDelivery()
+    {
+        return $this->termsOfDelivery;
     }
 }

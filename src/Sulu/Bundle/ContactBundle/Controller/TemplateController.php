@@ -31,7 +31,13 @@ class TemplateController extends Controller
      */
     public function contactFormAction()
     {
-        return $this->render('SuluContactBundle:Template:contact.form.html.twig', $this->getRenderArray());
+        $data = $this->getRenderArray();
+        $data['form_of_address'] = [];
+        foreach ($this->container->getParameter('sulu_contact.form_of_address') as $el) {
+            $data['form_of_address'][] = $el;
+        }
+
+        return $this->render('SuluContactBundle:Template:contact.form.html.twig', $data);
     }
 
     /**
@@ -41,6 +47,15 @@ class TemplateController extends Controller
     public function accountFormAction()
     {
         return $this->render('SuluContactBundle:Template:account.form.html.twig', $this->getRenderArray());
+    }
+
+    /**
+     * Returns the financials form for accounts
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function accountFinancialsAction()
+    {
+        return $this->render('SuluContactBundle:Template:account.financials.html.twig');
     }
 
     /**

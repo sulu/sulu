@@ -85,6 +85,42 @@ class Address
     private $accounts;
 
     /**
+     * @var boolean
+     * @Expose
+     */
+    private $primaryAddress;
+
+    /**
+     * @var boolean
+     * @Expose
+     */
+    private $deliveryAddress;
+
+    /**
+     * @var boolean
+     * @Expose
+     */
+    private $billingAddress;
+
+    /**
+     * @var string
+     * @Expose
+     */
+    private $postboxNumber;
+
+    /**
+     * @var string
+     * @Expose
+     */
+    private $postboxPostcode;
+
+    /**
+     * @var string
+     * @Expose
+     */
+    private $postboxCity;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -351,5 +387,143 @@ class Address
     public function getAccounts()
     {
         return $this->accounts;
+    }
+
+    /**
+     * Set primaryAddress
+     *
+     * @param boolean $primaryAddress
+     * @return Address
+     */
+    public function setPrimaryAddress($primaryAddress)
+    {
+        $this->primaryAddress = $primaryAddress;
+    
+        return $this;
+    }
+
+    /**
+     * Get primaryAddress
+     *
+     * @return boolean 
+     */
+    public function getPrimaryAddress()
+    {
+        return $this->primaryAddress;
+    }
+
+    /**
+     * Set deliveryAddress
+     *
+     * @param boolean $deliveryAddress
+     * @return Address
+     */
+    public function setDeliveryAddress($deliveryAddress)
+    {
+        $this->deliveryAddress = $deliveryAddress;
+    
+        return $this;
+    }
+
+    /**
+     * Get deliveryAddress
+     *
+     * @return boolean 
+     */
+    public function getDeliveryAddress()
+    {
+        return $this->deliveryAddress;
+    }
+
+    /**
+     * Set billingAddress
+     *
+     * @param boolean $billingAddress
+     * @return Address
+     */
+    public function setBillingAddress($billingAddress)
+    {
+        $this->billingAddress = $billingAddress;
+    
+        return $this;
+    }
+
+    /**
+     * Get billingAddress
+     *
+     * @return boolean 
+     */
+    public function getBillingAddress()
+    {
+        return $this->billingAddress;
+    }
+
+    /**
+     * Set postboxNumber
+     *
+     * @param string $postboxNumber
+     * @return Address
+     */
+    public function setPostboxNumber($postboxNumber)
+    {
+        $this->postboxNumber = $postboxNumber;
+    
+        return $this;
+    }
+
+    /**
+     * Get postboxNumber
+     *
+     * @return string 
+     */
+    public function getPostboxNumber()
+    {
+        return $this->postboxNumber;
+    }
+
+    /**
+     * Set postboxPostcode
+     *
+     * @param string $postboxPostcode
+     * @return Address
+     */
+    public function setPostboxPostcode($postboxPostcode)
+    {
+        $this->postboxPostcode = $postboxPostcode;
+    
+        return $this;
+    }
+
+    /**
+     * Get postboxPostcode
+     *
+     * @return string 
+     */
+    public function getPostboxPostcode()
+    {
+        return $this->postboxPostcode;
+    }
+
+    /**
+     * Set postboxCity
+     *
+     * @param string $postboxCity
+     * @return Address
+     */
+    public function setPostboxCity($postboxCity)
+    {
+        $this->postboxCity = $postboxCity;
+    
+        return $this;
+    }
+
+    /**
+     * Get postboxCity
+     *
+     * @return string 
+     */
+    public function getPostboxCity()
+    {
+        return $this->postboxCity;
     }
 }

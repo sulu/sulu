@@ -15,12 +15,16 @@ use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\VirtualProperty;
 use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation\PostDeserialize;
+use JMS\Serializer\Annotation\PostSerialize;
+use JMS\Serializer\Annotation\Accessor;
 
 /**
  * Contact
  */
 class Contact extends ApiEntity
 {
+
     /**
      * @var string
      */
@@ -87,11 +91,6 @@ class Contact extends ApiEntity
     private $creator;
 
     /**
-     * @var \Sulu\Bundle\ContactBundle\Entity\Account
-     */
-    private $account;
-
-    /**
      * @var \Doctrine\Common\Collections\Collection
      */
     private $notes;
@@ -117,6 +116,50 @@ class Contact extends ApiEntity
     private $faxes;
 
     /**
+     * @var integer
+     */
+    private $formOfAddress = 0;
+
+    /**
+     * @var string
+     */
+    private $salutation;
+
+    /**
+     * @var integer
+     */
+    private $disabled = 0;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     * @Accessor(getter="getTagNameArray")
+     */
+    private $tags;
+
+    /**
+     * main account
+     * @Accessor(getter="getMainAccount")
+     * @var string
+     */
+    private $account;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     * @Exclude
+     */
+    private $accountContacts;
+
+    /**
+     * @var boolean
+     */
+    private $newsletter;
+
+    /**
+     * @var string
+     */
+    private $gender;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -128,6 +171,8 @@ class Contact extends ApiEntity
         $this->addresses = new \Doctrine\Common\Collections\ArrayCollection();
         $this->phones = new \Doctrine\Common\Collections\ArrayCollection();
         $this->faxes = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->tags = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->accountContacts = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -447,29 +492,6 @@ class Contact extends ApiEntity
     }
 
     /**
-     * Set account
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Account $account
-     * @return Contact
-     */
-    public function setAccount(\Sulu\Bundle\ContactBundle\Entity\Account $account = null)
-    {
-        $this->account = $account;
-
-        return $this;
-    }
-
-    /**
-     * Get account
-     *
-     * @return \Sulu\Bundle\ContactBundle\Entity\Account
-     */
-    public function getAccount()
-    {
-        return $this->account;
-    }
-
-    /**
      * Add notes
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Note $notes
@@ -616,7 +638,6 @@ class Contact extends ApiEntity
         );
     }
 
-
     /**
      * Add faxes
      *
@@ -655,7 +676,6 @@ class Contact extends ApiEntity
      */
     private $urls;
 
-
     /**
      * Add urls
      *
@@ -665,6 +685,7 @@ class Contact extends ApiEntity
     public function addUrl(\Sulu\Bundle\ContactBundle\Entity\Url $urls)
     {
         $this->urls[] = $urls;
+
         return $this;
     }
 
@@ -697,7 +718,7 @@ class Contact extends ApiEntity
     public function addFaxe(\Sulu\Bundle\ContactBundle\Entity\Fax $faxes)
     {
         $this->faxes[] = $faxes;
-    
+
         return $this;
     }
 
@@ -709,5 +730,219 @@ class Contact extends ApiEntity
     public function removeFaxe(\Sulu\Bundle\ContactBundle\Entity\Fax $faxes)
     {
         $this->faxes->removeElement($faxes);
+    }
+
+    /**
+     * Set formOfAddress
+     *
+     * @param integer $formOfAddress
+     * @return Contact
+     */
+    public function setFormOfAddress($formOfAddress)
+    {
+        $this->formOfAddress = $formOfAddress;
+
+        return $this;
+    }
+
+    /**
+     * Add tags
+     *
+     * @param \Sulu\Bundle\TagBundle\Entity\Tag $tags
+     * @return Contact
+     */
+    public function addTag(\Sulu\Bundle\TagBundle\Entity\Tag $tags)
+    {
+        $this->tags[] = $tags;
+
+        return $this;
+    }
+
+    /**
+     * Get formOfAddress
+     *
+     * @return integer
+     */
+    public function getFormOfAddress()
+    {
+        return $this->formOfAddress;
+    }
+
+    /**
+     * Set salutation
+     *
+     * @param string $salutation
+     * @return Contact
+     */
+    public function setSalutation($salutation)
+    {
+        $this->salutation = $salutation;
+
+        return $this;
+    }
+
+    /**
+     * Get salutation
+     *
+     * @return string
+     */
+    public function getSalutation()
+    {
+        return $this->salutation;
+    }
+
+    /**
+     * Set disabled
+     *
+     * @param integer $disabled
+     * @return Contact
+     */
+    public function setDisabled($disabled)
+    {
+        $this->disabled = $disabled;
+
+        return $this;
+    }
+
+    /**
+     * Get disabled
+     *
+     * @return integer
+     */
+    public function getDisabled()
+    {
+        return $this->disabled;
+    }
+
+    /**
+     * Remove tags
+     *
+     * @param \Sulu\Bundle\TagBundle\Entity\Tag $tags
+     */
+    public function removeTag(\Sulu\Bundle\TagBundle\Entity\Tag $tags)
+    {
+        $this->tags->removeElement($tags);
+    }
+
+    /**
+     * Get tags
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getTags()
+    {
+        return $this->tags;
+    }
+
+    /**
+     * parses tags to array containing tag names
+     * @return array
+     */
+    public function getTagNameArray()
+    {
+        $tags = array();
+        if (!is_null($this->getTags())) {
+            foreach ($this->getTags() as $tag) {
+                $tags[] = $tag->getName();
+            }
+        }
+        return $tags;
+    }
+
+    /**
+     * Add accountContacts
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\AccountContact $accountContacts
+     * @return Contact
+     */
+    public function addAccountContact(\Sulu\Bundle\ContactBundle\Entity\AccountContact $accountContacts)
+    {
+        $this->accountContacts[] = $accountContacts;
+
+        return $this;
+    }
+
+    /**
+     * Remove accountContacts
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\AccountContact $accountContacts
+     */
+    public function removeAccountContact(\Sulu\Bundle\ContactBundle\Entity\AccountContact $accountContacts)
+    {
+        $this->accountContacts->removeElement($accountContacts);
+    }
+
+    /**
+     * Get accountContacts
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getAccountContacts()
+    {
+        return $this->accountContacts;
+    }
+
+    /**
+     * Set newsletter
+     *
+     * @param boolean $newsletter
+     * @return Contact
+     */
+    public function setNewsletter($newsletter)
+    {
+        $this->newsletter = $newsletter;
+
+        return $this;
+    }
+
+    /**
+     * Get newsletter
+     *
+     * @return boolean
+     */
+    public function getNewsletter()
+    {
+        return $this->newsletter;
+    }
+
+    /**
+     * Set gender
+     *
+     * @param string $gender
+     * @return Contact
+     */
+    public function setGender($gender)
+    {
+        $this->gender = $gender;
+
+        return $this;
+    }
+
+    /**
+     * Get gender
+     *
+     * @return string
+     */
+    public function getGender()
+    {
+        return $this->gender;
+    }
+
+    /**
+     * returns main account
+     */
+    public function getMainAccount()
+    {
+        $accountContacts = $this->getAccountContacts();
+
+        if (!is_null($accountContacts)) {
+            /** @var AccountContact $accountContact */
+            foreach ($accountContacts as $accountContact) {
+                if ($accountContact->getMain()) {
+                    return $accountContact->getAccount();
+                }
+            }
+        }
+        return null;
     }
 }

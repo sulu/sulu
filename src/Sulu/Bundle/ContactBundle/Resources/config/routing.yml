@@ -21,3 +21,7 @@ contact_list:
 account_list:
     pattern: /template/account/list.html
     defaults: { _controller: SuluContactBundle:Template:accountList }
+
+account_financials:
+    pattern: /template/account/financials.html
+    defaults: { _controller: SuluContactBundle:Template:accountFinancials }
