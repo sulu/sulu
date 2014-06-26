@@ -291,6 +291,73 @@ class MediaControllerTest extends DatabaseTestCase
     }
 
     /**
+     * @description Test GET all Media
+     */
+    public function testcGetCollection()
+    {
+        $client = $this->createTestClient();
+
+        $client->request(
+            'GET',
+            '/api/media?collection=1'
+        );
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertNotEmpty($response);
+
+        $this->assertEquals(1, $response->total);
+        $this->assertEquals(1, $response->_embedded[0]->id);
+        $this->assertEquals('photo.jpeg', $response->_embedded[0]->name);
+    }
+
+    /**
+     * @description Test GET all Media
+     */
+    public function testcGetIds()
+    {
+        $client = $this->createTestClient();
+
+        $client->request(
+            'GET',
+            '/api/media?ids=1'
+        );
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertNotEmpty($response);
+
+        $this->assertEquals(1, $response->total);
+        $this->assertEquals(1, $response->_embedded[0]->id);
+        $this->assertEquals('photo.jpeg', $response->_embedded[0]->name);
+    }
+
+    /**
+     * @description Test GET all Media
+     */
+    public function testcGetNotExistingIds()
+    {
+        $client = $this->createTestClient();
+
+        $client->request(
+            'GET',
+            '/api/media?ids=2,3,4'
+        );
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertNotEmpty($response);
+
+        $this->assertEquals(0, $response->total);
+    }
+
+    /**
      * @description Test GET for non existing Resource (404)
      */
     public function testGetByIdNotExisting()

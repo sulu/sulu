@@ -422,34 +422,18 @@ class CollectionController extends RestController implements ClassResourceInterf
 
         $medias = $this->getDoctrine()
             ->getRepository($this->entityMediaName)
-            ->findMedia($id, $this->container->getParameter('sulu_media.collection.previews.limit'));
+            ->findMedia($id, null, $this->container->getParameter('sulu_media.collection.previews.limit'));
 
 
         foreach ($medias as $media) {
             foreach ($media['files'] as $file) {
                 foreach ($file['fileVersions'] as $fileVersion) {
                     if ($fileVersion['version'] == $file['version']) {
-                        $title = '';
-                        foreach ($fileVersion['meta'] as $key => $meta) {
-                            if ($meta['locale'] == $this->getUser()->getLocale()) {
-                                $title = $meta['title'];
-                                break;
-                            } elseif ($key == 0) { // fallback title
-                                $title = $meta['title'];
-                            }
+                        $format = $this->getPreviewsFromFileVersion($media['id'], $fileVersion);
+                        if (!empty($format)) {
+                            $formats[] = $format;
                         }
-
-                        $mediaFormats = $this->getFormatManager()->getFormats($media['id'], $fileVersion['name'], $fileVersion['storageOptions']);
-
-                        foreach ($mediaFormats as $formatName => $formatUrl) {
-                            if ($formatName == $this->container->getParameter('sulu_media.collection.previews.format')) {
-                                $formats[] = array(
-                                    'url' => $formatUrl,
-                                    'title' => $title
-                                );
-                                break;
-                            }
-                        }
+                        break;
                     }
                 }
                 break;
@@ -458,4 +442,38 @@ class CollectionController extends RestController implements ClassResourceInterf
 
         return $formats;
     }
+
+    /**
+     * @param int $mediaId
+     * @param array $fileVersion
+     * @return array
+     */
+    protected function getPreviewsFromFileVersion($mediaId, $fileVersion)
+    {
+        $title = '';
+        foreach ($fileVersion['meta'] as $key => $meta) {
+            if ($meta['locale'] == $this->getUser()->getLocale()) {
+                $title = $meta['title'];
+                break;
+            } elseif ($key == 0) { // fallback title
+                $title = $meta['title'];
+            }
+        }
+
+        $mediaFormats = $this->getFormatManager()->getFormats($mediaId, $fileVersion['name'], $fileVersion['storageOptions']);
+
+        foreach ($mediaFormats as $formatName => $formatUrl) {
+            if ($formatName == $this->container->getParameter('sulu_media.collection.previews.format')) {
+                return array(
+                    'url' => $formatUrl,
+                    'title' => $title
+                );
+                break;
+            }
+        }
+
+        return array();
+    }
+
+
 }

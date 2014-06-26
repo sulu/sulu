@@ -15,10 +15,10 @@ use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Put;
 
-use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\Exception\UploadFileException;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\RestObject\Media;
+use Sulu\Bundle\MediaBundle\Media\RestObject\RestObjectHelper;
 use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
@@ -121,10 +121,6 @@ class MediaController extends RestController implements ClassResourceInterface
                 404
             );
         } else {
-            $media = new Media();
-            $media->setDataByEntityArray($mediaEntity, $locale, $request->get('version', null));
-            $media->setFormats($this->getFormats($media->getId(), $media->getName(), $media->getStorageOptions()));;
-
             $view = $this->view(
                 array_merge(
                     array(
@@ -132,7 +128,7 @@ class MediaController extends RestController implements ClassResourceInterface
                             'self' => $request->getRequestUri()
                         )
                     ),
-                    $media->toArray()
+                    $this->getRestObjectHelper()->convertMediaToRestObject($mediaEntity, $locale, $request->get('version', null))
                 )
                 , 200);
         }
@@ -150,12 +146,16 @@ class MediaController extends RestController implements ClassResourceInterface
         $locale = $this->getLocale($request->get('locale'));
 
         $collection = $request->get('collection');
+        $ids = $request->get('ids');
+        if ($ids !== null) {
+            $ids = explode(',', $ids);
+        }
         $fields = $request->get('fields', null);
         if ($fields !== null) {
             $fields = explode(',', $fields);
         }
-        $mediaList = $this->getDoctrine()->getRepository($this->entityName)->findMedia($collection);
-        $mediaList = $this->flatMedia($mediaList, $locale, $fields);
+        $mediaList = $this->getDoctrine()->getRepository($this->entityName)->findMedia($collection, $ids);
+        $mediaList = $this->getRestObjectHelper()->convertMediasToRestObjects($mediaList, $locale, $fields);
         $view = $this->view($this->createHalResponse($mediaList), 200);
 
         return $this->handleView($view);
@@ -183,17 +183,25 @@ class MediaController extends RestController implements ClassResourceInterface
             $uploadFiles = $this->getUploadedFiles($request, 'fileVersion');
             if (count($uploadFiles)) {
                 foreach ($uploadFiles as $uploadFile) {
-                    $mediaEntity = $this->getMediaManager()->add($uploadFile, $this->getUser()->getId(), $media->getCollection(), $properties);
+                    $mediaEntity = $this->getMediaManager()->add(
+                        $uploadFile,
+                        $this->getUser()->getId(),
+                        $media->getCollection(),
+                        $properties
+                    );
                     break;
                 }
             } else {
-                throw new RestException('Uploaded file not found', UploadFileException::EXCEPTION_CODE_UPLOADED_FILE_NOT_FOUND);
+                throw new RestException(
+                    'Uploaded file not found',
+                    UploadFileException::EXCEPTION_CODE_UPLOADED_FILE_NOT_FOUND
+                );
             }
 
-            $media = new Media();
-            $media->setDataByEntity($mediaEntity, $locale);
-            $media->setFormats($this->getFormats($media->getId(), $media->getName(), $media->getStorageOptions()));
-            $view = $this->view($media->toArray(), 200);
+            $view = $this->view(
+                $this->getRestObjectHelper()->convertMediaToRestObject($mediaEntity, $locale),
+                200
+            );
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
         } catch (RestException $re) {
@@ -229,18 +237,29 @@ class MediaController extends RestController implements ClassResourceInterface
             if (count($uploadFiles)) {
                 // Add new Fileversion
                 foreach ($uploadFiles as $uploadFile) {
-                    $mediaEntity = $this->getMediaManager()->update($uploadFile, $this->getUser()->getId(), $id, $media->getCollection(), $properties);
+                    $mediaEntity = $this->getMediaManager()->update(
+                        $uploadFile,
+                        $this->getUser()->getId(),
+                        $id,
+                        $media->getCollection(),
+                        $properties
+                    );
                     break;
                 }
             } else {
                 // Update only properties
-                $mediaEntity = $this->getMediaManager()->update(null, $this->getUser()->getId(), $id, $media->getCollection(), $properties);
+                $mediaEntity = $this->getMediaManager()->update(
+                    null,
+                    $this->getUser()->getId(),
+                    $id,
+                    $media->getCollection(),
+                    $properties
+                );
             }
-
-            $media = new Media();
-            $media->setDataByEntity($mediaEntity, $locale);
-            $media->setFormats($this->getFormats($media->getId(), $media->getName(), $media->getStorageOptions()));
-            $view = $this->view($media->toArray(), 200);
+            $view = $this->view(
+                $this->getRestObjectHelper()->convertMediaToRestObject($mediaEntity, $locale),
+                200
+            );
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
         } catch (RestException $exc) {
@@ -318,27 +337,6 @@ class MediaController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * convert media entities array to flat media rest object array
-     * @param $mediaList
-     * @param $locale
-     * @param array $fields
-     * @return array
-     */
-    protected function flatMedia($mediaList, $locale, $fields = array())
-    {
-        $flatMediaList = array();
-
-        foreach ($mediaList as $media) {
-            $flatMedia = new Media();
-            $flatMedia->setDataByEntityArray($media, $locale);
-            $flatMedia->setFormats($this->getFormats($flatMedia->getId(), $flatMedia->getName(), $flatMedia->getStorageOptions()));
-            $flatMediaList[] = $flatMedia->toArray($fields);
-        }
-
-        return $flatMediaList;
-    }
-
-    /**
      * get uploaded file when name is 'file' or 'file[]'
      * @param Request $request
      * @param $name
@@ -408,15 +406,6 @@ class MediaController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * getFormatManager
-     * @return FormatManagerInterface
-     */
-    protected function getFormatManager()
-    {
-        return $this->get('sulu_media.format_manager');
-    }
-
-    /**
      * @param $requestLocale
      * @return mixed
      */
@@ -430,24 +419,11 @@ class MediaController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * @param $id
-     * @param $name
-     * @param $storageOptions
-     * @return mixed
+     * getRestObjectHelper
+     * @return RestObjectHelper
      */
-    public function getFormats($id, $name, $storageOptions)
+    protected function getRestObjectHelper()
     {
-        return $this->getFormatManager()->getFormats($id, $name, $storageOptions);
-    }
-
-    /**
-     * @param $id
-     * @param $version
-     * @param $storageOptions
-     * @return mixed
-     */
-    public function getUrl($id, $version, $storageOptions)
-    {
-        return $this->getFormatManager()->getOriginal($id, $version, $storageOptions);
+        return $this->get('sulu_media.rest_object_helper');
     }
 }

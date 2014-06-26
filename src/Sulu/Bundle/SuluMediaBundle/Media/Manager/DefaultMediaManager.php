@@ -29,10 +29,14 @@ use Sulu\Bundle\MediaBundle\Media\Exception\InvalidFileException;
 use Sulu\Bundle\MediaBundle\Media\Exception\InvalidMediaTypeException;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Sulu\Bundle\MediaBundle\Media\FileValidator\FileValidatorInterface;
+use Sulu\Component\Security\UserInterface;
 use Sulu\Component\Security\UserRepositoryInterface;
 use DateTime;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
+/**
+ * @package Sulu\Bundle\MediaBundle\Media\Manager
+ */
 class DefaultMediaManager implements MediaManagerInterface
 {
     /**
@@ -110,8 +114,7 @@ class DefaultMediaManager implements MediaManagerInterface
         $maxFileSize,
         $blockedMimeTypes,
         $mediaTypes
-    )
-    {
+    ) {
         $this->mediaRepository = $mediaRepository;
         $this->collectionRepository = $collectionRepository;
         $this->em = $em;
@@ -132,6 +135,14 @@ class DefaultMediaManager implements MediaManagerInterface
         $media = $this->mediaRepository->findMediaById($id);
 
         return $media;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getMultiple($ids)
+    {
+        return $this->mediaRepository->findMediaByIds($ids);
     }
 
     /**
@@ -240,7 +251,10 @@ class DefaultMediaManager implements MediaManagerInterface
         if ($uploadedFile) {
             $mediaType = $this->getMediaType($uploadedFile);
             if ($media->getType()->getId() != $mediaType->getId()) {
-                throw new InvalidMediaTypeException('Media must be of type ' . $media->getType()->getId() . '('.$media->getType()->getName().'), ' . $mediaType->getId() . '('.$mediaType->getName().') was given');
+                throw new InvalidMediaTypeException(
+                    'Media must be of type ' . $media->getType()->getId() . '(' . $media->getType()->getName(
+                    ) . '), ' . $mediaType->getId() . '(' . $mediaType->getName() . ') was given'
+                );
             }
         }
 
@@ -290,13 +304,18 @@ class DefaultMediaManager implements MediaManagerInterface
         }
 
         if (!$fileName) {
-            throw new FileVersionNotFoundException ('Actual Version not found('.$version.')');
+            throw new FileVersionNotFoundException ('Actual Version not found(' . $version . ')');
         }
 
         if ($uploadedFile) {
             $version++; // Update Version
             $this->validator->validate($uploadedFile);
-            $storageOptions = $this->storage->save($uploadedFile->getPathname(), $uploadedFile->getFilename(), $version, $oldStorageOptions);
+            $storageOptions = $this->storage->save(
+                $uploadedFile->getPathname(),
+                $uploadedFile->getFilename(),
+                $version,
+                $oldStorageOptions
+            );
 
             $fileVersion = new FileVersion();
             $fileVersion->setChanged(new Datetime());
@@ -310,7 +329,13 @@ class DefaultMediaManager implements MediaManagerInterface
             $fileVersion->setStorageOptions($storageOptions);
             $fileVersion->setFile($file);
 
-            $this->setNewVersionProperties($fileVersion, $oldMeta, $oldTags, $oldContentLanguages, $oldPublishLanguages);
+            $this->setNewVersionProperties(
+                $fileVersion,
+                $oldMeta,
+                $oldTags,
+                $oldContentLanguages,
+                $oldPublishLanguages
+            );
 
             $file->addFileVersion($fileVersion);
         }
@@ -333,8 +358,13 @@ class DefaultMediaManager implements MediaManagerInterface
      * @param FileVersionContentLanguage[] $contentLanguages
      * @param FileVersionPublishLanguage[] $publishLanguages
      */
-    protected function setNewVersionProperties(&$fileVersion, $metas = array(), $tags = array(), $contentLanguages = array(), $publishLanguages = array())
-    {
+    protected function setNewVersionProperties(
+        &$fileVersion,
+        $metas = array(),
+        $tags = array(),
+        $contentLanguages = array(),
+        $publishLanguages = array()
+    ) {
         foreach ($metas as $meta) {
             $newMedia = clone $meta;
             $newMedia->setFileVersion($fileVersion);
@@ -362,10 +392,10 @@ class DefaultMediaManager implements MediaManagerInterface
     }
 
     /**
-     * @param $fileVersions
-     * @param $properties
-     * @param $user
-     * @param $version
+     * @param FileVersion $fileVersions
+     * @param array $properties
+     * @param UserInterface $user
+     * @param int $version
      */
     protected function setProperties($fileVersions, $properties, $user, $version)
     {
@@ -391,8 +421,8 @@ class DefaultMediaManager implements MediaManagerInterface
     }
 
     /**
-     * @param $fileVersion
-     * @param $fileVersionProperties
+     * @param FileVersion $fileVersion
+     * @param array $fileVersionProperties
      * @return bool
      */
     protected function updateFileVersionProperties(&$fileVersion, &$fileVersionProperties)
@@ -414,13 +444,13 @@ class DefaultMediaManager implements MediaManagerInterface
                     break;
             }
         }
+
         return $changed;
     }
 
-
     /**
      * @param FileVersion $fileVersion
-     * @param $metaList
+     * @param array $metaList
      */
     protected function updateMeta(&$fileVersion, $metaList)
     {
@@ -469,7 +499,7 @@ class DefaultMediaManager implements MediaManagerInterface
 
     /**
      * @param FileVersion $fileVersion
-     * @param $contentLanguages
+     * @param array $contentLanguages
      */
     protected function updateContentLanguages(&$fileVersion, $contentLanguages)
     {
@@ -506,7 +536,7 @@ class DefaultMediaManager implements MediaManagerInterface
 
     /**
      * @param FileVersion $fileVersion
-     * @param $publishLanguages
+     * @param array $publishLanguages
      */
     protected function updatePublishLanguages(&$fileVersion, $publishLanguages)
     {
