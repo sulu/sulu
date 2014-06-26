@@ -2,6 +2,7 @@ parameters:
     sulu_category.admin.class: Sulu\Bundle\CategoryBundle\Admin\SuluCategoryAdmin
     sulu_category.category_manager.class: Sulu\Bundle\CategoryBundle\Category\CategoryManager
     sulu_category.category_repository.class: Sulu\Bundle\CategoryBundle\Entity\CategoryRepository
+    sulu_category.admin.content_navigation.class: Sulu\Bundle\CategoryBundle\Admin\SuluCategoryContentNavigation
 
 services:
     sulu_category.admin:
@@ -9,6 +10,8 @@ services:
         arguments: [%sulu_admin.name%]
         tags:
         - { name: sulu.admin }
+    sulu_category.admin.content_navigation:
+            class: %sulu_category.admin.content_navigation.class%
 
     sulu_category.category_repository:
             class: %sulu_category.category_repository.class%

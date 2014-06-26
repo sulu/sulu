@@ -20,6 +20,16 @@ class SuluCategoryAdmin extends Admin
     public function __construct($title)
     {
         $rootNavigationItem = new NavigationItem($title);
+        $section = new NavigationItem('');
+
+        $settings = new NavigationItem('navigation.settings');
+        $settings->setIcon('settings');
+
+        $categories = new NavigationItem('navigation.settings.categories', $settings);
+        $categories->setAction('settings/categories');
+
+        $section->addChild($settings);
+        $rootNavigationItem->addChild($section);
         $this->setNavigation(new Navigation($rootNavigationItem));
     }
 
@@ -29,6 +39,13 @@ class SuluCategoryAdmin extends Admin
     public function getCommands()
     {
         return array();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getJsBundleName() {
+        return 'sulucategory';
     }
 
 }
