@@ -165,7 +165,7 @@ class AccountController extends AbstractContactController
      * @return \Symfony\Component\HttpFoundation\Response
      * @throws \Exception
      */
-    public function postContactsAction($accountId, $contactId, Request $request)
+    public function putContactsAction($accountId, $contactId, Request $request)
     {
         try {
             // get account

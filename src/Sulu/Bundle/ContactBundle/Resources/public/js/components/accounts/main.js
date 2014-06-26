@@ -122,7 +122,9 @@ define([
         },
 
         addAccountContact: function(id, position) {
-            var accountContact = new AccountContact({contact: new Contact({id: id}), account: this.account, position: position});
+            // set id to contacts id;
+            var accountContact = AccountContact.findOrCreate({id: id, contact: Contact.findOrCreate({id: id}), account: this.account});
+            accountContact.set({position: position});
 
             accountContact.save(null, {
                 // on success save contacts id
@@ -146,8 +148,8 @@ define([
                 // get ids of selected contacts
                 var accountContact;
                 this.sandbox.util.foreach(ids, function(id) {
-                    // set account and contact as well as a dummy id (so that request is going to be sent)
-                    accountContact = new AccountContact({id: 1, contact: new Contact({id: id}), account: this.account});
+                    // set account and contact as well as  id to contacts id(so that request is going to be sent)
+                    accountContact = AccountContact.findOrCreate({id: id, contact: Contact.findOrCreate({id: id}), account: this.account});
                     accountContact.destroy({
                         success: function() {
                             this.sandbox.emit('sulu.contacts.accounts.contacts.removed', id);

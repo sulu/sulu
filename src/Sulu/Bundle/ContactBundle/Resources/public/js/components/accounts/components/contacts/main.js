@@ -166,9 +166,9 @@ define([
     return {
         view: true,
 
-        fullSize: {
-            width: true
-        },
+//        fullSize: {
+//            width: true
+//        },
 
         templates: ['/admin/contact/template/contact/list'],
 
@@ -199,7 +199,7 @@ define([
                     searchInstanceName: 'contacts',
                     viewOptions: {
                         table: {
-                            fullWidth: true,
+//                            fullWidth: true,
                             selectItem: {
                                 type: 'checkbox'
                             },
