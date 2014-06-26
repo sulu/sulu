@@ -9,10 +9,21 @@
  */
 
 namespace Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\Manager;
+use Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\CommandInterface;
 
+/**
+ * Defines the operations of the CommandManager
+ * The CommandManager load dynamically services for the image manipulation.
+ * @package Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\Manager
+ */
+interface ManagerInterface
+{
 
-interface ManagerInterface {
-
+    /**
+     * Return a service which converts an image
+     * @param string $name
+     * @return CommandInterface
+     */
     public function get($name);
 
 } 

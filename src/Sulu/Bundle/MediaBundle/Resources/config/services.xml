@@ -14,6 +14,8 @@
         <parameter key="sulu_media.image.command_manager.class">Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\Manager\DefaultCommandManager</parameter>
         <parameter key="sulu_media.image.command.resize.class">Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\ResizeCommand</parameter>
         <parameter key="sulu_media.image.command.scale.class">Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\ScaleCommand</parameter>
+        <parameter key="sulu_media.media_selection.class">Sulu\Bundle\MediaBundle\Content\Types\MediaSelectionContentType</parameter>
+        <parameter key="sulu_media.rest_object_helper.class">Sulu\Bundle\MediaBundle\Media\RestObject\RestObjectHelper</parameter>
     </parameters>
     <services>
         <service id="sulu_media.admin" class="%sulu_media.admin.class%">
@@ -39,6 +41,7 @@
         </service>
         <service id="sulu_media.file_validator" class="%sulu_media.file_validator.class%" />
         <service id="sulu_media.format_cache" class="%sulu_media.format_cache%">
+            <argument type="service" id="filesystem"/>
             <argument>%sulu_media.format_cache.path%</argument>
             <argument>%sulu_media.format_cache.path.url%</argument>
             <argument>%sulu_media.format_cache.segments%</argument>
@@ -50,8 +53,11 @@
         </service>
 
         <service id="sulu_media.image.command_manager" class="%sulu_media.image.command_manager.class%">
-            <argument type="service" id="service_container"/>
             <argument>%sulu_media.image.command.prefix%</argument>
+
+            <call method="setContainer">
+                <argument type="service" id="service_container" />
+            </call>
         </service>
 
         <service id="sulu_media.image.command.resize" class="%sulu_media.image.command.resize.class%" />
@@ -79,6 +85,15 @@
             <argument type="service" id="sulu_media.format_cache" />
             <argument type="service" id="sulu_media.image.converter" />
             <argument>%sulu_media.format_cache.save_image%</argument>
+        </service>
+
+        <service id="sulu.content.type.media_selection" class="%sulu_media.media_selection.class%">
+            <argument type="service" id="sulu_media.media_manager"/>
+            <argument type="string">SuluMediaBundle:Template:content-types/media-selection.html.twig</argument>
+        </service>
+
+        <service id="sulu_media.rest_object_helper" class="%sulu_media.rest_object_helper.class%">
+            <argument type="service" id="sulu_media.format_manager" />
         </service>
     </services>
 </container>

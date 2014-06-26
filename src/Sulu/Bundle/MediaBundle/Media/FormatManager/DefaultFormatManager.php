@@ -12,6 +12,7 @@ namespace Sulu\Bundle\MediaBundle\Media\FormatManager;
 
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
+use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepository;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyMediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\ImageConverterInterface;
@@ -19,7 +20,11 @@ use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Sulu\Bundle\MediaBundle\Media\FormatCache\FormatCacheInterface;
 use Symfony\Component\HttpFoundation\Response;
 
-class DefaultFormatManager implements FormatManagerInterface {
+/**
+ * @package Sulu\Bundle\MediaBundle\Media\FormatManager
+ */
+class DefaultFormatManager implements FormatManagerInterface
+{
 
     /**
      * The repository for communication with the database
@@ -60,8 +65,7 @@ class DefaultFormatManager implements FormatManagerInterface {
         FormatCacheInterface $formatCache,
         ImageConverterInterface $converter,
         $saveImage
-    )
-    {
+    ) {
         $this->mediaRepository = $mediaRepository;
         $this->originalStorage = $originalStorage;
         $this->formatCache = $formatCache;
@@ -86,18 +90,48 @@ class DefaultFormatManager implements FormatManagerInterface {
 
         $image = $this->converter->convert($original, $format);
 
+        list($fileName, $version, $storageOptions) = $this->getMediaData($media);
+
+        $extension = $this->getFileExtension($fileName);
+
+        $image = $image->get($extension);
+
         $headers = array(
-            'Content-Type' => 'image/jpeg'
+            'Content-Type' => 'image/' . $extension
         );
 
-        $image = $image->get('jpeg');
-
         if ($this->saveImage) {
-            list($fileName, $version, $storageOptions) = $this->getMediaData($media);
-            $this->formatCache->save($this->createTmpFile($image), $media->getId(), $fileName, $storageOptions, $format);
+            $this->formatCache->save(
+                $this->createTmpFile($image),
+                $media->getId(),
+                $fileName,
+                $storageOptions,
+                $format
+            );
         }
 
         return new Response($image, 200, $headers);
+    }
+
+    /**
+     * @param $fileName
+     * @return string
+     */
+    protected function getFileExtension($fileName)
+    {
+        $extension = pathinfo($fileName)['extension'];
+
+        switch ($extension) {
+            case 'png':
+            case 'gif':
+                // do nothing
+                break;
+            default:
+                $extension = 'jpg';
+                break;
+        }
+
+        return $extension;
     }
 
     /**
@@ -110,7 +144,7 @@ class DefaultFormatManager implements FormatManagerInterface {
 
     /**
      * get file from namespace
-     * @param $uri
+     * @param string $uri
      * @return string
      */
     protected function getFile($uri)
@@ -134,8 +168,8 @@ class DefaultFormatManager implements FormatManagerInterface {
     }
 
     /**
-     * @param $media
-     * @return mixed
+     * @param Media $media
+     * @return string
      * @throws ImageProxyMediaNotFoundException
      */
     protected function getOriginalByMedia($media)
@@ -146,7 +180,7 @@ class DefaultFormatManager implements FormatManagerInterface {
     }
 
     /**
-     * @param $media
+     * @param Media $media
      * @return array
      * @throws \Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyMediaNotFoundException
      */
@@ -182,10 +216,10 @@ class DefaultFormatManager implements FormatManagerInterface {
     }
 
     /**
-     * @param $fileName
-     * @param $version
-     * @param $storageOptions
-     * @return mixed
+     * @param string $fileName
+     * @param int $version
+     * @param array $storageOptions
+     * @return string
      */
     public function getOriginal($fileName, $version, $storageOptions)
     {
@@ -193,9 +227,9 @@ class DefaultFormatManager implements FormatManagerInterface {
     }
 
     /**
-     * @param $id
-     * @param $fileName
-     * @param $storageOptions
+     * @param int $id
+     * @param string $fileName
+     * @param array $storageOptions
      * @return array
      */
     public function getFormats($id, $fileName, $storageOptions)
@@ -203,7 +237,12 @@ class DefaultFormatManager implements FormatManagerInterface {
         $formats = array();
 
         foreach ($this->converter->getFormats() as $format) {
-            $formats[$format['name']] = $this->formatCache->getMediaUrl($id, $fileName, $storageOptions, $format['name']);
+            $formats[$format['name']] = $this->formatCache->getMediaUrl(
+                $id,
+                $fileName,
+                $storageOptions,
+                $format['name']
+            );
         }
 
         return $formats;
