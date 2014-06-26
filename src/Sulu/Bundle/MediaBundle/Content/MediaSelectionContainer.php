@@ -49,6 +49,7 @@ class MediaSelectionContainer implements \Serializable
     private $data;
 
     /**
+     * @Exclude
      * @var RestObjectHelper
      */
     private $restObjectHelper;
