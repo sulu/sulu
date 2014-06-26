@@ -29932,7 +29932,7 @@ define('husky_components/datagrid/decorators/thumbnail-view',[],function() {
             this.data = data;
 
             this.renderThumbnails(this.data.embedded);
-
+            this.sandbox.dom.on('body', 'click.grid-thumbnails.' + this.datagrid.options.instanceName, this.unselectAll.bind(this));
             this.rendered = true;
         },
 
@@ -30015,7 +30015,7 @@ define('husky_components/datagrid/decorators/thumbnail-view',[],function() {
          * Destroys the view
          */
         destroy: function() {
-            this.sandbox.dom.off('body', 'click.grid-thumbnails');
+            this.sandbox.dom.off('body', 'click.grid-thumbnails.' + this.ddatagrid.options.instanceName);
             this.sandbox.dom.remove(this.$el);
         },
 
@@ -30038,8 +30038,6 @@ define('husky_components/datagrid/decorators/thumbnail-view',[],function() {
                 this.datagrid.emitItemClickedEvent.call(this.datagrid, id);
                 this.selectItem(id);
             }.bind(this));
-
-            this.sandbox.dom.on('body', 'click.grid-thumbnails', this.unselectAll.bind(this));
         },
 
         /**
@@ -30048,9 +30046,9 @@ define('husky_components/datagrid/decorators/thumbnail-view',[],function() {
          */
         toggleItemSelected: function(id) {
             if (this.datagrid.itemIsSelected.call(this.datagrid, id) === true) {
-                this.unselectItem(id);
+                this.unselectItem(id, false);
             } else {
-                this.selectItem(id);
+                this.selectItem(id, false);
             }
         },
 
@@ -30072,13 +30070,16 @@ define('husky_components/datagrid/decorators/thumbnail-view',[],function() {
         /**
          * Unselects an item with a given id
          * @param id {Number|String} the id of the item
+         * @param onlyView {Boolean} if true the selection only affects this view and not the data array
          */
-        unselectItem: function(id) {
+        unselectItem: function(id, onlyView) {
             this.sandbox.dom.removeClass(this.$thumbnails[id], constants.selectedClass);
             if (this.sandbox.dom.is(this.sandbox.dom.find('input[type="checkbox"]', this.$thumbnails[id]), ':checked')) {
                 this.sandbox.dom.prop(this.sandbox.dom.find('input[type="checkbox"]', this.$thumbnails[id]), 'checked', false);
             }
-            this.datagrid.setItemUnselected.call(this.datagrid, id);
+            if (onlyView !== true) {
+                this.datagrid.setItemUnselected.call(this.datagrid, id);
+            }
         },
 
         /**
@@ -30118,8 +30119,9 @@ define('husky_components/datagrid/decorators/thumbnail-view',[],function() {
          */
         unselectAll: function() {
             this.sandbox.util.each(this.$thumbnails, function(id) {
-                this.unselectItem(id);
+                this.unselectItem(id, true);
             }.bind(this));
+            this.datagrid.deselectAllItems.call(this.datagrid);
         }
     };
 });
@@ -39028,6 +39030,7 @@ define('__component__$smart-content@husky',[], function() {
  * @params {String} [options.type] The type of the overlay ('normal', 'error' or 'warning')
  * @params {Array} [options.buttonsDefaultAlign] the align of the buttons in the footer ('center', 'left' or 'right'). Can be overriden by each button individually
  * @params {Array} [options.supportKeyInput] if true pressing enter will submit the overlay and esc will close it
+ * @params {Array} [options.propagateEvents] If false click-events will be stoped at the components-element
  *
  * @params {Array} [options.slides] array of slide objects, will be rendered in a row and can slided with events
  * @params {String} [options.slides[].title] the title of the overlay
@@ -39071,6 +39074,7 @@ define('__component__$overlay@husky',[], function() {
             backdropColor: '#000000',
             skin: '',
             supportKeyInput: true,
+            propagateEvents: true,
             type: 'normal',
             backdropAlpha: 0.5,
             cssClass: '',
@@ -39854,9 +39858,11 @@ define('__component__$overlay@husky',[], function() {
             }.bind(this));
 
             //stop propagation
-            this.sandbox.dom.on(this.overlay.$el, 'click', function(event) {
-                this.sandbox.dom.stopPropagation(event);
-            }.bind(this));
+            if (this.options.propagateEvents === false) {
+                this.sandbox.dom.on(this.overlay.$el, 'click', function(event) {
+                    this.sandbox.dom.stopPropagation(event);
+                }.bind(this));
+            }
 
             // close handler for close icon
             this.sandbox.dom.on(this.overlay.$el, 'click',
