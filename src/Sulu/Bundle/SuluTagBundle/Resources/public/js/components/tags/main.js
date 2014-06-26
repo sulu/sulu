@@ -48,7 +48,7 @@ define([
                         var tag = new Tag({id: id});
                         tag.destroy({
                             success: function() {
-                                this.sandbox.emit('husky.datagrid.row.remove', id);
+                                this.sandbox.emit('husky.datagrid.record.remove', id);
                             }.bind(this),
                             error: function() {
                                 this.sandbox.logger.log('error while removing tag with id '+id);
