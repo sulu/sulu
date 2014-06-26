@@ -39,6 +39,12 @@ define(['sulumedia/collection/collections'], function(Collections) {
             }
         },
 
+        dataDefaults = {
+            ids: [],
+            displayOption: 'top',
+            config: {}
+        },
+
         /**
          * namespace for events
          * @type {string}
@@ -171,7 +177,8 @@ define(['sulumedia/collection/collections'], function(Collections) {
 
             // set preselected values
             if (!!this.sandbox.dom.data(this.$el, 'media-selection')) {
-                setData.call(this, this.sandbox.dom.data(this.$el, 'media-selection'));
+                var data = this.sandbox.util.extend(true, {}, dataDefaults, this.sandbox.dom.data(this.$el, 'media-selection'));
+                setData.call(this, data);
             } else {
                 setData.call(this, this.options.preselected);
             }
@@ -438,9 +445,12 @@ define(['sulumedia/collection/collections'], function(Collections) {
          * set data of media-selection
          */
         setData = function(data) {
-            data = this.sandbox.util.extend(true, {}, this.data, data);
-            this.sandbox.dom.data(this.$el, 'media-selection', data);
-            this.data = data;
+            for (var propertyName in data) {
+                if (data.hasOwnProperty(propertyName) && this.data.hasOwnProperty(propertyName)) {
+                    this.data[propertyName] = data[propertyName];
+                }
+            }
+            this.sandbox.dom.data(this.$el, 'media-selection', this.data);
         },
 
         /**
@@ -453,8 +463,10 @@ define(['sulumedia/collection/collections'], function(Collections) {
                     delimiter, this.options.idsParameter, '=', (this.data.ids || []).join(',')
                 ].join('');
             // min source must be selected
-            if (this.data.ids.length > 0 && newURI !== this.URI.str) {
-                this.sandbox.emit(DATA_CHANGED.call(this), this.data, this.$el);
+            if (newURI !== this.URI.str) {
+                if (this.URI.str !== '') {
+                    this.sandbox.emit(DATA_CHANGED.call(this), this.data, this.$el);
+                }
                 this.URI.str = newURI;
                 this.URI.hasChanged = true;
             } else {
@@ -474,6 +486,7 @@ define(['sulumedia/collection/collections'], function(Collections) {
         initialize: function() {
             // extend default options
             this.options = this.sandbox.util.extend({}, defaults, this.options);
+            this.data = {};
 
             render.call(this);
         }
