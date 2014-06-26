@@ -4,7 +4,7 @@
     "description": "This sulu bundle is responsible for the websites administrated by Sulu",
     "license": "MIT",
     "keywords": ["sulu", "website"],
-    "version": "0.3.0",
+    "version": "0.4.0",
     "authors": [
         {
             "name": "Sulu Community",
@@ -14,8 +14,9 @@
     "require": {
         "php": ">=5.4",
 
-        "sulu/sulu": "0.3.*",
-        "friendsofsymfony/rest-bundle": "1.0.*",
+        "sulu/sulu": "0.4.*",
+        "friendsofsymfony/rest-bundle": "@dev",
+        "friendsofsymfony/http-cache": "@dev",
 
         "doctrine/orm": ">=2.2.3,<2.4-dev",
         "liip/theme-bundle": "1.0.*@dev",
@@ -23,10 +24,10 @@
         "symfony-cmf/routing": "1.2.*@dev"
     },
     "require-dev": {
-        "symfony/symfony": "2.4.*",
+        "symfony/symfony": "2.5.*",
         "symfony/monolog-bundle": "2.4.*",
         "phpunit/phpunit": "3.7.*",
-        "sulu/test-bundle": "0.3.*"
+        "sulu/test-bundle": "0.4.*"
     },
     "autoload": {
         "psr-0": {
