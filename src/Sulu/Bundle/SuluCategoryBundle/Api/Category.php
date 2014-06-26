@@ -140,6 +140,16 @@ class Category extends ApiEntityWrapper
     }
 
     /**
+     * Returns the number of children
+     * @VirtualProperty
+     * @SerializedName("children")
+     * @return number
+     */
+    public function getChildren() {
+        return $this->getEntity()->getChildren()->count();
+    }
+
+    /**
      * Takes a name as string and sets it to the entity
      * @param string $name
      */
