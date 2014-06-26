@@ -82,6 +82,7 @@ class GroupControllerTest extends DatabaseTestCase
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Role'),
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Group'),
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\UserGroup'),
+            self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\SecurityType'),
         );
 
         self::$tool->dropSchema(self::$entities);

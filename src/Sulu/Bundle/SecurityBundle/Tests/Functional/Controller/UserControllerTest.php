@@ -53,6 +53,7 @@ class UserControllerTest extends DatabaseTestCase
 
         $email = new Email();
         $email->setEmail('max.mustermann@muster.at');
+        $email->setMain(true);
         $email->setEmailType($emailType);
         self::$em->persist($email);
 
@@ -167,6 +168,7 @@ class UserControllerTest extends DatabaseTestCase
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Contact'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Fax'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Account'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AccountContact'),
 
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\User'),
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\UserSetting'),
@@ -174,7 +176,10 @@ class UserControllerTest extends DatabaseTestCase
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Group'),
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\UserRole'),
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Role'),
-            self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Permission')
+            self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Permission'),
+            self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\SecurityType'),
+
+            self::$em->getClassMetadata('Sulu\Bundle\TagBundle\Entity\Tag')
         );
 
         self::$tool->dropSchema(self::$entities);

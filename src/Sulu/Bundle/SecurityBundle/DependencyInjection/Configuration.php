@@ -33,6 +33,14 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('system')
                     ->defaultValue('Sulu')
                 ->end()
+                ->arrayNode('security_types')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('fixture')
+                            ->defaultValue('vendor/sulu/security-bundle/Sulu/Bundle/SecurityBundle/DataFixtures/security-types.xml')
+                        ->end()
+                    ->end()
+                ->end()
             ->end();
 
         return $treeBuilder;

@@ -23,11 +23,11 @@ class SuluSecurityAdmin extends Admin
         $section = new NavigationItem('');
 
         $settings = new NavigationItem('navigation.settings');
-        $settings->setIcon('cogwheels');
+        $settings->setIcon('gear');
 
         $roles = new NavigationItem('navigation.settings.roles', $settings);
         $roles->setAction('settings/roles');
-        $roles->setIcon('settings');
+        $roles->setIcon('gear');
 
         $section->addChild($settings);
         $rootNavigationItem->addChild($section);

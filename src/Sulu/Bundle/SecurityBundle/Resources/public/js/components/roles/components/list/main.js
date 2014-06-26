@@ -68,11 +68,11 @@ define(function() {
                 {
                     el: this.sandbox.dom.find('#roles-list', this.$el),
                     url: '/admin/api/roles?flat=true',
-                    fullWidth: true,
-                    selectItem: {
-                        type: 'checkbox'
-                    },
-                    sortable: true
+                    viewOptions: {
+                        table: {
+                            fullWidth: true
+                        }
+                    }
                 }
             );
 

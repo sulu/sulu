@@ -31,6 +31,7 @@ class SuluSecurityExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
 
         $container->setParameter('sulu_security.system', $config['system']);
+        $container->setParameter('sulu_security.security_types.fixture', $config['security_types']['fixture']);
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');
