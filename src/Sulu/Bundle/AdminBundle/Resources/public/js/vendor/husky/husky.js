@@ -28292,7 +28292,8 @@ define('__component__$column-options@husky',[],function() {
  * @param {String} [options.icons[].column] the id of the column in which the icon should be displayed
  * @param {String} [options.icons[].align] the align of the icon. 'left' org 'right'
  * @param {Function} [options.icons.callback] a callback to execute if the icon got clicked. Gets the id of the data-record as first argument
- * @param {Function} [options.hideChildrenAtBeginning] if true children get hidden, if all children are loaded at the beginning
+ * @param {Boolean} [options.hideChildrenAtBeginning] if true children get hidden, if all children are loaded at the beginning
+ * @param {String|Number|Null} [options.openChildId] the id of the children to open all parents for. (only relevant in a child-list)
  *
  * @param {Boolean} [rendered] property used by the datagrid-main class
  * @param {Function} [initialize] function which gets called once at the start of the view
@@ -28324,6 +28325,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             thumbnailFormat: '50x50',
             showHead: true,
             hideChildrenAtBeginning: true,
+            openChildId: null,
             icons: []
         },
 
@@ -28499,6 +28501,12 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             }
 
             this.setHeaderClasses();
+
+            // try to open all parents for a child if configured
+            if (!!this.options.openChildId) {
+                this.openAllParents(this.options.openChildId);
+                this.options.openChildId = null;
+            }
 
             this.rendered = true;
         },
@@ -30922,6 +30930,14 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
         /* TRIGGERS EVENTS */
 
             /**
+             * raised after initialization has finished
+             * @event husky.datagrid.initialized
+             */
+            INITIALIZED = function() {
+                return this.createEventName('initialized');
+            },
+
+            /**
              * raised when the the current page changes
              * @event husky.datagrid.page.change
              */
@@ -31288,6 +31304,8 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
 
                 // Should only be be called once
                 this.bindCustomEvents();
+
+                this.sandbox.emit(INITIALIZED.call(this));
             },
 
             /**
