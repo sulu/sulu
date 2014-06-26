@@ -14,7 +14,6 @@ define(function () {
     var defaults = {
             data: {},
             instanceName: '',
-            newCollectionTitle: 'sulu.media.new-collection',
             newThumbnailSrc: 'http://lorempixel.com/150/100/',
             newThumbnailTitel: ''
         },
@@ -149,9 +148,6 @@ define(function () {
             this.sandbox.once('husky.overlay.add-collection.opened', function () {
                 this.sandbox.start(constants.newFormSelector);
                 this.sandbox.form.create(constants.newFormSelector);
-                this.sandbox.form.setData(constants.newFormSelector, {
-                    title: this.sandbox.translate(this.options.newCollectionTitle)
-                });
             }.bind(this));
 
             this.sandbox.start([
