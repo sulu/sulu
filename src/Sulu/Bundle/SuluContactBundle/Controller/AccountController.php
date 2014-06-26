@@ -42,6 +42,7 @@ class AccountController extends AbstractContactController
     protected $entityName = 'SuluContactBundle:Account';
     protected $contactEntityName = 'SuluContactBundle:Contact';
     protected $accountCategoryEntityName = 'SuluContactBundle:AccountCategory';
+    protected $accountContactEntityName = 'SuluContactBundle:AccountContact';
     protected $termsOfPaymentEntityName = 'SuluContactBundle:TermsOfPayment';
     protected $termsOfDeliveryEntityName = 'SuluContactBundle:TermsOfDelivery';
 
@@ -173,7 +174,7 @@ class AccountController extends AbstractContactController
                 ->getRepository($this->entityName)
                 ->find($accountId);
             if (!$account) {
-                throw new EntityNotFoundException('contact', $accountId);
+                throw new EntityNotFoundException('account', $accountId);
             }
             
             // get contact
@@ -181,12 +182,12 @@ class AccountController extends AbstractContactController
                 ->getRepository($this->contactEntityName)
                 ->find($contactId);
             if (!$contact) {
-                throw new EntityNotFoundException('contact', $contact);
+                throw new EntityNotFoundException('contact', $contactId);
             }
 
             // check if relation already exists
             $accountContact = $this->getDoctrine()
-                ->getRepository('SuluContactBundle:AccountContact')
+                ->getRepository($this->accountContactEntityName)
                 ->findOneBy(array('contact' => $contact, 'account' => $account));
             if ($accountContact) {
                 throw new \Exception('Relation already exists');
@@ -209,10 +210,41 @@ class AccountController extends AbstractContactController
             $view = $this->view($enfe->toArray(), 404);
         } catch (RestException $exc) {
             $view = $this->view($exc->toArray(), 400);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $view = $this->view($e->getMessage(), 400);
         }
 
+        return $this->handleView($view);
+    }
+
+    /**
+     * @param $accountId
+     * @param $contactId
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Exception
+     */
+    public function deleteContactsAction($accountId, $contactId, Request $request)
+    {
+        try {
+            // check if relation exists
+            $accountContact = $this->getDoctrine()
+                ->getRepository($this->accountContactEntityName)
+                ->findByForeignIds($accountId, $contactId);
+            if (!$accountContact) {
+                throw new EntityNotFoundException('AccountContact', $accountId.$contactId);
+            }
+            $id = $accountContact->getId();
+
+            // remove accountContact
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($accountContact);
+            $em->flush();
+
+            $view = $this->view($id, 200);
+        } catch (EntityNotFoundException $enfe) {
+            $view = $this->view($enfe->toArray(), 404);
+        }
         return $this->handleView($view);
     }
 
