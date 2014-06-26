@@ -59,7 +59,7 @@ class CollectionController extends RestController implements ClassResourceInterf
     /**
      * {@inheritdoc}
      */
-    protected $fieldsHidden = array('');
+    protected $fieldsHidden = array();
 
     /**
      * {@inheritdoc}
