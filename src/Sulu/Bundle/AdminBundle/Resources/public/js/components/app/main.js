@@ -289,6 +289,8 @@ define(function() {
         bindCustomEvents: function() {
             // listening for navigation events
             this.sandbox.on('sulu.router.navigate', function(route, trigger, noLoader) {
+                // remove eventual full-width and full-height mode
+                this.removeFullSize();
 
                 // default vars
                 trigger = (typeof trigger !== 'undefined') ? trigger : true;
@@ -304,9 +306,6 @@ define(function() {
                     // remove eventual spacing because of header
                     this.headerVisible = false;
                     this.changeTopSpacing();
-
-                    // remove eventual full-width and full-height mode
-                    this.removeFullSize();
                 }
 
                 // reset store for cleaning environment
@@ -440,6 +439,7 @@ define(function() {
             this.sandbox.dom.removeClass(this.$el, constants.fullHeightClass);
             this.sandbox.dom.removeClass(this.$el, constants.noPaddingClass);
             this.sandbox.dom.removeClass(this.$el, constants.fullWidthClass);
+            this.sandbox.emit('sulu.header.unsqueeze');
         },
 
         /**
