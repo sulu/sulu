@@ -446,7 +446,7 @@ define(['sulumedia/collection/collections'], function(Collections) {
          */
         setData = function(data) {
             for (var propertyName in data) {
-                if (data.hasOwnProperty(propertyName) && this.data.hasOwnProperty(propertyName)) {
+                if (data.hasOwnProperty(propertyName)) {
                     this.data[propertyName] = data[propertyName];
                 }
             }
