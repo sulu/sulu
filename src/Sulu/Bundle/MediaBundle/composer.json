@@ -20,7 +20,7 @@
         "sulu/sulu": "dev-develop",
         "sulu/admin-bundle": "dev-develop",
         "sulu/tag-bundle": "dev-develop",
-        "imagine/imagine": "~0.5.0",
+        "imagine/imagine": "~0.6.1",
 
         "sulu/security-bundle": "@dev",
         "sulu/contact-bundle": "@dev"
