@@ -365,6 +365,15 @@ define([], function() {
             return createEventName.call(this, 'set-bottom-content');
         },
 
+        /**
+         * listens on and squeezes the header
+         *
+         * @event sulu.header.[INSTANCE_NAME].squeeze
+         */
+        SQUEEZE = function() {
+            return createEventName.call(this, 'squeeze');
+        },
+
         /*********************************************
          *   Abstract events
          ********************************************/
@@ -725,6 +734,9 @@ define([], function() {
 
             // change the color-point in front of the title
             this.sandbox.on(SET_TITLE_COLOR.call(this), this.setTitleColor.bind(this));
+
+            // squeezes the header
+            this.sandbox.on(SQUEEZE.call(this), this.squeeze.bind(this));
 
             // get height event
             this.sandbox.on(GET_HEIGHT.call(this), function(callback) {
