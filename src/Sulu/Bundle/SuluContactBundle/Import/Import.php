@@ -44,10 +44,12 @@ class Import
      * @var array
      * @param {Boolean=true} importIds defines if ids of import file should be imported
      * @param {Boolean=false} streetNumberSplit defines if street is provided as street- number string and must be splitted
+     * @param {Boolean=false|int} fixedAccountType defines if accountType should be set to a fixed type for all imported accounts
      */
     protected $options = array(
         'importIds' => true,
         'streetNumberSplit' => false,
+        'fixedAccountType' => false,
     );
 
     /**
@@ -342,6 +344,8 @@ class Import
      * Loads the CSV Files and the Entities for the import
      * @param string $filename path to file
      * @param callable $function will be called for each row in file
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Exception
      */
     protected function processCsvLoop($filename, $function)
     {
@@ -399,7 +403,6 @@ class Import
         // check if account already exists
         $account = new Account();
         $this->accounts[] = $account;
-        $errorCache = array();
 
         // check if id mapping is defined
         if (array_key_exists('account_id', $this->idMappings)) {
@@ -415,14 +418,12 @@ class Import
         if ($this->checkData('account_name', $data)) {
             $account->setName($data['account_name']);
         } else {
-            // TODO: catch this exception
-            //throw new \Exception('Account name not set at row ' . $row);
-            $errorCache[$row] = $row;
+            $this->debug('ERROR: account name not set');
             return;
         }
 
-        if ($this->checkData('account_division', $data)) {
-            $account->setDivision($data['account_division']);
+        if ($this->checkData('account_corporation', $data)) {
+            $account->setCorporation($data['account_corporation']);
         }
         if ($this->checkData('account_disabled', $data)) {
             $account->setDisabled($data['account_disabled']);
@@ -430,10 +431,20 @@ class Import
         if ($this->checkData('account_uid', $data)) {
             $account->setUid($data['account_uid']);
         }
+        if ($this->checkData('account_number', $data)) {
+            $account->setNumber($data['account_number']);
+        }
         if ($this->checkData('account_registerNumber', $data)) {
             $account->setRegisterNumber($data['account_registerNumber']);
         }
-        if ($this->checkData('account_type', $data)) {
+        if ($this->checkData('account_jurisdiction', $data)) {
+            $account->setPlaceOfJurisdiction($data['account_jurisdiction']);
+        }
+        // set account type
+        if ($this->options['fixedAccountType'] != false && is_numeric($this->options['fixedAccountType'])) {
+            // set account type to a fixed number
+            $account->setType($this->options['fixedAccountType']);
+        } elseif ($this->checkData('account_type', $data)) {
             $account->setType($this->mapAccountType($data['account_type']));
         }
 
@@ -660,13 +671,23 @@ class Import
         }
         if ($this->checkData('zip', $data)) {
             $address->setZip($data['zip']);
-            $addAddress = $addAddress && true;
+            $addAddress = true;
         }
         if ($this->checkData('city', $data)) {
             $address->setCity($data['city']);
-            $addAddress = $addAddress && true;
-        } else {
-            $addAddress = $addAddress && false;
+            $addAddress = true;
+        }
+        if ($this->checkData('postbox', $data)) {
+            $address->setPostboxNumber($data['postbox']);
+            $addAddress = true;
+        }
+        if ($this->checkData('postbox_zip', $data)) {
+            $address->setPostboxPostcode($data['postbox_zip']);
+            $addAddress = true;
+        }
+        if ($this->checkData('postbox_city', $data)) {
+            $address->setPostboxCity($data['postbox_city']);
+            $addAddress = true;
         }
         if ($this->checkData('country', $data)) {
             $country = $this->em->getRepository('SuluContactBundle:Country')->findOneByCode(
@@ -680,8 +701,9 @@ class Import
             $address->setCountry($country);
             $addAddress = $addAddress && true;
         } else {
-            $addAddress = $addAddress && false;
+            $addAddress = false;
         }
+
 
         // only add address if part of it is defined
         if ($addAddress) {

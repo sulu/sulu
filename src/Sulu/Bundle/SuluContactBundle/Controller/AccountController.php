@@ -64,7 +64,7 @@ class AccountController extends AbstractContactController
     /**
      * {@inheritdoc}
      */
-    protected $fieldsHidden = array('created', 'type', 'division', 'disabled', 'uid', 'registerNumber', 'placeOfJurisdiction');
+    protected $fieldsHidden = array('id','created', 'type', 'disabled', 'uid', 'registerNumber', 'placeOfJurisdiction');
 
     /**
      * {@inheritdoc}
@@ -74,7 +74,11 @@ class AccountController extends AbstractContactController
     /**
      * {@inheritdoc}
      */
-    protected $fieldsSortOrder = array(0 => 'id');
+    protected $fieldsSortOrder = array(
+        0 => 'number',
+        1 => 'name',
+        2 => 'corporation',
+    );
 
     /**
      * {@inheritdoc}
@@ -290,6 +294,8 @@ class AccountController extends AbstractContactController
 
             $account->setName($request->get('name'));
 
+            $account->setCorporation($request->get('corporation'));
+
             $account->setType($request->get('type', 0));
 
             $disabled = $request->get('disabled');
@@ -360,6 +366,7 @@ class AccountController extends AbstractContactController
 
                 // set name
                 $account->setName($request->get('name'));
+                $account->setCorporation($request->get('corporation'));
 
                 // set disabled
                 $disabled = $request->get('disabled');
@@ -479,6 +486,9 @@ class AccountController extends AbstractContactController
                 }
                 if (!is_null($request->get('registerNumber'))) {
                     $account->setRegisterNumber($request->get('registerNumber'));
+                }
+                if (!is_null($request->get('number'))) {
+                    $account->setNumber($request->get('number'));
                 }
 
                 if (!is_null($request->get('placeOfJurisdiction'))) {
