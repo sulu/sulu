@@ -3,6 +3,7 @@ parameters:
     sulu_contact.admin.content_navigation.class: Sulu\Bundle\ContactBundle\Admin\SuluContactContentNavigation
     sulu_contact.js_config.class: Sulu\Bundle\AdminBundle\Admin\JsConfig
     sulu_contact.import.class: Sulu\Bundle\ContactBundle\Import\Import
+    sulu_contact.account_listener.class: Sulu\Bundle\ContactBundle\EventListener\AccountListener
 
 services:
     sulu_contact.admin:
@@ -28,3 +29,8 @@ services:
           - accountTypes: %sulu_contact.account_types%
         tags:
         - { name: sulu.js_config }
+
+    sulu_contact.account_listener:
+        class: %sulu_contact.account_listener.class%
+        tags:
+          - { name: doctrine.event_listener, event: postPersist }

@@ -28,6 +28,7 @@ define([
             return {
                 id: null,
                 name: '',
+                corporation: '',
                 emails: [],
                 phones: [],
                 addresses: [],

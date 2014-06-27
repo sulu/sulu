@@ -142,10 +142,11 @@ define([
                     id: 'settings',
                     icon: 'gear',
                     items: [
-                        {
-                            title: this.sandbox.translate('list-toolbar.column-options'),
-                            callback: openColumnOptions.bind(this)
-                        },
+//                      // TODO: currently column options are not needed for this list, but this can change in future
+//                        {
+//                            title: this.sandbox.translate('list-toolbar.column-options'),
+//                            callback: openColumnOptions.bind(this)
+//                        },
                         {
                             title: this.sandbox.translate('sulu.contact.accounts.contact-remove'),
                             callback: removeContact.bind(this)
@@ -165,10 +166,6 @@ define([
 
     return {
         view: true,
-
-//        fullSize: {
-//            width: true
-//        },
 
         templates: ['/admin/contact/template/contact/list'],
 
@@ -199,7 +196,6 @@ define([
                     searchInstanceName: 'contacts',
                     viewOptions: {
                         table: {
-//                            fullWidth: true,
                             selectItem: {
                                 type: 'checkbox'
                             },
