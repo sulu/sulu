@@ -30,7 +30,44 @@ class SuluContentExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $loader->load('services.yml');
+        $container->setParameter('sulu_content.preview.fallback.interval', $config['preview']['fallback']['interval']);
+        $container->setParameter('sulu_content.preview.websocket.port', $config['preview']['websocket']['port']);
+
+        $container->setParameter(
+            'sulu.content.type.smart_content.template',
+            $config['types']['smart_content']['template']
+
+        );
+        $container->setParameter(
+            'sulu.content.type.phone.template',
+            $config['types']['phone']['template']
+        );
+        $container->setParameter(
+            'sulu.content.type.password.template',
+            $config['types']['password']['template']
+        );
+        $container->setParameter(
+            'sulu.content.type.url.template',
+            $config['types']['url']['template']
+        );
+        $container->setParameter(
+            'sulu.content.type.email.template',
+            $config['types']['email']['template']
+        );
+        $container->setParameter(
+            'sulu.content.type.date.template',
+            $config['types']['date']['template']
+        );
+        $container->setParameter(
+            'sulu.content.type.time.template',
+            $config['types']['time']['template']
+        );
+        $container->setParameter(
+            'sulu.content.type.color.template',
+            $config['types']['color']['template']
+        );
+
+        $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader->load('services.xml');
     }
 }

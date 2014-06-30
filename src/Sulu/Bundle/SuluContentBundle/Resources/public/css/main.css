@@ -1,0 +1,168 @@
+/* line 5, ../scss/modules/preview.scss */
+.preview-wrapper {
+  overflow: scroll;
+  background-color: #ffffff;
+  position: fixed;
+  height: 100%;
+  top: 0;
+  right: 0;
+  z-index: 100;
+  /* because of a css bug in the toolbar */
+  border-left: 1px solid #666;
+}
+
+/* line 16, ../scss/modules/preview.scss */
+.preview-iframe {
+  border: 0;
+  height: 100%;
+}
+
+/* line 21, ../scss/modules/preview.scss */
+.preview-toolbar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 101;
+  height: 30px;
+  color: #fff;
+  font-weight: 100;
+}
+/* line 30, ../scss/modules/preview.scss */
+.preview-toolbar .right {
+  float: right;
+  background: #21272E;
+  height: 100%;
+  border-radius: 0 0 0 3px;
+}
+/* line 36, ../scss/modules/preview.scss */
+.preview-toolbar .right .new-window {
+  width: 30px;
+  overflow: hidden;
+  text-align: center;
+  padding-top: 5px;
+  border-left: 1px solid #fff;
+  height: 30px;
+  font-size: 20px;
+  line-height: 24px;
+}
+/* line 48, ../scss/modules/preview.scss */
+.preview-toolbar .right .resolutions .drop-down-trigger {
+  color: #fff;
+  padding: 5px 10px;
+}
+/* line 53, ../scss/modules/preview.scss */
+.preview-toolbar .right .resolutions .dropdown-toggle {
+  display: inline-block;
+}
+/* line 55, ../scss/modules/preview.scss */
+.preview-toolbar .right .resolutions .dropdown-toggle::after {
+  top: -1px;
+  margin-left: 5px;
+  margint-right: 0;
+  border-top: 6px solid #fff;
+}
+/* line 63, ../scss/modules/preview.scss */
+.preview-toolbar .right .resolutions .dropdown-menu {
+  background: #21272E;
+  color: #fff;
+  z-index: 105;
+  top: 35px;
+  left: -5px;
+  border: 0;
+  width: auto;
+}
+/* line 75, ../scss/modules/preview.scss */
+.preview-toolbar .left {
+  float: left;
+  width: 30px;
+  height: 30px;
+  overflow: hidden;
+  background: #21272E;
+  text-align: center;
+  line-height: 28px;
+  border-radius: 0 0 0 2px;
+  font-size: 20px;
+  line-height: 32px;
+}
+
+/* line 1, ../scss/modules/general.scss */
+#language-selector {
+  width: 95px;
+}
+
+/* line 5, ../scss/modules/general.scss */
+.sortable-placeholder {
+  margin-bottom: 20px;
+}
+
+/* line 2, ../scss/modules/resource-locator.scss */
+.resource-locator input {
+  width: 200px;
+}
+/* line 5, ../scss/modules/resource-locator.scss */
+.resource-locator .show {
+  padding-left: 5px;
+}
+/* line 8, ../scss/modules/resource-locator.scss */
+.resource-locator .show .icon {
+  font-size: 14px;
+  padding-right: 2px;
+}
+/* line 13, ../scss/modules/resource-locator.scss */
+.resource-locator .loader {
+  display: inline-block;
+  margin-bottom: -3px;
+  margin-left: 5px;
+}
+
+/* line 20, ../scss/modules/resource-locator.scss */
+.resource-locator-history {
+  list-style-type: none;
+  padding: 0 40px 0 30px;
+}
+/* line 24, ../scss/modules/resource-locator.scss */
+.resource-locator-history::after {
+  display: table;
+  content: "";
+  clear: both;
+}
+/* line 30, ../scss/modules/resource-locator.scss */
+.resource-locator-history li::after {
+  clear: both;
+}
+/* line 37, ../scss/modules/resource-locator.scss */
+.resource-locator-history .url,
+.resource-locator-history .date,
+.resource-locator-history .options-restore,
+.resource-locator-history .options-delete {
+  display: block;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ddd;
+}
+/* line 45, ../scss/modules/resource-locator.scss */
+.resource-locator-history .url,
+.resource-locator-history .date {
+  float: left;
+  width: 45%;
+}
+/* line 50, ../scss/modules/resource-locator.scss */
+.resource-locator-history .options-restore {
+  float: left;
+  width: 5%;
+  text-align: center;
+}
+/* line 56, ../scss/modules/resource-locator.scss */
+.resource-locator-history .options-delete {
+  float: right;
+  width: 5%;
+  text-align: center;
+}
+/* line 62, ../scss/modules/resource-locator.scss */
+.resource-locator-history .url {
+  text-align: left;
+}
+/* line 65, ../scss/modules/resource-locator.scss */
+.resource-locator-history .date {
+  text-align: center;
+}

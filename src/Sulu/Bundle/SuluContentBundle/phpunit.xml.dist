@@ -18,7 +18,8 @@
     </filter>
 
     <php>
-        <server name="KERNEL_DIR" value="Tests/Resources/app"/>
+        <server name="KERNEL_DIR" value="Tests/Resources/app/admin"/>
+        <var name="APP_DB" value="mysql"/>
     </php>
 
 </phpunit>

@@ -1,5 +1,3 @@
-/Tests/Resources/app/cache/*
-/Tests/Resources/app/logs/*
 /node_modules/
 /vendor/
 /composer.phar
@@ -10,3 +8,11 @@
 # IDEs
 .idea/*
 *.iml
+
+# Jackrabbit
+/bin/jackrabbit-standalone*
+/bin/jackrabbit/*
+
+# test cache
+/Tests/Resources/app/admin/cache/*
+/Tests/Resources/app/admin/logs/*
