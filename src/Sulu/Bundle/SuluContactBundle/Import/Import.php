@@ -229,14 +229,6 @@ class Import
     public function execute()
     {
         try {
-            // check if specified files do exist
-            if (!$this->accountFile || !file_exists($this->accountFile) ||
-                ($this->mappingsFile && !file_exists($this->mappingsFile)) ||
-                ($this->contactFile && !file_exists($this->contactFile))
-            ) {
-                throw new NotFoundResourceException('one of the specified files was not found at the specified path!');
-            }
-
             // set default types
             $this->defaultTypes = $this->getDefaults();
 
