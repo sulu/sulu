@@ -156,7 +156,7 @@ class ContactController extends AbstractContactController
             }
 
             // check if fullname should be returned
-            $returnFullName = array_search('fullName', $fields) !== false;
+            $returnFullName = !is_null($fields) && array_search('fullName', $fields) !== false;
 
             $filter = function($res) use ($returnFullName){
                 // get full name

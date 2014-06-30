@@ -1015,4 +1015,32 @@ class Account extends ApiEntity
     {
         return $this->number;
     }
+    /**
+     * @var string
+     */
+    private $externalId;
+
+
+    /**
+     * Set externalId
+     *
+     * @param string $externalId
+     * @return Account
+     */
+    public function setExternalId($externalId)
+    {
+        $this->externalId = $externalId;
+    
+        return $this;
+    }
+
+    /**
+     * Get externalId
+     *
+     * @return string 
+     */
+    public function getExternalId()
+    {
+        return $this->externalId;
+    }
 }
