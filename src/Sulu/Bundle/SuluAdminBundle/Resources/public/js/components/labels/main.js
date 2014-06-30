@@ -202,6 +202,8 @@ define([], function() {
          * @oaram id
          */
         showLabel: function(type, description, title, id) {
+            //make sure the container with is right
+            this.sandbox.emit('sulu.app.content.get-dimensions', this.resizeListener.bind(this));
             this.startLabelComponent({
                 type: type,
                 description: this.sandbox.translate(description),
