@@ -402,15 +402,30 @@ class Import
     {
         // check if account already exists
         $account = new Account();
-        $this->accounts[] = $account;
+        $persistAccount = true;
 
         // check if id mapping is defined
         if (array_key_exists('account_id', $this->idMappings)) {
             if (!array_key_exists($this->idMappings['account_id'], $data)) {
                 throw new \Exception('no key ' + $this->idMappings['account_id'] + ' found in column definition of accounts file');
             }
-            $this->associativeAccounts[$data[$this->idMappings['account_id']]] = $account;
+            $externalId = $data[$this->idMappings['account_id']];
+
+            $accountFromDb = $this->getAccountByKey($externalId);
+            if ($accountFromDb !== null) {
+                $account = $accountFromDb;
+                $persistAccount = false;
+            } else {
+                $account->setExternalId($externalId);
+            }
+            $this->associativeAccounts[$externalId] = $account;
         }
+
+        if ($persistAccount) {
+            $this->em->persist($account);
+        }
+
+        $this->accounts[] = $account;
 
         $account->setChanged(new \DateTime());
         $account->setCreated(new \DateTime());
@@ -477,8 +492,6 @@ class Import
 
         // add bank accounts
         $this->addBankAccounts($data, $account);
-
-        $this->em->persist($account);
 
         return $account;
     }
@@ -1155,10 +1168,12 @@ class Import
      */
     public function getAccountByKey($key)
     {
-        if (array_key_exists($key, $this->associativeAccounts)) {
-            return $this->associativeAccounts[$key];
-        }
-        return null;
+//        if (array_key_exists($key, $this->associativeAccounts)) {
+//            return $this->associativeAccounts[$key];
+//        }
+//        return null;
+
+          return $this->em->getRepository('SuluContactBundle:Account')->findOneBy(array('externalId' => $key));
     }
 
     /**
