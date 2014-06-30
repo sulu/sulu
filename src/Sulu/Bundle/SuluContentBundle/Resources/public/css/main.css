@@ -111,6 +111,19 @@
   border-radius: 2px;
 }
 
+/* line 27, ../scss/modules/general.scss */
+.internal-links-overlay .overlay-header {
+  margin-bottom: 1px;
+}
+/* line 30, ../scss/modules/general.scss */
+.internal-links-overlay .overlay-content {
+  margin: 0px;
+}
+/* line 34, ../scss/modules/general.scss */
+.internal-links-overlay .overlay-footer {
+  margin: 0px;
+}
+
 /* line 2, ../scss/modules/seo.scss */
 #seo-form .inline-input {
   width: 30px;

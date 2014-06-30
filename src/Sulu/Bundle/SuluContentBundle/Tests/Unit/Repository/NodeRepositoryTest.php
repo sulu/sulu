@@ -235,6 +235,27 @@ class NodeRepositoryTest extends PhpcrTestCase
         $this->assertEquals('/testtitle', $result['path']);
     }
 
+    public function testGetByIds()
+    {
+        $data = $this->prepareGetTestData();
+
+        $result = $this->nodeRepository->getNodesByIds(array(), 'default', 'en');
+        $this->assertEquals(0, sizeof($result['_embedded']));
+        $this->assertEquals(0, $result['total']);
+
+        $result = $this->nodeRepository->getNodesByIds(
+            array(
+                $data->getUuid()
+            ),
+            'default',
+            'en'
+        );
+        $this->assertEquals(1, sizeof($result['_embedded']));
+        $this->assertEquals(1, $result['total']);
+        $this->assertEquals('Testtitle', $result['_embedded'][0]['title']);
+        $this->assertEquals('/testtitle', $result['_embedded'][0]['path']);
+    }
+
     protected function setUp()
     {
         $this->prepareMapper();
