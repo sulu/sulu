@@ -257,7 +257,7 @@ class ImportTest extends DatabaseTestCase
         // first account
         $this->assertEquals(1, $account->getId());
         $this->assertEquals('Test Company 1', $account->getName());
-        $this->assertEquals('Office', $account->getDivision());
+        $this->assertEquals('Office', $account->getCorporation());
         $this->assertEquals(Account::TYPE_SUPPLIER, $account->getType());
         $this->assertEquals('ATU 1234 5678', $account->getUid());
         $this->assertNull($account->getParent());
@@ -303,7 +303,7 @@ class ImportTest extends DatabaseTestCase
         // second account
         $this->assertEquals(2, $account->getId());
         $this->assertEquals('Child Customer', $account->getName());
-        $this->assertEquals(null, $account->getDivision());
+        $this->assertEquals(null, $account->getCorporation());
         $this->assertEquals(Account::TYPE_CUSTOMER, $account->getType());
         $this->assertEquals('DEU 5678 1234', $account->getUid());
         $this->assertEquals(1, $account->getParent()->getId());
