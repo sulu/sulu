@@ -1,7 +1,7 @@
 CHANGELOG for SuluMediaBundle
 =============================
 
-0.1.0 (2014-06-26):
+0.1.0 (2014-06-30):
 * [FEATURE] multiple edit of media and new colleciton-list view
 * [FEATURE] Fix doctrine entities problem
 * [FEATURE] Content Type media selection
