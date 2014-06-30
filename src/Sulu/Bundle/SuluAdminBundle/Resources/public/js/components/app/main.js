@@ -421,6 +421,8 @@ define(function() {
                 this.sandbox.dom.addClass(this.$el, constants.fullHeightClass);
             }
             if (fullwidth === true) {
+                this.sandbox.dom.css(this.$el, {'max-width': ''});
+                this.sandbox.dom.css(this.$el, {'width': ''});
                 this.sandbox.dom.addClass(this.$el, constants.fullWidthClass);
                 if (keepPaddings !== true) {
                     this.sandbox.dom.addClass(this.$el, constants.noPaddingClass);
