@@ -26,7 +26,6 @@ define(['sulumedia/collection/collections'], function(Collections) {
             idKey: 'id',
             titleKey: 'title',
             thumbnailKey: 'thumbnails',
-            urlKey: 'url',
             thumbnailSize: '50x50',
             resultKey: '_embedded',
             translations: {
@@ -302,7 +301,7 @@ define(['sulumedia/collection/collections'], function(Collections) {
 
                 //loop stops if no more items are left or if number of rendered items matches itemsVisible
                 for (; ++i < length && i < this.itemsVisible;) {
-                    url = this.items[i][this.options.thumbnailKey][this.options.thumbnailSize][this.options.urlKey];
+                    url = this.items[i][this.options.thumbnailKey][this.options.thumbnailSize];
                     this.sandbox.dom.append(ul, templates.contentItem(this.items[i][this.options.idKey], i + 1, this.items[i][this.options.titleKey], url));
                 }
 
