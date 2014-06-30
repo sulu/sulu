@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <parameters>
+        <parameter key="sulu_content.admin.class">Sulu\Bundle\ContentBundle\Admin\SuluContentAdmin</parameter>
+        <parameter key="sulu_content.twig_extension.class">Sulu\Bundle\ContentBundle\Twig\ContentExtension</parameter>
+        <parameter key="sulu_content.admin.content_navigation.class">Sulu\Bundle\ContentBundle\Admin\SuluContentContentNavigation</parameter>
+        <parameter key="sulu_content.preview.message_component.class">Sulu\Bundle\ContentBundle\Preview\PreviewMessageComponent</parameter>
+        <parameter key="sulu_content.preview.class">Sulu\Bundle\ContentBundle\Preview\Preview</parameter>
+        <parameter key="sulu_content.preview.lifetime">3600</parameter>
+        <parameter key="sulu_content.preview.template-namespace">ClientWebsiteBundle:Website:</parameter>
+        <parameter key="sulu_content.preview.cache.class">Doctrine\Common\Cache\FilesystemCache</parameter>
+        <parameter key="sulu_content.node_repository.class">Sulu\Bundle\ContentBundle\Repository\NodeRepository</parameter>
+        <parameter key="sulu_content.rl_repository.class">Sulu\Bundle\ContentBundle\Repository\ResourceLocatorRepository</parameter>
+        <parameter key="sulu.content.type.smart_content.class">Sulu\Bundle\ContentBundle\Content\Types\SmartContent</parameter>
+        <parameter key="sulu.content.type.phone.class">Sulu\Bundle\ContentBundle\Content\Types\Phone</parameter>
+        <parameter key="sulu.content.type.password.class">Sulu\Bundle\ContentBundle\Content\Types\Password</parameter>
+        <parameter key="sulu.content.type.url.class">Sulu\Bundle\ContentBundle\Content\Types\Url</parameter>
+        <parameter key="sulu.content.type.email.class">Sulu\Bundle\ContentBundle\Content\Types\Email</parameter>
+        <parameter key="sulu.content.type.date.class">Sulu\Bundle\ContentBundle\Content\Types\Date</parameter>
+        <parameter key="sulu.content.type.time.class">Sulu\Bundle\ContentBundle\Content\Types\Time</parameter>
+        <parameter key="sulu.content.type.color.class">Sulu\Bundle\ContentBundle\Content\Types\Color</parameter>
+    </parameters>
+    <services>
+        <!-- admin class -->
+        <service id="sulu_content.admin" class="%sulu_content.admin.class%">
+            <tag name="sulu.admin"/>
+            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+            <argument>%sulu_admin.name%</argument>
+            <argument type="service" id="service_container"/>
+        </service>
+
+        <!-- content-navigation -->
+        <service id="sulu_content.admin.content_navigation" class="%sulu_content.admin.content_navigation.class%"/>
+        <service id="sulu_content.twig_extension" class="%sulu_content.twig_extension.class%">
+            <tag name="twig.extension"/>
+            <argument type="service" id="sulu.content.type_manager"/>
+        </service>
+
+        <!-- preview -->
+        <service id="sulu_content.preview.cache" class="%sulu_content.preview.cache.class%" public="false">
+            <argument>%kernel.cache_dir%</argument>
+        </service>
+        <service id="sulu_content.preview" class="%sulu_content.preview.class%">
+            <argument type="service" id="service_container"/>
+            <argument type="service" id="templating"/>
+            <argument type="service" id="sulu_content.preview.cache"/>
+            <argument type="service" id="sulu.content.mapper"/>
+            <argument type="service" id="sulu.content.structure_manager"/>
+            <argument type="service" id="controller_resolver"/>
+            <argument>%sulu_content.preview.lifetime%</argument>
+            <argument>%sulu_content.preview.template-namespace%</argument>
+        </service>
+        <service id="sulu_content.preview.message_component" class="%sulu_content.preview.message_component.class%">
+            <argument type="service" id="sulu_content.preview"/>
+            <argument type="service" id="logger"/>
+        </service>
+
+        <!-- nodes -->
+        <service id="sulu_content.node_repository" class="%sulu_content.node_repository.class%">
+            <argument type="service" id="sulu.content.mapper"/>
+            <argument type="service" id="sulu.phpcr.session"/>
+            <argument type="service" id="sulu_security.user_manager"/>
+            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+        </service>
+
+        <!-- resource locator -->
+        <service id="sulu_content.rl_repository" class="%sulu_content.rl_repository.class%">
+            <argument type="service" id="sulu.content.rlp.strategy.tree"/>
+            <argument type="service" id="sulu.content.structure_manager"/>
+            <argument type="service" id="sulu.content.type.resource_locator"/>
+        </service>
+
+        <!-- content-types -->
+        <service id="sulu.content.type.smart_content" class="%sulu.content.type.smart_content.class%">
+            <argument type="service" id="sulu_content.node_repository"/>
+            <argument type="service" id="sulu_tag.tag_manager"/>
+            <argument>%sulu.content.type.smart_content.template%</argument>
+        </service>
+
+        <service id="sulu.content.type.phone" class="%sulu.content.type.phone.class%">
+            <argument>%sulu.content.type.phone.template%</argument>
+        </service>
+        <service id="sulu.content.type.password" class="%sulu.content.type.password.class%">
+            <argument>%sulu.content.type.password.template%</argument>
+        </service>
+        <service id="sulu.content.type.url" class="%sulu.content.type.url.class%">
+            <argument>%sulu.content.type.url.template%</argument>
+        </service>
+        <service id="sulu.content.type.email" class="%sulu.content.type.email.class%">
+            <argument>%sulu.content.type.email.template%</argument>
+        </service>
+        <service id="sulu.content.type.date" class="%sulu.content.type.date.class%">
+            <argument>%sulu.content.type.date.template%</argument>
+        </service>
+        <service id="sulu.content.type.time" class="%sulu.content.type.time.class%">
+            <argument>%sulu.content.type.time.template%</argument>
+        </service>
+        <service id="sulu.content.type.color" class="%sulu.content.type.color.class%">
+            <argument>%sulu.content.type.color.template%</argument>
+        </service>
+    </services>
+</container>
