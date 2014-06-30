@@ -95,6 +95,19 @@
   margin-bottom: 20px;
 }
 
+/* line 2, ../scss/modules/seo.scss */
+#seo-form .inline-input {
+  width: 30px;
+}
+/* line 6, ../scss/modules/seo.scss */
+#seo-form .inline-label {
+  display: inline;
+  color: black;
+  position: relative;
+  top: -8px;
+  left: -10px;
+}
+
 /* line 2, ../scss/modules/resource-locator.scss */
 .resource-locator input {
   width: 200px;

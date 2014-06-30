@@ -86,6 +86,7 @@ class NodeRepository implements NodeRepositoryInterface
      * @param int $depth
      * @param bool $complete
      * @param bool $excludeGhosts
+     * @param string|null $extension
      * @return array
      */
     protected function prepareNode(
@@ -94,15 +95,19 @@ class NodeRepository implements NodeRepositoryInterface
         $languageCode,
         $depth = 1,
         $complete = true,
-        $excludeGhosts = false
+        $excludeGhosts = false,
+        $extension = null
     ) {
         $result = $structure->toArray($complete);
+
+        // add node name
+        $result['sulu.node.name'] = $structure->getPropertyValueByTagName('sulu.node.name');
 
         // add default empty embedded property
         $result['_embedded'] = array();
         // add api links
         $result['_links'] = array(
-            'self' => $this->apiBasePath . '/' . $structure->getUuid(),
+            'self' => $this->apiBasePath . '/' . $structure->getUuid() . ($extension !== null ? '/' . $extension : ''),
             'children' => $this->apiBasePath . '?parent=' . $structure->getUuid()
                 . '&depth=' . $depth . '&webspace=' . $webspaceKey . '&language=' . $languageCode . ($excludeGhosts === true ? '&exclude-ghosts=true' : '')
         );
@@ -403,5 +408,53 @@ class NodeRepository implements NodeRepositoryInterface
         );
 
         return $result;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function loadExtensionData($uuid, $extensionName, $webspaceKey, $languageCode)
+    {
+        $structure = $this->getMapper()->load($uuid, $webspaceKey, $languageCode);
+
+        // extract extension
+        $extension = $structure->getExtension($extensionName);
+        $data = $extension->getData();
+
+        // add uuid and path
+        $data['id'] = $structure->getUuid();
+        $data['path'] = $structure->getPath();
+        $data['sulu.node.name'] = $structure->getPropertyByTagName('sulu.node.name')->getValue();
+
+        // prepare data
+        $data['_links'] = array(
+            'self' => $this->apiBasePath . '/' . $uuid . '/' . $extensionName . '?webspace=' . $webspaceKey . '&language=' . $languageCode,
+        );
+
+        return $data;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function saveExtensionData($uuid, $data, $extensionName, $webspaceKey, $languageCode, $userId)
+    {
+        $structure = $this->getMapper()->saveExtension($uuid, $data, $extensionName, $webspaceKey, $languageCode, $userId);
+
+        // extract extension
+        $extension = $structure->getExtension($extensionName);
+        $data = $extension->getData();
+
+        // add uuid and path
+        $data['id'] = $structure->getUuid();
+        $data['path'] = $structure->getPath();
+        $data['sulu.node.name'] = $structure->getPropertyByTagName('sulu.node.name')->getValue();
+
+        // prepare data
+        $data['_links'] = array(
+            'self' => $this->apiBasePath . '/' . $uuid . '/' . $extensionName . '?webspace=' . $webspaceKey . '&language=' . $languageCode,
+        );
+
+        return $data;
     }
 }
