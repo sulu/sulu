@@ -143,7 +143,24 @@ class ImagineImageConverter implements ImageConverterInterface {
      */
     public function call($command, $parameters)
     {
-        $this->commandManager->get($command)->execute($this->image, $parameters);
+        if (count($this->image->layers())) {
+            $counter = 0;
+            foreach ($this->image->layers() as $layer) {
+                $counter++;
+                $this->commandManager->get($command)->execute($layer, $parameters);
+                if ($counter == 1) {
+                    /**
+                     * @var \Imagine\Imagick\Image|\Imagine\Gd\Image $image
+                     */
+                    $image = $layer; // use first layer as main image
+                } else {
+                    $image->layers()->add($layer);
+                }
+            }
+            $this->image = $image;
+        } else {
+            $this->commandManager->get($command)->execute($this->image, $parameters);
+        }
     }
 
 } 
