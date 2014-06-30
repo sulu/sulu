@@ -106,9 +106,12 @@ class DefaultFormatManager implements FormatManagerInterface
         // convert Media to format
         $image = $this->converter->convert($original, $format);
 
+        // get options
+        $options = $this->getOptionsFromImage($image);
+
         // set extension
         $imageExtension = $this->getFileExtension($fileName);
-        $image = $image->get($imageExtension);
+        $image = $image->get($imageExtension, $options);
 
         // set header
         $headers = array(
@@ -131,13 +134,28 @@ class DefaultFormatManager implements FormatManagerInterface
     }
 
     /**
+     * @param $image
+     * @return array
+     */
+    protected function getOptionsFromImage($image)
+    {
+        $options = array();
+        if (count($image->layers()) > 1) {
+            $options['animated'] = true;
+        }
+        return $options;
+    }
+
+    /**
      * @param string $fileName
      * @param string $path
      */
     protected function prepareMedia($fileName, $path)
     {
-        if ('pdf' == pathinfo($fileName)['extension']) {
-            $this->convertPdfToImage($path);
+        switch (pathinfo($fileName)['extension']) {
+            case 'pdf':
+                $this->convertPdfToImage($path);
+                break;
         }
     }
 
