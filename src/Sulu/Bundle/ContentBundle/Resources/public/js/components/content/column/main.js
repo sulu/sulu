@@ -13,41 +13,16 @@ define(function() {
 
     var SHOW_GHOST_PAGES_KEY = 'column-navigation-show-ghost-pages',
 
-        CONTENT_LANGUAGE = 'contentLanguage',
-
-    templates = {
-        toggler: [
-            '<div id="show-ghost-pages"></div>',
-            '<label class="inline spacing-left" for="show-ghost-pages"><%= label %></label>'
-        ].join('')
-    };
+        templates = {
+            toggler: [
+                '<div id="show-ghost-pages"></div>',
+                '<label class="inline spacing-left" for="show-ghost-pages"><%= label %></label>'
+            ].join('')
+        };
 
     return {
 
         view: true,
-
-        fullSize: {
-            width: true,
-            height: true
-        },
-
-        header: function() {
-            return {
-                title: this.options.webspace.replace(/_/g, '.'),
-                noBack: true,
-                breadcrumb: [
-                    {title: this.options.webspace.replace(/_/g, '.')}
-                ],
-                toolbar: {
-                    template: [],
-                    languageChanger: {
-                        url: '/admin/content/languages/' + this.options.webspace,
-                        preSelected: this.options.language,
-                        callback: this.changeLanguage.bind(this)
-                    }
-                }
-            };
-        },
 
         initialize: function() {
             this.render();
@@ -134,11 +109,6 @@ define(function() {
             }
         },
 
-        changeLanguage: function(item) {
-            this.sandbox.emit('sulu.content.contents.list', this.options.webspace, item.localization);
-            this.sandbox.sulu.saveUserSetting(CONTENT_LANGUAGE, item.localization);
-        },
-
         render: function() {
             this.bindCustomEvents();
 
@@ -155,7 +125,6 @@ define(function() {
 
                 // start column-navigation
                 this.startColumnNavigation();
-
             }.bind(this));
         },
 
@@ -167,14 +136,16 @@ define(function() {
                 label: this.sandbox.translate('content.contents.show-ghost-pages')
             }));
 
-            this.sandbox.start([{
-                name: 'toggler@husky',
-                options: {
-                    el: '#show-ghost-pages',
-                    checked: this.showGhostPages,
-                    outline: true
+            this.sandbox.start([
+                {
+                    name: 'toggler@husky',
+                    options: {
+                        el: '#show-ghost-pages',
+                        checked: this.showGhostPages,
+                        outline: true
+                    }
                 }
-            }]);
+            ]);
         }
     };
 });
