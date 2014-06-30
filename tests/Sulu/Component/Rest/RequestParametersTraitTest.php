@@ -120,8 +120,12 @@ class RequestParametersTraitTest extends \PHPUnit_Framework_TestCase
             $getBooleanRequestParameterReflection->invoke($this->requestParametersTrait, $request, 'test2', true)
         );
 
-        $this->assertNull(
+        $this->assertTrue(
             $getBooleanRequestParameterReflection->invoke($this->requestParametersTrait, $request, 'none', false, true)
+        );
+
+        $this->assertNull(
+            $getBooleanRequestParameterReflection->invoke($this->requestParametersTrait, $request, 'none', false)
         );
     }
 

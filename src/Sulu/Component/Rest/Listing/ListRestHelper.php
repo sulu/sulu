@@ -82,11 +82,12 @@ class ListRestHelper
      * Create a ListRepository for given EntityName and find Entities for list
      * @param string $entityName
      * @param array $where
+     * @param array $joinConditions
      * @return array
      */
-    public function find($entityName, $where = array())
+    public function find($entityName, $where = array(), $joinConditions = array())
     {
-        return $this->getRepository($entityName)->find($where);
+        return $this->getRepository($entityName)->find($where, 'u', false, $joinConditions);
     }
 
     /**
@@ -198,11 +199,12 @@ class ListRestHelper
     /**
      * @param $entityName
      * @param $where
+     * @param array $joinConditions
      * @return int
      */
-    public function getTotalNumberOfElements($entityName, $where)
+    public function getTotalNumberOfElements($entityName, $where, $joinConditions = array())
     {
-        $this->totalNumberOfElements = $this->getRepository($entityName)->getCount($where);
+        $this->totalNumberOfElements = $this->getRepository($entityName)->getCount($where, $joinConditions);
         return $this->totalNumberOfElements;
     }
 

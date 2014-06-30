@@ -37,6 +37,13 @@ abstract class RestController extends FOSRestController
     protected $unsortable = array();
 
     /**
+     * contains all attributes that are sortable
+     * if defined unsortable gets ignored
+     * @var array
+     */
+    protected $sortable = array();
+
+    /**
      * contains all fields that should be excluded from api
      * @var array
      */
@@ -47,6 +54,19 @@ abstract class RestController extends FOSRestController
      * @var array
      */
     protected $fieldsHidden = array();
+
+    /**
+     * contains the matching between fields and their types
+     * @var array
+     */
+    protected $fieldTypes = array(
+        'created' => 'date',
+        'changed' => 'date',
+        'birthday' => 'date',
+        'title' => 'title',
+        'size' => 'bytes',
+        'thumbnails' => 'thumbnails'
+    );
 
     /**
      * contains all field relations
@@ -181,6 +201,7 @@ abstract class RestController extends FOSRestController
 
     /**
      * creates the translation keys array and sets the default attribute, if set
+     * also adds the type property for
      * @param $fields
      * @param $fieldsHidden
      * @return array
@@ -210,6 +231,11 @@ abstract class RestController extends FOSRestController
                 }
             }
 
+            $type = '';
+            if (isset ($this->fieldTypes[$field])) {
+                $type = $this->fieldTypes[$field];
+            }
+
             $fieldsArray[] = array(
                 'id' => $field,
                 'translation' => $translationKey,
@@ -218,6 +244,7 @@ abstract class RestController extends FOSRestController
                 'editable' => in_array($field, $this->fieldsEditable) ? true : null,
                 'width' => ($fieldWidth != null) ? $fieldWidth : null,
                 'minWidth' => array_key_exists($field, $this->fieldsMinWidth) ? $this->fieldsMinWidth[$field] : null,
+                'type' => $type,
                 'validation' => array_key_exists($field, $this->fieldsValidation) ?
                         $this->fieldsValidation[$field] : null,
             );
@@ -230,16 +257,28 @@ abstract class RestController extends FOSRestController
      * Special function for lists
      * route /contacts/list
      * @param array $where
+     * @param String $entityName
+     * @param Function $entityFilter function for filtering entities
+     * @param array $joinConditions to specify join conditions
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    protected function responseList($where = array())
+    protected function responseList($where = array(), $entityName = null, $entityFilter = null, $joinConditions = array())
     {
         /** @var ListRestHelper $listHelper */
         $listHelper = $this->get('sulu_core.list_rest_helper');
 
-        $entities = $listHelper->find($this->entityName, $where);
-        $numberOfAll = $listHelper->getTotalNumberOfElements($this->entityName, $where);
+        if (is_null($entityName)) {
+            $entityName = $this->entityName;
+        }
+
+        $entities = $listHelper->find($entityName, $where, $joinConditions);
+        $numberOfAll = $listHelper->getTotalNumberOfElements($entityName, $where, $joinConditions);
         $pages = $listHelper->getTotalPages($numberOfAll);
+
+        // filter entities
+        if (!is_null($entityFilter)) {
+            $entities = array_map($entityFilter, $entities);
+        }
 
         $response = array(
             '_links' => $this->getHalLinks($entities, $pages, true),
@@ -257,12 +296,13 @@ abstract class RestController extends FOSRestController
     /**
      * creates HAL conform response-array out of an entity collection
      * @param array $entities
+     * @param boolean $returnListLinks
      * @return array
      */
-    protected function createHalResponse(array $entities)
+    protected function createHalResponse(array $entities, $returnListLinks = false)
     {
         return array(
-            '_links' => $this->getHalLinks($entities),
+            '_links' => $this->getHalLinks($entities, 1, $returnListLinks),
             '_embedded' => $entities,
             'total' => count($entities),
         );
@@ -275,7 +315,7 @@ abstract class RestController extends FOSRestController
      * @param bool $returnListLinks
      * @return array
      */
-    private function getHalLinks(array $entities, $pages = 1, $returnListLinks = false)
+    protected function getHalLinks(array $entities, $pages = 1, $returnListLinks = false)
     {
         /** @var ListRestHelper $listHelper */
         $listHelper = $this->get('sulu_core.list_rest_helper');
@@ -306,7 +346,12 @@ abstract class RestController extends FOSRestController
         // create sort links
         $sortable = array();
         if ($returnListLinks && count($entities) > 0) {
-            $keys = array_keys($entities[0]);
+            $keys = array();
+            if (sizeof($this->sortable) > 0) {
+                $keys = $this->sortable;
+            } elseif (is_array($entities[0])) {
+                $keys = array_keys($entities[0]);
+            }
             // remove page
             $sortUrl = $this->replaceOrAddUrlString(
                 $path,

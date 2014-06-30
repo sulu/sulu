@@ -10,7 +10,7 @@
         <localization language="en" country="us" shadow="auto">
             <localization language="en" country="uk" />
         </localization>
-        <localization language="de" country="at"/>
+        <localization language="de" country="at" default="true"/>
     </localizations>
 
     <theme>

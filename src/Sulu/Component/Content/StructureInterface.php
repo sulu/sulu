@@ -56,6 +56,16 @@ interface StructureInterface extends \JsonSerializable
     public function setUuid($uuid);
 
     /**
+     * returns absolute path of node
+     * @return string
+     */
+    public function getPath();
+
+    /**
+     * @param string $path
+     */
+    public function setPath($path);
+    /**
      * returns id of creator
      * @return int
      */
@@ -144,9 +154,10 @@ interface StructureInterface extends \JsonSerializable
 
     /**
      * returns an array of properties
-     * @return array
+     * @param bool $flatten
+     * @return PropertyInterface[]
      */
-    public function getProperties();
+    public function getProperties($flatten = false);
 
     /**
      * @param boolean $hasChildren
@@ -262,4 +273,27 @@ interface StructureInterface extends \JsonSerializable
      * @return array
      */
     public function toArray($complete = true);
+
+    /**
+     * returns a property instance with given tag name
+     * @param string $tagName
+     * @param $highest
+     * @return PropertyInterface
+     */
+    public function getPropertyByTagName($tagName, $highest = true);
+
+    /**
+     * returns properties with given tag name sorted by priority
+     * @param string $tagName
+     * @throws \Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException
+     * @return PropertyInterface[]
+     */
+    public function getPropertiesByTagName($tagName);
+
+    /**
+     * returns value of property with given tag name
+     * @param string $tagName
+     * @return mixed
+     */
+    public function getPropertyValueByTagName($tagName);
 }

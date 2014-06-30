@@ -15,6 +15,7 @@ use PHPCR\NodeInterface;
 use ReflectionClass;
 use Sulu\Component\Content\Types\Rlp\Mapper\RlpMapperInterface;
 use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategy;
+use Sulu\Component\PHPCR\PathCleanup;
 
 class RlpStrategyTest extends \PHPUnit_Framework_TestCase
 {
@@ -47,16 +48,7 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
     {
         $this->mapper = $this->getMock(
             'Sulu\Component\Content\Types\Rlp\Mapper\RlpMapper',
-            array(
-                'unique',
-                'getUniquePath',
-                'save',
-                'move',
-                'loadByContent',
-                'loadByContentUuid',
-                'loadByResourceLocator',
-                'getParentPath'
-            ),
+            array(),
             array('test-mapper'),
             'TestMapper'
         );
@@ -87,7 +79,7 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
 
         $this->strategy = $this->getMockForAbstractClass(
             $this->className,
-            array('test-strategy', $this->mapper),
+            array('test-strategy', $this->mapper, new PathCleanup()),
             'TestStrategy'
         );
         $this->strategy->expects($this->any())
@@ -144,14 +136,6 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
         $method->setAccessible(true);
 
         return $method;
-    }
-
-    public function testCleanUp()
-    {
-        $method = $this->getMethod($this->className, 'cleanup');
-        $clean = $method->invokeArgs($this->strategy, array('-/aSDf     asdf/äöü-'));
-
-        $this->assertEquals('/asdf-asdf/aeoeue', $clean);
     }
 
     public function testIsValid()

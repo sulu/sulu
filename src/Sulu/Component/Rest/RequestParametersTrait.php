@@ -42,7 +42,7 @@ trait RequestParametersTrait
      * @param Request $request
      * @param string $name
      * @param bool $force TRUE if value is mandatory
-     * @param mixed $default value if parameter not exists
+     * @param boolean $default value if parameter not exists
      * @throws MissingParameterException parameter is mandatory but does not exists
      * @throws ParameterDataTypeException parameter hast the wrong data type
      * @return boolean
@@ -56,6 +56,8 @@ trait RequestParametersTrait
             $value = false;
         } elseif ($force && $value !== true && $value !== false) {
             throw new ParameterDataTypeException(get_class($this), $name);
+        } else {
+            $value = $default;
         }
 
         return $value;

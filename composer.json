@@ -4,7 +4,7 @@
     "description": "Symfony bundle that provides basic core functionality",
     "license": "MIT",
     "keywords": ["core", "sulu"],
-    "version": "0.2.0",
+    "version": "0.4.0",
     "authors": [
         {
             "name": "Sulu Community",
@@ -14,18 +14,19 @@
     "require": {
         "php": ">=5.4",
         "doctrine/orm": ">=2.2.3,<2.4-dev",
-        "symfony/framework-bundle": "2.3.*",
+        "symfony/framework-bundle": "2.5.*",
         "sensio/distribution-bundle": "2.3.*",
-        "friendsofsymfony/rest-bundle": "1.0.*",
-        "jackalope/jackalope-jackrabbit": "1.0.*",
-        "doctrine/phpcr-bundle": "1.0.*",
-        "doctrine/phpcr-odm": "1.0.*"
+        "friendsofsymfony/rest-bundle": "dev-master",
+        "friendsofsymfony/http-cache": "dev-master",
+        "jackalope/jackalope-jackrabbit": "1.1.*",
+        "doctrine/phpcr-bundle": "1.1.*",
+        "doctrine/phpcr-odm": "1.1.*"
     },
     "require-dev": {
-        "symfony/symfony": "2.3.*",
+        "symfony/symfony": "2.5.*",
         "phpunit/phpunit": "4.0.*",
-        "sulu/test-bundle": "0.2.0",
-        "jackalope/jackalope-doctrine-dbal": "@dev"
+        "sulu/test-bundle": "0.4.0",
+        "jackalope/jackalope-doctrine-dbal": "1.1.*"
     },
     "autoload": {
         "psr-0": {

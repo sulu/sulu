@@ -10,7 +10,6 @@
 
 namespace Sulu\Bundle\CoreBundle\DependencyInjection\Compiler;
 
-use JMS\Serializer\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -55,7 +54,7 @@ class RequestAnalyzerCompilerPass implements CompilerPassInterface
             );
 
             // add listener to event dispatcher
-            $eventDispatcher = $container->getDefinition('event_dispatcher');
+            $eventDispatcher = $container->findDefinition('event_dispatcher');
             $eventDispatcher->addMethodCall(
                 'addListenerService',
                 array(

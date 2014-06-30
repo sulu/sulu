@@ -28,10 +28,16 @@ class ParentChildAnyFinder implements LocalizationFinderInterface
      */
     private $localizationNamespace;
 
-    public function __construct(WebspaceManagerInterface $webspaceManager, $localizationNamespace)
+    /**
+     * @var string
+     */
+    private $internalPrefix;
+
+    public function __construct(WebspaceManagerInterface $webspaceManager, $localizationNamespace, $internalPrefix)
     {
         $this->webspaceManager = $webspaceManager;
         $this->localizationNamespace = $localizationNamespace;
+        $this->internalPrefix = $internalPrefix;
     }
 
     /**
@@ -40,8 +46,9 @@ class ParentChildAnyFinder implements LocalizationFinderInterface
     public function getAvailableLocalization(NodeInterface $contentNode, $localizationCode, $webspaceKey)
     {
         // use title field to check localization availability
+        $propertyName = (!empty($this->internalPrefix) ? $this->internalPrefix . '-' : '') . 'created';
         $property = new TranslatedProperty(
-            new Property('title', 'none'), // FIXME none as type is a dirty hack
+            new Property($propertyName, '', 'none', false, true), // FIXME none as type is a dirty hack
             $localizationCode,
             $this->localizationNamespace
         );

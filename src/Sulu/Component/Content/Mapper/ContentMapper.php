@@ -20,15 +20,18 @@ use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\ContentTypeManager;
 use Sulu\Component\Content\ContentEvents;
 use Sulu\Component\Content\Event\ContentNodeEvent;
+use Sulu\Component\Content\Exception\MandatoryPropertyException;
 use Sulu\Component\Content\Exception\StateNotFoundException;
 use Sulu\Component\Content\Mapper\LocalizationFinder\LocalizationFinderInterface;
 use Sulu\Component\Content\Mapper\Translation\MultipleTranslatedProperties;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\PropertyInterface;
+use Sulu\Component\Content\Section\SectionPropertyInterface;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManagerInterface;
 use Sulu\Component\Content\StructureType;
 use Sulu\Component\Content\Types\ResourceLocatorInterface;
+use Sulu\Component\PHPCR\PathCleanupInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
@@ -84,30 +87,9 @@ class ContentMapper implements ContentMapperInterface
     private $stopwatch;
 
     /**
-     * TODO abstract with cleanup from RLPStrategy
-     * replacers for cleanup
-     * @var array
+     * @var PathCleanupInterface
      */
-    protected $replacers = array(
-        'default' => array(
-            ' ' => '-',
-            '+' => '-',
-            'ä' => 'ae',
-            'ö' => 'oe',
-            'ü' => 'ue',
-            // because strtolower ignores Ä,Ö,Ü
-            'Ä' => 'ae',
-            'Ö' => 'oe',
-            'Ü' => 'ue'
-            // TODO should be filled
-        ),
-        'de' => array(
-            '&' => 'und'
-        ),
-        'en' => array(
-            '&' => 'and'
-        )
-    );
+    private $cleaner;
 
     /**
      * excepted states
@@ -120,16 +102,17 @@ class ContentMapper implements ContentMapperInterface
 
     private $properties;
 
-
     public function __construct(
         ContentTypeManager $contentTypeManager,
         StructureManagerInterface $structureManager,
         SessionManagerInterface $sessionManager,
         EventDispatcherInterface $eventDispatcher,
         LocalizationFinderInterface $localizationFinder,
+        PathCleanupInterface $cleaner,
         $defaultLanguage,
         $defaultTemplate,
         $languageNamespace,
+        $internalPrefix,
         $stopwatch = null
     )
     {
@@ -141,6 +124,7 @@ class ContentMapper implements ContentMapperInterface
         $this->defaultLanguage = $defaultLanguage;
         $this->defaultTemplate = $defaultTemplate;
         $this->languageNamespace = $languageNamespace;
+        $this->cleaner = $cleaner;
 
         // optional
         $this->stopwatch = $stopwatch;
@@ -157,7 +141,8 @@ class ContentMapper implements ContentMapperInterface
                 'navigation',
                 'published'
             ),
-            $this->languageNamespace
+            $this->languageNamespace,
+            $internalPrefix
         );
     }
 
@@ -174,6 +159,7 @@ class ContentMapper implements ContentMapperInterface
      * @param int $state state of node
      * @param string $showInNavigation
      *
+     * @throws \Exception
      * @return StructureInterface
      */
     public function save(
@@ -201,12 +187,13 @@ class ContentMapper implements ContentMapperInterface
             $root = $this->getContentNode($webspaceKey);
         }
 
-        $path = $this->cleanUp($data['title']);
+        $nodeNameProperty = $structure->getPropertyByTagName('sulu.node.name');
+        $path = $this->cleaner->cleanUp($data[$nodeNameProperty->getName()], $languageCode);
 
         $dateTime = new \DateTime();
 
-        $titleProperty = new TranslatedProperty(
-            $structure->getProperty('title'),
+        $translatedNodeNameProperty = new TranslatedProperty(
+            $nodeNameProperty,
             $languageCode,
             $this->languageNamespace
         );
@@ -240,8 +227,8 @@ class ContentMapper implements ContentMapperInterface
 
                 $hasSameLanguage = ($languageCode == $this->defaultLanguage);
                 $hasSamePath = ($node->getPath() !== $this->getContentNode($webspaceKey)->getPath());
-                $hasDifferentTitle = !$node->hasProperty($titleProperty->getName()) ||
-                    $node->getPropertyValue($titleProperty->getName()) !== $data['title'];
+                $hasDifferentTitle = !$node->hasProperty($translatedNodeNameProperty->getName()) ||
+                    $node->getPropertyValue($translatedNodeNameProperty->getName()) !== $data[$nodeNameProperty->getName()];
 
                 if ($hasSameLanguage && $hasSamePath && $hasDifferentTitle) {
                     $path = $this->getUniquePath($path, $node->getParent());
@@ -274,8 +261,7 @@ class ContentMapper implements ContentMapperInterface
 
         // go through every property in the template
         /** @var PropertyInterface $property */
-        foreach ($structure->getProperties() as $property) {
-
+        foreach ($structure->getProperties(true) as $property) {
             // allow null values in data
             if (isset($data[$property->getName()])) {
                 $type = $this->getContentType($property->getContentTypeName());
@@ -298,6 +284,8 @@ class ContentMapper implements ContentMapperInterface
                         null
                     );
                 }
+            } elseif ($property->getMandatory()) {
+                throw new MandatoryPropertyException($templateKey, $property);
             } elseif (!$partialUpdate) {
                 $type = $this->getContentType($property->getContentTypeName());
                 // if it is not a partial update remove property
@@ -341,6 +329,7 @@ class ContentMapper implements ContentMapperInterface
         $session->save();
 
         $structure->setUuid($node->getPropertyValue('jcr:uuid'));
+        $structure->setPath(str_replace($this->getContentNode($webspaceKey)->getPath(), '', $node->getPath()));
         $structure->setWebspaceKey($webspaceKey);
         $structure->setLanguageCode($languageCode);
         $structure->setCreator($node->getPropertyValue($this->properties->getName('creator')));
@@ -654,6 +643,130 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
+     * load tree from root to given path
+     * @param string $uuid
+     * @param string $languageCode
+     * @param string $webspaceKey
+     * @param bool $excludeGhost
+     * @param bool $loadGhostContent
+     * @return StructureInterface[]
+     */
+    public function loadTreeByUuid(
+        $uuid,
+        $languageCode,
+        $webspaceKey,
+        $excludeGhost = true,
+        $loadGhostContent = false
+    )
+    {
+        $node = $this->getSession()->getNodeByIdentifier($uuid);
+
+        if ($this->stopwatch) {
+            $this->stopwatch->start('contentManager.loadTreeByUuid');
+        }
+
+        list($result) = $this->loadTreeByNode($node, $languageCode, $webspaceKey, $excludeGhost, $loadGhostContent);
+
+        if ($this->stopwatch) {
+            $this->stopwatch->stop('contentManager.loadTreeByUuid');
+        }
+
+        return $result;
+    }
+
+    /**
+     * load tree from root to given path
+     * @param string $path
+     * @param string $languageCode
+     * @param string $webspaceKey
+     * @param bool $excludeGhost
+     * @param bool $loadGhostContent
+     * @return StructureInterface[]
+     */
+    public function loadTreeByPath(
+        $path,
+        $languageCode,
+        $webspaceKey,
+        $excludeGhost = true,
+        $loadGhostContent = false
+    )
+    {
+        $path = ltrim($path, '/');
+        if ($path === '') {
+            $node = $this->getContentNode($webspaceKey);
+        } else {
+            $node = $this->getContentNode($webspaceKey)->getNode($path);
+        }
+
+        if ($this->stopwatch) {
+            $this->stopwatch->start('contentManager.loadTreeByPath');
+        }
+
+        list($result) = $this->loadTreeByNode($node, $languageCode, $webspaceKey, $excludeGhost, $loadGhostContent);
+
+        if ($this->stopwatch) {
+            $this->stopwatch->stop('contentManager.loadTreeByPath');
+        }
+
+        return $result;
+    }
+
+    /**
+     * returns a tree of nodes with the given endpoint
+     * @param NodeInterface $node
+     * @param string $languageCode
+     * @param string $webspaceKey
+     * @param bool $excludeGhost
+     * @param bool $loadGhostContent
+     * @param NodeInterface $childNode
+     * @return StructureInterface[]
+     */
+    private function loadTreeByNode(
+        NodeInterface $node,
+        $languageCode,
+        $webspaceKey,
+        $excludeGhost = true,
+        $loadGhostContent = false,
+        NodeInterface $childNode = null
+    )
+    {
+        // go up to content node
+        if ($node->getDepth() > $this->getContentNode($webspaceKey)->getDepth()) {
+            list($globalResult, $nodeStructure) = $this->loadTreeByNode(
+                $node->getParent(),
+                $languageCode,
+                $webspaceKey,
+                $excludeGhost,
+                $loadGhostContent,
+                $node
+            );
+        }
+
+        // load children of node
+        $result = array();
+        $childStructure = null;
+        foreach ($node as $child) {
+            $structure = $this->loadByNode($child, $languageCode, $webspaceKey, $excludeGhost, $loadGhostContent);
+            $result[] = $structure;
+            // search structure for child node
+            if ($childNode !== null && $childNode === $child) {
+                $childStructure = $structure;
+            }
+        }
+
+        // set global result once
+        if (!isset($globalResult)) {
+            $globalResult = $result;
+        }
+        // set children of structure
+        if (isset($nodeStructure)) {
+            $nodeStructure->setChildren($result);
+        }
+
+        return array($globalResult, $childStructure);
+    }
+
+    /**
      * returns a sql2 query
      * @param string $sql2 The query, which returns the content
      * @param int $limit Limits the number of returned rows
@@ -721,6 +834,7 @@ class ContentMapper implements ContentMapperInterface
         $structure->setHasTranslation($contentNode->hasProperty($this->properties->getName('template')));
 
         $structure->setUuid($contentNode->getPropertyValue('jcr:uuid'));
+        $structure->setPath(str_replace($this->getContentNode($webspaceKey)->getPath(), '', $contentNode->getPath()));
         $structure->setWebspaceKey($webspaceKey);
         $structure->setLanguageCode($localization);
         $structure->setCreator($contentNode->getPropertyValueWithDefault($this->properties->getName('creator'), 0));
@@ -751,19 +865,21 @@ class ContentMapper implements ContentMapperInterface
 
         // go through every property in the template
         /** @var PropertyInterface $property */
-        foreach ($structure->getProperties() as $property) {
-            $type = $this->getContentType($property->getContentTypeName());
-            $type->read(
-                $contentNode,
-                new TranslatedProperty(
-                    $property,
+        foreach ($structure->getProperties(true) as $property) {
+            if (!($property instanceof SectionPropertyInterface)) {
+                $type = $this->getContentType($property->getContentTypeName());
+                $type->read(
+                    $contentNode,
+                    new TranslatedProperty(
+                        $property,
+                        $availableLocalization,
+                        $this->languageNamespace
+                    ),
+                    $webspaceKey,
                     $availableLocalization,
-                    $this->languageNamespace
-                ),
-                $webspaceKey,
-                $availableLocalization,
-                null
-            );
+                    null
+                );
+            }
         }
 
         // throw an content.node.load event (disabled for now)
@@ -811,7 +927,8 @@ class ContentMapper implements ContentMapperInterface
                 $this->defaultTemplate
             );
             $structure = $this->getStructure($templateKey);
-            $property = $structure->getProperty('title');
+            $nodeNameProperty = $structure->getPropertyByTagName('sulu.node.name');
+            $property = $structure->getProperty($nodeNameProperty->getName());
             $type = $this->getContentType($property->getContentTypeName());
             $type->read(
                 $node,
@@ -820,9 +937,15 @@ class ContentMapper implements ContentMapperInterface
                 $languageCode,
                 null
             );
-            $title = $property->getValue();
+            $nodeName = $property->getValue();
+            $structure->setUuid($node->getPropertyValue('jcr:uuid'));
+            $structure->setPath(str_replace($this->getContentNode($webspaceKey)->getPath(), '', $node->getPath()));
 
-            $result[] = new BreadcrumbItem($depth, $nodeUuid, $title);
+            // throw an content.node.load event (disabled for now)
+            //$event = new ContentNodeEvent($node, $structure);
+            //$this->eventDispatcher->dispatch(ContentEvents::NODE_LOAD, $event);
+
+            $result[] = new BreadcrumbItem($depth, $nodeUuid, $nodeName);
         }
 
         return $result;
@@ -912,42 +1035,6 @@ class ContentMapper implements ContentMapperInterface
     protected function getRouteNode($webspaceKey, $languageCode, $segment)
     {
         return $this->sessionManager->getRouteNode($webspaceKey, $languageCode, $segment);
-    }
-
-    /**
-     * TODO abstract with cleanup from RLPStrategy
-     * @param string $dirty
-     * @return string
-     */
-    protected function cleanUp($dirty)
-    {
-        $clean = strtolower($dirty);
-
-        // TODO language
-        $languageCode = 'de';
-        $replacers = array_merge($this->replacers['default'], $this->replacers[$languageCode]);
-
-        if (count($replacers) > 0) {
-            foreach ($replacers as $key => $value) {
-                $clean = str_replace($key, $value, $clean);
-            }
-        }
-
-        // Inspired by ZOOLU
-        // delete problematic characters
-        $clean = str_replace('%2F', '/', urlencode(preg_replace('/([^A-za-z0-9\s-_\/])/', '', $clean)));
-
-        // replace multiple minus with one
-        $clean = preg_replace('/([-]+)/', '-', $clean);
-
-        // delete minus at the beginning or end
-        $clean = preg_replace('/^([-])/', '', $clean);
-        $clean = preg_replace('/([-])$/', '', $clean);
-
-        // remove double slashes
-        $clean = str_replace('//', '/', $clean);
-
-        return $clean;
     }
 
     /**

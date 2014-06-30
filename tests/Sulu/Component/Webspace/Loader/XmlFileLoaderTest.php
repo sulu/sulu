@@ -31,14 +31,19 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('Sulu CMF', $webspace->getName());
         $this->assertEquals('sulu_io', $webspace->getKey());
+        $this->assertEquals('sulu_io', $webspace->getSecurity()->getSystem());
 
         $this->assertEquals('en', $webspace->getLocalizations()[0]->getLanguage());
         $this->assertEquals('us', $webspace->getLocalizations()[0]->getCountry());
         $this->assertEquals('auto', $webspace->getLocalizations()[0]->getShadow());
+        $this->assertEquals(false, $webspace->getLocalizations()[0]->isDefault());
 
         $this->assertEquals('de', $webspace->getLocalizations()[1]->getLanguage());
         $this->assertEquals('at', $webspace->getLocalizations()[1]->getCountry());
         $this->assertEquals(null, $webspace->getLocalizations()[1]->getShadow());
+        $this->assertEquals(true, $webspace->getLocalizations()[1]->isDefault());
+
+        $this->assertEquals('de_at', $webspace->getDefaultLocalization()->getLocalization());
 
         $this->assertEquals('sulu', $webspace->getTheme()->getKey());
         $this->assertEquals(1, count($webspace->getTheme()->getExcludedTemplates()));
@@ -49,6 +54,9 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, count($webspace->getPortals()[0]->getLocalizations()));
         $this->assertEquals('de', $webspace->getPortals()[0]->getLocalizations()[0]->getLanguage());
         $this->assertEquals('at', $webspace->getPortals()[0]->getLocalizations()[0]->getCountry());
+        $this->assertEquals(true, $webspace->getPortals()[0]->getLocalizations()[0]->isDefault());
+
+        $this->assertEquals('de_at', $webspace->getPortals()[0]->getDefaultLocalization()->getLocalization());
 
         $this->assertEquals(2, count($webspace->getPortals()[0]->getEnvironments()));
 
@@ -75,28 +83,38 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('Massive Art', $webspace->getName());
         $this->assertEquals('massiveart', $webspace->getKey());
+        $this->assertEquals('massiveart', $webspace->getSecurity()->getSystem());
+
+        $this->assertEquals('w', $webspace->getDefaultSegment()->getKey());
 
         $this->assertEquals('en', $webspace->getLocalizations()[0]->getLanguage());
         $this->assertEquals('us', $webspace->getLocalizations()[0]->getCountry());
         $this->assertEquals('auto', $webspace->getLocalizations()[0]->getShadow());
+        $this->assertEquals(false, $webspace->getLocalizations()[0]->isDefault());
 
         $this->assertEquals(1, count($webspace->getLocalizations()[0]->getChildren()));
         $this->assertEquals('en', $webspace->getLocalizations()[0]->getChildren()[0]->getLanguage());
         $this->assertEquals('ca', $webspace->getLocalizations()[0]->getChildren()[0]->getCountry());
         $this->assertEquals(null, $webspace->getLocalizations()[0]->getChildren()[0]->getShadow());
+        $this->assertEquals(false, $webspace->getLocalizations()[0]->getChildren()[0]->isDefault());
 
         $this->assertEquals('fr', $webspace->getLocalizations()[1]->getLanguage());
         $this->assertEquals('ca', $webspace->getLocalizations()[1]->getCountry());
-        $this->assertEquals(null, $webspace->getLocalizations()[1]->getShadow());
+        $this->assertEquals(false, $webspace->getLocalizations()[1]->isDefault());
 
         $this->assertEquals('de', $webspace->getLocalizations()[2]->getLanguage());
         $this->assertEquals(null, $webspace->getLocalizations()[2]->getCountry());
         $this->assertEquals(null, $webspace->getLocalizations()[2]->getShadow());
+        $this->assertEquals(true, $webspace->getLocalizations()[2]->isDefault());
+
+        $this->assertEquals('de', $webspace->getDefaultLocalization()->getLocalization());
 
         $this->assertEquals('w', $webspace->getSegments()[0]->getKey());
         $this->assertEquals('winter', $webspace->getSegments()[0]->getName());
+        $this->assertEquals(true, $webspace->getSegments()[0]->isDefault());
         $this->assertEquals('s', $webspace->getSegments()[1]->getKey());
         $this->assertEquals('summer', $webspace->getSegments()[1]->getName());
+        $this->assertEquals(false, $webspace->getSegments()[1]->isDefault());
 
         $this->assertEquals('massiveart', $webspace->getTheme()->getKey());
         $this->assertEquals(1, count($webspace->getTheme()->getExcludedTemplates()));
@@ -107,8 +125,12 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(2, count($webspace->getPortals()[0]->getLocalizations()));
         $this->assertEquals('en', $webspace->getPortals()[0]->getLocalizations()[0]->getLanguage());
         $this->assertEquals('us', $webspace->getPortals()[0]->getLocalizations()[0]->getCountry());
+        $this->assertEquals(false, $webspace->getPortals()[0]->getLocalizations()[0]->isDefault());
         $this->assertEquals('de', $webspace->getPortals()[0]->getLocalizations()[1]->getLanguage());
         $this->assertEquals(null, $webspace->getPortals()[0]->getLocalizations()[1]->getCountry());
+        $this->assertEquals(true, $webspace->getPortals()[0]->getLocalizations()[1]->isDefault());
+
+        $this->assertEquals('de', $webspace->getPortals()[0]->getDefaultLocalization()->getLocalization());
 
         $this->assertEquals('Massive Art US', $webspace->getPortals()[0]->getName());
 
@@ -134,8 +156,12 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(2, count($webspace->getPortals()[1]->getLocalizations()));
         $this->assertEquals('en', $webspace->getPortals()[1]->getLocalizations()[0]->getLanguage());
         $this->assertEquals('ca', $webspace->getPortals()[1]->getLocalizations()[0]->getCountry());
+        $this->assertEquals(true, $webspace->getPortals()[1]->getLocalizations()[0]->isDefault());
         $this->assertEquals('fr', $webspace->getPortals()[1]->getLocalizations()[1]->getLanguage());
         $this->assertEquals('ca', $webspace->getPortals()[1]->getLocalizations()[1]->getCountry());
+        $this->assertEquals(false, $webspace->getPortals()[1]->getLocalizations()[1]->isDefault());
+
+        $this->assertEquals('en_ca', $webspace->getPortals()[1]->getDefaultLocalization()->getLocalization());
 
         $this->assertEquals(2, count($webspace->getPortals()[1]->getEnvironments()));
 
@@ -176,17 +202,24 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Sulu CMF', $webspace->getName());
         $this->assertEquals('sulu_io_without_portal_localization', $webspace->getKey());
 
+        $this->assertNull($webspace->getSecurity());
+
         $this->assertEquals('en', $webspace->getLocalizations()[0]->getLanguage());
         $this->assertEquals('us', $webspace->getLocalizations()[0]->getCountry());
         $this->assertEquals('auto', $webspace->getLocalizations()[0]->getShadow());
+        $this->assertEquals(false, $webspace->getLocalizations()[0]->isDefault());
 
         $this->assertEquals('en', $webspace->getLocalizations()[0]->getChildren()[0]->getLanguage());
         $this->assertEquals('uk', $webspace->getLocalizations()[0]->getChildren()[0]->getCountry());
         $this->assertEquals(null, $webspace->getLocalizations()[0]->getChildren()[0]->getShadow());
+        $this->assertEquals(false, $webspace->getLocalizations()[0]->getChildren()[0]->isDefault());
 
         $this->assertEquals('de', $webspace->getLocalizations()[1]->getLanguage());
         $this->assertEquals('at', $webspace->getLocalizations()[1]->getCountry());
         $this->assertEquals(null, $webspace->getLocalizations()[1]->getShadow());
+        $this->assertEquals(true, $webspace->getLocalizations()[1]->isDefault());
+
+        $this->assertEquals('de_at', $webspace->getDefaultLocalization()->getLocalization());
 
         $this->assertEquals('sulu', $webspace->getTheme()->getKey());
         $this->assertEquals(1, count($webspace->getTheme()->getExcludedTemplates()));
@@ -198,12 +231,17 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('en', $webspace->getPortals()[0]->getLocalizations()[0]->getLanguage());
         $this->assertEquals('us', $webspace->getPortals()[0]->getLocalizations()[0]->getCountry());
         $this->assertEquals('auto', $webspace->getPortals()[0]->getLocalizations()[0]->getShadow());
+        $this->assertEquals(false, $webspace->getPortals()[0]->getLocalizations()[0]->isDefault());
         $this->assertEquals('en', $webspace->getPortals()[0]->getLocalizations()[1]->getLanguage());
         $this->assertEquals('uk', $webspace->getPortals()[0]->getLocalizations()[1]->getCountry());
         $this->assertEquals(null, $webspace->getPortals()[0]->getLocalizations()[1]->getShadow());
+        $this->assertEquals(false, $webspace->getPortals()[0]->getLocalizations()[1]->isDefault());
         $this->assertEquals('de', $webspace->getPortals()[0]->getLocalizations()[2]->getLanguage());
         $this->assertEquals('at', $webspace->getPortals()[0]->getLocalizations()[2]->getCountry());
         $this->assertEquals(null, $webspace->getPortals()[0]->getLocalizations()[2]->getShadow());
+        $this->assertEquals(true, $webspace->getPortals()[0]->getLocalizations()[2]->isDefault());
+
+        $this->assertEquals('de_at', $webspace->getPortals()[0]->getDefaultLocalization()->getLocalization());
 
         $this->assertEquals(2, count($webspace->getPortals()[0]->getEnvironments()));
 
@@ -222,22 +260,56 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    /**
-     * @expectedException \Sulu\Component\Webspace\Loader\Exception\InvalidUrlDefinitionException
-     */
     public function testLoadWithIncorrectUrlDefinition()
     {
+        $this->setExpectedException('\Sulu\Component\Webspace\Loader\Exception\InvalidUrlDefinitionException');
+
         $this->loader->load(
             __DIR__ . '/../../../../Resources/DataFixtures/Webspace/invalid/massiveart_withIncorrectUrls.xml'
         );
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testLoadInvalid()
     {
+        $this->setExpectedException('\InvalidArgumentException');
+
         $this->loader->load(__DIR__ . '/../../../../Resources/DataFixtures/Webspace/invalid/massiveart.xml');
+    }
+
+    public function testLoadWithNotExistingDefault()
+    {
+        $this->setExpectedException('\Sulu\Component\Webspace\Loader\Exception\PortalDefaultLocalizationNotFoundException');
+
+        $this->loader->load(
+            __DIR__ . '/../../../../Resources/DataFixtures/Webspace/invalid/massiveart_withNotExistingDefault.xml'
+        );
+    }
+
+    public function testLoadWithoutDefaultLocalization()
+    {
+        $this->setExpectedException('\Sulu\Component\Webspace\Loader\Exception\PortalDefaultLocalizationNotFoundException');
+
+        $this->loader->load(
+            __DIR__ . '/../../../../Resources/DataFixtures/Webspace/invalid/massiveart_withoutDefaultLocalization.xml'
+        );
+    }
+
+    public function testLoadWithoutDefaultSegment()
+    {
+        $this->setExpectedException('\Sulu\Component\Webspace\Loader\Exception\WebspaceDefaultSegmentNotFoundException');
+
+        $this->loader->load(
+            __DIR__ . '/../../../../Resources/DataFixtures/Webspace/invalid/massiveart_withNotExistingDefaultSegment.xml'
+        );
+    }
+
+    public function testLoadWithTwoDefaultLocalization()
+    {
+        $this->setExpectedException('\Sulu\Component\Webspace\Loader\Exception\InvalidWebspaceDefaultLocalizationException');
+
+        $this->loader->load(
+            __DIR__ . '/../../../../Resources/DataFixtures/Webspace/invalid/massiveart_withTwoDefaultLocalizations.xml'
+        );
     }
 
     public function testLocalizations()
@@ -261,5 +333,35 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('fr', $localizations[1]->getLanguage());
         $this->assertEquals('ca', $localizations[1]->getCountry());
         $this->assertEquals(null, $localizations[1]->getShadow());
+    }
+
+    public function testSingleLanguage()
+    {
+        $webspace = $this->loader->load(
+            __DIR__ . '/../../../../Resources/DataFixtures/Webspace/valid/sulu.io_singleLanguage.xml'
+        );
+
+        $localizations = $webspace->getLocalizations();
+
+        $this->assertEquals('en', $localizations[0]->getLanguage());
+        $this->assertNull($localizations[0]->getCountry());
+        $this->assertNull($localizations[0]->getShadow());
+        $this->assertNull($localizations[0]->getParent());
+
+        $prodUrl = $webspace->getPortals()[0]->getEnvironments()[0]->getUrls()[0];
+
+        $this->assertEquals('sulu-single-language.at', $prodUrl->getUrl());
+        $this->assertEquals('en', $prodUrl->getLanguage());
+        $this->assertNull($prodUrl->getCountry());
+        $this->assertNull($prodUrl->getRedirect());
+        $this->assertNull($prodUrl->getSegment());
+
+        $devUrl = $webspace->getPortals()[0]->getEnvironments()[1]->getUrls()[0];
+
+        $this->assertEquals('sulu-single-language.lo', $devUrl->getUrl());
+        $this->assertEquals('en', $devUrl->getLanguage());
+        $this->assertNull($devUrl->getCountry());
+        $this->assertNull($devUrl->getRedirect());
+        $this->assertNull($devUrl->getSegment());
     }
 }

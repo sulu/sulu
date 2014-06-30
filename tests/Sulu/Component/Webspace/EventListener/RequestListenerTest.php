@@ -13,9 +13,12 @@ namespace Sulu\Component\Webspace\EventListener;
 
 use PHPUnit_Framework_MockObject_MockObject;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzer;
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceManager;
 use Sulu\Component\Webspace\Portal;
+use Sulu\Component\Webspace\PortalInformation;
+use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
@@ -36,6 +39,11 @@ class RequestListenerTest extends \PHPUnit_Framework_TestCase
      */
     private $webspaceManager;
 
+    /**
+     * @var PHPUnit_Framework_MockObject_MockObject
+     */
+    private $userRepository;
+
     public function setUp()
     {
         $this->webspaceManager = $this->getMockForAbstractClass(
@@ -48,13 +56,26 @@ class RequestListenerTest extends \PHPUnit_Framework_TestCase
             array('findPortalInformationByUrl')
         );
 
-        $this->requestAnalyzer = new RequestAnalyzer($this->webspaceManager, 'prod');
+        $this->userRepository = $this->getMockForAbstractClass(
+            '\Sulu\Component\Security\UserRepositoryInterface',
+            array(),
+            '',
+            true,
+            true,
+            true,
+            array('setSystem')
+        );
+
+        $this->requestAnalyzer = new RequestAnalyzer($this->webspaceManager, $this->userRepository, 'prod');
 
         $this->requestListener = new RequestListener($this->requestAnalyzer);
     }
 
     public function testAnalyze()
     {
+        $webspace = new Webspace();
+        $webspace->setKey('sulu');
+
         $portal = new Portal();
         $portal->setKey('sulu');
 
@@ -62,11 +83,14 @@ class RequestListenerTest extends \PHPUnit_Framework_TestCase
         $localization->setCountry('at');
         $localization->setLanguage('de');
 
-        $portalInformation = array(
-            'portal' => $portal,
-            'localization' => $localization,
-            'segment' => null,
-            'url' => 'sulu.lo'
+        $portalInformation = new PortalInformation(
+            RequestAnalyzerInterface::MATCH_TYPE_FULL,
+            $webspace,
+            $portal,
+            $localization,
+            'sulu.lo/test',
+            null,
+            null
         );
 
         $this->webspaceManager->expects($this->any())->method('findPortalInformationByUrl')->will(
@@ -78,6 +102,7 @@ class RequestListenerTest extends \PHPUnit_Framework_TestCase
         $this->requestListener->onKernelRequest(new GetResponseEvent($kernel, $request, ''));
 
         $this->assertEquals('de_at', $this->requestAnalyzer->getCurrentLocalization()->getLocalization());
+        $this->assertEquals('sulu', $this->requestAnalyzer->getCurrentWebspace()->getKey());
         $this->assertEquals('sulu', $this->requestAnalyzer->getCurrentPortal()->getKey());
         $this->assertEquals(null, $this->requestAnalyzer->getCurrentSegment());
     }

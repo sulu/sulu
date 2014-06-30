@@ -13,13 +13,18 @@ namespace Sulu\Component\Content;
 /**
  * Property of Structure generated from Structure Manager to map a template
  */
-class Property implements PropertyInterface
+class Property implements PropertyInterface, \JsonSerializable
 {
     /**
      * name of property
      * @var string
      */
     private $name;
+
+    /**
+     * @var Metadata
+     */
+    private $metadata;
 
     /**
      * is property mandatory
@@ -58,6 +63,18 @@ class Property implements PropertyInterface
     private $params;
 
     /**
+     * tags defined in xml
+     * @var PropertyTag[]
+     */
+    private $tags;
+
+    /**
+     * column span
+     * @var string
+     */
+    private $col;
+
+    /**
      * value of property
      * @var mixed
      */
@@ -65,20 +82,27 @@ class Property implements PropertyInterface
 
     function __construct(
         $name,
+        $metaData,
         $contentTypeName,
         $mandatory = false,
         $multilingual = false,
         $maxOccurs = 1,
         $minOccurs = 1,
-        $params = array()
-    ) {
+        $params = array(),
+        $tags = array(),
+        $col = null
+    )
+    {
         $this->contentTypeName = $contentTypeName;
         $this->mandatory = $mandatory;
         $this->maxOccurs = $maxOccurs;
         $this->minOccurs = $minOccurs;
         $this->multilingual = $multilingual;
         $this->name = $name;
+        $this->metadata = new Metadata($metaData);
         $this->params = $params;
+        $this->tags =$tags;
+        $this->col = $col;
     }
 
     /**
@@ -124,6 +148,82 @@ class Property implements PropertyInterface
     public function getMaxOccurs()
     {
         return $this->maxOccurs;
+    }
+
+    /**
+     * returns field is mandatory
+     * @return boolean
+     */
+    public function getMandatory()
+    {
+        return $this->mandatory;
+    }
+
+    /**
+     * returns field is multilingual
+     * @return boolean
+     */
+    public function getMultilingual()
+    {
+        return $this->multilingual;
+    }
+
+    /**
+     * returns tags defined in xml
+     * @return \Sulu\Component\Content\PropertyTag[]
+     */
+    public function getTags()
+    {
+        return $this->tags;
+    }
+
+    /**
+     * returns tag with given name
+     * @param string $tagName
+     * @return PropertyTag
+     */
+    public function getTag($tagName)
+    {
+        return $this->tags[$tagName];
+    }
+
+    /**
+     * returns column span
+     * @return string
+     */
+    public function getColspan()
+    {
+        return $this->col;
+    }
+
+    /**
+     * returns title of property
+     * @param string $languageCode
+     * @return string
+     */
+    public function getTitle($languageCode)
+    {
+        return $this->metadata->get('title', $languageCode, ucfirst($this->name));
+    }
+
+    /**
+     * returns infoText of property
+     * @param string $languageCode
+     * @return string
+     */
+    public function getInfoText($languageCode)
+    {
+        return $this->metadata->get('info_text', $languageCode, '');
+    }
+
+    /**
+     * returns placeholder of property
+     * @param string $languageCode
+     * @return string
+     */
+    public function getPlaceholder($languageCode)
+    {
+        return $this->metadata->get('placeholder', $languageCode, '');
     }
 
     /**
@@ -181,6 +281,14 @@ class Property implements PropertyInterface
     }
 
     /**
+     * @return Metadata
+     */
+    public function getMetadata()
+    {
+        return $this->metadata;
+    }
+
+    /**
      * magic getter for twig templates
      * @param $property
      * @return null
@@ -192,5 +300,48 @@ class Property implements PropertyInterface
         } else {
             return null;
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function jsonSerialize()
+    {
+        $result = array(
+            'name' => $this->getName(),
+            'metadata' => $this->getMetadata()->getData(),
+            'mandatory' => $this->getMandatory(),
+            'multilingual' => $this->getMultilingual(),
+            'minOccurs' => $this->getMinOccurs(),
+            'maxOccurs' => $this->getMaxOccurs(),
+            'contentTypeName' => $this->getContentTypeName(),
+            'params' => $this->getParams(),
+            'tags' => array()
+        );
+        foreach ($this->getTags() as $tag) {
+            $result['tags'][] = array(
+                'name' => $tag->getName(),
+                'priority' => $tag->getPriority()
+            );
+        }
+
+        return $result;
+    }
+
+    function __clone()
+    {
+        $clone = new Property(
+            $this->getName(),
+            $this->getMetadata(),
+            $this->getMandatory(),
+            $this->getMultilingual(),
+            $this->getMaxOccurs(),
+            $this->getMinOccurs(),
+            $this->getParams()
+        );
+
+        $clone->setValue($this->getValue());
+
+        return $clone;
     }
 }

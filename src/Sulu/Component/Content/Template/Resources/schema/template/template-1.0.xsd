@@ -8,41 +8,63 @@
     <xs:element name="template" type="templateType"/>
 
     <xs:complexType name="templateType">
-        <xs:sequence>
-            <xs:element type="xs:string" name="key"/>
-            <xs:element type="xs:string" name="view"/>
-            <xs:element type="xs:string" name="controller"/>
-            <xs:element type="xs:integer" name="cacheLifetime"/>
-            <xs:element type="propertiesType" name="properties" minOccurs="1" maxOccurs="1"/>
-        </xs:sequence>
+        <xs:choice maxOccurs="unbounded">
+            <xs:element type="xs:string" name="key" minOccurs="1" maxOccurs="1"/>
+            <xs:element type="xs:string" name="view" minOccurs="1" maxOccurs="1"/>
+            <xs:element type="xs:string" name="controller" minOccurs="1" maxOccurs="1"/>
+            <xs:element type="xs:integer" name="cacheLifetime" minOccurs="1" maxOccurs="1"/>
+            <xs:element type="rootPropertiesType" name="properties" minOccurs="1" maxOccurs="1"/>
+        </xs:choice>
     </xs:complexType>
 
+    <xs:complexType name="metaType">
+        <xs:choice maxOccurs="unbounded">
+            <xs:element type="langType" name="title"/>
+            <xs:element type="langType" name="info_text"/>
+            <xs:element type="langType" name="placeholder"/>
+        </xs:choice>
+    </xs:complexType>
 
-    <xs:complexType name="propertiesType">
+    <xs:complexType name="langType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="lang" use="required" type="xs:string" />
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
 
+    <xs:complexType name="rootPropertiesType">
         <xs:choice minOccurs="1" maxOccurs="unbounded">
             <xs:element type="propertyType" name="property" minOccurs="1" maxOccurs="unbounded"/>
             <xs:element type="blockType" name="block" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="sectionType" name="section" minOccurs="0" maxOccurs="unbounded"/>
         </xs:choice>
-
     </xs:complexType>
 
+    <xs:complexType name="sectionType">
+        <xs:sequence minOccurs="1" maxOccurs="1">
+            <xs:element type="metaType" name="meta" minOccurs="0" maxOccurs="1"/>
+            <xs:element type="propertiesType" name="properties" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
 
-    <xs:complexType name="blockPropertiesType">
+        <xs:attribute type="xs:string" name="name" use="required"/>
+        <xs:attribute type="xs:string" name="cssClass" use="optional"/>
+        <xs:attribute type="xs:integer" name="colspan" use="optional"/>
+    </xs:complexType>
 
+    <xs:complexType name="propertiesType">
         <xs:choice minOccurs="1" maxOccurs="unbounded">
             <xs:element type="propertyType" name="property"/>
             <xs:element type="blockType" name="block"/>
         </xs:choice>
-
     </xs:complexType>
 
-
     <xs:complexType name="propertyType" mixed="true">
-
-        <xs:sequence>
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element type="metaType" name="meta" minOccurs="0" maxOccurs="1"/>
+            <xs:element type="tagType" name="tag" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="paramsType" name="params" minOccurs="0" maxOccurs="1"/>
-        </xs:sequence>
+        </xs:choice>
 
         <xs:attribute type="xs:string" name="name" use="required"/>
         <xs:attribute type="xs:string" name="type" use="required"/>
@@ -50,31 +72,56 @@
         <xs:attribute type="xs:string" name="multilingual" use="optional"/>
         <xs:attribute type="xs:byte" name="minOccurs" use="optional"/>
         <xs:attribute type="xs:byte" name="maxOccurs" use="optional"/>
-
+        <xs:attribute type="xs:string" name="cssClass" use="optional"/>
+        <xs:attribute type="xs:integer" name="colspan" use="optional"/>
     </xs:complexType>
 
-
     <xs:complexType name="blockType">
-
-        <xs:sequence minOccurs="1" maxOccurs="1">
-            <xs:element type="blockPropertiesType" name="properties"/>
+        <xs:sequence minOccurs="1" maxOccurs="unbounded">
+            <xs:element type="metaType" name="meta" minOccurs="0" maxOccurs="1"/>
+            <xs:element type="tagType" name="tag" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="blockTypesType" name="types" minOccurs="1" maxOccurs="1"/>
         </xs:sequence>
 
         <xs:attribute type="xs:string" name="name" use="required"/>
+        <xs:attribute type="xs:string" name="default-type" use="required"/>
         <xs:attribute type="xs:string" name="mandatory" use="optional"/>
         <xs:attribute type="xs:string" name="multilingual" use="optional"/>
         <xs:attribute type="xs:byte" name="minOccurs" use="optional"/>
         <xs:attribute type="xs:byte" name="maxOccurs" use="optional"/>
-
+        <xs:attribute type="xs:string" name="cssClass" use="optional"/>
+        <xs:attribute type="xs:integer" name="colspan" use="optional"/>
     </xs:complexType>
 
+    <xs:complexType name="blockTypesType">
+        <xs:sequence minOccurs="1" maxOccurs="1">
+            <xs:element type="blockTypeType" name="type" minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="blockTypeType">
+        <xs:sequence minOccurs="1" maxOccurs="1">
+            <xs:element type="metaType" name="meta" minOccurs="0" maxOccurs="1"/>
+            <xs:element type="propertiesType" name="properties" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+
+        <xs:attribute type="xs:string" name="name" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="tagType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="name" use="required"/>
+                <xs:attribute type="xs:int" name="priority" use="optional"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
 
     <xs:complexType name="paramsType">
         <xs:sequence>
             <xs:element type="paramType" name="param" maxOccurs="unbounded" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
-
 
     <xs:complexType name="paramType">
         <xs:simpleContent>
@@ -84,6 +131,4 @@
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
-
-
 </xs:schema>

@@ -6,10 +6,17 @@
         <xs:sequence>
             <xs:element type="xs:string" name="name"/>
             <xs:element type="xs:string" name="key"/>
+            <xs:element type="security" name="security" minOccurs="0" maxOccurs="1"/>
             <xs:element type="localizationsType" name="localizations"/>
             <xs:element type="segmentsType" name="segments" maxOccurs="1" minOccurs="0"/>
             <xs:element type="themeType" name="theme"/>
             <xs:element type="portalsType" name="portals"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="security">
+        <xs:sequence>
+            <xs:element type="xs:string" name="system" maxOccurs="1" minOccurs="1"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -24,6 +31,7 @@
         </xs:sequence>
         <xs:attribute type="xs:string" name="language" use="required"/>
         <xs:attribute type="xs:string" name="country" use="optional"/>
+        <xs:attribute type="xs:boolean" name="default" use="optional"/>
         <xs:attribute name="shadow" use="optional">
             <xs:simpleType>
                 <xs:restriction base="xs:string">
@@ -43,6 +51,7 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="key" use="optional"/>
+                <xs:attribute type="xs:boolean" name="default" use="optional"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>

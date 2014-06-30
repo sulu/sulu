@@ -11,6 +11,8 @@
 namespace Sulu\Component\Content;
 
 use DateTime;
+use Sulu\Component\Content\Section\SectionProperty;
+use Sulu\Component\Content\Section\SectionPropertyInterface;
 use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
 
 /**
@@ -80,6 +82,12 @@ abstract class Structure implements StructureInterface
     private $uuid;
 
     /**
+     * absolute path of node
+     * @var string
+     */
+    private $path;
+
+    /**
      * user id of creator
      * @var int
      */
@@ -139,6 +147,11 @@ abstract class Structure implements StructureInterface
     private $type;
 
     /**
+     * @var array
+     */
+    private $tags = array();
+
+    /**
      * @param $key string
      * @param $view string
      * @param $controller string
@@ -163,9 +176,48 @@ abstract class Structure implements StructureInterface
      * adds a property to structure
      * @param PropertyInterface $property
      */
-    protected function add(PropertyInterface $property)
+    protected function addChild(PropertyInterface $property)
     {
+        if ($property instanceof SectionPropertyInterface) {
+            foreach ($property->getChildProperties() as $childProperty) {
+                $this->addPropertyTags($childProperty);
+            }
+        } else {
+            $this->addPropertyTags($property);
+        }
+
         $this->properties[$property->getName()] = $property;
+    }
+
+    /**
+     * add tags of properties
+     */
+    protected function addPropertyTags(PropertyInterface $property)
+    {
+        foreach ($property->getTags() as $tag) {
+            if (!array_key_exists($tag->getName(), $this->tags)) {
+                $this->tags[$tag->getName()] = array(
+                    'tag' => $tag,
+                    'properties' => array($tag->getPriority() => $property),
+                    'highest' => $property,
+                    'lowest' => $property
+                );
+            } else {
+                $this->tags[$tag->getName()]['properties'][$tag->getPriority()] = $property;
+
+                // replace highest priority property
+                $highestProperty = $this->tags[$tag->getName()]['highest'];
+                if ($highestProperty->getTag($tag->getName())->getPriority() < $tag->getPriority()) {
+                    $this->tags[$tag->getName()]['highest'] = $property;
+                }
+
+                // replace lowest priority property
+                $lowestProperty = $this->tags[$tag->getName()]['lowest'];
+                if ($lowestProperty->getTag($tag->getName())->getPriority() > $tag->getPriority()) {
+                    $this->tags[$tag->getName()]['lowest'] = $property;
+                }
+            }
+        }
     }
 
     /**
@@ -257,6 +309,22 @@ abstract class Structure implements StructureInterface
     }
 
     /**
+     * @return string
+     */
+    public function getPath()
+    {
+        return $this->path;
+    }
+
+    /**
+     * @param string $path
+     */
+    public function setPath($path)
+    {
+        $this->path = $path;
+    }
+
+    /**
      * returns id of creator
      * @return int
      */
@@ -337,8 +405,43 @@ abstract class Structure implements StructureInterface
      */
     public function getProperty($name)
     {
-        if ($this->hasProperty($name)) {
+        $result = $this->findProperty($name);
+
+        if ($result !== null) {
+            return $result;
+        } elseif (isset($this->properties[$name])) {
             return $this->properties[$name];
+        } else {
+            throw new NoSuchPropertyException();
+        }
+    }
+
+    /**
+     * returns a property instance with given tag name
+     * @param string $tagName
+     * @param boolean $highest
+     * @throws \Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException
+     * @return PropertyInterface
+     */
+    public function getPropertyByTagName($tagName, $highest = true)
+    {
+        if (array_key_exists($tagName, $this->tags)) {
+            return $this->tags[$tagName][$highest === true ? 'highest' : 'lowest'];
+        } else {
+            throw new NoSuchPropertyException();
+        }
+    }
+
+    /**
+     * returns properties with given tag name sorted by priority
+     * @param string $tagName
+     * @throws \Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException
+     * @return PropertyInterface
+     */
+    public function getPropertiesByTagName($tagName)
+    {
+        if (array_key_exists($tagName, $this->tags)) {
+            return $this->tags[$tagName]['properties'];
         } else {
             throw new NoSuchPropertyException();
         }
@@ -355,13 +458,39 @@ abstract class Structure implements StructureInterface
     }
 
     /**
+     * returns value of property with given tag name
+     * @param string $tagName
+     * @return mixed
+     */
+    public function getPropertyValueByTagName($tagName)
+    {
+        return $this->getPropertyByTagName($tagName, true)->getValue();
+    }
+
+    /**
      * checks if a property exists
      * @param string $name
      * @return boolean
      */
     public function hasProperty($name)
     {
-        return isset($this->properties[$name]);
+        return $this->findProperty($name) !== null;
+    }
+
+    /**
+     * find property in flatten properties
+     * @param string $name
+     * @return null|PropertyInterface
+     */
+    private function findProperty($name)
+    {
+        foreach ($this->getProperties(true) as $property) {
+            if ($property->getName() === $name) {
+                return $property;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -494,11 +623,26 @@ abstract class Structure implements StructureInterface
 
     /**
      * returns an array of properties
-     * @return array
+     * @param bool $flatten
+     * @return PropertyInterface[]
      */
-    public function getProperties()
+    public function getProperties($flatten = false)
     {
-        return $this->properties;
+        if ($flatten === false) {
+            return $this->properties;
+        } else {
+            $result = array();
+            foreach ($this->properties as $property) {
+                if ($property instanceof SectionPropertyInterface) {
+                    $result = array_merge($result, $property->getChildProperties());
+                } else {
+
+                    $result[] = $property;
+                }
+            }
+
+            return $result;
+        }
     }
 
     /**
@@ -564,7 +708,7 @@ abstract class Structure implements StructureInterface
      */
     public function __isset($property)
     {
-        if (isset($this->properties[$property])) {
+        if ($this->findProperty($property) !== null) {
             return true;
         } else {
             return isset($this->$property);
@@ -581,6 +725,7 @@ abstract class Structure implements StructureInterface
         if ($complete) {
             $result = array(
                 'id' => $this->uuid,
+                'path' => $this->path,
                 'nodeState' => $this->getNodeState(),
                 'published' => $this->getPublished(),
                 'globalState' => $this->getGlobalState(),
@@ -598,15 +743,13 @@ abstract class Structure implements StructureInterface
                 $result['type'] = $this->getType()->toArray();
             }
 
-            /** @var PropertyInterface $property */
-            foreach ($this->getProperties() as $property) {
-                $result[$property->getName()] = $property->getValue();
-            }
+            $this->appendProperties($this->getProperties(), $result);
 
             return $result;
         } else {
             $result = array(
                 'id' => $this->uuid,
+                'path' => $this->path,
                 'nodeState' => $this->getNodeState(),
                 'globalState' => $this->getGlobalState(),
                 'publishedState' => $this->getPublishedState(),
@@ -617,7 +760,20 @@ abstract class Structure implements StructureInterface
             if ($this->type !== null) {
                 $result['type'] = $this->getType()->toArray();
             }
+
             return $result;
+        }
+    }
+
+    private function appendProperties($properties, &$array)
+    {
+        /** @var PropertyInterface $property */
+        foreach ($properties as $property) {
+            if ($property instanceof SectionPropertyInterface) {
+                $this->appendProperties($property->getChildProperties(), $array);
+            } else {
+                $array[$property->getName()] = $property->getValue();
+            }
         }
     }
 

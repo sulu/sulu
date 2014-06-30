@@ -16,266 +16,359 @@ use Sulu\Component\Content\Template\Exception\InvalidXmlException;
 use Sulu\Component\Content\Template\Exception\InvalidArgumentException;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
+use Symfony\Component\Config\Util\XmlUtils;
 
 /**
  * reads a template xml and returns a array representation
  */
 class TemplateReader implements LoaderInterface
 {
-    /**
-     * @var string
-     */
-    private $nameKey = 'name';
+    const SCHEME_PATH = '/Resources/schema/template/template-1.0.xsd';
 
     /**
-     * @var string
-     */
-    private $propertiesKey = 'properties';
-
-    /**
-     * @var string
-     */
-    private $paramsKey = 'params';
-
-    /**
-     * @var string
-     */
-    private $pathToProperties = '/x:template/x:properties/*';
-
-    /**
-     * @var string
-     */
-    private $pathToParams = 'x:params/x:param';
-
-    /**
-     * @var \DOMDocument
-     */
-    private $xmlDocument;
-
-    /**
+     * tags that are required in template
+     * TODO should be possible to inject from config
      * @var array
      */
-    private $complexNodeTypes = array('block');
+    private $requiredTags = array(
+        'sulu.node.name'
+    );
 
     /**
-     * Reads all types from the given path
-     * @param $path string path to file with type definitions
-     * @param $mandatoryNodes array with key of mandatory node names
-     * @throws \Sulu\Component\Content\Template\Exception\InvalidXmlException
-     * @throws \Sulu\Component\Content\Template\Exception\InvalidArgumentException
-     * @return array with found definitions of types
+     * reserved names for sulu internals
+     * TODO should be possible to inject from config
+     * @var array
      */
-    private function readTemplate($path, $mandatoryNodes = array('key', 'view', 'controller', 'cacheLifetime'))
-    {
-
-        $template = array();
-        $this->xmlDocument = new \DOMDocument();
-
-        try {
-            $this->xmlDocument->load($path);
-
-            if (!empty($mandatoryNodes)) {
-                $template = $this->getMandatoryNodes($mandatoryNodes);
-            }
-
-            $template[$this->propertiesKey] = array();
-            $xpath = new \DOMXPath($this->xmlDocument);
-            $xpath->registerNamespace('x', 'http://schemas.sulu.io/template/template');
-
-            /** @var \DOMNodeList $nodes */
-            $nodes = $xpath->query($this->pathToProperties);
-
-            foreach ($nodes as $node) {
-
-                /** @var \DOMNode $node */
-                $attributes = $this->getAllAttributesOfNode($node);
-
-                if(in_array($node->tagName, $this->complexNodeTypes)) {
-                    $attributes['type'] = $node->tagName;
-                }
-
-                $name = $attributes[$this->nameKey];
-                $params = $this->getChildrenOfNode($node, $this->pathToParams, $xpath);
-                $template[$this->propertiesKey][$name] = array_merge($attributes, $params);
-
-                if(in_array($node->tagName, $this->complexNodeTypes)) {
-                    $template[$this->propertiesKey][$name][$this->propertiesKey] = $this->parseSubproperties($xpath,$node);
-                }
-
-            }
-
-        } catch (InvalidXmlException $ex) {
-            throw $ex;
-        } catch (Exception $ex) {
-            // TODO do not catch exceptions here but in the callee
-            throw new InvalidArgumentException('Path is invalid: ' . $path);
-        }
-
-        return $template;
-    }
+    private $reservedPropertyNames = array(
+        'template',
+        'changer',
+        'changed',
+        'creator',
+        'created',
+        'navigation',
+        'published',
+        'state'
+    );
 
     /**
-     * Parses childnodes and its attributes recursively and puts them into the properties element
-     * @param $xpath
-     * @param \DOMNode $node
-     * @return array with sub properties
+     * running variable for required tags
+     * at begin deep copy of requiredTags, each tag found will be removed
+     * @var array
      */
-    private function parseSubproperties($xpath, $node){
-
-        $properties = array();
-
-        /** @var \DOMNodeList $children */
-        $children = $xpath->query('x:properties/*', $node);
-
-
-        /** @var \DOMNode $child */
-        foreach($children as $child) {
-
-            $attributes = $this->getAllAttributesOfNode($child);
-
-            if(in_array($child->tagName, $this->complexNodeTypes)) {
-                $attributes['type'] = $child->tagName;
-            }
-
-            $name = $attributes[$this->nameKey];
-            $params = $this->getChildrenOfNode($child, $this->pathToParams, $xpath);
-            $properties[$name] = array_merge($attributes, $params);
-
-            if(in_array($child->tagName, $this->complexNodeTypes)) {
-                $properties[$name][$this->propertiesKey] = $this->parseSubproperties($xpath,$child);
-            }
-
-        }
-
-        return $properties;
-    }
+    private $runningRequiredTags;
 
     /**
-     * Get values of mandatory fields
-     * @param $mandatoryNodes
-     * @throws InvalidXmlException
-     * @return array with mandatory field-keys and -values
+     * all tag found tags during a run
+     * @var array
      */
-    private function getMandatoryNodes($mandatoryNodes)
-    {
-        $mandatoryFields = array();
-
-        foreach ($mandatoryNodes as $node) {
-            try {
-                $value = $this->xmlDocument->getElementsByTagName($node)->item(0)->nodeValue;
-                $mandatoryFields[$node] = $value;
-            } catch (Exception $ex) {
-                throw new InvalidXmlException('Missing or empty mandatory node in xml!');
-            }
-        }
-
-        return $mandatoryFields;
-    }
+    private $runningTags;
 
     /**
-     * Returns attributes form a node
-     * @param \DOMNode $node
-     * @return array
-     */
-    private function getAllAttributesOfNode(\DOMNode $node)
-    {
-        $attributes = array();
-
-        /** @var \DOMElement $node */
-        if ($node->hasAttributes()) {
-            for ($i = 0; $i < $node->attributes->length; $i++) {
-                $value = $node->attributes->item($i)->nodeValue;
-
-                if (is_numeric($value)) {
-                    $value = $value + 0;
-                } else {
-                    if ($value === 'true') {
-                        $value = true;
-                    } else {
-                        if ($value === 'false') {
-                            $value = false;
-                        }
-                    }
-                }
-
-                $attributes[$node->attributes->item($i)->nodeName] = $value;
-            }
-        }
-
-        return $attributes;
-    }
-
-    /**
-     * Returns an array with all the attributes from the children of a node
-     * @param \DOMNode $node
-     * @param $path
-     * @param $xpath
-     * @return array
-     * @internal param $paramsTag
-     */
-    private function getChildrenOfNode(\DOMNode $node, $path, $xpath)
-    {
-
-        $keyValue = array();
-        $params = $children = $xpath->query($path, $node);
-
-        if ($params->length > 0) {
-
-            $keyValue[$this->paramsKey] = array();
-            $xpath = new \DOMXPath($this->xmlDocument);
-            $xpath->registerNamespace('x', 'http://schemas.sulu.io/template/template');
-
-            $children = $xpath->query($path, $node);
-
-            foreach ($children as $child) {
-                $keyValue[$this->paramsKey] = array_merge(
-                    $keyValue[$this->paramsKey],
-                    $this->getAttributesAsKeyValuePairs($child)
-                );
-            }
-        }
-
-        return $keyValue;
-    }
-
-    /**
-     * Returns attributes as key value pairs (e.g. for params)
-     * @param \DOMNode $node
-     * @return array
-     */
-    private function getAttributesAsKeyValuePairs(\DOMNode $node)
-    {
-
-        $keyValues = array();
-
-        if ($node->hasAttributes()) {
-            $keyValues[$node->attributes->item(0)->nodeValue] = $node->attributes->item(1)->nodeValue;
-        }
-
-        return $keyValues;
-
-    }
-
-    /**
-     * Loads a resource.
-     *
-     * @param mixed $resource The resource
-     * @param string $type The resource type
-     * @return array
+     * {@inheritdoc}
      */
     public function load($resource, $type = null)
     {
-        return $this->readTemplate($resource);
+        // init running vars
+        // DEEP COPY
+        $requiredTags = array_merge(array(), $this->requiredTags);
+        $tags = array();
+
+        // read file
+        $xmlDocument = XmlUtils::loadFile($resource, __DIR__ . static::SCHEME_PATH);
+
+        // generate xpath for file
+        $xpath = new \DOMXPath($xmlDocument);
+        $xpath->registerNamespace('x', 'http://schemas.sulu.io/template/template');
+
+        // init result
+        $result = $this->loadTemplateAttributes($xpath);
+
+        // load properties
+        $result['properties'] = $this->loadProperties('/x:template/x:properties/x:*', $requiredTags, $tags, $xpath);
+
+        if (sizeof($requiredTags) > 0) {
+            throw new InvalidXmlException(
+                sprintf(
+                    'Tag(s) %s required but not found',
+                    join(',', $requiredTags)
+                )
+            );
+        }
+
+        return $result;
     }
 
     /**
-     * Returns true if this class supports the given resource.
-     *
-     * @param mixed $resource A resource
-     * @param string $type     The resource type
-     *
-     * @throws \Sulu\Exception\FeatureNotImplementedException
-     * @return Boolean true if this class supports the given resource, false otherwise
+     * load basic template attributes
+     */
+    private function loadTemplateAttributes(\DOMXPath $xpath)
+    {
+        $result = array(
+            'key'           => $this->getValueFromXPath('/x:template/x:key', $xpath),
+            'view'          => $this->getValueFromXPath('/x:template/x:view', $xpath),
+            'controller'    => $this->getValueFromXPath('/x:template/x:controller', $xpath),
+            'cacheLifetime' => $this->getValueFromXPath('/x:template/x:cacheLifetime', $xpath),
+        );
+
+        $result = array_filter($result);
+        if (sizeof($result) < 4) {
+            throw new InvalidXmlException();
+        }
+
+        return $result;
+    }
+
+    /**
+     * load properties from given context
+     */
+    private function loadProperties($path, &$requiredTags, &$tags, \DOMXPath $xpath, \DOMNode $context = null)
+    {
+        $result = array();
+
+        /** @var \DOMElement $node */
+        foreach ($xpath->query($path, $context) as $node) {
+            if ($node->tagName === 'property') {
+                $value = $this->loadProperty($xpath, $node, $requiredTags, $tags);
+                $result[$value['name']] = $value;
+            } elseif ($node->tagName === 'block') {
+                $value = $this->loadBlock($xpath, $node, $requiredTags, $tags);
+                $result[$value['name']] = $value;
+            } elseif ($node->tagName === 'section') {
+                $value = $this->loadSection($xpath, $node, $requiredTags, $tags);
+                $result[$value['name']] = $value;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * load single property
+     */
+    private function loadProperty(\DOMXPath $xpath, \DOMNode $node, &$requiredTags, &$tags)
+    {
+        $result = $this->loadValues(
+            $xpath,
+            $node,
+            array('name', 'type', 'minOccurs', 'maxOccurs', 'colspan', 'cssClass')
+        );
+
+        if (in_array($result['name'], $this->reservedPropertyNames)) {
+            throw new InvalidXmlException(
+                sprintf('Property name %s is a reserved name', $result['name'])
+            );
+        }
+
+        $result['mandatory'] = $this->getBooleanValueFromXPath('@mandatory', $xpath, $node);
+        $result['tags'] = $this->loadTags('x:tag', $requiredTags, $tags, $xpath, $node);
+        $result['params'] = $this->loadParams('x:params/x:param', $xpath, $node);
+        $result['meta'] = $this->loadMeta('x:meta/x:*', $xpath, $node);
+
+        return $result;
+    }
+
+    /**
+     * load single block
+     */
+    private function loadBlock(\DOMXPath $xpath, \DOMNode $node, &$requiredTags, &$tags)
+    {
+        $result = $this->loadValues(
+            $xpath,
+            $node,
+            array('name', 'default-type', 'minOccurs', 'maxOccurs', 'colspan', 'cssClass')
+        );
+
+        $result['mandatory'] = $this->getBooleanValueFromXPath('@mandatory', $xpath, $node);
+        $result['type'] = 'block';
+        $result['tags'] = $this->loadTags('x:tag', $requiredTags, $tags, $xpath, $node);
+        $result['params'] = $this->loadParams('x:params/x:param', $xpath, $node);
+        $result['meta'] = $this->loadMeta('x:meta/x:*', $xpath, $node);
+        $result['types'] = $this->loadTypes('x:types/x:type', $requiredTags, $tags, $xpath, $node);
+
+        return $result;
+    }
+
+    /**
+     * load single block
+     */
+    private function loadSection(\DOMXPath $xpath, \DOMNode $node, &$requiredTags, &$tags)
+    {
+        $result = $this->loadValues(
+            $xpath,
+            $node,
+            array('name', 'colspan', 'cssClass')
+        );
+
+        $result['type'] = 'section';
+        $result['params'] = $this->loadParams('x:params/x:param', $xpath, $node);
+        $result['meta'] = $this->loadMeta('x:meta/x:*', $xpath, $node);
+        $result['properties'] = $this->loadProperties('x:properties/x:*', $requiredTags, $tags, $xpath, $node);
+
+        return $result;
+    }
+
+    /**
+     * load tags from given tag and validates them
+     */
+    private function loadTags($path, &$requiredTags, &$tags, \DOMXPath $xpath, \DOMNode $context = null)
+    {
+        $result = array();
+
+        /** @var \DOMElement $node */
+        foreach ($xpath->query($path, $context) as $node) {
+            $tag = $this->loadTag($xpath, $node);
+            $this->validateTag($tag, $requiredTags, $tags);
+
+            $result[] = $tag;
+        }
+
+        return $result;
+    }
+
+    /**
+     * validates a single tag
+     */
+    private function validateTag($tag, &$requiredTags, &$tags)
+    {
+        // remove tag from required tags
+        $requiredTags = array_diff($requiredTags, array($tag['name']));
+
+        // check for duplicated priority
+        if (
+            isset($tags[$tag['name']]) &&
+            in_array(
+                $tag['priority'],
+                $tags[$tag['name']]
+            )
+        ) {
+            throw new InvalidXmlException(
+                sprintf(
+                    'Priority %s of tag %s exists duplicated',
+                    $tag['priority'],
+                    $tag['name']
+                )
+            );
+        } elseif (!isset($tags[$tag['name']])) {
+            $tags[$tag['name']] = array();
+        }
+
+        $tags[$tag['name']][] = $tag['priority'];
+    }
+
+    /**
+     * load single tag
+     */
+    private function loadTag(\DOMXPath $xpath, \DOMNode $node)
+    {
+        return $this->loadValues($xpath, $node, array('name', 'priority'));
+    }
+
+    /**
+     * load params from given node
+     */
+    private function loadParams($path, \DOMXPath $xpath, \DOMNode $context = null)
+    {
+        $result = array();
+
+        /** @var \DOMElement $node */
+        foreach ($xpath->query($path, $context) as $node) {
+            $result[] = $this->loadParam($xpath, $node);
+        }
+
+        return $result;
+    }
+
+    /**
+     * load single param
+     */
+    private function loadParam(\DOMXPath $xpath, \DOMNode $node)
+    {
+        return $this->loadValues($xpath, $node, array('name', 'value'));
+    }
+
+    /**
+     * load types from given node
+     */
+    private function loadTypes($path, &$requiredTags, &$tags, \DOMXPath $xpath, \DOMNode $context = null)
+    {
+        $result = array();
+
+        /** @var \DOMElement $node */
+        foreach ($xpath->query($path, $context) as $node) {
+            $value = $this->loadType($xpath, $node, $requiredTags, $tags);
+            $result[$value['name']] = $value;
+        }
+
+        return $result;
+    }
+
+    /**
+     * load single param
+     */
+    private function loadType(\DOMXPath $xpath, \DOMNode $node, &$requiredTags, &$tags)
+    {
+        $result = $this->loadValues($xpath, $node, array('name'));
+
+        $result['meta'] = $this->loadMeta('x:meta/x:*', $xpath, $node);
+        $result['properties'] = $this->loadProperties('x:properties/x:*', $requiredTags, $tags, $xpath, $node);
+
+        return $result;
+    }
+
+    private function loadMeta($path, \DOMXPath $xpath, \DOMNode $context)
+    {
+        $result = array();
+
+        /** @var \DOMElement $node */
+        foreach ($xpath->query($path, $context) as $node) {
+            $attribute = $node->tagName;
+            $lang = $this->getValueFromXPath('@lang', $xpath, $node);
+
+            if (!isset($result[$node->tagName])) {
+                $result[$attribute] = array();
+            }
+            $result[$attribute][$lang] = $node->textContent;
+        }
+
+        return $result;
+    }
+
+    /**
+     * load values defined by key from given node
+     */
+    private function loadValues(\DOMXPath $xpath, \DOMNode $node, $keys, $prefix = '@')
+    {
+        $result = array();
+
+        foreach ($keys as $key) {
+            $result[$key] = $this->getValueFromXPath($prefix . $key, $xpath, $node);
+        }
+
+        return $result;
+    }
+
+    /**
+     * returns boolean value of path
+     */
+    private function getBooleanValueFromXPath($path, \DOMXPath $xpath, \DomNode $context = null)
+    {
+        return $this->getValueFromXPath($path, $xpath, $context) === 'true' ? true : false;
+    }
+
+    /**
+     * returns value of path
+     */
+    private function getValueFromXPath($path, \DOMXPath $xpath, \DomNode $context = null, $default = null)
+    {
+        try {
+            return $xpath->query($path, $context)->item(0)->nodeValue;
+        } catch (Exception $ex) {
+            return $default;
+        }
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function supports($resource, $type = null)
     {
@@ -283,10 +376,7 @@ class TemplateReader implements LoaderInterface
     }
 
     /**
-     * Gets the loader resolver.
-     *
-     * @throws \Sulu\Exception\FeatureNotImplementedException
-     * @return LoaderResolverInterface A LoaderResolverInterface instance
+     * {@inheritdoc}
      */
     public function getResolver()
     {
@@ -294,14 +384,10 @@ class TemplateReader implements LoaderInterface
     }
 
     /**
-     * Sets the loader resolver.
-     *
-     * @param LoaderResolverInterface $resolver A LoaderResolverInterface instance
-     * @throws \Sulu\Exception\FeatureNotImplementedException
+     * {@inheritdoc}
      */
     public function setResolver(LoaderResolverInterface $resolver)
     {
         throw new FeatureNotImplementedException();
     }
-
 }

@@ -11,6 +11,7 @@
 namespace Sulu\Component\Content\Mapper\Translation;
 
 use Sulu\Component\Content\PropertyInterface;
+use Sulu\Component\Content\PropertyTag;
 
 /**
  * Wrapper for translated properties
@@ -59,7 +60,11 @@ class TranslatedProperty implements PropertyInterface
      */
     public function getName()
     {
-        return $this->languageNamespace . ':' . $this->localization . '-' . $this->property->getName();
+        if ($this->property->getMultilingual()) {
+            return $this->languageNamespace . ':' . $this->localization . '-' . $this->property->getName();
+        } else {
+            return $this->property->getName();
+        }
     }
 
     /**
@@ -168,5 +173,81 @@ class TranslatedProperty implements PropertyInterface
     public function getIsMultiple()
     {
         return $this->property->getIsMultiple();
+    }
+
+    /**
+     * returns field is mandatory
+     * @return boolean
+     */
+    public function getMandatory()
+    {
+        return $this->property->getMandatory();
+    }
+
+    /**
+     * returns field is multilingual
+     * @return boolean
+     */
+    public function getMultilingual()
+    {
+        return $this->property->getMultilingual();
+    }
+
+    /**
+     * returns tags defined in xml
+     * @return PropertyTag[]
+     */
+    public function getTags()
+    {
+        return $this->property->getTags();
+    }
+
+    /**
+     * returns tag with given name
+     * @param string $tagName
+     * @return PropertyTag
+     */
+    public function getTag($tagName)
+    {
+        return $this->property->getTag($tagName);
+    }
+
+    /**
+     * returns column span
+     * @return string
+     */
+    public function getColspan()
+    {
+        return $this->property->getColspan();
+    }
+
+    /**
+     * returns title of property
+     * @param string $languageCode
+     * @return string
+     */
+    public function getTitle($languageCode)
+    {
+        return $this->property->getTitle($languageCode);
+    }
+
+    /**
+     * returns infoText of property
+     * @param string $languageCode
+     * @return string
+     */
+    public function getInfoText($languageCode)
+    {
+        return $this->property->getInfoText($languageCode);
+    }
+
+    /**
+     * returns placeholder of property
+     * @param string $languageCode
+     * @return string
+     */
+    public function getPlaceholder($languageCode)
+    {
+        return $this->property->getPlaceholder($languageCode);
     }
 }

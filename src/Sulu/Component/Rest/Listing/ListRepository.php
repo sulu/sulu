@@ -38,9 +38,10 @@ class ListRepository extends EntityRepository
      * @param array $where
      * @param string $prefix
      * @param bool $justCount Defines, if find should just return the total number of results
+     * @param array $joinConditions optionally specify conditions on join
      * @return array|object|int
      */
-    public function find($where = array(), $prefix = 'u', $justCount = false)
+    public function find($where = array(), $prefix = 'u', $justCount = false, $joinConditions = array())
     {
         $searchPattern = $this->helper->getSearchPattern();
         $searchFields = $this->helper->getSearchFields();
@@ -65,7 +66,8 @@ class ListRepository extends EntityRepository
             $this->helper->getSorting(),
             $where,
             $textFields,
-            $numberFields
+            $numberFields,
+            $joinConditions
         );
 
         if ($justCount) {
@@ -97,18 +99,65 @@ class ListRepository extends EntityRepository
             return intval($query->getSingleResult()['totalcount']);
         }
 
-        return $query->getArrayResult();
+        $results = $query->getArrayResult();
+
+        // check if relational filter was set ( e.g. emails[0]_email)
+        // and filter result
+        if (sizeof($filters = $queryBuilder->getRelationalFilters()) > 0) {
+            $filteredResults = array();
+            // check if fields do contain id, else skip
+            if (sizeof($fields = $this->helper->getFields()) > 0 && array_search('id', $fields)!==false) {
+                $ids = array();
+                foreach($results as $result) {
+                    $id = $result['id'];
+                    // check if result already in resultset
+                    if (!array_key_exists($id, $ids)) {
+                        $ids[$id] = -1;
+                        $filteredResults[] = $result;
+                    }
+                    $ids[$id]++;
+                    // check filters
+                    foreach ($filters as $filter => $key) {
+                        // check if we are at the specified index
+                        if ($key == $ids[$id]) {
+                            $index = $this->getArrayIndexByKeyValue($filteredResults, $id);
+                            // set to current key
+                            $filteredResults[$index][$filter] = $result[$filter];
+                        }
+                    }
+                }
+                $results = $filteredResults;
+            }
+        }
+        return $results;
+    }
+
+    /**
+     * returns array index of by a specified key value
+     * @param $array
+     * @param $value
+     * @param string $key
+     * @return bool|int|string
+     */
+    private function getArrayIndexByKeyValue($array, $value, $key = 'id') {
+        foreach ($array as $index => $result) {
+            if ($result[$key] === $value) {
+                return $index;
+            }
+        }
+        return false;
     }
 
     /**
      * returns the amount of data
      * @param array $where
+     * @param array $joinConditions
      * @param string $prefix
      * @return int
      */
-    public function getCount($where = array(), $prefix = 'u')
+    public function getCount($where = array(), $joinConditions = array(), $prefix = 'u')
     {
-        return $this->find($where, $prefix, true);
+        return $this->find($where, $prefix, true, $joinConditions);
     }
 
     /**

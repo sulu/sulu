@@ -4,10 +4,13 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
+        <parameter key="sulu.content.path_cleaner.class">Sulu\Component\PHPCR\PathCleanup</parameter>
         <parameter key="sulu.content.mapper.class">Sulu\Component\Content\Mapper\ContentMapper</parameter>
 
         <parameter key="sulu.content.structure_manager.class">Sulu\Component\Content\StructureManager</parameter>
         <parameter key="sulu.content.structure_manager.loader.class">Sulu\Component\Content\Template\TemplateReader</parameter>
+        <parameter key="sulu.content.structure_manager.dumper.class">Sulu\Component\Content\Template\Dumper\PHPTemplateDumper</parameter>
+        <parameter key="sulu.content.structure_manager.dumper.path">../Resources/Skeleton</parameter>
 
         <parameter key="sulu.content.type_manager.class">Sulu\Component\Content\ContentTypeManager</parameter>
         <parameter key="sulu.content.type.text_line.class">Sulu\Component\Content\Types\TextLine</parameter>
@@ -15,6 +18,7 @@
         <parameter key="sulu.content.type.text_editor.class">Sulu\Component\Content\Types\TextEditor</parameter>
         <parameter key="sulu.content.type.resource_locator.class">Sulu\Component\Content\Types\ResourceLocator</parameter>
         <parameter key="sulu.content.type.block.class">Sulu\Component\Content\Block\BlockContentType</parameter>
+
         <parameter key="sulu.content.rlp.mapper.phpcr.class">Sulu\Component\Content\Types\Rlp\Mapper\PhpcrMapper</parameter>
         <parameter key="sulu.content.rlp.strategy.tree.class">Sulu\Component\Content\Types\Rlp\Strategy\TreeStrategy</parameter>
         <parameter key="sulu.content.parent_child_any_finder.class">Sulu\Component\Content\Mapper\LocalizationFinder\ParentChildAnyFinder</parameter>
@@ -22,6 +26,7 @@
 
     <services>
 
+        <service id="sulu.content.path_cleaner" public="false" class="%sulu.content.path_cleaner.class%"/>
         <!-- content mapper -->
         <!-- optional stopwatch: in prod not available -->
         <service id="sulu.content.mapper" class="%sulu.content.mapper.class%">
@@ -30,9 +35,11 @@
             <argument type="service" id="sulu.phpcr.session"/>
             <argument type="service" id="event_dispatcher"/>
             <argument type="service" id="sulu.content.localization_finder"/>
+            <argument type="service" id="sulu.content.path_cleaner"/>
             <argument>%sulu.content.language.default%</argument>
             <argument>%sulu.content.template.default%</argument>
             <argument>%sulu.content.language.namespace%</argument>
+            <argument>%sulu.content.internal_prefix%</argument>
             <argument type="service" id="debug.stopwatch" on-invalid="null"/>
         </service>
 
@@ -40,6 +47,7 @@
         <service id="sulu.content.localization_finder" class="%sulu.content.parent_child_any_finder.class%">
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument>%sulu.content.language.namespace%</argument>
+            <argument>%sulu.content.internal_prefix%</argument>
         </service>
 
         <!-- content type manager -->
@@ -50,8 +58,14 @@
 
         <!-- structure manager -->
         <service id="sulu.content.structure_manager.loader" class="%sulu.content.structure_manager.loader.class%" public="false"/>
+        <service id="sulu.content.structure_manager.dumper" class="%sulu.content.structure_manager.dumper.class%" public="false">
+            <argument>%sulu.content.structure_manager.dumper.path%</argument>
+            <argument>%kernel.debug%</argument>
+        </service>
         <service id="sulu.content.structure_manager" class="%sulu.content.structure_manager.class%">
             <argument type="service" id="sulu.content.structure_manager.loader"/>
+            <argument type="service" id="sulu.content.structure_manager.dumper"/>
+            <argument type="service" id="logger"/>
             <argument type="collection">
                 <argument key="template_dir">%sulu.content.template.default_path%</argument>
                 <argument key="cache_dir">%kernel.cache_dir%</argument>
@@ -71,6 +85,7 @@
         <!-- rlp strategies -->
         <service id="sulu.content.rlp.strategy.tree" class="%sulu.content.rlp.strategy.tree.class%">
             <argument type="service" id="sulu.content.rlp.mapper.phpcr"/>
+            <argument type="service" id="sulu.content.path_cleaner"/>
         </service>
 
         <!-- simple content types -->
@@ -92,6 +107,7 @@
         <service id="sulu.content.type.block" class="%sulu.content.type.block.class%">
             <argument type="service" id="sulu.content.type_manager"/>
             <argument>%sulu.content.type.block.template%</argument>
+            <argument>%sulu.content.language.namespace%</argument>
         </service>
 
     </services>

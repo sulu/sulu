@@ -12,13 +12,13 @@ namespace Sulu\Component\Content\Types\Rlp\Strategy;
 
 use PHPCR\NodeInterface;
 use Sulu\Component\Content\Types\Rlp\Mapper\RlpMapperInterface;
+use Sulu\Component\PHPCR\PathCleanupInterface;
 
 /**
  * base class for Resource Locator Path Strategy
  */
 abstract class RlpStrategy implements RlpStrategyInterface
 {
-
     /**
      * @var string name of strategy
      */
@@ -30,49 +30,20 @@ abstract class RlpStrategy implements RlpStrategyInterface
     protected $mapper;
 
     /**
-     * replacers for cleanup
-     * @var array
+     * @var PathCleanupInterface
      */
-    protected $replacers = array(
-        'default' => array(
-            ' ' => '-',
-            '+' => '-',
-            'ä' => 'ae',
-            'ö' => 'oe',
-            'ü' => 'ue',
-            // because strtolower ignores Ä,Ö,Ü
-            'Ä' => 'ae',
-            'Ö' => 'oe',
-            'Ü' => 'ue'
-            // TODO should be filled
-        ),
-        'de' => array(
-            '&' => 'und'
-        ),
-        'en' => array(
-            '&' => 'and'
-        )
-    );
-
-    /**
-     * valid pattern for path
-     * example: /products/machines
-     *  + test whole input case insensitive
-     *  + trailing slash
-     *  + one or more sign (a-z, 0-9, -, _)
-     *  + repeat
-     * @var string
-     */
-    private $pattern = '/^(\/[a-z0-9-_]+)+$/i';
+    protected $cleaner;
 
     /**
      * @param string $name name of RLP Strategy
      * @param RlpMapperInterface $mapper
+     * @param PathCleanupInterface $cleaner
      */
-    public function __construct($name, RlpMapperInterface $mapper)
+    public function __construct($name, RlpMapperInterface $mapper, PathCleanupInterface $cleaner)
     {
         $this->name = $name;
         $this->mapper = $mapper;
+        $this->cleaner = $cleaner;
     }
 
     /**
@@ -99,7 +70,7 @@ abstract class RlpStrategy implements RlpStrategyInterface
         $path = $this->generatePath($title, $parentPath);
 
         // cleanup path
-        $path = $this->cleanup($path);
+        $path = $this->cleaner->cleanup($path, $languageCode);
 
         // get unique path
         $path = $this->mapper->getUniquePath($path, $webspaceKey, $languageCode, $segmentKey);
@@ -130,42 +101,6 @@ abstract class RlpStrategy implements RlpStrategyInterface
      * @return string
      */
     protected abstract function generatePath($title, $parentPath = null);
-
-    /**
-     * returns a clean string
-     * @param string $dirty dirty string to cleanup
-     * @return string clean string
-     */
-    protected function cleanup($dirty)
-    {
-        $clean = strtolower($dirty);
-
-        // TODO language
-        $languageCode = 'de';
-        $replacers = array_merge($this->replacers['default'], $this->replacers[$languageCode]);
-
-        if (count($replacers) > 0) {
-            foreach ($replacers as $key => $value) {
-                $clean = str_replace($key, $value, $clean);
-            }
-        }
-
-        // Inspired by ZOOLU
-        // delete problematic characters
-        $clean = str_replace('%2F', '/', urlencode(preg_replace('/([^A-za-z0-9\s-_\/])/', '', $clean)));
-
-        // replace multiple minus with one
-        $clean = preg_replace('/([-]+)/', '-', $clean);
-
-        // delete minus at the beginning or end
-        $clean = preg_replace('/^([-])/', '', $clean);
-        $clean = preg_replace('/([-])$/', '', $clean);
-
-        // remove double slashes
-        $clean = str_replace('//', '/', $clean);
-
-        return $clean;
-    }
 
     /**
      * creates a new route for given path
@@ -224,6 +159,14 @@ abstract class RlpStrategy implements RlpStrategyInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function loadHistoryByContentUuid($uuid, $webspaceKey, $languageCode, $segmentKey = null)
+    {
+        return $this->mapper->loadHistoryByContentUuid($uuid, $webspaceKey, $languageCode, $segmentKey);
+    }
+
+    /**
      * returns the uuid of referenced content node
      * @param string $resourceLocator requested RL
      * @param string $webspaceKey key of portal
@@ -248,6 +191,36 @@ abstract class RlpStrategy implements RlpStrategyInterface
     public function isValid($path, $webspaceKey, $languageCode, $segmentKey = null)
     {
         // check for valid signs and uniqueness
-        return preg_match($this->pattern, $path) && $this->mapper->unique($path, $webspaceKey, $languageCode, $segmentKey);
+        return $this->cleaner->validate($path) && $this->mapper->unique(
+            $path,
+            $webspaceKey,
+            $languageCode,
+            $segmentKey
+        );
+    }
+
+    /**
+     * deletes given resource locator node
+     * @param string $path of resource locator node
+     * @param string $webspaceKey key of portal
+     * @param string $languageCode
+     * @param string $segmentKey
+     */
+    public function deleteByPath($path, $webspaceKey, $languageCode, $segmentKey = null)
+    {
+        $this->mapper->deleteByPath($path, $webspaceKey, $languageCode, $segmentKey);
+    }
+
+    /**
+     * restore given resource locator
+     * @param string $path of resource locator
+     * @param string $webspaceKey key of portal
+     * @param string $languageCode
+     * @param string $segmentKey
+     */
+    public function restoreByPath($path, $webspaceKey, $languageCode, $segmentKey = null)
+    {
+        $this->mapper->restoreByPath($path, $webspaceKey, $languageCode, $segmentKey);
     }
 }
+

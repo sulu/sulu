@@ -11,6 +11,7 @@
 namespace Sulu\Component\Content\Block;
 
 use Sulu\Component\Content\PropertyInterface;
+use Sulu\Component\Content\PropertyTag;
 
 class BlockPropertyWrapper implements PropertyInterface
 {
@@ -25,13 +26,20 @@ class BlockPropertyWrapper implements PropertyInterface
     private $block;
 
     /**
+     * @var integer
+     */
+    private $index;
+
+    /**
      * @param PropertyInterface $property
      * @param PropertyInterface $block
+     * @param integer $index
      */
-    public function __construct(PropertyInterface $property, PropertyInterface $block)
+    public function __construct(PropertyInterface $property, PropertyInterface $block, $index = null)
     {
         $this->property = $property;
         $this->block = $block;
+        $this->index = $index;
     }
 
     /**
@@ -40,7 +48,9 @@ class BlockPropertyWrapper implements PropertyInterface
      */
     public function getName()
     {
-        return $this->block->getName().'-'.$this->property->getName();
+        return $this->block->getName() . '-' .
+        $this->property->getName() .
+        ($this->index !== null ? '#' . $this->index : '');
     }
 
     /**
@@ -163,5 +173,81 @@ class BlockPropertyWrapper implements PropertyInterface
     public function getIsMultiple()
     {
         return $this->property->getIsMultiple();
+    }
+
+    /**
+     * returns field is mandatory
+     * @return boolean
+     */
+    public function getMandatory()
+    {
+        return $this->property->getMandatory();
+    }
+
+    /**
+     * returns field is multilingual
+     * @return boolean
+     */
+    public function getMultilingual()
+    {
+        return $this->property->getMultilingual();
+    }
+
+    /**
+     * returns tags defined in xml
+     * @return PropertyTag[]
+     */
+    public function getTags()
+    {
+        return $this->property->getTags();
+    }
+
+    /**
+     * returns tag with given name
+     * @param string $tagName
+     * @return PropertyTag
+     */
+    public function getTag($tagName)
+    {
+        return $this->property->getTag($tagName);
+    }
+
+    /**
+     * returns column span
+     * @return string
+     */
+    public function getColspan()
+    {
+        return $this->property->getColspan();
+    }
+
+    /**
+     * returns title of property
+     * @param string $languageCode
+     * @return string
+     */
+    public function getTitle($languageCode)
+    {
+        return $this->property->getTitle($languageCode);
+    }
+
+    /**
+     * returns infoText of property
+     * @param string $languageCode
+     * @return string
+     */
+    public function getInfoText($languageCode)
+    {
+        return $this->property->getInfoText($languageCode);
+    }
+
+    /**
+     * returns placeholder of property
+     * @param string $languageCode
+     * @return string
+     */
+    public function getPlaceholder($languageCode)
+    {
+        return $this->property->getPlaceholder($languageCode);
     }
 }

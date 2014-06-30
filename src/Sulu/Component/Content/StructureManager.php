@@ -11,7 +11,10 @@
 namespace Sulu\Component\Content;
 
 
+use Psr\Log\LoggerInterface;
 use Sulu\Component\Content\Template\Dumper\PHPTemplateDumper;
+use Sulu\Component\Content\Template\Exception\InvalidXmlException;
+use Sulu\Component\Content\Template\Exception\TemplateNotFoundException;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\Config\ConfigCache;
@@ -29,24 +32,44 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
     private $loader;
 
     /**
+     * @var Template\Dumper\PHPTemplateDumper
+     */
+    private $dumper;
+
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * @var array
      */
     private $options;
 
     /**
      * @param LoaderInterface $loader XMLLoader to load xml templates
+     * @param PHPTemplateDumper $dumper
+     * @param LoggerInterface $logger
      * @param array $options
      * @internal param string $defaultPath array with paths to search for templates
      */
-    function __construct(LoaderInterface $loader, $options = array())
+    function __construct(
+        LoaderInterface $loader,
+        PHPTemplateDumper $dumper,
+        LoggerInterface $logger,
+        $options = array()
+    )
     {
         $this->loader = $loader;
+        $this->dumper = $dumper;
+        $this->logger = $logger;
         $this->setOptions($options);
     }
 
     /**
      * returns a structure for given key
      * @param $key string
+     * @throws Template\Exception\TemplateNotFoundException
      * @return StructureInterface
      */
     public function getStructure($key)
@@ -59,20 +82,36 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
 
         if (!$cache->isFresh()) {
             $path = $this->options['template_dir'] . '/' . $key . '.xml';
-            $result = $this->loader->load($path);
 
-            $resources[] = new FileResource($path);
-
-            $dumper = new PHPTemplateDumper($result);
-            $cache->write(
-                $dumper->dump(
-                    array(
-                        'cache_class' => $class,
-                        'base_class' => $this->options['base_class']
-                    )
-                ),
-                $resources
-            );
+            try {
+                $result = $this->loader->load($path);
+                $resources[] = new FileResource($path);
+                $cache->write(
+                    $this->dumper->dump(
+                        $result,
+                        array(
+                            'cache_class' => $class,
+                            'base_class' => $this->options['base_class']
+                        )
+                    ),
+                    $resources
+                );
+            } catch (\InvalidArgumentException $iae) {
+                $this->logger->warning(
+                    'The file "' . $path . '" does not match the schema and was skipped'
+                );
+                throw new TemplateNotFoundException($path, $key);
+            } catch (InvalidXmlException $iude) {
+                $this->logger->warning(
+                    'The file "' . $path . '" defined some invalid properties and was skipped'
+                );
+                throw new TemplateNotFoundException($path, $key);
+            } catch (\Twig_Error $twige) {
+                $this->logger->warning(
+                    'The file "' . $path . '" content cant be rendered with the template'
+                );
+                throw new TemplateNotFoundException($path, $key);
+            }
         }
 
         require_once $cache;
@@ -109,7 +148,11 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
             $key = str_replace($this->options['template_dir'], '', $file);
             $key = str_replace('/', '', $key);
             $key = str_replace('.xml', '', $key);
-            $result[] = $this->getStructure($key);
+            try {
+                $result[] = $this->getStructure($key);
+            } catch (TemplateNotFoundException $ex) {
+                $this->logger->warning($ex->getMessage());
+            }
         }
         return $result;
     }

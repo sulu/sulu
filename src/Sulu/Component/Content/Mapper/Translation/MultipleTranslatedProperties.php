@@ -38,13 +38,14 @@ class MultipleTranslatedProperties
     function __construct(
         $names,
         $languageNamespace,
-        $namespace = 'sulu'
+        $namespace = ''
     )
     {
         $this->languageNamespace = $languageNamespace;
         $this->properties = array();
         foreach ($names as $name) {
-            $this->properties[$name] = new Property($namespace . '-' . $name, 'none');
+            $propertyName = (!empty($namespace) ? $namespace . '-' : '') . $name;
+            $this->properties[$name] = new Property($propertyName, array(), 'none', false, true);
         }
     }
 

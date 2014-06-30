@@ -17,9 +17,12 @@ use PHPCR\Util\NodeHelper;
 use ReflectionMethod;
 use Sulu\Bundle\TestBundle\Testing\PhpcrTestCase;
 use Sulu\Component\Content\Block\BlockProperty;
+use Sulu\Component\Content\Block\BlockPropertyType;
 use Sulu\Component\Content\BreadcrumbItemInterface;
 use Sulu\Component\Content\ContentEvents;
 use Sulu\Component\Content\Property;
+use Sulu\Component\Content\PropertyTag;
+use Sulu\Component\Content\Section\SectionProperty;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Webspace\Localization;
 use Sulu\Component\Webspace\Webspace;
@@ -46,6 +49,10 @@ class ContentMapperTest extends PhpcrTestCase
             return $this->getStructureMock(2);
         } elseif ($structureKey == 'complex') {
             return $this->getStructureMock(3);
+        } elseif ($structureKey == 'mandatory') {
+            return $this->getStructureMock(4);
+        } elseif ($structureKey == 'section') {
+            return $this->getStructureMock(5);
         }
 
         return null;
@@ -55,25 +62,35 @@ class ContentMapperTest extends PhpcrTestCase
     {
         $structureMock = $this->getMockForAbstractClass(
             '\Sulu\Component\Content\Structure',
-            array('overview', 'asdf', 'asdf', 2400)
+            array($type !== 5 ? 'overview' : 'section', 'asdf', 'asdf', 2400)
         );
 
         $method = new ReflectionMethod(
-            get_class($structureMock), 'add'
+            get_class($structureMock), 'addChild'
         );
 
         $method->setAccessible(true);
         $method->invokeArgs(
             $structureMock,
             array(
-                new Property('title', 'text_line')
+                new Property(
+                    'name',
+                    '',
+                    'text_line',
+                    false,
+                    true,
+                    1,
+                    1,
+                    array(),
+                    $type !== 5 ? array(new PropertyTag('sulu.node.name', 10)) : array()
+                )
             )
         );
 
         $method->invokeArgs(
             $structureMock,
             array(
-                new Property('url', 'resource_locator')
+                new Property('url', '', 'resource_locator', false, true)
             )
         );
 
@@ -81,32 +98,64 @@ class ContentMapperTest extends PhpcrTestCase
             $method->invokeArgs(
                 $structureMock,
                 array(
-                    new Property('tags', 'text_line', false, false, 2, 10)
+                    new Property('tags', '', 'text_line', false, true, 2, 10)
                 )
             );
 
             $method->invokeArgs(
                 $structureMock,
                 array(
-                    new Property('article', 'text_area')
+                    new Property('article', '', 'text_area', false, true)
                 )
             );
         } elseif ($type == 2) {
+            // not translated
             $method->invokeArgs(
                 $structureMock,
                 array(
-                    new Property('blog', 'text_area')
+                    new Property('blog', '', 'text_area', false, false)
                 )
             );
         } elseif ($type == 3) {
-            $blockProperty = new BlockProperty('block1', 'block', false, 2, 10);
-            $blockProperty->addChild(new Property('title', 'text_line'));
-            $blockProperty->addChild(new Property('article', 'text_area'));
+            $blockProperty = new BlockProperty('block1', '', 'default', false, true, 2, 10);
+            $type = new BlockPropertyType('default', '');
+            $type->addChild(new Property('name', '', 'text_line', false, true));
+            $type->addChild(new Property('article', '', 'text_area', false, true));
+            $blockProperty->addType($type);
 
             $method->invokeArgs(
                 $structureMock,
                 array(
                     $blockProperty
+                )
+            );
+        } elseif ($type == 4) {
+            $method->invokeArgs(
+                $structureMock,
+                array(
+                    new Property('blog', '', 'text_line', true, true)
+                )
+            );
+        } elseif ($type == 5) {
+            $section = new SectionProperty('test',array(), '6');
+            $section->addChild(
+                new Property(
+                    'blog',
+                    '',
+                    'text_line',
+                    true,
+                    true,
+                    1,
+                    1,
+                    array(),
+                    array(new PropertyTag('sulu.node.name', 10))
+                )
+            );
+
+            $method->invokeArgs(
+                $structureMock,
+                array(
+                    $section
                 )
             );
         }
@@ -159,7 +208,7 @@ class ContentMapperTest extends PhpcrTestCase
     public function testSave()
     {
         $data = array(
-            'title' => 'Testtitle',
+            'name' => 'Testname',
             'tags' => array(
                 'tag1',
                 'tag2'
@@ -182,20 +231,23 @@ class ContentMapperTest extends PhpcrTestCase
 
         $content = $route->getPropertyValue('sulu:content');
 
-        $this->assertEquals('Testtitle', $content->getProperty('sulu_locale:de-title')->getString());
-        $this->assertEquals('default', $content->getProperty('sulu_locale:de-article')->getString());
-        $this->assertEquals(array('tag1', 'tag2'), $content->getPropertyValue('sulu_locale:de-tags'));
-        $this->assertEquals('overview', $content->getPropertyValue('sulu_locale:de-sulu-template'));
-        $this->assertEquals(StructureInterface::STATE_TEST, $content->getPropertyValue('sulu_locale:de-sulu-state'));
-        $this->assertEquals(false, $content->getPropertyValue('sulu_locale:de-sulu-navigation'));
-        $this->assertEquals(1, $content->getPropertyValue('sulu_locale:de-sulu-creator'));
-        $this->assertEquals(1, $content->getPropertyValue('sulu_locale:de-sulu-changer'));
+        $this->assertEquals('Testname', $content->getProperty($this->languageNamespace . ':de-name')->getString());
+        $this->assertEquals('default', $content->getProperty($this->languageNamespace . ':de-article')->getString());
+        $this->assertEquals(array('tag1', 'tag2'), $content->getPropertyValue($this->languageNamespace . ':de-tags'));
+        $this->assertEquals('overview', $content->getPropertyValue($this->languageNamespace . ':de-template'));
+        $this->assertEquals(
+            StructureInterface::STATE_TEST,
+            $content->getPropertyValue($this->languageNamespace . ':de-state')
+        );
+        $this->assertEquals(false, $content->getPropertyValue($this->languageNamespace . ':de-navigation'));
+        $this->assertEquals(1, $content->getPropertyValue($this->languageNamespace . ':de-creator'));
+        $this->assertEquals(1, $content->getPropertyValue($this->languageNamespace . ':de-changer'));
     }
 
     public function testLoad()
     {
         $data = array(
-            'title' => 'Testtitle',
+            'name' => 'Testname',
             'tags' => array(
                 'tag1',
                 'tag2'
@@ -216,10 +268,11 @@ class ContentMapperTest extends PhpcrTestCase
         $content = $this->mapper->load($structure->getUuid(), 'default', 'de');
 
         $this->assertNotNull($content->getUuid());
+        $this->assertEquals('/testname', $content->getPath());
         $this->assertEquals('default', $content->getWebspaceKey());
         $this->assertEquals('de', $content->getLanguageCode());
         $this->assertEquals('overview', $content->getKey());
-        $this->assertEquals('Testtitle', $content->title);
+        $this->assertEquals('Testname', $content->name);
         $this->assertEquals('default', $content->article);
         $this->assertEquals('/news/test', $content->url);
         $this->assertEquals(array('tag1', 'tag2'), $content->tags);
@@ -232,7 +285,7 @@ class ContentMapperTest extends PhpcrTestCase
     public function testNewProperty()
     {
         $data = array(
-            'title' => 'Testtitle',
+            'name' => 'Testname',
             'tags' => array(
                 'tag1',
                 'tag2'
@@ -256,7 +309,7 @@ class ContentMapperTest extends PhpcrTestCase
         $contentNode = $route->getPropertyValue('sulu:content');
         // simulate new property article, by deleting the property
         /** @var PropertyInterface $articleProperty */
-        $articleProperty = $contentNode->getProperty('sulu_locale:de-article');
+        $articleProperty = $contentNode->getProperty($this->languageNamespace . ':de-article');
         $this->session->removeItem($articleProperty->getPath());
         $this->session->save();
 
@@ -275,7 +328,7 @@ class ContentMapperTest extends PhpcrTestCase
         /** @var StructureInterface $content */
         $content = $this->mapper->load($contentBefore->getUuid(), 'default', 'de');
         // test values
-        $this->assertEquals('Testtitle', $content->title);
+        $this->assertEquals('Testname', $content->name);
         $this->assertEquals(null, $content->article);
         $this->assertEquals('/news/test', $content->url);
         $this->assertEquals(array('tag1', 'tag2'), $content->tags);
@@ -287,7 +340,7 @@ class ContentMapperTest extends PhpcrTestCase
     public function testLoadByRL()
     {
         $data = array(
-            'title' => 'Testtitle',
+            'name' => 'Testname',
             'tags' => array(
                 'tag1',
                 'tag2'
@@ -307,7 +360,7 @@ class ContentMapperTest extends PhpcrTestCase
 
         $content = $this->mapper->loadByResourceLocator('/news/test', 'default', 'de');
 
-        $this->assertEquals('Testtitle', $content->title);
+        $this->assertEquals('Testname', $content->name);
         $this->assertEquals('default', $content->article);
         $this->assertEquals('/news/test', $content->url);
         $this->assertEquals(array('tag1', 'tag2'), $content->tags);
@@ -319,7 +372,7 @@ class ContentMapperTest extends PhpcrTestCase
     public function testUpdate()
     {
         $data = array(
-            'title' => 'Testtitle',
+            'name' => 'Testname',
             'tags' => array(
                 'tag1',
                 'tag2'
@@ -349,7 +402,7 @@ class ContentMapperTest extends PhpcrTestCase
         // check read
         $content = $this->mapper->loadByResourceLocator('/news/test', 'default', 'de');
 
-        $this->assertEquals('Testtitle', $content->title);
+        $this->assertEquals('Testname', $content->name);
         $this->assertEquals('thats a new test', $content->article);
         $this->assertEquals('/news/test', $content->url);
         $this->assertEquals(array('thats cool', 'tag2', 'tag3'), $content->tags);
@@ -363,19 +416,28 @@ class ContentMapperTest extends PhpcrTestCase
 
         $content = $route->getPropertyValue('sulu:content');
 
-        $this->assertEquals('Testtitle', $content->getProperty('sulu_locale:de-title')->getString());
-        $this->assertEquals('thats a new test', $content->getProperty('sulu_locale:de-article')->getString());
-        $this->assertEquals(array('thats cool', 'tag2', 'tag3'), $content->getPropertyValue('sulu_locale:de-tags'));
-        $this->assertEquals('overview', $content->getPropertyValue('sulu_locale:de-sulu-template'));
-        $this->assertEquals(StructureInterface::STATE_TEST, $content->getPropertyValue('sulu_locale:de-sulu-state'));
-        $this->assertEquals(1, $content->getPropertyValue('sulu_locale:de-sulu-creator'));
-        $this->assertEquals(1, $content->getPropertyValue('sulu_locale:de-sulu-changer'));
+        $this->assertEquals('Testname', $content->getProperty($this->languageNamespace . ':de-name')->getString());
+        $this->assertEquals(
+            'thats a new test',
+            $content->getProperty($this->languageNamespace . ':de-article')->getString()
+        );
+        $this->assertEquals(
+            array('thats cool', 'tag2', 'tag3'),
+            $content->getPropertyValue($this->languageNamespace . ':de-tags')
+        );
+        $this->assertEquals('overview', $content->getPropertyValue($this->languageNamespace . ':de-template'));
+        $this->assertEquals(
+            StructureInterface::STATE_TEST,
+            $content->getPropertyValue($this->languageNamespace . ':de-state')
+        );
+        $this->assertEquals(1, $content->getPropertyValue($this->languageNamespace . ':de-creator'));
+        $this->assertEquals(1, $content->getPropertyValue($this->languageNamespace . ':de-changer'));
     }
 
     public function testPartialUpdate()
     {
         $data = array(
-            'title' => 'Testtitle',
+            'name' => 'Testname',
             'tags' => array(
                 'tag1',
                 'tag2'
@@ -405,7 +467,7 @@ class ContentMapperTest extends PhpcrTestCase
         // check read
         $content = $this->mapper->loadByResourceLocator('/news/test', 'default', 'de');
 
-        $this->assertEquals('Testtitle', $content->title);
+        $this->assertEquals('Testname', $content->name);
         $this->assertEquals('default', $content->article);
         $this->assertEquals('/news/test', $content->url);
         $this->assertEquals(array('tag2', 'tag3'), $content->tags);
@@ -419,19 +481,22 @@ class ContentMapperTest extends PhpcrTestCase
 
         $content = $route->getPropertyValue('sulu:content');
 
-        $this->assertEquals('Testtitle', $content->getProperty('sulu_locale:de-title')->getString());
-        $this->assertEquals('default', $content->getProperty('sulu_locale:de-article')->getString());
-        $this->assertEquals(array('tag2', 'tag3'), $content->getPropertyValue('sulu_locale:de-tags'));
-        $this->assertEquals('overview', $content->getPropertyValue('sulu_locale:de-sulu-template'));
-        $this->assertEquals(StructureInterface::STATE_TEST, $content->getPropertyValue('sulu_locale:de-sulu-state'));
-        $this->assertEquals(1, $content->getPropertyValue('sulu_locale:de-sulu-creator'));
-        $this->assertEquals(1, $content->getPropertyValue('sulu_locale:de-sulu-changer'));
+        $this->assertEquals('Testname', $content->getProperty($this->languageNamespace . ':de-name')->getString());
+        $this->assertEquals('default', $content->getProperty($this->languageNamespace . ':de-article')->getString());
+        $this->assertEquals(array('tag2', 'tag3'), $content->getPropertyValue($this->languageNamespace . ':de-tags'));
+        $this->assertEquals('overview', $content->getPropertyValue($this->languageNamespace . ':de-template'));
+        $this->assertEquals(
+            StructureInterface::STATE_TEST,
+            $content->getPropertyValue($this->languageNamespace . ':de-state')
+        );
+        $this->assertEquals(1, $content->getPropertyValue($this->languageNamespace . ':de-creator'));
+        $this->assertEquals(1, $content->getPropertyValue($this->languageNamespace . ':de-changer'));
     }
 
     public function testNonPartialUpdate()
     {
         $data = array(
-            'title' => 'Testtitle',
+            'name' => 'Testname',
             'tags' => array(
                 'tag1',
                 'tag2'
@@ -461,7 +526,7 @@ class ContentMapperTest extends PhpcrTestCase
         // check read
         $content = $this->mapper->loadByResourceLocator('/news/test', 'default', 'de');
 
-        $this->assertEquals('Testtitle', $content->title);
+        $this->assertEquals('Testname', $content->name);
         $this->assertEquals(null, $content->article);
         $this->assertEquals('/news/test', $content->url);
         $this->assertEquals(array('tag2', 'tag3'), $content->tags);
@@ -475,19 +540,22 @@ class ContentMapperTest extends PhpcrTestCase
 
         $content = $route->getPropertyValue('sulu:content');
 
-        $this->assertEquals('Testtitle', $content->getProperty('sulu_locale:de-title')->getString());
-        $this->assertEquals(false, $content->hasProperty('sulu_locale:de-article'));
-        $this->assertEquals(array('tag2', 'tag3'), $content->getPropertyValue('sulu_locale:de-tags'));
-        $this->assertEquals('overview', $content->getPropertyValue('sulu_locale:de-sulu-template'));
-        $this->assertEquals(StructureInterface::STATE_TEST, $content->getPropertyValue('sulu_locale:de-sulu-state'));
-        $this->assertEquals(1, $content->getPropertyValue('sulu_locale:de-sulu-creator'));
-        $this->assertEquals(1, $content->getPropertyValue('sulu_locale:de-sulu-changer'));
+        $this->assertEquals('Testname', $content->getProperty($this->languageNamespace . ':de-name')->getString());
+        $this->assertEquals(false, $content->hasProperty($this->languageNamespace . ':de-article'));
+        $this->assertEquals(array('tag2', 'tag3'), $content->getPropertyValue($this->languageNamespace . ':de-tags'));
+        $this->assertEquals('overview', $content->getPropertyValue($this->languageNamespace . ':de-template'));
+        $this->assertEquals(
+            StructureInterface::STATE_TEST,
+            $content->getPropertyValue($this->languageNamespace . ':de-state')
+        );
+        $this->assertEquals(1, $content->getPropertyValue($this->languageNamespace . ':de-creator'));
+        $this->assertEquals(1, $content->getPropertyValue($this->languageNamespace . ':de-changer'));
     }
 
     public function testUpdateNullValue()
     {
         $data = array(
-            'title' => 'Testtitle',
+            'name' => 'Testname',
             'tags' => array(
                 'tag1',
                 'tag2'
@@ -516,7 +584,7 @@ class ContentMapperTest extends PhpcrTestCase
         // check read
         $content = $this->mapper->loadByResourceLocator('/news/test', 'default', 'de');
 
-        $this->assertEquals('Testtitle', $content->title);
+        $this->assertEquals('Testname', $content->name);
         $this->assertEquals(null, $content->article);
         $this->assertEquals('/news/test', $content->url);
         $this->assertEquals(null, $content->tags);
@@ -530,19 +598,22 @@ class ContentMapperTest extends PhpcrTestCase
 
         $content = $route->getPropertyValue('sulu:content');
 
-        $this->assertEquals('Testtitle', $content->getProperty('sulu_locale:de-title')->getString());
-        $this->assertEquals(false, $content->hasProperty('sulu_locale:de-article'));
-        $this->assertEquals(false, $content->hasProperty('sulu_locale:de-tags'));
-        $this->assertEquals('overview', $content->getPropertyValue('sulu_locale:de-sulu-template'));
-        $this->assertEquals(StructureInterface::STATE_TEST, $content->getPropertyValue('sulu_locale:de-sulu-state'));
-        $this->assertEquals(1, $content->getPropertyValue('sulu_locale:de-sulu-creator'));
-        $this->assertEquals(1, $content->getPropertyValue('sulu_locale:de-sulu-changer'));
+        $this->assertEquals('Testname', $content->getProperty($this->languageNamespace . ':de-name')->getString());
+        $this->assertEquals(false, $content->hasProperty($this->languageNamespace . ':de-article'));
+        $this->assertEquals(false, $content->hasProperty($this->languageNamespace . ':de-tags'));
+        $this->assertEquals('overview', $content->getPropertyValue($this->languageNamespace . ':de-template'));
+        $this->assertEquals(
+            StructureInterface::STATE_TEST,
+            $content->getPropertyValue($this->languageNamespace . ':de-state')
+        );
+        $this->assertEquals(1, $content->getPropertyValue($this->languageNamespace . ':de-creator'));
+        $this->assertEquals(1, $content->getPropertyValue($this->languageNamespace . ':de-changer'));
     }
 
     public function testUpdateTemplate()
     {
         $data = array(
-            'title' => 'Testtitle',
+            'name' => 'Testname',
             'tags' => array(
                 'tag1',
                 'tag2'
@@ -563,7 +634,7 @@ class ContentMapperTest extends PhpcrTestCase
 
         // change simple content
         $data = array(
-            'title' => 'Testtitle',
+            'name' => 'Testname',
             'blog' => 'this is a blog test'
         );
 
@@ -578,7 +649,7 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals(false, $content->hasProperty('tags'));
 
         // old properties are right
-        $this->assertEquals('Testtitle', $content->title);
+        $this->assertEquals('Testname', $content->name);
         $this->assertEquals('/news/test', $content->url);
         $this->assertEquals(1, $content->creator);
         $this->assertEquals(1, $content->changer);
@@ -592,21 +663,21 @@ class ContentMapperTest extends PhpcrTestCase
         $content = $route->getPropertyValue('sulu:content');
 
         // old properties exists in node
-        $this->assertEquals('default', $content->getPropertyValue('sulu_locale:de-article'));
-        $this->assertEquals(array('tag1', 'tag2'), $content->getPropertyValue('sulu_locale:de-tags'));
+        $this->assertEquals('default', $content->getPropertyValue($this->languageNamespace . ':de-article'));
+        $this->assertEquals(array('tag1', 'tag2'), $content->getPropertyValue($this->languageNamespace . ':de-tags'));
 
         // property of new structure exists
-        $this->assertEquals('Testtitle', $content->getProperty('sulu_locale:de-title')->getString());
-        $this->assertEquals('this is a blog test', $content->getPropertyValue('sulu_locale:de-blog'));
-        $this->assertEquals('default', $content->getPropertyValue('sulu_locale:de-sulu-template'));
-        $this->assertEquals(1, $content->getPropertyValue('sulu_locale:de-sulu-creator'));
-        $this->assertEquals(1, $content->getPropertyValue('sulu_locale:de-sulu-changer'));
+        $this->assertEquals('Testname', $content->getProperty($this->languageNamespace . ':de-name')->getString());
+        $this->assertEquals('this is a blog test', $content->getPropertyValue('blog'));
+        $this->assertEquals('default', $content->getPropertyValue($this->languageNamespace . ':de-template'));
+        $this->assertEquals(1, $content->getPropertyValue($this->languageNamespace . ':de-creator'));
+        $this->assertEquals(1, $content->getPropertyValue($this->languageNamespace . ':de-changer'));
     }
 
     public function testUpdateURL()
     {
         $data = array(
-            'title' => 'Testtitle',
+            'name' => 'Testname',
             'tags' => array(
                 'tag1',
                 'tag2'
@@ -634,7 +705,7 @@ class ContentMapperTest extends PhpcrTestCase
         // check read
         $content = $this->mapper->loadByResourceLocator('/news/test/test/test', 'default', 'de');
 
-        $this->assertEquals('Testtitle', $content->title);
+        $this->assertEquals('Testname', $content->name);
         $this->assertEquals('default', $content->article);
         $this->assertEquals('/news/test/test/test', $content->url);
         $this->assertEquals(array('tag1', 'tag2'), $content->tags);
@@ -648,12 +719,12 @@ class ContentMapperTest extends PhpcrTestCase
 
         $content = $route->getPropertyValue('sulu:content');
 
-        $this->assertEquals('Testtitle', $content->getProperty('sulu_locale:de-title')->getString());
-        $this->assertEquals('default', $content->getProperty('sulu_locale:de-article')->getString());
-        $this->assertEquals(array('tag1', 'tag2'), $content->getPropertyValue('sulu_locale:de-tags'));
-        $this->assertEquals('overview', $content->getPropertyValue('sulu_locale:de-sulu-template'));
-        $this->assertEquals(1, $content->getPropertyValue('sulu_locale:de-sulu-creator'));
-        $this->assertEquals(1, $content->getPropertyValue('sulu_locale:de-sulu-changer'));
+        $this->assertEquals('Testname', $content->getProperty($this->languageNamespace . ':de-name')->getString());
+        $this->assertEquals('default', $content->getProperty($this->languageNamespace . ':de-article')->getString());
+        $this->assertEquals(array('tag1', 'tag2'), $content->getPropertyValue($this->languageNamespace . ':de-tags'));
+        $this->assertEquals('overview', $content->getPropertyValue($this->languageNamespace . ':de-template'));
+        $this->assertEquals(1, $content->getPropertyValue($this->languageNamespace . ':de-creator'));
+        $this->assertEquals(1, $content->getPropertyValue($this->languageNamespace . ':de-changer'));
 
         // old resource locator is not a route (has property sulu:content), it is a history (has property sulu:route)
         $oldRoute = $root->getNode('cmf/default/routes/de/news/test');
@@ -669,7 +740,7 @@ class ContentMapperTest extends PhpcrTestCase
     public function testNameUpdate()
     {
         $data = array(
-            'title' => 'Testtitle',
+            'name' => 'Testname',
             'tags' => array(
                 'tag1',
                 'tag2'
@@ -689,7 +760,7 @@ class ContentMapperTest extends PhpcrTestCase
         $structure = $this->mapper->save($data, 'overview', 'default', 'de', 1);
 
         // change simple content
-        $data['title'] = 'test';
+        $data['name'] = 'test';
 
         // update content
         $this->mapper->save($data, 'overview', 'default', 'de', 1, true, $structure->getUuid());
@@ -698,7 +769,7 @@ class ContentMapperTest extends PhpcrTestCase
 //        // check read
 //        $content = $this->mapper->loadByResourceLocator('/news/test', 'default', 'de');
 //
-//        $this->assertEquals('default', $content->title);
+//        $this->assertEquals('default', $content->name);
 //        $this->assertEquals('default', $content->article);
 //        $this->assertEquals('/news/test', $content->url);
 //        $this->assertEquals(array('tag1', 'tag2'), $content->tags);
@@ -709,19 +780,22 @@ class ContentMapperTest extends PhpcrTestCase
         $root = $this->session->getRootNode();
         $content = $root->getNode('cmf/default/contents/test');
 
-        $this->assertEquals('test', $content->getProperty('sulu_locale:de-title')->getString());
-        $this->assertEquals('default', $content->getProperty('sulu_locale:de-article')->getString());
-        $this->assertEquals(array('tag1', 'tag2'), $content->getPropertyValue('sulu_locale:de-tags'));
-        $this->assertEquals('overview', $content->getPropertyValue('sulu_locale:de-sulu-template'));
-        $this->assertEquals(StructureInterface::STATE_TEST, $content->getPropertyValue('sulu_locale:de-sulu-state'));
-        $this->assertEquals(1, $content->getPropertyValue('sulu_locale:de-sulu-creator'));
-        $this->assertEquals(1, $content->getPropertyValue('sulu_locale:de-sulu-changer'));
+        $this->assertEquals('test', $content->getProperty($this->languageNamespace . ':de-name')->getString());
+        $this->assertEquals('default', $content->getProperty($this->languageNamespace . ':de-article')->getString());
+        $this->assertEquals(array('tag1', 'tag2'), $content->getPropertyValue($this->languageNamespace . ':de-tags'));
+        $this->assertEquals('overview', $content->getPropertyValue($this->languageNamespace . ':de-template'));
+        $this->assertEquals(
+            StructureInterface::STATE_TEST,
+            $content->getPropertyValue($this->languageNamespace . ':de-state')
+        );
+        $this->assertEquals(1, $content->getPropertyValue($this->languageNamespace . ':de-creator'));
+        $this->assertEquals(1, $content->getPropertyValue($this->languageNamespace . ':de-changer'));
     }
 
     public function testUpdateUrlTwice()
     {
         $data = array(
-            'title' => 'Testtitle',
+            'name' => 'Testname',
             'tags' => array(
                 'tag1',
                 'tag2'
@@ -748,7 +822,7 @@ class ContentMapperTest extends PhpcrTestCase
 
         // check read
         $content = $this->mapper->loadByResourceLocator('/news/test/test', 'default', 'de');
-        $this->assertEquals('Testtitle', $content->title);
+        $this->assertEquals('Testname', $content->name);
 
         // change simple content
         $data['url'] = '/news/asdf/test/test';
@@ -758,7 +832,7 @@ class ContentMapperTest extends PhpcrTestCase
 
         // check read
         $content = $this->mapper->loadByResourceLocator('/news/asdf/test/test', 'default', 'de');
-        $this->assertEquals('Testtitle', $content->title);
+        $this->assertEquals('Testname', $content->name);
         $this->assertEquals('default', $content->article);
         $this->assertEquals('/news/asdf/test/test', $content->url);
         $this->assertEquals(array('tag1', 'tag2'), $content->tags);
@@ -772,13 +846,16 @@ class ContentMapperTest extends PhpcrTestCase
 
         $content = $route->getPropertyValue('sulu:content');
 
-        $this->assertEquals('Testtitle', $content->getProperty('sulu_locale:de-title')->getString());
-        $this->assertEquals('default', $content->getProperty('sulu_locale:de-article')->getString());
-        $this->assertEquals(array('tag1', 'tag2'), $content->getPropertyValue('sulu_locale:de-tags'));
-        $this->assertEquals('overview', $content->getPropertyValue('sulu_locale:de-sulu-template'));
-        $this->assertEquals(StructureInterface::STATE_TEST, $content->getPropertyValue('sulu_locale:de-sulu-state'));
-        $this->assertEquals(1, $content->getPropertyValue('sulu_locale:de-sulu-creator'));
-        $this->assertEquals(1, $content->getPropertyValue('sulu_locale:de-sulu-changer'));
+        $this->assertEquals('Testname', $content->getProperty($this->languageNamespace . ':de-name')->getString());
+        $this->assertEquals('default', $content->getProperty($this->languageNamespace . ':de-article')->getString());
+        $this->assertEquals(array('tag1', 'tag2'), $content->getPropertyValue($this->languageNamespace . ':de-tags'));
+        $this->assertEquals('overview', $content->getPropertyValue($this->languageNamespace . ':de-template'));
+        $this->assertEquals(
+            StructureInterface::STATE_TEST,
+            $content->getPropertyValue($this->languageNamespace . ':de-state')
+        );
+        $this->assertEquals(1, $content->getPropertyValue($this->languageNamespace . ':de-creator'));
+        $this->assertEquals(1, $content->getPropertyValue($this->languageNamespace . ':de-changer'));
 
         // old resource locator is not a route (has property sulu:content), it is a history (has property sulu:route)
         $oldRoute = $root->getNode('cmf/default/routes/de/news/test');
@@ -795,7 +872,7 @@ class ContentMapperTest extends PhpcrTestCase
     {
         $data = array(
             array(
-                'title' => 'News',
+                'name' => 'News',
                 'tags' => array(
                     'tag1',
                     'tag2'
@@ -804,7 +881,7 @@ class ContentMapperTest extends PhpcrTestCase
                 'article' => 'asdfasdfasdf'
             ),
             array(
-                'title' => 'Testnews-1',
+                'name' => 'Testnews-1',
                 'tags' => array(
                     'tag1',
                     'tag2'
@@ -813,7 +890,7 @@ class ContentMapperTest extends PhpcrTestCase
                 'article' => 'default'
             ),
             array(
-                'title' => 'Testnews-2',
+                'name' => 'Testnews-2',
                 'tags' => array(
                     'tag1',
                     'tag2'
@@ -822,7 +899,7 @@ class ContentMapperTest extends PhpcrTestCase
                 'article' => 'default'
             ),
             array(
-                'title' => 'Testnews-2-1',
+                'name' => 'Testnews-2-1',
                 'tags' => array(
                     'tag1',
                     'tag2'
@@ -849,19 +926,19 @@ class ContentMapperTest extends PhpcrTestCase
 
         // check nodes
         $content = $this->mapper->loadByResourceLocator('/news', 'default', 'de');
-        $this->assertEquals('News', $content->title);
+        $this->assertEquals('News', $content->name);
         $this->assertTrue($content->getHasChildren());
 
         $content = $this->mapper->loadByResourceLocator('/news/test-1', 'default', 'de');
-        $this->assertEquals('Testnews-1', $content->title);
+        $this->assertEquals('Testnews-1', $content->name);
         $this->assertFalse($content->getHasChildren());
 
         $content = $this->mapper->loadByResourceLocator('/news/test-2', 'default', 'de');
-        $this->assertEquals('Testnews-2', $content->title);
+        $this->assertEquals('Testnews-2', $content->name);
         $this->assertTrue($content->getHasChildren());
 
         $content = $this->mapper->loadByResourceLocator('/news/test-2/test-1', 'default', 'de');
-        $this->assertEquals('Testnews-2-1', $content->title);
+        $this->assertEquals('Testnews-2-1', $content->name);
         $this->assertFalse($content->getHasChildren());
 
         // check content repository
@@ -870,24 +947,24 @@ class ContentMapperTest extends PhpcrTestCase
 
         $newsNode = $contentRootNode->getNode('news');
         $this->assertEquals(2, sizeof($newsNode->getNodes()));
-        $this->assertEquals('News', $newsNode->getPropertyValue('sulu_locale:de-title'));
+        $this->assertEquals('News', $newsNode->getPropertyValue($this->languageNamespace . ':de-name'));
 
         $testNewsNode = $newsNode->getNode('testnews-1');
-        $this->assertEquals('Testnews-1', $testNewsNode->getPropertyValue('sulu_locale:de-title'));
+        $this->assertEquals('Testnews-1', $testNewsNode->getPropertyValue($this->languageNamespace . ':de-name'));
 
         $testNewsNode = $newsNode->getNode('testnews-2');
         $this->assertEquals(1, sizeof($testNewsNode->getNodes()));
-        $this->assertEquals('Testnews-2', $testNewsNode->getPropertyValue('sulu_locale:de-title'));
+        $this->assertEquals('Testnews-2', $testNewsNode->getPropertyValue($this->languageNamespace . ':de-name'));
 
         $subTestNewsNode = $testNewsNode->getNode('testnews-2-1');
-        $this->assertEquals('Testnews-2-1', $subTestNewsNode->getPropertyValue('sulu_locale:de-title'));
+        $this->assertEquals('Testnews-2-1', $subTestNewsNode->getPropertyValue($this->languageNamespace . ':de-name'));
     }
 
     private function prepareTreeTestData()
     {
         $data = array(
             array(
-                'title' => 'News',
+                'name' => 'News',
                 'tags' => array(
                     'tag1',
                     'tag2'
@@ -896,7 +973,7 @@ class ContentMapperTest extends PhpcrTestCase
                 'article' => 'asdfasdfasdf'
             ),
             array(
-                'title' => 'Testnews-1',
+                'name' => 'Testnews-1',
                 'tags' => array(
                     'tag1',
                     'tag2'
@@ -905,7 +982,7 @@ class ContentMapperTest extends PhpcrTestCase
                 'article' => 'default'
             ),
             array(
-                'title' => 'Testnews-2',
+                'name' => 'Testnews-2',
                 'tags' => array(
                     'tag1',
                     'tag2'
@@ -914,7 +991,7 @@ class ContentMapperTest extends PhpcrTestCase
                 'article' => 'default'
             ),
             array(
-                'title' => 'Testnews-2-1',
+                'name' => 'Testnews-2-1',
                 'tags' => array(
                     'tag1',
                     'tag2'
@@ -931,7 +1008,7 @@ class ContentMapperTest extends PhpcrTestCase
                 $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeEvent')
             );
 
-        $this->mapper->saveStartPage(array('title' => 'Start Page'), 'overview', 'default', 'de', 1);
+        $this->mapper->saveStartPage(array('name' => 'Start Page'), 'overview', 'default', 'de', 1);
 
         // save root content
         $result['root'] = $this->mapper->save($data[0], 'overview', 'default', 'de', 1);
@@ -974,19 +1051,19 @@ class ContentMapperTest extends PhpcrTestCase
         $children = $this->mapper->loadByParent(null, 'default', 'de');
         $this->assertEquals(1, sizeof($children));
 
-        $this->assertEquals('News', $children[0]->title);
+        $this->assertEquals('News', $children[0]->name);
 
         // get children from 'News'
         $rootChildren = $this->mapper->loadByParent($root->getUuid(), 'default', 'de');
         $this->assertEquals(2, sizeof($rootChildren));
 
-        $this->assertEquals('Testnews-1', $rootChildren[0]->title);
-        $this->assertEquals('Testnews-2', $rootChildren[1]->title);
+        $this->assertEquals('Testnews-1', $rootChildren[0]->name);
+        $this->assertEquals('Testnews-2', $rootChildren[1]->name);
 
         $testNewsChildren = $this->mapper->loadByParent($child->getUuid(), 'default', 'de');
         $this->assertEquals(1, sizeof($testNewsChildren));
 
-        $this->assertEquals('Testnews-2-1', $testNewsChildren[0]->title);
+        $this->assertEquals('Testnews-2-1', $testNewsChildren[0]->name);
 
         $nodes = $this->mapper->loadByParent($root->getUuid(), 'default', 'de', null);
         $this->assertEquals(3, sizeof($nodes));
@@ -1002,21 +1079,21 @@ class ContentMapperTest extends PhpcrTestCase
 
         $children = $this->mapper->loadByParent(null, 'default', 'de', 2, true);
         $this->assertEquals(3, sizeof($children));
-        $this->assertEquals('News', $children[0]->title);
-        $this->assertEquals('Testnews-1', $children[1]->title);
-        $this->assertEquals('Testnews-2', $children[2]->title);
+        $this->assertEquals('News', $children[0]->name);
+        $this->assertEquals('Testnews-1', $children[1]->name);
+        $this->assertEquals('Testnews-2', $children[2]->name);
 
 
         $children = $this->mapper->loadByParent(null, 'default', 'de', 3, true);
         $this->assertEquals(4, sizeof($children));
-        $this->assertEquals('News', $children[0]->title);
-        $this->assertEquals('Testnews-1', $children[1]->title);
-        $this->assertEquals('Testnews-2', $children[2]->title);
-        $this->assertEquals('Testnews-2-1', $children[3]->title);
+        $this->assertEquals('News', $children[0]->name);
+        $this->assertEquals('Testnews-1', $children[1]->name);
+        $this->assertEquals('Testnews-2', $children[2]->name);
+        $this->assertEquals('Testnews-2-1', $children[3]->name);
 
         $children = $this->mapper->loadByParent($child->getUuid(), 'default', 'de', 3, true);
         $this->assertEquals(1, sizeof($children));
-        $this->assertEquals('Testnews-2-1', $children[0]->title);
+        $this->assertEquals('Testnews-2-1', $children[0]->name);
     }
 
     public function testLoadByParentTree()
@@ -1030,50 +1107,58 @@ class ContentMapperTest extends PhpcrTestCase
         $children = $this->mapper->loadByParent(null, 'default', 'de', 2, false);
         // /News
         $this->assertEquals(1, sizeof($children));
-        $this->assertEquals('News', $children[0]->title);
+        $this->assertEquals('News', $children[0]->name);
+        $this->assertEquals('/news', $children[0]->path);
 
         // /News/Testnews-1
         $tmp = $children[0]->getChildren()[0];
         $this->assertEquals(0, sizeof($tmp->getChildren()));
-        $this->assertEquals('Testnews-1', $tmp->title);
+        $this->assertEquals('Testnews-1', $tmp->name);
+        $this->assertEquals('/news/testnews-1', $tmp->path);
 
         // /News/Testnews-2
         $tmp = $children[0]->getChildren()[1];
         $this->assertEquals(null, $tmp->getChildren());
         $this->assertTrue($tmp->getHasChildren());
-        $this->assertEquals('Testnews-2', $tmp->title);
+        $this->assertEquals('Testnews-2', $tmp->name);
+        $this->assertEquals('/news/testnews-2', $tmp->path);
 
 
         $children = $this->mapper->loadByParent(null, 'default', 'de', 3, false);
         // /News
         $this->assertEquals(1, sizeof($children));
-        $this->assertEquals('News', $children[0]->title);
+        $this->assertEquals('News', $children[0]->name);
+        $this->assertEquals('/news', $children[0]->path);
 
         // /News/Testnews-1
         $tmp = $children[0]->getChildren()[0];
         $this->assertEquals(0, sizeof($tmp->getChildren()));
-        $this->assertEquals('Testnews-1', $tmp->title);
+        $this->assertEquals('Testnews-1', $tmp->name);
+        $this->assertEquals('/news/testnews-1', $tmp->path);
 
         // /News/Testnews-2
         $tmp = $children[0]->getChildren()[1];
         $this->assertEquals(1, sizeof($tmp->getChildren()));
-        $this->assertEquals('Testnews-2', $tmp->title);
+        $this->assertEquals('Testnews-2', $tmp->name);
+        $this->assertEquals('/news/testnews-2', $tmp->path);
 
         // /News/Testnews-2/Testnews-2-1
         $tmp = $children[0]->getChildren()[1]->getChildren()[0];
         $this->assertEquals(null, $tmp->getChildren());
         $this->assertFalse($tmp->getHasChildren());
-        $this->assertEquals('Testnews-2-1', $tmp->title);
+        $this->assertEquals('Testnews-2-1', $tmp->name);
+        $this->assertEquals('/news/testnews-2/testnews-2-1', $tmp->path);
 
         $children = $this->mapper->loadByParent($child->getUuid(), 'default', 'de', 3, false);
         $this->assertEquals(1, sizeof($children));
-        $this->assertEquals('Testnews-2-1', $children[0]->title);
+        $this->assertEquals('Testnews-2-1', $children[0]->name);
+        $this->assertEquals('/news/testnews-2/testnews-2-1', $children[0]->path);
     }
 
     public function testStartPage()
     {
         $data = array(
-            'title' => 'startpage',
+            'name' => 'startpage',
             'tags' => array(
                 'tag1',
                 'tag2'
@@ -1085,19 +1170,19 @@ class ContentMapperTest extends PhpcrTestCase
         $this->mapper->saveStartPage($data, 'overview', 'default', 'en', 1, false);
 
         $startPage = $this->mapper->loadStartPage('default', 'en');
-        $this->assertEquals('startpage', $startPage->title);
+        $this->assertEquals('startpage', $startPage->name);
         $this->assertEquals('/', $startPage->url);
 
-        $data['title'] = 'new-startpage';
+        $data['name'] = 'new-startpage';
 
         $this->mapper->saveStartPage($data, 'overview', 'default', 'en', 1, false);
 
         $startPage = $this->mapper->loadStartPage('default', 'en');
-        $this->assertEquals('new-startpage', $startPage->title);
+        $this->assertEquals('new-startpage', $startPage->name);
         $this->assertEquals('/', $startPage->url);
 
         $startPage = $this->mapper->loadByResourceLocator('/', 'default', 'en');
-        $this->assertEquals('new-startpage', $startPage->title);
+        $this->assertEquals('new-startpage', $startPage->name);
         $this->assertEquals('/', $startPage->url);
     }
 
@@ -1105,7 +1190,7 @@ class ContentMapperTest extends PhpcrTestCase
     {
         $data = array(
             array(
-                'title' => 'News',
+                'name' => 'News',
                 'tags' => array(
                     'tag1',
                     'tag2'
@@ -1114,7 +1199,7 @@ class ContentMapperTest extends PhpcrTestCase
                 'article' => 'asdfasdfasdf'
             ),
             array(
-                'title' => 'Testnews-1',
+                'name' => 'Testnews-1',
                 'tags' => array(
                     'tag1',
                     'tag2'
@@ -1123,7 +1208,7 @@ class ContentMapperTest extends PhpcrTestCase
                 'article' => 'default'
             ),
             array(
-                'title' => 'Testnews-2',
+                'name' => 'Testnews-2',
                 'tags' => array(
                     'tag1',
                     'tag2'
@@ -1132,7 +1217,7 @@ class ContentMapperTest extends PhpcrTestCase
                 'article' => 'default'
             ),
             array(
-                'title' => 'Testnews-2-1',
+                'name' => 'Testnews-2-1',
                 'tags' => array(
                     'tag1',
                     'tag2'
@@ -1180,7 +1265,7 @@ class ContentMapperTest extends PhpcrTestCase
     public function testCleanUp()
     {
         $data = array(
-            'title' => 'ä   ü ö   Ä Ü Ö',
+            'name' => 'ä   ü ö   Ä Ü Ö',
             'tags' => array(
                 'tag1',
                 'tag2'
@@ -1215,7 +1300,7 @@ class ContentMapperTest extends PhpcrTestCase
 
         // default state TEST
         $data1 = array(
-            'title' => 't1'
+            'name' => 't1'
         );
         $data1 = $this->mapper->save($data1, 'overview', 'default', 'de', 1);
         $this->assertEquals(StructureInterface::STATE_TEST, $data1->getNodeState());
@@ -1224,7 +1309,7 @@ class ContentMapperTest extends PhpcrTestCase
 
         // save with state PUBLISHED
         $data2 = array(
-            'title' => 't2'
+            'name' => 't2'
         );
         $data2 = $this->mapper->save($data2, 'overview', 'default', 'de', 1, true, null, null, 2);
         $this->assertEquals(StructureInterface::STATE_PUBLISHED, $data2->getNodeState());
@@ -1234,7 +1319,7 @@ class ContentMapperTest extends PhpcrTestCase
         sleep(1);
         // change state from TEST to PUBLISHED
         $data3 = array(
-            'title' => 't1'
+            'name' => 't1'
         );
         $data3 = $this->mapper->save($data3, 'overview', 'default', 'de', 1, true, $data1->getUuid(), null, 2);
         $this->assertEquals(StructureInterface::STATE_PUBLISHED, $data3->getNodeState());
@@ -1244,7 +1329,7 @@ class ContentMapperTest extends PhpcrTestCase
 
         // change state from PUBLISHED to TEST (exception)
         $data4 = array(
-            'title' => 't2'
+            'name' => 't2'
         );
         $data4 = $this->mapper->save($data4, 'overview', 'default', 'de', 1, true, $data2->getUuid(), null, 1);
         $this->assertEquals(StructureInterface::STATE_TEST, $data4->getNodeState());
@@ -1256,16 +1341,16 @@ class ContentMapperTest extends PhpcrTestCase
     {
         $data = array(
             array(
-                'title' => 't1'
+                'name' => 't1'
             ),
             array(
-                'title' => 't1-t1'
+                'name' => 't1-t1'
             ),
             array(
-                'title' => 't1-t1-t1'
+                'name' => 't1-t1-t1'
             ),
             array(
-                'title' => 't1-t2'
+                'name' => 't1-t2'
             )
         );
 
@@ -1347,7 +1432,7 @@ class ContentMapperTest extends PhpcrTestCase
     public function testShowInNavigation()
     {
         $data = array(
-            'title' => 'Testtitle',
+            'name' => 'Testname',
             'tags' => array(
                 'tag1',
                 'tag2'
@@ -1370,7 +1455,7 @@ class ContentMapperTest extends PhpcrTestCase
         $route = $root->getNode('cmf/default/routes/de/news/test');
         $node = $route->getPropertyValue('sulu:content');
 
-        $this->assertTrue($node->getPropertyValue('sulu_locale:de-sulu-navigation'));
+        $this->assertTrue($node->getPropertyValue($this->languageNamespace . ':de-navigation'));
         $this->assertTrue($result->getNavigation());
         $this->assertTrue($content->getNavigation());
 
@@ -1428,7 +1513,7 @@ class ContentMapperTest extends PhpcrTestCase
     public function testSameName()
     {
         $data = array(
-            'title' => 'Test',
+            'name' => 'Test',
             'tags' => array('tag1'),
             'url' => '/test-1',
             'article' => 'default'
@@ -1446,9 +1531,9 @@ class ContentMapperTest extends PhpcrTestCase
         $data['tags'] = array('tag2');
         $d2 = $this->mapper->save($data, 'overview', 'default', 'de', 1);
 
-        $this->assertEquals('Test', $d1->title);
+        $this->assertEquals('Test', $d1->name);
         $this->assertEquals(array('tag1'), $d1->tags);
-        $this->assertEquals('Test', $d2->title);
+        $this->assertEquals('Test', $d2->name);
         $this->assertEquals(array('tag2'), $d2->tags);
 
         $this->assertNotNull($this->session->getNode('/cmf/default/contents/test'));
@@ -1457,9 +1542,9 @@ class ContentMapperTest extends PhpcrTestCase
         $d1 = $this->mapper->load($d1->getUuid(), 'default', 'de');
         $d2 = $this->mapper->load($d2->getUuid(), 'default', 'de');
 
-        $this->assertEquals('Test', $d1->title);
+        $this->assertEquals('Test', $d1->name);
         $this->assertEquals(array('tag1'), $d1->tags);
-        $this->assertEquals('Test', $d2->title);
+        $this->assertEquals('Test', $d2->name);
         $this->assertEquals(array('tag2'), $d2->tags);
     }
 
@@ -1489,28 +1574,28 @@ class ContentMapperTest extends PhpcrTestCase
     {
         $data = array(
             array(
-                'title' => 'News-EN',
+                'name' => 'News-EN',
                 'url' => '/news'
             ),
             array(
-                'title' => 'News-DE_AT',
+                'name' => 'News-DE_AT',
                 'url' => '/news'
             ),
             array(
-                'title' => 'Products-EN',
+                'name' => 'Products-EN',
                 'url' => '/products'
             ),
             array(
-                'title' => 'Products-DE',
+                'name' => 'Products-DE',
                 'url' => '/products'
             ),
             array(
-                'title' => 'Team-DE',
+                'name' => 'Team-DE',
                 'url' => '/team-de'
             )
         );
 
-        $this->mapper->saveStartPage(array('title' => 'Start Page'), 'overview', 'default', 'de', 1);
+        $this->mapper->saveStartPage(array('name' => 'Start Page'), 'overview', 'default', 'de', 1);
 
         // save root content
         $result['news-en'] = $this->mapper->save($data[0], 'overview', 'default', 'en', 1);
@@ -1565,13 +1650,13 @@ class ContentMapperTest extends PhpcrTestCase
         $result = $this->mapper->loadByParent(null, 'default', 'en', 1, true, false, false);
         $this->assertEquals(3, sizeof($result));
         $this->assertEquals('en', $result[0]->getLanguageCode());
-        $this->assertEquals('News-EN', $result[0]->getPropertyValue('title'));
+        $this->assertEquals('News-EN', $result[0]->getPropertyValue('name'));
         $this->assertNull($result[0]->getType());
         $this->assertEquals('en', $result[1]->getLanguageCode());
-        $this->assertEquals('Products-EN', $result[1]->getPropertyValue('title'));
+        $this->assertEquals('Products-EN', $result[1]->getPropertyValue('name'));
         $this->assertNull($result[1]->getType());
         $this->assertEquals('en', $result[2]->getLanguageCode());
-        $this->assertEquals('Team-DE', $result[2]->getPropertyValue('title'));
+        $this->assertEquals('Team-DE', $result[2]->getPropertyValue('name'));
         $this->assertEquals('ghost', $result[2]->getType()->getName());
         $this->assertEquals('de', $result[2]->getType()->getValue());
 
@@ -1580,10 +1665,10 @@ class ContentMapperTest extends PhpcrTestCase
         $result = $this->mapper->loadByParent(null, 'default', 'en', 1, true, false, true);
         $this->assertEquals(2, sizeof($result));
         $this->assertEquals('en', $result[0]->getLanguageCode());
-        $this->assertEquals('News-EN', $result[0]->getPropertyValue('title'));
+        $this->assertEquals('News-EN', $result[0]->getPropertyValue('name'));
         $this->assertNull($result[0]->getType());
         $this->assertEquals('en', $result[1]->getLanguageCode());
-        $this->assertEquals('Products-EN', $result[1]->getPropertyValue('title'));
+        $this->assertEquals('Products-EN', $result[1]->getPropertyValue('name'));
         $this->assertNull($result[1]->getType());
 
         // both pages are ghosts in en_us from en
@@ -1591,15 +1676,15 @@ class ContentMapperTest extends PhpcrTestCase
         $result = $this->mapper->loadByParent(null, 'default', 'en_us', 1, true, false, false);
         $this->assertEquals(3, sizeof($result));
         $this->assertEquals('en_us', $result[0]->getLanguageCode());
-        $this->assertEquals('News-EN', $result[0]->getPropertyValue('title'));
+        $this->assertEquals('News-EN', $result[0]->getPropertyValue('name'));
         $this->assertEquals('ghost', $result[0]->getType()->getName());
         $this->assertEquals('en', $result[0]->getType()->getValue());
         $this->assertEquals('en_us', $result[1]->getLanguageCode());
-        $this->assertEquals('Products-EN', $result[1]->getPropertyValue('title'));
+        $this->assertEquals('Products-EN', $result[1]->getPropertyValue('name'));
         $this->assertEquals('ghost', $result[1]->getType()->getName());
         $this->assertEquals('en', $result[1]->getType()->getValue());
         $this->assertEquals('en_us', $result[2]->getLanguageCode());
-        $this->assertEquals('Team-DE', $result[2]->getPropertyValue('title'));
+        $this->assertEquals('Team-DE', $result[2]->getPropertyValue('name'));
         $this->assertEquals('ghost', $result[2]->getType()->getName());
         $this->assertEquals('de', $result[2]->getType()->getValue());
 
@@ -1613,14 +1698,14 @@ class ContentMapperTest extends PhpcrTestCase
         $result = $this->mapper->loadByParent(null, 'default', 'de', 1, true, false, false);
         $this->assertEquals(3, sizeof($result));
         $this->assertEquals('de', $result[0]->getLanguageCode());
-        $this->assertEquals('News-DE_AT', $result[0]->getPropertyValue('title'));
+        $this->assertEquals('News-DE_AT', $result[0]->getPropertyValue('name'));
         $this->assertEquals('ghost', $result[0]->getType()->getName());
         $this->assertEquals('de_at', $result[0]->getType()->getValue());
         $this->assertEquals('de', $result[1]->getLanguageCode());
-        $this->assertEquals('Products-DE', $result[1]->getPropertyValue('title'));
+        $this->assertEquals('Products-DE', $result[1]->getPropertyValue('name'));
         $this->assertNull($result[1]->getType());
         $this->assertEquals('de', $result[2]->getLanguageCode());
-        $this->assertEquals('Team-DE', $result[2]->getPropertyValue('title'));
+        $this->assertEquals('Team-DE', $result[2]->getPropertyValue('name'));
         $this->assertNull($result[2]->getType());
 
         // one page exists in de (without ghosts)
@@ -1628,10 +1713,10 @@ class ContentMapperTest extends PhpcrTestCase
         $result = $this->mapper->loadByParent(null, 'default', 'de', 1, true, false, true);
         $this->assertEquals(2, sizeof($result));
         $this->assertEquals('de', $result[0]->getLanguageCode());
-        $this->assertEquals('Products-DE', $result[0]->getPropertyValue('title'));
+        $this->assertEquals('Products-DE', $result[0]->getPropertyValue('name'));
         $this->assertNull($result[0]->getType());
         $this->assertEquals('de', $result[1]->getLanguageCode());
-        $this->assertEquals('Team-DE', $result[1]->getPropertyValue('title'));
+        $this->assertEquals('Team-DE', $result[1]->getPropertyValue('name'));
         $this->assertNull($result[1]->getType());
 
         // one page not exists in de_at (ghost from de), other exists in de_at
@@ -1639,14 +1724,14 @@ class ContentMapperTest extends PhpcrTestCase
         $result = $this->mapper->loadByParent(null, 'default', 'de', 1, true, false, false);
         $this->assertEquals(3, sizeof($result));
         $this->assertEquals('de', $result[0]->getLanguageCode());
-        $this->assertEquals('News-DE_AT', $result[0]->getPropertyValue('title'));
+        $this->assertEquals('News-DE_AT', $result[0]->getPropertyValue('name'));
         $this->assertEquals('ghost', $result[0]->getType()->getName());
         $this->assertEquals('de_at', $result[0]->getType()->getValue());
         $this->assertEquals('de', $result[1]->getLanguageCode());
-        $this->assertEquals('Products-DE', $result[1]->getPropertyValue('title'));
+        $this->assertEquals('Products-DE', $result[1]->getPropertyValue('name'));
         $this->assertNull($result[1]->getType());
         $this->assertEquals('de', $result[2]->getLanguageCode());
-        $this->assertEquals('Team-DE', $result[2]->getPropertyValue('title'));
+        $this->assertEquals('Team-DE', $result[2]->getPropertyValue('name'));
         $this->assertNull($result[2]->getType());
 
         // one page not exists in de_at (ghost from de), other exists in de_at
@@ -1654,14 +1739,14 @@ class ContentMapperTest extends PhpcrTestCase
         $result = $this->mapper->loadByParent(null, 'default', 'de_at', 1, true, false, false);
         $this->assertEquals(3, sizeof($result));
         $this->assertEquals('de_at', $result[0]->getLanguageCode());
-        $this->assertEquals('News-DE_AT', $result[0]->getPropertyValue('title'));
+        $this->assertEquals('News-DE_AT', $result[0]->getPropertyValue('name'));
         $this->assertNull($result[0]->getType());
         $this->assertEquals('de_at', $result[1]->getLanguageCode());
-        $this->assertEquals('Products-DE', $result[1]->getPropertyValue('title'));
+        $this->assertEquals('Products-DE', $result[1]->getPropertyValue('name'));
         $this->assertEquals('ghost', $result[1]->getType()->getName());
         $this->assertEquals('de', $result[1]->getType()->getValue());
         $this->assertEquals('de_at', $result[2]->getLanguageCode());
-        $this->assertEquals('Team-DE', $result[2]->getPropertyValue('title'));
+        $this->assertEquals('Team-DE', $result[2]->getPropertyValue('name'));
         $this->assertEquals('ghost', $result[2]->getType()->getName());
         $this->assertEquals('de', $result[2]->getType()->getValue());
 
@@ -1670,15 +1755,15 @@ class ContentMapperTest extends PhpcrTestCase
         $result = $this->mapper->loadByParent(null, 'default', 'es', 1, true, false, false);
         $this->assertEquals(3, sizeof($result));
         $this->assertEquals('es', $result[0]->getLanguageCode());
-        $this->assertEquals('News-EN', $result[0]->getPropertyValue('title'));
+        $this->assertEquals('News-EN', $result[0]->getPropertyValue('name'));
         $this->assertEquals('ghost', $result[0]->getType()->getName());
         $this->assertEquals('en', $result[0]->getType()->getValue());
         $this->assertEquals('es', $result[1]->getLanguageCode());
-        $this->assertEquals('Products-EN', $result[1]->getPropertyValue('title'));
+        $this->assertEquals('Products-EN', $result[1]->getPropertyValue('name'));
         $this->assertEquals('ghost', $result[1]->getType()->getName());
         $this->assertEquals('en', $result[1]->getType()->getValue());
         $this->assertEquals('es', $result[2]->getLanguageCode());
-        $this->assertEquals('Team-DE', $result[2]->getPropertyValue('title'));
+        $this->assertEquals('Team-DE', $result[2]->getPropertyValue('name'));
         $this->assertEquals('ghost', $result[2]->getType()->getName());
         $this->assertEquals('de', $result[2]->getType()->getValue());
 
@@ -1690,20 +1775,20 @@ class ContentMapperTest extends PhpcrTestCase
         // load content as de -> no ghost content
         $result = $this->mapper->load($data['news-de_at']->getUuid(), 'default', 'de', false);
         $this->assertEquals('de', $result->getLanguageCode());
-        $this->assertEquals('', $result->getPropertyValue('title'));
+        $this->assertEquals('', $result->getPropertyValue('name'));
         $this->assertNull($result->getType());
 
         // load content as de -> load ghost content
         $result = $this->mapper->load($data['news-de_at']->getUuid(), 'default', 'de', true);
         $this->assertEquals('de', $result->getLanguageCode());
-        $this->assertEquals('News-DE_AT', $result->getPropertyValue('title'));
+        $this->assertEquals('News-DE_AT', $result->getPropertyValue('name'));
         $this->assertEquals('ghost', $result->getType()->getName());
         $this->assertEquals('de_at', $result->getType()->getValue());
 
         // load only in german available page in english
         $result = $this->mapper->load($data['team-de']->getUuid(), 'default', 'en', true);
         $this->assertEquals('en', $result->getLanguageCode());
-        $this->assertEquals('Team-DE', $result->getPropertyValue('title'));
+        $this->assertEquals('Team-DE', $result->getPropertyValue('name'));
         $this->assertEquals('ghost', $result->getType()->getName());
         $this->assertEquals('de', $result->getType()->getValue());
     }
@@ -1711,7 +1796,7 @@ class ContentMapperTest extends PhpcrTestCase
     public function testTranslatedResourceLocator()
     {
         $data = array(
-            'title' => 'Testtitle',
+            'name' => 'Testname',
             'tags' => array(
                 'tag1',
                 'tag2'
@@ -1731,7 +1816,7 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertNotNull($this->languageRoutes['en']->getNode('news/test'));
 
         $data = array(
-            'title' => 'Testtitle',
+            'name' => 'Testname',
             'url' => '/neuigkeiten/test'
         );
         $structure = $this->mapper->save($data, 'overview', 'default', 'de', 1, true, $structure->getUuid());
@@ -1752,15 +1837,17 @@ class ContentMapperTest extends PhpcrTestCase
     public function testBlock()
     {
         $data = array(
-            'title' => 'Test-Title',
+            'name' => 'Test-name',
             'url' => '/test',
             'block1' => array(
                 array(
-                    'title' => 'Block-Title-1',
+                    'type' => 'default',
+                    'name' => 'Block-name-1',
                     'article' => 'Block-Article-1'
                 ),
                 array(
-                    'title' => 'Block-Title-2',
+                    'type' => 'default',
+                    'name' => 'Block-name-2',
                     'article' => 'Block-Article-2'
                 )
             )
@@ -1772,7 +1859,7 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals(
             $data,
             array(
-                'title' => $result['title'],
+                'name' => $result['name'],
                 'url' => $result['url'],
                 'block1' => $result['block1']
             )
@@ -1787,7 +1874,7 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals(
             $data,
             array(
-                'title' => $result['title'],
+                'name' => $result['name'],
                 'url' => $result['url'],
                 'block1' => $result['block1']
             )
@@ -1799,10 +1886,297 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals(
             $data,
             array(
-                'title' => $result['title'],
+                'name' => $result['name'],
                 'url' => $result['url'],
                 'block1' => $result['block1']
             )
         );
+    }
+
+    public function testMultilingual()
+    {
+        // change simple content
+        $dataDe = array(
+            'name' => 'Testname-DE',
+            'blog' => 'German',
+            'url' => '/news/test'
+        );
+
+        // update content
+        $structureDe = $this->mapper->save($dataDe, 'default', 'default', 'de', 1);
+
+        $dataEn = array(
+            'name' => 'Testname-EN',
+            'blog' => 'English'
+        );
+        $structureEn = $this->mapper->save($dataEn, 'default', 'default', 'en', 1, true, $structureDe->getUuid());
+        $structureDe = $this->mapper->load($structureDe->getUuid(), 'default', 'de');
+
+        // check data
+        $this->assertNotEquals($structureDe->getPropertyValue('name'), $structureEn->getPropertyValue('name'));
+        $this->assertEquals($structureDe->getPropertyValue('blog'), $structureEn->getPropertyValue('blog'));
+
+        $this->assertEquals($dataEn['name'], $structureEn->getPropertyValue('name'));
+        $this->assertEquals($dataEn['blog'], $structureEn->getPropertyValue('blog'));
+
+        $this->assertEquals($dataDe['name'], $structureDe->getPropertyValue('name'));
+        // En has overritten german content
+        $this->assertEquals($dataEn['blog'], $structureDe->getPropertyValue('blog'));
+
+        $root = $this->session->getRootNode();
+        $route = $root->getNode('cmf/default/routes/de/news/test');
+        /** @var NodeInterface $content */
+        $content = $route->getPropertyValue('sulu:content');
+        $this->assertEquals($dataDe['name'], $content->getPropertyValue($this->languageNamespace . ':de-name'));
+        $this->assertNotEquals($dataDe['blog'], $content->getPropertyValue('blog'));
+        $this->assertEquals($dataEn['name'], $content->getPropertyValue($this->languageNamespace . ':en-name'));
+        $this->assertEquals($dataEn['blog'], $content->getPropertyValue('blog'));
+
+        $this->assertFalse($content->hasProperty($this->languageNamespace . ':de-blog'));
+        $this->assertFalse($content->hasProperty($this->languageNamespace . ':en-blog'));
+        $this->assertFalse($content->hasProperty('name'));
+    }
+
+    public function testMandatory()
+    {
+        $data = array(
+            'name' => 'Testname',
+            'blog' => 'German',
+            'url' => '/news/test'
+        );
+        $structure = $this->mapper->save($data, 'mandatory', 'default', 'de', 1);
+
+        $this->assertEquals($data['name'], $structure->getPropertyValue('name'));
+        $this->assertEquals($data['blog'], $structure->getPropertyValue('blog'));
+        $this->assertEquals($data['url'], $structure->getPropertyValue('url'));
+
+        $this->setExpectedException('\Sulu\Component\Content\Exception\MandatoryPropertyException', 'Data for mandatory property blog in template mandatory not found');
+        $data = array(
+            'name' => 'Testname',
+            'url' => '/news/test'
+        );
+        $this->mapper->save($data, 'mandatory', 'default', 'de', 1);
+    }
+
+    private function prepareBigTreeTestData()
+    {
+        $data = array(
+            array(
+                'data' => array(
+                    'name' => 'Products',
+                    'url' => '/products'
+                ),
+                'children' => array(
+                    array(
+                        'data' => array(
+                            'name' => 'Products1',
+                            'url' => '/products/products-1'
+                        ),
+                        'children' => array()
+                    )
+                )
+            ),
+            array(
+                'data' => array(
+                    'name' => 'News',
+                    'url' => '/news'
+                ),
+                'children' => array(
+                    array(
+                        'data' => array(
+                            'name' => 'News-1',
+                            'url' => '/news/news-1'
+                        ),
+                        'children' => array(
+                            array(
+                                'data' => array(
+                                    'name' => 'SubNews-1',
+                                    'url' => '/news/news-1/subnews-1'
+                                ),
+                                'children' => array()
+                            ),
+                            array(
+                                'data' => array(
+                                    'name' => 'SubNews-2',
+                                    'url' => '/news/news-1/subnews-2'
+                                ),
+                                'children' => array()
+                            ),
+                            array(
+                                'data' => array(
+                                    'name' => 'SubNews-3',
+                                    'url' => '/news/news-1/subnews-3'
+                                ),
+                                'children' => array(
+                                    array(
+                                        'data' => array(
+                                            'name' => 'SubSubNews-1',
+                                            'url' => '/news/news-1/subnews-3/subsubnews-1'
+                                        ),
+                                        'children' => array()
+                                    ),
+                                    array(
+                                        'data' => array(
+                                            'name' => 'SubSubNews-2',
+                                            'url' => '/news/news-1/subnews-3/subsubnews-2'
+                                        ),
+                                        'children' => array()
+                                    ),
+                                    array(
+                                        'data' => array(
+                                            'name' => 'SubSubNews-3',
+                                            'url' => '/news/news-1/subnews-3/subsubnews-3'
+                                        ),
+                                        'children' => array()
+                                    )
+                                )
+                            )
+                        )
+                    ),
+                    array(
+                        'data' => array(
+                            'name' => 'News-2',
+                            'url' => '/news/news-2'
+                        ),
+                        'children' => array()
+                    ),
+                    array(
+                        'data' => array(
+                            'name' => 'News-3',
+                            'url' => '/news/news-3'
+                        ),
+                        'children' => array()
+                    ),
+                )
+            ),
+            array(
+                'data' => array(
+                    'name' => 'About Us',
+                    'url' => '/about-us'
+                ),
+                'children' => array()
+            ),
+        );
+
+        $this->eventDispatcher->expects($this->atLeastOnce())
+            ->method('dispatch')
+            ->with(
+                $this->equalTo(ContentEvents::NODE_SAVE),
+                $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeEvent')
+            );
+
+        return $this->saveData($data);
+    }
+
+    private function saveData($data, $uuid = null)
+    {
+        $result = array();
+        foreach ($data as $item) {
+            $itemStructure = $this->mapper->save($item['data'], 'overview', 'default', 'de', 1, true, null, $uuid);
+            $itemStructure->setChildren($this->saveData($item['children'], $itemStructure->getUuid()));
+
+            $result[] = $itemStructure;
+        }
+        return $result;
+    }
+
+    public function testLoadTree()
+    {
+        $data = $this->prepareBigTreeTestData();
+        $child = $data[1]->getChildren()[0]->getChildren()[2]->getChildren()[1];
+
+        $result = $this->mapper->loadTreeByPath($child->getPath(), 'de', 'default');
+        $this->checkTreeResult($result);
+
+        $result = $this->mapper->loadTreeByUuid($child->getUuid(), 'de', 'default');
+        $this->checkTreeResult($result);
+    }
+
+    private function checkTreeResult($result)
+    {
+        // layer 0
+        $this->assertEquals(3, sizeof($result));
+
+        // layer 1
+        $layer1 = $result[1]->getChildren();
+        $this->assertEquals(0, sizeof($result[0]->getChildren()));
+        $this->assertEquals('Products', $result[0]->name);
+        $this->assertTrue($result[0]->getHasChildren());
+
+        $this->assertEquals(3, sizeof($result[1]->getChildren()));
+        $this->assertEquals('News', $result[1]->name);
+        $this->assertTrue($result[1]->getHasChildren());
+
+        $this->assertEquals(0, sizeof($result[2]->getChildren()));
+        $this->assertEquals('About Us', $result[2]->name);
+        $this->assertFalse($result[2]->getHasChildren());
+
+        // layer 2
+        $layer2 = $layer1[0]->getChildren();
+        $this->assertEquals(3, sizeof($layer1[0]->getChildren()));
+        $this->assertEquals('News-1', $layer1[0]->name);
+        $this->assertTrue($layer1[0]->getHasChildren());
+
+        $this->assertEquals(0, sizeof($layer1[1]->getChildren()));
+        $this->assertEquals('News-2', $layer1[1]->name);
+        $this->assertFalse($layer1[1]->getHasChildren());
+
+        $this->assertEquals(0, sizeof($layer1[2]->getChildren()));
+        $this->assertEquals('News-3', $layer1[2]->name);
+        $this->assertFalse($layer1[2]->getHasChildren());
+
+        // layer 3
+        $layer3 = $layer2[2]->getChildren();
+        $this->assertEquals(0, sizeof($layer2[0]->getChildren()));
+        $this->assertEquals('SubNews-1', $layer2[0]->name);
+        $this->assertFalse($layer2[0]->getHasChildren());
+
+        $this->assertEquals(0, sizeof($layer2[1]->getChildren()));
+        $this->assertEquals('SubNews-2', $layer2[1]->name);
+        $this->assertFalse($layer2[1]->getHasChildren());
+
+        $this->assertEquals(3, sizeof($layer2[2]->getChildren()));
+        $this->assertEquals('SubNews-3', $layer2[2]->name);
+        $this->assertTrue($layer2[2]->getHasChildren());
+
+        // layer 4
+        $this->assertEquals(0, sizeof($layer3[0]->getChildren()));
+        $this->assertEquals('SubSubNews-1', $layer3[0]->name);
+        $this->assertFalse($layer3[0]->getHasChildren());
+
+        $this->assertEquals(0, sizeof($layer3[1]->getChildren()));
+        $this->assertEquals('SubSubNews-2', $layer3[1]->name);
+        $this->assertFalse($layer3[1]->getHasChildren());
+
+        $this->assertEquals(0, sizeof($layer3[2]->getChildren()));
+        $this->assertEquals('SubSubNews-3', $layer3[2]->name);
+        $this->assertFalse($layer3[2]->getHasChildren());
+    }
+
+    public function testSection()
+    {
+        $data = array(
+            'name' => 'Test',
+            'url' => '/test/test',
+            'blog' => 'Thats a good test'
+        );
+
+        $structure = $this->mapper->save($data, 'section', 'default', 'en', 1);
+        $resultSave = $structure->toArray();
+
+        $this->assertEquals('/thats-a-good-test', $resultSave['path']);
+        $this->assertEquals('section', $resultSave['template']);
+        $this->assertEquals('Test', $resultSave['name']);
+        $this->assertEquals('Thats a good test', $resultSave['blog']);
+        $this->assertEquals('/test/test', $resultSave['url']);
+
+        $structure = $this->mapper->load($structure->getUuid(), 'default', 'en');
+        $resultLoad = $structure->toArray();
+
+        $this->assertEquals('/thats-a-good-test', $resultLoad['path']);
+        $this->assertEquals('section', $resultLoad['template']);
+        $this->assertEquals('Test', $resultLoad['name']);
+        $this->assertEquals('Thats a good test', $resultLoad['blog']);
+        $this->assertEquals('/test/test', $resultLoad['url']);
     }
 }

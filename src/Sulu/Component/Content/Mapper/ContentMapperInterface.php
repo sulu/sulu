@@ -56,6 +56,7 @@ interface ContentMapperInterface
      * @param bool $partialUpdate ignore missing property
      *
      * @throws \PHPCR\ItemExistsException if new title already exists
+     * @throws \Exception
      *
      * @return StructureInterface
      */
@@ -126,6 +127,40 @@ interface ContentMapperInterface
      * @return StructureInterface[]
      */
     public function loadBySql2($sql2, $languageCode, $webspaceKey, $limit = null);
+
+    /**
+     * load tree from root to given path
+     * @param string $uuid
+     * @param string $languageCode
+     * @param string $webspaceKey
+     * @param bool $excludeGhost
+     * @param bool $loadGhostContent
+     * @return StructureInterface[]
+     */
+    public function loadTreeByUuid(
+        $uuid,
+        $languageCode,
+        $webspaceKey,
+        $excludeGhost = true,
+        $loadGhostContent = false
+    );
+
+    /**
+     * load tree from root to given path
+     * @param string $path
+     * @param string $languageCode
+     * @param string $webspaceKey
+     * @param bool $excludeGhost
+     * @param bool $loadGhostContent
+     * @return StructureInterface[]
+     */
+    public function loadTreeByPath(
+        $path,
+        $languageCode,
+        $webspaceKey,
+        $excludeGhost = true,
+        $loadGhostContent = false
+    );
 
     /**
      * load breadcrumb for given uuid in given language
