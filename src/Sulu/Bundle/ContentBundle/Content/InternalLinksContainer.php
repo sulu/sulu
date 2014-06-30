@@ -10,8 +10,6 @@
 
 namespace Sulu\Bundle\ContentBundle\Content;
 
-use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
-use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\StructureInterface;
 use JMS\Serializer\Annotation\Exclude;
@@ -31,12 +29,14 @@ class InternalLinksContainer implements \Serializable
 
     /**
      * The key of the webspace
+     * @Exclude
      * @var string
      */
     private $webspaceKey;
 
     /**
      * The code of the language
+     * @Exclude
      * @var string
      */
     private $languageCode;

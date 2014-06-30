@@ -102,7 +102,7 @@ define([], function() {
             noContent: function(noContentString) {
                 return [
                     '<div class="no-content">',
-                    '   <span class="fa-image icon"></span>',
+                    '   <span class="fa-file icon"></span>',
                     '   <div class="text">', noContentString, '</div>',
                     '</div>'
                 ].join('');
@@ -208,7 +208,7 @@ define([], function() {
             this.sandbox.on('husky.overlay.internal-links.' + this.options.instanceName + '.add.initialized', initColumnNavigation.bind(this));
 
             this.sandbox.on('husky.column-navigation.edit', function(item) {
-                if (!!this.data.ids.indexOf(item.id)) {
+                if (this.data.ids.indexOf(item.id) === -1) {
                     this.data.ids.push(item.id);
                 } else {
                     this.data.ids = this.data.ids.filter(function(el) {
@@ -216,6 +216,7 @@ define([], function() {
                     });
                 }
 
+                setData.call(this, this.data);
                 this.sandbox.logger.log('selected items', this.data.ids);
             }.bind(this));
 
