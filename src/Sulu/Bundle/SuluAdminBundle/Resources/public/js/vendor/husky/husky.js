@@ -38890,7 +38890,7 @@ define('__component__$smart-content@husky',[], function() {
          * event is emited on which the associeted component responses
          */
         getOverlayData: function() {
-            var categoryDef, tagsDef, sortByDef, sortMethodDef, presentAsDef;
+            var categoryDef, tagsDef, sortByDef, sortMethodDef, presentAsDef, temp;
             categoryDef = tagsDef = sortByDef = sortMethodDef = presentAsDef = this.sandbox.data.deferred();
 
             //include sub folders
@@ -38904,7 +38904,10 @@ define('__component__$smart-content@husky',[], function() {
             );
 
             //data-source
-            this.overlayData.dataSource = this.sandbox.dom.data(this.sandbox.dom.find(constants.dataSourceSelector, this.$overlayContent), 'id');
+            temp = this.sandbox.dom.data(this.sandbox.dom.find(constants.dataSourceSelector, this.$overlayContent), 'id')
+            if (temp !== undefined) {
+                this.overlayData.dataSource = temp;
+            }
 
             //category
             this.sandbox.emit('husky.select.' + this.options.instanceName + constants.categoryDDClass + '.get-checked',
