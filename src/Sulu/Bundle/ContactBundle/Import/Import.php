@@ -596,7 +596,7 @@ class Import
         }
         if (sizeof($noteValues) > 0) {
             $note = new Note();
-            $note->setValue(implode('\n', $noteValues));
+            $note->setValue(implode("\n", $noteValues));
             $this->em->persist($note);
             $entity->addNote($note);
         }
@@ -746,7 +746,7 @@ class Import
                 // check if note already exists, or create a new one
                 if (sizeof($notes = $entity->getNotes()) > 0) {
                     $note = $notes[0];
-                    $noteTxt = $note->getValue() . '\n';
+                    $noteTxt = $note->getValue() . "\n";
                 } else {
                     $note = new Note();
                     $this->em->persist($note);
