@@ -13,7 +13,7 @@
  * @class MediaSelection
  * @constructor
  */
-define(['sulumedia/collection/collections'], function(Collections) {
+define([], function() {
 
     'use strict';
 
@@ -25,16 +25,13 @@ define(['sulumedia/collection/collections'], function(Collections) {
             preselected: {ids: []},
             idKey: 'id',
             titleKey: 'title',
-            thumbnailKey: 'thumbnails',
-            thumbnailSize: '50x50',
             resultKey: '_embedded',
+            columnNavigationUrl: '',
             translations: {
-                noMediaSelected: 'media-selection.nomedia-selected',
-                addImages: 'media-selection.add-images',
-                choose: 'media-selection.choose',
-                collections: 'media-selection.collections',
-                visible: 'media-selection.visible',
-                of: 'media-selection.of'
+                noLinksSelected: 'internal-links.nolinks-selected',
+                addLinks: 'internal-links.add',
+                visible: 'internal-links.visible',
+                of: 'internal-links.of'
             }
         },
 
@@ -48,11 +45,11 @@ define(['sulumedia/collection/collections'], function(Collections) {
          * namespace for events
          * @type {string}
          */
-        eventNamespace = 'sulu.media-selection.',
+        eventNamespace = 'sulu.internal-links.',
 
         /**
          * raised when all overlay components returned their value
-         * @event sulu.media-selection.input-retrieved
+         * @event sulu.internal-links.input-retrieved
          */
         INPUT_RETRIEVED = function() {
             return createEventName.call(this, 'input-retrieved');
@@ -92,24 +89,12 @@ define(['sulumedia/collection/collections'], function(Collections) {
         templates = {
             skeleton: function(options) {
                 return [
-                    '<div class="media-selection-container form-element" id="', options.ids.container, '">',
-                    '   <div class="media-selection-header">',
+                    '<div class="smart-content-container form-element" id="', options.ids.container, '">',
+                    '   <div class="smart-header">',
                     '       <a href="#" class="fa-plus-circle add" id="', options.ids.addButton, '"></a>',
-                    '       <div class="display-option-outer">',
-                    '           <select class="display-option" id="', options.ids.displayOption, '">',
-                    '               <option value="left">left</option>',
-                    '               <option value="leftTop">left top</option>',
-                    '               <option value="top">top</option>',
-                    '               <option value="rightTop">right top</option>',
-                    '               <option value="right">right</option>',
-                    '               <option value="rightBottom">right bottom</option>',
-                    '               <option value="bottom">bottom</option>',
-                    '               <option value="leftBottom">left bottom</option>',
-                    '           </select>',
-                    '       </div>',
                     '       <a href="#" class="fa-cog config" id="', options.ids.configButton, '" style="display: none;"></a>',
                     '   </div>',
-                    '   <div class="media-selection" id="', options.ids.content, '"></div>',
+                    '   <div class="smart-content" id="', options.ids.content, '"></div>',
                     '</div>'
                 ].join('');
             },
@@ -123,22 +108,19 @@ define(['sulumedia/collection/collections'], function(Collections) {
                 ].join('');
             },
 
-            addTab: function(options, header) {
+            data: function(options) {
                 return[
-                    '<div id="', options.ids.chooseTab, '">',
-                    '   <div class="head-container"><h1>', header, '</h1></div>',
-                    '   <div id="', options.ids.gridGroup, '"/>',
-                    '</div>'
+                    '<div id="', options.ids.columnNavigation, '"/>',
                 ].join('');
             },
-            contentItem: function(id, num, value, imageUrl) {
+
+            contentItem: function(id, num, value) {
                 return [
                     '<li data-id="', id, '">',
                     '   <span class="num">', num, '</span>',
-                    '   <img src="', imageUrl, '" class="image"/>',
                     '   <span class="value">', value, '</span>',
                     '</li>'
-                ].join('')
+                ].join('');
             }
         },
 
@@ -153,9 +135,7 @@ define(['sulumedia/collection/collections'], function(Collections) {
          * render component
          */
         render = function() {
-            // init collection
-            this.collections = new Collections();
-
+            // init ids
             this.options.ids = {
                 container: 'internal-links-' + this.options.instanceName + '-container',
                 addButton: 'internal-links-' + this.options.instanceName + '-add',
@@ -163,7 +143,7 @@ define(['sulumedia/collection/collections'], function(Collections) {
                 displayOption: 'internal-links-' + this.options.instanceName + '-display-option',
                 content: 'internal-links-' + this.options.instanceName + '-content',
                 chooseTab: 'internal-links-' + this.options.instanceName + '-choose-tab',
-                gridGroup: 'internal-links-' + this.options.instanceName + '-grid-group'
+                columnNavigation: 'internal-links-' + this.options.instanceName + '-column-navigation'
             };
             this.sandbox.dom.html(this.$el, templates.skeleton(this.options));
 
@@ -217,54 +197,26 @@ define(['sulumedia/collection/collections'], function(Collections) {
          * (with no items and before any request)
          */
         renderStartContent = function() {
-            var noMedia = this.sandbox.translate(this.options.translations.noMediaSelected);
-            this.sandbox.dom.html(this.$content, templates.noContent(noMedia));
+            var label = this.sandbox.translate(this.options.translations.noLinksSelected);
+            this.sandbox.dom.html(this.$content, templates.noContent(label));
         },
 
         /**
          * custom event handling
          */
         bindCustomEvents = function() {
-            this.sandbox.on('husky.tabs.overlayinternal-links.' + this.options.instanceName + '.add.initialized', function() {
-                this.collections.fetch({
-                    success: function(collections) {
-                        this.sandbox.start([
-                            {
-                                name: 'grid-group@suluadmin',
-                                options: {
-                                    data: collections.toJSON(),
-                                    el: this.sandbox.dom.find(getId.call(this, 'gridGroup')),
-                                    instanceName: this.options.instanceName,
-                                    gridUrl: '/admin/api/media?collection=',
-                                    preselected: this.data.ids,
-                                    dataGridOptions: {
-                                        view: 'table',
-                                        viewOptions: {table: {excludeFields: ['id'], showHead: false}},
-                                        pagination: false,
-                                        matchings: [
-                                            {
-                                                id: 'id'
-                                            },
-                                            {
-                                                id: 'thumbnails',
-                                                translation: 'thumbnails',
-                                                type: 'thumbnails'
-                                            },
-                                            {
-                                                id: 'title',
-                                                translation: 'title'
-                                            },
-                                            {
-                                                id: 'description',
-                                                translation: 'description'
-                                            }
-                                        ]
-                                    }
-                                }
-                            }
-                        ]);
-                    }.bind(this)
-                });
+            this.sandbox.on('husky.overlay.internal-links.' + this.options.instanceName + '.add.initialized', initColumnNavigation.bind(this));
+
+            this.sandbox.on('husky.column-navigation.edit', function(item) {
+                if (!!this.data.ids.indexOf(item.id)) {
+                    this.data.ids.push(item.id);
+                } else {
+                    this.data.ids = this.data.ids.filter(function(el) {
+                        return el !== item.id;
+                    });
+                }
+
+                this.sandbox.logger.log('selected items', this.data.ids);
             }.bind(this));
 
             // data from overlay retrieved
@@ -277,6 +229,30 @@ define(['sulumedia/collection/collections'], function(Collections) {
             this.sandbox.on(DATA_RETRIEVED.call(this), function() {
                 renderContent.call(this);
             }.bind(this));
+        },
+
+        /**
+         * initialize column navigation
+         */
+        initColumnNavigation = function() {
+            this.sandbox.start(
+                [
+                    {
+                        name: 'column-navigation@husky',
+                        options: {
+                            el: getId.call(this, 'columnNavigation'),
+                            url: this.options.columnNavigationUrl,
+                            instanceName: this.options.instanceName,
+                            noPageDescription: 'No Pages',
+                            sizeRelativeTo: '.smart-content-overlay .slide-0 .overlay-content',
+                            wrapper: {height: 100},
+                            editIcon: 'fa-check',
+                            showEdit: false,
+                            showStatus: false
+                        }
+                    }
+                ]
+            );
         },
 
         /**
@@ -295,14 +271,11 @@ define(['sulumedia/collection/collections'], function(Collections) {
         renderContent = function() {
             if (this.items.length !== 0) {
                 var ul = this.sandbox.dom.createElement('<ul class="items-list"/>'),
-                    i = -1,
-                    length = this.items.length,
-                    url;
+                    i = -1, length = this.items.length;
 
                 //loop stops if no more items are left or if number of rendered items matches itemsVisible
                 for (; ++i < length && i < this.itemsVisible;) {
-                    url = this.items[i][this.options.thumbnailKey][this.options.thumbnailSize];
-                    this.sandbox.dom.append(ul, templates.contentItem(this.items[i][this.options.idKey], i + 1, this.items[i][this.options.titleKey], url));
+                    this.sandbox.dom.append(ul, templates.contentItem(this.items[i][this.options.idKey], i + 1, this.items[i][this.options.titleKey]));
                 }
 
                 this.sandbox.dom.html(this.$content, ul);
@@ -320,7 +293,7 @@ define(['sulumedia/collection/collections'], function(Collections) {
             this.itemsVisible = (this.items.length < this.itemsVisible) ? this.items.length : this.itemsVisible;
 
             if (this.$footer === null || this.$footer === undefined) {
-                this.$footer = this.sandbox.dom.createElement('<div class="medial-selection-footer"/>');
+                this.$footer = this.sandbox.dom.createElement('<div class="smart-footer"/>');
             }
 
             this.sandbox.dom.html(this.$footer, [
@@ -337,11 +310,9 @@ define(['sulumedia/collection/collections'], function(Collections) {
          * starts the overlay component
          */
         startAddOverlay = function() {
-            var chooseTabData = templates.addTab(this.options, this.sandbox.translate(this.options.translations.collections));
-
             var $element = this.sandbox.dom.createElement('<div/>');
-            this.sandbox.dom.append(this.$el, $element);
 
+            this.sandbox.dom.append(this.$el, $element);
             this.sandbox.start([
                 {
                     name: 'overlay@husky',
@@ -354,15 +325,10 @@ define(['sulumedia/collection/collections'], function(Collections) {
                         skin: 'wide',
                         slides: [
                             {
-                                title: this.sandbox.translate(this.options.translations.addImages),
+                                title: this.sandbox.translate(this.options.translations.addLinks),
                                 okCallback: getAddOverlayData.bind(this),
                                 cssClass: 'internal-links-overlay-add',
-                                tabs: [
-                                    {
-                                        title: this.sandbox.translate(this.options.translations.choose),
-                                        data: chooseTabData
-                                    }
-                                ]
+                                data: templates.data(this.options)
                             }
                         ]
                     }
@@ -374,16 +340,8 @@ define(['sulumedia/collection/collections'], function(Collections) {
          * extract data from overlay
          */
         getAddOverlayData = function() {
-            var idsDef = this.sandbox.data.deferred();
-
-            this.sandbox.emit('sulu.grid-group.' + this.options.instanceName + '.get-selected-ids', function(ids) {
-                setData.call(this, {ids: ids});
-                idsDef.resolve();
-            }.bind(this));
-
-            idsDef.then(function() {
-                this.sandbox.emit(INPUT_RETRIEVED.call(this));
-            }.bind(this));
+            // TODO data will be retrieved with events
+            this.sandbox.emit(INPUT_RETRIEVED.call(this));
         },
 
         /**
