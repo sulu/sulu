@@ -2,17 +2,19 @@
     <div class="grid-row form-group">
         <label for="seo-title"><%=translate('sulu.content.seo.title')%></label>
         <input type="text" id="seo-title" data-mapper-property="title"
-               class="form-element preview-update trigger-save-button"/>
+               class="form-element preview-update trigger-save-button"
+               data-validation-max-length="55"/>
     </div>
     <div class="grid-row form-group">
         <label for="seo-description"><%=translate('sulu.content.seo.description')%></label>
         <textarea id="seo-description" data-mapper-property="description"
-                  class="form-element preview-update trigger-save-button"></textarea>
+                  class="form-element preview-update trigger-save-button"
+                  data-validation-max-length="155"></textarea>
     </div>
     <div class="grid-row form-group">
         <label for="seo-keywords"><%=translate('sulu.content.seo.keywords')%></label>
-        <textarea id="seo-keywords" data-mapper-property="keywords"
-                  class="form-element preview-update trigger-save-button"></textarea>
+        <input type="text" id="seo-keywords" data-mapper-property="keywords"
+                  class="form-element preview-update trigger-save-button"/>
     </div>
     <div class="grid-row form-group">
         <label for="seo-canonical"><%=translate('sulu.content.seo.canonical')%></label>
