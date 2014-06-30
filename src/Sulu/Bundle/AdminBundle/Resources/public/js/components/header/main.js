@@ -374,6 +374,15 @@ define([], function() {
             return createEventName.call(this, 'squeeze');
         },
 
+        /**
+         * listens on and squeezes the header
+         *
+         * @event sulu.header.[INSTANCE_NAME].squeeze
+         */
+        UNSQUEEZE = function() {
+            return createEventName.call(this, 'unsqueeze');
+        },
+
         /*********************************************
          *   Abstract events
          ********************************************/
@@ -566,6 +575,15 @@ define([], function() {
          */
         squeeze: function() {
             this.sandbox.dom.addClass(this.$el, constants.tighterClass);
+            this.sandbox.emit('sulu.app.content.get-dimensions', this.setDimensions.bind(this));
+        },
+
+        /**
+         * Unsqueezes the elements inner
+         */
+        unsqueeze: function() {
+            this.sandbox.dom.removeClass(this.$el, constants.tighterClass);
+            this.sandbox.emit('sulu.app.content.get-dimensions', this.setDimensions.bind(this));
         },
 
         /**
@@ -766,6 +784,9 @@ define([], function() {
 
             // squeezes the header
             this.sandbox.on(SQUEEZE.call(this), this.squeeze.bind(this));
+
+            // unsqueeze the header
+            this.sandbox.on(UNSQUEEZE.call(this), this.unsqueeze.bind(this));
 
             // get height event
             this.sandbox.on(GET_HEIGHT.call(this), function(callback) {

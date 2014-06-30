@@ -85,7 +85,9 @@ define([], function() {
         handleFullSizeMarked = function(fullSize) {
             if (fullSize.width === true || fullSize.height === true) {
                 this.sandbox.emit('sulu.app.full-size', !!fullSize.width, !!fullSize.height, !!fullSize.keepPaddings);
-                this.sandbox.emit('sulu.header.squeeze');
+                if (fullSize.width === true && fullSize.keepPaddings !== true) {
+                    this.sandbox.emit('sulu.header.squeeze');
+                }
             }
         },
 
