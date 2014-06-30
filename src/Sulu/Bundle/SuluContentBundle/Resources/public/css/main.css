@@ -95,6 +95,22 @@
   margin-bottom: 20px;
 }
 
+/* smart content extension for internal links */
+/* line 11, ../scss/modules/general.scss */
+.smart-header .add {
+  display: block;
+  position: absolute;
+  top: 10px;
+  left: 20px;
+  font-size: 16px;
+  line-height: 15px;
+  color: white;
+  background-color: #52b6ca;
+  padding: 5px 10px;
+  border: 0px solid #ccc;
+  border-radius: 2px;
+}
+
 /* line 2, ../scss/modules/seo.scss */
 #seo-form .inline-input {
   width: 30px;

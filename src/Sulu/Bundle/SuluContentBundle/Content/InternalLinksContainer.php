@@ -25,7 +25,7 @@ class InternalLinksContainer implements \Serializable
     /**
      * The node repository, which is needed for lazy loading
      * @Exclude
-     * @var NodeRepositoryInterface
+     * @var ContentMapperInterface
      */
     private $contentMapper;
 
@@ -86,7 +86,7 @@ class InternalLinksContainer implements \Serializable
             $result = array();
 
             foreach ($this->ids as $id) {
-                $result[] = $this->contentMapper->getNode($id, $this->webspaceKey, $this->languageCode);
+                $result[] = $this->contentMapper->load($id, $this->webspaceKey, $this->languageCode);
             }
 
             return $result;

@@ -22,7 +22,7 @@
 
         <service id="sulu.content.type.internal_links" class="%sulu.content.type.internal_links.class%">
             <argument type="service" id="sulu.content.mapper"/>
-            <argument>%sulu.content.type.smart_content.template%</argument>
+            <argument>%sulu.content.type.internal_links.template%</argument>
         </service>
 
         <service id="sulu.content.type.phone" class="%sulu.content.type.phone.class%">
