@@ -134,10 +134,6 @@ define([], function() {
                 header = header.call(this);
             }
 
-            // insert the header-container
-            $header = this.sandbox.dom.createElement('<div id="sulu-header-container"/>');
-            this.sandbox.dom.append('body', $header);
-
             // insert the content-container
             $content = this.sandbox.dom.createElement('<div id="sulu-content-container"/>');
             this.html($content);
@@ -162,7 +158,11 @@ define([], function() {
                 squeezed = (!!this.fullSize && this.fullSize.width === true && this.fullSize.keepPaddings !== true) ? true : false;
                 titleColor = (!!header.titleColor) ? header.titleColor : null;
 
-                this.sandbox.start([
+                // insert the header-container
+                $header = this.sandbox.dom.createElement('<div id="sulu-header-container"/>');
+                this.sandbox.dom.append('body', $header);
+
+                App.start([
                     {
                         name: 'header@suluadmin',
                         options: {
@@ -196,9 +196,7 @@ define([], function() {
                     parseContentTabs.call(this, contentNavigation, this.options.id, startHeader.bind(this));
                 }.bind(this));
             } else {
-                setTimeout(function() {
-                    startHeader.call(this, null);
-                }.bind(this), 50)
+                startHeader.call(this, null);
             }
         };
 
