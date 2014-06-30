@@ -9212,12 +9212,21 @@ a.btn-black, a.btn-highlight {
   border-radius: 3px;
   border: 1px solid #cccccc;
   padding: 0 20px;
+  overflow: hidden;
 }
 /* line 168, ../scss/modules/datagrid.scss */
+.husky-datagrid.white-box .table-container {
+  margin-bottom: -1px;
+}
+/* line 172, ../scss/modules/datagrid.scss */
 .husky-datagrid.white-box tbody tr:first-child {
   height: 49px;
 }
-/* line 171, ../scss/modules/datagrid.scss */
+/* line 175, ../scss/modules/datagrid.scss */
+.husky-datagrid.white-box tbody tr:last-child {
+  border-bottom: none;
+}
+/* line 178, ../scss/modules/datagrid.scss */
 .husky-datagrid.white-box tbody td {
   padding-left: 0;
   padding-right: 0;

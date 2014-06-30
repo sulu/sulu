@@ -26016,7 +26016,7 @@ define('type/husky-select',[
                         ids = this.$el.data('selection'),
                         values = this.$el.data('selection-values');
 
-                    if (ids.length ===0) {
+                    if (!ids || ids.length === 0) {
                         return undefined;
                     }
                     if (this.$el.attr('data-mapper-property-type') === 'string') {
@@ -26030,7 +26030,7 @@ define('type/husky-select',[
                 },
 
                 needsValidation: function() {
-                    var val = this.getValue()
+                    var val = this.getValue();
                     return !!val;
                 },
 
@@ -28502,7 +28502,9 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             }
 
             this.bindDomEvents();
-            this.onResize();
+            if (this.datagrid.options.resizeListeners === true) {
+                this.onResize();
+            }
 
             // initialize validation
             if (!!this.options.validation) {
@@ -30883,6 +30885,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
  * @param {Array} [options.preselected] preselected ids
  * @param {Boolean|String} [options.childrenPropertyName] name of the property which contains the number of children. False to indaticate that list is flat
  * @param {Boolean} [options.onlySelectLeaves] If true only the outermost children can be selected
+ * @param {Boolean} [options.resizeListeners] If true a resize-listener will be instantiated, which is responsible for responsiveness
  *
  * @param {Array} [options.matchings] configuration array of columns if fieldsData isn't set
  * @param {String} [options.matchings.content] column title
@@ -30926,7 +30929,8 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
                 defaultMeasureUnit: 'px',
                 preselected: [],
                 onlySelectLeaves: false,
-                childrenPropertyName: false
+                childrenPropertyName: false,
+                resizeListeners: true
             },
 
             types = {
@@ -31410,12 +31414,32 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * Renders the data of the datagrid
              */
             render: function() {
-                this.setSelectedItems(this.options.preselected);
+                this.preSelectItems();
 
                 this.gridViews[this.viewId].render(this.data, this.$element);
                 if (!!this.paginations[this.paginationId]) {
                     this.paginations[this.paginationId].render(this.data, this.$element);
                 }
+            },
+
+            /**
+             * Preselects items because of passed options via javascript and the dom
+             */
+            preSelectItems: function() {
+                var dataSelected = this.sandbox.dom.data(this.$el, 'selected');
+                if (!!dataSelected) {
+                    this.options.preselected = this.sandbox.util.union(this.options.preselected, dataSelected);
+                }
+                this.setSelectedItems(this.options.preselected);
+                this.setSelectedItemsToData();
+            },
+
+            /**
+             * Sets the ids of slected records into the dom
+             */
+            setSelectedItemsToData: function() {
+                this.sandbox.dom.removeAttr(this.$el, 'data-selected');
+                this.sandbox.dom.data(this.$el, 'selected', this.getSelectedItemIds());
             },
 
             /**
@@ -31721,14 +31745,18 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * Binds Dom-related events
              */
             bindDOMEvents: function() {
-                this.sandbox.dom.on(this.sandbox.dom.$window, 'resize', this.windowResizeListener.bind(this));
+                if (this.options.resizeListeners === true) {
+                    this.sandbox.dom.on(this.sandbox.dom.$window, 'resize', this.windowResizeListener.bind(this));
+                }
             },
 
             /**
              * Bind custom-related events
              */
             bindCustomEvents: function() {
-                this.sandbox.on('husky.navigation.size.changed', this.windowResizeListener.bind(this));
+                if (this.options.resizeListeners === true) {
+                    this.sandbox.on('husky.navigation.size.changed', this.windowResizeListener.bind(this));
+                }
 
                 // listen for private events
                 this.sandbox.on(UPDATE.call(this), this.updateGrid.bind(this));
@@ -31916,6 +31944,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
                 // emit events with selected data
                 this.sandbox.emit(ALL_DESELECT.call(this));
                 this.sandbox.emit(NUMBER_SELECTIONS.call(this), 0);
+                this.setSelectedItemsToData();
             },
 
             /**
@@ -31932,6 +31961,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
                 // emit events with selected data
                 this.sandbox.emit(ALL_SELECT.call(this), ids);
                 this.sandbox.emit(NUMBER_SELECTIONS.call(this), ids.length);
+                this.setSelectedItemsToData();
             },
 
             /**
@@ -31992,6 +32022,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
                     // emit events with selected data
                     this.sandbox.emit(ITEM_SELECT.call(this), id);
                     this.sandbox.emit(NUMBER_SELECTIONS.call(this), this.getSelectedItemIds().length);
+                    this.setSelectedItemsToData();
                     return true;
                 }
                 return false;
@@ -32009,6 +32040,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
                     // emit events with selected data
                     this.sandbox.emit(ITEM_DESELECT.call(this), id);
                     this.sandbox.emit(NUMBER_SELECTIONS.call(this), this.getSelectedItemIds().length);
+                    this.setSelectedItemsToData();
                     return true;
                 }
                 return false;
@@ -47298,6 +47330,10 @@ define('husky_extensions/util',[],function() {
 
             app.core.util.delay = function(delay, callback) {
                 return _.delay(delay, callback);
+            };
+
+            app.core.util.union = function() {
+                return _.union.apply(this, arguments);
             };
 
 			app.core.util.template = _.template;
