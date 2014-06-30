@@ -9,7 +9,8 @@
 
 require.config({
     paths: {
-        sulucategory: '../../sulucategory/js'
+        sulucategory: '../../sulucategory/js',
+        "type/categoryList": '../../sulucategory/js/validation/types/categoryList'
     }
 });
 
