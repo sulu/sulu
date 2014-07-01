@@ -133,10 +133,6 @@ define([], function() {
                 header = header.call(this);
             }
 
-            // insert the header-container
-            $header = this.sandbox.dom.createElement('<div id="sulu-header-container"/>');
-            this.sandbox.dom.prepend('.content-column', $header);
-
             // insert the content-container
             $content = this.sandbox.dom.createElement('<div id="sulu-content-container"/>');
             this.html($content);
@@ -162,7 +158,7 @@ define([], function() {
 
                 // insert the header-container
                 $header = this.sandbox.dom.createElement('<div id="sulu-header-container"/>');
-                this.sandbox.dom.append('body', $header);
+                this.sandbox.dom.prepend('.content-column', $header);
 
                 App.start([
                     {

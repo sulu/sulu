@@ -1,0 +1,76 @@
+// Column structure of the admin
+/*----------------------------------------*/
+
+#main {
+  height: 100%;
+  min-width: 50px + $contentMinWidth;
+}
+
+.content-column {
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  min-width: $contentMinWidth;
+
+  #content {
+    height: 100%;
+    overflow: auto;
+    padding: $contentPaddingTop $contentPaddingLeft $contentPaddingRight $contentPaddingBottom;
+
+    h2.mainheadline {
+      margin-top: 35px;
+    }
+
+    h1:first-child {
+      margin-top: 0;
+    }
+
+    .content-tabs-content {
+      padding-top: 80px;
+    }
+
+    &.fullwidth {
+      max-width: none;
+      min-width: 0;
+      &.no-padding {
+        padding-left: $contentPaddingLeftFullWidth;
+        padding-right: $contentPaddingRightFullWidth;
+      }
+    }
+
+    &.fullheight {
+      margin-top: -$contentPaddingTop;
+    }
+  }
+
+  &.max {
+    float: none;
+    width: auto;
+  }
+  &.fixed {
+    width: $contentFixedWidth;
+    float: left;
+  }
+}
+
+.sidebar-column {
+  height: 100%;
+  overflow: hidden;
+  background: #fff; // move to sidebar component-file later
+
+  &.fixed {
+    width: $sidebarFixedWidth;
+    float: right;
+  }
+  &.max {
+    float: none;
+    width: auto;
+  }
+}
+
+@media only screen
+and (max-width : 50px + $contentMinWidth + $sidebarFixedWidth) {
+  .sidebar-column {
+    display: none;
+  }
+}

@@ -2,20 +2,6 @@ $white: #fff;
 $backgroundColor: #f1f1f1;
 $blue: #28B6CA;
 
-//  content size
-
-$contentMaxWidth: 820px;
-$contenMinWidth: 510px;
-
-$contentMarginLeft: 250px;
-$contentPaddingLeft: 50px;
-$contentPaddingTop: 40px;
-$contentMarginBottom: 40px;
-$contentPaddingRight: 50px;
-
-$contentPaddingLeftFullWidth: 0;
-$contentPaddingRightFullWidth: 0;
-
 // Effects
 
 $transitionDuration : 0.5s;
@@ -23,3 +9,24 @@ $transitionDuration : 0.5s;
 // Header
 $headerHeight: 150px;
 $tabsHeight: 50px;
+
+
+// Column structure variables
+/*----------------------------------------*/
+
+//  content size
+
+$contentFixedWidth: 900px;
+$contentMinWidth: 510px;
+
+$contentPaddingLeft: 50px;
+$contentPaddingTop: 40px;
+$contentPaddingBottom: 40px;
+$contentPaddingRight: 50px;
+
+$contentPaddingLeftFullWidth: 0;
+$contentPaddingRightFullWidth: 0;
+
+// sidebar
+
+$sidebarFixedWidth: 450px;

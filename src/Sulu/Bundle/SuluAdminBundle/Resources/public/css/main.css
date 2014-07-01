@@ -1,3 +1,4 @@
+/*----------------------------------------*/
 /* line 6, ../scss/modules/base.scss */
 body {
   background-color: #f1f1f1;
@@ -5,57 +6,6 @@ body {
 
 /*----------------------------------------*/
 /* line 12, ../scss/modules/base.scss */
-#main {
-  height: 100%;
-}
-
-/* line 16, ../scss/modules/base.scss */
-.content-column {
-  height: 100%;
-  position: relative;
-  top: 0px;
-  left: 0px;
-  overflow: hidden;
-}
-/* line 23, ../scss/modules/base.scss */
-.content-column #content {
-  height: 100%;
-  overflow: auto;
-  min-width: 510px;
-  padding-top: 40px;
-  padding-left: 50px;
-  padding-right: 50px;
-  padding-bottom: 40px;
-}
-/* line 32, ../scss/modules/base.scss */
-.content-column #content h2.mainheadline {
-  margin-top: 35px;
-}
-/* line 36, ../scss/modules/base.scss */
-.content-column #content h1:first-child {
-  margin-top: 0;
-}
-/* line 40, ../scss/modules/base.scss */
-.content-column #content .content-tabs-content {
-  padding-top: 80px;
-}
-/* line 44, ../scss/modules/base.scss */
-.content-column #content.fullwidth {
-  max-width: none;
-  min-width: 0;
-}
-/* line 47, ../scss/modules/base.scss */
-.content-column #content.fullwidth.no-padding {
-  padding-left: 0;
-  padding-right: 0;
-}
-/* line 53, ../scss/modules/base.scss */
-.content-column #content.fullheight {
-  margin-top: -40px;
-}
-
-/*----------------------------------------*/
-/* line 61, ../scss/modules/base.scss */
 .control-label {
   padding-left: 5px;
   padding-right: 5px;
@@ -63,28 +13,108 @@ body {
 }
 
 /*----------------------------------------*/
-/* line 69, ../scss/modules/base.scss */
+/* line 20, ../scss/modules/base.scss */
 input, select {
   font-family: Helvetica, Arial;
 }
 
 /*----------------------------------------*/
-/* line 76, ../scss/modules/base.scss */
+/* line 27, ../scss/modules/base.scss */
 .pointer {
   cursor: pointer;
 }
 
-/* line 80, ../scss/modules/base.scss */
+/* line 31, ../scss/modules/base.scss */
 .block {
   display: block;
 }
 
 /*----------------------------------------*/
-/* line 87, ../scss/modules/base.scss */
+/* line 38, ../scss/modules/base.scss */
 .m-top-1 {
   margin-top: 1px !important;
 }
 
+/*----------------------------------------*/
+/* line 4, ../scss/modules/layout.scss */
+#main {
+  height: 100%;
+  min-width: 560px;
+}
+
+/* line 9, ../scss/modules/layout.scss */
+.content-column {
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  min-width: 510px;
+}
+/* line 15, ../scss/modules/layout.scss */
+.content-column #content {
+  height: 100%;
+  overflow: auto;
+  padding: 40px 50px 50px 40px;
+}
+/* line 20, ../scss/modules/layout.scss */
+.content-column #content h2.mainheadline {
+  margin-top: 35px;
+}
+/* line 24, ../scss/modules/layout.scss */
+.content-column #content h1:first-child {
+  margin-top: 0;
+}
+/* line 28, ../scss/modules/layout.scss */
+.content-column #content .content-tabs-content {
+  padding-top: 80px;
+}
+/* line 32, ../scss/modules/layout.scss */
+.content-column #content.fullwidth {
+  max-width: none;
+  min-width: 0;
+}
+/* line 35, ../scss/modules/layout.scss */
+.content-column #content.fullwidth.no-padding {
+  padding-left: 0;
+  padding-right: 0;
+}
+/* line 41, ../scss/modules/layout.scss */
+.content-column #content.fullheight {
+  margin-top: -40px;
+}
+/* line 46, ../scss/modules/layout.scss */
+.content-column.max {
+  float: none;
+  width: auto;
+}
+/* line 50, ../scss/modules/layout.scss */
+.content-column.fixed {
+  width: 900px;
+  float: left;
+}
+
+/* line 56, ../scss/modules/layout.scss */
+.sidebar-column {
+  height: 100%;
+  overflow: hidden;
+  background: #fff;
+}
+/* line 61, ../scss/modules/layout.scss */
+.sidebar-column.fixed {
+  width: 450px;
+  float: right;
+}
+/* line 65, ../scss/modules/layout.scss */
+.sidebar-column.max {
+  float: none;
+  width: auto;
+}
+
+@media only screen and (max-width: 1010px) {
+  /* line 73, ../scss/modules/layout.scss */
+  .sidebar-column {
+    display: none;
+  }
+}
 /* line 1, ../scss/modules/login.scss */
 #main.login {
   width: 100%;

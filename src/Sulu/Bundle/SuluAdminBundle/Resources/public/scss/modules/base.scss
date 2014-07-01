@@ -7,55 +7,6 @@ body {
     background-color: $backgroundColor;
 }
 
-// Main structure of the admin
-/*----------------------------------------*/
-#main {
-  height: 100%;
-}
-
-.content-column {
-  height: 100%;
-  position: relative;
-  top: 0px;
-  left: 0px;
-  overflow: hidden;
-
-  #content {
-    height: 100%;
-    overflow: auto;
-    min-width: $contenMinWidth;
-    padding-top: $contentPaddingTop;
-    padding-left: $contentPaddingLeft;
-    padding-right: $contentPaddingRight;
-    padding-bottom: $contentMarginBottom;
-
-    h2.mainheadline {
-      margin-top: 35px;
-    }
-
-    h1:first-child {
-      margin-top: 0;
-    }
-
-    .content-tabs-content {
-      padding-top: 80px;
-    }
-
-    &.fullwidth {
-      max-width: none;
-      min-width: 0;
-      &.no-padding {
-        padding-left: $contentPaddingLeftFullWidth;
-        padding-right: $contentPaddingRightFullWidth;
-      }
-    }
-
-    &.fullheight {
-      margin-top: -$contentPaddingTop;
-    }
-  }
-}
-
 // Control elements
 /*----------------------------------------*/
 .control-label {
