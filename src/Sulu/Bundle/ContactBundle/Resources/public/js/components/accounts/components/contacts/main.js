@@ -161,7 +161,9 @@ define([
             var contactInput = this.sandbox.dom.find(constants.contactSelector + ' input', constants.relationFormSelector),
                 id = this.sandbox.dom.data(contactInput, 'id'),
                 position = this.sandbox.dom.val(this.sandbox.dom.find(constants.positionSelector, constants.relationFormSelector));
-            this.sandbox.emit('sulu.contacts.accounts.contact.save', id, position);
+            if (!!id) {
+                this.sandbox.emit('sulu.contacts.accounts.contact.save', id, position);
+            }
         };
 
     return {
