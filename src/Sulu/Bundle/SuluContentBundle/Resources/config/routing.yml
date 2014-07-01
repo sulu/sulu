@@ -34,7 +34,6 @@ sulu_content.excerpt:
     pattern: /template/content/excerpt.html
     defaults: { _controller: SuluContentBundle:Template:excerpt }
 
-
 # Preview
 sulu_content.preview.changes:
     pattern: /preview/{contentUuid}.json
