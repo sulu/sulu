@@ -404,7 +404,7 @@ define([
         setTemplate: function(data) {
             this.template = data.template;
 
-            if (this.template !== '') {
+            if (this.template !== '' && this.template !== undefined && this.template !== null) {
                 this.sandbox.emit('sulu.header.toolbar.item.change', 'template', this.template);
                 this.sandbox.emit('sulu.header.toolbar.item.show', 'template');
             }
