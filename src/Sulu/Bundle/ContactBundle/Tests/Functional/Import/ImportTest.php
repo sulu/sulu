@@ -237,9 +237,6 @@ class ImportTest extends DatabaseTestCase
         $this->import->execute();
     }
 
-    /**
-     * @expectedException \Symfony\Component\Translation\Exception\NotFoundResourceException
-     */
     public function testImportWithoutFiles()
     {
         $this->import->execute();
