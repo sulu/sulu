@@ -381,21 +381,27 @@ define([], function() {
         loadContent = function() {
             //only request if URI has changed
             if (this.URI.hasChanged === true) {
+                var thenFunction = function(data) {
+                    this.items = data[this.options.resultKey] || [];
+
+                    this.sandbox.emit(DATA_RETRIEVED.call(this));
+                }.bind(this);
+
                 this.sandbox.emit(DATA_REQUEST.call(this));
                 startLoader.call(this);
 
                 // reset item visible
                 this.itemsVisible = this.options.visibleItems;
 
-                this.sandbox.util.load(this.URI.str)
-                    .then(function(data) {
-                        this.items = data[this.options.resultKey];
-
-                        this.sandbox.emit(DATA_RETRIEVED.call(this));
-                    }.bind(this))
-                    .then(function(error) {
-                        this.sandbox.logger.log(error);
-                    }.bind(this));
+                if (!!this.data.ids && this.data.ids.length > 0) {
+                    this.sandbox.util.load(this.URI.str)
+                        .then(thenFunction.bind(this))
+                        .then(function(error) {
+                            this.sandbox.logger.log(error);
+                        }.bind(this));
+                } else {
+                    thenFunction.call(this, {});
+                }
             }
         },
 
