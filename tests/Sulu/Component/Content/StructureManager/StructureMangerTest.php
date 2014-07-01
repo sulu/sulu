@@ -8,12 +8,14 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Mapper;
+namespace Sulu\Component\Content\StructureMapper;
 
+use PHPCR\NodeInterface;
 use Psr\Log\LoggerInterface;
 use Sulu\Component\Content\Block\BlockProperty;
 use Sulu\Component\Content\PropertyTag;
 use Sulu\Component\Content\Section\SectionProperty;
+use Sulu\Component\Content\StructureExtension\StructureExtension;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManager;
 use Sulu\Component\Content\StructureManagerInterface;
@@ -545,4 +547,59 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('images', $structure->getProperty('images')->getName());
         $this->assertEquals('pages', $structure->getProperty('pages')->getName());
     }
+
+    public function testExtensions()
+    {
+        $this->structureManager->addExtension(new TestExtension('test1', 'test1'));
+        $this->structureManager->addExtension(new TestExtension('test2', 'test2'), 'template');
+
+        $template = $this->structureManager->getStructure('template');
+        $templateSection = $this->structureManager->getStructure('template_sections');
+
+        $this->assertEquals(2, sizeof($template->getExtensions()));
+        $this->assertEquals(1, sizeof($templateSection->getExtensions()));
+
+        $extensions = array_values($template->getExtensions());
+        $this->assertEquals('test1', $extensions[0]->getName());
+        $this->assertEquals('test2', $extensions[1]->getName());
+
+        $extensions = array_values($templateSection->getExtensions());
+        $this->assertEquals('test1', $extensions[0]->getName());
+    }
 }
+
+class TestExtension extends StructureExtension
+{
+    protected $properties = array(
+        'a',
+        'b'
+    );
+
+    function __construct($name, $additionalPrefix = null)
+    {
+        $this->name = $name;
+        $this->additionalPrefix = $additionalPrefix;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function save(NodeInterface $node, $data, $webspaceKey, $languageCode)
+    {
+        $this->data = $data;
+        $node->setProperty($this->getPropertyName('a'), $data['a']);
+        $node->setProperty($this->getPropertyName('b'), $data['b']);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function load(NodeInterface $node, $webspaceKey, $languageCode)
+    {
+        $this->data = array(
+            'a' => $node->getPropertyValueWithDefault($this->getPropertyName('a'), ''),
+            'b' => $node->getPropertyValueWithDefault($this->getPropertyName('b'), '')
+        );
+    }
+}
+

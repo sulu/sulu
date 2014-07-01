@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\CoreBundle;
 
 use Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\RequestAnalyzerCompilerPass;
+use Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\StructureExtensionCompilerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -21,5 +22,6 @@ class SuluCoreBundle extends Bundle
         parent::build($container);
 
         $container->addCompilerPass(new RequestAnalyzerCompilerPass());
+        $container->addCompilerPass(new StructureExtensionCompilerPass());
     }
 }

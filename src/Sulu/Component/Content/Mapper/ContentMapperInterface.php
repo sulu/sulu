@@ -47,6 +47,26 @@ interface ContentMapperInterface
     );
 
     /**
+     * save a extension with given name and data to an existing node
+     * @param string $uuid
+     * @param array $data
+     * @param string $extensionName
+     * @param string $webspaceKey
+     * @param string $languageCode
+     * @param integer $userId
+     *
+     * @return StructureInterface
+     */
+    public function saveExtension(
+        $uuid,
+        $data,
+        $extensionName,
+        $webspaceKey,
+        $languageCode,
+        $userId
+    );
+
+    /**
      * saves the given data in the content storage
      * @param array $data The data to be saved
      * @param string $templateKey Name of template

@@ -11,6 +11,7 @@
 namespace Sulu\Component\Content;
 
 use DateTime;
+use Sulu\Component\Content\StructureExtension\StructureExtensionInterface;
 use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
 
 /**
@@ -296,4 +297,27 @@ interface StructureInterface extends \JsonSerializable
      * @return mixed
      */
     public function getPropertyValueByTagName($tagName);
+
+    /**
+     * @param StructureExtensionInterface $extension
+     */
+    public function addExtension(StructureExtensionInterface $extension);
+
+    /**
+     * @return StructureExtensionInterface[]
+     */
+    public function getExtensions();
+
+    /**
+     * return extension with given name
+     * @param string $name
+     * @return StructureExtensionInterface
+     */
+    public function getExtension($name);
+
+    /**
+     * @param $extensions
+     * @return mixed
+     */
+    public function setExtensions($extensions);
 }

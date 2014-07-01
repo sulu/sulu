@@ -11,8 +11,9 @@
 namespace Sulu\Component\Content;
 
 use DateTime;
-use Sulu\Component\Content\Section\SectionProperty;
+use Sulu\Component\Content\Exception\ExtensionNotFoundException;
 use Sulu\Component\Content\Section\SectionPropertyInterface;
+use Sulu\Component\Content\StructureExtension\StructureExtensionInterface;
 use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
 
 /**
@@ -152,6 +153,11 @@ abstract class Structure implements StructureInterface
     private $tags = array();
 
     /**
+     * @var StructureExtensionInterface[]
+     */
+    private $extensions = array();
+
+    /**
      * @param $key string
      * @param $view string
      * @param $controller string
@@ -217,6 +223,45 @@ abstract class Structure implements StructureInterface
                     $this->tags[$tag->getName()]['lowest'] = $property;
                 }
             }
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addExtension(StructureExtensionInterface $extension)
+    {
+        $this->extensions[$extension->getName()] = $extension;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getExtensions()
+    {
+        return $this->extensions;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getExtension($name)
+    {
+        if (isset($this->extensions[$name])) {
+            return $this->extensions[$name];
+        } else {
+            throw new ExtensionNotFoundException($this, $name);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setExtensions($extensions)
+    {
+        $this->extensions = array();
+        foreach ($extensions as $extension) {
+            $this->extensions[$extension->getName()] = clone($extension);
         }
     }
 
@@ -744,6 +789,10 @@ abstract class Structure implements StructureInterface
             }
 
             $this->appendProperties($this->getProperties(), $result);
+
+            foreach ($this->getExtensions() as $extension) {
+                $result['extensions'][$extension->getName()] = $extension->getData();
+            }
 
             return $result;
         } else {
