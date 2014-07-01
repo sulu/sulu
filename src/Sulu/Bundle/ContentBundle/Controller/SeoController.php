@@ -24,7 +24,6 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class SeoController extends RestController implements ClassResourceInterface
 {
-
     use RequestParametersTrait;
 
     /**

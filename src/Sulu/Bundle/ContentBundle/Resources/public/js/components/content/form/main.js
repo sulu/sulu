@@ -425,11 +425,6 @@ define(['app-config'], function(AppConfig) {
                 this.sandbox.emit('sulu.header.toolbar.item.change', 'template', this.template);
             }
             this.sandbox.emit('sulu.header.toolbar.item.enable', 'template', true);
-
-            if (this.hiddenTemplate) {
-                this.hiddenTemplate = false;
-                this.sandbox.emit('sulu.header.toolbar.item.show', 'template');
-            }
         },
 
         submit: function() {
@@ -466,9 +461,7 @@ define(['app-config'], function(AppConfig) {
             this.sandbox.on('sulu.preview.update', function($el, value, changeOnKey) {
                 if (!!this.data.id) {
                     var property = this.getSequence($el);
-                    if (this.ws !== null) {
-                        this.updatePreview(property, value);
-                    } else if (!changeOnKey) {
+                    if (this.ws !== null || !changeOnKey) {
                         this.updatePreview(property, value);
                     }
                 }
