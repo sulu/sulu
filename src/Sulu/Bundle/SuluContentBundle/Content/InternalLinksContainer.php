@@ -82,17 +82,15 @@ class InternalLinksContainer implements \Serializable
      */
     private function loadData()
     {
-        if ($this->ids !== null) {
-            $result = array();
+        $result = array();
 
+        if ($this->ids !== null) {
             foreach ($this->ids as $id) {
                 $result[] = $this->contentMapper->load($id, $this->webspaceKey, $this->languageCode);
             }
-
-            return $result;
-        } else {
-            return array();
         }
+
+        return $result;
     }
 
     /**
