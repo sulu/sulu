@@ -152,7 +152,7 @@ class ContactController extends AbstractContactController
                             $newFields[] = $field;
                     }
                 }
-                $request->query->add(array('fields' => implode($newFields, ',')));
+                $request->query->add(array('fields' => implode(',', $newFields)));
             }
 
             // check if fullname should be returned
