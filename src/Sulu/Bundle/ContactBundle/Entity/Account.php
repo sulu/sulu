@@ -126,7 +126,7 @@ class Account extends ApiEntity
     /**
      * @var string
      */
-    private $division;
+    private $corporation;
 
     /**
      * @var integer
@@ -173,6 +173,11 @@ class Account extends ApiEntity
      * @var \Sulu\Bundle\ContactBundle\Entity\TermsOfDelivery
      */
     private $termsOfDelivery;
+
+    /**
+     * @var string
+     */
+    private $number;
 
     /**
      * Constructor
@@ -664,26 +669,26 @@ class Account extends ApiEntity
     }
 
     /**
-     * Set division
+     * Set corporation
      *
-     * @param string $division
+     * @param string $corporation
      * @return Account
      */
-    public function setDivision($division)
+    public function setCorporation($corporation)
     {
-        $this->division = $division;
+        $this->corporation = $corporation;
     
         return $this;
     }
 
     /**
-     * Get division
+     * Get corporation
      *
      * @return string 
      */
-    public function getDivision()
+    public function getCorporation()
     {
-        return $this->division;
+        return $this->corporation;
     }
 
     /**
@@ -986,5 +991,56 @@ class Account extends ApiEntity
     public function getTermsOfDelivery()
     {
         return $this->termsOfDelivery;
+    }
+
+    /**
+     * Set number
+     *
+     * @param string $number
+     * @return Account
+     */
+    public function setNumber($number)
+    {
+        $this->number = $number;
+    
+        return $this;
+    }
+
+    /**
+     * Get number
+     *
+     * @return string 
+     */
+    public function getNumber()
+    {
+        return $this->number;
+    }
+    /**
+     * @var string
+     */
+    private $externalId;
+
+
+    /**
+     * Set externalId
+     *
+     * @param string $externalId
+     * @return Account
+     */
+    public function setExternalId($externalId)
+    {
+        $this->externalId = $externalId;
+    
+        return $this;
+    }
+
+    /**
+     * Get externalId
+     *
+     * @return string 
+     */
+    public function getExternalId()
+    {
+        return $this->externalId;
     }
 }

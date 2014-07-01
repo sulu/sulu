@@ -14,25 +14,17 @@ use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Put;
 use FOS\RestBundle\Controller\Annotations\Post;
-use Sulu\Bundle\ContactBundle\Entity\BankAccount;
+use Sulu\Bundle\ContactBundle\Entity\AccountContact;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\TermsOfDelivery;
 use Sulu\Bundle\ContactBundle\Entity\TermsOfPayment;
-use Sulu\Bundle\ContactBundle\Entity\AccountCategory;
-use Sulu\Bundle\ContactBundle\Entity\Fax;
-use Sulu\Bundle\ContactBundle\Entity\FaxType;
-use Sulu\Bundle\ContactBundle\Entity\Address;
-use Sulu\Bundle\ContactBundle\Entity\Email;
-use Sulu\Bundle\ContactBundle\Entity\Note;
-use Sulu\Bundle\ContactBundle\Entity\Phone;
-use Sulu\Bundle\ContactBundle\Entity\Url;
-use Sulu\Bundle\ContactBundle\Entity\UrlType;
 use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\RestController;
 use \DateTime;
+use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\Request;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -48,8 +40,9 @@ class AccountController extends AbstractContactController
      * {@inheritdoc}
      */
     protected $entityName = 'SuluContactBundle:Account';
-    protected $contactsEntityName = 'SuluContactBundle:Contact';
+    protected $contactEntityName = 'SuluContactBundle:Contact';
     protected $accountCategoryEntityName = 'SuluContactBundle:AccountCategory';
+    protected $accountContactEntityName = 'SuluContactBundle:AccountContact';
     protected $termsOfPaymentEntityName = 'SuluContactBundle:TermsOfPayment';
     protected $termsOfDeliveryEntityName = 'SuluContactBundle:TermsOfDelivery';
 
@@ -66,12 +59,20 @@ class AccountController extends AbstractContactController
     /**
      * {@inheritdoc}
      */
-    protected $fieldsExcluded = array('lft', 'rgt', 'depth');
+    protected $fieldsExcluded = array('lft', 'rgt', 'depth','externalId');
 
     /**
      * {@inheritdoc}
      */
-    protected $fieldsHidden = array('created', 'type', 'division', 'disabled', 'uid', 'registerNumber', 'placeOfJurisdiction');
+    protected $fieldsHidden = array(
+        'id',
+        'created',
+        'type',
+        'disabled',
+        'uid',
+        'registerNumber',
+        'placeOfJurisdiction'
+    );
 
     /**
      * {@inheritdoc}
@@ -81,7 +82,11 @@ class AccountController extends AbstractContactController
     /**
      * {@inheritdoc}
      */
-    protected $fieldsSortOrder = array(0 => 'id');
+    protected $fieldsSortOrder = array(
+        0 => 'number',
+        1 => 'name',
+        2 => 'corporation',
+    );
 
     /**
      * {@inheritdoc}
@@ -157,10 +162,100 @@ class AccountController extends AbstractContactController
     {
         if ($request->get('flat') == 'true') {
             // flat structure
-            $view = $this->responseList(array('accountContacts_account_id' => $id), $this->contactsEntityName);
+            $view = $this->responseList(array('accountContacts_account_id' => $id), $this->contactEntityName);
         } else {
-            $contacts = $this->getDoctrine()->getRepository($this->contactsEntityName)->findByAccountId($id);
+            $contacts = $this->getDoctrine()->getRepository($this->contactEntityName)->findByAccountId($id);
             $view = $this->view($this->createHalResponse($contacts), 200);
+        }
+        return $this->handleView($view);
+    }
+
+    /**
+     * @param $accountId
+     * @param $contactId
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Exception
+     */
+    public function putContactsAction($accountId, $contactId, Request $request)
+    {
+        try {
+            // get account
+            /** @var Account $account */
+            $account = $this->getDoctrine()
+                ->getRepository($this->entityName)
+                ->find($accountId);
+            if (!$account) {
+                throw new EntityNotFoundException('account', $accountId);
+            }
+
+            // get contact
+            $contact = $this->getDoctrine()
+                ->getRepository($this->contactEntityName)
+                ->find($contactId);
+            if (!$contact) {
+                throw new EntityNotFoundException('contact', $contactId);
+            }
+
+            // check if relation already exists
+            $accountContact = $this->getDoctrine()
+                ->getRepository($this->accountContactEntityName)
+                ->findOneBy(array('contact' => $contact, 'account' => $account));
+            if ($accountContact) {
+                throw new \Exception('Relation already exists');
+            }
+
+            // create relation
+            $accountContact = new AccountContact();
+            // if contact has no main relation - set as main
+            $accountContact->setMain($contact->getAccountContacts()->isEmpty());
+            $accountContact->setAccount($account);
+            $accountContact->setContact($contact);
+            $accountContact->setPosition($request->get('position'));
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($accountContact);
+            $em->flush();
+
+            $view = $this->view($contact, 200);
+        } catch (EntityNotFoundException $enfe) {
+            $view = $this->view($enfe->toArray(), 404);
+        } catch (RestException $exc) {
+            $view = $this->view($exc->toArray(), 400);
+        } catch (\Exception $e) {
+            $view = $this->view($e->getMessage(), 400);
+        }
+
+        return $this->handleView($view);
+    }
+
+    /**
+     * Deleted account contact
+     * @param $accountId
+     * @param $contactId
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Exception
+     */
+    public function deleteContactsAction($accountId, $contactId)
+    {
+        try {
+            // check if relation exists
+            $accountContact = $this->getDoctrine()
+                ->getRepository($this->accountContactEntityName)
+                ->findByForeignIds($accountId, $contactId);
+            if (!$accountContact) {
+                throw new EntityNotFoundException('AccountContact', $accountId . $contactId);
+            }
+            $id = $accountContact->getId();
+
+            // remove accountContact
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($accountContact);
+            $em->flush();
+
+            $view = $this->view($id, 200);
+        } catch (EntityNotFoundException $enfe) {
+            $view = $this->view($enfe->toArray(), 404);
         }
         return $this->handleView($view);
     }
@@ -207,6 +302,8 @@ class AccountController extends AbstractContactController
 
             $account->setName($request->get('name'));
 
+            $account->setCorporation($request->get('corporation'));
+
             $account->setType($request->get('type', 0));
 
             $disabled = $request->get('disabled');
@@ -232,7 +329,7 @@ class AccountController extends AbstractContactController
             $this->addNewContactRelations($account, $request);
 
             // set new primary address
-            if($this->newPrimaryAddress){
+            if ($this->newPrimaryAddress) {
                 $this->setNewPrimaryAddress($account, $this->newPrimaryAddress);
             }
 
@@ -277,6 +374,7 @@ class AccountController extends AbstractContactController
 
                 // set name
                 $account->setName($request->get('name'));
+                $account->setCorporation($request->get('corporation'));
 
                 // set disabled
                 $disabled = $request->get('disabled');
@@ -309,7 +407,7 @@ class AccountController extends AbstractContactController
                 }
 
                 // set new primary address
-                if($this->newPrimaryAddress){
+                if ($this->newPrimaryAddress) {
                     $this->setNewPrimaryAddress($account, $this->newPrimaryAddress);
                 }
 
@@ -397,6 +495,9 @@ class AccountController extends AbstractContactController
                 if (!is_null($request->get('registerNumber'))) {
                     $account->setRegisterNumber($request->get('registerNumber'));
                 }
+                if (!is_null($request->get('number'))) {
+                    $account->setNumber($request->get('number'));
+                }
 
                 if (!is_null($request->get('placeOfJurisdiction'))) {
                     $account->setPlaceOfJurisdiction($request->get('placeOfJurisdiction'));
@@ -427,7 +528,8 @@ class AccountController extends AbstractContactController
      * @param Account $account
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      */
-    protected function processTerms(Request $request, Account $account){
+    protected function processTerms(Request $request, Account $account)
+    {
         if (!is_null($request->get('termsOfPayment'))) {
             $id = $request->get('termsOfPayment')['id'];
             /** @var TermsOfPayment $termsOfPayment */
