@@ -25,25 +25,33 @@ class TemplateController extends Controller
 {
     /**
      * returns all structures in system
+     * @param \Symfony\Component\HttpFoundation\Request $request
      * @return JsonResponse
      */
-    public function getAction()
+    public function getAction(Request $request)
     {
+        $internal = $request->get('internal', false);
+
         /** @var StructureManagerInterface $structureManager */
         $structureManager = $this->get('sulu.content.structure_manager');
         $structures = $structureManager->getStructures();
 
         $templates = array();
-        foreach($structures as $structure){
-            $templates[] = array(
-                'template' =>$structure->getKey()
-            );
+        foreach ($structures as $structure) {
+            if (!$structure->getInternal() || $internal !== false) {
+                $templates[] = array(
+                    'internal' => $structure->getInternal(),
+                    'template' => $structure->getKey()
+
+                );
+            }
         }
 
         $data = array(
             '_embedded' => $templates,
-            'total' => sizeof($templates),
+            'total' => sizeof($templates)
         );
+
         return new JsonResponse($data);
     }
 
@@ -145,11 +153,14 @@ class TemplateController extends Controller
             );
         }
 
-        return $this->render('SuluContentBundle:Template:column.html.twig', array(
+        return $this->render(
+            'SuluContentBundle:Template:column.html.twig',
+            array(
                 'localizations' => $localizations,
                 'currentLocalization' => $currentLocalization,
                 'webspace' => $webspace
-            ));
+            )
+        );
     }
 
     /**
@@ -177,6 +188,7 @@ class TemplateController extends Controller
             '_embedded' => $localizations,
             'total' => sizeof($localizations),
         );
+
         return new JsonResponse($data);
     }
 

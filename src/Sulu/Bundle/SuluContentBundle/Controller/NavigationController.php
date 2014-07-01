@@ -12,6 +12,7 @@ namespace Sulu\Bundle\ContentBundle\Controller;
 
 use Sulu\Bundle\AdminBundle\Admin\ContentNavigation;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -23,8 +24,7 @@ class NavigationController extends Controller
     const SERVICE_NAME = 'sulu_content.admin.content_navigation';
 
     /**
-     * Lists all the contacts or filters the contacts by parameters
-     * Special function for lists
+     * Returns content navigation for content form
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function contentAction()
@@ -33,6 +33,8 @@ class NavigationController extends Controller
         if ($this->has(self::SERVICE_NAME)) {
             $contentNavigation = $this->get(self::SERVICE_NAME);
         }
+
+        $contentNavigation->generate(true);
 
         return new Response(json_encode($contentNavigation->toArray('content')));
     }
