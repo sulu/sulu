@@ -15,7 +15,6 @@
         <parameter key="sulu_media.image.command.resize.class">Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\ResizeCommand</parameter>
         <parameter key="sulu_media.image.command.scale.class">Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\ScaleCommand</parameter>
         <parameter key="sulu_media.media_selection.class">Sulu\Bundle\MediaBundle\Content\Types\MediaSelectionContentType</parameter>
-        <parameter key="sulu_media.rest_object_helper.class">Sulu\Bundle\MediaBundle\Media\RestObject\RestObjectHelper</parameter>
         <parameter key="sulu_media.collection_manager.class">Sulu\Bundle\MediaBundle\Collection\Manager\DefaultCollectionManager</parameter>
     </parameters>
     <services>
@@ -75,6 +74,7 @@
             <argument type="service" id="sulu_media.storage" />
             <argument type="service" id="sulu_media.format_cache" />
             <argument type="service" id="sulu_media.file_validator" />
+            <argument type="service" id="sulu_media.format_manager" />
             <argument>%sulu_media.media.max_file_size%</argument>
             <argument>%sulu_media.media.blocked_file_types%</argument>
             <argument>%sulu_media.media.types%</argument>
@@ -91,7 +91,6 @@
 
         <service id="sulu.content.type.media_selection" class="%sulu_media.media_selection.class%">
             <argument type="service" id="sulu_media.media_manager"/>
-            <argument type="service" id="sulu_media.rest_object_helper"/>
             <argument type="string">SuluMediaBundle:Template:content-types/media-selection.html.twig</argument>
         </service>
 
@@ -103,10 +102,6 @@
             <argument type="service" id="doctrine.orm.entity_manager" />
             <argument type="string">%sulu_media.collection.previews.limit%</argument>
             <argument type="string">%sulu_media.collection.previews.format%</argument>
-        </service>
-
-        <service id="sulu_media.rest_object_helper" class="%sulu_media.rest_object_helper.class%">
-            <argument type="service" id="sulu_media.format_manager" />
         </service>
     </services>
 </container>

@@ -662,7 +662,7 @@ class MediaControllerTest extends DatabaseTestCase
         $client->request('DELETE', '/api/media/404');
         $this->assertEquals('404', $client->getResponse()->getStatusCode());
 
-        $client->request('GET', '/api/collections?flat=true');
+        $client->request('GET', '/api/collections');
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(1, $response->total);
     }
