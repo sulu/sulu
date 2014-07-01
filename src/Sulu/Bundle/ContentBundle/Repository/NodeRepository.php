@@ -52,7 +52,8 @@ class NodeRepository implements NodeRepositoryInterface
         SessionManagerInterface $sessionManager,
         UserManagerInterface $userManager,
         WebspaceManagerInterface $webspaceManager
-    ) {
+    )
+    {
         $this->mapper = $mapper;
         $this->sessionManager = $sessionManager;
         $this->userManager = $userManager;
@@ -97,7 +98,8 @@ class NodeRepository implements NodeRepositoryInterface
         $complete = true,
         $excludeGhosts = false,
         $extension = null
-    ) {
+    )
+    {
         $result = $structure->toArray($complete);
 
         // add node name
@@ -133,7 +135,8 @@ class NodeRepository implements NodeRepositoryInterface
         $breadcrumb = false,
         $complete = true,
         $loadGhostContent = false
-    ) {
+    )
+    {
         $structure = $this->getMapper()->load($uuid, $webspaceKey, $languageCode, $loadGhostContent);
 
         $result = $this->prepareNode($structure, $webspaceKey, $languageCode, 1, $complete);
@@ -193,7 +196,8 @@ class NodeRepository implements NodeRepositoryInterface
         $flat = true,
         $complete = true,
         $excludeGhosts = false
-    ) {
+    )
+    {
         $nodes = $this->getMapper()->loadByParent(
             $parent,
             $webspaceKey,
@@ -220,7 +224,8 @@ class NodeRepository implements NodeRepositoryInterface
         $languageCode,
         $depth = 1,
         $excludeGhosts = false
-    ) {
+    )
+    {
         $webspace = $this->webspaceManager->getWebspaceCollection()->getWebspace($webspaceKey);
 
         if ($depth > 0) {
@@ -345,7 +350,8 @@ class NodeRepository implements NodeRepositoryInterface
         $parentUuid = null,
         $state = null,
         $showInNavigation = null
-    ) {
+    )
+    {
         $node = $this->getMapper()->save(
             $data,
             $templateKey,
@@ -371,7 +377,8 @@ class NodeRepository implements NodeRepositoryInterface
         $languageCode,
         $excludeGhosts = false,
         $appendWebspaceNode = false
-    ) {
+    )
+    {
         $nodes = $this->getMapper()->loadTreeByUuid($uuid, $languageCode, $webspaceKey, $excludeGhosts, false);
 
         if ($appendWebspaceNode) {
@@ -391,7 +398,8 @@ class NodeRepository implements NodeRepositoryInterface
                                 $excludeGhosts
                             ),
                         '_links' => array(
-                            'children' => $this->apiBasePath . '?depth=1&webspace=' . $webspaceKey . '&language=' . $languageCode . ($excludeGhosts === true ? '&exclude-ghosts=true' : '')
+                            'children' => $this->apiBasePath . '?depth=1&webspace=' . $webspaceKey .
+                                '&language=' . $languageCode . ($excludeGhosts === true ? '&exclude-ghosts=true' : '')
                         )
                     )
                 )
@@ -404,7 +412,9 @@ class NodeRepository implements NodeRepositoryInterface
 
         // add api links
         $result['_links'] = array(
-            'self' => $this->apiBasePath . '/tree?uuid=' . $uuid . '&webspace=' . $webspaceKey . '&language=' . $languageCode . ($excludeGhosts === true ? '&exclude-ghosts=true' : '') . ($appendWebspaceNode === true ? '&webspace-node=true' : ''),
+            'self' => $this->apiBasePath . '/tree?uuid=' . $uuid . '&webspace=' . $webspaceKey . '&language=' .
+                $languageCode . ($excludeGhosts === true ? '&exclude-ghosts=true' : '') .
+                ($appendWebspaceNode === true ? '&webspace-node=true' : ''),
         );
 
         return $result;
@@ -428,7 +438,8 @@ class NodeRepository implements NodeRepositoryInterface
 
         // prepare data
         $data['_links'] = array(
-            'self' => $this->apiBasePath . '/' . $uuid . '/' . $extensionName . '?webspace=' . $webspaceKey . '&language=' . $languageCode,
+            'self' => $this->apiBasePath . '/' . $uuid . '/' . $extensionName . '?webspace=' . $webspaceKey .
+                '&language=' . $languageCode,
         );
 
         return $data;
@@ -439,7 +450,14 @@ class NodeRepository implements NodeRepositoryInterface
      */
     public function saveExtensionData($uuid, $data, $extensionName, $webspaceKey, $languageCode, $userId)
     {
-        $structure = $this->getMapper()->saveExtension($uuid, $data, $extensionName, $webspaceKey, $languageCode, $userId);
+        $structure = $this->getMapper()->saveExtension(
+            $uuid,
+            $data,
+            $extensionName,
+            $webspaceKey,
+            $languageCode,
+            $userId
+        );
 
         // extract extension
         $extension = $structure->getExtension($extensionName);
@@ -452,7 +470,8 @@ class NodeRepository implements NodeRepositoryInterface
 
         // prepare data
         $data['_links'] = array(
-            'self' => $this->apiBasePath . '/' . $uuid . '/' . $extensionName . '?webspace=' . $webspaceKey . '&language=' . $languageCode,
+            'self' => $this->apiBasePath . '/' . $uuid . '/' . $extensionName . '?webspace=' . $webspaceKey .
+                '&language=' . $languageCode,
         );
 
         return $data;
