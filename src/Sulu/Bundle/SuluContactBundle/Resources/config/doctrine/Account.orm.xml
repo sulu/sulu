@@ -21,10 +21,14 @@
         </field>
         <field name="name" type="string" column="name" length="60"/>
 
-        <field name="division" type="string" column="division" length="255" nullable="true"/>
+        <field name="externalId" type="string" column="externalId" length="255" nullable="true" />
+        <field name="number" type="string" column="number" length="255" nullable="true"/>
+
+        <field name="corporation" type="string" column="corporation" length="255" nullable="true"/>
 
         <field name="created" type="datetime" column="created"/>
         <field name="changed" type="datetime" column="changed"/>
+
 
         <field name="disabled" type="integer" column="disabled" length="1" nullable="false"/>
         <field name="type" type="integer" column="type" nullable="false" />
