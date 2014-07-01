@@ -49,11 +49,13 @@ define([], function() {
         },
 
         setData: function(data) {
-            if (data.nodeType === 1) {
+            var type = parseInt(data.nodeType);
+
+            if (type === 1) {
                 this.sandbox.dom.attr('#content-node-type', 'checked', true);
-            } else if (data.nodeType === 2) {
+            } else if (type === 2) {
                 this.sandbox.dom.attr('#internal-link-node-type', 'checked', true);
-            } else if (data.nodeType === 4) {
+            } else if (type === 4) {
                 this.sandbox.dom.attr('#external-link-node-type', 'checked', true);
             }
 
@@ -76,7 +78,7 @@ define([], function() {
             var data = {};
 
             data.navigation = this.sandbox.dom.prop('#show-in-navigation', 'checked');
-            data.nodeType = this.sandbox.dom.val('input[name="nodeType"]:checked');
+            data.nodeType = parseInt(this.sandbox.dom.val('input[name="nodeType"]:checked'));
 
             this.data = this.sandbox.util.extend(true, {}, this.data, data);
             this.sandbox.emit('sulu.content.contents.save', this.data);
