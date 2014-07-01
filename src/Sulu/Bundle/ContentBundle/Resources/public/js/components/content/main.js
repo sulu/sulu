@@ -22,8 +22,6 @@ define([
             this.saved = true;
             this.contentChanged = false;
 
-            this.headerInitialized = this.sandbox.data.deferred();
-
             if (this.options.display === 'column') {
                 this.renderColumn();
             } else {
@@ -49,7 +47,6 @@ define([
 
         loadData: function() {
             this.content = new Content({id: this.options.id});
-            this.loadDataDeferred = this.sandbox.data.deferred();
 
             this.content.fullFetch(
                 this.options.webspace,
@@ -482,11 +479,15 @@ define([
         },
 
         header: function() {
+            // because it is called first
+            this.headerInitialized = this.sandbox.data.deferred();
+            this.loadDataDeferred = this.sandbox.data.deferred();
+
             this.sandbox.once('sulu.header.initialized', function() {
                 this.headerInitialized.resolve();
             }.bind(this));
 
-            var noBack = (this.options.id === 'index');
+            var noBack = (this.options.id === 'index'), def;
 
             if (this.options.display === 'column') {
                 this.fullSize = {
@@ -509,70 +510,76 @@ define([
                     }
                 };
             } else {
-                return {
-                    noBack: noBack,
+                def = this.sandbox.data.deferred();
+                this.loadDataDeferred.then(function() {
+                    var x = {
+                        noBack: noBack,
 
-                    tabs: {
-                        url: '/admin/content/navigation/content'
-                    },
-
-                    toolbar: {
-                        parentTemplate: 'default',
-
-                        languageChanger: {
-                            url: '/admin/content/languages/' + this.options.webspace,
-                            preSelected: this.options.language
+                        tabs: {
+                            url: '/admin/content/navigation/content?type=' + this.data.nodeType + '&id=' + this.data.id
                         },
 
-                        template: [
-                            {
-                                'id': 'state',
-                                'group': 'left',
-                                'position': 100,
-                                'type': 'select',
-                                items: [
-                                    {
-                                        'id': 1,
-                                        'title': this.sandbox.translate('toolbar.state-test'),
-                                        'icon': 'husky-test',
-                                        'callback': function() {
-                                            this.sandbox.emit('sulu.dropdown.state.item-clicked', 1);
-                                        }.bind(this)
-                                    },
-                                    {
-                                        'id': 2,
-                                        'title': this.sandbox.translate('toolbar.state-publish'),
-                                        'icon': 'husky-publish',
-                                        'callback': function() {
-                                            this.sandbox.emit('sulu.dropdown.state.item-clicked', 2);
+                        toolbar: {
+                            parentTemplate: 'default',
+
+                            languageChanger: {
+                                url: '/admin/content/languages/' + this.options.webspace,
+                                preSelected: this.options.language
+                            },
+
+                            template: [
+                                {
+                                    'id': 'state',
+                                    'group': 'left',
+                                    'position': 100,
+                                    'type': 'select',
+                                    items: [
+                                        {
+                                            'id': 1,
+                                            'title': this.sandbox.translate('toolbar.state-test'),
+                                            'icon': 'husky-test',
+                                            'callback': function() {
+                                                this.sandbox.emit('sulu.dropdown.state.item-clicked', 1);
+                                            }.bind(this)
+                                        },
+                                        {
+                                            'id': 2,
+                                            'title': this.sandbox.translate('toolbar.state-publish'),
+                                            'icon': 'husky-publish',
+                                            'callback': function() {
+                                                this.sandbox.emit('sulu.dropdown.state.item-clicked', 2);
+                                            }.bind(this)
+                                        }
+                                    ]
+                                },
+                                {
+                                    id: 'template',
+                                    icon: 'pencil',
+                                    iconSize: 'large',
+                                    group: 'left',
+                                    position: 10,
+                                    type: 'select',
+                                    title: '',
+                                    hidden: false,
+                                    itemsOption: {
+                                        url: '/admin/content/template',
+                                        titleAttribute: 'template',
+                                        idAttribute: 'template',
+                                        translate: true,
+                                        languageNamespace: 'template.',
+                                        callback: function(item) {
+                                            this.template = item.template;
+                                            this.sandbox.emit('sulu.dropdown.template.item-clicked', item);
                                         }.bind(this)
                                     }
-                                ]
-                            },
-                            {
-                                id: 'template',
-                                icon: 'pencil',
-                                iconSize: 'large',
-                                group: 'left',
-                                position: 10,
-                                type: 'select',
-                                title: '',
-                                hidden: false,
-                                itemsOption: {
-                                    url: '/admin/content/template',
-                                    titleAttribute: 'template',
-                                    idAttribute: 'template',
-                                    translate: true,
-                                    languageNamespace: 'template.',
-                                    callback: function(item) {
-                                        this.template = item.template;
-                                        this.sandbox.emit('sulu.dropdown.template.item-clicked', item);
-                                    }.bind(this)
                                 }
-                            }
-                        ]
-                    }
-                };
+                            ]
+                        }
+                    };
+                    def.resolveWith(this, [x]);
+                }.bind(this));
+
+                return def;
             }
         }
     };
