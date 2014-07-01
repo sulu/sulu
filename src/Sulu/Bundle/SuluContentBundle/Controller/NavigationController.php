@@ -13,6 +13,7 @@ namespace Sulu\Bundle\ContentBundle\Controller;
 use Sulu\Bundle\AdminBundle\Admin\ContentNavigation;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -25,16 +26,18 @@ class NavigationController extends Controller
 
     /**
      * Returns content navigation for content form
+     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function contentAction()
+    public function contentAction(Request $request)
     {
         /** @var ContentNavigation $contentNavigation */
-        if ($this->has(self::SERVICE_NAME)) {
-            $contentNavigation = $this->get(self::SERVICE_NAME);
-        }
+        $contentNavigation = $this->get(self::SERVICE_NAME);
 
-        $contentNavigation->generate(true);
+        $uuid = $request->get('uuid');
+        $type = $request->get('type');
+
+        $contentNavigation->generate($uuid !== 'index', $type);
 
         return new Response(json_encode($contentNavigation->toArray('content')));
     }

@@ -49,8 +49,12 @@ define([], function() {
         },
 
         setData: function(data) {
-            if (this.options.id === 'index') {
-                this.sandbox.dom.remove('#show-in-navigation-container');
+            if (data.nodeType === 1) {
+                this.sandbox.dom.attr('#content-node-type', 'checked', true);
+            } else if (data.nodeType === 2) {
+                this.sandbox.dom.attr('#internal-link-node-type', 'checked', true);
+            } else if (data.nodeType === 4) {
+                this.sandbox.dom.attr('#external-link-node-type', 'checked', true);
             }
 
             this.sandbox.dom.attr('#show-in-navigation', 'checked', data.navigation);
@@ -72,6 +76,7 @@ define([], function() {
             var data = {};
 
             data.navigation = this.sandbox.dom.prop('#show-in-navigation', 'checked');
+            data.nodeType = this.sandbox.dom.val('input[name="nodeType"]:checked');
 
             this.data = this.sandbox.util.extend(true, {}, this.data, data);
             this.sandbox.emit('sulu.content.contents.save', this.data);
