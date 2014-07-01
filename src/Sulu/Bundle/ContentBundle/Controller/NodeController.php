@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\ContentBundle\Controller;
 
+use Doctrine\ODM\PHPCR\PHPCRException;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use PHPCR\ItemNotFoundException;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
@@ -152,16 +153,32 @@ class NodeController extends RestController implements ClassResourceInterface
 
         $appendWebspaceNode = $this->getBooleanRequestParameter($request, 'webspace-node', false, false);
 
-        if ($uuid !== null && $uuid !== '') {
-            $result = $this->getRepository()->getNodesTree(
-                $uuid,
-                $webspace,
-                $language,
-                $excludeGhosts,
-                $appendWebspaceNode
+        try {
+            if ($uuid !== null && $uuid !== '') {
+                $result = $this->getRepository()->getNodesTree(
+                    $uuid,
+                    $webspace,
+                    $language,
+                    $excludeGhosts,
+                    $appendWebspaceNode
+                );
+            } else {
+                $result = $this->getRepository()->getWebspaceNode($webspace, $language);
+            }
+        } catch (ItemNotFoundException $ex) {
+            // TODO return 404 and handle this edge case on client side
+            return $this->redirect(
+                $this->generateUrl(
+                    'get_nodes',
+                    array(
+                        'tree' => 'false',
+                        'depth' => 1,
+                        'language' => $language,
+                        'webspace' => $webspace,
+                        'exclude-ghosts' => $excludeGhosts
+                    )
+                )
             );
-        } else {
-            $result = $this->getRepository()->getWebspaceNode($webspace, $language);
         }
 
         return $this->handleView(
@@ -208,7 +225,15 @@ class NodeController extends RestController implements ClassResourceInterface
         $flat = ($flat === 'true');
 
         // TODO pagination
-        $result = $this->getRepository()->getNodes($parentUuid, $webspace, $language, $depth, $flat, false, $excludeGhosts);
+        $result = $this->getRepository()->getNodes(
+            $parentUuid,
+            $webspace,
+            $language,
+            $depth,
+            $flat,
+            false,
+            $excludeGhosts
+        );
 
         return $this->handleView(
             $this->view($result)
@@ -265,7 +290,6 @@ class NodeController extends RestController implements ClassResourceInterface
             'sortBy' => $sortColumns,
             'sortMethod' => $sortMethod
         );
-
 
         $content = $this->get('sulu_content.node_repository')->getFilteredNodes(
             $filterConfig,

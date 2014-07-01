@@ -55,7 +55,7 @@ define({
             route: 'content/contents/:webspace/:language/add::id/:content',
             callback: function(webspace, language, id, content) {
                 this.html(
-                    '<div data-aura-component="content/components/content@sulucontent" data-aura-webspace="' + webspace + '" data-aura-language="' + language + '" data-aura-content="' + content + '" data-aura-parent="' + id + '"/>'
+                    '<div data-aura-component="content@sulucontent" data-aura-webspace="' + webspace + '" data-aura-language="' + language + '" data-aura-content="' + content + '" data-aura-parent="' + id + '"/>'
                 );
             }
         });
@@ -65,7 +65,7 @@ define({
             route: 'content/contents/:webspace/:language/add/:content',
             callback: function(webspace, language, content) {
                 this.html(
-                    '<div data-aura-component="content/components/content@sulucontent" data-aura-webspace="' + webspace + '" data-aura-language="' + language + '" data-aura-content="' + content + '"/>'
+                    '<div data-aura-component="content@sulucontent" data-aura-webspace="' + webspace + '" data-aura-language="' + language + '" data-aura-content="' + content + '"/>'
                 );
             }
         });
@@ -84,7 +84,7 @@ define({
             route: 'content/contents/:webspace/:language/edit::id/:content',
             callback: function(webspace, language, id, content) {
                 this.html(
-                    '<div data-aura-component="content/components/content@sulucontent" data-aura-webspace="' + webspace + '" data-aura-language="' + language + '" data-aura-content="' + content + '" data-aura-id="' + id + '" data-aura-preview="true"/>'
+                    '<div data-aura-component="content@sulucontent" data-aura-webspace="' + webspace + '" data-aura-language="' + language + '" data-aura-content="' + content + '" data-aura-id="' + id + '" data-aura-preview="true"/>'
                 );
             }
         });
