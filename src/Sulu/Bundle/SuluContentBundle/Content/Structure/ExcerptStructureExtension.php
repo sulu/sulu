@@ -63,21 +63,20 @@ class ExcerptStructureExtension extends StructureExtension
         $this->data = array(
             'title' => $this->loadProperty($node, 'title'),
             'description' => $this->loadProperty($node, 'description'),
-            'images' =>
-                json_decode(
-                    $this->loadProperty(
-                        $node,
-                        'images',
-                        json_encode(
-                            array(
-                                'displayOption' => 'left',
-                                'ids' => array(),
-                                'config' => array()
-                            )
+            'images' => json_decode(
+                $this->loadProperty(
+                    $node,
+                    'images',
+                    json_encode(
+                        array(
+                            'displayOption' => 'left',
+                            'ids' => array(),
+                            'config' => array()
                         )
-                    ),
-                    true
-                )
+                    )
+                ),
+                true
+            )
         );
     }
 }

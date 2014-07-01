@@ -166,6 +166,7 @@ class NodeController extends RestController implements ClassResourceInterface
                 $result = $this->getRepository()->getWebspaceNode($webspace, $language);
             }
         } catch (ItemNotFoundException $ex) {
+            // TODO return 404 and handle this edge case on client side
             return $this->redirect(
                 $this->generateUrl(
                     'get_nodes',
