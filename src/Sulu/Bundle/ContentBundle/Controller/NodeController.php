@@ -187,6 +187,27 @@ class NodeController extends RestController implements ClassResourceInterface
     }
 
     /**
+     * Returns nodes by given ids
+     *
+     * @param Request $request
+     * @param array $idString
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    private function getNodeyByIds(Request $request, $idString)
+    {
+        $language = $this->getLanguage($request);
+        $webspace = $this->getWebspace($request);
+
+        $result = $this->getRepository()->getNodesByIds(
+            preg_split('/[,]/', $idString, -1, PREG_SPLIT_NO_EMPTY),
+            $webspace,
+            $language
+        );
+
+        return $this->handleView($this->view($result));
+    }
+
+    /**
      * returns a content item for startpage
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @return \Symfony\Component\HttpFoundation\Response
@@ -209,9 +230,12 @@ class NodeController extends RestController implements ClassResourceInterface
     public function cgetAction(Request $request)
     {
         $tree = $this->getBooleanRequestParameter($request, 'tree', false, false);
+        $ids = $this->getRequestParameter($request, 'ids');
 
         if ($tree === true) {
             return $this->getTreeForUuid($request, null);
+        } elseif ($ids !== null) {
+            return $this->getNodeyByIds($request, $ids);
         }
 
         $language = $this->getLanguage($request);

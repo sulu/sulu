@@ -421,7 +421,9 @@ define(['app-config'], function(AppConfig) {
         },
 
         changeTemplateDropdownHandler: function() {
-            this.sandbox.emit('sulu.header.toolbar.item.change', 'template', this.template);
+            if (this.template !== '' && this.template !== undefined && this.template !== null) {
+                this.sandbox.emit('sulu.header.toolbar.item.change', 'template', this.template);
+            }
             this.sandbox.emit('sulu.header.toolbar.item.enable', 'template', true);
         },
 
