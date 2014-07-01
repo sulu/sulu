@@ -160,7 +160,11 @@ define([], function() {
                 noBack = (typeof header.noBack !== 'undefined') ? header.noBack : false;
                 titleColor = (!!header.titleColor) ? header.titleColor : null;
 
-                this.sandbox.start([
+                // insert the header-container
+                $header = this.sandbox.dom.createElement('<div id="sulu-header-container"/>');
+                this.sandbox.dom.append('body', $header);
+
+                App.start([
                     {
                         name: 'header@suluadmin',
                         options: {
