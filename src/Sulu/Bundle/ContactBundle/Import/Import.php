@@ -1013,6 +1013,9 @@ class Import
     {
         $associativeData = array();
         foreach ($data as $index => $value) {
+            if ($index >= sizeof($headerData)) {
+                break;
+            }
             // search index in mapping config
             if (sizeof($resultArray = array_keys($this->columnMappings, $headerData[$index])) > 0) {
                 foreach ($resultArray as $key) {
