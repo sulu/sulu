@@ -419,10 +419,6 @@ class Import
             }
         }
 
-        if ($persistAccount) {
-            $this->em->persist($account);
-        }
-
         $this->accounts[] = $account;
 
         $account->setChanged(new \DateTime());
@@ -431,8 +427,7 @@ class Import
         if ($this->checkData('account_name', $data)) {
             $account->setName($data['account_name']);
         } else {
-            $this->debug('ERROR: account name not set');
-            return;
+            throw new \Exception('ERROR: account name not set');
         }
 
         if ($this->checkData('account_corporation', $data)) {
@@ -490,6 +485,10 @@ class Import
 
         // add bank accounts
         $this->addBankAccounts($data, $account);
+
+        if ($persistAccount) {
+            $this->em->persist($account);
+        }
 
         return $account;
     }
