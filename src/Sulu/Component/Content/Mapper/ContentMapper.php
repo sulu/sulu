@@ -28,6 +28,7 @@ use Sulu\Component\Content\Mapper\Translation\MultipleTranslatedProperties;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\Section\SectionPropertyInterface;
+use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManagerInterface;
 use Sulu\Component\Content\StructureType;
@@ -353,7 +354,7 @@ class ContentMapper implements ContentMapperInterface
 
         $structure->setUuid($node->getPropertyValue('jcr:uuid'));
         $structure->setPath(str_replace($this->getContentNode($webspaceKey)->getPath(), '', $node->getPath()));
-        $structure->setNodeType($node->getPropertyValue($this->properties->getName('nodeType')));
+        $structure->setNodeType($node->getPropertyValueWithDefault($this->properties->getName('nodeType'), Structure::NODE_TYPE_CONTENT));
         $structure->setWebspaceKey($webspaceKey);
         $structure->setLanguageCode($languageCode);
         $structure->setCreator($node->getPropertyValue($this->properties->getName('creator')));
@@ -914,7 +915,7 @@ class ContentMapper implements ContentMapperInterface
 
         $structure->setUuid($contentNode->getPropertyValue('jcr:uuid'));
         $structure->setPath(str_replace($this->getContentNode($webspaceKey)->getPath(), '', $contentNode->getPath()));
-        $structure->setNodeType($contentNode->getPropertyValue($this->properties->getName('nodeType')));
+        $structure->setNodeType($contentNode->getPropertyValueWithDefault($this->properties->getName('nodeType'), Structure::NODE_TYPE_CONTENT));
         $structure->setWebspaceKey($webspaceKey);
         $structure->setLanguageCode($localization);
         $structure->setCreator($contentNode->getPropertyValueWithDefault($this->properties->getName('creator'), 0));
