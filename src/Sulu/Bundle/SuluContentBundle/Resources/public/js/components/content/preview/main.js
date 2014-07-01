@@ -304,7 +304,7 @@ define([], function() {
                         left: constants.maxMainContentMarginLeft,
                         paddingLeft: constants.maxMainContentPaddingLeft});
 
-                    this.sandbox.dom.width(this.$mainContent, '');
+                    //this.sandbox.dom.width(this.$mainContent, '');
 
 
                     this.sandbox.emit(HIDE);
@@ -552,10 +552,10 @@ define([], function() {
 
                 }
 
-                this.sandbox.dom.width(this.$wrapper, widths.preview);
-                this.sandbox.dom.width(this.$iframe, widths.preview);
-                this.sandbox.dom.width(this.$toolbar, widths.preview + constants.marginPreviewCollapsedLeft);
-                this.sandbox.dom.width(this.$mainContent, widths.content);
+                //this.sandbox.dom.width(this.$wrapper, widths.preview);
+                //this.sandbox.dom.width(this.$iframe, widths.preview);
+                //this.sandbox.dom.width(this.$toolbar, widths.preview + constants.marginPreviewCollapsedLeft);
+                //this.sandbox.dom.width(this.$mainContent, widths.content);
             },
 
             /**
