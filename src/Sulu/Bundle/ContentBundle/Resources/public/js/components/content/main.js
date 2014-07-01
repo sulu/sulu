@@ -48,17 +48,22 @@ define([
         loadData: function() {
             this.content = new Content({id: this.options.id});
 
-            this.content.fullFetch(
-                this.options.webspace,
-                this.options.language,
-                true,
-                {
-                    success: function(content) {
-                        this.render(content.toJSON());
-                        this.loadDataDeferred.resolve();
-                    }.bind(this)
-                }
-            );
+            if (this.options.id !== undefined) {
+                this.content.fullFetch(
+                    this.options.webspace,
+                    this.options.language,
+                    true,
+                    {
+                        success: function(content) {
+                            this.render(content.toJSON());
+                            this.loadDataDeferred.resolve();
+                        }.bind(this)
+                    }
+                );
+            } else {
+                this.render(this.content.toJSON());
+                this.loadDataDeferred.resolve();
+            }
         },
 
         bindCustomEvents: function() {
@@ -413,7 +418,10 @@ define([
          */
         setState: function(data) {
             this.state = data.nodeState;
-            this.sandbox.emit('sulu.header.toolbar.item.change', 'state', data.nodeState);
+
+            if (this.state !== '' && this.state !== undefined && this.state !== null) {
+                this.sandbox.emit('sulu.header.toolbar.item.change', 'state', data.nodeState);
+            }
         },
 
         /**
