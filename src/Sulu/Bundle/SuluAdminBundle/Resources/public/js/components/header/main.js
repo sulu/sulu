@@ -455,6 +455,9 @@ define([], function() {
          * Initializes the component
          */
         initialize: function() {
+            // initialize deferreds
+            var toolbarDef, tabsDef;
+
             // merge defaults
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
@@ -469,14 +472,16 @@ define([], function() {
 
             this.render();
 
-            this.startToolbar();
-            this.startTabs();
+            toolbarDef = this.startToolbar();
+            tabsDef = this.startTabs();
 
             // bind events
             this.bindCustomEvents();
             this.bindDomEvents();
 
-            this.sandbox.emit(INITIALIZED.call(this));
+            this.sandbox.data.when(toolbarDef, tabsDef).then(function() {
+                this.sandbox.emit(INITIALIZED.call(this));
+            }.bind(this));
         },
 
         /**
@@ -544,6 +549,8 @@ define([], function() {
          * Handles the start of the Tabs
          */
         startTabs: function() {
+            var def = this.sandbox.data.deferred();
+
             if (this.options.tabsData !== null || !!this.options.tabsOptions.data) {
                 this.sandbox.dom.addClass(this.$el, constants.hasTabsClass);
                 this.$tabs = this.sandbox.dom.createElement('<div class="'+ constants.tabsClass +'"></div>');
@@ -554,18 +561,23 @@ define([], function() {
                     this.startContentComponent();
                     // wait for content-component to initialize
                     this.sandbox.on('sulu.content.content.initialized', function() {
-                        this.startTabsComponent();
+                        this.startTabsComponent(def);
                     }.bind(this));
                 } else {
-                    this.startTabsComponent();
+                    this.startTabsComponent(def);
                 }
+            } else {
+                def.resolve();
             }
+
+            return def;
         },
 
         /**
          * Starts the tabs component
+         * @param {deferred} def
          */
-        startTabsComponent: function() {
+        startTabsComponent: function(def) {
             this.sandbox.stop(this.$find('.' + constants.tabsClass));
             var $container = this.sandbox.dom.createElement('<div/>'),
                 options = {
@@ -575,6 +587,11 @@ define([], function() {
                     forceReload: false,
                     forceSelect: true
                 };
+
+            // wait for initialized
+            this.sandbox.on('husky.tabs.header.initialized', function() {
+                def.resolve();
+            }.bind(this));
 
             this.sandbox.dom.html(this.$find('.' + constants.tabsClass), $container);
             // merge default tabs-options with passed ones
@@ -592,6 +609,8 @@ define([], function() {
          * Handles the starting of the toolbar
          */
         startToolbar: function() {
+            var def = this.sandbox.data.deferred();
+
             if (this.options.toolbarDisabled !== true) {
                 // merge passed toolbar-options with defaults
                 var options = this.sandbox.util.extend(true, {}, constants.toolbarDefaults, this.options.toolbarOptions);
@@ -605,15 +624,20 @@ define([], function() {
                 });
 
                 // start toolbar component with built options
-                this.startToolbarComponent(options);
+                this.startToolbarComponent(options, def);
+            } else {
+                def.resolve();
             }
+
+            return def;
         },
 
         /**
          * Starts the husky-component
          * @param {object} options The options to pass to the toolbar component
+         * @param {deferred} def
          */
-        startToolbarComponent: function(options) {
+        startToolbarComponent: function(options, def) {
             var $container = this.sandbox.dom.createElement('<div />'),
                 // global default values
                 componentOptions = {
@@ -621,6 +645,11 @@ define([], function() {
                     skin: 'blueish',
                     instanceName: 'header' + this.options.instanceName
                 };
+
+            // wait for initialized
+            this.sandbox.on('husky.toolbar.header.initialized', function() {
+                def.resolve();
+            }.bind(this));
 
             // if passed template is a string get the corresponding default template
             if (!!options.template && typeof options.template === 'string' && toolbarTemplates.hasOwnProperty(options.template)) {
