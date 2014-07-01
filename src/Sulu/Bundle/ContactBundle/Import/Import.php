@@ -238,6 +238,11 @@ class Import
      */
     public function execute()
     {
+        // enable garbage collector
+        gc_enable();
+        // disable sql logger
+        $this->em->getConnection()->getConfiguration()->setSQLLogger(null);
+
         try {
             // set default types
             $this->defaultTypes = $this->getDefaults();
@@ -377,7 +382,8 @@ class Import
                     $function($associativeData, $row);
                     if($row%20 === 0) {
                         $this->em->flush();
-//                        $this->em->clear();
+                        gc_collect_cycles();
+
                     }
                 }
             } catch (DBALException $dbe) {
@@ -399,6 +405,7 @@ class Import
         }
         // finish with a flush
         $this->em->flush();
+        $this->em->clear();
 
         $this->debug("\n");
         fclose($handle);
