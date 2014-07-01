@@ -13,6 +13,7 @@ require.config({
         "type/resourceLocator": '../../sulucontent/js/validation/types/resourceLocator',
         "type/textEditor": '../../sulucontent/js/validation/types/textEditor',
         "type/smartContent": '../../sulucontent/js/validation/types/smartContent',
+        "type/internalLinks": '../../sulucontent/js/validation/types/internalLinks',
         "type/block": '../../sulucontent/js/validation/types/block'
     }
 });

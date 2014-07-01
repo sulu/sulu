@@ -41,6 +41,15 @@ interface NodeRepositoryInterface
     public function getNodes($parent, $webspaceKey, $languageCode, $depth = 1, $flat = true, $complete = true, $excludeGhosts = false);
 
     /**
+     * returns list of nodes with given ids
+     * @param array $ids
+     * @param string $webspaceKey
+     * @param string $languageCode
+     * @return array
+     */
+    public function getNodesByIds($ids, $webspaceKey, $languageCode);
+
+    /**
      * returns webspace as node
      * @param $webspaceKey
      * @param $languageCode

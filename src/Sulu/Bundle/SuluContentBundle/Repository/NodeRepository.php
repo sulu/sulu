@@ -219,6 +219,33 @@ class NodeRepository implements NodeRepositoryInterface
     /**
      * {@inheritdoc}
      */
+    public function getNodesByIds(
+        $ids,
+        $webspaceKey,
+        $languageCode
+    ) {
+        $result = array();
+        $idString = '';
+        
+        if (!empty($ids)) {
+            foreach ($ids as $id) {
+                $result[] = $this->getNode($id, $webspaceKey, $languageCode);
+            }
+            $idString = implode(',', $ids);
+        }
+
+        return array(
+            '_embedded' => $result,
+            'total' => sizeof($result),
+            '_links' => array(
+                'self' => $this->apiBasePath . '?ids=' . $idString
+            )
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getWebspaceNode(
         $webspaceKey,
         $languageCode,
