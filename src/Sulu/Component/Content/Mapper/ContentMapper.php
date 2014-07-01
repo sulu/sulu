@@ -224,13 +224,11 @@ class ContentMapper implements ContentMapperInterface
             $newTranslatedNode($node);
 
             $node->addMixin('sulu:content');
-
         } else {
             $node = $session->getNodeByIdentifier($uuid);
             if (!$node->hasProperty($this->properties->getName('template'))) {
                 $newTranslatedNode($node);
             } else {
-
                 $hasSameLanguage = ($languageCode == $this->defaultLanguage);
                 $hasSamePath = ($node->getPath() !== $this->getContentNode($webspaceKey)->getPath());
                 $hasDifferentTitle = !$node->hasProperty($translatedNodeNameProperty->getName()) ||
@@ -344,6 +342,7 @@ class ContentMapper implements ContentMapperInterface
                 $extension->load($node, $webspaceKey, $languageCode);
             }
         }
+
         $session->save();
 
         $structure->setUuid($node->getPropertyValue('jcr:uuid'));
@@ -380,6 +379,7 @@ class ContentMapper implements ContentMapperInterface
      * @param string $webspaceKey
      * @param string $languageCode
      * @param integer $userId
+     * @throws \Sulu\Component\Content\Exception\TranslatedNodeNotFoundException
      * @return StructureInterface
      */
     public function saveExtension(
@@ -413,14 +413,7 @@ class ContentMapper implements ContentMapperInterface
         $node->setProperty($this->properties->getName('changed'), $dateTime);
 
         // save data of extensions
-        foreach ($structure->getExtensions() as $extension) {
-            $extension->setLanguageCode($languageCode, $this->languageNamespace, $this->internalPrefix);
-            if ($extension->getName() === $extensionName) {
-                $extension->save($node, $data, $webspaceKey, $languageCode);
-            } else {
-                $extension->load($node, $webspaceKey, $languageCode);
-            }
-        }
+        $structure->getExtension($extensionName)->save($node, $data, $webspaceKey, $languageCode);
         $session->save();
 
         // throw an content.node.save event
