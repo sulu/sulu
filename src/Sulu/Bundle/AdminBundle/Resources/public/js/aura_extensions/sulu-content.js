@@ -85,9 +85,6 @@ define([], function() {
         handleFullSizeMarked = function(fullSize) {
             if (fullSize.width === true || fullSize.height === true) {
                 this.sandbox.emit('sulu.app.full-size', !!fullSize.width, !!fullSize.height, !!fullSize.keepPaddings);
-                if (fullSize.width === true && fullSize.keepPaddings !== true) {
-                    this.sandbox.emit('sulu.header.squeeze');
-                }
             }
         },
 
@@ -129,7 +126,7 @@ define([], function() {
         handleHeaderMarked = function(header) {
             var $content, $header, startHeader,
                 breadcrumb, toolbarTemplate, toolbarParentTemplate, tabsOptions, toolbarOptions, tabsFullControl,
-                toolbarDisabled, toolbarLanguageChanger, noBack, squeezed, titleColor;
+                toolbarDisabled, toolbarLanguageChanger, noBack, titleColor;
 
             // if header is a function get the data from the return value of the function
             if (typeof header === 'function') {
@@ -138,7 +135,7 @@ define([], function() {
 
             // insert the header-container
             $header = this.sandbox.dom.createElement('<div id="sulu-header-container"/>');
-            this.sandbox.dom.append('body', $header);
+            this.sandbox.dom.prepend('.content-column', $header);
 
             // insert the content-container
             $content = this.sandbox.dom.createElement('<div id="sulu-content-container"/>');
@@ -161,7 +158,6 @@ define([], function() {
                 tabsFullControl = (!!header.tabs && typeof header.tabs.fullControl === 'boolean') ? header.tabs.fullControl : false;
                 toolbarLanguageChanger = (!!header.toolbar && !!header.toolbar.languageChanger) ? header.toolbar.languageChanger : true;
                 noBack = (typeof header.noBack !== 'undefined') ? header.noBack : false;
-                squeezed = (!!this.fullSize && this.fullSize.width === true && this.fullSize.keepPaddings !== true) ? true : false;
                 titleColor = (!!header.titleColor) ? header.titleColor : null;
 
                 this.sandbox.start([
@@ -182,7 +178,6 @@ define([], function() {
                             toolbarDisabled: toolbarDisabled,
                             toolbarLanguageChanger: toolbarLanguageChanger,
                             noBack: noBack,
-                            squeezed: squeezed,
                             titleColor: titleColor
                         }
                     }
