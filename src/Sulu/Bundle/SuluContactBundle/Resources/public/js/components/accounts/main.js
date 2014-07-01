@@ -9,8 +9,10 @@
 
 define([
     'sulucontact/model/account',
+    'sulucontact/model/contact',
+    'sulucontact/model/accountContact',
     'accountsutil/header'
-], function(Account, AccountsUtilHeader) {
+], function(Account, Contact, AccountContact, AccountsUtilHeader) {
 
     'use strict';
 
@@ -85,6 +87,12 @@ define([
             // delete selected contacts
             this.sandbox.on('sulu.contacts.accounts.delete', this.delAccounts.bind(this));
 
+            // adds a new accountContact Relation
+            this.sandbox.on('sulu.contacts.accounts.contact.save', this.addAccountContact.bind(this));
+
+            // removes accountContact Relation
+            this.sandbox.on('sulu.contacts.accounts.contacts.remove', this.removeAccountContacts.bind(this));
+
             // saves financial infos
             this.sandbox.on('sulu.contacts.accounts.financials.save', this.saveFinancials.bind(this));
 
@@ -113,6 +121,47 @@ define([
             }.bind(this));
         },
 
+        addAccountContact: function(id, position) {
+            // set id to contacts id;
+            var accountContact = AccountContact.findOrCreate({id: id, contact: Contact.findOrCreate({id: id}), account: this.account});
+            accountContact.set({position: position});
+
+            accountContact.save(null, {
+                // on success save contacts id
+                success: function(response) {
+                    var model = response.toJSON();
+                    this.sandbox.emit('sulu.contacts.accounts.contact.saved', model);
+                }.bind(this),
+                error: function() {
+                    this.sandbox.logger.log("error while saving contact");
+                }.bind(this)
+            });
+        },
+
+        /**
+         * removes mulitple AccountContacts
+         * @param ids
+         */
+        removeAccountContacts: function(ids) {
+            // show warning
+            this.sandbox.emit('sulu.overlay.show-warning', 'sulu.overlay.be-careful', 'sulu.overlay.delete-desc', null, function() {
+                // get ids of selected contacts
+                var accountContact;
+                this.sandbox.util.foreach(ids, function(id) {
+                    // set account and contact as well as  id to contacts id(so that request is going to be sent)
+                    accountContact = AccountContact.findOrCreate({id: id, contact: Contact.findOrCreate({id: id}), account: this.account});
+                    accountContact.destroy({
+                        success: function() {
+                            this.sandbox.emit('sulu.contacts.accounts.contacts.removed', id);
+                        }.bind(this),
+                        error: function() {
+                            this.sandbox.logger.log("error while deleting AccountContact");
+                        }.bind(this)
+                    });
+                }.bind(this));
+            }.bind(this));
+        },
+
         /**
          * Converts an account
          */
@@ -121,11 +170,11 @@ define([
                 if (wasConfirmed) {
                     this.account.set({type: data.id});
                     this.sandbox.emit('sulu.header.toolbar.item.loading', 'options-button');
-                    this.sandbox.util.ajax('/admin/api/accounts/'+this.account.id+'?action=convertAccountType&type='+data.name, {
+                    this.sandbox.util.ajax('/admin/api/accounts/' + this.account.id + '?action=convertAccountType&type=' + data.name, {
 
                         type: 'POST',
 
-                        success: function(response){
+                        success: function(response) {
                             var model = response;
                             this.sandbox.emit('sulu.header.toolbar.item.enable', 'options-button');
 
@@ -137,7 +186,7 @@ define([
                             this.sandbox.emit('sulu.account.type.converted');
                         }.bind(this),
 
-                        error: function(){
+                        error: function() {
                             this.sandbox.logger.log("error while saving profile");
                         }.bind(this)
                     });

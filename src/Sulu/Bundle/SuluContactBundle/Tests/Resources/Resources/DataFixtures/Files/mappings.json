@@ -22,7 +22,7 @@
         "email1" : "e-mail",
         "account_name" : "name",
         "account_type" : "type",
-        "account_division" : "division",
+        "account_corporation" : "division",
         "account_disabled" : "disabled",
         "account_parent" : "parent",
         "account_uid" : "uid",
