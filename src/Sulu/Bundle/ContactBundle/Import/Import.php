@@ -110,7 +110,17 @@ class Import
      */
     protected $defaultTypes = array();
 
+    /**
+     * storage for log messages
+     * @var array
+     */
     protected $log = array();
+
+    /**
+     * storage for storing header data
+     * @var array
+     */
+    protected $headerData = array();
 
 
     // TODO: split mappings for accounts and contacts
@@ -346,7 +356,7 @@ class Import
     protected function processCsvLoop($filename, $function)
     {
         $row = 0;
-        $headerData = array();
+        $this->headerData = array();
 
         try {
             // load all Files
@@ -359,10 +369,10 @@ class Import
             try {
                 // for first row, save headers
                 if ($row === 0) {
-                    $headerData = $data;
+                    $this->headerData = $data;
                 } else {
                     // get associativeData
-                    $associativeData = $this->mapRowToAssociativeArray($data, $headerData);
+                    $associativeData = $this->mapRowToAssociativeArray($data, $this->headerData);
 
                     $function($associativeData, $row);
                     if($row%20 === 0) {
@@ -751,7 +761,7 @@ class Import
                     $bank->setBankName($data['bank' . $i]);
                 }
                 // set bank to public
-                if ($this->checkData('bank_public' . $i, $data)) {
+                if ($this->checkData('bank_public' . $i, $data, 'bool')) {
                     $bank->setPublic($data['bank_public' . $i]);
                 } else {
                     $bank->setPublic(false);
@@ -968,9 +978,16 @@ class Import
     /**
      * checks data for validity
      */
-    protected function checkData($index, $data)
+    protected function checkData($index, $data, $type = null)
     {
-        return array_key_exists($index, $data) && $data[$index] !== '';
+        $isDataSet = array_key_exists($index, $data) && $data[$index] !== '';
+        if ($type !== null && $isDataSet) {
+            // TODO check for types
+            if ($type === 'bool' && $data[$index] != 'true' && $data[$index] != 'false' && $data[$index] != '1' && $data[$index] != '0' ) {
+                throw new \InvalidArgumentException($data[$index]. ' is not a boolean!');
+            }
+        }
+        return $isDataSet;
     }
 
     /**
