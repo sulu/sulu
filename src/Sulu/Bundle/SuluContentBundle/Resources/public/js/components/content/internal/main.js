@@ -12,7 +12,7 @@ define([], function() {
     'use strict';
 
     return {
-        templates: ['/admin/content/template/form/external-link'],
+        templates: ['/admin/content/template/form/internal-link'],
 
         initialize: function() {
             this.sandbox.emit('sulu.app.ui.reset', { navigation: 'small', content: 'auto'});
@@ -49,7 +49,7 @@ define([], function() {
 
         render: function(data) {
             this.data = data;
-            this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/content/template/form/external-link', {options: this.options}));
+            this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/content/template/form/internal-link', {options: this.options}));
 
             this.dfdListenForChange = this.sandbox.data.deferred();
             this.createForm(this.initData(data));

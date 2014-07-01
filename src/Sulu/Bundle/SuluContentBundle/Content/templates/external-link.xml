@@ -18,5 +18,11 @@
             </meta>
             <tag name="sulu.node.name"/>
         </property>
+        <property name="link" type="url" mandatory="true">
+            <meta>
+                <title lang="de">Link</title>
+                <title lang="en">Link</title>
+            </meta>
+        </property>
     </properties>
 </template>

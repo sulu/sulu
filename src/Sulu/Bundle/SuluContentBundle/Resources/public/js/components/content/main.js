@@ -136,10 +136,12 @@ define([
             // set default template
             this.sandbox.on('sulu.content.contents.default-template', function(name) {
                 this.template = name;
-                this.sandbox.emit('sulu.header.toolbar.item.change', 'template', name);
-                if (this.hiddenTemplate) {
-                    this.hiddenTemplate = false;
-                    this.sandbox.emit('sulu.header.toolbar.item.show', 'template', name);
+                if (this.data.nodeType !== 1) {
+                    this.sandbox.emit('sulu.header.toolbar.item.change', 'template', name);
+                    if (this.hiddenTemplate) {
+                        this.hiddenTemplate = false;
+                        this.sandbox.emit('sulu.header.toolbar.item.show', 'template', name);
+                    }
                 }
             }, this);
 
@@ -350,7 +352,7 @@ define([
                 this.setTemplate(data);
                 this.setState(data);
 
-                if (!!this.options.preview) {
+                if (!!this.options.preview && this.data.nodeType === 1) {
                     this.renderPreview(data);
                 }
 
@@ -406,7 +408,7 @@ define([
         setTemplate: function(data) {
             this.template = data.template;
 
-            if (this.template !== '' && this.template !== undefined && this.template !== null) {
+            if (this.data.nodeType === 1 && this.template !== '' && this.template !== undefined && this.template !== null) {
                 this.sandbox.emit('sulu.header.toolbar.item.change', 'template', this.template);
                 this.sandbox.emit('sulu.header.toolbar.item.show', 'template');
             }
