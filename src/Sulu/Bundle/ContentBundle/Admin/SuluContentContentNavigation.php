@@ -67,12 +67,22 @@ class SuluContentContentNavigation extends ContentNavigation
         return $content;
     }
 
+    private function getExternalLink()
+    {
+        $tab = new NavigationItem('content-navigation.contents.external-link');
+        $tab->setAction('content');
+        $tab->setContentType('content');
+        $tab->setContentComponent('content/external@sulucontent');
+
+        return $tab;
+    }
+
     private function getInternalLink()
     {
         $tab = new NavigationItem('content-navigation.contents.internal-link');
         $tab->setAction('content');
         $tab->setContentType('content');
-        $tab->setContentComponent('content/form@sulucontent');
+        $tab->setContentComponent('content/internal@sulucontent');
 
         return $tab;
     }
@@ -87,9 +97,9 @@ class SuluContentContentNavigation extends ContentNavigation
         if ($type === 1) {
             $this->addNavigationItem($this->getContent());
         }else if ($type === 2) {
-            // TODO $this->addNavigationItem($this->getLink(true));
+            $this->addNavigationItem($this->getInternalLink());
         } else if ($type === 4) {
-            // TODO $this->addNavigationItem($this->getLink(false));
+            $this->addNavigationItem($this->getExternalLink());
         }
 
         $this->addNavigationItem($this->getSeo());

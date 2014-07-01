@@ -31,6 +31,12 @@ define([], function() {
             this.sandbox.on('sulu.header.toolbar.save', function() {
                 this.submit();
             }, this);
+
+            // content saved
+            this.sandbox.on('sulu.content.contents.saved', function() {
+                // FIXME better solution?
+                window.location.reload();
+            }, this);
         },
 
         load: function() {
