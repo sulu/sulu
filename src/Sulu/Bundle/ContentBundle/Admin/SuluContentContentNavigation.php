@@ -22,32 +22,73 @@ class SuluContentContentNavigation extends ContentNavigation
 
         $this->setName('Content');
 
-        $content = new NavigationItem('content-navigation.contents.content');
-        $content->setAction('content');
-        $content->setContentType('content');
-        $content->setContentComponent('content/form@sulucontent');
+    }
 
+    private function getSeo()
+    {
         $seo = new NavigationItem('content-navigation.contents.seo');
         $seo->setAction('seo');
         $seo->setContentType('content');
         $seo->setContentComponent('content/seo@sulucontent');
         $seo->setContentDisplay(array('edit'));
 
+        return $seo;
+    }
+
+    private function getExcerpt()
+    {
         $excerpt = new NavigationItem('content-navigation.contents.excerpt');
         $excerpt->setAction('excerpt');
         $excerpt->setContentType('content');
         $excerpt->setContentComponent('content/excerpt@sulucontent');
         $excerpt->setContentDisplay(array('edit'));
 
+        return $excerpt;
+    }
+
+    private function getSettings()
+    {
         $settings = new NavigationItem('content-navigation.contents.settings');
         $settings->setAction('settings');
         $settings->setContentType('content');
         $settings->setContentComponent('content/settings@sulucontent');
         $settings->setContentDisplay(array('edit'));
 
-        $this->addNavigationItem($content);
-        $this->addNavigationItem($seo);
-        $this->addNavigationItem($excerpt);
-        $this->addNavigationItem($settings);
+        return $settings;
+    }
+
+    private function getContent()
+    {
+        $content = new NavigationItem('content-navigation.contents.content');
+        $content->setAction('content');
+        $content->setContentType('content');
+        $content->setContentComponent('content/form@sulucontent');
+
+        return $content;
+    }
+
+    /**
+     * generate content navigation
+     * @param bool $showContent
+     * @param bool $showInternalLink
+     * @param bool $showExternalLink
+     */
+    public function generate($showContent, $showInternalLink = false, $showExternalLink = false)
+    {
+        if ($showContent) {
+            $this->addNavigationItem($this->getContent());
+        }
+
+        if ($showExternalLink) {
+            // TODO $this->addNavigationItem($this->getLink(true));
+        }
+
+        if ($showInternalLink) {
+            // TODO $this->addNavigationItem($this->getLink(false));
+        }
+
+        $this->addNavigationItem($this->getSeo());
+        $this->addNavigationItem($this->getExcerpt());
+        $this->addNavigationItem($this->getSettings());
     }
 }
