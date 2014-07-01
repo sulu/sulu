@@ -67,6 +67,16 @@ class SuluContentContentNavigation extends ContentNavigation
         return $content;
     }
 
+    private function getInternalLink()
+    {
+        $tab = new NavigationItem('content-navigation.contents.internal-link');
+        $tab->setAction('content');
+        $tab->setContentType('content');
+        $tab->setContentComponent('content/form@sulucontent');
+
+        return $tab;
+    }
+
     /**
      * generate content navigation
      * @param $showSettings
