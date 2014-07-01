@@ -379,11 +379,13 @@ class Import
                     // get associativeData
                     $associativeData = $this->mapRowToAssociativeArray($data, $this->headerData);
 
-                    $function($associativeData, $row);
+                    $entity = $function($associativeData, $row);
                     if($row%20 === 0) {
                         $this->em->flush();
                         gc_collect_cycles();
-
+                        if ($entity) {
+                            $this->em->detach($entity);
+                        }
                     }
                 }
             } catch (DBALException $dbe) {
@@ -399,7 +401,6 @@ class Import
                 break;
             }
             $row++;
-
 
             print(sprintf("%d ", $row));
         }
