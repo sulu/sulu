@@ -82,6 +82,7 @@ class SuluContentContentNavigation extends ContentNavigation
             // TODO $this->addNavigationItem($this->getLink(false));
         }
 
+        $this->addNavigationItem($this->getContent());
         $this->addNavigationItem($this->getSeo());
         $this->addNavigationItem($this->getExcerpt());
 
