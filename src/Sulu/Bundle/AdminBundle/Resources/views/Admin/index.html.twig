@@ -36,10 +36,10 @@
                  data-aura-logout-route="{{ user.logout }}"
             ></div>
 
-            <div class="split-view"></div>
-            <div class="content-column">
+            <div class="content-column fixed">
                 <main class="grid" id="content" data-aura-component="app@suluadmin" data-aura-user="{{ user| json_encode }}"></main>
             </div>
+            <div class="sidebar-column max"></div>
         </div>
 
         <div id="labels-container" data-aura-component="labels@suluadmin"></div>

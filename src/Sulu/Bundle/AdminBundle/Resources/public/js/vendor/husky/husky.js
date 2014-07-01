@@ -27063,7 +27063,7 @@ define('__component__$navigation@husky',[],function() {
                 hide: 'navigation.hide',
                 show: 'navigation.show'
             },
-            resizeWidth: 800,
+            resizeWidth: 1210,
             forceCollapse: false,
             systemName: 'Sulu 2.0',
             footer: true,
@@ -33686,12 +33686,6 @@ define('__component__$toolbar@husky',[],function() {
          * @param highlight {boolean} if true a highlight effect is played
          */
         toggleEnabled = function(enabled, id, highlight) {
-
-            // check if toolbar has an item with specified id
-            if (!this.items[id]) {
-                return;
-            }
-
             var item = this.items[id],
                 $item = this.sandbox.dom.find('[data-id="' + id + '"]', this.$el),
                 $iconItem = this.sandbox.dom.find('[data-id="' + id + '"] .icon', this.$el),
