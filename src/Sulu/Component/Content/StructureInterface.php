@@ -320,4 +320,24 @@ interface StructureInterface extends \JsonSerializable
      * @return mixed
      */
     public function setExtensions($extensions);
+
+    /**
+     * @return int
+     */
+    public function getNodeType();
+
+    /**
+     * @param int $nodeType
+     */
+    public function setNodeType($nodeType);
+
+    /**
+     * @return boolean
+     */
+    public function getInternal();
+
+    /**
+     * @param boolean $internal
+     */
+    public function setInternal($internal);
 }

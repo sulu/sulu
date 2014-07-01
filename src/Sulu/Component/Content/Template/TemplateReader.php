@@ -47,7 +47,9 @@ class TemplateReader implements LoaderInterface
         'created',
         'navigation',
         'published',
-        'state'
+        'state',
+        'internal',
+        'nodeType'
     );
 
     /**
