@@ -11,7 +11,11 @@
         <field name="created" type="datetime" column="created"/>
         <field name="changed" type="datetime" column="changed"/>
 
-        <one-to-many field="files" target-entity="Sulu\Bundle\MediaBundle\Entity\File" mapped-by="media"/>
+        <one-to-many field="files" target-entity="Sulu\Bundle\MediaBundle\Entity\File" mapped-by="media">
+            <cascade>
+                <cascade-persist />
+            </cascade>
+        </one-to-many>
 
         <many-to-one field="collection" target-entity="Sulu\Bundle\MediaBundle\Entity\Collection" inversed-by="media">
             <join-columns>

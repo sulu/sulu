@@ -11,53 +11,57 @@
 namespace Sulu\Bundle\MediaBundle\Media\Manager;
 
 use Sulu\Bundle\MediaBundle\Entity\Media;
+use Sulu\Bundle\MediaBundle\Api\Media as MediaWrapper;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-/**
- * Defines the operations of the MediaManager.
- * The MediaManager is responsible for the centralized management of our media.
- * @package Sulu\Bundle\MediaBundle\Media
- */
-interface MediaManagerInterface
-{
-    /**
-     * Load the media object
-     * @param $id
-     * @return Media
-     */
-    public function get($id);
+interface MediaManagerInterface {
 
     /**
-     * Loads multiple media objct
-     * @param string[] $ids
+     * Returns media with a given collection and/or ids and/or limit
+     * if no arguments passed returns all media
+     * @param int $collection the id of the collection to filter for
+     * @param array $ids the media ids
+     * @param int $limit to limite the output
      * @return Media[]
      */
-    public function getMultiple($ids);
-    /**
-     * Adds a new file to a media
-     * @param $uploadedFile
-     * @param int $userId
-     * @param int $collectionId
-     * @param array $properties contains e.g. meta data (title, description, locale), content- and publish languages
-     * @return mixed
-     */
-    public function add($uploadedFile, $userId, $collectionId, $properties = array());
+    public function find($collection = null, $ids = null, $limit = null);
 
     /**
-     * Update the file to a new fileversion
-     * @param $uploadedFile
-     * @param int $userId
-     * @param int $id
-     * @param null|int $collectionId when null no changes!
-     * @param array $properties
-     * @return mixed
+     * Returns a media with a given id
+     * @param int $id the id of the category
+     * @return Media
      */
-    public function update($uploadedFile, $userId, $id, $collectionId = null, $properties = array());
+    public function findById($id);
 
     /**
-     * Remove a media
-     * @param $id
-     * @param $userId
-     * @return mixed
+     * Creates a new media or overrides an existing one
+     * @param UploadedFile $uploadedFile
+     * @param array $data The data of the category to save
+     * @param int $userId The id of the user, who is doing this change
+     * @return Media
      */
-    public function remove($id, $userId);
+    public function save($uploadedFile, $data, $userId);
+
+    /**
+     * Deletes a media with a given id
+     * @param int $id the id of the category to delete
+     */
+    public function delete($id);
+
+    /**
+     * Returns an API-Object for a given collection-entity. The API-Object wraps the entity
+     * and provides neat getters and setters
+     * @param Media $media
+     * @param string $locale
+     * @return MediaWrapper
+     */
+    public function getApiObject($media, $locale);
+
+    /**
+     * Same as getApiObject, but takes multiple media-entities
+     * @param Media[] $media
+     * @param string $locale
+     * @return MediaWrapper[]
+     */
+    public function getApiObjects($media, $locale);
 }

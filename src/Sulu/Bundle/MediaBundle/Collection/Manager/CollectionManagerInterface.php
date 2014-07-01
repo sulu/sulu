@@ -36,7 +36,7 @@ interface CollectionManagerInterface {
     public function findById($id);
 
     /**
-     * Creates a new category or overrides an existing one
+     * Creates a new collection or overrides an existing one
      * @param array $data The data of the category to save
      * @param int $userId The id of the user, who is doing this change
      * @return Collection
@@ -59,7 +59,7 @@ interface CollectionManagerInterface {
     public function getApiObject($collection, $locale);
 
     /**
-     * Same as getApiObject, but takes multiple category-entities
+     * Same as getApiObject, but takes multiple collection-entities
      * @param Collection[] $collections
      * @param string $locale
      * @return CollectionWrapper[]

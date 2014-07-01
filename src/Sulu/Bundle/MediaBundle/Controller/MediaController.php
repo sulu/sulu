@@ -15,10 +15,8 @@ use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Put;
 
-use Sulu\Bundle\MediaBundle\Media\Exception\UploadFileException;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\RestObject\Media;
-use Sulu\Bundle\MediaBundle\Media\RestObject\RestObjectHelper;
 use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
@@ -108,30 +106,17 @@ class MediaController extends RestController implements ClassResourceInterface
     public function getAction($id, Request $request)
     {
         $locale = $this->getLocale($request->get('locale'));
-
-        $mediaEntity = $this->getDoctrine()
-            ->getRepository($this->entityName)
-            ->findMediaById($id, true);
-
-        if (!$mediaEntity) {
-            $exception = new EntityNotFoundException($this->entityName, $id);
-            // Return a 404 together with an error message, given by the exception, if the entity is not found
-            $view = $this->view(
-                $exception->toArray(),
-                404
-            );
-        } else {
-            $view = $this->view(
-                array_merge(
-                    array(
-                        '_links' => array(
-                            'self' => $request->getRequestUri()
-                        )
-                    ),
-                    $this->getRestObjectHelper()->convertMediaToRestObject($mediaEntity, $locale, $request->get('version', null))
-                )
-                , 200);
-        }
+        $mM = $this->getMediaManager();
+        $view = $this->responseGetById(
+            $id,
+            function ($id) use ($locale, $mM) {
+                /**
+                 * @var MediaEntity $mediaEntity
+                 */
+                $mediaEntity = $mM->findById($id);
+                return $mM->getApiObject($mediaEntity, $locale);
+            }
+        );
 
         return $this->handleView($view);
     }
@@ -143,21 +128,13 @@ class MediaController extends RestController implements ClassResourceInterface
      */
     public function cgetAction(Request $request)
     {
-        $locale = $this->getLocale($request->get('locale'));
-
         $collection = $request->get('collection');
-        $ids = $request->get('ids');
-        if ($ids !== null) {
-            $ids = explode(',', $ids);
-        }
-        $fields = $request->get('fields', null);
-        if ($fields !== null) {
-            $fields = explode(',', $fields);
-        }
-        $mediaList = $this->getDoctrine()->getRepository($this->entityName)->findMedia($collection, $ids);
-        $mediaList = $this->getRestObjectHelper()->convertMediasToRestObjects($mediaList, $locale, $fields);
-        $view = $this->view($this->createHalResponse($mediaList), 200);
-
+        $limit = $request->get('limit');
+        $mM = $this->getMediaManager();
+        $media = $mM->find($collection, null, $limit);
+        $wrappers = $mM->getApiObjects($media, $this->getLocale($request->get('locale')));
+        $halResponse = $this->createHalResponse($wrappers, true);
+        $view = $this->view($halResponse, 200);
         return $this->handleView($view);
     }
 
@@ -169,48 +146,7 @@ class MediaController extends RestController implements ClassResourceInterface
      */
     public function postAction(Request $request)
     {
-        try {
-            // locale
-            $locale = $this->getLocale($request->get('locale'));
-
-            // get collection id
-            $media = $this->getRestObject($request);
-
-            // get fileversions properties
-            $properties = $this->getProperties($media);
-
-            // generate media
-            $uploadFiles = $this->getUploadedFiles($request, 'fileVersion');
-            if (count($uploadFiles)) {
-                foreach ($uploadFiles as $uploadFile) {
-                    $mediaEntity = $this->getMediaManager()->add(
-                        $uploadFile,
-                        $this->getUser()->getId(),
-                        $media->getCollection(),
-                        $properties
-                    );
-                    break;
-                }
-            } else {
-                throw new RestException(
-                    'Uploaded file not found',
-                    UploadFileException::EXCEPTION_CODE_UPLOADED_FILE_NOT_FOUND
-                );
-            }
-
-            $view = $this->view(
-                $this->getRestObjectHelper()->convertMediaToRestObject($mediaEntity, $locale),
-                200
-            );
-        } catch (EntityNotFoundException $enfe) {
-            $view = $this->view($enfe->toArray(), 404);
-        } catch (RestException $re) {
-            $view = $this->view($re->toArray(), 400);
-        } catch (UploadFileException $ufe) {
-            $view = $this->view($ufe->toArray(), 400);
-        }
-
-        return $this->handleView($view);
+        return $this->saveEntity(null, $request);
     }
 
     /**
@@ -222,53 +158,7 @@ class MediaController extends RestController implements ClassResourceInterface
      */
     public function putAction($id, Request $request)
     {
-        try {
-            // locale
-            $locale = $this->getLocale($request->get('locale'));
-
-            // get collection id
-            $media = $this->getRestObject($request);
-
-            // get fileversions properties
-            $properties = $this->getProperties($media);
-
-            // update media
-            $uploadFiles = $this->getUploadedFiles($request, 'fileVersion');
-            if (count($uploadFiles)) {
-                // Add new Fileversion
-                foreach ($uploadFiles as $uploadFile) {
-                    $mediaEntity = $this->getMediaManager()->update(
-                        $uploadFile,
-                        $this->getUser()->getId(),
-                        $id,
-                        $media->getCollection(),
-                        $properties
-                    );
-                    break;
-                }
-            } else {
-                // Update only properties
-                $mediaEntity = $this->getMediaManager()->update(
-                    null,
-                    $this->getUser()->getId(),
-                    $id,
-                    $media->getCollection(),
-                    $properties
-                );
-            }
-            $view = $this->view(
-                $this->getRestObjectHelper()->convertMediaToRestObject($mediaEntity, $locale),
-                200
-            );
-        } catch (EntityNotFoundException $enfe) {
-            $view = $this->view($enfe->toArray(), 404);
-        } catch (RestException $exc) {
-            $view = $this->view($exc->toArray(), 400);
-        } catch (UploadFileException $ufe) {
-            $view = $this->view($ufe->toArray(), 400);
-        }
-
-        return $this->handleView($view);
+        return $this->saveEntity($id, $request);
     }
 
     /**
@@ -279,7 +169,7 @@ class MediaController extends RestController implements ClassResourceInterface
     public function deleteAction($id)
     {
         $delete = function ($id) {
-            $this->getMediaManager()->remove($id, $this->getUser()->getId());
+            $this->getMediaManager()->delete($id);
         };
 
         $view = $this->responseDelete($id, $delete);
@@ -288,33 +178,67 @@ class MediaController extends RestController implements ClassResourceInterface
     }
 
     /**
+     * @param $id
      * @param Request $request
-     * @return Media
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    protected function getRestObject(Request $request)
+    protected function saveEntity($id, Request $request)
     {
-        $object = new Media();
-        $object->setId($request->get('id'));
-        $object->setLocale($request->get('locale', $this->getLocale($request->get('locale'))));
-        $object->setType($request->get('type'));
-        $object->setCollection($request->get('collection'));
-        $object->setVersions($request->get('versions', array()));
-        $object->setVersion($request->get('version'));
-        $object->setSize($request->get('size'));
-        $object->setContentLanguages($request->get('contentLanguages', array()));
-        $object->setPublishLanguages($request->get('publishLanguages', array()));
-        $object->setTags($request->get('tags', array()));
-        $object->setFormats($request->get('formats', array()));
-        $object->setUrl($request->get('url'));
-        $object->setName($request->get('name'));
-        $object->setTitle($request->get('title', $this->getTitleFromUpload($request, 'fileVersion')));
-        $object->setDescription($request->get('description'));
-        $object->setChanger($request->get('changer'));
-        $object->setCreator($request->get('creator'));
-        $object->setChanged($request->get('changed'));
-        $object->setCreated($request->get('created'));
+        try {
+            $mM = $this->getMediaManager();
+            $data = $this->getData($request);
+            $data['id'] = $id;
+            $uploadedFile = $this->getUploadedFile($request, 'fileVersion');
+            $categoryEntity = $mM->save($uploadedFile, $data, $this->getUser()->getId());
+            $categoryWrapper = $mM->getApiObject($categoryEntity, $this->getLocale($request->get('locale')));
 
-        return $object;
+            $view = $this->view($categoryWrapper, 200);
+        } catch (EntityNotFoundException $enfe) {
+            $view = $this->view($enfe->toArray(), 404);
+        } catch (RestException $exc) {
+            $view = $this->view($exc->toArray(), 400);
+        }
+
+        return $this->handleView($view);
+    }
+
+    /**
+     * @param Request $request
+     * @param $name
+     * @return UploadedFile
+     */
+    protected function getUploadedFile(Request $request, $name)
+    {
+        return $request->files->get($name);
+    }
+
+    /**
+     * @param Request $request
+     * @return array
+     */
+    protected function getData(Request $request)
+    {
+        return array(
+            'id' => $request->get('id'),
+            'locale' => $request->get('locale', $this->getLocale($request->get('locale'))),
+            'type' => $request->get('type'),
+            'collection' => $request->get('collection'),
+            'versions' => $request->get('versions'),
+            'version' => $request->get('version'),
+            'size' => $request->get('size'),
+            'contentLanguages' => $request->get('contentLanguages', array()),
+            'publishLanguages' => $request->get('publishLanguages', array()),
+            'tags' => $request->get('tags', array()),
+            'formats' => $request->get('formats', array()),
+            'url' => $request->get('url'),
+            'name' => $request->get('name'),
+            'title' => $request->get('title', $this->getTitleFromUpload($request, 'fileVersion')),
+            'description' => $request->get('description'),
+            'changer' => $request->get('changer'),
+            'creator' => $request->get('creator'),
+            'changed' => $request->get('changed'),
+            'created' => $request->get('created'),
+        );
     }
 
     /**
@@ -325,75 +249,13 @@ class MediaController extends RestController implements ClassResourceInterface
     {
         $title = null;
 
-        /**
-         * @var UploadedFile $uploadedFile
-         */
-        foreach ($this->getUploadedFiles($request, 'fileVersion') as $uploadedFile) {
-            $title = $part = implode('.', explode('.', $uploadedFile->getClientOriginalName(), -1));;
-            break;
+        $uploadedFile = $this->getUploadedFile($request, 'fileVersion');
+
+        if ($uploadedFile) {
+            $title = $part = implode('.', explode('.', $uploadedFile->getClientOriginalName(), -1));
         }
 
         return $title;
-    }
-
-    /**
-     * get uploaded file when name is 'file' or 'file[]'
-     * @param Request $request
-     * @param $name
-     * @return array
-     */
-    private function getUploadedFiles(Request $request, $name)
-    {
-        if (is_null($request->files->get($name))) {
-            return array();
-        }
-
-        if (is_array($request->files->get($name))) {
-            return $request->files->get($name);
-        }
-
-        return array(
-            $request->files->get($name)
-        );
-    }
-
-    /**
-     * give back the fileversion properties
-     * @param Media $restObject
-     * @return array
-     */
-    protected function getProperties($restObject)
-    {
-        $properties = array();
-
-        $fileVersion = array();
-        $fileVersion['version'] = $restObject->getVersion();
-
-        if ($restObject->getContentLanguages() && count($restObject->getContentLanguages())) {
-            $fileVersion['contentLanguages'] = $restObject->getContentLanguages();
-        }
-
-        if ($restObject->getPublishLanguages() && count($restObject->getPublishLanguages())) {
-            $fileVersion['publishLanguages'] = $restObject->getPublishLanguages();
-        }
-
-        if ($restObject->getTags() && count($restObject->getTags())) {
-            $fileVersion['tags'] = $restObject->getTags();
-        }
-
-        if ($restObject->getLocale() && $restObject->getTitle()) {
-            $meta = array();
-            $meta['title'] = $restObject->getTitle();
-            $meta['locale'] = $restObject->getLocale();
-            if ($restObject->getDescription()) {
-                $meta['description'] = $restObject->getDescription();
-            }
-            $fileVersion['meta'] = array();
-            $fileVersion['meta'][] = $meta;
-        }
-        $properties[] = $fileVersion;
-
-        return $properties;
     }
 
     /**
@@ -416,14 +278,5 @@ class MediaController extends RestController implements ClassResourceInterface
         }
 
         return $this->getUser()->getLocale();
-    }
-
-    /**
-     * getRestObjectHelper
-     * @return RestObjectHelper
-     */
-    protected function getRestObjectHelper()
-    {
-        return $this->get('sulu_media.rest_object_helper');
     }
 }

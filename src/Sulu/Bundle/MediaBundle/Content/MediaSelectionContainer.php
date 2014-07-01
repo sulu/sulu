@@ -67,30 +67,31 @@ class MediaSelectionContainer implements \Serializable
         $this->ids = $ids;
         $this->localization = $localization;
         $this->mediaManager = $mediaManager;
-        $this->restObjectHelper = $restObjectHelper;
     }
 
     /**
      * returns data of container
+     * @param string $locale
      * @return Media[]
      */
-    public function getData()
+    public function getData($locale = 'en') // TODO delete "= 'en'" and set it on the position where the function is called
     {
         if ($this->data === null) {
-            $this->data = $this->loadData();
+            $this->data = $this->loadData($locale);
         }
 
         return $this->data;
     }
 
     /**
+     * @param string $locale
      * @return Media[]
      */
-    private function loadData()
+    private function loadData($locale)
     {
-        $medias = $this->mediaManager->getMultiple($this->ids);
+        $medias = $this->mediaManager->find(null, $this->ids);
 
-        return $this->getRestObjectHelper()->convertMediasToRestObjects($medias, $this->localization);
+        return $this->mediaManager->getApiObjects($medias, $locale);
     }
 
     /**
@@ -163,14 +164,5 @@ class MediaSelectionContainer implements \Serializable
         $this->config = $values['config'];
         $this->ids = $values['ids'];
         $this->displayOption = $values['displayOption'];
-    }
-
-    /**
-     * getRestObjectHelper
-     * @return RestObjectHelper
-     */
-    protected function getRestObjectHelper()
-    {
-        return $this->restObjectHelper;
     }
 }

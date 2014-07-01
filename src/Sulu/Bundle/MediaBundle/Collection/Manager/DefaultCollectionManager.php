@@ -13,6 +13,8 @@ namespace Sulu\Bundle\MediaBundle\Collection\Manager;
 
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
+use Sulu\Bundle\MediaBundle\Entity\FileVersion;
+use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
@@ -236,7 +238,7 @@ class DefaultCollectionManager implements CollectionManagerInterface
     {
         $arrReturn = [];
         foreach($collections as $collection) {
-            array_push($arrReturn, $this->addPreviews(new CollectionWrapper($collection, $locale)));
+            array_push($arrReturn, $this->getApiObject($collection, $locale));
         }
         return $arrReturn;
     }
@@ -258,7 +260,7 @@ class DefaultCollectionManager implements CollectionManagerInterface
     protected function addPreviews(CollectionWrapper $collectionWrapper)
     {
         return $collectionWrapper->setPreviews(
-            $previews = $this->getPreviews($collectionWrapper->getId(), $collectionWrapper->getLocale())
+            $this->getPreviews($collectionWrapper->getId(), $collectionWrapper->getLocale())
         );
     }
 
@@ -276,10 +278,10 @@ class DefaultCollectionManager implements CollectionManagerInterface
 
 
         foreach ($medias as $media) {
-            foreach ($media['files'] as $file) {
-                foreach ($file['fileVersions'] as $fileVersion) {
-                    if ($fileVersion['version'] == $file['version']) {
-                        $format = $this->getPreviewsFromFileVersion($media['id'], $fileVersion, $locale);
+            foreach ($media->getFiles() as $file) {
+                foreach ($file->getFileVersions() as $fileVersion) {
+                    if ($fileVersion->getVersion() == $file->getVersion()) {
+                        $format = $this->getPreviewsFromFileVersion($media->getId(), $fileVersion, $locale);
                         if (!empty($format)) {
                             $formats[] = $format;
                         }
@@ -295,23 +297,26 @@ class DefaultCollectionManager implements CollectionManagerInterface
 
     /**
      * @param int $mediaId
-     * @param array $fileVersion
+     * @param FileVersion $fileVersion
      * @param string $locale
      * @return array
      */
     protected function getPreviewsFromFileVersion($mediaId, $fileVersion, $locale)
     {
         $title = '';
-        foreach ($fileVersion['meta'] as $key => $meta) {
-            if ($meta['locale'] == $locale) {
-                $title = $meta['title'];
+        /**
+         * @var FileVersionMeta $meta
+         */
+        foreach ($fileVersion->getMeta() as $key => $meta) {
+            if ($meta->getLocale() == $locale) {
+                $title = $meta->getTitle();
                 break;
             } elseif ($key == 0) { // fallback title
-                $title = $meta['title'];
+                $title = $meta->getTitle();
             }
         }
 
-        $mediaFormats = $this->formatManager->getFormats($mediaId, $fileVersion['name'], $fileVersion['storageOptions']);
+        $mediaFormats = $this->formatManager->getFormats($mediaId, $fileVersion->getName(), $fileVersion->getStorageOptions());
 
         foreach ($mediaFormats as $formatName => $formatUrl) {
             if ($formatName == $this->collectionPreviewFormat) {

@@ -8,100 +8,28 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\MediaBundle\Media\RestObject;
+namespace Sulu\Bundle\MediaBundle\Api;
 
-use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
+use Doctrine\ORM\EntityNotFoundException;
+use Sulu\Bundle\CoreBundle\Entity\ApiEntityWrapper;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage;
 use Sulu\Bundle\MediaBundle\Entity\Media as Entity;
-use DateTime;
+use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\TagBundle\Entity\Tag;
+use JMS\Serializer\Annotation\VirtualProperty;
+use JMS\Serializer\Annotation\SerializedName;
 
 /**
  * Class Media
  * The Media RestObject is the api entity for the MediaController.
  * @package Sulu\Bundle\MediaBundle\Media\RestObject
  */
-class Media extends ApiEntity implements RestObjectInterface
+class Media extends ApiEntityWrapper
 {
-
-    /**
-     * @var int
-     */
-    protected $id;
-
-    /**
-     * @var int
-     */
-    protected $name;
-
-    /**
-     * @var string
-     */
-    protected $locale;
-
-    /**
-     * @var int
-     */
-    protected $type;
-
-    /**
-     * @var int
-     */
-    protected $collection;
-
-    /**
-     * @var int
-     */
-    protected $version;
-
-    /**
-     * @var array
-     */
-    protected $versions = array();
-
-    /**
-     * @var string
-     */
-    protected $title;
-
-    /**
-     * @var string
-     */
-    protected $description;
-
-    /**
-     * @var int
-     */
-    protected $size;
-
-    /**
-     * @var array
-     */
-    protected $contentLanguages = array();
-
-    /**
-     * @var array
-     */
-    protected $publishLanguages = array();
-
-    /**
-     * @var array
-     */
-    protected $tags = array();
-
-    /**
-     * @var array
-     */
-    protected $properties = array();
-
-    /**
-     * @var string
-     */
-    protected $storageOptions;
 
     /**
      * @var string
@@ -114,448 +42,46 @@ class Media extends ApiEntity implements RestObjectInterface
     protected $formats = array();
 
     /**
-     * @var string
+     * @var array
      */
-    protected $changer;
+    protected $properties = array();
 
     /**
      * @var string
      */
-    protected $creator;
+    protected $locale;
 
     /**
-     * @var string
+     * @var int
      */
-    protected $changed;
+    protected $version;
 
     /**
-     * @var
+     * @var FileVersion
      */
-    protected $created;
+    protected $fileVersion = null;
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setDataByEntityArray($data, $locale, $version = null)
+
+    public function __construct(Entity $collection, $locale, $version = null)
     {
+        $this->entity = $collection;
         $this->locale = $locale;
-        foreach ($data as $key => $value) {
-            switch ($key) {
-                case 'id':
-                    // set id
-                    $this->id = $value;
-                    break;
-                case 'type':
-                case 'collection':
-                    // set collection
-                    if ($value) {
-                        $this->$key = $value['id'];
-                    }
-                    break;
-                case 'changer':
-                case 'creator':
-                    if ($value) {
-                        if (isset($value['contact']['firstName']) && isset($value['contact']['lastName'])) {
-                            $this->$key = $value['contact']['firstName'] . ' ' . $value['contact']['lastName'];
-                        }
-                    }
-                    break;
-                case 'files':
-                    if ($value) {
-                        $file = $value[0];
-                        // get actual file version when not set
-                        if ($version === null) {
-                            $version = $file['version'];
-                        }
-                        $versions = array();
-                        if ($file['fileVersions']) {
-                            foreach ($file['fileVersions'] as $fileVersion) {
-                                $versions[] = $fileVersion['version'];
-                                if ($fileVersion['version'] == $version) {
-                                    $this->name = $fileVersion['name'];
-                                    $this->size = $fileVersion['size'];
-                                    $this->version = $fileVersion['version'];
-                                    if ($fileVersion['changed'] instanceof DateTime) {
-                                        $this->changed = $fileVersion['changed']->format('Y-m-d H:i:s');
-                                    }
-                                    if ($fileVersion['created'] instanceof DateTime) {
-                                        $this->created = $fileVersion['created']->format('Y-m-d H:i:s');
-                                    }
-                                    $this->contentLanguages = array();
-                                    if ($fileVersion['contentLanguages']) {
-                                        foreach ($fileVersion['contentLanguages'] as $contentLanguage) {
-                                            if (!empty($contentLanguage['locale'])) {
-                                                $this->contentLanguages[] = $contentLanguage['locale'];
-                                            }
-                                        }
-                                    }
-                                    $this->publishLanguages = array();
-                                    if ($fileVersion['publishLanguages']) {
-                                        foreach ($fileVersion['publishLanguages'] as $publishLanguage) {
-                                            if (!empty($contentLanguage['locale'])) {
-                                                $this->publishLanguages[] = $publishLanguage['locale'];
-                                            }
-                                        }
-                                    }
-
-                                    $this->storageOptions = $fileVersion['storageOptions'];
-
-                                    if ($fileVersion['meta']) {
-                                        $counter = 0;
-                                        foreach ($fileVersion['meta'] as $meta) {
-                                            $counter++;
-                                            if ($counter == 1 || $meta['locale'] == $locale) {
-                                                $this->title = $meta['title'];
-                                                $this->description = $meta['description'];
-                                            }
-                                        }
-                                    }
-                                    break;
-                                }
-                            }
-                        }
-                        $this->versions = $versions;
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        return $this;
+        $this->version = $version;
     }
 
     /**
-     * @var Entity $object
-     * {@inheritdoc}
-     */
-    public function setDataByEntity($object, $locale, $version = null)
-    {
-        // set id
-        $this->id = $object->getId();
-
-        // set locale
-        $this->locale = $locale;
-
-        $versions = array();
-        $contentLanguages = array();
-        $publishLanguages = array();
-        $tags = array();
-
-        /**
-         * @var File $file
-         */
-        foreach ($object->getFiles() as $file) {
-            if ($version === null) {
-                $version = $file->getVersion();
-            }
-            // set version
-            $this->version = $version;
-            /**
-             * @var FileVersion $fileVersion
-             */
-            foreach ($file->getFileVersions() as $fileVersion) {
-                $versions[] = $fileVersion->getVersion();
-                if ($version == $fileVersion->getVersion()) {
-                    // set name
-                    $this->name = $fileVersion->getName();
-
-                    // set size
-                    $this->size = $fileVersion->getSize();
-
-                    /**
-                     * @var FileVersionContentLanguage $contentLanguage
-                     */
-                    foreach ($fileVersion->getContentLanguages() as $contentLanguage) {
-                        array_push($contentLanguages, $contentLanguage->getLocale());
-                    }
-
-                    /**
-                     * @var FileVersionPublishLanguage $publishLanguage
-                     */
-                    foreach ($fileVersion->getPublishLanguages() as $publishLanguage) {
-                        array_push($publishLanguages, $publishLanguage->getLocale());
-                    }
-
-                    /**
-                     * @var Tag $tag
-                     */
-                    foreach ($fileVersion->getTags() as $tag) {
-                        $tags[] = array(
-                            'id' => $tag->getId(),
-                            'name' =>$tag->getName()
-                        );
-                    }
-
-                    /**
-                     * @var FileVersionMeta $meta
-                     */
-                    $counter = 0;
-                    foreach ($fileVersion->getMeta() as $meta) {
-                        $counter++;
-                        if ($counter == 1 || $meta->getLocale() == $locale) {
-                            // set title
-                            $this->title = $meta->getTitle();
-                            // set description
-                            $this->description = $meta->getDescription();
-                        }
-                    }
-
-                    $this->storageOptions = $fileVersion->getStorageOptions();
-                }
-            }
-        }
-
-        // set versions
-        $this->versions = $versions;
-
-        // set contentLanguages
-        $this->contentLanguages = $contentLanguages;
-
-        // set publishLanguages
-        $this->publishLanguages = $publishLanguages;
-
-        // set tags
-        $this->tags = $tags;
-
-        // set collection
-        if ($object->getCollection()) {
-            $this->collection = $object->getCollection()->getId();
-        }
-
-        // set type
-        if ($object->getType()) {
-            $this->type = $object->getType()->getId();
-        }
-
-        // set changed time
-        if ($object->getChanged() instanceof DateTime) {
-            $this->changed = $object->getChanged();
-        }
-
-        // set created time
-        if ($object->getCreated() instanceof DateTime) {
-            $this->created = $object->getCreated();
-        }
-
-        // set changer
-        if ($object->getChanger()) {
-            $this->changer = ''; // TODO
-        }
-
-        // set creator
-        if ($object->getCreator()) {
-            $this->creator = ''; // TODO
-        }
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function toArray($fields = array())
-    {
-        if (empty($fields)) {
-            // get all fields
-            $data = array(
-                'id' => $this->id,
-                'locale' => $this->locale,
-                'collection' => $this->collection,
-                'type' => $this->type,
-                'version' => $this->version,
-                'versions' => $this->versions,
-                'name' => $this->name,
-                'title' => $this->title,
-                'description' => $this->description,
-                'size' => $this->size,
-                'contentLanguages' => $this->contentLanguages,
-                'publishLanguages' => $this->publishLanguages,
-                'tags' => $this->tags,
-                'url' => $this->url,
-                'thumbnails' => $this->formats, // TODO change to formats when it is changed in husky
-                'properties' => $this->properties,
-                'changer' => $this->changer,
-                'creator' => $this->creator,
-                'changed' => $this->changed,
-                'created' => $this->created
-            );
-        } else {
-            // only get specific fields
-            $data = array();
-            foreach ($fields as $field) {
-                $fieldValue = $field;
-                $fieldKey = $field;
-                // TODO Delete when changed
-                if (in_array($field, array('formats', 'thumbnails'))) {
-                    $fieldValue = 'thumbnails';
-                    $fieldKey =  'formats';
-                }
-                // TODO END
-                if (isset($this->$fieldKey)) {
-                    $data[$fieldValue] = $this->$fieldKey;
-                }
-            }
-        }
-
-        return $data;
-    }
-
-    /**
-     * @param string $changed
-     * @return $this
-     */
-    public function setChanged($changed)
-    {
-        $this->changed = $changed;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getChanged()
-    {
-        return $this->changed;
-    }
-
-    /**
-     * @param string $changer
-     * @return $this
-     */
-    public function setChanger($changer)
-    {
-        $this->changer = $changer;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getChanger()
-    {
-        return $this->changer;
-    }
-
-    /**
-     * @param int $collection
-     * @return $this
-     */
-    public function setCollection($collection)
-    {
-        $this->collection = $collection;
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getCollection()
-    {
-        return $this->collection;
-    }
-
-    /**
-     * @param array $contentLanguages
-     * @return $this
-     */
-    public function setContentLanguages($contentLanguages)
-    {
-        $this->contentLanguages = $contentLanguages;
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getContentLanguages()
-    {
-        return $this->contentLanguages;
-    }
-
-    /**
-     * @param mixed $created
-     * @return $this
-     */
-    public function setCreated($created)
-    {
-        $this->created = $created;
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCreated()
-    {
-        return $this->created;
-    }
-
-    /**
-     * @param string $creator
-     * @return $this
-     */
-    public function setCreator($creator)
-    {
-        $this->creator = $creator;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCreator()
-    {
-        return $this->creator;
-    }
-
-    /**
-     * @param string $description
-     * @return $this
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDescription()
-    {
-        return $this->description;
-    }
-
-    /**
-     * @param int $id
-     * @return $this
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-        return $this;
-    }
-
-    /**
+     * @VirtualProperty
+     * @SerializedName("id")
      * @return int
      */
     public function getId()
     {
-        return $this->id;
+        return $this->entity->getId();
     }
 
     /**
-     * @param string $locale
-     * @return $this
-     */
-    public function setLocale($locale)
-    {
-        $this->locale = $locale;
-        return $this;
-    }
-
-    /**
+     * @VirtualProperty
+     * @SerializedName("locale")
      * @return string
      */
     public function getLocale()
@@ -564,39 +90,27 @@ class Media extends ApiEntity implements RestObjectInterface
     }
 
     /**
-     * @param array $properties
+     * @param Collection $collection
      * @return $this
      */
-    public function setProperties($properties)
+    public function setCollection($collection)
     {
-        $this->properties = $properties;
+        $this->entity->setCollection($collection);
         return $this;
     }
 
     /**
-     * @return array
+     * @VirtualProperty
+     * @SerializedName("collection")
+     * @return int
      */
-    public function getProperties()
+    public function getCollection()
     {
-        return $this->properties;
-    }
-
-    /**
-     * @param array $publishLanguages
-     * @return $this
-     */
-    public function setPublishLanguages($publishLanguages)
-    {
-        $this->publishLanguages = $publishLanguages;
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getPublishLanguages()
-    {
-        return $this->publishLanguages;
+        $collection = $this->entity->getCollection();
+        if ($collection) {
+            return $collection->getId();
+        }
+        return null;
     }
 
     /**
@@ -605,34 +119,18 @@ class Media extends ApiEntity implements RestObjectInterface
      */
     public function setSize($size)
     {
-        $this->size = $size;
+        $this->getFileVersion()->setSize($size);
         return $this;
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("size")
      * @return int
      */
     public function getSize()
     {
-        return $this->size;
-    }
-
-    /**
-     * @param array $tags
-     * @return $this
-     */
-    public function setTags($tags)
-    {
-        $this->tags = $tags;
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getTags()
-    {
-        return $this->tags;
+        return $this->getFileVersion()->getSize();
     }
 
     /**
@@ -641,16 +139,104 @@ class Media extends ApiEntity implements RestObjectInterface
      */
     public function setTitle($title)
     {
-        $this->title = $title;
+        $metaExists = false;
+
+        /**
+         * @var FileVersionMeta $meta
+         */
+        foreach ($this->getFileVersion()->getMeta() as $meta) {
+            if ($meta->getLocale() == $this->locale) {
+                $metaExists = true;
+                $meta->setTitle($title);
+            }
+        }
+
+        if (!$metaExists) {
+            $meta = new FileVersionMeta();
+            $meta->setTitle($title);
+            $meta->setFileVersion($this->getFileVersion());
+            $meta->setLocale($this->locale);
+            $this->getFileVersion()->addMeta($meta);
+        }
+
         return $this;
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("title")
      * @return string
      */
     public function getTitle()
     {
-        return $this->title;
+        $title = null;
+        $counter = 0;
+
+        /**
+         * @var FileVersionMeta $meta
+         */
+        foreach ($this->getFileVersion()->getMeta() as $meta) {
+            $counter++;
+            // when meta not exists in locale return first created description
+            if ($meta->getLocale() == $this->locale || $counter == 1) {
+                $title = $meta->getTitle();
+            }
+        }
+
+        return $title;
+    }
+
+    /**
+     * @param string $description
+     * @return $this
+     */
+    public function setDescription($description)
+    {
+        $metaExists = false;
+
+        /**
+         * @var FileVersionMeta $meta
+         */
+        foreach ($this->getFileVersion()->getMeta() as $meta) {
+            if ($meta->getLocale() == $this->locale) {
+                $metaExists = true;
+                $meta->setDescription($description);
+            }
+        }
+
+        if (!$metaExists) {
+            $meta = new FileVersionMeta();
+            $meta->setDescription($description);
+            $meta->setFileVersion($this->getFileVersion());
+            $meta->setLocale($this->locale);
+            $this->getFileVersion()->addMeta($meta);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @VirtualProperty
+     * @SerializedName("description")
+     * @return string
+     */
+    public function getDescription()
+    {
+        $description = null;
+        $counter = 0;
+
+        /**
+         * @var FileVersionMeta $meta
+         */
+        foreach ($this->getFileVersion()->getMeta() as $meta) {
+            $counter++;
+            // when meta not exists in locale return first created description
+            if ($meta->getLocale() == $this->locale || $counter == 1) {
+                $description = $meta->getDescription();
+            }
+        }
+
+        return $description;
     }
 
     /**
@@ -664,29 +250,36 @@ class Media extends ApiEntity implements RestObjectInterface
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("version")
      * @return int
      */
     public function getVersion()
     {
-        return $this->version;
+        return $this->getFileVersion()->getVersion();
     }
 
     /**
-     * @param array $versions
-     * @return $this
-     */
-    public function setVersions($versions)
-    {
-        $this->versions = $versions;
-        return $this;
-    }
-
-    /**
+     * @VirtualProperty
+     * @SerializedName("versions")
      * @return array
      */
     public function getVersions()
     {
-        return $this->versions;
+        $versions = array();
+        /**
+         * @var File $file
+         */
+        foreach ($this->entity->getFiles() as $file) {
+            /**
+             * @var FileVersion $fileVersion
+             */
+            foreach ($file->getFileVersions() as $fileVersion) {
+                array_push($versions, $fileVersion->getVersion());
+            }
+            break; // currently only one file per media exists
+        }
+        return $versions;
     }
 
     /**
@@ -695,40 +288,52 @@ class Media extends ApiEntity implements RestObjectInterface
      */
     public function setName($name)
     {
-        $this->name = $name;
+        $this->getFileVersion()->setName($name);
         return $this;
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("name")
      * @return int
      */
     public function getName()
     {
-        return $this->name;
+        return $this->getFileVersion()->getName();
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("type")
      * @return int
      */
     public function getType()
     {
-        return $this->type;
+        $type = $this->entity->getType();
+        if ($type) {
+            return $type->getId();
+        }
+        return null;
     }
 
     /**
-     * @param int $type
+     * @param MediaType $type
+     * @return $this
      */
     public function setType($type)
     {
-        $this->type = $type;
+        $this->entity->setType($type);
+        return $this;
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("storageOptions")
      * @return string
      */
     public function getStorageOptions()
     {
-        return $this->storageOptions;
+        return $this->getFileVersion()->getStorageOptions();
     }
 
     /**
@@ -736,13 +341,156 @@ class Media extends ApiEntity implements RestObjectInterface
      */
     public function setStorageOptions($storageOptions)
     {
-        $this->storageOptions = $storageOptions;
+        $this->getFileVersion()->setStorageOptions($storageOptions);
+    }
+
+    /**
+     * @param array $publishLanguages
+     * @return $this
+     */
+    public function setPublishLanguages($publishLanguages)
+    {
+        /**
+         * @var FileVersionPublishLanguage $publishLanguage
+         */
+        foreach ($publishLanguages as $key => $locale) {
+            foreach ($this->getFileVersion()->getPublishLanguages() as $publishLanguage) {
+                if ($publishLanguage->getLocale() == $locale) {
+                    unset($publishLanguages[$key]);
+                    break;
+                }
+            }
+        }
+
+        foreach ($publishLanguages as $locale) {
+            $publishLanguage = new FileVersionPublishLanguage();
+            $publishLanguage->setFileVersion($this->getFileVersion());
+            $publishLanguage->setLocale($locale);
+        }
+        return $this;
+    }
+
+    /**
+     * @VirtualProperty
+     * @SerializedName("publishLanguages")
+     * @return array
+     */
+    public function getPublishLanguages()
+    {
+        $publishLanguages = array();
+        /**
+         * @var FileVersionPublishLanguage $publishLanguage
+         */
+        foreach ($this->getFileVersion()->getPublishLanguages() as $publishLanguage) {
+            array_push($publishLanguage->getLocale(), $publishLanguage->getLocale());
+        }
+
+        return $publishLanguages;
+    }
+
+    /**
+     * @param array $contentLanguages
+     * @return $this
+     */
+    public function setContentLanguages($contentLanguages)
+    {
+        /**
+         * @var FileVersionContentLanguage $contentLanguage
+         */
+        foreach ($contentLanguages as $key => $locale) {
+            foreach ($this->getFileVersion()->getContentLanguages() as $contentLanguage) {
+                if ($contentLanguage->getLocale() == $locale) {
+                    unset($contentLanguages[$key]);
+                    break;
+                }
+            }
+        }
+
+        foreach ($contentLanguages as $locale) {
+            $contentLanguage = new FileVersionContentLanguage();
+            $contentLanguage->setFileVersion($this->getFileVersion());
+            $contentLanguage->setLocale($locale);
+        }
+        return $this;
+    }
+
+    /**
+     * @VirtualProperty
+     * @SerializedName("contentLanguages")
+     * @return array
+     */
+    public function getContentLanguages()
+    {
+        $contentLanguages = array();
+        /**
+         * @var FileVersionContentLanguage $contentLanguage
+         */
+        foreach ($this->getFileVersion()->getContentLanguages() as $contentLanguage) {
+            array_push($contentLanguage->getLocale(), $contentLanguage->getLocale());
+        }
+
+        return $contentLanguages;
+    }
+
+    /**
+     * @param array $tags
+     * @return $this
+     */
+    public function setTags($tags)
+    {
+        foreach ($tags as $key => $tagName) {
+            /**
+             * @var Tag $tag
+             */
+            foreach ($this->getFileVersion()->getTags() as $tag) {
+                if ($tag->getName() == $tagName) {
+                    unset($tags[$key]);
+                    break;
+                }
+            }
+        }
+
+        foreach ($tags as $tagName) {
+            $tag = new Tag();
+            $tag->setName($tagName);
+            $this->getFileVersion()->addTag($tag);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @VirtualProperty
+     * @SerializedName("tags")
+     * @return array
+     */
+    public function getTags()
+    {
+        $tags = array();
+        /**
+         * @var Tag $tag
+         */
+        foreach ($this->getFileVersion()->getTags() as $tag) {
+            $tags[$tag->getId()] = $tag->getName();
+        }
+        return $tags;
     }
 
     /**
      * @return array
      */
     public function getFormats()
+    {
+        return $this->formats;
+    }
+
+    /**
+     * @VirtualProperty
+     * @SerializedName("thumbnails")
+     * TODO change to formats when fixed in husky
+     * @return array
+     */
+    public function getThumbnails()
     {
         return $this->formats;
     }
@@ -756,6 +504,8 @@ class Media extends ApiEntity implements RestObjectInterface
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("url")
      * @return string
      */
     public function getUrl()
@@ -769,6 +519,107 @@ class Media extends ApiEntity implements RestObjectInterface
     public function setUrl($url)
     {
         $this->url = $url;
+    }
+
+    /**
+     * @VirtualProperty
+     * @SerializedName("changed")
+     * @return string
+     */
+    public function getChanged()
+    {
+        return $this->getFileVersion()->getChanged();
+    }
+
+    /**
+     * @VirtualProperty
+     * @SerializedName("changer")
+     * @return string
+     */
+    public function getChanger()
+    {
+        $changer = $this->getFileVersion()->getChanger();
+        if ($changer) {
+            return (string)$changer;
+        }
+        return null;
+    }
+
+    /**
+     * @VirtualProperty
+     * @SerializedName("created")
+     * @return mixed
+     */
+    public function getCreated()
+    {
+        return $this->getFileVersion()->getCreated();
+    }
+
+    /**
+     * @VirtualProperty
+     * @SerializedName("creator")
+     * @return string
+     */
+    public function getCreator()
+    {
+        $creator = $this->fileVersion->getCreator();
+        if ($creator) {
+            return (string)$creator;
+        }
+        return null;
+    }
+
+    /**
+     * @param array $properties
+     * @return $this
+     */
+    public function setProperties($properties)
+    {
+        $this->properties = $properties;
+        return $this;
+    }
+
+    /**
+     * @VirtualProperty
+     * @SerializedName("properties")
+     * @return array
+     */
+    public function getProperties()
+    {
+        return $this->properties;
+    }
+
+    /**
+     * @return FileVersion
+     * @throws \Doctrine\ORM\EntityNotFoundException
+     */
+    protected function getFileVersion()
+    {
+        if ($this->fileVersion !== null) {
+            return $this->fileVersion;
+        }
+
+        /**
+         * @var File $file
+         */
+        foreach ($this->entity->getFiles() as $file) {
+            if ($this->version !== null) {
+                $version = $this->version;
+            } else {
+                $version = $file->getVersion();
+            }
+            /**
+             * @var FileVersion $fileVersion
+             */
+            foreach ($file->getFileVersions() as $fileVersion) {
+                if ($fileVersion->getVersion() == $version) {
+                    $this->fileVersion = $fileVersion;
+                    return $fileVersion;
+                }
+            }
+            break; // currently only one file per media exists
+        }
+        throw new EntityNotFoundException('SuluMediaBundle:FileVersion', $this->entity->getId());
     }
 
 } 

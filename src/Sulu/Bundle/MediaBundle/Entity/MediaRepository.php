@@ -134,7 +134,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
                 $query->setParameter('mediaIds', $ids);
             }
 
-            return $query->getArrayResult();
+            return $query->getResult();
         } catch (NoResultException $ex) {
             return null;
         }
