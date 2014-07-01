@@ -99,11 +99,6 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
 
         // overwrite the default values with the given options
         $this->options = array_merge($this->options, $options);
-
-        // convert template dir to array
-        if (!is_array($this->options['template_dir'])) {
-            $this->options['template_dir'] = array($this->options['template_dir']);
-        }
     }
 
     /**
