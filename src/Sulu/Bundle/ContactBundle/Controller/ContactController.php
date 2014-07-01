@@ -155,7 +155,27 @@ class ContactController extends AbstractContactController
                 $request->query->add(array('fields' => implode($newFields, ',')));
             }
 
-            $filter = function($res) {
+            // check if fullname should be returned
+            $returnFullName = !is_null($fields) && array_search('fullName', $fields) !== false;
+
+            $filter = function($res) use ($returnFullName){
+                // get full name
+                if ($returnFullName) {
+                    $fullName = array();
+                    if (array_key_exists('firstName', $res)) {
+                        $fullName[] = $res['firstName'];
+                    }
+                    if (array_key_exists('middleName', $res)) {
+                        $fullName[] = $res['middleName'];
+                    }
+                    if (array_key_exists('lastName', $res)) {
+                        $fullName[] = $res['lastName'];
+                    }
+                    $res['fullName'] = implode(' ', $fullName);
+                    $res['name'] = implode(' ', $fullName); // FIXME: name is only returned due to an error in auto-complete component
+                }
+
+                // filter relations
                 if (array_key_exists('emails_email', $res)) {
                     $res['email'] = $res['emails_email'];
                     unset($res['emails_email']);

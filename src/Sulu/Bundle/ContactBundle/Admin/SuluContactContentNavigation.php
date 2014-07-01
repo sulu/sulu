@@ -41,7 +41,7 @@ class SuluContactContentNavigation extends ContentNavigation
         $details->setContentComponentOptions(array('display'=>'form'));
         $this->addNavigationItem($details);
         // contacts
-        $contacts = new NavigationItem('navigation.contacts.people');
+        $contacts = new NavigationItem('content-navigation.contact.accounts.contacts');
         $contacts->setAction('contacts');
         $contacts->setId('contacts');
         $contacts->setContentType('account');
