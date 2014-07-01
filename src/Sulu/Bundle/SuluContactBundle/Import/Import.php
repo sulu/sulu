@@ -259,37 +259,41 @@ class Import
      * assigns mappings as defined in mappings file
      * @param $mappingsFile
      * @return bool|mixed
-     * @throws \Exception
+     * @throws \Symfony\Component\Translation\Exception\NotFoundResourceException
      */
     protected function processMappingsFile($mappingsFile)
     {
-        // set mappings
-        if ($mappingsFile && ($mappingsContent = file_get_contents($mappingsFile))) {
-            $mappings = json_decode($mappingsContent, true);
-            if (!$mappings) {
-                throw new \Exception('no valid JSON in mappings file');
+        try {
+            // set mappings
+            if ($mappingsFile && ($mappingsContent = file_get_contents($mappingsFile))) {
+                $mappings = json_decode($mappingsContent, true);
+                if (!$mappings) {
+                    throw new \Exception('no valid JSON in mappings file');
+                }
+                if (array_key_exists('columns', $mappings)) {
+                    $this->setColumnMappings($mappings['columns']);
+                }
+                if (array_key_exists('ids', $mappings)) {
+                    $this->setIdMappings($mappings['ids']);
+                }
+                if (array_key_exists('options', $mappings)) {
+                    $this->setOptions($mappings['options']);
+                }
+                if (array_key_exists('countries', $mappings)) {
+                    $this->setCountryMappings($mappings['countries']);
+                }
+                if (array_key_exists('accountTypes', $mappings)) {
+                    $this->setAccountTypeMappings($mappings['accountTypes']);
+                }
+                if (array_key_exists('formOfAddress', $mappings)) {
+                    $this->setFormOfAddressMappings($mappings['formOfAddress']);
+                }
+                return $mappings;
             }
-            if (array_key_exists('columns', $mappings)) {
-                $this->setColumnMappings($mappings['columns']);
-            }
-            if (array_key_exists('ids', $mappings)) {
-                $this->setIdMappings($mappings['ids']);
-            }
-            if (array_key_exists('options', $mappings)) {
-                $this->setOptions($mappings['options']);
-            }
-            if (array_key_exists('countries', $mappings)) {
-                $this->setCountryMappings($mappings['countries']);
-            }
-            if (array_key_exists('accountTypes', $mappings)) {
-                $this->setAccountTypeMappings($mappings['accountTypes']);
-            }
-            if (array_key_exists('formOfAddress', $mappings)) {
-                $this->setFormOfAddressMappings($mappings['formOfAddress']);
-            }
-            return $mappings;
+            return false;
+        } catch (\Exception $e) {
+            throw new NotFoundResourceException($mappingsFile);
         }
-        return false;
     }
 
     /**
@@ -344,10 +348,13 @@ class Import
         $row = 0;
         $headerData = array();
 
-        // load all Files
-        if (($handle = fopen($filename, 'r')) === false) {
-            return;
+        try {
+            // load all Files
+            $handle = fopen($filename, 'r');
+        } catch (\Exception $e) {
+            throw new NotFoundResourceException($filename);
         }
+
         while (($data = fgetcsv($handle, 1000, ";")) !== false) {
             try {
                 // for first row, save headers
@@ -363,7 +370,7 @@ class Import
                     $this->em->flush();
                 }
             } catch (DBALException $dbe) {
-                $this->debug(sprintf("ABORTING DUE TO DATABASE ERROR: %s \n",$dbe->getMessage()));
+                $this->debug(sprintf("ABORTING DUE TO DATABASE ERROR: %s \n", $dbe->getMessage()));
                 throw $dbe;
             } catch (\Exception $e) {
                 $this->debug(sprintf("ERROR while processing data row %d: %s \n", $row, $e->getMessage()));
@@ -410,7 +417,7 @@ class Import
             } else {
                 $account->setExternalId($externalId);
             }
-            $this->associativeAccounts[$externalId] = $account;
+//            $this->associativeAccounts[$externalId] = $account;
         }
 
         if ($persistAccount) {
@@ -1165,7 +1172,7 @@ class Import
 //        }
 //        return null;
 
-          return $this->em->getRepository('SuluContactBundle:Account')->findOneBy(array('externalId' => $key));
+        return $this->em->getRepository('SuluContactBundle:Account')->findOneBy(array('externalId' => $key));
     }
 
     /**
