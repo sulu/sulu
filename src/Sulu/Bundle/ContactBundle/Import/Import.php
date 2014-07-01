@@ -417,7 +417,6 @@ class Import
             } else {
                 $account->setExternalId($externalId);
             }
-//            $this->associativeAccounts[$externalId] = $account;
         }
 
         if ($persistAccount) {
@@ -1167,11 +1166,6 @@ class Import
      */
     public function getAccountByKey($key)
     {
-//        if (array_key_exists($key, $this->associativeAccounts)) {
-//            return $this->associativeAccounts[$key];
-//        }
-//        return null;
-
         return $this->em->getRepository('SuluContactBundle:Account')->findOneBy(array('externalId' => $key));
     }
 

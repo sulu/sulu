@@ -59,7 +59,7 @@ class AccountController extends AbstractContactController
     /**
      * {@inheritdoc}
      */
-    protected $fieldsExcluded = array('lft', 'rgt', 'depth');
+    protected $fieldsExcluded = array('lft', 'rgt', 'depth','externalId');
 
     /**
      * {@inheritdoc}
