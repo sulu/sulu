@@ -220,11 +220,20 @@ class Collection extends ApiEntityWrapper
     }
 
     /**
-     * @VirtualProperty
-     * @SerializedName("thumbnails") TODO change to previews when fixed in husky
      * @return array
      */
     public function getPreviews()
+    {
+        return $this->previews;
+    }
+
+    /**
+     * @VirtualProperty
+     * @SerializedName("thumbnails")
+     * TODO change to previews when fixed in husky
+     * @return array
+     */
+    public function getThumbnails()
     {
         return $this->previews;
     }
