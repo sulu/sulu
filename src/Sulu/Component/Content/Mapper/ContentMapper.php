@@ -146,7 +146,8 @@ class ContentMapper implements ContentMapperInterface
                 'state',
                 'template',
                 'navigation',
-                'published'
+                'published',
+                'nodeType'
             ),
             $this->languageNamespace,
             $this->internalPrefix
@@ -250,6 +251,10 @@ class ContentMapper implements ContentMapperInterface
         $node->setProperty($this->properties->getName('changer'), $userId);
         $node->setProperty($this->properties->getName('changed'), $dateTime);
 
+        if (isset($data['nodeType'])) {
+            $node->setProperty($this->properties->getName('nodeType'), $data['nodeType']);
+        }
+
         // do not state transition for root (contents) node
         $contentRootNode = $this->getContentNode($webspaceKey);
         if ($node->getPath() !== $contentRootNode->getPath() && isset($state)) {
@@ -348,6 +353,7 @@ class ContentMapper implements ContentMapperInterface
 
         $structure->setUuid($node->getPropertyValue('jcr:uuid'));
         $structure->setPath(str_replace($this->getContentNode($webspaceKey)->getPath(), '', $node->getPath()));
+        $structure->setNodeState($node->getPropertyValue($this->properties->getName('nodeType')));
         $structure->setWebspaceKey($webspaceKey);
         $structure->setLanguageCode($languageCode);
         $structure->setCreator($node->getPropertyValue($this->properties->getName('creator')));
@@ -380,6 +386,7 @@ class ContentMapper implements ContentMapperInterface
      * @param string $webspaceKey
      * @param string $languageCode
      * @param integer $userId
+     * @throws \Sulu\Component\Content\Exception\TranslatedNodeNotFoundException
      * @return StructureInterface
      */
     public function saveExtension(
@@ -907,6 +914,7 @@ class ContentMapper implements ContentMapperInterface
 
         $structure->setUuid($contentNode->getPropertyValue('jcr:uuid'));
         $structure->setPath(str_replace($this->getContentNode($webspaceKey)->getPath(), '', $contentNode->getPath()));
+        $structure->setNodeState($contentNode->getPropertyValue($this->properties->getName('nodeType')));
         $structure->setWebspaceKey($webspaceKey);
         $structure->setLanguageCode($localization);
         $structure->setCreator($contentNode->getPropertyValueWithDefault($this->properties->getName('creator'), 0));
@@ -1134,6 +1142,9 @@ class ContentMapper implements ContentMapperInterface
         }
     }
 
+    /**
+     * calculates publich state of node
+     */
     private function getInheritedState(NodeInterface $contentNode, $statePropertyName, $webspaceKey)
     {
         // index page is default PUBLISHED
