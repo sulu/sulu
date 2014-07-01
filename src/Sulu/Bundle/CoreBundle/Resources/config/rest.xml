@@ -5,15 +5,17 @@
 
     <parameters>
         <parameter key="sulu_core.list_rest_helper.class">Sulu\Component\Rest\Listing\ListRestHelper</parameter>
+        <parameter key="sulu_core.doctrine_list_builder_factory.class">Sulu\Component\Rest\ListBuilder\DoctrineListBuilderFactory</parameter>
     </parameters>
 
     <services>
-
         <service id="sulu_core.list_rest_helper" class="%sulu_core.list_rest_helper.class%" scope="request">
             <argument type="service" id="request"/>
             <argument type="service" id="doctrine.orm.entity_manager"/>
         </service>
-
+        <service id="sulu_core.doctrine_list_builder_factory" class="%sulu_core.doctrine_list_builder_factory.class%">
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+        </service>
     </services>
 
 </container>
