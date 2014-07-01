@@ -355,11 +355,6 @@ class NodeController extends RestController implements ClassResourceInterface
         }
         $data = $request->request->all();
 
-        // FIXME better solution
-        if ($data['nodeType'] === Structure::NODE_TYPE_EXTERNAL_LINK) {
-            $template = 'external-link';
-        }
-
         $result = $this->getRepository()->saveNode(
             $data,
             $template,
