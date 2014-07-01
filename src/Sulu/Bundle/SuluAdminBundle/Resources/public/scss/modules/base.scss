@@ -7,47 +7,53 @@ body {
     background-color: $backgroundColor;
 }
 
-.control-label {
-    padding-left: 10px;
-    cursor: pointer;
+// Main structure of the admin
+/*----------------------------------------*/
+#main {
+  height: 100%;
 }
 
-// Content
-/*----------------------------------------*/
-#content {
-    max-width: $contentMaxWidth + $contentPaddingLeft + $contentPaddingRight;
+.content-column {
+  height: 100%;
+  position: relative;
+  top: 0px;
+  left: 0px;
+  overflow: hidden;
+
+  #content {
+    height: 100%;
+    overflow: auto;
     min-width: $contenMinWidth;
-    margin-left: $contentMarginLeft;
+    padding-top: $contentPaddingTop;
     padding-left: $contentPaddingLeft;
-    margin-top: $contentMarginTop;
     padding-right: $contentPaddingRight;
     padding-bottom: $contentMarginBottom;
-    @include single-transition(margin-left,  $transitionDuration);
 
     h2.mainheadline {
-        margin-top: 35px;
+      margin-top: 35px;
     }
 
     h1:first-child {
-        margin-top: 0;
+      margin-top: 0;
     }
 
     .content-tabs-content {
-        padding-top: 80px;
+      padding-top: 80px;
     }
 
     &.fullwidth {
-        max-width: none;
-        min-width: 0;
-        &.no-padding {
-          padding-left: $contentPaddingLeftFullWidth;
-          padding-right: $contentPaddingRightFullWidth;
-        }
+      max-width: none;
+      min-width: 0;
+      &.no-padding {
+        padding-left: $contentPaddingLeftFullWidth;
+        padding-right: $contentPaddingRightFullWidth;
+      }
     }
 
     &.fullheight {
-        margin-top: 0;
+      margin-top: -$contentPaddingTop;
     }
+  }
 }
 
 // Control elements
@@ -62,13 +68,6 @@ body {
 /*----------------------------------------*/
 input, select {
     font-family: Helvetica, Arial;
-}
-
-// Utility
-/*----------------------------------------*/
-
-.navigation-container {
-    z-index: 101;
 }
 
 // Utility

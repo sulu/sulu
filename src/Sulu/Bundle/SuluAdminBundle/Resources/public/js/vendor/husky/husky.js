@@ -26014,22 +26014,11 @@ define('type/husky-select',[
                     // For single select
                     var data = {},
                         ids = this.$el.data('selection'),
-                        values = this.$el.data('selection-values'),
-                        returnValue = this.$el.attr('data-mapper-return-value');
+                        values = this.$el.data('selection-values');
 
                     if (!ids || ids.length === 0) {
                         return undefined;
                     }
-
-                    // check if 'data-mapper-return-value' is defined
-                    if (typeof returnValue !== 'undefined') {
-                        if (returnValue === 'id') {
-                            return Array.isArray(ids) ? ids[0] : ids;
-                        } else if(returnValue === 'value'){
-                            return Array.isArray(values) ? values[0] : values;
-                        }
-                    }
-                    // return value if property type is set to string
                     if (this.$el.attr('data-mapper-property-type') === 'string') {
                         return Array.isArray(values) ? values[0] : values;
                     }
@@ -27085,6 +27074,7 @@ define('__component__$navigation@husky',[],function() {
             }
         },
         CONSTANTS = {
+            COMPONENT_CLASS: 'husky-navigation',
             UNCOLLAPSED_WIDTH: 250, //px
             COLLAPSED_WIDTH: 50, //px
             ITEM_LABEL_HEIGHT: 50, //px
@@ -27218,15 +27208,15 @@ define('__component__$navigation@husky',[],function() {
             this.items = [];
 
             // add container class to current div
-            this.sandbox.dom.addClass(this.$el, 'navigation-container');
+            this.sandbox.dom.addClass(this.$el, CONSTANTS.COMPONENT_CLASS);
 
             // render skeleton
             this.sandbox.dom.html(this.$el, this.sandbox.template.parse(templates.skeleton,
                 this.sandbox.util.extend(true, {}, this.options, {translate: this.sandbox.translate}))
             );
 
-            this.$navigation = this.$find('.navigation', this.$el);
-            this.$navigationContent = this.$find('.navigation-content', this.$navigation);
+            this.$navigation = this.$find('.navigation');
+            this.$navigationContent = this.$find('.navigation-content');
 
             // start search component
             this.sandbox.start([
@@ -27717,6 +27707,9 @@ define('__component__$navigation@husky',[],function() {
 
         collapse: function() {
             if (this.hidden === false) {
+                this.sandbox.dom.one(this.$el, CONSTANTS.TRANSITIONEND_EVENT, function() {
+                    this.sandbox.dom.css(this.$el, {'width': ''});
+                }.bind(this));
                 this.sandbox.dom.addClass(this.$navigation, 'collapsed');
                 this.sandbox.dom.removeClass(this.$navigation, 'collapseIcon');
                 this.removeHeightforExpanded();
@@ -27731,12 +27724,16 @@ define('__component__$navigation@husky',[],function() {
 
         unCollapse: function(forced) {
             if ((this.stayCollapsed === false || forced === true) && this.hidden === false) {
+                if (forced) {
+                    // freeze width of parent so that the navigation overlaps the content
+                    this.sandbox.dom.width(this.$el, this.sandbox.dom.width(this.$navigation));
+                    this.sandbox.dom.addClass(this.$navigation, 'collapseIcon');
+                } else {
+                    this.sandbox.dom.css(this.$el, {'width': ''});
+                }
                 this.sandbox.dom.removeClass(this.$navigation, 'collapsed');
                 this.hideToolTip();
                 this.setHeightForExpanded();
-                if (forced) {
-                    this.sandbox.dom.addClass(this.$navigation, 'collapseIcon');
-                }
                 if (this.collapsed) {
                     this.sandbox.emit(EVENT_UNCOLLAPSED, CONSTANTS.UNCOLLAPSED_WIDTH);
                     if (!forced) {

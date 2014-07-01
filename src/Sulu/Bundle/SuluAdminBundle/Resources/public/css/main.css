@@ -3,56 +3,59 @@ body {
   background-color: #f1f1f1;
 }
 
-/* line 10, ../scss/modules/base.scss */
-.control-label {
-  padding-left: 10px;
-  cursor: pointer;
+/*----------------------------------------*/
+/* line 12, ../scss/modules/base.scss */
+#main {
+  height: 100%;
 }
 
-/*----------------------------------------*/
-/* line 17, ../scss/modules/base.scss */
-#content {
-  max-width: 920px;
+/* line 16, ../scss/modules/base.scss */
+.content-column {
+  height: 100%;
+  position: relative;
+  top: 0px;
+  left: 0px;
+  overflow: hidden;
+}
+/* line 23, ../scss/modules/base.scss */
+.content-column #content {
+  height: 100%;
+  overflow: auto;
   min-width: 510px;
-  margin-left: 250px;
+  padding-top: 40px;
   padding-left: 50px;
-  margin-top: 40px;
   padding-right: 50px;
   padding-bottom: 40px;
-  -webkit-transition: margin-left 0.5s;
-  -moz-transition: margin-left 0.5s;
-  -o-transition: margin-left 0.5s;
-  transition: margin-left 0.5s;
 }
-/* line 27, ../scss/modules/base.scss */
-#content h2.mainheadline {
+/* line 32, ../scss/modules/base.scss */
+.content-column #content h2.mainheadline {
   margin-top: 35px;
 }
-/* line 31, ../scss/modules/base.scss */
-#content h1:first-child {
+/* line 36, ../scss/modules/base.scss */
+.content-column #content h1:first-child {
   margin-top: 0;
 }
-/* line 35, ../scss/modules/base.scss */
-#content .content-tabs-content {
+/* line 40, ../scss/modules/base.scss */
+.content-column #content .content-tabs-content {
   padding-top: 80px;
 }
-/* line 39, ../scss/modules/base.scss */
-#content.fullwidth {
+/* line 44, ../scss/modules/base.scss */
+.content-column #content.fullwidth {
   max-width: none;
   min-width: 0;
 }
-/* line 42, ../scss/modules/base.scss */
-#content.fullwidth.no-padding {
+/* line 47, ../scss/modules/base.scss */
+.content-column #content.fullwidth.no-padding {
   padding-left: 0;
   padding-right: 0;
 }
-/* line 48, ../scss/modules/base.scss */
-#content.fullheight {
-  margin-top: 0;
+/* line 53, ../scss/modules/base.scss */
+.content-column #content.fullheight {
+  margin-top: -40px;
 }
 
 /*----------------------------------------*/
-/* line 55, ../scss/modules/base.scss */
+/* line 61, ../scss/modules/base.scss */
 .control-label {
   padding-left: 5px;
   padding-right: 5px;
@@ -60,30 +63,24 @@ body {
 }
 
 /*----------------------------------------*/
-/* line 63, ../scss/modules/base.scss */
+/* line 69, ../scss/modules/base.scss */
 input, select {
   font-family: Helvetica, Arial;
 }
 
 /*----------------------------------------*/
-/* line 70, ../scss/modules/base.scss */
-.navigation-container {
-  z-index: 101;
-}
-
-/*----------------------------------------*/
-/* line 77, ../scss/modules/base.scss */
+/* line 76, ../scss/modules/base.scss */
 .pointer {
   cursor: pointer;
 }
 
-/* line 81, ../scss/modules/base.scss */
+/* line 80, ../scss/modules/base.scss */
 .block {
   display: block;
 }
 
 /*----------------------------------------*/
-/* line 88, ../scss/modules/base.scss */
+/* line 87, ../scss/modules/base.scss */
 .m-top-1 {
   margin-top: 1px !important;
 }
@@ -142,7 +139,7 @@ input, select {
 .sulu-header {
   background-color: #28b6ca;
   width: 100%;
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   z-index: 90;
@@ -153,7 +150,7 @@ input, select {
   position: relative;
   top: 0px;
   left: 0px;
-  margin-left: 50px;
+  margin: 0 50px;
   height: 150px;
 }
 /* line 19, ../scss/modules/header.scss */
@@ -235,17 +232,13 @@ input, select {
   top: 10px;
   left: 0px;
 }
-/* line 93, ../scss/modules/header.scss */
-.sulu-header.squeezed .info, .sulu-header.squeezed .headline {
-  left: 50px;
+/* line 92, ../scss/modules/header.scss */
+.sulu-header + #content {
+  padding-top: 190px;
 }
-/* line 96, ../scss/modules/header.scss */
-.sulu-header.squeezed .tabs, .sulu-header.squeezed .bottom-row {
-  padding-left: 50px;
-}
-/* line 99, ../scss/modules/header.scss */
-.sulu-header.squeezed .bottom-row {
-  padding-right: 30px;
+/* line 95, ../scss/modules/header.scss */
+.sulu-header.has-tabs + #content {
+  padding-top: 240px;
 }
 
 /* line 5, ../scss/modules/gridgroup.scss */

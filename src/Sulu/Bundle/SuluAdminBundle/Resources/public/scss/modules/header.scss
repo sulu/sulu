@@ -2,9 +2,9 @@
     background-color: $blue;
     width: 100%;
 
-    position: fixed;
+    position: absolute;
     top: 0;
-    left:0;
+    left: 0;
     z-index: 90;
     width: 100%;
 
@@ -12,7 +12,7 @@
         position: relative;
         top: 0px;
         left: 0px;
-        margin-left: 50px;
+        margin: 0 50px;
         height: $headerHeight;
     }
 
@@ -79,7 +79,7 @@
     }
 
     .tabs {
-        height: 50px;
+        height: $tabsHeight;
     }
 
     .info {
@@ -88,16 +88,11 @@
         left: 0px;
     }
 
-    // squeezed style for content full-width mode
-    &.squeezed {
-        .info, .headline {
-            left: $contentPaddingLeft;
-        }
-        .tabs, .bottom-row {
-            padding-left: $contentPaddingLeft;
-        }
-        .bottom-row {
-            padding-right: 30px;
-        }
+    // add top space to the content-container beneath the header
+    & + #content {
+      padding-top: $contentPaddingTop + $headerHeight;
+    }
+    &.has-tabs + #content {
+      padding-top: $contentPaddingTop + $headerHeight + $tabsHeight;
     }
 }
