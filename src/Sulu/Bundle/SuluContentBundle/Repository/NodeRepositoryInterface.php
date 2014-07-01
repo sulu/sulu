@@ -118,12 +118,6 @@ interface NodeRepositoryInterface
     public function deleteNode($uuid, $webspaceKey);
 
     /**
-     * returns history for given content node uuid
-     * @param string $uuid
-     * @param string $webspaceKey
-     * @param string $languageCode
-
-    /**
      * returns tree to content node given by uuid
      * @param string $uuid
      * @param string $webspaceKey
@@ -139,4 +133,26 @@ interface NodeRepositoryInterface
         $excludeGhosts = false,
         $appendWebspaceNode = false
     );
+
+    /**
+     * returns data of given extension api ready
+     * @param string $uuid
+     * @param string $extension
+     * @param string $webspaceKey
+     * @param string $languageCode
+     * @return array
+     */
+    public function loadExtensionData($uuid, $extension, $webspaceKey, $languageCode);
+
+    /**
+     * save extension data
+     * @param string $uuid
+     * @param array $data
+     * @param string $extensionName
+     * @param string $webspaceKey
+     * @param string $languageCode
+     * @param integer $userId
+     * @return array
+     */
+    public function saveExtensionData($uuid, $data, $extensionName, $webspaceKey, $languageCode, $userId);
 }

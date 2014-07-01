@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <parameters>
+        <parameter key="sulu.content.type.smart_content.class">Sulu\Bundle\ContentBundle\Content\Types\SmartContent</parameter>
+        <parameter key="sulu.content.type.phone.class">Sulu\Bundle\ContentBundle\Content\Types\Phone</parameter>
+        <parameter key="sulu.content.type.password.class">Sulu\Bundle\ContentBundle\Content\Types\Password</parameter>
+        <parameter key="sulu.content.type.url.class">Sulu\Bundle\ContentBundle\Content\Types\Url</parameter>
+        <parameter key="sulu.content.type.email.class">Sulu\Bundle\ContentBundle\Content\Types\Email</parameter>
+        <parameter key="sulu.content.type.date.class">Sulu\Bundle\ContentBundle\Content\Types\Date</parameter>
+        <parameter key="sulu.content.type.time.class">Sulu\Bundle\ContentBundle\Content\Types\Time</parameter>
+        <parameter key="sulu.content.type.color.class">Sulu\Bundle\ContentBundle\Content\Types\Color</parameter>
+    </parameters>
+    <services>
+        <!-- content-types -->
+        <service id="sulu.content.type.smart_content" class="%sulu.content.type.smart_content.class%">
+            <argument type="service" id="sulu_content.node_repository"/>
+            <argument type="service" id="sulu_tag.tag_manager"/>
+            <argument>%sulu.content.type.smart_content.template%</argument>
+        </service>
+
+        <service id="sulu.content.type.phone" class="%sulu.content.type.phone.class%">
+            <argument>%sulu.content.type.phone.template%</argument>
+        </service>
+        <service id="sulu.content.type.password" class="%sulu.content.type.password.class%">
+            <argument>%sulu.content.type.password.template%</argument>
+        </service>
+        <service id="sulu.content.type.url" class="%sulu.content.type.url.class%">
+            <argument>%sulu.content.type.url.template%</argument>
+        </service>
+        <service id="sulu.content.type.email" class="%sulu.content.type.email.class%">
+            <argument>%sulu.content.type.email.template%</argument>
+        </service>
+        <service id="sulu.content.type.date" class="%sulu.content.type.date.class%">
+            <argument>%sulu.content.type.date.template%</argument>
+        </service>
+        <service id="sulu.content.type.time" class="%sulu.content.type.time.class%">
+            <argument>%sulu.content.type.time.template%</argument>
+        </service>
+        <service id="sulu.content.type.color" class="%sulu.content.type.color.class%">
+            <argument>%sulu.content.type.color.template%</argument>
+        </service>
+    </services>
+</container>
