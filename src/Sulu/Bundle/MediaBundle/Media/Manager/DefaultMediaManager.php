@@ -142,7 +142,10 @@ class DefaultMediaManager implements MediaManagerInterface
      */
     public function getMultiple($ids)
     {
-        return $this->mediaRepository->findMediaByIds($ids);
+        if (empty($ids)) {
+            return array();
+        }
+        return $this->mediaRepository->findMedia(null, $ids);
     }
 
     /**
