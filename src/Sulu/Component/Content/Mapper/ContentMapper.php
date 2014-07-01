@@ -353,7 +353,7 @@ class ContentMapper implements ContentMapperInterface
 
         $structure->setUuid($node->getPropertyValue('jcr:uuid'));
         $structure->setPath(str_replace($this->getContentNode($webspaceKey)->getPath(), '', $node->getPath()));
-        $structure->setNodeState($node->getPropertyValue($this->properties->getName('nodeType')));
+        $structure->setNodeType($node->getPropertyValue($this->properties->getName('nodeType')));
         $structure->setWebspaceKey($webspaceKey);
         $structure->setLanguageCode($languageCode);
         $structure->setCreator($node->getPropertyValue($this->properties->getName('creator')));
@@ -914,7 +914,7 @@ class ContentMapper implements ContentMapperInterface
 
         $structure->setUuid($contentNode->getPropertyValue('jcr:uuid'));
         $structure->setPath(str_replace($this->getContentNode($webspaceKey)->getPath(), '', $contentNode->getPath()));
-        $structure->setNodeState($contentNode->getPropertyValue($this->properties->getName('nodeType')));
+        $structure->setNodeType($contentNode->getPropertyValue($this->properties->getName('nodeType')));
         $structure->setWebspaceKey($webspaceKey);
         $structure->setLanguageCode($localization);
         $structure->setCreator($contentNode->getPropertyValueWithDefault($this->properties->getName('creator'), 0));
