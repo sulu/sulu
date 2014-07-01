@@ -365,9 +365,10 @@ class Import
                     $associativeData = $this->mapRowToAssociativeArray($data, $headerData);
 
                     $function($associativeData, $row);
-
-                    // now save to database
-                    $this->em->flush();
+                    if($row%20 === 0) {
+                        $this->em->flush();
+//                        $this->em->clear();
+                    }
                 }
             } catch (DBALException $dbe) {
                 $this->debug(sprintf("ABORTING DUE TO DATABASE ERROR: %s \n", $dbe->getMessage()));
@@ -386,6 +387,9 @@ class Import
 
             print(sprintf("%d ", $row));
         }
+        // finish with a flush
+        $this->em->flush();
+
         $this->debug("\n");
         fclose($handle);
     }
@@ -421,6 +425,9 @@ class Import
 
         $this->accounts[] = $account;
 
+        // clear notes
+        $account->getNotes()->clear();
+
         $account->setChanged(new \DateTime());
         $account->setCreated(new \DateTime());
 
@@ -433,8 +440,8 @@ class Import
         if ($this->checkData('account_corporation', $data)) {
             $account->setCorporation($data['account_corporation']);
         }
-        if ($this->checkData('account_disabled', $data)) {
-            $account->setDisabled($data['account_disabled']);
+        if ($this->checkData('account_disabled', $data) && $data['account_disabled'] == true) {
+            $account->setDisabled(true);
         }
         if ($this->checkData('account_uid', $data)) {
             $account->setUid($data['account_uid']);
@@ -669,8 +676,12 @@ class Import
             if ($this->options['streetNumberSplit']) {
                 preg_match('/([^\d]+)\s?(.+)/i', $street, $result);
 
-                $street = trim($result[1]);
-                $number = trim($result[2]);
+                if (array_key_exists(1, $result)) {
+                    $street = trim($result[1]);
+                }
+                if (array_key_exists(2, $result)) {
+                    $number = trim($result[2]);
+                }
             }
             $address->setStreet($street);
             $addAddress = true;
