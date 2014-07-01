@@ -6,3 +6,7 @@ sulu_content.node:
     type: rest
     resource: Sulu\Bundle\ContentBundle\Controller\NodeController
 
+sulu_content.node.seo:
+    type: rest
+    parent: sulu_content.node
+    resource: Sulu\Bundle\ContentBundle\Controller\SeoController
