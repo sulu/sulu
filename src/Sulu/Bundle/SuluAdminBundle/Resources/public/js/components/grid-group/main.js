@@ -321,8 +321,7 @@ define(function() {
          * @param newCollection {Boolean} set true if the rendered colleciton is an unsaved new group
          */
         renderGroup: function(group, $container, newCollection) {
-            var $group = this.sandbox.dom.createElement(this.sandbox.util.template(templates.group)({
-                color: group.style.color,
+            var $group = this.sandbox.dom.createElement(this.sandbox.util.template(templates.group, {
                 icon: constants.slideDownIcon,
                 title: group.title
             }));
