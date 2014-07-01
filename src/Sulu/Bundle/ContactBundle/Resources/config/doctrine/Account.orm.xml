@@ -19,7 +19,7 @@
         <field name="depth" type="integer" column="depth">
             <gedmo:tree-level/>
         </field>
-        <field name="name" type="string" column="name" length="60"/>
+        <field name="name" type="string" column="name" length="150"/>
 
         <field name="externalId" type="string" column="externalId" length="255" nullable="true" />
         <field name="number" type="string" column="number" length="255" nullable="true"/>
