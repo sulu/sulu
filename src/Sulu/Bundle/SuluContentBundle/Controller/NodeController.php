@@ -197,7 +197,11 @@ class NodeController extends RestController implements ClassResourceInterface
         $language = $this->getLanguage($request);
         $webspace = $this->getWebspace($request);
 
-        $result = $this->getRepository()->getNodesByIds(explode(',', $idString), $webspace, $language);
+        $result = $this->getRepository()->getNodesByIds(
+            preg_split('/[,]/', $idString, -1, PREG_SPLIT_NO_EMPTY),
+            $webspace,
+            $language
+        );
 
         return $this->handleView($this->view($result));
     }
