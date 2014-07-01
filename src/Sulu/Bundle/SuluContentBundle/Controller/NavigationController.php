@@ -35,7 +35,7 @@ class NavigationController extends Controller
         $contentNavigation = $this->get(self::SERVICE_NAME);
 
         $uuid = $request->get('uuid');
-        $type = $request->get('type');
+        $type = intval($request->get('type'));
 
         $contentNavigation->generate($uuid !== 'index', $type);
 
