@@ -5,7 +5,37 @@
                 <input id="show-in-navigation" class="trigger-save-button form-element" type="checkbox"/>
                 <span class="icon"></span>
             </div>
-            <span class="clickable">Show in navigation</span>
+            <span class="clickable"><%=translate('sulu.content.form.settings.show-in-navigation')%></span>
         </label>
+    </div>
+
+    <div class="grid-row section" id="show-in-navigation-container">
+        <h2 class="divider m-bottom-20" title="Content Section">
+            <%=translate('sulu.content.form.settings.type')%>
+        </h2>
+
+        <div class="grid">
+            <div class="grid-row form-group">
+                <input id="content-node-type" name="nodeType" value="1" class="trigger-save-button form-element" type="radio"/>
+                <label for="content-node-type">
+                    <span class="clickable"><%=translate('sulu.content.form.settings.type.content')%></span>
+                </label>
+            </div>
+            <div class="grid-row form-group">
+                <input id="internal-link-node-type" name="nodeType" value="2" class="trigger-save-button form-element"
+                       type="radio"/>
+                <label for="internal-link-node-type">
+                    <span class="clickable"><%=translate('sulu.content.form.settings.type.internal-link')%></span>
+                </label>
+            </div>
+            <div class="grid-row form-group">
+                <input id="external-link-node-type" name="nodeType" value="4" class="trigger-save-button form-element"
+                       type="radio"/>
+
+                <label for="external-link-node-type">
+                    <span class="clickable"><%=translate('sulu.content.form.settings.type.external-link')%></span>
+                </label>
+            </div>
+        </div>
     </div>
 </form>
