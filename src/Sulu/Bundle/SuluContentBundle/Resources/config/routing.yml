@@ -38,7 +38,6 @@ sulu_content.template.settings:
     pattern: /template/content/settings.html
     defaults: { _controller: SuluContentBundle:Template:settings }
 
-
 # Preview
 sulu_content.preview.changes:
     pattern: /preview/{contentUuid}.json
