@@ -125,7 +125,7 @@ define([
 //            this.sandbox.once('husky.column-options.' + instanceName + 'saved', function(data) {
 //                this.sandbox.sulu.saveUserSetting(this.options.columnOptions.key, data, this.options.columnOptions.url);
 //            }.bind(this));
-        },
+//        },
 
         // list-toolbar template
         listTemplate = function() {
