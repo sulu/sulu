@@ -264,6 +264,8 @@ class MediaControllerTest extends DatabaseTestCase
 
         $this->assertEquals(2, $response->type);
 
+        $this->assertEquals('photo.jpeg', $response->name);
+
         $this->assertEquals('photo', $response->title);
 
         $this->assertEquals('description', $response->description);
@@ -419,6 +421,7 @@ class MediaControllerTest extends DatabaseTestCase
         $this->assertEquals('photo.jpeg', $response->name);
         $this->assertEquals(2, $response->id);
         $this->assertEquals('en-gb', $response->locale);
+        $this->assertEquals('photo.jpeg', $response->name);
         $this->assertEquals('New Image Title', $response->title);
         $this->assertEquals('New Image Description', $response->description);
 
