@@ -467,7 +467,7 @@ class Import
             $account->setCorporation($data['account_corporation']);
         }
         if ($this->checkData('account_disabled', $data, 'bool')) {
-            $account->setDisabled(true);
+            $account->setDisabled($data['account_disabled']);
         }
         if ($this->checkData('account_uid', $data)) {
             $account->setUid($data['account_uid']);
