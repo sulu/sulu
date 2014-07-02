@@ -30,8 +30,6 @@ class Collection extends ApiEntityWrapper
 {
 
     /**
-     * @Expose
-     * @SerializedName("thumbnails")
      * @var array
      */
     protected $previews = array();
@@ -225,6 +223,8 @@ class Collection extends ApiEntityWrapper
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("thumbnails") // TODO not working yet
      * @return array
      */
     public function getPreviews()
