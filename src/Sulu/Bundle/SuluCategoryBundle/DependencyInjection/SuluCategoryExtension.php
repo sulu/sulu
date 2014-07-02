@@ -30,6 +30,12 @@ class SuluCategoryExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
+        // set content types
+        $container->setParameter(
+            'sulu.content.type.category_list.template',
+            $config['content']['types']['category_list']['template']
+        );
+
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
     }
