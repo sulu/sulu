@@ -110,7 +110,17 @@ class Import
      */
     protected $defaultTypes = array();
 
+    /**
+     * storage for log messages
+     * @var array
+     */
     protected $log = array();
+
+    /**
+     * storage for storing header data
+     * @var array
+     */
+    protected $headerData = array();
 
 
     // TODO: split mappings for accounts and contacts
@@ -216,11 +226,6 @@ class Import
         $this->configDefaults = $configDefaults;
         $this->configAccountTypes = $configAccountTypes;
         $this->configFormOfAddress = $configFormOfAddress;
-
-        // load account categories
-        $this->loadAccountCategories();
-        // load tags
-        $this->loadTags();
     }
 
     /**
@@ -228,10 +233,12 @@ class Import
      */
     public function execute()
     {
-        try {
-            // set default types
-            $this->defaultTypes = $this->getDefaults();
+        // enable garbage collector
+        gc_enable();
+        // disable sql logger
+        $this->em->getConnection()->getConfiguration()->setSQLLogger(null);
 
+        try {
             // process mappings file
             if ($this->mappingsFile) {
                 $this->processMappingsFile($this->mappingsFile);
@@ -253,6 +260,18 @@ class Import
             print($e->getMessage());
             throw $e;
         }
+    }
+
+    /**
+     * loads type defaults, tags and account-categories
+     * gets called by processcsvloop
+     */
+    protected function initDefaults()
+    {
+        // set default types
+        $this->defaultTypes = $this->getDefaults();
+        $this->loadTags();
+        $this->loadAccountCategories();
     }
 
     /**
@@ -345,8 +364,11 @@ class Import
      */
     protected function processCsvLoop($filename, $function)
     {
+        // initialize default values
+        $this->initDefaults();
+
         $row = 0;
-        $headerData = array();
+        $this->headerData = array();
 
         try {
             // load all Files
@@ -359,15 +381,19 @@ class Import
             try {
                 // for first row, save headers
                 if ($row === 0) {
-                    $headerData = $data;
+                    $this->headerData = $data;
                 } else {
                     // get associativeData
-                    $associativeData = $this->mapRowToAssociativeArray($data, $headerData);
+                    $associativeData = $this->mapRowToAssociativeArray($data, $this->headerData);
 
-                    $function($associativeData, $row);
-
-                    // now save to database
-                    $this->em->flush();
+                    $entity = $function($associativeData, $row);
+                    if($row%20 === 0) {
+                        $this->em->flush();
+                        $this->em->clear();
+                        gc_collect_cycles();
+                        // reinitialize defaults (lost with call of clear)
+                        $this->initDefaults();
+                    }
                 }
             } catch (DBALException $dbe) {
                 $this->debug(sprintf("ABORTING DUE TO DATABASE ERROR: %s \n", $dbe->getMessage()));
@@ -383,9 +409,11 @@ class Import
             }
             $row++;
 
-
             print(sprintf("%d ", $row));
         }
+        // finish with a flush
+        $this->em->flush();
+
         $this->debug("\n");
         fclose($handle);
     }
@@ -421,6 +449,11 @@ class Import
 
         $this->accounts[] = $account;
 
+        // clear notes
+        if (!$account->getNotes()->isEmpty()) {
+            $account->getNotes()->clear();
+        }
+
         $account->setChanged(new \DateTime());
         $account->setCreated(new \DateTime());
 
@@ -433,7 +466,7 @@ class Import
         if ($this->checkData('account_corporation', $data)) {
             $account->setCorporation($data['account_corporation']);
         }
-        if ($this->checkData('account_disabled', $data)) {
+        if ($this->checkData('account_disabled', $data, 'bool')) {
             $account->setDisabled($data['account_disabled']);
         }
         if ($this->checkData('account_uid', $data)) {
@@ -471,7 +504,7 @@ class Import
         $this->processNotes($data, $account);
 
         // phone with type isdn
-        if ($this->checkData('phone_isdn', $data)) {
+        if ($this->checkData('phone_isdn', $data, null, 60)) {
             $phone = new Phone();
             $phone->setMain(false);
             $phone->setPhone($data['phone_isdn']);
@@ -494,7 +527,7 @@ class Import
     }
 
     /**
-     * iterate through data and find first of a specific type (which is enumerable
+     * iterate through data and find first of a specific type (which is enumerable)
      * @param $identifier
      * @param $data
      * @return string|bool
@@ -538,7 +571,7 @@ class Import
     {
         // add phones
         for ($i = 0, $len = 10; ++$i < $len;) {
-            if ($this->checkData('phone' . $i, $data)) {
+            if ($this->checkData('phone' . $i, $data, null, 60)) {
                 $phone = new Phone();
                 $phone->setMain(false);
                 $phone->setPhone($data['phone' . $i]);
@@ -558,7 +591,7 @@ class Import
     {
         // add faxes
         for ($i = 0, $len = 10; ++$i < $len;) {
-            if ($this->checkData('fax' . $i, $data)) {
+            if ($this->checkData('fax' . $i, $data, null, 60)) {
                 $fax = new Fax();
                 $fax->setMain(false);
                 $fax->setFax($data['fax' . $i]);
@@ -578,7 +611,7 @@ class Import
     {
         // add urls
         for ($i = 0, $len = 10; ++$i < $len;) {
-            if ($this->checkData('url' . $i, $data)) {
+            if ($this->checkData('url' . $i, $data, null, 255)) {
                 $url = new Url();
                 $url->setMain(false);
                 $url->setUrl($data['url' . $i]);
@@ -669,8 +702,12 @@ class Import
             if ($this->options['streetNumberSplit']) {
                 preg_match('/([^\d]+)\s?(.+)/i', $street, $result);
 
-                $street = trim($result[1]);
-                $number = trim($result[2]);
+                if (array_key_exists(1, $result)) {
+                    $street = trim($result[1]);
+                }
+                if (array_key_exists(2, $result)) {
+                    $number = trim($result[2]);
+                }
             }
             $address->setStreet($street);
             $addAddress = true;
@@ -740,7 +777,7 @@ class Import
                     $bank->setBankName($data['bank' . $i]);
                 }
                 // set bank to public
-                if ($this->checkData('bank_public' . $i, $data)) {
+                if ($this->checkData('bank_public' . $i, $data, 'bool')) {
                     $bank->setPublic($data['bank_public' . $i]);
                 } else {
                     $bank->setPublic(false);
@@ -957,9 +994,21 @@ class Import
     /**
      * checks data for validity
      */
-    protected function checkData($index, $data)
+    protected function checkData($index, $data, $type = null, $maxLength = null)
     {
-        return array_key_exists($index, $data) && $data[$index] !== '';
+        $isDataSet = array_key_exists($index, $data) && $data[$index] !== '';
+        if ($isDataSet) {
+            if ($type !== null) {
+                // TODO check for types
+                if ($type === 'bool' && $data[$index] != 'true' && $data[$index] != 'false' && $data[$index] != '1' && $data[$index] != '0' ) {
+                    throw new \InvalidArgumentException($data[$index]. ' is not a boolean!');
+                }
+            }
+            if ($maxLength !== null && intval($maxLength) && sizeof($data[$index]) > $maxLength) {
+                throw new \InvalidArgumentException($data[$index]. ' exceeds max length!');
+            }
+        }
+        return $isDataSet;
     }
 
     /**
