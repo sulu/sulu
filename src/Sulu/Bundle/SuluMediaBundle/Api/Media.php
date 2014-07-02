@@ -22,11 +22,13 @@ use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use JMS\Serializer\Annotation\VirtualProperty;
 use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation\ExclusionPolicy;
 
 /**
  * Class Media
  * The Media RestObject is the api entity for the MediaController.
  * @package Sulu\Bundle\MediaBundle\Media\RestObject
+ * @ExclusionPolicy("all")
  */
 class Media extends ApiEntityWrapper
 {
@@ -488,20 +490,11 @@ class Media extends ApiEntityWrapper
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("thumbnails")
      * @return array
      */
     public function getFormats()
-    {
-        return $this->formats;
-    }
-
-    /**
-     * @VirtualProperty
-     * @SerializedName("thumbnails")
-     * TODO change to formats when fixed in husky
-     * @return array
-     */
-    public function getThumbnails()
     {
         return $this->formats;
     }
