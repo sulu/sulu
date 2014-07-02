@@ -14,6 +14,7 @@ use Sulu\Bundle\CoreBundle\Entity\ApiEntityWrapper;
 use Sulu\Bundle\MediaBundle\Entity\Collection as Entity;
 use JMS\Serializer\Annotation\VirtualProperty;
 use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation\Expose;
 use DateTime;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
@@ -29,6 +30,8 @@ class Collection extends ApiEntityWrapper
 {
 
     /**
+     * @Expose
+     * @SerializedName("thumbnails")
      * @var array
      */
     protected $previews = array();
@@ -222,8 +225,6 @@ class Collection extends ApiEntityWrapper
     }
 
     /**
-     * @VirtualProperty
-     * @SerializedName("thumbnails")
      * @return array
      */
     public function getPreviews()
