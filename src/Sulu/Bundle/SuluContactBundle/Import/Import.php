@@ -450,7 +450,9 @@ class Import
         $this->accounts[] = $account;
 
         // clear notes
-        $account->getNotes()->clear();
+        if (!$account->getNotes()->isEmpty()) {
+            $account->getNotes()->clear();
+        }
 
         $account->setChanged(new \DateTime());
         $account->setCreated(new \DateTime());
@@ -464,7 +466,7 @@ class Import
         if ($this->checkData('account_corporation', $data)) {
             $account->setCorporation($data['account_corporation']);
         }
-        if ($this->checkData('account_disabled', $data) && $data['account_disabled'] == true) {
+        if ($this->checkData('account_disabled', $data, 'bool')) {
             $account->setDisabled(true);
         }
         if ($this->checkData('account_uid', $data)) {
@@ -525,7 +527,7 @@ class Import
     }
 
     /**
-     * iterate through data and find first of a specific type (which is enumerable
+     * iterate through data and find first of a specific type (which is enumerable)
      * @param $identifier
      * @param $data
      * @return string|bool
