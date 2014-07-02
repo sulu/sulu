@@ -13,6 +13,20 @@ define(['app-config'], function(AppConfig) {
 
     return {
 
+        view: true,
+
+        layout: {
+            navigation: {
+                collapsed: true
+            },
+            content: {
+                width: 'fixed'
+            },
+            sidebar: {
+                width: 'max'
+            }
+        },
+
         // if ws != null then use it
         ws: null,
         wsUrl: '',
@@ -25,7 +39,6 @@ define(['app-config'], function(AppConfig) {
         contentChanged: false,
 
         initialize: function() {
-            this.sandbox.emit('sulu.app.ui.reset', { navigation: 'small', content: 'auto'});
             this.sandbox.emit('husky.toolbar.header.item.enable', 'template', false);
 
             this.dfdListenForChange = this.sandbox.data.deferred();
