@@ -226,11 +226,6 @@ class Import
         $this->configDefaults = $configDefaults;
         $this->configAccountTypes = $configAccountTypes;
         $this->configFormOfAddress = $configFormOfAddress;
-
-        // load account categories
-        $this->loadAccountCategories();
-        // load tags
-        $this->loadTags();
     }
 
     /**
@@ -244,9 +239,6 @@ class Import
         $this->em->getConnection()->getConfiguration()->setSQLLogger(null);
 
         try {
-            // set default types
-            $this->defaultTypes = $this->getDefaults();
-
             // process mappings file
             if ($this->mappingsFile) {
                 $this->processMappingsFile($this->mappingsFile);
@@ -268,6 +260,18 @@ class Import
             print($e->getMessage());
             throw $e;
         }
+    }
+
+    /**
+     * loads type defaults, tags and account-categories
+     * gets called by processcsvloop
+     */
+    protected function initDefaults()
+    {
+        // set default types
+        $this->defaultTypes = $this->getDefaults();
+        $this->loadTags();
+        $this->loadAccountCategories();
     }
 
     /**
@@ -360,6 +364,9 @@ class Import
      */
     protected function processCsvLoop($filename, $function)
     {
+        // initialize default values
+        $this->initDefaults();
+
         $row = 0;
         $this->headerData = array();
 
@@ -382,10 +389,10 @@ class Import
                     $entity = $function($associativeData, $row);
                     if($row%20 === 0) {
                         $this->em->flush();
+                        $this->em->clear();
                         gc_collect_cycles();
-                        if ($entity) {
-                            $this->em->detach($entity);
-                        }
+                        // reinitialize defaults (lost with call of clear)
+                        $this->initDefaults();
                     }
                 }
             } catch (DBALException $dbe) {
@@ -406,7 +413,6 @@ class Import
         }
         // finish with a flush
         $this->em->flush();
-        $this->em->clear();
 
         $this->debug("\n");
         fclose($handle);
@@ -496,7 +502,7 @@ class Import
         $this->processNotes($data, $account);
 
         // phone with type isdn
-        if ($this->checkData('phone_isdn', $data)) {
+        if ($this->checkData('phone_isdn', $data, null, 60)) {
             $phone = new Phone();
             $phone->setMain(false);
             $phone->setPhone($data['phone_isdn']);
@@ -563,7 +569,7 @@ class Import
     {
         // add phones
         for ($i = 0, $len = 10; ++$i < $len;) {
-            if ($this->checkData('phone' . $i, $data)) {
+            if ($this->checkData('phone' . $i, $data, null, 60)) {
                 $phone = new Phone();
                 $phone->setMain(false);
                 $phone->setPhone($data['phone' . $i]);
@@ -583,7 +589,7 @@ class Import
     {
         // add faxes
         for ($i = 0, $len = 10; ++$i < $len;) {
-            if ($this->checkData('fax' . $i, $data)) {
+            if ($this->checkData('fax' . $i, $data, null, 60)) {
                 $fax = new Fax();
                 $fax->setMain(false);
                 $fax->setFax($data['fax' . $i]);
@@ -603,7 +609,7 @@ class Import
     {
         // add urls
         for ($i = 0, $len = 10; ++$i < $len;) {
-            if ($this->checkData('url' . $i, $data)) {
+            if ($this->checkData('url' . $i, $data, null, 255)) {
                 $url = new Url();
                 $url->setMain(false);
                 $url->setUrl($data['url' . $i]);
@@ -986,7 +992,7 @@ class Import
     /**
      * checks data for validity
      */
-    protected function checkData($index, $data, $type = null)
+    protected function checkData($index, $data, $type = null, $maxLength = null)
     {
         $isDataSet = array_key_exists($index, $data) && $data[$index] !== '';
         if ($type !== null && $isDataSet) {
@@ -994,6 +1000,9 @@ class Import
             if ($type === 'bool' && $data[$index] != 'true' && $data[$index] != 'false' && $data[$index] != '1' && $data[$index] != '0' ) {
                 throw new \InvalidArgumentException($data[$index]. ' is not a boolean!');
             }
+        }
+        if ($maxLength !== null && intval($maxLength) && sizeof($data[$index]) > $maxLength) {
+            throw new \InvalidArgumentException($data[$index]. ' exceeds max length!');
         }
         return $isDataSet;
     }
