@@ -24,6 +24,15 @@ define(function() {
 
         view: true,
 
+        layout: {
+            content: {
+                width: 'max',
+                leftSpace: false,
+                rightSpace: false,
+                topSpace: false
+            }
+        },
+
         initialize: function() {
             this.render();
             // shows a delete success label. If a node just got deleted

@@ -364,9 +364,6 @@ define([
             var $preview = this.sandbox.dom.createElement('<div id="preview-container"/>');
             this.sandbox.dom.append('#preview', $preview);
 
-            // collapse navigation
-            this.sandbox.emit('husky.navigation.collapse', true);
-
             this.sandbox.start([
                 {
                     name: 'content/preview@sulucontent',
