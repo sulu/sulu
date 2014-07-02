@@ -22,6 +22,7 @@ use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use JMS\Serializer\Annotation\VirtualProperty;
 use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 
 /**
@@ -39,6 +40,8 @@ class Media extends ApiEntityWrapper
     protected $url;
 
     /**
+     * @Expose
+     * @SerializedName("thumbnails")
      * @var array
      */
     protected $formats = array();
@@ -490,8 +493,6 @@ class Media extends ApiEntityWrapper
     }
 
     /**
-     * @VirtualProperty
-     * @SerializedName("thumbnails")
      * @return array
      */
     public function getFormats()
