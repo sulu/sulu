@@ -449,7 +449,6 @@ define([], function() {
         };
 
     return {
-        view: true,
 
         /**
          * Initializes the component
@@ -553,6 +552,7 @@ define([], function() {
 
             if (this.options.tabsData !== null || !!this.options.tabsOptions.data) {
                 this.sandbox.dom.addClass(this.$el, constants.hasTabsClass);
+                this.sandbox.dom.addClass('.sulu-header-background', constants.hasTabsClass);
                 this.$tabs = this.sandbox.dom.createElement('<div class="'+ constants.tabsClass +'"></div>');
                 this.sandbox.dom.append(this.$el, this.$tabs);
 

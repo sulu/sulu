@@ -29,16 +29,13 @@
       padding-top: 80px;
     }
 
-    &.fullwidth {
-      max-width: none;
-      min-width: 0;
-      &.no-padding {
-        padding-left: $contentPaddingLeftFullWidth;
-        padding-right: $contentPaddingRightFullWidth;
-      }
+    &.no-left-space {
+      padding-left: 0;
     }
-
-    &.fullheight {
+    &.no-right-space {
+      padding-right: 0;
+    }
+    &.no-top-space {
       margin-top: -$contentPaddingTop;
     }
   }
@@ -56,7 +53,8 @@
 .sidebar-column {
   height: 100%;
   overflow: hidden;
-  background: #fff; // move to sidebar component-file later
+  z-index: 101;
+  position: relative;
 
   &.fixed {
     width: $sidebarFixedWidth;
@@ -70,7 +68,19 @@
 
 @media only screen
 and (max-width : 50px + $contentMinWidth + $sidebarFixedWidth) {
-  .sidebar-column {
+  .sidebar-column.fixed {
     display: none;
+  }
+}
+
+@media only screen
+and (max-width : 50px + $contentFixedWidth) {
+  .sidebar-column.max {
+    display: none;
+  }
+  .content-column.fixed {
+    float: none;
+    width: auto;
+    max-width: $contentFixedWidth;
   }
 }

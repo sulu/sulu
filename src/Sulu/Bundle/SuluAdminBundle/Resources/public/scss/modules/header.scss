@@ -96,3 +96,16 @@
       padding-top: $contentPaddingTop + $headerHeight + $tabsHeight;
     }
 }
+
+.sulu-header-background {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  background: $blue;
+  height: $headerHeight;
+  width: 100%;
+  &.has-tabs {
+    height: $headerHeight + $tabsHeight;
+    border-bottom: $tabsHeight solid $white;
+  }
+}

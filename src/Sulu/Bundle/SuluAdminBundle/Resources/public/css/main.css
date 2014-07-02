@@ -68,51 +68,63 @@ input, select {
   padding-top: 80px;
 }
 /* line 32, ../scss/modules/layout.scss */
-.content-column #content.fullwidth {
-  max-width: none;
-  min-width: 0;
+.content-column #content.no-left-space {
+  padding-left: 0;
 }
 /* line 35, ../scss/modules/layout.scss */
-.content-column #content.fullwidth.no-padding {
-  padding-left: 0;
+.content-column #content.no-right-space {
   padding-right: 0;
 }
-/* line 41, ../scss/modules/layout.scss */
-.content-column #content.fullheight {
+/* line 38, ../scss/modules/layout.scss */
+.content-column #content.no-top-space {
   margin-top: -40px;
 }
-/* line 46, ../scss/modules/layout.scss */
+/* line 43, ../scss/modules/layout.scss */
 .content-column.max {
   float: none;
   width: auto;
 }
-/* line 50, ../scss/modules/layout.scss */
+/* line 47, ../scss/modules/layout.scss */
 .content-column.fixed {
   width: 900px;
   float: left;
 }
 
-/* line 56, ../scss/modules/layout.scss */
+/* line 53, ../scss/modules/layout.scss */
 .sidebar-column {
   height: 100%;
   overflow: hidden;
-  background: #fff;
+  z-index: 101;
+  position: relative;
 }
-/* line 61, ../scss/modules/layout.scss */
+/* line 59, ../scss/modules/layout.scss */
 .sidebar-column.fixed {
   width: 450px;
   float: right;
 }
-/* line 65, ../scss/modules/layout.scss */
+/* line 63, ../scss/modules/layout.scss */
 .sidebar-column.max {
   float: none;
   width: auto;
 }
 
 @media only screen and (max-width: 1010px) {
-  /* line 73, ../scss/modules/layout.scss */
-  .sidebar-column {
+  /* line 71, ../scss/modules/layout.scss */
+  .sidebar-column.fixed {
     display: none;
+  }
+}
+@media only screen and (max-width: 950px) {
+  /* line 78, ../scss/modules/layout.scss */
+  .sidebar-column.max {
+    display: none;
+  }
+
+  /* line 81, ../scss/modules/layout.scss */
+  .content-column.fixed {
+    float: none;
+    width: auto;
+    max-width: 900px;
   }
 }
 /* line 1, ../scss/modules/login.scss */
@@ -269,6 +281,34 @@ input, select {
 /* line 95, ../scss/modules/header.scss */
 .sulu-header.has-tabs + #content {
   padding-top: 240px;
+}
+
+/* line 100, ../scss/modules/header.scss */
+.sulu-header-background {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  background: #28b6ca;
+  height: 150px;
+  width: 100%;
+}
+/* line 107, ../scss/modules/header.scss */
+.sulu-header-background.has-tabs {
+  height: 200px;
+  border-bottom: 50px solid white;
+}
+
+/*----------------------------------------*/
+/* line 4, ../scss/modules/sidebar.scss */
+.sulu-sidebar {
+  width: 100%;
+  height: 100%;
+  background: white;
+  overflow: auto;
+}
+/* line 10, ../scss/modules/sidebar.scss */
+.sulu-sidebar .sidebar-loader {
+  margin-top: 40px;
 }
 
 /* line 5, ../scss/modules/gridgroup.scss */

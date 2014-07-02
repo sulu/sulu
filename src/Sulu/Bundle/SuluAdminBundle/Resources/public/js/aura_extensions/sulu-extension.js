@@ -255,12 +255,7 @@
                         gridDefaults = {
                             view: 'table',
                             pagination: 'dropdown',
-                            matchings: data,
-                            viewOptions: {
-                                table: {
-                                    contentContainer: '#content'
-                                }
-                            }
+                            matchings: data
                         },
                         gridOptions = this.sandbox.util.extend(true, {}, gridDefaults, datagridOptions);
 
