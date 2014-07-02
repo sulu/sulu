@@ -17,11 +17,13 @@ use JMS\Serializer\Annotation\SerializedName;
 use DateTime;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
+use JMS\Serializer\Annotation\ExclusionPolicy;
 
 /**
  * Class Collection
  * The Collection RestObject is the api entity for the CollectionController.
  * @package Sulu\Bundle\MediaBundle\Media\RestObject
+ * @ExclusionPolicy("all")
  */
 class Collection extends ApiEntityWrapper
 {
@@ -220,20 +222,11 @@ class Collection extends ApiEntityWrapper
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("thumbnails")
      * @return array
      */
     public function getPreviews()
-    {
-        return $this->previews;
-    }
-
-    /**
-     * @VirtualProperty
-     * @SerializedName("thumbnails")
-     * TODO change to previews when fixed in husky
-     * @return array
-     */
-    public function getThumbnails()
     {
         return $this->previews;
     }
