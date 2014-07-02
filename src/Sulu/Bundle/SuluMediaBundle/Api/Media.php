@@ -40,8 +40,6 @@ class Media extends ApiEntityWrapper
     protected $url;
 
     /**
-     * @Expose
-     * @SerializedName("thumbnails")
      * @var array
      */
     protected $formats = array();
@@ -493,6 +491,8 @@ class Media extends ApiEntityWrapper
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("thumbnails") // TODO not working yet
      * @return array
      */
     public function getFormats()
