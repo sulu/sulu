@@ -56,7 +56,6 @@ define(function() {
         };
 
     return {
-        view: true,
 
         templates: ['/admin/media/template/media/info',
             '/admin/media/template/media/multiple-edit'],
