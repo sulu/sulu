@@ -136,8 +136,11 @@ class DefaultFormatManager implements FormatManagerInterface
      */
     protected function prepareMedia($fileName, $path)
     {
-        if ('pdf' == pathinfo($fileName)['extension']) {
-            $this->convertPdfToImage($path);
+        $pathInfos = pathinfo($fileName);
+        if (isset($pathInfos['extension'])) {
+            if ('pdf' == $pathInfos['extension']) {
+                $this->convertPdfToImage($path);
+            }
         }
     }
 
@@ -166,7 +169,11 @@ class DefaultFormatManager implements FormatManagerInterface
      */
     protected function getFileExtension($fileName)
     {
-        $extension = pathinfo($fileName)['extension'];
+        $extension = null;
+        $pathInfo = pathinfo($fileName);
+        if (isset($pathInfo['extension'])) {
+            $extension = $pathInfo['extension'];
+        }
 
         switch ($extension) {
             case 'png':
