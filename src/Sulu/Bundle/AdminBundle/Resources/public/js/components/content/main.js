@@ -55,7 +55,6 @@ define([], function() {
         };
 
     return {
-        view: true,
 
         initialize: function() {
 

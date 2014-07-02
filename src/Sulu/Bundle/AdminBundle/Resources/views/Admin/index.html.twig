@@ -39,7 +39,9 @@
             <div class="content-column fixed">
                 <main class="grid" id="content" data-aura-component="app@suluadmin" data-aura-user="{{ user| json_encode }}"></main>
             </div>
-            <div class="sidebar-column max"></div>
+            <div class="sidebar-column max">
+                <aside id="sidebar" data-aura-component="sidebar@suluadmin"></aside>
+            </div>
         </div>
 
         <div id="labels-container" data-aura-component="labels@suluadmin"></div>

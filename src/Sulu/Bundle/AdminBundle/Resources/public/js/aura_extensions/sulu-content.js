@@ -79,6 +79,83 @@ define([], function() {
         },
 
         /**
+         * Handles layout marked components
+         * @param layout {Object|Boolean} the layout object or true for default values
+         *
+         * @param {Object} [content.navigation] the object which holds the layout configuration for the navigation
+         * @param {Boolean} [content.navigation.collapsed] if true navigation is collapsed
+         *
+         * @param {Object} [content.content] the object which holds the layout configuration for the content
+         * @param {String} [content.width] the width-type of the content-column. 'fixed' or 'max'
+         * @param {Boolean} [content.leftSpace] If false content has no spacing on the left
+         * @param {Boolean} [content.rightSpace] If false content has no spacing on the right
+         * @param {Boolean} [content.topSpace] If false content has no spacing on top
+         *
+         * @param {Object|Boolean} [content.sidebar] the object which holds the layout configuration for the sidebar. If false no sidebar will be displayed
+         * @param {String} [sidebar.width] the width-type of the sidebar-column. 'fixed' or 'max'
+         *
+         * @example
+         *
+         *      layout: {
+         *          navigation: {
+         *              collapsed: true
+         *          },
+         *          content: {
+         *              width: 'fixed',
+         *              topSpace: false,
+         *              leftSpace: false,
+         *              rightSpace: true
+         *          },
+         *          sidebar: {
+         *              width: 'max'
+         *          }
+         *      }
+         */
+        handleLayoutMarked = function(layout) {
+            handleLayoutNavigation.call(this, layout.navigation || true);
+            handleLayoutContent.call(this, layout.content || true);
+            handleLayoutSidebar.call(this, layout.sidebar || false);
+        },
+
+        /**
+         * Handles the navigation part of the view object
+         * @param navigation {Object|Boolean} the navigation config object or true for default behaviour
+         */
+        handleLayoutNavigation = function(navigation) {
+            if (navigation.collapsed === true) {
+                this.sandbox.emit('husky.navigation.collapse', true);
+            } else {
+                this.sandbox.emit('husky.navigation.uncollapse');
+            }
+        },
+
+        /**
+         * Handles the content part of the view object
+         * @param {Object|Boolean} [content] the content config object or true for default behaviour
+         */
+        handleLayoutContent = function(content) {
+            var width = content.width || 'fixed',
+                leftSpace = (typeof content.leftSpace === 'undefined') ? true : !!content.leftSpace,
+                rightSpace = (typeof content.rightSpace === 'undefined') ? true : !!content.rightSpace,
+                topSpace = (typeof content.topSpace === 'undefined') ? true : !!content.topSpace;
+            this.sandbox.emit('sulu.app.change-width', width);
+            this.sandbox.emit('sulu.app.change-spacing', leftSpace, rightSpace, topSpace);
+         },
+
+        /**
+         * Handles the sidebar part of the view object
+         * @param content {Object|Boolean} the sidebar config object or true for default behaviour. If false sidebar gets hidden
+         */
+        handleLayoutSidebar = function(sidebar) {
+            if (!!sidebar) {
+                var width = sidebar.width || 'max';
+                this.sandbox.emit('sulu.sidebar.change-width', width);
+            } else {
+                this.sandbox.emit('sulu.sidebar.hide');
+            }
+        },
+
+        /**
          * Handles the components which are marked with a fullSize property
          * @param fullSize
          */
@@ -124,7 +201,7 @@ define([], function() {
          *
          */
         handleHeaderMarked = function(header) {
-            var $content, $header, startHeader,
+            var $content, $header, $headerBg, startHeader,
                 breadcrumb, toolbarTemplate, toolbarParentTemplate, tabsOptions, toolbarOptions, tabsFullControl,
                 toolbarDisabled, toolbarLanguageChanger, noBack, titleColor;
 
@@ -159,6 +236,10 @@ define([], function() {
                 // insert the header-container
                 $header = this.sandbox.dom.createElement('<div id="sulu-header-container"/>');
                 this.sandbox.dom.prepend('.content-column', $header);
+
+                // append header background container to body
+                $headerBg = this.sandbox.dom.createElement('<div class="sulu-header-background"/>');
+                this.sandbox.dom.prepend('body', $headerBg);
 
                 App.start([
                     {
@@ -211,10 +292,14 @@ define([], function() {
 
             if (!!this.view) {
                 handleViewMarked.call(this, this.view);
+                // if a view has no layout specified use the default one
+                if (!this.layout) {
+                    handleLayoutMarked.call(this, true);
+                }
             }
 
-            if (!!this.fullSize) {
-                handleFullSizeMarked.call(this, this.fullSize);
+            if (!!this.layout) {
+                handleLayoutMarked.call(this, this.layout);
             }
         });
     };

@@ -79,7 +79,6 @@ define([], function() {
     };
 
     return {
-        view: true,
 
         /**
          * Waits for the App-Component to start,

@@ -15,9 +15,12 @@ define(function() {
 
         constants = {
             suluNavigateAMark: '[data-sulu-navigate="true"]', //a tags which match this mark will use the sulu.navigate method
-            fullWidthClass: 'fullwidth',
-            noPaddingClass: 'no-padding',
-            fullHeightClass: 'fullheight'
+            fixedWidthClass: 'fixed',
+            maxWidthClass: 'max',
+            columnSelector: '.content-column',
+            noLeftSpaceClass: 'no-left-space',
+            noRightSpaceClass: 'no-right-space',
+            noTopSpaceClass: 'no-top-space'
         },
 
         eventNamespace = 'sulu.app.',
@@ -28,24 +31,6 @@ define(function() {
          */
             INITIALIZED = function() {
             return createEventName('initialized');
-        },
-
-        /**
-         * raised if width height, or position of content-container changes
-         * @event sulu.app.content.dimensions-changed
-         * @param {object} Object containing width, and position from the left
-         */
-            CONTENT_DIMENSIONS_CHANGED = function() {
-            return createEventName('content.dimensions-changed');
-        },
-
-        /**
-         * raised if width height, or position of view port changes
-         * @event sulu.app.content.dimensions-changed
-         * @param {object} Object containing width, and position from the left
-         */
-            VIEWPORT_DIMENSIONS_CHANGED = function() {
-            return createEventName('viewport.dimensions-changed');
         },
 
         /**
@@ -76,13 +61,23 @@ define(function() {
          },
 
         /**
-         * sets the container in full-width mode
-         * @event sulu.app.full-size
-         * @param {Boolean} true for full width
-         * @param {Boolean} true for full height
+         * listens on and changes the width type of the column
+         * @event sulu.app.change-width
+         * @param {String} the new width-type. 'fixed' or 'max'
          */
-        SET_FULL_SIZE = function() {
-            return createEventName('full-size');
+        CHANGE_WIDTH = function() {
+            return createEventName('change-width');
+        },
+
+        /**
+         * listens on and changes the spacing of the content
+         * @event sulu.app.change-spacing
+         * @param {Boolean} false for no spacing left
+         * @param {Boolean} false for no spacing right
+         * @param {Boolean} false for no spacing top
+         */
+        CHANGE_SPACING = function() {
+            return createEventName('change-spacing');
         },
 
         /**
@@ -90,7 +85,7 @@ define(function() {
          */
             createEventName = function(postFix) {
             return eventNamespace + postFix;
-        }
+        };
 
     return {
         name: 'Sulu App',
@@ -148,12 +143,6 @@ define(function() {
          * Bind DOM-related Events
          */
         bindDomEvents: function() {
-            // start centralized resize-listener
-            this.sandbox.dom.on(this.sandbox.dom.$window, 'resize', function() {
-                this.emitContentDimensionsChangedEvent();
-                this.emitViewPortDimensionsChanged();
-            }.bind(this));
-
             // call navigate event for marked a-tags
             this.sandbox.dom.on(this.sandbox.dom.$document, 'click', function(event) {
                 // prevent the default action for the anchor tag
@@ -175,33 +164,6 @@ define(function() {
                     this.emitNavigationEvent({action: event.currentTarget.attributes.href.value}, true, true);
                 }
             }.bind(this), 'a' + constants.suluNavigateAMark);
-        },
-
-        /**
-         * Emits an event with the new dimensions of the viewport
-         */
-        emitViewPortDimensionsChanged: function() {
-            var width = this.sandbox.dom.width(window),
-                height = this.sandbox.dom.height(window);
-
-            this.sandbox.emit(VIEWPORT_DIMENSIONS_CHANGED.call(this), {width: width, height: height});
-        },
-
-        /**
-         * Sets the new dimensions of the content-container and
-         * emits the content.dimensions-changed event
-         * @force {Boolean} if true event will gets emited for sure
-         */
-        emitContentDimensionsChangedEvent: function(force) {
-            var newContentDimensions = this.getContentDimensions();
-
-            if (this.contentDimensions.width !== newContentDimensions.width ||
-                this.contentDimensions.left !== newContentDimensions.left ||
-                force === true) {
-
-                this.sandbox.emit(CONTENT_DIMENSIONS_CHANGED.call(this), newContentDimensions);
-                this.contentDimensions = newContentDimensions;
-            }
         },
 
         /**
@@ -240,43 +202,52 @@ define(function() {
         },
 
         /**
-         * Bind component-related events
+         * Handler for the sulu.router.navigate event. Calls the backbone-router
+         * @param route {String} the route to navigate to
+         * @param trigger {Boolean} if trigger is true it will be actually navigated to the route. Otherwise only the borswer-url will be updated
+         * @param noLoader {Boolean} if false no loader will be instantiated
          */
-        bindCustomEvents: function() {
-            // listening for navigation events
-            this.sandbox.on('sulu.router.navigate', function(route, trigger, noLoader) {
-                // remove eventual full-width and full-height mode
-                this.removeFullSize();
+        navigate: function(route, trigger, noLoader) {
+            // if trigger is not define make it always true to actually route to
+            trigger = (typeof trigger !== 'undefined') ? trigger : true;
 
-                // default vars
-                trigger = (typeof trigger !== 'undefined') ? trigger : true;
-
-                if (!!trigger && this.currentRoute !== route) {
-                    // FIXME - App.stop is used in global context; possibly there is a better solution
-                    // and the stop event will be called
-                    App.stop('#sulu-content-container');
-                    App.stop('#sulu-header-container');
-                    App.stop('#content > *');
-                    App.stop('#preview > *');
+            // only route if route has changed
+            if (this.currentRoute !== route) {
+                this.currentRoute = route;
+                if (!!trigger) {
+                    this.beforeNavigateCleanup();
                 }
-
-                // reset store for cleaning environment
-                this.sandbox.mvc.Store.reset();
-
-                // reset content max-width, which might was set by datagrid-list
-                this.sandbox.dom.css('#content', 'max-width', '');
-
-                // navigate
-                router.navigate(route, {trigger: trigger});
-
-                // move to top
-                this.sandbox.dom.scrollTop(this.sandbox.dom.$window, 0);
 
                 if (noLoader !== true && this.currentRoute !== route && this.currentRoute !== null) {
                     this.startLoader();
                 }
-                this.currentRoute = route;
-            }.bind(this));
+                this.sandbox.mvc.Store.reset();
+                // navigate
+                router.navigate(route, {trigger: trigger});
+                this.sandbox.dom.scrollTop(this.sandbox.dom.$window, 0);
+            }
+        },
+
+        /**
+         * Cleans things up before navigating
+         */
+        beforeNavigateCleanup: function() {
+            this.sandbox.dom.remove('.sulu-header-background');
+
+            // FIXME - App.stop is used in global context; possibly there is a better solution
+            // and the stop method will be called
+            App.stop('#sulu-content-container');
+            App.stop('#sulu-header-container');
+            App.stop('#content > *');
+            App.stop('#preview > *');
+        },
+
+        /**
+         * Bind component-related events
+         */
+        bindCustomEvents: function() {
+            // navigate
+            this.sandbox.on('sulu.router.navigate', this.navigate.bind(this));
 
             // navigation event
             this.sandbox.on('husky.navigation.item.select', function(event) {
@@ -331,42 +302,86 @@ define(function() {
             // change user locale
             this.sandbox.on(CHANGE_USER_LOCALE.call(this), this.changeUserLocale.bind(this));
 
-            // listen for full size mode
-            this.sandbox.on(SET_FULL_SIZE.call(this), this.setFullSize.bind(this));
+            // change the width-type of the content
+            this.sandbox.on(CHANGE_WIDTH.call(this), this.changeWidth.bind(this));
+
+            // change the width-type of the content
+            this.sandbox.on(CHANGE_SPACING.call(this), this.changeSpacing.bind(this));
         },
 
         /**
-         * Sets the container in full-width mode
-         * @param fullwidth {boolean} If true set container in full-width mode
-         * @param fullheight {boolean} If true set container in full-height mode
-         * @param keepPaddings {boolean} If true paddings are kept
+         /**
+         * changes the spacing of the content
+         * @event sulu.app.change-spacing
+         * @param {Boolean} leftSpacing false for no spacing left
+         * @param {Boolean} rightSpacing false for no spacing right
+         * @param {Boolean} topSpacing false for no spacing top
          */
-        setFullSize: function(fullwidth, fullheight, keepPaddings) {
-            if (fullheight === true) {
-                this.sandbox.dom.addClass(this.$el, constants.fullHeightClass);
+        changeSpacing: function(leftSpacing, rightSpacing, topSpacing) {
+            // left space
+            if (leftSpacing === false) {
+                this.sandbox.dom.addClass(this.$el, constants.noLeftSpaceClass);
+            } else {
+                this.sandbox.dom.removeClass(this.$el, constants.noLeftSpaceClass);
             }
-            if (fullwidth === true) {
-                this.sandbox.dom.css(this.$el, {'max-width': ''});
-                this.sandbox.dom.css(this.$el, {'width': ''});
-                this.sandbox.dom.addClass(this.$el, constants.fullWidthClass);
-                if (keepPaddings !== true) {
-                    this.sandbox.dom.addClass(this.$el, constants.noPaddingClass);
-                    this.sandbox.dom.css(this.$el, {'padding-left': ''});
 
-                }
-                this.emitContentDimensionsChangedEvent(true);
-                this.sandbox.dom.trigger(this.sandbox.dom.$window, 'resize');
+            // right space
+            if (rightSpacing === false) {
+                this.sandbox.dom.addClass(this.$el, constants.noRightSpaceClass);
+            } else {
+                this.sandbox.dom.removeClass(this.$el, constants.noRightSpaceClass);
+            }
+
+            // top space
+            if (topSpacing === false) {
+                this.sandbox.dom.addClass(this.$el, constants.noTopSpaceClass);
+            } else {
+                this.sandbox.dom.removeClass(this.$el, constants.noTopSpaceClass);
             }
         },
 
         /**
-         * Removes the full-width and full-height mode from the container
+         * Changes the width of content to fixed or to max
+         * @param width {String} the new type of width to apply to the content. 'fixed' or 'max'
          */
-        removeFullSize: function() {
-            this.sandbox.dom.removeClass(this.$el, constants.fullHeightClass);
-            this.sandbox.dom.removeClass(this.$el, constants.noPaddingClass);
-            this.sandbox.dom.removeClass(this.$el, constants.fullWidthClass);
-            this.sandbox.emit('sulu.header.unsqueeze');
+        changeWidth: function(width) {
+            if (width === 'fixed') {
+                this.changeToFixedWidth();
+            } else if (width === 'max') {
+                this.changeToMaxWidth();
+            }
+        },
+
+        /**
+         * Ensures that the width of the content is fixed
+         * (it just sets a css-class which contains a width property)
+         */
+        changeToFixedWidth: function() {
+            var $column = this.sandbox.dom.find(constants.columnSelector);
+
+            if (!this.sandbox.dom.hasClass($column, constants.fixedWidthClass)) {
+                this.sandbox.dom.removeClass($column, constants.maxWidthClass);
+                this.sandbox.dom.addClass($column, constants.fixedWidthClass);
+            }
+        },
+
+        /**
+         * Makes the content take the maximum of the available space
+         */
+        changeToMaxWidth: function() {
+            var $column = this.sandbox.dom.find(constants.columnSelector);
+
+            if (!this.sandbox.dom.hasClass($column, constants.maxWidthClass)) {
+                var $parent = this.sandbox.dom.parent($column);
+
+                this.sandbox.dom.removeClass($column, constants.fixedWidthClass);
+                this.sandbox.dom.addClass($column, constants.maxWidthClass);
+
+                // make sure the column is the last child of its parent. Otherwise
+                // it isn't possible to take the max width
+                this.sandbox.dom.detach($column);
+                this.sandbox.dom.append($parent, $column);
+            }
         },
 
         /**
