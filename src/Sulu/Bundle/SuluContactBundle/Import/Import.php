@@ -995,14 +995,16 @@ class Import
     protected function checkData($index, $data, $type = null, $maxLength = null)
     {
         $isDataSet = array_key_exists($index, $data) && $data[$index] !== '';
-        if ($type !== null && $isDataSet) {
-            // TODO check for types
-            if ($type === 'bool' && $data[$index] != 'true' && $data[$index] != 'false' && $data[$index] != '1' && $data[$index] != '0' ) {
-                throw new \InvalidArgumentException($data[$index]. ' is not a boolean!');
+        if ($isDataSet) {
+            if ($type !== null) {
+                // TODO check for types
+                if ($type === 'bool' && $data[$index] != 'true' && $data[$index] != 'false' && $data[$index] != '1' && $data[$index] != '0' ) {
+                    throw new \InvalidArgumentException($data[$index]. ' is not a boolean!');
+                }
             }
-        }
-        if ($maxLength !== null && intval($maxLength) && sizeof($data[$index]) > $maxLength) {
-            throw new \InvalidArgumentException($data[$index]. ' exceeds max length!');
+            if ($maxLength !== null && intval($maxLength) && sizeof($data[$index]) > $maxLength) {
+                throw new \InvalidArgumentException($data[$index]. ' exceeds max length!');
+            }
         }
         return $isDataSet;
     }
