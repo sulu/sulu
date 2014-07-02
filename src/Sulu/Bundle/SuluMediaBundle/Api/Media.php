@@ -141,10 +141,11 @@ class Media extends ApiEntityWrapper
     {
         $metaExists = false;
 
+        $fileVersion = $this->getFileVersion();
         /**
          * @var FileVersionMeta $meta
          */
-        foreach ($this->getFileVersion()->getMeta() as $meta) {
+        foreach ($fileVersion->getMeta() as $meta) {
             if ($meta->getLocale() == $this->locale) {
                 $metaExists = true;
                 $meta->setTitle($title);
@@ -154,9 +155,9 @@ class Media extends ApiEntityWrapper
         if (!$metaExists) {
             $meta = new FileVersionMeta();
             $meta->setTitle($title);
-            $meta->setFileVersion($this->getFileVersion());
             $meta->setLocale($this->locale);
-            $this->getFileVersion()->addMeta($meta);
+            $meta->setFileVersion($fileVersion);
+            $fileVersion->addMeta($meta);
         }
 
         return $this;
@@ -194,10 +195,11 @@ class Media extends ApiEntityWrapper
     {
         $metaExists = false;
 
+        $fileVersion = $this->getFileVersion();
         /**
          * @var FileVersionMeta $meta
          */
-        foreach ($this->getFileVersion()->getMeta() as $meta) {
+        foreach ($fileVersion->getMeta() as $meta) {
             if ($meta->getLocale() == $this->locale) {
                 $metaExists = true;
                 $meta->setDescription($description);
@@ -207,9 +209,9 @@ class Media extends ApiEntityWrapper
         if (!$metaExists) {
             $meta = new FileVersionMeta();
             $meta->setDescription($description);
-            $meta->setFileVersion($this->getFileVersion());
             $meta->setLocale($this->locale);
-            $this->getFileVersion()->addMeta($meta);
+            $meta->setFileVersion($fileVersion);
+            $fileVersion->addMeta($meta);
         }
 
         return $this;
@@ -338,10 +340,12 @@ class Media extends ApiEntityWrapper
 
     /**
      * @param string $storageOptions
+     * @return $this
      */
     public function setStorageOptions($storageOptions)
     {
         $this->getFileVersion()->setStorageOptions($storageOptions);
+        return $this;
     }
 
     /**
@@ -353,8 +357,9 @@ class Media extends ApiEntityWrapper
         /**
          * @var FileVersionPublishLanguage $publishLanguage
          */
+        $fileVersion = $this->getFileVersion();
         foreach ($publishLanguages as $key => $locale) {
-            foreach ($this->getFileVersion()->getPublishLanguages() as $publishLanguage) {
+            foreach ($fileVersion->getPublishLanguages() as $publishLanguage) {
                 if ($publishLanguage->getLocale() == $locale) {
                     unset($publishLanguages[$key]);
                     break;
@@ -364,8 +369,9 @@ class Media extends ApiEntityWrapper
 
         foreach ($publishLanguages as $locale) {
             $publishLanguage = new FileVersionPublishLanguage();
-            $publishLanguage->setFileVersion($this->getFileVersion());
+            $publishLanguage->setFileVersion($fileVersion);
             $publishLanguage->setLocale($locale);
+            $fileVersion->addPublishLanguage($publishLanguage);
         }
         return $this;
     }
@@ -378,11 +384,12 @@ class Media extends ApiEntityWrapper
     public function getPublishLanguages()
     {
         $publishLanguages = array();
+
         /**
          * @var FileVersionPublishLanguage $publishLanguage
          */
         foreach ($this->getFileVersion()->getPublishLanguages() as $publishLanguage) {
-            array_push($publishLanguage->getLocale(), $publishLanguage->getLocale());
+            array_push($publishLanguages, $publishLanguage->getLocale());
         }
 
         return $publishLanguages;
@@ -394,11 +401,12 @@ class Media extends ApiEntityWrapper
      */
     public function setContentLanguages($contentLanguages)
     {
+        $fileVersion = $this->getFileVersion();
         /**
          * @var FileVersionContentLanguage $contentLanguage
          */
         foreach ($contentLanguages as $key => $locale) {
-            foreach ($this->getFileVersion()->getContentLanguages() as $contentLanguage) {
+            foreach ($fileVersion->getContentLanguages() as $contentLanguage) {
                 if ($contentLanguage->getLocale() == $locale) {
                     unset($contentLanguages[$key]);
                     break;
@@ -408,8 +416,9 @@ class Media extends ApiEntityWrapper
 
         foreach ($contentLanguages as $locale) {
             $contentLanguage = new FileVersionContentLanguage();
-            $contentLanguage->setFileVersion($this->getFileVersion());
+            $contentLanguage->setFileVersion($fileVersion);
             $contentLanguage->setLocale($locale);
+            $fileVersion->addContentLanguage($contentLanguage);
         }
         return $this;
     }
@@ -426,7 +435,7 @@ class Media extends ApiEntityWrapper
          * @var FileVersionContentLanguage $contentLanguage
          */
         foreach ($this->getFileVersion()->getContentLanguages() as $contentLanguage) {
-            array_push($contentLanguage->getLocale(), $contentLanguage->getLocale());
+            array_push($contentLanguages, $contentLanguage->getLocale());
         }
 
         return $contentLanguages;
@@ -438,11 +447,12 @@ class Media extends ApiEntityWrapper
      */
     public function setTags($tags)
     {
+        $fileVersion = $this->getFileVersion();
         foreach ($tags as $key => $tagName) {
             /**
              * @var Tag $tag
              */
-            foreach ($this->getFileVersion()->getTags() as $tag) {
+            foreach ($fileVersion->getTags() as $tag) {
                 if ($tag->getName() == $tagName) {
                     unset($tags[$key]);
                     break;
@@ -453,7 +463,7 @@ class Media extends ApiEntityWrapper
         foreach ($tags as $tagName) {
             $tag = new Tag();
             $tag->setName($tagName);
-            $this->getFileVersion()->addTag($tag);
+            $fileVersion->addTag($tag);
         }
 
         return $this;
@@ -467,6 +477,7 @@ class Media extends ApiEntityWrapper
     public function getTags()
     {
         $tags = array();
+
         /**
          * @var Tag $tag
          */
@@ -539,8 +550,8 @@ class Media extends ApiEntityWrapper
     public function getChanger()
     {
         $changer = $this->getFileVersion()->getChanger();
-        if ($changer) {
-            return (string)$changer;
+        if (method_exists($changer, 'getFullName')) {
+            return $changer->getFullName();
         }
         return null;
     }
@@ -563,8 +574,8 @@ class Media extends ApiEntityWrapper
     public function getCreator()
     {
         $creator = $this->fileVersion->getCreator();
-        if ($creator) {
-            return (string)$creator;
+        if (method_exists($creator, 'getFullName')) {
+            return $creator->getFullName();
         }
         return null;
     }
