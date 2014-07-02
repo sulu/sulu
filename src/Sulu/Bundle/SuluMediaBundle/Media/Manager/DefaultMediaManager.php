@@ -232,6 +232,7 @@ class DefaultMediaManager implements MediaManagerInterface
             );
             $data['name'] = $uploadedFile->getClientOriginalName();
             $data['size'] = $uploadedFile->getSize();
+            $data['version'] = $version;
 
             $fileVersion = new FileVersion();
             $fileVersion->setChanged(new Datetime());
@@ -288,6 +289,7 @@ class DefaultMediaManager implements MediaManagerInterface
         $file->setChanger($user);
         $file->setCreated(new \DateTime());
         $file->setChanged(new \DateTime());
+        $file->setVersion(1);
         $file->setMedia($mediaEntity);
 
         $fileVersion = new FileVersion();
@@ -295,6 +297,7 @@ class DefaultMediaManager implements MediaManagerInterface
         $fileVersion->setChanger($user);
         $fileVersion->setCreated(new \DateTime());
         $fileVersion->setChanged(new \DateTime());
+        $fileVersion->setVersion(1);
         $fileVersion->setFile($file);
 
         $file->addFileVersion($fileVersion);
