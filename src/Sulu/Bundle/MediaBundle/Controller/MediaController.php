@@ -130,8 +130,13 @@ class MediaController extends RestController implements ClassResourceInterface
     {
         $collection = $request->get('collection');
         $limit = $request->get('limit');
+        $ids = $request->get('ids');
+        if ($ids !== null) {
+            $ids = explode(',', $ids);
+        }
+
         $mM = $this->getMediaManager();
-        $media = $mM->find($collection, null, $limit);
+        $media = $mM->find($collection, $ids, $limit);
         $wrappers = $mM->getApiObjects($media, $this->getLocale($request->get('locale')));
         $halResponse = $this->createHalResponse($wrappers, true);
         $view = $this->view($halResponse, 200);
