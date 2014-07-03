@@ -17,6 +17,8 @@ use Sulu\Bundle\MediaBundle\Media\Exception\MediaException;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Config\Definition\Exception\Exception;
+use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -57,7 +59,7 @@ class WebsiteMediaController extends Controller
     public function downloadAction(Request $request, $id)
     {
         try {
-            $version = $request->get('v');
+            $version = $request->get('v', null);
 
             /**
              * @var Media $mediaEntity
@@ -82,7 +84,11 @@ class WebsiteMediaController extends Controller
 
             $path = $this->getStorage()->load($fileName, $version, $storageOptions);
 
-            $file = file_get_contents($path);
+            try {
+                $file = file_get_contents($path);
+            } catch (Exception $e) {
+                throw new FileNotFoundException('File not found');
+            }
 
             // Generate response
             $response = new Response();
