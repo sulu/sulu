@@ -223,11 +223,18 @@ class Collection extends ApiEntityWrapper
     }
 
     /**
-     * @VirtualProperty
-     * @SerializedName("thumbnails") // TODO not working yet
      * @return array
      */
     public function getPreviews()
+    {
+        return $this->previews;
+    }
+
+    /**
+     * @VirtualProperty
+     * @SerializedName("thumbnails")
+     */
+    public function getThumbnails() // FIXME change to getPreviews when SerializedName working
     {
         return $this->previews;
     }
