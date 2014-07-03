@@ -108,7 +108,7 @@ define([
             if (item.id !== 'all') {
                 type = item.id;
             }
-            this.sandbox.emit('husky.datagrid.url.update', {'type': type, 'pageSize': 10}); // TODO: get page size from server
+            this.sandbox.emit('husky.datagrid.url.update', {'type': type});
             this.sandbox.emit('sulu.contacts.accounts.list', item.name, true); // change url, but do not reload
         },
 
