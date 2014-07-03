@@ -491,11 +491,19 @@ class Media extends ApiEntityWrapper
     }
 
     /**
-     * @VirtualProperty
-     * @SerializedName("thumbnails") // TODO not working yet
      * @return array
      */
     public function getFormats()
+    {
+        return $this->formats;
+    }
+
+    /**
+     * @VirtualProperty
+     * @SerializedName("thumbnails")
+     * @return array
+     */
+    public function getThumbnails() // FIXME change to getPreviews when SerializedName working
     {
         return $this->formats;
     }
