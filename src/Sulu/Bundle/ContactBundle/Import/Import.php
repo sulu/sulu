@@ -431,6 +431,8 @@ class Import
         $account = new Account();
         $persistAccount = true;
 
+        $this->accounts[] = $account;
+
         // check if id mapping is defined
         if (array_key_exists('account_id', $this->idMappings)) {
             if (!array_key_exists($this->idMappings['account_id'], $data)) {
@@ -446,8 +448,6 @@ class Import
                 $account->setExternalId($externalId);
             }
         }
-
-        $this->accounts[] = $account;
 
         // clear notes
         if (!$account->getNotes()->isEmpty()) {
