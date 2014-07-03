@@ -50,6 +50,8 @@ class Import
         'importIds' => true,
         'streetNumberSplit' => false,
         'fixedAccountType' => false,
+        'delimiter' => ';',
+        'enclosure' => '"',
     );
 
     /**
@@ -377,7 +379,7 @@ class Import
             throw new NotFoundResourceException($filename);
         }
 
-        while (($data = fgetcsv($handle, 1000, ";")) !== false) {
+        while (($data = fgetcsv($handle, 0, $this->options['delimiter'], $this->options['enclosure'])) !== false) {
             try {
                 // for first row, save headers
                 if ($row === 0) {
@@ -652,6 +654,7 @@ class Import
      */
     protected function addCategory($categoryName, Account $account)
     {
+        $categoryName = trim($categoryName);
         if (array_key_exists($categoryName, $this->accountCategories)) {
             $category = $this->accountCategories[$categoryName];
         } else {
@@ -670,6 +673,7 @@ class Import
      */
     protected function addTag($tagName, $entity)
     {
+        $tagName = trim($tagName);
         if (array_key_exists($tagName, $this->tags)) {
             $tag = $this->tags[$tagName];
         } else {
@@ -1114,7 +1118,7 @@ class Import
      */
     protected function mapFormOfAddress($formOfAddress)
     {
-        return $this->mapByConfigId($formOfAddress, $this->formOfAddressMappings, $this->configFormOfAddress);
+        return $this->mapReverseByConfigId($formOfAddress, $this->formOfAddressMappings, $this->configFormOfAddress);
     }
 
     /**
@@ -1354,6 +1358,7 @@ class Import
 
     /**
      * maps a certain index to a mappings array and returns it's index as defined in config array
+     * mapping is defined as mappingindex => $index
      * @param $index
      * @param array $mappings
      * @param array $config
@@ -1363,6 +1368,26 @@ class Import
     {
         if ($mappingIndex = array_search($index, $mappings)) {
             if (array_key_exists($mappingIndex, $config)) {
+                return $config[$mappingIndex]['id'];
+            }
+            return $mappingIndex;
+        } else {
+            return $index;
+        }
+    }
+
+    /**
+     * maps a certain index to a mappings array and returns it's index as defined in config array
+     * @param $index
+     * @param array $mappings
+     * @param array $config
+     * @return mixed
+     */
+    protected function mapReverseByConfigId($index, $mappings, $config)
+    {
+        if (array_key_exists($index, $mappings)) {
+            $mappingIndex = $mappings[$index];
+            if (array_key_exists($mappingIndex,$config)) {
                 return $config[$mappingIndex]['id'];
             }
             return $mappingIndex;
