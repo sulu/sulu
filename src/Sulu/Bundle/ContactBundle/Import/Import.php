@@ -387,7 +387,7 @@ class Import
                     $associativeData = $this->mapRowToAssociativeArray($data, $this->headerData);
 
                     $entity = $function($associativeData, $row);
-                    if($row%20 === 0) {
+                    if ($row % 20 === 0) {
                         $this->em->flush();
                         $this->em->clear();
                         gc_collect_cycles();
@@ -700,13 +700,12 @@ class Import
 
             // separate street and number
             if ($this->options['streetNumberSplit']) {
-                preg_match('/([^\d]+)\s?(.+)/i', $street, $result);
+                preg_match('/(*UTF8)([^\d]+)\s?(.+)/iu', $street, $result); // UTF8 is to ensure correct utf8 encoding
 
-                if (array_key_exists(1, $result)) {
-                    $street = trim($result[1]);
-                }
-                if (array_key_exists(2, $result)) {
+                // check if number is given, else do not apply preg match
+                if (array_key_exists(2, $result) && is_numeric($result[2])) {
                     $number = trim($result[2]);
+                    $street = trim($result[1]);
                 }
             }
             $address->setStreet($street);
@@ -1000,12 +999,12 @@ class Import
         if ($isDataSet) {
             if ($type !== null) {
                 // TODO check for types
-                if ($type === 'bool' && $data[$index] != 'true' && $data[$index] != 'false' && $data[$index] != '1' && $data[$index] != '0' ) {
-                    throw new \InvalidArgumentException($data[$index]. ' is not a boolean!');
+                if ($type === 'bool' && $data[$index] != 'true' && $data[$index] != 'false' && $data[$index] != '1' && $data[$index] != '0') {
+                    throw new \InvalidArgumentException($data[$index] . ' is not a boolean!');
                 }
             }
-            if ($maxLength !== null && intval($maxLength) && sizeof($data[$index]) > $maxLength) {
-                throw new \InvalidArgumentException($data[$index]. ' exceeds max length!');
+            if ($maxLength !== null && intval($maxLength) && strlen($data[$index]) > $maxLength) {
+                throw new \InvalidArgumentException($data[$index] . ' exceeds max length of ' . $index);
             }
         }
         return $isDataSet;
@@ -1115,14 +1114,7 @@ class Import
      */
     protected function mapFormOfAddress($formOfAddress)
     {
-        if ($mappingIndex = array_search($formOfAddress, $this->formOfAddressMappings)) {
-            if (array_key_exists($mappingIndex, $this->configFormOfAddress)) {
-                return $this->configFormOfAddress[$mappingIndex]['id'];
-            }
-            return $mappingIndex;
-        } else {
-            return $formOfAddress;
-        }
+        return $this->mapByConfigId($formOfAddress, $this->formOfAddressMappings, $this->configFormOfAddress);
     }
 
     /**
@@ -1357,5 +1349,25 @@ class Import
         $file = fopen($root . 'log-' . $timestamp . '.txt', 'w');
         fwrite($file, implode("\n", $this->log));
         fclose($file);
+    }
+
+
+    /**
+     * maps a certain index to a mappings array and returns it's index as defined in config array
+     * @param $index
+     * @param array $mappings
+     * @param array $config
+     * @return mixed
+     */
+    protected function mapByConfigId($index, $mappings, $config)
+    {
+        if ($mappingIndex = array_search($index, $mappings)) {
+            if (array_key_exists($mappingIndex, $config)) {
+                return $config[$mappingIndex]['id'];
+            }
+            return $mappingIndex;
+        } else {
+            return $index;
+        }
     }
 }
