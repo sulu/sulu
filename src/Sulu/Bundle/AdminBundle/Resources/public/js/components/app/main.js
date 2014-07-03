@@ -287,13 +287,22 @@ define(function() {
          * Bind component-related events
          */
         bindCustomEvents: function() {
-            // listening for navigation events
+            /**
+             * listening for navigation events
+             * @event sulu.router.navigate
+             * @param {String} route the route to navigate to
+             * @param {Bool} [trigger=true] trigger navigation route
+             * @param {Bool} [noLoader] defines if a loader should be shown
+             */
             this.sandbox.on('sulu.router.navigate', function(route, trigger, noLoader) {
-                // remove eventual full-width and full-height mode
-                this.removeFullSize();
 
-                // default vars
-                trigger = (typeof trigger !== 'undefined') ? trigger : true;
+                // set trigger default to true
+                trigger = (typeof trigger !== 'undefined' && trigger === false) ? false : true;
+
+                if (trigger) {
+                    // remove eventual full-width and full-height mode
+                    this.removeFullSize();
+                }
 
                 if (!!trigger && this.currentRoute !== route) {
                     // FIXME - App.stop is used in global context; possibly there is a better solution
