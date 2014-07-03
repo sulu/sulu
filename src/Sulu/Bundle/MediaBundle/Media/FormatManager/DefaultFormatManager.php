@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\FormatManager;
 
+use Imagine\Imagick\Imagine;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\Media;
@@ -115,6 +116,7 @@ class DefaultFormatManager implements FormatManagerInterface
             'Content-Type' => 'image/' . $imageExtension
         );
 
+
         // save image
         if ($this->saveImage) {
             $this->formatCache->save(
@@ -139,15 +141,31 @@ class DefaultFormatManager implements FormatManagerInterface
         if ('pdf' == pathinfo($fileName)['extension']) {
             $this->convertPdfToImage($path);
         }
+        if ('psd' == pathinfo($fileName)['extension']) {
+            $this->convertPsdToImage($path);
+        }
     }
 
     /**
-     * @param string  $path
+     * @param string $path
      */
     protected function convertPdfToImage($path)
     {
         $command = $this->ghostScriptPath . ' -dNOPAUSE -sDEVICE=jpeg -dFirstPage=1 -dLastPage=1 -sOutputFile=' . $path . ' -dJPEGQ=100 -r300x300 -q ' . $path . ' -c quit';
         exec($command);
+    }
+
+    /**
+     * @param string $path
+     */
+    protected function convertPsdToImage($path)
+    {
+        if (class_exists('Imagick')) {
+            $imagine = new Imagine();
+            $image = $imagine->open($path);
+            $image = $image->layers()[0];
+            file_put_contents($path, $image->get('png'));
+        }
     }
 
     /**
