@@ -299,12 +299,7 @@ define(function() {
                 // set trigger default to true
                 trigger = (typeof trigger !== 'undefined' && trigger === false) ? false : true;
 
-                if (trigger) {
-                    // remove eventual full-width and full-height mode
-                    this.removeFullSize();
-                }
-
-                if (!!trigger && this.currentRoute !== route) {
+                if (trigger && this.currentRoute !== route) {
                     // FIXME - App.stop is used in global context; possibly there is a better solution
                     // and the stop event will be called
                     App.stop('#sulu-content-container');
@@ -315,6 +310,11 @@ define(function() {
                     // remove eventual spacing because of header
                     this.headerVisible = false;
                     this.changeTopSpacing();
+                }
+
+                if (trigger) {
+                    // remove eventual full-width and full-height mode
+                    this.removeFullSize();
                 }
 
                 // reset store for cleaning environment
