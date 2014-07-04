@@ -206,7 +206,7 @@ abstract class RestController extends FOSRestController
      * @param $fieldsHidden
      * @return array
      */
-    private function addFieldAttributes($fields, $fieldsHidden)
+    protected function addFieldAttributes($fields, $fieldsHidden = array())
     {
         // add translations
         $fieldsArray = array();
