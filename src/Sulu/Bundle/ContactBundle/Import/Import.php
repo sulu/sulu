@@ -60,6 +60,11 @@ class Import
      */
     protected $contactEntityName = 'SuluContactBundle:Contact';
     protected $accountEntityName = 'SuluContactBundle:Account';
+    protected $accountContactEntityName = 'SuluContactBundle:AccountContact';
+    protected $accountCategoryEntityName = 'SuluContactBundle:AccountCategory';
+    protected $tagEntityName = 'SuluTagBundle:Tag';
+    protected $countryEntityName = 'SuluContactBundle:Country';
+
 
 
     /**
@@ -433,8 +438,6 @@ class Import
         $account = new Account();
         $persistAccount = true;
 
-        $this->accounts[] = $account;
-
         // check if id mapping is defined
         if (array_key_exists('account_id', $this->idMappings)) {
             if (!array_key_exists($this->idMappings['account_id'], $data)) {
@@ -740,7 +743,7 @@ class Import
             $addAddress = true;
         }
         if ($this->checkData('country', $data)) {
-            $country = $this->em->getRepository('SuluContactBundle:Country')->findOneByCode(
+            $country = $this->em->getRepository($this->countryEntityName)->findOneByCode(
                 $this->mapCountryCode($data['country'])
             );
 
@@ -926,6 +929,7 @@ class Import
     }
 
     /**
+     * adds a accountcontact relation if not existent
      * @param $data
      * @param $contact
      * @param $row
@@ -939,23 +943,31 @@ class Import
                 // throw new \Exception('could not find '.$data['contact_parent'].' in accounts');
                 $this->debug(sprintf("Could not assign contact at row %d to %s. (account could not be found)\n", $row, $data['contact_parent']));
             } else {
-                // account contact relation
-                $accountContact = new AccountContact();
-                $accountContact->setContact($contact);
-                $accountContact->setAccount($account);
 
-                $main = false;
+                // check if relation already exists
+                $accountContact = $this->em->getRepository($this->accountContactEntityName)->findOneBy(array($account => $account, $contact => $contact));
+
+                if (!$accountContact) {
+                    // account contact relation
+                    $accountContact = new AccountContact();
+                    $accountContact->setContact($contact);
+                    $accountContact->setAccount($account);
+                    $contact->addAccountContact($accountContact);
+                    $account->addAccountContact($accountContact);
+                    $this->em->persist($accountContact);
+                }
+
                 // check if main relation exists
+                $main = false;
                 if (!$this->mainRelationExists($contact)) {
                     $main = true;
                 }
-
                 $accountContact->setMain($main);
 
-                $this->em->persist($accountContact);
-
-                $contact->addAccountContact($accountContact);
-                $account->addAccountContact($accountContact);
+                // set position
+                if ($this->checkData('contact_position', $data)) {
+                    $accountContact->setPosition($data['contact_position']);
+                }
             }
         }
     }
@@ -1022,8 +1034,9 @@ class Import
         // if account has parent
         if ($this->checkData('account_parent', $data)) {
             // get account
+            $externalId = $this->getExternalId($data);
             /** @var Account $account */
-            $account = $this->accounts[$row - 1];
+            $account = $this->getAccountByKey($externalId);
 
             // get parent account
             $parent = $this->getAccountByKey($data['account_parent']);
@@ -1082,7 +1095,7 @@ class Import
 
     protected function loadAccountCategories()
     {
-        $categories = $this->em->getRepository('SuluContactBundle:AccountCategory')->findAll();
+        $categories = $this->em->getRepository($this->accountCategoryEntityName)->findAll();
         /** @var AccountCategory $category */
         foreach ($categories as $category) {
             $this->accountCategories[$category->getCategory()] = $category;
@@ -1091,7 +1104,7 @@ class Import
 
     protected function loadTags()
     {
-        $tags = $this->em->getRepository('SuluTagBundle:Tag')->findAll();
+        $tags = $this->em->getRepository($this->tagEntityName)->findAll();
         /** @var Tag $tag */
         foreach ($tags as $tag) {
             $this->tags[$tag->getName()] = $tag;
@@ -1213,7 +1226,7 @@ class Import
      */
     public function getAccountByKey($key)
     {
-        return $this->em->getRepository('SuluContactBundle:Account')->findOneBy(array('externalId' => $key));
+        return $this->em->getRepository($this->accountEntityName)->findOneBy(array('externalId' => $key));
     }
 
     /**
@@ -1394,5 +1407,26 @@ class Import
         } else {
             return $index;
         }
+    }
+
+    /**
+     * gets the external id of an account by providing the dataset
+     * @param $data
+     * @return mixed
+     * @throws \Exception
+     */
+    protected function getExternalId($data)
+    {
+        if (array_key_exists('account_id', $this->idMappings)) {
+            if (!array_key_exists($this->idMappings['account_id'], $data)) {
+                throw new \Exception('no key ' + $this->idMappings['account_id'] + ' found in column definition of accounts file');
+            }
+            $externalId = $data[$this->idMappings['account_id']];
+        } else {
+            // TODO: find current id of account
+
+        }
+        return $externalId;
+
     }
 }
