@@ -95,6 +95,7 @@ class ContactController extends AbstractContactController
         'email' => 'public.email',
         'phone' => 'public.phone',
         'account' => 'contact.contacts.company',
+        'accountContacts_position' => 'contact.contacts.position',
     );
 
     /**
@@ -104,11 +105,19 @@ class ContactController extends AbstractContactController
 
     /**
      * returns all fields that can be used by list
-     * @Get("contacts/fields")
-     * @return mixed
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getFieldsAction()
+    public function fieldsAction(Request $request)
     {
+        if ($request->get('accountContacts') === 'true') {
+            $fields = array(
+                'firstName',
+                'lastName',
+                'accountContacts_position',
+            );
+            return $this->handleView($this->view($this->addFieldAttributes($fields), 200));
+        }
         return $this->responseFields();
     }
 
@@ -158,7 +167,7 @@ class ContactController extends AbstractContactController
             // check if fullname should be returned
             $returnFullName = !is_null($fields) && array_search('fullName', $fields) !== false;
 
-            $filter = function($res) use ($returnFullName){
+            $filter = function ($res) use ($returnFullName) {
                 // get full name
                 if ($returnFullName) {
                     $fullName = array();
@@ -343,7 +352,7 @@ class ContactController extends AbstractContactController
             $contact->setCreated(new DateTime());
             $contact->setChanged(new DateTime());
 
-            $contact->setFormOfAddress($formOfAddress[ 'id']);
+            $contact->setFormOfAddress($formOfAddress['id']);
 
             $contact->setDisabled($disabled);
 
@@ -356,7 +365,7 @@ class ContactController extends AbstractContactController
             $this->addNewContactRelations($contact, $request);
 
             // set new primary address
-            if($this->newPrimaryAddress){
+            if ($this->newPrimaryAddress) {
                 $this->setNewPrimaryAddress($contact, $this->newPrimaryAddress);
             }
 
@@ -502,7 +511,7 @@ class ContactController extends AbstractContactController
                 }
 
                 // set new primary address
-                if($this->newPrimaryAddress){
+                if ($this->newPrimaryAddress) {
                     $this->setNewPrimaryAddress($contact, $this->newPrimaryAddress);
                 }
 
