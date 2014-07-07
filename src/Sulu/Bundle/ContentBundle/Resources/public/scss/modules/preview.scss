@@ -1,21 +1,13 @@
-.preview {
+.sulu-content-preview {
+  width: 100%;
+  height: 100%;
+  border-left: 1px solid #666;
 
-}
-
-.preview-wrapper {
-    overflow: scroll;
-    background-color: #ffffff;
-    position: fixed;
-    height: 100%;
-    top: 0;
-    right: 0;
-    z-index: 100; /* because of a css bug in the toolbar */
-    border-left: 1px solid #666;
-}
-
-.preview-iframe {
+  iframe {
     border: 0;
+    width: 100%;
     height: 100%;
+  }
 }
 
 .preview-toolbar {

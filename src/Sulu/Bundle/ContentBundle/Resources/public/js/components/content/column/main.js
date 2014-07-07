@@ -25,12 +25,7 @@ define(function() {
         view: true,
 
         layout: {
-            content: {
-                width: 'max',
-                leftSpace: false,
-                rightSpace: false,
-                topSpace: false
-            }
+            changeNothing: true
         },
 
         initialize: function() {

@@ -14,6 +14,10 @@ define([], function() {
     return {
         view: true,
 
+        layout: {
+            changeNothing: true
+        },
+
         templates: ['/admin/content/template/content/seo'],
 
         initialize: function() {

@@ -1,23 +1,17 @@
-/* line 5, ../scss/modules/preview.scss */
-.preview-wrapper {
-  overflow: scroll;
-  background-color: #ffffff;
-  position: fixed;
+/* line 1, ../scss/modules/preview.scss */
+.sulu-content-preview {
+  width: 100%;
   height: 100%;
-  top: 0;
-  right: 0;
-  z-index: 100;
-  /* because of a css bug in the toolbar */
   border-left: 1px solid #666;
 }
-
-/* line 16, ../scss/modules/preview.scss */
-.preview-iframe {
+/* line 6, ../scss/modules/preview.scss */
+.sulu-content-preview iframe {
   border: 0;
+  width: 100%;
   height: 100%;
 }
 
-/* line 21, ../scss/modules/preview.scss */
+/* line 13, ../scss/modules/preview.scss */
 .preview-toolbar {
   position: fixed;
   top: 0;
@@ -27,14 +21,14 @@
   color: #fff;
   font-weight: 100;
 }
-/* line 30, ../scss/modules/preview.scss */
+/* line 22, ../scss/modules/preview.scss */
 .preview-toolbar .right {
   float: right;
   background: #21272E;
   height: 100%;
   border-radius: 0 0 0 3px;
 }
-/* line 36, ../scss/modules/preview.scss */
+/* line 28, ../scss/modules/preview.scss */
 .preview-toolbar .right .new-window {
   width: 30px;
   overflow: hidden;
@@ -45,23 +39,23 @@
   font-size: 20px;
   line-height: 24px;
 }
-/* line 48, ../scss/modules/preview.scss */
+/* line 40, ../scss/modules/preview.scss */
 .preview-toolbar .right .resolutions .drop-down-trigger {
   color: #fff;
   padding: 5px 10px;
 }
-/* line 53, ../scss/modules/preview.scss */
+/* line 45, ../scss/modules/preview.scss */
 .preview-toolbar .right .resolutions .dropdown-toggle {
   display: inline-block;
 }
-/* line 55, ../scss/modules/preview.scss */
+/* line 47, ../scss/modules/preview.scss */
 .preview-toolbar .right .resolutions .dropdown-toggle::after {
   top: -1px;
   margin-left: 5px;
   margint-right: 0;
   border-top: 6px solid #fff;
 }
-/* line 63, ../scss/modules/preview.scss */
+/* line 55, ../scss/modules/preview.scss */
 .preview-toolbar .right .resolutions .dropdown-menu {
   background: #21272E;
   color: #fff;
@@ -71,7 +65,7 @@
   border: 0;
   width: auto;
 }
-/* line 75, ../scss/modules/preview.scss */
+/* line 67, ../scss/modules/preview.scss */
 .preview-toolbar .left {
   float: left;
   width: 30px;

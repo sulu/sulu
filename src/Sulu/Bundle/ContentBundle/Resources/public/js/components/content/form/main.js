@@ -16,15 +16,7 @@ define(['app-config'], function(AppConfig) {
         view: true,
 
         layout: {
-            navigation: {
-                collapsed: true
-            },
-            content: {
-                width: 'fixed'
-            },
-            sidebar: {
-                width: 'max'
-            }
+            changeNothing: true
         },
 
         // if ws != null then use it
