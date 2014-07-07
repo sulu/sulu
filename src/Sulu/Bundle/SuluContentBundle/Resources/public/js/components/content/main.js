@@ -361,10 +361,13 @@ define([
          * @param data
          */
         renderPreview: function(data) {
-            var $preview = this.sandbox.dom.createElement('<div id="preview-container"/>');
-            this.sandbox.dom.append('#preview', $preview);
+            if (!this.sandbox.dom.find('.sulu-content-preview').length) {
+                var $preview = this.sandbox.dom.createElement('<div class="sulu-content-preview"/>');
+                this.sandbox.dom.html($preview, '<iframe src="/admin/content/preview/'+ data.id +'?webspace='+ this.options.webspace +'&language=en&template='+ data.template +'"></iframe>');
+                this.sandbox.emit('sulu.sidebar.set-widget', null, $preview);
+            }
 
-            this.sandbox.start([
+            /*this.sandbox.start([
                 {
                     name: 'content/preview@sulucontent',
                     options: {
@@ -391,7 +394,7 @@ define([
                         }
                     }
                 }
-            ]);
+            ]);*/
         },
 
         /**
@@ -568,6 +571,31 @@ define([
                                 }
                             }
                         ]
+                    }
+                };
+            }
+        },
+
+        layout: function() {
+            if (this.options.display === 'column') {
+                return {
+                    content: {
+                        width: 'max',
+                        leftSpace: false,
+                        rightSpace: false,
+                        topSpace: false
+                    }
+                };
+            } else {
+                return {
+                    navigation: {
+                        collapsed: true
+                    },
+                    content: {
+                        width: 'fixed'
+                    },
+                    sidebar: {
+                        width: 'max'
                     }
                 };
             }

@@ -159,12 +159,6 @@ define([], function() {
                 this.renderWrapper(widths);
                 this.renderIframe(widths.preview, this.url);
                 this.renderToolbar(widths);
-
-                // adjust content width if needed
-                this.sandbox.emit('sulu.app.content.dimensions-change', {
-                    width: widths.content,
-                    left: constants.maxMainContentMarginLeft,
-                    paddingLeft: constants.maxMainContentPaddingLeft});
             },
 
             /**
@@ -299,13 +293,6 @@ define([], function() {
 
                     this.sandbox.emit('husky.navigation.show');
                     this.sandbox.emit('sulu.header.content.show-back', true);
-                    this.sandbox.emit('sulu.app.content.dimensions-change', {
-                        width: '',
-                        left: constants.maxMainContentMarginLeft,
-                        paddingLeft: constants.maxMainContentPaddingLeft});
-
-                    //this.sandbox.dom.width(this.$mainContent, '');
-
 
                     this.sandbox.emit(HIDE);
 
@@ -332,9 +319,6 @@ define([], function() {
                 this.sandbox.on('husky.dropdown.resolutionsDropdown.item.click', function(item) {
                     this.sandbox.dom.text(this.$toolbarResolutionsLabel, item.name);
                 }.bind(this));
-
-                // make preview responsive
-                this.sandbox.on('sulu.app.viewport.dimensions-changed', this.adjustDisplayedComponents.bind(this));
 
                 this.sandbox.on('sulu.content.preview.change-url', function(iframeSource) {
                     this.sandbox.dom.remove(this.$iframe);

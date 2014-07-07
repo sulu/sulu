@@ -15,6 +15,10 @@ define([], function() {
 
         view: true,
 
+        layout: {
+            changeNothing: true
+        },
+
         templates: ['/admin/content/template/content/settings'],
 
         initialize: function() {
