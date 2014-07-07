@@ -221,6 +221,7 @@ define(function() {
                 if (noLoader !== true && this.currentRoute !== route && this.currentRoute !== null) {
                     this.startLoader();
                 }
+
                 this.sandbox.mvc.Store.reset();
                 // navigate
                 router.navigate(route, {trigger: trigger});

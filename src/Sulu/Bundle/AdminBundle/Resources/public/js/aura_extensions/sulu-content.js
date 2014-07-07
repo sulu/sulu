@@ -208,14 +208,24 @@ define([], function() {
          *
          */
         handleHeaderMarked = function(header) {
-            var $content, $header, $headerBg, startHeader,
-                breadcrumb, toolbarTemplate, toolbarParentTemplate, tabsOptions, toolbarOptions, tabsFullControl,
-                toolbarDisabled, toolbarLanguageChanger, noBack, titleColor;
-
             // if header is a function get the data from the return value of the function
             if (typeof header === 'function') {
                 header = header.call(this);
             }
+
+            if (!!header.then) {
+                header.then(function(data) {
+                    startHeader.call(this, data);
+                }.bind(this));
+            } else {
+                startHeader.call(this, header);
+            }
+        },
+
+        startHeader = function(header) {
+            var $content, $header, $headerBg, initializeHeader,
+                breadcrumb, toolbarTemplate, toolbarParentTemplate, tabsOptions, toolbarOptions, tabsFullControl,
+                toolbarDisabled, toolbarLanguageChanger, noBack, titleColor;
 
             // insert the content-container
             $content = this.sandbox.dom.createElement('<div id="sulu-content-container"/>');
@@ -226,7 +236,7 @@ define([], function() {
              * @param tabsData {array} Array of Data to pass on to the tabs component
              * @private
              */
-            startHeader = function(tabsData) {
+            initializeHeader = function(tabsData) {
 
                 // set the variables for the header-component-options properties
                 breadcrumb = (!!header.breadcrumb) ? header.breadcrumb : null;
@@ -235,7 +245,7 @@ define([], function() {
                 toolbarParentTemplate = (!!header.toolbar && !!header.toolbar.parentTemplate) ? header.toolbar.parentTemplate : null;
                 tabsOptions = (!!header.tabs && !!header.tabs.options) ? header.tabs.options : {};
                 toolbarOptions = (!!header.toolbar && !!header.toolbar.options) ? header.toolbar.options : {},
-                tabsFullControl = (!!header.tabs && typeof header.tabs.fullControl === 'boolean') ? header.tabs.fullControl : false;
+                    tabsFullControl = (!!header.tabs && typeof header.tabs.fullControl === 'boolean') ? header.tabs.fullControl : false;
                 toolbarLanguageChanger = (!!header.toolbar && !!header.toolbar.languageChanger) ? header.toolbar.languageChanger : true;
                 noBack = (typeof header.noBack !== 'undefined') ? header.noBack : false;
                 titleColor = (!!header.titleColor) ? header.titleColor : null;
@@ -278,10 +288,10 @@ define([], function() {
                     var contentNavigation = JSON.parse(data);
 
                     // start header with tabs data passed
-                    parseContentTabs.call(this, contentNavigation, this.options.id, startHeader.bind(this));
+                    parseContentTabs.call(this, contentNavigation, this.options.id, initializeHeader.bind(this));
                 }.bind(this));
             } else {
-                startHeader.call(this, null);
+                initializeHeader.call(this, null);
             }
         };
 
