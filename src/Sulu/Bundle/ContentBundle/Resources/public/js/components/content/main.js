@@ -13,7 +13,26 @@ define([
 
     'use strict';
 
-    var CONTENT_LANGUAGE = 'contentLanguage';
+    var CONTENT_LANGUAGE = 'contentLanguage',
+
+        templates = {
+            preview: [
+                '<div class="sulu-content-preview">',
+                '   <iframe src="/admin/content/preview/<%= uuid %>?webspace=<%= webspace %>&language=<%= language %>&template=<%= template %>"></iframe>',
+                '</div>',
+                '<div id="preview-toolbar" class="sulu-preview-toolbar">',
+                '    <div id="preview-toolbar-right" class="right">',
+                '       <div id="preview-toolbar-new-window" class="new-window pull-right pointer"><span class="fa-external-link"></span></div>',
+                '       <div id="preview-toolbar-resolutions" class="resolutions pull-right pointer">',
+                '           <label class="drop-down-trigger">',
+                '               <span class="dropdown-label"><%= resolution %></span>',
+                '               <span class="dropdown-toggle"></span>',
+                '           </label>',
+                '       </div>',
+                '   </div>',
+                '</div>'
+            ].join('')
+        };
 
     return {
 
@@ -371,9 +390,14 @@ define([
          */
         renderPreview: function(data) {
             if (!this.sandbox.dom.find('.sulu-content-preview').length) {
-                var $preview = this.sandbox.dom.createElement('<div class="sulu-content-preview"/>');
-                this.sandbox.dom.html($preview, '<iframe src="/admin/content/preview/'+ data.id +'?webspace='+ this.options.webspace +'&language=en&template='+ data.template +'"></iframe>');
-                this.sandbox.emit('sulu.sidebar.set-widget', null, $preview);
+                var $preview = this.sandbox.dom.createElement(this.sandbox.util.template(templates.preview)({
+                    resolution: this.sandbox.translate('content.preview.resolutions'),
+                    webspace: this.options.webspace,
+                    language: this.options.language,
+                    uuid: data.id,
+                    template: data.template
+                }));
+                this.sandbox.emit('sulu.sidebar.append-widget', null, $preview);
             }
 
             /*this.sandbox.start([
@@ -604,7 +628,8 @@ define([
                         collapsed: true
                     },
                     content: {
-                        width: 'fixed'
+                        width: 'fixed',
+                        shrinkable: true
                     },
                     sidebar: {
                         width: 'max'

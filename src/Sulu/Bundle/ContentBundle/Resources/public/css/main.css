@@ -12,7 +12,7 @@
 }
 
 /* line 13, ../scss/modules/preview.scss */
-.preview-toolbar {
+.sulu-preview-toolbar {
   position: fixed;
   top: 0;
   right: 0;
@@ -22,14 +22,14 @@
   font-weight: 100;
 }
 /* line 22, ../scss/modules/preview.scss */
-.preview-toolbar .right {
+.sulu-preview-toolbar .right {
   float: right;
   background: #21272E;
   height: 100%;
   border-radius: 0 0 0 3px;
 }
 /* line 28, ../scss/modules/preview.scss */
-.preview-toolbar .right .new-window {
+.sulu-preview-toolbar .right .new-window {
   width: 30px;
   overflow: hidden;
   text-align: center;
@@ -40,23 +40,23 @@
   line-height: 24px;
 }
 /* line 40, ../scss/modules/preview.scss */
-.preview-toolbar .right .resolutions .drop-down-trigger {
+.sulu-preview-toolbar .right .resolutions .drop-down-trigger {
   color: #fff;
   padding: 5px 10px;
 }
 /* line 45, ../scss/modules/preview.scss */
-.preview-toolbar .right .resolutions .dropdown-toggle {
+.sulu-preview-toolbar .right .resolutions .dropdown-toggle {
   display: inline-block;
 }
 /* line 47, ../scss/modules/preview.scss */
-.preview-toolbar .right .resolutions .dropdown-toggle::after {
+.sulu-preview-toolbar .right .resolutions .dropdown-toggle::after {
   top: -1px;
   margin-left: 5px;
   margint-right: 0;
   border-top: 6px solid #fff;
 }
 /* line 55, ../scss/modules/preview.scss */
-.preview-toolbar .right .resolutions .dropdown-menu {
+.sulu-preview-toolbar .right .resolutions .dropdown-menu {
   background: #21272E;
   color: #fff;
   z-index: 105;
@@ -66,7 +66,7 @@
   width: auto;
 }
 /* line 67, ../scss/modules/preview.scss */
-.preview-toolbar .left {
+.sulu-preview-toolbar .left {
   float: left;
   width: 30px;
   height: 30px;
