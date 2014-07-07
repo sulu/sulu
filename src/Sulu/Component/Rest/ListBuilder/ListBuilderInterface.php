@@ -54,6 +54,12 @@ interface ListBuilderInterface
     public function setCurrentPage($page);
 
     /**
+     * The number of total elements for this list
+     * @return integer
+     */
+    public function count();
+
+    /**
      * Returns the objects for the built query
      * @return mixed
      */

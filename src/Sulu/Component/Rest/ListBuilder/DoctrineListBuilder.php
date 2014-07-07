@@ -87,11 +87,26 @@ class DoctrineListBuilder implements ListBuilderInterface
         return $this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function setCurrentPage($page)
     {
         $this->page = $page;
 
         return $this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function count()
+    {
+        $qb = $this->em->createQueryBuilder()
+            ->select('count(' . $this->entityName . '.id)')
+            ->from($this->entityName, $this->entityName);
+
+        return $qb->getQuery()->getSingleScalarResult();
     }
 
     /**
