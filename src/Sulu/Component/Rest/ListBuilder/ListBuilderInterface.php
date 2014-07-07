@@ -18,6 +18,10 @@ use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
  */
 interface ListBuilderInterface
 {
+    const SORTORDER_ASC = 'ASC';
+
+    const SORTORDER_DESC = 'DESC';
+
     /**
      * Adds a field descriptor to the ListBuilder, which is then used to retrieve and return the list
      * @param $fieldDescriptor
@@ -28,16 +32,10 @@ interface ListBuilderInterface
     /**
      * Defines the field by which the table is sorted
      * @param $fieldDescriptor
-     * @return ListBuilderInterface
-     */
-    public function sortBy($fieldDescriptor);
-
-    /**
-     * Defines the order of the sorting
      * @param $order
      * @return ListBuilderInterface
      */
-    public function sortOrder($order);
+    public function sort($fieldDescriptor, $order = self::SORTORDER_ASC);
 
     /**
      * Defines how many items should be returned

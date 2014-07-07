@@ -34,6 +34,18 @@ class DoctrineListBuilder implements ListBuilderInterface
     private $fields = array();
 
     /**
+     * The field descriptor for the field to sort
+     * @var DoctrineFieldDescriptor
+     */
+    private $sortField = null;
+
+    /**
+     * Defines the sort order of the string
+     * @var string
+     */
+    private $sortOrder;
+
+    /**
      * The limit for this query
      * @var integer
      */
@@ -64,17 +76,12 @@ class DoctrineListBuilder implements ListBuilderInterface
     /**
      * {@inheritDoc}
      */
-    public function sortBy($fieldDescriptor)
+    public function sort($fieldDescriptor, $order = self::SORTORDER_ASC)
     {
-        // TODO: Implement sortBy() method.
-    }
+        $this->sortField = $fieldDescriptor;
+        $this->sortOrder = $order;
 
-    /**
-     * {@inheritDoc}
-     */
-    public function sortOrder($order)
-    {
-        // TODO: Implement sortOrder() method.
+        return $this;
     }
 
     /**
@@ -118,11 +125,37 @@ class DoctrineListBuilder implements ListBuilderInterface
             ->select($this->entityName)
             ->from($this->entityName, $this->entityName);
 
+        foreach ($this->getJoins() as $entity => $join) {
+            $qb->leftJoin($join, $entity);
+        }
+
+        if ($this->sortField != null)
+        {
+            $qb->orderBy($this->sortField->getEntityName() . '.' . $this->sortField->getName(), $this->sortOrder);
+        }
+
         if ($this->limit != null) {
-            $qb->setMaxResults($this->limit);
-            $qb->setFirstResult($this->limit * ($this->page - 1));
+            $qb->setMaxResults($this->limit)->setFirstResult($this->limit * ($this->page - 1));
         }
 
         return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * @return array
+     */
+    private function getJoins()
+    {
+        $joins = array();
+
+        if ($this->sortField != null) {
+            $joins = array_merge($joins, $this->sortField->getJoins());
+        }
+
+        foreach ($this->fields as $field) {
+            $joins = array_merge($joins, $field->getJoins());
+        }
+
+        return $joins;
     }
 }
