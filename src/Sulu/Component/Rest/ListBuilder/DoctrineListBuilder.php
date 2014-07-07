@@ -29,9 +29,21 @@ class DoctrineListBuilder implements ListBuilderInterface
 
     /**
      * The field descriptors for the current list
-     * @var DoctrineFieldDescriptor
+     * @var DoctrineFieldDescriptor[]
      */
     private $fields = array();
+
+    /**
+     * The field descriptors for the field, which will be used for the search
+     * @var DoctrineFieldDescriptor[]
+     */
+    private $searchFields = array();
+
+    /**
+     * The value for which the searchfields will be searched
+     * @var string
+     */
+    private $search;
 
     /**
      * The field descriptor for the field to sort
@@ -66,11 +78,37 @@ class DoctrineListBuilder implements ListBuilderInterface
     /**
      * {@inheritDoc}
      */
-    public function add($fieldDescriptor)
+    public function setFields($fieldDescriptors)
+    {
+        $this->fields = $fieldDescriptors;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function addField($fieldDescriptor)
     {
         $this->fields[] = $fieldDescriptor;
 
         return $this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function addSearchField($fieldDescriptor)
+    {
+        $this->searchFields[] = $fieldDescriptor;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function search($search)
+    {
+        $this->search = $search;
     }
 
     /**
@@ -122,15 +160,26 @@ class DoctrineListBuilder implements ListBuilderInterface
     public function execute()
     {
         $qb = $this->em->createQueryBuilder()
-            ->select($this->entityName)
+            //->select($this->entityName)
             ->from($this->entityName, $this->entityName);
+
+        foreach ($this->fields as $field) {
+            $qb->addSelect($field->getFullName() . ' AS ' . $field->getAlias());
+        }
 
         foreach ($this->getJoins() as $entity => $join) {
             $qb->leftJoin($join, $entity);
         }
 
-        if ($this->sortField != null)
-        {
+        if ($this->search != null) {
+            foreach ($this->searchFields as $searchField) {
+                $qb->orWhere($searchField->getFullName() . ' LIKE :search');
+            }
+
+            $qb->setParameter('search', '%' . $this->search . '%');
+        }
+
+        if ($this->sortField != null) {
             $qb->orderBy($this->sortField->getEntityName() . '.' . $this->sortField->getName(), $this->sortOrder);
         }
 
@@ -138,10 +187,11 @@ class DoctrineListBuilder implements ListBuilderInterface
             $qb->setMaxResults($this->limit)->setFirstResult($this->limit * ($this->page - 1));
         }
 
-        return $qb->getQuery()->getResult();
+        return $qb->getQuery()->getArrayResult();
     }
 
     /**
+     * Returns all the joins required for the query
      * @return array
      */
     private function getJoins()
@@ -153,6 +203,10 @@ class DoctrineListBuilder implements ListBuilderInterface
         }
 
         foreach ($this->fields as $field) {
+            $joins = array_merge($joins, $field->getJoins());
+        }
+
+        foreach ($this->searchFields as $field) {
             $joins = array_merge($joins, $field->getJoins());
         }
 

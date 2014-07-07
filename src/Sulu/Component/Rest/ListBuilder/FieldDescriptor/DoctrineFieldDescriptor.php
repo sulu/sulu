@@ -23,6 +23,12 @@ class DoctrineFieldDescriptor
     private $name;
 
     /**
+     * The alias name of the field for the response
+     * @var string
+     */
+    private $alias;
+
+    /**
      * The name of the entity
      * @var string
      */
@@ -34,11 +40,17 @@ class DoctrineFieldDescriptor
      */
     private $joins;
 
-    public function __construct($name, $entityName, $joins = array())
+    public function __construct($name, $alias, $entityName, $joins = array())
     {
         $this->name = $name;
+        $this->alias = $alias;
         $this->entityName = $entityName;
         $this->joins = $joins;
+    }
+
+    public function getFullName()
+    {
+        return $this->entityName . '.' . $this->name;
     }
 
     /**
@@ -47,6 +59,14 @@ class DoctrineFieldDescriptor
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAlias()
+    {
+        return $this->alias;
     }
 
     /**

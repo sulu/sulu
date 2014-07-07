@@ -23,11 +23,32 @@ interface ListBuilderInterface
     const SORTORDER_DESC = 'DESC';
 
     /**
+     * Sets all the field descriptors for the ListBuilder at once
+     * @param $fieldDescriptors
+     * @return mixed
+     */
+    public function setFields($fieldDescriptors);
+
+    /**
      * Adds a field descriptor to the ListBuilder, which is then used to retrieve and return the list
      * @param $fieldDescriptor
      * @return ListBuilderInterface
      */
-    public function add($fieldDescriptor);
+    public function addField($fieldDescriptor);
+
+    /**
+     * Adds a field descriptor, which will be used for search
+     * @param $fieldDescriptor
+     * @return ListBuilderInterface
+     */
+    public function addSearchField($fieldDescriptor);
+
+    /**
+     * Sets the search value for the search fields
+     * @param $search
+     * @return ListBuilderInterface
+     */
+    public function search($search);
 
     /**
      * Defines the field by which the table is sorted
