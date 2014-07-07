@@ -33,6 +33,18 @@ class DoctrineListBuilder implements ListBuilderInterface
      */
     private $fields = array();
 
+    /**
+     * The limit for this query
+     * @var integer
+     */
+    private $limit = null;
+
+    /**
+     * The page the resulting query will be returning
+     * @var integer
+     */
+    private $page = 1;
+
     public function __construct(EntityManager $em, $entityName)
     {
         $this->em = $em;
@@ -68,13 +80,34 @@ class DoctrineListBuilder implements ListBuilderInterface
     /**
      * {@inheritDoc}
      */
+    public function limit($limit)
+    {
+        $this->limit = $limit;
+
+        return $this;
+    }
+
+    public function setCurrentPage($page)
+    {
+        $this->page = $page;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function execute()
     {
-        $query = $this->em->createQueryBuilder()
+        $qb = $this->em->createQueryBuilder()
             ->select($this->entityName)
-            ->from($this->entityName, $this->entityName)
-            ->getQuery();
+            ->from($this->entityName, $this->entityName);
 
-        return $query->getResult();
+        if ($this->limit != null) {
+            $qb->setMaxResults($this->limit);
+            $qb->setFirstResult($this->limit * ($this->page - 1));
+        }
+
+        return $qb->getQuery()->getResult();
     }
 }

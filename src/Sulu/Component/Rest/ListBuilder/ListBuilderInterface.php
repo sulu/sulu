@@ -40,8 +40,22 @@ interface ListBuilderInterface
     public function sortOrder($order);
 
     /**
+     * Defines how many items should be returned
+     * @param $limit
+     * @return ListBuilderInterface
+     */
+    public function limit($limit);
+
+    /**
+     * Sets the current page for the builder
+     * @param $page
+     * @return ListBuilderInterface
+     */
+    public function setCurrentPage($page);
+
+    /**
      * Returns the objects for the built query
      * @return mixed
      */
     public function execute();
-} 
+}
