@@ -52,7 +52,6 @@ define([], function() {
             return createEventName.call(this, 'hide');
         },
 
-
         /**
          * appends a widget to the sidebar
          *
@@ -120,8 +119,8 @@ define([], function() {
          */
         render: function() {
             this.sandbox.dom.addClass(this.$el, constants.componentClass);
-            // todo: implement sidebar
-            this.html('Hey dude, could you please implement me?');
+            // hide sidebar at beginning
+            this.hideColumn();
         },
 
         /**
@@ -141,8 +140,10 @@ define([], function() {
          */
         changeWidth: function(width) {
             if (width === 'fixed') {
+                this.showColumn();
                 this.changeToFixedWidth();
             } else if (width === 'max') {
+                this.showColumn();
                 this.changeToMaxWidth();
             }
         },
@@ -154,7 +155,6 @@ define([], function() {
             var $column = this.sandbox.dom.find(constants.columnSelector);
 
             if (!this.sandbox.dom.hasClass($column, constants.fixedWidthClass)) {
-                this.showColumn();
                 this.sandbox.dom.removeClass($column, constants.maxWidthClass);
                 this.sandbox.dom.addClass($column, constants.fixedWidthClass);
             }
@@ -169,7 +169,6 @@ define([], function() {
             if (!this.sandbox.dom.hasClass($column, constants.maxWidthClass)) {
                 var $parent = this.sandbox.dom.parent($column);
 
-                this.showColumn();
                 this.sandbox.dom.removeClass($column, constants.fixedWidthClass);
                 this.sandbox.dom.addClass($column, constants.maxWidthClass);
 
@@ -199,46 +198,11 @@ define([], function() {
         /**
          * Appends a widget to the sidebar
          * @param url {String} the url to load the widget from
+         * @param $element {Object} a dom object to insert as a widget
          */
-        appendWidget: function(url) {
-            var $widget;
-            this.loadWidget(url).then(function(widget) {
-                $widget = this.sandbox.dom.createElement(widget);
-                this.widgets.push({
-                    url: url,
-                    $el: $widget
-                });
-                this.sandbox.dom.append(this.$el, $widget);
-                this.sandbox.start($widget);
-            }.bind(this));
-        },
-
-        /**
-         * Prepends a widget to the sidebar
-         * @param url {String} the url to load the widget from
-         */
-        prependWidget: function(url) {
-            var $widget;
-            this.loadWidget(url).then(function(widget) {
-                $widget = this.sandbox.dom.createElement(widget);
-                this.widgets.unshift({
-                    url: url,
-                    $el: $widget
-                });
-                this.sandbox.dom.prepend(this.$el, $widget);
-                this.sandbox.start($widget);
-            }.bind(this));
-        },
-
-        /**
-         * Sets the widget to the sidebar. deletes all other widgets
-         * @param url
-         */
-        setWidget: function(url) {
-            // only load widget if sidebar-content changes
-            if (this.widgets.length !== 1 || this.widgets[0].url !== url) {
+        appendWidget: function(url, $element) {
+            if (!$element) {
                 var $widget;
-                this.emptySidebar();
                 this.loadWidget(url).then(function(widget) {
                     $widget = this.sandbox.dom.createElement(widget);
                     this.widgets.push({
@@ -246,8 +210,71 @@ define([], function() {
                         $el: $widget
                     });
                     this.sandbox.dom.append(this.$el, $widget);
-                    this.sandbox.start(this.$el, $widget);
+                    this.sandbox.start($widget);
                 }.bind(this));
+            } else {
+                this.widgets.push({
+                    url: null,
+                    $el: $element
+                });
+                this.sandbox.dom.append(this.$el, $element);
+            }
+        },
+
+        /**
+         * Prepends a widget to the sidebar
+         * @param url {String} the url to load the widget from
+         * @param $element {Object} a dom object to insert as a widget
+         */
+        prependWidget: function(url, $element) {
+            if (!$element) {
+                var $widget;
+                this.loadWidget(url).then(function(widget) {
+                    $widget = this.sandbox.dom.createElement(widget);
+                    this.widgets.unshift({
+                        url: url,
+                        $el: $widget
+                    });
+                    this.sandbox.dom.prepend(this.$el, $widget);
+                    this.sandbox.start($widget);
+                }.bind(this));
+            } else {
+                this.widgets.push({
+                    url: null,
+                    $el: $element
+                });
+                this.sandbox.dom.prepend(this.$el, $element);
+            }
+        },
+
+        /**
+         * Sets the widget to the sidebar. deletes all other widgets
+         * @param url {String} the url to load the widget from
+         * @param $element {Object} a dom object to insert as a widget
+         */
+        setWidget: function(url, $element) {
+            if (!$element) {
+                // only load widget if sidebar-content changes
+                if (this.widgets.length !== 1 || this.widgets[0].url !== url) {
+                    var $widget;
+                    this.emptySidebar();
+                    this.loadWidget(url).then(function(widget) {
+                        $widget = this.sandbox.dom.createElement(widget);
+                        this.widgets.push({
+                            url: url,
+                            $el: $widget
+                        });
+                        this.sandbox.dom.append(this.$el, $widget);
+                        this.sandbox.start(this.$el, $widget);
+                    }.bind(this));
+                }
+            } else {
+                this.emptySidebar();
+                this.widgets.push({
+                    url: null,
+                    $el: $element
+                });
+                this.sandbox.dom.append(this.$el, $element);
             }
         },
 

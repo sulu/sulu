@@ -80,18 +80,20 @@ define([], function() {
 
         /**
          * Handles layout marked components
-         * @param layout {Object|Boolean} the layout object or true for default values
+         * @param layout {Object|Boolean|Function} the layout object or true for default values. If a function, gets called and takes the return value to work with
          *
-         * @param {Object} [content.navigation] the object which holds the layout configuration for the navigation
-         * @param {Boolean} [content.navigation.collapsed] if true navigation is collapsed
+         * @param {Boolean} [layout.changeNothing] if true the layout as it is won't be touched. Nothing will be changed
          *
-         * @param {Object} [content.content] the object which holds the layout configuration for the content
-         * @param {String} [content.width] the width-type of the content-column. 'fixed' or 'max'
-         * @param {Boolean} [content.leftSpace] If false content has no spacing on the left
-         * @param {Boolean} [content.rightSpace] If false content has no spacing on the right
-         * @param {Boolean} [content.topSpace] If false content has no spacing on top
+         * @param {Object} [layout.navigation] the object which holds the layout configuration for the navigation
+         * @param {Boolean} [layout.navigation.collapsed] if true navigation is collapsed
          *
-         * @param {Object|Boolean} [content.sidebar] the object which holds the layout configuration for the sidebar. If false no sidebar will be displayed
+         * @param {Object} [layout.content] the object which holds the layout configuration for the content
+         * @param {String} [layout.width] the width-type of the content-column. 'fixed' or 'max'
+         * @param {Boolean} [layout.leftSpace] If false content has no spacing on the left
+         * @param {Boolean} [layout.rightSpace] If false content has no spacing on the right
+         * @param {Boolean} [layout.topSpace] If false content has no spacing on top
+         *
+         * @param {Object|Boolean} [layout.sidebar] the object which holds the layout configuration for the sidebar. If false no sidebar will be displayed
          * @param {String} [sidebar.width] the width-type of the sidebar-column. 'fixed' or 'max'
          *
          * @example
@@ -112,9 +114,14 @@ define([], function() {
          *      }
          */
         handleLayoutMarked = function(layout) {
-            handleLayoutNavigation.call(this, layout.navigation || true);
-            handleLayoutContent.call(this, layout.content || true);
-            handleLayoutSidebar.call(this, layout.sidebar || false);
+            if (typeof layout === 'function') {
+                layout = layout.call(this);
+            }
+            if (!layout.changeNothing) {
+                handleLayoutNavigation.call(this, layout.navigation || true);
+                handleLayoutContent.call(this, layout.content || true);
+                handleLayoutSidebar.call(this, layout.sidebar || false);
+            }
         },
 
         /**
