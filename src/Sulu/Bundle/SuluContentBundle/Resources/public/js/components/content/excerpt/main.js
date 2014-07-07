@@ -64,7 +64,6 @@ define([], function() {
             this.sandbox.form.create(this.formId).initialized.then(function() {
                 this.sandbox.form.setData(this.formId, data).then(function() {
                     this.sandbox.start(this.$el, {reset: true});
-
                     this.dfdListenForChange.resolve();
                 }.bind(this));
             }.bind(this));

@@ -166,6 +166,7 @@ class NodeController extends RestController implements ClassResourceInterface
                 $result = $this->getRepository()->getWebspaceNode($webspace, $language);
             }
         } catch (ItemNotFoundException $ex) {
+            // TODO return 404 and handle this edge case on client side
             return $this->redirect(
                 $this->generateUrl(
                     'get_nodes',
@@ -183,6 +184,27 @@ class NodeController extends RestController implements ClassResourceInterface
         return $this->handleView(
             $this->view($result)
         );
+    }
+
+    /**
+     * Returns nodes by given ids
+     *
+     * @param Request $request
+     * @param array $idString
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    private function getNodeyByIds(Request $request, $idString)
+    {
+        $language = $this->getLanguage($request);
+        $webspace = $this->getWebspace($request);
+
+        $result = $this->getRepository()->getNodesByIds(
+            preg_split('/[,]/', $idString, -1, PREG_SPLIT_NO_EMPTY),
+            $webspace,
+            $language
+        );
+
+        return $this->handleView($this->view($result));
     }
 
     /**
@@ -208,9 +230,12 @@ class NodeController extends RestController implements ClassResourceInterface
     public function cgetAction(Request $request)
     {
         $tree = $this->getBooleanRequestParameter($request, 'tree', false, false);
+        $ids = $this->getRequestParameter($request, 'ids');
 
         if ($tree === true) {
             return $this->getTreeForUuid($request, null);
+        } elseif ($ids !== null) {
+            return $this->getNodeyByIds($request, $ids);
         }
 
         $language = $this->getLanguage($request);
