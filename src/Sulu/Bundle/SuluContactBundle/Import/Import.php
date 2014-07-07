@@ -66,7 +66,6 @@ class Import
     protected $countryEntityName = 'SuluContactBundle:Country';
 
 
-
     /**
      * @var \Doctrine\ORM\EntityManager
      */
@@ -201,7 +200,7 @@ class Import
      * used as temp storage for newly created accounts
      * @var array
      */
-    protected $accounts = array();
+    protected $accountExternalIds = array();
 
     /**
      * used as temp associative storage for newly created accounts
@@ -441,6 +440,7 @@ class Import
         // check if id mapping is defined
         if (array_key_exists('account_id', $this->idMappings)) {
             if (!array_key_exists($this->idMappings['account_id'], $data)) {
+                $this->accountExternalIds[] = null;
                 throw new \Exception('no key ' + $this->idMappings['account_id'] + ' found in column definition of accounts file');
             }
             $externalId = $data[$this->idMappings['account_id']];
@@ -453,6 +453,7 @@ class Import
                 $account->setExternalId($externalId);
             }
         }
+        $this->accountExternalIds[] = $externalId;
 
         // clear notes
         if (!$account->getNotes()->isEmpty()) {
@@ -1034,7 +1035,7 @@ class Import
         // if account has parent
         if ($this->checkData('account_parent', $data)) {
             // get account
-            $externalId = $this->getExternalId($data);
+            $externalId = $this->getExternalId($data, $row);
             /** @var Account $account */
             $account = $this->getAccountByKey($externalId);
 
@@ -1400,7 +1401,7 @@ class Import
     {
         if (array_key_exists($index, $mappings)) {
             $mappingIndex = $mappings[$index];
-            if (array_key_exists($mappingIndex,$config)) {
+            if (array_key_exists($mappingIndex, $config)) {
                 return $config[$mappingIndex]['id'];
             }
             return $mappingIndex;
@@ -1412,10 +1413,11 @@ class Import
     /**
      * gets the external id of an account by providing the dataset
      * @param $data
+     * @param $row
      * @return mixed
      * @throws \Exception
      */
-    protected function getExternalId($data)
+    protected function getExternalId($data, $row)
     {
         if (array_key_exists('account_id', $this->idMappings)) {
             if (!array_key_exists($this->idMappings['account_id'], $data)) {
@@ -1423,8 +1425,7 @@ class Import
             }
             $externalId = $data[$this->idMappings['account_id']];
         } else {
-            // TODO: find current id of account
-
+            $externalId = $this->accountExternalIds[$row - 1];
         }
         return $externalId;
 
