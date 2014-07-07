@@ -116,8 +116,8 @@ define(['app-config'], function(AppConfig) {
         showRenderTemplateDialog: function(item) {
             // show warning dialog
             this.sandbox.emit('sulu.overlay.show-warning',
-                this.sandbox.translate('content.template.dialog.title'),
-                this.sandbox.translate('content.template.dialog.content'),
+                'sulu.overlay.be-careful',
+                'content.template.dialog.content',
 
                 function() {
                     // cancel callback
@@ -426,13 +426,10 @@ define(['app-config'], function(AppConfig) {
         },
 
         changeTemplateDropdownHandler: function() {
-            this.sandbox.emit('sulu.header.toolbar.item.change', 'template', this.template);
-            this.sandbox.emit('sulu.header.toolbar.item.enable', 'template', true);
-
-            if (this.hiddenTemplate) {
-                this.hiddenTemplate = false;
-                this.sandbox.emit('sulu.header.toolbar.item.show', 'template');
+            if (this.template !== '' && this.template !== undefined && this.template !== null) {
+                this.sandbox.emit('sulu.header.toolbar.item.change', 'template', this.template);
             }
+            this.sandbox.emit('sulu.header.toolbar.item.enable', 'template', true);
         },
 
         submit: function() {
@@ -469,9 +466,7 @@ define(['app-config'], function(AppConfig) {
             this.sandbox.on('sulu.preview.update', function($el, value, changeOnKey) {
                 if (!!this.data.id) {
                     var property = this.getSequence($el);
-                    if (this.ws !== null) {
-                        this.updatePreview(property, value);
-                    } else if (!changeOnKey) {
+                    if (this.ws !== null || !changeOnKey) {
                         this.updatePreview(property, value);
                     }
                 }
