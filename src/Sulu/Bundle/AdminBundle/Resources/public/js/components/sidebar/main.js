@@ -23,7 +23,8 @@ define([], function() {
 
     var defaults = {
             instanceName: '',
-            url: ''
+            url: '',
+            expandable: true
         },
 
         constants = {
@@ -164,10 +165,11 @@ define([], function() {
          * Ensures that the column takes the maximum of the available space
          */
         changeToMaxWidth: function() {
-            var $column = this.sandbox.dom.find(constants.columnSelector);
+            var $column = this.sandbox.dom.find(constants.columnSelector),
+                $parent;
 
             if (!this.sandbox.dom.hasClass($column, constants.maxWidthClass)) {
-                var $parent = this.sandbox.dom.parent($column);
+                $parent = this.sandbox.dom.parent($column);
 
                 this.sandbox.dom.removeClass($column, constants.fixedWidthClass);
                 this.sandbox.dom.addClass($column, constants.maxWidthClass);
@@ -184,6 +186,7 @@ define([], function() {
          */
         hideColumn: function() {
             var $column = this.sandbox.dom.find(constants.columnSelector);
+            this.changeToFixedWidth();
             this.sandbox.dom.hide($column);
         },
 

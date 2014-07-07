@@ -18,11 +18,14 @@ $tabsHeight: 50px;
 
 $contentFixedWidth: 900px;
 $contentMinWidth: 510px;
+$contentFixedSmallWidth: 480px;
 
 $contentPaddingLeft: 50px;
+$contentPaddingLeftSmall: 10px;
 $contentPaddingTop: 40px;
 $contentPaddingBottom: 40px;
 $contentPaddingRight: 50px;
+$contentPaddingRightSmall: 10px;
 
 $contentPaddingLeftFullWidth: 0;
 $contentPaddingRightFullWidth: 0;
@@ -30,3 +33,6 @@ $contentPaddingRightFullWidth: 0;
 // sidebar
 
 $sidebarFixedWidth: 450px;
+
+// shrink animation
+$shrinkAnimationDuration: 700ms;

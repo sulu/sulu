@@ -16,11 +16,18 @@ define(function() {
         constants = {
             suluNavigateAMark: '[data-sulu-navigate="true"]', //a tags which match this mark will use the sulu.navigate method
             fixedWidthClass: 'fixed',
+            smallFixedClass: 'small-fixed',
             maxWidthClass: 'max',
             columnSelector: '.content-column',
             noLeftSpaceClass: 'no-left-space',
             noRightSpaceClass: 'no-right-space',
-            noTopSpaceClass: 'no-top-space'
+            noTopSpaceClass: 'no-top-space',
+            shrinkIcon: 'fa-chevron-left',
+            expandIcon: 'fa-chevron-right'
+        },
+
+        templates = {
+            shrinkable: '<div class="sulu-app-shrink"><span class="fa-chevron-left"></span></div>'
         },
 
         eventNamespace = 'sulu.app.',
@@ -31,15 +38,6 @@ define(function() {
          */
             INITIALIZED = function() {
             return createEventName('initialized');
-        },
-
-        /**
-         * listens on and pass an object with the dimensions to the passed callback
-         * @event sulu.app.content.get-dimensions
-         * @param {function} callback The callback to pass the dimensions to
-         */
-            GET_CONTENT_DIMENSIONS = function() {
-            return createEventName('content.get-dimensions');
         },
 
         /**
@@ -81,6 +79,15 @@ define(function() {
         },
 
         /**
+         * listens on and displays or hides the toggle icon
+         * @event sulu.app.toggle-shrinker
+         * @param {Boolean} true to display, false to hide the shrinker-button
+         */
+        TOGGLE_SHRINKER = function() {
+            return createEventName('toggle-shrinker');
+        },
+
+        /**
          * Creates the event-names
          */
             createEventName = function(postFix) {
@@ -95,6 +102,7 @@ define(function() {
          */
         initialize: function() {
             this.title = document.title;
+            this.$shrinker = null;
 
             if (!!this.sandbox.mvc.routes) {
 
@@ -124,6 +132,7 @@ define(function() {
 
                 this.currentRoute = null;
 
+                this.render();
                 this.bindCustomEvents();
                 this.bindDomEvents();
 
@@ -137,6 +146,16 @@ define(function() {
          */
         selectNavigationItem: function(action) {
             this.sandbox.emit('husky.navigation.select-item', action, false);
+        },
+
+        /**
+         * Renderes dom events for the component
+         */
+        render: function() {
+            var $column = this.sandbox.dom.find(constants.columnSelector);
+            this.$shrinker = this.sandbox.dom.createElement(templates.shrinkable);
+            this.sandbox.dom.hide(this.$shrinker);
+            this.sandbox.dom.append($column, this.$shrinker);
         },
 
         /**
@@ -164,19 +183,8 @@ define(function() {
                     this.emitNavigationEvent({action: event.currentTarget.attributes.href.value}, true, true);
                 }
             }.bind(this), 'a' + constants.suluNavigateAMark);
-        },
 
-        /**
-         * Returns an object with the current dimensions of the content container
-         * @returns {{width: number, left: number}}
-         */
-        getContentDimensions: function() {
-            return {
-                width: this.sandbox.dom.width(this.$el),
-                left: Math.round(
-                    this.sandbox.dom.offset(this.$el).left + parseInt(this.sandbox.dom.css(this.$el, 'padding-left').replace(/[^-\d\.]/g, ''))
-                )
-            };
+            this.sandbox.dom.on(this.$shrinker, 'click', this.toggleShrinkColumn.bind(this));
         },
 
         /**
@@ -276,11 +284,6 @@ define(function() {
                 callbackFunction(this.sandbox.mvc.history.fragment);
             }, this);
 
-            // getter event for the content-dimensions
-            this.sandbox.on(GET_CONTENT_DIMENSIONS.call(this), function(callbackFunction) {
-                callbackFunction(this.getContentDimensions());
-            }.bind(this));
-
             this.sandbox.on(HAS_STARTED.call(this), function(callbackFunction) {
                 callbackFunction(true);
             }.bind(this));
@@ -308,6 +311,42 @@ define(function() {
 
             // change the width-type of the content
             this.sandbox.on(CHANGE_SPACING.call(this), this.changeSpacing.bind(this));
+
+            // toggles the shrinker-button
+            this.sandbox.on(TOGGLE_SHRINKER.call(this), this.toggleShrinker.bind(this));
+        },
+
+        /**
+         * Toggles the shrinker-button
+         * @param show {Boolean} if true gets displayed if false hidden
+         */
+        toggleShrinker: function(show) {
+            if (show === true) {
+                this.sandbox.dom.show(this.$shrinker);
+            } else {
+                this.sandbox.dom.hide(this.$shrinker);
+            }
+        },
+
+        /**
+         * Click-handler for the shrinker-button. Shrinks or expands the content-column
+         * and hides or shows the navigation
+         */
+        toggleShrinkColumn: function() {
+            var $column = this.sandbox.dom.find(constants.columnSelector);
+            if (this.sandbox.dom.hasClass($column, constants.smallFixedClass)) {
+                // expand
+                this.sandbox.emit('husky.navigation.show');
+                this.sandbox.dom.removeClass($column, constants.smallFixedClass);
+                this.sandbox.dom.removeClass(this.sandbox.dom.find('span', this.$shrinker), constants.expandIcon);
+                this.sandbox.dom.addClass(this.sandbox.dom.find('span', this.$shrinker), constants.shrinkIcon);
+            } else {
+                // shrink
+                this.sandbox.emit('husky.navigation.hide');
+                this.sandbox.dom.addClass($column, constants.smallFixedClass);
+                this.sandbox.dom.removeClass(this.sandbox.dom.find('span', this.$shrinker), constants.shrinkIcon);
+                this.sandbox.dom.addClass(this.sandbox.dom.find('span', this.$shrinker), constants.expandIcon);
+            }
         },
 
         /**
@@ -347,22 +386,30 @@ define(function() {
          */
         changeWidth: function(width) {
             if (width === 'fixed') {
-                this.changeToFixedWidth();
+                this.changeToFixedWidth(false);
             } else if (width === 'max') {
                 this.changeToMaxWidth();
+            } else if (width === 'fixed-small') {
+                this.changeToFixedWidth(true);
             }
         },
 
         /**
          * Ensures that the width of the content is fixed
          * (it just sets a css-class which contains a width property)
+         * @param small {Boolean} if true small-class gets added
          */
-        changeToFixedWidth: function() {
+        changeToFixedWidth: function(small) {
             var $column = this.sandbox.dom.find(constants.columnSelector);
 
             if (!this.sandbox.dom.hasClass($column, constants.fixedWidthClass)) {
                 this.sandbox.dom.removeClass($column, constants.maxWidthClass);
                 this.sandbox.dom.addClass($column, constants.fixedWidthClass);
+            }
+            if (small === true) {
+                this.sandbox.dom.addClass($column, constants.smallFixedClass);
+            } else {
+                this.sandbox.dom.removeClass($column, constants.smallFixedClass);
             }
         },
 
@@ -375,6 +422,7 @@ define(function() {
             if (!this.sandbox.dom.hasClass($column, constants.maxWidthClass)) {
                 var $parent = this.sandbox.dom.parent($column);
 
+                this.sandbox.dom.removeClass($column, constants.smallFixedClass);
                 this.sandbox.dom.removeClass($column, constants.fixedWidthClass);
                 this.sandbox.dom.addClass($column, constants.maxWidthClass);
 

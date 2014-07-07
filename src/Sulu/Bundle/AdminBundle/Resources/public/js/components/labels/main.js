@@ -105,17 +105,12 @@ define([], function() {
             this.labelId = 0;
 
             this.bindCustomEvents();
-
-            //set the beginning width of the label-container
-            this.sandbox.emit('sulu.app.content.get-dimensions', this.resizeListener.bind(this));
         },
 
         /**
          * Bind custom related events
          */
         bindCustomEvents: function() {
-            this.sandbox.on('sulu.app.content.dimensions-changed', this.resizeListener.bind(this));
-
             this.sandbox.on(SHOW_ERROR.call(this), function(description, title, id) {
                 this.showLabel('ERROR', description, title, id);
             }.bind(this));
@@ -151,14 +146,6 @@ define([], function() {
          */
         removeLabels: function() {
             this.sandbox.dom.html(this.$el, '');
-        },
-
-        /**
-         * Makes sure labels-container always has the width of the content
-         */
-        resizeListener: function(dimensions) {
-            this.sandbox.dom.width(this.$el, dimensions.width);
-            this.sandbox.dom.css(this.$el, {'margin-left': dimensions.left + 'px'});
         },
 
         /**
@@ -201,8 +188,6 @@ define([], function() {
          * @oaram id
          */
         showLabel: function(type, description, title, id) {
-            //make sure the container with is right
-            this.sandbox.emit('sulu.app.content.get-dimensions', this.resizeListener.bind(this));
             this.startLabelComponent({
                 type: type,
                 description: this.sandbox.translate(description),
