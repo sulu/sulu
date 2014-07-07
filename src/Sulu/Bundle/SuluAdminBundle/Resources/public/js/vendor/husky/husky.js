@@ -26014,11 +26014,22 @@ define('type/husky-select',[
                     // For single select
                     var data = {},
                         ids = this.$el.data('selection'),
-                        values = this.$el.data('selection-values');
+                        values = this.$el.data('selection-values'),
+                        returnValue = this.$el.attr('data-mapper-return-value');
 
                     if (!ids || ids.length === 0) {
                         return undefined;
                     }
+
+                    // check if 'data-mapper-return-value' is defined
+                    if (typeof returnValue !== 'undefined') {
+                        if (returnValue === 'id') {
+                            return Array.isArray(ids) ? ids[0] : ids;
+                        } else if(returnValue === 'value'){
+                            return Array.isArray(values) ? values[0] : values;
+                        }
+                    }
+                    // return value if property type is set to string
                     if (this.$el.attr('data-mapper-property-type') === 'string') {
                         return Array.isArray(values) ? values[0] : values;
                     }
@@ -29988,7 +29999,7 @@ define('husky_components/datagrid/decorators/thumbnail-view',[],function() {
          * Destroys the view
          */
         destroy: function() {
-            this.sandbox.dom.off('body', 'click.grid-thumbnails.' + this.ddatagrid.options.instanceName);
+            this.sandbox.dom.off('body', 'click.grid-thumbnails.' + this.datagrid.options.instanceName);
             this.sandbox.dom.remove(this.$el);
         },
 
@@ -31448,9 +31459,9 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * @param params url
              */
             load: function(params) {
-                this.currentUrl = params.url;
+                this.currentUrl = this.getUrl(params);
 
-                this.sandbox.util.load(this.getUrl(params), params.data)
+                this.sandbox.util.load(this.currentUrl, params.data)
                     .then(function(response) {
                         this.destroy();
                         this.parseData(response);
@@ -33647,6 +33658,12 @@ define('__component__$toolbar@husky',[],function() {
          * @param highlight {boolean} if true a highlight effect is played
          */
         toggleEnabled = function(enabled, id, highlight) {
+
+            // check if toolbar has an item with specified id
+            if (!this.items[id]) {
+                return;
+            }
+
             var item = this.items[id],
                 $item = this.sandbox.dom.find('[data-id="' + id + '"]', this.$el),
                 $iconItem = this.sandbox.dom.find('[data-id="' + id + '"] .icon', this.$el),
