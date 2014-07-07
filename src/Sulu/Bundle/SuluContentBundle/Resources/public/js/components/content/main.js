@@ -310,7 +310,11 @@ define([
         save: function(data) {
             this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
 
-            this.content = new Content(data);
+            if (!!this.content) {
+                this.content.set(data);
+            } else {
+                this.content = new Content(data);
+            }
             if (!!this.options.id) {
                 this.content.set({id: this.options.id});
             }
