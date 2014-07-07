@@ -111,8 +111,8 @@ define(['app-config'], function(AppConfig) {
         showRenderTemplateDialog: function(item) {
             // show warning dialog
             this.sandbox.emit('sulu.overlay.show-warning',
-                this.sandbox.translate('content.template.dialog.title'),
-                this.sandbox.translate('content.template.dialog.content'),
+                'sulu.overlay.be-careful',
+                'content.template.dialog.content',
 
                 function() {
                     // cancel callback
