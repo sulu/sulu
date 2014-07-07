@@ -28,10 +28,14 @@ define([], function() {
             tabsData: null
         },
 
+        constants = {
+            tabsComponent: 'content-tabs-component'
+        },
+
         templates = {
             skeleton: function() {
                 return [
-                    '<div id="content-tabs"></div>'
+                    '<div id="content-tabs"></div><div id="<%= tabsComponentId %>"></div>'
                 ].join('');
             }
         },
@@ -62,8 +66,10 @@ define([], function() {
             // default
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
+            var template = this.sandbox.util.template(templates.skeleton.call(this), { tabsComponentId : constants.tabsComponent});
+
             // skeleton
-            this.html(templates.skeleton.call(this));
+            this.html(template);
 
             // bind events (also initializes first component)
             this.bindCustomEvents();
@@ -88,6 +94,8 @@ define([], function() {
          */
         startTabComponent: function(item) {
 
+            var $tabsContainer, options;
+
             if (!item) {
                 item = this.options.tabsData.items[0];
             }
@@ -100,11 +108,11 @@ define([], function() {
             // resets store to prevent duplicated models
             this.sandbox.mvc.Store.reset();
 
-            this.sandbox.stop(this.$find('#content-tabs-component'));
-            this.sandbox.dom.append(this.$el, '<div id="content-tabs-component"></div>');
+            // stop all children
+            this.sandbox.stop('#'+constants.tabsComponent+' > *');
 
             if (!!item && !!item.contentComponent) {
-                var options = this.sandbox.util.extend(true, {}, this.options.contentOptions, {el: '#content-tabs-component', reset: true }, item.contentComponentOptions);
+                options = this.sandbox.util.extend(true, {}, this.options.contentOptions, {el: '#'+constants.tabsComponent}, item.contentComponentOptions);
                 // start component defined by
                 this.sandbox.start([
                     {name: item.contentComponent, options: options}
