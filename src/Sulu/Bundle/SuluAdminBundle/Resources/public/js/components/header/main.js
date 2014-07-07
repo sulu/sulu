@@ -303,25 +303,6 @@ define([], function() {
         },
 
         /**
-         * listens on and hides back icon
-         *
-         * @event sulu.header.[INSTANCE_NAME].show-back
-         * @param {boolean} animate If true back icon gets hidden with an animation
-         */
-        HIDE_BACK = function() {
-            return createEventName.call(this, 'hide-back');
-        },
-
-        /**
-         * listens on and shows back icon
-         *
-         * @event sulu.header.[INSTANCE_NAME].show-back
-         */
-        SHOW_BACK = function() {
-            return createEventName.call(this, 'show-back');
-        },
-
-        /**
          * listens on and changes the state of the toolbar
          *
          * @event sulu.header.[INSTANCE_NAME].toolbar.state.change
@@ -508,7 +489,7 @@ define([], function() {
 
             // hide back if configured
             if (this.options.noBack === true) {
-                this.hideBack(false);
+                this.sandbox.dom.hide(this.$find('.' + constants.backClass));
             }
         },
 
@@ -692,12 +673,6 @@ define([], function() {
             // changes the saved state of the toolbar
             this.sandbox.on(TOOLBAR_STATE_CHANGE.call(this), this.changeToolbarState.bind(this));
 
-            // show back icon
-            this.sandbox.on(SHOW_BACK.call(this), this.showBack.bind(this));
-
-            // hide back icon
-            this.sandbox.on(HIDE_BACK.call(this), this.hideBack.bind(this));
-
             // set breadcrumb
             this.sandbox.on(SET_BREADCRUMB.call(this), this.setBreadcrumb.bind(this));
 
@@ -775,30 +750,6 @@ define([], function() {
             this.sandbox.on(TABS_DEACTIVATE.call(this), function() {
                 this.sandbox.emit('husky.tabs.header'+ this.options.instanceName +'.activate');
             }.bind(this));
-        },
-
-        /**
-         * Shows the back icon
-         */
-        showBack: function() {
-            this.sandbox.dom.css(this.$find('.' + constants.backClass), {
-                'opacity': '1'
-            });
-            this.sandbox.dom.show(this.$find('.' + constants.backClass));
-        },
-
-        /**
-         * Hides the back icon
-         * @param animate {boolean} if true hidden with an animation
-         */
-        hideBack: function(animate) {
-            if (animate === true) {
-                this.sandbox.dom.css(this.$find('.' + constants.backClass), {
-                    'opacity': '0'
-                });
-            } else {
-                this.sandbox.dom.hide(this.$find('.' + constants.backClass));
-            }
         },
 
         /**

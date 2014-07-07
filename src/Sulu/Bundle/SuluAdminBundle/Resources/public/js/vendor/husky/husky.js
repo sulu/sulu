@@ -27740,6 +27740,7 @@ define('__component__$navigation@husky',[],function() {
                     this.sandbox.dom.width(this.$el, this.sandbox.dom.width(this.$navigation));
                     this.sandbox.dom.addClass(this.$navigation, 'collapseIcon');
                 } else {
+                    this.sandbox.dom.removeClass(this.$navigation, 'collapseIcon');
                     this.sandbox.dom.css(this.$el, {'width': ''});
                 }
                 this.sandbox.dom.removeClass(this.$navigation, 'collapsed');
@@ -40138,7 +40139,7 @@ define('__component__$label@husky',[],function() {
         ERROR: {
             title: 'Error',
             labelClass: 'husky-label-error',
-            fadeOut: false
+            fadeOutDelay: 10000
         },
         WARNING: {
             fadeOutDelay: 5000,

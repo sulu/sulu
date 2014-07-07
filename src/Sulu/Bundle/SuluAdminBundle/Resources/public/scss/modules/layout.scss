@@ -11,11 +11,17 @@
   position: relative;
   overflow: hidden;
   min-width: $contentMinWidth;
+  @include single-transition(width, $shrinkAnimationDuration);
 
   #content {
     height: 100%;
     overflow: auto;
-    padding: $contentPaddingTop $contentPaddingLeft $contentPaddingRight $contentPaddingBottom;
+    padding-top: $contentPaddingTop;
+    padding-right: $contentPaddingRight;
+    padding-bottom: $contentPaddingBottom;
+    padding-left: $contentPaddingLeft;
+    @include single-transition(padding-left, $shrinkAnimationDuration);
+    @include single-transition(padding-right, $shrinkAnimationDuration);
 
     h2.mainheadline {
       margin-top: 35px;
@@ -40,6 +46,29 @@
     }
   }
 
+  .sulu-app-shrink {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    z-index: 100;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    overflow: hidden;
+    background: #21272E;
+    color: $white;
+    text-align: center;
+    border-radius: 0 0 0 2px;
+    font-size: 20px;
+    line-height: 32px;
+    .fa-chevron-right {
+      padding-left: 3px;
+    }
+    .fa-chevron-left {
+      padding-right: 3px;
+    }
+  }
+
   &.max {
     float: none;
     width: auto;
@@ -47,6 +76,14 @@
   &.fixed {
     width: $contentFixedWidth;
     float: left;
+
+    &.small-fixed {
+      width: $contentFixedSmallWidth;
+      #content {
+        padding-left: $contentPaddingLeftSmall;
+        padding-right: $contentPaddingRightSmall;
+      }
+    }
   }
 }
 
@@ -66,15 +103,13 @@
   }
 }
 
-@media only screen
-and (max-width : 50px + $contentMinWidth + $sidebarFixedWidth) {
+@media only screen and (max-width: 50px + $contentMinWidth + $sidebarFixedWidth) {
   .sidebar-column.fixed {
     display: none;
   }
 }
 
-@media only screen
-and (max-width : 50px + $contentFixedWidth) {
+@media only screen and (max-width: 50px + $contentFixedWidth) {
   .sidebar-column.max {
     display: none;
   }

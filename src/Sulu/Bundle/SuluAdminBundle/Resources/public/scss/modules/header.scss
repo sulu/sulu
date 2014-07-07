@@ -14,6 +14,7 @@
         left: 0px;
         margin: 0 50px;
         height: $headerHeight;
+        @include single-transition(margin, $shrinkAnimationDuration);
     }
 
     .headline {
@@ -80,6 +81,9 @@
 
     .tabs {
         height: $tabsHeight;
+        .tabs-container {
+          @include single-transition(padding, $shrinkAnimationDuration);
+        }
     }
 
     .info {
@@ -107,5 +111,18 @@
   &.has-tabs {
     height: $headerHeight + $tabsHeight;
     border-bottom: $tabsHeight solid $white;
+  }
+}
+
+.small-fixed {
+  .sulu-header .inner {
+    margin-left: $contentPaddingLeftSmall;
+    margin-right: $contentPaddingRightSmall;
+  }
+  .tabs-container {
+    padding-left: $contentPaddingLeftSmall;
+  }
+  .sulu-header .back {
+    opacity: 0;
   }
 }

@@ -86,15 +86,17 @@ define([], function() {
          *
          * @param {Object} [layout.navigation] the object which holds the layout configuration for the navigation
          * @param {Boolean} [layout.navigation.collapsed] if true navigation is collapsed
+         * @param {Boolean} [layout.navigation.hidden] if true navigation gets hidden. (if not set gets shown)
          *
          * @param {Object} [layout.content] the object which holds the layout configuration for the content
-         * @param {String} [layout.width] the width-type of the content-column. 'fixed' or 'max'
-         * @param {Boolean} [layout.leftSpace] If false content has no spacing on the left
-         * @param {Boolean} [layout.rightSpace] If false content has no spacing on the right
-         * @param {Boolean} [layout.topSpace] If false content has no spacing on top
+         * @param {Boolean} [layout.content.shrinkable] if true an icon for shrinking the content-column will be displayed
+         * @param {String} [layout.content.width] the width-type of the content-column. 'fixed' or 'max'
+         * @param {Boolean} [layout.content.leftSpace] If false content has no spacing on the left
+         * @param {Boolean} [layout.content.rightSpace] If false content has no spacing on the right
+         * @param {Boolean} [layout.content.topSpace] If false content has no spacing on top
          *
          * @param {Object|Boolean} [layout.sidebar] the object which holds the layout configuration for the sidebar. If false no sidebar will be displayed
-         * @param {String} [sidebar.width] the width-type of the sidebar-column. 'fixed' or 'max'
+         * @param {String} [layout.sidebar.width] the width-type of the sidebar-column. 'fixed' or 'max'
          *
          * @example
          *
@@ -134,6 +136,11 @@ define([], function() {
             } else {
                 this.sandbox.emit('husky.navigation.uncollapse');
             }
+            if (navigation.hidden === true) {
+                this.sandbox.emit('husky.navigation.hide');
+            } else {
+                this.sandbox.emit('husky.navigation.show');
+            }
         },
 
         /**
@@ -147,6 +154,7 @@ define([], function() {
                 topSpace = (typeof content.topSpace === 'undefined') ? true : !!content.topSpace;
             this.sandbox.emit('sulu.app.change-width', width);
             this.sandbox.emit('sulu.app.change-spacing', leftSpace, rightSpace, topSpace);
+            this.sandbox.emit('sulu.app.toggle-shrinker', !!content.shrinkable);
          },
 
         /**
