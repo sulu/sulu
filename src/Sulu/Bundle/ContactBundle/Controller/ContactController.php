@@ -72,6 +72,7 @@ class ContactController extends AbstractContactController
     protected $fieldsRelations = array(
 //        'email',
         'account',
+        'accountContacts_position',
     );
 
     /**
@@ -95,6 +96,7 @@ class ContactController extends AbstractContactController
         'email' => 'public.email',
         'phone' => 'public.phone',
         'account' => 'contact.contacts.company',
+        'accountContacts_position' => 'contact.contacts.position',
     );
 
     /**
@@ -319,7 +321,6 @@ class ContactController extends AbstractContactController
             $contact->setLastName($lastName);
 
             $contact->setTitle($request->get('title'));
-            $contact->setPosition($request->get('position'));
 
             $parentData = $request->get('account');
             if ($parentData != null && $parentData['id'] != null && $parentData['id'] != 'null' && $parentData['id'] != '') {
@@ -334,6 +335,9 @@ class ContactController extends AbstractContactController
                 // create new account-contact relation
                 $this->createMainAccountContact($contact, $parent);
             }
+            // Since the position is related to the contact we have to set this
+            // property after creating the new account-contact relation.
+            $contact->setPosition($request->get('position'));
 
             $birthday = $request->get('birthday');
             if (!empty($birthday)) {
@@ -445,7 +449,6 @@ class ContactController extends AbstractContactController
                 $contact->setLastName($request->get('lastName'));
 
                 $contact->setTitle($request->get('title'));
-                $contact->setPosition($request->get('position'));
                 $contact->setChanged(new DateTime());
 
                 // set account relation
@@ -468,6 +471,9 @@ class ContactController extends AbstractContactController
                         $em->remove($accountContact);
                     }
                 }
+                // Since the position is related to the contact we have to set this
+                // property after setting the account-contact relation.
+                $contact->setPosition($request->get('position'));
 
                 // process details
                 if (!($this->processEmails($contact, $request->get('emails'))

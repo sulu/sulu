@@ -288,7 +288,6 @@ class Contact extends ApiEntity
     {
         $mainAccountContact = $this->getMainAccountContact();
         if ($mainAccountContact) {
-            $this->position = $position;
             $mainAccountContact->setPosition($position);
         }
         return $this;
