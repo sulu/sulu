@@ -303,11 +303,11 @@ define(function() {
                 if (trigger && this.currentRoute !== route) {
                     // FIXME - App.stop is used in global context; possibly there is a better solution
                     // and the stop event will be called
-                    App.stop('#sulu-content-container');
                     App.stop('#sulu-header-container');
+                    App.stop('#sulu-content-container');
                     App.stop('#content > *');
-                    App.stop('#preview > *');
 
+                    App.stop('#preview > *');
                     // remove eventual spacing because of header
                     this.headerVisible = false;
                     this.changeTopSpacing();
@@ -431,6 +431,8 @@ define(function() {
                 this.sandbox.dom.addClass(this.$el, constants.fullHeightClass);
             }
             if (fullwidth === true) {
+                this.sandbox.dom.css(this.$el, {'max-width': ''});
+                this.sandbox.dom.css(this.$el, {'width': ''});
                 this.sandbox.dom.addClass(this.$el, constants.fullWidthClass);
                 if (keepPaddings !== true) {
                     this.sandbox.dom.addClass(this.$el, constants.noPaddingClass);

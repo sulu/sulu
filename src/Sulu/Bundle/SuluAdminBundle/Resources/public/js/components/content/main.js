@@ -35,7 +35,7 @@ define([], function() {
         templates = {
             skeleton: function() {
                 return [
-                    '<div id="content-tabs"></div><div id="<%= tabsComponentId %>"></div>'
+                    '<div id="content-tabs"></div>'
                 ].join('');
             }
         },
@@ -94,7 +94,7 @@ define([], function() {
          */
         startTabComponent: function(item) {
 
-            var $tabsContainer, options;
+            var options;
 
             if (!item) {
                 item = this.options.tabsData.items[0];
@@ -108,11 +108,12 @@ define([], function() {
             // resets store to prevent duplicated models
             this.sandbox.mvc.Store.reset();
 
-            // stop all children
-            this.sandbox.stop('#'+constants.tabsComponent+' > *');
+            // stop the current tab
+            App.stop('#' + constants.tabsComponent);
+            this.sandbox.dom.append(this.$el, this.sandbox.dom.createElement('<div id="'+ constants.tabsComponent +'"/>'));
 
             if (!!item && !!item.contentComponent) {
-                options = this.sandbox.util.extend(true, {}, this.options.contentOptions, {el: '#'+constants.tabsComponent}, item.contentComponentOptions);
+                options = this.sandbox.util.extend(true, {}, this.options.contentOptions, {el: '#' + constants.tabsComponent}, item.contentComponentOptions);
                 // start component defined by
                 this.sandbox.start([
                     {name: item.contentComponent, options: options}
