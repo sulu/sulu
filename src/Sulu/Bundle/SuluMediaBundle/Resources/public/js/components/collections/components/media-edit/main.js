@@ -224,7 +224,7 @@ define(function() {
                     options: {
                         el: constants.dropzoneSelector,
                         url: '/admin/api/media/' + this.media.id,
-                        method: 'PUT',
+                        method: 'POST',
                         paramName: 'fileVersion',
                         showOverlay: false,
                         skin: 'small',

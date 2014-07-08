@@ -474,7 +474,7 @@ class MediaControllerTest extends DatabaseTestCase
     /**
      * @description Test PUT to create a new FileVersion
      */
-    public function testPut()
+    public function testFileVersionUpdate()
     {
         $client = $this->createTestClient();
 
@@ -483,7 +483,7 @@ class MediaControllerTest extends DatabaseTestCase
         $photo = new UploadedFile($imagePath, 'photo.jpeg', 'image/jpeg', 160768);
 
         $client->request(
-            'PUT',
+            'POST',
             '/api/media/1',
             array(
                 'collection' => 1,
@@ -577,7 +577,7 @@ class MediaControllerTest extends DatabaseTestCase
     /**
      * @description Test PUT to create a new FileVersion
      */
-    public function testPutWithoutDetails()
+    public function testFileVersionUpdateWithoutDetails()
     {
         $client = $this->createTestClient();
 
@@ -586,7 +586,7 @@ class MediaControllerTest extends DatabaseTestCase
         $photo = new UploadedFile($imagePath, 'photo.jpeg', 'image/jpeg', 160768);
 
         $client->request(
-            'PUT',
+            'POST',
             '/api/media/1',
             array(
                 'collection' => 1
