@@ -188,7 +188,6 @@ class UserControllerTest extends DatabaseTestCase
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Fax'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Account'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AccountContact'),
-
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\User'),
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\UserSetting'),
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\UserGroup'),
@@ -197,7 +196,6 @@ class UserControllerTest extends DatabaseTestCase
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Role'),
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Permission'),
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\SecurityType'),
-
             self::$em->getClassMetadata('Sulu\Bundle\TagBundle\Entity\Tag')
         );
 
@@ -207,7 +205,6 @@ class UserControllerTest extends DatabaseTestCase
 
     public function testFindBySuluSystem()
     {
-
         $client = static::createClient();
         $em = $client->getContainer()->get('doctrine')->getManager();
 
