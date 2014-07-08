@@ -946,7 +946,10 @@ class Import
             } else {
 
                 // check if relation already exists
-                $accountContact = $this->em->getRepository($this->accountContactEntityName)->findOneBy(array($account => $account, $contact => $contact));
+                $accountContact = null;
+                if ($contact->getId() && $account->getId()) {
+                    $accountContact = $this->em->getRepository($this->accountContactEntityName)->findOneBy(array($account => $account, $contact => $contact));
+                }
 
                 if (!$accountContact) {
                     // account contact relation
