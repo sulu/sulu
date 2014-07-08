@@ -79,6 +79,7 @@ class AccountRepository extends EntityRepository
                 ->leftJoin('account.tags', 'tags')
                 ->leftJoin('account.termsOfDelivery', 'termsOfDelivery')
                 ->leftJoin('account.termsOfPayment', 'termsOfPayment')
+                ->leftJoin('account.responsiblePerson', 'responsiblePerson')
                 ->addSelect('partial tags.{id, name}')
                 ->addSelect('bankAccounts')
                 ->addSelect('addresses')
@@ -97,6 +98,7 @@ class AccountRepository extends EntityRepository
                 ->addSelect('accountCategory')
                 ->addSelect('termsOfDelivery')
                 ->addSelect('termsOfPayment')
+                ->addSelect('responsiblePerson')
                 ->where('account.id = :accountId');
 
 

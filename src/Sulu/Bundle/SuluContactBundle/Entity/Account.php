@@ -180,6 +180,11 @@ class Account extends ApiEntity
     private $number;
 
     /**
+     * @var \Sulu\Bundle\ContactBundle\Entity\Contact
+     */
+    private $responsiblePerson;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -1042,5 +1047,28 @@ class Account extends ApiEntity
     public function getExternalId()
     {
         return $this->externalId;
+    }
+
+    /**
+     * Set responsiblePerson
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\Contact $responsiblePerson
+     * @return Account
+     */
+    public function setResponsiblePerson(\Sulu\Bundle\ContactBundle\Entity\Contact $responsiblePerson = null)
+    {
+        $this->responsiblePerson = $responsiblePerson;
+    
+        return $this;
+    }
+
+    /**
+     * Get responsiblePerson
+     *
+     * @return \Sulu\Bundle\ContactBundle\Entity\Contact 
+     */
+    public function getResponsiblePerson()
+    {
+        return $this->responsiblePerson;
     }
 }
