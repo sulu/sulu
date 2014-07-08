@@ -32,7 +32,9 @@ define([], function() {
             columnSelector: '.sidebar-column',
             fixedWidthClass: 'fixed',
             maxWidthClass: 'max',
-            loaderClass: 'sidebar-loader'
+            loaderClass: 'sidebar-loader',
+            visibleSidebarClass: 'has-visible-sidebar',
+            noVisibleSidebarClass: 'has-no-visible-sidebar'
         },
 
         /**
@@ -185,8 +187,11 @@ define([], function() {
          * Hides the sidebar column
          */
         hideColumn: function() {
-            var $column = this.sandbox.dom.find(constants.columnSelector);
+            var $column = this.sandbox.dom.find(constants.columnSelector),
+                $parent = this.sandbox.dom.parent($column);
             this.changeToFixedWidth();
+            this.sandbox.dom.removeClass($parent, constants.visibleSidebarClass);
+            this.sandbox.dom.addClass($parent, constants.noVisibleSidebarClass);
             this.sandbox.dom.hide($column);
         },
 
@@ -194,8 +199,11 @@ define([], function() {
          * Shows the sidebar column
          */
         showColumn: function() {
-            var $column = this.sandbox.dom.find(constants.columnSelector);
-            this.sandbox.dom.show($column);
+            var $column = this.sandbox.dom.find(constants.columnSelector),
+                $parent = this.sandbox.dom.parent($column);
+            this.sandbox.dom.removeClass($parent, constants.noVisibleSidebarClass);
+            this.sandbox.dom.addClass($parent, constants.visibleSidebarClass);
+            this.sandbox.dom.css($column, {display: ''});
         },
 
         /**

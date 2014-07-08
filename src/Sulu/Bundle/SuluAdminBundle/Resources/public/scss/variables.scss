@@ -18,6 +18,7 @@ $tabsHeight: 50px;
 
 $contentFixedWidth: 900px;
 $contentMinWidth: 510px;
+$contentFixedMediumWidth: 690px;
 $contentFixedSmallWidth: 480px;
 
 $contentPaddingLeft: 50px;
@@ -33,6 +34,7 @@ $contentPaddingRightFullWidth: 0;
 // sidebar
 
 $sidebarFixedWidth: 450px;
+$sidebarMaxCollapseWidth: 250px; // if the max-sidebar is smaller than this width the content collapses to the medium width
 
 // shrink animation
 $shrinkAnimationDuration: 700ms;

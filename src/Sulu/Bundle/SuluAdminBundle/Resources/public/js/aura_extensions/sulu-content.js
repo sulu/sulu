@@ -171,16 +171,6 @@ define([], function() {
         },
 
         /**
-         * Handles the components which are marked with a fullSize property
-         * @param fullSize
-         */
-        handleFullSizeMarked = function(fullSize) {
-            if (fullSize.width === true || fullSize.height === true) {
-                this.sandbox.emit('sulu.app.full-size', !!fullSize.width, !!fullSize.height, !!fullSize.keepPaddings);
-            }
-        },
-
-        /**
          * Handles the the components which are marked with a header property.
          * Generates defaults, handles tabs data if tabs are configured, starts the header-component
          *
