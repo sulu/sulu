@@ -46,6 +46,7 @@ class Contact extends ApiEntity
     private $title;
 
     /**
+     * @Accessor(getter="getMainPosition")
      * @var string
      */
     private $position;
@@ -285,8 +286,11 @@ class Contact extends ApiEntity
      */
     public function setPosition($position)
     {
-        $this->position = $position;
-
+        $mainAccountContact = $this->getMainAccountContact();
+        if ($mainAccountContact) {
+            $this->position = $position;
+            $mainAccountContact->setPosition($position);
+        }
         return $this;
     }
 
@@ -295,9 +299,13 @@ class Contact extends ApiEntity
      *
      * @return string
      */
-    public function getPosition()
+    public function getMainPosition()
     {
-        return $this->position;
+        $mainAccountContact = $this->getMainAccountContact();
+        if ($mainAccountContact) {
+            return $mainAccountContact->getPosition();
+        }
+        return null;
     }
 
     /**
@@ -631,7 +639,7 @@ class Contact extends ApiEntity
             'middleName' => $this->getMiddleName(),
             'lastName' => $this->getLastName(),
             'title' => $this->getTitle(),
-            'position' => $this->getPosition(),
+            'position' => $this->getMainPosition(),
             'birthday' => $this->getBirthday(),
             'created' => $this->getCreated(),
             'changed' => $this->getChanged()
@@ -933,13 +941,25 @@ class Contact extends ApiEntity
      */
     public function getMainAccount()
     {
+        $mainAccountContact = $this->getMainAccountContact();
+        if (!is_null($mainAccountContact)) {
+            return $mainAccountContact->getAccount();
+        }
+        return null;
+    }
+
+    /**
+     * returns main account contact
+     */
+    private function getMainAccountContact()
+    {
         $accountContacts = $this->getAccountContacts();
 
         if (!is_null($accountContacts)) {
             /** @var AccountContact $accountContact */
             foreach ($accountContacts as $accountContact) {
                 if ($accountContact->getMain()) {
-                    return $accountContact->getAccount();
+                    return $accountContact;
                 }
             }
         }
