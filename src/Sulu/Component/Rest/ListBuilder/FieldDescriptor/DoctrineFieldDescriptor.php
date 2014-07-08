@@ -10,18 +10,15 @@
 
 namespace Sulu\Component\Rest\ListBuilder\FieldDescriptor;
 
+use JMS\Serializer\Annotation\ExclusionPolicy;
+
 /**
  * This class defines the necessary information for a field to resolve it within a Doctrine Query for the ListBuilder.
  * @package Sulu\Component\Rest\ListBuilder\FieldDescriptor
+ * @ExclusionPolicy("all")
  */
-class DoctrineFieldDescriptor
+class DoctrineFieldDescriptor extends AbstractFieldDescriptor
 {
-    /**
-     * The name of the field in the database
-     * @var string
-     */
-    private $name;
-
     /**
      * The alias name of the field for the response
      * @var string
@@ -40,28 +37,35 @@ class DoctrineFieldDescriptor
      */
     private $joins;
 
-    public function __construct($name, $alias, $entityName, $joins = array())
+    public function __construct(
+        $name,
+        $alias,
+        $entityName,
+        $joins = array(),
+        $disabled = false,
+        $type = '',
+        $width = '',
+        $translation = null
+    )
     {
-        $this->name = $name;
+        parent::__construct($name, $disabled, $type, $width, $translation);
+
         $this->alias = $alias;
         $this->entityName = $entityName;
         $this->joins = $joins;
     }
 
-    public function getFullName()
-    {
-        return $this->entityName . '.' . $this->name;
-    }
-
     /**
+     * Returns the full name of the field, including the entity
      * @return string
      */
-    public function getName()
+    public function getFullName()
     {
-        return $this->name;
+        return $this->entityName . '.' . $this->getName();
     }
 
     /**
+     * Returns the alias for the field in the database
      * @return string
      */
     public function getAlias()
@@ -70,6 +74,7 @@ class DoctrineFieldDescriptor
     }
 
     /**
+     * Returns the name of the entity this field is contained in
      * @return string
      */
     public function getEntityName()
@@ -78,6 +83,7 @@ class DoctrineFieldDescriptor
     }
 
     /**
+     * Returns all the joins which are necessary to access this field
      * @return array
      */
     public function getJoins()
