@@ -14,6 +14,7 @@ use Doctrine\Common\Proxy\Exception\InvalidArgumentException;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\UnitOfWork;
 use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\AccountCategory;
 use Sulu\Bundle\ContactBundle\Entity\AccountContact;
@@ -947,7 +948,7 @@ class Import
 
                 // check if relation already exists
                 $accountContact = null;
-                if ($contact->getId() && $account->getId()) {
+                if (!$this->em->getUnitOfWork()->isScheduledForInsert($contact)) {
                     $accountContact = $this->em->getRepository($this->accountContactEntityName)->findOneBy(array($account => $account, $contact => $contact));
                 }
 
