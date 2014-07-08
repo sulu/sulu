@@ -184,10 +184,6 @@ class Account extends ApiEntity
      */
     private $externalId;
 
-    /**
-     * @var \Sulu\Bundle\ContactBundle\Entity\Contact
-     */
-    private $mainContact;
 
 
     /**
@@ -352,6 +348,11 @@ class Account extends ApiEntity
     {
         return $this->id;
     }
+
+    /**
+     * @var \Sulu\Bundle\ContactBundle\Entity\Contact
+     */
+    private $mainContact;
 
     /**
      * Set changer
@@ -1050,7 +1051,6 @@ class Account extends ApiEntity
         return $this->externalId;
     }
 
-
     /**
      * Set mainContact
      *
@@ -1067,7 +1067,7 @@ class Account extends ApiEntity
     /**
      * Get mainContact
      *
-     * @return \Sulu\Bundle\ContactBundle\Entity\Contact
+     * @return \Sulu\Bundle\ContactBundle\Entity\Contact 
      */
     public function getMainContact()
     {

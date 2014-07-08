@@ -497,17 +497,16 @@ class AccountController extends AbstractContactController
     {
         $accountEntity = 'SuluContactBundle:Account';
 
+        $em = $this->getDoctrine()->getManager();
+
         try {
             /** @var Account $account */
-            $account = $this->getDoctrine()
-                ->getRepository($accountEntity)
+            $account = $em->getRepository($accountEntity)
                 ->findAccountById($id);
 
             if (!$account) {
                 throw new EntityNotFoundException($accountEntity, $id);
             } else {
-
-                $em = $this->getDoctrine()->getManager();
 
                 if (!is_null($request->get('uid'))) {
                     $account->setUid($request->get('uid'));
@@ -522,6 +521,16 @@ class AccountController extends AbstractContactController
                 if (!is_null($request->get('placeOfJurisdiction'))) {
                     $account->setPlaceOfJurisdiction($request->get('placeOfJurisdiction'));
                 }
+
+                // check if mainContact is set
+                if (!is_null($mainContactRequest = $request->get('mainContact'))) {
+                    $mainContact = $em->getRepository($this->contactEntityName)->find($mainContactRequest['id']);
+                    if ($mainContact) {
+                        $account->setMainContact($mainContact);
+                    }
+                }
+
+                $account->setNumber("blubsi");
 
                 // process details
                 if (!is_null($request->get('bankAccounts'))) {
