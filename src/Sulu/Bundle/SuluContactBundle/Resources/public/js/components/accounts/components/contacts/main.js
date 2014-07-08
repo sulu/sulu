@@ -47,6 +47,11 @@ define([
             this.sandbox.on('sulu.contacts.accounts.contacts.removed', function(id) {
                 this.sandbox.emit('husky.datagrid.record.remove', id);
             }, this);
+
+            // when radio button is clicked
+            this.sandbox.on('husky.datagrid.radio.selected', function(id, columName) {
+                this.sandbox.emit('sulu.contacts.accounts.contacts.set-main', id);
+            }, this);
         },
 
         createRelationOverlay = function(data) {

@@ -93,6 +93,9 @@ define([
             // removes accountContact Relation
             this.sandbox.on('sulu.contacts.accounts.contacts.remove', this.removeAccountContacts.bind(this));
 
+            // set main contact
+            this.sandbox.on('sulu.contacts.accounts.contacts.set-main', this.setMainContact.bind(this));
+
             // saves financial infos
             this.sandbox.on('sulu.contacts.accounts.financials.save', this.saveFinancials.bind(this));
 
@@ -119,6 +122,16 @@ define([
             this.sandbox.on('sulu.contacts.account.convert', function(data) {
                 this.convertAccount(data);
             }.bind(this));
+        },
+
+        // sets main contact
+        setMainContact: function(id) {
+            this.account.save(null, {
+               patch: true,
+               success: function(response) {
+                   var model = response.toJSON();
+               }.bind(this)
+            });
         },
 
         addAccountContact: function(id, position) {
