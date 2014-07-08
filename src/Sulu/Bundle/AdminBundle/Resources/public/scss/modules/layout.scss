@@ -16,12 +16,8 @@
   #content {
     height: 100%;
     overflow: auto;
-    padding-top: $contentPaddingTop;
-    padding-right: $contentPaddingRight;
-    padding-bottom: $contentPaddingBottom;
-    padding-left: $contentPaddingLeft;
-    @include single-transition(padding-left, $shrinkAnimationDuration);
-    @include single-transition(padding-right, $shrinkAnimationDuration);
+    padding: $contentPaddingTop $contentPaddingRight $contentPaddingBottom $contentPaddingLeft;
+    @include transition(padding-left $shrinkAnimationDuration, padding-right $shrinkAnimationDuration);
 
     h2.mainheadline {
       margin-top: 35px;
@@ -103,17 +99,59 @@
   }
 }
 
+//
+// responsiveness for case: content (max) sidebar (fixed)
+// ------------------------------------------------------
+//
+
+// 1. Hides the sidebar if the minimum content width is reached
 @media only screen and (max-width: 50px + $contentMinWidth + $sidebarFixedWidth) {
   .sidebar-column.fixed {
     display: none;
   }
 }
 
-@media only screen and (max-width: 50px + $contentFixedWidth) {
+//
+// responsiveness for case: content (fixed) sidebar (max)
+// ------------------------------------------------------
+//
+
+// 1. collapses to content-column to medium width
+@media only screen and (max-width: 50px + $contentFixedWidth + $sidebarMaxCollapseWidth) {
+  .has-visible-sidebar .content-column.fixed {
+    width: $contentFixedMediumWidth;
+  }
+}
+// 2. collapses the content-column to small width
+@media only screen and (max-width: 50px + $contentFixedMediumWidth + $sidebarMaxCollapseWidth) {
+  .has-visible-sidebar .content-column.fixed {
+    width: $contentFixedSmallWidth;
+  }
+}
+// 3. hides the sidebar and brings the content-column to fit the screen
+@media only screen and (max-width: 50px + $contentFixedSmallWidth + $sidebarMaxCollapseWidth) {
   .sidebar-column.max {
     display: none;
   }
-  .content-column.fixed {
+  .has-visible-sidebar .content-column.fixed {
+    float: none;
+    width: auto;
+    max-width: $contentFixedWidth;
+
+    .sulu-app-shrink {
+      display: none;
+    }
+  }
+}
+
+//
+// responsiveness for case: content (fixed) sidebar (hidden)
+// ------------------------------------------------------
+//
+
+// 1. makes the content-column fit the screen
+@media only screen and (max-width: 50px + $contentFixedWidth) {
+  .has-no-visible-sidebar .content-column.fixed {
     float: none;
     width: auto;
     max-width: $contentFixedWidth;

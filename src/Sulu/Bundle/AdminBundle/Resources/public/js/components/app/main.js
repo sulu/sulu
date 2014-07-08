@@ -136,6 +136,10 @@ define(function() {
                 this.bindCustomEvents();
                 this.bindDomEvents();
 
+                if (!!this.sandbox.mvc.history.fragment && this.sandbox.mvc.history.fragment.length > 0) {
+                    this.selectNavigationItem(this.sandbox.mvc.history.fragment);
+                }
+
                 this.sandbox.emit(INITIALIZED.call(this));
             }
         },
@@ -145,7 +149,7 @@ define(function() {
          * @param action {string}
          */
         selectNavigationItem: function(action) {
-            this.sandbox.emit('husky.navigation.select-item', action, false);
+            this.sandbox.emit('husky.navigation.select-item', action);
         },
 
         /**
