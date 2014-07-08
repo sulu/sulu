@@ -102,7 +102,7 @@ define([
                 if (!!type) {
                     typeString = '/type:' + type;
                 }
-                this.sandbox.emit('sulu.router.navigate', 'contacts/accounts' + typeString, !noReload ? true : false, true);
+                this.sandbox.emit('sulu.router.navigate', 'contacts/accounts' + typeString, !noReload ? true : false, true, true);
             }, this);
 
             this.sandbox.on('sulu.contacts.account.types', function(data) {

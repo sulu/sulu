@@ -169,6 +169,10 @@ define([
     return {
         view: true,
 
+        fullSize: {
+            width: true
+        },
+
         templates: ['/admin/contact/template/contact/list'],
 
         initialize: function() {
@@ -196,8 +200,12 @@ define([
                     el: this.sandbox.dom.find('#people-list', this.$el),
                     url: '/admin/api/accounts/' + this.options.data.id + '/contacts?flat=true',
                     searchInstanceName: 'contacts',
+                    contentFilters: {
+                        isMainContact: 'radio'
+                    },
                     viewOptions: {
                         table: {
+                            fullWidth: true,
                             selectItem: {
                                 type: 'checkbox'
                             },

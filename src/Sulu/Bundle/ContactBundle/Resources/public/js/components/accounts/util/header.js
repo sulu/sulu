@@ -221,6 +221,10 @@ define(['app-config'], function(AppConfig) {
          */
         getAccountTypeIdByTypeName: function(accountTypeName) {
             return getAccountType.call(this, null, accountTypeName).id;
+        },
+
+        getAccountTypeById: function(id) {
+            return getAccountType.call({ id: id, type: id});
         }
     };
 });

@@ -160,8 +160,29 @@ class AccountController extends AbstractContactController
     public function getContactsAction($id, Request $request)
     {
         if ($request->get('flat') == 'true') {
+
+            $filterMainContact = null;
+            $listHelper = $this->get('sulu_core.list_rest_helper');
+            $fields = $listHelper->getFields();
+
+            // check if contact is principle point of contact
+            if ($fields && array_search('isMainContact',$fields)) {
+                $mainContactString = 'accountContacts_account_mainContact_id';
+                // add to fields to query
+                $fields[] = $mainContactString;
+                $request->query->add(array('fields' => implode(',', $fields)));
+                // filter result
+                $filterMainContact = function($content) use ($mainContactString, $fields) {
+                    if (array_search('isMainContact',$fields)) {
+                        $content['isMainContact'] = $content['id'] === $content[$mainContactString];
+                    }
+                    unset($content[$mainContactString]);
+                    return $content;
+                };
+            }
+
             // flat structure
-            $view = $this->responseList(array('accountContacts_account_id' => $id), $this->contactEntityName);
+            $view = $this->responseList(array('accountContacts_account_id' => $id), $this->contactEntityName, $filterMainContact);
         } else {
             $contacts = $this->getDoctrine()->getRepository($this->contactEntityName)->findByAccountId($id);
             $view = $this->view($this->createHalResponse($contacts), 200);
