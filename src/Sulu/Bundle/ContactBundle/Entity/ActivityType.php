@@ -5,9 +5,9 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * ActivityStatus
+ * ActivityType
  */
-class ActivityStatus
+class ActivityType
 {
     /**
      * @var string
@@ -36,7 +36,7 @@ class ActivityStatus
      * Set name
      *
      * @param string $name
-     * @return ActivityStatus
+     * @return ActivityType
      */
     public function setName($name)
     {
@@ -69,7 +69,7 @@ class ActivityStatus
      * Add activities
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Activity $activities
-     * @return ActivityStatus
+     * @return ActivityType
      */
     public function addActivitie(\Sulu\Bundle\ContactBundle\Entity\Activity $activities)
     {
