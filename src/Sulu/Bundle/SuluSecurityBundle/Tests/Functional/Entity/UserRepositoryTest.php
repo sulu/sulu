@@ -24,7 +24,7 @@ use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\ContactBundle\Entity\EmailType;
 
-class UserControllerTest extends DatabaseTestCase
+class UserRepositoryTest extends DatabaseTestCase
 {
     /**
      * @var array
