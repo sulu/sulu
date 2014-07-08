@@ -180,6 +180,13 @@ class Account extends ApiEntity
     private $number;
 
     /**
+     * @var string
+     */
+    private $externalId;
+
+
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -341,6 +348,11 @@ class Account extends ApiEntity
     {
         return $this->id;
     }
+
+    /**
+     * @var \Sulu\Bundle\ContactBundle\Entity\Contact
+     */
+    private $mainContact;
 
     /**
      * Set changer
@@ -1015,11 +1027,6 @@ class Account extends ApiEntity
     {
         return $this->number;
     }
-    /**
-     * @var string
-     */
-    private $externalId;
-
 
     /**
      * Set externalId
@@ -1042,5 +1049,28 @@ class Account extends ApiEntity
     public function getExternalId()
     {
         return $this->externalId;
+    }
+
+    /**
+     * Set mainContact
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\Contact $mainContact
+     * @return Account
+     */
+    public function setMainContact(\Sulu\Bundle\ContactBundle\Entity\Contact $mainContact = null)
+    {
+        $this->mainContact = $mainContact;
+    
+        return $this;
+    }
+
+    /**
+     * Get mainContact
+     *
+     * @return \Sulu\Bundle\ContactBundle\Entity\Contact 
+     */
+    public function getMainContact()
+    {
+        return $this->mainContact;
     }
 }
