@@ -530,8 +530,6 @@ class AccountController extends AbstractContactController
                     }
                 }
 
-                $account->setNumber("blubsi");
-
                 // process details
                 if (!is_null($request->get('bankAccounts'))) {
                     $this->processBankAccounts($account, $request->get('bankAccounts'));
