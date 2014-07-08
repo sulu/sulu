@@ -245,10 +245,9 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
     }
 
     /**
-     * returns all users including their contacts
-     * these contacts are possible contact persons
+     * returns all users within the defined system including their contacts
      */
-    public function getUserInSuluSystem()
+    public function getUserInSystem()
     {
         $qb = $this->createQueryBuilder('user')
             ->select('user', 'contact')
