@@ -13,6 +13,7 @@ namespace Sulu\Bundle\MediaBundle\Entity;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 
 /**
@@ -134,7 +135,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
                 $query->setParameter('mediaIds', $ids);
             }
 
-            return $query->getResult();
+            return new Paginator($query, $fetchJoin = true);
         } catch (NoResultException $ex) {
             return null;
         }
