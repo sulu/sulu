@@ -195,7 +195,6 @@ class ContactControllerTest extends DatabaseTestCase
         $this->assertEquals('Mustermann', $response->lastName);
         $this->assertEquals('Max Mustermann', $response->fullName);
         $this->assertEquals('Dr', $response->title);
-        $this->assertEquals('CEO', $response->position);
         $this->assertEquals('123456789', $response->phones[0]->phone);
         $this->assertEquals('Private', $response->phones[0]->phoneType->name);
         $this->assertEquals('123654789', $response->faxes[0]->fax);
@@ -321,7 +320,6 @@ class ContactControllerTest extends DatabaseTestCase
         $this->assertEquals('Erika', $response->firstName);
         $this->assertEquals('Mustermann', $response->lastName);
         $this->assertEquals('MSc', $response->title);
-        $this->assertEquals('Manager', $response->position);
         $this->assertEquals('erika.mustermann@muster.at', $response->emails[0]->email);
         $this->assertEquals('erika.mustermann@muster.de', $response->emails[1]->email);
         $this->assertEquals('123456789', $response->phones[0]->phone);
@@ -352,7 +350,6 @@ class ContactControllerTest extends DatabaseTestCase
         $this->assertEquals('Erika', $response->firstName);
         $this->assertEquals('Mustermann', $response->lastName);
         $this->assertEquals('MSc', $response->title);
-        $this->assertEquals('Manager', $response->position);
         $this->assertEquals('erika.mustermann@muster.at', $response->emails[0]->email);
         $this->assertEquals('erika.mustermann@muster.de', $response->emails[1]->email);
         $this->assertEquals('123456789', $response->phones[0]->phone);
@@ -569,7 +566,6 @@ class ContactControllerTest extends DatabaseTestCase
         $this->assertEquals('Erika', $response->firstName);
         $this->assertEquals('Mustermann', $response->lastName);
         $this->assertEquals('MSc', $response->title);
-        $this->assertEquals('Manager', $response->position);
 
         $client->request('GET', '/api/contacts/' . $response->id);
         $response = json_decode($client->getResponse()->getContent());
@@ -578,7 +574,6 @@ class ContactControllerTest extends DatabaseTestCase
         $this->assertEquals('Erika', $response->firstName);
         $this->assertEquals('Mustermann', $response->lastName);
         $this->assertEquals('MSc', $response->title);
-        $this->assertEquals('Manager', $response->position);
     }
 
     public function testPostWithoutDisabledFlag()
@@ -658,7 +653,6 @@ class ContactControllerTest extends DatabaseTestCase
         $this->assertEquals('Erika', $response->firstName);
         $this->assertEquals('Mustermann', $response->lastName);
         $this->assertEquals('MSc', $response->title);
-        $this->assertEquals('Manager', $response->position);
 
         $this->assertEquals(0, $response->formOfAddress);
         $this->assertEquals("Sehr geehrte Frau Dr Mustermann", $response->salutation);
@@ -671,7 +665,6 @@ class ContactControllerTest extends DatabaseTestCase
         $this->assertEquals('Erika', $response->firstName);
         $this->assertEquals('Mustermann', $response->lastName);
         $this->assertEquals('MSc', $response->title);
-        $this->assertEquals('Manager', $response->position);
 
         $this->assertEquals(0, $response->formOfAddress);
         $this->assertEquals("Sehr geehrte Frau Dr Mustermann", $response->salutation);
@@ -820,7 +813,6 @@ class ContactControllerTest extends DatabaseTestCase
         $this->assertEquals('John', $response->firstName);
         $this->assertEquals('Doe', $response->lastName);
         $this->assertEquals('MBA', $response->title);
-        $this->assertEquals('Manager', $response->position);
         $this->assertEquals('john.doe@muster.at', $response->emails[0]->email);
         $this->assertEquals('john.doe@muster.de', $response->emails[1]->email);
         $this->assertEquals('321654987', $response->phones[0]->phone);
@@ -854,7 +846,6 @@ class ContactControllerTest extends DatabaseTestCase
         $this->assertEquals('John', $response->firstName);
         $this->assertEquals('Doe', $response->lastName);
         $this->assertEquals('MBA', $response->title);
-        $this->assertEquals('Manager', $response->position);
         $this->assertEquals('john.doe@muster.at', $response->emails[0]->email);
         $this->assertEquals('john.doe@muster.de', $response->emails[1]->email);
         $this->assertEquals('321654987', $response->phones[0]->phone);
@@ -964,7 +955,6 @@ class ContactControllerTest extends DatabaseTestCase
         $this->assertEquals('John', $response->firstName);
         $this->assertEquals('Doe', $response->lastName);
         $this->assertEquals('MBA', $response->title);
-        $this->assertEquals('Manager', $response->position);
         $this->assertEquals('john.doe@muster.de', $response->emails[0]->email);
         $this->assertEquals('789456123', $response->phones[0]->phone);
         $this->assertEquals('147258369-1', $response->faxes[0]->fax);
@@ -993,7 +983,6 @@ class ContactControllerTest extends DatabaseTestCase
         $this->assertEquals('John', $response->firstName);
         $this->assertEquals('Doe', $response->lastName);
         $this->assertEquals('MBA', $response->title);
-        $this->assertEquals('Manager', $response->position);
         $this->assertEquals('john.doe@muster.de', $response->emails[0]->email);
         $this->assertEquals('789456123', $response->phones[0]->phone);
         $this->assertEquals('147258369-1', $response->faxes[0]->fax);
@@ -1098,7 +1087,6 @@ class ContactControllerTest extends DatabaseTestCase
         $this->assertEquals('John', $response->firstName);
         $this->assertEquals('Doe', $response->lastName);
         $this->assertEquals('MBA', $response->title);
-        $this->assertEquals('Manager', $response->position);
         $this->assertEquals(0, count($response->emails));
 
         $this->assertEquals(true,$response->addresses[0]->billingAddress);
@@ -1187,7 +1175,6 @@ class ContactControllerTest extends DatabaseTestCase
         $this->assertEquals('John', $response->firstName);
         $this->assertEquals('Doe', $response->lastName);
         $this->assertEquals('MBA', $response->title);
-        $this->assertEquals('Manager', $response->position);
         $this->assertEquals(0, count($response->emails));
 
         $this->assertEquals(2, $response->addresses[0]->country->id);
@@ -1274,7 +1261,6 @@ class ContactControllerTest extends DatabaseTestCase
         $this->assertEquals('John', $response->firstName);
         $this->assertEquals('Doe', $response->lastName);
         $this->assertEquals('MBA', $response->title);
-        $this->assertEquals('Manager', $response->position);
         $this->assertEquals(0, count($response->emails));
 
         $this->assertEquals(2, $response->account->id);
@@ -1312,7 +1298,6 @@ class ContactControllerTest extends DatabaseTestCase
         $this->assertEquals('Max', $response->_embedded[0]->firstName);
         $this->assertEquals('Mustermann', $response->_embedded[0]->lastName);
         $this->assertEquals('Dr', $response->_embedded[0]->title);
-        $this->assertEquals('CEO', $response->_embedded[0]->position);
 
         $this->assertEquals(1, $response->_embedded[0]->formOfAddress);
         $this->assertEquals('Sehr geehrter Herr Dr Mustermann', $response->_embedded[0]->salutation);
@@ -1461,7 +1446,6 @@ class ContactControllerTest extends DatabaseTestCase
         $this->assertEquals('Doe', $response->lastName);
         $this->assertEquals('MBA', $response->title);
         $this->assertEquals('2', $response->account->id);
-        $this->assertEquals('Manager', $response->position);
         $this->assertEquals('john.doe@muster.at', $response->emails[0]->email);
         $this->assertEquals('john.doe@muster.de', $response->emails[1]->email);
         $this->assertEquals('321654987', $response->phones[0]->phone);
@@ -1568,7 +1552,6 @@ class ContactControllerTest extends DatabaseTestCase
         $this->assertEquals('Doe', $response->lastName);
         $this->assertEquals('MBA', $response->title);
         $this->assertObjectNotHasAttribute('account', $response);
-        $this->assertEquals('Manager', $response->position);
         $this->assertEquals('john.doe@muster.at', $response->emails[0]->email);
         $this->assertEquals('john.doe@muster.de', $response->emails[1]->email);
         $this->assertEquals('321654987', $response->phones[0]->phone);
@@ -1593,7 +1576,6 @@ class ContactControllerTest extends DatabaseTestCase
         $this->assertEquals('Doe', $response->lastName);
         $this->assertEquals('MBA', $response->title);
         $this->assertObjectNotHasAttribute('account', $response);
-        $this->assertEquals('Manager', $response->position);
         $this->assertEquals('john.doe@muster.at', $response->emails[0]->email);
         $this->assertEquals('john.doe@muster.de', $response->emails[1]->email);
         $this->assertEquals('321654987', $response->phones[0]->phone);
