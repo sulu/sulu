@@ -44,6 +44,8 @@
         <one-to-many field="children" target-entity="Sulu\Bundle\ContactBundle\Entity\Account" mapped-by="parent"
                      fetch="EXTRA_LAZY"/>
 
+        <one-to-many field="activities" target-entity="Sulu\Bundle\ContactBundle\Entity\Activity" mapped-by="account"/>
+
         <many-to-one field="changer" target-entity="Sulu\Component\Security\UserInterface">
             <join-columns>
                 <join-column name="idUsersChanger" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>

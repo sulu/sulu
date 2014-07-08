@@ -161,6 +161,11 @@ class Contact extends ApiEntity
 
     /**
      * @var \Doctrine\Common\Collections\Collection
+     */
+    private $assignedActivities;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
      * @Exclude
      */
     private $responsibleForAccounts;
@@ -983,5 +988,38 @@ class Contact extends ApiEntity
     public function getResponsibleForAccounts()
     {
         return $this->responsibleForAccounts;
+    }
+
+    /**
+     * Add assignedActivities
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\Activity $assignedActivities
+     * @return Contact
+     */
+    public function addAssignedActivitie(\Sulu\Bundle\ContactBundle\Entity\Activity $assignedActivities)
+    {
+        $this->assignedActivities[] = $assignedActivities;
+    
+        return $this;
+    }
+
+    /**
+     * Remove assignedActivities
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\Activity $assignedActivities
+     */
+    public function removeAssignedActivitie(\Sulu\Bundle\ContactBundle\Entity\Activity $assignedActivities)
+    {
+        $this->assignedActivities->removeElement($assignedActivities);
+    }
+
+    /**
+     * Get assignedActivities
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getAssignedActivities()
+    {
+        return $this->assignedActivities;
     }
 }

@@ -185,6 +185,11 @@ class Account extends ApiEntity
     private $responsiblePerson;
 
     /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $activities;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -1070,5 +1075,38 @@ class Account extends ApiEntity
     public function getResponsiblePerson()
     {
         return $this->responsiblePerson;
+    }
+
+    /**
+     * Add activities
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\Activity $activities
+     * @return Account
+     */
+    public function addActivitie(\Sulu\Bundle\ContactBundle\Entity\Activity $activities)
+    {
+        $this->activities[] = $activities;
+    
+        return $this;
+    }
+
+    /**
+     * Remove activities
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\Activity $activities
+     */
+    public function removeActivitie(\Sulu\Bundle\ContactBundle\Entity\Activity $activities)
+    {
+        $this->activities->removeElement($activities);
+    }
+
+    /**
+     * Get activities
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getActivities()
+    {
+        return $this->activities;
     }
 }

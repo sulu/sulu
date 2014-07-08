@@ -1,0 +1,8 @@
+<ActivityTypes>
+    <ActivityType>
+        <Name>contact.activity.type.phone</Name>
+    </ActivityType>
+    <ActivityType>
+        <Name>contact.activity.type.event</Name>
+    </ActivityType>
+</ActivityTypes>
