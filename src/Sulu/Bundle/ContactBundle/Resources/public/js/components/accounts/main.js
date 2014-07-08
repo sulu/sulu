@@ -126,10 +126,12 @@ define([
 
         // sets main contact
         setMainContact: function(id) {
+            // set mainContact
+            this.account.set({mainContact: Contact.findOrCreate({id: id})});
             this.account.save(null, {
                patch: true,
                success: function(response) {
-                   var model = response.toJSON();
+                   // TODO: show success label
                }.bind(this)
             });
         },
