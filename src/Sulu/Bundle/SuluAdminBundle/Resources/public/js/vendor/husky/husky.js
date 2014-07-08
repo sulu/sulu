@@ -28433,6 +28433,16 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         },
 
         /**
+         * triggered when a radio button inside the datagrid is clicked
+         * @event husky.datagrid.table.open-child
+         * @param {Number|String} id The id of the data-record to open the parents for
+         * @param {String} columnName column name
+         */
+        RADIO_SELECTED = function() {
+            return this.datagrid.createEventName.call(this.datagrid, 'radio.selected');
+        },
+
+        /**
          * calculates the width of a text by creating a tablehead element and measure its width
          * @param text
          * @param classArray
@@ -28619,6 +28629,12 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                 this.callIconCallback.bind(this), 'tr .grid-icon'
             );
 
+            // calls the radio-clicked event and stops further event-propagation
+            this.sandbox.dom.on(
+                this.sandbox.dom.find('.custom-radio.custom-filter',this.$tableContainer), 'click',
+                this.radioClickedCallback.bind(this)
+            );
+
             this.sandbox.dom.on(this.$tableContainer, 'click', function(event) {
                 this.sandbox.dom.stopPropagation(event);
             }.bind(this));
@@ -28653,6 +28669,18 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                     this.prepareChildrenLoad.bind(this), 'tbody tr'
                 );
             }
+        },
+
+        /**
+         * emits radio-clicked event and stops event propagation
+         */
+        radioClickedCallback: function(event) {
+            var parentTr = this.sandbox.dom.closest(event.currentTarget, 'tr'),
+                parentTd = this.sandbox.dom.closest(event.currentTarget, 'td'),
+                id = this.sandbox.dom.data(parentTr, 'id'),
+                field = this.sandbox.dom.data(parentTd, 'field');
+            this.sandbox.emit(RADIO_SELECTED.call(this), id, field);
+            event.stopPropagation();
         },
 
         /**
@@ -29018,13 +29046,11 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                 tblCellStyle = 'style="max-width:' + this.datagrid.matchings[index].minWidth + '"';
 
                 // call the type manipulate to manipulate the content of the cell
-                if (!!type) {
-                    if (type === this.datagrid.types.THUMBNAILS) {
-                        tblCellContent = this.datagrid.manipulateContent(tblCellContent, type, this.options.thumbnailFormat);
-                        tblCellContent = '<img alt="' + tblCellContent[constants.thumbAltKey] + '" src="' + tblCellContent[constants.thumbSrcKey] + '"/>';
-                    } else {
-                        tblCellContent = this.datagrid.manipulateContent(tblCellContent, type);
-                    }
+                if (!!type && type === this.datagrid.types.THUMBNAILS) {
+                    tblCellContent = this.datagrid.manipulateContent(tblCellContent, type, this.options.thumbnailFormat);
+                    tblCellContent = '<img alt="' + tblCellContent[constants.thumbAltKey] + '" src="' + tblCellContent[constants.thumbSrcKey] + '"/>';
+                } else {
+                    tblCellContent = this.datagrid.processContentFilter(key, tblCellContent, type, index);
                 }
 
                 if (!!editable) {
@@ -29878,20 +29904,20 @@ define('husky_components/datagrid/decorators/thumbnail-view',[],function() {
 
         templates = {
             item: [
-                    '<div class="' + constants.itemClass + ' <%= styleClass %>">',
-                        '<div class="' + constants.imageClass + '">',
-                            '<img src="<%= imgSrc %>" alt="<%= imgAlt %>"/>',
-                        '</div>',
-                        '<div class="' + constants.textClass + '">',
-                            '<span class="' + constants.titleClass + '"><%= title %></span><br />',
-                            '<span class="' + constants.descriptionClass + '"><%= description %></span>',
-                        '</div>',
-                        '<div class="' + constants.checkboxClass + ' custom-checkbox no-spacing">',
-                            '<input type="checkbox"<% if (!!checked) { %> checked<% } %>/>',
-                            '<span class="icon"></span>',
-                        '</div>',
-                        '<div class="fa-' + constants.downloadIcon + ' ' + constants.downloadClass + '"></div>',
-                    '</div>'
+                '<div class="' + constants.itemClass + ' <%= styleClass %>">',
+                '<div class="' + constants.imageClass + '">',
+                '<img src="<%= imgSrc %>" alt="<%= imgAlt %>"/>',
+                '</div>',
+                '<div class="' + constants.textClass + '">',
+                '<span class="' + constants.titleClass + '"><%= title %></span><br />',
+                '<span class="' + constants.descriptionClass + '"><%= description %></span>',
+                '</div>',
+                '<div class="' + constants.checkboxClass + ' custom-checkbox no-spacing">',
+                '<input type="checkbox"<% if (!!checked) { %> checked<% } %>/>',
+                '<span class="icon"></span>',
+                '</div>',
+                '<div class="fa-' + constants.downloadIcon + ' ' + constants.downloadClass + '"></div>',
+                '</div>'
             ].join('')
         };
 
@@ -29965,23 +29991,30 @@ define('husky_components/datagrid/decorators/thumbnail-view',[],function() {
 
                 // foreach matching configured get the corresponding datum from the record
                 this.sandbox.util.foreach(this.datagrid.matchings, function(matching) {
+                    var argument, result;
+
+                    // get argument
+                    if (matching.type === this.datagrid.types.THUMBNAILS) {
+                        argument = this.thumbnailFormat;
+                    }
+
+                    // process
+                    result = this.datagrid.processContentFilter.call(this.datagrid,
+                        matching.attribute,
+                        record[matching.attribute],
+                        matching.type,
+                        argument
+                    );
 
                     // get the thumbnail and the title data (to place it on top)
                     // with the rest generate a description string
                     if (matching.type === this.datagrid.types.THUMBNAILS) {
-                        thumbnail = this.datagrid.manipulateContent.call(this.datagrid,
-                            record[matching.attribute],
-                            this.datagrid.types.THUMBNAILS,
-                            this.thumbnailFormat
-                        );
-                        imgSrc = thumbnail[constants.thumbnailSrcProperty];
-                        imgAlt = thumbnail[constants.thumbnailAltProperty];
+                        imgSrc = result[constants.thumbnailSrcProperty];
+                        imgAlt = result[constants.thumbnailAltProperty];
                     } else if (matching.type === this.datagrid.types.TITLE) {
-                        title = record[matching.attribute];
+                        title = result;
                     } else if (matching.type === this.datagrid.types.BYTES) {
-                        description.push(
-                            this.datagrid.manipulateContent.call(this.datagrid, record[matching.attribute], this.datagrid.types.BYTES)
-                        );
+                        description.push(result);
                     }
                 }.bind(this));
 
@@ -30259,16 +30292,31 @@ define('husky_components/datagrid/decorators/group-view',[],function () {
                 title = addition = '';
 
                 this.sandbox.util.foreach(this.datagrid.matchings, function(matching) {
+                    var argument, result,
+                        type = matching.type;
 
-                    // pick the important data out of each group
+                    // prepare data for processing
+                    if (matching.type === this.datagrid.types.COUNT) {
+                        argument = this.sandbox.translate(constants.elementsKey);
+                    } else if (matching.type === this.datagrid.types.THUMBNAILS) {
+                        type = null; // do not apply default processor on thumbnails
+                    }
+
+                    // process
+                    result = this.datagrid.processContentFilter.call(this.datagrid,
+                        matching.attribute,
+                        group[matching.attribute],
+                        type,
+                        argument
+                    );
+
+                    // set data
                     if (matching.type === this.datagrid.types.THUMBNAILS) {
-                        thumbnails = group[matching.attribute];
+                        thumbnails = result;
                     } else if (matching.type === this.datagrid.types.TITLE) {
-                        title = group[matching.attribute];
+                        title = result;
                     } else if(matching.type === this.datagrid.types.COUNT) {
-                        addition += this.datagrid.manipulateContent.call(this.datagrid,
-                            group[matching.attribute],
-                            matching.type, this.sandbox.translate(constants.elementsKey));
+                        addition += result;
                     }
                 }.bind(this));
 
@@ -30897,7 +30945,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
  * @param {Boolean|String} [options.childrenPropertyName] name of the property which contains the number of children. False to indaticate that list is flat
  * @param {Boolean} [options.onlySelectLeaves] If true only the outermost children can be selected
  * @param {Boolean} [options.resizeListeners] If true a resize-listener will be instantiated, which is responsible for responsiveness
- *
+ * @param {String|Function} [options.contentFilters] Used for filtering data at a specifig attribute / column. If defined as callback the rows value will be passed. If defined as a string, an existing filter template will be applied (see matching types)
  * @param {Array} [options.matchings] configuration array of columns if fieldsData isn't set
  * @param {String} [options.matchings.content] column title
  * @param {String} [options.matchings.width] width of column (used by the table view)
@@ -30930,6 +30978,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
                 paginationOptions: {
                     dropdown: {}
                 },
+                contentFilters: null,
                 sortable: true,
                 matchings: [],
                 url: null,
@@ -30949,6 +30998,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
                 THUMBNAILS: 'thumbnails',
                 TITLE: 'title',
                 BYTES: 'bytes',
+                RADIO: 'radio',
                 COUNT: 'count'
             },
 
@@ -30964,6 +31014,89 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
                 }
             },
 
+            filters = {
+                /**
+                 * Takes bytes and returns a more readable string
+                 * @param bytes {Number}
+                 * @returns {string}
+                 */
+                bytes: function(bytes) {
+                    if (bytes === 0) {
+                        return '0 Byte';
+                    }
+                    var k = 1000,
+                        sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
+                        i = Math.floor(Math.log(bytes) / Math.log(k));
+                    return (bytes / Math.pow(k, i)).toPrecision(3) + ' ' + sizes[i];
+                },
+
+                title: function(content) {
+                    return content;
+                },
+
+                /**
+                 * Brings a date into the right format
+                 * @param date {String} the date to parse
+                 * @returns {String}
+                 */
+                date: function(date) {
+                    var parsedDate = this.sandbox.date.format(date);
+                    if (parsedDate !== null) {
+                        return parsedDate;
+                    }
+                    return date;
+                },
+
+                /**
+                 * Attaches a postfix to a number
+                 * @param number
+                 * @param postfix
+                 */
+                count: function(number, postfix) {
+                    return (!!postfix) ? number + ' ' + postfix : number;
+                },
+
+                /**
+                 * Takes an array of thumbnails and returns an object with url and and alt
+                 * @param thumbnails {Array} array of thumbnails
+                 * @param format {String} the format of the thumbnail
+                 * @returns {Object} with url and alt property
+                 */
+                thumbnails: function(thumbnails, format) {
+                    var thumbnail = {
+                        url: null,
+                        alt: null
+                    };
+                    if (!!thumbnails[format]) {
+                        if (typeof thumbnails[format] === 'object') {
+                            thumbnail.url = thumbnails[format].url;
+                            thumbnail.alt = thumbnails[format].alt;
+                        } else {
+                            thumbnail.url = thumbnails[format];
+                            thumbnail.alt = '';
+                        }
+                    }
+                    return thumbnail;
+                },
+
+                /**
+                 * checks for bool value and sets radio to true
+                 */
+                radio: function(content, index, columnName) {
+                    var checked = (!content) ? false : true;
+                    return this.sandbox.util.template(templates.radio, {checked: checked, radioId: index, columnName: columnName});
+                }
+            },
+
+            templates = {
+                radio: [
+                    '<div class="custom-radio custom-filter">',
+                    '   <input name="radio-<%= columnName %>-<%= radioId %>" class="" type="radio" class="form-element" <% if (checked) { print("checked")} %>/>',
+                    '   <span class="icon"></span>',
+                    '</div>'
+                ].join('')
+            },
+
             namespace = 'husky.datagrid.',
 
         /* TRIGGERS EVENTS */
@@ -30972,7 +31105,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * raised after initialization has finished
              * @event husky.datagrid.initialized
              */
-            INITIALIZED = function() {
+                INITIALIZED = function() {
                 return this.createEventName('initialized');
             },
 
@@ -30980,7 +31113,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * raised when the the current page changes
              * @event husky.datagrid.page.change
              */
-            PAGE_CHANGE = function() {
+                PAGE_CHANGE = function() {
                 return this.createEventName('page.change');
             },
 
@@ -30988,7 +31121,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * raised when the data is updated
              * @event husky.datagrid.updated
              */
-            UPDATED = function() {
+                UPDATED = function() {
                 return this.createEventName('updated');
             },
 
@@ -30997,7 +31130,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * @event husky.datagrid.item.deselect
              * @param {String} id of deselected item
              */
-            ITEM_DESELECT = function() {
+                ITEM_DESELECT = function() {
                 return this.createEventName('item.deselect');
             },
 
@@ -31005,7 +31138,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * raised when selection of items changes
              * @event husky.datagrid.number.selections
              */
-            NUMBER_SELECTIONS = function() {
+                NUMBER_SELECTIONS = function() {
                 return this.createEventName('number.selections');
             },
 
@@ -31014,7 +31147,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * @event husky.datagrid.item.click
              * @param {String} id of item that was clicked
              */
-            ITEM_CLICK = function() {
+                ITEM_CLICK = function() {
                 return this.createEventName('item.click');
             },
 
@@ -31023,7 +31156,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * @event husky.datagrid.item.select
              * @param {String} if of selected item
              */
-            ITEM_SELECT = function() {
+                ITEM_SELECT = function() {
                 return this.createEventName('item.select');
             },
 
@@ -31031,7 +31164,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * raised when all items get deselected via the header checkbox
              * @event husky.datagrid.all.deselect
              */
-            ALL_DESELECT = function() {
+                ALL_DESELECT = function() {
                 return this.createEventName('all.deselect');
             },
 
@@ -31040,7 +31173,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * @event husky.datagrid.all.select
              * @param {Array} ids of all items that have been clicked
              */
-            ALL_SELECT = function() {
+                ALL_SELECT = function() {
                 return this.createEventName('all.select');
             },
 
@@ -31049,7 +31182,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * @event husky.datagrid.data.saved
              * @param {Object} data returned
              */
-            DATA_SAVED = function() {
+                DATA_SAVED = function() {
                 return this.createEventName('updated');
             },
 
@@ -31060,7 +31193,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * @param {String} error thrown
              *
              */
-            DATA_SAVE_FAILED = function() {
+                DATA_SAVE_FAILED = function() {
                 return this.createEventName('data.save.failed');
             },
 
@@ -31068,10 +31201,9 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * raised when editable table is changed
              * @event husky.datagrid.data.save
              */
-            DATA_CHANGED = function() {
+                DATA_CHANGED = function() {
                 return this.createEventName('data.changed');
             },
-
 
         /* PROVIDED EVENTS */
 
@@ -31079,7 +31211,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * raised when husky.datagrid.data.get is triggered
              * @event husky.datagrid.data.provide
              */
-            DATA_PROVIDE = function() {
+                DATA_PROVIDE = function() {
                 return this.createEventName('data.provide');
             },
 
@@ -31089,7 +31221,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * @param {String} viewId The identifier of the view
              * @param {Object} Options to merge with the current view options
              */
-            CHANGE_VIEW = function() {
+                CHANGE_VIEW = function() {
                 return this.createEventName('view.change');
             },
 
@@ -31098,7 +31230,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * @event husky.datagrid.pagination.change
              * @param {String} paginationId The identifier of the pagination
              */
-            CHANGE_PAGINATION = function() {
+                CHANGE_PAGINATION = function() {
                 return this.createEventName('pagination.change');
             },
 
@@ -31107,7 +31239,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * @event husky.datagrid.record.add
              * @param {Object} the data of the new record
              */
-            RECORD_ADD = function() {
+                RECORD_ADD = function() {
                 return this.createEventName('record.add');
             },
 
@@ -31117,7 +31249,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * @param {Object} the data of the new record
              * @param callback {Function} callback to execute after process has been finished
              */
-            RECORDS_ADD = function() {
+                RECORDS_ADD = function() {
                 return this.createEventName('records.add');
             },
 
@@ -31126,7 +31258,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * @event husky.datagrid.record.remove
              * @param {String} id of the record to be removed
              */
-            RECORD_REMOVE = function() {
+                RECORD_REMOVE = function() {
                 return this.createEventName('record.remove');
             },
 
@@ -31135,7 +31267,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * @event husky.datagrid.records.change
              * @param {Object|Array} the new data-record. Must at least contain an id-property. Can also be an array of data-records
              */
-            RECORDS_CHANGE = function() {
+                RECORDS_CHANGE = function() {
                 return this.createEventName('records.change');
             },
 
@@ -31143,7 +31275,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * used to trigger an update of the data
              * @event husky.datagrid.update
              */
-            UPDATE = function() {
+                UPDATE = function() {
                 return this.createEventName('update');
             },
 
@@ -31153,7 +31285,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * @param {String} searchField
              * @param {String} searchString
              */
-            DATA_SEARCH = function() {
+                DATA_SEARCH = function() {
                 return this.createEventName('data.search');
             },
 
@@ -31161,7 +31293,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * raised when data is sorted
              * @event husky.datagrid.data.sort
              */
-            DATA_SORT = function() {
+                DATA_SORT = function() {
                 return this.createEventName('data.sort');
             },
 
@@ -31170,7 +31302,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * @event husky.datagrid.url.update
              * @param {Object} url parameter : key
              */
-            URL_UPDATE = function() {
+                URL_UPDATE = function() {
                 return this.createEventName('url.update');
             },
 
@@ -31178,7 +31310,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * triggers husky.datagrid.data.provide
              * @event husky.datagrid.data.get
              */
-            DATA_GET = function() {
+                DATA_GET = function() {
                 return this.createEventName('data.get');
             },
 
@@ -31187,10 +31319,9 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * @event husky.datagrid.items.get-selected
              * @param  {Function} callback function receives array of selected items
              */
-            ITEMS_GET_SELECTED = function() {
+                ITEMS_GET_SELECTED = function() {
                 return this.createEventName('items.get-selected');
             },
-
 
         /**
          * Private Methods
@@ -31205,7 +31336,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * @param {String|Null} paramValue Value of the parameter. If not set, parameter will be removed from url
              * @returns {String} updated url
              */
-            setGetParameter = function(url, paramName, paramValue) {
+                setGetParameter = function(url, paramName, paramValue) {
                 if (url.indexOf(paramName + "=") >= 0) {
                     var prefix = url.substring(0, url.indexOf(paramName + "=")),
                         suffix = url.substring(url.indexOf(paramName + "="));
@@ -31230,66 +31361,6 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
                     }
                 }
                 return url;
-            },
-
-            /**
-             * Takes bytes and returns a more readable string
-             * @param bytes {Number}
-             * @returns {string}
-             */
-            parseBytes = function(bytes) {
-                if (bytes === 0) {
-                    return '0 Byte';
-                }
-                var k = 1000,
-                    sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
-                    i = Math.floor(Math.log(bytes) / Math.log(k));
-                return (bytes / Math.pow(k, i)).toPrecision(3) + ' ' + sizes[i];
-            },
-
-            /**
-             * Brings a date into the right format
-             * @param date {String} the date to parse
-             * @returns {String}
-             */
-            parseDate = function(date) {
-                var parsedDate = this.sandbox.date.format(date);
-                if (parsedDate !== null) {
-                    return parsedDate;
-                }
-                return date;
-            },
-
-            /**
-             * Attaches a postfix to a number
-             * @param number
-             * @param postfix
-             */
-            parseCount = function(number, postfix) {
-                return (!!postfix) ? number + ' ' + postfix : number;
-            },
-
-            /**
-             * Takes an array of thumbnails and returns an object with url and and alt
-             * @param thumbnails {Array} array of thumbnails
-             * @param format {String} the format of the thumbnail
-             * @returns {Object} with url and alt property
-             */
-            parseThumbnails = function(thumbnails, format) {
-                var thumbnail = {
-                    url: null,
-                    alt: null
-                };
-                if (!!thumbnails[format]) {
-                    if (typeof thumbnails[format] === 'object') {
-                    thumbnail.url = thumbnails[format].url;
-                    thumbnail.alt = thumbnails[format].alt;
-                    } else {
-                        thumbnail.url = thumbnails[format];
-                        thumbnail.alt = '';
-                    }
-                }
-                return thumbnail;
             };
 
         return {
@@ -31729,17 +31800,38 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * @param content {String} the content of the cell
              * @param type {String} the columns type
              * @param argument {Number|String} argument to pass to the processor
+             * @param columnName {String} Name of the column
              * @returns {String} the manipulated content
              */
-            manipulateContent: function(content, type, argument) {
-                if (type === types.DATE) {
-                    content = parseDate.call(this, content, argument);
-                } else if (type === types.BYTES) {
-                    content = parseBytes.call(this, content, argument);
-                } else if (type === types.THUMBNAILS) {
-                    content = parseThumbnails.call(this, content, argument);
-                } else if (type === types.COUNT) {
-                    content = parseCount.call(this, content, argument);
+            manipulateContent: function(content, type, argument, columnName) {
+                if (filters.hasOwnProperty(type)) {
+                    return filters[type].call(this, content, argument, columnName);
+                }
+                return content;
+            },
+
+            /**
+             * Checks if a filter was set for specified column and processes it
+             * @param {String} attributeName name of processed attribute
+             * @param {String} content the content which is processed
+             * @param {String} [type] if no filter is set, the type is processed
+             * @param {Number|String} [argument] argument to pass to the processor
+             * @returns {String} the manipulated content
+             */
+            processContentFilter: function(attributeName, content, type, argument) {
+                // check if filter is set for current column
+                if (!!this.options.contentFilters && this.options.contentFilters.hasOwnProperty(attributeName)) {
+                    // check if filter is function or string and call filter
+                    if (typeof this.options.contentFilters[attributeName] === 'function') {
+                        return this.options.contentFilters[attributeName].call(this, content, argument);
+                    } else if (typeof this.options.contentFilters[attributeName] === 'string') {
+                        type = this.options.contentFilters[attributeName];
+                        return this.manipulateContent(content, type, argument, attributeName);
+                    }
+                }
+                // if no filter was set, check if type is set and call
+                else if (!!type) {
+                    return this.manipulateContent(content, type, argument);
                 }
                 return content;
             },
@@ -32228,7 +32320,6 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
                     });
                 }
             },
-
 
             /**
              * Filters fields out of the data passed to the view

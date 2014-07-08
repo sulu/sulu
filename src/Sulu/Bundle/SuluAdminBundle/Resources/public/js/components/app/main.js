@@ -313,7 +313,7 @@ define(function() {
                     this.changeTopSpacing();
                 }
 
-                if (!noResize) {
+                if (!noResize && this.currentRoute !== route) {
                     // remove eventual full-width and full-height mode
                     this.removeFullSize();
                 }
