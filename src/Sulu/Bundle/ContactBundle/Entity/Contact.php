@@ -46,7 +46,7 @@ class Contact extends ApiEntity
     private $title;
 
     /**
-     * @Accessor(getter="getMainPosition")
+     * @Accessor(getter="getPosition")
      * @var string
      */
     private $position;
@@ -289,6 +289,7 @@ class Contact extends ApiEntity
         $mainAccountContact = $this->getMainAccountContact();
         if ($mainAccountContact) {
             $mainAccountContact->setPosition($position);
+            $this->position = $position;
         }
         return $this;
     }
@@ -298,7 +299,7 @@ class Contact extends ApiEntity
      *
      * @return string
      */
-    public function getMainPosition()
+    public function getPosition()
     {
         $mainAccountContact = $this->getMainAccountContact();
         if ($mainAccountContact) {
@@ -638,7 +639,7 @@ class Contact extends ApiEntity
             'middleName' => $this->getMiddleName(),
             'lastName' => $this->getLastName(),
             'title' => $this->getTitle(),
-            'position' => $this->getMainPosition(),
+            'position' => $this->getPosition(),
             'birthday' => $this->getBirthday(),
             'created' => $this->getCreated(),
             'changed' => $this->getChanged()
