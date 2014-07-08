@@ -293,8 +293,9 @@ define(function() {
              * @param {String} route the route to navigate to
              * @param {Bool} [trigger=true] trigger navigation route
              * @param {Bool} [noLoader] defines if a loader should be shown
+             * @param {Bool} [noResize=false] defines if layout should be resized on navigate
              */
-            this.sandbox.on('sulu.router.navigate', function(route, trigger, noLoader) {
+            this.sandbox.on('sulu.router.navigate', function(route, trigger, noLoader, noResize) {
 
                 // set trigger default to true
                 trigger = (typeof trigger !== 'undefined' && trigger === false) ? false : true;
@@ -312,7 +313,7 @@ define(function() {
                     this.changeTopSpacing();
                 }
 
-                if (trigger) {
+                if (!noResize) {
                     // remove eventual full-width and full-height mode
                     this.removeFullSize();
                 }
