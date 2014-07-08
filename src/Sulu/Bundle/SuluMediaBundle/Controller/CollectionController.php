@@ -10,7 +10,6 @@
 
 namespace Sulu\Bundle\MediaBundle\Controller;
 
-use DateTime;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Put;
