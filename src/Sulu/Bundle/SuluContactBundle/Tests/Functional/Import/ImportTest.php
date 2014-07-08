@@ -347,7 +347,7 @@ class ImportTest extends DatabaseTestCase
         $this->assertEquals(1, $contact->getId());
         $this->assertEquals('John', $contact->getFirstName());
         $this->assertEquals('Doe', $contact->getLastName());
-        $this->assertEquals('Secretary', $contact->getPosition());
+        $this->assertEquals('Secretary', $contact->getMainPosition());
         $this->assertEquals(1, $contact->getAccountContacts()[0]->getAccount()->getId());
 
         // addresss
@@ -381,7 +381,7 @@ class ImportTest extends DatabaseTestCase
         $this->assertEquals(2, $contact->getId());
         $this->assertEquals('Nicole', $contact->getFirstName());
         $this->assertEquals('Exemplary', $contact->getLastName());
-        $this->assertEquals('CEO', $contact->getPosition());
+        $this->assertEquals('CEO', $contact->getMainPosition());
         $this->assertEquals('Master', $contact->getTitle());
         $this->assertEquals(2, $contact->getAccountContacts()[0]->getAccount()->getId());
 
