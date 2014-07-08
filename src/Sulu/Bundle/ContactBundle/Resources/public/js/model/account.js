@@ -20,7 +20,7 @@ define([
     'sulucontact/model/accountCategory',
     'sulucontact/model/accountContact',
     'sulucontact/model/bankAccount',
-    'sulucontact/model/Contact'
+    'sulucontact/model/contact'
 ], function(RelationalModel, HasMany, Account, Email, Phone, Address, Url, Note, HasOne, AccountCategory, AccountContact, BankAccount, Contact) {
 
     return RelationalModel({
