@@ -17,3 +17,7 @@ sulu_contact.termsofpayment:
 sulu_contact.termsofdelivers:
     type: rest
     resource: Sulu\Bundle\ContactBundle\Controller\TermsOfDeliveryController
+
+sulu_contact.activities:
+    type: rest
+    resource: Sulu\Bundle\ContactBundle\Controller\ActivityController
