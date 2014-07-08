@@ -72,7 +72,10 @@ class ContactController extends AbstractContactController
     protected $fieldsRelations = array(
 //        'email',
         'account',
+        'accountContacts_position'
     );
+
+    protected $fieldsWidth = array();
 
     /**
      * {@inheritdoc}
@@ -96,6 +99,7 @@ class ContactController extends AbstractContactController
         'phone' => 'public.phone',
         'account' => 'contact.contacts.company',
         'accountContacts_position' => 'contact.contacts.position',
+        'isMainContact' => 'contact.contacts.main-contact',
     );
 
     /**
@@ -116,6 +120,7 @@ class ContactController extends AbstractContactController
                 'id',
                 'firstName',
                 'lastName',
+                'isMainContact',
                 'accountContacts_position',
             );
             $fieldsHidden = array(
