@@ -34,7 +34,6 @@ define(['app-config'], function(AppConfig) {
             this.sandbox.emit('husky.toolbar.header.item.enable', 'template', false);
 
             this.dfdListenForChange = this.sandbox.data.deferred();
-
             this.load();
         },
 
@@ -169,6 +168,7 @@ define(['app-config'], function(AppConfig) {
                 context = this.sandbox.util.extend({}, defaults),
                 tpl = this.sandbox.util.template(template, context);
 
+            this.sandbox.stop(this.formId + '*');
             this.sandbox.dom.remove(this.formId + ' *');
             this.sandbox.dom.html(this.formId, tpl);
             this.setStateDropdown(data);
@@ -419,6 +419,7 @@ define(['app-config'], function(AppConfig) {
                 }.bind(this), '.trigger-save-button');
             }.bind(this));
 
+            this.sandbox.off('sulu.content.changed');
             this.sandbox.on('sulu.content.changed', function() {
                 this.setHeaderBar(false);
                 this.contentChanged = true;
