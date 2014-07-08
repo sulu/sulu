@@ -186,6 +186,7 @@ class Account extends ApiEntity
 
     /**
      * @var \Doctrine\Common\Collections\Collection
+     * @Exclude
      */
     private $activities;
 
