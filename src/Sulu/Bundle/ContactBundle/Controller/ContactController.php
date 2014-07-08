@@ -59,7 +59,7 @@ class ContactController extends AbstractContactController
     /**
      * {@inheritdoc}
      */
-    protected $fieldsExcluded = array('gender', 'newsletter', 'position');
+    protected $fieldsExcluded = array('gender', 'newsletter');
 
     /**
      * {@inheritdoc}
