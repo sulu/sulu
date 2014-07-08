@@ -56,7 +56,6 @@ define(function() {
         };
 
     return {
-        view: true,
 
         templates: ['/admin/media/template/media/info',
             '/admin/media/template/media/multiple-edit'],
@@ -150,6 +149,7 @@ define(function() {
                         openOnStart: true,
                         removeOnClose: true,
                         instanceName: 'media-edit',
+                        propagateEvents: false,
                         okCallback: this.changeSingleModel.bind(this)
                     }
                 }
@@ -181,6 +181,7 @@ define(function() {
                         openOnStart: true,
                         removeOnClose: true,
                         draggable: false,
+                        propagateEvents: false,
                         instanceName: 'media-multiple-edit',
                         okCallback: this.changeMultipleModel.bind(this)
                     }
