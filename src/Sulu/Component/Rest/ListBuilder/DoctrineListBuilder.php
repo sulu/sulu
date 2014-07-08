@@ -10,7 +10,6 @@
 
 namespace Sulu\Component\Rest\ListBuilder;
 
-use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManager;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptor\DoctrineFieldDescriptor;
 
@@ -160,7 +159,6 @@ class DoctrineListBuilder implements ListBuilderInterface
     public function execute()
     {
         $qb = $this->em->createQueryBuilder()
-            //->select($this->entityName)
             ->from($this->entityName, $this->entityName);
 
         foreach ($this->fields as $field) {
@@ -180,7 +178,7 @@ class DoctrineListBuilder implements ListBuilderInterface
         }
 
         if ($this->sortField != null) {
-            $qb->orderBy($this->sortField->getEntityName() . '.' . $this->sortField->getName(), $this->sortOrder);
+            $qb->orderBy($this->sortField->getFullName(), $this->sortOrder);
         }
 
         if ($this->limit != null) {
