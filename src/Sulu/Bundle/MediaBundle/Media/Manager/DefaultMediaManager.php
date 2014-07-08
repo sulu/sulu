@@ -198,28 +198,24 @@ class DefaultMediaManager implements MediaManagerInterface
 
         $version = $file->getVersion();
 
-        $fileName = null;
-        $oldStorageOptions = null;
+        $currentFileVersion = null;
 
         /**
          * @var FileVersion $fileVersion
          */
         foreach ($file->getFileVersions() as $fileVersion) {
-            if ($version == $file->getVersion()) {
-                $fileName = $fileVersion->getName();
-                $oldStorageOptions = $fileVersion->getStorageOptions();
-
-                // delete old fileversion from cache
-                $this->formatCache->purge($mediaEntity->getId(), $fileVersion->getName(), $fileVersion->getStorageOptions());
+            if ($version == $fileVersion->getVersion()) {
+                $currentFileVersion = $fileVersion;
                 break;
             }
         }
 
-        if (!$fileName) {
+        if (!$currentFileVersion) {
             throw new FileVersionNotFoundException ('Actual Version not found(' . $version . ')');
         }
 
         if ($uploadedFile) {
+
             // new uploaded file
             $version++;
             $this->validator->validate($uploadedFile);
@@ -228,21 +224,32 @@ class DefaultMediaManager implements MediaManagerInterface
                 $uploadedFile->getPathname(),
                 $uploadedFile->getFilename(),
                 $version,
-                $oldStorageOptions
+                $currentFileVersion->getStorageOptions()
             );
             $data['name'] = $uploadedFile->getClientOriginalName();
             $data['size'] = $uploadedFile->getSize();
+            $data['type'] = $this->getMediaType($uploadedFile);
             $data['version'] = $version;
 
-            $fileVersion = new FileVersion();
             $fileVersion->setChanged(new Datetime());
             $fileVersion->setCreated(new Datetime());
             $fileVersion->setChanger($user);
             $fileVersion->setCreator($user);
+
             $file->setVersion($version);
             $fileVersion->setVersion($version);
             $fileVersion->setFile($file);
             $file->addFileVersion($fileVersion);
+
+            // delete old fileversion from cache
+            $this->formatCache->purge($mediaEntity->getId(), $currentFileVersion->getName(), $currentFileVersion->getStorageOptions());
+        } else {
+            // not setable in update
+            $data['name'] = null;
+            $data['size'] = null;
+            $data['type'] = null;
+            $data['version'] = null;
+            $data['storageOptions'] = null;
         }
 
         $mediaWrapper = $this->setDataToMediaWrapper(
@@ -329,7 +336,7 @@ class DefaultMediaManager implements MediaManagerInterface
             }
         }
 
-        return $this->em->getRepository('SuluMediaBundle:MediaType')->find($id);
+        return $id;
     }
 
     /**
@@ -341,16 +348,20 @@ class DefaultMediaManager implements MediaManagerInterface
     protected function setDataToMediaWrapper(MediaWrapper $mediaWrapper, $data)
     {
         foreach ($data as $key => $value) {
-            if ($value) {
-                switch ($key) {
-                    case 'collection':
-                        $value = $this->getCollectionById($value);
-                        break;
-                }
-                $setDataMethod = 'set' . ucfirst($key);
-                if (method_exists($mediaWrapper, $setDataMethod)) {
-                    $mediaWrapper->$setDataMethod($value);
-                }
+            if (empty($value)) {
+                continue; // don't call setter for null
+            }
+            switch ($key) {
+                case 'collection':
+                    $value = $this->getCollectionById($value);
+                    break;
+                case 'type':
+                    $value = $this->getTypeById($data['type']);
+                    break;
+            }
+            $setDataMethod = 'set' . ucfirst($key);
+            if (method_exists($mediaWrapper, $setDataMethod)) {
+                $mediaWrapper->$setDataMethod($value);
             }
         }
 
@@ -369,6 +380,20 @@ class DefaultMediaManager implements MediaManagerInterface
             throw new EntityNotFoundException('SuluMediaBundle:Collection', $collectionId);
         }
         return $collection;
+    }
+
+    /**
+     * @param $typeId
+     * @return object
+     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
+     */
+    protected function getTypeById($typeId)
+    {
+        $type = $this->em->getRepository('SuluMediaBundle:MediaType')->find($typeId);
+        if (!$type) {
+            throw new EntityNotFoundException('SuluMediaBundle:MediaType', $typeId);
+        }
+        return $type;
     }
 
     /**

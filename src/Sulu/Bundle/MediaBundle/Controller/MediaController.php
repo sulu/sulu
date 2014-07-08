@@ -26,6 +26,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Translation\Exception\NotFoundResourceException;
 use Symfony\Component\HttpFoundation\Request;
+use FOS\RestBundle\Controller\Annotations\Post;
 
 /**
  * Makes media available through a REST API
@@ -160,6 +161,19 @@ class MediaController extends RestController implements ClassResourceInterface
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
+     * @Post("media/{id}")
+     */
+    public function fileVersionUpdateAction($id, Request $request)
+    {
+        return $this->saveEntity($id, $request);
+    }
+
+    /**
+     * Edits the existing media with the given id
+     * @param integer $id The id of the media to update
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      */
     public function putAction($id, Request $request)
     {
@@ -191,7 +205,7 @@ class MediaController extends RestController implements ClassResourceInterface
     {
         try {
             $mM = $this->getMediaManager();
-            $data = $this->getData($request);
+            $data = $this->getData($request, $id ? false : true);
             $data['id'] = $id;
             $uploadedFile = $this->getUploadedFile($request, 'fileVersion');
             $categoryEntity = $mM->save($uploadedFile, $data, $this->getUser()->getId());
@@ -219,13 +233,14 @@ class MediaController extends RestController implements ClassResourceInterface
 
     /**
      * @param Request $request
+     * @param bool $fallback
      * @return array
      */
-    protected function getData(Request $request)
+    protected function getData(Request $request, $fallback = true)
     {
         return array(
             'id' => $request->get('id'),
-            'locale' => $request->get('locale', $this->getLocale($request->get('locale'))),
+            'locale' => $request->get('locale', $fallback ? $this->getLocale($request->get('locale')) : null),
             'type' => $request->get('type'),
             'collection' => $request->get('collection'),
             'versions' => $request->get('versions'),
@@ -237,7 +252,7 @@ class MediaController extends RestController implements ClassResourceInterface
             'formats' => $request->get('formats', array()),
             'url' => $request->get('url'),
             'name' => $request->get('name'),
-            'title' => $request->get('title', $this->getTitleFromUpload($request, 'fileVersion')),
+            'title' => $request->get('title', $fallback ? $this->getTitleFromUpload($request, 'fileVersion') : null),
             'description' => $request->get('description'),
             'changer' => $request->get('changer'),
             'creator' => $request->get('creator'),
