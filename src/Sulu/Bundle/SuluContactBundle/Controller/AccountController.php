@@ -93,7 +93,7 @@ class AccountController extends AbstractContactController
      */
     protected $fieldsTranslationKeys = array(
         'id' => 'public.id',
-        'disabled' => 'public.deactivate'
+        'disabled' => 'public.deactivate',
     );
 
     /**
@@ -121,10 +121,9 @@ class AccountController extends AbstractContactController
 
     /**
      * returns all fields that can be used by list
-     * @Get("accounts/fields")
      * @return mixed
      */
-    public function getFieldsAction()
+    public function fieldsAction()
     {
         return $this->responseFields();
     }
