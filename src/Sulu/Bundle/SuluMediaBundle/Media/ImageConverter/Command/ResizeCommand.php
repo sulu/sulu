@@ -20,8 +20,11 @@ class ResizeCommand implements CommandInterface {
     public function execute(&$image, $parameters)
     {
         $size = $image->getSize();
-        $newWidth = isset($parameters['x']) ? intval($parameters['x']) : null;
-        $newHeight = isset($parameters['y']) ? intval($parameters['y']) : null;
+
+        $retina = isset($parameters['retina']) && $parameters['retina'] != 'false' ? 2 : 1;
+
+        $newWidth = isset($parameters['x']) ? intval($parameters['x']) * $retina : null;
+        $newHeight = isset($parameters['y']) ? intval($parameters['y']) * $retina : null;
 
         if ($newHeight == null) {
             $newHeight = $size->getHeight() / $size->getWidth() * $newWidth;
