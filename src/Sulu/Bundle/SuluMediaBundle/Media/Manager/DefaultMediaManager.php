@@ -13,7 +13,6 @@ namespace Sulu\Bundle\MediaBundle\Media\Manager;
 use Doctrine\Common\Persistence\ObjectManager;
 
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
-use Sulu\Bundle\MediaBundle\Media\FormatCache\FormatCacheInterface;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
@@ -76,11 +75,6 @@ class DefaultMediaManager implements MediaManagerInterface
     private $storage;
 
     /**
-     * @var FormatCacheInterface
-     */
-    private $formatCache;
-
-    /**
      * @var UserRepositoryInterface
      */
     private $userRepository;
@@ -106,7 +100,6 @@ class DefaultMediaManager implements MediaManagerInterface
      * @param UserRepositoryInterface $userRepository
      * @param ObjectManager $em
      * @param StorageInterface $storage
-     * @param FormatCacheInterface $formatCache
      * @param FileValidatorInterface $validator
      * @param FormatManagerInterface $formatManager
      * @param string $maxFileSize
@@ -119,7 +112,6 @@ class DefaultMediaManager implements MediaManagerInterface
         UserRepositoryInterface $userRepository,
         ObjectManager $em,
         StorageInterface $storage,
-        FormatCacheInterface $formatCache,
         FileValidatorInterface $validator,
         FormatManagerInterface $formatManager,
         $maxFileSize,
@@ -131,7 +123,6 @@ class DefaultMediaManager implements MediaManagerInterface
         $this->em = $em;
         $this->userRepository = $userRepository;
         $this->storage = $storage;
-        $this->formatCache = $formatCache;
         $this->validator = $validator;
         $this->formatManager = $formatManager;
         $this->maxFileSize = $maxFileSize;
@@ -210,7 +201,7 @@ class DefaultMediaManager implements MediaManagerInterface
                 $oldStorageOptions = $fileVersion->getStorageOptions();
 
                 // delete old fileversion from cache
-                $this->formatCache->purge($mediaEntity->getId(), $fileVersion->getName(), $fileVersion->getStorageOptions());
+                $this->formatManager->purge($mediaEntity->getId(), $fileVersion->getName(), $fileVersion->getStorageOptions());
                 break;
             }
         }
@@ -421,7 +412,7 @@ class DefaultMediaManager implements MediaManagerInterface
         );
 
         $mediaWrapper->setUrl(
-            $this->getUrl($mediaWrapper->getId(), $mediaWrapper->getVersion(), $mediaWrapper->getStorageOptions())
+            $this->getUrl($mediaWrapper->getName(), $mediaWrapper->getVersion(), $mediaWrapper->getStorageOptions())
         );
 
         return $mediaWrapper;
@@ -443,20 +434,20 @@ class DefaultMediaManager implements MediaManagerInterface
      * @param $storageOptions
      * @return mixed
      */
-    public function getFormats($id, $name, $storageOptions)
+    protected function getFormats($id, $name, $storageOptions)
     {
         return $this->formatManager->getFormats($id, $name, $storageOptions);
     }
 
     /**
-     * @param $id
+     * @param $fileName
      * @param $version
      * @param $storageOptions
      * @return mixed
      */
-    public function getUrl($id, $version, $storageOptions)
+    protected function getUrl($fileName, $version, $storageOptions)
     {
-        return $this->formatManager->getOriginal($id, $version, $storageOptions);
+        return $this->storage->load($fileName, $version, $storageOptions);
     }
 
 
