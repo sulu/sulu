@@ -426,7 +426,7 @@ define([
                 }));
                 this.bindPreviewDomEvents();
                 this.startPreviewResolutionDropdown();
-                this.sandbox.emit('sulu.sidebar.append-widget', null, this.$preview);
+                this.sandbox.emit('sulu.sidebar.set-widget', null, this.$preview);
             }
         },
 
@@ -488,12 +488,14 @@ define([
          */
         changePreviewStyle: function(newStyle) {
             if (this.$preview !== null) {
-                var $container = this.$preview[0];
+                var $container = this.$preview[0],
+                    $toolbar = this.$preview[1];
                 // remove all styles
                 this.sandbox.util.foreach(constants.resolutionDropdownData, function(style) {
                     this.sandbox.dom.removeClass($container, style.cssClass);
                 }.bind(this));
                 this.sandbox.dom.addClass($container, newStyle.cssClass);
+                this.sandbox.dom.html(this.sandbox.dom.find('.dropdown-label', $toolbar), this.sandbox.translate(newStyle.name));
             }
         },
 
@@ -707,17 +709,21 @@ define([
                     }
                 };
             } else {
+                var sidebar = {
+                    width: 'max'
+                };
+                if (!this.options.preview) {
+                    sidebar = false;
+                }
                 return {
                     navigation: {
                         collapsed: true
                     },
                     content: {
                         width: 'fixed',
-                        shrinkable: true
+                        shrinkable: (!!this.options.preview) ? true : false
                     },
-                    sidebar: {
-                        width: 'max'
-                    }
+                    sidebar: sidebar
                 };
             }
         }
