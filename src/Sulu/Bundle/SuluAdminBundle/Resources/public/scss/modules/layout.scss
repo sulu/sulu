@@ -97,6 +97,11 @@
     float: none;
     width: auto;
   }
+  &.hidden {
+    width: 0;
+    height: 0;
+    display: block;
+  }
 }
 
 //
@@ -107,7 +112,8 @@
 // 1. Hides the sidebar if the minimum content width is reached
 @media only screen and (max-width: 50px + $contentMinWidth + $sidebarFixedWidth) {
   .sidebar-column.fixed {
-    display: none;
+    width: 0;
+    height: 0;
   }
 }
 
@@ -131,16 +137,17 @@
 // 3. hides the sidebar and brings the content-column to fit the screen
 @media only screen and (max-width: 50px + $contentFixedSmallWidth + $sidebarMaxCollapseWidth) {
   .sidebar-column.max {
-    display: none;
+    width: 0;
+    height: 0;
   }
   .has-visible-sidebar .content-column.fixed {
     float: none;
     width: auto;
     max-width: $contentFixedWidth;
 
-    .sulu-app-shrink {
-      display: none;
-    }
+  }
+  .sulu-app-shrink {
+    display: none;
   }
 }
 

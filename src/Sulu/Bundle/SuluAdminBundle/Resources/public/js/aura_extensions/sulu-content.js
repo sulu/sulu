@@ -162,6 +162,7 @@ define([], function() {
          * @param content {Object|Boolean} the sidebar config object or true for default behaviour. If false sidebar gets hidden
          */
         handleLayoutSidebar = function(sidebar) {
+            this.sandbox.emit('sulu.sidebar.empty');
             if (!!sidebar) {
                 var width = sidebar.width || 'max';
                 this.sandbox.emit('sulu.sidebar.change-width', width);
