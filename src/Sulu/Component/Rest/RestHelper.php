@@ -18,7 +18,7 @@ use Sulu\Component\Rest\ListBuilder\ListRestHelperInterface;
 /**
  * Defines some common REST functionalities
  */
-class RestHelper
+class RestHelper implements RestHelperInterface
 {
     /**
      * @var ListRestHelperInterface

@@ -17,6 +17,7 @@ use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\Listing\ListRestHelper;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Abstract Controller for extracting some required rest functionality
@@ -46,6 +47,7 @@ abstract class RestController extends FOSRestController
     /**
      * contains all fields that should be excluded from api
      * @var array
+     * @deprecated
      */
     protected $fieldsExcluded = array();
 
@@ -71,6 +73,7 @@ abstract class RestController extends FOSRestController
     /**
      * contains all field relations
      * @var array
+     * @deprecated
      */
     protected $fieldsRelations = array();
 
@@ -83,6 +86,7 @@ abstract class RestController extends FOSRestController
     /**
      * contains custom translation keys like array(fieldName => translationKey)
      * @var array
+     * @deprecated
      */
     protected $fieldsTranslationKeys = array();
 
@@ -106,6 +110,7 @@ abstract class RestController extends FOSRestController
 
     /**
      * @var array contains the widths of the fields
+     * @deprecated
      */
     protected $fieldsWidth = array();
 
@@ -130,6 +135,25 @@ abstract class RestController extends FOSRestController
      * @var string
      */
     protected $bundlePrefix = '';
+
+    /**
+     * Returns the language.
+     *
+     * @param Request $request
+     * @return mixed
+     */
+    protected function getLocale($request)
+    {
+        $lang = $request->get('locale');
+        if (!$lang) {
+            if ($this->getUser()) {
+                $lang = $this->getUser()->getLocale() ? : $this->container->getParameter('locale');
+            } else {
+                $lang = $this->container->getParameter('locale');
+            }
+        }
+        return $lang;
+    }
 
     /**
      * Creates a response which contains all fields of the current entity
@@ -525,7 +549,7 @@ abstract class RestController extends FOSRestController
     /**
      * This method processes a put request (delete non-existing entities, update existing entities, add new
      * entries), and let the single actions be modified by callbacks
-     * @param $entities
+     * @param ApiEntity[] $entities
      * @param $requestEntities
      * @param callback $deleteCallback
      * @param callback $updateCallback
@@ -538,7 +562,6 @@ abstract class RestController extends FOSRestController
 
         if (!empty($entities)) {
             foreach ($entities as $entity) {
-                /** @var ApiEntity $entity */
                 $this->findMatch($requestEntities, $entity->getId(), $matchedEntry, $matchedKey);
 
                 if ($matchedEntry == null) {
@@ -553,7 +576,7 @@ abstract class RestController extends FOSRestController
                 }
 
                 // Remove done element from array
-                if (!is_null($matchedKey)) {
+                if ($matchedKey != null) {
                     unset($requestEntities[$matchedKey]);
                 }
             }
