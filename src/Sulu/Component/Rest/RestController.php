@@ -134,6 +134,7 @@ abstract class RestController extends FOSRestController
     /**
      * Creates a response which contains all fields of the current entity
      * @return \Symfony\Component\HttpFoundation\Response
+     * @deprecated
      */
     public function responseFields()
     {
@@ -261,6 +262,7 @@ abstract class RestController extends FOSRestController
      * @param Function $entityFilter function for filtering entities
      * @param array $joinConditions to specify join conditions
      * @return \Symfony\Component\HttpFoundation\Response
+     * @deprecated
      */
     protected function responseList($where = array(), $entityName = null, $entityFilter = null, $joinConditions = array())
     {
@@ -298,6 +300,7 @@ abstract class RestController extends FOSRestController
      * @param array $entities
      * @param boolean $returnListLinks
      * @return array
+     * @deprecated
      */
     protected function createHalResponse(array $entities, $returnListLinks = false)
     {
@@ -314,6 +317,7 @@ abstract class RestController extends FOSRestController
      * @param int $pages
      * @param bool $returnListLinks
      * @return array
+     * @deprecated
      */
     protected function getHalLinks(array $entities, $pages = 1, $returnListLinks = false)
     {
@@ -442,6 +446,7 @@ abstract class RestController extends FOSRestController
      * @param string $value replace value
      * @param bool $add defines if value should be added
      * @return mixed|string
+     * @deprecated
      */
     public function replaceOrAddUrlString($url, $key, $value, $add = true)
     {
