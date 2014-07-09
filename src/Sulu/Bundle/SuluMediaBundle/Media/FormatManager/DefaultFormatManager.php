@@ -258,21 +258,7 @@ class DefaultFormatManager implements FormatManagerInterface
     }
 
     /**
-     * @param string $fileName
-     * @param int $version
-     * @param array $storageOptions
-     * @return string
-     */
-    public function getOriginal($fileName, $version, $storageOptions)
-    {
-        return $this->originalStorage->load($fileName, $version, $storageOptions);
-    }
-
-    /**
-     * @param int $id
-     * @param string $fileName
-     * @param array $storageOptions
-     * @return array
+     * {@inheritdoc}
      */
     public function getFormats($id, $fileName, $storageOptions)
     {
@@ -288,6 +274,14 @@ class DefaultFormatManager implements FormatManagerInterface
         }
 
         return $formats;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function purge($idMedia, $fileName, $options)
+    {
+        return $this->formatCache->purge($idMedia, $fileName, $options);
     }
 
 } 
