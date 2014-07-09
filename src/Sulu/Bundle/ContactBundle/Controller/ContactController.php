@@ -17,6 +17,7 @@ use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\AccountContact;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
+use Sulu\Bundle\ContactBundle\Entity\ContactAddress;
 use Sulu\Bundle\ContactBundle\Entity\Fax;
 use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\ContactBundle\Entity\Phone;
@@ -64,7 +65,16 @@ class ContactController extends AbstractContactController
     /**
      * {@inheritdoc}
      */
-    protected $fieldsHidden = array('middleName', 'created', 'changed', 'birthday', 'salutation', 'formOfAddress', 'id', 'title', 'disabled');
+    protected $fieldsHidden = array(
+        'middleName',
+        'created',
+        'changed',
+        'birthday',
+        'salutation',
+        'formOfAddress',
+        'id',
+        'title',
+        'disabled');
 
     /**
      * {@inheritdoc}
@@ -72,7 +82,7 @@ class ContactController extends AbstractContactController
     protected $fieldsRelations = array(
 //        'email',
         'account',
-        'accountContacts_position'
+        'accountContacts_position',
     );
 
     protected $fieldsWidth = array();
@@ -193,7 +203,8 @@ class ContactController extends AbstractContactController
                         $fullName[] = $res['lastName'];
                     }
                     $res['fullName'] = implode(' ', $fullName);
-                    $res['name'] = implode(' ', $fullName); // FIXME: name is only returned due to an error in auto-complete component
+                    $res['name'] = implode(' ', $fullName); // FIXME: name is only returned due to an error in
+                                                            // auto-complete component
                 }
 
                 // filter relations
@@ -340,10 +351,13 @@ class ContactController extends AbstractContactController
             $contact->setLastName($lastName);
 
             $contact->setTitle($request->get('title'));
-            $contact->setPosition($request->get('position'));
 
             $parentData = $request->get('account');
-            if ($parentData != null && $parentData['id'] != null && $parentData['id'] != 'null' && $parentData['id'] != '') {
+            if ($parentData != null &&
+                $parentData['id'] != null &&
+                $parentData['id'] != 'null' &&
+                $parentData['id'] != ''
+            ) {
                 /** @var Account $parent */
                 $parent = $this->getDoctrine()
                     ->getRepository('SuluContactBundle:Account')
@@ -353,9 +367,8 @@ class ContactController extends AbstractContactController
                     throw new EntityNotFoundException('SuluContactBundle:Account', $parentData['id']);
                 }
                 // create new account-contact relation
-                $this->createMainAccountContact($contact, $parent);
+                $this->createMainAccountContact($contact, $parent, $request->get('position'));
             }
-
             $birthday = $request->get('birthday');
             if (!empty($birthday)) {
                 $contact->setBirthday(new DateTime($birthday));
@@ -400,10 +413,13 @@ class ContactController extends AbstractContactController
      * @param Account $account
      * @return bool
      */
-    private function getMainAccountContactOrCreateNew(Contact $contact, Account $account)
+    private function getMainAccountContactOrCreateNew(Contact $contact, Account $account, $position)
     {
-        if (!$accountContact = $this->getMainAccountContact($contact)) {
-            $accountContact = $this->createMainAccountContact($contact, $account);
+        $accountContact = $this->getMainAccountContact($contact);
+        if (!$accountContact) {
+            $accountContact = $this->createMainAccountContact($contact, $account, $position);
+        } else {
+            $accountContact->setPosition($position);
         }
         return $accountContact;
     }
@@ -429,7 +445,7 @@ class ContactController extends AbstractContactController
      * @param Account $account
      * @return AccountContact
      */
-    private function createMainAccountContact(Contact $contact, Account $account)
+    private function createMainAccountContact(Contact $contact, Account $account, $position)
     {
         $accountContact = new AccountContact();
         $accountContact->setAccount($account);
@@ -437,6 +453,7 @@ class ContactController extends AbstractContactController
         $accountContact->setMain(true);
         $this->getDoctrine()->getManager()->persist($accountContact);
         $contact->addAccountContact($accountContact);
+        $accountContact->setPosition($position);
         return $accountContact;
     }
 
@@ -466,12 +483,15 @@ class ContactController extends AbstractContactController
                 $contact->setLastName($request->get('lastName'));
 
                 $contact->setTitle($request->get('title'));
-                $contact->setPosition($request->get('position'));
                 $contact->setChanged(new DateTime());
 
                 // set account relation
                 $parentData = $request->get('account');
-                if ($parentData != null && $parentData['id'] != null && $parentData['id'] != 'null' && $parentData['id'] != '') {
+                if ($parentData != null &&
+                    $parentData['id'] != null &&
+                    $parentData['id'] != 'null' &&
+                    $parentData['id'] != ''
+                ) {
                     /** @var Account $parent */
                     $parent = $this->getDoctrine()
                         ->getRepository('SuluContactBundle:Account')
@@ -480,7 +500,12 @@ class ContactController extends AbstractContactController
                     if (!$parent) {
                         throw new EntityNotFoundException('SuluContactBundle:Account', $parentData['id']);
                     }
-                    $accountContact = $this->getMainAccountContactOrCreateNew($contact, $parent);
+                    $accountContact = $this->getMainAccountContactOrCreateNew(
+                        $contact,
+                        $parent,
+                        $request->get('position')
+                    );
+
                     if ($accountContact) {
                         $accountContact->setAccount($parent);
                     }
@@ -553,9 +578,12 @@ class ContactController extends AbstractContactController
         };
 
         $delete = function ($contactAddress) use ($contact) {
-            $address = $contactAddress->getAddress();
+            $address = $contactAddress->getAddresse();
+            if (!$address->hasRelations()) { // delete address if it has no more relations
+                $this->getDoctrine()->getManager()->remove($address);
+            }
             $contact->removeContactAddresse($contactAddress);
-            $address->removeContactAddresse($contactAddress);
+            $this->getDoctrine()->getManager()->remove($contactAddress);
             return true;
         };
 
@@ -585,7 +613,7 @@ class ContactController extends AbstractContactController
             return true;
         };
 
-        $result = $this->processPut($contact->getAddresses(), $addresses, $delete, $update, $add, $getAddressId);
+        $result = $this->processPut($contact->getContactAddresses(), $addresses, $delete, $update, $add, $getAddressId);
 
         // check if main exists, else take first address
         $this->checkAndSetMainAddress($contact->getContactAddresses());

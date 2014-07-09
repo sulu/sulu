@@ -46,6 +46,7 @@ class Contact extends ApiEntity
     private $title;
 
     /**
+     * @Accessor(getter="getPosition")
      * @var string
      */
     private $position;
@@ -314,8 +315,11 @@ class Contact extends ApiEntity
      */
     public function setPosition($position)
     {
-        $this->position = $position;
-
+        $mainAccountContact = $this->getMainAccountContact();
+        if ($mainAccountContact) {
+            $mainAccountContact->setPosition($position);
+            $this->position = $position;
+        }
         return $this;
     }
 
@@ -326,7 +330,11 @@ class Contact extends ApiEntity
      */
     public function getPosition()
     {
-        return $this->position;
+        $mainAccountContact = $this->getMainAccountContact();
+        if ($mainAccountContact) {
+            return $mainAccountContact->getPosition();
+        }
+        return null;
     }
 
     /**
@@ -929,13 +937,25 @@ class Contact extends ApiEntity
      */
     public function getMainAccount()
     {
+        $mainAccountContact = $this->getMainAccountContact();
+        if (!is_null($mainAccountContact)) {
+            return $mainAccountContact->getAccount();
+        }
+        return null;
+    }
+
+    /**
+     * returns main account contact
+     */
+    private function getMainAccountContact()
+    {
         $accountContacts = $this->getAccountContacts();
 
         if (!is_null($accountContacts)) {
             /** @var AccountContact $accountContact */
             foreach ($accountContacts as $accountContact) {
                 if ($accountContact->getMain()) {
-                    return $accountContact->getAccount();
+                    return $accountContact;
                 }
             }
         }
