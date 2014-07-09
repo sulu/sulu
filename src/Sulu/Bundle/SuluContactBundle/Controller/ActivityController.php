@@ -161,9 +161,9 @@ class ActivityController extends RestController implements ClassResourceInterfac
         if ($request->get('flat') == 'true') {
 
             if(!!$contact) {
-                $where['contact_id'] = $contact['id'];
+                $where['contact_id'] = $contact;
             } else if (!!$account){
-                $where['account_id'] = $account['id'];
+                $where['account_id'] = $account;
             }
 
             // TODO
