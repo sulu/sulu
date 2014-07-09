@@ -41,6 +41,7 @@ class SuluMediaExtension extends Extension
         $container->setParameter('sulu_media.format_cache.save_image', 'true');
         $container->setParameter('sulu_media.format_cache.path', '%kernel.root_dir%/../../web/uploads/media');
         $container->setParameter('sulu_media.format_cache.path.url', '/uploads/media');
+        $container->setParameter('sulu_media.media.download.url', '/uploads/download/');
         $container->setParameter('sulu_media.format_cache.segments', '10');
         $container->setParameter('ghost_script.path', '/usr/local/bin/gs');
         $container->setParameter('sulu_media.image.formats', array(
