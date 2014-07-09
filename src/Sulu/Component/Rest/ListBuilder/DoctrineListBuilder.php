@@ -13,7 +13,7 @@ namespace Sulu\Component\Rest\ListBuilder;
 use Doctrine\ORM\EntityManager;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptor\DoctrineFieldDescriptor;
 
-class DoctrineListBuilder implements ListBuilderInterface
+class DoctrineListBuilder extends AbstractListBuilder
 {
     /**
      * @var EntityManager
@@ -27,118 +27,24 @@ class DoctrineListBuilder implements ListBuilderInterface
     private $entityName;
 
     /**
-     * The field descriptors for the current list
      * @var DoctrineFieldDescriptor[]
      */
-    private $fields = array();
+    protected $fields = array();
 
     /**
-     * The field descriptors for the field, which will be used for the search
      * @var DoctrineFieldDescriptor[]
      */
-    private $searchFields = array();
+    protected $searchFields = array();
 
     /**
-     * The value for which the searchfields will be searched
-     * @var string
-     */
-    private $search;
-
-    /**
-     * The field descriptor for the field to sort
      * @var DoctrineFieldDescriptor
      */
-    private $sortField = null;
-
-    /**
-     * Defines the sort order of the string
-     * @var string
-     */
-    private $sortOrder;
-
-    /**
-     * The limit for this query
-     * @var integer
-     */
-    private $limit = null;
-
-    /**
-     * The page the resulting query will be returning
-     * @var integer
-     */
-    private $page = 1;
+    protected $sortField;
 
     public function __construct(EntityManager $em, $entityName)
     {
         $this->em = $em;
         $this->entityName = $entityName;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function setFields($fieldDescriptors)
-    {
-        $this->fields = $fieldDescriptors;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function addField($fieldDescriptor)
-    {
-        $this->fields[] = $fieldDescriptor;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function addSearchField($fieldDescriptor)
-    {
-        $this->searchFields[] = $fieldDescriptor;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function search($search)
-    {
-        $this->search = $search;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function sort($fieldDescriptor, $order = self::SORTORDER_ASC)
-    {
-        $this->sortField = $fieldDescriptor;
-        $this->sortOrder = $order;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function limit($limit)
-    {
-        $this->limit = $limit;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function setCurrentPage($page)
-    {
-        $this->page = $page;
-
-        return $this;
     }
 
     /**

@@ -10,10 +10,54 @@
 
 namespace Sulu\Component\Rest;
 
+use Sulu\Component\Rest\ListBuilder\FieldDescriptor\AbstractFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
+use Sulu\Component\Rest\ListBuilder\ListRestHelper;
+use Sulu\Component\Rest\ListBuilder\ListRestHelperInterface;
+
 /**
- * Defines some common
+ * Defines some common REST functionalities
  */
 class RestHelper
 {
+    /**
+     * @var ListRestHelperInterface
+     */
+    private $listRestHelper;
 
+    public function __construct(ListRestHelper $listRestHelper)
+    {
+        $this->listRestHelper = $listRestHelper;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function initializeListBuilder(ListBuilderInterface $listBuilder, array $fieldDescriptors)
+    {
+        $listBuilder->limit($this->listRestHelper->getLimit())->setCurrentPage($this->listRestHelper->getPage());
+
+        $fields = $this->listRestHelper->getFields();
+        if ($fields != null) {
+            foreach ($fields as $field) {
+                $listBuilder->addField($fieldDescriptors[$field]);
+            }
+        } else {
+            $listBuilder->setFields($fieldDescriptors);
+        }
+
+        $searchFields = $this->listRestHelper->getSearchFields();
+        if ($searchFields != null) {
+            foreach ($searchFields as $searchField) {
+                $listBuilder->addSearchField($fieldDescriptors[$searchField]);
+            }
+
+            $listBuilder->search($this->listRestHelper->getSearchPattern());
+        }
+
+        $sortBy = $this->listRestHelper->getSortColumn();
+        if ($sortBy != null) {
+            $listBuilder->sort($fieldDescriptors[$sortBy], $this->listRestHelper->getSortOrder());
+        }
+    }
 } 

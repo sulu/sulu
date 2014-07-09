@@ -11,6 +11,7 @@
 namespace Sulu\Component\Rest\ListBuilder;
 
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
+use Sulu\Component\Rest\ListBuilder\FieldDescriptor\AbstractFieldDescriptor;
 
 /**
  * This interface defines the the ListBuilder functionality, for the creation of REST list responses
@@ -24,53 +25,65 @@ interface ListBuilderInterface
 
     /**
      * Sets all the field descriptors for the ListBuilder at once
-     * @param $fieldDescriptors
+     * @param AbstractFieldDescriptor $fieldDescriptors
      * @return mixed
      */
     public function setFields($fieldDescriptors);
 
     /**
      * Adds a field descriptor to the ListBuilder, which is then used to retrieve and return the list
-     * @param $fieldDescriptor
+     * @param AbstractFieldDescriptor $fieldDescriptor
      * @return ListBuilderInterface
      */
-    public function addField($fieldDescriptor);
+    public function addField(AbstractFieldDescriptor $fieldDescriptor);
 
     /**
      * Adds a field descriptor, which will be used for search
-     * @param $fieldDescriptor
+     * @param AbstractFieldDescriptor $fieldDescriptor
      * @return ListBuilderInterface
      */
-    public function addSearchField($fieldDescriptor);
+    public function addSearchField(AbstractFieldDescriptor $fieldDescriptor);
 
     /**
      * Sets the search value for the search fields
-     * @param $search
+     * @param string $search
      * @return ListBuilderInterface
      */
     public function search($search);
 
     /**
      * Defines the field by which the table is sorted
-     * @param $fieldDescriptor
-     * @param $order
+     * @param AbstractFieldDescriptor $fieldDescriptor
+     * @param string $order
      * @return ListBuilderInterface
      */
-    public function sort($fieldDescriptor, $order = self::SORTORDER_ASC);
+    public function sort(AbstractFieldDescriptor $fieldDescriptor, $order = self::SORTORDER_ASC);
 
     /**
      * Defines how many items should be returned
-     * @param $limit
+     * @param integer $limit
      * @return ListBuilderInterface
      */
     public function limit($limit);
 
     /**
+     * Returns the limit of the builder
+     * @return integer
+     */
+    public function getLimit();
+
+    /**
      * Sets the current page for the builder
-     * @param $page
+     * @param integer $page
      * @return ListBuilderInterface
      */
     public function setCurrentPage($page);
+
+    /**
+     * Returns the current page
+     * @return integer
+     */
+    public function getCurrentPage();
 
     /**
      * The number of total elements for this list

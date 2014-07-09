@@ -30,10 +30,19 @@ class ListRepresentation extends PaginatedRepresentation
      */
     protected $total;
 
-    public function __construct($data, $route, $parameters, $page, $limit, $total)
+    /**
+     * @param mixed $data The data which will be presented
+     * @param string $rel The name of the relation inside of the _embedded field
+     * @param string $route The name of the route, for generating the links
+     * @param array $parameters The parameters to append to the route
+     * @param integer $page The number of the current page
+     * @param integer $limit The size of one page
+     * @param null $total The total number of elements
+     */
+    public function __construct($data, $rel, $route, $parameters, $page, $limit, $total)
     {
         parent::__construct(
-            new CollectionRepresentation($data),
+            new CollectionRepresentation($data, $rel),
             $route,
             $parameters,
             $page,
