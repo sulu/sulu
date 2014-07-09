@@ -222,7 +222,7 @@ class DefaultMediaManager implements MediaManagerInterface
 
             $data['storageOptions'] = $this->storage->save(
                 $uploadedFile->getPathname(),
-                $uploadedFile->getFilename(),
+                $uploadedFile->getClientOriginalName(),
                 $version,
                 $currentFileVersion->getStorageOptions()
             );
