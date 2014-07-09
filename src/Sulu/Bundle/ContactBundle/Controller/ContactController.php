@@ -493,7 +493,7 @@ class ContactController extends AbstractContactController
                 // process details
                 if (!($this->processEmails($contact, $request->get('emails'))
                     && $this->processPhones($contact, $request->get('phones'))
-                    && $this->processAddresses($contact, $request->get('addresses'))
+                    && $this->processContactAddresses($contact, $request->get('addresses'))
                     && $this->processNotes($contact, $request->get('notes'))
                     && $this->processFaxes($contact, $request->get('faxes'))
                     && $this->processTags($contact, $request->get('tags'))
@@ -538,5 +538,47 @@ class ContactController extends AbstractContactController
         }
 
         return $this->handleView($view);
+    }
+
+    /**
+     * Process all addresses from request
+     * @param Contact $contact The contact on which is worked
+     * @param $addresses
+     * @return bool True if the processing was sucessful, otherwise false
+     */
+    protected function processContactAddresses($contact, $addresses)
+    {
+        $getAddressId = function($contactAddress) {
+            return $contactAddress->getAddress()->getId();
+        };
+
+        $delete = function ($contactAddress) use ($contact) {
+            $address = $contactAddress->getAddress();
+            $contact->removeContactAddresse($contactAddress);
+            $address->removeContactAddresse($contactAddress);
+            return true;
+        };
+
+        $update = function ($contactAddress, $matchedEntry) use ($contact) {
+            $address = $contactAddress->getAddress();
+            return $this->updateAddress($address, $matchedEntry);
+        };
+
+        $add = function ($addressData) use ($contact) {
+            $address = $this->createAddress($addressData);
+            $contactAddress = new ContactAddress();
+            $contactAddress->setAddress($address);
+            $contactAddress->setContact($contact);
+
+            // TODO: check if persistence succeeds in callback
+            $this->getDoctrine()->getManager()->persist($contactAddress);
+
+            return true;
+        };
+
+        $result = $this->processPut($contact->getAddresses(), $addresses, $delete, $update, $add, $getAddressId);
+
+        // TODO: check main address!
+        return $result;
     }
 }
