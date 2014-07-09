@@ -198,7 +198,8 @@ class ContactRepository extends EntityRepository
     public function findByAccountId($accountId, $excludeContactId = null)
     {
         $qb = $this->createQueryBuilder('c')
-            ->join('u.accountContacts', 'accountContacts', 'WITH', 'accountContacts.idAccounts = :accountId AND accountContacts.main = true')
+            ->join('c.accountContacts', 'accountContacts', 'WITH', 'accountContacts.main = true')
+            ->join('accountContacts.account', 'account', 'WITH', 'account.id = :accountId')
             ->setParameter('accountId', $accountId);
 
         if (!is_null($excludeContactId)) {
