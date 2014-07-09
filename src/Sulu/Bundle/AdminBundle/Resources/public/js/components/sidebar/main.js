@@ -34,7 +34,8 @@ define([], function() {
             maxWidthClass: 'max',
             loaderClass: 'sidebar-loader',
             visibleSidebarClass: 'has-visible-sidebar',
-            noVisibleSidebarClass: 'has-no-visible-sidebar'
+            noVisibleSidebarClass: 'has-no-visible-sidebar',
+            hiddenClass: 'hidden'
         },
 
         /**
@@ -87,6 +88,16 @@ define([], function() {
             return createEventName.call(this, 'set-widget');
         },
 
+
+        /**
+         * listens on and empties the sidebar
+         *
+         * @event sulu.sidebar.[INSTANCE_NAME].empty
+         */
+            EMPTY = function() {
+            return createEventName.call(this, 'empty');
+        },
+
         /**
          * listens on and changes the width type of the column
          *
@@ -135,6 +146,7 @@ define([], function() {
             this.sandbox.on(SET_WIDGET.call(this), this.setWidget.bind(this));
             this.sandbox.on(APPEND_WIDGET.call(this), this.appendWidget.bind(this));
             this.sandbox.on(PREPEND_WIDGET.call(this), this.prependWidget.bind(this));
+            this.sandbox.on(EMPTY.call(this), this.emptySidebar.bind(this));
         },
 
         /**
@@ -192,7 +204,7 @@ define([], function() {
             this.changeToFixedWidth();
             this.sandbox.dom.removeClass($parent, constants.visibleSidebarClass);
             this.sandbox.dom.addClass($parent, constants.noVisibleSidebarClass);
-            this.sandbox.dom.hide($column);
+            this.sandbox.dom.addClass($column, constants.hiddenClass);
         },
 
         /**
@@ -203,7 +215,7 @@ define([], function() {
                 $parent = this.sandbox.dom.parent($column);
             this.sandbox.dom.removeClass($parent, constants.noVisibleSidebarClass);
             this.sandbox.dom.addClass($parent, constants.visibleSidebarClass);
-            this.sandbox.dom.css($column, {display: ''});
+            this.sandbox.dom.removeClass($column, constants.hiddenClass);
         },
 
         /**

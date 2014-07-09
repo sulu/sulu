@@ -149,44 +149,53 @@ input, select {
   float: none;
   width: auto;
 }
+/* line 100, ../scss/modules/layout.scss */
+.sidebar-column.hidden {
+  width: 0;
+  height: 0;
+  display: block;
+}
 
 @media only screen and (max-width: 1010px) {
-  /* line 109, ../scss/modules/layout.scss */
+  /* line 114, ../scss/modules/layout.scss */
   .sidebar-column.fixed {
-    display: none;
+    width: 0;
+    height: 0;
   }
 }
 @media only screen and (max-width: 1200px) {
-  /* line 121, ../scss/modules/layout.scss */
+  /* line 127, ../scss/modules/layout.scss */
   .has-visible-sidebar .content-column.fixed {
     width: 690px;
   }
 }
 @media only screen and (max-width: 990px) {
-  /* line 127, ../scss/modules/layout.scss */
+  /* line 133, ../scss/modules/layout.scss */
   .has-visible-sidebar .content-column.fixed {
     width: 480px;
   }
 }
 @media only screen and (max-width: 780px) {
-  /* line 133, ../scss/modules/layout.scss */
+  /* line 139, ../scss/modules/layout.scss */
   .sidebar-column.max {
-    display: none;
+    width: 0;
+    height: 0;
   }
 
-  /* line 136, ../scss/modules/layout.scss */
+  /* line 143, ../scss/modules/layout.scss */
   .has-visible-sidebar .content-column.fixed {
     float: none;
     width: auto;
     max-width: 900px;
   }
-  /* line 141, ../scss/modules/layout.scss */
-  .has-visible-sidebar .content-column.fixed .sulu-app-shrink {
+
+  /* line 149, ../scss/modules/layout.scss */
+  .sulu-app-shrink {
     display: none;
   }
 }
 @media only screen and (max-width: 950px) {
-  /* line 154, ../scss/modules/layout.scss */
+  /* line 161, ../scss/modules/layout.scss */
   .has-no-visible-sidebar .content-column.fixed {
     float: none;
     width: auto;
