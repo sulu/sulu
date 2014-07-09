@@ -74,6 +74,11 @@ class DoctrineListBuilder extends AbstractListBuilder
             $qb->addSelect($field->getFullName() . ' AS ' . $field->getAlias());
         }
 
+        if ($this->limit != null) {
+            $qb->setMaxResults($this->limit)->setFirstResult($this->limit * ($this->page - 1));
+            return $qb;
+        }
+
         return $qb->getQuery()->getArrayResult();
     }
 
@@ -139,10 +144,6 @@ class DoctrineListBuilder extends AbstractListBuilder
             $qb->setParameter('search', '%' . $this->search . '%');
         }
 
-        if ($this->limit != null) {
-            $qb->setMaxResults($this->limit)->setFirstResult($this->limit * ($this->page - 1));
-            return $qb;
-        }
         return $qb;
     }
 }

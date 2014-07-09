@@ -49,13 +49,14 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
 
         $this->query = $this->getMockBuilder('Doctrine\ORM\AbstractQuery')
             ->disableOriginalConstructor()
-            ->setMethods(array('execute'))
+            ->setMethods(array('execute', 'getSingleScalarResult'))
             ->getMockForAbstractClass();
 
         $this->em->expects($this->once())->method('createQueryBuilder')->willReturn($this->queryBuilder);
+        $this->queryBuilder->expects($this->any())->method('select')->willReturnSelf();
 
         $this->queryBuilder->expects($this->any())->method('setMaxResults')->willReturnSelf();
-        $this->queryBuilder->expects($this->once())->method('getQuery')->willReturn($this->query);
+        $this->queryBuilder->expects($this->any())->method('getQuery')->willReturn($this->query);
 
         $this->queryBuilder->expects($this->once())->method('from')->with(
             self::$entityName, self::$entityName
@@ -105,8 +106,8 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
         $this->doctrineListBuilder->addField(
             new DoctrineFieldDescriptor(
                 'desc', 'desc_alias', self::$translationEntityName, array(
-                self::$translationEntityName => self::$entityName . '.translations'
-            )
+                    self::$translationEntityName => self::$entityName . '.translations'
+                )
             )
         );
 
@@ -124,9 +125,11 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
     public function testSearchFieldWithJoin()
     {
         $this->doctrineListBuilder->addSearchField(
-            new DoctrineFieldDescriptor('desc', 'desc_alias', self::$translationEntityName, array(
-                self::$translationEntityName => self::$entityName . '.translations'
-            ))
+            new DoctrineFieldDescriptor(
+                'desc', 'desc_alias', self::$translationEntityName, array(
+                    self::$translationEntityName => self::$entityName . '.translations'
+                )
+            )
         );
 
         $this->queryBuilder->expects($this->once())->method('leftJoin')->with(
@@ -139,9 +142,11 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
     public function testSortFieldWithJoin()
     {
         $this->doctrineListBuilder->sort(
-            new DoctrineFieldDescriptor('desc', 'desc_alias', self::$translationEntityName, array(
-                self::$translationEntityName => self::$entityName . '.translations'
-            ))
+            new DoctrineFieldDescriptor(
+                'desc', 'desc_alias', self::$translationEntityName, array(
+                    self::$translationEntityName => self::$entityName . '.translations'
+                )
+            )
         );
 
         $this->queryBuilder->expects($this->once())->method('leftJoin')->with(
@@ -161,11 +166,8 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
         );
         $this->doctrineListBuilder->search('value');
 
-        $this->queryBuilder->expects($this->at(1))->method('orWhere')->with(
-            self::$translationEntityName . '.desc LIKE :search'
-        );
-        $this->queryBuilder->expects($this->at(2))->method('orWhere')->with(
-            self::$entityName . '.name LIKE :search'
+        $this->queryBuilder->expects($this->once())->method('andWhere')->with(
+            '(' . self::$translationEntityName . '.desc LIKE :search OR ' . self::$entityName . '.name LIKE :search)'
         );
         $this->queryBuilder->expects($this->once())->method('setParameter')->with('search', '%value%');
 
@@ -188,5 +190,33 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
         $this->queryBuilder->expects($this->once())->method('setMaxResults')->with(5);
 
         $this->doctrineListBuilder->execute();
+    }
+
+    public function testCount()
+    {
+        $this->doctrineListBuilder->setFields(
+            array(
+                new DoctrineFieldDescriptor('name', 'name_alias', self::$entityName),
+                new DoctrineFieldDescriptor(
+                    'desc', 'desc_alias', self::$translationEntityName, array(
+                        self::$translationEntityName => self::$entityName . '.translations'
+                    )
+                )
+            )
+        );
+
+        $this->doctrineListBuilder->addSearchField(
+            new DoctrineFieldDescriptor('desc', 'desc', self::$translationEntityName)
+        );
+        $this->doctrineListBuilder->search('value');
+
+        $this->doctrineListBuilder->limit(5);
+
+        $this->queryBuilder->expects($this->exactly(1))->method('leftJoin');
+        $this->queryBuilder->expects($this->exactly(1))->method('setParameter');
+        $this->queryBuilder->expects($this->never())->method('setMaxResults');
+        $this->queryBuilder->expects($this->never())->method('setFirstResult');
+
+        $this->doctrineListBuilder->count();
     }
 }

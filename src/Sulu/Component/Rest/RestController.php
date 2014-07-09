@@ -555,6 +555,7 @@ abstract class RestController extends FOSRestController
      * @param callback $updateCallback
      * @param callback $addCallback
      * @return bool
+     * @deprecated
      */
     protected function processPut($entities, $requestEntities, $deleteCallback, $updateCallback, $addCallback)
     {

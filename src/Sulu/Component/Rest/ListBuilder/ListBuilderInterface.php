@@ -25,7 +25,7 @@ interface ListBuilderInterface
 
     /**
      * Sets all the field descriptors for the ListBuilder at once
-     * @param AbstractFieldDescriptor $fieldDescriptors
+     * @param AbstractFieldDescriptor[] $fieldDescriptors
      * @return mixed
      */
     public function setFields($fieldDescriptors);
