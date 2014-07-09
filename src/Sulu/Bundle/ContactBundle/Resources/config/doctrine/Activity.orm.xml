@@ -2,13 +2,13 @@
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-    <entity name="Sulu\Bundle\ContactBundle\Entity\Activity" table="co_activities">
+    <entity name="Sulu\Bundle\ContactBundle\Entity\Activity" table="co_activities" repository-class="Sulu\Bundle\ContactBundle\Entity\ActivityRepository">
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
         </id>
 
         <field name="subject" type="string" column="subject" length="60" nullable="false"/>
-        <field name="note" type="string" column="note" length="1000"/>
+        <field name="note" type="string" column="note" length="1000" nullable="true"/>
 
         <field name="dueDate" type="datetime" column="dueDate" nullable="false"/>
         <field name="startDate" type="datetime" column="startDate" nullable="true"/>
@@ -49,7 +49,8 @@
             </join-columns>
         </many-to-one>
 
-        <many-to-one field="assignedContact" target-entity="Sulu\Bundle\ContactBundle\Entity\Contact" inversed-by="assignedActivities">
+        <many-to-one field="assignedContact" target-entity="Sulu\Bundle\ContactBundle\Entity\Contact"
+                     inversed-by="assignedActivities">
             <join-columns>
                 <join-column name="idAssignedContacts" referenced-column-name="id" nullable="false"/>
             </join-columns>
@@ -57,7 +58,7 @@
 
         <many-to-one field="contact" target-entity="Sulu\Bundle\ContactBundle\Entity\Contact" inversed-by="activities">
             <join-columns>
-                <join-column name="idContacts" referenced-column-name="id"  nullable="true"/>
+                <join-column name="idContacts" referenced-column-name="id" nullable="true"/>
             </join-columns>
         </many-to-one>
 
