@@ -561,16 +561,25 @@ class ContactController extends AbstractContactController
 
         $update = function ($contactAddress, $matchedEntry) use ($contact) {
             $address = $contactAddress->getAddress();
-            return $this->updateAddress($address, $matchedEntry);
+            $result = $this->updateAddress($address, $matchedEntry, $isMain);
+            if ($isMain) {
+                $this->unsetMain($contact->getContactAddresses());
+            }
+            $contactAddress->setMain($isMain);
+
+            return $result;
         };
 
         $add = function ($addressData) use ($contact) {
-            $address = $this->createAddress($addressData);
+            $address = $this->createAddress($addressData, $isMain);
             $contactAddress = new ContactAddress();
             $contactAddress->setAddress($address);
             $contactAddress->setContact($contact);
+            if ($isMain) {
+                $this->unsetMain($contact->getContactAddresses());
+            }
+            $contactAddress->setMain($isMain);
 
-            // TODO: check if persistence succeeds in callback
             $this->getDoctrine()->getManager()->persist($contactAddress);
 
             return true;
@@ -578,7 +587,9 @@ class ContactController extends AbstractContactController
 
         $result = $this->processPut($contact->getAddresses(), $addresses, $delete, $update, $add, $getAddressId);
 
-        // TODO: check main address!
+        // check if main exists, else take first address
+        $this->checkAndSetMainAddress($contact->getContactAddresses());
+
         return $result;
     }
 }
