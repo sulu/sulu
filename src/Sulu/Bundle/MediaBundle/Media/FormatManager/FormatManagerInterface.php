@@ -36,18 +36,19 @@ interface FormatManagerInterface
     public function getMediaProperties($url);
 
     /**
-     * @param string $fileName
-     * @param int $version
-     * @param array $storageOptions
-     * @return string
-     */
-    public function getOriginal($fileName, $version, $storageOptions);
-
-    /**
      * @param int $id
      * @param string $fileName
      * @param array $storageOptions
      * @return array
      */
     public function getFormats($id, $fileName, $storageOptions);
+
+    /**
+     * Delete the image by the given parameters
+     * @param int $idMedia
+     * @param string $fileName
+     * @param array $options
+     * @return bool
+     */
+    public function purge($idMedia, $fileName, $options);
 } 
