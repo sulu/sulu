@@ -2,8 +2,23 @@
   width: 100%;
   height: 100%;
   border-left: 1px solid #666;
+  text-align: center;
+  white-space: nowrap;
   overflow: auto;
-  background: #999999;
+
+  &::before {
+    content: '';
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+    margin-right: -0.25em;
+  }
+
+  .wrapper {
+    display: inline-block;
+    vertical-align: middle;
+    white-space: normal;
+  }
 
   iframe {
     border: 0;
@@ -12,47 +27,62 @@
   }
 
   &.auto {
+    .wrapper {
+      width: 100%;
+      height: 100%;
+    }
     .viewport {
       width: 100%;
       height: 100%;
     }
   }
   &.desktop {
+    background: #999999;
+    .wrapper {
+      width: 100%;
+      height: 100%;
+    }
     .viewport {
       width: 1024px;
       height: 100%;
     }
   }
   &.smartphone {
+    background: #999999;
     .wrapper {
-      position: relative;
-      top: 50%;
-      margin: -(1136px)/2 auto 0 auto;
-      width: (640px)/2;
-      height: (1136px)/2;
+      width: 378px;
+      height: 794px;
+      background-image: url('../img/smartphone_portrait.png');
+      background-size: 378px;
+      background-repeat: no-repeat;
+      background-position: 0 0;
+      padding-top: 115px;
+      padding-left: 30px;
     }
     .viewport {
-      position: relative;
-      top: 50%;
       width: 640px;
       height: 1136px;
-      -webkit-transform: scale(0.5);
-      -webkit-transform-origin: 0 0;
+      @include scale(0.5);
+      @include transformOrigin(0, 0);
     }
   }
   &.tablet {
+    background: #999999;
     .wrapper {
-      position: relative;
-      top: 50%;
-      margin: -(2048px)/4 auto 0 auto;
-      width: (1536px)/2;
-      height: (2048px)/2;
+      width: 836px;
+      height: 1282px;
+      background-image: url('../img/tablet_portrait.png');
+      background-size: 836px;
+      background-repeat: no-repeat;
+      background-position: 0 0;
+      padding-top: 122px;
+      padding-left: 30px;
     }
     .viewport {
       width: 1536px;
       height: 2048px;
-      -webkit-transform: scale(0.5);
-      -webkit-transform-origin: 0 0;
+      @include scale(0.5);
+      @include transformOrigin(0, 0);
     }
   }
 }
@@ -67,7 +97,6 @@
     font-weight: 100;
 
     .right {
-        float: right;
         background: #21272E;
         height: 100%;
         border-radius: 0 0 0 3px;
@@ -84,7 +113,8 @@
         }
 
         .resolutions {
-           border-right: 1px solid #fff;
+          border-right: 1px solid #fff;
+          min-width: 125px;
           .drop-down-trigger {
                 color: #fff;
                 padding: 5px 10px;
