@@ -11,7 +11,6 @@
         <field name="middleName" type="string" column="middleName" length="60" nullable="true"/>
         <field name="lastName" type="string" column="lastName" length="60"/>
         <field name="title" type="string" column="title" length="60" nullable="true"/>
-        <field name="position" type="string" column="position" length="60" nullable="true"/>
         <field name="birthday" type="date" column="birthday" nullable="true"/>
         <field name="created" type="datetime" column="created"/>
         <field name="changed" type="datetime" column="changed"/>

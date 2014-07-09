@@ -10,7 +10,6 @@
 
 namespace Sulu\Bundle\ContactBundle\Controller;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\ContactAddress;
@@ -49,7 +48,7 @@ class AbstractContactController extends RestController implements ClassResourceI
 
     /**
      * @param $address
-     * @param ArrayCollection $addresses
+     * @param $addresses
      */
     protected function setMainAddress($address, $addresses)
     {
@@ -57,11 +56,11 @@ class AbstractContactController extends RestController implements ClassResourceI
 
     /**
      * checks if a collection for main attribute
-     * @param ArrayCollection $arrayCollection
+     * @param $arrayCollection
      * @param $mainEntity will be set, if found
      * @return mixed
      */
-    private function hasMain(ArrayCollection $arrayCollection, &$mainEntity = null)
+    private function hasMain($arrayCollection, &$mainEntity = null)
     {
         if ($arrayCollection && !$arrayCollection->isEmpty()) {
             return $arrayCollection->exists(function ($index, $entity) {
@@ -74,9 +73,9 @@ class AbstractContactController extends RestController implements ClassResourceI
 
     /**
      * sets the first element to main, if none is set
-     * @param ArrayCollection $arrayCollection
+     * @param $arrayCollection
      */
-    private function setMainForCollection(ArrayCollection $arrayCollection)
+    private function setMainForCollection($arrayCollection)
     {
         if ($arrayCollection && !$arrayCollection->isEmpty() && !$this->hasMain($arrayCollection)) {
             $arrayCollection->first()->setMain(true);
@@ -85,10 +84,10 @@ class AbstractContactController extends RestController implements ClassResourceI
 
     /**
      * unsets main of all elements of arraycollection
-     * @param ArrayCollection $arrayCollection
+     * @param $arrayCollection
      * @return boolean returns true if a element was unset
      */
-    protected function unsetMain(ArrayCollection $arrayCollection)
+    protected function unsetMain($arrayCollection)
     {
         if ($arrayCollection && !$arrayCollection->isEmpty()) {
             return $arrayCollection->forAll(
@@ -110,7 +109,7 @@ class AbstractContactController extends RestController implements ClassResourceI
     protected function setMainEmail($entity)
     {
         // set main to first entry or to null
-        if ($entity->getEmails()->empty()) {
+        if ($entity->getEmails()->isEmpty()) {
             $entity->setMainEmail(null);
         } else {
             $entity->setMainEmail($entity->getEmails()->first()->getEmail());
@@ -124,7 +123,7 @@ class AbstractContactController extends RestController implements ClassResourceI
     protected function setMainPhone($entity)
     {
         // set main to first entry or to null
-        if ($entity->getPhones()->empty()) {
+        if ($entity->getPhones()->isEmpty()) {
             $entity->setMainPhone(null);
         } else {
             $entity->setMainPhone($entity->getPhones()->first()->getPhone());
@@ -138,7 +137,7 @@ class AbstractContactController extends RestController implements ClassResourceI
     protected function setMainFax($entity)
     {
         // set main to first entry or to null
-        if ($entity->getFaxes()->empty()) {
+        if ($entity->getFaxes()->isEmpty()) {
             $entity->setMainFax(null);
         } else {
             $entity->setMainFax($entity->getFaxes()->first()->getFax());
@@ -152,7 +151,7 @@ class AbstractContactController extends RestController implements ClassResourceI
     protected function setMainUrl($entity)
     {
         // set main to first entry or to null
-        if ($entity->getUrls()->empty()) {
+        if ($entity->getUrls()->isEmpty()) {
             $entity->setMainUrl(null);
         } else {
             $entity->setMainUrl($entity->getUrls()->first()->getUrl());
@@ -254,7 +253,7 @@ class AbstractContactController extends RestController implements ClassResourceI
 
         $result = $this->processPut($contact->getEmails(), $emails, $delete, $update, $add);
         // check main
-        $this->setMainEmail($contact->getEmails());
+        $this->setMainEmail($contact);
 
         return $result;
     }
@@ -342,7 +341,7 @@ class AbstractContactController extends RestController implements ClassResourceI
 
         $result = $this->processPut($contact->getUrls(), $urls, $delete, $update, $add);
         // check main
-        $this->setMainUrl($contact->getUrls());
+        $this->setMainUrl($contact);
 
         return $result;
     }
@@ -429,7 +428,7 @@ class AbstractContactController extends RestController implements ClassResourceI
 
         $result = $this->processPut($contact->getPhones(), $phones, $delete, $update, $add);
         // check main
-        $this->setMainPhone($contact->getPhones());
+        $this->setMainPhone($contact);
 
         return $result;
     }
@@ -519,7 +518,7 @@ class AbstractContactController extends RestController implements ClassResourceI
 
         $result = $this->processPut($contact->getFaxes(), $faxes, $delete, $update, $add);
         // check main
-        $this->setMainFax($contact->getFaxes());
+        $this->setMainFax($contact);
 
         return $result;
     }
@@ -615,7 +614,6 @@ class AbstractContactController extends RestController implements ClassResourceI
             $address->setCity($addressData['city']);
             $address->setState($addressData['state']);
 
-            // TODO: handle primary address
             if (isset($addressData['primaryAddress'])) {
                 $isMain = $this->getBooleanValue($addressData['primaryAddress']);
             }

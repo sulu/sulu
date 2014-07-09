@@ -545,7 +545,7 @@ class Address
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\ContactAddress $contactAddresses
      */
-    public function removeContactAddresse(\Sulu\Bundle\ContactBundle\Entity\ContactAddress $contactAddresses)
+    public function removeContactAddress(\Sulu\Bundle\ContactBundle\Entity\ContactAddress $contactAddresses)
     {
         $this->contactAddresses->removeElement($contactAddresses);
     }
@@ -591,5 +591,19 @@ class Address
     public function getAccountAddresses()
     {
         return $this->accountAddresses;
+    }
+
+    /**
+     * returns if address has at least one relation to another entity
+     *
+     * @return Bool
+     */
+    public function hasRelations() {
+
+        if (!$this->getContactAddresses()->isEmpty() ||
+            !$this->getAccountAddresses()->isEmpty()) {
+            return true;
+        }
+        return false;
     }
 }
