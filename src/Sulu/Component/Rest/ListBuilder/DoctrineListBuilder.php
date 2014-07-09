@@ -41,6 +41,11 @@ class DoctrineListBuilder extends AbstractListBuilder
      */
     protected $sortField;
 
+    /**
+     * @var DoctrineFieldDescriptor[]
+     */
+    protected $whereFields = array();
+
     public function __construct(EntityManager $em, $entityName)
     {
         $this->em = $em;
@@ -52,9 +57,8 @@ class DoctrineListBuilder extends AbstractListBuilder
      */
     public function count()
     {
-        $qb = $this->em->createQueryBuilder()
-            ->select('count(' . $this->entityName . '.id)')
-            ->from($this->entityName, $this->entityName);
+        $qb = $this->createQueryBuilder()
+            ->select('count(' . $this->entityName . '.id)');
 
         return $qb->getQuery()->getSingleScalarResult();
     }
@@ -64,31 +68,10 @@ class DoctrineListBuilder extends AbstractListBuilder
      */
     public function execute()
     {
-        $qb = $this->em->createQueryBuilder()
-            ->from($this->entityName, $this->entityName);
+        $qb = $this->createQueryBuilder();
 
         foreach ($this->fields as $field) {
             $qb->addSelect($field->getFullName() . ' AS ' . $field->getAlias());
-        }
-
-        foreach ($this->getJoins() as $entity => $join) {
-            $qb->leftJoin($join, $entity);
-        }
-
-        if ($this->search != null) {
-            foreach ($this->searchFields as $searchField) {
-                $qb->orWhere($searchField->getFullName() . ' LIKE :search');
-            }
-
-            $qb->setParameter('search', '%' . $this->search . '%');
-        }
-
-        if ($this->sortField != null) {
-            $qb->orderBy($this->sortField->getFullName(), $this->sortOrder);
-        }
-
-        if ($this->limit != null) {
-            $qb->setMaxResults($this->limit)->setFirstResult($this->limit * ($this->page - 1));
         }
 
         return $qb->getQuery()->getArrayResult();
@@ -110,10 +93,56 @@ class DoctrineListBuilder extends AbstractListBuilder
             $joins = array_merge($joins, $field->getJoins());
         }
 
-        foreach ($this->searchFields as $field) {
-            $joins = array_merge($joins, $field->getJoins());
+        foreach ($this->searchFields as $searchField) {
+            $joins = array_merge($joins, $searchField->getJoins());
+        }
+
+        foreach ($this->whereFields as $whereField) {
+            $joins = array_merge($joins, $whereField->getJoins());
         }
 
         return $joins;
+    }
+
+    /**
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    private function createQueryBuilder()
+    {
+        $qb = $this->em->createQueryBuilder()
+            ->from($this->entityName, $this->entityName);
+
+        foreach ($this->getJoins() as $entity => $join) {
+            $qb->leftJoin($join, $entity);
+        }
+
+        if ($this->sortField != null) {
+            $qb->orderBy($this->sortField->getFullName(), $this->sortOrder);
+        }
+
+        if (!empty($this->whereFields)) {
+            $whereParts = array();
+            foreach ($this->whereFields as $whereField) {
+                $whereParts[] = $whereField->getFullName() . ' = :' . $whereField->getAlias();
+                $qb->setParameter($whereField->getAlias(), $this->whereValues[$whereField->getName()]);
+            }
+            $qb->andWhere('(' . implode(' AND ', $whereParts) . ')');
+        }
+
+        if ($this->search != null) {
+            $searchParts = array();
+            foreach ($this->searchFields as $searchField) {
+                $searchParts[] = $searchField->getFullName() . ' LIKE :search';
+            }
+
+            $qb->andWhere('(' . implode(' OR ', $searchParts) . ')');
+            $qb->setParameter('search', '%' . $this->search . '%');
+        }
+
+        if ($this->limit != null) {
+            $qb->setMaxResults($this->limit)->setFirstResult($this->limit * ($this->page - 1));
+            return $qb;
+        }
+        return $qb;
     }
 }

@@ -51,6 +51,18 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     protected $limit = null;
 
     /**
+     * The fields to be checked
+     * @var array
+     */
+    protected $whereFields = array();
+
+    /**
+     * The values the where fields should have
+     * @var array
+     */
+    protected $whereValues = array();
+
+    /**
      * The page the resulting query will be returning
      * @var integer
      */
@@ -137,5 +149,14 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     public function getCurrentPage()
     {
         return $this->page;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function where(AbstractFieldDescriptor $fieldDescriptor, $value)
+    {
+        $this->whereFields[$fieldDescriptor->getName()] = $fieldDescriptor;
+        $this->whereValues[$fieldDescriptor->getName()] = $value;
     }
 }

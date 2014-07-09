@@ -86,6 +86,14 @@ interface ListBuilderInterface
     public function getCurrentPage();
 
     /**
+     * Defines a constraint for the rows to return
+     * @param AbstractFieldDescriptor $fieldDescriptor The FieldDescriptor which is checked
+     * @param string $value The value the FieldDescriptor should have
+     * @return mixed
+     */
+    public function where(AbstractFieldDescriptor $fieldDescriptor, $value);
+
+    /**
      * The number of total elements for this list
      * @return integer
      */
