@@ -135,4 +135,128 @@ class RestHelperTest extends \PHPUnit_Framework_TestCase
 
         $this->restHelper->initializeListBuilder($listBuilder, array('name' => $field));
     }
+
+    public function testProcessPutEmpty()
+    {
+        $mock = $this->getMock('stdClass', array('delete', 'update', 'add'));
+        $mock->expects($this->never())->method('delete');
+        $mock->expects($this->never())->method('update');
+        $mock->expects($this->never())->method('add');
+
+        $delete = function () use ($mock) {
+            $mock->delete();
+        };
+
+        $update = function () use ($mock) {
+            $mock->update();
+        };
+
+        $add = function () use ($mock) {
+            $mock->add();
+        };
+
+        $this->restHelper->processPut(array(), array(), $delete, $update, $add);
+    }
+
+    public function testProcessPutWithDelete()
+    {
+        $mockedObject = $this->getMock('stdClass', array('getId'));
+        $mockedObject->expects($this->any())->method('getId')->will($this->returnValue(1));
+        
+        $mock = $this->getMock('stdClass', array('delete', 'update', 'add'));
+        $mock->expects($this->once())->method('delete');
+        $mock->expects($this->never())->method('update');
+        $mock->expects($this->never())->method('add');
+
+        $delete = function () use ($mock) {
+            $mock->delete();
+        };
+
+        $update = function () use ($mock) {
+            $mock->update();
+        };
+
+        $add = function () use ($mock) {
+            $mock->add();
+        };
+
+        $this->restHelper->processPut(
+            array(
+                $mockedObject
+            ),
+            array(),
+            $delete,
+            $update,
+            $add
+        );
+    }
+
+    public function testProcessPutWithUpdate()
+    {
+        $mockedObject = $this->getMock('stdClass', array('getId'));
+        $mockedObject->expects($this->any())->method('getId')->will($this->returnValue(1));
+
+        $mock = $this->getMock('stdClass', array('delete', 'update', 'add'));
+        $mock->expects($this->never())->method('delete');
+        $mock->expects($this->once())->method('update');
+        $mock->expects($this->never())->method('add');
+
+        $delete = function () use ($mock) {
+            $mock->delete();
+        };
+
+        $update = function () use ($mock) {
+            $mock->update();
+        };
+
+        $add = function () use ($mock) {
+            $mock->add();
+        };
+
+        $this->restHelper->processPut(
+            array(
+                $mockedObject
+            ),
+            array(
+                array(
+                    'id' => 1
+                )
+            ),
+            $delete,
+            $update,
+            $add
+        );
+    }
+
+    public function testProcessPutWithAdd()
+    {
+        $mock = $this->getMock('stdClass', array('delete', 'update', 'add'));
+        $mock->expects($this->never())->method('delete');
+        $mock->expects($this->never())->method('update');
+        $mock->expects($this->once())->method('add');
+
+        $delete = function () use ($mock) {
+            $mock->delete();
+        };
+
+        $update = function () use ($mock) {
+            $mock->update();
+        };
+
+        $add = function () use ($mock) {
+            $mock->add();
+        };
+
+        $this->restHelper->processPut(
+            array(),
+            array(
+                array(
+                    'id' => 1
+                )
+            ),
+            $delete,
+            $update,
+            $add
+        );
+    }
 }

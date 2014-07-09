@@ -10,6 +10,7 @@
 
 namespace Sulu\Component\Rest;
 
+use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptor\AbstractFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
 
@@ -21,4 +22,17 @@ interface RestHelperInterface
      * @param AbstractFieldDescriptor[] $fieldDescriptors The FieldDescriptors available for this object type
      */
     public function initializeListBuilder(ListBuilderInterface $listBuilder, array $fieldDescriptors);
+
+    /**
+     * This method processes a put request (delete non-existing entities, update existing entities, add new
+     * entries), and let the single actions be modified by callbacks
+     * @param ApiEntity[] $entities
+     * @param $requestEntities
+     * @param callback $deleteCallback
+     * @param callback $updateCallback
+     * @param callback $addCallback
+     * @return bool
+     * @deprecated
+     */
+    public function processPut($entities, $requestEntities, $deleteCallback, $updateCallback, $addCallback);
 } 
