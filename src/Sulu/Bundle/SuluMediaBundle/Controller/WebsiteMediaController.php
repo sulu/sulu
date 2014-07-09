@@ -19,8 +19,10 @@ use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class WebsiteMediaController extends Controller
 {
@@ -59,6 +61,8 @@ class WebsiteMediaController extends Controller
     public function downloadAction(Request $request, $id)
     {
         try {
+            ob_end_clean();
+
             $version = $request->get('v', null);
 
             /**
@@ -69,38 +73,44 @@ class WebsiteMediaController extends Controller
                 ->findMediaById($id);
 
             $fileName = null;
+            $fileSize = null;
             $storageOptions = null;
             $version = $version === null ? $mediaEntity->getFiles()[0]->getVersion() : $version;
+
+            $file = $mediaEntity->getFiles()[0];
 
             /**
              * @var FileVersion $fileVersion
              */
-            foreach ($mediaEntity->getFiles()[0]->getFileVersion() as $fileVersion) {
+            foreach ($file->getFileVersions() as $fileVersion) {
                 if ($fileVersion->getVersion() == $version) {
                     $fileName = $fileVersion->getName();
+                    $fileSize = $fileVersion->getSize();
                     $storageOptions = $fileVersion->getStorageOptions();
                 }
             }
 
             $path = $this->getStorage()->load($fileName, $version, $storageOptions);
 
-            try {
-                $file = file_get_contents($path);
-            } catch (Exception $e) {
-                throw new FileNotFoundException('File not found');
-            }
-
-            // Generate response
-            $response = new Response();
-            $response->setContent($file);
+            // in case you need the container
+            $container = $this->container;
+            $response = new StreamedResponse(function() use($container, $path) {
+                flush(); // send headers
+                $handle = fopen($path, 'r');
+                while (!feof($handle)) {
+                    $buffer = fread($handle, 1024);
+                    echo $buffer;
+                    flush(); // buffered output
+                }
+                fclose($handle);
+            });
 
             // Set headers
-            $response->headers->set('Cache-Control', 'private');
-            $response->headers->set('Content-type', mime_content_type($fileName));
+            $response->headers->set('Content-Type', 'application/octet-stream');
             $response->headers->set('Content-Disposition', 'attachment; filename="' . basename($fileName) . '";');
-            $response->headers->set('Content-length', filesize($fileName));
+            $response->headers->set('Content-length', $fileSize);
 
-            return new $response;
+            return $response;
         } catch (MediaException $e) {
             throw $this->createNotFoundException('File not found: ' . $e->getCode());
         }
@@ -126,7 +136,7 @@ class WebsiteMediaController extends Controller
     protected function getStorage()
     {
         if ($this->storage === null) {
-            $this->storage = $this->get('sulu_media.');
+            $this->storage = $this->get('sulu_media.storage');
         }
         return $this->storage;
     }
