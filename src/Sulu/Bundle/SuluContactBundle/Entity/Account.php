@@ -89,14 +89,16 @@ class Account extends ApiEntity
     private $parent;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * main account
+     * @Accessor(getter="getAddresses")
+     * @var string
      */
-    private $urls;
+    private $addresses;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
-    private $addresses;
+    private $urls;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
@@ -184,7 +186,31 @@ class Account extends ApiEntity
      */
     private $externalId;
 
+    /**
+     * @var string
+     */
+    private $mainEmail;
 
+    /**
+     * @var string
+     */
+    private $mainPhone;
+
+    /**
+     * @var string
+     */
+    private $mainFax;
+
+    /**
+     * @var string
+     */
+    private $mainUrl;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     * @Exclude
+     */
+    private $accountAddresses;
 
     /**
      * Constructor
@@ -199,6 +225,7 @@ class Account extends ApiEntity
         $this->faxes = new \Doctrine\Common\Collections\ArrayCollection();
         $this->tags = new \Doctrine\Common\Collections\ArrayCollection();
         $this->accountContacts = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->accountAddresses = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -454,39 +481,6 @@ class Account extends ApiEntity
     public function getUrls()
     {
         return $this->urls;
-    }
-
-    /**
-     * Add addresses
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Address $addresses
-     * @return Account
-     */
-    public function addAddresse(\Sulu\Bundle\ContactBundle\Entity\Address $addresses)
-    {
-        $this->addresses[] = $addresses;
-
-        return $this;
-    }
-
-    /**
-     * Remove addresses
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Address $addresses
-     */
-    public function removeAddresse(\Sulu\Bundle\ContactBundle\Entity\Address $addresses)
-    {
-        $this->addresses->removeElement($addresses);
-    }
-
-    /**
-     * Get addresses
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getAddresses()
-    {
-        return $this->addresses;
     }
 
     /**
@@ -1072,5 +1066,147 @@ class Account extends ApiEntity
     public function getMainContact()
     {
         return $this->mainContact;
+    }
+
+    /**
+     * Set mainEmail
+     *
+     * @param string $mainEmail
+     * @return Account
+     */
+    public function setMainEmail($mainEmail)
+    {
+        $this->mainEmail = $mainEmail;
+    
+        return $this;
+    }
+
+    /**
+     * Get mainEmail
+     *
+     * @return string 
+     */
+    public function getMainEmail()
+    {
+        return $this->mainEmail;
+    }
+
+    /**
+     * Set mainPhone
+     *
+     * @param string $mainPhone
+     * @return Account
+     */
+    public function setMainPhone($mainPhone)
+    {
+        $this->mainPhone = $mainPhone;
+    
+        return $this;
+    }
+
+    /**
+     * Get mainPhone
+     *
+     * @return string 
+     */
+    public function getMainPhone()
+    {
+        return $this->mainPhone;
+    }
+
+    /**
+     * Set mainFax
+     *
+     * @param string $mainFax
+     * @return Account
+     */
+    public function setMainFax($mainFax)
+    {
+        $this->mainFax = $mainFax;
+    
+        return $this;
+    }
+
+    /**
+     * Get mainFax
+     *
+     * @return string 
+     */
+    public function getMainFax()
+    {
+        return $this->mainFax;
+    }
+
+    /**
+     * Set mainUrl
+     *
+     * @param string $mainUrl
+     * @return Account
+     */
+    public function setMainUrl($mainUrl)
+    {
+        $this->mainUrl = $mainUrl;
+    
+        return $this;
+    }
+
+    /**
+     * Get mainUrl
+     *
+     * @return string 
+     */
+    public function getMainUrl()
+    {
+        return $this->mainUrl;
+    }
+
+    /**
+     * Add accountAddresses
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddresses
+     * @return Account
+     */
+    public function addAccountAddresse(\Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddresses)
+    {
+        $this->accountAddresses[] = $accountAddresses;
+    
+        return $this;
+    }
+
+    /**
+     * Remove accountAddresses
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddresses
+     */
+    public function removeAccountAddresse(\Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddresses)
+    {
+        $this->accountAddresses->removeElement($accountAddresses);
+    }
+
+    /**
+     * Get accountAddresses
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getAccountAddresses()
+    {
+        return $this->accountAddresses;
+    }
+
+    /**
+     * returns main account
+     */
+    public function getAddresses()
+    {
+        $accountAddresses = $this->getAccountAddresses();
+        $addresses = array();
+
+        if (!is_null($accountAddresses)) {
+            /** @var ContactAddress $contactAddress */
+            foreach ($accountAddresses as $accountAddress) {
+                $addresses[] = $accountAddress->getAddress();
+            }
+        }
+        return $addresses;
     }
 }

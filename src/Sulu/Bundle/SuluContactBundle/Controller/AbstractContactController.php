@@ -11,6 +11,8 @@
 namespace Sulu\Bundle\ContactBundle\Controller;
 
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use Sulu\Bundle\ContactBundle\Entity\Contact;
+use Sulu\Bundle\ContactBundle\Entity\ContactAddress;
 use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\ContactBundle\Entity\Note;
 use Sulu\Bundle\ContactBundle\Entity\Fax;
@@ -119,39 +121,59 @@ class AbstractContactController extends RestController implements ClassResourceI
     }
 
     /**
-     * checks if entity has main email or sets one
-     * @param $emails
+     * sets Entity's Main-Email
+     * @param Contact|Account $entity
      */
-    protected function checkAndSetMainEmail($emails)
+    protected function setMainEmail($entity)
     {
-        $this->setMainForCollection($emails);
+        // set main to first entry or to null
+        if ($entity->getEmails()->empty()) {
+            $entity->setMainEmail(null);
+        } else {
+            $entity->setMainEmail($entity->getEmails()->first()->getEmail());
+        }
     }
 
     /**
-     * checks if entity has main phone or sets one
-     * @param $phones
+     * sets Entity's Main-Phone
+     * @param Contact|Account $entity
      */
-    protected function checkAndSetMainPhone($phones)
+    protected function setMainPhone($entity)
     {
-        $this->setMainForCollection($phones);
+        // set main to first entry or to null
+        if ($entity->getPhones()->empty()) {
+            $entity->setMainPhone(null);
+        } else {
+            $entity->setMainPhone($entity->getPhones()->first()->getPhone());
+        }
     }
 
     /**
-     * checks if entity has main fax or sets one
-     * @param $faxes
+     * sets Entity's Main-Fax
+     * @param Contact|Account $entity
      */
-    protected function checkAndSetMainFax($faxes)
+    protected function setMainFax($entity)
     {
-        $this->setMainForCollection($faxes);
+        // set main to first entry or to null
+        if ($entity->getFaxes()->empty()) {
+            $entity->setMainFax(null);
+        } else {
+            $entity->setMainFax($entity->getFaxes()->first()->getFax());
+        }
     }
 
     /**
-     * checks if entity has main url or sets one
-     * @param $urls
+     * sets Entity's Main-Url
+     * @param Contact|Account $entity
      */
-    protected function checkAndSetMainUrl($urls)
+    protected function setMainUrl($entity)
     {
-        $this->setMainForCollection($urls);
+        // set main to first entry or to null
+        if ($entity->getUrls()->empty()) {
+            $entity->setMainUrl(null);
+        } else {
+            $entity->setMainUrl($entity->getUrls()->first()->getUrl());
+        }
     }
 
     /**
@@ -595,40 +617,14 @@ class AbstractContactController extends RestController implements ClassResourceI
     }
 
     /**
-     * Process all addresses from request
-     * @param $contact The contact on which is worked
-     * @param $addresses
-     * @return bool True if the processing was sucessful, otherwise false
-     */
-    protected function processAddresses($contact, $addresses)
-    {
-        $delete = function ($address) use ($contact) {
-            $contact->removeAddresse($address);
-
-            return true;
-        };
-
-        $update = function ($address, $matchedEntry) use ($contact) {
-            return $this->updateAddress($contact, $address, $matchedEntry);
-        };
-
-        $add = function ($address) use ($contact) {
-            $this->addAddress($contact, $address);
-
-            return true;
-        };
-
-        return $this->processPut($contact->getAddresses(), $addresses, $delete, $update, $add);
-    }
-
-    /**
-     * Adds an address to an account
-     * @param $contact
+     * Creates an address based on the data passed
      * @param $addressData
-     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
+     * @return Address
      * @throws \Sulu\Component\Rest\Exception\EntityIdAlreadySetException
+     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
+     *
      */
-    private function addAddress($contact, $addressData)
+    protected function createAddress($addressData)
     {
         $em = $this->getDoctrine()->getManager();
         $addressEntity = 'SuluContactBundle:Address';
@@ -657,10 +653,11 @@ class AbstractContactController extends RestController implements ClassResourceI
             $address->setCity($addressData['city']);
             $address->setState($addressData['state']);
 
-            if (isset($addressData['primaryAddress'])) {
-                $value = $this->getBooleanValue($addressData['primaryAddress']);
-                $this->handlePrimaryAddress($contact, $address, $value);
-            }
+            // TODO: handle primary address
+//            if (isset($addressData['primaryAddress'])) {
+//                $value = $this->getBooleanValue($addressData['primaryAddress']);
+//                $this->handlePrimaryAddress($contact, $address, $value);
+//            }
             if (isset($addressData['billingAddress'])) {
                 $address->setBillingAddress($this->getBooleanValue($addressData['billingAddress']));
             }
@@ -686,20 +683,18 @@ class AbstractContactController extends RestController implements ClassResourceI
             }
 
             $em->persist($address);
-
-            $contact->addAddresse($address);
         }
+        return $address;
     }
 
     /**
      * Updates the given address
-     * @param $contact
      * @param Address $address The phone object to update
      * @param mixed $entry The entry with the new data
      * @return bool True if successful, otherwise false
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      */
-    protected function updateAddress($contact, Address $address, $entry)
+    protected function updateAddress(Address $address, $entry)
     {
         $success = true;
         $addressTypeEntity = 'SuluContactBundle:AddressType';
@@ -727,10 +722,10 @@ class AbstractContactController extends RestController implements ClassResourceI
                 $address->setCountry($country);
                 $address->setAddressType($addressType);
 
-                if (isset($entry['primaryAddress'])) {
-                    $value = $this->getBooleanValue($entry['primaryAddress']);
-                    $this->handlePrimaryAddress($contact, $address, $value);
-                }
+//                if (isset($entry['primaryAddress'])) {
+//                    $value = $this->getBooleanValue($entry['primaryAddress']);
+//                    $this->handlePrimaryAddress($contact, $address, $value);
+//                }
                 if (isset($entry['billingAddress'])) {
                     $address->setBillingAddress($this->getBooleanValue($entry['billingAddress']));
                 }

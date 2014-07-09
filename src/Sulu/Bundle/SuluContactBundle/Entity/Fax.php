@@ -21,11 +21,6 @@ class Fax
     private $id;
 
     /**
-     * @var boolean
-     */
-    private $main;
-
-    /**
      * @var \Sulu\Bundle\ContactBundle\Entity\FaxType
      */
     private $faxType;
@@ -171,28 +166,5 @@ class Fax
     public function getAccounts()
     {
         return $this->accounts;
-    }
-
-    /**
-     * Set main
-     *
-     * @param boolean $main
-     * @return Fax
-     */
-    public function setMain($main)
-    {
-        $this->main = $main;
-    
-        return $this;
-    }
-
-    /**
-     * Get main
-     *
-     * @return boolean 
-     */
-    public function getMain()
-    {
-        return $this->main;
     }
 }

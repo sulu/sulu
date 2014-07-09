@@ -75,16 +75,6 @@ class Address
     private $country;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $contacts;
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $accounts;
-
-    /**
      * @var boolean
      * @Expose
      */
@@ -525,5 +515,81 @@ class Address
     public function getPostboxCity()
     {
         return $this->postboxCity;
+    }
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $contactAddresses;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $accountAddresses;
+
+
+    /**
+     * Add contactAddresses
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\ContactAddress $contactAddresses
+     * @return Address
+     */
+    public function addContactAddresse(\Sulu\Bundle\ContactBundle\Entity\ContactAddress $contactAddresses)
+    {
+        $this->contactAddresses[] = $contactAddresses;
+    
+        return $this;
+    }
+
+    /**
+     * Remove contactAddresses
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\ContactAddress $contactAddresses
+     */
+    public function removeContactAddresse(\Sulu\Bundle\ContactBundle\Entity\ContactAddress $contactAddresses)
+    {
+        $this->contactAddresses->removeElement($contactAddresses);
+    }
+
+    /**
+     * Get contactAddresses
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getContactAddresses()
+    {
+        return $this->contactAddresses;
+    }
+
+    /**
+     * Add accountAddresses
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddresses
+     * @return Address
+     */
+    public function addAccountAddresse(\Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddresses)
+    {
+        $this->accountAddresses[] = $accountAddresses;
+    
+        return $this;
+    }
+
+    /**
+     * Remove accountAddresses
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddresses
+     */
+    public function removeAccountAddresse(\Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddresses)
+    {
+        $this->accountAddresses->removeElement($accountAddresses);
+    }
+
+    /**
+     * Get accountAddresses
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getAccountAddresses()
+    {
+        return $this->accountAddresses;
     }
 }
