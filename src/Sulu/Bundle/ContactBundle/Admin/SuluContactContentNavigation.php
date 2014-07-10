@@ -30,6 +30,13 @@ class SuluContactContentNavigation extends ContentNavigation
         $details->setContentComponent('contacts@sulucontact');
         $details->setContentComponentOptions(array('display'=>'form'));
         $this->addNavigationItem($details);
+        // activities
+        $activities = new NavigationItem('content-navigation.contacts.activities');
+        $activities->setAction('activities');
+        $activities->setContentType('contact');
+        $activities->setContentComponent('contacts@sulucontact');
+        $activities->setContentComponentOptions(array('display'=>'activities'));
+        $this->addNavigationItem($activities);
 
         /* ACCOUNTS */
         // details

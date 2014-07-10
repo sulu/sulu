@@ -59,6 +59,15 @@ class TemplateController extends Controller
     }
 
     /**
+     * Returns the activities form for contacts
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function contactActivitiesAction()
+    {
+        return $this->render('SuluContactBundle:Template:contact.activities.html.twig');
+    }
+
+    /**
      * Returns an array for rendering a form
      * @return array
      */
