@@ -18,6 +18,7 @@
     display: inline-block;
     vertical-align: middle;
     white-space: normal;
+    overflow: hidden;
   }
 
   iframe {
@@ -60,10 +61,8 @@
       padding-left: 30px;
     }
     .viewport {
-      width: 640px;
-      height: 1136px;
-      @include scale(0.5);
-      @include transformOrigin(0, 0);
+      width: (640px)/2;
+      height: (1136px)/2;
     }
   }
   &.tablet {
@@ -79,10 +78,8 @@
       padding-left: 30px;
     }
     .viewport {
-      width: 1536px;
-      height: 2048px;
-      @include scale(0.5);
-      @include transformOrigin(0, 0);
+      width: (1536px)/2;
+      height: (2048px)/2;
     }
   }
 }
