@@ -16,11 +16,13 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\UnitOfWork;
 use Sulu\Bundle\ContactBundle\Entity\Account;
+use Sulu\Bundle\ContactBundle\Entity\AccountAddress;
 use Sulu\Bundle\ContactBundle\Entity\AccountCategory;
 use Sulu\Bundle\ContactBundle\Entity\AccountContact;
 use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\BankAccount;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
+use Sulu\Bundle\ContactBundle\Entity\ContactAddress;
 use Sulu\Bundle\ContactBundle\Entity\ContactRepository;
 use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\ContactBundle\Entity\Fax;
@@ -521,7 +523,14 @@ class Import
         }
 
         // add address if set
-        $this->addAddress($data, $account);
+        $address = $this->createAddress($data, $account);
+        if ($address) {
+            $accountAddress = new AccountAddress();
+            $accountAddress->setAccount($account);
+            $accountAddress->setAddress($address);
+            $this->em->persist($accountAddress);
+            $account->addContactAddresse($accountAddress);
+        }
 
         // add bank accounts
         $this->addBankAccounts($data, $account);
@@ -560,13 +569,13 @@ class Import
         for ($i = 0, $len = 10; ++$i < $len;) {
             if ($this->checkData('email' . $i, $data)) {
                 $email = new Email();
-                $email->setMain(false);
                 $email->setEmail($data['email' . $i]);
                 $email->setEmailType($this->defaultTypes['emailType']);
                 $this->em->persist($email);
                 $entity->addEmail($email);
             }
         }
+        $this->setMainEmail($entity);
     }
 
     /**
@@ -580,13 +589,13 @@ class Import
         for ($i = 0, $len = 10; ++$i < $len;) {
             if ($this->checkData('phone' . $i, $data, null, 60)) {
                 $phone = new Phone();
-                $phone->setMain(false);
                 $phone->setPhone($data['phone' . $i]);
                 $phone->setPhoneType($this->defaultTypes['phoneType']);
                 $this->em->persist($phone);
                 $entity->addPhone($phone);
             }
         }
+        $this->setMainPhone($entity);
     }
 
     /**
@@ -600,13 +609,13 @@ class Import
         for ($i = 0, $len = 10; ++$i < $len;) {
             if ($this->checkData('fax' . $i, $data, null, 60)) {
                 $fax = new Fax();
-                $fax->setMain(false);
                 $fax->setFax($data['fax' . $i]);
                 $fax->setFaxType($this->defaultTypes['faxType']);
                 $this->em->persist($fax);
                 $entity->addFax($fax);
             }
         }
+        $this->setMainFax($entity);
     }
 
     /**
@@ -626,6 +635,63 @@ class Import
                 $this->em->persist($url);
                 $entity->addUrl($url);
             }
+        }
+        $this->setMainUrl($entity);
+    }
+
+    /**
+     * sets Entity's Main-Email
+     * @param Contact|Account $entity
+     */
+    protected function setMainEmail($entity)
+    {
+        // set main to first entry or to null
+        if ($entity->getEmails()->isEmpty()) {
+            $entity->setMainEmail(null);
+        } else {
+            $entity->setMainEmail($entity->getEmails()->first()->getEmail());
+        }
+    }
+
+    /**
+     * sets Entity's Main-Phone
+     * @param Contact|Account $entity
+     */
+    protected function setMainPhone($entity)
+    {
+        // set main to first entry or to null
+        if ($entity->getPhones()->isEmpty()) {
+            $entity->setMainPhone(null);
+        } else {
+            $entity->setMainPhone($entity->getPhones()->first()->getPhone());
+        }
+    }
+
+    /**
+     * sets Entity's Main-Fax
+     * @param Contact|Account $entity
+     */
+    protected function setMainFax($entity)
+    {
+        // set main to first entry or to null
+        if ($entity->getFaxes()->isEmpty()) {
+            $entity->setMainFax(null);
+        } else {
+            $entity->setMainFax($entity->getFaxes()->first()->getFax());
+        }
+    }
+
+    /**
+     * sets Entity's Main-Url
+     * @param Contact|Account $entity
+     */
+    protected function setMainUrl($entity)
+    {
+        // set main to first entry or to null
+        if ($entity->getUrls()->isEmpty()) {
+            $entity->setMainUrl(null);
+        } else {
+            $entity->setMainUrl($entity->getUrls()->first()->getUrl());
         }
     }
 
@@ -698,7 +764,7 @@ class Import
      * @param $entity
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      */
-    protected function addAddress($data, $entity)
+    protected function createAddress($data, $entity)
     {
         // set address
         $address = new Address();
@@ -759,13 +825,14 @@ class Import
             $addAddress = false;
         }
 
-
         // only add address if part of it is defined
         if ($addAddress) {
             $address->setAddressType($this->defaultTypes['addressType']);
             $this->em->persist($address);
-            $entity->addAddresse($address);
+//            $entity->addAddresse($address);
+            return $address;
         }
+        return null;
     }
 
     // gets financial information and adds it
@@ -908,7 +975,14 @@ class Import
         $this->em->persist($contact);
 
         // add address if set
-        $this->addAddress($data, $contact);
+        $address = $this->createAddress($data, $contact);
+        if ($address) {
+            $contactAddress = new ContactAddress();
+            $contactAddress->setContact($contact);
+            $contactAddress->setAddress($address);
+            $this->em->persist($contactAddress);
+            $contact->addContactAddresse($contactAddress);
+        }
 
         // process emails, phones, faxes, urls and notes
         $this->processEmails($data, $contact);

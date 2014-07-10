@@ -50,7 +50,7 @@ class ContactController extends AbstractContactController
     /**
      * {@inheritdoc}
      */
-    protected $unsortable = array();
+    protected $unsortable = array('account','accountContacts_position','city');
 
     /**
      * {@inheritdoc}
@@ -74,14 +74,18 @@ class ContactController extends AbstractContactController
         'formOfAddress',
         'id',
         'title',
-        'disabled');
+        'disabled',
+        'mainUrl',
+        'mainFax',
+        'accountContacts_position',
+    );
 
     /**
      * {@inheritdoc}
      */
     protected $fieldsRelations = array(
-//        'email',
         'account',
+        'city',
         'accountContacts_position',
     );
 
@@ -91,13 +95,15 @@ class ContactController extends AbstractContactController
      * {@inheritdoc}
      */
     protected $fieldsSortOrder = array(
-        0 => 'id',
-        1 => 'title',
+        1 => 'account',
         2 => 'firstName',
-        3 => 'lastName',
-        5 => 'account',
-//        4 => 'email',
-//        6 => 'phone',
+        3 => 'middleName',
+        4 => 'lastName',
+        5 => 'city',
+        6 => 'mainPhone',
+        7 => 'mainEmail',
+        10 => 'title',
+        20 => 'id',
     );
 
     /**
@@ -110,6 +116,11 @@ class ContactController extends AbstractContactController
         'account' => 'contact.contacts.company',
         'accountContacts_position' => 'contact.contacts.position',
         'isMainContact' => 'contact.contacts.main-contact',
+        'mainEmail' => 'public.email',
+        'mainPhone' => 'public.phone',
+        'mainUrl' => 'public.url',
+        'mainFax' => 'public.fax',
+        'city' => 'contact.address.city',
     );
 
     /**
@@ -165,19 +176,20 @@ class ContactController extends AbstractContactController
                 $newFields = array();
                 $where = array();
 
+                $mappings = array(
+                    'city' => 'contactAddresses_address_city',
+                    'account' => 'accountContacts_account_name'
+                );
+
                 foreach ($fields as $field) {
                     switch ($field) {
-                        case 'email':
-                            $newFields[] = 'emails_email';
-                            $joinConditions['emails'] = 'emails.main = TRUE';
-                            break;
-                        case 'phone':
-                            $newFields[] = 'phones_phone';
-                            $joinConditions['phones'] = 'phones.main = TRUE';
+                        case 'city':
+                            $newFields[] = $mappings[$field];
+                            $joinConditions['contactAddresses'] = 'contactAddresses.main = TRUE';
                             break;
                         case 'account':
-                            $newFields[] = 'accountContacts_account_name';
-                            $joinConditions['accountContacts'] = 'accountContacts.main = TRUE';
+                            $newFields[] = $mappings[$field];
+                            $joinConditions['accountContacts']  = 'accountContacts.main = TRUE';
                             break;
                         default:
                             $newFields[] = $field;
@@ -189,7 +201,7 @@ class ContactController extends AbstractContactController
             // check if fullname should be returned
             $returnFullName = !is_null($fields) && array_search('fullName', $fields) !== false;
 
-            $filter = function ($res) use ($returnFullName) {
+            $filter = function ($res) use ($returnFullName, $mappings) {
                 // get full name
                 if ($returnFullName) {
                     $fullName = array();
@@ -202,23 +214,20 @@ class ContactController extends AbstractContactController
                     if (array_key_exists('lastName', $res)) {
                         $fullName[] = $res['lastName'];
                     }
+                    $fullName[] = sprintf('(%s)',$res['id']);
                     $res['fullName'] = implode(' ', $fullName);
                     $res['name'] = implode(' ', $fullName); // FIXME: name is only returned due to an error in
                                                             // auto-complete component
                 }
 
                 // filter relations
-                if (array_key_exists('emails_email', $res)) {
-                    $res['email'] = $res['emails_email'];
-                    unset($res['emails_email']);
+                if (array_key_exists($mappings['city'], $res)) {
+                    $res['city'] = $res[$mappings['city']];
+                    unset($res[$mappings['city']]);
                 }
-                if (array_key_exists('phones_phone', $res)) {
-                    $res['phone'] = $res['phones_phone'];
-                    unset($res['phones_phone']);
-                }
-                if (array_key_exists('accountContacts_account_name', $res)) {
-                    $res['account'] = $res['accountContacts_account_name'];
-                    unset($res['accountContacts_account_name']);
+                if (array_key_exists($mappings['account'], $res)) {
+                    $res['account'] = $res[$mappings['account']];
+                    unset($res[$mappings['account']]);
                 }
                 return $res;
             };
@@ -578,7 +587,7 @@ class ContactController extends AbstractContactController
         };
 
         $delete = function ($contactAddress) use ($contact) {
-            $address = $contactAddress->getAddresse();
+            $address = $contactAddress->getAddress();
             if (!$address->hasRelations()) { // delete address if it has no more relations
                 $this->getDoctrine()->getManager()->remove($address);
             }
@@ -603,6 +612,7 @@ class ContactController extends AbstractContactController
             $contactAddress = new ContactAddress();
             $contactAddress->setAddress($address);
             $contactAddress->setContact($contact);
+            $contact->addContactAddresse($contactAddress);
             if ($isMain) {
                 $this->unsetMain($contact->getContactAddresses());
             }

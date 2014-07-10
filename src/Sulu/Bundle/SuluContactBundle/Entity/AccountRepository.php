@@ -61,7 +61,8 @@ class AccountRepository extends EntityRepository
     {
         try {
             $qb = $this->createQueryBuilder('account')
-                ->leftJoin('account.addresses', 'addresses')
+                ->leftJoin('account.accountAddresses', 'accountAddresses')
+                ->leftJoin('accountAddresses.address', 'addresses')
                 ->leftJoin('addresses.country', 'country')
                 ->leftJoin('addresses.addressType', 'addressType')
                 ->leftJoin('account.parent', 'parent')
@@ -83,6 +84,7 @@ class AccountRepository extends EntityRepository
                 ->addSelect('mainContact')
                 ->addSelect('partial tags.{id, name}')
                 ->addSelect('bankAccounts')
+                ->addSelect('accountAddresses')
                 ->addSelect('addresses')
                 ->addSelect('country')
                 ->addSelect('addressType')
@@ -149,7 +151,8 @@ class AccountRepository extends EntityRepository
     {
         try {
             $qb = $this->createQueryBuilder('account')
-                ->leftJoin('account.addresses', 'addresses')
+                ->leftJoin('account.accountAddresses', 'accountAddresses')
+                ->leftJoin('accountAddresses.address', 'addresses')
                 ->leftJoin('account.children', 'children')
                 ->leftJoin('addresses.country', 'country')
                 ->leftJoin('addresses.addressType', 'addressType')
@@ -177,6 +180,7 @@ class AccountRepository extends EntityRepository
                 ->leftJoin('account.mainContact', 'mainContact')
                 ->addSelect('mainContact')
                 ->addSelect('bankAccounts')
+                ->addSelect('accountAddresses')
                 ->addSelect('addresses')
                 ->addSelect('children')
                 ->addSelect('accountContacts')
