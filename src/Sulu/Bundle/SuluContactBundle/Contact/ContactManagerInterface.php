@@ -42,7 +42,18 @@ interface ContactManagerInterface
      */
     public function getAddressRelations($entity);
 
-    public function unsetMain($collection);
+    /**
+     * sets the first element to main, if none is set
+     * @param $arrayCollection
+     */
+    public function setMainForCollection($arrayCollection);
+
+    /**
+     * unsets main of all elements of an ArrayCollection | PersistanceCollection
+     * @param $arrayCollection
+     * @return boolean returns true if a element was unset
+     */
+    public function unsetMain($arrayCollection);
 
 //    public function addAccountContact($account, $contact);
 

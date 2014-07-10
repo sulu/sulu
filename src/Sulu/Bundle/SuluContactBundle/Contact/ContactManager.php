@@ -42,7 +42,6 @@ class ContactManager extends AbstractContactManager
         $this->em->persist($contactAddress);
 
         $contact->addAccountAddresse($contactAddress);
-        $address->addAccountAddresse($contactAddress);
 
         return $contactAddress;
     }

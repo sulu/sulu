@@ -33,8 +33,6 @@ use Symfony\Component\HttpFoundation\Request;
  */
 abstract class AbstractContactController extends RestController implements ClassResourceInterface
 {
-    protected $newPrimaryAddress;
-
     /**
      * @return AbstractContactManager
      */
@@ -47,64 +45,7 @@ abstract class AbstractContactController extends RestController implements Class
      */
     protected function checkAndSetMainAddress($addresses)
     {
-        return $this->setMainForCollection($addresses);
-    }
-
-
-    /**
-     * @param $address
-     * @param $addresses
-     */
-    protected function setMainAddress($address, $addresses)
-    {
-    }
-
-    /**
-     * checks if a collection for main attribute
-     * @param $arrayCollection
-     * @param $mainEntity will be set, if found
-     * @return mixed
-     */
-    private function hasMain($arrayCollection, &$mainEntity = null)
-    {
-        if ($arrayCollection && !$arrayCollection->isEmpty()) {
-            return $arrayCollection->exists(function ($index, $entity) {
-                $mainEntity = $entity;
-                return $entity->getMain() === true;
-            });
-        }
-        return false;
-    }
-
-    /**
-     * sets the first element to main, if none is set
-     * @param $arrayCollection
-     */
-    private function setMainForCollection($arrayCollection)
-    {
-        if ($arrayCollection && !$arrayCollection->isEmpty() && !$this->hasMain($arrayCollection)) {
-            $arrayCollection->first()->setMain(true);
-        }
-    }
-
-    /**
-     * unsets main of all elements of arraycollection
-     * @param $arrayCollection
-     * @return boolean returns true if a element was unset
-     */
-    protected function unsetMain($arrayCollection)
-    {
-        if ($arrayCollection && !$arrayCollection->isEmpty()) {
-            return $arrayCollection->forAll(
-                function ($index, $entry) {
-                    if ($entry->getMain() === true) {
-                        $entry->setMain(false);
-                        return false;
-                    }
-                    return true;
-                }
-            );
-        }
+        return $this->getContactManager()->setMainForCollection($addresses);
     }
 
     /**
@@ -710,39 +651,6 @@ abstract class AbstractContactController extends RestController implements Class
         }
 
         return $success;
-    }
-
-    /**
-     * Handles the primary flag of addresses
-     * @param $contact
-     * @param Address $address
-     * @param $value
-     */
-    protected function handlePrimaryAddress($contact, Address $address, $value){
-        if($value && !$address->getPrimaryAddress() && !$this->newPrimaryAddress) {
-            $this->currentContact = $contact;
-            $this->newPrimaryAddress = $address;
-        } else if(!$value) {
-            $address->setPrimaryAddress($value);
-        }
-    }
-
-    /**
-     * Sets primary address flag of all addresses of an account to false and sets new primary
-     * @param $contact
-     * @param $address
-     */
-    protected function setNewPrimaryAddress($contact, Address $address)
-    {
-        if ($contact && $address) {
-
-            $addresses = $contact->getAddresses();
-            /** @var Address $address */
-            foreach ($addresses as $addr) {
-                $addr->setPrimaryAddress(false);
-            }
-            $address->setPrimaryAddress(true);
-        }
     }
 
     /**
