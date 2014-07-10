@@ -45,7 +45,7 @@ class DoctrineRestHelper extends RestHelper implements RestHelperInterface
         /** @var Collection $entities */
         parent::processSubEntities($entities, $requestEntities, $get, $add, $update, $delete);
 
-        if (sizeof($entities) > 0) {
+        if (count($entities) > 0) {
             $newEntities = $entities->getValues();
             $entities->clear();
             foreach ($newEntities as $value) {

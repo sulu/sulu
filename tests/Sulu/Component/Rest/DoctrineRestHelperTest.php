@@ -28,19 +28,20 @@ class DoctrineRestHelperTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->restHelper = new RestHelper($this->listRestHelper);
+        $this->restHelper = new DoctrineRestHelper($this->listRestHelper);
     }
 
     public function testProcessSubEntities()
     {
-        $entities = $this->getMockBuilder('Doctrine\Common\Collection')
+        $entities = $this->getMockBuilder('Doctrine\Common\Collections\Collection')
             ->getMockForAbstractClass();
 
         $entities->expects($this->once())->method('count')->willReturn(2);
         $entities->expects($this->once())->method('getValues')->willReturn(array(null, null));
         $entities->expects($this->once())->method('clear');
+        $entities->expects($this->once())->method('getIterator')->willReturn(new \ArrayIterator(array(null, null)));
         $entities->expects($this->exactly(2))->method('add');
 
-        $this->restHelper->processSubEntities($entities, array(), null);
+        $this->restHelper->processSubEntities($entities, array(), function() {});
     }
 }
