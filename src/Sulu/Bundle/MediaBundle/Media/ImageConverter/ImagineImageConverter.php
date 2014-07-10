@@ -149,9 +149,7 @@ class ImagineImageConverter implements ImageConverterInterface {
                 $counter++;
                 $this->commandManager->get($command)->execute($layer, $parameters);
                 if ($counter == 1) {
-                    /**
-                     * @var \Imagine\Imagick\Image|\Imagine\Gd\Image $image
-                     */
+                    /** @var \Imagine\Imagick\Image|\Imagine\Gd\Image $image */
                     $image = $layer; // use first layer as main image
                 } else {
                     $image->layers()->add($layer);
