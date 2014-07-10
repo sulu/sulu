@@ -51,7 +51,7 @@ class ContactController extends AbstractContactController
     /**
      * {@inheritdoc}
      */
-    protected $unsortable = array('account','accountContacts_position','city');
+    protected $unsortable = array('account', 'accountContacts_position', 'city');
 
     /**
      * {@inheritdoc}
@@ -171,17 +171,15 @@ class ContactController extends AbstractContactController
 
             /** @var ListRestHelper $listHelper */
             $listHelper = $this->get('sulu_core.list_rest_helper');
-
+            $mappings = array(
+                'city' => 'contactAddresses_address_city',
+                'account' => 'accountContacts_account_name'
+            );
+            $joinConditions = null;
             // if fields are set
             if ($fields = $listHelper->getFields()) {
                 $newFields = array();
                 $where = array();
-
-                $mappings = array(
-                    'city' => 'contactAddresses_address_city',
-                    'account' => 'accountContacts_account_name'
-                );
-
                 foreach ($fields as $field) {
                     switch ($field) {
                         case 'city':
@@ -190,7 +188,7 @@ class ContactController extends AbstractContactController
                             break;
                         case 'account':
                             $newFields[] = $mappings[$field];
-                            $joinConditions['accountContacts']  = 'accountContacts.main = TRUE';
+                            $joinConditions['accountContacts'] = 'accountContacts.main = TRUE';
                             break;
                         default:
                             $newFields[] = $field;
@@ -215,10 +213,10 @@ class ContactController extends AbstractContactController
                     if (array_key_exists('lastName', $res)) {
                         $fullName[] = $res['lastName'];
                     }
-                    $fullName[] = sprintf('(%s)',$res['id']);
+                    $fullName[] = sprintf('(%s)', $res['id']);
                     $res['fullName'] = implode(' ', $fullName);
                     $res['name'] = implode(' ', $fullName); // FIXME: name is only returned due to an error in
-                                                            // auto-complete component
+                    // auto-complete component
                 }
 
                 // filter relations
@@ -529,7 +527,7 @@ class ContactController extends AbstractContactController
                 // process details
                 if (!($this->processEmails($contact, $request->get('emails'))
                     && $this->processPhones($contact, $request->get('phones'))
-                    && $this->processContactAddresses($contact, $request->get('addresses'))
+                    && $this->processAddresses($contact, $request->get('addresses'))
                     && $this->processNotes($contact, $request->get('notes'))
                     && $this->processFaxes($contact, $request->get('faxes'))
                     && $this->processTags($contact, $request->get('tags'))
@@ -577,56 +575,10 @@ class ContactController extends AbstractContactController
     }
 
     /**
-     * Process all addresses from request
-     * @param Contact $contact The contact on which is worked
-     * @param $addresses
-     * @return bool True if the processing was sucessful, otherwise false
-     */
-    protected function processContactAddresses($contact, $addresses)
-    {
-        $getAddressId = function($contactAddress) {
-            return $contactAddress->getAddress()->getId();
-        };
-
-        $delete = function ($contactAddress) use ($contact) {
-            $address = $contactAddress->getAddress();
-            if (!$address->hasRelations()) { // delete address if it has no more relations
-                $this->getDoctrine()->getManager()->remove($address);
-            }
-            $contact->removeContactAddresse($contactAddress);
-            $this->getDoctrine()->getManager()->remove($contactAddress);
-            return true;
-        };
-
-        $update = function ($contactAddress, $matchedEntry) use ($contact) {
-            $address = $contactAddress->getAddress();
-            $result = $this->updateAddress($address, $matchedEntry, $isMain);
-            if ($isMain) {
-                $this->getContactManager()->unsetMain($contact->getContactAddresses());
-            }
-            $contactAddress->setMain($isMain);
-
-            return $result;
-        };
-
-        $add = function ($addressData) use ($contact) {
-            $address = $this->createAddress($addressData, $isMain);
-            $this->getContactManager()->addAddress($contact, $address, $isMain);
-            return true;
-        };
-
-        $result = $this->processPut($contact->getContactAddresses(), $addresses, $delete, $update, $add, $getAddressId);
-
-        // check if main exists, else take first address
-        $this->checkAndSetMainAddress($contact->getContactAddresses());
-
-        return $result;
-    }
-
-    /**
      * @return ContactManagerInterface
      */
-    protected function getContactManager() {
+    protected function getContactManager()
+    {
         return $this->get('sulu_contact.contact_manager');
     }
 }

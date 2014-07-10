@@ -1204,7 +1204,9 @@ class Account extends ApiEntity
         if (!is_null($accountAddresses)) {
             /** @var ContactAddress $contactAddress */
             foreach ($accountAddresses as $accountAddress) {
-                $addresses[] = $accountAddress->getAddress();
+                $address = $accountAddress->getAddress();
+                $address->setPrimaryAddress($accountAddress->getMain());
+                $addresses[] = $address;
             }
         }
         return $addresses;

@@ -59,22 +59,27 @@ class ContactManager extends AbstractContactManager
 
     /**
      * removes the address relation from a contact and also deletes the address if it has no more relations
-     * @param $entity
-     * @param ContactAddress $contactAddress
-     * @return mixed
+     * @param $contact
+     * @param $contactAddress
+     * @return mixed|void
+     * @throws \Exception
      */
-    public function removeAddressRelation($entity, $contactAddress)
+    public function removeAddressRelation($contact, $contactAddress)
     {
+        if (!$contact || !$contactAddress) {
+            throw new \Exception('Contact and ContactAddress cannot be null');
+        }
+
         $address = $contactAddress->getAddress();
         $isMain = $contactAddress->getMain();
 
         // remove relation
-        $entity->removeContactAddresse($contactAddress);
+        $contact->removeContactAddresse($contactAddress);
         $address->removeContactAddresse($contactAddress);
 
         // if was main, set a new one
         if ($isMain) {
-            $this->setMainForCollection($entity->getContactContacts());
+            $this->setMainForCollection($contact->getContactContacts());
         }
 
         // delete address if it has no more relations
