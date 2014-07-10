@@ -118,7 +118,9 @@ define(function () {
          * @param id {Number|String} the id of the category
          */
         saveLastClickedCategory: function(id) {
-            this.sandbox.sulu.saveUserSetting(constants.lastClickedCategorySettingsKey, id);
+            if (!!id) {
+                this.sandbox.sulu.saveUserSetting(constants.lastClickedCategorySettingsKey, id);
+            }
         },
 
         /**
