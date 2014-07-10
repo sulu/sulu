@@ -240,6 +240,7 @@ class DefaultMediaManager implements MediaManagerInterface
             $data['size'] = null;
             $data['type'] = null;
             $data['version'] = null;
+            $data['mimeType'] = null;
             $data['storageOptions'] = null;
         }
 
