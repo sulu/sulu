@@ -133,9 +133,7 @@ class FilterNodesQueryBuilder
         }
 
         // search only for published pages
-        if (!$preview) {
-            $sql2Where[] = 'c.[i18n:' . $languageCode . '-sulu-state] = ' . StructureInterface::STATE_PUBLISHED;
-        }
+        $sql2Where[] = 'c.[i18n:' . $languageCode . '-state] = ' . StructureInterface::STATE_PUBLISHED;
 
         return $sql2Where;
     }

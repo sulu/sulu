@@ -132,7 +132,7 @@ class SmartContentContainer implements \Serializable
      */
     private function loadData($config)
     {
-        if (array_key_exists('dataSource',$config) && $config['dataSource'] !== '') {
+        if (array_key_exists('dataSource', $config) && $config['dataSource'] !== '') {
             return $this->nodeRepository->getFilteredNodes(
                 $config,
                 $this->languageCode,
@@ -176,7 +176,7 @@ class SmartContentContainer implements \Serializable
     {
         return json_encode(
             array(
-                'data' => $this->getData(),
+                'data'   => $this->getData(),
                 'config' => $this->getConfig()
             )
         );
