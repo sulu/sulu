@@ -75,6 +75,7 @@ class WebsiteMediaController extends Controller
             $fileName = null;
             $fileSize = null;
             $storageOptions = null;
+            $mimeType = null;
             $version = $version === null ? $mediaEntity->getFiles()[0]->getVersion() : $version;
 
             $file = $mediaEntity->getFiles()[0];
@@ -87,6 +88,7 @@ class WebsiteMediaController extends Controller
                     $fileName = $fileVersion->getName();
                     $fileSize = $fileVersion->getSize();
                     $storageOptions = $fileVersion->getStorageOptions();
+                    $mimeType = $fileVersion->getMimeType();
                 }
             }
 
@@ -106,7 +108,7 @@ class WebsiteMediaController extends Controller
             });
 
             // Set headers
-            $response->headers->set('Content-Type', 'application/octet-stream');
+            $response->headers->set('Content-Type', !empty($mimeType) ? $mimeType : 'application/octet-stream');
             $response->headers->set('Content-Disposition', 'attachment; filename="' . basename($fileName) . '";');
             $response->headers->set('Content-length', $fileSize);
 
