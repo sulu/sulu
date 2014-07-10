@@ -46,7 +46,7 @@ class ContactAddress
     /**
      * Get main
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getMain()
     {
@@ -65,7 +65,6 @@ class ContactAddress
 
     /**
      * Set address
-     *
      * @param \Sulu\Bundle\ContactBundle\Entity\Address $address
      * @return ContactAddress
      */
