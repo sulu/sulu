@@ -14,6 +14,7 @@ use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Put;
 use FOS\RestBundle\Controller\Annotations\Post;
+use Sulu\Bundle\ContactBundle\Entity\AccountAddress;
 use Sulu\Bundle\ContactBundle\Entity\AccountContact;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\Account;
@@ -49,7 +50,7 @@ class AccountController extends AbstractContactController
     /**
      * {@inheritdoc}
      */
-    protected $unsortable = array('lft', 'rgt', 'depth');
+    protected $unsortable = array('lft', 'rgt', 'depth', 'city','mainContact');
 
     /**
      * {@inheritdoc}
@@ -67,17 +68,22 @@ class AccountController extends AbstractContactController
     protected $fieldsHidden = array(
         'id',
         'created',
+        'changed',
         'type',
         'disabled',
         'uid',
         'registerNumber',
-        'placeOfJurisdiction'
+        'placeOfJurisdiction',
+        'mainUrl',
+        'mainFax',
     );
 
     /**
      * {@inheritdoc}
      */
-    protected $fieldsRelations = array();
+    protected $fieldsRelations = array(
+        'city'
+    );
 
     /**
      * {@inheritdoc}
@@ -86,6 +92,10 @@ class AccountController extends AbstractContactController
         0 => 'number',
         1 => 'name',
         2 => 'corporation',
+        5 => 'city',
+        5 => 'mainContact',
+        6 => 'mainPhone',
+        7 => 'mainEmail',
     );
 
     /**
@@ -94,6 +104,12 @@ class AccountController extends AbstractContactController
     protected $fieldsTranslationKeys = array(
         'id' => 'public.id',
         'disabled' => 'public.deactivate',
+        'mainEmail' => 'public.email',
+        'mainPhone' => 'public.phone',
+        'mainUrl' => 'public.url',
+        'mainFax' => 'public.fax',
+        'city' => 'contact.address.city',
+        'mainContact' => 'contact.contacts.main-contact',
     );
 
     /**
@@ -111,7 +127,15 @@ class AccountController extends AbstractContactController
      */
     protected $fieldsWidth = array(
         'type' => '150px',
-        'number' => '90px'
+        'number' => '90px',
+        'name' => '300px',
+    );
+
+    /**
+     * {@inheritdoc}
+     */
+    protected $fieldsMinWidth = array(
+        'name' => '150px',
     );
 
     /**
@@ -294,7 +318,51 @@ class AccountController extends AbstractContactController
             $where['type'] = $type;
         }
         if ($request->get('flat') == 'true') {
-            $view = $this->responseList($where);
+
+            /** @var ListRestHelper $listHelper */
+            $listHelper = $this->get('sulu_core.list_rest_helper');
+
+            // if fields are set
+            if ($fields = $listHelper->getFields()) {
+                $newFields = array();
+                $where = array();
+
+
+                $mappings = array(
+                    'city' => 'accountAddresses_address_city',
+                    'mainContact' => 'mainContact_lastName',
+                );
+
+                foreach ($fields as $field) {
+                    switch ($field) {
+                        case 'city':
+                            $newFields[] = $mappings[$field];
+                            $joinConditions['accountAddresses'] = 'accountAddresses.main = TRUE';
+                            break;
+                        case 'mainContact':
+                            $newFields[] = $mappings[$field];
+                            break;
+                        default:
+                            $newFields[] = $field;
+                    }
+                }
+                $request->query->add(array('fields' => implode(',', $newFields)));
+            }
+            $filter = function ($res) use ($mappings) {
+                // filter relations
+                if (array_key_exists($mappings['city'], $res)) {
+                    $res['city'] = $res[$mappings['city']];
+                    unset($res[$mappings['city']]);
+                }
+                //
+                if (array_key_exists($mappings['mainContact'], $res)) {
+                    $res['mainContact'] = $res[$mappings['mainContact']];
+                    unset($res[$mappings['mainContact']]);
+                }
+                return $res;
+            };
+
+            $view = $this->responseList($where, null, $filter, $joinConditions);
         } else {
             $contacts = $this->getDoctrine()->getRepository($this->entityName)->findAll();
             $view = $this->view($this->createHalResponse($contacts), 200);
@@ -419,7 +487,7 @@ class AccountController extends AbstractContactController
                     && $this->processEmails($account, $request->get('emails'))
                     && $this->processFaxes($account, $request->get('faxes'))
                     && $this->processPhones($account, $request->get('phones'))
-                    && $this->processAddresses($account, $request->get('addresses'))
+                    && $this->processAccountAddresses($account, $request->get('addresses'))
                     && $this->processTags($account, $request->get('tags'))
                     && $this->processNotes($account, $request->get('notes')))
                 ) {
@@ -856,4 +924,61 @@ class AccountController extends AbstractContactController
         return $types;
     }
 
+
+    /**
+     * Process all addresses from request
+     * @param Account $contact The contact on which is worked
+     * @param $addresses
+     * @return bool True if the processing was sucessful, otherwise false
+     */
+    protected function processAccountAddresses($contact, $addresses)
+    {
+        $getAddressId = function($accountAddress) {
+            return $accountAddress->getAddress()->getId();
+        };
+
+        $delete = function ($accountAddress) use ($contact) {
+            $address = $accountAddress->getAddress();
+            if (!$address->hasRelations()) { // delete address if it has no more relations
+                $this->getDoctrine()->getManager()->remove($address);
+            }
+            $contact->removeAccountAddresse($accountAddress);
+            $this->getDoctrine()->getManager()->remove($accountAddress);
+            return true;
+        };
+
+        $update = function ($accountAddress, $matchedEntry) use ($contact) {
+            $address = $accountAddress->getAddress();
+            $result = $this->updateAddress($address, $matchedEntry, $isMain);
+            if ($isMain) {
+                $this->unsetMain($contact->getAccountAddresses());
+            }
+            $accountAddress->setMain($isMain);
+
+            return $result;
+        };
+
+        $add = function ($addressData) use ($contact) {
+            $address = $this->createAddress($addressData, $isMain);
+            $accountAddress = new AccountAddress();
+            $accountAddress->setAddress($address);
+            $accountAddress->setAccount($contact);
+            $contact->addAccountAddresse($accountAddress);
+            if ($isMain) {
+                $this->unsetMain($contact->getAccountAddresses());
+            }
+            $accountAddress->setMain($isMain);
+
+            $this->getDoctrine()->getManager()->persist($accountAddress);
+
+            return true;
+        };
+
+        $result = $this->processPut($contact->getAccountAddresses(), $addresses, $delete, $update, $add, $getAddressId);
+
+        // check if main exists, else take first address
+        $this->checkAndSetMainAddress($contact->getAccountAddresses());
+
+        return $result;
+    }
 }

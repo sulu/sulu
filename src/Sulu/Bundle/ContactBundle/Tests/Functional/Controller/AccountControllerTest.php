@@ -14,6 +14,7 @@ namespace Sulu\Bundle\ContactBundle\Tests\Functional\Controller;
 use DateTime;
 use Doctrine\ORM\Tools\SchemaTool;
 use Sulu\Bundle\ContactBundle\Entity\Account;
+use Sulu\Bundle\ContactBundle\Entity\AccountAddress;
 use Sulu\Bundle\ContactBundle\Entity\AccountCategory;
 use Sulu\Bundle\ContactBundle\Entity\AccountContact;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
@@ -113,6 +114,8 @@ class AccountControllerTest extends DatabaseTestCase
         $address->setPostboxCity("Dornbirn");
         $address->setPostboxPostcode("6850");
         $address->setPostboxNumber("4711");
+
+        $accountAddress = new AccountAddress();
         self::$account->addAddresse($address);
 
 
