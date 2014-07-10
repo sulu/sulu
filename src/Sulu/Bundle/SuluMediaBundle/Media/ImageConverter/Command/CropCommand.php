@@ -20,8 +20,9 @@ class CropCommand implements CommandInterface {
      */
     public function execute(&$image, $parameters)
     {
-        $x = isset($parameters['x']) ? intval($parameters['x']) : 0;
-        $y = isset($parameters['y']) ? intval($parameters['y']) : 0;
+        $retina = isset($parameters['retina']) && $parameters['retina'] != 'false' ? 2 : 1;
+        $x = isset($parameters['x']) ? intval($parameters['x']) * $retina : 0;
+        $y = isset($parameters['y']) ? intval($parameters['y']) * $retina : 0;
         $width = isset($parameters['w']) ? intval($parameters['w']) : 0;
         $height = isset($parameters['h']) ? intval($parameters['h']) : 0;
 
