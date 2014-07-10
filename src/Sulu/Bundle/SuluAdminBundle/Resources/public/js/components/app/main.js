@@ -236,7 +236,7 @@ define(function() {
 
             // navigation event
             this.sandbox.on('husky.navigation.item.select', function(event) {
-                this.emitNavigationEvent(event, false);git
+                this.emitNavigationEvent(event, false);
 
                 // update title
                 if (!!event.parentTitle) {
