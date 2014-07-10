@@ -24,6 +24,7 @@ use Sulu\Bundle\ContactBundle\Entity\Phone;
 use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\Note;
 use Sulu\Bundle\ContactBundle\Entity\Url;
+use Sulu\Bundle\ContactBundle\Manager\ContactManagerInterface;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
@@ -396,7 +397,7 @@ class ContactController extends AbstractContactController
             }
 
             // add urls, phones, emails, tags, bankAccounts, notes, addresses,..
-            $this->addNewContactRelations($contact, $request);
+            $this->addNewContactRelations($contact, $request, $this->getContactManager());
 
             // set new primary address
             if ($this->newPrimaryAddress) {
@@ -452,6 +453,7 @@ class ContactController extends AbstractContactController
      * creates a new main Account Contacts relation
      * @param Contact $contact
      * @param Account $account
+     * @param $position
      * @return AccountContact
      */
     private function createMainAccountContact(Contact $contact, Account $account, $position)
@@ -600,7 +602,7 @@ class ContactController extends AbstractContactController
             $address = $contactAddress->getAddress();
             $result = $this->updateAddress($address, $matchedEntry, $isMain);
             if ($isMain) {
-                $this->unsetMain($contact->getContactAddresses());
+                $this->getContactManager()->unsetMain($contact->getContactAddresses());
             }
             $contactAddress->setMain($isMain);
 
@@ -609,17 +611,7 @@ class ContactController extends AbstractContactController
 
         $add = function ($addressData) use ($contact) {
             $address = $this->createAddress($addressData, $isMain);
-            $contactAddress = new ContactAddress();
-            $contactAddress->setAddress($address);
-            $contactAddress->setContact($contact);
-            $contact->addContactAddresse($contactAddress);
-            if ($isMain) {
-                $this->unsetMain($contact->getContactAddresses());
-            }
-            $contactAddress->setMain($isMain);
-
-            $this->getDoctrine()->getManager()->persist($contactAddress);
-
+            $this->getContactManager()->addAddress($contact, $address, $isMain);
             return true;
         };
 
@@ -629,5 +621,12 @@ class ContactController extends AbstractContactController
         $this->checkAndSetMainAddress($contact->getContactAddresses());
 
         return $result;
+    }
+
+    /**
+     * @return ContactManagerInterface
+     */
+    protected function getContactManager() {
+        return $this->get('sulu_contact.contact_manager');
     }
 }

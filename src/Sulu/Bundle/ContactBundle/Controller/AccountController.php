@@ -20,6 +20,7 @@ use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\TermsOfDelivery;
 use Sulu\Bundle\ContactBundle\Entity\TermsOfPayment;
+use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
 use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
@@ -414,7 +415,7 @@ class AccountController extends AbstractContactController
             $account->setChanger($this->getUser());
 
             // add urls, phones, emails, tags, bankAccounts, notes, addresses,..
-            $this->addNewContactRelations($account, $request);
+            $this->addNewContactRelations($account, $request, $this->getContactManager());
 
             // set new primary address
             if ($this->newPrimaryAddress) {
@@ -939,11 +940,7 @@ class AccountController extends AbstractContactController
 
         $delete = function ($accountAddress) use ($contact) {
             $address = $accountAddress->getAddress();
-            if (!$address->hasRelations()) { // delete address if it has no more relations
-                $this->getDoctrine()->getManager()->remove($address);
-            }
-            $contact->removeAccountAddresse($accountAddress);
-            $this->getDoctrine()->getManager()->remove($accountAddress);
+            $this->getContactManager()->removeAddress($contact, $address);
             return true;
         };
 
@@ -951,7 +948,7 @@ class AccountController extends AbstractContactController
             $address = $accountAddress->getAddress();
             $result = $this->updateAddress($address, $matchedEntry, $isMain);
             if ($isMain) {
-                $this->unsetMain($contact->getAccountAddresses());
+                $this->getContactManager()->unsetMain($this->getContactManager()->getAddressRelations($contact));
             }
             $accountAddress->setMain($isMain);
 
@@ -960,25 +957,22 @@ class AccountController extends AbstractContactController
 
         $add = function ($addressData) use ($contact) {
             $address = $this->createAddress($addressData, $isMain);
-            $accountAddress = new AccountAddress();
-            $accountAddress->setAddress($address);
-            $accountAddress->setAccount($contact);
-            $contact->addAccountAddresse($accountAddress);
-            if ($isMain) {
-                $this->unsetMain($contact->getAccountAddresses());
-            }
-            $accountAddress->setMain($isMain);
-
-            $this->getDoctrine()->getManager()->persist($accountAddress);
-
+            $this->getContactManager()->addAddress($contact, $address, $isMain);
             return true;
         };
 
-        $result = $this->processPut($contact->getAccountAddresses(), $addresses, $delete, $update, $add, $getAddressId);
+        $result = $this->processPut($this->getContactManager()->getAddressRelations($contact), $addresses, $delete, $update, $add, $getAddressId);
 
         // check if main exists, else take first address
-        $this->checkAndSetMainAddress($contact->getAccountAddresses());
+        $this->checkAndSetMainAddress($this->getContactManager()->getAddressRelations($contact));
 
         return $result;
+    }
+
+    /**
+     * @return ContactManagerInterface
+     */
+    protected function getContactManager() {
+        return $this->get('sulu_contact.account_manager');
     }
 }

@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\ContactBundle\Controller;
 
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use Sulu\Bundle\ContactBundle\Contact\AbstractContactManager;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\ContactAddress;
 use Sulu\Bundle\ContactBundle\Entity\Email;
@@ -20,6 +21,7 @@ use Sulu\Bundle\ContactBundle\Entity\Phone;
 use Sulu\Bundle\ContactBundle\Entity\Url;
 use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\BankAccount;
+use Sulu\Bundle\ContactBundle\Manager\ContactManagerInterface;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
@@ -160,10 +162,11 @@ class AbstractContactController extends RestController implements ClassResourceI
 
     /**
      * adds new relations
-     * @param Contact|Account $contact
+     * @param $contact
      * @param Request $request
+     * @param AbstractContactManager $contactManager
      */
-    protected function addNewContactRelations($contact, Request $request)
+    protected function addNewContactRelations($contact, Request $request, AbstractContactManager $contactManager)
     {
         // urls
         $urls = $request->get('urls');
@@ -205,12 +208,8 @@ class AbstractContactController extends RestController implements ClassResourceI
         $addresses = $request->get('addresses');
         if (!empty($addresses)) {
             foreach ($addresses as $addressData) {
-                $this->addAddress($contact, $addressData);
-            }
-            if ($contact instanceof Contact) {
-                $this->setMainForCollection($contact->getContactAddresses());
-            } else if ($contact instanceof Account) {
-                $this->setMainForCollection($contact->getAccountContacts());
+                $address = $this->createAddress($addressData, $isMain);
+                $contactManager->addAddress($contact, $address, $isMain);
             }
         }
 
