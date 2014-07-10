@@ -14,7 +14,7 @@ class ApiWrapper {
      * @var object
      * @Exclude
      */
-    protected $object;
+    protected $entity;
 
     /**
      * the locale in which the wrapped entity should be expressed
@@ -23,7 +23,7 @@ class ApiWrapper {
      */
     protected $locale;
 
-    public function getObject() {
-        return $this->object;
+    public function getEntity() {
+        return $this->entity;
     }
 } 

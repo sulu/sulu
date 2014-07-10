@@ -10,7 +10,6 @@
 
 namespace Sulu\Component\Rest\ListBuilder;
 
-
 use Hateoas\Representation\CollectionRepresentation;
 use Hateoas\Representation\PaginatedRepresentation;
 use JMS\Serializer\Annotation\Expose;

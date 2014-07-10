@@ -64,7 +64,7 @@ class RestHelper implements RestHelperInterface
     /**
      * {@inheritDoc}
      */
-    public function processPut($entities, $requestEntities, $deleteCallback, $updateCallback, $addCallback)
+    public function processSubEntities($entities, $requestEntities, $deleteCallback, $updateCallback, $addCallback)
     {
         $success = true;
 

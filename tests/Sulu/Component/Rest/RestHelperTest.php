@@ -155,7 +155,7 @@ class RestHelperTest extends \PHPUnit_Framework_TestCase
             $mock->add();
         };
 
-        $this->restHelper->processPut(array(), array(), $delete, $update, $add);
+        $this->restHelper->processSubEntities(array(), array(), $delete, $update, $add);
     }
 
     public function testProcessPutWithDelete()
@@ -180,7 +180,7 @@ class RestHelperTest extends \PHPUnit_Framework_TestCase
             $mock->add();
         };
 
-        $this->restHelper->processPut(
+        $this->restHelper->processSubEntities(
             array(
                 $mockedObject
             ),
@@ -213,7 +213,7 @@ class RestHelperTest extends \PHPUnit_Framework_TestCase
             $mock->add();
         };
 
-        $this->restHelper->processPut(
+        $this->restHelper->processSubEntities(
             array(
                 $mockedObject
             ),
@@ -247,7 +247,7 @@ class RestHelperTest extends \PHPUnit_Framework_TestCase
             $mock->add();
         };
 
-        $this->restHelper->processPut(
+        $this->restHelper->processSubEntities(
             array(),
             array(
                 array(
