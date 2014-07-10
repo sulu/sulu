@@ -116,7 +116,7 @@ class WebspaceCollectionBuilder
                 );
             } catch (InvalidUrlDefinitionException $iude) {
                 $this->logger->warning(
-                    'The file "' . $file->getRealPath() . '" defined some invalid urls and was skipped'
+                    'Error: "' . $iude->getMessage() .'" in "' . $file->getRealPath() . '". File was skipped'
                 );
             }
         }
