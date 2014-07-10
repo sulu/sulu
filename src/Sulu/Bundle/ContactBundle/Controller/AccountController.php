@@ -331,8 +331,6 @@ class AccountController extends AbstractContactController
             // if fields are set
             if ($fields = $listHelper->getFields()) {
                 $newFields = array();
-                $where = array();
-
 
                 foreach ($fields as $field) {
                     switch ($field) {
