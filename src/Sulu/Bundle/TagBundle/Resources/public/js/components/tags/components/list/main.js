@@ -33,8 +33,12 @@ define(function() {
         view: true,
         instanceNameToolbar: 'saveToolbar',
 
-        fullSize: {
-            width: true
+        layout: {
+            content: {
+                width: 'max',
+                leftSpace: false,
+                rightSpace: false
+            }
         },
 
         header: function() {
