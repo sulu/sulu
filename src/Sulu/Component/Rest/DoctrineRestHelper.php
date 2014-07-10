@@ -20,14 +20,9 @@ use Traversable;
  */
 class DoctrineRestHelper extends RestHelper implements RestHelperInterface
 {
-    /**
-     * @var ListRestHelperInterface
-     */
-    private $listRestHelper;
-
     public function __construct(ListRestHelper $listRestHelper)
     {
-        $this->listRestHelper = $listRestHelper;
+        parent::__construct($listRestHelper);
     }
 
     /**
