@@ -137,6 +137,26 @@ class Media extends ApiEntityWrapper
     }
 
     /**
+     * @param string $mimeType
+     * @return $this
+     */
+    public function setMimeType($mimeType)
+    {
+        $this->getFileVersion()->setMimeType($mimeType);
+        return $this;
+    }
+
+    /**
+     * @VirtualProperty
+     * @SerializedName("mimeType")
+     * @return string
+     */
+    public function getMimeType()
+    {
+        return $this->getFileVersion()->getMimeType();
+    }
+
+    /**
      * @param string $title
      * @return $this
      */
