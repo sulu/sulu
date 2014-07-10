@@ -90,7 +90,7 @@ class WebsiteMediaController extends Controller
         $fileName = $fileVersion->getName();
         $fileSize = $fileVersion->getSize();
         $storageOptions = $fileVersion->getStorageOptions();
-        $mimeType = $fileVersion->getMimeType();
+        $mimeType = null; //$fileVersion->getMimeType();
         $version = $fileVersion->getVersion();
 
         $path = $this->getStorage()->load($fileName, $version, $storageOptions);
@@ -121,11 +121,14 @@ class WebsiteMediaController extends Controller
      */
     protected function updateDownloadCounter($fileVersion)
     {
-        $fileVersion->setDownloadCounter($fileVersion->getDownloadCounter() + 1);
-        /** @var \Doctrine\ORM\EntityManager $em */
         $em = $this->getDoctrine()->getManager();
-        $em->persist($fileVersion);
-        $em->flush();
+        $query = $em->createQuery(
+            'UPDATE SuluMediaBundle:FileVersion f
+            SET f.downloadCounter = f.downloadCounter + 1
+            WHERE f.id = :id'
+        )->setParameter('id', $fileVersion->getId());
+
+        $query->execute();
     }
 
     /**
