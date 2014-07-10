@@ -5,7 +5,7 @@ sulu_media.website.image.proxy:
         slug: .*
 
 sulu_media.website.media.download:
-    path: /uploads/download/{id}/{slug}
+    path: /media/{id}/download/{slug}
     defaults: { _controller: SuluMediaBundle:WebsiteMedia:download }
     requirements:
         slug: .*
