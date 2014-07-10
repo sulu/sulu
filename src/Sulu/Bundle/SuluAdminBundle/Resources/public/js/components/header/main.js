@@ -539,9 +539,9 @@ define([], function() {
 
                 if (this.options.tabsFullControl !== true) {
                     // first start the content-component responsible for the tabs-content-handling
-                    this.startContentComponent();
+                    this.startContentTabsComponent();
                     // wait for content-component to initialize
-                    this.sandbox.on('sulu.content.content.initialized', function() {
+                    this.sandbox.on('sulu.content-tabs.content.initialized', function() {
                         this.startTabsComponent(def);
                     }.bind(this));
                 } else {
@@ -805,10 +805,10 @@ define([], function() {
         /**
          * Starts the content component necessary and responsible for the tabs
          */
-        startContentComponent: function() {
+        startContentTabsComponent: function() {
             if (this.options.contentEl !== null) {
                 this.sandbox.start([{
-                    name: 'content@suluadmin',
+                    name: 'content-tabs@suluadmin',
                     options: {
                         el: this.sandbox.dom.$(this.options.contentEl),
                         contentOptions: this.options.contentComponentOptions,

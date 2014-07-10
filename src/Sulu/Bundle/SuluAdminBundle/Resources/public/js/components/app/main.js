@@ -103,45 +103,43 @@ define(function() {
         initialize: function() {
             this.title = document.title;
             this.$shrinker = null;
+            this.currentRoute = null;
 
-            if (!!this.sandbox.mvc.routes) {
+            this.initializeRouter();
+            this.render();
+            this.bindCustomEvents();
+            this.bindDomEvents();
 
-                var AppRouter = this.sandbox.mvc.Router({
-                    routes: {
-                        // Default
-                        '*actions': 'defaultAction'
-                    },
-
-                    defaultAction: function() {
-                        // We have no matching route
-                    }
-                });
-
-                router = new AppRouter();
-
-                this.sandbox.util._.each(this.sandbox.mvc.routes, function(route) {
-                    router.route(route.route, function() {
-                        route.callback.apply(this, arguments);
-                    }.bind(this));
-                }.bind(this));
-
-                this.contentDimensions = {
-                    left: null,
-                    width: null
-                };
-
-                this.currentRoute = null;
-
-                this.render();
-                this.bindCustomEvents();
-                this.bindDomEvents();
-
-                if (!!this.sandbox.mvc.history.fragment && this.sandbox.mvc.history.fragment.length > 0) {
-                    this.selectNavigationItem(this.sandbox.mvc.history.fragment);
-                }
-
-                this.sandbox.emit(INITIALIZED.call(this));
+            if (!!this.sandbox.mvc.history.fragment && this.sandbox.mvc.history.fragment.length > 0) {
+                this.selectNavigationItem(this.sandbox.mvc.history.fragment);
             }
+
+            this.sandbox.emit(INITIALIZED.call(this));
+        },
+
+        /**
+         * Initializes the backbone router
+         */
+        initializeRouter: function() {
+            var AppRouter = this.sandbox.mvc.Router({
+                routes: {
+                    // Default
+                    '*actions': 'defaultAction'
+                },
+
+                defaultAction: function() {
+                    // We have no matching route
+                }
+            });
+            router = new AppRouter();
+
+            this.sandbox.util._.each(this.sandbox.mvc.routes, function(route) {
+                router.route(route.route, function() {
+                    this.sandbox.mvc.Store.reset();
+                    this.beforeNavigateCleanup();
+                    route.callback.apply(this, arguments);
+                }.bind(this));
+            }.bind(this));
         },
 
         /**
@@ -192,28 +190,6 @@ define(function() {
         },
 
         /**
-         * Starts the Loader if the content is loading
-         */
-        startLoader: function() {
-            var $element = this.sandbox.dom.createElement('<div class="sulu-app-loader">');
-            this.sandbox.dom.css($element, {
-                'margin-top': (this.sandbox.dom.height(this.sandbox.dom.$window) / 2 - 75) + 'px'
-            });
-            this.sandbox.dom.append(this.$el, $element);
-
-            this.sandbox.start([
-                {
-                    name: 'loader@husky',
-                    options: {
-                        el: $element,
-                        size: '150px',
-                        color: '#cacaca'
-                    }
-                }
-            ]);
-        },
-
-        /**
          * Handler for the sulu.router.navigate event. Calls the backbone-router
          * @param route {String} the route to navigate to
          * @param trigger {Boolean} if trigger is true it will be actually navigated to the route. Otherwise only the borswer-url will be updated
@@ -226,15 +202,11 @@ define(function() {
             // only route if route has changed
             if (this.currentRoute !== route) {
                 this.currentRoute = route;
-                if (!!trigger) {
-                    this.beforeNavigateCleanup();
-                }
 
                 if (noLoader !== true && this.currentRoute !== route && this.currentRoute !== null) {
-                    this.startLoader();
+                    // todo: start loader
                 }
 
-                this.sandbox.mvc.Store.reset();
                 // navigate
                 router.navigate(route, {trigger: trigger});
                 this.sandbox.dom.scrollTop(this.sandbox.dom.$window, 0);
@@ -290,11 +262,6 @@ define(function() {
 
             this.sandbox.on(HAS_STARTED.call(this), function(callbackFunction) {
                 callbackFunction(true);
-            }.bind(this));
-
-            // stop the loader if a view gets initialized
-            this.sandbox.on('sulu.view.initialize', function() {
-                this.sandbox.stop('.sulu-app-loader');
             }.bind(this));
 
             // select right navigation-item on navigation startup

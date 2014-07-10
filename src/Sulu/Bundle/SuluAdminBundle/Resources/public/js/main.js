@@ -17,7 +17,7 @@ require.config({
         'aura_extensions/sulu-extension': 'aura_extensions/sulu-extension',
 
         '__component__$app@suluadmin': 'components/app/main',
-        '__component__$content@suluadmin': 'components/content/main',
+        '__component__$content-tabs@suluadmin': 'components/content-tabs/main',
         '__component__$overlay@suluadmin': 'components/overlay/main',
         '__component__$header@suluadmin': 'components/header/main',
         '__component__$list-toolbar@suluadmin': 'components/list-toolbar/main',
@@ -33,7 +33,7 @@ require.config({
 
         '__component__$app@suluadmin',
         '__component__$app@suluadmin',
-        '__component__$content@suluadmin',
+        '__component__$content-tabs@suluadmin',
         '__component__$overlay@suluadmin',
         '__component__$header@suluadmin',
         '__component__$list-toolbar@suluadmin',
