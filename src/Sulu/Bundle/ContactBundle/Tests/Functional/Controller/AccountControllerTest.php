@@ -391,7 +391,7 @@ class AccountControllerTest extends DatabaseTestCase
         $this->assertEquals('Note 2', $response->notes[1]->value);
 
         $this->assertEquals(true,$response->addresses[0]->billingAddress);
-//        $this->assertEquals(true,$response->addresses[0]->primaryAddress);
+        $this->assertEquals(true,$response->addresses[0]->primaryAddress);
         $this->assertEquals(false,$response->addresses[0]->deliveryAddress);
         $this->assertEquals('Dornbirn',$response->addresses[0]->postboxCity);
         $this->assertEquals('6850',$response->addresses[0]->postboxPostcode);
@@ -420,7 +420,7 @@ class AccountControllerTest extends DatabaseTestCase
         $this->assertEquals('Note 2', $response->notes[1]->value);
 
         $this->assertEquals(true,$response->addresses[0]->billingAddress);
-//        $this->assertEquals(true,$response->addresses[0]->primaryAddress);
+        $this->assertEquals(true,$response->addresses[0]->primaryAddress);
         $this->assertEquals(false,$response->addresses[0]->deliveryAddress);
         $this->assertEquals('Dornbirn',$response->addresses[0]->postboxCity);
         $this->assertEquals('6850',$response->addresses[0]->postboxPostcode);

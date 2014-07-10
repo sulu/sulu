@@ -13,7 +13,6 @@ namespace Sulu\Bundle\ContactBundle\Controller;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\ContactBundle\Contact\AbstractContactManager;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
-use Sulu\Bundle\ContactBundle\Entity\ContactAddress;
 use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\ContactBundle\Entity\Note;
 use Sulu\Bundle\ContactBundle\Entity\Fax;
@@ -21,7 +20,6 @@ use Sulu\Bundle\ContactBundle\Entity\Phone;
 use Sulu\Bundle\ContactBundle\Entity\Url;
 use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\BankAccount;
-use Sulu\Bundle\ContactBundle\Manager\ContactManagerInterface;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
@@ -33,9 +31,14 @@ use Symfony\Component\HttpFoundation\Request;
  * Makes accounts available through a REST API
  * @package Sulu\Bundle\ContactBundle\Controller
  */
-class AbstractContactController extends RestController implements ClassResourceInterface
+abstract class AbstractContactController extends RestController implements ClassResourceInterface
 {
     protected $newPrimaryAddress;
+
+    /**
+     * @return AbstractContactManager
+     */
+    abstract protected function getContactManager();
 
     /**
      * sets main address
@@ -927,5 +930,47 @@ class AbstractContactController extends RestController implements ClassResourceI
         $entity->setPublic($this->getBooleanValue($data['public']));
 
         return $success;
+    }
+
+    /**
+     * Process all addresses from request
+     * @param $contact The contact on which is worked
+     * @param $addresses
+     * @return bool True if the processing was sucessful, otherwise false
+     */
+    protected function processAddresses($contact, $addresses)
+    {
+        $getAddressId = function($addressRelation) {
+            return $addressRelation->getAddress()->getId();
+        };
+
+        $delete = function ($addressRelation) use ($contact) {
+            $this->getContactManager()->removeAddressRelation($contact, $addressRelation);
+            return true;
+        };
+
+        $update = function ($addressRelation, $matchedEntry) use ($contact) {
+            $address = $addressRelation->getAddress();
+            $result = $this->updateAddress($address, $matchedEntry, $isMain);
+            if ($isMain) {
+                $this->getContactManager()->unsetMain($this->getContactManager()->getAddressRelations($contact));
+            }
+            $addressRelation->setMain($isMain);
+
+            return $result;
+        };
+
+        $add = function ($addressData) use ($contact) {
+            $address = $this->createAddress($addressData, $isMain);
+            $this->getContactManager()->addAddress($contact, $address, $isMain);
+            return true;
+        };
+
+        $result = $this->processPut($this->getContactManager()->getAddressRelations($contact), $addresses, $delete, $update, $add, $getAddressId);
+
+        // check if main exists, else take first address
+        $this->checkAndSetMainAddress($this->getContactManager()->getAddressRelations($contact));
+
+        return $result;
     }
 }

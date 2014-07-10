@@ -115,8 +115,8 @@ class Address
      */
     public function __construct()
     {
-        $this->contacts = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->accounts = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->accountAddresses = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->contactAddresses = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -388,14 +388,14 @@ class Address
     public function setPrimaryAddress($primaryAddress)
     {
         $this->primaryAddress = $primaryAddress;
-    
+
         return $this;
     }
 
     /**
      * Get primaryAddress
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getPrimaryAddress()
     {
@@ -411,14 +411,14 @@ class Address
     public function setDeliveryAddress($deliveryAddress)
     {
         $this->deliveryAddress = $deliveryAddress;
-    
+
         return $this;
     }
 
     /**
      * Get deliveryAddress
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getDeliveryAddress()
     {
@@ -434,14 +434,14 @@ class Address
     public function setBillingAddress($billingAddress)
     {
         $this->billingAddress = $billingAddress;
-    
+
         return $this;
     }
 
     /**
      * Get billingAddress
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getBillingAddress()
     {
@@ -457,14 +457,14 @@ class Address
     public function setPostboxNumber($postboxNumber)
     {
         $this->postboxNumber = $postboxNumber;
-    
+
         return $this;
     }
 
     /**
      * Get postboxNumber
      *
-     * @return string 
+     * @return string
      */
     public function getPostboxNumber()
     {
@@ -480,14 +480,14 @@ class Address
     public function setPostboxPostcode($postboxPostcode)
     {
         $this->postboxPostcode = $postboxPostcode;
-    
+
         return $this;
     }
 
     /**
      * Get postboxPostcode
      *
-     * @return string 
+     * @return string
      */
     public function getPostboxPostcode()
     {
@@ -503,19 +503,20 @@ class Address
     public function setPostboxCity($postboxCity)
     {
         $this->postboxCity = $postboxCity;
-    
+
         return $this;
     }
 
     /**
      * Get postboxCity
      *
-     * @return string 
+     * @return string
      */
     public function getPostboxCity()
     {
         return $this->postboxCity;
     }
+
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
@@ -536,7 +537,7 @@ class Address
     public function addContactAddresse(\Sulu\Bundle\ContactBundle\Entity\ContactAddress $contactAddresses)
     {
         $this->contactAddresses[] = $contactAddresses;
-    
+
         return $this;
     }
 
@@ -553,7 +554,7 @@ class Address
     /**
      * Get contactAddresses
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getContactAddresses()
     {
@@ -569,7 +570,7 @@ class Address
     public function addAccountAddresse(\Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddresses)
     {
         $this->accountAddresses[] = $accountAddresses;
-    
+
         return $this;
     }
 
@@ -586,7 +587,7 @@ class Address
     /**
      * Get accountAddresses
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getAccountAddresses()
     {
@@ -598,10 +599,12 @@ class Address
      *
      * @return Bool
      */
-    public function hasRelations() {
+    public function hasRelations()
+    {
 
         if (!$this->getContactAddresses()->isEmpty() ||
-            !$this->getAccountAddresses()->isEmpty()) {
+            !$this->getAccountAddresses()->isEmpty()
+        ) {
             return true;
         }
         return false;

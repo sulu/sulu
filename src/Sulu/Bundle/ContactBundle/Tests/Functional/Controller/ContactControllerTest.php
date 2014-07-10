@@ -16,6 +16,7 @@ use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\AddressType;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
+use Sulu\Bundle\ContactBundle\Entity\ContactAddress;
 use Sulu\Bundle\ContactBundle\Entity\Country;
 use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\ContactBundle\Entity\EmailType;
@@ -71,7 +72,6 @@ class ContactControllerTest extends DatabaseTestCase
         $phone = new Phone();
         $phone->setPhone('123456789');
         $phone->setPhoneType($phoneType);
-        $phone->setMain(true);
         $contact->addPhone($phone);
 
         $emailType = new EmailType();
@@ -80,7 +80,6 @@ class ContactControllerTest extends DatabaseTestCase
         $email = new Email();
         $email->setEmail('max.mustermann@muster.at');
         $email->setEmailType($emailType);
-        $email->setMain(true);
         $contact->addEmail($email);
 
         $faxType = new FaxType();
@@ -89,7 +88,6 @@ class ContactControllerTest extends DatabaseTestCase
         $fax = new Fax();
         $fax->setFax('123654789');
         $fax->setFaxType($faxType);
-        $fax->setMain(true);
         $contact->addFax($fax);
 
         $country1 = new Country();
@@ -118,7 +116,12 @@ class ContactControllerTest extends DatabaseTestCase
         $address->setPostboxPostcode("6850");
         $address->setPostboxNumber("4711");
 
-        $contact->addAddresse($address);
+        $contactAddress = new ContactAddress();
+        $contactAddress->setAddress($address);
+        $contactAddress->setContact($contact);
+        $contactAddress->setMain(true);
+        self::$account->addContactAddresse($contactAddress);
+        $address->addContactAddresse($contactAddress);
 
         $note = new Note();
         $note->setValue('Note');
@@ -164,6 +167,7 @@ class ContactControllerTest extends DatabaseTestCase
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AddressType'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\BankAccount'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ContactLocale'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ContactAddress'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Country'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Email'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\EmailType'),
