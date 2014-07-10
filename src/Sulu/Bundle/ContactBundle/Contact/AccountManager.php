@@ -59,11 +59,14 @@ class AccountManager extends AbstractContactManager
             throw new \Exception('Account and AccountAddress cannot be null');
         }
         $address = $accountAddress->getAddress();
+
+        // reload address to get all data (including relational data)
+        $address = $this->em->getRepository('SuluContactBundle:Address')->find($address->getId());
+
         $isMain = $accountAddress->getMain();
 
         // remove relation
         $account->removeAccountAddresse($accountAddress);
-        $address->removeAccountAddresse($accountAddress);
 
         // if was main, set a new one
         if ($isMain) {

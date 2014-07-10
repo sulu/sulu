@@ -55,10 +55,27 @@ abstract class AbstractContactManager implements ContactManagerInterface
      * sets the first element to main, if none is set
      * @param $arrayCollection
      */
-    protected function setMainForCollection($arrayCollection)
+    public function setMainForCollection($arrayCollection)
     {
         if ($arrayCollection && !$arrayCollection->isEmpty() && !$this->hasMain($arrayCollection)) {
             $arrayCollection->first()->setMain(true);
         }
+    }
+
+    /**
+     * checks if a collection for main attribute
+     * @param $arrayCollection
+     * @param $mainEntity will be set, if found
+     * @return mixed
+     */
+    private function hasMain($arrayCollection, &$mainEntity = null)
+    {
+        if ($arrayCollection && !$arrayCollection->isEmpty()) {
+            return $arrayCollection->exists(function ($index, $entity) {
+                $mainEntity = $entity;
+                return $entity->getMain() === true;
+            });
+        }
+        return false;
     }
 }

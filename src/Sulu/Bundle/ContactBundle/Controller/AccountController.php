@@ -415,11 +415,6 @@ class AccountController extends AbstractContactController
             // add urls, phones, emails, tags, bankAccounts, notes, addresses,..
             $this->addNewContactRelations($account, $request, $this->getContactManager());
 
-            // set new primary address
-            if ($this->newPrimaryAddress) {
-                $this->setNewPrimaryAddress($account, $this->newPrimaryAddress);
-            }
-
             $this->processTerms($request, $account);
 
             $em->persist($account);
@@ -491,11 +486,6 @@ class AccountController extends AbstractContactController
                     && $this->processNotes($account, $request->get('notes')))
                 ) {
                     throw new RestException('Updating dependencies is not possible', 0);
-                }
-
-                // set new primary address
-                if ($this->newPrimaryAddress) {
-                    $this->setNewPrimaryAddress($account, $this->newPrimaryAddress);
                 }
 
                 $this->processTerms($request, $account);

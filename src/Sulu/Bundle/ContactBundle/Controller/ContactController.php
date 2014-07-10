@@ -24,7 +24,7 @@ use Sulu\Bundle\ContactBundle\Entity\Phone;
 use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\Note;
 use Sulu\Bundle\ContactBundle\Entity\Url;
-use Sulu\Bundle\ContactBundle\Manager\ContactManagerInterface;
+use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
@@ -397,11 +397,6 @@ class ContactController extends AbstractContactController
             // add urls, phones, emails, tags, bankAccounts, notes, addresses,..
             $this->addNewContactRelations($contact, $request, $this->getContactManager());
 
-            // set new primary address
-            if ($this->newPrimaryAddress) {
-                $this->setNewPrimaryAddress($contact, $this->newPrimaryAddress);
-            }
-
             $em->persist($contact);
             $em->flush();
 
@@ -554,11 +549,6 @@ class ContactController extends AbstractContactController
                 $birthday = $request->get('birthday');
                 if (!empty($birthday)) {
                     $contact->setBirthday(new DateTime($birthday));
-                }
-
-                // set new primary address
-                if ($this->newPrimaryAddress) {
-                    $this->setNewPrimaryAddress($contact, $this->newPrimaryAddress);
                 }
 
                 $em->flush();
