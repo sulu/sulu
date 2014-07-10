@@ -210,12 +210,12 @@ class DefaultFormatManager implements FormatManagerInterface
 
     /**
      * @param string $filename
-     * @param string $new_extension
+     * @param string $newExtension
      * @return string
      */
-    protected function replaceExtension($filename, $new_extension) {
+    protected function replaceExtension($filename, $newExtension) {
         $info = pathinfo($filename);
-        return $info['filename'] . '.' . $new_extension;
+        return $info['filename'] . '.' . $newExtension;
     }
 
     /**
