@@ -223,6 +223,7 @@ class DefaultMediaManager implements MediaManagerInterface
             );
             $data['name'] = $uploadedFile->getClientOriginalName();
             $data['size'] = $uploadedFile->getSize();
+            $data['mimeType'] = $uploadedFile->getMimeType();
             $data['version'] = $version;
 
             $fileVersion = new FileVersion();
@@ -267,6 +268,7 @@ class DefaultMediaManager implements MediaManagerInterface
         $data['storageOptions'] = $this->storage->save($uploadedFile->getPathname(), $uploadedFile->getClientOriginalName(), 1);
         $data['name'] = $uploadedFile->getClientOriginalName();
         $data['size'] = $uploadedFile->getSize();
+        $data['mimeType'] = $uploadedFile->getMimeType();
         $data['type'] = $this->getMediaType($uploadedFile);
 
         $mediaEntity = new MediaEntity();

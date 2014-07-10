@@ -12,6 +12,7 @@
         <field name="version" type="integer" column="version" />
         <field name="size" type="integer" column="size" />
         <field name="storageOptions" type="text" column="storageOptions" nullable="true" />
+        <field name="mimeType" type="string" column="mimeType" length="255" nullable="true" />
 
         <field name="created" type="datetime" column="created"/>
         <field name="changed" type="datetime" column="changed"/>
