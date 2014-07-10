@@ -89,14 +89,18 @@ class MediaSelectionContentType extends ComplexContentType
      */
     private function setData($data, PropertyInterface $property, $languageCode)
     {
-        $container = new MediaSelectionContainer(
-            isset($data['config']) ?  $data['config'] : array(),
-            isset($data['displayOption']) ? $data['displayOption'] : '',
-            isset($data['ids']) ? $data['ids'] : array(),
-            $languageCode,
-            $this->mediaManager,
-            $this->restObjectHelper
-        );
+        if ($data instanceof MediaSelectionContainer) {
+            $container = $data;
+        } else {
+            $container = new MediaSelectionContainer(
+                isset($data['config']) ?  $data['config'] : array(),
+                isset($data['displayOption']) ? $data['displayOption'] : '',
+                isset($data['ids']) ? $data['ids'] : array(),
+                $languageCode,
+                $this->mediaManager,
+                $this->restObjectHelper
+            );
+        }
 
         $property->setValue($container);
     }
