@@ -218,13 +218,20 @@ define(function() {
          * Starts the dropzone for changeing the file-version
          */
         startDropzone: function() {
+            // replace the current media with the new one if a fileversion got uploaded
+            this.sandbox.on('husky.dropzone.file-version-'+ this.media.id +'.files-added', function(newMedia) {
+                this.media = newMedia[0];
+                this.sandbox.emit('sulu.media.collections.save-media', this.medias, null, true);
+                this.savedCallback();
+            }.bind(this));
+
             this.sandbox.start([
                 {
                     name: 'dropzone@husky',
                     options: {
                         el: constants.dropzoneSelector,
                         url: '/admin/api/media/' + this.media.id,
-                        method: 'PUT',
+                        method: 'POST',
                         paramName: 'fileVersion',
                         showOverlay: false,
                         skin: 'small',
