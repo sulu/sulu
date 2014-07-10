@@ -76,7 +76,6 @@ class DoctrineListBuilder extends AbstractListBuilder
 
         if ($this->limit != null) {
             $qb->setMaxResults($this->limit)->setFirstResult($this->limit * ($this->page - 1));
-            return $qb;
         }
 
         return $qb->getQuery()->getArrayResult();
