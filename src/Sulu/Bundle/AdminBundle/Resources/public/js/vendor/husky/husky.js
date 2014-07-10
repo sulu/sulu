@@ -33683,23 +33683,33 @@ define('__component__$toolbar@husky',[],function() {
         /** events bound to sandbox */
         bindCustomEvents = function() {
             this.sandbox.on(ITEM_DISABLE.call(this), function(id, highlight) {
-                toggleEnabled.call(this, false, id, highlight);
+                if (!!this.items[id]) {
+                    toggleEnabled.call(this, false, id, highlight);
+                }
             }.bind(this));
 
             this.sandbox.on(ITEM_ENABLE.call(this), function(id, highlight) {
-                toggleEnabled.call(this, true, id, highlight);
+                if (!!this.items[id]) {
+                    toggleEnabled.call(this, true, id, highlight);
+                }
             }.bind(this));
 
             this.sandbox.on(ITEM_LOADING.call(this), function(id) {
-                itemLoading.call(this, id);
+                if (!!this.items[id]) {
+                    itemLoading.call(this, id);
+                }
             }.bind(this));
 
             this.sandbox.on(ITEM_HIDE.call(this), function(id) {
-                hideItem.call(this, this.items[id].$el);
+                if (!!this.items[id]) {
+                    hideItem.call(this, this.items[id].$el);
+                }
             }.bind(this));
 
             this.sandbox.on(ITEM_SHOW.call(this), function(id) {
-                showItem.call(this, this.items[id].$el);
+                if (!!this.items[id]) {
+                    showItem.call(this, this.items[id].$el);
+                }
             }.bind(this));
 
             this.sandbox.on(COLLAPSE.call(this), function() {
@@ -33711,15 +33721,17 @@ define('__component__$toolbar@husky',[],function() {
             }.bind(this));
 
             this.sandbox.on(ITEM_CHANGE.call(this), function(button, id, executeCallback) {
-                this.items[button].initialized.then(function() {
-                    var index = getItemIndexById.call(this, id, this.items[button]);
-                    changeMainListItem.call(this, this.items[button].$el, this.items[button].items[index]);
-                    if (executeCallback === true || !!this.items[button].items[index].callback) {
-                        if (typeof this.items[button].items[index].callback === 'function') {
-                            this.items[button].items[index].callback();
+                if (!!this.items[button]) {
+                    this.items[button].initialized.then(function () {
+                        var index = getItemIndexById.call(this, id, this.items[button]);
+                        changeMainListItem.call(this, this.items[button].$el, this.items[button].items[index]);
+                        if (executeCallback === true || !!this.items[button].items[index].callback) {
+                            if (typeof this.items[button].items[index].callback === 'function') {
+                                this.items[button].items[index].callback();
+                            }
                         }
-                    }
-                }.bind(this));
+                    }.bind(this));
+                }
             }.bind(this));
 
             this.sandbox.on(BUTTON_SET.call(this), function(button, newData) {
@@ -33727,18 +33739,20 @@ define('__component__$toolbar@husky',[],function() {
             }.bind(this));
 
             this.sandbox.on(ITEMS_SET.call(this), function(button, items, itemId) {
-                if (items.length > 0 && !!this.items[button]) {
-                    deleteDropdown.call(this, this.items[button]);
-                    this.sandbox.dom.addClass(this.sandbox.dom.children(this.items[button].$el, 'a'), 'dropdown-toggle');
-                    this.items[button].items = items;
-                    createDropdownMenu.call(this, this.items[button].$el, this.items[button]);
-                    setButtonWidth.call(this, this.items[button].$el, this.items[button]);
-                    if (!!itemId) {
-                        this.sandbox.emit(ITEM_CHANGE.call(this), this.items[button].id, itemId);
+                if (!!this.items[button]) {
+                    if (items.length > 0) {
+                        deleteDropdown.call(this, this.items[button]);
+                        this.sandbox.dom.addClass(this.sandbox.dom.children(this.items[button].$el, 'a'), 'dropdown-toggle');
+                        this.items[button].items = items;
+                        createDropdownMenu.call(this, this.items[button].$el, this.items[button]);
+                        setButtonWidth.call(this, this.items[button].$el, this.items[button]);
+                        if (!!itemId) {
+                            this.sandbox.emit(ITEM_CHANGE.call(this), this.items[button].id, itemId);
+                        }
+                    } else {
+                        deleteDropdown.call(this, this.items[button]);
+                        this.sandbox.dom.removeClass(this.sandbox.dom.children(this.items[button].$el, 'a'), 'dropdown-toggle');
                     }
-                } else {
-                    deleteDropdown.call(this, this.items[button]);
-                    this.sandbox.dom.removeClass(this.sandbox.dom.children(this.items[button].$el, 'a'), 'dropdown-toggle');
                 }
             }.bind(this));
         },
