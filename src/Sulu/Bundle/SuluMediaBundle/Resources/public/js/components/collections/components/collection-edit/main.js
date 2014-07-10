@@ -52,9 +52,12 @@ define(function () {
 
         view: true,
 
-        fullSize: {
-            width: true,
-            keepPaddings: true
+        layout: {
+            content: {
+                width: 'max',
+                leftSpace: false,
+                rightSpace: false
+            }
         },
 
         templates: [
