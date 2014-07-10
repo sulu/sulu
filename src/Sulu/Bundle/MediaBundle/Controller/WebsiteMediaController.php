@@ -13,6 +13,7 @@ namespace Sulu\Bundle\MediaBundle\Controller;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyException;
+use Sulu\Bundle\MediaBundle\Media\Exception\InvalidFileVersionException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaException;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
@@ -64,58 +65,103 @@ class WebsiteMediaController extends Controller
             ob_end_clean();
 
             $version = $request->get('v', null);
+            $noCount = $request->get('no-count', false);
 
-            /**
-             * @var Media $mediaEntity
-             */
-            $mediaEntity = $this->getDoctrine()
-                ->getRepository('SuluMediaBundle:Media')
-                ->findMediaById($id);
+            $fileVersion = $this->getFileVersion($id, $version);
 
-            $fileName = null;
-            $fileSize = null;
-            $storageOptions = null;
-            $mimeType = null;
-            $version = $version === null ? $mediaEntity->getFiles()[0]->getVersion() : $version;
-
-            $file = $mediaEntity->getFiles()[0];
-
-            /**
-             * @var FileVersion $fileVersion
-             */
-            foreach ($file->getFileVersions() as $fileVersion) {
-                if ($fileVersion->getVersion() == $version) {
-                    $fileName = $fileVersion->getName();
-                    $fileSize = $fileVersion->getSize();
-                    $storageOptions = $fileVersion->getStorageOptions();
-                    $mimeType = $fileVersion->getMimeType();
-                }
+            if (!$noCount) {
+                $this->updateDownloadCounter($fileVersion);
             }
 
-            $path = $this->getStorage()->load($fileName, $version, $storageOptions);
-
-            // in case you need the container
-            $container = $this->container;
-            $response = new StreamedResponse(function() use($container, $path) {
-                flush(); // send headers
-                $handle = fopen($path, 'r');
-                while (!feof($handle)) {
-                    $buffer = fread($handle, 1024);
-                    echo $buffer;
-                    flush(); // buffered output
-                }
-                fclose($handle);
-            });
-
-            // Set headers
-            $response->headers->set('Content-Type', !empty($mimeType) ? $mimeType : 'application/octet-stream');
-            $response->headers->set('Content-Disposition', 'attachment; filename="' . basename($fileName) . '";');
-            $response->headers->set('Content-length', $fileSize);
+            $response = $this->getFileResponse($fileVersion);
 
             return $response;
         } catch (MediaException $e) {
-            throw $this->createNotFoundException('File not found: ' . $e->getCode());
+            throw $this->createNotFoundException('File not found: ' . $e->getCode() . ' ' . $e->getMessage());
         }
+    }
+
+    /**
+     * @param FileVersion $fileVersion
+     * @return StreamedResponse
+     */
+    protected function getFileResponse($fileVersion)
+    {
+        $fileName = $fileVersion->getName();
+        $fileSize = $fileVersion->getSize();
+        $storageOptions = $fileVersion->getStorageOptions();
+        $mimeType = $fileVersion->getMimeType();
+        $version = $fileVersion->getVersion();
+
+        $path = $this->getStorage()->load($fileName, $version, $storageOptions);
+
+        // in case you need the container
+        $container = $this->container;
+        $response = new StreamedResponse(function() use($container, $path) {
+            flush(); // send headers
+            $handle = fopen($path, 'r');
+            while (!feof($handle)) {
+                $buffer = fread($handle, 1024);
+                echo $buffer;
+                flush(); // buffered output
+            }
+            fclose($handle);
+        });
+
+        // Set headers
+        $response->headers->set('Content-Type', !empty($mimeType) ? $mimeType : 'application/octet-stream');
+        $response->headers->set('Content-Disposition', 'attachment; filename="' . basename($fileName) . '";');
+        $response->headers->set('Content-length', $fileSize);
+
+        return $response;
+    }
+
+    /**
+     * @param FileVersion $fileVersion
+     */
+    protected function updateDownloadCounter($fileVersion)
+    {
+        $fileVersion->setDownloadCounter($fileVersion->getDownloadCounter() + 1);
+        /** @var \Doctrine\ORM\EntityManager $em */
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($fileVersion);
+        $em->flush();
+    }
+
+    /**
+     * @param int $id
+     * @param int $version
+     * @return null|FileVersion
+     * @throws \Sulu\Bundle\MediaBundle\Media\Exception\InvalidFileVersionException
+     */
+    protected function getFileVersion($id, $version)
+    {
+        /**
+         * @var Media $mediaEntity
+         */
+        $mediaEntity = $this->getDoctrine()
+            ->getRepository('SuluMediaBundle:Media')
+            ->findMediaById($id);
+
+        $currentFileVersion = null;
+        $version = $version === null ? $mediaEntity->getFiles()[0]->getVersion() : $version;
+
+        $file = $mediaEntity->getFiles()[0];
+
+        /**
+         * @var FileVersion $fileVersion
+         */
+        foreach ($file->getFileVersions() as $fileVersion) {
+            if ($fileVersion->getVersion() == $version) {
+                $currentFileVersion = $fileVersion;
+            }
+        }
+
+        if (!$currentFileVersion) {
+            throw new InvalidFileVersionException('File "' . $id . '" with the Version "' . $version . '" not found.');
+        }
+
+        return $currentFileVersion;
     }
 
     /**

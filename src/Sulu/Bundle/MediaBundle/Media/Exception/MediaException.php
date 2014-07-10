@@ -101,4 +101,10 @@ class MediaException extends RestException
      * @description the configured format options are invalid
      */
     const EXCEPTION_CODE_IMAGE_PROXY_INVALID_FORMAT_OPTIONS = 5014;
+
+    /**
+     * @var int
+     * @description the file was not found with the given version
+     */
+    const EXCEPTION_INVALID_FILE_VERSION = 5015;
 }
