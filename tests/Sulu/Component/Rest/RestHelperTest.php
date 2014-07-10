@@ -136,12 +136,17 @@ class RestHelperTest extends \PHPUnit_Framework_TestCase
         $this->restHelper->initializeListBuilder($listBuilder, array('name' => $field));
     }
 
-    public function testProcessPutEmpty()
+    public function testprocessSubEntitiesEmpty()
     {
-        $mock = $this->getMock('stdClass', array('delete', 'update', 'add'));
+        $mock = $this->getMock('stdClass', array('delete', 'update', 'add', 'get'));
         $mock->expects($this->never())->method('delete');
         $mock->expects($this->never())->method('update');
         $mock->expects($this->never())->method('add');
+        $mock->expects($this->never())->method('get');
+
+        $get = function() use ($mock) {
+            $mock->get();
+        };
 
         $delete = function () use ($mock) {
             $mock->delete();
@@ -155,18 +160,23 @@ class RestHelperTest extends \PHPUnit_Framework_TestCase
             $mock->add();
         };
 
-        $this->restHelper->processSubEntities(array(), array(), $delete, $update, $add);
+        $this->restHelper->processSubEntities(array(), array(), $get, $add, $update, $delete);
     }
 
-    public function testProcessPutWithDelete()
+    public function testprocessSubEntitiesWithDelete()
     {
         $mockedObject = $this->getMock('stdClass', array('getId'));
         $mockedObject->expects($this->any())->method('getId')->will($this->returnValue(1));
-        
-        $mock = $this->getMock('stdClass', array('delete', 'update', 'add'));
+
+        $mock = $this->getMock('stdClass', array('delete', 'update', 'add', 'get'));
         $mock->expects($this->once())->method('delete');
         $mock->expects($this->never())->method('update');
         $mock->expects($this->never())->method('add');
+        $mock->expects($this->once())->method('get');
+
+        $get = function() use ($mock) {
+            $mock->get();
+        };
 
         $delete = function () use ($mock) {
             $mock->delete();
@@ -185,21 +195,27 @@ class RestHelperTest extends \PHPUnit_Framework_TestCase
                 $mockedObject
             ),
             array(),
-            $delete,
+            $get,
+            $add,
             $update,
-            $add
+            $delete
         );
     }
 
-    public function testProcessPutWithUpdate()
+    public function testprocessSubEntitiesWithUpdate()
     {
         $mockedObject = $this->getMock('stdClass', array('getId'));
         $mockedObject->expects($this->any())->method('getId')->will($this->returnValue(1));
 
-        $mock = $this->getMock('stdClass', array('delete', 'update', 'add'));
+        $mock = $this->getMock('stdClass', array('delete', 'update', 'add', 'get'));
         $mock->expects($this->never())->method('delete');
         $mock->expects($this->once())->method('update');
         $mock->expects($this->never())->method('add');
+        $mock->expects($this->once())->method('get')->willReturn($mockedObject->getId());
+
+        $get = function() use ($mock) {
+            return $mock->get();
+        };
 
         $delete = function () use ($mock) {
             $mock->delete();
@@ -222,18 +238,24 @@ class RestHelperTest extends \PHPUnit_Framework_TestCase
                     'id' => 1
                 )
             ),
-            $delete,
+            $get,
+            $add,
             $update,
-            $add
+            $delete
         );
     }
 
-    public function testProcessPutWithAdd()
+    public function testprocessSubEntitiesWithAdd()
     {
-        $mock = $this->getMock('stdClass', array('delete', 'update', 'add'));
+        $mock = $this->getMock('stdClass', array('delete', 'update', 'add', 'get'));
         $mock->expects($this->never())->method('delete');
         $mock->expects($this->never())->method('update');
         $mock->expects($this->once())->method('add');
+        $mock->expects($this->never())->method('get');
+
+        $get = function() use ($mock) {
+            $mock->get();
+        };
 
         $delete = function () use ($mock) {
             $mock->delete();
@@ -254,9 +276,10 @@ class RestHelperTest extends \PHPUnit_Framework_TestCase
                     'id' => 1
                 )
             ),
-            $delete,
+            $get,
+            $add,
             $update,
-            $add
+            $delete
         );
     }
 }

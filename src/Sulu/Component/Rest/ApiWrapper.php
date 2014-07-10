@@ -8,7 +8,6 @@ use JMS\Serializer\Annotation\Exclude;
  * @package Sulu\Bundle\CoreBundle\Entity
  */
 class ApiWrapper {
-
     /**
      * the entity which is wrapped by this class
      * @var object

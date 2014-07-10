@@ -10,10 +10,10 @@
 
 namespace Sulu\Component\Rest;
 
-use Sulu\Component\Rest\ListBuilder\FieldDescriptor\AbstractFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
 use Sulu\Component\Rest\ListBuilder\ListRestHelper;
 use Sulu\Component\Rest\ListBuilder\ListRestHelperInterface;
+use Traversable;
 
 /**
  * Defines some common REST functionalities
@@ -64,20 +64,27 @@ class RestHelper implements RestHelperInterface
     /**
      * {@inheritDoc}
      */
-    public function processSubEntities($entities, $requestEntities, $deleteCallback, $updateCallback, $addCallback)
+    public function processSubEntities(
+        $entities,
+        array $requestEntities,
+        callable $get,
+        callable $add = null,
+        callable $update = null,
+        callable $delete = null
+    )
     {
         $success = true;
 
         if (!empty($entities)) {
             foreach ($entities as $entity) {
-                $this->findMatch($requestEntities, $entity->getId(), $matchedEntry, $matchedKey);
+                $this->findMatch($requestEntities, $get($entity), $matchedEntry, $matchedKey);
 
-                if ($matchedEntry == null) {
+                if ($matchedEntry == null && $delete != null) {
                     // delete entity if it is not listed anymore
-                    $deleteCallback($entity);
-                } else {
+                    $delete($entity);
+                } elseif ($update != null) {
                     // update entity if it is matched
-                    $success = $updateCallback($entity, $matchedEntry);
+                    $success = $update($entity, $matchedEntry);
                     if (!$success) {
                         break;
                     }
@@ -91,23 +98,12 @@ class RestHelper implements RestHelperInterface
         }
 
         // The entity which have not been delete or updated have to be added
-        if (!empty($requestEntities)) {
+        if (!empty($requestEntities) && $add != null) {
             foreach ($requestEntities as $entity) {
                 if (!$success) {
                     break;
                 }
-                $success = $addCallback($entity);
-            }
-        }
-
-        // FIXME: this is just a hack to avoid relations that start with index != 0
-        // FIXME: otherwise deserialization process will parse relations as object instead of an array
-        // reindex entities
-        if (sizeof($entities) > 0 && method_exists($entities, 'getValues')) {
-            $newEntities = $entities->getValues();
-            $entities->clear();
-            foreach ($newEntities as $value) {
-                $entities->add($value);
+                $success = $add($entity);
             }
         }
 

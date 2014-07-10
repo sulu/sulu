@@ -13,6 +13,7 @@ namespace Sulu\Component\Rest;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptor\AbstractFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
+use Traversable;
 
 interface RestHelperInterface
 {
@@ -26,13 +27,21 @@ interface RestHelperInterface
     /**
      * This method processes a put request (delete non-existing entities, update existing entities, add new
      * entries), and let the single actions be modified by callbacks
-     * @param ApiEntity[] $entities
-     * @param $requestEntities
-     * @param callback $deleteCallback
-     * @param callback $updateCallback
-     * @param callback $addCallback
+     * @param Traversable $entities The list of entities to work on
+     * @param array $requestEntities The entities as retrieved from the request
+     * @param callable $get The
+     * @param callable $add
+     * @param callable $update
+     * @param callable $delete
      * @return bool
      * @deprecated
      */
-    public function processSubEntities($entities, $requestEntities, $deleteCallback, $updateCallback, $addCallback);
-} 
+    public function processSubEntities(
+        $entities,
+        array $requestEntities,
+        callable $get,
+        callable $add = null,
+        callable $update = null,
+        callable $delete = null
+    );
+}
