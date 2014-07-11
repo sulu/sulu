@@ -93,7 +93,7 @@ class AccountController extends AbstractContactController
      */
     protected $fieldsTranslationKeys = array(
         'id' => 'public.id',
-        'disabled' => 'public.deactivate'
+        'disabled' => 'public.deactivate',
     );
 
     /**
@@ -121,10 +121,9 @@ class AccountController extends AbstractContactController
 
     /**
      * returns all fields that can be used by list
-     * @Get("accounts/fields")
      * @return mixed
      */
-    public function getFieldsAction()
+    public function fieldsAction()
     {
         return $this->responseFields();
     }
@@ -161,8 +160,29 @@ class AccountController extends AbstractContactController
     public function getContactsAction($id, Request $request)
     {
         if ($request->get('flat') == 'true') {
+
+            $filterMainContact = null;
+            $listHelper = $this->get('sulu_core.list_rest_helper');
+            $fields = $listHelper->getFields();
+
+            // check if contact is principle point of contact
+            if ($fields && array_search('isMainContact',$fields)) {
+                $mainContactString = 'accountContacts_account_mainContact_id';
+                // add to fields to query
+                $fields[] = $mainContactString;
+                $request->query->add(array('fields' => implode(',', $fields)));
+                // filter result
+                $filterMainContact = function($content) use ($mainContactString, $fields) {
+                    if (array_search('isMainContact',$fields)) {
+                        $content['isMainContact'] = $content['id'] === $content[$mainContactString];
+                    }
+                    unset($content[$mainContactString]);
+                    return $content;
+                };
+            }
+
             // flat structure
-            $view = $this->responseList(array('accountContacts_account_id' => $id), $this->contactEntityName);
+            $view = $this->responseList(array('accountContacts_account_id' => $id), $this->contactEntityName, $filterMainContact);
         } else {
             $contacts = $this->getDoctrine()->getRepository($this->contactEntityName)->findByAccountId($id);
             $view = $this->view($this->createHalResponse($contacts), 200);
@@ -494,17 +514,16 @@ class AccountController extends AbstractContactController
     {
         $accountEntity = 'SuluContactBundle:Account';
 
+        $em = $this->getDoctrine()->getManager();
+
         try {
             /** @var Account $account */
-            $account = $this->getDoctrine()
-                ->getRepository($accountEntity)
+            $account = $em->getRepository($accountEntity)
                 ->findAccountById($id);
 
             if (!$account) {
                 throw new EntityNotFoundException($accountEntity, $id);
             } else {
-
-                $em = $this->getDoctrine()->getManager();
 
                 if (!is_null($request->get('uid'))) {
                     $account->setUid($request->get('uid'));
@@ -518,6 +537,14 @@ class AccountController extends AbstractContactController
 
                 if (!is_null($request->get('placeOfJurisdiction'))) {
                     $account->setPlaceOfJurisdiction($request->get('placeOfJurisdiction'));
+                }
+
+                // check if mainContact is set
+                if (!is_null($mainContactRequest = $request->get('mainContact'))) {
+                    $mainContact = $em->getRepository($this->contactEntityName)->find($mainContactRequest['id']);
+                    if ($mainContact) {
+                        $account->setMainContact($mainContact);
+                    }
                 }
 
                 // process details
