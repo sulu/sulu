@@ -244,5 +244,27 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
         return $user->getUsername();
     }
 
+    /**
+     * returns all users within the defined system including their contacts
+     */
+    public function getUserInSystem()
+    {
+        $qb = $this->createQueryBuilder('user')
+            ->select('user', 'contact')
+            ->leftJoin('user.userRoles', 'userRoles')
+            ->leftJoin('user.contact', 'contact')
+            ->leftJoin('userRoles.role', 'role')
+            ->where('role.system=:system');
 
+        $query = $qb->getQuery();
+        $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+        $query->setParameter('system', $this->getSystem());
+
+        try {
+            return $query->getResult();
+        } catch (NoResultException $nre) {
+            $message = 'Unable to find any SuluSecurityBundle:User object with a contact';
+            throw new UsernameNotFoundException($message, 0, $nre);
+        }
+    }
 }
