@@ -97,7 +97,8 @@ class TemplateController extends Controller
      * Returns the possible values for the dropdowns of activities
      * @return array
      */
-    private function getActivityDropdownValues(){
+    private function getActivityDropdownValues()
+    {
         $values = array();
 
         $values['activityTypes'] = $this->getDoctrine()
