@@ -144,6 +144,7 @@ class DefaultMediaManager implements MediaManagerInterface, MediaFieldDescriptor
         $this->maxFileSize = $maxFileSize;
         $this->blockedMimeTypes = $blockedMimeTypes;
         $this->mediaTypes = $mediaTypes;
+        
         $this->initializeFieldDescriptors();
     }
 
@@ -151,7 +152,7 @@ class DefaultMediaManager implements MediaManagerInterface, MediaFieldDescriptor
      * TODO
      * @return array
      */
-    public function initializeFieldDescriptors()
+    private function initializeFieldDescriptors()
     {
         $fieldDescriptors[] = new DoctrineFieldDescriptor('id', 'id', self::ENTITY_NAME_MEDIA, array());
         $fieldDescriptors[] = new DoctrineFieldDescriptor('collection', 'idCollections', self::ENTITY_NAME_MEDIA, array());
@@ -216,21 +217,19 @@ class DefaultMediaManager implements MediaManagerInterface, MediaFieldDescriptor
     }
 
     /**
-     * @return array
+     * {@inheritdoc}
+     */
+    public function getFieldDescriptor($key)
+    {
+        return $this->fieldDescriptors[$key];
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function getFieldDescriptors()
     {
         return $this->fieldDescriptors;
-    }
-
-    /**
-     * @param array $fieldDescriptors
-     * @return $this
-     */
-    public function setFieldDescriptors($fieldDescriptors)
-    {
-        $this->fieldDescriptors = $fieldDescriptors;
-        return $this;
     }
 
 
