@@ -29,7 +29,7 @@ define([], function() {
         },
 
         constants = {
-            tabsComponent: 'content-tabs-component'
+            tabsComponentId: 'content-tabs-component'
         },
 
         templates = {
@@ -55,18 +55,17 @@ define([], function() {
          * @returns {string}
          */
         createEventName = function(postfix) {
-            return 'sulu.content.' + ((!!this.options.instanceName) ? this.options.instanceName + '.' : '') + postfix;
+            return 'sulu.content-tabs.' + ((!!this.options.instanceName) ? this.options.instanceName + '.' : '') + postfix;
         };
 
     return {
-        view: true,
 
         initialize: function() {
 
             // default
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
-            var template = this.sandbox.util.template(templates.skeleton.call(this), { tabsComponentId : constants.tabsComponent});
+            var template = this.sandbox.util.template(templates.skeleton.call(this));
 
             // skeleton
             this.html(template);
@@ -90,38 +89,37 @@ define([], function() {
 
         /**
          * gets called when tabs either got initialized or when tab was clicked
-         * @param item
+         * @param item {Object} the Tabs object
          */
         startTabComponent: function(item) {
-
             var options;
-
-            if (!item) {
-                item = this.options.tabsData.items[0];
-            }
+            
+            item = item || this.options.tabsData.items[0];
 
             if (!item.forceReload && item.action === this.action) {
                 this.sandbox.logger.log('page already loaded; no reload required!');
-                return;
+                return false;
             }
 
+            // save action
+            this.action = item.action;
+            
             // resets store to prevent duplicated models
             this.sandbox.mvc.Store.reset();
 
             // stop the current tab
-            App.stop('#' + constants.tabsComponent);
-            this.sandbox.dom.append(this.$el, this.sandbox.dom.createElement('<div id="'+ constants.tabsComponent +'"/>'));
-
-            if (!!item && !!item.contentComponent) {
-                options = this.sandbox.util.extend(true, {}, this.options.contentOptions, {el: '#' + constants.tabsComponent}, item.contentComponentOptions);
+            App.stop('#' + constants.tabsComponentId + ' *');
+            App.stop('#' + constants.tabsComponentId);
+            
+            // start the new tab-component
+            if (!!item.contentComponent) {
+                this.sandbox.dom.append(this.$el, this.sandbox.dom.createElement('<div id="'+ constants.tabsComponentId +'"/>'));
+                options = this.sandbox.util.extend(true, {}, this.options.contentOptions, {el: '#' + constants.tabsComponentId}, item.contentComponentOptions);
                 // start component defined by
-                this.sandbox.start([
-                    {name: item.contentComponent, options: options}
-                ]);
-            }
-
-            if (!!item) {
-                this.action = item.action;
+                this.sandbox.start([{
+                    name: item.contentComponent,
+                    options: options
+                }]);
             }
         }
     };
