@@ -20,15 +20,15 @@ interface MediaFieldDescriptorInterface
 {
 
     /**
-     * Return the FieldDescriptors
-     * @return DoctrineFieldDescriptor[]
+     * Return the FieldDescriptor by name
+     * @param string $key
+     * @return DoctrineFieldDescriptor
      */
-    public function getFieldDescriptors();
+    public function getFieldDescriptor($key);
 
     /**
      * Return the FieldDescriptors
-     * @param DoctrineFieldDescriptor[] $fieldDescriptors
      * @return $this
      */
-    public function setFieldDescriptors($fieldDescriptors);
+    public function getFieldDescriptors();
 } 
