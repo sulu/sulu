@@ -64,7 +64,8 @@ class TemplateController extends Controller
      */
     public function contactActivitiesAction()
     {
-        return $this->render('SuluContactBundle:Template:contact.activities.html.twig');
+        $values = $this->getActivityDropdownValues();
+        return $this->render('SuluContactBundle:Template:contact.activities.html.twig', $values);
     }
 
     /**
@@ -90,6 +91,28 @@ class TemplateController extends Controller
             'defaultFaxType' => $defaults['faxType'],
             'defaultCountry' => $defaults['country']
         );
+    }
+
+    /**
+     * Returns the possible values for the dropdowns of activities
+     * @return array
+     */
+    private function getActivityDropdownValues(){
+        $values = array();
+
+        $values['activityTypes'] = $this->getDoctrine()
+            ->getRepository('SuluContactBundle:ActivityType')
+            ->findAll();
+
+        $values['activityPriorities'] = $this->getDoctrine()
+            ->getRepository('SuluContactBundle:ActivityPriority')
+            ->findAll();
+
+        $values['activityStatuses'] = $this->getDoctrine()
+            ->getRepository('SuluContactBundle:ActivityStatus')
+            ->findAll();
+
+        return $values;
     }
 
     /**

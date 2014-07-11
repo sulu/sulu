@@ -47,24 +47,28 @@ define(['text!sulucontact/components/activities/activity.form.html'], function(A
 
             // back to list
             this.sandbox.on('sulu.header.back', function() {
-//            this.sandbox.emit('sulu.contacts.accounts.list');
+                this.sandbox.emit('sulu.contacts.contacts.list');
             }, this);
 
             // add new activity
             this.sandbox.on('sulu.contacts.accounts.contact.saved', function(model) {
-//            this.sandbox.emit('h usky.datagrid.record.add', model);
+            this.sandbox.emit('husky.datagrid.record.add', model);
             }, this);
 
             // remove record from datagrid
             this.sandbox.on('sulu.contacts.accounts.contacts.removed', function(id) {
-//            this.sandbox.emit('husky.datagrid.record.remove', id);
+                this.sandbox.emit('husky.datagrid.record.remove', id);
             }, this);
 
+            // set data in overlay
             this.sandbox.on('husky.overlay.activity-add-edit.opened', function() {
+                // start components in overlay
+                this.sandbox.start(constants.activityFormSelector);
+
                 // start form and set data
                 var formObject = this.sandbox.form.create(constants.activityFormSelector);
                 formObject.initialized.then(function() {
-                    this.sandbox.form.setData(constants.activityFormSelector, this.data);
+                    this.sandbox.form.setData(constants.activityFormSelector, this.overlayData);
                 }.bind(this));
             }.bind(this));
         },
@@ -105,11 +109,13 @@ define(['text!sulucontact/components/activities/activity.form.html'], function(A
          */
         startOverlay = function(data) {
 
-            var translation, activityTemplate, $container;
+            var translation, activityTemplate, $container, values;
 
             this.sandbox.dom.remove('#'+constants.overlayId);
             $container = this.sandbox.dom.createElement('<div id="'+constants.overlayId+'"></div>');
             this.sandbox.dom.append(this.$el, $container);
+
+            this.overlayData = data;
 
             if (!!data && !!data.id) {
                 translation = this.sandbox.translate('contact.contacts.activities.edit');
@@ -117,13 +123,14 @@ define(['text!sulucontact/components/activities/activity.form.html'], function(A
                 translation = this.sandbox.translate('contact.contacts.activities.add');
             }
 
-            // extend address data by additional variables
-            this.sandbox.util.extend(true, data, {
+            values = {
+                activityTypes: window.activityTypes,
+                activityPriorities: window.activityPriorities,
+                activityStatuses: window.activityStatuses,
                 translate: this.sandbox.translate
-            });
+            };
 
-            activityTemplate = this.sandbox.util.template(ActivityForm, data);
-
+            activityTemplate = this.sandbox.util.template(ActivityForm, values);
 
             this.sandbox.start([
                 {
@@ -136,13 +143,27 @@ define(['text!sulucontact/components/activities/activity.form.html'], function(A
                         instanceName: 'activity-add-edit',
                         data: activityTemplate,
                         skin: 'wide',
-//                        okCallback: editOkClicked.bind(this),
-//                        closeCallback: unbindEditEvents.bind(this)
+                        okCallback: editAddOkClicked.bind(this),
+                        closeCallback: stopOverlayComponents.bind(this)
                     }
                 }
             ]);
+        },
 
-            this.data = data;
+        /**
+         *
+         */
+        stopOverlayComponents = function(){
+            this.sandbox.stop(constants.activityFormSelector);
+        },
+
+        /**
+         * triggered when overlay was closed with ok
+         */
+        editAddOkClicked = function(){
+            var data = this.sandbox.form.getData(constants.activityFormSelector);
+            this.sandbox.emit('sulu.contacts.contact.activity.save', data);
+            stopOverlayComponents();
         },
 
         /**
