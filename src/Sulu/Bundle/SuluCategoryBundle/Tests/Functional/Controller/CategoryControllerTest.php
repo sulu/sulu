@@ -180,13 +180,13 @@ class CategoryControllerTest extends DatabaseTestCase
         $client = $this->createTestClient();
         $client->request(
             'GET',
-            '/api/categories?flat=true'
+            '/api/categories'
         );
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(3, count($response->_embedded));
+        $this->assertEquals(3, count($response->_embedded->categories));
     }
 
     public function testCGetWithParent()
@@ -200,9 +200,9 @@ class CategoryControllerTest extends DatabaseTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(1, count($response->_embedded));
-        $this->assertEquals(3, $response->_embedded[0]->id);
-        $this->assertEquals('Third Category', $response->_embedded[0]->name);
+        $this->assertEquals(1, count($response->_embedded->categories));
+        $this->assertEquals(3, $response->_embedded->categories[0]->id);
+        $this->assertEquals('Third Category', $response->_embedded->categories[0]->name);
     }
 
     public function testCGetWithDepth()
@@ -216,9 +216,9 @@ class CategoryControllerTest extends DatabaseTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(1, count($response->_embedded));
-        $this->assertEquals(3, $response->_embedded[0]->id);
-        $this->assertEquals('Third Category', $response->_embedded[0]->name);
+        $this->assertEquals(1, count($response->_embedded->categories));
+        $this->assertEquals(3, $response->_embedded->categories[0]->id);
+        $this->assertEquals('Third Category', $response->_embedded->categories[0]->name);
     }
 
     public function testCGetWithSorting()
@@ -232,9 +232,9 @@ class CategoryControllerTest extends DatabaseTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(3, count($response->_embedded));
-        $this->assertEquals(3, $response->_embedded[0]->id);
-        $this->assertEquals('Third Category', $response->_embedded[0]->name);
+        $this->assertEquals(3, count($response->_embedded->categories));
+        $this->assertEquals(3, $response->_embedded->categories[0]->id);
+        $this->assertEquals('Third Category', $response->_embedded->categories[0]->name);
     }
 
     public function testPost()
@@ -270,13 +270,13 @@ class CategoryControllerTest extends DatabaseTestCase
         $client = $this->createTestClient();
         $client->request(
             'GET',
-            '/api/categories?flat=true'
+            '/api/categories'
         );
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(4, count($response->_embedded));
+        $this->assertEquals(4, count($response->_embedded->categories));
     }
 
     public function testPut()
@@ -421,14 +421,14 @@ class CategoryControllerTest extends DatabaseTestCase
         $client = $this->createTestClient();
         $client->request(
             'GET',
-            '/api/categories?flat=true'
+            '/api/categories'
         );
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(2, count($response->_embedded));
-        $this->assertEquals(1, $response->_embedded[0]->id);
-        $this->assertEquals(3, $response->_embedded[1]->id);
+        $this->assertEquals(2, count($response->_embedded->categories));
+        $this->assertEquals(1, $response->_embedded->categories[0]->id);
+        $this->assertEquals(3, $response->_embedded->categories[1]->id);
     }
 
     public function testDeleteOfParent()
@@ -444,12 +444,12 @@ class CategoryControllerTest extends DatabaseTestCase
         $client = $this->createTestClient();
         $client->request(
             'GET',
-            '/api/categories?flat=true'
+            '/api/categories'
         );
 
         //$this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(1, count($response->_embedded));
-        $this->assertEquals(2, $response->_embedded[0]->id);
+        $this->assertEquals(1, count($response->_embedded->categories));
+        $this->assertEquals(2, $response->_embedded->categories[0]->id);
     }
 }
