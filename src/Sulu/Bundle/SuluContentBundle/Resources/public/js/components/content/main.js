@@ -13,13 +13,49 @@ define([
 
     'use strict';
 
-    var CONTENT_LANGUAGE = 'contentLanguage';
+    var CONTENT_LANGUAGE = 'contentLanguage',
+
+        constants = {
+            resolutionDropdownData: [
+                {id: 1, name: 'sulu.preview.auto', cssClass: 'auto'},
+                {id: 2, name: 'sulu.preview.desktop', cssClass: 'desktop'},
+                {id: 3, name: 'sulu.preview.tablet', cssClass: 'tablet'},
+                {id: 4, name: 'sulu.preview.smartphone', cssClass: 'smartphone'}
+            ]
+        },
+
+        templates = {
+            preview: [
+                '<div class="sulu-content-preview '+ constants.resolutionDropdownData[0].cssClass +'">',
+                '   <div class="wrapper">',
+                '       <div class="viewport">',
+                '           <iframe src="<%= url %>"></iframe>',
+                '       </div>',
+                '   </div>',
+                '</div>',
+                '<div id="preview-toolbar" class="sulu-preview-toolbar">',
+                '    <div id="preview-toolbar-right" class="right">',
+                '       <div id="preview-toolbar-new-window" class="new-window pull-right pointer"><span class="fa-external-link"></span></div>',
+                '       <div id="preview-toolbar-resolutions" class="resolutions pull-right pointer">',
+                '           <label class="drop-down-trigger">',
+                '               <span class="dropdown-label"><%= resolution %></span>',
+                '               <span class="dropdown-toggle"></span>',
+                '           </label>',
+                '       </div>',
+                '   </div>',
+                '</div>'
+            ].join(''),
+            previewUrl: '<%= url %><%= uuid %>?webspace=<%= webspace %>&language=<%= language %>&template=<%= template %>'
+        };
 
     return {
 
         initialize: function() {
             // init vars
             this.saved = true;
+            this.previewUrl = null;
+            this.previewWindow = null;
+            this.$preview = null;
             this.contentChanged = false;
 
             this.headerInitialized = this.sandbox.data.deferred();
@@ -161,6 +197,12 @@ define([
                     this.setHeaderBar(false);
                 }
             }.bind(this));
+
+            // change url of preview
+            this.sandbox.on('sulu.content.preview.change-url', this.changePreviewUrl.bind(this));
+
+            // change the preview style if the resolution dropdown gets changed
+            this.sandbox.on('husky.dropdown.resolutionsDropdown.item.click', this.changePreviewStyle.bind(this));
 
             // bind model data events
             this.bindModelEvents();
@@ -370,40 +412,108 @@ define([
          * @param data
          */
         renderPreview: function(data) {
-            var $preview = this.sandbox.dom.createElement('<div id="preview-container"/>');
-            this.sandbox.dom.append('#preview', $preview);
+            if (this.$preview === null) {
+                this.previewUrl = this.sandbox.util.template(templates.previewUrl)({
+                    url: '/admin/content/preview/',
+                    webspace: this.options.webspace,
+                    language: this.options.language,
+                    uuid: data.id,
+                    template: data.template
+                });
+                this.$preview = this.sandbox.dom.createElement(this.sandbox.util.template(templates.preview)({
+                    resolution: this.sandbox.translate('content.preview.resolutions'),
+                    url: this.previewUrl
+                }));
+                this.bindPreviewDomEvents();
+                this.startPreviewResolutionDropdown();
+                this.sandbox.emit('sulu.sidebar.set-widget', null, this.$preview);
+            }
+        },
 
-            // collapse navigation
-            this.sandbox.emit('husky.navigation.collapse', true);
-
+        /**
+         * Starts the resolution dropdown for the preview
+         */
+        startPreviewResolutionDropdown: function() {
             this.sandbox.start([
                 {
-                    name: 'content/preview@sulucontent',
+                    name: 'dropdown@husky',
                     options: {
-                        el: '#preview-container',
-                        toolbar: {
-                            resolutions: [
-                                1680,
-                                1440,
-                                1024,
-                                800,
-                                600,
-                                480
-                            ],
-                            showLeft: true,
-                            showRight: true
-                        },
-                        mainContentElementIdentifier: 'content',
-                        iframeSource: {
-                            url: '/admin/content/preview/',
-                            webspace: this.options.webspace,
-                            language: this.options.language,
-                            id: data.id,
-                            template: data.template
-                        }
+                        el: this.sandbox.dom.find('#preview-toolbar-resolutions', this.$preview),
+                        trigger: '.drop-down-trigger',
+                        setParentDropDown: true,
+                        instanceName: 'resolutionsDropdown',
+                        alignment: 'left',
+                        data: constants.resolutionDropdownData
                     }
                 }
             ]);
+        },
+
+        /**
+         * Binds Dom-related events on the preview
+         */
+        bindPreviewDomEvents: function() {
+            this.sandbox.dom.on(this.sandbox.dom.find('#preview-toolbar-new-window', this.$preview),
+                'click', this.openPreviewInNewWindow.bind(this));
+        },
+
+        /**
+         * Changes the url of the preview
+         * @param params {Object} object with parameteres like webspace language etc.
+         */
+        changePreviewUrl: function(params) {
+            if (this.$preview !== null && !!this.content) {
+                var $iframe,
+                    content = this.content.toJSON(),
+                    defaults = {
+                        url: '/admin/content/preview/',
+                        webspace: this.options.webspace,
+                        language: this.options.language,
+                        uuid: content.id,
+                        template: content.template
+                    };
+                defaults = this.sandbox.util.extend(true, {}, defaults, params);
+                this.previewUrl = this.sandbox.util.template(templates.previewUrl)(defaults);
+                $iframe = this.sandbox.dom.find('iframe', this.$preview);
+                this.sandbox.dom.attr($iframe, 'src', this.previewUrl);
+                if (!!this.previewWindow && this.previewWindow.closed === false) {
+                    this.previewWindow.close();
+                }
+            }
+        },
+
+        /**
+         * Changes the style of the the preview. E.g. from desktop to smartphone
+         * @param newStyle {Object} the new style object. Has to have a cssClass property
+         */
+        changePreviewStyle: function(newStyle) {
+            if (this.$preview !== null) {
+                var $container = this.$preview[0],
+                    $toolbar = this.$preview[1];
+                // remove all styles
+                this.sandbox.util.foreach(constants.resolutionDropdownData, function(style) {
+                    this.sandbox.dom.removeClass($container, style.cssClass);
+                }.bind(this));
+                this.sandbox.dom.addClass($container, newStyle.cssClass);
+                this.sandbox.dom.html(this.sandbox.dom.find('.dropdown-label', $toolbar), this.sandbox.translate(newStyle.name));
+            }
+        },
+
+        /**
+         * Hides the sidebar and opens a new window with the preview in it
+         */
+        openPreviewInNewWindow: function() {
+            this.sandbox.emit('sulu.app.toggle-shrinker', false);
+            this.sandbox.emit('sulu.app.change-width', 'fixed');
+            this.sandbox.emit('husky.navigation.show');
+            this.sandbox.emit('sulu.sidebar.hide');
+            this.previewWindow = window.open(this.previewUrl);
+            this.previewWindow.onload = function() {
+                this.previewWindow.onunload = function() {
+                    this.sandbox.emit('sulu.app.toggle-shrinker', true);
+                    this.sandbox.emit('sulu.sidebar.change-width', 'max');
+                }.bind(this);
+            }.bind(this);
         },
 
         /**
@@ -584,6 +694,36 @@ define([
                             }
                         ]
                     }
+                };
+            }
+        },
+
+        layout: function() {
+            if (this.options.display === 'column') {
+                return {
+                    content: {
+                        width: 'max',
+                        leftSpace: false,
+                        rightSpace: false,
+                        topSpace: false
+                    }
+                };
+            } else {
+                var sidebar = {
+                    width: 'max'
+                };
+                if (!this.options.preview) {
+                    sidebar = false;
+                }
+                return {
+                    navigation: {
+                        collapsed: true
+                    },
+                    content: {
+                        width: 'fixed',
+                        shrinkable: (!!this.options.preview) ? true : false
+                    },
+                    sidebar: sidebar
                 };
             }
         }

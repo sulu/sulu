@@ -24,6 +24,10 @@ define(function() {
 
         view: true,
 
+        layout: {
+            changeNothing: true
+        },
+
         initialize: function() {
             this.render();
             // shows a delete success label. If a node just got deleted
