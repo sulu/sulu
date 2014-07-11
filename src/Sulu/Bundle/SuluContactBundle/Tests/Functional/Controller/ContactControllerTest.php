@@ -120,7 +120,7 @@ class ContactControllerTest extends DatabaseTestCase
         $contactAddress->setAddress($address);
         $contactAddress->setContact($contact);
         $contactAddress->setMain(true);
-        self::$account->addContactAddresse($contactAddress);
+        $contact->addContactAddresse($contactAddress);
         $address->addContactAddresse($contactAddress);
 
         $note = new Note();
@@ -139,6 +139,7 @@ class ContactControllerTest extends DatabaseTestCase
         self::$em->persist($country1);
         self::$em->persist($country2);
         self::$em->persist($addressType);
+        self::$em->persist($contactAddress);
         self::$em->persist($address);
         self::$em->persist($note);
 
@@ -1693,14 +1694,14 @@ class ContactControllerTest extends DatabaseTestCase
 
         $this->assertEquals(2, $response->account->id);
 
-        $this->assertEquals(true, $response->addresses[0]->primaryAddress);
-        $this->assertEquals(false, $response->addresses[1]->primaryAddress);
+        $this->assertEquals(false, $response->addresses[0]->primaryAddress);
+        $this->assertEquals(true, $response->addresses[1]->primaryAddress);
 
         $client->request('GET', '/api/contacts/' . $response->id);
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(true, $response->addresses[0]->primaryAddress);
-        $this->assertEquals(false, $response->addresses[1]->primaryAddress);
+        $this->assertEquals(false, $response->addresses[0]->primaryAddress);
+        $this->assertEquals(true, $response->addresses[1]->primaryAddress);
     }
 
     public function testPrimaryAddressHandlingPut()
@@ -1805,15 +1806,15 @@ class ContactControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(false, $response->addresses[0]->primaryAddress);
-        $this->assertEquals(true, $response->addresses[1]->primaryAddress);
-        $this->assertEquals(false, $response->addresses[2]->primaryAddress);
+        $this->assertEquals(false, $response->addresses[1]->primaryAddress);
+        $this->assertEquals(true, $response->addresses[2]->primaryAddress);
 
         $client->request('GET', '/api/contacts/' . $response->id);
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(false, $response->addresses[0]->primaryAddress);
-        $this->assertEquals(true, $response->addresses[1]->primaryAddress);
-        $this->assertEquals(false, $response->addresses[2]->primaryAddress);
+        $this->assertEquals(false, $response->addresses[1]->primaryAddress);
+        $this->assertEquals(true, $response->addresses[2]->primaryAddress);
 
     }
 }

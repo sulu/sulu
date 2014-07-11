@@ -41,7 +41,7 @@ class ContactManager extends AbstractContactManager
         $contactAddress->setMain($isMain);
         $this->em->persist($contactAddress);
 
-        $contact->addAccountAddresse($contactAddress);
+        $contact->addContactAddresse($contactAddress);
 
         return $contactAddress;
     }
@@ -71,15 +71,15 @@ class ContactManager extends AbstractContactManager
 
         // if was main, set a new one
         if ($isMain) {
-            $this->setMainForCollection($contact->getContactContacts());
+            $this->setMainForCollection($contact->getContactAddresses());
         }
 
         // delete address if it has no more relations
         if (!$address->hasRelations()) {
-            $this->$em->remove($address);
+            $this->em->remove($address);
         }
 
-        $this->$em->remove($contactAddress);
+        $this->em->remove($contactAddress);
     }
 
     /**

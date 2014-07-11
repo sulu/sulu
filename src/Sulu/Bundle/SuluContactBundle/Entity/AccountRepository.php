@@ -183,7 +183,6 @@ class AccountRepository extends EntityRepository
                 ->addSelect('mainContact')
                 ->addSelect('bankAccounts')
                 ->addSelect('addresses')
-                ->addSelect('addresses')
                 ->addSelect('children')
                 ->addSelect('accountAddresses')
                 ->addSelect('accountContacts')
