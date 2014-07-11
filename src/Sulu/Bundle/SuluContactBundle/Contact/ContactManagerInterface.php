@@ -57,8 +57,8 @@ interface ContactManagerInterface
 
 //    public function addAccountContact($account, $contact);
 
-//    public function setMainEmail();
-//    public function setMainFax();
-//    public function setMainUrl();
-//    public function setMainPhone();
+    public function setMainEmail($entity);
+    public function setMainFax($entity);
+    public function setMainUrl($entity);
+    public function setMainPhone($entity);
 }

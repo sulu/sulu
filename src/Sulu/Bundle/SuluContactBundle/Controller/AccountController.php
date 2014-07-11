@@ -922,7 +922,7 @@ class AccountController extends AbstractContactController
     }
 
     /**
-     * @return ContactManagerInterface
+     * @return AbstractContactManager
      */
     protected function getContactManager()
     {

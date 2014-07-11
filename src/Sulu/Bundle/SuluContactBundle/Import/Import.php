@@ -15,6 +15,7 @@ use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\UnitOfWork;
+use Sulu\Bundle\ContactBundle\Contact\AbstractContactManager;
 use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\AccountAddress;
 use Sulu\Bundle\ContactBundle\Entity\AccountCategory;
@@ -73,6 +74,16 @@ class Import
      * @var \Doctrine\ORM\EntityManager
      */
     protected $em;
+
+    /**
+     * @var AbstractContactManager $accountManager
+     */
+    protected $accountManager;
+
+    /**
+     * @var AbstractContactManager $contactManager
+     */
+    protected $contactManager;
 
     /**
      * location of contacts import file
@@ -225,16 +236,20 @@ class Import
 
     /**
      * @param EntityManager $em
+     * @param $accountManager
+     * @param $contactManager
      * @param $configDefaults
      * @param $configAccountTypes
      * @param $configFormOfAddress
      */
-    function __construct(EntityManager $em, $configDefaults, $configAccountTypes, $configFormOfAddress)
+    function __construct(EntityManager $em, $accountManager, $contactManager, $configDefaults, $configAccountTypes, $configFormOfAddress)
     {
         $this->em = $em;
         $this->configDefaults = $configDefaults;
         $this->configAccountTypes = $configAccountTypes;
         $this->configFormOfAddress = $configFormOfAddress;
+        $this->accountManager = $accountManager;
+        $this->contactManager = $contactManager;
     }
 
     /**
@@ -515,7 +530,6 @@ class Import
         // phone with type isdn
         if ($this->checkData('phone_isdn', $data, null, 60)) {
             $phone = new Phone();
-            $phone->setMain(false);
             $phone->setPhone($data['phone_isdn']);
             $phone->setPhoneType($this->defaultTypes['phoneTypeIsdn']);
             $this->em->persist($phone);
@@ -524,12 +538,8 @@ class Import
 
         // add address if set
         $address = $this->createAddress($data, $account);
-        if ($address) {
-            $accountAddress = new AccountAddress();
-            $accountAddress->setAccount($account);
-            $accountAddress->setAddress($address);
-            $this->em->persist($accountAddress);
-            $account->addContactAddresse($accountAddress);
+        if ($address !== null) {
+            $this->getAccountManager()->addAddress($account, $address, true);
         }
 
         // add bank accounts
@@ -575,7 +585,7 @@ class Import
                 $entity->addEmail($email);
             }
         }
-        $this->setMainEmail($entity);
+        $this->getContactManager()->setMainEmail($entity);
     }
 
     /**
@@ -595,7 +605,7 @@ class Import
                 $entity->addPhone($phone);
             }
         }
-        $this->setMainPhone($entity);
+        $this->getContactManager()->setMainPhone($entity);
     }
 
     /**
@@ -615,7 +625,7 @@ class Import
                 $entity->addFax($fax);
             }
         }
-        $this->setMainFax($entity);
+        $this->getContactManager()->setMainFax($entity);
     }
 
     /**
@@ -629,70 +639,13 @@ class Import
         for ($i = 0, $len = 10; ++$i < $len;) {
             if ($this->checkData('url' . $i, $data, null, 255)) {
                 $url = new Url();
-                $url->setMain(false);
                 $url->setUrl($data['url' . $i]);
                 $url->setUrlType($this->defaultTypes['urlType']);
                 $this->em->persist($url);
                 $entity->addUrl($url);
             }
         }
-        $this->setMainUrl($entity);
-    }
-
-    /**
-     * sets Entity's Main-Email
-     * @param Contact|Account $entity
-     */
-    protected function setMainEmail($entity)
-    {
-        // set main to first entry or to null
-        if ($entity->getEmails()->isEmpty()) {
-            $entity->setMainEmail(null);
-        } else {
-            $entity->setMainEmail($entity->getEmails()->first()->getEmail());
-        }
-    }
-
-    /**
-     * sets Entity's Main-Phone
-     * @param Contact|Account $entity
-     */
-    protected function setMainPhone($entity)
-    {
-        // set main to first entry or to null
-        if ($entity->getPhones()->isEmpty()) {
-            $entity->setMainPhone(null);
-        } else {
-            $entity->setMainPhone($entity->getPhones()->first()->getPhone());
-        }
-    }
-
-    /**
-     * sets Entity's Main-Fax
-     * @param Contact|Account $entity
-     */
-    protected function setMainFax($entity)
-    {
-        // set main to first entry or to null
-        if ($entity->getFaxes()->isEmpty()) {
-            $entity->setMainFax(null);
-        } else {
-            $entity->setMainFax($entity->getFaxes()->first()->getFax());
-        }
-    }
-
-    /**
-     * sets Entity's Main-Url
-     * @param Contact|Account $entity
-     */
-    protected function setMainUrl($entity)
-    {
-        // set main to first entry or to null
-        if ($entity->getUrls()->isEmpty()) {
-            $entity->setMainUrl(null);
-        } else {
-            $entity->setMainUrl($entity->getUrls()->first()->getUrl());
-        }
+        $this->getContactManager()->setMainUrl($entity);
     }
 
     /**
@@ -759,12 +712,12 @@ class Import
     }
 
     /**
-     * adds an address to a contact / account
+     * creates an address entity based on passed data
      * @param $data
-     * @param $entity
+     * @return null|Address
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      */
-    protected function createAddress($data, $entity)
+    protected function createAddress($data)
     {
         // set address
         $address = new Address();
@@ -829,7 +782,6 @@ class Import
         if ($addAddress) {
             $address->setAddressType($this->defaultTypes['addressType']);
             $this->em->persist($address);
-//            $entity->addAddresse($address);
             return $address;
         }
         return null;
@@ -976,12 +928,8 @@ class Import
 
         // add address if set
         $address = $this->createAddress($data, $contact);
-        if ($address) {
-            $contactAddress = new ContactAddress();
-            $contactAddress->setContact($contact);
-            $contactAddress->setAddress($address);
-            $this->em->persist($contactAddress);
-            $contact->addContactAddresse($contactAddress);
+        if ($address !== null) {
+            $this->getContactManager()->addAddress($contact, $address, true);
         }
 
         // process emails, phones, faxes, urls and notes
@@ -1507,5 +1455,32 @@ class Import
         }
         return $externalId;
 
+    }
+
+    /**
+     * @param $entity
+     * @return AbstractContactManager
+     */
+    protected function getManager($entity) {
+        if ($entity instanceof Contact) {
+            return $this->getContactManager();
+        } else {
+            return $this->getAccountManager();
+        }
+    }
+
+    /**
+     * @return AbstractContactManager
+     */
+    protected function getContactManager()
+    {
+        return $this->contactManager;
+    }
+    /**
+     * @return AbstractContactManager
+     */
+    protected function getAccountManager()
+    {
+        return $this->accountManager;
     }
 }
