@@ -35,7 +35,6 @@
  * @param {String} [options.breadcrumb[].event] event to throw when crumb is clicked
  * @param {Boolean} [options.toolbarDisabled] if true the toolbar-component won't be initialized
  * @param {Boolean} [options.noBack] if true the back icon won't be displayed
- * @param {Boolean} [options.squeezed] if true the inner of the component will be squeezed. Used for the full-width mode of the content
  * @param {String} [options.titleColor] hex-color for setting a colored point in front of the title
  */
 
@@ -60,12 +59,12 @@ define([], function() {
             breadcrumb: null,
             toolbarDisabled: false,
             noBack: false,
-            squeezed: false,
             titleColor: null
         },
 
         constants = {
             componentClass: 'sulu-header',
+            hasTabsClass: 'has-tabs',
             titleColorClass: 'title-color',
             titleColorSetClass: 'color-set',
             infoClass: 'info',
@@ -77,7 +76,6 @@ define([], function() {
             innerSelector: '.inner',
             tabsSelector: '.tabs-container',
             bottomContentClass: 'bottom-content',
-            tighterClass: 'squeezed',
             toolbarDefaults: {
                 groups: [
                     {id: 'left', align: 'left'},
@@ -305,25 +303,6 @@ define([], function() {
         },
 
         /**
-         * listens on and hides back icon
-         *
-         * @event sulu.header.[INSTANCE_NAME].show-back
-         * @param {boolean} animate If true back icon gets hidden with an animation
-         */
-        HIDE_BACK = function() {
-            return createEventName.call(this, 'hide-back');
-        },
-
-        /**
-         * listens on and shows back icon
-         *
-         * @event sulu.header.[INSTANCE_NAME].show-back
-         */
-        SHOW_BACK = function() {
-            return createEventName.call(this, 'show-back');
-        },
-
-        /**
          * listens on and changes the state of the toolbar
          *
          * @event sulu.header.[INSTANCE_NAME].toolbar.state.change
@@ -363,24 +342,6 @@ define([], function() {
          */
         SET_BOTTOM_CONTENT = function() {
             return createEventName.call(this, 'set-bottom-content');
-        },
-
-        /**
-         * listens on and squeezes the header
-         *
-         * @event sulu.header.[INSTANCE_NAME].squeeze
-         */
-        SQUEEZE = function() {
-            return createEventName.call(this, 'squeeze');
-        },
-
-        /**
-         * listens on and squeezes the header
-         *
-         * @event sulu.header.[INSTANCE_NAME].squeeze
-         */
-        UNSQUEEZE = function() {
-            return createEventName.call(this, 'unsqueeze');
         },
 
         /*********************************************
@@ -469,7 +430,6 @@ define([], function() {
         };
 
     return {
-        view: true,
 
         /**
          * Initializes the component
@@ -491,7 +451,6 @@ define([], function() {
             this.toolbarInstanceName = null;
 
             this.render();
-            this.setPosition();
 
             toolbarDef = this.startToolbar();
             tabsDef = this.startTabs();
@@ -503,37 +462,6 @@ define([], function() {
             this.sandbox.data.when(toolbarDef, tabsDef).then(function() {
                 this.sandbox.emit(INITIALIZED.call(this));
             }.bind(this));
-        },
-
-        /**
-         * Handles the placing of the component at the beginning
-         */
-        setPosition: function() {
-            // wait for tabs to initialize if there are tabs
-            if (this.options.tabsData !== null || !!this.options.tabsOptions.data) {
-                this.sandbox.on('husky.tabs.header'+ this.options.instanceName +'.initialized', function() {
-                    this.sandbox.emit('sulu.app.content.get-dimensions', this.setDimensions.bind(this));
-                }.bind(this));
-            } else {
-                this.sandbox.emit('sulu.app.content.get-dimensions', this.setDimensions.bind(this));
-            }
-        },
-
-        /**
-         * Applies an object with dimensions to the component element
-         * @param dimensions
-         */
-        setDimensions: function(dimensions) {
-            this.sandbox.dom.css(this.$inner, {
-                'margin-left': dimensions.left + 'px'
-            });
-            this.sandbox.dom.width(this.$inner, dimensions.width);
-
-            if (this.$tabs !== null) {
-                this.sandbox.dom.css(this.sandbox.dom.find(constants.tabsSelector, this.$tabs), {
-                   'padding-left': dimensions.left + 'px'
-                });
-            }
         },
 
         /**
@@ -561,29 +489,8 @@ define([], function() {
 
             // hide back if configured
             if (this.options.noBack === true) {
-                this.hideBack(false);
+                this.sandbox.dom.hide(this.$find('.' + constants.backClass));
             }
-
-            // add tighter class if configured
-            if (this.options.squeezed === true) {
-                this.squeeze();
-            }
-        },
-
-        /**
-         * Squeezes the elements inner
-         */
-        squeeze: function() {
-            this.sandbox.dom.addClass(this.$el, constants.tighterClass);
-            this.sandbox.emit('sulu.app.content.get-dimensions', this.setDimensions.bind(this));
-        },
-
-        /**
-         * Unsqueezes the elements inner
-         */
-        unsqueeze: function() {
-            this.sandbox.dom.removeClass(this.$el, constants.tighterClass);
-            this.sandbox.emit('sulu.app.content.get-dimensions', this.setDimensions.bind(this));
         },
 
         /**
@@ -625,14 +532,16 @@ define([], function() {
             var def = this.sandbox.data.deferred();
 
             if (this.options.tabsData !== null || !!this.options.tabsOptions.data) {
+                this.sandbox.dom.addClass(this.$el, constants.hasTabsClass);
+                this.sandbox.dom.addClass('.sulu-header-background', constants.hasTabsClass);
                 this.$tabs = this.sandbox.dom.createElement('<div class="'+ constants.tabsClass +'"></div>');
                 this.sandbox.dom.append(this.$el, this.$tabs);
 
                 if (this.options.tabsFullControl !== true) {
                     // first start the content-component responsible for the tabs-content-handling
-                    this.startContentComponent();
+                    this.startContentTabsComponent();
                     // wait for content-component to initialize
-                    this.sandbox.on('sulu.content.content.initialized', function() {
+                    this.sandbox.on('sulu.content-tabs.content.initialized', function() {
                         this.startTabsComponent(def);
                     }.bind(this));
                 } else {
@@ -754,9 +663,6 @@ define([], function() {
          * listens to tab events
          */
         bindCustomEvents: function() {
-            // change dimensions if content-dimensions change
-            this.sandbox.on('sulu.app.content.dimensions-changed', this.setDimensions.bind(this));
-
             // enable langauge-dropdown after loading the language items
             this.sandbox.on('husky.toolbar.header'+ this.options.instanceName +'.items.set', function(id) {
                 if (id === 'language') {
@@ -767,12 +673,6 @@ define([], function() {
             // changes the saved state of the toolbar
             this.sandbox.on(TOOLBAR_STATE_CHANGE.call(this), this.changeToolbarState.bind(this));
 
-            // show back icon
-            this.sandbox.on(SHOW_BACK.call(this), this.showBack.bind(this));
-
-            // hide back icon
-            this.sandbox.on(HIDE_BACK.call(this), this.hideBack.bind(this));
-
             // set breadcrumb
             this.sandbox.on(SET_BREADCRUMB.call(this), this.setBreadcrumb.bind(this));
 
@@ -781,12 +681,6 @@ define([], function() {
 
             // change the color-point in front of the title
             this.sandbox.on(SET_TITLE_COLOR.call(this), this.setTitleColor.bind(this));
-
-            // squeezes the header
-            this.sandbox.on(SQUEEZE.call(this), this.squeeze.bind(this));
-
-            // unsqueeze the header
-            this.sandbox.on(UNSQUEEZE.call(this), this.unsqueeze.bind(this));
 
             // get height event
             this.sandbox.on(GET_HEIGHT.call(this), function(callback) {
@@ -859,30 +753,6 @@ define([], function() {
         },
 
         /**
-         * Shows the back icon
-         */
-        showBack: function() {
-            this.sandbox.dom.css(this.$find('.' + constants.backClass), {
-                'opacity': '1'
-            });
-            this.sandbox.dom.show(this.$find('.' + constants.backClass));
-        },
-
-        /**
-         * Hides the back icon
-         * @param animate {boolean} if true hidden with an animation
-         */
-        hideBack: function(animate) {
-            if (animate === true) {
-                this.sandbox.dom.css(this.$find('.' + constants.backClass), {
-                    'opacity': '0'
-                });
-            } else {
-                this.sandbox.dom.hide(this.$find('.' + constants.backClass));
-            }
-        },
-
-        /**
          * Displays an array of objects as a breadcrumb
          * @param crumbs {array} crumbs Array of objects with a title and a link attribute
          */
@@ -935,10 +805,10 @@ define([], function() {
         /**
          * Starts the content component necessary and responsible for the tabs
          */
-        startContentComponent: function() {
+        startContentTabsComponent: function() {
             if (this.options.contentEl !== null) {
                 this.sandbox.start([{
-                    name: 'content@suluadmin',
+                    name: 'content-tabs@suluadmin',
                     options: {
                         el: this.sandbox.dom.$(this.options.contentEl),
                         contentOptions: this.options.contentComponentOptions,

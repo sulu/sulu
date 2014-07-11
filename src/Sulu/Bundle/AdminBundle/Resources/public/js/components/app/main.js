@@ -14,18 +14,20 @@ define(function() {
     var router,
 
         constants = {
-            contentMaxWidth: 920,
-            contentMaxMarginLeft: 250,
-            contentMaxPaddingLeft: 50,
-
-            contentMinWidth: 510,
-            contentMinMarginLeft: 10,
-            contentMinPaddingLeft: 0,
-
             suluNavigateAMark: '[data-sulu-navigate="true"]', //a tags which match this mark will use the sulu.navigate method
-            fullWidthClass: 'fullwidth',
-            noPaddingClass: 'no-padding',
-            fullHeightClass: 'fullheight'
+            fixedWidthClass: 'fixed',
+            smallFixedClass: 'small-fixed',
+            maxWidthClass: 'max',
+            columnSelector: '.content-column',
+            noLeftSpaceClass: 'no-left-space',
+            noRightSpaceClass: 'no-right-space',
+            noTopSpaceClass: 'no-top-space',
+            shrinkIcon: 'fa-chevron-left',
+            expandIcon: 'fa-chevron-right'
+        },
+
+        templates = {
+            shrinkable: '<div class="sulu-app-shrink"><span class="fa-chevron-left"></span></div>'
         },
 
         eventNamespace = 'sulu.app.',
@@ -39,65 +41,12 @@ define(function() {
         },
 
         /**
-         * raised if width height, or position of content-container changes
-         * @event sulu.app.content.dimensions-changed
-         * @param {object} Object containing width, and position from the left
-         */
-            CONTENT_DIMENSIONS_CHANGED = function() {
-            return createEventName('content.dimensions-changed');
-        },
-
-        /**
-         * raised if width height, or position of view port changes
-         * @event sulu.app.content.dimensions-changed
-         * @param {object} Object containing width, and position from the left
-         */
-            VIEWPORT_DIMENSIONS_CHANGED = function() {
-            return createEventName('viewport.dimensions-changed');
-        },
-
-        /**
-         * listens on and changes the dimensions of the content
-         * @event sulu.app.content.dimensions-change
-         * @param {object} Object containing width, and position from the left
-         */
-            CONTENT_DIMENSIONS_CHANGE = function() {
-            return createEventName('content.dimensions-change');
-        },
-
-        /**
-         * listens on and pass an object with the dimensions to the passed callback
-         * @event sulu.app.content.get-dimensions
-         * @param {function} callback The callback to pass the dimensions to
-         */
-            GET_CONTENT_DIMENSIONS = function() {
-            return createEventName('content.get-dimensions');
-        },
-
-        /**
          * listens on and returns true
          * @event sulu.app.content.has-started
          * @param {function} callback The callback to pass true on
          */
             HAS_STARTED = function() {
             return createEventName('has-started');
-        },
-
-        /**
-         * listens on and resets the ui according to given state
-         * @event sulu.app.reset.ui
-         * @param {Object} contains states of navigation and content (small | large)
-         */
-            UI_RESET = function() {
-            return createEventName('ui.reset');
-        },
-
-        /**
-         * raised after reset of ui
-         * @event sulu.app.reseted.ui
-         */
-            UI_RESETED = function() {
-            return createEventName('ui.reseted');
         },
 
         /**
@@ -110,13 +59,32 @@ define(function() {
          },
 
         /**
-         * sets the container in full-width mode
-         * @event sulu.app.full-size
-         * @param {Boolean} true for full width
-         * @param {Boolean} true for full height
+         * listens on and changes the width type of the column
+         * @event sulu.app.change-width
+         * @param {String} the new width-type. 'fixed' or 'max'
          */
-        SET_FULL_SIZE = function() {
-            return createEventName('full-size');
+        CHANGE_WIDTH = function() {
+            return createEventName('change-width');
+        },
+
+        /**
+         * listens on and changes the spacing of the content
+         * @event sulu.app.change-spacing
+         * @param {Boolean} false for no spacing left
+         * @param {Boolean} false for no spacing right
+         * @param {Boolean} false for no spacing top
+         */
+        CHANGE_SPACING = function() {
+            return createEventName('change-spacing');
+        },
+
+        /**
+         * listens on and displays or hides the toggle icon
+         * @event sulu.app.toggle-shrinker
+         * @param {Boolean} true to display, false to hide the shrinker-button
+         */
+        TOGGLE_SHRINKER = function() {
+            return createEventName('toggle-shrinker');
         },
 
         /**
@@ -124,14 +92,6 @@ define(function() {
          */
             createEventName = function(postFix) {
             return eventNamespace + postFix;
-        },
-
-        /**
-         * Changes the left margin of the content-container
-         * @param marginLeft {number} The margin to set
-         */
-            changeContentMarginLeft = function(marginLeft) {
-            this.sandbox.dom.css(this.$el, {'margin-left': marginLeft});
         };
 
     return {
@@ -142,42 +102,44 @@ define(function() {
          */
         initialize: function() {
             this.title = document.title;
-            this.headerVisible = false;
+            this.$shrinker = null;
+            this.currentRoute = null;
 
-            if (!!this.sandbox.mvc.routes) {
+            this.initializeRouter();
+            this.render();
+            this.bindCustomEvents();
+            this.bindDomEvents();
 
-                var AppRouter = this.sandbox.mvc.Router({
-                    routes: {
-                        // Default
-                        '*actions': 'defaultAction'
-                    },
-
-                    defaultAction: function() {
-                        // We have no matching route
-                    }
-                });
-
-                router = new AppRouter();
-
-                this.sandbox.util._.each(this.sandbox.mvc.routes, function(route) {
-                    router.route(route.route, function() {
-                        route.callback.apply(this, arguments);
-                    }.bind(this));
-                }.bind(this));
-
-                this.contentChangeInterval = null;
-                this.contentDimensions = {
-                    left: null,
-                    width: null
-                };
-
-                this.currentRoute = null;
-
-                this.bindCustomEvents();
-                this.bindDomEvents();
-
-                this.sandbox.emit(INITIALIZED.call(this));
+            if (!!this.sandbox.mvc.history.fragment && this.sandbox.mvc.history.fragment.length > 0) {
+                this.selectNavigationItem(this.sandbox.mvc.history.fragment);
             }
+
+            this.sandbox.emit(INITIALIZED.call(this));
+        },
+
+        /**
+         * Initializes the backbone router
+         */
+        initializeRouter: function() {
+            var AppRouter = this.sandbox.mvc.Router({
+                routes: {
+                    // Default
+                    '*actions': 'defaultAction'
+                },
+
+                defaultAction: function() {
+                    // We have no matching route
+                }
+            });
+            router = new AppRouter();
+
+            this.sandbox.util._.each(this.sandbox.mvc.routes, function(route) {
+                router.route(route.route, function() {
+                    this.sandbox.mvc.Store.reset();
+                    this.beforeNavigateCleanup();
+                    route.callback.apply(this, arguments);
+                }.bind(this));
+            }.bind(this));
         },
 
         /**
@@ -185,19 +147,23 @@ define(function() {
          * @param action {string}
          */
         selectNavigationItem: function(action) {
-            this.sandbox.emit('husky.navigation.select-item', action, false);
+            this.sandbox.emit('husky.navigation.select-item', action);
+        },
+
+        /**
+         * Renderes dom events for the component
+         */
+        render: function() {
+            var $column = this.sandbox.dom.find(constants.columnSelector);
+            this.$shrinker = this.sandbox.dom.createElement(templates.shrinkable);
+            this.sandbox.dom.hide(this.$shrinker);
+            this.sandbox.dom.append($column, this.$shrinker);
         },
 
         /**
          * Bind DOM-related Events
          */
         bindDomEvents: function() {
-            // start centralized resize-listener
-            this.sandbox.dom.on(this.sandbox.dom.$window, 'resize', function() {
-                this.emitContentDimensionsChangedEvent();
-                this.emitViewPortDimensionsChanged();
-            }.bind(this));
-
             // call navigate event for marked a-tags
             this.sandbox.dom.on(this.sandbox.dom.$document, 'click', function(event) {
                 // prevent the default action for the anchor tag
@@ -219,121 +185,54 @@ define(function() {
                     this.emitNavigationEvent({action: event.currentTarget.attributes.href.value}, true, true);
                 }
             }.bind(this), 'a' + constants.suluNavigateAMark);
+
+            this.sandbox.dom.on(this.$shrinker, 'click', this.toggleShrinkColumn.bind(this));
         },
 
         /**
-         * Emits an event with the new dimensions of the viewport
+         * Handler for the sulu.router.navigate event. Calls the backbone-router
+         * @param route {String} the route to navigate to
+         * @param trigger {Boolean} if trigger is true it will be actually navigated to the route. Otherwise only the borswer-url will be updated
+         * @param noLoader {Boolean} if false no loader will be instantiated
          */
-        emitViewPortDimensionsChanged: function() {
-            var width = this.sandbox.dom.width(window),
-                height = this.sandbox.dom.height(window);
+        navigate: function(route, trigger, noLoader) {
+            // if trigger is not define make it always true to actually route to
+            trigger = (typeof trigger !== 'undefined') ? trigger : true;
 
-            this.sandbox.emit(VIEWPORT_DIMENSIONS_CHANGED.call(this), {width: width, height: height});
-        },
+            // only route if route has changed
+            if (this.currentRoute !== route) {
+                this.currentRoute = route;
 
-        /**
-         * Sets the new dimensions of the content-container and
-         * emits the content.dimensions-changed event
-         * @force {Boolean} if true event will gets emited for sure
-         */
-        emitContentDimensionsChangedEvent: function(force) {
-            var newContentDimensions = this.getContentDimensions();
+                if (noLoader !== true && this.currentRoute !== route && this.currentRoute !== null) {
+                    // todo: start loader
+                }
 
-            if (this.contentDimensions.width !== newContentDimensions.width ||
-                this.contentDimensions.left !== newContentDimensions.left ||
-                force === true) {
-
-                this.sandbox.emit(CONTENT_DIMENSIONS_CHANGED.call(this), newContentDimensions);
-                this.contentDimensions = newContentDimensions;
+                // navigate
+                router.navigate(route, {trigger: trigger});
+                this.sandbox.dom.scrollTop(this.sandbox.dom.$window, 0);
             }
         },
 
         /**
-         * Returns an object with the current dimensions of the content container
-         * @returns {{width: number, left: number}}
+         * Cleans things up before navigating
          */
-        getContentDimensions: function() {
-            return {
-                width: this.sandbox.dom.width(this.$el),
-                left: Math.round(
-                    this.sandbox.dom.offset(this.$el).left + parseInt(this.sandbox.dom.css(this.$el, 'padding-left').replace(/[^-\d\.]/g, ''))
-                )
-            };
-        },
+        beforeNavigateCleanup: function() {
+            this.sandbox.dom.remove('.sulu-header-background');
 
-        /**
-         * Starts the Loader if the content is loading
-         */
-        startLoader: function() {
-            var $element = this.sandbox.dom.createElement('<div class="sulu-app-loader">');
-            this.sandbox.dom.css($element, {
-                'margin-top': (this.sandbox.dom.height(this.sandbox.dom.$window) / 2 - 75) + 'px'
-            });
-            this.sandbox.dom.append(this.$el, $element);
-
-            this.sandbox.start([
-                {
-                    name: 'loader@husky',
-                    options: {
-                        el: $element,
-                        size: '150px',
-                        color: '#cacaca'
-                    }
-                }
-            ]);
+            // FIXME App.stop is used in global context; possibly there is a better solution
+            // and the stop method will be called
+            App.stop('#sulu-content-container');
+            App.stop('#sulu-header-container');
+            App.stop('#content > *');
+            App.stop('#preview > *');
         },
 
         /**
          * Bind component-related events
          */
         bindCustomEvents: function() {
-            /**
-             * listening for navigation events
-             * @event sulu.router.navigate
-             * @param {String} route the route to navigate to
-             * @param {Bool} [trigger=true] trigger navigation route
-             * @param {Bool} [noLoader] defines if a loader should be shown
-             */
-            this.sandbox.on('sulu.router.navigate', function(route, trigger, noLoader) {
-
-                // set trigger default to true
-                trigger = (typeof trigger !== 'undefined' && trigger === false) ? false : true;
-
-                if (trigger && this.currentRoute !== route) {
-                    // FIXME - App.stop is used in global context; possibly there is a better solution
-                    // and the stop event will be called
-                    App.stop('#sulu-header-container');
-                    App.stop('#sulu-content-container');
-                    App.stop('#content > *');
-
-                    App.stop('#preview > *');
-                    // remove eventual spacing because of header
-                    this.headerVisible = false;
-                    this.changeTopSpacing();
-                }
-
-                if (trigger) {
-                    // remove eventual full-width and full-height mode
-                    this.removeFullSize();
-                }
-
-                // reset store for cleaning environment
-                this.sandbox.mvc.Store.reset();
-
-                // reset content max-width, which might was set by datagrid-list
-                this.sandbox.dom.css('#content', 'max-width', '');
-
-                // navigate
-                router.navigate(route, {trigger: trigger});
-
-                // move to top
-                this.sandbox.dom.scrollTop(this.sandbox.dom.$window, 0);
-
-                if (noLoader !== true && this.currentRoute !== route && this.currentRoute !== null) {
-                    this.startLoader();
-                }
-                this.currentRoute = route;
-            }.bind(this));
+            // navigate
+            this.sandbox.on('sulu.router.navigate', this.navigate.bind(this));
 
             // navigation event
             this.sandbox.on('husky.navigation.item.select', function(event) {
@@ -356,48 +255,13 @@ define(function() {
                 this.emitNavigationEvent(event, true);
             }.bind(this));
 
-            // emit dimensions-changed event during transition
-            this.sandbox.on('husky.navigation.size.change', function() {
-                this.contentChangeInterval = setInterval(this.emitContentDimensionsChangedEvent.bind(this), 30);
-            }.bind(this));
-
-            // emit dimensions-changed event during transition
-            this.sandbox.on('husky.navigation.size.changed', function() {
-                clearInterval(this.contentChangeInterval);
-                this.emitContentDimensionsChangedEvent();
-            }.bind(this));
-
             // return current url
             this.sandbox.on('navigation.url', function(callbackFunction) {
                 callbackFunction(this.sandbox.mvc.history.fragment);
             }, this);
 
-            // getter event for the content-dimensions
-            this.sandbox.on(GET_CONTENT_DIMENSIONS.call(this), function(callbackFunction) {
-                callbackFunction(this.getContentDimensions());
-            }.bind(this));
-
-            // layout
-            // responsive listeners
-            this.sandbox.on('husky.navigation.size.change', changeContentMarginLeft.bind(this));
-
             this.sandbox.on(HAS_STARTED.call(this), function(callbackFunction) {
                 callbackFunction(true);
-            }.bind(this));
-
-            this.sandbox.on(CONTENT_DIMENSIONS_CHANGE.call(this), function(properties) {
-                this.changeContentStyles(properties);
-            }.bind(this));
-
-            // stop the loader if a view gets initialized
-            this.sandbox.on('sulu.view.initialize', function() {
-                this.sandbox.stop('.sulu-app-loader');
-            }.bind(this));
-
-            // listener for header (add top-spacing)
-            this.sandbox.on('sulu.header.initialized', function() {
-                this.headerVisible = true;
-                this.changeTopSpacing();
             }.bind(this));
 
             // select right navigation-item on navigation startup
@@ -413,134 +277,131 @@ define(function() {
             // change user locale
             this.sandbox.on(CHANGE_USER_LOCALE.call(this), this.changeUserLocale.bind(this));
 
-            // listen for full size mode
-            this.sandbox.on(SET_FULL_SIZE.call(this), this.setFullSize.bind(this));
+            // change the width-type of the content
+            this.sandbox.on(CHANGE_WIDTH.call(this), this.changeWidth.bind(this));
 
-            this.sandbox.on(UI_RESET.call(this), this.resetUI.bind(this));
+            // change the width-type of the content
+            this.sandbox.on(CHANGE_SPACING.call(this), this.changeSpacing.bind(this));
+
+            // toggles the shrinker-button
+            this.sandbox.on(TOGGLE_SHRINKER.call(this), this.toggleShrinker.bind(this));
         },
 
         /**
-         * Sets the container in full-width mode
-         * @param fullwidth {boolean} If true set container in full-width mode
-         * @param fullheight {boolean} If true set container in full-height mode
-         * @param keepPaddings {boolean} If true paddings are kept
+         * Toggles the shrinker-button
+         * @param show {Boolean} if true gets displayed if false hidden
          */
-        setFullSize: function(fullwidth, fullheight, keepPaddings) {
-            if (fullheight === true) {
-                this.sandbox.dom.addClass(this.$el, constants.fullHeightClass);
-            }
-            if (fullwidth === true) {
-                this.sandbox.dom.css(this.$el, {'max-width': ''});
-                this.sandbox.dom.css(this.$el, {'width': ''});
-                this.sandbox.dom.addClass(this.$el, constants.fullWidthClass);
-                if (keepPaddings !== true) {
-                    this.sandbox.dom.addClass(this.$el, constants.noPaddingClass);
-                    this.sandbox.dom.css(this.$el, {'padding-left': ''});
-
-                }
-                this.emitContentDimensionsChangedEvent(true);
-                this.sandbox.dom.trigger(this.sandbox.dom.$window, 'resize');
-            }
-        },
-
-        /**
-         * Removes the full-width and full-height mode from the container
-         */
-        removeFullSize: function() {
-            this.sandbox.dom.removeClass(this.$el, constants.fullHeightClass);
-            this.sandbox.dom.removeClass(this.$el, constants.noPaddingClass);
-            this.sandbox.dom.removeClass(this.$el, constants.fullWidthClass);
-            this.sandbox.emit('sulu.header.unsqueeze');
-        },
-
-        /**
-         * Resets the ui according to the given states
-         * @param states
-         * TODO: move all resetUI handling to css - handle it with just setting CSS-classes
-         */
-        resetUI: function(states) {
-
-            if (!states.content || !states.navigation) {
-                this.sandbox.logger.error('restUI: state for navigation and content are required');
-                return;
-            } else if (states.content === 'small' && states.navigation === 'large') {
-                this.sandbox.logger.error('restUI: invalid state combination');
-                return;
-            }
-
-            // show navigation to be independent of currently active states
-            this.sandbox.emit('husky.navigation.show');
-
-            if (states.navigation === 'small') {
-
-                this.sandbox.emit('husky.navigation.collapse', true);
-
-            } else if (states.navigation === 'large') {
-
-                // worst case navigation is in overlay mode
-                // have to collapse before resize
-                this.sandbox.emit('husky.navigation.collapse', false);
-                this.sandbox.emit('husky.navigation.uncollapse', false);
-
-            } else if (states.navigation === 'auto') {
-
-                // let the navigation decide
-                this.sandbox.emit('husky.navigation.collapse', false);
-                this.sandbox.emit('husky.navigation.size.update');
-
+        toggleShrinker: function(show) {
+            if (show === true) {
+                this.sandbox.dom.show(this.$shrinker);
             } else {
-                this.sandbox.logger.error("resetUI: invalid state for navigation (small or large or auto)!");
-                return;
+                this.sandbox.dom.hide(this.$shrinker);
             }
+        },
 
-            if (states.content === 'large') {
-                this.resetToLargeContent();
-            } else if (states.content === 'small') {
-                this.resetToSmallContent();
-            } else if (states.content === 'auto') {
-                this.restoreContentWidthProperties();
-
+        /**
+         * Click-handler for the shrinker-button. Shrinks or expands the content-column
+         * and hides or shows the navigation
+         */
+        toggleShrinkColumn: function() {
+            var $column = this.sandbox.dom.find(constants.columnSelector);
+            if (this.sandbox.dom.hasClass($column, constants.smallFixedClass)) {
+                // expand
+                this.sandbox.emit('husky.navigation.show');
+                this.sandbox.dom.removeClass($column, constants.smallFixedClass);
+                this.sandbox.dom.removeClass(this.sandbox.dom.find('span', this.$shrinker), constants.expandIcon);
+                this.sandbox.dom.addClass(this.sandbox.dom.find('span', this.$shrinker), constants.shrinkIcon);
             } else {
-                this.sandbox.logger.error("resetUI: invalid state for navigation (small or large)!");
-                return;
+                // shrink
+                this.sandbox.emit('husky.navigation.hide');
+                this.sandbox.dom.addClass($column, constants.smallFixedClass);
+                this.sandbox.dom.removeClass(this.sandbox.dom.find('span', this.$shrinker), constants.shrinkIcon);
+                this.sandbox.dom.addClass(this.sandbox.dom.find('span', this.$shrinker), constants.expandIcon);
+            }
+        },
+
+        /**
+         /**
+         * changes the spacing of the content
+         * @event sulu.app.change-spacing
+         * @param {Boolean} leftSpacing false for no spacing left
+         * @param {Boolean} rightSpacing false for no spacing right
+         * @param {Boolean} topSpacing false for no spacing top
+         */
+        changeSpacing: function(leftSpacing, rightSpacing, topSpacing) {
+            // left space
+            if (leftSpacing === false) {
+                this.sandbox.dom.addClass(this.$el, constants.noLeftSpaceClass);
+            } else {
+                this.sandbox.dom.removeClass(this.$el, constants.noLeftSpaceClass);
             }
 
-            this.sandbox.emit(UI_RESETED.call(this));
+            // right space
+            if (rightSpacing === false) {
+                this.sandbox.dom.addClass(this.$el, constants.noRightSpaceClass);
+            } else {
+                this.sandbox.dom.removeClass(this.$el, constants.noRightSpaceClass);
+            }
+
+            // top space
+            if (topSpacing === false) {
+                this.sandbox.dom.addClass(this.$el, constants.noTopSpaceClass);
+            } else {
+                this.sandbox.dom.removeClass(this.$el, constants.noTopSpaceClass);
+            }
         },
 
         /**
-         * Resets the content to the large state
+         * Changes the width of content to fixed or to max
+         * @param width {String} the new type of width to apply to the content. 'fixed' or 'max'
          */
-        resetToLargeContent: function() {
-            this.changeContentStyles({
-                width: constants.contentMaxWidth,
-                left: constants.contentMaxMarginLeft,
-                paddingLeft: constants.contentMaxPaddingLeft});
-
-            this.restoreContentWidthProperties();
+        changeWidth: function(width) {
+            if (width === 'fixed') {
+                this.changeToFixedWidth(false);
+            } else if (width === 'max') {
+                this.changeToMaxWidth();
+            } else if (width === 'fixed-small') {
+                this.changeToFixedWidth(true);
+            }
         },
 
         /**
-         * Removes possible width attribute and width css property and resets max-width
+         * Ensures that the width of the content is fixed
+         * (it just sets a css-class which contains a width property)
+         * @param small {Boolean} if true small-class gets added
          */
-        restoreContentWidthProperties: function() {
-            this.sandbox.dom.width(this.$el, '');
-            this.sandbox.dom.css(this.$el, 'width', '');
-            this.sandbox.dom.css(this.$el, 'max-width', '920px');
+        changeToFixedWidth: function(small) {
+            var $column = this.sandbox.dom.find(constants.columnSelector);
+
+            if (!this.sandbox.dom.hasClass($column, constants.fixedWidthClass)) {
+                this.sandbox.dom.removeClass($column, constants.maxWidthClass);
+                this.sandbox.dom.addClass($column, constants.fixedWidthClass);
+            }
+            if (small === true) {
+                this.sandbox.dom.addClass($column, constants.smallFixedClass);
+            } else {
+                this.sandbox.dom.removeClass($column, constants.smallFixedClass);
+            }
         },
 
         /**
-         * Resets the content to the small state
+         * Makes the content take the maximum of the available space
          */
-        resetToSmallContent: function() {
-            this.changeContentStyles({
-                width: constants.contentMinWidth,
-                left: constants.contentMinMarginLeft,
-                paddingLeft: constants.contentMinPaddingLeft});
+        changeToMaxWidth: function() {
+            var $column = this.sandbox.dom.find(constants.columnSelector);
 
-            this.sandbox.dom.width(this.$el, '');
-            this.sandbox.dom.css(this.$el, 'width', '');
-            this.sandbox.dom.css(this.$el, 'max-width', '510px');
+            if (!this.sandbox.dom.hasClass($column, constants.maxWidthClass)) {
+                var $parent = this.sandbox.dom.parent($column);
+
+                this.sandbox.dom.removeClass($column, constants.smallFixedClass);
+                this.sandbox.dom.removeClass($column, constants.fixedWidthClass);
+                this.sandbox.dom.addClass($column, constants.maxWidthClass);
+
+                // make sure the column is the last child of its parent. Otherwise
+                // it isn't possible to take the max width
+                this.sandbox.dom.detach($column);
+                this.sandbox.dom.append($parent, $column);
+            }
         },
 
         /**
@@ -561,41 +422,6 @@ define(function() {
                     this.sandbox.dom.window.location.reload();
                 }.bind(this)
             });
-        },
-
-        /**
-         * Takes an object with styles and applies it to the app-content
-         * @param styles
-         */
-        changeContentStyles: function(styles) {
-            //Todo: change animate to css-transition
-            this.sandbox.dom.animate(this.$el, {
-                width: styles.width + 'px',
-                paddingLeft: styles.paddingLeft + 'px'
-            }, {
-                duration: 500,
-                queue: false,
-                progress: this.emitContentDimensionsChangedEvent.bind(this)
-            });
-
-            changeContentMarginLeft.call(this, styles.left);
-        },
-
-        /**
-         * Adds spacing to the top if there is a header, removes it if there isn't any
-         */
-        changeTopSpacing: function() {
-            if (this.headerVisible === true) {
-                this.sandbox.emit('sulu.header.get-height', function(height) {
-                    this.sandbox.dom.css(this.$el, {
-                        'padding-top': height + 'px'
-                    });
-                }.bind(this));
-            } else {
-                this.sandbox.dom.css(this.$el, {
-                    'padding-top': '0'
-                });
-            }
         },
 
         /**
