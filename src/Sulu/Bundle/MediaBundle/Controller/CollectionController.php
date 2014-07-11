@@ -14,6 +14,7 @@ use DateTime;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Put;
+use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Bundle\MediaBundle\Api\Collection;
 use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface;
 use Sulu\Bundle\MediaBundle\Entity\Collection as CollectionEntity;
@@ -145,18 +146,8 @@ class CollectionController extends RestController implements ClassResourceInterf
         $cm = $this->getCollectionManager();
         $collections = $cm->find($parent, $depth);
         $wrappers = $cm->getApiObjects($collections, $this->getLocale($request->get('locale')));
-        $halResponse = $this->createHalResponse($wrappers, true);
-        //add children link to hal-links array
-        $halResponse['_links']['children'] = $this->replaceOrAddUrlString(
-            $halResponse['_links']['self'],
-            'parent=', '{parentId}'
-        );
-        // remove depth parameter from children hal-link
-        $halResponse['_links']['children'] = $this->replaceOrAddUrlString(
-            $halResponse['_links']['children'],
-            'depth=', null
-        );
-        $view = $this->view($halResponse, 200);
+        $collection = new CollectionRepresentation($wrappers, 'collections');
+        $view = $this->view($collection, 200);
         return $this->handleView($view);
     }
 
