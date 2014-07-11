@@ -595,6 +595,7 @@ class UserController extends RestController implements ClassResourceInterface
     /**
      * Returns a user with a specific contact id or all users
      * optional parameter 'flat' calls listAction
+     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function cgetAction(Request $request)
@@ -619,5 +620,4 @@ class UserController extends RestController implements ClassResourceInterface
         }
         return $this->handleView($view);
     }
-
 }
