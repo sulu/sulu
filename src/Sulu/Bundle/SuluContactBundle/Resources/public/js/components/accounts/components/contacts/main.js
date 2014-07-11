@@ -174,8 +174,12 @@ define([
     return {
         view: true,
 
-        fullSize: {
-            width: true
+        layout: {
+            content: {
+                width: 'max',
+                leftSpace: false,
+                rightSpace: false
+            }
         },
 
         templates: ['/admin/contact/template/contact/list'],

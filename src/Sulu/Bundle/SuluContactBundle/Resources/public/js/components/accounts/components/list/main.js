@@ -121,8 +121,12 @@ define([
 
         view: true,
 
-        fullSize: {
-            width: true
+        layout: {
+            content: {
+                width: 'max',
+                leftSpace: false,
+                rightSpace: false
+            }
         },
 
         header: function() {
