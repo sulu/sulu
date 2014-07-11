@@ -88,7 +88,7 @@ define([], function() {
                     name: 'auto-complete@husky',
                     options: {
                         el: '#company',
-                        remoteUrl: '/admin/api/accounts?searchFields=id,name&flat=true',
+                        remoteUrl: '/admin/api/accounts?searchFields=name&fields=id,name&flat=true',
                         getParameter: 'search',
                         value: !!data.parent ? data.parent : null,
                         instanceName: 'companyAccount' + data.id,
