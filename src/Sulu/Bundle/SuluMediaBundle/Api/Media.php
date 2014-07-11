@@ -316,7 +316,7 @@ class Media extends ApiEntityWrapper
     {
         $type = $this->entity->getType();
         if ($type) {
-            return $type->getId();
+            return $type->getName();
         }
         return null;
     }
