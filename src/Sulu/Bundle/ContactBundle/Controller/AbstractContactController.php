@@ -49,62 +49,6 @@ abstract class AbstractContactController extends RestController implements Class
     }
 
     /**
-     * sets Entity's Main-Email
-     * @param Contact|Account $entity
-     */
-    protected function setMainEmail($entity)
-    {
-        // set main to first entry or to null
-        if ($entity->getEmails()->isEmpty()) {
-            $entity->setMainEmail(null);
-        } else {
-            $entity->setMainEmail($entity->getEmails()->first()->getEmail());
-        }
-    }
-
-    /**
-     * sets Entity's Main-Phone
-     * @param Contact|Account $entity
-     */
-    protected function setMainPhone($entity)
-    {
-        // set main to first entry or to null
-        if ($entity->getPhones()->isEmpty()) {
-            $entity->setMainPhone(null);
-        } else {
-            $entity->setMainPhone($entity->getPhones()->first()->getPhone());
-        }
-    }
-
-    /**
-     * sets Entity's Main-Fax
-     * @param Contact|Account $entity
-     */
-    protected function setMainFax($entity)
-    {
-        // set main to first entry or to null
-        if ($entity->getFaxes()->isEmpty()) {
-            $entity->setMainFax(null);
-        } else {
-            $entity->setMainFax($entity->getFaxes()->first()->getFax());
-        }
-    }
-
-    /**
-     * sets Entity's Main-Url
-     * @param Contact|Account $entity
-     */
-    protected function setMainUrl($entity)
-    {
-        // set main to first entry or to null
-        if ($entity->getUrls()->isEmpty()) {
-            $entity->setMainUrl(null);
-        } else {
-            $entity->setMainUrl($entity->getUrls()->first()->getUrl());
-        }
-    }
-
-    /**
      * adds new relations
      * @param $contact
      * @param Request $request
@@ -119,7 +63,7 @@ abstract class AbstractContactController extends RestController implements Class
             foreach ($urls as $urlData) {
                 $this->addUrl($contact, $urlData);
             }
-            $this->setMainUrl($contact);
+            $this->getContactManager()->setMainUrl($contact);
         }
 
         //faxes
@@ -128,7 +72,7 @@ abstract class AbstractContactController extends RestController implements Class
             foreach ($faxes as $faxData) {
                 $this->addFax($contact, $faxData);
             }
-            $this->setMainFax($contact);
+            $this->getContactManager()->setMainFax($contact);
         }
 
         // emails
@@ -137,7 +81,7 @@ abstract class AbstractContactController extends RestController implements Class
             foreach ($emails as $emailData) {
                 $this->addEmail($contact, $emailData);
             }
-            $this->setMainEmail($contact);
+            $this->getContactManager()->setMainEmail($contact);
         }
 
         // phones
@@ -146,7 +90,7 @@ abstract class AbstractContactController extends RestController implements Class
             foreach ($phones as $phoneData) {
                 $this->addPhone($contact, $phoneData);
             }
-            $this->setMainPhone($contact);
+            $this->getContactManager()->setMainPhone($contact);
         }
 
         // addresses
@@ -199,7 +143,7 @@ abstract class AbstractContactController extends RestController implements Class
 
         $result = $this->processPut($contact->getEmails(), $emails, $delete, $update, $add);
         // check main
-        $this->setMainEmail($contact);
+        $this->getContactManager()->setMainEmail($contact);
 
         return $result;
     }
@@ -287,7 +231,7 @@ abstract class AbstractContactController extends RestController implements Class
 
         $result = $this->processPut($contact->getUrls(), $urls, $delete, $update, $add);
         // check main
-        $this->setMainUrl($contact);
+        $this->getContactManager()->setMainUrl($contact);
 
         return $result;
     }
@@ -374,7 +318,7 @@ abstract class AbstractContactController extends RestController implements Class
 
         $result = $this->processPut($contact->getPhones(), $phones, $delete, $update, $add);
         // check main
-        $this->setMainPhone($contact);
+        $this->getContactManager()->setMainPhone($contact);
 
         return $result;
     }
@@ -464,7 +408,7 @@ abstract class AbstractContactController extends RestController implements Class
 
         $result = $this->processPut($contact->getFaxes(), $faxes, $delete, $update, $add);
         // check main
-        $this->setMainFax($contact);
+        $this->getContactManager()->setMainFax($contact);
 
         return $result;
     }

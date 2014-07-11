@@ -78,4 +78,60 @@ abstract class AbstractContactManager implements ContactManagerInterface
         }
         return false;
     }
+
+    /**
+     * sets Entity's Main-Email
+     * @param Contact|Account $entity
+     */
+    public function setMainEmail($entity)
+    {
+        // set main to first entry or to null
+        if ($entity->getEmails()->isEmpty()) {
+            $entity->setMainEmail(null);
+        } else {
+            $entity->setMainEmail($entity->getEmails()->first()->getEmail());
+        }
+    }
+
+    /**
+     * sets Entity's Main-Phone
+     * @param Contact|Account $entity
+     */
+    public function setMainPhone($entity)
+    {
+        // set main to first entry or to null
+        if ($entity->getPhones()->isEmpty()) {
+            $entity->setMainPhone(null);
+        } else {
+            $entity->setMainPhone($entity->getPhones()->first()->getPhone());
+        }
+    }
+
+    /**
+     * sets Entity's Main-Fax
+     * @param Contact|Account $entity
+     */
+    public function setMainFax($entity)
+    {
+        // set main to first entry or to null
+        if ($entity->getFaxes()->isEmpty()) {
+            $entity->setMainFax(null);
+        } else {
+            $entity->setMainFax($entity->getFaxes()->first()->getFax());
+        }
+    }
+
+    /**
+     * sets Entity's Main-Url
+     * @param Contact|Account $entity
+     */
+    public function setMainUrl($entity)
+    {
+        // set main to first entry or to null
+        if ($entity->getUrls()->isEmpty()) {
+            $entity->setMainUrl(null);
+        } else {
+            $entity->setMainUrl($entity->getUrls()->first()->getUrl());
+        }
+    }
 }

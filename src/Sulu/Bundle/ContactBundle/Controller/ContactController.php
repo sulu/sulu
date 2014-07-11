@@ -568,7 +568,7 @@ class ContactController extends AbstractContactController
     }
 
     /**
-     * @return ContactManagerInterface
+     * @return AbstractContactManager
      */
     protected function getContactManager()
     {

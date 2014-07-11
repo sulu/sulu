@@ -20,6 +20,8 @@ services:
         class: %sulu_contact.import.class%
         arguments:
           - @doctrine.orm.entity_manager
+          - @sulu_contact.account_manager
+          - @sulu_contact.contact_manager
           - %sulu_contact.defaults%
           - %sulu_contact.account_types%
           - %sulu_contact.form_of_address%
