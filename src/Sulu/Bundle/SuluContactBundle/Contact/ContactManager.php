@@ -47,16 +47,6 @@ class ContactManager extends AbstractContactManager
     }
 
     /**
-     * Returns a collection of relations to get addresses
-     * @param $entity
-     * @return mixed
-     */
-    public function getAddressRelations($entity)
-    {
-        return $entity->getContactAddresses();
-    }
-
-    /**
      * removes the address relation from a contact and also deletes the address if it has no more relations
      * @param $contact
      * @param $contactAddress
@@ -69,7 +59,10 @@ class ContactManager extends AbstractContactManager
             throw new \Exception('Contact and ContactAddress cannot be null');
         }
 
+        // reload address to get all data (including relational data)
         $address = $contactAddress->getAddress();
+        $address = $this->em->getRepository('SuluContactBundle:Address')->findById($address->getId());
+
         $isMain = $contactAddress->getMain();
 
         // remove relation
@@ -87,5 +80,15 @@ class ContactManager extends AbstractContactManager
         }
 
         $this->$em->remove($contactAddress);
+    }
+
+    /**
+     * Returns a collection of relations to get addresses
+     * @param $entity
+     * @return mixed
+     */
+    public function getAddressRelations($entity)
+    {
+        return $entity->getContactAddresses();
     }
 }

@@ -108,10 +108,11 @@ abstract class AbstractContactController extends RestController implements Class
      * adds new relations
      * @param $contact
      * @param Request $request
-     * @param AbstractContactManager $contactManager
      */
-    protected function addNewContactRelations($contact, Request $request, AbstractContactManager $contactManager)
+    protected function addNewContactRelations($contact, Request $request)
     {
+        $contactManager = $this->getContactManager();
+
         // urls
         $urls = $request->get('urls');
         if (!empty($urls)) {
@@ -156,6 +157,8 @@ abstract class AbstractContactController extends RestController implements Class
                 $contactManager->addAddress($contact, $address, $isMain);
             }
         }
+        // set main address (if it was not set yet)
+        $contactManager->setMainForCollection($contactManager->getAddressRelations($contact));
 
         // notes
         $notes = $request->get('notes');
@@ -559,6 +562,8 @@ abstract class AbstractContactController extends RestController implements Class
 
             if (isset($addressData['primaryAddress'])) {
                 $isMain = $this->getBooleanValue($addressData['primaryAddress']);
+            } else {
+                $isMain = false;
             }
             if (isset($addressData['billingAddress'])) {
                 $address->setBillingAddress($this->getBooleanValue($addressData['billingAddress']));
@@ -627,6 +632,8 @@ abstract class AbstractContactController extends RestController implements Class
 
                 if (isset($entry['primaryAddress'])) {
                     $isMain = $this->getBooleanValue($entry['primaryAddress']);
+                } else {
+                    $isMain = false;
                 }
                 if (isset($entry['billingAddress'])) {
                     $address->setBillingAddress($this->getBooleanValue($entry['billingAddress']));

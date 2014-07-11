@@ -413,7 +413,7 @@ class AccountController extends AbstractContactController
             $account->setChanger($this->getUser());
 
             // add urls, phones, emails, tags, bankAccounts, notes, addresses,..
-            $this->addNewContactRelations($account, $request, $this->getContactManager());
+            $this->addNewContactRelations($account, $request);
 
             $this->processTerms($request, $account);
 
@@ -666,6 +666,8 @@ class AccountController extends AbstractContactController
             }
 
             $em = $this->getDoctrine()->getManager();
+
+            // TODO: handle addresses
 
             // remove related contacts if removeContacts is true
             if (!is_null($request->get('removeContacts')) &&

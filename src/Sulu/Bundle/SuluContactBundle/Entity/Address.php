@@ -543,4 +543,14 @@ class Address
         }
         return false;
     }
+
+    /**
+     * Remove contactAddresses
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\ContactAddress $contactAddresses
+     */
+    public function removeContactAddresse(\Sulu\Bundle\ContactBundle\Entity\ContactAddress $contactAddresses)
+    {
+        $this->contactAddresses->removeElement($contactAddresses);
+    }
 }
