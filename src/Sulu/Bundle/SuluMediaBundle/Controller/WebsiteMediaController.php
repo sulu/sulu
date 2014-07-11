@@ -17,6 +17,7 @@ use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyException;
 use Sulu\Bundle\MediaBundle\Media\Exception\InvalidFileVersionException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaException;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
+use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Config\Definition\Exception\Exception;
@@ -33,6 +34,11 @@ class WebsiteMediaController extends Controller
      * @var FormatManagerInterface
      */
     protected $cacheManager = null;
+
+    /**
+     * @var MediaManagerInterface
+     */
+    protected $mediaManager = null;
 
     /**
      * @var StorageInterface
@@ -71,7 +77,7 @@ class WebsiteMediaController extends Controller
             $fileVersion = $this->getFileVersion($id, $version);
 
             if (!$noCount) {
-                $this->updateDownloadCounter($fileVersion);
+                $this->getMediaManager()->increaseDownloadCounter($fileVersion->getId());
             }
 
             $response = $this->getFileResponse($fileVersion);
@@ -115,21 +121,6 @@ class WebsiteMediaController extends Controller
         $response->headers->set('Content-length', $fileSize);
 
         return $response;
-    }
-
-    /**
-     * @param FileVersion $fileVersion
-     */
-    protected function updateDownloadCounter($fileVersion)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $query = $em->createQueryBuilder()->update('SuluMediaBundle:FileVersion', 'fV')
-            ->set('fV.downloadCounter', 'fV.downloadCounter + 1')
-            ->where('fV.id = :id')
-            ->setParameter('id', $fileVersion->getId())
-            ->getQuery();
-
-        $query->execute();
     }
 
     /**
@@ -179,6 +170,19 @@ class WebsiteMediaController extends Controller
         }
 
         return $this->cacheManager;
+    }
+
+    /**
+     * getMediaManager
+     * @return MediaManagerInterface
+     */
+    protected function getMediaManager()
+    {
+        if ($this->mediaManager === null) {
+            $this->mediaManager = $this->get('sulu_media.media_manager');
+        }
+
+        return $this->mediaManager;
     }
 
     /**

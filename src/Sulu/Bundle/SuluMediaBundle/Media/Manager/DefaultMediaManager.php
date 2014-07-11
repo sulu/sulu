@@ -596,4 +596,18 @@ class DefaultMediaManager implements MediaManagerInterface
         $this->em->remove($media);
         $this->em->flush();
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function increaseDownloadCounter($fileVersionId)
+    {
+        $query = $this->em->createQueryBuilder()->update('SuluMediaBundle:FileVersion', 'fV')
+            ->set('fV.downloadCounter', 'fV.downloadCounter + 1')
+            ->where('fV.id = :id')
+            ->setParameter('id', $fileVersionId)
+            ->getQuery();
+
+        $query->execute();
+    }
 }
