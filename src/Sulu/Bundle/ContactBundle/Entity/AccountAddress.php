@@ -5,9 +5,9 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * AccountContact
+ * AccountAddress
  */
-class AccountContact
+class AccountAddress
 {
     /**
      * @var boolean
@@ -20,9 +20,9 @@ class AccountContact
     private $id;
 
     /**
-     * @var \Sulu\Bundle\ContactBundle\Entity\Contact
+     * @var \Sulu\Bundle\ContactBundle\Entity\Address
      */
-    private $contact;
+    private $address;
 
     /**
      * @var \Sulu\Bundle\ContactBundle\Entity\Account
@@ -34,7 +34,7 @@ class AccountContact
      * Set main
      *
      * @param boolean $main
-     * @return AccountContact
+     * @return AccountAddress
      */
     public function setMain($main)
     {
@@ -64,33 +64,33 @@ class AccountContact
     }
 
     /**
-     * Set contact
+     * Set address
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Contact $contact
-     * @return AccountContact
+     * @param \Sulu\Bundle\ContactBundle\Entity\Address $address
+     * @return AccountAddress
      */
-    public function setContact(\Sulu\Bundle\ContactBundle\Entity\Contact $contact)
+    public function setAddress(\Sulu\Bundle\ContactBundle\Entity\Address $address)
     {
-        $this->contact = $contact;
+        $this->address = $address;
     
         return $this;
     }
 
     /**
-     * Get contact
+     * Get address
      *
-     * @return \Sulu\Bundle\ContactBundle\Entity\Contact 
+     * @return \Sulu\Bundle\ContactBundle\Entity\Address 
      */
-    public function getContact()
+    public function getAddress()
     {
-        return $this->contact;
+        return $this->address;
     }
 
     /**
      * Set account
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Account $account
-     * @return AccountContact
+     * @return AccountAddress
      */
     public function setAccount(\Sulu\Bundle\ContactBundle\Entity\Account $account)
     {
@@ -107,33 +107,5 @@ class AccountContact
     public function getAccount()
     {
         return $this->account;
-    }
-    /**
-     * @var string
-     */
-    private $position;
-
-
-    /**
-     * Set position
-     *
-     * @param string $position
-     * @return AccountContact
-     */
-    public function setPosition($position)
-    {
-        $this->position = $position;
-
-        return $this;
-    }
-
-    /**
-     * Get position
-     *
-     * @return string
-     */
-    public function getPosition()
-    {
-        return $this->position;
     }
 }

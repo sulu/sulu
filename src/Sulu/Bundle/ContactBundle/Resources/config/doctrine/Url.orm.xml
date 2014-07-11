@@ -7,7 +7,6 @@
             <generator strategy="AUTO"/>
         </id>
         <field name="url" type="string" column="url" length="255"/>
-        <field name="main" type="boolean" column="main" nullable="false"/>
         <many-to-one field="urlType" target-entity="Sulu\Bundle\ContactBundle\Entity\UrlType" inversed-by="urls">
             <join-columns>
                 <join-column name="idUrlTypes" referenced-column-name="id" nullable="false"/>

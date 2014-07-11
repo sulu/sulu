@@ -14,6 +14,7 @@ namespace Sulu\Bundle\ContactBundle\Tests\Functional\Controller;
 use DateTime;
 use Doctrine\ORM\Tools\SchemaTool;
 use Sulu\Bundle\ContactBundle\Entity\Account;
+use Sulu\Bundle\ContactBundle\Entity\AccountAddress;
 use Sulu\Bundle\ContactBundle\Entity\AccountCategory;
 use Sulu\Bundle\ContactBundle\Entity\AccountContact;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
@@ -62,7 +63,6 @@ class AccountControllerTest extends DatabaseTestCase
         $url = new Url();
         $url->setUrl('http://www.company.example');
         $url->setUrlType($urlType);
-        $url->setMain(true);
         self::$account->addUrl($url);
 
         $emailType = new EmailType();
@@ -71,14 +71,12 @@ class AccountControllerTest extends DatabaseTestCase
         $email = new Email();
         $email->setEmail('office@company.example');
         $email->setEmailType($emailType);
-        $email->setMain(true);
         self::$account->addEmail($email);
 
         $phoneType = new PhoneType();
         $phoneType->setName('Private');
 
         $phone = new Phone();
-        $phone->setMain(true);
         $phone->setPhone('123456789');
         $phone->setPhoneType($phoneType);
         self::$account->addPhone($phone);
@@ -89,7 +87,6 @@ class AccountControllerTest extends DatabaseTestCase
         $fax = new Fax();
         $fax->setFax('123654789');
         $fax->setFaxType($faxType);
-        $fax->setMain(true);
         self::$account->addFax($fax);
 
         $country = new Country();
@@ -113,8 +110,13 @@ class AccountControllerTest extends DatabaseTestCase
         $address->setPostboxCity("Dornbirn");
         $address->setPostboxPostcode("6850");
         $address->setPostboxNumber("4711");
-        self::$account->addAddresse($address);
 
+        $accountAddress = new AccountAddress();
+        $accountAddress->setAddress($address);
+        $accountAddress->setAccount(self::$account);
+        $accountAddress->setMain(true);
+        self::$account->addAccountAddresse($accountAddress);
+        $address->addAccountAddresse($accountAddress);
 
         $contact = new Contact();
         $contact->setFirstName("Vorname");
@@ -146,6 +148,7 @@ class AccountControllerTest extends DatabaseTestCase
         self::$em->persist($country);
         self::$em->persist($addressType);
         self::$em->persist($address);
+        self::$em->persist($accountAddress);
         self::$em->persist($note);
         self::$em->persist($faxType);
         self::$em->persist($fax);
@@ -175,6 +178,8 @@ class AccountControllerTest extends DatabaseTestCase
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ActivityStatus'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Address'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AddressType'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AccountAddress'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ContactAddress'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\BankAccount'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Contact'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ContactLocale'),
@@ -283,8 +288,7 @@ class AccountControllerTest extends DatabaseTestCase
                         'urlType' => array(
                             'id' => '1',
                             'name' => 'Private'
-                        ),
-                        'main' => 'true'
+                        )
                     )
                 ),
                 'emails' => array(
@@ -293,16 +297,14 @@ class AccountControllerTest extends DatabaseTestCase
                         'emailType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        ),
-                        'main' => 'true'
+                        )
                     ),
                     array(
                         'email' => 'erika.mustermann@muster.de',
                         'emailType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        ),
-                        'main' => 'false'
+                        )
                     )
                 ),
                 'phones' => array(
@@ -311,16 +313,14 @@ class AccountControllerTest extends DatabaseTestCase
                         'phoneType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        ),
-                        'main' => 'true'
+                        )
                     ),
                     array(
                         'phone' => '987654321',
                         'phoneType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        ),
-                        'main' => 'false'
+                        )
                     )
                 ),
                 'faxes' => array(
@@ -329,16 +329,14 @@ class AccountControllerTest extends DatabaseTestCase
                         'faxType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        ),
-                        'main' => 'true'
+                        )
                     ),
                     array(
                         'fax' => '987654321-1',
                         'faxType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        ),
-                        'main' => 'false'
+                        )
                     )
                 ),
                 'addresses' => array(
@@ -447,8 +445,7 @@ class AccountControllerTest extends DatabaseTestCase
                         'urlType' => array(
                             'id' => '1',
                             'name' => 'Private'
-                        ),
-                        'main' => 'true'
+                        )
                     )
                 ),
                 'emails' => array(
@@ -457,16 +454,14 @@ class AccountControllerTest extends DatabaseTestCase
                         'emailType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        ),
-                        'main' => 'true'
+                        )
                     ),
                     array(
                         'email' => 'erika.mustermann@muster.de',
                         'emailType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        ),
-                        'main' => 'false'
+                        )
                     )
                 ),
                 'phones' => array(
@@ -475,16 +470,14 @@ class AccountControllerTest extends DatabaseTestCase
                         'phoneType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        ),
-                        'main' => 'true'
+                        )
                     ),
                     array(
                         'phone' => '987654321',
                         'phoneType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        ),
-                        'main' => 'false'
+                        )
                     )
                 ),
                 'faxes' => array(
@@ -493,16 +486,14 @@ class AccountControllerTest extends DatabaseTestCase
                         'faxType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        ),
-                        'main' => 'true'
+                        )
                     ),
                     array(
                         'fax' => '987654321-1',
                         'faxType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        ),
-                        'main' => 'false'
+                        )
                     )
                 ),
                 'addresses' => array(
@@ -637,16 +628,14 @@ class AccountControllerTest extends DatabaseTestCase
                         'emailType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        ),
-                        'main' => 'false'
+                        )
                     ),
                     array(
                         'email' => 'erika.mustermann@muster.de',
                         'emailType' => array(
                             'id' => 1,
                             'name' => 'Work'
-                        ),
-                        'main' => 'false'
+                        )
                     )
                 ),
             )
@@ -668,16 +657,14 @@ class AccountControllerTest extends DatabaseTestCase
                         'phoneType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        ),
-                        'main' => 'true'
+                        )
                     ),
                     array(
                         'phone' => '987654321',
                         'phoneType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        ),
-                        'main' => 'false'
+                        )
                     )
                 ),
             )
@@ -751,8 +738,7 @@ class AccountControllerTest extends DatabaseTestCase
                         'urlType' => array(
                             'id' => '2',
                             'name' => 'Work'
-                        ),
-                        'main' => 'false'
+                        )
                     )
                 )
             )
@@ -777,16 +763,14 @@ class AccountControllerTest extends DatabaseTestCase
                         'emailType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        ),
-                        'main' => 'false'
+                        )
                     ),
                     array(
                         'email' => 'erika.mustermann@muster.de',
                         'emailType' => array(
                             'id' => 2,
                             'name' => 'Work'
-                        ),
-                        'main' => 'false'
+                        )
                     )
                 ),
             )
@@ -811,16 +795,14 @@ class AccountControllerTest extends DatabaseTestCase
                         'phoneType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        ),
-                        'main' => 'false'
+                        )
                     ),
                     array(
                         'phone' => '987654321',
                         'phoneType' => array(
                             'id' => 2,
                             'name' => 'Work'
-                        ),
-                        'main' => 'false'
+                        )
                     )
                 ),
             )
@@ -879,8 +861,7 @@ class AccountControllerTest extends DatabaseTestCase
                         'faxType' => array(
                             'id' => 2,
                             'name' => 'Work'
-                        ),
-                        'main' => 'false'
+                        )
                     )
                 ),
             )
@@ -1810,7 +1791,7 @@ class AccountControllerTest extends DatabaseTestCase
                     ),
                     array(
                         'street' => 'Musterstraße',
-                        'number' => '1',
+                        'number' => '2',
                         'zip' => '0000',
                         'city' => 'Musterstadt',
                         'state' => 'Musterstate',
@@ -1836,14 +1817,14 @@ class AccountControllerTest extends DatabaseTestCase
 
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(true,$response->addresses[0]->primaryAddress);
-        $this->assertEquals(false,$response->addresses[1]->primaryAddress);
+        $this->assertEquals(false,$response->addresses[0]->primaryAddress);
+        $this->assertEquals(true,$response->addresses[1]->primaryAddress);
 
         $client->request('GET', '/api/accounts/' . $response->id);
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(true,$response->addresses[0]->primaryAddress);
-        $this->assertEquals(false,$response->addresses[1]->primaryAddress);
+        $this->assertEquals(false,$response->addresses[0]->primaryAddress);
+        $this->assertEquals(true,$response->addresses[1]->primaryAddress);
 
     }
 
@@ -1963,8 +1944,8 @@ class AccountControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertEquals(false,$response->addresses[0]->primaryAddress);
-        $this->assertEquals(true,$response->addresses[1]->primaryAddress);
-        $this->assertEquals(false,$response->addresses[2]->primaryAddress);
+        $this->assertEquals(false,$response->addresses[1]->primaryAddress);
+        $this->assertEquals(true,$response->addresses[2]->primaryAddress);
 
         $client->request(
             'GET',
@@ -1974,8 +1955,8 @@ class AccountControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertEquals(false,$response->addresses[0]->primaryAddress);
-        $this->assertEquals(true,$response->addresses[1]->primaryAddress);
-        $this->assertEquals(false,$response->addresses[2]->primaryAddress);
+        $this->assertEquals(false,$response->addresses[1]->primaryAddress);
+        $this->assertEquals(true,$response->addresses[2]->primaryAddress);
     }
 
     public function testTriggerAction()

@@ -2,7 +2,7 @@
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-    <entity name="Sulu\Bundle\ContactBundle\Entity\Address" table="co_addresses">
+    <entity name="Sulu\Bundle\ContactBundle\Entity\Address" table="co_addresses" repository-class="Sulu\Bundle\ContactBundle\Entity\AddressRepository">
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
         </id>
@@ -22,6 +22,9 @@
         <field name="postboxPostcode" type="string" column="postboxPostcode" length="100" nullable="true" />
         <field name="postboxCity" type="string" column="postboxCity" length="100" nullable="true" />
 
+        <one-to-many field="contactAddresses" target-entity="Sulu\Bundle\ContactBundle\Entity\ContactAddress" mapped-by="address"/>
+        <one-to-many field="accountAddresses" target-entity="Sulu\Bundle\ContactBundle\Entity\AccountAddress" mapped-by="address"/>
+
         <many-to-one field="addressType" target-entity="Sulu\Bundle\ContactBundle\Entity\AddressType"
                      inversed-by="addresses">
             <join-columns>
@@ -34,9 +37,5 @@
                 <join-column name="idCountries" referenced-column-name="id" nullable="false"/>
             </join-columns>
         </many-to-one>
-
-        <many-to-many field="contacts" target-entity="Sulu\Bundle\ContactBundle\Entity\Contact" mapped-by="addresses"/>
-        <many-to-many field="accounts" target-entity="Sulu\Bundle\ContactBundle\Entity\Account" mapped-by="addresses"/>
-
     </entity>
 </doctrine-mapping>
