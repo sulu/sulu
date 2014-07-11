@@ -268,7 +268,7 @@ class CollectionControllerTest extends DatabaseTestCase
 
         $this->assertNotEmpty($response);
 
-        $this->assertEquals(2, count($response->_embedded->collections));
+        $this->assertEquals(2, $response->total);
 
         // check if first entity is unchanged
         $this->assertTrue(isset($response->_embedded->collections[0]));
@@ -350,7 +350,7 @@ class CollectionControllerTest extends DatabaseTestCase
 
         $this->assertNotEmpty($response);
 
-        $this->assertEquals(2, count($response->_embedded->collections));
+        $this->assertEquals(2, $response->total);
 
         // check if first entity is unchanged
         $this->assertTrue(isset($response->_embedded->collections[0]));
@@ -398,7 +398,7 @@ class CollectionControllerTest extends DatabaseTestCase
 
         $this->assertNotEmpty($response);
 
-        $this->assertEquals(2, count($response->_embedded->collections));
+        $this->assertEquals(2, $response->total);
 
         // check if first entity is unchanged
         $this->assertTrue(isset($response->_embedded->collections[0]));
@@ -526,7 +526,7 @@ class CollectionControllerTest extends DatabaseTestCase
 
         $this->assertNotEmpty($response);
 
-        $this->assertEquals(1, count($response->_embedded->collections));
+        $this->assertEquals(1, $response->total);
 
         $this->assertTrue(isset($response->_embedded->collections[0]));
         $responseFirstEntity = $response->_embedded->collections[0];
@@ -653,6 +653,6 @@ class CollectionControllerTest extends DatabaseTestCase
 
         $client->request('GET', '/api/collections?flat=true');
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(1, count($response->_embedded->collections));
+        $this->assertEquals(1, $response->total);
     }
 }

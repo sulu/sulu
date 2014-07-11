@@ -23,6 +23,7 @@ use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\DoctrineListBuilderFactory;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
+use Sulu\Component\Rest\ListBuilder\ListRestHelperInterface;
 use Sulu\Component\Rest\RestController;
 use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Security\UserInterface;
@@ -103,10 +104,25 @@ class MediaController extends RestController implements ClassResourceInterface
             $ids = explode(',', $ids);
         }
 
+        /** @var ListRestHelperInterface $listRestHelper */
+        $listRestHelper = $this->get('sulu_core.list_rest_helper');
+
         $mM = $this->getMediaManager();
-        $media = $mM->find($collection, $ids, $limit);
-        $wrappers = $mM->getApiObjects($media, $this->getLocale($request->get('locale')));
-        $list = new CollectionRepresentation($wrappers, self::$entityKey);
+        $mediaEntities = $mM->find($collection, $ids, $limit);
+        $media = $mM->getApiObjects($mediaEntities, $this->getLocale($request->get('locale')));
+
+        $all = count($media); // TODO
+
+        $list = new ListRepresentation(
+            $media,
+            self::$entityKey,
+            'get_collections',
+            $request->query->all(),
+            $listRestHelper->getPage(),
+            $listRestHelper->getLimit(),
+            $all
+        );
+
 
         $view = $this->view($list, 200);
 
