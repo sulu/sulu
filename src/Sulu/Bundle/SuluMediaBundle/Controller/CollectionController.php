@@ -16,11 +16,13 @@ use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Put;
 use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Bundle\MediaBundle\Api\Collection;
+use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionFieldDescriptorInterface;
 use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface;
 use Sulu\Bundle\MediaBundle\Entity\Collection as CollectionEntity;
 use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
+use Sulu\Component\Rest\ListBuilder\ListRestHelperInterface;
 use Sulu\Component\Rest\RestController;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -31,65 +33,14 @@ use Symfony\Component\HttpFoundation\Request;
 class CollectionController extends RestController implements ClassResourceInterface
 {
     /**
-     * {@inheritdoc}
+     * @var string
      */
-    protected $entityName = 'SuluMediaBundle:Collection';
+    protected static $entityName = 'SuluMediaBundle:Collection';
 
     /**
-     * {@inheritdoc}
+     * @var string
      */
-    protected $unsortable = array('lft', 'rgt', 'depth');
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $fieldsDefault = array();
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $fieldsExcluded = array('lft', 'rgt', 'depth');
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $fieldsHidden = array();
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $fieldsRelations = array();
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $fieldsSortOrder = array(0 => 'id');
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $fieldsTranslationKeys = array('id' => 'public.id');
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $fieldsEditable = array();
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $fieldsValidation = array();
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $fieldsWidth = array();
-
-    /**
-     *
-     * {@inheritdoc}
-     */
-    protected $bundlePrefix = 'media.collection.';
+    protected static $entityKey = 'collections';
 
     /**
      * returns all fields that can be used by list
@@ -98,7 +49,7 @@ class CollectionController extends RestController implements ClassResourceInterf
      */
     public function getFieldsAction()
     {
-        return $this->responseFields();
+        return $this->getCollectionManager()->getFieldDescriptors();
     }
 
     /**
@@ -123,9 +74,7 @@ class CollectionController extends RestController implements ClassResourceInterf
         $view = $this->responseGetById(
             $id,
             function ($id) use ($locale, $cm) {
-                /**
-                 * @var CollectionEntity $collectionEntity
-                 */
+                /** @var CollectionEntity $collectionEntity */
                 $collectionEntity = $cm->findById($id);
                 return $cm->getApiObject($collectionEntity, $locale);
             }
@@ -144,10 +93,26 @@ class CollectionController extends RestController implements ClassResourceInterf
         $parent = $request->get('parent');
         $depth = $request->get('depth');
         $cm = $this->getCollectionManager();
-        $collections = $cm->find($parent, $depth);
-        $wrappers = $cm->getApiObjects($collections, $this->getLocale($request->get('locale')));
-        $collection = new CollectionRepresentation($wrappers, 'collections');
-        $view = $this->view($collection, 200);
+
+        /** @var ListRestHelperInterface $listRestHelper */
+        $listRestHelper = $this->get('sulu_core.list_rest_helper');
+
+        $collectionEntities = $cm->find($parent, $depth);
+        $collections = $cm->getApiObjects($collectionEntities, $this->getLocale($request->get('locale')));
+
+        $all = count($collections); // TODO
+
+        $list = new ListRepresentation(
+            $collections,
+            self::$entityKey,
+            'get_products',
+            $request->query->all(),
+            $listRestHelper->getPage(),
+            $listRestHelper->getLimit(),
+            $all
+        );
+
+        $view = $this->view($list, 200);
         return $this->handleView($view);
     }
 
@@ -248,7 +213,7 @@ class CollectionController extends RestController implements ClassResourceInterf
     }
 
     /**
-     * @return CollectionManagerInterface
+     * @return CollectionManagerInterface|CollectionFieldDescriptorInterface
      */
     protected function getCollectionManager()
     {

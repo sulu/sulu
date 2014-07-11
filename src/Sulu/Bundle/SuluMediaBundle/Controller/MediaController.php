@@ -16,12 +16,15 @@ use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Put;
 
+use Sulu\Bundle\MediaBundle\Media\Manager\MediaFieldDescriptorInterface;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
-use Sulu\Bundle\MediaBundle\Media\RestObject\Media;
 use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
+use Sulu\Component\Rest\ListBuilder\DoctrineListBuilderFactory;
+use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\RestController;
+use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Security\UserInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Config\Definition\Exception\Exception;
@@ -34,50 +37,16 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class MediaController extends RestController implements ClassResourceInterface
 {
-    /**
-     * {@inheritdoc}
-     */
-    protected $entityName = 'SuluMediaBundle:Media';
 
     /**
-     * {@inheritdoc}
+     * @var string
      */
-    protected $fieldsHidden = array('id', 'created', 'changed');
+    protected static $entityName = 'SuluMediaBundle:Media';
 
     /**
-     * {@inheritdoc}
+     * @var string
      */
-    protected $fieldsSortOrder = array(0 => 'id');
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $fieldsTranslationKeys = array('id' => 'public.id');
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $fieldsEditable = array();
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $fieldsValidation = array();
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $fieldsWidth = array();
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $fieldsRelations = array('title', 'name', 'description', 'thumbnails', 'size'); // TODO change thumbnails to format when husky updated
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $bundlePrefix = 'media.media.';
+    protected static $entityKey = 'media';
 
     /**
      * returns all fields that can be used by list
@@ -112,9 +81,6 @@ class MediaController extends RestController implements ClassResourceInterface
         $view = $this->responseGetById(
             $id,
             function ($id) use ($locale, $mM) {
-                /**
-                 * @var MediaEntity $mediaEntity
-                 */
                 $mediaEntity = $mM->findById($id);
                 return $mM->getApiObject($mediaEntity, $locale);
             }
@@ -140,8 +106,10 @@ class MediaController extends RestController implements ClassResourceInterface
         $mM = $this->getMediaManager();
         $media = $mM->find($collection, $ids, $limit);
         $wrappers = $mM->getApiObjects($media, $this->getLocale($request->get('locale')));
-        $mediaCollection = new CollectionRepresentation($wrappers, 'media');
-        $view = $this->view($mediaCollection, 200);
+        $list = new CollectionRepresentation($wrappers, self::$entityKey);
+
+        $view = $this->view($list, 200);
+
         return $this->handleView($view);
     }
 
@@ -267,7 +235,7 @@ class MediaController extends RestController implements ClassResourceInterface
 
     /**
      * getMediaManager
-     * @return MediaManagerInterface
+     * @return MediaManagerInterface|MediaFieldDescriptorInterface
      */
     protected function getMediaManager()
     {

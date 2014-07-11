@@ -12,7 +12,6 @@ namespace Sulu\Bundle\MediaBundle\Media\Manager;
 
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Api\Media as MediaWrapper;
-use Sulu\Component\Rest\ListBuilder\FieldDescriptor\DoctrineFieldDescriptor;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 interface MediaManagerInterface {
@@ -65,10 +64,4 @@ interface MediaManagerInterface {
      * @return MediaWrapper[]
      */
     public function getApiObjects($media, $locale);
-
-    /**
-     * Return the FieldDescriptors
-     * @return DoctrineFieldDescriptor[]
-     */
-    public function getFieldDescriptors();
 }
