@@ -26,7 +26,7 @@ class AddressRepository extends EntityRepository
                 ->where('address.id = :id');
 
             $query = $qb->getQuery();
-//            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
             $query->setParameter('id', $id);
 
             return $query->getSingleResult();
