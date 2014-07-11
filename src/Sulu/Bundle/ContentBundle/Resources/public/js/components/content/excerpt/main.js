@@ -12,6 +12,12 @@ define([], function() {
     'use strict';
 
     return {
+        view: true,
+
+        layout: {
+            changeNothing: true
+        },
+
         templates: ['/admin/content/template/content/excerpt'],
 
         initialize: function() {
