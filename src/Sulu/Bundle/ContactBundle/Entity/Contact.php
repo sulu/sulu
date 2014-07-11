@@ -159,11 +159,6 @@ class Contact extends ApiEntity
      */
     private $gender;
 
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     * @Exclude
-     */
-    private $responsibleForAccounts;
 
     /**
      * Constructor
@@ -950,38 +945,5 @@ class Contact extends ApiEntity
             }
         }
         return null;
-    }
-
-    /**
-     * Add responsibleForAccounts
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Account $responsibleForAccounts
-     * @return Contact
-     */
-    public function addResponsibleForAccount(\Sulu\Bundle\ContactBundle\Entity\Account $responsibleForAccounts)
-    {
-        $this->responsibleForAccounts[] = $responsibleForAccounts;
-    
-        return $this;
-    }
-
-    /**
-     * Remove responsibleForAccounts
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Account $responsibleForAccounts
-     */
-    public function removeResponsibleForAccount(\Sulu\Bundle\ContactBundle\Entity\Account $responsibleForAccounts)
-    {
-        $this->responsibleForAccounts->removeElement($responsibleForAccounts);
-    }
-
-    /**
-     * Get responsibleForAccounts
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getResponsibleForAccounts()
-    {
-        return $this->responsibleForAccounts;
     }
 }
