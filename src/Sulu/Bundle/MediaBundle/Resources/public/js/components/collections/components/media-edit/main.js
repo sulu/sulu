@@ -219,9 +219,10 @@ define(function() {
          */
         startDropzone: function() {
             // replace the current media with the new one if a fileversion got uploaded
+            this.sandbox.off('husky.dropzone.file-version-'+ this.media.id +'.files-added');
             this.sandbox.on('husky.dropzone.file-version-'+ this.media.id +'.files-added', function(newMedia) {
                 this.media = newMedia[0];
-                this.sandbox.emit('sulu.media.collections.save-media', this.medias, null, true);
+                this.sandbox.emit('sulu.media.collections.save-media', this.media, null, true);
                 this.savedCallback();
             }.bind(this));
 
@@ -236,7 +237,8 @@ define(function() {
                         showOverlay: false,
                         skin: 'small',
                         titleKey: 'sulu.upload.small-dropzone-title',
-                        instanceName: 'file-version-' + this.media.id
+                        instanceName: 'file-version-' + this.media.id,
+                        maxFiles: 1
                     }
                 }
             ]);
