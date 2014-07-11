@@ -68,7 +68,7 @@
             </join-columns>
         </many-to-one>
 
-        <many-to-one field="responsiblePerson" target-entity="Sulu\Bundle\ContactBundle\Entity\Contact" inversed-by="responsibleForAccounts">
+        <many-to-one field="responsiblePerson" target-entity="Sulu\Bundle\ContactBundle\Entity\Contact">
             <join-columns>
                 <join-column name="idResponsiblePerson" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
             </join-columns>

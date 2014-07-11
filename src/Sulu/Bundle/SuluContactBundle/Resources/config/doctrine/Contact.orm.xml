@@ -29,8 +29,6 @@
 
         <one-to-many field="accountContacts" target-entity="Sulu\Bundle\ContactBundle\Entity\AccountContact" mapped-by="contact"/>
 
-        <one-to-many field="responsibleForAccounts" target-entity="Sulu\Bundle\ContactBundle\Entity\Account" mapped-by="responsiblePerson"/>
-
         <many-to-one field="changer" target-entity="Sulu\Component\Security\UserInterface">
             <join-columns>
                 <join-column name="idUsersChanger" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
