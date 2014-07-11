@@ -14,11 +14,13 @@ use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Put;
 use FOS\RestBundle\Controller\Annotations\Post;
+use Sulu\Bundle\ContactBundle\Entity\AccountAddress;
 use Sulu\Bundle\ContactBundle\Entity\AccountContact;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\TermsOfDelivery;
 use Sulu\Bundle\ContactBundle\Entity\TermsOfPayment;
+use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
 use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
@@ -49,7 +51,7 @@ class AccountController extends AbstractContactController
     /**
      * {@inheritdoc}
      */
-    protected $unsortable = array('lft', 'rgt', 'depth');
+    protected $unsortable = array('lft', 'rgt', 'depth', 'city', 'mainContact');
 
     /**
      * {@inheritdoc}
@@ -59,7 +61,7 @@ class AccountController extends AbstractContactController
     /**
      * {@inheritdoc}
      */
-    protected $fieldsExcluded = array('lft', 'rgt', 'depth','externalId');
+    protected $fieldsExcluded = array('lft', 'rgt', 'depth', 'externalId');
 
     /**
      * {@inheritdoc}
@@ -67,17 +69,22 @@ class AccountController extends AbstractContactController
     protected $fieldsHidden = array(
         'id',
         'created',
+        'changed',
         'type',
         'disabled',
         'uid',
         'registerNumber',
-        'placeOfJurisdiction'
+        'placeOfJurisdiction',
+        'mainUrl',
+        'mainFax',
     );
 
     /**
      * {@inheritdoc}
      */
-    protected $fieldsRelations = array();
+    protected $fieldsRelations = array(
+        'city'
+    );
 
     /**
      * {@inheritdoc}
@@ -86,6 +93,10 @@ class AccountController extends AbstractContactController
         0 => 'number',
         1 => 'name',
         2 => 'corporation',
+        5 => 'city',
+        5 => 'mainContact',
+        6 => 'mainPhone',
+        7 => 'mainEmail',
     );
 
     /**
@@ -94,6 +105,12 @@ class AccountController extends AbstractContactController
     protected $fieldsTranslationKeys = array(
         'id' => 'public.id',
         'disabled' => 'public.deactivate',
+        'mainEmail' => 'public.email',
+        'mainPhone' => 'public.phone',
+        'mainUrl' => 'public.url',
+        'mainFax' => 'public.fax',
+        'city' => 'contact.address.city',
+        'mainContact' => 'contact.contacts.main-contact',
     );
 
     /**
@@ -111,7 +128,15 @@ class AccountController extends AbstractContactController
      */
     protected $fieldsWidth = array(
         'type' => '150px',
-        'number' => '90px'
+        'number' => '90px',
+        'name' => '300px',
+    );
+
+    /**
+     * {@inheritdoc}
+     */
+    protected $fieldsMinWidth = array(
+        'name' => '150px',
     );
 
     /**
@@ -166,14 +191,14 @@ class AccountController extends AbstractContactController
             $fields = $listHelper->getFields();
 
             // check if contact is principle point of contact
-            if ($fields && array_search('isMainContact',$fields)) {
+            if ($fields && array_search('isMainContact', $fields)) {
                 $mainContactString = 'accountContacts_account_mainContact_id';
                 // add to fields to query
                 $fields[] = $mainContactString;
                 $request->query->add(array('fields' => implode(',', $fields)));
                 // filter result
-                $filterMainContact = function($content) use ($mainContactString, $fields) {
-                    if (array_search('isMainContact',$fields)) {
+                $filterMainContact = function ($content) use ($mainContactString, $fields) {
+                    if (array_search('isMainContact', $fields)) {
                         $content['isMainContact'] = $content['id'] === $content[$mainContactString];
                     }
                     unset($content[$mainContactString]);
@@ -232,6 +257,7 @@ class AccountController extends AbstractContactController
             $accountContact->setAccount($account);
             $accountContact->setContact($contact);
             $accountContact->setPosition($request->get('position'));
+            $contact->setCurrentPosition($request->get('position'));
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($accountContact);
@@ -294,7 +320,49 @@ class AccountController extends AbstractContactController
             $where['type'] = $type;
         }
         if ($request->get('flat') == 'true') {
-            $view = $this->responseList($where);
+
+            /** @var ListRestHelper $listHelper */
+            $listHelper = $this->get('sulu_core.list_rest_helper');
+
+            $mappings = array(
+                'city' => 'accountAddresses_address_city',
+                'mainContact' => 'mainContact_lastName',
+            );
+            $joinConditions = null;
+            // if fields are set
+            if ($fields = $listHelper->getFields()) {
+                $newFields = array();
+
+                foreach ($fields as $field) {
+                    switch ($field) {
+                        case 'city':
+                            $newFields[] = $mappings[$field];
+                            $joinConditions['accountAddresses'] = 'accountAddresses.main = TRUE';
+                            break;
+                        case 'mainContact':
+                            $newFields[] = $mappings[$field];
+                            break;
+                        default:
+                            $newFields[] = $field;
+                    }
+                }
+                $request->query->add(array('fields' => implode(',', $newFields)));
+            }
+
+            $filter = function ($res) use ($mappings) {
+                // filter relations
+                if (array_key_exists($mappings['city'], $res)) {
+                    $res['city'] = $res[$mappings['city']];
+                    unset($res[$mappings['city']]);
+                }
+                if (array_key_exists($mappings['mainContact'], $res)) {
+                    $res['mainContact'] = $res[$mappings['mainContact']];
+                    unset($res[$mappings['mainContact']]);
+                }
+                return $res;
+            };
+
+            $view = $this->responseList($where, null, $filter, $joinConditions);
         } else {
             $contacts = $this->getDoctrine()->getRepository($this->entityName)->findAll();
             $view = $this->view($this->createHalResponse($contacts), 200);
@@ -349,11 +417,6 @@ class AccountController extends AbstractContactController
 
             // add urls, phones, emails, tags, bankAccounts, notes, addresses,..
             $this->addNewContactRelations($account, $request);
-
-            // set new primary address
-            if ($this->newPrimaryAddress) {
-                $this->setNewPrimaryAddress($account, $this->newPrimaryAddress);
-            }
 
             $this->processTerms($request, $account);
 
@@ -441,11 +504,6 @@ class AccountController extends AbstractContactController
                     && $this->processNotes($account, $request->get('notes')))
                 ) {
                     throw new RestException('Updating dependencies is not possible', 0);
-                }
-
-                // set new primary address
-                if ($this->newPrimaryAddress) {
-                    $this->setNewPrimaryAddress($account, $this->newPrimaryAddress);
                 }
 
                 $this->processTerms($request, $account);
@@ -626,6 +684,14 @@ class AccountController extends AbstractContactController
             }
 
             $em = $this->getDoctrine()->getManager();
+
+            $addresses = $account->getAddresses();
+            /** @var Address $address */
+            foreach ($addresses as $address) {
+                if (!$address->hasRelations()) {
+                    $em->remove($address);
+                }
+            }
 
             // remove related contacts if removeContacts is true
             if (!is_null($request->get('removeContacts')) &&
@@ -871,5 +937,13 @@ class AccountController extends AbstractContactController
             $types[$confType['name']] = $confType['id'];
         }
         return $types;
+    }
+
+    /**
+     * @return AbstractContactManager
+     */
+    protected function getContactManager()
+    {
+        return $this->get('sulu_contact.account_manager');
     }
 }

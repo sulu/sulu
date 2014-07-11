@@ -104,11 +104,6 @@ class Contact extends ApiEntity
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
-    private $addresses;
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
     private $phones;
 
     /**
@@ -145,6 +140,13 @@ class Contact extends ApiEntity
     private $account;
 
     /**
+     * main account
+     * @Accessor(getter="getAddresses")
+     * @var string
+     */
+    private $addresses;
+
+    /**
      * @var \Doctrine\Common\Collections\Collection
      * @Exclude
      */
@@ -162,6 +164,32 @@ class Contact extends ApiEntity
 
 
     /**
+     * @var string
+     */
+    private $mainEmail;
+
+    /**
+     * @var string
+     */
+    private $mainPhone;
+
+    /**
+     * @var string
+     */
+    private $mainFax;
+
+    /**
+     * @var string
+     */
+    private $mainUrl;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     * @Exclude
+     */
+    private $contactAddresses;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -170,11 +198,13 @@ class Contact extends ApiEntity
         $this->activities = new \Doctrine\Common\Collections\ArrayCollection();
         $this->notes = new \Doctrine\Common\Collections\ArrayCollection();
         $this->emails = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->urls = new \Doctrine\Common\Collections\ArrayCollection();
         $this->addresses = new \Doctrine\Common\Collections\ArrayCollection();
         $this->phones = new \Doctrine\Common\Collections\ArrayCollection();
         $this->faxes = new \Doctrine\Common\Collections\ArrayCollection();
         $this->tags = new \Doctrine\Common\Collections\ArrayCollection();
         $this->accountContacts = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->contactAddresses = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -293,6 +323,15 @@ class Contact extends ApiEntity
             $this->position = $position;
         }
         return $this;
+    }
+
+    /**
+     * sets position variable
+     * @param $position
+     */
+    public function setCurrentPosition($position)
+    {
+        $this->position = $position;
     }
 
     /**
@@ -564,39 +603,6 @@ class Contact extends ApiEntity
     public function getEmails()
     {
         return $this->emails;
-    }
-
-    /**
-     * Add addresses
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Address $addresses
-     * @return Contact
-     */
-    public function addAddresse(\Sulu\Bundle\ContactBundle\Entity\Address $addresses)
-    {
-        $this->addresses[] = $addresses;
-
-        return $this;
-    }
-
-    /**
-     * Remove addresses
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Address $addresses
-     */
-    public function removeAddresse(\Sulu\Bundle\ContactBundle\Entity\Address $addresses)
-    {
-        $this->addresses->removeElement($addresses);
-    }
-
-    /**
-     * Get addresses
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getAddresses()
-    {
-        return $this->addresses;
     }
 
     /**
@@ -965,5 +971,149 @@ class Contact extends ApiEntity
             }
         }
         return null;
+    }
+
+    /**
+     * returns main account
+     */
+    public function getAddresses()
+    {
+        $contactAddresses = $this->getContactAddresses();
+        $addresses = array();
+
+        if (!is_null($contactAddresses)) {
+            /** @var ContactAddress $contactAddress */
+            foreach ($contactAddresses as $contactAddress) {
+                $address = $contactAddress->getAddress();
+                $address->setPrimaryAddress($contactAddress->getMain());
+                $addresses[] = $address;
+            }
+        }
+        return $addresses;
+    }
+
+    /**
+     * Set mainEmail
+     *
+     * @param string $mainEmail
+     * @return Contact
+     */
+    public function setMainEmail($mainEmail)
+    {
+        $this->mainEmail = $mainEmail;
+    
+        return $this;
+    }
+
+    /**
+     * Get mainEmail
+     *
+     * @return string 
+     */
+    public function getMainEmail()
+    {
+        return $this->mainEmail;
+    }
+
+    /**
+     * Set mainPhone
+     *
+     * @param string $mainPhone
+     * @return Contact
+     */
+    public function setMainPhone($mainPhone)
+    {
+        $this->mainPhone = $mainPhone;
+    
+        return $this;
+    }
+
+    /**
+     * Get mainPhone
+     *
+     * @return string 
+     */
+    public function getMainPhone()
+    {
+        return $this->mainPhone;
+    }
+
+    /**
+     * Set mainFax
+     *
+     * @param string $mainFax
+     * @return Contact
+     */
+    public function setMainFax($mainFax)
+    {
+        $this->mainFax = $mainFax;
+    
+        return $this;
+    }
+
+    /**
+     * Get mainFax
+     *
+     * @return string 
+     */
+    public function getMainFax()
+    {
+        return $this->mainFax;
+    }
+
+    /**
+     * Set mainUrl
+     *
+     * @param string $mainUrl
+     * @return Contact
+     */
+    public function setMainUrl($mainUrl)
+    {
+        $this->mainUrl = $mainUrl;
+    
+        return $this;
+    }
+
+    /**
+     * Get mainUrl
+     *
+     * @return string 
+     */
+    public function getMainUrl()
+    {
+        return $this->mainUrl;
+    }
+
+    /**
+     * Add contactAddresses
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\ContactAddress $contactAddresses
+     * @return Contact
+     */
+    public function addContactAddresse(\Sulu\Bundle\ContactBundle\Entity\ContactAddress $contactAddresses)
+    {
+        $this->contactAddresses[] = $contactAddresses;
+    
+        return $this;
+    }
+
+    /**
+     * Remove contactAddresses
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\ContactAddress $contactAddresses
+     */
+    public function removeContactAddresse(\Sulu\Bundle\ContactBundle\Entity\ContactAddress $contactAddresses)
+    {
+        $this->contactAddresses->removeElement($contactAddresses);
+    }
+
+    /**
+     * Get contactAddresses
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getContactAddresses()
+    {
+        return $this->contactAddresses;
     }
 }

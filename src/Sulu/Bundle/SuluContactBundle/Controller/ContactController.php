@@ -17,12 +17,14 @@ use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\AccountContact;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
+use Sulu\Bundle\ContactBundle\Entity\ContactAddress;
 use Sulu\Bundle\ContactBundle\Entity\Fax;
 use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\ContactBundle\Entity\Phone;
 use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\Note;
 use Sulu\Bundle\ContactBundle\Entity\Url;
+use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
@@ -49,7 +51,7 @@ class ContactController extends AbstractContactController
     /**
      * {@inheritdoc}
      */
-    protected $unsortable = array();
+    protected $unsortable = array('account', 'accountContacts_position', 'city');
 
     /**
      * {@inheritdoc}
@@ -73,14 +75,18 @@ class ContactController extends AbstractContactController
         'formOfAddress',
         'id',
         'title',
-        'disabled');
+        'disabled',
+        'mainUrl',
+        'mainFax',
+        'accountContacts_position',
+    );
 
     /**
      * {@inheritdoc}
      */
     protected $fieldsRelations = array(
-//        'email',
         'account',
+        'city',
         'accountContacts_position',
     );
 
@@ -90,13 +96,15 @@ class ContactController extends AbstractContactController
      * {@inheritdoc}
      */
     protected $fieldsSortOrder = array(
-        0 => 'id',
-        1 => 'title',
+        1 => 'account',
         2 => 'firstName',
-        3 => 'lastName',
-        5 => 'account',
-//        4 => 'email',
-//        6 => 'phone',
+        3 => 'middleName',
+        4 => 'lastName',
+        5 => 'city',
+        6 => 'mainPhone',
+        7 => 'mainEmail',
+        10 => 'title',
+        20 => 'id',
     );
 
     /**
@@ -109,6 +117,11 @@ class ContactController extends AbstractContactController
         'account' => 'contact.contacts.company',
         'accountContacts_position' => 'contact.contacts.position',
         'isMainContact' => 'contact.contacts.main-contact',
+        'mainEmail' => 'public.email',
+        'mainPhone' => 'public.phone',
+        'mainUrl' => 'public.url',
+        'mainFax' => 'public.fax',
+        'city' => 'contact.address.city',
     );
 
     /**
@@ -164,24 +177,23 @@ class ContactController extends AbstractContactController
 
             /** @var ListRestHelper $listHelper */
             $listHelper = $this->get('sulu_core.list_rest_helper');
-
+            $mappings = array(
+                'city' => 'contactAddresses_address_city',
+                'account' => 'accountContacts_account_name'
+            );
+            $joinConditions = null;
             // if fields are set
             if ($fields = $listHelper->getFields()) {
                 $newFields = array();
                 $where = array();
-
                 foreach ($fields as $field) {
                     switch ($field) {
-                        case 'email':
-                            $newFields[] = 'emails_email';
-                            $joinConditions['emails'] = 'emails.main = TRUE';
-                            break;
-                        case 'phone':
-                            $newFields[] = 'phones_phone';
-                            $joinConditions['phones'] = 'phones.main = TRUE';
+                        case 'city':
+                            $newFields[] = $mappings[$field];
+                            $joinConditions['contactAddresses'] = 'contactAddresses.main = TRUE';
                             break;
                         case 'account':
-                            $newFields[] = 'accountContacts_account_name';
+                            $newFields[] = $mappings[$field];
                             $joinConditions['accountContacts'] = 'accountContacts.main = TRUE';
                             break;
                         default:
@@ -194,7 +206,7 @@ class ContactController extends AbstractContactController
             // check if fullname should be returned
             $returnFullName = !is_null($fields) && array_search('fullName', $fields) !== false;
 
-            $filter = function ($res) use ($returnFullName) {
+            $filter = function ($res) use ($returnFullName, $mappings) {
                 // get full name
                 if ($returnFullName) {
                     $fullName = array();
@@ -207,23 +219,20 @@ class ContactController extends AbstractContactController
                     if (array_key_exists('lastName', $res)) {
                         $fullName[] = $res['lastName'];
                     }
+                    $fullName[] = sprintf('(%s)', $res['id']);
                     $res['fullName'] = implode(' ', $fullName);
                     $res['name'] = implode(' ', $fullName); // FIXME: name is only returned due to an error in
-                                                            // auto-complete component
+                    // auto-complete component
                 }
 
                 // filter relations
-                if (array_key_exists('emails_email', $res)) {
-                    $res['email'] = $res['emails_email'];
-                    unset($res['emails_email']);
+                if (array_key_exists($mappings['city'], $res)) {
+                    $res['city'] = $res[$mappings['city']];
+                    unset($res[$mappings['city']]);
                 }
-                if (array_key_exists('phones_phone', $res)) {
-                    $res['phone'] = $res['phones_phone'];
-                    unset($res['phones_phone']);
-                }
-                if (array_key_exists('accountContacts_account_name', $res)) {
-                    $res['account'] = $res['accountContacts_account_name'];
-                    unset($res['accountContacts_account_name']);
+                if (array_key_exists($mappings['account'], $res)) {
+                    $res['account'] = $res[$mappings['account']];
+                    unset($res[$mappings['account']]);
                 }
                 return $res;
             };
@@ -256,13 +265,15 @@ class ContactController extends AbstractContactController
             }
 
             $em = $this->getDoctrine()->getManager();
-            $addresses = $contact->getAddresses()->toArray();
+
+            $addresses = $contact->getAddresses();
             /** @var Address $address */
             foreach ($addresses as $address) {
-                if ($address->getAccounts()->count() == 0 && $address->getContacts()->count() == 1) {
+                if (!$address->hasRelations()) {
                     $em->remove($address);
                 }
             }
+
             $phones = $contact->getPhones()->toArray();
             /** @var Phone $phone */
             foreach ($phones as $phone) {
@@ -394,11 +405,6 @@ class ContactController extends AbstractContactController
             // add urls, phones, emails, tags, bankAccounts, notes, addresses,..
             $this->addNewContactRelations($contact, $request);
 
-            // set new primary address
-            if ($this->newPrimaryAddress) {
-                $this->setNewPrimaryAddress($contact, $this->newPrimaryAddress);
-            }
-
             $em->persist($contact);
             $em->flush();
 
@@ -416,7 +422,8 @@ class ContactController extends AbstractContactController
      * returns the main account-contact relation or creates a new one
      * @param Contact $contact
      * @param Account $account
-     * @return bool
+     * @param $position
+     * @return bool|AccountContact
      */
     private function getMainAccountContactOrCreateNew(Contact $contact, Account $account, $position)
     {
@@ -448,6 +455,7 @@ class ContactController extends AbstractContactController
      * creates a new main Account Contacts relation
      * @param Contact $contact
      * @param Account $account
+     * @param $position
      * @return AccountContact
      */
     private function createMainAccountContact(Contact $contact, Account $account, $position)
@@ -552,11 +560,6 @@ class ContactController extends AbstractContactController
                     $contact->setBirthday(new DateTime($birthday));
                 }
 
-                // set new primary address
-                if ($this->newPrimaryAddress) {
-                    $this->setNewPrimaryAddress($contact, $this->newPrimaryAddress);
-                }
-
                 $em->flush();
 
                 $view = $this->view($contact, 200);
@@ -568,6 +571,14 @@ class ContactController extends AbstractContactController
         }
 
         return $this->handleView($view);
+    }
+
+    /**
+     * @return AbstractContactManager
+     */
+    protected function getContactManager()
+    {
+        return $this->get('sulu_contact.contact_manager');
     }
 
     /**
