@@ -27,7 +27,7 @@ abstract class RestController extends FOSRestController
      * The type of the entity, which is handled by the concrete controller
      * @var string
      */
-    protected $entityName;
+    protected static $entityName;
 
     /**
      * The key of the entity which will be used in the embedded part of the REST Response
@@ -174,7 +174,7 @@ abstract class RestController extends FOSRestController
             /** @var ListRestHelper $listHelper */
             $listHelper = $this->get('sulu_core.list_rest_helper');
 
-            $fields = $listHelper->getAllFields($this->entityName);
+            $fields = $listHelper->getAllFields(self::$entityName);
 
             // excluded fields
             $fields = array_diff($fields, $this->fieldsExcluded);
@@ -298,7 +298,7 @@ abstract class RestController extends FOSRestController
         $listHelper = $this->get('sulu_core.list_rest_helper');
 
         if (is_null($entityName)) {
-            $entityName = $this->entityName;
+            $entityName = self::$entityName;
         }
 
         $entities = $listHelper->find($entityName, $where, $joinConditions);
@@ -516,7 +516,7 @@ abstract class RestController extends FOSRestController
         $entity = $findCallback($id);
 
         if (!$entity) {
-            $exception = new EntityNotFoundException($this->entityName, $id);
+            $exception = new EntityNotFoundException(self::$entityName, $id);
             // Return a 404 together with an error message, given by the exception, if the entity is not found
             $view = $this->view(
                 $exception->toArray(),
