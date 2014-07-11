@@ -59,6 +59,7 @@
                 <join-column name="idUsersCreator" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
             </join-columns>
         </many-to-one>
+
         <many-to-one field="parent" target-entity="Sulu\Bundle\ContactBundle\Entity\Account" inversed-by="children">
             <join-columns>
                 <join-column name="idAccountsParent" referenced-column-name="id"/>
@@ -69,6 +70,12 @@
         <many-to-one field="accountCategory" target-entity="Sulu\Bundle\ContactBundle\Entity\AccountCategory">
             <join-columns>
                 <join-column name="idAccountCategory" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
+            </join-columns>
+        </many-to-one>
+
+        <many-to-one field="responsiblePerson" target-entity="Sulu\Bundle\ContactBundle\Entity\Contact">
+            <join-columns>
+                <join-column name="idResponsiblePerson" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
             </join-columns>
         </many-to-one>
 

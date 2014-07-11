@@ -160,6 +160,7 @@ class Contact extends ApiEntity
      */
     private $gender;
 
+
     /**
      * Constructor
      */
