@@ -41,7 +41,7 @@ use Sulu\Bundle\MediaBundle\Api\Media as MediaWrapper;
 /**
  * @package Sulu\Bundle\MediaBundle\Media\Manager
  */
-class DefaultMediaManager implements MediaManagerInterface
+class DefaultMediaManager implements MediaManagerInterface, MediaFieldDescriptorInterface
 {
     const ENTITY_NAME_MEDIA = 'SuluMediaBundle:Media';
     const ENTITY_NAME_MEDIATYPE = 'SuluMediaBundle:MediaType';
@@ -106,7 +106,7 @@ class DefaultMediaManager implements MediaManagerInterface
     private $mediaTypes;
 
     /**
-     * @var array
+     * @var DoctrineFieldDescriptor[]
      */
     private $fieldDescriptors = array();
 
@@ -148,6 +148,7 @@ class DefaultMediaManager implements MediaManagerInterface
     }
 
     /**
+     * TODO
      * @return array
      */
     public function initializeFieldDescriptors()

@@ -18,12 +18,13 @@ use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
+use Sulu\Component\Rest\ListBuilder\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Security\UserRepositoryInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Sulu\Bundle\MediaBundle\Entity\Collection as CollectionEntity;
 use Sulu\Bundle\MediaBundle\Api\Collection as CollectionWrapper;
 
-class DefaultCollectionManager implements CollectionManagerInterface
+class DefaultCollectionManager implements CollectionManagerInterface, CollectionFieldDescriptorInterface
 {
 
     /**
@@ -57,6 +58,11 @@ class DefaultCollectionManager implements CollectionManagerInterface
     private $previewLimit;
 
     /**
+     * @var DoctrineFieldDescriptor[]
+     */
+    private $fieldDescriptors;
+
+    /**
      * @var int
      */
     private $collectionPreviewFormat;
@@ -78,6 +84,38 @@ class DefaultCollectionManager implements CollectionManagerInterface
         $this->formatManager = $formatManager;
         $this->previewLimit = $previewLimit;
         $this->collectionPreviewFormat = $collectionPreviewFormat;
+
+        $this->initializeFieldDescriptors();
+    }
+
+    /**
+     * TODO
+     * @return DoctrineFieldDescriptor[]
+     */
+    public function initializeFieldDescriptors()
+    {
+        $fieldDescriptors = array();
+
+        $this->fieldDescriptors = $fieldDescriptors;
+
+        return $this->fieldDescriptors;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFieldDescriptors()
+    {
+        return $this->fieldDescriptors;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setFieldDescriptors($fieldDescriptors)
+    {
+        $this->fieldDescriptors = $fieldDescriptors;
+        return $this;
     }
 
     /**
