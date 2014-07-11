@@ -34,9 +34,12 @@
     &.no-left-space {
       padding-left: 0;
     }
+
     &.no-right-space {
       padding-right: 0;
     }
+
+
     &.no-top-space {
       margin-top: -$contentPaddingTop;
     }
@@ -69,6 +72,7 @@
     float: none;
     width: auto;
   }
+
   &.fixed {
     width: $contentFixedWidth;
     float: left;
@@ -93,10 +97,12 @@
     width: $sidebarFixedWidth;
     float: right;
   }
+
   &.max {
     float: none;
     width: auto;
   }
+
   &.hidden {
     width: 0;
     height: 0;
@@ -140,12 +146,14 @@
     width: 0;
     height: 0;
   }
+
   .has-visible-sidebar .content-column.fixed {
     float: none;
     width: auto;
     max-width: $contentFixedWidth;
 
   }
+
   .sulu-app-shrink {
     display: none;
   }
