@@ -667,7 +667,13 @@ class AccountController extends AbstractContactController
 
             $em = $this->getDoctrine()->getManager();
 
-            // TODO: handle addresses
+            $addresses = $account->getAddresses();
+            /** @var Address $address */
+            foreach ($addresses as $address) {
+                if (!$address->hasRelations()) {
+                    $em->remove($address);
+                }
+            }
 
             // remove related contacts if removeContacts is true
             if (!is_null($request->get('removeContacts')) &&

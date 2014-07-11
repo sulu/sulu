@@ -973,7 +973,9 @@ class Contact extends ApiEntity
         if (!is_null($contactAddresses)) {
             /** @var ContactAddress $contactAddress */
             foreach ($contactAddresses as $contactAddress) {
-                $addresses[] = $contactAddress->getAddress();
+                $address = $contactAddress->getAddress();
+                $address->setPrimaryAddress($contactAddress->getMain());
+                $addresses[] = $address;
             }
         }
         return $addresses;

@@ -259,13 +259,15 @@ class ContactController extends AbstractContactController
             }
 
             $em = $this->getDoctrine()->getManager();
-            $addresses = $contact->getAddresses()->toArray();
+
+            $addresses = $contact->getAddresses();
             /** @var Address $address */
             foreach ($addresses as $address) {
-                if ($address->getAccounts()->count() == 0 && $address->getContacts()->count() == 1) {
+                if (!$address->hasRelations()) {
                     $em->remove($address);
                 }
             }
+
             $phones = $contact->getPhones()->toArray();
             /** @var Phone $phone */
             foreach ($phones as $phone) {
