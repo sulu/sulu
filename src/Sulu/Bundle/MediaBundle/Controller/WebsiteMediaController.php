@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Controller;
 
+use Doctrine\ORM\EntityManager;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyException;
@@ -122,11 +123,11 @@ class WebsiteMediaController extends Controller
     protected function updateDownloadCounter($fileVersion)
     {
         $em = $this->getDoctrine()->getManager();
-        $query = $em->createQuery(
-            'UPDATE SuluMediaBundle:FileVersion f
-            SET f.downloadCounter = f.downloadCounter + 1
-            WHERE f.id = :id'
-        )->setParameter('id', $fileVersion->getId());
+        $query = $em->createQueryBuilder()->update('SuluMediaBundle:FileVersion', 'fV')
+            ->set('fV.downloadCounter', 'fV.downloadCounter + 1')
+            ->where('fV.id = :id')
+            ->setParameter('id', $fileVersion->getId())
+            ->getQuery();
 
         $query->execute();
     }
