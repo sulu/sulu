@@ -162,6 +162,7 @@ class Contact extends ApiEntity
      */
     private $gender;
 
+
     /**
      * @var string
      */

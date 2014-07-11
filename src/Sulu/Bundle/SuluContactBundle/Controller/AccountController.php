@@ -392,6 +392,8 @@ class AccountController extends AbstractContactController
 
             $account->setCorporation($request->get('corporation'));
 
+            $this->setResponsiblePerson($em, $account, $request->get('responsiblePerson'));
+
             $account->setType($request->get('type', 0));
 
             $disabled = $request->get('disabled');
@@ -432,6 +434,19 @@ class AccountController extends AbstractContactController
         return $this->handleView($view);
     }
 
+    private function setResponsiblePerson($em, $account, $responsiblePerson){
+        if(!!$responsiblePerson) {
+            $id = $responsiblePerson['id'];
+            /* @var Contact $contact */
+            $contact = $em->getRepository($this->contactEntityName)->find($id);
+
+            if(!$contact){
+                throw new EntitiyNotFoundException($this->contactEntityName, $id);
+            }
+            $account->setResponsiblePerson($contact);
+        }
+    }
+
     /**
      * Edits the existing contact with the given id
      * @param integer $id The id of the contact to update
@@ -464,6 +479,8 @@ class AccountController extends AbstractContactController
                 if (!is_null($disabled)) {
                     $account->setDisabled($disabled);
                 }
+
+                $this->setResponsiblePerson($em, $account, $request->get('responsiblePerson'));
 
                 // set category
                 // FIXME: check if accountcategory with given value exists

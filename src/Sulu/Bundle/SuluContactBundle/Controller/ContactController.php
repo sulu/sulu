@@ -166,6 +166,12 @@ class ContactController extends AbstractContactController
         $where = array();
         $joinConditions = array();
 
+        if(!is_null($request->get('bySystem')) && $request->get('bySystem') == true){
+            $contacts = $this->getContactsByUserSystem();
+            $view = $this->view($this->createHalResponse($contacts), 200);
+            return $this->handleView($view);
+        }
+
         // flat structure
         if ($request->get('flat') == 'true') {
 
@@ -573,5 +579,20 @@ class ContactController extends AbstractContactController
     protected function getContactManager()
     {
         return $this->get('sulu_contact.contact_manager');
+    }
+
+    /**
+     * Returns a list of contacts which have a user in the sulu system
+     */
+    protected function getContactsByUserSystem(){
+        $repo = $this->get('sulu_security.user_repository');
+        $users = $repo->getUserInSystem();
+        $contacts = [];
+
+        foreach($users  as $user){
+            $contacts[] = $user->getContact();
+        }
+
+        return $contacts;
     }
 }

@@ -49,6 +49,7 @@ define([], function() {
 
             this.instanceNameTypeOverlay = 'accountCategories';
             this.accountCategoryURL = 'api/account/categories';
+            this.contactBySystemURL = 'api/contacts?bySystem=true';
 
             this.render();
             this.getAccountTypeData();
@@ -102,6 +103,7 @@ define([], function() {
 
             this.initForm(data);
             this.initCategorySelect(data);
+            this.initResponsibleContactSelect(data);
             this.startCategoryOverlay();
 
             this.setTags();
@@ -184,6 +186,40 @@ define([], function() {
                                 repeatSelect: false,
                                 preSelectedElements: [this.preselectedElemendId],
                                 data: data
+                            }
+                        }
+                    ]);
+
+                }.bind(this))
+                .fail(function(textStatus, error) {
+                    this.sandbox.logger.error(textStatus, error);
+                }.bind(this));
+        },
+
+        /**
+         * Inits the select for the account category
+         */
+        initResponsibleContactSelect: function(formData) {
+            this.preselectedElemendId = !!formData.responsiblePerson ? formData.responsiblePerson.id : null;
+            this.responsiblePersons = null;
+
+            this.sandbox.util.load(this.contactBySystemURL)
+                .then(function(response) {
+
+                    this.responsiblePersons = response._embedded;
+
+                    this.sandbox.start([
+                        {
+                            name: 'select@husky',
+                            options: {
+                                el: '#responsiblePerson',
+                                instanceName: 'responsible-person',
+                                multipleSelect: false,
+                                defaultLabel: this.sandbox.translate('dropdown.please-choose'),
+                                valueName: 'fullName',
+                                repeatSelect: false,
+                                preSelectedElements: [this.preselectedElemendId],
+                                data: this.responsiblePersons
                             }
                         }
                     ]);
@@ -517,6 +553,13 @@ define([], function() {
             this.sandbox.on('husky.select.account-category.selected.item', function(id) {
                 if (id > 0) {
                     this.selectedAccountCategory = id;
+                    this.setHeaderBar(false);
+                }
+            }.bind(this));
+
+            this.sandbox.on('husky.select.responsible-person.selected.item', function(id) {
+                if (id > 0) {
+                    this.selectedResponsiblePerson = id;
                     this.setHeaderBar(false);
                 }
             }.bind(this));
