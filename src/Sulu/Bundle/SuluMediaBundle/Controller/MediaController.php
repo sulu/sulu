@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Controller;
 
+use Hateoas\Representation\CollectionRepresentation;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Controller\Annotations\Get;
@@ -85,7 +86,8 @@ class MediaController extends RestController implements ClassResourceInterface
      */
     public function getFieldsAction()
     {
-        return $this->responseFields();
+        $fieldDescriptors = $this->getMediaManager()->getFieldDescriptors();
+        return $this->handleView($this->view($fieldDescriptors, 200));
     }
 
     /**
@@ -138,8 +140,8 @@ class MediaController extends RestController implements ClassResourceInterface
         $mM = $this->getMediaManager();
         $media = $mM->find($collection, $ids, $limit);
         $wrappers = $mM->getApiObjects($media, $this->getLocale($request->get('locale')));
-        $halResponse = $this->createHalResponse($wrappers, true);
-        $view = $this->view($halResponse, 200);
+        $mediaCollection = new CollectionRepresentation($wrappers, 'media');
+        $view = $this->view($mediaCollection, 200);
         return $this->handleView($view);
     }
 

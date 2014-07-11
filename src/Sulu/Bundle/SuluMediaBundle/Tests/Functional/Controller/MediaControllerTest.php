@@ -262,7 +262,7 @@ class MediaControllerTest extends DatabaseTestCase
 
         $this->assertEquals(1, $response->id);
 
-        $this->assertEquals(2, $response->type);
+        $this->assertEquals('Image Type', $response->type);
 
         $this->assertEquals('photo.jpeg', $response->name);
 
@@ -289,7 +289,7 @@ class MediaControllerTest extends DatabaseTestCase
 
         $this->assertNotEmpty($response);
 
-        $this->assertEquals(1, $response->total);
+        $this->assertEquals(1, count($response->_embedded->media));
     }
 
     /**
@@ -310,9 +310,9 @@ class MediaControllerTest extends DatabaseTestCase
 
         $this->assertNotEmpty($response);
 
-        $this->assertEquals(1, $response->total);
-        $this->assertEquals(1, $response->_embedded[0]->id);
-        $this->assertEquals('photo.jpeg', $response->_embedded[0]->name);
+        $this->assertEquals(1, count($response->_embedded->media));
+        $this->assertEquals(1, $response->_embedded->media[0]->id);
+        $this->assertEquals('photo.jpeg', $response->_embedded->media[0]->name);
     }
 
     /**
@@ -333,9 +333,9 @@ class MediaControllerTest extends DatabaseTestCase
 
         $this->assertNotEmpty($response);
 
-        $this->assertEquals(1, $response->total);
-        $this->assertEquals(1, $response->_embedded[0]->id);
-        $this->assertEquals('photo.jpeg', $response->_embedded[0]->name);
+        $this->assertEquals(1, count($response->_embedded->media));
+        $this->assertEquals(1, $response->_embedded->media[0]->id);
+        $this->assertEquals('photo.jpeg', $response->_embedded->media[0]->name);
     }
 
     /**
@@ -356,7 +356,7 @@ class MediaControllerTest extends DatabaseTestCase
 
         $this->assertNotEmpty($response);
 
-        $this->assertEquals(0, $response->total);
+        $this->assertEquals(0, count($response->_embedded->media));
     }
 
     /**
@@ -665,9 +665,9 @@ class MediaControllerTest extends DatabaseTestCase
         $client->request('DELETE', '/api/media/404');
         $this->assertEquals('404', $client->getResponse()->getStatusCode());
 
-        $client->request('GET', '/api/collections');
+        $client->request('GET', '/api/media');
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(1, $response->total);
+        $this->assertEquals(1, count($response->_embedded->media));
     }
 
     /**
