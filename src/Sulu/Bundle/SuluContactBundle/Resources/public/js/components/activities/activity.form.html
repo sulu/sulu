@@ -1,0 +1,57 @@
+<div id="acitivity-form" class="form-vertical">
+
+    <div class="grid-row small">
+        <div class="grid-col-6">
+            <div class="form-group">
+                <label for="subject"><%=translate('contact.activities.subject')%></label>
+                <input id="subject" type="text" class="form-element" data-mapper-property="subject"/>
+            </div>
+        </div>
+        <div class="grid-col-6">
+            <div class="form-group">
+                <label for="type"><%=translate('contact.activities.type')%></label>
+                <input id="type" type="text" class="form-element" data-mapper-property="activityType"/>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid-row small">
+        <div class="grid-col-12">
+            <div class="form-group">
+                <label for="note"><%=translate('contact.activities.textarea')%></label>
+                <textarea id="note" type="text" class="form-element" data-mapper-property="note"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid-row small">
+        <div class="grid-col-6">
+            <div class="form-group">
+                <label for="assignedContact"><%=translate('contact.activities.assignedContact')%></label>
+                <input id="assignedContact" type="text" class="form-element" data-mapper-property="assignedContact"/>
+            </div>
+        </div>
+        <div class="grid-col-6">
+            <div class="form-group">
+                <label for="dueDate"><%=translate('contact.activities.dueDate')%></label>
+                <input id="dueDate" type="text" class="form-element" data-mapper-property="dueDate"/>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid-row small">
+        <div class="grid-col-6">
+            <div class="form-group">
+                <label for="priority"><%=translate('contact.activities.priority')%></label>
+                <input id="priority" type="text" class="form-element" data-mapper-property="activityPriority"/>
+            </div>
+        </div>
+        <div class="grid-col-6">
+            <div class="form-group">
+                <label for="status"><%=translate('contact.activities.status')%></label>
+                <input id="status" type="text" class="form-element" data-mapper-property="activityStatus"/>
+            </div>
+        </div>
+    </div>
+
+</div>

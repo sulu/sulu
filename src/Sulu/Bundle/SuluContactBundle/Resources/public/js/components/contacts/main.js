@@ -8,8 +8,9 @@
  */
 
 define([
-    'sulucontact/model/contact'
-], function(Contact) {
+    'sulucontact/model/contact',
+    'sulucontact/model/activity'
+], function(Contact, Activity) {
 
     'use strict';
 
@@ -22,6 +23,8 @@ define([
                 this.renderList();
             } else if (this.options.display === 'form') {
                 this.renderForm();
+            } else if (this.options.display === 'activities') {
+                this.renderActivities();
             } else {
                 throw 'display type wrong';
             }
@@ -57,6 +60,84 @@ define([
             this.sandbox.on('sulu.contacts.contacts.list', function() {
                 this.sandbox.emit('sulu.router.navigate', 'contacts/contacts');
             }, this);
+
+            // activities remove / save / add
+            this.sandbox.on('sulu.contacts.contact.activities.remove', this.removeActivities.bind(this));
+            this.sandbox.on('sulu.contacts.contact.activity.save', this.saveActivity.bind(this));
+            this.sandbox.on('sulu.contacts.contact.activity.load', this.loadActivity.bind(this));
+
+        },
+
+        removeActivities: function(ids){
+
+            // TODO loading
+            this.confirmDeleteDialog(function(wasConfirmed) {
+                if (wasConfirmed) {
+//                    this.sandbox.emit('sulu.header.toolbar.item.loading', 'options-button');
+                    var activity;
+                    this.sandbox.util.foreach(ids, function(id) {
+                        activity = Activity.findOrCreate({id: id});
+                        activity.destroy({
+                            success: function() {
+                                this.sandbox.emit('sulu.contacts.contact.activity.removed', id);
+                            }.bind(this),
+                            error: function() {
+                                this.sandbox.logger.log("error while deleting activity");
+                            }.bind(this)
+                        });
+                    }.bind(this));
+                }
+            }.bind(this));
+
+            // show warning
+//            this.sandbox.emit('sulu.overlay.show-warning', 'sulu.overlay.be-careful', 'sulu.overlay.delete-desc', null, function() {
+//                var activity;
+//                this.sandbox.util.foreach(ids, function(id) {
+//                    activity = Activity.findOrCreate({id: id});
+//                    activity.destroy({
+//                        success: function() {
+//                            this.sandbox.emit('sulu.contacts.contact.activity.removed', id);
+//                        }.bind(this),
+//                        error: function() {
+//                            this.sandbox.logger.log("error while deleting activity");
+//                        }.bind(this)
+//                    });
+//                }.bind(this));
+//            }.bind(this));
+        },
+
+        saveActivity: function(data){
+
+             // TODO loading icon
+            var activity = Activity.findOrCreate({id: data.id});
+            activity.set(data);
+            activity.save(null, {
+                // on success save contacts id
+                success: function(response) {
+                    this.sandbox.emit('sulu.contacts.contact.activity.saved', response.toJSON());
+                }.bind(this),
+                error: function() {
+                    this.sandbox.logger.log("error while saving activity");
+                }.bind(this)
+            });
+        },
+
+        loadActivity: function(id) {
+
+            // TODO loading icon
+            if (!!id) {
+                var activity = Activity.findOrCreate({id: this.options.id});
+                activity.fetch({
+                    success: function(model) {
+                        this.sandbox.emit('sulu.contacts.contact.activity.loaded', model.toJSON());
+                    }.bind(this),
+                    error: function() {
+                        this.sandbox.logger.log('error while fetching activity');
+                    }.bind(this)
+                });
+            } else {
+                this.sandbox.logger.warn('no id given to load activity');
+            }
         },
 
         del: function() {
@@ -154,6 +235,32 @@ define([
                 this.sandbox.start([
                     {name: 'contacts/components/form@sulucontact', options: { el: $form, data: this.contact.toJSON()}}
                 ]);
+            }
+        },
+
+        renderActivities: function(){
+
+            // load data and show form
+            this.contact = new Contact();
+            var $list = this.sandbox.dom.createElement('<div id="activities-list-container"/>');
+            this.html($list);
+
+            if (!!this.options.id) {
+                this.contact = new Contact({id: this.options.id});
+                //contact = this.getModel(this.options.id);
+                this.contact.fetch({
+                    success: function(model) {
+                        this.sandbox.start([
+                            {name: 'contacts/components/activities@sulucontact', options: { el: $list, contact: model.toJSON()}}
+                        ]);
+
+                    }.bind(this),
+                    error: function() {
+                        this.sandbox.logger.log('error while fetching contact');
+                    }.bind(this)
+                });
+            } else {
+                this.sandbox.logger.error("activities are not available for unsaved contacts!");
             }
         },
 
