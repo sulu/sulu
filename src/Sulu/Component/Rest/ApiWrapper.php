@@ -1,15 +1,13 @@
 <?php
-namespace Sulu\Bundle\CoreBundle\Entity;
+namespace Sulu\Component\Rest;
 
 use JMS\Serializer\Annotation\Exclude;
 
 /**
  * The abstract base class for an API object, which wraps another entity
  * @package Sulu\Bundle\CoreBundle\Entity
- * @deprecated
  */
-class ApiEntityWrapper {
-
+class ApiWrapper {
     /**
      * the entity which is wrapped by this class
      * @var object
@@ -20,6 +18,7 @@ class ApiEntityWrapper {
     /**
      * the locale in which the wrapped entity should be expressed
      * @var string
+     * @Exclude
      */
     protected $locale;
 

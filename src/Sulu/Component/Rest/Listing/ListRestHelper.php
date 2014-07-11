@@ -22,6 +22,7 @@ use Symfony\Component\HttpFoundation\Request;
  * For lists it allocates a Repository
  *
  * @package Sulu\Bundle\TranslateBundle\Controller
+ * @deprecated
  */
 class ListRestHelper
 {

@@ -10,6 +10,11 @@
 
 namespace Sulu\Component\Rest\Listing;
 
+/**
+ * Class ListQueryBuilder
+ * @package Sulu\Component\Rest\Listing
+ * @deprecated
+ */
 class ListQueryBuilder
 {
     /**
