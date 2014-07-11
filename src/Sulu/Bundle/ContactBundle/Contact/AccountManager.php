@@ -27,7 +27,7 @@ class AccountManager extends AbstractContactManager
      * @return AccountAddress
      * @throws \Exception
      */
-    public function addAddress($account, Address $address, $isMain)
+    public function addAddress($account, Address $address, $isMain = false)
     {
         if (!$account || !$address) {
             throw new \Exception('Account and Address cannot be null');
@@ -58,14 +58,15 @@ class AccountManager extends AbstractContactManager
         if (!$account || !$accountAddress) {
             throw new \Exception('Account and AccountAddress cannot be null');
         }
-        $address = $accountAddress->getAddress();
 
         // reload address to get all data (including relational data)
-        $address = $this->em->getRepository('SuluContactBundle:Address')->find($address->getId());
+        $address = $accountAddress->getAddress();
+        $address = $this->em->getRepository('SuluContactBundle:Address')->findById($address->getId());
 
         $isMain = $accountAddress->getMain();
 
         // remove relation
+        $address->removeAccountAddresse($accountAddress);
         $account->removeAccountAddresse($accountAddress);
 
         // if was main, set a new one
@@ -75,10 +76,10 @@ class AccountManager extends AbstractContactManager
 
         // delete address if it has no more relations
         if (!$address->hasRelations()) {
-            $this->$em->remove($address);
+            $this->em->remove($address);
         }
 
-        $this->$em->remove($accountAddress);
+        $this->em->remove($accountAddress);
     }
 
     /**

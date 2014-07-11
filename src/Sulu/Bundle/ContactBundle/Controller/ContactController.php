@@ -395,7 +395,7 @@ class ContactController extends AbstractContactController
             }
 
             // add urls, phones, emails, tags, bankAccounts, notes, addresses,..
-            $this->addNewContactRelations($contact, $request, $this->getContactManager());
+            $this->addNewContactRelations($contact, $request);
 
             $em->persist($contact);
             $em->flush();
@@ -414,7 +414,8 @@ class ContactController extends AbstractContactController
      * returns the main account-contact relation or creates a new one
      * @param Contact $contact
      * @param Account $account
-     * @return bool
+     * @param $position
+     * @return bool|AccountContact
      */
     private function getMainAccountContactOrCreateNew(Contact $contact, Account $account, $position)
     {
