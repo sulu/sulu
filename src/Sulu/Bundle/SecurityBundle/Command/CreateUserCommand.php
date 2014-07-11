@@ -64,7 +64,6 @@ class CreateUserCommand extends ContainerAwareCommand
 
         $email = new Email();
         $email->setEmail($emailText);
-        $email->setMain(true);
         $email->setEmailType($emailTypes[0]);
 
         $em->persist($email);
@@ -76,10 +75,10 @@ class CreateUserCommand extends ContainerAwareCommand
         $contact->setTitle('');
         $contact->setFirstName($firstName);
         $contact->setLastName($lastName);
-        $contact->setPosition('');
         $contact->addEmail($email);
         $contact->setCreated($now);
         $contact->setChanged($now);
+        $contact->setMainEmail($email->getEmail());
 
         $em->persist($contact);
         $em->flush();
