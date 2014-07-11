@@ -177,9 +177,9 @@ class CollectionControllerTest extends DatabaseTestCase
 
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertNotEmpty($response);
+        $this->assertNotEmpty($response->_embedded->collections);
 
-        $this->assertEquals(1, $response->total);
+        $this->assertEquals(1, count($response->_embedded->collections));
     }
 
     /**
@@ -268,10 +268,11 @@ class CollectionControllerTest extends DatabaseTestCase
 
         $this->assertNotEmpty($response);
 
-        $this->assertEquals(2, $response->total);
+        $this->assertEquals(2, count($response->_embedded->collections));
 
         // check if first entity is unchanged
-        $responseFirstEntity = $response->_embedded[0];
+        $this->assertTrue(isset($response->_embedded->collections[0]));
+        $responseFirstEntity = $response->_embedded->collections[0];
 
         $style = new \stdClass();
         $style->type = 'circle';
@@ -287,7 +288,8 @@ class CollectionControllerTest extends DatabaseTestCase
         $this->assertEquals('This Description is only for testing', $responseFirstEntity->description);
 
         // check second entity was created right
-        $responseSecondEntity = $response->_embedded[1];
+        $this->assertTrue(isset($response->_embedded->collections[1]));
+        $responseSecondEntity = $response->_embedded->collections[1];
 
 
         $style = new \stdClass();
@@ -348,10 +350,11 @@ class CollectionControllerTest extends DatabaseTestCase
 
         $this->assertNotEmpty($response);
 
-        $this->assertEquals(2, $response->total);
+        $this->assertEquals(2, count($response->_embedded->collections));
 
         // check if first entity is unchanged
-        $responseFirstEntity = $response->_embedded[0];
+        $this->assertTrue(isset($response->_embedded->collections[0]));
+        $responseFirstEntity = $response->_embedded->collections[0];
 
         $style = new \stdClass();
         $style->type = 'circle';
@@ -367,7 +370,8 @@ class CollectionControllerTest extends DatabaseTestCase
         $this->assertEquals('This Description is only for testing', $responseFirstEntity->description);
 
         // check second entity was created right
-        $responseSecondEntity = $response->_embedded[1];
+        $this->assertTrue(isset($response->_embedded->collections[1]));
+        $responseSecondEntity = $response->_embedded->collections[1];
 
         $this->assertEquals(2, $responseSecondEntity->id);
         $this->assertEquals('en-gb', $responseSecondEntity->locale);
@@ -394,10 +398,11 @@ class CollectionControllerTest extends DatabaseTestCase
 
         $this->assertNotEmpty($response);
 
-        $this->assertEquals(2, $response->total);
+        $this->assertEquals(2, count($response->_embedded->collections));
 
         // check if first entity is unchanged
-        $responseFirstEntity = $response->_embedded[0];
+        $this->assertTrue(isset($response->_embedded->collections[0]));
+        $responseFirstEntity = $response->_embedded->collections[0];
 
         $style = new \stdClass();
         $style->type = 'circle';
@@ -413,7 +418,8 @@ class CollectionControllerTest extends DatabaseTestCase
         $this->assertEquals('This Description is only for testing', $responseFirstEntity->description);
 
         // check second entity was created right
-        $responseSecondEntity = $response->_embedded[1];
+        $this->assertTrue(isset($response->_embedded->collections[1]));
+        $responseSecondEntity = $response->_embedded->collections[1];
 
         $this->assertEquals(2, $responseSecondEntity->id);
         $this->assertEquals('en', $responseSecondEntity->locale);
@@ -520,9 +526,10 @@ class CollectionControllerTest extends DatabaseTestCase
 
         $this->assertNotEmpty($response);
 
-        $this->assertEquals(1, $response->total);
+        $this->assertEquals(1, count($response->_embedded->collections));
 
-        $responseFirstEntity = $response->_embedded[0];
+        $this->assertTrue(isset($response->_embedded->collections[0]));
+        $responseFirstEntity = $response->_embedded->collections[0];
 
         $style = new \stdClass();
         $style->type = 'circle';
@@ -646,6 +653,6 @@ class CollectionControllerTest extends DatabaseTestCase
 
         $client->request('GET', '/api/collections?flat=true');
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(1, $response->total);
+        $this->assertEquals(1, count($response->_embedded->collections));
     }
 }
