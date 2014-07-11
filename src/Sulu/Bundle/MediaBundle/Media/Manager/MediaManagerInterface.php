@@ -60,4 +60,11 @@ interface MediaManagerInterface
      * @return mixed
      */
     public function remove($id, $userId);
+
+    /**
+     * Increase the download counter of a fileVersion
+     * @param int $fileVersionId
+     * @return mixed
+     */
+    public function increaseDownloadCounter($fileVersionId);
 }
