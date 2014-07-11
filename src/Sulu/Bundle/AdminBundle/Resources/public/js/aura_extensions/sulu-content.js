@@ -2,6 +2,22 @@ define([], function() {
 
     'use strict';
 
+    var defaults = {
+        layout: {
+            navigation: {
+                collapsed: false,
+                hidden: false
+            },
+            content: {
+                width: 'fixed',
+                leftSpace: true,
+                rightSpace: true,
+                topSpace: true
+            },
+            sidebar: false
+        }
+    };
+
     /**
      * parses content tabs into the right format
      *
@@ -120,9 +136,10 @@ define([], function() {
                 layout = layout.call(this);
             }
             if (!layout.changeNothing) {
-                handleLayoutNavigation.call(this, layout.navigation || true);
-                handleLayoutContent.call(this, layout.content || true);
-                handleLayoutSidebar.call(this, layout.sidebar || false);
+                layout = this.sandbox.util.extend(true, {}, defaults.layout, layout);
+                handleLayoutNavigation.call(this, layout.navigation);
+                handleLayoutContent.call(this, layout.content);
+                handleLayoutSidebar.call(this, layout.sidebar);
             }
         },
 
@@ -148,10 +165,10 @@ define([], function() {
          * @param {Object|Boolean} [content] the content config object or true for default behaviour
          */
         handleLayoutContent = function(content) {
-            var width = content.width || 'fixed',
-                leftSpace = (typeof content.leftSpace === 'undefined') ? true : !!content.leftSpace,
-                rightSpace = (typeof content.rightSpace === 'undefined') ? true : !!content.rightSpace,
-                topSpace = (typeof content.topSpace === 'undefined') ? true : !!content.topSpace;
+            var width = content.width,
+                leftSpace = !!content.leftSpace,
+                rightSpace = !!content.rightSpace,
+                topSpace = !!content.topSpace;
             this.sandbox.emit('sulu.app.change-width', width);
             this.sandbox.emit('sulu.app.change-spacing', leftSpace, rightSpace, topSpace);
             this.sandbox.emit('sulu.app.toggle-shrinker', !!content.shrinkable);
@@ -159,7 +176,7 @@ define([], function() {
 
         /**
          * Handles the sidebar part of the view object
-         * @param content {Object|Boolean} the sidebar config object or true for default behaviour. If false sidebar gets hidden
+         * @param sidebar {Object|Boolean} the sidebar config object or true for default behaviour. If false sidebar gets hidden
          */
         handleLayoutSidebar = function(sidebar) {
             this.sandbox.emit('sulu.sidebar.empty');
@@ -310,7 +327,7 @@ define([], function() {
                 handleViewMarked.call(this, this.view);
                 // if a view has no layout specified use the default one
                 if (!this.layout) {
-                    handleLayoutMarked.call(this, true);
+                    handleLayoutMarked.call(this, {});
                 }
             }
 
