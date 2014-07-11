@@ -11,8 +11,6 @@
 namespace Sulu\Component\Rest;
 
 use FOS\RestBundle\Controller\FOSRestController;
-use Sulu\Bundle\AdminBundle\UserManager\CurrentUserDataInterface;
-use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
@@ -30,6 +28,12 @@ abstract class RestController extends FOSRestController
      * @var string
      */
     protected $entityName;
+
+    /**
+     * The key of the entity which will be used in the embedded part of the REST Response
+     * @var string
+     */
+    protected static $entityKey;
 
     /**
      * contains all attributes that are not sortable

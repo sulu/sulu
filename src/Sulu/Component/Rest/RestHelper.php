@@ -91,7 +91,7 @@ class RestHelper implements RestHelperInterface
                 }
 
                 // Remove done element from array
-                if ($matchedKey != null) {
+                if ($matchedKey !== null) {
                     unset($requestEntities[$matchedKey]);
                 }
             }
