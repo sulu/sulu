@@ -144,7 +144,7 @@ class DefaultMediaManager implements MediaManagerInterface, MediaFieldDescriptor
         $this->maxFileSize = $maxFileSize;
         $this->blockedMimeTypes = $blockedMimeTypes;
         $this->mediaTypes = $mediaTypes;
-        
+
         $this->initializeFieldDescriptors();
     }
 
@@ -154,61 +154,61 @@ class DefaultMediaManager implements MediaManagerInterface, MediaFieldDescriptor
      */
     private function initializeFieldDescriptors()
     {
-        $fieldDescriptors[] = new DoctrineFieldDescriptor('id', 'id', self::ENTITY_NAME_MEDIA, array());
-        $fieldDescriptors[] = new DoctrineFieldDescriptor('collection', 'idCollections', self::ENTITY_NAME_MEDIA, array());
+        $fieldDescriptors['id'] = new DoctrineFieldDescriptor('id', 'id', self::ENTITY_NAME_MEDIA, array());
+        $fieldDescriptors['collection'] = new DoctrineFieldDescriptor('collection', 'idCollections', self::ENTITY_NAME_MEDIA, array());
 
-        $fieldDescriptors[] = new DoctrineFieldDescriptor('name', 'name', self::ENTITY_NAME_FILEVERSION, array(
+        $fieldDescriptors['name'] = new DoctrineFieldDescriptor('name', 'name', self::ENTITY_NAME_FILEVERSION, array(
             self::ENTITY_NAME_FILEVERSION => self::ENTITY_NAME_FILE . '.version'
         ));
-        $fieldDescriptors[] = new DoctrineFieldDescriptor('size', 'size', self::ENTITY_NAME_FILEVERSION, array(
+        $fieldDescriptors['size'] = new DoctrineFieldDescriptor('size', 'size', self::ENTITY_NAME_FILEVERSION, array(
             self::ENTITY_NAME_FILEVERSION => self::ENTITY_NAME_FILE . '.version'
         ));
-        $fieldDescriptors[] = new DoctrineFieldDescriptor('storageOptions', 'storageOptions', self::ENTITY_NAME_FILEVERSION, array(
+        $fieldDescriptors['storageOptions'] = new DoctrineFieldDescriptor('storageOptions', 'storageOptions', self::ENTITY_NAME_FILEVERSION, array(
             self::ENTITY_NAME_FILEVERSION => self::ENTITY_NAME_FILE . '.version'
         ));
-        $fieldDescriptors[] = new DoctrineFieldDescriptor('changed', 'changed', self::ENTITY_NAME_FILEVERSION, array(
+        $fieldDescriptors['changed'] = new DoctrineFieldDescriptor('changed', 'changed', self::ENTITY_NAME_FILEVERSION, array(
             self::ENTITY_NAME_FILEVERSION => self::ENTITY_NAME_FILE . '.version'
         ));
-        $fieldDescriptors[] = new DoctrineFieldDescriptor('changer', 'firstName', self::ENTITY_NAME_CONTACT, array(
+        $fieldDescriptors['changer'] = new DoctrineFieldDescriptor('changer', 'firstName', self::ENTITY_NAME_CONTACT, array(
             self::ENTITY_NAME_FILEVERSION => self::ENTITY_NAME_FILE . '.version'
         ));
-        $fieldDescriptors[] = new DoctrineFieldDescriptor('created', 'created', self::ENTITY_NAME_FILEVERSION, array(
+        $fieldDescriptors['created'] = new DoctrineFieldDescriptor('created', 'created', self::ENTITY_NAME_FILEVERSION, array(
             self::ENTITY_NAME_FILEVERSION => self::ENTITY_NAME_FILE . '.version'
         ));
-        $fieldDescriptors[] = new DoctrineFieldDescriptor('creator', 'firstName', self::ENTITY_NAME_CONTACT, array(
+        $fieldDescriptors['creator'] = new DoctrineFieldDescriptor('creator', 'firstName', self::ENTITY_NAME_CONTACT, array(
             self::ENTITY_NAME_FILEVERSION => self::ENTITY_NAME_FILE . '.version'
         ));
-        $fieldDescriptors[] = new DoctrineFieldDescriptor('version', 'version', self::ENTITY_NAME_FILEVERSION, array(
-            self::ENTITY_NAME_FILEVERSION => self::ENTITY_NAME_FILE . '.version'
-        ));
-
-        $fieldDescriptors[] = new DoctrineFieldDescriptor('type', 'name', self::ENTITY_NAME_MEDIATYPE, array(
+        $fieldDescriptors['version'] = new DoctrineFieldDescriptor('version', 'version', self::ENTITY_NAME_FILEVERSION, array(
             self::ENTITY_NAME_FILEVERSION => self::ENTITY_NAME_FILE . '.version'
         ));
 
-        $fieldDescriptors[] = new DoctrineFieldDescriptor('title', 'title', self::ENTITY_NAME_FILEVERSIONMETA, array(
+        $fieldDescriptors['type'] = new DoctrineFieldDescriptor('type', 'name', self::ENTITY_NAME_MEDIATYPE, array(
+            self::ENTITY_NAME_FILEVERSION => self::ENTITY_NAME_FILE . '.version'
+        ));
+
+        $fieldDescriptors['title'] = new DoctrineFieldDescriptor('title', 'title', self::ENTITY_NAME_FILEVERSIONMETA, array(
             self::ENTITY_NAME_FILEVERSIONMETA => self::ENTITY_NAME_FILEVERSION . '.version'
         ));
-        $fieldDescriptors[] = new DoctrineFieldDescriptor('description', 'description', self::ENTITY_NAME_FILEVERSIONMETA, array(
+        $fieldDescriptors['description'] = new DoctrineFieldDescriptor('description', 'description', self::ENTITY_NAME_FILEVERSIONMETA, array(
             self::ENTITY_NAME_FILEVERSIONMETA => self::ENTITY_NAME_FILEVERSION . '.version'
         ));
-        $fieldDescriptors[] = new DoctrineFieldDescriptor('locale', 'locale', self::ENTITY_NAME_FILEVERSIONMETA, array(
+        $fieldDescriptors['locale'] = new DoctrineFieldDescriptor('locale', 'locale', self::ENTITY_NAME_FILEVERSIONMETA, array(
             self::ENTITY_NAME_FILEVERSIONMETA => self::ENTITY_NAME_FILEVERSION . '.version'
         ));
 
-        $fieldDescriptors[] = new DoctrineFieldDescriptor('publishLanguages', 'locale', self::ENTITY_NAME_FILEVERSIONPUBLISHLANGUAGE, array(
+        $fieldDescriptors['publishLanguages'] = new DoctrineFieldDescriptor('publishLanguages', 'locale', self::ENTITY_NAME_FILEVERSIONPUBLISHLANGUAGE, array(
 
         ));
-        $fieldDescriptors[] = new DoctrineFieldDescriptor('contentLanguages', 'locale', self::ENTITY_NAME_FILEVERSIONCONTENTLANGUAGE, array(
+        $fieldDescriptors['contentLanguages'] = new DoctrineFieldDescriptor('contentLanguages', 'locale', self::ENTITY_NAME_FILEVERSIONCONTENTLANGUAGE, array(
 
         ));
-        $fieldDescriptors[] = new DoctrineFieldDescriptor('tags', 'id', self::ENTITY_NAME_TAG, array(
+        $fieldDescriptors['tags'] = new DoctrineFieldDescriptor('tags', 'id', self::ENTITY_NAME_TAG, array(
 
         ));
 
-        $fieldDescriptors[] = new DoctrineFieldDescriptor('thumbnails',  null, null, array());
-        $fieldDescriptors[] = new DoctrineFieldDescriptor('url', null, null, array());
-        $fieldDescriptors[] = new DoctrineFieldDescriptor('properties', null, null, array());
+        $fieldDescriptors['thumbnails'] = new DoctrineFieldDescriptor('thumbnails',  null, null, array());
+        $fieldDescriptors['url'] = new DoctrineFieldDescriptor('url', null, null, array());
+        $fieldDescriptors['properties'] = new DoctrineFieldDescriptor('properties', null, null, array());
 
 
         $this->fieldDescriptors = $fieldDescriptors;
