@@ -27,7 +27,7 @@ use Sulu\Bundle\TranslateBundle\Entity\Package;
  */
 class PackageController extends RestController implements ClassResourceInterface
 {
-    protected $entityName = 'SuluTranslateBundle:Package';
+    protected static $entityName = 'SuluTranslateBundle:Package';
 
 
     protected $basePath = 'admin/api/contacts';

@@ -74,7 +74,7 @@ class CatalogueControllerTest extends DatabaseTestCase
 
         $client->request('GET', '/api/catalogues');
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals('EN', $response->_embedded[0]->locale);
+        $this->assertEquals('EN', $response->_embedded->catalogues[0]->locale);
     }
 
     public function testGetByPackage()
@@ -83,7 +83,7 @@ class CatalogueControllerTest extends DatabaseTestCase
 
         $client->request('GET', '/api/catalogues?package=1');
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals('EN', $response->_embedded[0]->locale);
+        $this->assertEquals('EN', $response->_embedded->catalogues[0]->locale);
     }
 
     public function testGetById()
@@ -131,8 +131,8 @@ class CatalogueControllerTest extends DatabaseTestCase
         $this->assertEquals('200', $client->getResponse()->getStatusCode());
 
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals('1', $response->_embedded[0]->id);
-        $this->assertEquals('EN', $response->_embedded[0]->locale);
+        $this->assertEquals('1', $response->_embedded->catalogues[0]->id);
+        $this->assertEquals('EN', $response->_embedded->catalogues[0]->locale);
 
     }
 

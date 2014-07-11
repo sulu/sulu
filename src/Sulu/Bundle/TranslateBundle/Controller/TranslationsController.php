@@ -27,7 +27,7 @@ class TranslationsController extends RestController implements ClassResourceInte
     /**
      * @var string
      */
-    protected $entityName = 'SuluTranslateBundle:Translation';
+    protected static $entityName = 'SuluTranslateBundle:Translation';
 
     /**
      * Lists all the translations or filters the translations by parameters for a single catalogue

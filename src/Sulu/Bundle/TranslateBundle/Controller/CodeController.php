@@ -24,7 +24,7 @@ use Sulu\Bundle\TranslateBundle\Entity\Translation;
  */
 class CodeController extends RestController implements ClassResourceInterface
 {
-    protected $entityName = 'SuluTranslateBundle:Code';
+    protected static $entityName = 'SuluTranslateBundle:Code';
 
     private $codeEntity = 'SuluTranslateBundle:Code';
     private $catalogueEntity = 'SuluTranslateBundle:Catalogue';
