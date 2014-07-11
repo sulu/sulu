@@ -27,8 +27,8 @@ interface CollectionFieldDescriptorInterface
 
     /**
      * Return the FieldDescriptors
-     * @param DoctrineFieldDescriptor[] $fieldDescriptors
-     * @return $this
+     * @param string $key
+     * @return DoctrineFieldDescriptor
      */
-    public function setFieldDescriptors($fieldDescriptors);
+    public function getFieldDescriptor($key);
 }

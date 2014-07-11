@@ -92,7 +92,7 @@ class DefaultCollectionManager implements CollectionManagerInterface, Collection
      * TODO
      * @return DoctrineFieldDescriptor[]
      */
-    public function initializeFieldDescriptors()
+    private function initializeFieldDescriptors()
     {
         $fieldDescriptors = array();
 
@@ -112,10 +112,9 @@ class DefaultCollectionManager implements CollectionManagerInterface, Collection
     /**
      * {@inheritdoc}
      */
-    public function setFieldDescriptors($fieldDescriptors)
+    public function getFieldDescriptor($key)
     {
-        $this->fieldDescriptors = $fieldDescriptors;
-        return $this;
+        return $this->fieldDescriptors[$key];
     }
 
     /**
