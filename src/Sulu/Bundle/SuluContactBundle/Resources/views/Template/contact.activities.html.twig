@@ -1,5 +1,13 @@
 {% extends "SuluContactBundle:Template:base.list.html.twig" %}
 
 {% block list %}
-    <div id="activities-list"></div>
+    <script type="text/javascript">
+        var activityTypes = {{ activityTypes|json_encode()|raw }};
+        var activityPriorities = {{ activityPriorities|json_encode()|raw }};
+        var activityStatuses = {{ activityStatuses|json_encode()|raw }};
+    </script>
+
+    <div id="activities-list">
+
+    </div>
 {% endblock %}
