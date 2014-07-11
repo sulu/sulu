@@ -289,7 +289,7 @@ class MediaControllerTest extends DatabaseTestCase
 
         $this->assertNotEmpty($response);
 
-        $this->assertEquals(1, count($response->_embedded->media));
+        $this->assertEquals(1, $response->total);
     }
 
     /**
@@ -310,7 +310,7 @@ class MediaControllerTest extends DatabaseTestCase
 
         $this->assertNotEmpty($response);
 
-        $this->assertEquals(1, count($response->_embedded->media));
+        $this->assertEquals(1, $response->total);
         $this->assertEquals(1, $response->_embedded->media[0]->id);
         $this->assertEquals('photo.jpeg', $response->_embedded->media[0]->name);
     }
@@ -333,7 +333,7 @@ class MediaControllerTest extends DatabaseTestCase
 
         $this->assertNotEmpty($response);
 
-        $this->assertEquals(1, count($response->_embedded->media));
+        $this->assertEquals(1, $response->total);
         $this->assertEquals(1, $response->_embedded->media[0]->id);
         $this->assertEquals('photo.jpeg', $response->_embedded->media[0]->name);
     }
@@ -356,7 +356,7 @@ class MediaControllerTest extends DatabaseTestCase
 
         $this->assertNotEmpty($response);
 
-        $this->assertEquals(0, count($response->_embedded->media));
+        $this->assertEquals(0, $response->total);
     }
 
     /**
@@ -667,7 +667,7 @@ class MediaControllerTest extends DatabaseTestCase
 
         $client->request('GET', '/api/media');
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(1, count($response->_embedded->media));
+        $this->assertEquals(1, $response->total);
     }
 
     /**
