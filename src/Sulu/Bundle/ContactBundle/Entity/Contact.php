@@ -325,6 +325,15 @@ class Contact extends ApiEntity
     }
 
     /**
+     * sets position variable
+     * @param $position
+     */
+    public function setCurrentPosition($position)
+    {
+        $this->position = $position;
+    }
+
+    /**
      * Get position
      *
      * @return string

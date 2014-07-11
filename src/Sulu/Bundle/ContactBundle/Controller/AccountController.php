@@ -257,6 +257,7 @@ class AccountController extends AbstractContactController
             $accountContact->setAccount($account);
             $accountContact->setContact($contact);
             $accountContact->setPosition($request->get('position'));
+            $contact->setCurrentPosition($request->get('position'));
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($accountContact);
