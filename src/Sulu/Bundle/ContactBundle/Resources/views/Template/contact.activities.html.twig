@@ -1,8 +1,12 @@
 {% extends "SuluContactBundle:Template:base.list.html.twig" %}
 
 {% block list %}
+
+   {# TODO empty values? #}
+
+
     <script type="text/javascript">
-        var activityTypes = {{ activityTypes|json_encode()|raw }};
+        var activityTypes = {{ activityTypes|json_encode() }};
         var activityPriorities = {{ activityPriorities|json_encode()|raw }};
         var activityStatuses = {{ activityStatuses|json_encode()|raw }};
     </script>
