@@ -44,16 +44,14 @@ class UserController extends RestController implements ClassResourceInterface
     const ENTITY_NAME_CONTACT = 'SuluContactBundle:Contact';
     const ENTITY_NAME_USER_SETTING = 'SuluSecurityBundle:UserSetting';
 
+    // TODO: move field descriptors to a manager
     /**
      * Contains the field descriptors used by the list response
-     * TODO: move field descriptors to a manager
      * @var DoctrineFieldDescriptor[]
      */
     protected $fieldDescriptors;
 
-    /**
-     * TODO: move field descriptors to a manager
-     */
+    // TODO: move field descriptors to a manager
     public function __construct()
     {
         $this->fieldDescriptors = array();
@@ -341,7 +339,7 @@ class UserController extends RestController implements ClassResourceInterface
 
             $view = $this->view($setting, 200);
         } catch (InvalidArgumentException $exc) {
-            $view = $this->view($exc - toArray(), 400);
+            $view = $this->view($exc->toArray(), 400);
         }
 
         return $this->handleView($view);
@@ -440,7 +438,7 @@ class UserController extends RestController implements ClassResourceInterface
             throw new EntityNotFoundException(self::ENTITY_NAME_ROLE, $userRoleData['role']['id']);
         }
 
-        if ($user->getRoles()) {
+        if ($user->getUserRoles()) {
             foreach($user->getUserRoles() as $containedRole) {
                 if ($containedRole->getRole()->getId() === $role->getId()) {
                     $alreadyContains = true;
