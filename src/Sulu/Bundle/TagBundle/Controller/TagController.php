@@ -85,7 +85,7 @@ class TagController extends RestController implements ClassResourceInterface
      */
     private function getManager()
     {
-        return $this->getManager();
+        return $this->get('sulu_tag.tag_manager');
     }
 
     /**
@@ -146,7 +146,7 @@ class TagController extends RestController implements ClassResourceInterface
             $list = new ListRepresentation(
                 $listBuilder->execute(),
                 self::$entityKey,
-                'get_products',
+                'get_tags',
                 $request->query->all(),
                 $listBuilder->getCurrentPage(),
                 $listBuilder->getLimit(),
