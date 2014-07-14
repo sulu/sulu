@@ -30,7 +30,6 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
  */
 class TagManager implements TagManagerInterface
 {
-
     protected static $tagEntityName = 'SuluTagBundle:Tag';
 
     /**
@@ -276,7 +275,7 @@ class TagManager implements TagManagerInterface
     private function initializeFieldDescriptors()
     {
         $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor('id', 'id', self::$tagEntityName);
-        $this->fieldDescriptors['name'] = new DoctrineFieldDescriptor('code', 'code', self::$tagEntityName);
+        $this->fieldDescriptors['name'] = new DoctrineFieldDescriptor('name', 'name', self::$tagEntityName);
         $this->fieldDescriptors['created'] = new DoctrineFieldDescriptor('created', 'created', self::$tagEntityName);
         $this->fieldDescriptors['changed'] = new DoctrineFieldDescriptor('changed', 'changed', self::$tagEntityName);
     }
