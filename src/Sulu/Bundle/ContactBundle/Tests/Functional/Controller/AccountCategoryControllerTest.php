@@ -178,7 +178,7 @@ class AccountCategoryControllerTest extends DatabaseTestCase
         $client = $this->createTestClient();
         $client->request(
             'PUT',
-            'api/account/categories/1',
+            'api/accounts/1/category',
             array(
                 'category' => 'Nebensitz 3'
             )
@@ -212,7 +212,7 @@ class AccountCategoryControllerTest extends DatabaseTestCase
         $client = $this->createTestClient();
         $client->request(
             'PUT',
-            'api/account/categories/100',
+            'api/account/100/category',
             array(
                 'category' => 'Nebensitz 3'
             )
@@ -237,7 +237,7 @@ class AccountCategoryControllerTest extends DatabaseTestCase
         $response2 = json_decode($client2->getResponse()->getContent());
         $this->assertEquals(200, $client2->getResponse()->getStatusCode());
 
-        $this->assertEquals(1, $response2->total);
+        $this->assertEquals(1, count($response2->_embedded->accountCategories));
     }
 
     public function testDeleteInvalidId()
@@ -256,7 +256,7 @@ class AccountCategoryControllerTest extends DatabaseTestCase
         $response2 = json_decode($client2->getResponse()->getContent());
         $this->assertEquals(200, $client2->getResponse()->getStatusCode());
 
-        $this->assertEquals(2, $response2->total);
+        $this->assertEquals(2, count($response2->_embedded->accountCategories));
     }
 
     public function testPatch()
@@ -294,7 +294,7 @@ class AccountCategoryControllerTest extends DatabaseTestCase
         $response2 = json_decode($client2->getResponse()->getContent());
         $this->assertEquals(200, $client2->getResponse()->getStatusCode());
 
-        $this->assertEquals(3, $response2->total);
+        $this->assertEquals(3, count($response2->_embedded->accountCategories));
 
         if($response2->_embedded->accountCategories[0]->category == 'Changed Hauptsitz') {
             $this->assertEquals('Changed Hauptsitz', $response2->_embedded->accountCategories[0]->category);
@@ -322,7 +322,7 @@ class AccountCategoryControllerTest extends DatabaseTestCase
         $client = $this->createTestClient();
         $client->request(
             'PATCH',
-            'api/account/categories',
+            'api/accounts/1/category',
             array(
                 array(
                     'id' => 1,

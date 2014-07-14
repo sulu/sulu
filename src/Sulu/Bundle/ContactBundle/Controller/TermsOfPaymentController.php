@@ -21,6 +21,7 @@ use Sulu\Component\Rest\RestController;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Controller\Annotations\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Hateoas\Representation\CollectionRepresentation;
 
 /**
  * Makes account categories available through a REST API
@@ -33,6 +34,11 @@ class TermsOfPaymentController extends RestController implements ClassResourceIn
      * {@inheritdoc}
      */
     protected static $entityName = 'SuluContactBundle:TermsOfPayment';
+
+    /**
+     * {@inheritdoc}
+     */
+    protected static $entityKey = 'termsOfPayments';
 
     /**
      * Shows a single terms of payment
@@ -63,8 +69,9 @@ class TermsOfPaymentController extends RestController implements ClassResourceIn
     public function cgetAction()
     {
         $termsOfPayment = $this->getDoctrine()->getRepository(self::$entityName)->findAll();
-        $view = $this->view($this->createHalResponse($termsOfPayment), 200);
+        $list = new CollectionRepresentation($termsOfPayment, self::$entityKey);
 
+        $view = $this->view($list, 200);
         return $this->handleView($view);
     }
 
