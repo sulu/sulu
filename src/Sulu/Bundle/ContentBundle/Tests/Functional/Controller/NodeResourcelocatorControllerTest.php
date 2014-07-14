@@ -224,9 +224,9 @@ class NodeResourcelocatorControllerTest extends DatabaseTestCase
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $result = (array)json_decode($this->client->getResponse()->getContent(), true);
 
-        $this->assertEquals(1, sizeof($result['_embedded']));
+        $this->assertEquals(1, sizeof($result['_embedded']['resourcelocators']));
         $this->assertEquals(1, $result['total']);
-        $this->assertEquals('/news', $result['_embedded'][0]['resourceLocator']);
+        $this->assertEquals('/news', $result['_embedded']['resourcelocators'][0]['resourceLocator']);
     }
 
     public function testDelete()
@@ -260,7 +260,7 @@ class NodeResourcelocatorControllerTest extends DatabaseTestCase
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $result = (array)json_decode($this->client->getResponse()->getContent(), true);
 
-        $this->assertEquals(0, sizeof($result['_embedded']));
+        $this->assertEquals(0, sizeof($result['_embedded']['resourcelocators']));
         $this->assertEquals(0, $result['total']);
     }
 
