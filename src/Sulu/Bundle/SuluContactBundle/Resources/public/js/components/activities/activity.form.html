@@ -1,5 +1,4 @@
-<div id="acitivity-form" class="form-vertical">
-
+<form id="acitivity-form" class="form-vertical">
     <div class="grid-row small">
         <div class="grid-col-6">
             <div class="form-group">
@@ -34,10 +33,19 @@
     </div>
 
     <div class="grid-row small">
-                <div class="grid-col-6">
-                    <div class="form-group">
-                        <label for="assignedContact" class="required"><%=translate('contact.activities.assignedContact')%></label>
+        <div class="grid-col-6">
+            <div class="form-group">
+                <label for="assignedContact" class="required"><%=translate('contact.activities.assignedContact')%></label>
 
+                <div id="assignedContact"
+                     data-aura-component="select@husky"
+                     data-aura-default-label="<%= translate('public.please-choose') %>"
+                     data-value-name="fullName"
+                     data-aura-data='<%= JSON.stringify(responsiblePersons) %>'
+                     data-type="husky-select"
+                     data-form="true"
+                     data-mapper-return-value="id"
+                     data-mapper-property="assignedContact"></div>
 
             </div>
         </div>
@@ -59,7 +67,7 @@
         </div>
     </div>
 
-    <div class="grid-row small">
+    <div class="grid-row m-bottom-40">
         <div class="grid-col-6">
             <div class="form-group">
                 <label for="activityPriorities"><%=translate('contact.activities.priority')%></label>
@@ -93,4 +101,6 @@
         </div>
     </div>
 
-</div>
+    <span id="contact" type="text" class="hidden" data-mapper-property="contact"></span>
+    <span id="account" type="text" class="hidden" data-mapper-property="account"></span>
+</form>
