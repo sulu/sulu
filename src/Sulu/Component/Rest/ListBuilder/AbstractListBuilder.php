@@ -156,7 +156,7 @@ abstract class AbstractListBuilder implements ListBuilderInterface
      */
     public function where(AbstractFieldDescriptor $fieldDescriptor, $value)
     {
-        $this->whereFields[$fieldDescriptor->getName()] = $fieldDescriptor;
-        $this->whereValues[$fieldDescriptor->getName()] = $value;
+        $this->whereFields[$fieldDescriptor->getAlias()] = $fieldDescriptor;
+        $this->whereValues[$fieldDescriptor->getAlias()] = $value;
     }
 }

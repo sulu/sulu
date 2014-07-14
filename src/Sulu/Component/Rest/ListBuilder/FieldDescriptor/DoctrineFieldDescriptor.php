@@ -19,11 +19,6 @@ use JMS\Serializer\Annotation\ExclusionPolicy;
  */
 class DoctrineFieldDescriptor extends AbstractFieldDescriptor
 {
-    /**
-     * The alias name of the field for the response
-     * @var string
-     */
-    private $alias;
 
     /**
      * The name of the entity
@@ -48,9 +43,8 @@ class DoctrineFieldDescriptor extends AbstractFieldDescriptor
         $translation = null
     )
     {
-        parent::__construct($name, $disabled, $type, $width, $translation);
+        parent::__construct($name, $alias, $disabled, $type, $width, $translation);
 
-        $this->alias = $alias;
         $this->entityName = $entityName;
         $this->joins = $joins;
     }
@@ -62,15 +56,6 @@ class DoctrineFieldDescriptor extends AbstractFieldDescriptor
     public function getFullName()
     {
         return $this->entityName . '.' . $this->getName();
-    }
-
-    /**
-     * Returns the alias for the field in the database
-     * @return string
-     */
-    public function getAlias()
-    {
-        return $this->alias;
     }
 
     /**
