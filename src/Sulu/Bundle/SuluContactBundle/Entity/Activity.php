@@ -4,10 +4,12 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Exclude;
+use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
+
 /**
  * Activity
  */
-class Activity
+class Activity extends ApiEntity
 {
     /**
      * @var string
