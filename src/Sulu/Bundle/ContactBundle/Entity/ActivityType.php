@@ -4,10 +4,11 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Exclude;
+use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 /**
  * ActivityType
  */
-class ActivityType
+class ActivityType extends ApiEntity implements \JsonSerializable
 {
     /**
      * @var string
@@ -97,5 +98,20 @@ class ActivityType
     public function getActivities()
     {
         return $this->activities;
+    }
+
+    /**
+     * (PHP 5 &gt;= 5.4.0)<br/>
+     * Specify data which should be serialized to JSON
+     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return mixed data which can be serialized by <b>json_encode</b>,
+     * which is a value of any type other than a resource.
+     */
+    public function jsonSerialize()
+    {
+        return array(
+            'id' => $this->getId(),
+            'name' => $this->getName()
+        );
     }
 }

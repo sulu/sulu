@@ -23,6 +23,8 @@ define([
     'sulucontact/model/contact'
 ], function(RelationalModel, HasMany, Account, Email, Phone, Address, Url, Note, HasOne, AccountCategory, AccountContact, BankAccount,Contact) {
 
+    'use strict';
+
     return RelationalModel({
         urlRoot: '/admin/api/accounts',
         defaults: function() {

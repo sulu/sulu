@@ -2,13 +2,16 @@
 
 {% block list %}
 
-   {# TODO empty values? #}
-
-
     <script type="text/javascript">
-        var activityTypes = {{ activityTypes|json_encode() }};
-        var activityPriorities = {{ activityPriorities|json_encode()|raw }};
-        var activityStatuses = {{ activityStatuses|json_encode()|raw }};
+        (function() {
+            var defaults = {
+                activityTypes: {{ activityTypes|json_encode()|raw }},
+                activityPriorities: {{ activityPriorities|json_encode()|raw }},
+                activityStatuses: {{ activityStatuses|json_encode()|raw }}
+            };
+
+            App.emit('sulu.contacts.activities.defaults', defaults);
+        })();
     </script>
 
     <div id="activities-list">
