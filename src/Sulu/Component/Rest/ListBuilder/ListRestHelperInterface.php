@@ -36,7 +36,7 @@ interface ListRestHelperInterface
 
     /**
      * Returns the calculated value for the starting position based
-     * on the page and pagesize values
+     * on the page and limit values
      * @return integer|null
      */
     public function getOffset();

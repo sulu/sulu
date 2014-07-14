@@ -77,15 +77,15 @@ class ListRestHelper implements ListRestHelperInterface
 
     /**
      * Returns the calculated value for the starting position based
-     * on the page and pagesize values
+     * on the page and limit values
      * @return integer|null
      */
     public function getOffset()
     {
         $page = $this->getRequest()->get('page', 1);
-        $pageSize = $this->getRequest()->get('pageSize');
+        $limit = $this->getRequest()->get('limit');
 
-        return ($pageSize != null) ? $pageSize * ($page - 1) : null;
+        return ($limit != null) ? $limit * ($page - 1) : null;
     }
 
     /**

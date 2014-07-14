@@ -316,7 +316,7 @@ abstract class RestController extends FOSRestController
             'total' => sizeof($entities),
             'page' => $listHelper->getPage(),
             'pages' => $pages,
-            'pageSize' => $listHelper->getLimit(),
+            'limit' => $listHelper->getLimit(),
             'numberOfAll' => $numberOfAll
         );
 
@@ -355,7 +355,7 @@ abstract class RestController extends FOSRestController
         $path = $this->getRequest()->getRequestUri();
         $path = $this->replaceOrAddUrlString(
             $path,
-            $listHelper->getParameterName('pageSize') . '=',
+            'limit=',
             $listHelper->getLimit(),
             false
         );
@@ -387,19 +387,19 @@ abstract class RestController extends FOSRestController
             // remove page
             $sortUrl = $this->replaceOrAddUrlString(
                 $path,
-                $listHelper->getParameterName('page') . '=',
+                'page=',
                 null
             );
             foreach ($keys as $key) {
                 if (!in_array($key, $this->unsortable)) {
                     $sortPath = $this->replaceOrAddUrlString(
                         $sortUrl,
-                        $listHelper->getParameterName('sortBy') . '=',
+                        'sortBy=',
                         $key
                     );
                     $sortable[$key] = $this->replaceOrAddUrlString(
                         $sortPath,
-                        $listHelper->getParameterName('sortOrder') . '=',
+                        'sortOrder=',
                         '{sortOrder}'
                     );
                 }
@@ -409,57 +409,57 @@ abstract class RestController extends FOSRestController
         // create search link
         $searchLink = $this->replaceOrAddUrlString(
             $path,
-            $listHelper->getParameterName('search') . '=',
+            'search=',
             '{searchString}'
         );
 
         $searchLink = $this->replaceOrAddUrlString(
             $searchLink,
-            $listHelper->getParameterName('searchFields') . '=',
+            'searchFields=',
             '{searchFields}'
         );
 
         $searchLink = $this->replaceOrAddUrlString(
             $searchLink,
-            $listHelper->getParameterName('page') . '=',
+            'page=',
             '1'
         );
 
         // create all link
         $allLink = $this->replaceOrAddUrlString(
             $path,
-            $listHelper->getParameterName('pageSize') . '=',
+            'limit=',
             null
         );
 
         $allLink = $this->replaceOrAddUrlString(
             $allLink,
-            $listHelper->getParameterName('page') . '=',
+            'page=',
             null
         );
 
         // create filter link
         $filterLink = $this->replaceOrAddUrlString(
             $path,
-            $listHelper->getParameterName('fields') . '=',
+            'fields=',
             '{fieldsList}'
         );
 
         // create pagination link
-        $paginationLink = $this->replaceOrAddUrlString($path, $listHelper->getParameterName('pageSize') . '=', '{pageSize}');
+        $paginationLink = $this->replaceOrAddUrlString($path, 'limit=', '{limit}');
 
 
         return array(
             'self' => $path,
             'first' => ($pages > 1) ?
-                    $this->replaceOrAddUrlString($path, $listHelper->getParameterName('page') . '=', 1) : null,
+                    $this->replaceOrAddUrlString($path, 'page=', 1) : null,
             'last' => ($pages > 1) ?
-                    $this->replaceOrAddUrlString($path, $listHelper->getParameterName('page') . '=', $pages) : null,
+                    $this->replaceOrAddUrlString($path, 'page=', $pages) : null,
             'next' => ($page < $pages) ?
-                    $this->replaceOrAddUrlString($path, $listHelper->getParameterName('page') . '=', $page + 1) : null,
+                    $this->replaceOrAddUrlString($path, 'page=', $page + 1) : null,
             'prev' => ($page > 1 && $pages > 1) ?
-                    $this->replaceOrAddUrlString($path, $listHelper->getParameterName('page') . '=', $page - 1) : null,
-            'pagination' => $this->replaceOrAddUrlString($paginationLink, $listHelper->getParameterName('page') . '=', '{page}'),
+                    $this->replaceOrAddUrlString($path, 'page=', $page - 1) : null,
+            'pagination' => $this->replaceOrAddUrlString($paginationLink, 'page=', '{page}'),
             'find' => $returnListLinks ? $searchLink : null,
             'filter' => $returnListLinks ? $filterLink : null,
             'sortable' => $returnListLinks ? $sortable : null,

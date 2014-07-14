@@ -34,7 +34,6 @@ interface RestHelperInterface
      * @param callable $update
      * @param callable $delete
      * @return bool
-     * @deprecated
      */
     public function processSubEntities(
         $entities,
