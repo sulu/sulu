@@ -26,11 +26,21 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('sulu_location');
-
-        // Here you should define the parameters that are allowed to
-        // configure your bundle. See the documentation linked above for
-        // more information on that topic.
+        $rootNode = $treeBuilder->root('sulu_location')
+            ->children()
+                ->arrayNode('types')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                    ->arrayNode('location')
+                        ->addDefaultsIfNotSet()
+                        ->children()
+                            ->scalarNode('template')
+                                ->defaultValue('SuluLocationBundle:Template:content-types/location.html.twig')
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end();
 
         return $treeBuilder;
     }

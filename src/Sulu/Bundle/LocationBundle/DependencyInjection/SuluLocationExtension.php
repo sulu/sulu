@@ -32,5 +32,10 @@ class SuluLocationExtension extends Extension
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
+
+        $container->setParameter(
+            'sulu.content.type.location.template',
+            $config['types']['location']['template']
+        );
     }
 }

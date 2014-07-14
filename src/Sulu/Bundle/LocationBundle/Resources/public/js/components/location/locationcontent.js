@@ -6,7 +6,7 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  *
- * @module husky/components/geolocation-content
+ * @module husky/components/location-content
  */
 
 define([], function() {
@@ -17,13 +17,13 @@ define([], function() {
         },
         templates = {
             skeleton: [
-                '<div class="geoloc-content-container form-element">',
-                '<div class="geoloc-header"></div>',
-                '<div class="geoloc-content"></div>'
+                '<div class="loc-content-container form-element">',
+                '<div class="loc-header"></div>',
+                '<div class="loc-content"></div>'
             ].join(''),
             overlayContent: {
                 main: [
-                    '<div class="geoloc-overlay-content">',
+                    '<div class="loc-overlay-content">',
                     '</div>'
                 ].join('')
             }
