@@ -1,6 +1,10 @@
 {% extends "SuluContactBundle:Template:base.list.html.twig" %}
 
 {% block list %}
+    <div id="activities-list"></div>
+{% endblock %}
+
+{% block data %}
 
     <script type="text/javascript">
         (function() {
@@ -9,12 +13,11 @@
                 activityPriorities: {{ activityPriorities|json_encode()|raw }},
                 activityStatuses: {{ activityStatuses|json_encode()|raw }}
             };
-
-            App.emit('sulu.contacts.activities.defaults', defaults);
+            App.emit('sulu.contacts.contact.activities.set.defaults', defaults);
         })();
     </script>
 
-    <div id="activities-list">
+    {{ parent() }}
 
-    </div>
 {% endblock %}
+

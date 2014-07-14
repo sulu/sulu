@@ -31,6 +31,15 @@ define([
         },
 
         bindCustomEvents: function() {
+
+            // listen for defaults for types/statuses/prios
+            this.sandbox.once('sulu.contacts.contact.activities.set.defaults', this.parseActivityDefaults.bind(this));
+
+            // shares defaults with subcomponents
+            this.sandbox.on('sulu.contacts.contact.activities.get.defaults', function() {
+                this.sandbox.emit('sulu.contacts.contact.activities.set.defaults', this.activityDefaults);
+            }, this);
+
             // delete contact
             this.sandbox.on('sulu.contacts.contact.delete', function() {
                 this.del();
@@ -65,7 +74,23 @@ define([
             this.sandbox.on('sulu.contacts.contact.activities.remove', this.removeActivities.bind(this));
             this.sandbox.on('sulu.contacts.contact.activity.save', this.saveActivity.bind(this));
             this.sandbox.on('sulu.contacts.contact.activity.load', this.loadActivity.bind(this));
+        },
 
+        /**
+         * Parses and translates defaults for acitivties
+         * @param defaults
+         */
+        parseActivityDefaults: function(defaults){
+
+            var el, sub;
+
+            for(el in defaults){
+                for(sub in defaults[el]){
+                    defaults[el][sub].translations = this.sandbox.translate(defaults[el][sub].name);
+                }
+            }
+
+            this.activityDefaults = defaults;
         },
 
         removeActivities: function(ids){
