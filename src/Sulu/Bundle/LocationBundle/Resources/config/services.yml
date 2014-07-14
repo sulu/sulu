@@ -1,0 +1,9 @@
+parameters:
+    sulu_location.admin.class: Sulu\Bundle\LocationBundle\Admin\SuluLocationAdmin
+
+services:
+    sulu_location.admin:
+        class: %sulu_location.admin.class%
+        arguments: [%sulu_admin.name%]
+        tags:
+        - { name: sulu.admin }

@@ -1,0 +1,7 @@
+sulu_location:
+    resource: "@SuluLocationBundle/Resources/config/routing.yml"
+    prefix: 
+
+sulu_location:
+    resource: "@SuluLocationBundle/Resources/config/routing_api.yml"
+    prefix: 

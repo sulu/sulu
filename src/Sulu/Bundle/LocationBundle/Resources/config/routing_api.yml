@@ -1,0 +1,4 @@
+# sulu_location_homepage:
+#    pattern:  /admin/api/something
+#    defaults: { _controller: SuluLocationBundle:Default:index }
+
