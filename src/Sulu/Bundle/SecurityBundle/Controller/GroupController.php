@@ -33,17 +33,15 @@ class GroupController extends RestController implements ClassResourceInterface
 
     protected static $entityKey = 'groups';
 
+    // TODO: Create a Manager and move the field descriptors to the manager
     /**
      * @var Array - Holds the field descriptors for the list response
-     * TODO: Create a Manager and move the field descriptors to the manager
      */
     protected $fieldDescriptors;
 
     const ENTITY_NAME_ROLE = 'SuluSecurityBundle:Role';
 
-    /**
-     * TODO: move the field descriptors to a manager
-     */
+    // TODO: move the field descriptors to a manager
     public function __construct() {
         $this->fieldDescriptors = array();
         $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor('id', 'id', self::$entityName);
@@ -251,7 +249,6 @@ class GroupController extends RestController implements ClassResourceInterface
     private function addRole(Group $group, $roleData)
     {
         $em = $this->getDoctrine()->getManager();
-        $alreadyContains = false;
 
         if (isset($roleData['id'])) {
             $role = $em->getRepository(self::ENTITY_NAME_ROLE)->findRoleById($roleData['id']);
@@ -260,15 +257,7 @@ class GroupController extends RestController implements ClassResourceInterface
                 throw new EntityNotFoundException(self::ENTITY_NAME_ROLE, $roleData['id']);
             }
 
-            // only add role if not already added
-            if ($group->getRoles()) {
-                foreach($group->getRoles() as $groupRole) {
-                    if ($groupRole->getId() === $role->getId()) {
-                        $alreadyContains = true;
-                    }
-                }
-            }
-            if ($alreadyContains === false) {
+            if (!$group->getRoles()->contains($role)) {
                 $group->addRole($role);
             }
         }

@@ -306,13 +306,7 @@ class RoleController extends RestController implements ClassResourceInterface
                 throw new EntityNotFoundException(self::ENTITY_NAME_PERMISSION, $permissionData['id']);
             }
             // only add if not already contains
-            if ($role->getPermissions()) {
-                foreach($role->getPermissions() as $rolePermission) {
-                    if ($rolePermission->getId() === $permission->getId()) {
-                        $alreadyContains = true;
-                    }
-                }
-            }
+            $alreadyContains = $role->getPermissions()->contains($permission);
         } else {
             $permission = new Permission();
             $permission->setContext($permissionData['context']);

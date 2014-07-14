@@ -47,13 +47,11 @@ class UserRepositoryTest extends DatabaseTestCase
 
         $email = new Email();
         $email->setEmail('max.mustermann@muster.at');
-        $email->setMain(true);
         $email->setEmailType($emailType);
         self::$em->persist($email);
 
         $email2 = new Email();
         $email2->setEmail('maria.musterfrau@muster.at');
-        $email2->setMain(true);
         $email2->setEmailType($emailType);
         self::$em->persist($email2);
 
