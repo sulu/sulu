@@ -29,6 +29,7 @@ define(['text!sulucontact/components/activities/activity.form.html'], function(A
 
         activityDefaults = null,
         responsiblePersons = null,
+        contact = null,
 
         bindCustomEvents = function() {
 
@@ -137,6 +138,8 @@ define(['text!sulucontact/components/activities/activity.form.html'], function(A
                 activityPriorities: activityDefaults.activityPriorities,
                 activityStatuses: activityDefaults.activityStatuses,
                 responsiblePersons: responsiblePersons,
+                contact: contact.id,
+                account: null,
                 translate: this.sandbox.translate
             };
 
@@ -160,9 +163,6 @@ define(['text!sulucontact/components/activities/activity.form.html'], function(A
             ]);
         },
 
-        /**
-         *
-         */
         stopOverlayComponents = function(){
             this.sandbox.stop(constants.activityFormSelector);
         },
@@ -171,9 +171,18 @@ define(['text!sulucontact/components/activities/activity.form.html'], function(A
          * triggered when overlay was closed with ok
          */
         editAddOkClicked = function(){
-            var data = this.sandbox.form.getData(constants.activityFormSelector);
-            this.sandbox.emit('sulu.contacts.contact.activity.save', data);
-            stopOverlayComponents();
+            if (this.sandbox.form.validate(constants.activityFormSelector, true)) {
+                var data = this.sandbox.form.getData(constants.activityFormSelector);
+
+                if(!data.contact) {
+                    data.contact = contact.id;
+                }
+
+                this.sandbox.emit('sulu.contacts.contact.activity.save', data);
+                stopOverlayComponents.call(this);
+            } else {
+                return false;
+            }
         },
 
         /**
@@ -215,7 +224,7 @@ define(['text!sulucontact/components/activities/activity.form.html'], function(A
 
         initialize: function() {
 
-            this.contact = this.options.contact;
+            contact = this.options.contact;
             responsiblePersons = this.options.responsiblePersons;
 
             this.render();

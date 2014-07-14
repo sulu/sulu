@@ -8,16 +8,16 @@
         </div>
         <div class="grid-col-6">
             <div class="form-group">
-                <label for="type"><%=translate('contact.activities.type')%></label>
+                <label for="activityType"><%=translate('contact.activities.type')%></label>
 
-                <div id="type"
+                <div id="activityType"
                      data-aura-component="select@husky"
                      data-aura-default-label="<%= translate('public.please-choose') %>"
                      data-value-name="translation"
                      data-aura-data='<%= JSON.stringify(activityTypes) %>'
                      data-type="husky-select"
                      data-form="true"
-                     data-mapper-return-value="id"
+                     data-aura-instance-name="activityType"
                      data-mapper-property="activityType"></div>
             </div>
         </div>
@@ -26,7 +26,7 @@
     <div class="grid-row small">
         <div class="grid-col-12">
             <div class="form-group">
-                <label for="note"><%=translate('contact.activities.textarea')%></label>
+                <label for="note"><%=translate('contact.activities.note')%></label>
                 <textarea id="note" type="text" class="form-element" data-mapper-property="note"></textarea>
             </div>
         </div>
@@ -44,8 +44,9 @@
                      data-aura-data='<%= JSON.stringify(responsiblePersons) %>'
                      data-type="husky-select"
                      data-form="true"
-                     data-mapper-return-value="id"
-                     data-mapper-property="assignedContact"></div>
+                     data-mapper-property="assignedContact"
+                     data-aura-instance-name="assignedContact"
+                     data-validation-required="true"></div>
 
             </div>
         </div>
@@ -70,17 +71,17 @@
     <div class="grid-row m-bottom-40">
         <div class="grid-col-6">
             <div class="form-group">
-                <label for="activityPriorities"><%=translate('contact.activities.priority')%></label>
+                <label for="activityPriority"><%=translate('contact.activities.priority')%></label>
 
-                <div id="activityPriorities"
+                <div id="activityPriority"
                      data-aura-component="select@husky"
                      data-aura-default-label="<%= translate('public.please-choose') %>"
                      data-value-name="translation"
                      data-aura-data='<%= JSON.stringify(activityPriorities) %>'
                      data-type="husky-select"
                      data-form="true"
-                     data-mapper-return-value="id"
-                     data-mapper-property="activityPriorities"></div>
+                     data-aura-instance-name="activityPriority"
+                     data-mapper-property="activityPriority"></div>
 
             </div>
         </div>
@@ -95,12 +96,12 @@
                      data-aura-data='<%= JSON.stringify(activityStatuses) %>'
                      data-type="husky-select"
                      data-form="true"
-                     data-mapper-return-value="id"
+                     data-aura-instance-name="activityStatus"
                      data-mapper-property="activityStatus"></div>
             </div>
         </div>
     </div>
 
-    <span id="contact" type="text" class="hidden" data-mapper-property="contact"></span>
-    <span id="account" type="text" class="hidden" data-mapper-property="account"></span>
+    <span id="contact" type="text" data-form="true" class="hidden" data-mapper-property="contact"></span>
+    <span id="account" type="text" data-form="true" class="hidden" data-mapper-property="account"></span>
 </form>
