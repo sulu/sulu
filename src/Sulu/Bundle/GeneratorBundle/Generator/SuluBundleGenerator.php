@@ -57,7 +57,7 @@ class SuluBundleGenerator extends BundleGenerator
         // PHPUNIT: /phpunit.xml.dist
         $this->renderFile('sulu/other/phpunit.xml.dist.twig', $dir . '/phpunit.xml.dist', $parameters);
         // Github: /README.md
-        $this->renderFile('sulu/other/README.md.twig', $dir . '/README', $parameters);
+        $this->renderFile('sulu/other/README.md.twig', $dir . '/README.md', $parameters);
 
         // Public Files
         // Main: /Resources/public/js/main.js
@@ -72,8 +72,13 @@ class SuluBundleGenerator extends BundleGenerator
         $this->renderFile('sulu/travis/Tests/Resources/app/AppKernel.php.twig', $dir . '/Tests/Resources/app/AppKernel.php', $parameters);
         // /Tests/Resources/app/config/config.yml
         $this->renderFile('sulu/travis/Tests/Resources/app/config/config.yml.twig', $dir . '/Tests/Resources/app/config/config.yml', $parameters);
-        // /Tests/Resources/app/config/routing.yml
-        $this->renderFile('sulu/travis/Tests/Resources/app/config/routing.yml.twig', $dir . '/Tests/Resources/app/config/routing.yml', $parameters);
+        // /tests/resources/app/config/routing.yml
+        $this->renderfile('sulu/travis/Tests/Resources/app/config/routing.yml.twig', $dir . '/Tests/Resources/app/config/routing.yml', $parameters);
+        // /tests/resources/app/config/security.yml
+        $this->renderfile('sulu/travis/Tests/Resources/app/config/security.yml.twig', $dir . '/Tests/Resources/app/config/security.yml', $parameters);
+        // /tests/resources/app/Resources/webspaces/sulu.io.xml
+        $this->renderfile('sulu/travis/Tests/Resources/app/Resources/webspaces/sulu.io.xml.twig', $dir . '/Tests/Resources/app/Resources/webspaces/sulu.io.xml', $parameters);
+
 
         // Basic Structure
         if ($structure) {
