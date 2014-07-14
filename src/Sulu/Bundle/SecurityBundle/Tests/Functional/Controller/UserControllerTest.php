@@ -53,7 +53,6 @@ class UserControllerTest extends DatabaseTestCase
 
         $email = new Email();
         $email->setEmail('max.mustermann@muster.at');
-        $email->setMain(true);
         $email->setEmailType($emailType);
         self::$em->persist($email);
 
@@ -169,6 +168,7 @@ class UserControllerTest extends DatabaseTestCase
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Fax'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Account'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AccountContact'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ContactAddress'),
 
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\User'),
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\UserSetting'),
@@ -190,15 +190,14 @@ class UserControllerTest extends DatabaseTestCase
     {
         $client = static::createClient();
 
-        $client->request('GET', '/api/users/list');
+        $client->request('GET', '/api/users?flat=true');
 
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(1, $response->total);
-        $this->assertEquals(1, count($response->total));
-        $this->assertEquals('admin', $response->_embedded[0]->username);
-        $this->assertEquals('securepassword', $response->_embedded[0]->password);
-        $this->assertEquals('de', $response->_embedded[0]->locale);
+        $this->assertEquals(1, count($response->_embedded->users));
+        $this->assertEquals('admin', $response->_embedded->users[0]->username);
+        $this->assertEquals('securepassword', $response->_embedded->users[0]->password);
+        $this->assertEquals('de', $response->_embedded->users[0]->locale);
     }
 
     public function testGetById()
@@ -420,11 +419,13 @@ class UserControllerTest extends DatabaseTestCase
         $this->assertEquals('manager', $response->username);
         $this->assertEquals(1, $response->contact->id);
         $this->assertEquals('en', $response->locale);
+
         $this->assertEquals('Role1', $response->userRoles[0]->role->name);
         $this->assertEquals('de', $response->userRoles[0]->locales[0]);
         $this->assertEquals('en', $response->userRoles[0]->locales[1]);
         $this->assertEquals('Role2', $response->userRoles[1]->role->name);
         $this->assertEquals('en', $response->userRoles[1]->locales[0]);
+
         $this->assertEquals('Group1', $response->userGroups[0]->group->name);
         $this->assertEquals('de', $response->userGroups[0]->locales[0]);
         $this->assertEquals('en', $response->userGroups[0]->locales[1]);
@@ -441,11 +442,13 @@ class UserControllerTest extends DatabaseTestCase
         $this->assertEquals('manager', $response->username);
         $this->assertEquals(1, $response->contact->id);
         $this->assertEquals('en', $response->locale);
+
         $this->assertEquals('Role1', $response->userRoles[0]->role->name);
         $this->assertEquals('de', $response->userRoles[0]->locales[0]);
         $this->assertEquals('en', $response->userRoles[0]->locales[1]);
         $this->assertEquals('Role2', $response->userRoles[1]->role->name);
         $this->assertEquals('en', $response->userRoles[1]->locales[0]);
+
         $this->assertEquals('Group1', $response->userGroups[0]->group->name);
         $this->assertEquals('de', $response->userGroups[0]->locales[0]);
         $this->assertEquals('en', $response->userGroups[0]->locales[1]);
@@ -548,14 +551,14 @@ class UserControllerTest extends DatabaseTestCase
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
-        $this->assertEquals('1', $response->id);
-        $this->assertEquals('admin', $response->username);
-        $this->assertEquals('securepassword', $response->password);
+        $this->assertEquals(1, $response->_embedded->users[0]->id);
+        $this->assertEquals('admin', $response->_embedded->users[0]->username);
+        $this->assertEquals('securepassword', $response->_embedded->users[0]->password);
 
-        $this->assertEquals('Role1', $response->userRoles[0]->role->name);
-        $this->assertEquals('Sulu', $response->userRoles[0]->role->system);
-        $this->assertEquals('Role2', $response->userRoles[1]->role->name);
-        $this->assertEquals('Sulu', $response->userRoles[1]->role->system);
+        $this->assertEquals('Role1', $response->_embedded->users[0]->userRoles[0]->role->name);
+        $this->assertEquals('Sulu', $response->_embedded->users[0]->userRoles[0]->role->system);
+        $this->assertEquals('Role2', $response->_embedded->users[0]->userRoles[1]->role->name);
+        $this->assertEquals('Sulu', $response->_embedded->users[0]->userRoles[1]->role->system);
 
     }
 
@@ -586,11 +589,10 @@ class UserControllerTest extends DatabaseTestCase
 
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(1, $response->total);
-        $this->assertEquals(1, count($response->total));
-        $this->assertEquals('admin', $response->_embedded[0]->username);
-        $this->assertEquals('securepassword', $response->_embedded[0]->password);
-        $this->assertEquals('de', $response->_embedded[0]->locale);
+        $this->assertEquals(1, count($response->_embedded->users));
+        $this->assertEquals('admin', $response->_embedded->users[0]->username);
+        $this->assertEquals('securepassword', $response->_embedded->users[0]->password);
+        $this->assertEquals('de', $response->_embedded->users[0]->locale);
     }
 
     public function testPutWithRemovedRoles()

@@ -23,6 +23,11 @@ use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\SecurityBundle\Entity\UserSetting;
 use FOS\RestBundle\Controller\Annotations\Get;
 use Symfony\Component\HttpFoundation\Request;
+use Hateoas\Representation\CollectionRepresentation;
+use Sulu\Component\Rest\ListBuilder\ListRepresentation;
+use Sulu\Component\Rest\RestHelperInterface;
+use Sulu\Component\Rest\ListBuilder\DoctrineListBuilderFactory;
+use Sulu\Component\Rest\ListBuilder\FieldDescriptor\DoctrineFieldDescriptor;
 
 /**
  * Makes the users accessible through a rest api
@@ -30,7 +35,9 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class UserController extends RestController implements ClassResourceInterface
 {
-    protected $entityName = 'SuluSecurityBundle:User';
+    protected static $entityName = 'SuluSecurityBundle:User';
+
+    protected static $entityKey = 'users';
 
     const ENTITY_NAME_ROLE = 'SuluSecurityBundle:Role';
     const ENTITY_NAME_GROUP = 'SuluSecurityBundle:Group';
@@ -38,14 +45,24 @@ class UserController extends RestController implements ClassResourceInterface
     const ENTITY_NAME_USER_SETTING = 'SuluSecurityBundle:UserSetting';
 
     /**
-     * Lists all the users in the system
-     * @return \Symfony\Component\HttpFoundation\Response
+     * Contains the field descriptors used by the list response
+     * TODO: move field descriptors to a manager
+     * @var DoctrineFieldDescriptor[]
      */
-    public function listAction()
-    {
-        $view = $this->responseList();
+    protected $fieldDescriptors;
 
-        return $this->handleView($view);
+    /**
+     * TODO: move field descriptors to a manager
+     */
+    public function __construct()
+    {
+        $this->fieldDescriptors = array();
+        $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor('id', 'id', self::$entityName);
+        $this->fieldDescriptors['username'] = new DoctrineFieldDescriptor('username', 'username', self::$entityName);
+        $this->fieldDescriptors['password'] = new DoctrineFieldDescriptor('password', 'password', self::$entityName);
+        $this->fieldDescriptors['locale'] = new DoctrineFieldDescriptor('locale', 'locale', self::$entityName);
+        $this->fieldDescriptors['salt'] = new DoctrineFieldDescriptor('salt', 'salt', self::$entityName);
+        $this->fieldDescriptors['apiKey'] = new DoctrineFieldDescriptor('apiKey', 'apiKey', self::$entityName);
     }
 
     /**
@@ -57,7 +74,7 @@ class UserController extends RestController implements ClassResourceInterface
     {
         $find = function ($id) {
             return $this->getDoctrine()
-                ->getRepository($this->entityName)
+                ->getRepository(self::$entityName)
                 ->findUserById($id);
         };
 
@@ -91,7 +108,7 @@ class UserController extends RestController implements ClassResourceInterface
                     $this->encodePassword($user, $request->get('password'), $user->getSalt())
                 );
             } else {
-                throw new InvalidArgumentException($this->entityName, 'password');
+                throw new InvalidArgumentException(self::$entityName, 'password');
             }
 
             $user->setLocale($request->get('locale'));
@@ -144,12 +161,12 @@ class UserController extends RestController implements ClassResourceInterface
     {
         /** @var User $user */
         $user = $this->getDoctrine()
-            ->getRepository($this->entityName)
+            ->getRepository(self::$entityName)
             ->findUserById($id);
 
         try {
             if (!$user) {
-                throw new EntityNotFoundException($this->entityName, $id);
+                throw new EntityNotFoundException(self::$entityName, $id);
             }
 
             $this->checkArguments($request);
@@ -198,12 +215,12 @@ class UserController extends RestController implements ClassResourceInterface
     {
         /** @var User $user */
         $user = $this->getDoctrine()
-            ->getRepository($this->entityName)
+            ->getRepository(self::$entityName)
             ->findUserById($id);
 
         try {
             if (!$user) {
-                throw new EntityNotFoundException($this->entityName, $id);
+                throw new EntityNotFoundException(self::$entityName, $id);
             }
 
             $username = $request->get('username');
@@ -264,14 +281,14 @@ class UserController extends RestController implements ClassResourceInterface
 
         try {
             if ($key === null || $value === null) {
-                throw new InvalidArgumentException($this->entityName, 'key and value');
+                throw new InvalidArgumentException(self::$entityName, 'key and value');
             }
 
             $em = $this->getDoctrine()->getManager();
             $user = $this->getUser();
 
             if ($user->getId() != $id) {
-                throw new InvalidArgumentException($this->entityName, 'id');
+                throw new InvalidArgumentException(self::$entityName, 'id');
             }
 
             // encode before persist
@@ -315,7 +332,7 @@ class UserController extends RestController implements ClassResourceInterface
             $user = $this->getUser();
 
             if ($user->getId() != $id) {
-                throw new InvalidArgumentException($this->entityName, 'id');
+                throw new InvalidArgumentException(self::$entityName, 'id');
             }
 
             $setting = $this->getDoctrine()
@@ -324,7 +341,7 @@ class UserController extends RestController implements ClassResourceInterface
 
             $view = $this->view($setting, 200);
         } catch (InvalidArgumentException $exc) {
-            $view = $this->view($exc-toArray(), 400);
+            $view = $this->view($exc - toArray(), 400);
         }
 
         return $this->handleView($view);
@@ -339,11 +356,11 @@ class UserController extends RestController implements ClassResourceInterface
     {
         $delete = function ($id) {
             $user = $this->getDoctrine()
-                ->getRepository($this->entityName)
+                ->getRepository(self::$entityName)
                 ->findUserById($id);
 
             if (!$user) {
-                throw new EntityNotFoundException($this->entityName, $id);
+                throw new EntityNotFoundException(self::$entityName, $id);
             }
 
             $em = $this->getDoctrine()->getManager();
@@ -413,6 +430,7 @@ class UserController extends RestController implements ClassResourceInterface
     private function addUserRole(User $user, $userRoleData)
     {
         $em = $this->getDoctrine()->getManager();
+        $alreadyContains = false;
 
         $role = $this->getDoctrine()
             ->getRepository(self::ENTITY_NAME_ROLE)
@@ -422,13 +440,22 @@ class UserController extends RestController implements ClassResourceInterface
             throw new EntityNotFoundException(self::ENTITY_NAME_ROLE, $userRoleData['role']['id']);
         }
 
-        $userRole = new UserRole();
-        $userRole->setUser($user);
-        $userRole->setRole($role);
-        $userRole->setLocale(json_encode($userRoleData['locales']));
-        $em->persist($userRole);
+        if ($user->getRoles()) {
+            foreach($user->getUserRoles() as $containedRole) {
+                if ($containedRole->getRole()->getId() === $role->getId()) {
+                    $alreadyContains = true;
+                }
+            }
+        }
+        if ($alreadyContains === false) {
+            $userRole = new UserRole();
+            $userRole->setUser($user);
+            $userRole->setRole($role);
+            $userRole->setLocale(json_encode($userRoleData['locales']));
+            $em->persist($userRole);
 
-        $user->addUserRole($userRole);
+            $user->addUserRole($userRole);
+        }
 
         return true;
     }
@@ -524,16 +551,16 @@ class UserController extends RestController implements ClassResourceInterface
     private function checkArguments(Request $request)
     {
         if ($request->get('username') == null) {
-            throw new MissingArgumentException($this->entityName, 'username');
+            throw new MissingArgumentException(self::$entityName, 'username');
         }
         if ($request->get('password') === null) {
-            throw new MissingArgumentException($this->entityName, 'password');
+            throw new MissingArgumentException(self::$entityName, 'password');
         }
         if ($request->get('locale') == null) {
-            throw new MissingArgumentException($this->entityName, 'locale');
+            throw new MissingArgumentException(self::$entityName, 'locale');
         }
         if ($request->get('contact') == null) {
-            throw new MissingArgumentException($this->entityName, 'contact');
+            throw new MissingArgumentException(self::$entityName, 'contact');
         }
     }
 
@@ -600,23 +627,45 @@ class UserController extends RestController implements ClassResourceInterface
      */
     public function cgetAction(Request $request)
     {
+        $view = null;
         if ($request->get('flat') == 'true') {
-            // flat structure
-            $view = $this->responseList();
+            /** @var RestHelperInterface $restHelper */
+            $restHelper = $this->get('sulu_core.doctrine_rest_helper');
+
+            /** @var DoctrineListBuilderFactory $factory */
+            $factory = $this->get('sulu_core.doctrine_list_builder_factory');
+
+            $listBuilder = $factory->create(self::$entityName);
+
+            $restHelper->initializeListBuilder($listBuilder, $this->fieldDescriptors);
+
+            $list = new ListRepresentation(
+                $listBuilder->execute(),
+                self::$entityKey,
+                'get_users',
+                $request->query->all(),
+                $listBuilder->getCurrentPage(),
+                $listBuilder->getLimit(),
+                $listBuilder->count()
+            );
         } else {
             $contactId = $request->get('contactId');
 
             if ($contactId != null) {
-                $user = $this->getDoctrine()->getRepository($this->entityName)->findUserByContact($contactId);
-                if ($user == null) {
+                $entities = array();
+                $entities[] = $this->getDoctrine()->getRepository(self::$entityName)->findUserByContact($contactId);
+                if (!$entities[0]) {
                     $view = $this->view(null, 204);
-                } else {
-                    $view = $this->view($user, 200);
                 }
             } else {
-                $entities = $this->getDoctrine()->getRepository($this->entityName)->findAll();
-                $view = $this->view($this->createHalResponse($entities), 200);
+                $entities = $this->getDoctrine()->getRepository(self::$entityName)->findAll();
             }
+
+            $list = new CollectionRepresentation($entities, self::$entityKey);
+        }
+
+        if (!$view) {
+            $view = $this->view($list, 200);
         }
         return $this->handleView($view);
     }
