@@ -9,8 +9,11 @@
 
 define([
     'sulucontact/model/contact',
-    'sulucontact/model/activity'
-], function(Contact, Activity) {
+    'sulucontact/model/activity',
+    'sulucontact/model/activityStatus',
+    'sulucontact/model/activityType',
+    'sulucontact/model/activityPriority'
+], function(Contact, Activity, ActivityStatus, ActivityType, ActivityPriority) {
 
     'use strict';
 
@@ -135,6 +138,10 @@ define([
 
              // TODO loading icon
             var activity = Activity.findOrCreate({id: data.id});
+//                activityStatus = ActivityStatus.findOrCreate({id: data.activityStatus}),
+//                activityType = ActivityType.findOrCreate({id: data.activityType}),
+//                activityPriority = ActivityPriority.findOrCreate({id: data.activityPriority});
+
             activity.set(data);
             activity.save(null, {
                 // on success save contacts id

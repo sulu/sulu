@@ -15,7 +15,8 @@ define(['mvc/relationalmodel'], function(RelationalModel) {
         urlRoot: '',
         defaults: {
             id: null,
-            name: ''
+            name: '',
+            translation: ''
         }
     });
 });
