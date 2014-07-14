@@ -265,28 +265,65 @@ define([
 
         renderActivities: function(){
 
+            var $list;
+
             // load data and show form
             this.contact = new Contact();
-            var $list = this.sandbox.dom.createElement('<div id="activities-list-container"/>');
+            $list = this.sandbox.dom.createElement('<div id="activities-list-container"/>');
             this.html($list);
 
-            if (!!this.options.id) {
-                this.contact = new Contact({id: this.options.id});
-                //contact = this.getModel(this.options.id);
-                this.contact.fetch({
-                    success: function(model) {
-                        this.sandbox.start([
-                            {name: 'contacts/components/activities@sulucontact', options: { el: $list, contact: model.toJSON()}}
-                        ]);
+            this.dfdContact = this.sandbox.data.deferred();
+            this.dfdSystemContacts = this.sandbox.data.deferred();
 
-                    }.bind(this),
-                    error: function() {
-                        this.sandbox.logger.log('error while fetching contact');
-                    }.bind(this)
-                });
+            if (!!this.options.id) {
+
+                this.getContact(this.options.id);
+                this.getSystemMembers();
+
+                // start component when contact and system members are loaded
+                this.sandbox.data.when(this.dfdContact,this.dfdSystemContacts).then(function(){
+                    this.sandbox.start([
+                        {name: 'contacts/components/activities@sulucontact', options: { el: $list, contact: this.contact.toJSON(), responsiblePersons: this.responsiblePersons}}
+                    ]);
+                }.bind(this));
+
             } else {
                 this.sandbox.logger.error("activities are not available for unsaved contacts!");
             }
+        },
+
+        /**
+         * loads contact by id
+         */
+        getContact: function(id){
+            this.contact = new Contact({id: id});
+            this.contact.fetch({
+                success: function(model) {
+                    this.contact = model;
+                    this.dfdContact.resolve();
+                }.bind(this),
+                error: function() {
+                    this.sandbox.logger.log('error while fetching contact');
+                }.bind(this)
+            });
+        },
+
+        /**
+         * loads system members
+         */
+        getSystemMembers: function(){
+            this.sandbox.util.load('api/contacts?bySystem=true')
+                .then(function(response) {
+                    this.responsiblePersons = response._embedded;
+                    this.sandbox.util.foreach(this.responsiblePersons, function(el) {
+                        var contact = Contact.findOrCreate(el);
+                        el = contact.toJSON();
+                    }.bind(this));
+                    this.dfdSystemContacts.resolve();
+                }.bind(this))
+                .fail(function(textStatus, error) {
+                    this.sandbox.logger.error(textStatus, error);
+                }.bind(this));
         },
 
         /**

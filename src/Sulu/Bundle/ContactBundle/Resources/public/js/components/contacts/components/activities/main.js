@@ -28,6 +28,7 @@ define(['text!sulucontact/components/activities/activity.form.html'], function(A
         },
 
         activityDefaults = null,
+        responsiblePersons = null,
 
         bindCustomEvents = function() {
 
@@ -135,6 +136,7 @@ define(['text!sulucontact/components/activities/activity.form.html'], function(A
                 activityTypes: activityDefaults.activityTypes,
                 activityPriorities: activityDefaults.activityPriorities,
                 activityStatuses: activityDefaults.activityStatuses,
+                responsiblePersons: responsiblePersons,
                 translate: this.sandbox.translate
             };
 
@@ -214,6 +216,8 @@ define(['text!sulucontact/components/activities/activity.form.html'], function(A
         initialize: function() {
 
             this.contact = this.options.contact;
+            responsiblePersons = this.options.responsiblePersons;
+
             this.render();
             bindCustomEvents.call(this);
 
@@ -237,7 +241,7 @@ define(['text!sulucontact/components/activities/activity.form.html'], function(A
                 },
                 {
                     el: this.sandbox.dom.find('#activities-list', this.$el),
-                    url: '/admin/api/accounts/1/contacts?flat=true',
+                    url: '/admin/api/accounts/4/contacts?flat=true',
                     searchInstanceName: 'contacts',
                     viewOptions: {
                         table: {
