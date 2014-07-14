@@ -914,7 +914,7 @@ class AccountControllerTest extends DatabaseTestCase
 
         $this->assertEquals(1, $response->total);
 
-        $this->assertEquals('Company', $response->_embedded[0]->name);
+        $this->assertEquals('Company', $response->_embedded->accounts[0]->name);
     }
 
     public function testGetListSearch()
@@ -924,14 +924,14 @@ class AccountControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(0, $response->total);
-        $this->assertEquals(0, count($response->_embedded));
+        $this->assertEquals(0, count($response->_embedded->accounts));
 
         $client->request('GET', '/api/accounts?flat=true&search=Comp&searchFields=name,emails_emailType_name');
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(1, $response->total);
-        $this->assertEquals(1, count($response->_embedded));
-        $this->assertEquals('Company', $response->_embedded[0]->name);
+        $this->assertEquals(1, count($response->_embedded->accounts));
+        $this->assertEquals('Company', $response->_embedded->accounts[0]->name);
     }
 
     public function testPut()

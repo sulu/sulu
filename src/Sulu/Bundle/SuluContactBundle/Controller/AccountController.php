@@ -27,6 +27,11 @@ use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\ListRestHelper;
 use \DateTime;
 use Symfony\Component\HttpFoundation\Request;
+use Hateoas\Representation\CollectionRepresentation;
+use Sulu\Component\Rest\ListBuilder\ListRepresentation;
+use Sulu\Component\Rest\RestHelperInterface;
+use Sulu\Component\Rest\ListBuilder\DoctrineListBuilderFactory;
+use Sulu\Component\Rest\ListBuilder\FieldDescriptor\DoctrineFieldDescriptor;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -41,11 +46,18 @@ class AccountController extends AbstractContactController
      * {@inheritdoc}
      */
     protected static $entityName = 'SuluContactBundle:Account';
+    protected static $entityKey = 'accounts';
     protected static $contactEntityName = 'SuluContactBundle:Contact';
     protected static $accountCategoryEntityName = 'SuluContactBundle:AccountCategory';
     protected static $accountContactEntityName = 'SuluContactBundle:AccountContact';
     protected static $termsOfPaymentEntityName = 'SuluContactBundle:TermsOfPayment';
     protected static $termsOfDeliveryEntityName = 'SuluContactBundle:TermsOfDelivery';
+    protected static $emailEntityName = 'SuluContactBundle:Email';
+    protected static $phoneEntityName = 'SuluContactBundle:Phone';
+    protected static $urlEntityName = 'SuluContactBundle:Url';
+    protected static $faxEntityName = 'SuluContactBundle:Fax';
+    protected static $addressEntityName = 'SuluContactBundle:Address';
+    protected static $accountAddressEntityName = 'SuluContactBundle:AccountAddress';
 
     /**
      * {@inheritdoc}
@@ -142,6 +154,40 @@ class AccountController extends AbstractContactController
      * {@inheritdoc}
      */
     protected $bundlePrefix = 'contact.accounts.';
+
+    /**
+     * TODO: Move the field descriptors to a manager
+     * @var DoctrineFieldDescriptor[]
+     */
+    protected $fieldDescriptors;
+
+    /**
+     * TODO: move the field descriptors to a manager
+     */
+    public function __construct() {
+        $this->fieldDescriptors = array();
+        $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor('id', 'id', self::$entityName);
+        $this->fieldDescriptors['number'] = new DoctrineFieldDescriptor('number', 'number', self::$entityName);
+        $this->fieldDescriptors['name'] = new DoctrineFieldDescriptor('name', 'name', self::$entityName);
+        $this->fieldDescriptors['corporation'] = new DoctrineFieldDescriptor('corporation', 'corporation', self::$entityName);
+        $this->fieldDescriptors['created'] = new DoctrineFieldDescriptor('created', 'created', self::$entityName);
+        $this->fieldDescriptors['changed'] = new DoctrineFieldDescriptor('changed', 'changed', self::$entityName);
+        $this->fieldDescriptors['type'] = new DoctrineFieldDescriptor('type', 'type', self::$entityName);
+        $this->fieldDescriptors['disabled'] = new DoctrineFieldDescriptor('disabled', 'disabled', self::$entityName);
+        $this->fieldDescriptors['uid'] = new DoctrineFieldDescriptor('uid', 'uid', self::$entityName);
+        $this->fieldDescriptors['registerNumber'] = new DoctrineFieldDescriptor('registerNumber', 'registerNumber', self::$entityName);
+        $this->fieldDescriptors['mainPhone'] = new DoctrineFieldDescriptor('mainPhone', 'mainPhone', self::$entityName);
+        $this->fieldDescriptors['mainEmail'] = new DoctrineFieldDescriptor('mainEmail', 'mainEmail', self::$entityName);
+        $this->fieldDescriptors['mainFax'] = new DoctrineFieldDescriptor('mainFax', 'mainFax', self::$entityName);
+        $this->fieldDescriptors['mainUrl'] = new DoctrineFieldDescriptor('mainUrl', 'mainUrl', self::$entityName);
+
+        $this->fieldDescriptors['city'] = new DoctrineFieldDescriptor('city', 'city', self::$addressEntityName,
+            array(
+                self::$accountAddressEntityName => self::$entityName . '.accountAddresses',
+                self::$addressEntityName => self::$accountAddressEntityName . '.address',
+            )
+        );
+    }
 
     /**
      * returns all fields that can be used by list
@@ -321,52 +367,33 @@ class AccountController extends AbstractContactController
         }
         if ($request->get('flat') == 'true') {
 
-            /** @var ListRestHelper $listHelper */
-            $listHelper = $this->get('sulu_core.list_rest_helper');
+            /** @var RestHelperInterface $restHelper */
+            $restHelper = $this->get('sulu_core.doctrine_rest_helper');
 
-            $mappings = array(
-                'city' => 'accountAddresses_address_city',
-                'mainContact' => 'mainContact_lastName',
+            /** @var DoctrineListBuilderFactory $factory */
+            $factory = $this->get('sulu_core.doctrine_list_builder_factory');
+
+            $listBuilder = $factory->create(self::$entityName);
+
+            $restHelper->initializeListBuilder($listBuilder, $this->fieldDescriptors);
+
+            // TODO: where main address is true
+
+            $list = new ListRepresentation(
+                $listBuilder->execute(),
+                self::$entityKey,
+                'get_accounts',
+                $request->query->all(),
+                $listBuilder->getCurrentPage(),
+                $listBuilder->getLimit(),
+                $listBuilder->count()
             );
-            $joinConditions = null;
-            // if fields are set
-            if ($fields = $listHelper->getFields()) {
-                $newFields = array();
-
-                foreach ($fields as $field) {
-                    switch ($field) {
-                        case 'city':
-                            $newFields[] = $mappings[$field];
-                            $joinConditions['accountAddresses'] = 'accountAddresses.main = TRUE';
-                            break;
-                        case 'mainContact':
-                            $newFields[] = $mappings[$field];
-                            break;
-                        default:
-                            $newFields[] = $field;
-                    }
-                }
-                $request->query->add(array('fields' => implode(',', $newFields)));
-            }
-
-            $filter = function ($res) use ($mappings) {
-                // filter relations
-                if (array_key_exists($mappings['city'], $res)) {
-                    $res['city'] = $res[$mappings['city']];
-                    unset($res[$mappings['city']]);
-                }
-                if (array_key_exists($mappings['mainContact'], $res)) {
-                    $res['mainContact'] = $res[$mappings['mainContact']];
-                    unset($res[$mappings['mainContact']]);
-                }
-                return $res;
-            };
-
-            $view = $this->responseList($where, null, $filter, $joinConditions);
         } else {
             $contacts = $this->getDoctrine()->getRepository(self::$entityName)->findAll();
-            $view = $this->view($this->createHalResponse($contacts), 200);
+            $list = new CollectionRepresentation($contacts, self::$entityKey);
         }
+
+        $view = $this->view($list, 200);
         return $this->handleView($view);
     }
 

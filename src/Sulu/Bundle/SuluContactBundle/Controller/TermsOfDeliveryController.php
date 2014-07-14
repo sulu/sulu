@@ -21,6 +21,7 @@ use Sulu\Component\Rest\RestController;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Controller\Annotations\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Hateoas\Representation\CollectionRepresentation;
 
 /**
  * Makes account categories available through a REST API
@@ -33,6 +34,7 @@ class TermsOfDeliveryController extends RestController implements ClassResourceI
      * {@inheritdoc}
      */
     protected static $entityName = 'SuluContactBundle:TermsOfDelivery';
+    protected static $entityKey = 'termsOfDeliveries';
 
     /**
      * Shows a single terms of delivery
@@ -63,8 +65,9 @@ class TermsOfDeliveryController extends RestController implements ClassResourceI
     public function cgetAction()
     {
         $termsOfDelivery = $this->getDoctrine()->getRepository(self::$entityName)->findAll();
-        $view = $this->view($this->createHalResponse($termsOfDelivery), 200);
+        $list = new CollectionRepresentation($termsOfDelivery, self::$entityKey);
 
+        $view = $this->view($list, 200);
         return $this->handleView($view);
     }
 
