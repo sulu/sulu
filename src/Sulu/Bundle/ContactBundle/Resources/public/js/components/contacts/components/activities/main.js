@@ -26,7 +26,14 @@ define(['text!sulucontact/components/activities/activity.form.html'], function(A
             activitiesURL: '/admin/api/activities/'
         },
 
+        activityDefaults = null,
+
         bindCustomEvents = function() {
+
+            // listen for defaults for types/statuses/prios
+            this.sandbox.on('sulu.contacts.contact.activities.set.defaults', function(defaults) {
+                activityDefaults = defaults;
+            }, this);
 
             // loaded activity
             this.sandbox.on('sulu.contacts.contact.activity.loaded', function(item) {
@@ -124,9 +131,9 @@ define(['text!sulucontact/components/activities/activity.form.html'], function(A
             }
 
             values = {
-                activityTypes: window.activityTypes,
-                activityPriorities: window.activityPriorities,
-                activityStatuses: window.activityStatuses,
+                activityTypes: activityDefaults.activityTypes,
+                activityPriorities: activityDefaults.activityPriorities,
+                activityStatuses: activityDefaults.activityStatuses,
                 translate: this.sandbox.translate
             };
 
@@ -208,6 +215,9 @@ define(['text!sulucontact/components/activities/activity.form.html'], function(A
             this.contact = this.options.contact;
             this.render();
             bindCustomEvents.call(this);
+
+            // get defaults for priorities/statuses/types
+            this.sandbox.emit('sulu.contacts.contact.activities.get.defaults');
         },
 
         render: function() {

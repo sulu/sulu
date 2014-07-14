@@ -10,11 +10,12 @@
         <div class="grid-col-6">
             <div class="form-group">
                 <label for="type"><%=translate('contact.activities.type')%></label>
+
                 <div id="type"
                      data-aura-component="select@husky"
                      data-aura-default-label="<%= translate('public.please-choose') %>"
                      data-value-name="name"
-                     data-aura-data="activityTypes"
+                     data-aura-data='<%= JSON.stringify(activityTypes) %>'
                      data-type="husky-select"
                      data-form="true"
                      data-mapper-return-value="id"
@@ -33,23 +34,17 @@
     </div>
 
     <div class="grid-row small">
-        <div class="grid-col-6">
-            <div class="form-group">
-                <label for="assignedContact" class="required"><%=translate('contact.activities.assignedContact')%></label>
-                <div id="assignedContact"
-                     data-aura-component="select@husky"
-                     data-aura-default-label="<%= translate('public.please-choose') %>"
-                     data-value-name="fullName"
-                     data-aura-data="assignedContacts"
-                     data-type="husky-select"
-                     data-form="true"
-                     data-mapper-return-value="id"
-                     data-mapper-property="assignedContact"></div>
+                <div class="grid-col-6">
+                    <div class="form-group">
+                        <label for="assignedContact" class="required"><%=translate('contact.activities.assignedContact')%></label>
+
+
             </div>
         </div>
         <div class="grid-col-6">
             <div class="form-group">
                 <label for="dueDate" class="required"><%=translate('contact.activities.dueDate')%></label>
+
                 <div id="dueDate"
                      data-form="true"
                      data-type="husky-input"
@@ -68,25 +63,28 @@
         <div class="grid-col-6">
             <div class="form-group">
                 <label for="activityPriorities"><%=translate('contact.activities.priority')%></label>
+
                 <div id="activityPriorities"
                      data-aura-component="select@husky"
                      data-aura-default-label="<%= translate('public.please-choose') %>"
                      data-value-name="translation"
-                     data-aura-data="activityPriorities"
+                     data-aura-data='<%= JSON.stringify(activityPriorities) %>'
                      data-type="husky-select"
                      data-form="true"
                      data-mapper-return-value="id"
                      data-mapper-property="activityPriorities"></div>
+
             </div>
         </div>
         <div class="grid-col-6">
             <div class="form-group">
                 <label for="activityStatus"><%=translate('contact.activities.status')%></label>
+
                 <div id="activityStatus"
                      data-aura-component="select@husky"
                      data-aura-default-label="<%= translate('public.please-choose') %>"
                      data-value-name="translation"
-                     data-aura-data="activityStatuses"
+                     data-aura-data='<%= JSON.stringify(activityStatuses) %>'
                      data-type="husky-select"
                      data-form="true"
                      data-mapper-return-value="id"
