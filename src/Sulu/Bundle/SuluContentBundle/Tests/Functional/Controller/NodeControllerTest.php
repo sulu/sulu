@@ -410,10 +410,10 @@ class NodeControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(2, $response->total);
-        $this->assertEquals(2, sizeof($response->_embedded));
+        $this->assertEquals(2, sizeof($response->_embedded->nodes));
 
-        $this->assertEquals($data[1]['title'], $response->_embedded[0]->title);
-        $this->assertEquals($data[0]['title'], $response->_embedded[1]->title);
+        $this->assertEquals($data[1]['title'], $response->_embedded->nodes[0]->title);
+        $this->assertEquals($data[0]['title'], $response->_embedded->nodes[1]->title);
     }
 
     private function buildTree()
@@ -499,7 +499,7 @@ class NodeControllerTest extends DatabaseTestCase
         $client->request('GET', '/api/nodes?depth=1&webspace=sulu_io&language=en');
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
-        $items = $response->_embedded;
+        $items = $response->_embedded->nodes;
 
         $this->assertEquals(2, sizeof($items));
         $this->assertEquals($data[0]['title'], $items[0]->title);
@@ -511,7 +511,7 @@ class NodeControllerTest extends DatabaseTestCase
         $client->request('GET', str_replace('/admin', '', $items[1]->_links->children));
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
-        $items = $response->_embedded;
+        $items = $response->_embedded->nodes;
 
         $this->assertEquals(2, sizeof($items));
         $this->assertEquals($data[2]['title'], $items[0]->title);
@@ -523,7 +523,7 @@ class NodeControllerTest extends DatabaseTestCase
         $client->request('GET', str_replace('/admin', '', $items[1]->_links->children));
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
-        $items = $response->_embedded;
+        $items = $response->_embedded->nodes;
 
         $this->assertEquals(1, sizeof($items));
         $this->assertEquals($data[4]['title'], $items[0]->title);
@@ -545,7 +545,7 @@ class NodeControllerTest extends DatabaseTestCase
         $client->request('GET', '/api/nodes?depth=1&webspace=sulu_io&language=en');
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
-        $items = $response->_embedded;
+        $items = $response->_embedded->nodes;
 
         $this->assertEquals(2, sizeof($items));
 
@@ -559,7 +559,7 @@ class NodeControllerTest extends DatabaseTestCase
         $client->request('GET', '/api/nodes?depth=2&webspace=sulu_io&language=en');
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
-        $items = $response->_embedded;
+        $items = $response->_embedded->nodes;
 
         $this->assertEquals(4, sizeof($items));
 
@@ -579,7 +579,7 @@ class NodeControllerTest extends DatabaseTestCase
         $client->request('GET', '/api/nodes?depth=3&webspace=sulu_io&language=en');
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
-        $items = $response->_embedded;
+        $items = $response->_embedded->nodes;
 
         $this->assertEquals(5, sizeof($items));
 
@@ -602,7 +602,7 @@ class NodeControllerTest extends DatabaseTestCase
         $client->request('GET', '/api/nodes?depth=3&webspace=sulu_io&language=en&parent=' . $data[3]['id']);
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
-        $items = $response->_embedded;
+        $items = $response->_embedded->nodes;
 
         $this->assertEquals(1, sizeof($items));
 
@@ -625,87 +625,87 @@ class NodeControllerTest extends DatabaseTestCase
         $client->request('GET', '/api/nodes?depth=1&flat=false&webspace=sulu_io&language=en');
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
-        $items = $response->_embedded;
+        $items = $response->_embedded->nodes;
 
         $this->assertEquals(2, sizeof($items));
 
         $this->assertEquals('test1', $items[0]->title);
         $this->assertFalse($items[0]->hasSub);
-        $this->assertEquals(0, sizeof($items[0]->_embedded));
+        $this->assertEquals(0, sizeof($items[0]->_embedded->nodes));
 
         $this->assertEquals('test2', $items[1]->title);
         $this->assertTrue($items[1]->hasSub);
-        $this->assertEquals(0, sizeof($items[1]->_embedded));
+        $this->assertEquals(0, sizeof($items[1]->_embedded->nodes));
 
         // get child nodes from root
         $client->request('GET', '/api/nodes?depth=2&flat=false&webspace=sulu_io&language=en');
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
-        $items = $response->_embedded;
+        $items = $response->_embedded->nodes;
 
         $this->assertEquals(2, sizeof($items));
 
         $this->assertEquals('test1', $items[0]->title);
         $this->assertFalse($items[0]->hasSub);
-        $this->assertEquals(0, sizeof($items[0]->_embedded));
+        $this->assertEquals(0, sizeof($items[0]->_embedded->nodes));
 
         $this->assertEquals('test2', $items[1]->title);
         $this->assertTrue($items[1]->hasSub);
-        $this->assertEquals(2, sizeof($items[1]->_embedded));
+        $this->assertEquals(2, sizeof($items[1]->_embedded->nodes));
 
-        $items = $items[1]->_embedded;
+        $items = $items[1]->_embedded->nodes;
 
         $this->assertEquals('test3', $items[0]->title);
         $this->assertFalse($items[0]->hasSub);
-        $this->assertEquals(0, sizeof($items[0]->_embedded));
+        $this->assertEquals(0, sizeof($items[0]->_embedded->nodes));
 
         $this->assertEquals('test4', $items[1]->title);
         $this->assertTrue($items[1]->hasSub);
-        $this->assertEquals(0, sizeof($items[1]->_embedded));
+        $this->assertEquals(0, sizeof($items[1]->_embedded->nodes));
 
         // get child nodes from root
         $client->request('GET', '/api/nodes?depth=3&flat=false&webspace=sulu_io&language=en');
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
-        $items = $response->_embedded;
+        $items = $response->_embedded->nodes;
 
         $this->assertEquals(2, sizeof($items));
 
         $this->assertEquals('test1', $items[0]->title);
         $this->assertFalse($items[0]->hasSub);
-        $this->assertEquals(0, sizeof($items[0]->_embedded));
+        $this->assertEquals(0, sizeof($items[0]->_embedded->nodes));
 
         $this->assertEquals('test2', $items[1]->title);
         $this->assertTrue($items[1]->hasSub);
-        $this->assertEquals(2, sizeof($items[1]->_embedded));
+        $this->assertEquals(2, sizeof($items[1]->_embedded->nodes));
 
-        $items = $items[1]->_embedded;
+        $items = $items[1]->_embedded->nodes;
 
         $this->assertEquals('test3', $items[0]->title);
         $this->assertFalse($items[0]->hasSub);
-        $this->assertEquals(0, sizeof($items[0]->_embedded));
+        $this->assertEquals(0, sizeof($items[0]->_embedded->nodes));
 
         $this->assertEquals('test4', $items[1]->title);
         $this->assertTrue($items[1]->hasSub);
-        $this->assertEquals(1, sizeof($items[1]->_embedded));
+        $this->assertEquals(1, sizeof($items[1]->_embedded->nodes));
 
-        $items = $items[1]->_embedded;
+        $items = $items[1]->_embedded->nodes;
 
         $this->assertEquals('test5', $items[0]->title);
         $this->assertFalse($items[0]->hasSub);
-        $this->assertEquals(0, sizeof($items[0]->_embedded));
+        $this->assertEquals(0, sizeof($items[0]->_embedded->nodes));
 
         // get child nodes from subNode
         $client->request('GET', '/api/nodes?depth=3&flat=false&webspace=sulu_io&language=en&parent=' . $data[3]['id']);
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
-        $items = $response->_embedded;
+        $items = $response->_embedded->nodes;
 
         $this->assertEquals(1, sizeof($items));
 
         $this->assertEquals('test5', $items[0]->title);
         $this->assertFalse($items[0]->hasSub);
-        $this->assertEquals(0, sizeof($items[0]->_embedded));
+        $this->assertEquals(0, sizeof($items[0]->_embedded->nodes));
     }
 
     public function testSmartContent()
@@ -722,14 +722,14 @@ class NodeControllerTest extends DatabaseTestCase
 
         $client->request('GET', '/api/nodes/filter?webspace=sulu_io&language=en');
         $response = json_decode($client->getResponse()->getContent());
-        $items = $response->_embedded;
+        $items = $response->_embedded->nodes;
 
         $this->assertEquals('', $response->title);
         $this->assertEquals(6, sizeof($items));
 
         $client->request('GET', '/api/nodes/filter?webspace=sulu_io&language=en&dataSource=' . $data[1]['id']);
         $response = json_decode($client->getResponse()->getContent());
-        $items = $response->_embedded;
+        $items = $response->_embedded->nodes;
 
         $this->assertEquals(2, sizeof($items));
         $this->assertEquals($data[1]['title'], $response->title);
@@ -739,7 +739,7 @@ class NodeControllerTest extends DatabaseTestCase
             '/api/nodes/filter?webspace=sulu_io&language=en&dataSource=' . $data[1]['id'] . '&includeSubFolders=true'
         );
         $response = json_decode($client->getResponse()->getContent());
-        $items = $response->_embedded;
+        $items = $response->_embedded->nodes;
 
         $this->assertEquals(3, sizeof($items));
         $this->assertEquals($data[1]['title'], $response->title);
@@ -749,28 +749,28 @@ class NodeControllerTest extends DatabaseTestCase
             '/api/nodes/filter?webspace=sulu_io&language=en&dataSource=' . $data[1]['id'] . '&includeSubFolders=true&limitResult=2'
         );
         $response = json_decode($client->getResponse()->getContent());
-        $items = $response->_embedded;
+        $items = $response->_embedded->nodes;
 
         $this->assertEquals(2, sizeof($items));
         $this->assertEquals($data[1]['title'], $response->title);
 
         $client->request('GET', '/api/nodes/filter?webspace=sulu_io&language=en&tags=tag1');
         $response = json_decode($client->getResponse()->getContent());
-        $items = $response->_embedded;
+        $items = $response->_embedded->nodes;
 
         $this->assertEquals('', $response->title);
         $this->assertEquals(4, sizeof($items));
 
         $client->request('GET', '/api/nodes/filter?webspace=sulu_io&language=en&tags=tag2');
         $response = json_decode($client->getResponse()->getContent());
-        $items = $response->_embedded;
+        $items = $response->_embedded->nodes;
 
         $this->assertEquals('', $response->title);
         $this->assertEquals(3, sizeof($items));
 
         $client->request('GET', '/api/nodes/filter?webspace=sulu_io&language=en&tags=tag1,tag2');
         $response = json_decode($client->getResponse()->getContent());
-        $items = $response->_embedded;
+        $items = $response->_embedded->nodes;
 
         $this->assertEquals('', $response->title);
         $this->assertEquals(2, sizeof($items));
