@@ -10,23 +10,22 @@
 
 namespace Sulu\Bundle\ContactBundle\Controller;
 
-use FOS\RestBundle\Routing\ClassResourceInterface;
+use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManager;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Put;
 use FOS\RestBundle\Controller\Annotations\Post;
-use Sulu\Bundle\ContactBundle\Entity\AccountAddress;
+use Sulu\Bundle\ContactBundle\Contact\AbstractContactManager;
 use Sulu\Bundle\ContactBundle\Entity\AccountContact;
+use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\TermsOfDelivery;
 use Sulu\Bundle\ContactBundle\Entity\TermsOfPayment;
-use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
-use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
-use Sulu\Component\Rest\RestController;
+use Sulu\Component\Rest\ListBuilder\ListRestHelper;
 use \DateTime;
-use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\Request;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -41,12 +40,12 @@ class AccountController extends AbstractContactController
     /**
      * {@inheritdoc}
      */
-    protected $entityName = 'SuluContactBundle:Account';
-    protected $contactEntityName = 'SuluContactBundle:Contact';
-    protected $accountCategoryEntityName = 'SuluContactBundle:AccountCategory';
-    protected $accountContactEntityName = 'SuluContactBundle:AccountContact';
-    protected $termsOfPaymentEntityName = 'SuluContactBundle:TermsOfPayment';
-    protected $termsOfDeliveryEntityName = 'SuluContactBundle:TermsOfDelivery';
+    protected static $entityName = 'SuluContactBundle:Account';
+    protected static $contactEntityName = 'SuluContactBundle:Contact';
+    protected static $accountCategoryEntityName = 'SuluContactBundle:AccountCategory';
+    protected static $accountContactEntityName = 'SuluContactBundle:AccountContact';
+    protected static $termsOfPaymentEntityName = 'SuluContactBundle:TermsOfPayment';
+    protected static $termsOfDeliveryEntityName = 'SuluContactBundle:TermsOfDelivery';
 
     /**
      * {@inheritdoc}
@@ -94,9 +93,9 @@ class AccountController extends AbstractContactController
         1 => 'name',
         2 => 'corporation',
         5 => 'city',
-        5 => 'mainContact',
-        6 => 'mainPhone',
-        7 => 'mainEmail',
+        6 => 'mainContact',
+        7 => 'mainPhone',
+        8 => 'mainEmail',
     );
 
     /**
@@ -167,7 +166,7 @@ class AccountController extends AbstractContactController
             $id,
             function ($id) use ($includes) {
                 return $this->getDoctrine()
-                    ->getRepository($this->entityName)
+                    ->getRepository(self::$entityName)
                     ->findAccountById($id, in_array('contacts', $includes));
             }
         );
@@ -207,9 +206,9 @@ class AccountController extends AbstractContactController
             }
 
             // flat structure
-            $view = $this->responseList(array('accountContacts_account_id' => $id), $this->contactEntityName, $filterMainContact);
+            $view = $this->responseList(array('accountContacts_account_id' => $id), self::$contactEntityName, $filterMainContact);
         } else {
-            $contacts = $this->getDoctrine()->getRepository($this->contactEntityName)->findByAccountId($id);
+            $contacts = $this->getDoctrine()->getRepository(self::$contactEntityName)->findByAccountId($id);
             $view = $this->view($this->createHalResponse($contacts), 200);
         }
         return $this->handleView($view);
@@ -228,7 +227,7 @@ class AccountController extends AbstractContactController
             // get account
             /** @var Account $account */
             $account = $this->getDoctrine()
-                ->getRepository($this->entityName)
+                ->getRepository(self::$entityName)
                 ->find($accountId);
             if (!$account) {
                 throw new EntityNotFoundException('account', $accountId);
@@ -236,7 +235,7 @@ class AccountController extends AbstractContactController
 
             // get contact
             $contact = $this->getDoctrine()
-                ->getRepository($this->contactEntityName)
+                ->getRepository(self::$contactEntityName)
                 ->find($contactId);
             if (!$contact) {
                 throw new EntityNotFoundException('contact', $contactId);
@@ -244,7 +243,7 @@ class AccountController extends AbstractContactController
 
             // check if relation already exists
             $accountContact = $this->getDoctrine()
-                ->getRepository($this->accountContactEntityName)
+                ->getRepository(self::$accountContactEntityName)
                 ->findOneBy(array('contact' => $contact, 'account' => $account));
             if ($accountContact) {
                 throw new \Exception('Relation already exists');
@@ -286,8 +285,9 @@ class AccountController extends AbstractContactController
     {
         try {
             // check if relation exists
+            /** @var AccountContact $accountContact */
             $accountContact = $this->getDoctrine()
-                ->getRepository($this->accountContactEntityName)
+                ->getRepository(self::$accountContactEntityName)
                 ->findByForeignIds($accountId, $contactId);
             if (!$accountContact) {
                 throw new EntityNotFoundException('AccountContact', $accountId . $contactId);
@@ -364,7 +364,7 @@ class AccountController extends AbstractContactController
 
             $view = $this->responseList($where, null, $filter, $joinConditions);
         } else {
-            $contacts = $this->getDoctrine()->getRepository($this->entityName)->findAll();
+            $contacts = $this->getDoctrine()->getRepository(self::$entityName)->findAll();
             $view = $this->view($this->createHalResponse($contacts), 200);
         }
         return $this->handleView($view);
@@ -434,14 +434,14 @@ class AccountController extends AbstractContactController
         return $this->handleView($view);
     }
 
-    private function setResponsiblePerson($em, $account, $responsiblePerson){
+    private function setResponsiblePerson(ObjectManager $em, Account $account, $responsiblePerson){
         if(!!$responsiblePerson) {
             $id = $responsiblePerson['id'];
             /* @var Contact $contact */
-            $contact = $em->getRepository($this->contactEntityName)->find($id);
+            $contact = $em->getRepository(self::$contactEntityName)->find($id);
 
             if(!$contact){
-                throw new EntitiyNotFoundException($this->contactEntityName, $id);
+                throw new EntityNotFoundException(self::$contactEntityName, $id);
             }
             $account->setResponsiblePerson($contact);
         }
@@ -456,16 +456,14 @@ class AccountController extends AbstractContactController
      */
     public function putAction($id, Request $request)
     {
-        $accountEntity = 'SuluContactBundle:Account';
-
         try {
             /** @var Account $account */
             $account = $this->getDoctrine()
-                ->getRepository($accountEntity)
+                ->getRepository(self::$entityName)
                 ->findAccountById($id);
 
             if (!$account) {
-                throw new EntityNotFoundException($accountEntity, $id);
+                throw new EntityNotFoundException(self::$entityName, $id);
             } else {
 
                 $em = $this->getDoctrine()->getManager();
@@ -531,10 +529,10 @@ class AccountController extends AbstractContactController
     {
         if ($parentData != null && isset($parentData['id']) && $parentData['id'] != 'null' && $parentData['id'] != '') {
             $parent = $this->getDoctrine()
-                ->getRepository($this->entityName)
+                ->getRepository(self::$entityName)
                 ->findAccountById($parentData['id']);
             if (!$parent) {
-                throw new EntityNotFoundException($this->entityName, $parentData['id']);
+                throw new EntityNotFoundException(self::$entityName, $parentData['id']);
             }
             $account->setParent($parent);
         } else {
@@ -553,11 +551,11 @@ class AccountController extends AbstractContactController
         $categoryId = $categoryData['id'];
         if (!is_null($categoryId) && !empty($categoryId)) {
             /** @var @var AccountCategory $category */
-            $category = $this->getDoctrine()->getRepository($this->accountCategoryEntityName)->find($categoryId);
+            $category = $this->getDoctrine()->getRepository(self::$accountCategoryEntityName)->find($categoryId);
             if (!is_null($category)) {
                 $account->setAccountCategory($category);
             } else {
-                throw new EntityNotFoundException($this->accountCategoryEntityName, $categoryId);
+                throw new EntityNotFoundException(self::$accountCategoryEntityName, $categoryId);
             }
         }
     }
@@ -570,17 +568,15 @@ class AccountController extends AbstractContactController
      */
     public function patchAction($id, Request $request)
     {
-        $accountEntity = 'SuluContactBundle:Account';
-
         $em = $this->getDoctrine()->getManager();
 
         try {
             /** @var Account $account */
-            $account = $em->getRepository($accountEntity)
+            $account = $em->getRepository(self::$entityName)
                 ->findAccountById($id);
 
             if (!$account) {
-                throw new EntityNotFoundException($accountEntity, $id);
+                throw new EntityNotFoundException(self::$entityName, $id);
             } else {
 
                 if (!is_null($request->get('uid'))) {
@@ -599,7 +595,7 @@ class AccountController extends AbstractContactController
 
                 // check if mainContact is set
                 if (!is_null($mainContactRequest = $request->get('mainContact'))) {
-                    $mainContact = $em->getRepository($this->contactEntityName)->find($mainContactRequest['id']);
+                    $mainContact = $em->getRepository(self::$contactEntityName)->find($mainContactRequest['id']);
                     if ($mainContact) {
                         $account->setMainContact($mainContact);
                     }
@@ -636,11 +632,11 @@ class AccountController extends AbstractContactController
             $id = $request->get('termsOfPayment')['id'];
             /** @var TermsOfPayment $termsOfPayment */
             $termsOfPayment = $this->getDoctrine()
-                ->getRepository($this->termsOfPaymentEntityName)
+                ->getRepository(self::$termsOfPaymentEntityName)
                 ->find($id);
 
             if (!$termsOfPayment) {
-                throw new EntityNotFoundException($this->termsOfPaymentEntityName, $id);
+                throw new EntityNotFoundException(self::$termsOfPaymentEntityName, $id);
             }
             $account->setTermsOfPayment($termsOfPayment);
         }
@@ -649,10 +645,10 @@ class AccountController extends AbstractContactController
             $id = $request->get('termsOfDelivery')['id'];
             /** @var TermsOfDelivery $termsOfDelivery */
             $termsOfDelivery = $this->getDoctrine()
-                ->getRepository($this->termsOfDeliveryEntityName)
+                ->getRepository(self::$termsOfDeliveryEntityName)
                 ->find($id);
             if (!$termsOfDelivery) {
-                throw new EntityNotFoundException($this->termsOfDeliveryEntityName, $id);
+                throw new EntityNotFoundException(self::$termsOfDeliveryEntityName, $id);
             }
             $account->setTermsOfDelivery($termsOfDelivery);
         }
@@ -667,15 +663,13 @@ class AccountController extends AbstractContactController
     public function deleteAction($id, Request $request)
     {
         $delete = function ($id) use ($request) {
-            $entityName = 'SuluContactBundle:Account';
-
             /* @var Account $account */
             $account = $this->getDoctrine()
-                ->getRepository($entityName)
+                ->getRepository(self::$entityName)
                 ->findAccountByIdAndDelete($id);
 
             if (!$account) {
-                throw new EntityNotFoundException($entityName, $id);
+                throw new EntityNotFoundException(self::$entityName, $id);
             }
 
             // do not allow to delete entity if child is existent
@@ -728,7 +722,7 @@ class AccountController extends AbstractContactController
         foreach ($ids as $id) {
             /** @var Account $account */
             $account = $this->getDoctrine()
-                ->getRepository('SuluContactBundle:Account')
+                ->getRepository(self::$entityName)
                 ->countDistinctAccountChildrenAndContacts($id);
 
             // get number of subaccounts
@@ -760,7 +754,7 @@ class AccountController extends AbstractContactController
 
         /** @var Account $account */
         $account = $this->getDoctrine()
-            ->getRepository('SuluContactBundle:Account')
+            ->getRepository(self::$entityName)
             ->findChildrenAndContacts($id);
 
         if ($account != null) {
@@ -770,6 +764,7 @@ class AccountController extends AbstractContactController
             $numContacts = 0;
             if (!is_null($accountContacts)) {
                 foreach ($accountContacts as $accountContact) {
+                    /** @var AccountContact $accountContact */
                     $contactId = $accountContact->getContact()->getId();
                     if (!array_key_exists($contactId, $slicedContacts)) {
                         if ($numContacts++ < 3) {
@@ -837,7 +832,7 @@ class AccountController extends AbstractContactController
                 case 'convertAccountType':
                     $accountType = $request->get('type');
                     $accountEntity = $this->getDoctrine()
-                        ->getRepository('SuluContactBundle:Account')
+                        ->getRepository(self::$entityName)
                         ->find($id);
 
                     if (!$accountEntity) {

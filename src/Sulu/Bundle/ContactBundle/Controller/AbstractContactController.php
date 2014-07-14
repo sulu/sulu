@@ -23,7 +23,9 @@ use Sulu\Bundle\ContactBundle\Entity\BankAccount;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
+use Sulu\Component\Rest\ListBuilder\ListRestHelperInterface;
 use Sulu\Component\Rest\RestController;
+use Sulu\Component\Rest\RestHelperInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 
@@ -45,7 +47,15 @@ abstract class AbstractContactController extends RestController implements Class
      */
     protected function checkAndSetMainAddress($addresses)
     {
-        return $this->getContactManager()->setMainForCollection($addresses);
+        $this->getContactManager()->setMainForCollection($addresses);
+    }
+
+    /**
+     * @return RestHelperInterface
+     */
+    protected function getRestHelper()
+    {
+        return $this->get('sulu_core.rest_helper');
     }
 
     /**
@@ -129,6 +139,10 @@ abstract class AbstractContactController extends RestController implements Class
      */
     protected function processEmails($contact, $emails)
     {
+        $get = function($email) use ($contact) {
+            return $email->getId();
+        };
+
         $delete = function ($email) use ($contact) {
             return $contact->removeEmail($email);
         };
@@ -141,7 +155,7 @@ abstract class AbstractContactController extends RestController implements Class
             return $this->addEmail($contact, $email);
         };
 
-        $result = $this->processPut($contact->getEmails(), $emails, $delete, $update, $add);
+        $result = $this->getRestHelper()->processSubEntities($contact->getEmails(), $emails, $get, $add, $update, $delete);
         // check main
         $this->getContactManager()->setMainEmail($contact);
 
