@@ -21,6 +21,7 @@ define(['text!sulucontact/components/activities/activity.form.html'], function(A
     var constants = {
 
             overlayId: 'activitiesOverlay',
+            activityListSelector: '#activities-list',
             activityFormSelector: '#acitivity-form',
 
             activitiesURL: '/admin/api/activities/'
@@ -120,7 +121,7 @@ define(['text!sulucontact/components/activities/activity.form.html'], function(A
 
             this.sandbox.dom.remove('#'+constants.overlayId);
             $container = this.sandbox.dom.createElement('<div id="'+constants.overlayId+'"></div>');
-            this.sandbox.dom.append(this.$el, $container);
+            this.sandbox.dom.append(constants.activityListSelector, $container);
 
             this.overlayData = data;
 
