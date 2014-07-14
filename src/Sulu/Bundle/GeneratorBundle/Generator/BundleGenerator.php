@@ -45,7 +45,7 @@ abstract class BundleGenerator extends Generator
         $parameters = array(
             'namespace' => $namespace,
             'bundle' => $bundle,
-            'format' => 'yml',
+            'format' => 'xml',
             'bundle_basename' => $basename,
             'basename' => $basename,
             'extension_alias' => Container::underscore($basename),
