@@ -86,7 +86,7 @@ define([
 
             for(el in defaults){
                 for(sub in defaults[el]){
-                    defaults[el][sub].translations = this.sandbox.translate(defaults[el][sub].name);
+                    defaults[el][sub].translation = this.sandbox.translate(defaults[el][sub].name);
                 }
             }
 
