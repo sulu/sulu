@@ -32,7 +32,7 @@ class TermsOfPaymentController extends RestController implements ClassResourceIn
     /**
      * {@inheritdoc}
      */
-    protected $entityName = 'SuluContactBundle:TermsOfPayment';
+    protected static $entityName = 'SuluContactBundle:TermsOfPayment';
 
     /**
      * Shows a single terms of payment
@@ -46,7 +46,7 @@ class TermsOfPaymentController extends RestController implements ClassResourceIn
             $id,
             function ($id) {
                 return $this->getDoctrine()
-                    ->getRepository($this->entityName)
+                    ->getRepository(self::$entityName)
                     ->find($id);
             }
         );
@@ -62,7 +62,7 @@ class TermsOfPaymentController extends RestController implements ClassResourceIn
      */
     public function cgetAction()
     {
-        $termsOfPayment = $this->getDoctrine()->getRepository($this->entityName)->findAll();
+        $termsOfPayment = $this->getDoctrine()->getRepository(self::$entityName)->findAll();
         $view = $this->view($this->createHalResponse($termsOfPayment), 200);
 
         return $this->handleView($view);
@@ -113,11 +113,11 @@ class TermsOfPaymentController extends RestController implements ClassResourceIn
         try {
             /** @var TermsOfPayment $termsOfPayment */
             $termsOfPayment = $this->getDoctrine()
-                ->getRepository($this->entityName)
+                ->getRepository(self::$entityName)
                 ->find($id);
 
             if (!$termsOfPayment) {
-                throw new EntityNotFoundException($this->entityName, $id);
+                throw new EntityNotFoundException(self::$entityName, $id);
             } else {
                 $terms = $request->get('terms');
 
@@ -153,11 +153,11 @@ class TermsOfPaymentController extends RestController implements ClassResourceIn
 
                 /* @var TermsOfPayment $termsOfPayment */
                 $termsOfPayment = $this->getDoctrine()
-                    ->getRepository($this->entityName)
+                    ->getRepository(self::$entityName)
                     ->find($id);
 
                 if (!$termsOfPayment) {
-                    throw new EntityNotFoundException($this->entityName, $id);
+                    throw new EntityNotFoundException(self::$entityName, $id);
                 }
 
                 $em = $this->getDoctrine()->getManager();
@@ -210,18 +210,18 @@ class TermsOfPaymentController extends RestController implements ClassResourceIn
      * Helper function for patch action
      * @param $item
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
-     * @return added or updated entity
+     * @return TermsOfPayment added or updated entity
      */
     private function addAndUpdateCategories($item)
     {
         if (isset($item['id']) && !empty($item['id'])) {
             /* @var TermsOfPayment $termsOfPayment */
             $termsOfPayment = $this->getDoctrine()
-                ->getRepository($this->entityName)
+                ->getRepository(self::$entityName)
                 ->find($item['id']);
 
             if ($termsOfPayment == null) {
-                throw new EntityNotFoundException($this->entityName, $item['id']);
+                throw new EntityNotFoundException(self::$entityName, $item['id']);
             } else {
                 $termsOfPayment->setTerms($item['terms']);
             }
