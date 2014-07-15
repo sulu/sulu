@@ -185,28 +185,12 @@ class ContactController extends AbstractContactController
 
     /**
      * returns all fields that can be used by list
-     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function fieldsAction(Request $request)
+    public function fieldsAction()
     {
-        // AccountContacts Fields (are being showed in accounts-contacts-list)
-        if ($request->get('accountContacts') === 'true') {
-            $fields = array(
-                'id',
-                'firstName',
-                'lastName',
-                'isMainContact',
-                'accountContacts_position',
-            );
-            $fieldsHidden = array(
-                'id',
-            );
-            return $this->handleView($this->view($this->addFieldAttributes($fields, $fieldsHidden), 200));
-        }
-
         // default contacts list
-        return $this->responseFields();
+        return $this->handleView($this->view(array_values($this->fieldDescriptors), 200));
     }
 
     /**
