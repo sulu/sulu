@@ -62,13 +62,29 @@ abstract class AbstractFieldDescriptor
      */
     private $width;
 
-    public function __construct($name, $disabled = false, $default = false, $type = '', $width = '', $translation = null)
+    /**
+     * The minimal with of the field in the table
+     * @var string
+     * @Expose
+     */
+    private $minWidth;
+
+    public function __construct(
+        $name,
+        $disabled = false,
+        $default = false,
+        $type = '',
+        $width = '',
+        $minWidth = '',
+        $translation = null
+    )
     {
         $this->name = $name;
         $this->disabled = $disabled;
         $this->default = $default;
         $this->type = $type;
         $this->width = $width;
+        $this->minWidth = $minWidth;
         $this->translation = $translation == null ? $name : $translation;
     }
 
