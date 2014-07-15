@@ -59,16 +59,25 @@
                     </div>
                     <div class="grid-col-4 no-padding"></div>
                     <div class="grid-col-4 no-padding">
-                        <div onclick="javascript:document.forms['login'].submit();" id="submit" class="btn action large">
+                        <div id="submit" class="btn action large">
                             <span class="fa-unlock-alt"></span>
                             <span class="text">Login</span>
                         </div>
-                        <input type="submit" style="visibility: hidden;" />
+                        <input id="submitInput" type="submit" style="width:0; height:0; opacity: 0" />
                     </div>
                 </div>
             </form>
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    document.getElementById('username').focus();
+
+    document.getElementById('submit').onclick = function() {
+        var clickEvent = document.createEvent('MouseEvents');
+        clickEvent.initEvent('click', true, true);
+        document.getElementById('submitInput').dispatchEvent(clickEvent);
+    }
+</script>
 </body>
 </html>
