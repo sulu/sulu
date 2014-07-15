@@ -153,15 +153,15 @@ class NodeResourcelocatorControllerTest extends DatabaseTestCase
             )
         );
         $client->request('POST', '/api/nodes?webspace=sulu_io&language=en&template=default', $data[0]);
-        $data[0] = (array) json_decode($client->getResponse()->getContent());
+        $data[0] = (array) json_decode($client->getResponse()->getContent(), true);
         $client->request('POST', '/api/nodes?webspace=sulu_io&language=en&template=default', $data[1]);
-        $data[1] = (array) json_decode($client->getResponse()->getContent());
+        $data[1] = (array) json_decode($client->getResponse()->getContent(), true);
         $client->request('POST', '/api/nodes?webspace=sulu_io&language=en&template=default&parent='.$data[1]['id'], $data[2]);
-        $data[2] = (array) json_decode($client->getResponse()->getContent());
+        $data[2] = (array) json_decode($client->getResponse()->getContent(), true);
         $client->request('POST', '/api/nodes?webspace=sulu_io&language=en&template=default&parent='.$data[1]['id'], $data[3]);
-        $data[3] = (array) json_decode($client->getResponse()->getContent());
+        $data[3] = (array) json_decode($client->getResponse()->getContent(), true);
         $client->request('POST', '/api/nodes?webspace=sulu_io&language=en&template=default&parent='.$data[3]['id'], $data[4]);
-        $data[4] = (array) json_decode($client->getResponse()->getContent());
+        $data[4] = (array) json_decode($client->getResponse()->getContent(), true);
 
         return $data;
     }
@@ -215,7 +215,7 @@ class NodeResourcelocatorControllerTest extends DatabaseTestCase
             '/api/nodes/' . $newsData['id'] . '?webspace=sulu_io&language=en&template=default',
             $newsData
         );
-        $newsData = (array)json_decode($this->client->getResponse()->getContent());
+        $newsData = (array)json_decode($this->client->getResponse()->getContent(), true);
 
         $this->client->request(
             'GET',
@@ -248,7 +248,8 @@ class NodeResourcelocatorControllerTest extends DatabaseTestCase
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $history = (array)json_decode($this->client->getResponse()->getContent(), true);
 
-        $url = $history['_embedded'][0]['_links']['delete'];
+        $url = $history['_embedded']['resourcelocators'][0]['_links']['delete'];
+
         $url = substr($url, 6);
         $this->client->request('DELETE', $url);
         $this->assertEquals(204, $this->client->getResponse()->getStatusCode());
@@ -283,7 +284,7 @@ class NodeResourcelocatorControllerTest extends DatabaseTestCase
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $history = (array)json_decode($this->client->getResponse()->getContent(), true);
 
-        $url = $history['_embedded'][0]['_links']['restore'];
+        $url = $history['_embedded']['resourcelocators'][0]['_links']['restore'];
         $url = substr($url, 6);
         $this->client->request('PUT', $url);
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());

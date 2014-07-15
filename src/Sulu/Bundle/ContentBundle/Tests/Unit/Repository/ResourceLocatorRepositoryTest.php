@@ -149,9 +149,9 @@ class ResourceLocatorRepositoryTest extends PhpcrTestCase
 
         $result = $this->repository->getHistory($structure->getUuid(), 'default', 'en');
 
-        $this->assertEquals(2, sizeof($result['_embedded']));
-        $this->assertEquals('/asdf-1', $result['_embedded'][0]['resourceLocator']);
-        $this->assertEquals('/asdf', $result['_embedded'][1]['resourceLocator']);
+        $this->assertEquals(2, sizeof($result['_embedded']['resourcelocators']));
+        $this->assertEquals('/asdf-1', $result['_embedded']['resourcelocators'][0]['resourceLocator']);
+        $this->assertEquals('/asdf', $result['_embedded']['resourcelocators'][1]['resourceLocator']);
     }
 
     public function testRestore()
@@ -164,9 +164,9 @@ class ResourceLocatorRepositoryTest extends PhpcrTestCase
 
         $result = $this->repository->getHistory($structure->getUuid(), 'default', 'en');
 
-        $this->assertEquals(2, sizeof($result['_embedded']));
-        $this->assertEquals('/asdf-2', $result['_embedded'][0]['resourceLocator']);
-        $this->assertEquals('/asdf-1', $result['_embedded'][1]['resourceLocator']);
+        $this->assertEquals(2, sizeof($result['_embedded']['resourcelocators']));
+        $this->assertEquals('/asdf-2', $result['_embedded']['resourcelocators'][0]['resourceLocator']);
+        $this->assertEquals('/asdf-1', $result['_embedded']['resourcelocators'][1]['resourceLocator']);
     }
 
     public function testDelete()
@@ -176,7 +176,7 @@ class ResourceLocatorRepositoryTest extends PhpcrTestCase
         $this->repository->delete('/asdf', 'default', 'en');
         $result = $this->repository->getHistory($structure->getUuid(), 'default', 'en');
 
-        $this->assertEquals(1, sizeof($result['_embedded']));
-        $this->assertEquals('/asdf-1', $result['_embedded'][0]['resourceLocator']);
+        $this->assertEquals(1, sizeof($result['_embedded']['resourcelocators']));
+        $this->assertEquals('/asdf-1', $result['_embedded']['resourcelocators'][0]['resourceLocator']);
     }
 }
