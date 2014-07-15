@@ -237,6 +237,7 @@ define(['sulumedia/collection/collections'], function(Collections) {
                                     instanceName: this.options.instanceName,
                                     gridUrl: '/admin/api/media?collection=',
                                     preselected: this.data.ids,
+                                    resultKey: 'media',
                                     dataGridOptions: {
                                         view: 'table',
                                         viewOptions: {table: {excludeFields: ['id'], showHead: false}},
