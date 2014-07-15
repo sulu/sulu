@@ -181,6 +181,12 @@ class AccountController extends AbstractContactController
         $this->fieldDescriptors['mainFax'] = new DoctrineFieldDescriptor('mainFax', 'mainFax', self::$entityName);
         $this->fieldDescriptors['mainUrl'] = new DoctrineFieldDescriptor('mainUrl', 'mainUrl', self::$entityName);
 
+        $this->fieldDescriptors['mainContact'] = new DoctrineFieldDescriptor('lastName', 'mainContact', self::$contactEntityName,
+            array(
+                self::$contactEntityName => self::$entityName . '.mainContact'
+            )
+        );
+
         $this->fieldDescriptors['city'] = new DoctrineFieldDescriptor('city', 'city', self::$addressEntityName,
             array(
                 self::$accountAddressEntityName => self::$entityName . '.accountAddresses',
