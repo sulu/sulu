@@ -20,6 +20,11 @@ use Sulu\Component\Rest\RestController;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Symfony\Component\HttpFoundation\Request;
+use Hateoas\Representation\CollectionRepresentation;
+use Sulu\Component\Rest\ListBuilder\ListRepresentation;
+use Sulu\Component\Rest\RestHelperInterface;
+use Sulu\Component\Rest\ListBuilder\DoctrineListBuilderFactory;
+use Sulu\Component\Rest\ListBuilder\FieldDescriptor\DoctrineFieldDescriptor;
 
 /**
  * Makes the roles accessible through a REST-API
@@ -27,7 +32,9 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class RoleController extends RestController implements ClassResourceInterface
 {
-    protected $entityName = 'SuluSecurityBundle:Role';
+    protected static $entityName = 'SuluSecurityBundle:Role';
+
+    protected static $entityKey = 'roles';
 
     const ENTITY_NAME_PERMISSION = 'SuluSecurityBundle:Permission';
 
@@ -39,6 +46,23 @@ class RoleController extends RestController implements ClassResourceInterface
     protected $fieldsTranslationKeys = array();
     protected $bundlePrefix = 'security.roles.';
 
+    /**
+     * @var Array - Holds the field descriptors for the list response
+     * TODO: Create a Manager and move the field descriptors to the manager
+     */
+    protected $fieldDescriptors;
+
+    /**
+     * TODO: move the field descriptors to a manager
+     */
+    public function __construct() {
+        $this->fieldDescriptors = array();
+        $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor('id', 'id', self::$entityName);
+        $this->fieldDescriptors['system'] = new DoctrineFieldDescriptor('system', 'system', self::$entityName);
+        $this->fieldDescriptors['name'] = new DoctrineFieldDescriptor('name', 'name', self::$entityName);
+        $this->fieldDescriptors['created'] = new DoctrineFieldDescriptor('created', 'created', self::$entityName);
+        $this->fieldDescriptors['changed'] = new DoctrineFieldDescriptor('changed', 'changed', self::$entityName);
+    }
 
     /**
      * returns all fields that can be used by list
@@ -66,22 +90,37 @@ class RoleController extends RestController implements ClassResourceInterface
     public function cgetAction(Request $request)
     {
         if ($request->get('flat') == 'true') {
-            // flat structure
-            $view = $this->responseList();
-        } else {
-            $roles = $this->getDoctrine()->getRepository($this->entityName)->findAllRoles();
+            /** @var RestHelperInterface $restHelper */
+            $restHelper = $this->get('sulu_core.doctrine_rest_helper');
 
+            /** @var DoctrineListBuilderFactory $factory */
+            $factory = $this->get('sulu_core.doctrine_list_builder_factory');
+
+            $listBuilder = $factory->create(self::$entityName);
+
+            $restHelper->initializeListBuilder($listBuilder, $this->fieldDescriptors);
+
+            $list = new ListRepresentation(
+                $listBuilder->execute(),
+                self::$entityKey,
+                'get_roles',
+                $request->query->all(),
+                $listBuilder->getCurrentPage(),
+                $listBuilder->getLimit(),
+                $listBuilder->count()
+            );
+        } else {
+            $roles = $this->getDoctrine()->getRepository(self::$entityName)->findAllRoles();
+            $convertedRoles = [];
             if ($roles != null) {
-                $convertedRoles = [];
                 foreach ($roles as $role) {
                     array_push($convertedRoles, $this->convertRole($role));
                 }
-                $view = $this->view($this->createHalResponse($convertedRoles), 200);
 
-            } else {
-                $view = $this->view(array(), 200);
             }
+            $list = new CollectionRepresentation($convertedRoles, self::$entityKey);
         }
+        $view = $this->view($list, 200);
         return $this->handleView($view);
     }
 
@@ -96,7 +135,7 @@ class RoleController extends RestController implements ClassResourceInterface
         $find = function ($id) {
             /** @var Role $role */
             $role = $this->getDoctrine()
-                ->getRepository($this->entityName)
+                ->getRepository(self::$entityName)
                 ->findRoleById($id);
 
             return $this->convertRole($role);
@@ -162,12 +201,12 @@ class RoleController extends RestController implements ClassResourceInterface
     {
         /** @var Role $role */
         $role = $this->getDoctrine()
-            ->getRepository($this->entityName)
+            ->getRepository(self::$entityName)
             ->findRoleById($id);
 
         try {
             if (!$role) {
-                throw new EntityNotFoundException($this->entityName, $id);
+                throw new EntityNotFoundException(self::$entityName, $id);
             } else {
                 $em = $this->getDoctrine()->getManager();
 
@@ -210,11 +249,11 @@ class RoleController extends RestController implements ClassResourceInterface
     {
         $delete = function ($id) {
             $role = $this->getDoctrine()
-                ->getRepository($this->entityName)
+                ->getRepository(self::$entityName)
                 ->findRoleById($id);
 
             if (!$role) {
-                throw new EntityNotFoundException($this->entityName, $id);
+                throw new EntityNotFoundException(self::$entityName, $id);
             }
 
             $em = $this->getDoctrine()->getManager();
@@ -255,25 +294,33 @@ class RoleController extends RestController implements ClassResourceInterface
      * @param Role $role
      * @param $permissionData
      * @return bool
-     * @throws \Sulu\Component\Rest\Exception\EntityIdAlreadySetException
+     * @throws EntityNotFoundException
      */
     protected function addPermission(Role $role, $permissionData)
     {
         $em = $this->getDoctrine()->getManager();
+        $alreadyContains = false;
 
         if (isset($permissionData['id'])) {
-            throw new EntityIdAlreadySetException(self::ENTITY_NAME_PERMISSION, $permissionData['id']);
+            $permission = $em->getRepository(self::ENTITY_NAME_PERMISSION)->find($permissionData['id']);
+            if (!$permission) {
+                throw new EntityNotFoundException(self::ENTITY_NAME_PERMISSION, $permissionData['id']);
+            }
+            // only add if not already contains
+            $alreadyContains = $role->getPermissions()->contains($permission);
+        } else {
+            $permission = new Permission();
+            $permission->setContext($permissionData['context']);
+            $permission->setPermissions(
+                $this->get('sulu_security.mask_converter')
+                    ->convertPermissionsToNumber($permissionData['permissions'])
+            );
         }
-
-        $permission = new Permission();
-        $permission->setContext($permissionData['context']);
-        $permission->setPermissions(
-            $this->get('sulu_security.mask_converter')
-                ->convertPermissionsToNumber($permissionData['permissions'])
-        );
-        $permission->setRole($role);
-        $em->persist($permission);
-        $role->addPermission($permission);
+        if ($alreadyContains === false) {
+            $permission->setRole($role);
+            $em->persist($permission);
+            $role->addPermission($permission);
+        }
 
         return true;
     }

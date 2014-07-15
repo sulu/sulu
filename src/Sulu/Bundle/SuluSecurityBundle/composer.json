@@ -18,6 +18,7 @@
         "friendsofsymfony/http-cache": "@dev",
         "jms/serializer-bundle": "@dev",
         "stof/doctrine-extensions-bundle": "1.1.*@dev",
+        "willdurand/hateoas-bundle": "0.3.*",
 
         "sulu/sulu": "dev-develop",
         "sulu/admin-bundle": "dev-develop",
