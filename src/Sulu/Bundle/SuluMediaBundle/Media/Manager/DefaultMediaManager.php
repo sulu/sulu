@@ -210,7 +210,6 @@ class DefaultMediaManager implements MediaManagerInterface, MediaFieldDescriptor
         $fieldDescriptors['url'] = new DoctrineFieldDescriptor('url', null, null, array());
         $fieldDescriptors['properties'] = new DoctrineFieldDescriptor('properties', null, null, array());
 
-
         $this->fieldDescriptors = $fieldDescriptors;
 
         return $this->fieldDescriptors;

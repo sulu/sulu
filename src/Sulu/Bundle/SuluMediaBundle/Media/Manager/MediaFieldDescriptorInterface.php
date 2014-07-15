@@ -18,7 +18,6 @@ use Sulu\Component\Rest\ListBuilder\FieldDescriptor\DoctrineFieldDescriptor;
  */
 interface MediaFieldDescriptorInterface
 {
-
     /**
      * Return the FieldDescriptor by name
      * @param string $key
