@@ -18,7 +18,6 @@ use Sulu\Component\Rest\ListBuilder\FieldDescriptor\DoctrineFieldDescriptor;
  */
 interface CollectionFieldDescriptorInterface
 {
-
     /**
      * Return the FieldDescriptors
      * @return DoctrineFieldDescriptor[]

@@ -78,12 +78,12 @@ class MediaController extends RestController implements ClassResourceInterface
     public function getAction($id, Request $request)
     {
         $locale = $this->getLocale($request->get('locale'));
-        $mM = $this->getMediaManager();
+        $mm = $this->getMediaManager();
         $view = $this->responseGetById(
             $id,
-            function ($id) use ($locale, $mM) {
-                $mediaEntity = $mM->findById($id);
-                return $mM->getApiObject($mediaEntity, $locale);
+            function ($id) use ($locale, $mm) {
+                $mediaEntity = $mm->findById($id);
+                return $mm->getApiObject($mediaEntity, $locale);
             }
         );
 
@@ -107,9 +107,9 @@ class MediaController extends RestController implements ClassResourceInterface
         /** @var ListRestHelperInterface $listRestHelper */
         $listRestHelper = $this->get('sulu_core.list_rest_helper');
 
-        $mM = $this->getMediaManager();
-        $mediaEntities = $mM->find($collection, $ids, $limit);
-        $media = $mM->getApiObjects($mediaEntities, $this->getLocale($request->get('locale')));
+        $mm = $this->getMediaManager();
+        $mediaEntities = $mm->find($collection, $ids, $limit);
+        $media = $mm->getApiObjects($mediaEntities, $this->getLocale($request->get('locale')));
 
         $all = count($media); // TODO
 
@@ -176,12 +176,12 @@ class MediaController extends RestController implements ClassResourceInterface
     protected function saveEntity($id, Request $request)
     {
         try {
-            $mM = $this->getMediaManager();
+            $mm = $this->getMediaManager();
             $data = $this->getData($request);
             $data['id'] = $id;
             $uploadedFile = $this->getUploadedFile($request, 'fileVersion');
-            $categoryEntity = $mM->save($uploadedFile, $data, $this->getUser()->getId());
-            $categoryWrapper = $mM->getApiObject($categoryEntity, $this->getLocale($request->get('locale')));
+            $categoryEntity = $mm->save($uploadedFile, $data, $this->getUser()->getId());
+            $categoryWrapper = $mm->getApiObject($categoryEntity, $this->getLocale($request->get('locale')));
 
             $view = $this->view($categoryWrapper, 200);
         } catch (EntityNotFoundException $enfe) {

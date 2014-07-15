@@ -17,8 +17,8 @@ namespace Sulu\Bundle\MediaBundle\Collection\Manager;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Api\Collection as CollectionWrapper;
 
-interface CollectionManagerInterface {
-
+interface CollectionManagerInterface
+{
     /**
      * Returns collections with a given parent and/or a given depth-level
      * if no arguments passed returns all collection

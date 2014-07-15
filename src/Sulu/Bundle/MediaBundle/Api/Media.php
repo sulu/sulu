@@ -24,6 +24,7 @@ use JMS\Serializer\Annotation\VirtualProperty;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\ExclusionPolicy;
+use Sulu\Component\Rest\ApiWrapper;
 
 /**
  * Class Media
@@ -31,9 +32,8 @@ use JMS\Serializer\Annotation\ExclusionPolicy;
  * @package Sulu\Bundle\MediaBundle\Media\RestObject
  * @ExclusionPolicy("all")
  */
-class Media extends ApiEntityWrapper
+class Media extends ApiWrapper
 {
-
     /**
      * @var string
      */
@@ -634,5 +634,4 @@ class Media extends ApiEntityWrapper
         }
         throw new EntityNotFoundException('SuluMediaBundle:FileVersion', $this->entity->getId());
     }
-
-} 
+}

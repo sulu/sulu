@@ -10,7 +10,6 @@
 
 namespace Sulu\Bundle\MediaBundle\Api;
 
-use Sulu\Bundle\CoreBundle\Entity\ApiEntityWrapper;
 use Sulu\Bundle\MediaBundle\Entity\Collection as Entity;
 use JMS\Serializer\Annotation\VirtualProperty;
 use JMS\Serializer\Annotation\SerializedName;
@@ -19,6 +18,7 @@ use DateTime;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use JMS\Serializer\Annotation\ExclusionPolicy;
+use Sulu\Component\Rest\ApiWrapper;
 
 /**
  * Class Collection
@@ -26,9 +26,8 @@ use JMS\Serializer\Annotation\ExclusionPolicy;
  * @package Sulu\Bundle\MediaBundle\Media\RestObject
  * @ExclusionPolicy("all")
  */
-class Collection extends ApiEntityWrapper
+class Collection extends ApiWrapper
 {
-
     /**
      * @var array
      */

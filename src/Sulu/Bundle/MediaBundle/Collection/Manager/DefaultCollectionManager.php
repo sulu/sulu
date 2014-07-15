@@ -10,7 +10,6 @@
 
 namespace Sulu\Bundle\MediaBundle\Collection\Manager;
 
-
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
@@ -26,7 +25,6 @@ use Sulu\Bundle\MediaBundle\Api\Collection as CollectionWrapper;
 
 class DefaultCollectionManager implements CollectionManagerInterface, CollectionFieldDescriptorInterface
 {
-
     /**
      * @var CollectionRepositoryInterface
      */
@@ -312,7 +310,6 @@ class DefaultCollectionManager implements CollectionManagerInterface, Collection
 
         $medias = $this->mediaRepository
             ->findMedia($id, null, $this->previewLimit);
-
 
         foreach ($medias as $media) {
             foreach ($media->getFiles() as $file) {
