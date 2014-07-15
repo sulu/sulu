@@ -10,6 +10,7 @@
 
 namespace Sulu\Component\Rest\ListBuilder;
 
+use PHPUnit_Framework_Assert;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptor\DoctrineFieldDescriptor;
 
 class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
@@ -218,5 +219,35 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
         $this->queryBuilder->expects($this->never())->method('setFirstResult');
 
         $this->doctrineListBuilder->count();
+    }
+
+    public function testSetWhereWithSameName()
+    {
+        $fieldDescriptors = array(
+            'title_id' => new DoctrineFieldDescriptor('id', 'title_id', self::$entityName),
+            'desc_id' => new DoctrineFieldDescriptor('id', 'desc_id', self::$entityName)
+        );
+
+        $filter = array(
+            'title_id' => 3,
+            'desc_id' => 1,
+        );
+
+        foreach ($filter as $key => $value) {
+            $this->doctrineListBuilder->addField($fieldDescriptors[$key]);
+            $this->doctrineListBuilder->where($fieldDescriptors[$key], $value);
+        }
+
+        $this->assertCount(2, PHPUnit_Framework_Assert::readAttribute($this->doctrineListBuilder, 'whereValues'));
+        $whereValues = PHPUnit_Framework_Assert::readAttribute($this->doctrineListBuilder, 'whereValues');
+        $this->assertEquals(3, $whereValues['title_id']);
+        $this->assertEquals(1, $whereValues['desc_id']);
+
+        $this->assertCount(2, PHPUnit_Framework_Assert::readAttribute($this->doctrineListBuilder, 'whereFields'));
+        $whereFields = PHPUnit_Framework_Assert::readAttribute($this->doctrineListBuilder, 'whereFields');
+        $this->assertEquals($fieldDescriptors['title_id'], $whereFields['title_id']);
+        $this->assertEquals($fieldDescriptors['desc_id'], $whereFields['desc_id']);
+
+        $this->doctrineListBuilder->execute();
     }
 }
