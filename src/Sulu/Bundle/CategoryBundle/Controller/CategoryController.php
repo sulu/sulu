@@ -103,7 +103,8 @@ class CategoryController extends RestController implements ClassResourceInterfac
      */
     public function getFieldsAction()
     {
-        return $this->responseFields();
+        // default contacts list
+        return $this->handleView($this->view(array_values($this->get('sulu_category.category_manager')->getFieldDescriptors()), 200));
     }
 
     /**
