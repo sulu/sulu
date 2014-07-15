@@ -1054,7 +1054,7 @@ class AccountControllerTest extends DatabaseTestCase
             )
         );
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        //$this->assertEquals(200, $client->getResponse()->getStatusCode());
 
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(200, $client->getResponse()->getStatusCode());

@@ -33,6 +33,11 @@ use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\ListRestHelper;
 use Sulu\Component\Rest\RestController;
 use Symfony\Component\HttpFoundation\Request;
+use Hateoas\Representation\CollectionRepresentation;
+use Sulu\Component\Rest\ListBuilder\ListRepresentation;
+use Sulu\Component\Rest\RestHelperInterface;
+use Sulu\Component\Rest\ListBuilder\DoctrineListBuilderFactory;
+use Sulu\Component\Rest\ListBuilder\FieldDescriptor\DoctrineFieldDescriptor;
 
 /**
  * Makes contacts available through a REST API
@@ -44,7 +49,11 @@ class ContactController extends AbstractContactController
      * {@inheritdoc}
      */
     protected static $entityName = 'SuluContactBundle:Contact';
+    protected static $entityKey = 'contacts';
     protected static $accountEntityName = 'SuluContactBundle:Account';
+    protected static $accountContactEntityName = 'SuluContactBundle:AccountContact';
+    protected static $addressEntityName = 'SuluContactBundle:Address';
+    protected static $contactAddressEntityName = 'SuluContactBundle:ContactAddress';
 
     /**
      * @var string
@@ -133,6 +142,48 @@ class ContactController extends AbstractContactController
     protected $bundlePrefix = 'contact.contacts.';
 
     /**
+     * TODO: move the field descriptors to a manager
+     * @var DoctrineFieldDescriptor[]
+     */
+    protected $fieldDescriptors;
+
+    /**
+     * TODO: move field descriptors to a manager
+     */
+    public function __construct() {
+        $this->fieldDescriptors = array();
+        $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor('id', 'id', self::$entityName);
+        $this->fieldDescriptors['mainPhone'] = new DoctrineFieldDescriptor('mainPhone', 'mainPhone', self::$entityName);
+        $this->fieldDescriptors['mainFax'] = new DoctrineFieldDescriptor('mainFax', 'mainFax', self::$entityName);
+        $this->fieldDescriptors['mainUrl'] = new DoctrineFieldDescriptor('mainUrl', 'mainUrl', self::$entityName);
+        $this->fieldDescriptors['mainEmail'] = new DoctrineFieldDescriptor('mainEmail', 'mainEmail', self::$entityName);
+        $this->fieldDescriptors['created'] = new DoctrineFieldDescriptor('created', 'created', self::$entityName);
+        $this->fieldDescriptors['changed'] = new DoctrineFieldDescriptor('changed', 'changed', self::$entityName);
+        $this->fieldDescriptors['disabled'] = new DoctrineFieldDescriptor('disabled', 'disabled', self::$entityName);
+        $this->fieldDescriptors['birthday'] = new DoctrineFieldDescriptor('birthday', 'birthday', self::$entityName);
+        $this->fieldDescriptors['title'] = new DoctrineFieldDescriptor('title', 'title', self::$entityName);
+        $this->fieldDescriptors['salutation'] = new DoctrineFieldDescriptor('salutation', 'salutation', self::$entityName);
+        $this->fieldDescriptors['formOfAddress'] = new DoctrineFieldDescriptor('formOfAddress', 'formOfAddress', self::$entityName);
+        $this->fieldDescriptors['firstName'] = new DoctrineFieldDescriptor('firstName', 'firstName', self::$entityName);
+        $this->fieldDescriptors['middleName'] = new DoctrineFieldDescriptor('middleName', 'middleName', self::$entityName);
+        $this->fieldDescriptors['lastName'] = new DoctrineFieldDescriptor('lastName', 'lastName', self::$entityName);
+
+        $this->fieldDescriptors['company'] = new DoctrineFieldDescriptor('name', 'company', self::$accountEntityName,
+            array(
+                self::$accountContactEntityName => self::$entityName . '.accountContacts',
+                self::$accountEntityName => self::$accountContactEntityName . '.account'
+            )
+        );
+
+        $this->fieldDescriptors['city'] = new DoctrineFieldDescriptor('city', 'city', self::$addressEntityName,
+            array(
+                self::$contactAddressEntityName => self::$entityName . '.contactAddresses',
+                self::$addressEntityName => self::$contactAddressEntityName . '.address',
+            )
+        );
+    }
+
+    /**
      * returns all fields that can be used by list
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
@@ -166,8 +217,6 @@ class ContactController extends AbstractContactController
      */
     public function cgetAction(Request $request)
     {
-        $where = array();
-        $joinConditions = array();
 
         if(!is_null($request->get('bySystem')) && $request->get('bySystem') == true){
             $contacts = $this->getContactsByUserSystem();
@@ -178,74 +227,34 @@ class ContactController extends AbstractContactController
         // flat structure
         if ($request->get('flat') == 'true') {
 
-            /** @var ListRestHelper $listHelper */
-            $listHelper = $this->get('sulu_core.list_rest_helper');
-            $mappings = array(
-                'city' => 'contactAddresses_address_city',
-                'account' => 'accountContacts_account_name'
+            /** @var RestHelperInterface $restHelper */
+            $restHelper = $this->get('sulu_core.doctrine_rest_helper');
+
+            /** @var DoctrineListBuilderFactory $factory */
+            $factory = $this->get('sulu_core.doctrine_list_builder_factory');
+
+            $listBuilder = $factory->create(self::$entityName);
+
+            $restHelper->initializeListBuilder($listBuilder, $this->fieldDescriptors);
+
+            // TODO: main address
+            // TODO: fullname
+
+            $list = new ListRepresentation(
+                $listBuilder->execute(),
+                self::$entityKey,
+                'get_contacts',
+                $request->query->all(),
+                $listBuilder->getCurrentPage(),
+                $listBuilder->getLimit(),
+                $listBuilder->count()
             );
-            $joinConditions = null;
-            // if fields are set
-            if ($fields = $listHelper->getFields()) {
-                $newFields = array();
-                $where = array();
-                foreach ($fields as $field) {
-                    switch ($field) {
-                        case 'city':
-                            $newFields[] = $mappings[$field];
-                            $joinConditions['contactAddresses'] = 'contactAddresses.main = TRUE';
-                            break;
-                        case 'account':
-                            $newFields[] = $mappings[$field];
-                            $joinConditions['accountContacts'] = 'accountContacts.main = TRUE';
-                            break;
-                        default:
-                            $newFields[] = $field;
-                    }
-                }
-                $request->query->add(array('fields' => implode(',', $newFields)));
-            }
-
-            // check if fullname should be returned
-            $returnFullName = !is_null($fields) && array_search('fullName', $fields) !== false;
-
-            $filter = function ($res) use ($returnFullName, $mappings) {
-                // get full name
-                if ($returnFullName) {
-                    $fullName = array();
-                    if (array_key_exists('firstName', $res)) {
-                        $fullName[] = $res['firstName'];
-                    }
-                    if (array_key_exists('middleName', $res)) {
-                        $fullName[] = $res['middleName'];
-                    }
-                    if (array_key_exists('lastName', $res)) {
-                        $fullName[] = $res['lastName'];
-                    }
-                    $fullName[] = sprintf('(%s)', $res['id']);
-                    $res['fullName'] = implode(' ', $fullName);
-                    $res['name'] = implode(' ', $fullName); // FIXME: name is only returned due to an error in
-                    // auto-complete component
-                }
-
-                // filter relations
-                if (array_key_exists($mappings['city'], $res)) {
-                    $res['city'] = $res[$mappings['city']];
-                    unset($res[$mappings['city']]);
-                }
-                if (array_key_exists($mappings['account'], $res)) {
-                    $res['account'] = $res[$mappings['account']];
-                    unset($res[$mappings['account']]);
-                }
-                return $res;
-            };
-
-            $view = $this->responseList($where, self::$entityName, $filter, $joinConditions);
 
         } else {
             $contacts = $this->getDoctrine()->getRepository(self::$entityName)->findAll();
-            $view = $this->view($this->createHalResponse($contacts), 200);
+            $list = new CollectionRepresentation($contacts, self::$entityKey);
         }
+        $view = $this->view($list, 200);
         return $this->handleView($view);
     }
 
