@@ -314,7 +314,7 @@ class ActivityControllerTest extends DatabaseTestCase
         $this->assertEquals('activityPriortiy', $data[0]->activityPriority);
         $this->assertEquals(1, $data[0]->contact);
         $this->assertEquals(false, array_key_exists('account', $data[0]));
-        $this->assertEquals('Nachname', $data[0]->assignedContact->id);
+        $this->assertEquals('Nachname', $data[0]->assignedContact);
     }
 
     public function testPost()
