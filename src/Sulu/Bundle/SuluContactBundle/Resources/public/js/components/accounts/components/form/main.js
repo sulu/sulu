@@ -164,7 +164,7 @@ define([], function() {
                 .then(function(response) {
 
                     // data is data for select but not for overlay
-                    var data = response._embedded;
+                    var data = response._embedded.accountCategories;
                     this.accountCategoryData = this.copyArrayOfObjects(data);
 
                     // translate values for select but not for overlay
@@ -206,7 +206,7 @@ define([], function() {
             this.sandbox.util.load(this.contactBySystemURL)
                 .then(function(response) {
 
-                    this.responsiblePersons = response._embedded;
+                    this.responsiblePersons = response._embedded.contacts;
 
                     this.sandbox.start([
                         {

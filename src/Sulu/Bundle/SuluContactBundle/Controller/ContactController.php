@@ -185,10 +185,9 @@ class ContactController extends AbstractContactController
 
     /**
      * returns all fields that can be used by list
-     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function fieldsAction(Request $request)
+    public function fieldsAction()
     {
         // default contacts list
         return $this->handleView($this->view(array_values($this->fieldDescriptors), 200));
