@@ -11,13 +11,6 @@ define(['text!sulucontact/components/activities/activity.form.html'], function(A
 
     'use strict';
 
-    // TODO
-    // spalten optionen
-    // suche
-    // editieren
-    // loeschen
-    // neu anlegen
-
     var constants = {
 
             overlayId: 'activitiesOverlay',
