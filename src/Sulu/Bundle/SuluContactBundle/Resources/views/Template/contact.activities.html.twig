@@ -10,7 +10,7 @@
                 activityPriorities: {{ activityPriorities|json_encode()|raw }},
                 activityStatuses: {{ activityStatuses|json_encode()|raw }}
             };
-            App.emit('sulu.contacts.contact.activities.set.defaults', defaults);
+            App.emit('sulu.contacts.activities.set.defaults', defaults);
         })();
     </script>
 

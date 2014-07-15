@@ -68,15 +68,9 @@ class ActivityController extends RestController implements ClassResourceInterfac
     public function __construct()
     {
         $this->fieldDescriptors = array();
-        $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor(
+        $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor('id',
             'id',
-            'id',
-            self::$entityName,
-            array(),
-            false,
-            '',
-            '',
-            'public.id'
+            self::$entityName
         );
         $this->fieldDescriptors['subject'] = new DoctrineFieldDescriptor('subject', 'subject', self::$entityName);
         $this->fieldDescriptors['note'] = new DoctrineFieldDescriptor('note', 'note', self::$entityName);
