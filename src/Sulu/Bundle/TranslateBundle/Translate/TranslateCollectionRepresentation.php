@@ -14,9 +14,16 @@ namespace Sulu\Bundle\TranslateBundle\Translate;
 use Hateoas\Representation\CollectionRepresentation;
 use JMS\Serializer\Annotation\VirtualProperty;
 use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation\Exclude;
 
 class TranslateCollectionRepresentation extends CollectionRepresentation
 {
+    /**
+     * @Exclude
+     * @var int
+     */
+    protected $total = null;
+
     /**
      * @VirtualProperty
      * @SerializedName("total")
@@ -24,6 +31,16 @@ class TranslateCollectionRepresentation extends CollectionRepresentation
      */
     public function getTotal()
     {
-        return count($this->getResources());
+        return $this->total === null ? count($this->getResources()) : $this->total;
+    }
+
+    /**
+     * @param $total
+     * @return $this
+     */
+    public function setTotal($total)
+    {
+        $this->total = $total;
+        return $this;
     }
 } 

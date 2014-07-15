@@ -14,12 +14,19 @@ use Doctrine\ORM\EntityManager;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Put;
+use Hateoas\Representation\CollectionRepresentation;
+use Sulu\Bundle\TranslateBundle\Translate\TranslateCollectionRepresentation;
 use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
+use Sulu\Component\Rest\ListBuilder\DoctrineListBuilderFactory;
+use Sulu\Component\Rest\ListBuilder\FieldDescriptor\DoctrineFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\RestController;
 use Sulu\Bundle\TranslateBundle\Entity\Catalogue;
 use Sulu\Bundle\TranslateBundle\Entity\Package;
+use Sulu\Component\Rest\RestHelperInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Makes the translation catalogues accessible trough an REST-API
@@ -29,6 +36,12 @@ class PackageController extends RestController implements ClassResourceInterface
 {
     protected static $entityName = 'SuluTranslateBundle:Package';
 
+    protected static $entityKey = 'packages';
+
+    /**
+     * @var DoctrineFieldDescriptor[]
+     */
+    protected $fieldDescriptors = array();
 
     protected $basePath = 'admin/api/contacts';
 
@@ -49,7 +62,7 @@ class PackageController extends RestController implements ClassResourceInterface
      * @return mixed
      */
     public function getFieldsAction() {
-        return $this->responseFields();
+        return $this->handleView($this->view(array_values($this->getFieldDescriptors())));
     }
 
     /**
@@ -62,17 +75,38 @@ class PackageController extends RestController implements ClassResourceInterface
 
     /**
      * Lists all the catalogues or filters the catalogues by parameters
+     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function cgetAction()
+    public function cgetAction(Request $request)
     {
-        if ($this->getRequest()->get('flat')=='true') {
-            // flat structure
-            $view = $this->responseList();
+        if ($request->get('flat')=='true') {
+            /** @var RestHelperInterface $restHelper */
+            $restHelper = $this->get('sulu_core.doctrine_rest_helper');
+
+            /** @var DoctrineListBuilderFactory $factory */
+            $factory = $this->get('sulu_core.doctrine_list_builder_factory');
+
+            $listBuilder = $factory->create(self::$entityName);
+
+            $restHelper->initializeListBuilder($listBuilder, $this->getFieldDescriptors());
+
+            $list = new ListRepresentation(
+                $listBuilder->execute(),
+                self::$entityKey,
+                'get_catalogues',
+                $request->query->all(),
+                $listBuilder->getCurrentPage(),
+                $listBuilder->getLimit(),
+                $listBuilder->count()
+            );
         } else {
-            $entities = $this->getDoctrine()->getRepository($this->entityName)->findAll();
-            $view = $this->view($this->createHalResponse($entities), 200);
+            $list = new TranslateCollectionRepresentation(
+                $this->getDoctrine()->getRepository(self::$entityName)->findAll(),
+                self::$entityKey
+            );
         }
+        $view = $this->view($list, 200);
         return $this->handleView($view);
     }
 
@@ -85,7 +119,7 @@ class PackageController extends RestController implements ClassResourceInterface
     {
         $find = function ($id) {
             return $this->getDoctrine()
-                ->getRepository($this->entityName)
+                ->getRepository(self::$entityName)
                 ->getPackageById($id);
         };
 
@@ -96,16 +130,17 @@ class PackageController extends RestController implements ClassResourceInterface
 
     /**
      * Creates a new catalogue
+     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function postAction()
+    public function postAction(Request $request)
     {
-        $name = $this->getRequest()->get('name');
+        $name = $request->get('name');
 
         if ($name != null) {
             $em = $this->getDoctrine()->getManager();
 
-            $catalogues = $this->getRequest()->get('catalogues');
+            $catalogues = $request->get('catalogues');
 
             $package = new Package();
             $package->setName($name);
@@ -138,27 +173,29 @@ class PackageController extends RestController implements ClassResourceInterface
     /**
      * Update the existing package or create a new one with the given id,
      * if the package with the given id is not yet existing.
+     * @param Request $request
      * @param integer $id The id of the package to update
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function putAction($id)
+    public function putAction(Request $request, $id)
     {
         /** @var Package $package */
         $package = $this->getDoctrine()
-            ->getRepository($this->entityName)
+            ->getRepository(self::$entityName)
             ->getPackageById($id);
 
         try {
             if (!$package) {
-                throw new EntityNotFoundException($this->entityName, $id);
+                throw new EntityNotFoundException(self::$entityName, $id);
             } else {
                 $em = $this->getDoctrine()->getManager();
 
-                $name = $this->getRequest()->get('name');
+                $name = $request->get('name');
 
                 $package->setName($name);
 
-                if (!$this->processCatalogues($package)) {
+                $catalogues = $request->get('catalogues', array());
+                if (!$this->processCatalogues($catalogues, $package)) {
                     throw new RestException('Catalogue update not possible', 0);
                 }
 
@@ -174,10 +211,8 @@ class PackageController extends RestController implements ClassResourceInterface
         return $this->handleView($view);
     }
 
-    protected function processCatalogues(Package $package)
+    protected function processCatalogues($catalogues, Package $package)
     {
-        $catalogues = $this->getRequest()->get('catalogues');
-
         /** @var EntityManager $em */
         $em = $this->getDoctrine()->getManager();
 
@@ -196,7 +231,14 @@ class PackageController extends RestController implements ClassResourceInterface
             return $this->addCatalogue($package, $catalogue);
         };
 
-        return $this->processPut($package->getCatalogues(), $catalogues, $delete, $update, $add);
+        $get = function ($catalogue) {
+            return $catalogue->getId();
+        };
+
+        /** @var RestHelperInterface $restHelper */
+        $restHelper = $this->get('sulu_core.doctrine_rest_helper');
+
+        return $restHelper->processSubEntities($package->getCatalogues(), $catalogues, $get, $add, $update, $delete);
     }
 
     protected function addCatalogue(Package $package, $catalogueData)
@@ -218,6 +260,7 @@ class PackageController extends RestController implements ClassResourceInterface
         $catalogue->setPackage($package);
         $package->addCatalogue($catalogue);
         $em->persist($catalogue);
+        $em->persist($package);
 
         return true;
     }
@@ -258,5 +301,25 @@ class PackageController extends RestController implements ClassResourceInterface
         $view = $this->responseDelete($id, $delete);
 
         return $this->handleView($view);
+    }
+
+    /**
+     * @return DoctrineFieldDescriptor[]
+     */
+    private function getFieldDescriptors()
+    {
+        $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor('id', 'id', self::$entityName);
+        $this->fieldDescriptors['name'] = new DoctrineFieldDescriptor('name', 'name', self::$entityName);
+
+        return $this->fieldDescriptors;
+    }
+
+    /**
+     * @param $key
+     * @return DoctrineFieldDescriptor
+     */
+    private function getFieldDescriptor($key)
+    {
+        return $this->fieldDescriptors[$key];
     }
 }
