@@ -71,7 +71,7 @@ define([
             }, this);
 
             // activities remove / save / add
-            this.sandbox.on('sulu.contacts.contact.activities.remove', this.removeActivities.bind(this));
+            this.sandbox.on('sulu.contacts.contact.activities.delete', this.removeActivities.bind(this));
             this.sandbox.on('sulu.contacts.contact.activity.save', this.saveActivity.bind(this));
             this.sandbox.on('sulu.contacts.contact.activity.load', this.loadActivity.bind(this));
         },
@@ -150,32 +150,13 @@ define([
         },
 
         loadActivity: function(id) {
-
             // TODO loading icon
             if (!!id) {
                 this.activity = Activity.findOrCreate({id: id});
                 this.activity.fetch({
                     success: function(model) {
-
                         this.activity = model;
-                        var el = model.toJSON();
-
-
-//                        // TODO
-//                        // add translations for ??
-//                        if(!!el.activityType) {
-//                            el.activityType.translation = this.sandbox.translate(el.activityType.name);
-//                        }
-//
-//                        if(!!el.activityPriority) {
-//                            el.activityPriority.translation = this.sandbox.translate(el.activityPriority.name);
-//                        }
-//
-//                        if(!!el.activityStatus) {
-//                            el.activityStatus.translation = this.sandbox.translate(el.activityStatus.name);
-//                        }
-
-                        this.sandbox.emit('sulu.contacts.contact.activity.loaded', el);
+                        this.sandbox.emit('sulu.contacts.contact.activity.loaded', model.toJSON());
                     }.bind(this),
                     error: function(e1,e2) {
                         this.sandbox.logger.log('error while fetching activity', e1, e2);
