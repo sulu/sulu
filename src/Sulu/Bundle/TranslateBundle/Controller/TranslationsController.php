@@ -32,10 +32,11 @@ class TranslationsController extends RestController implements ClassResourceInte
     /**
      * Lists all the translations or filters the translations by parameters for a single catalogue
      * plus a suggestion
+     * @param Request $request
      * @param $slug
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function cgetAction($slug)
+    public function cgetAction(Request $request, $slug)
     {
         try {
             // find codes by catalogueID
@@ -96,13 +97,12 @@ class TranslationsController extends RestController implements ClassResourceInte
 
     /**
      * updates an array of translations
+     * @param Request $request
      * @param $slug
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function patchAction($slug)
+    public function patchAction(Request $request, $slug)
     {
-        /** @var Request $request */
-        $request = $this->getRequest();
         $i = 0;
         while ($item = $request->get($i)) {
             $this->saveTranslation($slug, $item);
@@ -123,7 +123,7 @@ class TranslationsController extends RestController implements ClassResourceInte
     {
         /** @var TranslationRepository $repository */
         $repository = $this->getDoctrine()
-            ->getRepository($this->entityName);
+            ->getRepository(self::$entityName);
 
         if (isset($item['id']) && $item['id'] != null) {
             // code exists
