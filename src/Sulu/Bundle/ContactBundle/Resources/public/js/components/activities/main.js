@@ -99,8 +99,10 @@ define(['text!sulucontact/components/activities/activity.form.html'], function(A
                 this.sandbox.emit('husky.datagrid.record.remove', id);
             }, this);
 
-            // todo
-//            sulu.contacts.contact.activities.delete
+            // todo wrong namespace?
+            this.sandbox.on('sulu.contacts.contact.activities.delete', function(ids){
+                this.sandbox.emit('sulu.contacts.' + this.instanceName + '.activities.delete', ids);
+            }, this);
 
             // set data in overlay
             this.sandbox.on('husky.overlay.activity-add-edit.opened', function() {
