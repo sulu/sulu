@@ -108,6 +108,7 @@ define(function () {
                         url: '/admin/api/collections',
                         view: 'group',
                         pagination: false,
+                        resultKey: 'collections',
                         matchings: [
                             {
                                 id: 'title',
