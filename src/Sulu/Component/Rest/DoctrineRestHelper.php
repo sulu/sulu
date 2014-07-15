@@ -38,7 +38,7 @@ class DoctrineRestHelper extends RestHelper implements RestHelperInterface
     )
     {
         /** @var Collection $entities */
-        parent::processSubEntities($entities, $requestEntities, $get, $add, $update, $delete);
+        $success = parent::processSubEntities($entities, $requestEntities, $get, $add, $update, $delete);
 
         if (count($entities) > 0) {
             $newEntities = $entities->getValues();
@@ -47,5 +47,7 @@ class DoctrineRestHelper extends RestHelper implements RestHelperInterface
                 $entities->add($value);
             }
         }
+        
+        return $success;
     }
 } 
