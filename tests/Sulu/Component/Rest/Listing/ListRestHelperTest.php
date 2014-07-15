@@ -30,7 +30,7 @@ class ListRestHelperTest extends \PHPUnit_Framework_TestCase
             'sortOrder' => 'desc',
             'search' => 'test',
             'searchFields' => 'title',
-            'pageSize' => 10,
+            'limit' => 10,
             'page' => 3
         ));
         $helper = new ListRestHelper($request, $this->em);
