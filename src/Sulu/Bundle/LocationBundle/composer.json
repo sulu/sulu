@@ -16,7 +16,8 @@
         "friendsofsymfony/rest-bundle": "@dev",
         "jms/serializer-bundle": "@dev",
         "sulu/sulu": "dev-develop",
-        "sulu/admin-bundle": "dev-develop"
+        "sulu/admin-bundle": "dev-develop",
+        "friendsofsymfony/http-cache": "1.0.*@dev"
     },
     "require-dev": {
         "symfony/symfony": "2.5.*",
