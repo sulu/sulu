@@ -58,11 +58,9 @@ class Collection extends ApiWrapper
     public function getChildren()
     {
         $childIds = array();
-        /**
-         * @var Entity $child
-         */
+        /** @var Entity $child */
         foreach ($this->entity->getChildren() as $child) {
-            array_push($childIds, $child->getId());
+            $childIds[] = $child->getId();
         }
 
         return $childIds;
@@ -74,25 +72,7 @@ class Collection extends ApiWrapper
      */
     public function setDescription($description)
     {
-        $metaExists = false;
-
-        /**
-         * @var CollectionMeta $meta
-         */
-        foreach ($this->entity->getMeta() as $meta) {
-            if ($meta->getLocale() == $this->locale) {
-                $metaExists = true;
-                $meta->setDescription($description);
-            }
-        }
-
-        if (!$metaExists) {
-            $meta = new CollectionMeta();
-            $meta->setDescription($description);
-            $meta->setCollection($this->entity);
-            $meta->setLocale($this->locale);
-            $this->entity->addMeta($meta);
-        }
+        $this->getMeta(true)->setDescription($description);
 
         return $this;
     }
@@ -104,21 +84,12 @@ class Collection extends ApiWrapper
      */
     public function getDescription()
     {
-        $description = null;
-        $counter = 0;
-
-        /**
-         * @var CollectionMeta $meta
-         */
-        foreach ($this->entity->getMeta() as $meta) {
-            $counter++;
-            // when meta not exists in locale return first created description
-            if ($meta->getLocale() == $this->locale || $counter == 1) {
-                $description = $meta->getDescription();
-            }
+        $meta = $this->getMeta();
+        if ($meta) {
+            return $meta->getDescription();
         }
 
-        return $description;
+        return null;
     }
 
     /**
@@ -140,11 +111,8 @@ class Collection extends ApiWrapper
     {
         $mediaCount = 0;
 
-        /**
-         * @var Entity $child
-         */
+        /** @var Entity $child */
         foreach ($this->entity->getChildren() as $child) {
-            array_push($childIds, $child->getId());
             $mediaCount += count($child->getMedia());
         }
 
@@ -171,11 +139,7 @@ class Collection extends ApiWrapper
      */
     public function getParent()
     {
-        $parent = $this->entity->getParent();
-        if ($parent) {
-            return $parent->getId();
-        }
-        return null;
+        return ($parent = $this->entity->getParent()) ? $parent->getId() : null;
     }
 
     /**
@@ -262,25 +226,7 @@ class Collection extends ApiWrapper
      */
     public function setTitle($title)
     {
-        $metaExists = false;
-
-        /**
-         * @var CollectionMeta $meta
-         */
-        foreach ($this->entity->getMeta() as $meta) {
-            if ($meta->getLocale() == $this->locale) {
-                $metaExists = true;
-                $meta->setTitle($title);
-            }
-        }
-
-        if (!$metaExists) {
-            $meta = new CollectionMeta();
-            $meta->setTitle($title);
-            $meta->setCollection($this->entity);
-            $meta->setLocale($this->locale);
-            $this->entity->addMeta($meta);
-        }
+        $this->getMeta(true)->setTitle($title);
 
         return $this;
     }
@@ -292,21 +238,12 @@ class Collection extends ApiWrapper
      */
     public function getTitle()
     {
-        $title = null;
-        $counter = 0;
-
-        /**
-         * @var CollectionMeta $meta
-         */
-        foreach ($this->entity->getMeta() as $meta) {
-            $counter++;
-            // when meta not exists in set locale return first created title
-            if ($meta->getLocale() == $this->locale || $counter == 1) {
-                $title = $meta->getTitle();
-            }
+        $meta = $this->getMeta();
+        if ($meta) {
+            return $meta->getTitle();
         }
 
-        return $title;
+        return null;
     }
 
     /**
@@ -326,13 +263,7 @@ class Collection extends ApiWrapper
      */
     public function getType()
     {
-        $typeId = null;
-        $type = $this->entity->getType();
-        if ($type) {
-            $typeId = $type->getId();
-        }
-
-        return $typeId;
+        return $this->entity->getType();
     }
 
     /**
@@ -423,4 +354,43 @@ class Collection extends ApiWrapper
         return $this->entity->getCreator();
     }
 
+    /**
+     * @param bool $create
+     * @return CollectionMeta
+     */
+    private function getMeta($create = false)
+    {
+        $locale = $this->locale;
+        $metaCollection = $this->entity->getMeta();
+
+        // get meta only with this locale
+        $metaCollectionFiltered = $metaCollection->filter(function($meta) use ($locale) {
+            /** @var CollectionMeta $meta */
+            if ($meta->getLocale() == $locale) {
+                return true;
+            }
+            return false;
+        });
+
+        // check if meta was found
+        if ($metaCollectionFiltered->isEmpty()) {
+            if ($create) {
+                // create when not found
+                $meta = new CollectionMeta();
+                $meta->setLocale($this->locale);
+                $meta->setCollection($this->entity);
+                $this->entity->addMeta($meta);
+
+                return $meta;
+            } elseif (isset($metaCollection[0])) {
+                // return first when create false
+                return $metaCollection[0];
+            }
+        } elseif ($metaCollectionFiltered[0]) {
+            // return exists
+            return $metaCollectionFiltered[0];
+        }
+
+        return null;
+    }
 } 
