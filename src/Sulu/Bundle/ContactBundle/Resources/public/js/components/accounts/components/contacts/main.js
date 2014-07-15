@@ -47,6 +47,11 @@ define([
             this.sandbox.on('sulu.contacts.accounts.contacts.removed', function(id) {
                 this.sandbox.emit('husky.datagrid.record.remove', id);
             }, this);
+
+            // when radio button is clicked
+            this.sandbox.on('husky.datagrid.radio.selected', function(id, columName) {
+                this.sandbox.emit('sulu.contacts.accounts.contacts.set-main', id);
+            }, this);
         },
 
         createRelationOverlay = function(data) {
@@ -169,6 +174,14 @@ define([
     return {
         view: true,
 
+        layout: {
+            content: {
+                width: 'max',
+                leftSpace: false,
+                rightSpace: false
+            }
+        },
+
         templates: ['/admin/contact/template/contact/list'],
 
         initialize: function() {
@@ -185,7 +198,7 @@ define([
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/contact/template/contact/list'));
 
             // init list-toolbar and datagrid
-            this.sandbox.sulu.initListToolbarAndList.call(this, 'accountsContactsFields', '/admin/api/contacts/fields',
+            this.sandbox.sulu.initListToolbarAndList.call(this, 'accountsContactsFields', '/admin/api/contacts/fields?accountContacts=true',
                 {
                     el: this.$find('#list-toolbar-container'),
                     instanceName: 'contacts',
@@ -196,8 +209,12 @@ define([
                     el: this.sandbox.dom.find('#people-list', this.$el),
                     url: '/admin/api/accounts/' + this.options.data.id + '/contacts?flat=true',
                     searchInstanceName: 'contacts',
+                    contentFilters: {
+                        isMainContact: 'radio'
+                    },
                     viewOptions: {
                         table: {
+                            fullWidth: true,
                             selectItem: {
                                 type: 'checkbox'
                             },

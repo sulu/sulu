@@ -60,7 +60,6 @@ class ActivityControllerTest extends DatabaseTestCase
         $email = new Email();
         $email->setEmail('office@company.example');
         $email->setEmailType($emailType);
-        $email->setMain(true);
         $account->addEmail($email);
 
         $contact = new Contact();
@@ -75,7 +74,6 @@ class ActivityControllerTest extends DatabaseTestCase
         $email2 = new Email();
         $email2->setEmail('vorname.nachname@company.example');
         $email2->setEmailType($emailType);
-        $email2->setMain(true);
         $contact->addEmail($email2);
 
         $activityType = new ActivityType();
@@ -92,7 +90,6 @@ class ActivityControllerTest extends DatabaseTestCase
         $activity->setNote('note');
         $activity->setDueDate(new \DateTime());
         $activity->setAssignedContact($contact);
-        $activity->setContact();
         $activity->setAccount($account);
         $activity->setActivityType($activityType);
         $activity->setActivityPriority($activityPriortiy);
@@ -107,7 +104,6 @@ class ActivityControllerTest extends DatabaseTestCase
         $activity2->setDueDate(new \DateTime());
         $activity2->setAssignedContact($contact);
         $activity2->setContact($contact);
-        $activity2->setAccount();
         $activity2->setActivityType($activityType);
         $activity2->setActivityPriority($activityPriortiy);
         $activity2->setActivityStatus($activityState);
@@ -197,9 +193,9 @@ class ActivityControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
-        $data = $response->_embedded;
+        $data = $response->_embedded->items;
 
-        $this->assertEquals(2, $response->total);
+        $this->assertEquals(2, count($data));
 
         if ($data[0]->id === 1) {
             $this->assertEquals(1, $data[0]->id);
@@ -272,10 +268,8 @@ class ActivityControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
-        $data = $response->_embedded;
+        $data = $response->_embedded->items;
         $this->assertEquals(1, $response->total);
-
-        // TODO account,contact, etc
 
         $this->assertEquals(1, $data[0]->id);
         $this->assertEquals('test', $data[0]->subject);
@@ -284,13 +278,12 @@ class ActivityControllerTest extends DatabaseTestCase
         $this->assertNotEmpty($data[0]->startDate);
         $this->assertNotEmpty($data[0]->created);
         $this->assertNotEmpty($data[0]->changed);
-//        $this->assertEquals(1, $data[0]->activityStatus->id);
-//        $this->assertEquals(1, $data[0]->activityType->id);
-//        $this->assertEquals(1, $data[0]->activityPriority->id);
+        $this->assertEquals('activityState', $data[0]->activityStatus);
+        $this->assertEquals('activityType', $data[0]->activityType);
+        $this->assertEquals('activityPriortiy', $data[0]->activityPriority);
         $this->assertEquals(false, array_key_exists('contact', $data[0]));
-//        $this->assertEquals(1, $data[0]->account->id);
-//        $this->assertEquals(1, $data[0]->assignedContact->id);
-
+        $this->assertEquals(1, $data[0]->account);
+        $this->assertEquals('Nachname', $data[0]->assignedContact);
     }
 
     public function testGetFlatByContact()
@@ -305,11 +298,9 @@ class ActivityControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
-        $data = $response->_embedded;
+        $data = $response->_embedded->items;
 
         $this->assertEquals(1, $response->total);
-
-        // TODO account,contact, etc
 
         $this->assertEquals(2, $data[0]->id);
         $this->assertEquals('test 2', $data[0]->subject);
@@ -318,12 +309,12 @@ class ActivityControllerTest extends DatabaseTestCase
         $this->assertNotEmpty($data[0]->startDate);
         $this->assertNotEmpty($data[0]->created);
         $this->assertNotEmpty($data[0]->changed);
-//        $this->assertEquals(1, $data[0]->activityStatus->id);
-//        $this->assertEquals(1, $data[0]->activityType->id);
-//        $this->assertEquals(1, $data[0]->activityPriority->id);
-//        $this->assertEquals(1, $data[0]->contact->id);
+        $this->assertEquals('activityState', $data[0]->activityStatus);
+        $this->assertEquals('activityType', $data[0]->activityType);
+        $this->assertEquals('activityPriortiy', $data[0]->activityPriority);
+        $this->assertEquals(1, $data[0]->contact);
         $this->assertEquals(false, array_key_exists('account', $data[0]));
-//        $this->assertEquals(1, $data[0]->assignedContact->id);
+        $this->assertEquals('Nachname', $data[0]->assignedContact->id);
     }
 
     public function testPost()
