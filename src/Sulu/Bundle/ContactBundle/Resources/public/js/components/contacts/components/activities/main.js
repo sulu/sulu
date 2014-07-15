@@ -27,20 +27,61 @@ define(['text!sulucontact/components/activities/activity.form.html'], function(A
             activitiesURL: '/admin/api/activities/'
         },
 
-        activityDefaults = null,
-        responsiblePersons = null,
-        contact = null,
+        /**
+         * Template for header toolbar
+         * @returns {*[]}
+         */
+        listTemplate = function() {
+            return [
+                {
+                    id: 'add',
+                    icon: 'plus-circle',
+                    class: 'highlight-white',
+                    title: 'add',
+                    position: 10,
+                    callback: this.addOrEditActivity.bind(this)
+                },
+                {
+                    id: 'settings',
+                    icon: 'gear',
+                    items: [
+                        {
+                            title: this.sandbox.translate('contact.activities.remove'),
+                            callback: this.removeActivities.bind(this)
+                        }
+                    ]
+                }
+            ];
+        };
 
-        bindCustomEvents = function() {
+    return {
+
+        view: true,
+        templates: ['/admin/contact/template/contact/activities'],
+
+        initialize: function() {
+
+            this.activityDefaults = null,
+                this.contact = this.options.contact;
+            this.responsiblePersons = this.options.responsiblePersons;
+
+            this.render();
+            this.bindCustomEvents();
+
+            // get defaults for priorities/statuses/types
+            this.sandbox.emit('sulu.contacts.contact.activities.get.defaults');
+        },
+
+        bindCustomEvents: function() {
 
             // listen for defaults for types/statuses/prios
             this.sandbox.on('sulu.contacts.contact.activities.set.defaults', function(defaults) {
-                activityDefaults = defaults;
+                this.activityDefaults = defaults;
             }, this);
 
             // loaded activity
             this.sandbox.on('sulu.contacts.contact.activity.loaded', function(item) {
-                startOverlay.call(this, item);
+                this.startOverlay(item);
             }, this);
 
             // edit activity
@@ -49,11 +90,11 @@ define(['text!sulucontact/components/activities/activity.form.html'], function(A
             }, this);
 
             // delete clicked
-            this.sandbox.on('sulu.list-toolbar.delete', function() {
-//            this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
-//                this.sandbox.emit('sulu.contacts.accounts.delete', ids);
-//            }.bind(this));
-            }, this);
+//            this.sandbox.on('sulu.list-toolbar.delete', function() {
+//                this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
+//                    this.sandbox.emit('sulu.contacts.contact.activities.delete', ids);
+//                }.bind(this));
+//            }, this);
 
             // back to list
             this.sandbox.on('sulu.header.back', function() {
@@ -61,13 +102,12 @@ define(['text!sulucontact/components/activities/activity.form.html'], function(A
             }, this);
 
             // add new activity
-            this.sandbox.on('sulu.contacts.contact.activity.saved', function(model) {
-                // TODO
-                this.sandbox.emit('husky.datagrid.records.change', model);
+            this.sandbox.on('sulu.contacts.contact.activity.saved', function() {
+                this.sandbox.emit('husky.datagrid.update');
             }, this);
 
             // remove record from datagrid
-            this.sandbox.on('sulu.contacts.accounts.contacts.removed', function(id) {
+            this.sandbox.on('sulu.contacts.contact.activity.removed', function(id) {
                 this.sandbox.emit('husky.datagrid.record.remove', id);
             }, this);
 
@@ -75,11 +115,8 @@ define(['text!sulucontact/components/activities/activity.form.html'], function(A
             this.sandbox.on('husky.overlay.activity-add-edit.opened', function() {
                 // start components in overlay
                 this.sandbox.start(constants.activityFormSelector);
-
-                // TODO does not set select values
-
-                // start form and set data
                 var formObject = this.sandbox.form.create(constants.activityFormSelector);
+
                 formObject.initialized.then(function() {
                     this.sandbox.form.setData(constants.activityFormSelector, this.overlayData);
                 }.bind(this));
@@ -90,7 +127,7 @@ define(['text!sulucontact/components/activities/activity.form.html'], function(A
          * Sets the title to the contact name
          * default title as fallback
          */
-        setTitle = function() {
+        setTitle: function() {
             var title = this.sandbox.translate('contact.contacts.title'),
                 breadcrumb = [
                     {title: 'navigation.contacts'},
@@ -109,23 +146,23 @@ define(['text!sulucontact/components/activities/activity.form.html'], function(A
         /**
          * Inits the process to add or edit an activity
          */
-        addOrEditActivity = function(id) {
+        addOrEditActivity: function(id) {
             if (!!id) {
                 this.sandbox.emit('sulu.contacts.contact.activity.load', id);
             } else {
-                startOverlay.call(this, {});
+                this.startOverlay(null);
             }
         },
 
         /**
          * starts overlay to edit / add activity
          */
-        startOverlay = function(data) {
+        startOverlay: function(data) {
 
             var translation, activityTemplate, $container, values;
 
-            this.sandbox.dom.remove('#'+constants.overlayId);
-            $container = this.sandbox.dom.createElement('<div id="'+constants.overlayId+'"></div>');
+            this.sandbox.dom.remove('#' + constants.overlayId);
+            $container = this.sandbox.dom.createElement('<div id="' + constants.overlayId + '"></div>');
             this.sandbox.dom.append(constants.activityListSelector, $container);
 
             this.overlayData = data;
@@ -137,15 +174,15 @@ define(['text!sulucontact/components/activities/activity.form.html'], function(A
             }
 
             values = {
-                activityType: !!data.activityType ? data.activityType.id : '',
-                activityStatus: !!data.activityStatus ? data.activityType.id : '',
-                activityPriority: !!data.activityPriority ? data.activityType.id : '',
-                assignedContact: !!data.assignedContact ? data.assignedContact.id : '',
-                activityTypes: activityDefaults.activityTypes,
-                activityPriorities: activityDefaults.activityPriorities,
-                activityStatuses: activityDefaults.activityStatuses,
-                responsiblePersons: responsiblePersons,
-                contact: contact.id,
+                activityType: !!data && !!data.activityType ? data.activityType.id : '',
+                activityStatus: !!data && !!data.activityStatus ? data.activityType.id : '',
+                activityPriority: !!data && !!data.activityPriority ? data.activityType.id : '',
+                assignedContact: !!data && !!data.assignedContact ? data.assignedContact.id : '',
+                activityTypes: this.activityDefaults.activityTypes,
+                activityPriorities: this.activityDefaults.activityPriorities,
+                activityStatuses: this.activityDefaults.activityStatuses,
+                responsiblePersons: this.responsiblePersons,
+                contact: this.contact.id,
                 account: null,
                 translate: this.sandbox.translate
             };
@@ -163,101 +200,54 @@ define(['text!sulucontact/components/activities/activity.form.html'], function(A
                         instanceName: 'activity-add-edit',
                         data: activityTemplate,
                         skin: 'wide',
-                        okCallback: editAddOkClicked.bind(this),
-                        closeCallback: stopOverlayComponents.bind(this)
+                        okCallback: this.editAddOkClicked.bind(this),
+                        closeCallback: this.stopOverlayComponents.bind(this)
                     }
                 }
             ]);
         },
 
-        stopOverlayComponents = function(){
+        /**
+         * Stops subcomponents of overlay
+         */
+        stopOverlayComponents: function() {
             this.sandbox.stop(constants.activityFormSelector);
         },
 
         /**
          * triggered when overlay was closed with ok
          */
-        editAddOkClicked = function(){
+        editAddOkClicked: function() {
             if (this.sandbox.form.validate(constants.activityFormSelector, true)) {
                 var data = this.sandbox.form.getData(constants.activityFormSelector);
 
-                if(!data.contact) {
-                    data.contact = contact.id;
+                if (!data.contact) {
+                    data.contact = this.contact.id;
                 }
 
-                if(!data.id){
+                if (!data.id) {
                     delete data.id;
                 }
 
                 this.sandbox.emit('sulu.contacts.contact.activity.save', data);
-                stopOverlayComponents.call(this);
+                this.stopOverlayComponents();
             } else {
                 return false;
             }
         },
 
-        /**
-         * Template for header toolbar
-         * @returns {*[]}
-         */
-        listTemplate = function() {
-            return [
-                {
-                    id: 'add',
-                    icon: 'plus-circle',
-                    class: 'highlight-white',
-                    title: 'add',
-                    position: 10,
-                    callback: addOrEditActivity.bind(this)
-                },
-                {
-                    id: 'settings',
-                    icon: 'gear',
-                    items: [
-//                        {
-//                            title: this.sandbox.translate('list-toolbar.column-options'),
-//                            callback: openColumnOptions.bind(this)
-//                        },
-                        {
-                            title: this.sandbox.translate('contact.activities.remove'),
-//                            callback: removeContact.bind(this)
-                        }
-                    ]
-                }
-            ];
-        };
-
-    return {
-
-        view: true,
-
-        templates: ['/admin/contact/template/contact/activities'],
-
-        initialize: function() {
-
-            contact = this.options.contact;
-            responsiblePersons = this.options.responsiblePersons;
-
-            this.render();
-            bindCustomEvents.call(this);
-
-            // get defaults for priorities/statuses/types
-            this.sandbox.emit('sulu.contacts.contact.activities.get.defaults');
-        },
-
         render: function() {
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/contact/template/contact/activities'));
 
-            setTitle.call(this);
+            this.setTitle();
 
-            // TODO change to activities when API is finished
             // init list-toolbar and datagrid
             this.sandbox.sulu.initListToolbarAndList.call(this, 'activitiesContactsFields', '/admin/api/activities/fields',
                 {
                     el: this.$find('#list-toolbar-container'),
                     instanceName: 'activities-toolbar',
                     inHeader: true,
-                    template: listTemplate
+                    template: listTemplate.call(this)
                 },
                 {
                     el: this.sandbox.dom.find('#activities-list', this.$el),
@@ -273,6 +263,17 @@ define(['text!sulucontact/components/activities/activity.form.html'], function(A
                     }
                 }
             );
+        },
+
+        /**
+         * Removes elements from datagrid
+         */
+        removeActivities: function(){
+            this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
+                if (ids.length > 0) {
+                    this.sandbox.emit('sulu.contacts.contact.activities.delete', ids);
+                }
+            }.bind(this));
         }
 
     };
