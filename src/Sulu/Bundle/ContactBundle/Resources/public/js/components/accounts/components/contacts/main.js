@@ -89,6 +89,7 @@ define([
                         el: constants.contactSelector,
                         remoteUrl: '/admin/api/contacts?flat=true&fields=id,firstName,lastName,fullName&searchFields=firstName,lastName',
                         getParameter: 'search',
+                        resultKey: 'contacts',
 //                        value: data.account,
                         instanceName: 'contact',
                         valueKey: 'fullName',
