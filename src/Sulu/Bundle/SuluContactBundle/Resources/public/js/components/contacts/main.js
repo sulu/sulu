@@ -99,7 +99,6 @@ define([
             // TODO loading
             this.confirmDeleteDialog(function(wasConfirmed) {
                 if (wasConfirmed) {
-//                    this.sandbox.emit('sulu.header.toolbar.item.loading', 'options-button');
                     var activity;
                     this.sandbox.util.foreach(ids, function(id) {
                         activity = Activity.findOrCreate({id: id});
@@ -114,22 +113,6 @@ define([
                     }.bind(this));
                 }
             }.bind(this));
-
-            // show warning
-//            this.sandbox.emit('sulu.overlay.show-warning', 'sulu.overlay.be-careful', 'sulu.overlay.delete-desc', null, function() {
-//                var activity;
-//                this.sandbox.util.foreach(ids, function(id) {
-//                    activity = Activity.findOrCreate({id: id});
-//                    activity.destroy({
-//                        success: function() {
-//                            this.sandbox.emit('sulu.contacts.contact.activity.removed', id);
-//                        }.bind(this),
-//                        error: function() {
-//                            this.sandbox.logger.log("error while deleting activity");
-//                        }.bind(this)
-//                    });
-//                }.bind(this));
-//            }.bind(this));
         },
 
         saveActivity: function(data){
