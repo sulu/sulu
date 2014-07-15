@@ -44,13 +44,14 @@ class DoctrineFieldDescriptor extends AbstractFieldDescriptor
         $joins = array(),
         $disabled = false,
         $default = false,
+        $sortable = true,
         $type = '',
         $width = '',
         $minWidth = '',
         $translation = null
     )
     {
-        parent::__construct($name, $disabled, $default, $type, $width, $minWidth, $translation);
+        parent::__construct($name, $disabled, $default, $sortable, $type, $width, $minWidth, $translation);
 
         $this->alias = $alias;
         $this->entityName = $entityName;
