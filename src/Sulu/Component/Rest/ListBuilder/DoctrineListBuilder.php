@@ -57,8 +57,9 @@ class DoctrineListBuilder extends AbstractListBuilder
      */
     public function count()
     {
+        $entityId = $this->entityName . '.id';
         $qb = $this->createQueryBuilder()
-            ->select('count(' . $this->entityName . '.id)');
+            ->select('count(' . $entityId . ')');
 
         return $qb->getQuery()->getSingleScalarResult();
     }
@@ -76,6 +77,10 @@ class DoctrineListBuilder extends AbstractListBuilder
 
         if ($this->limit != null) {
             $qb->setMaxResults($this->limit)->setFirstResult($this->limit * ($this->page - 1));
+        }
+
+        if ($this->sortField != null) {
+            $qb->orderBy($this->sortField->getFullName(), $this->sortOrder);
         }
 
         return $qb->getQuery()->getArrayResult();
@@ -118,10 +123,6 @@ class DoctrineListBuilder extends AbstractListBuilder
 
         foreach ($this->getJoins() as $entity => $join) {
             $qb->leftJoin($join, $entity);
-        }
-
-        if ($this->sortField != null) {
-            $qb->orderBy($this->sortField->getFullName(), $this->sortOrder);
         }
 
         if (!empty($this->whereFields)) {
