@@ -90,6 +90,7 @@ define([], function() {
                         el: '#company',
                         remoteUrl: '/admin/api/accounts?searchFields=name&fields=id,name&flat=true',
                         getParameter: 'search',
+                        resultKey: 'accounts',
                         value: !!data.parent ? data.parent : null,
                         instanceName: 'companyAccount' + data.id,
                         valueName: 'name',
