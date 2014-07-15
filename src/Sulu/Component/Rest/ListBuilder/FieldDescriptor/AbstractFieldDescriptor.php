@@ -28,6 +28,13 @@ abstract class AbstractFieldDescriptor
     private $name;
 
     /**
+     * The alias name of the field for the response
+     * @var string
+     * @Expose
+     */
+    private $alias;
+
+    /**
      * The translation name
      * @var string
      * @Expose
@@ -55,9 +62,10 @@ abstract class AbstractFieldDescriptor
      */
     private $width;
 
-    public function __construct($name, $disabled = false, $type = '', $width = '', $translation = null)
+    public function __construct($name, $alias, $disabled = false, $type = '', $width = '', $translation = null)
     {
         $this->name = $name;
+        $this->alias = $alias;
         $this->disabled = $disabled;
         $this->type = $type;
         $this->width = $width;
@@ -71,6 +79,15 @@ abstract class AbstractFieldDescriptor
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Returns the alias for the field in the database
+     * @return string
+     */
+    public function getAlias()
+    {
+        return $this->alias;
     }
 
     /**

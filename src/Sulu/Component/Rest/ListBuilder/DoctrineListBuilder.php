@@ -128,7 +128,7 @@ class DoctrineListBuilder extends AbstractListBuilder
             $whereParts = array();
             foreach ($this->whereFields as $whereField) {
                 $whereParts[] = $whereField->getFullName() . ' = :' . $whereField->getAlias();
-                $qb->setParameter($whereField->getAlias(), $this->whereValues[$whereField->getName()]);
+                $qb->setParameter($whereField->getAlias(), $this->whereValues[$whereField->getAlias()]);
             }
             $qb->andWhere('(' . implode(' AND ', $whereParts) . ')');
         }
