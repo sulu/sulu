@@ -55,6 +55,7 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
 
         $this->em->expects($this->once())->method('createQueryBuilder')->willReturn($this->queryBuilder);
         $this->queryBuilder->expects($this->any())->method('select')->willReturnSelf();
+        $this->queryBuilder->expects($this->any())->method('addGroupBy')->willReturnSelf();
 
         $this->queryBuilder->expects($this->any())->method('setMaxResults')->willReturnSelf();
         $this->queryBuilder->expects($this->any())->method('getQuery')->willReturn($this->query);
@@ -213,6 +214,7 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
 
         $this->doctrineListBuilder->limit(5);
 
+        $this->queryBuilder->expects($this->never())->method('orderBy');
         $this->queryBuilder->expects($this->exactly(1))->method('leftJoin');
         $this->queryBuilder->expects($this->exactly(1))->method('setParameter');
         $this->queryBuilder->expects($this->never())->method('setMaxResults');
