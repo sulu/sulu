@@ -33,11 +33,11 @@ define([
         bindCustomEvents: function() {
 
             // listen for defaults for types/statuses/prios
-            this.sandbox.once('sulu.contacts.contact.activities.set.defaults', this.parseActivityDefaults.bind(this));
+            this.sandbox.once('sulu.contacts.activities.set.defaults', this.parseActivityDefaults.bind(this));
 
             // shares defaults with subcomponents
-            this.sandbox.on('sulu.contacts.contact.activities.get.defaults', function() {
-                this.sandbox.emit('sulu.contacts.contact.activities.set.defaults', this.activityDefaults);
+            this.sandbox.on('sulu.contacts.activities.get.defaults', function() {
+                this.sandbox.emit('sulu.contacts.activities.set.defaults', this.activityDefaults);
             }, this);
 
             // delete contact
@@ -268,7 +268,7 @@ define([
                 // start component when contact and system members are loaded
                 this.sandbox.data.when(this.dfdContact,this.dfdSystemContacts).then(function(){
                     this.sandbox.start([
-                        {name: 'contacts/components/activities@sulucontact', options: { el: $list, contact: this.contact.toJSON(), responsiblePersons: this.responsiblePersons}}
+                        {name: 'activities@sulucontact', options: { el: $list, contact: this.contact.toJSON(), responsiblePersons: this.responsiblePersons, instanceName: 'contact'}}
                     ]);
                 }.bind(this));
 
