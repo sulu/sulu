@@ -201,7 +201,8 @@ class AccountController extends AbstractContactController
      */
     public function fieldsAction()
     {
-        return $this->responseFields();
+        // default contacts list
+        return $this->handleView($this->view(array_values($this->fieldDescriptors), 200));
     }
 
     /**
