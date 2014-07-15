@@ -3,6 +3,7 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <parameters>
         <parameter key="sulu.content.type.location.class">Sulu\Bundle\LocationBundle\Content\Types\LocationContent</parameter>
+        <parameter key="sulu_location.admin.class">Sulu\Bundle\LocationBundle\Admin\SuluLocationAdmin</parameter>
     </parameters>
 
     <services>
@@ -12,6 +13,10 @@
             <argument>%sulu.content.type.location.template%</argument>
         </service>
 
+        <service id="sulu_location.admin" class="%sulu_location.admin.class%">
+            <argument>%sulu_admin.name%</argument>
+            <tag name="sulu.admin" />
+        </service>
     </services>
 </container>
 

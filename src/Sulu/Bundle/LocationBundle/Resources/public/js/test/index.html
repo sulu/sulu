@@ -1,0 +1,87 @@
+<!doctype html>
+<!--[if lt IE 7]>
+<html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>
+<html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>
+<html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Location Content Demo</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+        <link rel="stylesheet" href="/bundles/suluadmin/js/vendor/husky/husky.min.css">
+        <link rel="stylesheet" href="/bundles/sululocation/css/main.css">
+        <style type="text/css">
+            h1 {
+                padding: 20px 0 0 00px;
+            }
+
+            #location-content,
+            #location-content2 {
+                padding: 50px 0 0 0px;
+            }
+
+            .fixed-width {
+                width: 820px;
+            }
+
+            #setConfigs {
+                margin: 10px 0 0 0px;
+            }
+
+            body {
+                margin-left: 50px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Location Content Husky Demo</h1>
+
+        <script src="/bundles/suluadmin/js/vendor/husky/husky.js"></script>
+        <script type="text/javascript">
+            var App;
+
+            require.config({
+                baseUrl: '../../',
+                sululocation: '../../sululocation/js',
+            });
+
+            require(['husky'], function(Husky) {
+                'use strict';
+
+                var app = Husky({ debug: { enable: true }});
+                var _ = app.sandbox.util._;
+
+                App = app;
+
+                app.components.addSource('sululocation', '/bundles/sululocation/js/components');
+
+                app.start([
+                    {
+                        name: 'location@sululocation',
+                        options: {
+                            el: '#location_content'
+                        }
+                    }
+                ]).then(function() {
+                    app.logger.log('Aura started...');
+                });
+            });
+        </script>
+
+        <div class="container">
+            <div class="grid">
+                <div class="grid-row">
+                    <div class="grid-col-6 fixed-width">
+                        <div id="location_content"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

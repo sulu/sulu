@@ -8,7 +8,12 @@ module.exports = function (grunt) {
         copy: {
             public: {
                 files: [
-                    {expand: true, cwd: 'Resources/public', src: ['**', '!**/scss/**'], dest: '../../../../../../web/bundles/sululocation/'}
+                    {
+                        expand: true, 
+                        cwd: 'Resources/public', 
+                        src: ['**', '!**/scss/**'], 
+                        dest: '../../../../../../web/bundles/sululocation/'
+                    }
                 ]
             }
         },
@@ -25,7 +30,7 @@ module.exports = function (grunt) {
         },
         watch: {
             options: {
-                nospawn: true
+                nospawn: false
             },
             compass: {
                 files: ['Resources/public/scss/{,*/}*.{scss,sass}'],
@@ -58,15 +63,33 @@ module.exports = function (grunt) {
                     relativeAssets: false
                 }
             }
+        },
+        replace: {
+            build: {
+                options: {
+                    variables: {
+                        'sululocation/js': 'sululocation/dist'
+                    },
+                    prefix: ''
+                },
+                files: [
+                    {src: ['Resources/public/dist/main.js'], dest: 'Resources/public/dist/main.js'}
+                ]
+            }
         }
     });
 
     grunt.registerTask('publish', [
+        'compass:dev',
         'clean:public',
         'copy:public'
     ]);
 
     grunt.registerTask('default', [
         'watch'
+    ]);
+
+    grunt.registerTask('build', [
+        'publish'
     ]);
 };
