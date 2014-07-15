@@ -71,7 +71,7 @@ class DoctrineListBuilder extends AbstractListBuilder
         $qb = $this->createQueryBuilder();
 
         foreach ($this->fields as $field) {
-            $qb->addSelect($field->getFullName() . ' AS ' . $field->getAlias());
+            $qb->addSelect($field->getFullName() . ' AS ' . $field->getName());
         }
 
         if ($this->limit != null) {
@@ -127,8 +127,8 @@ class DoctrineListBuilder extends AbstractListBuilder
         if (!empty($this->whereFields)) {
             $whereParts = array();
             foreach ($this->whereFields as $whereField) {
-                $whereParts[] = $whereField->getFullName() . ' = :' . $whereField->getAlias();
-                $qb->setParameter($whereField->getAlias(), $this->whereValues[$whereField->getName()]);
+                $whereParts[] = $whereField->getFullName() . ' = :' . $whereField->getName();
+                $qb->setParameter($whereField->getName(), $this->whereValues[$whereField->getName()]);
             }
             $qb->andWhere('(' . implode(' AND ', $whereParts) . ')');
         }
