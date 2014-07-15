@@ -41,7 +41,7 @@ class SuluBundleGenerator extends BundleGenerator
         // API Routing: /Resources/config/routing_api.yml
         $this->renderFile('sulu/config/routing_api.yml.twig', $dir . '/Resources/config/routing_api.yml', $parameters);
         // Services: /Resources/config/services.yml
-        $this->renderFile('sulu/config/services.yml.twig', $dir . '/Resources/config/services.yml', $parameters);
+        $this->renderFile('sulu/config/services.xml.twig', $dir . '/Resources/config/services.xml', $parameters);
 
         // Root files
         // Composer: /composer.json
