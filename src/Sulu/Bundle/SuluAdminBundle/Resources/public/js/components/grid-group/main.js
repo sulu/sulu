@@ -23,6 +23,7 @@ define(function() {
             instanceName: 'undefined',
             gridUrl: '',
             preselected: [],
+            resultKey: '',
             dataGridOptions:{
                 view: 'thumbnail',
                 pagination: 'showall',
@@ -423,6 +424,7 @@ define(function() {
                         matchings: this.options.dataGridOptions.matchings,
                         viewOptions: this.options.dataGridOptions.viewOptions,
                         preselected: this.options.preselected,
+                        resultKey: this.options.resultKey,
                         instanceName: instanceName,
                         searchInstanceName: this.options.instanceName,
                         paginationOptions: {
