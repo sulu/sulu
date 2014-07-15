@@ -190,23 +190,8 @@ class ContactController extends AbstractContactController
      */
     public function fieldsAction(Request $request)
     {
-        // AccountContacts Fields (are being showed in accounts-contacts-list)
-        if ($request->get('accountContacts') === 'true') {
-            $fields = array(
-                'id',
-                'firstName',
-                'lastName',
-                'isMainContact',
-                'accountContacts_position',
-            );
-            $fieldsHidden = array(
-                'id',
-            );
-            return $this->handleView($this->view($this->addFieldAttributes($fields, $fieldsHidden), 200));
-        }
-
         // default contacts list
-        return $this->responseFields();
+        return $this->handleView($this->view(array_values($this->fieldDescriptors), 200));
     }
 
     /**
