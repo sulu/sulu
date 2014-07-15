@@ -50,7 +50,6 @@ class ActivityController extends RestController implements ClassResourceInterfac
     protected static $contactEntityName = 'SuluContactBundle:Contact';
     protected static $accountEntityName = 'SuluContactBundle:Account';
 
-
     /**
      * @var string
      */
@@ -58,9 +57,9 @@ class ActivityController extends RestController implements ClassResourceInterfac
     protected $bundlePrefix = 'contact.activities.';
 
     /**
-    * TODO: move the field descriptors to a manager
-    * @var DoctrineFieldDescriptor[]
-    */
+     * TODO: move the field descriptors to a manager
+     * @var DoctrineFieldDescriptor[]
+     */
     protected $fieldDescriptors;
 
     /**
@@ -69,7 +68,16 @@ class ActivityController extends RestController implements ClassResourceInterfac
     public function __construct()
     {
         $this->fieldDescriptors = array();
-        $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor('id', 'id', self::$entityName, array(), false, '','', 'public.id');
+        $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor(
+            'id',
+            'id',
+            self::$entityName,
+            array(),
+            false,
+            '',
+            '',
+            'public.id'
+        );
         $this->fieldDescriptors['subject'] = new DoctrineFieldDescriptor('subject', 'subject', self::$entityName);
         $this->fieldDescriptors['note'] = new DoctrineFieldDescriptor('note', 'note', self::$entityName);
         $this->fieldDescriptors['dueDate'] = new DoctrineFieldDescriptor('dueDate', 'dueDate', self::$entityName);
@@ -109,18 +117,18 @@ class ActivityController extends RestController implements ClassResourceInterfac
 
         // TODO should be excluded
         $this->fieldDescriptors['contact'] = new DoctrineFieldDescriptor(
-            'id', 'contact', self::$contactEntityName,
+            'id', 'contact', self::$contactEntityName . 'contact',
             array(
-                self::$contactEntityName => self::$entityName . '.contact'
+                self::$contactEntityName . 'contact' => self::$entityName . '.contact'
             ),
             true
         );
 
         // TODO use fullName when implemented
         $this->fieldDescriptors['assignedContact'] = new DoctrineFieldDescriptor(
-            'lastName', 'assignedContact', self::$contactEntityName,
+            'lastName', 'assignedContact', self::$contactEntityName . 'assignedContact',
             array(
-                self::$contactEntityName => self::$entityName . '.assignedContact'
+                self::$contactEntityName . 'assignedContact' => self::$entityName . '.assignedContact'
             )
         );
     }
@@ -311,7 +319,7 @@ class ActivityController extends RestController implements ClassResourceInterfac
 
         if (!is_null($assignedContactData['id'])) {
             /* @var Contact $assignedContact */
-            $assignedContact = $this->getEntityById($this->contactEntityName, $assignedContactData['id']);
+            $assignedContact = $this->getEntityById(self::$contactEntityName, $assignedContactData['id']);
             $activity->setAssignedContact($assignedContact);
         }
 
@@ -332,17 +340,17 @@ class ActivityController extends RestController implements ClassResourceInterfac
         }
         if (!is_null($status)) {
             /* @var ActivityStatus $activityStatus */
-            $activityStatus = $this->getEntityById($this->entityStatusName, $status['id']);
+            $activityStatus = $this->getEntityById(self::$activityStatusEntityName, $status['id']);
             $activity->setActivityStatus($activityStatus);
         }
         if (!is_null($priority)) {
             /* @var ActivityPriority $activityPriority */
-            $activityPriority = $this->getEntityById($this->entityPriorityName, $priority['id']);
+            $activityPriority = $this->getEntityById(self::$activityPriorityEntityName, $priority['id']);
             $activity->setActivityPriority($activityPriority);
         }
         if (!is_null($type)) {
             /* @var ActivityType $activityType */
-            $activityType = $this->getEntityById($this->entityTypeName, $type['id']);
+            $activityType = $this->getEntityById(self::$activityTypeEntityName, $type['id']);
             $activity->setActivityType($activityType);
         }
         if (!is_null($startDate)) {
@@ -350,16 +358,18 @@ class ActivityController extends RestController implements ClassResourceInterfac
         }
         if (!is_null($belongsToAccount)) {
             /* @var Account $account */
-            $account = $this->getEntityById($this->accountEntityName, $belongsToAccount['id']);
+            $account = $this->getEntityById(self::$accountEntityName, $belongsToAccount['id']);
             $activity->setAccount($account);
             $activity->setContact(null);
-        } else if (!is_null($belongsToContact)) {
-            /* @var Contact $contact */
-            $contact = $this->getEntityById($this->contactEntityName, $belongsToContact['id']);
-            $activity->setContact($contact);
-            $activity->setAccount(null);
         } else {
-            throw new RestException('No account or contact set!', self::$entityName);
+            if (!is_null($belongsToContact)) {
+                /* @var Contact $contact */
+                $contact = $this->getEntityById(self::$contactEntityName, $belongsToContact['id']);
+                $activity->setContact($contact);
+                $activity->setAccount(null);
+            } else {
+                throw new RestException('No account or contact set!', self::$entityName);
+            }
         }
     }
 
