@@ -27,7 +27,7 @@ define(['sulumedia/collection/collections'], function(Collections) {
             titleKey: 'title',
             thumbnailKey: 'thumbnails',
             thumbnailSize: '50x50',
-            resultKey: '_embedded',
+            resultKey: 'media',
             translations: {
                 noMediaSelected: 'media-selection.nomedia-selected',
                 addImages: 'media-selection.add-images',
@@ -430,7 +430,7 @@ define(['sulumedia/collection/collections'], function(Collections) {
 
                 this.sandbox.util.load(this.URI.str)
                     .then(function(data) {
-                        this.items = data[this.options.resultKey];
+                        this.items = data._embedded[this.options.resultKey];
 
                         this.sandbox.emit(DATA_RETRIEVED.call(this));
                     }.bind(this))
