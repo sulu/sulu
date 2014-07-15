@@ -187,7 +187,7 @@ class NodeRepositoryTest extends PhpcrTestCase
     {
         $result = $this->nodeRepository->getWebspaceNode('default', 'en');
 
-        $this->assertEquals('Test', $result['_embedded'][0]['title']);
+        $this->assertEquals('Test', $result['_embedded']['nodes'][0]['title']);
     }
 
     public function testGetNodesTree()
@@ -196,22 +196,22 @@ class NodeRepositoryTest extends PhpcrTestCase
 
         // without webspace
         $result = $this->nodeRepository->getNodesTree($data->getUuid(), 'default', 'en', false, false);
-        $this->assertEquals(1, sizeof($result['_embedded']));
-        $this->assertEquals('Testtitle', $result['_embedded'][0]['title']);
-        $this->assertEquals('/testtitle', $result['_embedded'][0]['path']);
-        $this->assertFalse($result['_embedded'][0]['hasSub']);
+        $this->assertEquals(1, sizeof($result['_embedded']['nodes']));
+        $this->assertEquals('Testtitle', $result['_embedded']['nodes'][0]['title']);
+        $this->assertEquals('/testtitle', $result['_embedded']['nodes'][0]['path']);
+        $this->assertFalse($result['_embedded']['nodes'][0]['hasSub']);
 
         // with webspace
         $result = $this->nodeRepository->getNodesTree($data->getUuid(), 'default', 'en', false, true);
-        $this->assertEquals(1, sizeof($result['_embedded']));
-        $this->assertEquals('Test', $result['_embedded'][0]['title']);
-        $this->assertEquals('/', $result['_embedded'][0]['path']);
-        $this->assertTrue($result['_embedded'][0]['hasSub']);
+        $this->assertEquals(1, sizeof($result['_embedded']['nodes']));
+        $this->assertEquals('Test', $result['_embedded']['nodes'][0]['title']);
+        $this->assertEquals('/', $result['_embedded']['nodes'][0]['path']);
+        $this->assertTrue($result['_embedded']['nodes'][0]['hasSub']);
 
-        $this->assertEquals(1, sizeof($result['_embedded'][0]['_embedded']));
-        $this->assertEquals('Testtitle', $result['_embedded'][0]['_embedded'][0]['title']);
-        $this->assertEquals('/testtitle', $result['_embedded'][0]['_embedded'][0]['path']);
-        $this->assertFalse($result['_embedded'][0]['_embedded'][0]['hasSub']);
+        $this->assertEquals(1, sizeof($result['_embedded']['nodes'][0]['_embedded']));
+        $this->assertEquals('Testtitle', $result['_embedded']['nodes'][0]['_embedded'][0]['title']);
+        $this->assertEquals('/testtitle', $result['_embedded']['nodes'][0]['_embedded'][0]['path']);
+        $this->assertFalse($result['_embedded']['nodes'][0]['_embedded'][0]['hasSub']);
     }
 
     public function testExtensionData()
@@ -240,7 +240,7 @@ class NodeRepositoryTest extends PhpcrTestCase
         $data = $this->prepareGetTestData();
 
         $result = $this->nodeRepository->getNodesByIds(array(), 'default', 'en');
-        $this->assertEquals(0, sizeof($result['_embedded']));
+        $this->assertEquals(0, sizeof($result['_embedded']['nodes']));
         $this->assertEquals(0, $result['total']);
 
         $result = $this->nodeRepository->getNodesByIds(
@@ -250,10 +250,10 @@ class NodeRepositoryTest extends PhpcrTestCase
             'default',
             'en'
         );
-        $this->assertEquals(1, sizeof($result['_embedded']));
+        $this->assertEquals(1, sizeof($result['_embedded']['nodes']));
         $this->assertEquals(1, $result['total']);
-        $this->assertEquals('Testtitle', $result['_embedded'][0]['title']);
-        $this->assertEquals('/testtitle', $result['_embedded'][0]['path']);
+        $this->assertEquals('Testtitle', $result['_embedded']['nodes'][0]['title']);
+        $this->assertEquals('/testtitle', $result['_embedded']['nodes'][0]['path']);
     }
 
     protected function setUp()
