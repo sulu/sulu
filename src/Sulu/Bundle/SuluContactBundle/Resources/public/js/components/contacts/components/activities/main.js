@@ -185,6 +185,10 @@ define(['text!sulucontact/components/activities/activity.form.html'], function(A
                     data.contact = contact.id;
                 }
 
+                if(!data.id){
+                    delete data.id;
+                }
+
                 this.sandbox.emit('sulu.contacts.contact.activity.save', data);
                 stopOverlayComponents.call(this);
             } else {

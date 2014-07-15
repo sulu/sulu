@@ -9,11 +9,8 @@
 
 define([
     'sulucontact/model/contact',
-    'sulucontact/model/activity',
-    'sulucontact/model/activityStatus',
-    'sulucontact/model/activityType',
-    'sulucontact/model/activityPriority'
-], function(Contact, Activity, ActivityStatus, ActivityType, ActivityPriority) {
+    'sulucontact/model/activity'
+], function(Contact, Activity) {
 
     'use strict';
 
@@ -138,11 +135,12 @@ define([
         saveActivity: function(data){
 
             // TODO loading icon
-            var activity = Activity.findOrCreate({id: data.id});
-            activity.set(data);
-            activity.save(null, {
+            this.activity = Activity.findOrCreate({id: data.id});
+            this.activity.set(data);
+            this.activity.save(null, {
                 // on success save contacts id
                 success: function(response) {
+                    this.activity = response;
                     this.sandbox.emit('sulu.contacts.contact.activity.saved', response.toJSON());
                 }.bind(this),
                 error: function() {
@@ -155,23 +153,27 @@ define([
 
             // TODO loading icon
             if (!!id) {
-                var activity = Activity.findOrCreate({id: id});
-                activity.fetch({
+                this.activity = Activity.findOrCreate({id: id});
+                this.activity.fetch({
                     success: function(model) {
 
+                        this.activity = model;
                         var el = model.toJSON();
 
-                        if(!!el.activityType) {
-                            el.activityType.translation = this.sandbox.translate(el.activityType.name);
-                        }
 
-                        if(!!el.activityPriority) {
-                            el.activityPriority.translation = this.sandbox.translate(el.activityPriority.name);
-                        }
-
-                        if(!!el.activityStatus) {
-                            el.activityStatus.translation = this.sandbox.translate(el.activityStatus.name);
-                        }
+//                        // TODO
+//                        // add translations for ??
+//                        if(!!el.activityType) {
+//                            el.activityType.translation = this.sandbox.translate(el.activityType.name);
+//                        }
+//
+//                        if(!!el.activityPriority) {
+//                            el.activityPriority.translation = this.sandbox.translate(el.activityPriority.name);
+//                        }
+//
+//                        if(!!el.activityStatus) {
+//                            el.activityStatus.translation = this.sandbox.translate(el.activityStatus.name);
+//                        }
 
                         this.sandbox.emit('sulu.contacts.contact.activity.loaded', el);
                     }.bind(this),
