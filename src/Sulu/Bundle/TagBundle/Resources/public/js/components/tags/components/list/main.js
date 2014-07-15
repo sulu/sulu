@@ -75,6 +75,7 @@ define(function() {
                 {
                     el: this.sandbox.dom.find('#tags-list', this.$el),
                     url: '/admin/api/tags?flat=true',
+                    resultKey: 'tags',
                     viewOptions: {
                         table: {
                             editable: true,
