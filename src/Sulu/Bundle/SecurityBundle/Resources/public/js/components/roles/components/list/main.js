@@ -68,6 +68,7 @@ define(function() {
                 {
                     el: this.sandbox.dom.find('#roles-list', this.$el),
                     url: '/admin/api/roles?flat=true',
+                    resultKey: 'roles',
                     viewOptions: {
                         table: {
                             fullWidth: true

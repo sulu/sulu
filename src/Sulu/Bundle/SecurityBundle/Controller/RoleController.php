@@ -46,7 +46,8 @@ class RoleController extends RestController implements ClassResourceInterface
      * @return mixed
      */
     public function getFieldsAction() {
-        return $this->responseFields();
+        // default contacts list
+        return $this->handleView($this->view(array_values($this->fieldDescriptors), 200));
     }
 
     /**

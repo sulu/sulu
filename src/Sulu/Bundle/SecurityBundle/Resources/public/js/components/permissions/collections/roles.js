@@ -21,7 +21,7 @@ define([
         url: '/admin/api/roles',
 
         parse: function(resp) {
-            return resp._embedded;
+            return resp._embedded.roles;
         },
 
         save: function(sandbox, roles) {
