@@ -25,7 +25,7 @@ define([], function() {
             preselected: {ids: []},
             idKey: 'id',
             titleKey: 'title',
-            resultKey: '_embedded',
+            resultKey: '',
             columnNavigationUrl: '',
             translations: {
                 noLinksSelected: 'internal-links.nolinks-selected',
@@ -248,6 +248,7 @@ define([], function() {
                             sizeRelativeTo: '.smart-content-overlay .slide-0 .overlay-content',
                             wrapper: {height: 100},
                             editIcon: 'fa-check',
+                            resultKey: this.options.resultKey,
                             showEdit: false,
                             showStatus: false
                         }
@@ -382,7 +383,7 @@ define([], function() {
             //only request if URI has changed
             if (this.URI.hasChanged === true) {
                 var thenFunction = function(data) {
-                    this.items = data[this.options.resultKey] || [];
+                    this.items = data._embedded[this.options.resultKey] || [];
 
                     this.sandbox.emit(DATA_RETRIEVED.call(this));
                 }.bind(this);

@@ -85,6 +85,7 @@ define(function() {
                     options: {
                         el: this.$find('#content-column'),
                         selected: this.getLastSelected(),
+                        resultKey: 'nodes',
                         url: this.getUrl()
                     }
                 }
