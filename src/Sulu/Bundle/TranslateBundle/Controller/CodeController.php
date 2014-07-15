@@ -320,7 +320,7 @@ class CodeController extends RestController implements ClassResourceInterface
         $this->fieldDescriptors['backend'] = new DoctrineFieldDescriptor('backend', 'backend', self::$entityName);
         $this->fieldDescriptors['frontend'] = new DoctrineFieldDescriptor('frontend', 'frontend', self::$entityName);
         $this->fieldDescriptors['length'] = new DoctrineFieldDescriptor('length', 'length', self::$entityName);
-        $this->fieldDescriptors['translations_value'] = new DoctrineFieldDescriptor('value', 'value', self::$translationEntity, array(
+        $this->fieldDescriptors['translations_value'] = new DoctrineFieldDescriptor('value', 'translations_value', self::$translationEntity, array(
             self::$translationEntity => self::$entityName . '.translations',
         ));
         $this->fieldDescriptors['translations_catalogue_locale'] = new DoctrineFieldDescriptor('locale', 'translations_catalogue_locale', self::$catalogueEntity, array(
