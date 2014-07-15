@@ -34,7 +34,8 @@ class ContactRepository extends EntityRepository
             ->leftJoin('accountContacts.account', 'account')
             ->leftJoin('u.activities', 'activities')
             ->leftJoin('activities.activityStatus', 'activityStatus')
-            ->leftJoin('u.addresses', 'addresses')
+            ->leftJoin('u.contactAddresses', 'contactAddresses')
+            ->leftJoin('contactAddresses.address', 'addresses')
             ->leftJoin('addresses.country', 'country')
             ->leftJoin('addresses.addressType', 'addressType')
             ->leftJoin('u.locales', 'locales')
@@ -61,6 +62,7 @@ class ContactRepository extends EntityRepository
             ->addSelect('phones')
             ->addSelect('phoneType')
             ->addSelect('addresses')
+            ->addSelect('contactAddresses')
             ->addSelect('country')
             ->addSelect('addressType')
             ->addSelect('notes')
@@ -92,9 +94,12 @@ class ContactRepository extends EntityRepository
             ->leftJoin('accountContacts.account', 'account')
             ->leftJoin('u.activities', 'activities')
             ->leftJoin('activities.activityStatus', 'activityStatus')
-            ->leftJoin('u.addresses', 'addresses')
-            ->leftJoin('addresses.contacts', 'addressContacts')
-            ->leftJoin('addresses.accounts', 'addressAccounts')
+            ->leftJoin('u.contactAddresses', 'contactAddresses')
+            ->leftJoin('contactAddresses.address', 'addresses')
+            ->leftJoin('addresses.contactAddresses', 'addressContactAddresses')
+            ->leftJoin('addresses.accountAddresses', 'addressAccountAddresses')
+            ->leftJoin('addressContactAddresses.contact', 'addressContacts')
+            ->leftJoin('addressAccountAddresses.account', 'addressAccounts')
             ->leftJoin('addresses.country', 'country')
             ->leftJoin('addresses.addressType', 'addressType')
             ->leftJoin('u.locales', 'locales')
@@ -126,6 +131,9 @@ class ContactRepository extends EntityRepository
             ->addSelect('faxType')
             ->addSelect('phones')
             ->addSelect('phoneType')
+            ->addSelect('contactAddresses')
+            ->addSelect('addressContactAddresses')
+            ->addSelect('addressAccountAddresses')
             ->addSelect('addresses')
             ->addSelect('country')
             ->addSelect('addressType')
@@ -168,11 +176,13 @@ class ContactRepository extends EntityRepository
             ->leftJoin('u.emails', 'emails')
             ->leftJoin('u.phones', 'phones')
             ->leftJoin('u.faxes', 'faxes')
-            ->leftJoin('u.addresses', 'addresses')
+            ->leftJoin('u.contactAddresses', 'contactAddresses')
+            ->leftJoin('contactAddresses.address', 'addresses')
             ->leftJoin('u.account', 'account')
             ->addSelect('emails')
             ->addSelect('phones')
             ->addSelect('faxes')
+            ->addSelect('contactAddresses')
             ->addSelect('addresses');
 
         $qb = $this->addSorting($qb, $sorting, 'u');
@@ -198,7 +208,8 @@ class ContactRepository extends EntityRepository
     public function findByAccountId($accountId, $excludeContactId = null)
     {
         $qb = $this->createQueryBuilder('c')
-            ->join('u.accountContacts', 'accountContacts', 'WITH', 'accountContacts.idAccounts = :accountId AND accountContacts.main = true')
+            ->join('c.accountContacts', 'accountContacts', 'WITH', 'accountContacts.main = true')
+            ->join('accountContacts.account', 'account', 'WITH', 'account.id = :accountId')
             ->setParameter('accountId', $accountId);
 
         if (!is_null($excludeContactId)) {

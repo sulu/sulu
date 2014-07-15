@@ -21,7 +21,6 @@ use Sulu\Bundle\ContactBundle\Entity\ActivityPriority;
 use Sulu\Bundle\ContactBundle\Entity\ActivityType;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\Account;
-
 use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
@@ -29,6 +28,11 @@ use Sulu\Component\Rest\RestController;
 use \DateTime;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\Request;
+use Sulu\Component\Rest\RestHelperInterface;
+use Hateoas\Representation\CollectionRepresentation;
+use Sulu\Component\Rest\ListBuilder\DoctrineListBuilderFactory;
+use Sulu\Component\Rest\ListBuilder\ListRepresentation;
+use Sulu\Component\Rest\ListBuilder\FieldDescriptor\DoctrineFieldDescriptor;
 
 /**
  * Makes activities available through a REST API
@@ -39,86 +43,95 @@ class ActivityController extends RestController implements ClassResourceInterfac
     /**
      * {@inheritdoc}
      */
-    protected $entityName = 'SuluContactBundle:Activity';
-    protected $entityStatusName = 'SuluContactBundle:ActivityStatus';
-    protected $entityPriorityName = 'SuluContactBundle:ActivityPriority';
-    protected $entityTypeName = 'SuluContactBundle:ActivityType';
-    protected $contactEntityName = 'SuluContactBundle:Contact';
-    protected $accountEntityName = 'SuluContactBundle:Account';
+    protected static $entityName = 'SuluContactBundle:Activity';
+    protected static $activityStatusEntityName = 'SuluContactBundle:ActivityStatus';
+    protected static $activityTypeEntityName = 'SuluContactBundle:ActivityType';
+    protected static $activityPriorityEntityName = 'SuluContactBundle:ActivityPriority';
+    protected static $contactEntityName = 'SuluContactBundle:Contact';
+    protected static $accountEntityName = 'SuluContactBundle:Account';
+
 
     /**
-     * {@inheritdoc}
+     * @var string
      */
-    protected $unsortable = array();
+    protected $basePath = 'admin/api/activities';
+    protected $bundlePrefix = 'contact.activities.';
 
     /**
-     * {@inheritdoc}
-     */
-    protected $fieldsDefault = array('subject', 'status', 'dueDate');
+    * TODO: move the field descriptors to a manager
+    * @var DoctrineFieldDescriptor[]
+    */
+    protected $fieldDescriptors;
 
     /**
-     * {@inheritdoc}
+     * TODO: move field descriptors to a manager
      */
-    protected $fieldsExcluded = array('startDate', 'account', 'contact');
+    public function __construct()
+    {
+        $this->fieldDescriptors = array();
+        $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor('id', 'id', self::$entityName, array(), false, '','', 'public.id');
+        $this->fieldDescriptors['subject'] = new DoctrineFieldDescriptor('subject', 'subject', self::$entityName);
+        $this->fieldDescriptors['note'] = new DoctrineFieldDescriptor('note', 'note', self::$entityName);
+        $this->fieldDescriptors['dueDate'] = new DoctrineFieldDescriptor('dueDate', 'dueDate', self::$entityName);
+        $this->fieldDescriptors['startDate'] = new DoctrineFieldDescriptor('startDate', 'startDate', self::$entityName);
+        $this->fieldDescriptors['created'] = new DoctrineFieldDescriptor('created', 'created', self::$entityName);
+        $this->fieldDescriptors['changed'] = new DoctrineFieldDescriptor('changed', 'changed', self::$entityName);
 
-    /**
-     * {@inheritdoc}
-     */
-    protected $fieldsHidden = array(
-        'id',
-        'created'
-    );
+        $this->fieldDescriptors['activityStatus'] = new DoctrineFieldDescriptor(
+            'name', 'activityStatus', self::$activityStatusEntityName,
+            array(
+                self::$activityStatusEntityName => self::$entityName . '.activityStatus'
+            )
+        );
 
-    /**
-     * {@inheritdoc}
-     */
-    protected $fieldsRelations = array();
+        $this->fieldDescriptors['activityPriority'] = new DoctrineFieldDescriptor(
+            'name', 'activityPriority', self::$activityPriorityEntityName,
+            array(
+                self::$activityPriorityEntityName => self::$entityName . '.activityPriority'
+            )
+        );
 
-    /**
-     * {@inheritdoc}
-     */
-    protected $fieldsSortOrder = array(
-        0 => 'subject',
-        1 => 'status',
-        2 => 'dueDate'
-    );
+        $this->fieldDescriptors['activityType'] = new DoctrineFieldDescriptor(
+            'name', 'activityType', self::$activityTypeEntityName,
+            array(
+                self::$activityTypeEntityName => self::$entityName . '.activityType'
+            )
+        );
 
-    /**
-     * {@inheritdoc}
-     */
-    protected $fieldsTranslationKeys = array(
-        'id' => 'public.id',
-        'status' => 'public.status'
-    );
+        // TODO should be excluded
+        $this->fieldDescriptors['account'] = new DoctrineFieldDescriptor(
+            'id', 'account', self::$accountEntityName,
+            array(
+                self::$accountEntityName => self::$entityName . '.account'
+            ),
+            true
+        );
 
-    /**
-     * {@inheritdoc}
-     */
-    protected $fieldsEditable = array();
+        // TODO should be excluded
+        $this->fieldDescriptors['contact'] = new DoctrineFieldDescriptor(
+            'id', 'contact', self::$contactEntityName,
+            array(
+                self::$contactEntityName => self::$entityName . '.contact'
+            ),
+            true
+        );
 
-    /**
-     * {@inheritdoc}
-     */
-    protected $fieldsValidation = array();
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $fieldsWidth = array();
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $bundlePrefix = 'contact.accounts.';
+        // TODO use fullName when implemented
+        $this->fieldDescriptors['assignedContact'] = new DoctrineFieldDescriptor(
+            'lastName', 'assignedContact', self::$contactEntityName,
+            array(
+                self::$contactEntityName => self::$entityName . '.assignedContact'
+            )
+        );
+    }
 
     /**
      * returns all fields that can be used by list
-     * @Get("activities/fields")
      * @return mixed
      */
-    public function getFieldsAction()
+    public function fieldsAction()
     {
-        return $this->responseFields();
+        return $this->handleView($this->view(array_values($this->fieldDescriptors), 200));
     }
 
     /**
@@ -132,8 +145,8 @@ class ActivityController extends RestController implements ClassResourceInterfac
             $id,
             function ($id) {
                 return $this->getDoctrine()
-                    ->getRepository($this->entityName)
-                    ->find($id);
+                    ->getRepository(self::$entityName)
+                    ->findActivitiesById($id);
             }
         );
 
@@ -150,29 +163,55 @@ class ActivityController extends RestController implements ClassResourceInterfac
      */
     public function cgetAction(Request $request)
     {
-        $where = array();
-        $type = $request->get('type');
-        $account = $request->get('account');
-        $contact = $request->get('contact');
+        $filter = array();
 
+        $type = $request->get('type');
         if ($type) {
-            $where['type'] = $type;
+            $filter['type'] = $type;
         }
+
+        $account = $request->get('account');
+        if ($account) {
+            $filter['account'] = $account;
+        }
+
+        $contact = $request->get('contact');
+        if ($contact) {
+            $filter['contact'] = $contact;
+        }
+
         if ($request->get('flat') == 'true') {
 
-            if(!!$contact) {
-                $where['contact_id'] = $contact;
-            } else if (!!$account){
-                $where['account_id'] = $account;
+            /** @var RestHelperInterface $restHelper */
+            $restHelper = $this->get('sulu_core.doctrine_rest_helper');
+
+            /** @var DoctrineListBuilderFactory $factory */
+            $factory = $this->get('sulu_core.doctrine_list_builder_factory');
+
+            $listBuilder = $factory->create(self::$entityName);
+
+            $restHelper->initializeListBuilder($listBuilder, $this->fieldDescriptors);
+
+            foreach ($filter as $key => $value) {
+                $listBuilder->where($this->fieldDescriptors[$key], $value);
             }
 
-            // TODO
+            $list = new ListRepresentation(
+                $listBuilder->execute(),
+                self::$entityKey,
+                'get_activities',
+                $request->query->all(),
+                $listBuilder->getCurrentPage(),
+                $listBuilder->getLimit(),
+                $listBuilder->count()
+            );
 
-            $view = $this->responseList($where);
         } else {
-            $activities = $this->getDoctrine()->getRepository($this->entityName)->findAllActivities();
-            $view = $this->view($this->createHalResponse($activities), 200);
+            $activities = $this->getDoctrine()->getRepository(self::$entityName)->findAllActivities();
+            $list = new CollectionRepresentation($activities, self::$entityKey);
         }
+
+        $view = $this->view($list, 200);
         return $this->handleView($view);
     }
 
@@ -186,7 +225,7 @@ class ActivityController extends RestController implements ClassResourceInterfac
     {
         try {
             $em = $this->getDoctrine()->getManager();
-            $activity = $this->getEntityById($this->entityName, $id);
+            $activity = $this->getEntityById(self::$entityName, $id);
 
             $this->processActivityData($activity, $request);
 
@@ -212,7 +251,7 @@ class ActivityController extends RestController implements ClassResourceInterfac
     {
         $delete = function ($id) {
             $em = $this->getDoctrine()->getManager();
-            $activity = $this->getEntityById($this->entityName, $id);
+            $activity = $this->getEntityById(self::$entityName, $id);
             $em->remove($activity);
             $em->flush();
         };
@@ -320,7 +359,7 @@ class ActivityController extends RestController implements ClassResourceInterfac
             $activity->setContact($contact);
             $activity->setAccount(null);
         } else {
-            throw new RestException('No account or contact set!', $this->entityName);
+            throw new RestException('No account or contact set!', self::$entityName);
         }
     }
 

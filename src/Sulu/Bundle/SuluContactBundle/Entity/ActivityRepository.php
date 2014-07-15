@@ -22,6 +22,39 @@ class ActivityRepository extends EntityRepository
 {
 
     /**
+     * Searches for an activity by id
+     * @param $id
+     * @return array|null
+     */
+    public function findActivitiesById($id){
+        try {
+            $qb = $this->createQueryBuilder('activity')
+                ->leftJoin('activity.activityStatus', 'status')
+                ->leftJoin('activity.activityType', 'type')
+                ->leftJoin('activity.activityPriority', 'priority')
+                ->leftJoin('activity.contact', 'contact')
+                ->leftJoin('activity.account', 'account')
+                ->leftJoin('activity.assignedContact', 'assignedContact')
+                ->addSelect('activity')
+                ->addSelect('contact')
+                ->addSelect('account')
+                ->addSelect('assignedContact')
+                ->addSelect('status')
+                ->addSelect('type')
+                ->addSelect('priority')
+                ->where('activity.id = :id');
+
+            $query = $qb->getQuery();
+            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+            $query->setParameter('id', $id);
+
+            return $query->getSingleResult();
+        } catch (NoResultException $ex) {
+            return null;
+        }
+    }
+
+    /**
      * Returns all activities including their contact, account and assigned contact
      * @return array|null
      */

@@ -7,7 +7,6 @@
             <generator strategy="AUTO"/>
         </id>
         <field name="fax" type="string" column="fax" length="255"/>
-        <field name="main" type="boolean" column="main" nullable="false"/>
         <many-to-one field="faxType" target-entity="Sulu\Bundle\ContactBundle\Entity\FaxType" inversed-by="faxes">
             <join-columns>
                 <join-column name="idFaxTypes" referenced-column-name="id" nullable="false"/>

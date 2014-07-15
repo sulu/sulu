@@ -21,7 +21,9 @@ define([
     'sulucontact/model/accountContact',
     'sulucontact/model/bankAccount',
     'sulucontact/model/contact'
-], function(RelationalModel, HasMany, Account, Email, Phone, Address, Url, Note, HasOne, AccountCategory, AccountContact, BankAccount,Contact) {
+], function(RelationalModel, HasMany, Account, Email, Phone, Address, Url, Note, HasOne, AccountCategory, AccountContact, BankAccount, Contact) {
+
+    'use strict';
 
     'use strict';
 
@@ -41,7 +43,8 @@ define([
                 accountContacts: [],
                 termsOfPayment: null,
                 termsOfDelivery: null,
-                responsiblePerson: null
+                responsiblePerson: null,
+                mainContact: null
             };
         }, relations: [
             {
@@ -87,6 +90,9 @@ define([
             {
                 type: HasOne,
                 key: 'responsiblePerson',
+            },
+            {
+                key: 'mainContact',
                 relatedModel: Contact
             }
         ]

@@ -93,6 +93,9 @@ define([
             // removes accountContact Relation
             this.sandbox.on('sulu.contacts.accounts.contacts.remove', this.removeAccountContacts.bind(this));
 
+            // set main contact
+            this.sandbox.on('sulu.contacts.accounts.contacts.set-main', this.setMainContact.bind(this));
+
             // saves financial infos
             this.sandbox.on('sulu.contacts.accounts.financials.save', this.saveFinancials.bind(this));
 
@@ -102,7 +105,7 @@ define([
                 if (!!type) {
                     typeString = '/type:' + type;
                 }
-                this.sandbox.emit('sulu.router.navigate', 'contacts/accounts' + typeString, !noReload ? true : false, true);
+                this.sandbox.emit('sulu.router.navigate', 'contacts/accounts' + typeString, !noReload ? true : false, true, true);
             }, this);
 
             this.sandbox.on('sulu.contacts.account.types', function(data) {
@@ -119,6 +122,18 @@ define([
             this.sandbox.on('sulu.contacts.account.convert', function(data) {
                 this.convertAccount(data);
             }.bind(this));
+        },
+
+        // sets main contact
+        setMainContact: function(id) {
+            // set mainContact
+            this.account.set({mainContact: Contact.findOrCreate({id: id})});
+            this.account.save(null, {
+               patch: true,
+               success: function(response) {
+                   // TODO: show success label
+               }.bind(this)
+            });
         },
 
         addAccountContact: function(id, position) {
