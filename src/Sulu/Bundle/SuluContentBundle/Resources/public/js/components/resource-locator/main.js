@@ -250,7 +250,7 @@ define([], function() {
             startLoader.call(this);
             this.sandbox.util.load(this.options.historyApi).then(function(data) {
                 stopLoader.call(this);
-                var content = renderHistories.call(this, data._embedded);
+                var content = renderHistories.call(this, data._embedded.resourcelocators);
                 startOverlay.call(this, content);
             }.bind(this));
         };
