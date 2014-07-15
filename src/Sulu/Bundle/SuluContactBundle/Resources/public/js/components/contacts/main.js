@@ -84,15 +84,16 @@ define([
          * @param defaults
          */
         parseActivityDefaults: function(defaults){
-
             var el, sub;
-
             for(el in defaults){
-                for(sub in defaults[el]){
-                    defaults[el][sub].translation = this.sandbox.translate(defaults[el][sub].name);
+                if(defaults.hasOwnProperty(el)) {
+                    for(sub in defaults[el]){
+                        if(defaults[el].hasOwnProperty(sub)) {
+                            defaults[el][sub].translation = this.sandbox.translate(defaults[el][sub].name);
+                        }
+                    }
                 }
             }
-
             this.activityDefaults = defaults;
         },
 
@@ -136,12 +137,8 @@ define([
 
         saveActivity: function(data){
 
-             // TODO loading icon
+            // TODO loading icon
             var activity = Activity.findOrCreate({id: data.id});
-//                activityStatus = ActivityStatus.findOrCreate({id: data.activityStatus}),
-//                activityType = ActivityType.findOrCreate({id: data.activityType}),
-//                activityPriority = ActivityPriority.findOrCreate({id: data.activityPriority});
-
             activity.set(data);
             activity.save(null, {
                 // on success save contacts id
@@ -158,13 +155,28 @@ define([
 
             // TODO loading icon
             if (!!id) {
-                var activity = Activity.findOrCreate({id: this.options.id});
+                var activity = Activity.findOrCreate({id: id});
                 activity.fetch({
                     success: function(model) {
-                        this.sandbox.emit('sulu.contacts.contact.activity.loaded', model.toJSON());
+
+                        var el = model.toJSON();
+
+                        if(!!el.activityType) {
+                            el.activityType.translation = this.sandbox.translate(el.activityType.name);
+                        }
+
+                        if(!!el.activityPriority) {
+                            el.activityPriority.translation = this.sandbox.translate(el.activityPriority.name);
+                        }
+
+                        if(!!el.activityStatus) {
+                            el.activityStatus.translation = this.sandbox.translate(el.activityStatus.name);
+                        }
+
+                        this.sandbox.emit('sulu.contacts.contact.activity.loaded', el);
                     }.bind(this),
-                    error: function() {
-                        this.sandbox.logger.log('error while fetching activity');
+                    error: function(e1,e2) {
+                        this.sandbox.logger.log('error while fetching activity', e1, e2);
                     }.bind(this)
                 });
             } else {
