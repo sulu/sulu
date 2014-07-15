@@ -21,8 +21,12 @@ define(function () {
 
         view: true,
 
-        fullSize: {
-            width: true
+        layout: {
+            content: {
+                width: 'max',
+                leftSpace: false,
+                rightSpace: false
+            }
         },
 
         header: function () {
@@ -69,6 +73,7 @@ define(function () {
                     el: this.$find(constants.listSelector),
                     url: '/admin/api/categories?flat=true&sortBy=depth&sortOrder=asc',
                     childrenPropertyName: 'children',
+                    resultKey: 'categories',
                     viewOptions: {
                         table: {
                             openChildId: this.sandbox.sulu.getUserSetting(constants.lastClickedCategorySettingsKey),

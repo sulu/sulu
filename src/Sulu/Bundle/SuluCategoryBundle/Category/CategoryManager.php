@@ -95,7 +95,15 @@ class CategoryManager implements CategoryManagerInterface
      */
     private function initializeFieldDescriptors()
     {
-        // TODO: define Field Descriptors
+        $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor('id', 'id', self::$categoryEntityName);
+        $this->fieldDescriptors['name'] = new DoctrineFieldDescriptor('translation', 'name', self::$categoryTranslationEntityName,
+            array(
+                self::$categoryTranslationEntityName => self::$categoryEntityName . '.translations'
+            )
+        );
+        $this->fieldDescriptors['created'] = new DoctrineFieldDescriptor('created', 'created', self::$categoryEntityName);
+        $this->fieldDescriptors['changed'] = new DoctrineFieldDescriptor('changed', 'changed', self::$categoryEntityName);
+
     }
 
     /**
