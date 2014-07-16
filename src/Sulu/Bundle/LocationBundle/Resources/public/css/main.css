@@ -1,3 +1,5 @@
+/*----------------------------------------*/
+/*-------------------------------------------------------------------------------------*/
 /* line 5, ../scss/modules/location.scss */
 .location-content-container {
   width: 100%;
@@ -125,63 +127,58 @@
   min-height: 55px;
 }
 /* line 122, ../scss/modules/location.scss */
-.location-overlay-content label {
-  color: black;
-  font-size: 12px;
-}
-/* line 126, ../scss/modules/location.scss */
 .location-overlay-content .sublabel {
   font-size: 10px;
   color: #999999;
 }
-/* line 130, ../scss/modules/location.scss */
+/* line 126, ../scss/modules/location.scss */
 .location-overlay-content .item-half {
   float: left;
   width: 270px;
 }
-/* line 134, ../scss/modules/location.scss */
+/* line 130, ../scss/modules/location.scss */
 .location-overlay-content .item {
   padding-right: 20px;
 }
-/* line 137, ../scss/modules/location.scss */
+/* line 133, ../scss/modules/location.scss */
 .location-overlay-content .left {
   margin-right: 20px;
 }
-/* line 140, ../scss/modules/location.scss */
+/* line 136, ../scss/modules/location.scss */
 .location-overlay-content .full {
   padding-right: 0;
 }
-/* line 143, ../scss/modules/location.scss */
+/* line 139, ../scss/modules/location.scss */
 .location-overlay-content .check {
   margin-top: 30px;
 }
-/* line 145, ../scss/modules/location.scss */
+/* line 141, ../scss/modules/location.scss */
 .location-overlay-content .check .description {
   padding-left: 5px;
 }
-/* line 148, ../scss/modules/location.scss */
+/* line 144, ../scss/modules/location.scss */
 .location-overlay-content .check.disabled {
   display: none;
 }
-/* line 152, ../scss/modules/location.scss */
+/* line 148, ../scss/modules/location.scss */
 .location-overlay-content .sortMethod {
   margin-top: 25px;
 }
-/* line 156, ../scss/modules/location.scss */
+/* line 152, ../scss/modules/location.scss */
 .location-overlay-content input.limit-to,
 .location-overlay-content input.data-source {
   padding-left: 10px;
   border-radius: 0;
 }
-/* line 160, ../scss/modules/location.scss */
+/* line 156, ../scss/modules/location.scss */
 .location-overlay-content .tags.disabled {
   display: none;
 }
-/* line 163, ../scss/modules/location.scss */
+/* line 159, ../scss/modules/location.scss */
 .location-overlay-content .tag-list {
   border-radius: 1px 1px 0 0;
 }
-/* line 165, ../scss/modules/location.scss */
+/* line 161, ../scss/modules/location.scss */
 .location-overlay-content .tag-list input {
   margin: 7px 0 0 0;
 }

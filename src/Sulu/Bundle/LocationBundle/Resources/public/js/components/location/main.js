@@ -14,11 +14,15 @@ define([], function() {
     'use strict';
 
     var defaults = {
+             translations: {
+                 'configureLocation': 'Configure Location',
+             },
+             instanceName: 'instance-one'
         },
         templates = {
             skeleton: [
                 '<div class="location-content-container form-element">',
-                '<div class="location-header"><a class="fa-gears" href="#"/></div>',
+                '<div class="location-header"><a class="location-content-configure fa-gears" href="#"/></div>',
                 '<div class="location-content"></div>'
             ].join(''),
             content: [
@@ -56,10 +60,69 @@ define([], function() {
                             '</div>',
                         '</div>',
                     '</div>',
+            ].join(''),
+            overlay: [
+                '<div class="location-overlay-content grid">',
+                    '<form id="location-configuration-form">',
+                        '<div class="grid-row">',
+                            '<div class="grid-col-6">',
+                            '<div class="form-group">',
+                                '<label for="map_source">Map Source</label>',
+                                '<select class="form-element" name="map_source" class="map-source">',
+                                    '<option value="google">Google Maps</option>',
+                                    '<option value="openstreetmaps">Open Street Maps</option>',
+                                '</select>',
+                                '</div>',
+                            '</div>',
+                        '</div>',
+                        '<div class="grid-row">',
+                            '<div class="form-group grid-col-12">',
+                                '<label for="title">Title</label>',
+                                '<input class="form-element" type="text" name="title"/ >',
+                            '</div>',
+                        '</div>',
+                        '<div class="grid-row">',
+                            '<div class="form-group grid-col-6">',
+                                '<label for="street">Street</label>',
+                                '<input class="form-element" type="text" class="street"/ >',
+                            '</div>',
+                            '<div class="form-group grid-col-6">',
+                                '<label for="number">Number</label>',
+                                '<input class="form-element" type="text" class="street"/ >',
+                            '</div>',
+                        '</div>',
+                        '<div class="grid-row">',
+                            '<div class="form-group grid-col-6">',
+                                '<label for="code">Code</label>',
+                                '<input class="form-element" type="text" class="code"/ >',
+                            '</div>',
+                            '<div class="form-group grid-col-6">',
+                                '<label for="country">Country</label>',
+                                '<select class="form-element" name="country" class="map-source">',
+                                    '<option value="as">Austria</option>',
+                                '</select>',
+                            '</div>',
+                        '</div>',
+                        '<div class="grid-row">',
+                            '<div class="form-group grid-col-12">',
+                                '<label for="coordinates">Coordinates</label>',
+                                '<input class="form-element" type="text" name="coordinates"/ >',
+                            '</div>',
+                        '</div>',
+                        '<div class="grid-row">',
+                            '<div class="grid-col-12">',
+                                '<img src="/bundles/sululocation/js/test/map.png"/>',
+                            '</div>',
+                            '<div class="small-font grey-font">Move pointer to change location on map</div>',
+                        '</div>',
+                    '</div>',
+                '</div>'
             ].join('')
-        }
+        };
 
     return {
+        options: {},
+        $button: null,
 
         initialize: function() {
             this.sandbox.logger.log('initialize', this);
@@ -70,6 +133,7 @@ define([], function() {
 
         createComponent: function () {
             this.render();
+            this.startOverlay();
         },
 
         render: function () {
@@ -77,15 +141,30 @@ define([], function() {
             this.sandbox.dom.find('.location-content').append(templates.content);
         },
 
-        renderHeader: function () {
-            $this.$header = this.sandbox.dom.find('loc-header', this.$el);
-        },
+        startOverlay: function () {
+            var $element = this.sandbox.dom.createElement('<div></div>');
+            this.sandbox.dom.append(this.$el, $element);
 
-        renderButton: function() {
-            this.$button = this.sandbox.dom.createElement('<a href="#"/>');
-            this.sandbox.dom.addClass(this.$button, constants.buttonClass);
-            this.sandbox.dom.append(this.$header, this.$button);
-        },
+            this.sandbox.start([
+                {
+                    name: 'overlay@husky',
+                    options: {
+                        triggerEl: '.location-content-configure',
+                        el: $element,
+                        container: this.$el,
+                        instanceName: 'location-content.' + this.options.instanceName,
+                        skin: 'wide',
+                        slides: [
+                            {
+                                title: this.sandbox.translate(this.options.translations.configureLocation),
+                                data: templates.overlay,
+                                okCallback: function () {
+                                }.bind(this)
+                            }
+                        ]
+                    }
+                }
+            ]);
+        }
     }
 })
-
