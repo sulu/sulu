@@ -180,7 +180,12 @@ define([
             }.bind(this));
         },
 
-        saveActivity: function(data){
+        saveActivity: function(data) {
+
+            var isNew = true;
+            if (!!data.id) {
+                isNew = false;
+            }
 
             // TODO loading icon
             this.activity = Activity.findOrCreate({id: data.id});
@@ -188,13 +193,37 @@ define([
             this.activity.save(null, {
                 // on success save contacts id
                 success: function(response) {
-                    this.activity = response;
-                    this.sandbox.emit('sulu.contacts.account.activity.saved', response.toJSON());
+                    this.activity = this.flattenActivityObjects(response.toJSON());
+
+                    if (!!isNew) {
+                        this.sandbox.emit('sulu.contacts.account.activity.added', this.activity);
+                    } else {
+                        this.sandbox.emit('sulu.contacts.account.activity.updated', this.activity);
+                    }
+
                 }.bind(this),
                 error: function() {
                     this.sandbox.logger.log("error while saving activity");
                 }.bind(this)
             });
+        },
+
+        /**
+         * Flattens type/status/priority
+         * @param activity
+         */
+        flattenActivityObjects: function(activity){
+            if(!!activity.activityStatus){
+                activity.activityStatus = this.sandbox.translate(activity.activityStatus.name);
+            }
+            if(!!activity.activityType){
+                activity.activityType = this.sandbox.translate(activity.activityType.name);
+            }
+            if(!!activity.activityPriority){
+                activity.activityPriority = this.sandbox.translate(activity.activityPriority.name);
+            }
+
+            return activity;
         },
 
         loadActivity: function(id) {
