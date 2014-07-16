@@ -146,6 +146,7 @@ define([], function() {
             },
 
             bindTagEvents: function(data) {
+
                 if (!!data.tags && data.tags.length > 0) {
                     // set tags after auto complete list was initialized
                     this.sandbox.on('husky.auto-complete-list.' + this.autoCompleteInstanceName + '.initialized', function() {
@@ -384,6 +385,14 @@ define([], function() {
                 this.saved = saved;
             },
 
+            titleDeleted: function(indexes) {
+                debugger;
+            },
+
+            titleSaved: function(data) {
+                debugger;
+            },
+
             // event listens for changes in form
             listenForChange: function() {
                 // listen for change after TAGS and BIRTHDAY-field have been set
@@ -404,6 +413,14 @@ define([], function() {
                 }.bind(this));
                 this.sandbox.on('husky.select.form-of-address.selected.item', function() {
                     this.setHeaderBar(false);
+                }.bind(this));
+
+                // Listen for changes in title selection drop down 
+                this.sandbox.on('husky.select.title-select.deleted', function(data) {
+                    this.titleDeleted(data);
+                }.bind(this));
+                this.sandbox.on('husky.select.title-select.saved', function(data) {
+                    this.titleSaved(data);
                 }.bind(this));
             }
         };

@@ -52,6 +52,7 @@ class ContactController extends AbstractContactController
     protected static $entityKey = 'contacts';
     protected static $accountEntityName = 'SuluContactBundle:Account';
     protected static $accountContactEntityName = 'SuluContactBundle:AccountContact';
+    protected static $titleEntityName = 'SuluContactBundle:Title';
     protected static $addressEntityName = 'SuluContactBundle:Address';
     protected static $contactAddressEntityName = 'SuluContactBundle:ContactAddress';
 
@@ -152,30 +153,97 @@ class ContactController extends AbstractContactController
      */
     public function __construct() {
         $this->fieldDescriptors = array();
-        $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor('id', 'id', self::$entityName);
-        $this->fieldDescriptors['mainPhone'] = new DoctrineFieldDescriptor('mainPhone', 'mainPhone', self::$entityName);
-        $this->fieldDescriptors['mainFax'] = new DoctrineFieldDescriptor('mainFax', 'mainFax', self::$entityName);
-        $this->fieldDescriptors['mainUrl'] = new DoctrineFieldDescriptor('mainUrl', 'mainUrl', self::$entityName);
-        $this->fieldDescriptors['mainEmail'] = new DoctrineFieldDescriptor('mainEmail', 'mainEmail', self::$entityName);
-        $this->fieldDescriptors['created'] = new DoctrineFieldDescriptor('created', 'created', self::$entityName);
-        $this->fieldDescriptors['changed'] = new DoctrineFieldDescriptor('changed', 'changed', self::$entityName);
-        $this->fieldDescriptors['disabled'] = new DoctrineFieldDescriptor('disabled', 'disabled', self::$entityName);
-        $this->fieldDescriptors['birthday'] = new DoctrineFieldDescriptor('birthday', 'birthday', self::$entityName);
-        $this->fieldDescriptors['title'] = new DoctrineFieldDescriptor('title', 'title', self::$entityName);
-        $this->fieldDescriptors['salutation'] = new DoctrineFieldDescriptor('salutation', 'salutation', self::$entityName);
-        $this->fieldDescriptors['formOfAddress'] = new DoctrineFieldDescriptor('formOfAddress', 'formOfAddress', self::$entityName);
-        $this->fieldDescriptors['firstName'] = new DoctrineFieldDescriptor('firstName', 'firstName', self::$entityName);
-        $this->fieldDescriptors['middleName'] = new DoctrineFieldDescriptor('middleName', 'middleName', self::$entityName);
-        $this->fieldDescriptors['lastName'] = new DoctrineFieldDescriptor('lastName', 'lastName', self::$entityName);
-
-        $this->fieldDescriptors['company'] = new DoctrineFieldDescriptor('name', 'company', self::$accountEntityName,
+        $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor(
+            'id',
+            'id',
+            self::$entityName
+        );
+        $this->fieldDescriptors['mainPhone'] = new DoctrineFieldDescriptor(
+            'mainPhone',
+            'mainPhone',
+            self::$entityName
+        );
+        $this->fieldDescriptors['mainFax'] = new DoctrineFieldDescriptor(
+            'mainFax',
+            'mainFax',
+            self::$entityName
+        );
+        $this->fieldDescriptors['mainUrl'] = new DoctrineFieldDescriptor(
+            'mainUrl',
+            'mainUrl',
+            self::$entityName
+        );
+        $this->fieldDescriptors['mainEmail'] = new DoctrineFieldDescriptor(
+            'mainEmail',
+            'mainEmail',
+            self::$entityName
+        );
+        $this->fieldDescriptors['created'] = new DoctrineFieldDescriptor(
+            'created',
+            'created',
+            self::$entityName
+        );
+        $this->fieldDescriptors['changed'] = new DoctrineFieldDescriptor(
+            'changed',
+            'changed',
+            self::$entityName
+        );
+        $this->fieldDescriptors['disabled'] = new DoctrineFieldDescriptor(
+            'disabled',
+            'disabled',
+            self::$entityName
+        );
+        $this->fieldDescriptors['birthday'] = new DoctrineFieldDescriptor(
+            'birthday',
+            'birthday',
+            self::$entityName
+        );
+        $this->fieldDescriptors['salutation'] = new DoctrineFieldDescriptor(
+            'salutation',
+            'salutation',
+            self::$entityName
+        );
+        $this->fieldDescriptors['formOfAddress'] = new DoctrineFieldDescriptor(
+            'formOfAddress',
+            'formOfAddress',
+            self::$entityName
+        );
+        $this->fieldDescriptors['firstName'] = new DoctrineFieldDescriptor(
+            'firstName',
+            'firstName',
+            self::$entityName
+        );
+        $this->fieldDescriptors['middleName'] = new DoctrineFieldDescriptor(
+            'middleName',
+            'middleName',
+            self::$entityName
+        );
+        $this->fieldDescriptors['lastName'] = new DoctrineFieldDescriptor(
+            'lastName',
+            'lastName',
+            self::$entityName
+        );
+        $this->fieldDescriptors['title'] = new DoctrineFieldDescriptor(
+            'title',
+            'title',
+            self::$titleEntityName,
+            array(
+                self::$titleEntityName => self::$entityName . '.title',
+            )
+        );
+        $this->fieldDescriptors['company'] = new DoctrineFieldDescriptor(
+            'name',
+            'company',
+            self::$accountEntityName,
             array(
                 self::$accountContactEntityName => self::$entityName . '.accountContacts',
                 self::$accountEntityName => self::$accountContactEntityName . '.account'
             )
         );
-
-        $this->fieldDescriptors['city'] = new DoctrineFieldDescriptor('city', 'city', self::$addressEntityName,
+        $this->fieldDescriptors['city'] = new DoctrineFieldDescriptor(
+            'city',
+            'city',
+            self::$addressEntityName,
             array(
                 self::$contactAddressEntityName => self::$entityName . '.contactAddresses',
                 self::$addressEntityName => self::$contactAddressEntityName . '.address',

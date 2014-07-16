@@ -26,11 +26,17 @@
         <div class="grid-col-6">
             <div class="form-group">
                 <label for="title"><%=translate('contact.contacts.contactTitle')%></label>
-                <input class="form-element" type="text" id="title" data-mapper-property="title" value=""/>
+                <div data-form="true"
+                     data-type="husky-select"
+                     data-aura-data="{{ titles|json_encode() }}"
+                     data-aura-component="select@husky"
+                     data-aura-instance-name="title-select"
+                     data-aura-editable="true"
+                     data-aura-value-name="title"
+                     data-mapper-property="name"></div>
             </div>
         </div>
     </div>
-
     <div class="grid-row small">
         <div class="grid-col-6">
             <div class="form-group">
@@ -58,7 +64,13 @@
         <div class="grid-col-6">
             <div class="form-group">
                 <label for="position"><%=translate('contact.contacts.position')%></label>
-                <input class="form-element" type="text" id="position" data-mapper-property="position" value=""/>
+                <div data-form="true"
+                     data-type="husky-select"
+                     data-aura-data="{{ positions|json_encode() }}"
+                     data-aura-component="select@husky"
+                     data-aura-instance-name="position-select"
+                     data-aura-editable="true"
+                     data-mapper-property="name"></div>
             </div>
         </div>
     </div>
