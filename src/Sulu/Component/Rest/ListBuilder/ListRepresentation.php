@@ -16,13 +16,52 @@ use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\XmlAttribute;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use Hateoas\Configuration\Annotation\Relation;
+use Hateoas\Configuration\Annotation\Route;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptor\AbstractFieldDescriptor;
 
 /**
  * This class represents a list for our common rest services
  * @package Sulu\Component\Rest\ListBuilder
  * @ExclusionPolicy("all")
- * @Relation("sortable", href = "expr(object.getSortableFields())")
+ * @Relation(
+ *      "all",
+ *      href = @Route(
+ *          "expr(object.getRoute())",
+ *          absolute = "expr(object.isAbsolute())"
+ *      )
+ * )
+ * @Relation(
+ *      "filter",
+ *      href = @Route(
+ *          "expr(object.getRoute())",
+ *          parameters = "expr(object.getParameters() + { fields: '{fieldsList}' })",
+ *          absolute = "expr(object.isAbsolute())"
+ *      )
+ * )
+ * @Relation(
+ *      "find",
+ *      href = @Route(
+ *          "expr(object.getRoute())",
+ *          parameters = "expr(object.getParameters() + { fields: '{searchString}{&searchFields}' })",
+ *          absolute = "expr(object.isAbsolute())"
+ *      )
+ * )
+ * @Relation(
+ *      "pagination",
+ *      href = @Route(
+ *          "expr(object.getRoute())",
+ *          parameters = "expr(object.getParameters() + { page: '{page}', pageSize: '{pageSize}' })",
+ *          absolute = "expr(object.isAbsolute())"
+ *      )
+ * )
+ * @Relation(
+ *      "sortable",
+ *      href = @Route(
+ *          "expr(object.getRoute())",
+ *          parameters = "expr(object.getParameters() + { sortBy: '{sortBy}', sortOrder: '{sortOrder}' })",
+ *          absolute = "expr(object.isAbsolute())"
+ *      )
+ * )
  */
 class ListRepresentation extends PaginatedRepresentation
 {
@@ -63,23 +102,4 @@ class ListRepresentation extends PaginatedRepresentation
         $this->fieldDescriptors = $fieldDescriptors;
         $this->total = $total;
     }
-
-    /**
-     * Returns the links for sortable fields
-     * @return array
-     */
-    public function getSortableFields()
-    {
-        $sortableFields = array();
-
-        if (!empty($this->fieldDescriptors)) {
-            foreach ($this->fieldDescriptors as $fieldDescriptor) {
-                if ($fieldDescriptor->getSortable()) {
-                    $sortableFields[$fieldDescriptor->getName()] = 'link';
-                }
-            }
-        }
-
-        return $sortableFields;
-    }
-} 
+}
