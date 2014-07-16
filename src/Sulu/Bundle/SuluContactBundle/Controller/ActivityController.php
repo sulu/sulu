@@ -29,6 +29,7 @@ use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Component\Rest\ListBuilder\DoctrineListBuilderFactory;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptor\DoctrineFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\FieldDescriptor\DoctrineJoinDescriptor;
 
 /**
  * Makes activities available through a REST API
@@ -79,21 +80,30 @@ class ActivityController extends RestController implements ClassResourceInterfac
         $this->fieldDescriptors['activityStatus'] = new DoctrineFieldDescriptor(
             'name', 'activityStatus', self::$activityStatusEntityName,
             array(
-                self::$activityStatusEntityName => self::$entityName . '.activityStatus'
+                self::$activityStatusEntityName => new DoctrineJoinDescriptor(
+                        self::$activityStatusEntityName,
+                        self::$entityName . '.activityStatus'
+                    )
             )
         );
 
         $this->fieldDescriptors['activityPriority'] = new DoctrineFieldDescriptor(
             'name', 'activityPriority', self::$activityPriorityEntityName,
             array(
-                self::$activityPriorityEntityName => self::$entityName . '.activityPriority'
+                self::$activityPriorityEntityName => new DoctrineJoinDescriptor(
+                        self::$activityPriorityEntityName,
+                        self::$entityName . '.activityPriority'
+                    )
             )
         );
 
         $this->fieldDescriptors['activityType'] = new DoctrineFieldDescriptor(
             'name', 'activityType', self::$activityTypeEntityName,
             array(
-                self::$activityTypeEntityName => self::$entityName . '.activityType'
+                self::$activityTypeEntityName => new DoctrineJoinDescriptor(
+                        self::$activityTypeEntityName,
+                        self::$entityName . '.activityType'
+                    )
             )
         );
 
@@ -101,7 +111,10 @@ class ActivityController extends RestController implements ClassResourceInterfac
         $this->fieldDescriptors['account'] = new DoctrineFieldDescriptor(
             'id', 'account', self::$accountEntityName,
             array(
-                self::$accountEntityName => self::$entityName . '.account'
+                self::$accountEntityName => new DoctrineJoinDescriptor(
+                        self::$accountEntityName,
+                        self::$entityName . '.account'
+                    )
             ),
             true
         );
@@ -110,7 +123,10 @@ class ActivityController extends RestController implements ClassResourceInterfac
         $this->fieldDescriptors['contact'] = new DoctrineFieldDescriptor(
             'id', 'contact', self::$contactEntityName . 'contact',
             array(
-                self::$contactEntityName . 'contact' => self::$entityName . '.contact'
+                self::$contactEntityName . 'contact' => new DoctrineJoinDescriptor(
+                        self::$contactEntityName . 'contact',
+                        self::$entityName . '.contact'
+                    )
             ),
             true
         );
@@ -119,7 +135,9 @@ class ActivityController extends RestController implements ClassResourceInterfac
         $this->fieldDescriptors['assignedContact'] = new DoctrineFieldDescriptor(
             'lastName', 'assignedContact', self::$contactEntityName . 'assignedContact',
             array(
-                self::$contactEntityName . 'assignedContact' => self::$entityName . '.assignedContact'
+                self::$contactEntityName . 'assignedContact' => new DoctrineJoinDescriptor(
+                        self::$contactEntityName . 'assignedContact', self::$entityName . '.assignedContact'
+                    )
             )
         );
     }
