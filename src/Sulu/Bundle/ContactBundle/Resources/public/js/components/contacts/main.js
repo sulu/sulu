@@ -97,14 +97,11 @@ define([
         removeActivities: function(ids) {
 
 //            // TODO loading
-            if (ids.length < 1) {
-                this.sandbox.emit('sulu.dialog.error.show', 'No contacts selected for Deletion');
-                return;
-            }
             this.confirmDeleteDialog(function(wasConfirmed) {
                 if (wasConfirmed) {
-                    ids.forEach(function(id) {
-                        var activity = Activity.findOrCreate({id: id});
+                    var activity;
+                    this.sandbox.util.foreach(ids, function(id) {
+                        activity = Activity.findOrCreate({id: id});
                         activity.destroy({
                             success: function() {
                                 this.sandbox.emit('sulu.contacts.contact.activity.removed', id);
@@ -116,24 +113,6 @@ define([
                     }.bind(this));
                 }
             }.bind(this));
-
-//            // TODO loading
-//            this.confirmDeleteDialog(function(wasConfirmed) {
-//                if (wasConfirmed) {
-//                    var activity;
-//                    this.sandbox.util.foreach(ids, function(id) {
-//                        activity = Activity.findOrCreate({id: id});
-//                        activity.destroy({
-//                            success: function() {
-//                                this.sandbox.emit('sulu.contacts.contact.activity.removed', id);
-//                            }.bind(this),
-//                            error: function() {
-//                                this.sandbox.logger.log("error while deleting activity");
-//                            }.bind(this)
-//                        });
-//                    }.bind(this));
-//                }
-//            }.bind(this));
         },
 
         saveActivity: function(data) {

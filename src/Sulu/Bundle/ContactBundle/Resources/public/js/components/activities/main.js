@@ -104,11 +104,6 @@ define(['text!sulucontact/components/activities/activity.form.html'], function(A
                 this.sandbox.emit('husky.datagrid.record.remove', id);
             }, this);
 
-            // todo wrong namespace?
-            this.sandbox.on('sulu.contacts.contact.activities.delete', function(ids) {
-                this.sandbox.emit('sulu.contacts.' + this.instanceName + '.activities.delete', ids);
-            }, this);
-
             // set data in overlay
             this.sandbox.on('husky.overlay.activity-add-edit.opened', function() {
                 // start components in overlay
@@ -254,7 +249,7 @@ define(['text!sulucontact/components/activities/activity.form.html'], function(A
             this.sandbox.sulu.initListToolbarAndList.call(this, 'activitiesContactsFields', '/admin/api/activities/fields',
                 {
                     el: this.$find('#list-toolbar-container'),
-                    instanceName: 'activities-toolbar',
+                    instanceName: 'activities123-toolbar',
                     inHeader: true,
                     template: listTemplate.call(this)
                 },
@@ -280,7 +275,7 @@ define(['text!sulucontact/components/activities/activity.form.html'], function(A
         removeActivities: function() {
             this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
                 if (ids.length > 0) {
-                    this.sandbox.emit('sulu.contacts.contact.activities.delete', ids);
+                    this.sandbox.emit('sulu.contacts.'+this.instanceName+'.activities.delete', ids);
                 }
             }.bind(this));
         }
