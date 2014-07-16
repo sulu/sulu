@@ -3,8 +3,10 @@
 namespace Sulu\Bundle\ContactBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sulu\Component\Rest\RestController;
+use Hateoas\Representation\CollectionRepresentation;
 
-class TemplateController extends Controller
+class TemplateController extends RestController
 {
 
     /**
@@ -31,8 +33,13 @@ class TemplateController extends Controller
      */
     public function contactFormAction()
     {
+        $titleEntity = 'SuluContactBundle:Title';
+        $titles = $this->getDoctrine()->getRepository($titleEntity)->findAll();
+
         $data = $this->getRenderArray();
         $data['form_of_address'] = [];
+        $data['titles'] = $titles;
+        $data['positions'] = [];
         foreach ($this->container->getParameter('sulu_contact.form_of_address') as $el) {
             $data['form_of_address'][] = $el;
         }
