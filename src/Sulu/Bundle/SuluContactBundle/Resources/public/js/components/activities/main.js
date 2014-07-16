@@ -90,8 +90,13 @@ define(['text!sulucontact/components/activities/activity.form.html'], function(A
             }, this);
 
             // add new activity
-            this.sandbox.on('sulu.contacts.' + this.instanceName + '.activity.saved', function() {
-                this.sandbox.emit('husky.datagrid.update');
+            this.sandbox.on('sulu.contacts.' + this.instanceName + '.activity.added', function(model) {
+                this.sandbox.emit('husky.datagrid.record.add',model);
+            }, this);
+
+            // update activity
+            this.sandbox.on('sulu.contacts.' + this.instanceName + '.activity.updated', function(model) {
+                this.sandbox.emit('husky.datagrid.records.change',model);
             }, this);
 
             // remove record from datagrid

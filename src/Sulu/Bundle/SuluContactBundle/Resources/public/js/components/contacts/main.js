@@ -80,12 +80,12 @@ define([
          * Parses and translates defaults for acitivties
          * @param defaults
          */
-        parseActivityDefaults: function(defaults){
+        parseActivityDefaults: function(defaults) {
             var el, sub;
-            for(el in defaults){
-                if(defaults.hasOwnProperty(el)) {
-                    for(sub in defaults[el]){
-                        if(defaults[el].hasOwnProperty(sub)) {
+            for (el in defaults) {
+                if (defaults.hasOwnProperty(el)) {
+                    for (sub in defaults[el]) {
+                        if (defaults[el].hasOwnProperty(sub)) {
                             defaults[el][sub].translation = this.sandbox.translate(defaults[el][sub].name);
                         }
                     }
@@ -94,14 +94,17 @@ define([
             this.activityDefaults = defaults;
         },
 
-        removeActivities: function(ids){
+        removeActivities: function(ids) {
 
-            // TODO loading
+//            // TODO loading
+            if (ids.length < 1) {
+                this.sandbox.emit('sulu.dialog.error.show', 'No contacts selected for Deletion');
+                return;
+            }
             this.confirmDeleteDialog(function(wasConfirmed) {
                 if (wasConfirmed) {
-                    var activity;
-                    this.sandbox.util.foreach(ids, function(id) {
-                        activity = Activity.findOrCreate({id: id});
+                    ids.forEach(function(id) {
+                        var activity = Activity.findOrCreate({id: id});
                         activity.destroy({
                             success: function() {
                                 this.sandbox.emit('sulu.contacts.contact.activity.removed', id);
@@ -113,9 +116,32 @@ define([
                     }.bind(this));
                 }
             }.bind(this));
+
+//            // TODO loading
+//            this.confirmDeleteDialog(function(wasConfirmed) {
+//                if (wasConfirmed) {
+//                    var activity;
+//                    this.sandbox.util.foreach(ids, function(id) {
+//                        activity = Activity.findOrCreate({id: id});
+//                        activity.destroy({
+//                            success: function() {
+//                                this.sandbox.emit('sulu.contacts.contact.activity.removed', id);
+//                            }.bind(this),
+//                            error: function() {
+//                                this.sandbox.logger.log("error while deleting activity");
+//                            }.bind(this)
+//                        });
+//                    }.bind(this));
+//                }
+//            }.bind(this));
         },
 
-        saveActivity: function(data){
+        saveActivity: function(data) {
+
+            var isNew = true;
+            if (!!data.id) {
+                isNew = false;
+            }
 
             // TODO loading icon
             this.activity = Activity.findOrCreate({id: data.id});
@@ -123,13 +149,37 @@ define([
             this.activity.save(null, {
                 // on success save contacts id
                 success: function(response) {
-                    this.activity = response;
-                    this.sandbox.emit('sulu.contacts.contact.activity.saved', response.toJSON());
+                    this.activity = this.flattenActivityObjects(response.toJSON());
+
+                    if (!!isNew) {
+                        this.sandbox.emit('sulu.contacts.contact.activity.added', this.activity);
+                    } else {
+                        this.sandbox.emit('sulu.contacts.contact.activity.updated', this.activity);
+                    }
+
                 }.bind(this),
                 error: function() {
                     this.sandbox.logger.log("error while saving activity");
                 }.bind(this)
             });
+        },
+
+        /**
+         * Flattens type/status/priority
+         * @param activity
+         */
+        flattenActivityObjects: function(activity){
+            if(!!activity.activityStatus){
+                activity.activityStatus = this.sandbox.translate(activity.activityStatus.name);
+            }
+            if(!!activity.activityType){
+                activity.activityType = this.sandbox.translate(activity.activityType.name);
+            }
+            if(!!activity.activityPriority){
+                activity.activityPriority = this.sandbox.translate(activity.activityPriority.name);
+            }
+
+            return activity;
         },
 
         loadActivity: function(id) {
@@ -141,7 +191,7 @@ define([
                         this.activity = model;
                         this.sandbox.emit('sulu.contacts.contact.activity.loaded', model.toJSON());
                     }.bind(this),
-                    error: function(e1,e2) {
+                    error: function(e1, e2) {
                         this.sandbox.logger.log('error while fetching activity', e1, e2);
                     }.bind(this)
                 });
@@ -248,7 +298,7 @@ define([
             }
         },
 
-        renderActivities: function(){
+        renderActivities: function() {
 
             var $list;
 
@@ -266,7 +316,7 @@ define([
                 this.getSystemMembers();
 
                 // start component when contact and system members are loaded
-                this.sandbox.data.when(this.dfdContact,this.dfdSystemContacts).then(function(){
+                this.sandbox.data.when(this.dfdContact, this.dfdSystemContacts).then(function() {
                     this.sandbox.start([
                         {name: 'activities@sulucontact', options: { el: $list, contact: this.contact.toJSON(), responsiblePersons: this.responsiblePersons, instanceName: 'contact'}}
                     ]);
@@ -280,7 +330,7 @@ define([
         /**
          * loads contact by id
          */
-        getContact: function(id){
+        getContact: function(id) {
             this.contact = new Contact({id: id});
             this.contact.fetch({
                 success: function(model) {
@@ -296,7 +346,7 @@ define([
         /**
          * loads system members
          */
-        getSystemMembers: function(){
+        getSystemMembers: function() {
             this.sandbox.util.load('api/contacts?bySystem=true')
                 .then(function(response) {
                     this.responsiblePersons = response._embedded;
