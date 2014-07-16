@@ -24,7 +24,7 @@ class DoctrineConcatenationFieldDescriptorTest extends \PHPUnit_Framework_TestCa
         );
 
         $this->assertEquals(
-            'CONCAT(CONCAT(TestEntity1.test1, CONCAT(\' \', TestEntity2.test2), CONCAT(\' \', TestEntity3.test3)',
+            'CONCAT(CONCAT(TestEntity1.test1, CONCAT(\' \', TestEntity2.test2)), CONCAT(\' \', TestEntity3.test3))',
             $doctrineConcatenationFieldDescriptor->getSelect()
         );
     }
@@ -42,7 +42,7 @@ class DoctrineConcatenationFieldDescriptorTest extends \PHPUnit_Framework_TestCa
         );
 
         $this->assertEquals(
-            'CONCAT(CONCAT(TestEntity1.test1, CONCAT(\', \', TestEntity2.test2), CONCAT(\', \', TestEntity3.test3)',
+            'CONCAT(CONCAT(TestEntity1.test1, CONCAT(\', \', TestEntity2.test2)), CONCAT(\', \', TestEntity3.test3))',
             $doctrineConcatenationFieldDescriptor->getSelect()
         );
     }
