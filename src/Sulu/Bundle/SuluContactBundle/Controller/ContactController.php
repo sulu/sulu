@@ -38,6 +38,8 @@ use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Rest\ListBuilder\DoctrineListBuilderFactory;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptor\DoctrineFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\FieldDescriptor\DoctrineJoinDescriptor;
+
 
 /**
  * Makes contacts available through a REST API
@@ -228,7 +230,10 @@ class ContactController extends AbstractContactController
             'title',
             self::$titleEntityName,
             array(
-                self::$titleEntityName => self::$entityName . '.title',
+                self::$titleEntityName => new DoctrineJoinDescriptor(
+                    self::$titleEntityName,
+                    self::$entityName . '.title'
+                )
             )
         );
         $this->fieldDescriptors['company'] = new DoctrineFieldDescriptor(
