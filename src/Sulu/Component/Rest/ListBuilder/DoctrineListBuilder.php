@@ -12,6 +12,7 @@ namespace Sulu\Component\Rest\ListBuilder;
 
 use Doctrine\ORM\EntityManager;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptor\DoctrineFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\FieldDescriptor\DoctrineJoinDescriptor;
 
 class DoctrineListBuilder extends AbstractListBuilder
 {
@@ -88,7 +89,7 @@ class DoctrineListBuilder extends AbstractListBuilder
 
     /**
      * Returns all the joins required for the query
-     * @return array
+     * @return DoctrineJoinDescriptor[]
      */
     private function getJoins()
     {
@@ -122,7 +123,24 @@ class DoctrineListBuilder extends AbstractListBuilder
             ->from($this->entityName, $this->entityName);
 
         foreach ($this->getJoins() as $entity => $join) {
-            $qb->leftJoin($join, $entity);
+            switch ($join->getJoinMethod()) {
+                case DoctrineJoinDescriptor::JOIN_METHOD_LEFT:
+                    $qb->leftJoin(
+                        $join->getJoin(),
+                        $entity,
+                        $join->getJoinConditionMethod(),
+                        $join->getJoinCondition()
+                    );
+                    break;
+                case DoctrineJoinDescriptor::JOIN_METHOD_INNER:
+                    $qb->innerJoin(
+                        $join->getJoin(),
+                        $entity,
+                        $join->getJoinConditionMethod(),
+                        $join->getJoinCondition()
+                    );
+                    break;
+            }
         }
 
         if (!empty($this->whereFields)) {
