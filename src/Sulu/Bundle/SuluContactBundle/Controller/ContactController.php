@@ -212,7 +212,7 @@ class ContactController extends AbstractContactController
         if ($request->get('flat') == 'true') {
 
             /** @var RestHelperInterface $restHelper */
-            $restHelper = $this->get('sulu_core.doctrine_rest_helper');
+            $restHelper = $this->getRestHelper();
 
             /** @var DoctrineListBuilderFactory $factory */
             $factory = $this->get('sulu_core.doctrine_list_builder_factory');
@@ -525,13 +525,13 @@ class ContactController extends AbstractContactController
                 }
 
                 // process details
-                if (!($this->processEmails($contact, $request->get('emails'))
-                    && $this->processPhones($contact, $request->get('phones'))
-                    && $this->processAddresses($contact, $request->get('addresses'))
-                    && $this->processNotes($contact, $request->get('notes'))
-                    && $this->processFaxes($contact, $request->get('faxes'))
-                    && $this->processTags($contact, $request->get('tags'))
-                    && $this->processUrls($contact, $request->get('urls')))
+                if (!($this->processEmails($contact, $request->get('emails', array()))
+                    && $this->processPhones($contact, $request->get('phones'), array())
+                    && $this->processAddresses($contact, $request->get('addresses'), array())
+                    && $this->processNotes($contact, $request->get('notes', array()))
+                    && $this->processFaxes($contact, $request->get('faxes', array()))
+                    && $this->processTags($contact, $request->get('tags', array()))
+                    && $this->processUrls($contact, $request->get('urls', array())))
                 ) {
                     throw new RestException('Updating dependencies is not possible', 0);
                 }
