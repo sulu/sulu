@@ -63,97 +63,6 @@ class AccountController extends AbstractContactController
     /**
      * {@inheritdoc}
      */
-    protected $unsortable = array('lft', 'rgt', 'depth', 'city', 'mainContact');
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $fieldsDefault = array('name');
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $fieldsExcluded = array('lft', 'rgt', 'depth', 'externalId');
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $fieldsHidden = array(
-        'id',
-        'created',
-        'changed',
-        'type',
-        'disabled',
-        'uid',
-        'registerNumber',
-        'placeOfJurisdiction',
-        'mainUrl',
-        'mainFax',
-    );
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $fieldsRelations = array(
-        'city'
-    );
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $fieldsSortOrder = array(
-        0 => 'number',
-        1 => 'name',
-        2 => 'corporation',
-        5 => 'city',
-        6 => 'mainContact',
-        7 => 'mainPhone',
-        8 => 'mainEmail',
-    );
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $fieldsTranslationKeys = array(
-        'id' => 'public.id',
-        'disabled' => 'public.deactivate',
-        'mainEmail' => 'public.email',
-        'mainPhone' => 'public.phone',
-        'mainUrl' => 'public.url',
-        'mainFax' => 'public.fax',
-        'city' => 'contact.address.city',
-        'mainContact' => 'contact.contacts.main-contact',
-    );
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $fieldsEditable = array();
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $fieldsValidation = array();
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $fieldsWidth = array(
-        'type' => '150px',
-        'number' => '90px',
-        'name' => '300px',
-    );
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $fieldsMinWidth = array(
-        'name' => '150px',
-    );
-
-    /**
-     * {@inheritdoc}
-     */
     protected $bundlePrefix = 'contact.accounts.';
 
     /**
@@ -215,14 +124,16 @@ class AccountController extends AbstractContactController
         $this->fieldDescriptors['mainContact'] = new DoctrineFieldDescriptor('lastName', 'mainContact', self::$contactEntityName,
             array(
                 self::$contactEntityName => new DoctrineJoinDescriptor(self::$contactEntityName, self::$entityName . '.mainContact')
-            )
+            ),
+            false, false, '', '', '', false, 'contact.contacts.main-contact'
         );
 
         $this->fieldDescriptors['city'] = new DoctrineFieldDescriptor('city', 'city', self::$addressEntityName,
             array(
                 self::$accountAddressEntityName => new DoctrineJoinDescriptor(self::$accountAddressEntityName, self::$entityName . '.accountAddresses', self::$accountAddressEntityName . '.main = true', 'LEFT'),
                 self::$addressEntityName => new DoctrineJoinDescriptor(self::$addressEntityName, self::$accountAddressEntityName . '.address')
-            )
+            ),
+            false, false, '', '50px', '', false, 'contact.address.city'
         );
     }
 
