@@ -10,13 +10,13 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\Exception;
 
-use Sulu\Component\Rest\Exception\RestException;
+use Exception;
 
 /**
  * This Exception is thrown when a Uploaded File is not valid
  * @package Sulu\Bundle\MediaBundle\Media\Exception
  */
-class MediaException extends RestException
+class MediaException extends Exception
 {
     /**
      * @var int
@@ -46,7 +46,7 @@ class MediaException extends RestException
      * @var int
      * @description this exception code is thrown when the file type is not supported
      */
-    const EXCEPTION_COLLECTION_NOT_FOUND = 5005;
+    const EXCEPTION_CODE_COLLECTION_NOT_FOUND = 5005;
 
     /**
      * @var int
@@ -101,4 +101,30 @@ class MediaException extends RestException
      * @description the configured format options are invalid
      */
     const EXCEPTION_CODE_IMAGE_PROXY_INVALID_FORMAT_OPTIONS = 5014;
+
+    /**
+     * @var int
+     * @description the media was not found
+     */
+    const EXCEPTION_CODE_MEDIA_NOT_FOUND = 5015;
+
+    /**
+     * @var int
+     * @description the collection type was not found
+     */
+    const EXCEPTION_CODE_COLLECTION_TYPE_NOT_FOUND = 5016;
+
+    /**
+     * @var int
+     * @description the media type was not found
+     */
+    const EXCEPTION_CODE_MEDIA_TYPE_NOT_FOUND = 5017;
+
+    public function toArray()
+    {
+        return array(
+            'code' => $this->code,
+            'message' => $this->message
+        );
+    }
 }

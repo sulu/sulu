@@ -11,3 +11,4 @@
 # IDEs
 .idea/*
 *.iml
+*.IGNORE
