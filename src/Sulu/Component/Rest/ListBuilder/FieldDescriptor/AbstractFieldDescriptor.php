@@ -76,6 +76,13 @@ abstract class AbstractFieldDescriptor
      */
     private $minWidth;
 
+    /**
+     * Defines whether the field is editable in the table or not
+     * @var boolean
+     * @Expose
+     */
+    private $editable;
+
     public function __construct(
         $name,
         $disabled = false,
@@ -84,6 +91,7 @@ abstract class AbstractFieldDescriptor
         $type = '',
         $width = '',
         $minWidth = '',
+        $editable = false,
         $translation = null
     )
     {
@@ -94,6 +102,7 @@ abstract class AbstractFieldDescriptor
         $this->type = $type;
         $this->width = $width;
         $this->minWidth = $minWidth;
+        $this->editable = $editable;
         $this->translation = $translation == null ? $name : $translation;
     }
 
@@ -151,20 +160,26 @@ abstract class AbstractFieldDescriptor
     }
 
     /**
-     * Returns the minimal width for the field
-     * @return string
-     */
-    public function getMinWidth()
-    {
-        return $this->minWidth;
-    }
-
-    /**
-     * Returns whether the field is sortable or not
      * @return boolean
      */
     public function getSortable()
     {
         return $this->sortable;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getEditable()
+    {
+        return $this->editable;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMinWidth()
+    {
+        return $this->minWidth;
     }
 } 
