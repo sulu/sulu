@@ -28657,7 +28657,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          */
         destroy: function() {
             this.unbindDomEvents();
-            this.sandbox.stop(this.sandbox.dom.find('*', this.$tableContainer));
+            //this.sandbox.stop(this.sandbox.dom.find('*', this.$tableContainer));
             // remove full-width class if configured
             if (this.options.fullWidth === true) {
                 this.sandbox.dom.removeClass(this.$el, constants.fullWidthClass);
@@ -28919,7 +28919,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
 
                     if (!!this.datagrid.data.links && !!this.data.links.sortable) {
                         //is column sortable - check with received sort-links
-                        this.sandbox.util.each(this.data.links.sortable, function(index) {
+                        this.sandbox.util.each(this.data.links.sortable.href, function(index) {
                             if (index === column.attribute) {
                                 isSortable = true;
                                 return false;
@@ -30640,7 +30640,7 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                     if (item.id === 0) {
                         // only if not already all are shown
                         if (this.data.embedded.length !== this.data.total) {
-                            this.datagrid.changePage.call(this.datagrid, this.data.links.all);
+                            this.datagrid.changePage.call(this.datagrid, this.data.links.all.href);
                         }
                     } else {
                         // always jump to the first page
@@ -30674,7 +30674,7 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
          */
         nextPage: function() {
             if (!!this.data.links.next) {
-                this.datagrid.changePage.call(this.datagrid, this.data.links.next);
+                this.datagrid.changePage.call(this.datagrid, this.data.links.next.href);
             }
         },
 
@@ -30682,8 +30682,8 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
          * Triggers a page change to the previous page
          */
         prevPage: function() {
-            if (!!this.data.links.prev) {
-                this.datagrid.changePage.call(this.datagrid, this.data.links.prev);
+            if (!!this.data.links.previous) {
+                this.datagrid.changePage.call(this.datagrid, this.data.links.previous.href);
             }
         },
 
@@ -30975,7 +30975,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
          */
         showAll: function() {
             if (typeof this.options.showAllHandler !== 'function') {
-                this.datagrid.changePage.call(this.datagrid, this.data.links.all);
+                this.datagrid.changePage.call(this.datagrid, this.data.links.all.href);
             } else {
                 this.options.showAllHandler();
             }
@@ -31998,7 +31998,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * Returns url without params
              */
             getUrlWithoutParams: function() {
-                var url = this.data.links.self;
+                var url = this.data.links.self.href;
 
                 if (url.indexOf('?') !== -1) {
                     return url.substring(0, url.indexOf('?'));
@@ -32338,7 +32338,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * @param limit {Number} new page size. Has to be set if no Uri is passed
              */
             changePage: function(uri, page, limit) {
-                if (!!this.data.links.pagination) {
+                if (!!this.data.links.pagination || !!uri) {
                     var url, uriTemplate;
 
                     // if a url is passed load the data from this url
@@ -32358,7 +32358,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
                         }
 
                         // generate uri for loading
-                        uriTemplate = this.sandbox.uritemplate.parse(this.data.links.pagination);
+                        uriTemplate = this.sandbox.uritemplate.parse(this.data.links.pagination.href);
                         url = this.sandbox.uritemplate.expand(uriTemplate, {page: page, limit: limit});
                     }
 
@@ -32380,7 +32380,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
                     this.resetSortingOptions();
 
                     this.load({
-                        url: this.data.links.self,
+                        url: this.data.links.self.href,
                         success: function() {
                             this.sandbox.emit(UPDATED.call(this));
                         }.bind(this)
@@ -32400,7 +32400,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
 
                     this.filterMatchings(matchings);
 
-                    uriTemplate = this.sandbox.uritemplate.parse(this.data.links.filter);
+                    uriTemplate = this.sandbox.uritemplate.parse(this.data.links.filter.href);
                     url = this.sandbox.uritemplate.expand(uriTemplate, {fieldsList: this.requestFields.join(',')});
 
                     this.destroy();
@@ -32421,16 +32421,16 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * @param direction {String} the sort method to use 'asc' or 'desc'
              */
             sortGrid: function(attribute, direction) {
-                if (this.options.sortable === true && !!this.data.links.sortable[attribute]) {
+                if (this.options.sortable === true && !!this.data.links.sortable.href[attribute]) {
                     var template, url;
 
                     // if passed attribute is sortable
-                    if (!!attribute && !!this.data.links.sortable[attribute]) {
+                    if (!!attribute && !!this.data.links.sortable.href[attribute]) {
 
                         this.sort.attribute = attribute;
                         this.sort.direction = direction;
 
-                        template = this.sandbox.uritemplate.parse(this.data.links.sortable[attribute]);
+                        template = this.sandbox.uritemplate.parse(this.data.links.sortable.href[attribute]);
                         url = this.sandbox.uritemplate.expand(template, {sortOrder: direction});
 
                         this.sandbox.emit(DATA_SORT.call(this));
@@ -32451,7 +32451,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              */
             loadChildren: function(recordId) {
                 if (!!this.data.links.children) {
-                    var template = this.sandbox.uritemplate.parse(this.data.links.children),
+                    var template = this.sandbox.uritemplate.parse(this.data.links.children.href),
                         url = this.sandbox.uritemplate.expand(template, {parentId: recordId});
 
                     this.sandbox.util.load(this.getUrl({url: url}))
@@ -32473,7 +32473,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
                 if (!!this.data.links.find) {
                     var template, url;
 
-                    template = this.sandbox.uritemplate.parse(this.data.links.find);
+                    template = this.sandbox.uritemplate.parse(this.data.links.find.href);
                     url = this.sandbox.uritemplate.expand(template, {searchString: searchString, searchFields: searchFields});
 
                     this.destroy();
