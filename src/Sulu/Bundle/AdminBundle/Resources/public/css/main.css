@@ -92,7 +92,7 @@ input, select {
 }
 /* line 47, ../scss/modules/layout.scss */
 .content-column #content.no-top-space {
-  margin-top: -40px;
+  padding-top: 0;
 }
 /* line 52, ../scss/modules/layout.scss */
 .content-column .sulu-app-shrink {
