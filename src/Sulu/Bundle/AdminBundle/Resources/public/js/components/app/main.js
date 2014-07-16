@@ -23,7 +23,8 @@ define(function() {
             noRightSpaceClass: 'no-right-space',
             noTopSpaceClass: 'no-top-space',
             shrinkIcon: 'fa-chevron-left',
-            expandIcon: 'fa-chevron-right'
+            expandIcon: 'fa-chevron-right',
+            noTransitionsClass: 'no-transitions'
         },
 
         templates = {
@@ -274,6 +275,9 @@ define(function() {
             // change user locale
             this.sandbox.on('husky.navigation.user-locale.changed', this.changeUserLocale.bind(this));
 
+            // route to the form of the current user
+            this.sandbox.on('husky.navigation.username.clicked', this.routeToUserForm.bind(this));
+
             // change user locale
             this.sandbox.on(CHANGE_USER_LOCALE.call(this), this.changeUserLocale.bind(this));
 
@@ -305,6 +309,7 @@ define(function() {
          */
         toggleShrinkColumn: function() {
             var $column = this.sandbox.dom.find(constants.columnSelector);
+            this.sandbox.dom.removeClass(this.$el, constants.noTransitionsClass);
             if (this.sandbox.dom.hasClass($column, constants.smallFixedClass)) {
                 // expand
                 this.sandbox.emit('husky.navigation.show');
@@ -329,6 +334,7 @@ define(function() {
          * @param {Boolean} topSpacing false for no spacing top
          */
         changeSpacing: function(leftSpacing, rightSpacing, topSpacing) {
+            this.sandbox.dom.addClass(this.$el, constants.noTransitionsClass);
             // left space
             if (leftSpacing === false) {
                 this.sandbox.dom.addClass(this.$el, constants.noLeftSpaceClass);
@@ -356,6 +362,7 @@ define(function() {
          * @param width {String} the new type of width to apply to the content. 'fixed' or 'max'
          */
         changeWidth: function(width) {
+            this.sandbox.dom.removeClass(this.$el, constants.noTransitionsClass);
             if (width === 'fixed') {
                 this.changeToFixedWidth(false);
             } else if (width === 'max') {
@@ -422,6 +429,14 @@ define(function() {
                     this.sandbox.dom.window.location.reload();
                 }.bind(this)
             });
+        },
+
+        /**
+         * Routes to the form of the user
+         */
+        routeToUserForm: function() {
+            //Todo: don't use hardcoded url
+            this.navigate('contacts/contacts/edit:'+ this.sandbox.sulu.user.id +'/details', true, false);
         },
 
         /**

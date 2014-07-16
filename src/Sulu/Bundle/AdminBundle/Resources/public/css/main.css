@@ -83,11 +83,18 @@ input, select {
 .content-column #content.no-right-space {
   padding-right: 0;
 }
-/* line 43, ../scss/modules/layout.scss */
+/* line 42, ../scss/modules/layout.scss */
+.content-column #content.no-transitions {
+  -webkit-transition: none;
+  -moz-transition: none;
+  -o-transition: none;
+  transition: none;
+}
+/* line 47, ../scss/modules/layout.scss */
 .content-column #content.no-top-space {
   margin-top: -40px;
 }
-/* line 48, ../scss/modules/layout.scss */
+/* line 52, ../scss/modules/layout.scss */
 .content-column .sulu-app-shrink {
   position: absolute;
   top: 0px;
@@ -104,52 +111,52 @@ input, select {
   font-size: 20px;
   line-height: 32px;
 }
-/* line 63, ../scss/modules/layout.scss */
+/* line 67, ../scss/modules/layout.scss */
 .content-column .sulu-app-shrink .fa-chevron-right {
   padding-left: 3px;
 }
-/* line 66, ../scss/modules/layout.scss */
+/* line 70, ../scss/modules/layout.scss */
 .content-column .sulu-app-shrink .fa-chevron-left {
   padding-right: 3px;
 }
-/* line 71, ../scss/modules/layout.scss */
+/* line 75, ../scss/modules/layout.scss */
 .content-column.max {
   float: none;
   width: auto;
 }
-/* line 76, ../scss/modules/layout.scss */
+/* line 80, ../scss/modules/layout.scss */
 .content-column.fixed {
   width: 900px;
   float: left;
 }
-/* line 80, ../scss/modules/layout.scss */
+/* line 84, ../scss/modules/layout.scss */
 .content-column.fixed.small-fixed {
   width: 480px;
 }
-/* line 82, ../scss/modules/layout.scss */
+/* line 86, ../scss/modules/layout.scss */
 .content-column.fixed.small-fixed #content {
   padding-left: 10px;
   padding-right: 10px;
 }
 
-/* line 90, ../scss/modules/layout.scss */
+/* line 94, ../scss/modules/layout.scss */
 .sidebar-column {
   height: 100%;
   overflow: hidden;
   z-index: 101;
   position: relative;
 }
-/* line 96, ../scss/modules/layout.scss */
+/* line 100, ../scss/modules/layout.scss */
 .sidebar-column.fixed {
   width: 450px;
   float: right;
 }
-/* line 101, ../scss/modules/layout.scss */
+/* line 105, ../scss/modules/layout.scss */
 .sidebar-column.max {
   float: none;
   width: auto;
 }
-/* line 106, ../scss/modules/layout.scss */
+/* line 110, ../scss/modules/layout.scss */
 .sidebar-column.hidden {
   width: 0;
   height: 0;
@@ -157,45 +164,45 @@ input, select {
 }
 
 @media only screen and (max-width: 1010px) {
-  /* line 120, ../scss/modules/layout.scss */
+  /* line 124, ../scss/modules/layout.scss */
   .sidebar-column.fixed {
     width: 0;
     height: 0;
   }
 }
 @media only screen and (max-width: 1200px) {
-  /* line 133, ../scss/modules/layout.scss */
+  /* line 137, ../scss/modules/layout.scss */
   .has-visible-sidebar .content-column.fixed {
     width: 690px;
   }
 }
 @media only screen and (max-width: 990px) {
-  /* line 139, ../scss/modules/layout.scss */
+  /* line 143, ../scss/modules/layout.scss */
   .has-visible-sidebar .content-column.fixed {
     width: 480px;
   }
 }
 @media only screen and (max-width: 780px) {
-  /* line 145, ../scss/modules/layout.scss */
+  /* line 149, ../scss/modules/layout.scss */
   .sidebar-column.max {
     width: 0;
     height: 0;
   }
 
-  /* line 150, ../scss/modules/layout.scss */
+  /* line 154, ../scss/modules/layout.scss */
   .has-visible-sidebar .content-column.fixed {
     float: none;
     width: auto;
     max-width: 900px;
   }
 
-  /* line 157, ../scss/modules/layout.scss */
+  /* line 161, ../scss/modules/layout.scss */
   .sulu-app-shrink {
     display: none;
   }
 }
 @media only screen and (max-width: 950px) {
-  /* line 169, ../scss/modules/layout.scss */
+  /* line 173, ../scss/modules/layout.scss */
   .has-no-visible-sidebar .content-column.fixed {
     float: none;
     width: auto;
@@ -362,14 +369,16 @@ input, select {
 }
 /* line 96, ../scss/modules/header.scss */
 .sulu-header + #content {
-  padding-top: 190px;
+  margin-top: 150px;
+  padding-bottom: 190px;
 }
-/* line 99, ../scss/modules/header.scss */
+/* line 100, ../scss/modules/header.scss */
 .sulu-header.has-tabs + #content {
-  padding-top: 240px;
+  margin-top: 200px;
+  padding-bottom: 240px;
 }
 
-/* line 104, ../scss/modules/header.scss */
+/* line 106, ../scss/modules/header.scss */
 .sulu-header-background {
   position: absolute;
   top: 0px;
@@ -378,22 +387,22 @@ input, select {
   height: 150px;
   width: 100%;
 }
-/* line 111, ../scss/modules/header.scss */
+/* line 113, ../scss/modules/header.scss */
 .sulu-header-background.has-tabs {
   height: 200px;
   border-bottom: 50px solid white;
 }
 
-/* line 118, ../scss/modules/header.scss */
+/* line 120, ../scss/modules/header.scss */
 .small-fixed .sulu-header .inner {
   margin-left: 10px;
   margin-right: 10px;
 }
-/* line 122, ../scss/modules/header.scss */
+/* line 124, ../scss/modules/header.scss */
 .small-fixed .tabs-container {
   padding-left: 10px;
 }
-/* line 125, ../scss/modules/header.scss */
+/* line 127, ../scss/modules/header.scss */
 .small-fixed .sulu-header .back {
   opacity: 0;
 }
