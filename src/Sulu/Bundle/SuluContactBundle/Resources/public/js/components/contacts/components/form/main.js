@@ -388,11 +388,28 @@ define([], function() {
             },
 
             titleDeleted: function(indexes) {
-                debugger;
+                if (!!indexes && indexes > 0) {
+                    this.sandbox.util.each(indexes, function(index, el) {
+                        this.deleteItem(el);
+                    }.bind(this));
+                }
             },
 
             titleSaved: function(data) {
                 debugger;
+            },
+
+            /**
+            * delete elements
+            * @param id
+            */
+            deleteItem: function(id) {
+                this.sandbox.util.save('api/contact/titles/' + id, 'DELETE')
+                    .then(function() {
+                    }.bind(this)).fail(function(status, error) {
+                        this.sandbox.logger.error(status, error);
+                        return null;
+                    }.bind(this));
             },
 
             // event listens for changes in form

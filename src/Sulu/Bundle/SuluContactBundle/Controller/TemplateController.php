@@ -33,6 +33,7 @@ class TemplateController extends RestController
      */
     public function contactFormAction()
     {
+        // Get the contact titles
         $titleEntity = 'SuluContactBundle:ContactTitle';
         $titles = $this->getDoctrine()->getRepository($titleEntity)->findAll();
 
