@@ -120,10 +120,20 @@ class DoctrineListBuilder extends AbstractListBuilder
         foreach ($this->getJoins() as $entity => $join) {
             switch ($join->getJoinMethod()) {
                 case DoctrineJoinDescriptor::JOIN_METHOD_LEFT:
-                    $qb->leftJoin($join->getJoin(), $entity);
+                    $qb->leftJoin(
+                        $join->getJoin(),
+                        $entity,
+                        $join->getJoinConditionMethod(),
+                        $join->getJoinCondition()
+                    );
                     break;
                 case DoctrineJoinDescriptor::JOIN_METHOD_INNER:
-                    $qb->innerJoin($join->getJoin(), $entity);
+                    $qb->innerJoin(
+                        $join->getJoin(),
+                        $entity,
+                        $join->getJoinConditionMethod(),
+                        $join->getJoinCondition()
+                    );
                     break;
             }
         }
