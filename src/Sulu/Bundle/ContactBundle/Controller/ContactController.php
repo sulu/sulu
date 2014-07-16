@@ -54,7 +54,7 @@ class ContactController extends AbstractContactController
     protected static $entityKey = 'contacts';
     protected static $accountEntityName = 'SuluContactBundle:Account';
     protected static $accountContactEntityName = 'SuluContactBundle:AccountContact';
-    protected static $titleEntityName = 'SuluContactBundle:Title';
+    protected static $titleEntityName = 'SuluContactBundle:ContactTitle';
     protected static $addressEntityName = 'SuluContactBundle:Address';
     protected static $contactAddressEntityName = 'SuluContactBundle:ContactAddress';
 

@@ -45,7 +45,7 @@
                 <join-column name="idUsersCreator" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
             </join-columns>
         </many-to-one>
-        <many-to-one field="title" target-entity="Sulu\Bundle\ContactBundle\Entity\Title">
+        <many-to-one field="title" target-entity="Sulu\Bundle\ContactBundle\Entity\ContactTitle">
             <join-columns>
                 <join-column name="title" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
             </join-columns>
