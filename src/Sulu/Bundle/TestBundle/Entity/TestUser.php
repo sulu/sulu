@@ -40,6 +40,11 @@ class TestUser implements UserInterface
     private $locale;
 
     /**
+     * @var string
+     */
+    private $fullname;
+
+    /**
      * Set username
      *
      * @param string $username
@@ -89,10 +94,13 @@ class TestUser implements UserInterface
      * Set locale
      *
      * @param $locale
+     * @return TestUser
      */
     public function setLocale($locale)
     {
         $this->locale = $locale;
+
+        return $this;
     }
 
     /**
@@ -103,6 +111,29 @@ class TestUser implements UserInterface
     public function getLocale()
     {
         return $this->locale;
+    }
+
+    /**
+     * Set fullname
+     *
+     * @param $fullname
+     * @return TestUser
+     */
+    public function setFullname($fullname)
+    {
+        $this->fullname = $fullname;
+
+        return $this;
+    }
+
+    /**
+     * Get fullname
+     *
+     * @return string
+     */
+    public function getFullname()
+    {
+        return $this->fullname;
     }
 
     /**
