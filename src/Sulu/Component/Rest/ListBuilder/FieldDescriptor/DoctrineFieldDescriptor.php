@@ -33,7 +33,7 @@ class DoctrineFieldDescriptor extends AbstractFieldDescriptor
 
     /**
      * The joins, which have to be made to get to the result
-     * @var array
+     * @var DoctrineJoinDescriptor[]
      */
     private $joins;
 

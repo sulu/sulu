@@ -12,6 +12,7 @@ namespace Sulu\Component\Rest\ListBuilder;
 
 use PHPUnit_Framework_Assert;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptor\DoctrineFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\FieldDescriptor\DoctrineJoinDescriptor;
 
 class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
 {
@@ -107,7 +108,7 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
         $this->doctrineListBuilder->addField(
             new DoctrineFieldDescriptor(
                 'desc', 'desc_alias', self::$translationEntityName, array(
-                    self::$translationEntityName => self::$entityName . '.translations'
+                    self::$translationEntityName => new DoctrineJoinDescriptor(self::$translationEntityName, self::$entityName . '.translations')
                 )
             )
         );
@@ -128,7 +129,7 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
         $this->doctrineListBuilder->addSearchField(
             new DoctrineFieldDescriptor(
                 'desc', 'desc_alias', self::$translationEntityName, array(
-                    self::$translationEntityName => self::$entityName . '.translations'
+                    self::$translationEntityName => new DoctrineJoinDescriptor(self::$translationEntityName, self::$entityName . '.translations')
                 )
             )
         );
@@ -145,7 +146,7 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
         $this->doctrineListBuilder->sort(
             new DoctrineFieldDescriptor(
                 'desc', 'desc_alias', self::$translationEntityName, array(
-                    self::$translationEntityName => self::$entityName . '.translations'
+                    self::$translationEntityName => new DoctrineJoinDescriptor(self::$translationEntityName, self::$entityName . '.translations')
                 )
             )
         );
@@ -200,7 +201,7 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
                 new DoctrineFieldDescriptor('name', 'name_alias', self::$entityName),
                 new DoctrineFieldDescriptor(
                     'desc', 'desc_alias', self::$translationEntityName, array(
-                        self::$translationEntityName => self::$entityName . '.translations'
+                        self::$translationEntityName => new DoctrineJoinDescriptor(self::$translationEntityName, self::$entityName . '.translations')
                     )
                 )
             )
@@ -247,6 +248,27 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
         $whereFields = PHPUnit_Framework_Assert::readAttribute($this->doctrineListBuilder, 'whereFields');
         $this->assertEquals($fieldDescriptors['title_id'], $whereFields['title_id']);
         $this->assertEquals($fieldDescriptors['desc_id'], $whereFields['desc_id']);
+
+        $this->doctrineListBuilder->execute();
+    }
+
+    public function testJoinMethods()
+    {
+        $fieldDescriptors = array(
+            'id1' => new DoctrineFieldDescriptor('id1', 'id1', 'id1', array(
+                    new DoctrineJoinDescriptor('idj1', 'id1.idj1', null, DoctrineJoinDescriptor::JOIN_METHOD_LEFT)
+                )
+            ),
+            'id2' => new DoctrineFieldDescriptor('id2', 'id2', 'id2', array(
+                    new DoctrineJoinDescriptor('idj2', 'id1.idj2', null, DoctrineJoinDescriptor::JOIN_METHOD_INNER)
+                )
+            ),
+        );
+
+        $this->doctrineListBuilder->setFields($fieldDescriptors);
+
+        $this->queryBuilder->expects($this->once())->method('leftJoin');
+        $this->queryBuilder->expects($this->once())->method('innerJoin');
 
         $this->doctrineListBuilder->execute();
     }
