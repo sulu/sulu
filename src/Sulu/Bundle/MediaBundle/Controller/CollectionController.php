@@ -15,10 +15,13 @@ use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Put;
 use Hateoas\Representation\CollectionRepresentation;
+use SebastianBergmann\Exporter\Exception;
 use Sulu\Bundle\MediaBundle\Api\Collection;
 use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionFieldDescriptorInterface;
 use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface;
 use Sulu\Bundle\MediaBundle\Entity\Collection as CollectionEntity;
+use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
+use Sulu\Bundle\MediaBundle\Media\Exception\MediaException;
 use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
@@ -70,16 +73,21 @@ class CollectionController extends RestController implements ClassResourceInterf
      */
     public function getAction($id, Request $request)
     {
-        $locale = $this->getLocale($request->get('locale'));
-        $cm = $this->getCollectionManager();
-        $view = $this->responseGetById(
-            $id,
-            function ($id) use ($locale, $cm) {
-                /** @var CollectionEntity $collectionEntity */
-                $collectionEntity = $cm->findById($id);
-                return $cm->getApiObject($collectionEntity, $locale);
-            }
-        );
+        try {
+            $locale = $this->getLocale($request->get('locale'));
+            $collectionManager = $this->getCollectionManager();
+            $view = $this->responseGetById(
+                $id,
+                function ($id) use ($locale, $collectionManager) {
+                    /** @var CollectionEntity $collectionEntity */
+                    return $collectionManager->get($id, $locale);
+                }
+            );
+        } catch (CollectionNotFoundException $cnf) {
+            $view = $this->view($cnf->toArray(), 404);
+        } catch (MediaException $me) {
+            $view = $this->view($me->toArray(), 400);
+        }
 
         return $this->handleView($view);
     }
@@ -91,29 +99,34 @@ class CollectionController extends RestController implements ClassResourceInterf
      */
     public function cgetAction(Request $request)
     {
-        $parent = $request->get('parent');
-        $depth = $request->get('depth');
-        $cm = $this->getCollectionManager();
+        try {
+            $parent = $request->get('parent');
+            $depth = $request->get('depth');
+            $collectionManager = $this->getCollectionManager();
 
-        /** @var ListRestHelperInterface $listRestHelper */
-        $listRestHelper = $this->get('sulu_core.list_rest_helper');
+            /** @var ListRestHelperInterface $listRestHelper */
+            $listRestHelper = $this->get('sulu_core.list_rest_helper');
 
-        $collectionEntities = $cm->find($parent, $depth);
-        $collections = $cm->getApiObjects($collectionEntities, $this->getLocale($request->get('locale')));
+            $collections = $collectionManager->getAll($this->getLocale($request->get('locale')), $parent, $depth);
 
-        $all = count($collections); // TODO
+            $all = count($collections); // TODO
 
-        $list = new ListRepresentation(
-            $collections,
-            self::$entityKey,
-            'get_collections',
-            $request->query->all(),
-            $listRestHelper->getPage(),
-            $listRestHelper->getLimit(),
-            $all
-        );
+            $list = new ListRepresentation(
+                $collections,
+                self::$entityKey,
+                'get_collections',
+                $request->query->all(),
+                $listRestHelper->getPage(),
+                $listRestHelper->getLimit(),
+                $all
+            );
 
-        $view = $this->view($list, 200);
+            $view = $this->view($list, 200);
+        } catch (CollectionNotFoundException $cnf) {
+            $view = $this->view($cnf->toArray(), 404);
+        } catch (MediaException $me) {
+            $view = $this->view($me->toArray(), 400);
+        }
         return $this->handleView($view);
     }
 
@@ -147,8 +160,14 @@ class CollectionController extends RestController implements ClassResourceInterf
     public function deleteAction($id)
     {
         $delete = function ($id) {
-            $cm = $this->getCollectionManager();
-            $cm->delete($id);
+            try {
+                $collectionManager = $this->getCollectionManager();
+                $collectionManager->delete($id);
+            } catch (CollectionNotFoundException $cnf) {
+                throw new EntityNotFoundException(self::$entityName, $id); // will through 404 Entity not found
+            } catch (MediaException $me) {
+                throw new RestException($me->getMessage(), $me->getCode()); // will through 400 Bad Request
+            }
         };
 
         $view = $this->responseDelete($id, $delete);
@@ -184,17 +203,16 @@ class CollectionController extends RestController implements ClassResourceInterf
     protected function saveEntity($id, Request $request)
     {
         try {
-            $cm = $this->getCollectionManager();
+            $collectionManager = $this->getCollectionManager();
             $data = $this->getData($request);
             $data['id'] = $id;
-            $categoryEntity = $cm->save($data, $this->getUser()->getId());
-            $categoryWrapper = $cm->getApiObject($categoryEntity, $this->getLocale($request->get('locale')));
+            $collection = $collectionManager->save($data, $this->getUser()->getId());
 
-            $view = $this->view($categoryWrapper, 200);
-        } catch (EntityNotFoundException $enfe) {
-            $view = $this->view($enfe->toArray(), 404);
-        } catch (RestException $exc) {
-            $view = $this->view($exc->toArray(), 400);
+            $view = $this->view($collection, 200);
+        } catch (CollectionNotFoundException $cnf) {
+            $view = $this->view($cnf->toArray(), 404);
+        } catch (MediaException $me) {
+            $view = $this->view($me->toArray(), 400);
         }
 
         return $this->handleView($view);
@@ -214,7 +232,7 @@ class CollectionController extends RestController implements ClassResourceInterf
     }
 
     /**
-     * @return CollectionManagerInterface|CollectionFieldDescriptorInterface
+     * @return CollectionManagerInterface
      */
     protected function getCollectionManager()
     {

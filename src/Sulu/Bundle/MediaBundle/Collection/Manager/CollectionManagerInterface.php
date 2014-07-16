@@ -14,26 +14,28 @@
  */
 namespace Sulu\Bundle\MediaBundle\Collection\Manager;
 
-use Sulu\Bundle\MediaBundle\Entity\Collection;
-use Sulu\Bundle\MediaBundle\Api\Collection as CollectionWrapper;
+use Sulu\Bundle\MediaBundle\Api\Collection;
+use Sulu\Component\Rest\ListBuilder\FieldDescriptor\DoctrineFieldDescriptor;
 
 interface CollectionManagerInterface
 {
     /**
      * Returns collections with a given parent and/or a given depth-level
      * if no arguments passed returns all collection
-     * @param int $parent the id of the parent to filter for
-     * @param int $depth the depth-level to filter for
+     * @param int $id the id of the collection
+     * @param int $locale the locale which the collection should be return
      * @return Collection[]
      */
-    public function find($parent = null, $depth = null);
+    public function get($id, $locale);
 
     /**
      * Returns a collection with a given id
-     * @param int $id the id of the category
+     * @param int $locale the locale which the collection should be return
+     * @param int $parent the parent id to filter for
+     * @param int $depth the depth to filter for
      * @return Collection
      */
-    public function findById($id);
+    public function getAll($locale, $parent = null, $depth = null);
 
     /**
      * Creates a new collection or overrides an existing one
@@ -50,19 +52,15 @@ interface CollectionManagerInterface
     public function delete($id);
 
     /**
-     * Returns an API-Object for a given collection-entity. The API-Object wraps the entity
-     * and provides neat getters and setters
-     * @param Collection $collection
-     * @param string $locale
-     * @return CollectionWrapper
+     * Return the FieldDescriptors
+     * @return DoctrineFieldDescriptor[]
      */
-    public function getApiObject($collection, $locale);
+    public function getFieldDescriptors();
 
     /**
-     * Same as getApiObject, but takes multiple collection-entities
-     * @param Collection[] $collections
-     * @param string $locale
-     * @return CollectionWrapper[]
+     * Return the FieldDescriptors
+     * @param string $key
+     * @return DoctrineFieldDescriptor
      */
-    public function getApiObjects($collections, $locale);
+    public function getFieldDescriptor($key);
 } 

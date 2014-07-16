@@ -13,8 +13,8 @@ namespace Sulu\Bundle\MediaBundle\Media\ImageConverter\Command;
 use Imagine\Image\Box;
 use Imagine\Image\Point;
 
-class CropCommand implements CommandInterface {
-
+class CropCommand implements CommandInterface
+{
     /**
      * {@inheritdoc}
      */
@@ -31,5 +31,4 @@ class CropCommand implements CommandInterface {
 
         $image->crop($point, $box);
     }
-
 } 

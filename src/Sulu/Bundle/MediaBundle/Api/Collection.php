@@ -19,6 +19,7 @@ use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use Sulu\Component\Rest\ApiWrapper;
+use Sulu\Component\Security\UserInterface;
 
 /**
  * Class Collection
@@ -123,7 +124,7 @@ class Collection extends ApiWrapper
     }
 
     /**
-     * @param Collection $parent
+     * @param Entity $parent
      * @return $this
      */
     public function setParent($parent)
@@ -213,6 +214,8 @@ class Collection extends ApiWrapper
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("locale")
      * @return mixed
      */
     public function getLocale()
@@ -259,7 +262,7 @@ class Collection extends ApiWrapper
     /**
      * @VirtualProperty
      * @SerializedName("type")
-     * @return int
+     * @return CollectionType
      */
     public function getType()
     {
@@ -291,7 +294,7 @@ class Collection extends ApiWrapper
     }
 
     /**
-     * @param string $changer
+     * @param UserInterface $changer
      * @return $this
      */
     public function setChanger($changer)
@@ -307,7 +310,11 @@ class Collection extends ApiWrapper
      */
     public function getChanger()
     {
-        return $this->entity->getChanger();
+        $user = $this->entity->getCreator();
+        if ($user) {
+            return $user->getFullName();
+        }
+        return null;
     }
 
     /**
@@ -335,7 +342,7 @@ class Collection extends ApiWrapper
     }
 
     /**
-     * @param string $creator
+     * @param UserInterface $creator
      * @return $this
      */
     public function setCreator($creator)
@@ -351,7 +358,11 @@ class Collection extends ApiWrapper
      */
     public function getCreator()
     {
-        return $this->entity->getCreator();
+        $user = $this->entity->getCreator();
+        if ($user) {
+            return $user->getFullName();
+        }
+        return null;
     }
 
     /**
