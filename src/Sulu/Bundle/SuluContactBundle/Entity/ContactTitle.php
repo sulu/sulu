@@ -6,9 +6,9 @@ use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
 
 /**
- * Title
+ * ContactTitle
  */
-class Title implements JsonSerializable
+class ContactTitle implements JsonSerializable
 {
     /**
      * @var string
@@ -20,12 +20,11 @@ class Title implements JsonSerializable
      */
     private $id;
 
-
     /**
      * Set title
      *
      * @param string $title
-     * @return Title
+     * @return ContactTitle
      */
     public function setTitle($title)
     {
