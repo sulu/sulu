@@ -68,14 +68,94 @@ class ActivityController extends RestController implements ClassResourceInterfac
         $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor(
             'id',
             'id',
-            self::$entityName
+            self::$entityName,
+            array(),
+            false,
+            true,
+            '',
+            '',
+            '',
+            false,
+            'public.id'
         );
-        $this->fieldDescriptors['subject'] = new DoctrineFieldDescriptor('subject', 'subject', self::$entityName);
-        $this->fieldDescriptors['note'] = new DoctrineFieldDescriptor('note', 'note', self::$entityName);
-        $this->fieldDescriptors['dueDate'] = new DoctrineFieldDescriptor('dueDate', 'dueDate', self::$entityName);
-        $this->fieldDescriptors['startDate'] = new DoctrineFieldDescriptor('startDate', 'startDate', self::$entityName);
-        $this->fieldDescriptors['created'] = new DoctrineFieldDescriptor('created', 'created', self::$entityName);
-        $this->fieldDescriptors['changed'] = new DoctrineFieldDescriptor('changed', 'changed', self::$entityName);
+        $this->fieldDescriptors['subject'] = new DoctrineFieldDescriptor(
+            'subject',
+            'subject',
+            self::$entityName,
+            array(),
+            false,
+            true,
+            '',
+            '',
+            '',
+            false,
+            'contact.activities.subject'
+        );
+        $this->fieldDescriptors['note'] = new DoctrineFieldDescriptor(
+            'note',
+            'note',
+            self::$entityName,
+            array(),
+            false,
+            true,
+            '',
+            '',
+            '',
+            false,
+            'contact.activities.note'
+        );
+        $this->fieldDescriptors['dueDate'] = new DoctrineFieldDescriptor(
+            'dueDate',
+            'dueDate',
+            self::$entityName,
+            array(),
+            false,
+            true,
+            'date',
+            '',
+            '',
+            false,
+            'contact.activities.dueDate'
+        );
+        $this->fieldDescriptors['startDate'] = new DoctrineFieldDescriptor(
+            'startDate',
+            'startDate',
+            self::$entityName,
+            array(),
+            true,
+            false,
+            'date',
+            '',
+            '',
+            false,
+            'contact.activities.startDate'
+        );
+        $this->fieldDescriptors['created'] = new DoctrineFieldDescriptor(
+            'created',
+            'created',
+            self::$entityName,
+            array(),
+            true,
+            false,
+            'date',
+            '',
+            '',
+            false,
+            'public.created'
+        );
+        $this->fieldDescriptors['changed'] = new DoctrineFieldDescriptor(
+            'changed',
+            'changed',
+            self::$entityName,
+            array(),
+            true,
+            false,
+            'date',
+            '',
+            '',
+            false,
+            'public.changede'
+        );
 
         $this->fieldDescriptors['activityStatus'] = new DoctrineFieldDescriptor(
             'name', 'activityStatus', self::$activityStatusEntityName,
@@ -84,7 +164,14 @@ class ActivityController extends RestController implements ClassResourceInterfac
                         self::$activityStatusEntityName,
                         self::$entityName . '.activityStatus'
                     )
-            )
+            ),
+            false,
+            true,
+            '',
+            '',
+            '',
+            false,
+            'contact.activities.status'
         );
 
         $this->fieldDescriptors['activityPriority'] = new DoctrineFieldDescriptor(
@@ -94,7 +181,14 @@ class ActivityController extends RestController implements ClassResourceInterfac
                         self::$activityPriorityEntityName,
                         self::$entityName . '.activityPriority'
                     )
-            )
+            ),
+            false,
+            true,
+            '',
+            '',
+            '',
+            false,
+            'contact.activities.priority'
         );
 
         $this->fieldDescriptors['activityType'] = new DoctrineFieldDescriptor(
@@ -104,7 +198,14 @@ class ActivityController extends RestController implements ClassResourceInterfac
                         self::$activityTypeEntityName,
                         self::$entityName . '.activityType'
                     )
-            )
+            ),
+            false,
+            true,
+            '',
+            '',
+            '',
+            false,
+            'contact.activities.type'
         );
 
         // TODO should be excluded
@@ -116,7 +217,8 @@ class ActivityController extends RestController implements ClassResourceInterfac
                         self::$entityName . '.account'
                     )
             ),
-            true
+            true,
+            false
         );
 
         // TODO should be excluded
@@ -128,7 +230,8 @@ class ActivityController extends RestController implements ClassResourceInterfac
                         self::$entityName . '.contact'
                     )
             ),
-            true
+            true,
+            false
         );
 
         // TODO use fullName when implemented
@@ -138,7 +241,14 @@ class ActivityController extends RestController implements ClassResourceInterfac
                 self::$contactEntityName . 'assignedContact' => new DoctrineJoinDescriptor(
                         self::$contactEntityName . 'assignedContact', self::$entityName . '.assignedContact'
                     )
-            )
+            ),
+            false,
+            true,
+            '',
+            '',
+            '',
+            false,
+            'contact.activities.assignedContact'
         );
     }
 
