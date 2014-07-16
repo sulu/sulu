@@ -59,12 +59,15 @@ class ActivityController extends RestController implements ClassResourceInterfac
      */
     protected $fieldDescriptors;
 
+    protected $joinDescriptors;
+
     /**
      * TODO: move field descriptors to a manager
      */
     public function __construct()
     {
         $this->fieldDescriptors = array();
+        $this->joinDescriptors = array();
         $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor(
             'id',
             'id',
@@ -208,32 +211,6 @@ class ActivityController extends RestController implements ClassResourceInterfac
             'contact.activities.type'
         );
 
-        // TODO should be excluded
-        $this->fieldDescriptors['account'] = new DoctrineFieldDescriptor(
-            'id', 'account', self::$accountEntityName,
-            array(
-                self::$accountEntityName => new DoctrineJoinDescriptor(
-                        self::$accountEntityName,
-                        self::$entityName . '.account'
-                    )
-            ),
-            true,
-            false
-        );
-
-        // TODO should be excluded
-        $this->fieldDescriptors['contact'] = new DoctrineFieldDescriptor(
-            'id', 'contact', self::$contactEntityName . 'contact',
-            array(
-                self::$contactEntityName . 'contact' => new DoctrineJoinDescriptor(
-                        self::$contactEntityName . 'contact',
-                        self::$entityName . '.contact'
-                    )
-            ),
-            true,
-            false
-        );
-
         // TODO use fullName when implemented
         $this->fieldDescriptors['assignedContact'] = new DoctrineFieldDescriptor(
             'lastName', 'assignedContact', self::$contactEntityName . 'assignedContact',
@@ -249,6 +226,30 @@ class ActivityController extends RestController implements ClassResourceInterfac
             '',
             false,
             'contact.activities.assignedContact'
+        );
+
+        $this->joinDescriptors['account'] = new DoctrineFieldDescriptor(
+            'id', 'account', self::$accountEntityName,
+            array(
+                self::$accountEntityName => new DoctrineJoinDescriptor(
+                        self::$accountEntityName,
+                        self::$entityName . '.account'
+                    )
+            ),
+            true,
+            false
+        );
+
+        $this->joinDescriptors['contact'] = new DoctrineFieldDescriptor(
+            'id', 'contact', self::$contactEntityName . 'contact',
+            array(
+                self::$contactEntityName . 'contact' => new DoctrineJoinDescriptor(
+                        self::$contactEntityName . 'contact',
+                        self::$entityName . '.contact'
+                    )
+            ),
+            true,
+            false
         );
     }
 
@@ -320,7 +321,7 @@ class ActivityController extends RestController implements ClassResourceInterfac
             $restHelper->initializeListBuilder($listBuilder, $this->fieldDescriptors);
 
             foreach ($filter as $key => $value) {
-                $listBuilder->where($this->fieldDescriptors[$key], $value);
+                $listBuilder->where($this->joinDescriptors[$key], $value);
             }
 
             $list = new ListRepresentation(
