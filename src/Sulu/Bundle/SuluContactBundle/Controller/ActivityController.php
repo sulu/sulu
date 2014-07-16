@@ -12,16 +12,12 @@ namespace Sulu\Bundle\ContactBundle\Controller;
 
 use Doctrine\ORM\EntityManager;
 use FOS\RestBundle\Routing\ClassResourceInterface;
-use FOS\RestBundle\Controller\Annotations\Get;
-use FOS\RestBundle\Controller\Annotations\Put;
-use FOS\RestBundle\Controller\Annotations\Post;
 use Sulu\Bundle\ContactBundle\Entity\Activity;
 use Sulu\Bundle\ContactBundle\Entity\ActivityStatus;
 use Sulu\Bundle\ContactBundle\Entity\ActivityPriority;
 use Sulu\Bundle\ContactBundle\Entity\ActivityType;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\Account;
-use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\RestController;
@@ -68,7 +64,8 @@ class ActivityController extends RestController implements ClassResourceInterfac
     public function __construct()
     {
         $this->fieldDescriptors = array();
-        $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor('id',
+        $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor(
+            'id',
             'id',
             self::$entityName
         );
@@ -129,7 +126,7 @@ class ActivityController extends RestController implements ClassResourceInterfac
 
     /**
      * returns all fields that can be used by list
-     * @return mixed
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function fieldsAction()
     {
@@ -299,27 +296,7 @@ class ActivityController extends RestController implements ClassResourceInterfac
      */
     protected function processActivityData(Activity $activity, Request $request)
     {
-        $subject = $request->get('subject');
-        $dueDate = $request->get('dueDate');
-        $assignedContactData = $request->get('assignedContact');
-
-        if ($subject == null || $dueDate == null || $assignedContactData == null) {
-            throw new RestException('There is no name or dueDate or assignedContact for the activity given');
-        }
-
-        // required data
-        $activity->setSubject($subject);
-        $activity->setDueDate(new DateTime($dueDate));
-
-        if (!is_null($assignedContactData['id'])) {
-            /* @var Contact $assignedContact */
-            $assignedContact = $this->getEntityById(self::$contactEntityName, $assignedContactData['id']);
-            $activity->setAssignedContact($assignedContact);
-        }
-
-        // changer and changed
-        $activity->setChanged(new \DateTime());
-        $activity->setChanger($this->getUser());
+        $this->processRequiredData($activity, $request);
 
         $note = $request->get('note');
         $status = $request->get('activityStatus');
@@ -369,7 +346,7 @@ class ActivityController extends RestController implements ClassResourceInterfac
 
     /**
      * Returns an entity for a specific id
-     * @param $entityName
+     * @param string $entityName
      * @param $id
      * @return mixed
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
@@ -383,6 +360,37 @@ class ActivityController extends RestController implements ClassResourceInterfac
             throw new EntityNotFoundException($entityName, $id);
         }
         return $entity;
+    }
+
+    /**
+     * Sets required data for an activity
+     * @param $activity
+     * @param $request
+     * @throws \Sulu\Component\Rest\Exception\RestException
+     */
+    private function processRequiredData(Activity $activity, Request $request)
+    {
+        $subject = $request->get('subject');
+        $dueDate = $request->get('dueDate');
+        $assignedContactData = $request->get('assignedContact');
+
+        if ($subject == null || $dueDate == null || $assignedContactData == null) {
+            throw new RestException('There is no name or dueDate or assignedContact for the activity given');
+        }
+
+        // required data
+        $activity->setSubject($subject);
+        $activity->setDueDate(new DateTime($dueDate));
+
+        if (!is_null($assignedContactData['id'])) {
+            /* @var Contact $assignedContact */
+            $assignedContact = $this->getEntityById(self::$contactEntityName, $assignedContactData['id']);
+            $activity->setAssignedContact($assignedContact);
+        }
+
+        // changer and changed
+        $activity->setChanged(new \DateTime());
+        $activity->setChanger($this->getUser());
     }
 
 }

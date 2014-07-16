@@ -100,7 +100,7 @@ define(['text!sulucontact/components/activities/activity.form.html'], function(A
             }, this);
 
             // todo wrong namespace?
-            this.sandbox.on('sulu.contacts.contact.activities.delete', function(ids){
+            this.sandbox.on('sulu.contacts.contact.activities.delete', function(ids) {
                 this.sandbox.emit('sulu.contacts.' + this.instanceName + '.activities.delete', ids);
             }, this);
 
@@ -226,7 +226,7 @@ define(['text!sulucontact/components/activities/activity.form.html'], function(A
                     delete data.id;
                 }
 
-                this.sandbox.emit('sulu.contacts.'+this.instanceName+'.activity.save', data);
+                this.sandbox.emit('sulu.contacts.' + this.instanceName + '.activity.save', data);
                 this.stopOverlayComponents();
             } else {
                 return false;
