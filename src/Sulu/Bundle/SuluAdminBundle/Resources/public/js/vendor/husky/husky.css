@@ -6840,8 +6840,9 @@ li a.navigation-settings-icon {
   margin-bottom: 15px;
   height: 20px;
   white-space: nowrap;
+  cursor: pointer;
 }
-/* line 402, ../scss/modules/navigation.scss */
+/* line 403, ../scss/modules/navigation.scss */
 .navigation footer .user .pic {
   color: white;
   text-align: right;
@@ -6849,13 +6850,13 @@ li a.navigation-settings-icon {
   display: inline-block;
   margin-right: 15px;
 }
-/* line 409, ../scss/modules/navigation.scss */
+/* line 410, ../scss/modules/navigation.scss */
 .navigation footer .user .name {
   display: inline-block;
   vertical-align: middle;
   padding-bottom: 5px;
 }
-/* line 416, ../scss/modules/navigation.scss */
+/* line 417, ../scss/modules/navigation.scss */
 .navigation footer .options {
   height: 20px;
   margin-bottom: 15px;
@@ -6865,16 +6866,16 @@ li a.navigation-settings-icon {
   top: 0px;
   left: 0px;
 }
-/* line 425, ../scss/modules/navigation.scss */
+/* line 426, ../scss/modules/navigation.scss */
 .navigation footer .options .locale-dropdown {
   color: black;
   width: 60px;
 }
-/* line 430, ../scss/modules/navigation.scss */
+/* line 431, ../scss/modules/navigation.scss */
 .navigation footer .options .dropdown-list {
   min-width: 150px;
 }
-/* line 434, ../scss/modules/navigation.scss */
+/* line 435, ../scss/modules/navigation.scss */
 .navigation footer .options .logout {
   color: white;
   cursor: pointer;
@@ -6886,14 +6887,14 @@ li a.navigation-settings-icon {
   top: 0px;
   right: 0px;
 }
-/* line 446, ../scss/modules/navigation.scss */
+/* line 447, ../scss/modules/navigation.scss */
 .navigation footer .version {
   padding-left: 35px;
   font-size: 10px;
   color: #878787;
   white-space: nowrap;
 }
-/* line 452, ../scss/modules/navigation.scss */
+/* line 453, ../scss/modules/navigation.scss */
 .navigation footer .version a {
   color: white;
   text-decoration: none;
@@ -6902,21 +6903,21 @@ li a.navigation-settings-icon {
 /**
  * MINIFIED NAVIGATION
  */
-/* line 463, ../scss/modules/navigation.scss */
+/* line 464, ../scss/modules/navigation.scss */
 .navigation.collapsed {
   width: 50px;
   overflow-x: hidden;
 }
-/* line 467, ../scss/modules/navigation.scss */
+/* line 468, ../scss/modules/navigation.scss */
 .navigation.collapsed .navigation-header {
   margin-left: 10px;
   margin-right: 0;
 }
-/* line 472, ../scss/modules/navigation.scss */
+/* line 473, ../scss/modules/navigation.scss */
 .navigation.collapsed .navigation-header-title {
   opacity: 0;
 }
-/* line 476, ../scss/modules/navigation.scss */
+/* line 477, ../scss/modules/navigation.scss */
 .navigation.collapsed .section-headline {
   opacity: 0;
   height: 0;
@@ -6925,23 +6926,23 @@ li a.navigation-settings-icon {
   margin-top: 0;
   margin-bottom: 0;
 }
-/* line 485, ../scss/modules/navigation.scss */
+/* line 486, ../scss/modules/navigation.scss */
 .navigation.collapsed .navigation-search.search-container {
   margin: 0;
   margin-left: 8px;
 }
-/* line 489, ../scss/modules/navigation.scss */
+/* line 490, ../scss/modules/navigation.scss */
 .navigation.collapsed .navigation-search.search-container input {
   opacity: 0;
   z-index: 0;
 }
-/* line 493, ../scss/modules/navigation.scss */
+/* line 494, ../scss/modules/navigation.scss */
 .navigation.collapsed .navigation-search.search-container .search-icon {
   opacity: 1;
   z-index: 100;
   color: rgba(255, 255, 255, 0.5);
 }
-/* line 503, ../scss/modules/navigation.scss */
+/* line 504, ../scss/modules/navigation.scss */
 .navigation.collapsed * .navigation-settings-icon,
 .navigation.collapsed * .navigation-toggle-icon, .navigation.collapsed .is-active .navigation-settings-icon,
 .navigation.collapsed .is-active .navigation-toggle-icon, .navigation.collapsed .is-expanded .navigation-settings-icon,
@@ -6952,70 +6953,70 @@ li a.navigation-settings-icon {
   -o-transition: opacity 0.2s;
   transition: opacity 0.2s;
 }
-/* line 508, ../scss/modules/navigation.scss */
+/* line 509, ../scss/modules/navigation.scss */
 .navigation.collapsed .navigation-item-title {
   opacity: 0;
 }
-/* line 513, ../scss/modules/navigation.scss */
+/* line 514, ../scss/modules/navigation.scss */
 .navigation.collapsed .navigation-items div {
   border: rgba(0, 0, 0, 0) !important;
   padding: 0 !important;
   margin: 0 !important;
   line-height: 0;
 }
-/* line 520, ../scss/modules/navigation.scss */
+/* line 521, ../scss/modules/navigation.scss */
 .navigation.collapsed .navigation-items a {
   padding: 0;
 }
-/* line 524, ../scss/modules/navigation.scss */
+/* line 525, ../scss/modules/navigation.scss */
 .navigation.collapsed .navigation-items .navigation-items-list {
   opacity: 0;
   display: none;
 }
-/* line 530, ../scss/modules/navigation.scss */
+/* line 531, ../scss/modules/navigation.scss */
 .navigation.collapsed li {
   padding: 0;
 }
-/* line 534, ../scss/modules/navigation.scss */
+/* line 535, ../scss/modules/navigation.scss */
 .navigation.collapsed .navigation-item-icon {
   margin-left: 15px;
   padding-left: 0px;
   line-height: 50px;
   vertical-align: middle;
 }
-/* line 541, ../scss/modules/navigation.scss */
+/* line 542, ../scss/modules/navigation.scss */
 .navigation.collapsed footer {
   padding-left: 15px;
   cursor: pointer;
   height: 51px;
   overflow: hidden;
 }
-/* line 547, ../scss/modules/navigation.scss */
+/* line 548, ../scss/modules/navigation.scss */
 .navigation.collapsed footer * {
   opacity: 0;
   height: 0px;
   margin: 0px;
 }
-/* line 553, ../scss/modules/navigation.scss */
+/* line 554, ../scss/modules/navigation.scss */
 .navigation.collapsed footer .user {
   opacity: 1;
   height: 20px;
 }
-/* line 557, ../scss/modules/navigation.scss */
+/* line 558, ../scss/modules/navigation.scss */
 .navigation.collapsed footer .user .pic {
   opacity: 1;
   height: 20px;
 }
-/* line 565, ../scss/modules/navigation.scss */
+/* line 566, ../scss/modules/navigation.scss */
 .navigation.collapsed .navigation-content .wrapper {
   margin-bottom: -51px;
 }
-/* line 567, ../scss/modules/navigation.scss */
+/* line 568, ../scss/modules/navigation.scss */
 .navigation.collapsed .navigation-content .wrapper:after {
   height: 91px;
 }
 
-/* line 574, ../scss/modules/navigation.scss */
+/* line 575, ../scss/modules/navigation.scss */
 .navigation-tooltip {
   position: absolute;
   height: 30px;
@@ -7029,7 +7030,7 @@ li a.navigation-settings-icon {
   border-radius: 2px;
   z-index: 1000;
 }
-/* line 587, ../scss/modules/navigation.scss */
+/* line 588, ../scss/modules/navigation.scss */
 .navigation-tooltip::before {
   content: ' ';
   position: absolute;
@@ -7042,7 +7043,7 @@ li a.navigation-settings-icon {
   border-right: 10px solid #111417;
 }
 
-/* line 601, ../scss/modules/navigation.scss */
+/* line 602, ../scss/modules/navigation.scss */
 .navigation {
   -webkit-transition: width 0.5s;
   -moz-transition: width 0.5s;
@@ -7050,7 +7051,7 @@ li a.navigation-settings-icon {
   transition: width 0.5s;
 }
 
-/* line 609, ../scss/modules/navigation.scss */
+/* line 610, ../scss/modules/navigation.scss */
 .navigation footer,
 .navigation footer > *,
 .navigation .wrapper,
@@ -7062,7 +7063,7 @@ li a.navigation-settings-icon {
   transition: all 0.5s;
 }
 
-/* line 613, ../scss/modules/navigation.scss */
+/* line 614, ../scss/modules/navigation.scss */
 .navigation-items {
   -webkit-transition: all 0, opacity 0.5s, background 0.5s;
   -moz-transition: all 0, opacity 0.5s, background 0.5s;
@@ -7070,14 +7071,14 @@ li a.navigation-settings-icon {
   transition: all 0, opacity 0.5s, background 0.5s;
 }
 
-/* line 617, ../scss/modules/navigation.scss */
+/* line 618, ../scss/modules/navigation.scss */
 .navigation-header {
   -webkit-transition: margin 0.5s;
   -moz-transition: margin 0.5s;
   -o-transition: margin 0.5s;
   transition: margin 0.5s;
 }
-/* line 620, ../scss/modules/navigation.scss */
+/* line 621, ../scss/modules/navigation.scss */
 .navigation-header .navigation-header-title {
   -webkit-transition: opacity 0.5s;
   -moz-transition: opacity 0.5s;
@@ -7085,14 +7086,14 @@ li a.navigation-settings-icon {
   transition: opacity 0.5s;
 }
 
-/* line 625, ../scss/modules/navigation.scss */
+/* line 626, ../scss/modules/navigation.scss */
 .navigation-search {
   -webkit-transition: margin 0.5s;
   -moz-transition: margin 0.5s;
   -o-transition: margin 0.5s;
   transition: margin 0.5s;
 }
-/* line 627, ../scss/modules/navigation.scss */
+/* line 628, ../scss/modules/navigation.scss */
 .navigation-search input {
   -webkit-transition: width 0.5s;
   -moz-transition: width 0.5s;
@@ -7100,7 +7101,7 @@ li a.navigation-settings-icon {
   transition: width 0.5s;
 }
 
-/* line 633, ../scss/modules/navigation.scss */
+/* line 634, ../scss/modules/navigation.scss */
 .section-headline,
 .section-headline * {
   -webkit-transition: all 0.5s;
@@ -7109,7 +7110,7 @@ li a.navigation-settings-icon {
   transition: all 0.5s;
 }
 
-/* line 637, ../scss/modules/navigation.scss */
+/* line 638, ../scss/modules/navigation.scss */
 .navigation-item-title {
   -webkit-transition: opacity 0.5s;
   -moz-transition: opacity 0.5s;
@@ -7117,7 +7118,7 @@ li a.navigation-settings-icon {
   transition: opacity 0.5s;
 }
 
-/* line 641, ../scss/modules/navigation.scss */
+/* line 642, ../scss/modules/navigation.scss */
 .search-icon {
   -webkit-transition: color 0.5s;
   -moz-transition: color 0.5s;
@@ -7125,7 +7126,7 @@ li a.navigation-settings-icon {
   transition: color 0.5s;
 }
 
-/* line 646, ../scss/modules/navigation.scss */
+/* line 647, ../scss/modules/navigation.scss */
 .navigation:not(.collapsed) * {
   opacity: 1;
 }
@@ -7154,6 +7155,8 @@ li a.navigation-settings-icon {
 /* line 23, ../scss/modules/dropdown.scss */
 .dropdown-menu {
   width: 250px;
+  max-height: 350px;
+  overflow: scroll;
   display: inline-block;
   position: absolute;
   top: 20px;
@@ -7166,25 +7169,31 @@ li a.navigation-settings-icon {
   z-index: 90;
   border-radius: 3px;
 }
-/* line 37, ../scss/modules/dropdown.scss */
+/* line 39, ../scss/modules/dropdown.scss */
+.dropdown-menu.top {
+  top: auto;
+  bottom: 25px;
+  margin-bottom: 0;
+}
+/* line 45, ../scss/modules/dropdown.scss */
 .dropdown-menu > ul {
   list-style: none;
   margin: 0;
   padding: 10px 0;
 }
-/* line 42, ../scss/modules/dropdown.scss */
+/* line 50, ../scss/modules/dropdown.scss */
 .dropdown-menu > ul > li {
   padding: 0 20px;
   line-height: 30px;
   text-align: left;
 }
-/* line 47, ../scss/modules/dropdown.scss */
+/* line 55, ../scss/modules/dropdown.scss */
 .dropdown-menu > ul > li:hover, .dropdown-menu > ul > li.hover {
   background-color: #52b6ca;
   cursor: pointer;
   color: white;
 }
-/* line 52, ../scss/modules/dropdown.scss */
+/* line 60, ../scss/modules/dropdown.scss */
 .dropdown-menu > ul > li.divider {
   height: 1px;
   margin: 5px 0 10px 0;
@@ -7194,24 +7203,24 @@ li a.navigation-settings-icon {
   cursor: default;
 }
 
-/* line 64, ../scss/modules/dropdown.scss */
+/* line 72, ../scss/modules/dropdown.scss */
 .dropdown-align-right {
   right: 6px;
   left: inherit;
 }
 
-/* line 69, ../scss/modules/dropdown.scss */
+/* line 77, ../scss/modules/dropdown.scss */
 .dropdown-footer {
   border-top: 1px solid #ccc;
   padding: 10px 10px;
 }
 
-/* line 74, ../scss/modules/dropdown.scss */
+/* line 82, ../scss/modules/dropdown.scss */
 .dropdown-toggle {
   display: inline-block;
   cursor: pointer;
 }
-/* line 77, ../scss/modules/dropdown.scss */
+/* line 85, ../scss/modules/dropdown.scss */
 .dropdown-toggle::after {
   content: "";
   display: inline-block;
@@ -7225,7 +7234,7 @@ li a.navigation-settings-icon {
   border-top: 6px solid #000;
 }
 
-/* line 92, ../scss/modules/dropdown.scss */
+/* line 100, ../scss/modules/dropdown.scss */
 .dropdown-trigger {
   height: 30px;
   line-height: 30px;
@@ -10071,7 +10080,6 @@ a.btn-black, a.btn-highlight {
   float: left;
   position: relative;
   cursor: pointer;
-  border: 1px solid #cccccc;
 }
 /* line 32, ../scss/mixins.scss */
 .husky-thumbnails .item:after {
@@ -10079,34 +10087,38 @@ a.btn-black, a.btn-highlight {
   content: ' ';
   display: block;
 }
-/* line 37, ../scss/modules/thumbnails.scss */
+/* line 36, ../scss/modules/thumbnails.scss */
 .husky-thumbnails .item.small {
   width: 259px;
-  height: 68px;
+  height: 70px;
   margin-bottom: 20px;
   margin-right: 8px;
 }
-/* line 43, ../scss/modules/thumbnails.scss */
+/* line 42, ../scss/modules/thumbnails.scss */
 .husky-thumbnails .item.small .image {
   float: left;
   width: 70px;
   text-align: center;
-  line-height: 47px;
+  line-height: 50px;
   padding: 8px;
+  position: relative;
 }
 /* line 49, ../scss/modules/thumbnails.scss */
 .husky-thumbnails .item.small .image img {
+  display: block;
+  position: relative;
+  z-index: 10;
   vertical-align: middle;
   max-width: 100%;
   max-height: 100%;
 }
-/* line 55, ../scss/modules/thumbnails.scss */
+/* line 58, ../scss/modules/thumbnails.scss */
 .husky-thumbnails .item.small .text {
   float: left;
   padding-top: 20px;
   width: 190px -1px;
 }
-/* line 60, ../scss/modules/thumbnails.scss */
+/* line 63, ../scss/modules/thumbnails.scss */
 .husky-thumbnails .item.small .checkbox {
   position: absolute;
   top: 10px;
@@ -10114,62 +10126,94 @@ a.btn-black, a.btn-highlight {
   left: auto;
   display: none;
 }
-/* line 67, ../scss/modules/thumbnails.scss */
+/* line 70, ../scss/modules/thumbnails.scss */
 .husky-thumbnails .item.small .download {
   position: absolute;
   right: 10px;
   bottom: 10px;
   display: none;
 }
-/* line 75, ../scss/modules/thumbnails.scss */
+/* line 76, ../scss/modules/thumbnails.scss */
+.husky-thumbnails .item.small .empty {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 70px;
+  line-height: 70px;
+  z-index: 5;
+  font-size: 25px;
+  color: #cccccc;
+}
+/* line 89, ../scss/modules/thumbnails.scss */
 .husky-thumbnails .item.large {
+  border: 1px solid #cccccc;
   width: 187px;
   height: 248px;
   margin-bottom: 40px;
   margin-right: 18px;
   padding: 10px;
 }
-/* line 82, ../scss/modules/thumbnails.scss */
+/* line 97, ../scss/modules/thumbnails.scss */
 .husky-thumbnails .item.large .image {
   width: 100%;
   height: 170px;
   text-align: center;
   line-height: 170px;
   margin-bottom: 10px;
+  position: relative;
 }
-/* line 88, ../scss/modules/thumbnails.scss */
+/* line 104, ../scss/modules/thumbnails.scss */
 .husky-thumbnails .item.large .image img {
+  display: block;
+  position: relative;
+  z-index: 10;
   vertical-align: bottom;
   max-width: 100%;
   max-height: 100%;
 }
-/* line 94, ../scss/modules/thumbnails.scss */
+/* line 113, ../scss/modules/thumbnails.scss */
 .husky-thumbnails .item.large .text {
   text-align: center;
 }
-/* line 97, ../scss/modules/thumbnails.scss */
+/* line 116, ../scss/modules/thumbnails.scss */
 .husky-thumbnails .item.large .checkbox {
   position: absolute;
   left: 10px;
   bottom: 10px;
   top: auto;
 }
-/* line 103, ../scss/modules/thumbnails.scss */
+/* line 122, ../scss/modules/thumbnails.scss */
 .husky-thumbnails .item.large .download {
   position: absolute;
   bottom: 10px;
   right: 10px;
 }
-/* line 111, ../scss/modules/thumbnails.scss */
+/* line 127, ../scss/modules/thumbnails.scss */
+.husky-thumbnails .item.large .empty {
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 5;
+  height: 160px;
+  line-height: 160px;
+  font-size: 70px;
+  color: #cccccc;
+}
+/* line 141, ../scss/modules/thumbnails.scss */
 .husky-thumbnails .item:hover, .husky-thumbnails .item.is-selected {
   background: white;
+}
+/* line 144, ../scss/modules/thumbnails.scss */
+.husky-thumbnails .item:hover.large, .husky-thumbnails .item.is-selected.large {
   border-color: white;
 }
-/* line 114, ../scss/modules/thumbnails.scss */
+/* line 147, ../scss/modules/thumbnails.scss */
 .husky-thumbnails .item:hover .checkbox, .husky-thumbnails .item.is-selected .checkbox {
   display: block;
 }
-/* line 117, ../scss/modules/thumbnails.scss */
+/* line 150, ../scss/modules/thumbnails.scss */
 .husky-thumbnails .item:hover .download, .husky-thumbnails .item.is-selected .download {
   display: block;
 }
@@ -10180,7 +10224,7 @@ a.btn-black, a.btn-highlight {
   content: ' ';
   display: block;
 }
-/* line 136, ../scss/modules/thumbnails.scss */
+/* line 168, ../scss/modules/thumbnails.scss */
 .husky-groups .grid-group {
   width: 190px;
   margin-right: 20px;
@@ -10188,13 +10232,13 @@ a.btn-black, a.btn-highlight {
   float: left;
   cursor: pointer;
 }
-/* line 143, ../scss/modules/thumbnails.scss */
+/* line 175, ../scss/modules/thumbnails.scss */
 .husky-groups .grid-group .thumbnails {
   position: relative;
   width: 100%;
   height: 125px;
 }
-/* line 148, ../scss/modules/thumbnails.scss */
+/* line 180, ../scss/modules/thumbnails.scss */
 .husky-groups .grid-group .thumbnails .thumbnail {
   position: absolute;
   width: 150px;
@@ -10214,13 +10258,13 @@ a.btn-black, a.btn-highlight {
   -o-transition: all 200ms ease 200ms;
   transition: all 200ms ease 200ms;
 }
-/* line 158, ../scss/modules/thumbnails.scss */
+/* line 190, ../scss/modules/thumbnails.scss */
 .husky-groups .grid-group .thumbnails .thumbnail img {
   width: 100%;
   height: 100%;
   display: block;
 }
-/* line 163, ../scss/modules/thumbnails.scss */
+/* line 195, ../scss/modules/thumbnails.scss */
 .husky-groups .grid-group .thumbnails .thumbnail.empty {
   width: 145px;
   height: 95px;
@@ -10230,7 +10274,7 @@ a.btn-black, a.btn-highlight {
   font-size: 40px;
   color: #cccccc;
 }
-/* line 172, ../scss/modules/thumbnails.scss */
+/* line 204, ../scss/modules/thumbnails.scss */
 .husky-groups .grid-group .thumbnails .thumbnail.first {
   top: 0px;
   right: 0px;
@@ -10241,7 +10285,7 @@ a.btn-black, a.btn-highlight {
   -webkit-transform: rotate(0deg);
   /* Opera, Chrome, and Safari */
 }
-/* line 178, ../scss/modules/thumbnails.scss */
+/* line 210, ../scss/modules/thumbnails.scss */
 .husky-groups .grid-group .thumbnails .thumbnail.first:only-child {
   -webkit-transition: none 1s;
   -moz-transition: none 1s;
@@ -10250,7 +10294,7 @@ a.btn-black, a.btn-highlight {
   position: relative;
   margin: 0 auto;
 }
-/* line 185, ../scss/modules/thumbnails.scss */
+/* line 217, ../scss/modules/thumbnails.scss */
 .husky-groups .grid-group .thumbnails .thumbnail.second {
   right: 10px;
   top: 3px;
@@ -10261,7 +10305,7 @@ a.btn-black, a.btn-highlight {
   -webkit-transform: rotate(-3deg);
   /* Opera, Chrome, and Safari */
 }
-/* line 192, ../scss/modules/thumbnails.scss */
+/* line 224, ../scss/modules/thumbnails.scss */
 .husky-groups .grid-group .thumbnails .thumbnail.third {
   right: 20px;
   top: 6px;
@@ -10272,7 +10316,7 @@ a.btn-black, a.btn-highlight {
   -webkit-transform: rotate(-5deg);
   /* Opera, Chrome, and Safari */
 }
-/* line 202, ../scss/modules/thumbnails.scss */
+/* line 234, ../scss/modules/thumbnails.scss */
 .husky-groups .grid-group .thumbnails:hover .thumbnail.first {
   top: -10px;
   right: -20px;
@@ -10282,7 +10326,7 @@ a.btn-black, a.btn-highlight {
   -webkit-transform: rotate(5deg);
   /* Opera, Chrome, and Safari */
 }
-/* line 206, ../scss/modules/thumbnails.scss */
+/* line 238, ../scss/modules/thumbnails.scss */
 .husky-groups .grid-group .thumbnails:hover .thumbnail.first:only-child {
   transform: rotate(0deg);
   -ms-transform: rotate(0deg);
@@ -10292,7 +10336,7 @@ a.btn-black, a.btn-highlight {
   top: 0px;
   left: 0px;
 }
-/* line 213, ../scss/modules/thumbnails.scss */
+/* line 245, ../scss/modules/thumbnails.scss */
 .husky-groups .grid-group .thumbnails:hover .thumbnail.second {
   right: 10px;
   top: -2px;
@@ -10302,7 +10346,7 @@ a.btn-black, a.btn-highlight {
   -webkit-transform: rotate(-2deg);
   /* Opera, Chrome, and Safari */
 }
-/* line 219, ../scss/modules/thumbnails.scss */
+/* line 251, ../scss/modules/thumbnails.scss */
 .husky-groups .grid-group .thumbnails:hover .thumbnail.third {
   top: 15px;
   right: 35px;
@@ -10312,13 +10356,13 @@ a.btn-black, a.btn-highlight {
   -webkit-transform: rotate(-8deg);
   /* Opera, Chrome, and Safari */
 }
-/* line 227, ../scss/modules/thumbnails.scss */
+/* line 259, ../scss/modules/thumbnails.scss */
 .husky-groups .grid-group .title {
   display: block;
   line-height: 14px;
   text-align: center;
 }
-/* line 232, ../scss/modules/thumbnails.scss */
+/* line 264, ../scss/modules/thumbnails.scss */
 .husky-groups .grid-group .addition {
   display: block;
   text-align: center;

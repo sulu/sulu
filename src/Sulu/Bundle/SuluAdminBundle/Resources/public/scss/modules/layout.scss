@@ -39,6 +39,10 @@
       padding-right: 0;
     }
 
+    &.no-transitions {
+      @include transition(none);
+    }
+
 
     &.no-top-space {
       margin-top: -$contentPaddingTop;
