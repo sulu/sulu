@@ -10,9 +10,6 @@
 
 namespace Sulu\Component\Rest\ListBuilder;
 
-use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
-use Sulu\Component\Rest\ListBuilder\FieldDescriptor\AbstractFieldDescriptor;
-
 /**
  * This interface defines the the ListBuilder functionality, for the creation of REST list responses
  * @package Sulu\Component\Rest\ListBuilder
