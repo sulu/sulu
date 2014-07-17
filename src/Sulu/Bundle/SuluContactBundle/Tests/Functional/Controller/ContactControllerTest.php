@@ -1801,6 +1801,7 @@ class ContactControllerTest extends DatabaseTestCase
         );
 
         $response = json_decode($client->getResponse()->getContent());
+        usort($response->addresses, $this->sortAddressesPrimaryLast());
 
         $this->assertEquals(false, $response->addresses[0]->primaryAddress);
         $this->assertEquals(false, $response->addresses[1]->primaryAddress);
@@ -1808,10 +1809,20 @@ class ContactControllerTest extends DatabaseTestCase
 
         $client->request('GET', '/api/contacts/' . $response->id);
         $response = json_decode($client->getResponse()->getContent());
+        usort($response->addresses, $this->sortAddressesPrimaryLast());
 
         $this->assertEquals(false, $response->addresses[0]->primaryAddress);
         $this->assertEquals(false, $response->addresses[1]->primaryAddress);
         $this->assertEquals(true, $response->addresses[2]->primaryAddress);
+    }
 
+    public function sortAddressesPrimaryLast()
+    {
+        return function ($a, $b) {
+            if ($a->primaryAddress === true && $b->primaryAddress === false) {
+                return true;
+            }
+            return false;
+        };
     }
 }
