@@ -26,7 +26,7 @@ use Hateoas\Configuration\Annotation\Route;
  *      "all",
  *      href = @Route(
  *          "expr(object.getRoute())",
- *          absolute = "expr(object.isAbsolute())"
+ *          absolute = "expr(object.isAbsolute())",
  *      )
  * )
  * @Relation(
@@ -34,7 +34,7 @@ use Hateoas\Configuration\Annotation\Route;
  *      href = @Route(
  *          "expr(object.getRoute())",
  *          parameters = "expr(object.getParameters() + { fields: '{fieldsList}' })",
- *          absolute = "expr(object.isAbsolute())"
+ *          absolute = "expr(object.isAbsolute())",
  *      )
  * )
  * @Relation(
@@ -42,7 +42,7 @@ use Hateoas\Configuration\Annotation\Route;
  *      href = @Route(
  *          "expr(object.getRoute())",
  *          parameters = "expr(object.getParameters() + { fields: '{searchString}{&searchFields}' })",
- *          absolute = "expr(object.isAbsolute())"
+ *          absolute = "expr(object.isAbsolute())",
  *      )
  * )
  * @Relation(
@@ -50,7 +50,7 @@ use Hateoas\Configuration\Annotation\Route;
  *      href = @Route(
  *          "expr(object.getRoute())",
  *          parameters = "expr(object.getParameters() + { page: '{page}', pageSize: '{pageSize}' })",
- *          absolute = "expr(object.isAbsolute())"
+ *          absolute = "expr(object.isAbsolute())",
  *      )
  * )
  * @Relation(
@@ -59,7 +59,6 @@ use Hateoas\Configuration\Annotation\Route;
  *          "expr(object.getRoute())",
  *          parameters = "expr(object.getParameters() + { sortBy: '{sortBy}', sortOrder: '{sortOrder}' })",
  *          absolute = "expr(object.isAbsolute())",
- *          generator = "templated_uri"
  *      )
  * )
  */
