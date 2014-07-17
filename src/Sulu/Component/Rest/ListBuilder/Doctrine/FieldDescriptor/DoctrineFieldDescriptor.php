@@ -41,14 +41,14 @@ class DoctrineFieldDescriptor extends AbstractDoctrineFieldDescriptor
         $fieldName,
         $name,
         $entityName,
+        $translation = null,
         $joins = array(),
         $disabled = false,
         $default = false,
         $type = '',
         $width = '',
         $minWidth = '',
-        $editable = false,
-        $translation = null
+        $editable = false
     )
     {
         parent::__construct($name, $disabled, $default, $type, $width, $minWidth, $editable, $translation);

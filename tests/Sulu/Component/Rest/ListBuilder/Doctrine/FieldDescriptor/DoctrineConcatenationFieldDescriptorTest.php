@@ -38,6 +38,7 @@ class DoctrineConcatenationFieldDescriptorTest extends \PHPUnit_Framework_TestCa
                 new DoctrineFieldDescriptor('test3', null, 'TestEntity3'),
             ),
             'test',
+            'translation',
             ', '
         );
 

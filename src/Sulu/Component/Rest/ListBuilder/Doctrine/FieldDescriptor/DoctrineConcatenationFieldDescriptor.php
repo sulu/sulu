@@ -23,17 +23,17 @@ class DoctrineConcatenationFieldDescriptor extends AbstractDoctrineFieldDescript
     public function __construct(
         array $fieldDescriptors,
         $name,
+        $translation = null,
         $glue = ' ',
         $disabled = false,
         $default = false,
         $type = '',
         $width = '',
         $minWidth = '',
-        $editable = false,
-        $translation = null
+        $editable = false
     )
     {
-        parent::__construct($name, $disabled, $default, $type, $width, $minWidth, $editable, $translation);
+        parent::__construct($name, $translation, $disabled, $default, $type, $width, $minWidth, $editable);
 
         $this->fieldDescriptors = $fieldDescriptors;
         $this->glue = $glue;
