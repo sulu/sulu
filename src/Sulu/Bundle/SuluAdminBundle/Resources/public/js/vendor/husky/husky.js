@@ -28886,7 +28886,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          */
 
         prepareTableHead: function() {
-            var tblColumns, tblCellClass, headData, widthValues, checkboxValues, dataAttribute, isSortable,
+            var tblColumns, tblCellClass, headData, widthValues, dataAttribute,
                 tblColumnStyle, minWidth, count = 0;
 
             tblColumns = [];
@@ -28915,26 +28915,16 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
 
             this.sandbox.util.foreach(headData, function(column) {
                 if (this.options.excludeFields.indexOf(column.attribute) < 0) {
-                    isSortable = false;
-
-                    if (!!this.datagrid.data.links && !!this.data.links.sortable) {
-                        //is column sortable - check with received sort-links
-                        this.sandbox.util.each(this.data.links.sortable.href, function(index) {
-                            if (index === column.attribute) {
-                                isSortable = true;
-                                return false;
-                            }
-                        }.bind(this));
-                    }
 
                     // calculate width
                     tblColumnStyle = [];
+                    tblCellClass = '';
                     if (column.width) {
                         minWidth = column.width;
                     } else if (column.minWidth) {
                         minWidth = column.minWidth;
                     } else {
-                        minWidth = getTextWidth.call(this, column.content, [], isSortable);
+                        minWidth = getTextWidth.call(this, column.content, [], column.sortable);
                         minWidth = (minWidth > this.datagrid.getNumberAndUnit(this.options.columnMinWidth).number) ? minWidth + 'px' : this.options.columnMinWidth;
 
                     }
@@ -28968,7 +28958,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                     }
 
                     // add html to table header cell if sortable
-                    if (!!isSortable) {
+                    if (!!column.sortable) {
                         dataAttribute = ' data-attribute="' + column.attribute + '"';
                         tblCellClass += ((!!column.class) ? ' ' + column.class + ' ' + constants.sortableClass : ' ' + constants.sortableClass + '');
                         tblColumns.push('<th class="' + tblCellClass + '" style="' + tblColumnStyle.join(';') + '" ' + dataAttribute + '>' + column.content + '<span></span></th>');
@@ -31073,7 +31063,8 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
                 TITLE: 'title',
                 BYTES: 'bytes',
                 RADIO: 'radio',
-                COUNT: 'count'
+                COUNT: 'count',
+                TRANSLATION: 'translation'
             },
 
             decorators = {
@@ -31120,6 +31111,16 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
                     }
                     return date;
                 },
+
+                /**
+                 * Translates a string
+                 * @param val {String} the string to translate
+                 * @returns {String}
+                 */
+                translation: function(val) {
+                   return this.sandbox.translate(val);
+                },
+
 
                 /**
                  * Attaches a postfix to a number
@@ -32421,17 +32422,17 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * @param direction {String} the sort method to use 'asc' or 'desc'
              */
             sortGrid: function(attribute, direction) {
-                if (this.options.sortable === true && !!this.data.links.sortable.href[attribute]) {
+                if (this.options.sortable === true && !!this.data.links.sortable) {
                     var template, url;
 
                     // if passed attribute is sortable
-                    if (!!attribute && !!this.data.links.sortable.href[attribute]) {
+                    if (!!attribute) {
 
                         this.sort.attribute = attribute;
                         this.sort.direction = direction;
 
-                        template = this.sandbox.uritemplate.parse(this.data.links.sortable.href[attribute]);
-                        url = this.sandbox.uritemplate.expand(template, {sortOrder: direction});
+                        template = this.sandbox.uritemplate.parse(this.data.links.sortable.href);
+                        url = this.sandbox.uritemplate.expand(template, {sortBy: attribute, sortOrder: direction});
 
                         this.sandbox.emit(DATA_SORT.call(this));
 
