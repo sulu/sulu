@@ -32,7 +32,7 @@ class SuluCategoryExtension extends Extension
 
         // set content types
         $container->setParameter(
-            'sulu.content.type.category_list.template',
+            'sulu_category.content.type.category_list.template',
             $config['content']['types']['category_list']['template']
         );
 
