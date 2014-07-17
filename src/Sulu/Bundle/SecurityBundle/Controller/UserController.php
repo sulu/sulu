@@ -26,8 +26,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\RestHelperInterface;
-use Sulu\Component\Rest\ListBuilder\DoctrineListBuilderFactory;
-use Sulu\Component\Rest\ListBuilder\FieldDescriptor\DoctrineFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 
 /**
  * Makes the users accessible through a rest api
@@ -184,8 +184,8 @@ class UserController extends RestController implements ClassResourceInterface
             $user->setLocale($request->get('locale'));
 
             if (
-                !$this->processUserRoles($user, $request->get('userRoles')) ||
-                !$this->processUserGroups($user, $request->get('userGroups'))
+                !$this->processUserRoles($user, $request->get('userRoles', array())) ||
+                !$this->processUserGroups($user, $request->get('userGroups', array()))
             ) {
                 throw new RestException('Could not update dependencies!');
             }
@@ -225,8 +225,8 @@ class UserController extends RestController implements ClassResourceInterface
             $password = $request->get('password');
             $contact = $request->get('contact');
             $locale = $request->get('locale');
-            $userRoles = $request->get('userRoles');
-            $userGroups = $request->get('userGroups');
+            $userRoles = $request->get('userRoles', array());
+            $userGroups = $request->get('userGroups', array());
 
             $em = $this->getDoctrine()->getManager();
 
@@ -379,6 +379,14 @@ class UserController extends RestController implements ClassResourceInterface
      */
     protected function processUserRoles(User $user, $userRoles)
     {
+        /** @var RestHelperInterface $restHelper */
+        $restHelper = $this->get('sulu_core.doctrine_rest_helper');
+
+        $get = function($entity) {
+            /** @var User $entity */
+            return $entity->getId();
+        };
+
         $delete = function ($userRole) use ($user) {
             $user->removeUserRole($userRole);
             $this->getDoctrine()->getManager()->remove($userRole);
@@ -392,16 +400,25 @@ class UserController extends RestController implements ClassResourceInterface
             return $this->addUserRole($user, $userRole);
         };
 
-        return $this->processPut($user->getUserRoles(), $userRoles, $delete, $update, $add);
+        return $restHelper->processSubEntities($user->getUserRoles(), $userRoles, $get, $add, $update, $delete);
     }
 
     /**
      * Process all user groups from request
      * @param User $user The user on which is worked
+     * @param $userGroups
      * @return bool True if the processing was successful, otherwise false
      */
     protected function processUserGroups(User $user, $userGroups)
     {
+        /** @var RestHelperInterface $restHelper */
+        $restHelper = $this->get('sulu_core.doctrine_rest_helper');
+
+        $get = function($entity) {
+            /** @var User $entity */
+            return $entity->getId();
+        };
+
         $delete = function ($userGroup) use ($user) {
             $user->removeUserGroup($userGroup);
             $this->getDoctrine()->getManager()->remove($userGroup);
@@ -415,7 +432,7 @@ class UserController extends RestController implements ClassResourceInterface
             return $this->addUserGroup($user, $userGroup);
         };
 
-        return $this->processPut($user->getUserGroups(), $userGroups, $delete, $update, $add);
+        return $restHelper->processSubEntities($user->getUserGroups(), $userGroups, $get, $add, $update, $delete);
     }
 
     /**
