@@ -31709,12 +31709,27 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              */
             parseData: function(data) {
                 this.data = {};
-                this.data.links = data._links;
+                this.data.links = this.parseLinks(data._links);
                 this.data.embedded = data._embedded[this.options.resultKey];
                 this.data.total = data.total;
                 this.data.page = data.page;
                 this.data.pages = data.pages;
                 this.data.limit = data.limit;
+            },
+
+            /**
+             * Unescapes all passed links
+             * @param links {Object}
+             * @returns {Object}
+             */
+            parseLinks: function(links) {
+                var linksObj = {};
+                this.sandbox.util.each(links, function(link, index) {
+                    linksObj[index] = {
+                        href: decodeURI(link.href)
+                    };
+                }.bind(this));
+                return linksObj;
             },
 
             /**
