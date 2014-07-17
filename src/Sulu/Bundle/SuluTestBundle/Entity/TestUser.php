@@ -40,6 +40,11 @@ class TestUser implements UserInterface
     private $locale;
 
     /**
+     * @var TestContact
+     */
+    private $contact;
+
+    /**
      * Set username
      *
      * @param string $username
@@ -161,7 +166,6 @@ class TestUser implements UserInterface
     /**
      * @var \Sulu\Bundle\TestBundle\Entity\TestContact
      */
-    private $contact;
 
 
     /**
