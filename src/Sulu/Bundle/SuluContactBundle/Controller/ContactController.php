@@ -257,16 +257,7 @@ class ContactController extends AbstractContactController
      */
     public function cgetAction(Request $request)
     {
-
-        if (!is_null($request->get('bySystem')) && $request->get('bySystem') == true) {
-            $contacts = $this->getContactsByUserSystem();
-            $view = $this->view($this->createHalResponse($contacts), 200);
-            return $this->handleView($view);
-        }
-
-        // flat structure
         if ($request->get('flat') == 'true') {
-
             /** @var RestHelperInterface $restHelper */
             $restHelper = $this->getRestHelper();
 
@@ -288,7 +279,11 @@ class ContactController extends AbstractContactController
             );
 
         } else {
-            $contacts = $this->getDoctrine()->getRepository(self::$entityName)->findAll();
+            if ($request->get('bySystem') == true) {
+                $contacts = $this->getContactsByUserSystem();
+            } else {
+                $contacts = $this->getDoctrine()->getRepository(self::$entityName)->findAll();
+            }
             $list = new CollectionRepresentation($contacts, self::$entityKey);
         }
         $view = $this->view($list, 200);
