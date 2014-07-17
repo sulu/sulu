@@ -12,17 +12,17 @@ class TestContact
     /**
      * @var string
      */
-    private $firstName;
+    protected $firstName;
 
     /**
      * @var string
      */
-    private $lastName;
+    protected $lastName;
 
     /**
      * @var integer
      */
-    private $id;
+    protected $id;
 
 
     /**
