@@ -2,7 +2,7 @@ parameters:
     sulu_tag.admin.class: Sulu\Bundle\TagBundle\Admin\SuluTagAdmin
     sulu_tag.tag_manager.class: Sulu\Bundle\TagBundle\Tag\TagManager
     sulu_tag.tag_repository.class: Sulu\Bundle\TagBundle\Entity\TagRepository
-    sulu.content.type.tag_list.class: Sulu\Bundle\TagBundle\Content\Types\TagList
+    sulu_tag.content.type.tag_list.class: Sulu\Bundle\TagBundle\Content\Types\TagList
 
 services:
     sulu_tag.admin:
@@ -26,6 +26,8 @@ services:
             - "@event_dispatcher"
 
     # Content types
-    sulu.content.type.tag_list:
-        class: %sulu.content.type.tag_list.class%
-        arguments: ["@sulu_tag.tag_manager", %sulu.content.type.tag_list.template%]
+    sulu_tag.content.type.tag_list:
+        class: %sulu_tag.content.type.tag_list.class%
+        arguments: ["@sulu_tag.tag_manager", %sulu_tag.content.type.tag_list.template%]
+        tags:
+            - { name: sulu.content.type, alias: tag_list }
