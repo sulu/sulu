@@ -40,6 +40,11 @@ class TestUser implements UserInterface
     private $locale;
 
     /**
+     * @var TestContact
+     */
+    private $contact;
+
+    /**
      * Set username
      *
      * @param string $username
@@ -157,5 +162,28 @@ class TestUser implements UserInterface
     public function eraseCredentials()
     {
 
+    }
+
+    /**
+     * Set contact
+     *
+     * @param \Sulu\Bundle\TestBundle\Entity\TestContact $contact
+     * @return TestUser
+     */
+    public function setContact(\Sulu\Bundle\TestBundle\Entity\TestContact $contact = null)
+    {
+        $this->contact = $contact;
+    
+        return $this;
+    }
+
+    /**
+     * Get contact
+     *
+     * @return \Sulu\Bundle\TestBundle\Entity\TestContact 
+     */
+    public function getContact()
+    {
+        return $this->contact;
     }
 }
