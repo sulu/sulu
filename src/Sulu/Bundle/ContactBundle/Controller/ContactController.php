@@ -551,7 +551,13 @@ class ContactController extends AbstractContactController
                 $contact->setFirstName($request->get('firstName'));
                 $contact->setLastName($request->get('lastName'));
 
-                $contact->setTitle($request->get('title'));
+                $titleId = $request->get('title');
+                if ($titleId && is_numeric($titleId)) {
+                    $title = $this->getDoctrine()->getRepository(self::$titleEntityName)->find($titleId);
+                    if ($title) {
+                        $contact->setTitle($title);
+                    }
+                }
                 $contact->setChanged(new DateTime());
 
                 // set account relation
