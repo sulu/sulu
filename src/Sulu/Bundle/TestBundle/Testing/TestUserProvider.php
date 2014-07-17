@@ -36,6 +36,7 @@ class TestUserProvider implements UserProviderInterface
             $contact = new TestContact();
             $contact->setFirstName('Max');
             $contact->setLastName('Mustermann');
+            $em->persist($contact);
             $this->user = new TestUser();
             $this->user->setPassword('test');
             $this->user->setUsername('test');

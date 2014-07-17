@@ -7,7 +7,7 @@
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
         </id>
-        <field name="firstName" type="string" column="username" length="60" unique="true"/>
-        <field name="lastName" type="string" column="password" length="128"/>
+        <field name="firstName" type="string" column="firstName" length="60"/>
+        <field name="lastName" type="string" column="lastName" length="128"/>
     </entity>
 </doctrine-mapping>
