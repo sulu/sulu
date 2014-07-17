@@ -163,10 +163,6 @@ class TestUser implements UserInterface
     {
 
     }
-    /**
-     * @var \Sulu\Bundle\TestBundle\Entity\TestContact
-     */
-
 
     /**
      * Set contact
