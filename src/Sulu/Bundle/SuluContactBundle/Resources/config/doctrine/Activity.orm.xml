@@ -52,19 +52,19 @@
         <many-to-one field="assignedContact" target-entity="Sulu\Bundle\ContactBundle\Entity\Contact"
                      inversed-by="assignedActivities">
             <join-columns>
-                <join-column name="idAssignedContacts" referenced-column-name="id" nullable="false"/>
+                <join-column name="idAssignedContacts" referenced-column-name="id" nullable="true"  on-delete="SET NULL"/>
             </join-columns>
         </many-to-one>
 
         <many-to-one field="contact" target-entity="Sulu\Bundle\ContactBundle\Entity\Contact" inversed-by="activities">
             <join-columns>
-                <join-column name="idContacts" referenced-column-name="id" nullable="true"/>
+                <join-column name="idContacts" referenced-column-name="id" nullable="true" on-delete="SET NULL"/>
             </join-columns>
         </many-to-one>
 
         <many-to-one field="account" target-entity="Sulu\Bundle\ContactBundle\Entity\Account" inversed-by="activities">
             <join-columns>
-                <join-column name="idAccounts" referenced-column-name="id" nullable="true"/>
+                <join-column name="idAccounts" referenced-column-name="id" nullable="true" on-delete="SET NULL"/>
             </join-columns>
         </many-to-one>
 
