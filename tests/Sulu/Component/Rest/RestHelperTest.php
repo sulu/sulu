@@ -60,11 +60,11 @@ class RestHelperTest extends \PHPUnit_Framework_TestCase
             ->setMethods(array('addField'))
             ->getMockForAbstractClass();
 
-        $field1 = $this->getMockBuilder('Sulu\Component\Rest\ListBuilder\FieldDescriptor\AbstractFieldDescriptor')
+        $field1 = $this->getMockBuilder('Sulu\Component\Rest\ListBuilder\AbstractFieldDescriptor')
             ->disableOriginalConstructor()
             ->getMock();
 
-        $field2 = $this->getMockBuilder('Sulu\Component\Rest\ListBuilder\FieldDescriptor\AbstractFieldDescriptor')
+        $field2 = $this->getMockBuilder('Sulu\Component\Rest\ListBuilder\AbstractFieldDescriptor')
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -81,11 +81,11 @@ class RestHelperTest extends \PHPUnit_Framework_TestCase
             ->setMethods(array('setFields'))
             ->getMockForAbstractClass();
 
-        $field1 = $this->getMockBuilder('Sulu\Component\Rest\ListBuilder\FieldDescriptor\AbstractFieldDescriptor')
+        $field1 = $this->getMockBuilder('Sulu\Component\Rest\ListBuilder\AbstractFieldDescriptor')
             ->disableOriginalConstructor()
             ->getMock();
 
-        $field2 = $this->getMockBuilder('Sulu\Component\Rest\ListBuilder\FieldDescriptor\AbstractFieldDescriptor')
+        $field2 = $this->getMockBuilder('Sulu\Component\Rest\ListBuilder\AbstractFieldDescriptor')
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -102,11 +102,11 @@ class RestHelperTest extends \PHPUnit_Framework_TestCase
             ->setMethods(array('addSearchField', 'search'))
             ->getMockForAbstractClass();
 
-        $field1 = $this->getMockBuilder('Sulu\Component\Rest\ListBuilder\FieldDescriptor\AbstractFieldDescriptor')
+        $field1 = $this->getMockBuilder('Sulu\Component\Rest\ListBuilder\AbstractFieldDescriptor')
             ->disableOriginalConstructor()
             ->getMock();
 
-        $field2 = $this->getMockBuilder('Sulu\Component\Rest\ListBuilder\FieldDescriptor\AbstractFieldDescriptor')
+        $field2 = $this->getMockBuilder('Sulu\Component\Rest\ListBuilder\AbstractFieldDescriptor')
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -125,7 +125,7 @@ class RestHelperTest extends \PHPUnit_Framework_TestCase
             ->setMethods(array('sort'))
             ->getMockForAbstractClass();
 
-        $field = $this->getMockBuilder('Sulu\Component\Rest\ListBuilder\FieldDescriptor\AbstractFieldDescriptor')
+        $field = $this->getMockBuilder('Sulu\Component\Rest\ListBuilder\AbstractFieldDescriptor')
             ->disableOriginalConstructor()
             ->getMock();
 

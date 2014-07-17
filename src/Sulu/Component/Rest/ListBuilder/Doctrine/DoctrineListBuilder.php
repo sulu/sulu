@@ -8,12 +8,17 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Rest\ListBuilder;
+namespace Sulu\Component\Rest\ListBuilder\Doctrine;
 
 use Doctrine\ORM\EntityManager;
-use Sulu\Component\Rest\ListBuilder\FieldDescriptor\DoctrineFieldDescriptor;
-use Sulu\Component\Rest\ListBuilder\FieldDescriptor\DoctrineJoinDescriptor;
+use Sulu\Component\Rest\ListBuilder\AbstractListBuilder;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\AbstractDoctrineFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 
+/**
+ * The listbuilder implementation for doctrine
+ * @package Sulu\Component\Rest\ListBuilder\Doctrine
+ */
 class DoctrineListBuilder extends AbstractListBuilder
 {
     /**
@@ -28,22 +33,22 @@ class DoctrineListBuilder extends AbstractListBuilder
     private $entityName;
 
     /**
-     * @var DoctrineFieldDescriptor[]
+     * @var AbstractDoctrineFieldDescriptor[]
      */
     protected $fields = array();
 
     /**
-     * @var DoctrineFieldDescriptor[]
+     * @var AbstractDoctrineFieldDescriptor[]
      */
     protected $searchFields = array();
 
     /**
-     * @var DoctrineFieldDescriptor
+     * @var AbstractDoctrineFieldDescriptor
      */
     protected $sortField;
 
     /**
-     * @var DoctrineFieldDescriptor[]
+     * @var AbstractDoctrineFieldDescriptor[]
      */
     protected $whereFields = array();
 
@@ -73,7 +78,7 @@ class DoctrineListBuilder extends AbstractListBuilder
         $qb = $this->createQueryBuilder();
 
         foreach ($this->fields as $field) {
-            $qb->addSelect($field->getFullName() . ' AS ' . $field->getName());
+            $qb->addSelect($field->getSelect() . ' AS ' . $field->getName());
         }
 
         if ($this->limit != null) {
@@ -81,7 +86,7 @@ class DoctrineListBuilder extends AbstractListBuilder
         }
 
         if ($this->sortField != null) {
-            $qb->orderBy($this->sortField->getFullName(), $this->sortOrder);
+            $qb->orderBy($this->sortField->getSelect(), $this->sortOrder);
         }
 
         return $qb->getQuery()->getArrayResult();
@@ -146,7 +151,7 @@ class DoctrineListBuilder extends AbstractListBuilder
         if (!empty($this->whereFields)) {
             $whereParts = array();
             foreach ($this->whereFields as $whereField) {
-                $whereParts[] = $whereField->getFullName() . ' = :' . $whereField->getName();
+                $whereParts[] = $whereField->getSelect() . ' = :' . $whereField->getName();
                 $qb->setParameter($whereField->getName(), $this->whereValues[$whereField->getName()]);
             }
             $qb->andWhere('(' . implode(' AND ', $whereParts) . ')');
@@ -155,7 +160,7 @@ class DoctrineListBuilder extends AbstractListBuilder
         if ($this->search != null) {
             $searchParts = array();
             foreach ($this->searchFields as $searchField) {
-                $searchParts[] = $searchField->getFullName() . ' LIKE :search';
+                $searchParts[] = $searchField->getSelect() . ' LIKE :search';
             }
 
             $qb->andWhere('(' . implode(' OR ', $searchParts) . ')');

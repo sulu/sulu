@@ -8,13 +8,13 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Rest\ListBuilder\FieldDescriptor;
+namespace Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor;
 
 use Doctrine\ORM\Query\Expr;
 
 /**
  * This class describes a doctrine join
- * @package Sulu\Component\Rest\ListBuilder\FieldDescriptor
+ * @package Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor
  */
 class DoctrineJoinDescriptor
 {
