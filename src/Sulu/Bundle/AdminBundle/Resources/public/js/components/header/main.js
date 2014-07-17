@@ -628,9 +628,11 @@ define([], function() {
                 };
 
             // wait for initialized
-            this.sandbox.on('husky.toolbar.header.initialized', function() {
-                def.resolve();
-            }.bind(this));
+            if (!!def) {
+                this.sandbox.on('husky.toolbar.header'+ this.options.instanceName +'.initialized', function() {
+                    def.resolve();
+                }.bind(this));
+            }
 
             // if passed template is a string get the corresponding default template
             if (!!options.template && typeof options.template === 'string' && toolbarTemplates.hasOwnProperty(options.template)) {
