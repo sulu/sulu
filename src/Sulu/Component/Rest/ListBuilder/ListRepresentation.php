@@ -33,7 +33,7 @@ use Hateoas\Configuration\Annotation\Route;
  *      "filter",
  *      href = @Route(
  *          "expr(object.getRoute())",
- *          parameters = "expr(object.getParameters() + { fields: '{fieldsList}' })",
+ *          parameters = "expr({ fields: '{fieldsList}' } + object.getParameters())",
  *          absolute = "expr(object.isAbsolute())",
  *      )
  * )
@@ -41,7 +41,7 @@ use Hateoas\Configuration\Annotation\Route;
  *      "find",
  *      href = @Route(
  *          "expr(object.getRoute())",
- *          parameters = "expr(object.getParameters() + { fields: '{searchString}{&searchFields}' })",
+ *          parameters = "expr({ search: '{searchString}{&searchFields}' } + object.getParameters())",
  *          absolute = "expr(object.isAbsolute())",
  *      )
  * )
@@ -49,7 +49,7 @@ use Hateoas\Configuration\Annotation\Route;
  *      "pagination",
  *      href = @Route(
  *          "expr(object.getRoute())",
- *          parameters = "expr(object.getParameters() + { page: '{page}', pageSize: '{pageSize}' })",
+ *          parameters = "expr({ page: '{page}', limit: '{limit}'} + object.getParameters())",
  *          absolute = "expr(object.isAbsolute())",
  *      )
  * )
@@ -57,7 +57,7 @@ use Hateoas\Configuration\Annotation\Route;
  *      "sortable",
  *      href = @Route(
  *          "expr(object.getRoute())",
- *          parameters = "expr(object.getParameters() + { sortBy: '{sortBy}', sortOrder: '{sortOrder}' })",
+ *          parameters = "expr({ sortBy: '{sortBy}', sortOrder: '{sortOrder}' } + object.getParameters())",
  *          absolute = "expr(object.isAbsolute())",
  *      )
  * )
