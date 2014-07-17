@@ -2004,8 +2004,8 @@ class AccountControllerTest extends DatabaseTestCase
             $this->assertEquals(false, $response->addresses[1]->primaryAddress);
             $this->assertEquals(true, $response->addresses[2]->primaryAddress);
         } else {
-            $this->assertEquals(true, $response->addresses[0]->primaryAddress);
-            $this->assertEquals(false, $response->addresses[1]->primaryAddress);
+            $this->assertEquals(false, $response->addresses[0]->primaryAddress);
+            $this->assertEquals(true, $response->addresses[1]->primaryAddress);
             $this->assertEquals(false, $response->addresses[2]->primaryAddress);
         }
         $client->request(
@@ -2021,8 +2021,8 @@ class AccountControllerTest extends DatabaseTestCase
             $this->assertEquals(false, $response->addresses[1]->primaryAddress);
             $this->assertEquals(true, $response->addresses[2]->primaryAddress);
         } else {
-            $this->assertEquals(true, $response->addresses[0]->primaryAddress);
-            $this->assertEquals(false, $response->addresses[1]->primaryAddress);
+            $this->assertEquals(false, $response->addresses[0]->primaryAddress);
+            $this->assertEquals(true, $response->addresses[1]->primaryAddress);
             $this->assertEquals(false, $response->addresses[2]->primaryAddress);
         }
     }
