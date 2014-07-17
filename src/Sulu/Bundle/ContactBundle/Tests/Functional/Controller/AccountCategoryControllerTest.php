@@ -322,7 +322,7 @@ class AccountCategoryControllerTest extends DatabaseTestCase
         $client = $this->createTestClient();
         $client->request(
             'PATCH',
-            'api/accounts/1/category',
+            'api/accounts/1/category/999',
             array(
                 array(
                     'id' => 1,
