@@ -13,8 +13,9 @@ namespace Sulu\Bundle\TranslateBundle\Controller;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\TranslateBundle\Translate\TranslateCollectionRepresentation;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 use Sulu\Component\Rest\ListBuilder\DoctrineListBuilderFactory;
-use Sulu\Component\Rest\ListBuilder\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\ListBuilder\ListRestHelperInterface;
 use Sulu\Component\Rest\Listing\ListRestHelper;
@@ -320,23 +321,74 @@ class CodeController extends RestController implements ClassResourceInterface
         $this->fieldDescriptors['backend'] = new DoctrineFieldDescriptor('backend', 'backend', self::$entityName);
         $this->fieldDescriptors['frontend'] = new DoctrineFieldDescriptor('frontend', 'frontend', self::$entityName);
         $this->fieldDescriptors['length'] = new DoctrineFieldDescriptor('length', 'length', self::$entityName);
-        $this->fieldDescriptors['translations_value'] = new DoctrineFieldDescriptor('value', 'translations_value', self::$translationEntity, array(
-            self::$translationEntity => self::$entityName . '.translations',
-        ));
-        $this->fieldDescriptors['translations_catalogue_locale'] = new DoctrineFieldDescriptor('locale', 'translations_catalogue_locale', self::$catalogueEntity, array(
-            self::$translationEntity => self::$entityName . '.translations',
-            self::$catalogueEntity => self::$translationEntity . '.catalogue'
-        ));
-        $this->fieldDescriptors['packageId'] = new DoctrineFieldDescriptor('id', 'packageId', self::$packageEntity, array(
-            self::$packageEntity => self::$entityName . '.package'
-        ));
-        $this->fieldDescriptors['catalogueId'] = new DoctrineFieldDescriptor('id', 'catalogueId', self::$catalogueEntity, array(
-            self::$translationEntity => self::$entityName . '.translations',
-            self::$catalogueEntity => self::$translationEntity . '.catalogue',
-        ));
-        $this->fieldDescriptors['location_name'] = new DoctrineFieldDescriptor('name', 'location_name', self::$locationEntity, array(
-            self::$locationEntity => self::$entityName . '.location',
-        ));
+        $this->fieldDescriptors['translations_value'] = new DoctrineFieldDescriptor(
+            'value',
+            'translations_value',
+            self::$translationEntity,
+            'value',
+            array(
+                self::$translationEntity => new DoctrineJoinDescriptor(
+                        self::$translationEntity,
+                        self::$entityName . '.translations'
+                    )
+            )
+        );
+        $this->fieldDescriptors['translations_catalogue_locale'] = new DoctrineFieldDescriptor(
+            'locale',
+            'translations_catalogue_locale',
+            self::$catalogueEntity,
+            'locale',
+            array(
+                self::$translationEntity => new DoctrineJoinDescriptor(
+                        self::$translationEntity,
+                        self::$entityName . '.translations'
+                    ),
+                self::$catalogueEntity =>   new DoctrineJoinDescriptor(
+                        self::$catalogueEntity,
+                        self::$translationEntity . '.catalogue'
+                    ),
+            )
+        );
+        $this->fieldDescriptors['packageId'] = new DoctrineFieldDescriptor(
+            'id',
+            'packageId',
+            self::$packageEntity,
+            'package',
+            array(
+                self::$packageEntity =>     new DoctrineJoinDescriptor(
+                        self::$packageEntity,
+                        self::$entityName . '.package'
+                    )
+            )
+        );
+        $this->fieldDescriptors['catalogueId'] = new DoctrineFieldDescriptor(
+            'id',
+            'catalogueId',
+            self::$catalogueEntity,
+            'catalogue',
+            array(
+                self::$translationEntity => new DoctrineJoinDescriptor(
+                        self::$translationEntity,
+                        self::$entityName . '.translations'
+                    ),
+                self::$catalogueEntity =>   new DoctrineJoinDescriptor(
+                        self::$catalogueEntity,
+                        self::$translationEntity . '.catalogue'
+                    )
+            )
+        );
+        $this->fieldDescriptors['location_name'] = new DoctrineFieldDescriptor(
+            'name',
+            'location_name',
+            self::$locationEntity,
+            'location',
+            array(
+                self::$locationEntity =>    new DoctrineJoinDescriptor(
+                        self::$locationEntity,
+                        self::$entityName . '.location'
+                    )
+            )
+        );
 
 
         return $this->fieldDescriptors;
