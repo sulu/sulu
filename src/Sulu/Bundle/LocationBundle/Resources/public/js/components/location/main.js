@@ -15,98 +15,180 @@ define([], function() {
 
     var defaults = {
              translations: {
-                 'configureLocation': 'Configure Location',
+                 configureLocation: 'Configure Location',
+                 title: 'Title',
+                 street: 'Street',
+                 number: 'Number',
+                 code: 'Code',
+                 town: 'Town',
+                 country: 'Country',
+                 coordinates: 'Coordinates'
              },
-             instanceName: 'instance-one'
+             instanceName: null,
+             mapSource: 'google_maps',
         },
+
+        constants = {
+            contentContainerClass: 'location-content-container',
+            contentClass: 'location-content',
+            configureButtonClass: 'location-content-configure',
+            overlayClass: 'location-overlay-content',
+            formId: 'location-content-overlay-form'
+        },
+
+        dataDefaults = {
+            title: '',
+            street: '',
+            number: '',
+            code: '',
+            country: '',
+            coordinates: ''
+        },
+
+        /**
+         * Namespace for events
+         *
+         * @type {string}
+         */
+        eventNamespace = 'sulu.location',
+
+        /**
+         * Raised when all overlay components returned their value
+         * @event sulu.media-selection.input-retrieved
+         */
+        INPUT_RETRIEVED = function() {
+            return createEventName.call(this, 'input-retrieved');
+        },
+
+        /**
+         * Raised when the overlay data has been changed
+         * @event sulu.media-selection.data-changed
+         */
+        DATA_CHANGED = function() {
+            return createEventName.call(this, 'data-changed');
+        },
+
+        /**
+         * Raised before data is requested with AJAX
+         * @event sulu.media-selection.data-request
+         */
+        DATA_REQUEST = function() {
+            return createEventName.call(this, 'data-request');
+        },
+
+        /**
+         * Raised when data has returned from the ajax request
+         * @event sulu.media-selection.data-retrieved
+         */
+        DATA_RETRIEVED = function() {
+            return createEventName.call(this, 'data-retrieved');
+        },
+
+        /**
+         * returns normalized event names
+         */
+        createEventName = function(postFix) {
+            return eventNamespace + (this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
+        },
+
         templates = {
             skeleton: [
-                '<div class="location-content-container form-element">',
-                '<div class="location-header"><a class="location-content-configure fa-gears" href="#"/></div>',
-                '<div class="location-content"></div>'
+                '<div class="<%= constants.contentContainerClass %> form-element">',
+                    '<div class="location-header"><a href="#" class="<%= constants.configureButtonClass %>"><span class="fa-gears icon large"></span></a></div>',
+                    '<div class="<%= constants.contentClass %>"></div>',
+                '</div>',
             ].join(''),
             content: [
                     '<div class="grid-row">',
                         '<div class="grid-col-6 container">',
-                            '<iframe src="https://www.google.com/maps/embed?pb=!1m16!1m12!1m3!1d5400.563708014352!2d9.761512727812047!3d47.406443294080205!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!2m1!1smassiveart+dornbirn!5e0!3m2!1sfr!2sfr!4v1405433236369" width="350" height="200" frameborder="0" style="border:0"></iframe>',
-                            '<div class="source">Source: Google Maps</div>',
+                            '<img src="/bundles/sululocation/js/test/map.png"/>',
+                            '<div class="source">Source: <%= data.map_source %></div>',
                         '</div>',
                         '<div class="grid-col-6">',
                             '<div class="container grid">',
                                 '<div class="grid-row">',
-                                    '<div class="grid-col-3 field">Title:</div>',
-                                    '<div class="grid-col-9">MASSIVE ART WebServices GmbH</div>',
+                                    '<div class="grid-col-3 field"><%= translations.title %>:</div>',
+                                    '<div class="grid-col-9"><%= data.title %></div>',
+                                '</div>',
+                                '<div class="grid-row no-spacing">',
+                                    '<div class="grid-col-3 field"><%= translations.street %></div>',
+                                    '<div class="grid-col-9"><%= data.street %></div>',
+                                '</div>',
+                                '<div class="grid-row no-spacing">',
+
+                                    '<div class="grid-col-3 field"><%= translations.number %>:</div>',
+                                    '<div class="grid-col-9"><%= data.number %></div>',
+                                '</div>',
+
+                                '<div class="grid-row no-spacing">',
+                                    '<div class="grid-col-3 field"><%= translations.code %>:</div>',
+                                    '<div class="grid-col-9"><%= data.code %></div>',
+                                '</div>',
+
+                                '<div class="grid-row no-spacing">',
+                                    '<div class="grid-col-3 field"><%= translations.town %>:</div>',
+                                    '<div class="grid-col-9"><%= data.town %></div>',
+                                '</div>',
+
+                                '<div class="grid-row">',
+                                    '<div class="grid-col-3 field"><%= translations.country %>:</div>',
+                                    '<div class="grid-col-9"><%= data.country %></div>',
                                 '</div>',
                                 '<div class="grid-row">',
-                                    '<div class="grid-col-3 field">Street:</div>',
-                                    '<div class="grid-col-9">Steineback</div>',
-
-                                    '<div class="grid-col-3 field">Number:</div>',
-                                    '<div class="grid-col-9">16</div>',
-
-                                    '<div class="grid-col-3 field">Code</div>',
-                                    '<div class="grid-col-9">6850</div>',
-
-                                    '<div class="grid-col-3 field">Town</div>',
-                                    '<div class="grid-col-9">Dornbirn</div>',
-
-                                    '<div class="grid-col-3 field">Country</div>',
-                                    '<div class="grid-col-9">Austria</div>',
-                                '</div>',
-                                '<div class="grid-row">',
-                                    '<div class="grid-col-3 field">Coordinates:</div>',
-                                    '<div class="grid-col-9">47.404936,9.75833,17</div>',
+                                    '<div class="grid-col-3 field"><%= translations.coordinates %>:</div>',
+                                    '<div class="grid-col-9"><%= data.coordinates %></div>',
                                 '</div>',
                             '</div>',
                         '</div>',
                     '</div>',
             ].join(''),
             overlay: [
-                '<div class="location-overlay-content grid">',
-                    '<form id="location-configuration-form">',
+                '<div class="<%= constants.overlayClass %> grid">',
+                    '<form id="<%= constants.formId %>">',
                         '<div class="grid-row">',
-                            '<div class="grid-col-6">',
-                            '<div class="form-group">',
+                            '<div class="form-group grid-col-6">',
                                 '<label for="map_source">Map Source</label>',
-                                '<select class="form-element" name="map_source" class="map-source">',
-                                    '<option value="google">Google Maps</option>',
-                                    '<option value="openstreetmaps">Open Street Maps</option>',
+                                '<select class="form-element" name="map_source" class="map-source" data-mapper-property="map_source">',
+                                    '<option value="google_maps">Google Maps</option>',
                                 '</select>',
-                                '</div>',
                             '</div>',
                         '</div>',
                         '<div class="grid-row">',
                             '<div class="form-group grid-col-12">',
-                                '<label for="title">Title</label>',
-                                '<input class="form-element" type="text" name="title"/ >',
+                                '<label for="title"><%= translations.title %></label>',
+                                '<input class="form-element" type="text" data-mapper-property="title" value="<%= data.title %>"/ >',
                             '</div>',
                         '</div>',
                         '<div class="grid-row">',
                             '<div class="form-group grid-col-6">',
-                                '<label for="street">Street</label>',
-                                '<input class="form-element" type="text" class="street"/ >',
+                                '<label for="street"><%= translations.street %></label>',
+                                '<input class="form-element" type="text" data-mapper-property="street" value="<%= data.street %>"/ >',
                             '</div>',
                             '<div class="form-group grid-col-6">',
-                                '<label for="number">Number</label>',
-                                '<input class="form-element" type="text" class="street"/ >',
+                                '<label for="number"><%= translations.number %></label>',
+                                '<input class="form-element" type="text" data-mapper-property="number" value="<%= data.number %>"/ >',
                             '</div>',
                         '</div>',
                         '<div class="grid-row">',
                             '<div class="form-group grid-col-6">',
-                                '<label for="code">Code</label>',
-                                '<input class="form-element" type="text" class="code"/ >',
+                                '<label for="code"><%= translations.code %></label>',
+                                '<input class="form-element" type="text" data-mapper-property="code" value="<%= data.code %>"/ >',
                             '</div>',
                             '<div class="form-group grid-col-6">',
-                                '<label for="country">Country</label>',
-                                '<select class="form-element" name="country" class="map-source">',
+                                '<label for="town"><%= translations.town %></label>',
+                                '<input class="form-element" type="text" data-mapper-property="town" value="<%= data.town %>"/ >',
+                            '</div>',
+                        '</div>',
+                        '<div class="grid-row">',
+                            '<div class="form-group grid-col-6">',
+                                '<label for="country"><%= translations.country %></label>',
+                                '<select class="form-element" name="country" data-mapper-property="country">',
                                     '<option value="as">Austria</option>',
                                 '</select>',
                             '</div>',
-                        '</div>',
-                        '<div class="grid-row">',
-                            '<div class="form-group grid-col-12">',
-                                '<label for="coordinates">Coordinates</label>',
-                                '<input class="form-element" type="text" name="coordinates"/ >',
+                            '<div class="form-group grid-col-6">',
+                                '<label for="coordinates"><%= translations.coordinates %></label>',
+                                '<input class="form-element" type="text" data-mapper-property="coordinates" value="<%= data.coordinates %>"/ >',
                             '</div>',
                         '</div>',
                         '<div class="grid-row">',
@@ -115,33 +197,69 @@ define([], function() {
                             '</div>',
                             '<div class="small-font grey-font">Move pointer to change location on map</div>',
                         '</div>',
-                    '</div>',
+                    '</form>',
                 '</div>'
             ].join('')
         };
+
 
     return {
         options: {},
         $button: null,
 
-        initialize: function() {
-            this.sandbox.logger.log('initialize', this);
+        data: {},
+        formData: {},
 
+        /**
+         * Wrap the underscore _.template call and add some
+         * default params
+         */
+        _template: function (name, params) {
+            var tmplSource = templates[name];
+            var params = this.sandbox.util.extend(true, {}, {
+                constants: constants,
+                translations: this.options.translations
+            }, params);
+
+            return _.template(tmplSource, params);
+        },
+
+        initialize: function() {
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
+            this.data = this.sandbox.util.extend(true, {}, dataDefaults, this.sandbox.dom.data(this.$el, 'location'));
             this.createComponent();
         },
 
         createComponent: function () {
             this.render();
+            this.renderContent();
+            this.bindEvents();
             this.startOverlay();
         },
 
+        bindEvents: function () {
+            this.sandbox.on('husky.overlay.location-content.location.opened', this.createForm.bind(this));
+        },
+
         render: function () {
-            this.sandbox.dom.html(this.$el, templates.skeleton);
-            this.sandbox.dom.find('.location-content').append(templates.content);
+            this.sandbox.dom.html(this.$el, this._template('skeleton', {}));
+        },
+
+        renderContent: function () {
+            this.sandbox.dom.find('.' + constants.contentClass).empty().html(
+                this._template('content', {
+                    data: this.data
+                })
+            );
+        },
+
+        createForm: function () {
+            this.sandbox.form.create('#' + constants.formId);
         },
 
         startOverlay: function () {
+            this.formData = this.data;
+
             var $element = this.sandbox.dom.createElement('<div></div>');
             this.sandbox.dom.append(this.$el, $element);
 
@@ -149,7 +267,7 @@ define([], function() {
                 {
                     name: 'overlay@husky',
                     options: {
-                        triggerEl: '.location-content-configure',
+                        triggerEl: '.' + constants.configureButtonClass,
                         el: $element,
                         container: this.$el,
                         instanceName: 'location-content.' + this.options.instanceName,
@@ -157,8 +275,15 @@ define([], function() {
                         slides: [
                             {
                                 title: this.sandbox.translate(this.options.translations.configureLocation),
-                                data: templates.overlay,
+                                data: this._template('overlay', {
+                                    data: this.formData
+                                }),
                                 okCallback: function () {
+                                    // @todo: Validation
+                                    this.data = this.sandbox.form.getData('#' + constants.formId);
+                                    this.sandbox.dom.data(this.$el, 'location', this.data);
+                                    this.sandbox.emit('sulu.content.changed');
+                                    this.renderContent();
                                 }.bind(this)
                             }
                         ]

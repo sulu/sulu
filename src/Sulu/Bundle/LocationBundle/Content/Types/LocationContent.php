@@ -40,12 +40,26 @@ class LocationContent extends ComplexContentType
     }
 
     /**
-     * returns a template to render a form
-     * @return string
+     * {@inheritDoc}
      */
     public function getTemplate()
     {
         return $this->template;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getDefaultParams()
+    {
+        // Need a service to provide countries, see: https://github.com/sulu-cmf/SuluContactBundle/issues/121
+        return array(
+            'countries' => array(
+                'at' => 'Austria',
+                'fr' => 'France',
+                'gb' => 'Great Britain'
+            )
+        );
     }
 
     /**
@@ -82,7 +96,6 @@ class LocationContent extends ComplexContentType
     public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
         $data = json_decode($node->getPropertyValueWithDefault($property->getName(), '{}'), true);
-
         $this->setData($data, $property, $webspaceKey, $languageCode, $segmentKey);
     }
 

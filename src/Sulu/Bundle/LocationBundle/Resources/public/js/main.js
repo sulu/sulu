@@ -9,7 +9,8 @@
 
 require.config({
     paths: {
-        sululocation: '../../sululocation/js'
+        sululocation: '../../sululocation/js',
+        "type/location": '../../sululocation/js/validation/types/location'
     }
 });
 
@@ -24,7 +25,6 @@ define({
         var sandbox = app.sandbox;
 
         app.components.addSource('sululocation', '/bundles/sululocation/js/components');
-
         // Example: list all contacts
         // sandbox.mvc.routes.push({
         //     route: 'contacts/contacts',

@@ -15,7 +15,7 @@
         <meta name="viewport" content="width=device-width">
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
         <link rel="stylesheet" href="/bundles/suluadmin/js/vendor/husky/husky.min.css">
-        <link rel="stylesheet" href="/bundles/sululocation/css/main.css">
+        <link rel="stylesheet" href="../../css/main.css">
         <style type="text/css">
             h1 {
                 padding: 20px 0 0 00px;
@@ -65,7 +65,8 @@
                     {
                         name: 'location@sululocation',
                         options: {
-                            el: '#location_content'
+                            el: '#location_content',
+                            url: '/bundles/sululocation/js/test/data1.json'
                         }
                     }
                 ]).then(function() {
