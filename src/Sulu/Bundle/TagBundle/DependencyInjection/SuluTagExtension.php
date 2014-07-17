@@ -32,7 +32,7 @@ class SuluTagExtension extends Extension
 
         // set content types
         $container->setParameter(
-            'sulu.content.type.tag_list.template',
+            'sulu_tag.content.type.tag_list.template',
             $config['content']['types']['tag_list']['template']
         );
 
