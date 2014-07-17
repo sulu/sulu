@@ -1999,7 +1999,7 @@ class AccountControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
-        if ($response->addresses[0]->primaryAddress === false) {
+        if ($response->addresses[1]->primaryAddress === false) {
             $this->assertEquals(false, $response->addresses[0]->primaryAddress);
             $this->assertEquals(false, $response->addresses[1]->primaryAddress);
             $this->assertEquals(true, $response->addresses[2]->primaryAddress);
@@ -2016,7 +2016,7 @@ class AccountControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
-        if ($response->addresses[0]->primaryAddress === false) {
+        if ($response->addresses[1]->primaryAddress === false) {
             $this->assertEquals(false, $response->addresses[0]->primaryAddress);
             $this->assertEquals(false, $response->addresses[1]->primaryAddress);
             $this->assertEquals(true, $response->addresses[2]->primaryAddress);
