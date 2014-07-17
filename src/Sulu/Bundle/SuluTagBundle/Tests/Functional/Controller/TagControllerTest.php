@@ -46,7 +46,8 @@ class TagControllerTest extends DatabaseTestCase
 
         self::$entities = array(
             self::$em->getClassMetadata('Sulu\Bundle\TagBundle\Entity\Tag'),
-            self::$em->getClassMetadata('Sulu\Bundle\TestBundle\Entity\TestUser')
+            self::$em->getClassMetadata('Sulu\Bundle\TestBundle\Entity\TestUser'),
+            self::$em->getClassMetadata('Sulu\Bundle\TestBundle\Entity\TestContact'),
         );
 
         self::$tool->dropSchema(self::$entities);
@@ -467,7 +468,6 @@ class TagControllerTest extends DatabaseTestCase
         $this->assertEquals('tag4', $response->_embedded->tags[3]->name);
         $this->assertEquals('tag5', $response->_embedded->tags[4]->name);
         $this->assertEquals('tag6', $response->_embedded->tags[5]->name);
-
     }
 
     public function testPatchExistingAsNew()
