@@ -23,8 +23,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\RestHelperInterface;
-use Sulu\Component\Rest\ListBuilder\DoctrineListBuilderFactory;
-use Sulu\Component\Rest\ListBuilder\FieldDescriptor\DoctrineFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 
 /**
  * Makes the roles accessible through a REST-API
@@ -57,11 +57,42 @@ class RoleController extends RestController implements ClassResourceInterface
      */
     public function __construct() {
         $this->fieldDescriptors = array();
-        $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor('id', 'id', self::$entityName);
-        $this->fieldDescriptors['system'] = new DoctrineFieldDescriptor('system', 'system', self::$entityName);
-        $this->fieldDescriptors['name'] = new DoctrineFieldDescriptor('name', 'name', self::$entityName);
-        $this->fieldDescriptors['created'] = new DoctrineFieldDescriptor('created', 'created', self::$entityName);
-        $this->fieldDescriptors['changed'] = new DoctrineFieldDescriptor('changed', 'changed', self::$entityName);
+        $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor(
+            'id',
+            'id',
+            self::$entityName,
+            'public.id',
+            array(),
+            false, false, '', '50px'
+        );
+        $this->fieldDescriptors['system'] = new DoctrineFieldDescriptor(
+            'system',
+            'system',
+            self::$entityName,
+            'security.roles.system'
+        );
+        $this->fieldDescriptors['name'] = new DoctrineFieldDescriptor(
+            'name',
+            'name',
+            self::$entityName,
+            'public.name'
+        );
+        $this->fieldDescriptors['created'] = new DoctrineFieldDescriptor(
+            'created',
+            'created',
+            self::$entityName,
+            'public.created',
+            array(),
+            false, false, 'date'
+        );
+        $this->fieldDescriptors['changed'] = new DoctrineFieldDescriptor(
+            'changed',
+            'changed',
+            self::$entityName,
+            'public.changed',
+            array(),
+            true, false, 'date'
+        );
     }
 
     /**
@@ -217,7 +248,7 @@ class RoleController extends RestController implements ClassResourceInterface
 
                 $role->setChanged(new \DateTime());
 
-                if (!$this->processPermissions($role, $request->get('permissions'))) {
+                if (!$this->processPermissions($role, $request->get('permissions', array()))) {
                     throw new RestException("Could not update dependencies!");
                 }
 
@@ -274,6 +305,14 @@ class RoleController extends RestController implements ClassResourceInterface
      */
     protected function processPermissions(Role $role, $permissions)
     {
+        /** @var RestHelperInterface $restHelper */
+        $restHelper = $this->get('sulu_core.doctrine_rest_helper');
+
+        $get = function($entity) {
+            /** @var Permission $entity */
+            return $entity->getId();
+        };
+
         $delete = function ($permission) use ($role) {
             $this->getDoctrine()->getManager()->remove($permission);
         };
@@ -286,7 +325,8 @@ class RoleController extends RestController implements ClassResourceInterface
             return $this->addPermission($role, $permission);
         };
 
-        return $this->processPut($role->getPermissions(), $permissions, $delete, $update, $add);
+        return $restHelper->processSubEntities($role->getPermissions(), $permissions, $get, $add, $update, $delete);
+
     }
 
     /**
