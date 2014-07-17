@@ -28,8 +28,9 @@ use Sulu\Component\Rest\RestHelperInterface;
 use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Component\Rest\ListBuilder\DoctrineListBuilderFactory;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
-use Sulu\Component\Rest\ListBuilder\FieldDescriptor\DoctrineFieldDescriptor;
-use Sulu\Component\Rest\ListBuilder\FieldDescriptor\DoctrineJoinDescriptor;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineConcatenationFieldDescriptor;
 
 /**
  * Makes activities available through a REST API
@@ -72,32 +73,36 @@ class ActivityController extends RestController implements ClassResourceInterfac
             'id',
             'id',
             self::$entityName,
+            'public.id',
             array(),
             false,
             true,
             '',
             '',
             '',
-            false,
-            'public.id'
+            true,
+            false
         );
         $this->fieldDescriptors['subject'] = new DoctrineFieldDescriptor(
             'subject',
             'subject',
             self::$entityName,
+            'contact.activities.subject',
             array(),
             false,
             true,
             '',
             '',
             '',
-            false,
-            'contact.activities.subject'
+            true,
+            false
+
         );
         $this->fieldDescriptors['note'] = new DoctrineFieldDescriptor(
             'note',
             'note',
             self::$entityName,
+            'contact.activities.note',
             array(),
             false,
             true,
@@ -105,25 +110,27 @@ class ActivityController extends RestController implements ClassResourceInterfac
             '',
             '',
             false,
-            'contact.activities.note'
+            false
         );
         $this->fieldDescriptors['dueDate'] = new DoctrineFieldDescriptor(
             'dueDate',
             'dueDate',
             self::$entityName,
+            'contact.activities.dueDate',
             array(),
             false,
             true,
             'date',
             '',
             '',
-            false,
-            'contact.activities.dueDate'
+            true,
+            false
         );
         $this->fieldDescriptors['startDate'] = new DoctrineFieldDescriptor(
             'startDate',
             'startDate',
             self::$entityName,
+            'contact.activities.startDate',
             array(),
             true,
             false,
@@ -131,12 +138,13 @@ class ActivityController extends RestController implements ClassResourceInterfac
             '',
             '',
             false,
-            'contact.activities.startDate'
+            false
         );
         $this->fieldDescriptors['created'] = new DoctrineFieldDescriptor(
             'created',
             'created',
             self::$entityName,
+            'public.created',
             array(),
             true,
             false,
@@ -144,12 +152,13 @@ class ActivityController extends RestController implements ClassResourceInterfac
             '',
             '',
             false,
-            'public.created'
+            false
         );
         $this->fieldDescriptors['changed'] = new DoctrineFieldDescriptor(
             'changed',
             'changed',
             self::$entityName,
+            'public.changed',
             array(),
             true,
             false,
@@ -157,11 +166,14 @@ class ActivityController extends RestController implements ClassResourceInterfac
             '',
             '',
             false,
-            'public.changede'
+            false
         );
 
         $this->fieldDescriptors['activityStatus'] = new DoctrineFieldDescriptor(
-            'name', 'activityStatus', self::$activityStatusEntityName,
+            'name',
+            'activityStatus',
+            self::$activityStatusEntityName,
+            'contact.activities.status',
             array(
                 self::$activityStatusEntityName => new DoctrineJoinDescriptor(
                         self::$activityStatusEntityName,
@@ -173,12 +185,15 @@ class ActivityController extends RestController implements ClassResourceInterfac
             'translation',
             '',
             '',
-            false,
-            'contact.activities.status'
+            true,
+            false
         );
 
         $this->fieldDescriptors['activityPriority'] = new DoctrineFieldDescriptor(
-            'name', 'activityPriority', self::$activityPriorityEntityName,
+            'name',
+            'activityPriority',
+            self::$activityPriorityEntityName,
+            'contact.activities.priority',
             array(
                 self::$activityPriorityEntityName => new DoctrineJoinDescriptor(
                         self::$activityPriorityEntityName,
@@ -190,12 +205,15 @@ class ActivityController extends RestController implements ClassResourceInterfac
             'translation',
             '',
             '',
-            false,
-            'contact.activities.priority'
+            true,
+            false
         );
 
         $this->fieldDescriptors['activityType'] = new DoctrineFieldDescriptor(
-            'name', 'activityType', self::$activityTypeEntityName,
+            'name',
+            'activityType',
+            self::$activityTypeEntityName,
+            'contact.activities.type',
             array(
                 self::$activityTypeEntityName => new DoctrineJoinDescriptor(
                         self::$activityTypeEntityName,
@@ -207,41 +225,46 @@ class ActivityController extends RestController implements ClassResourceInterfac
             'translation',
             '',
             '',
-            false,
-            'contact.activities.type'
+            true,
+            false
         );
 
         // TODO use fullName when implemented
-        $this->fieldDescriptors['assignedContact'] = new DoctrineFieldDescriptor(
-            'lastName', 'assignedContact', self::$contactEntityName . 'assignedContact',
-            array(
-                self::$contactEntityName . 'assignedContact' => new DoctrineJoinDescriptor(
-                        self::$contactEntityName . 'assignedContact', self::$entityName . '.assignedContact'
-                    )
-            ),
-            false,
-            true,
-            '',
-            '',
-            '',
-            false,
-            'contact.activities.assignedContact'
-        );
+//        $this->fieldDescriptors['assignedContact'] = new DoctrineConcatenationFieldDescriptor(
+//            array(
+//                new DoctrineFieldDescriptor('firstName', 'firstName', self::$entityName),
+//                new DoctrineFieldDescriptor('lastName', 'lastName', self::$entityName)
+//            ),
+//            'fullName',
+//            'public.fullName'
+//        );
+
+//        $this->fieldDescriptors['fullName'] = new DoctrineConcatenationFieldDescriptor(
+//            array(
+//                new DoctrineFieldDescriptor('firstName', 'firstName', self::$entityName),
+//                new DoctrineFieldDescriptor('lastName', 'lastName', self::$entityName)
+//            ),
+//            'fullName',
+//            'public.fullName'
+//        );
 
         $this->joinDescriptors['account'] = new DoctrineFieldDescriptor(
             'id', 'account', self::$accountEntityName,
+            '',
             array(
                 self::$accountEntityName => new DoctrineJoinDescriptor(
                         self::$accountEntityName,
                         self::$entityName . '.account'
                     )
             ),
+            '',
             true,
             false
         );
 
         $this->joinDescriptors['contact'] = new DoctrineFieldDescriptor(
             'id', 'contact', self::$contactEntityName . 'contact',
+            '',
             array(
                 self::$contactEntityName . 'contact' => new DoctrineJoinDescriptor(
                         self::$contactEntityName . 'contact',
