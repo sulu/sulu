@@ -158,4 +158,32 @@ class TestUser implements UserInterface
     {
 
     }
+    /**
+     * @var \Sulu\Bundle\TestBundle\Entity\TestContact
+     */
+    private $contact;
+
+
+    /**
+     * Set contact
+     *
+     * @param \Sulu\Bundle\TestBundle\Entity\TestContact $contact
+     * @return TestUser
+     */
+    public function setContact(\Sulu\Bundle\TestBundle\Entity\TestContact $contact = null)
+    {
+        $this->contact = $contact;
+    
+        return $this;
+    }
+
+    /**
+     * Get contact
+     *
+     * @return \Sulu\Bundle\TestBundle\Entity\TestContact 
+     */
+    public function getContact()
+    {
+        return $this->contact;
+    }
 }
