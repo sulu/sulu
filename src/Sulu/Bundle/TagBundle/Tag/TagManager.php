@@ -296,7 +296,9 @@ class TagManager implements TagManagerInterface
             array(),
             false,
             true,
-            '', '', '',
+            '',
+            '',
+            '',
             true,
             true
         );
@@ -320,9 +322,9 @@ class TagManager implements TagManagerInterface
             false,
             'date'
         );
-        $this->fieldDescriptors['creator_contact_lastName'] = new DoctrineFieldDescriptor(
+        $this->fieldDescriptors['creator'] = new DoctrineFieldDescriptor(
             'lastName',
-            'creator_contact_lastName',
+            'creator',
             self::$contactEntityName,
             'tags.author',
             array(
