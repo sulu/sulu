@@ -920,13 +920,13 @@ class AccountControllerTest extends DatabaseTestCase
     public function testGetListSearch()
     {
         $client = $this->createTestClient();
-        $client->request('GET', '/api/accounts?flat=true&search=Nothing&searchFields=name,emails_emailType_name');
+        $client->request('GET', '/api/accounts?flat=true&search=Nothing&searchFields=name');
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(0, $response->total);
         $this->assertEquals(0, count($response->_embedded->accounts));
 
-        $client->request('GET', '/api/accounts?flat=true&search=Comp&searchFields=name,emails_emailType_name');
+        $client->request('GET', '/api/accounts?flat=true&search=Comp&searchFields=name');
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(1, $response->total);
