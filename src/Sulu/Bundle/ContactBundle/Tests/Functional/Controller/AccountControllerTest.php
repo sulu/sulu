@@ -1998,16 +1998,12 @@ class AccountControllerTest extends DatabaseTestCase
 
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        usort($response->addresses, $this->sortAddressesPrimaryLast());
 
-        if ($response->addresses[1]->primaryAddress === false) {
-            $this->assertEquals(false, $response->addresses[0]->primaryAddress);
-            $this->assertEquals(false, $response->addresses[1]->primaryAddress);
-            $this->assertEquals(true, $response->addresses[2]->primaryAddress);
-        } else {
-            $this->assertEquals(false, $response->addresses[0]->primaryAddress);
-            $this->assertEquals(true, $response->addresses[1]->primaryAddress);
-            $this->assertEquals(false, $response->addresses[2]->primaryAddress);
-        }
+        $this->assertEquals(false, $response->addresses[0]->primaryAddress);
+        $this->assertEquals(false, $response->addresses[1]->primaryAddress);
+        $this->assertEquals(true, $response->addresses[2]->primaryAddress);
+
         $client->request(
             'GET',
             '/api/accounts/1'
@@ -2015,16 +2011,21 @@ class AccountControllerTest extends DatabaseTestCase
 
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        usort($response->addresses, $this->sortAddressesPrimaryLast());
 
-        if ($response->addresses[1]->primaryAddress === false) {
-            $this->assertEquals(false, $response->addresses[0]->primaryAddress);
-            $this->assertEquals(false, $response->addresses[1]->primaryAddress);
-            $this->assertEquals(true, $response->addresses[2]->primaryAddress);
-        } else {
-            $this->assertEquals(false, $response->addresses[0]->primaryAddress);
-            $this->assertEquals(true, $response->addresses[1]->primaryAddress);
-            $this->assertEquals(false, $response->addresses[2]->primaryAddress);
-        }
+        $this->assertEquals(false, $response->addresses[0]->primaryAddress);
+        $this->assertEquals(false, $response->addresses[1]->primaryAddress);
+        $this->assertEquals(true, $response->addresses[2]->primaryAddress);
+    }
+
+    public function sortAddressesPrimaryLast()
+    {
+        return function ($a, $b) {
+            if ($a->primaryAddress === true && $b->primaryAddress === false) {
+                return true;
+            }
+        return false;
+        };
     }
 
     public function testTriggerAction()
