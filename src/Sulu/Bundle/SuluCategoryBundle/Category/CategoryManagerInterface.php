@@ -11,7 +11,7 @@
 namespace Sulu\Bundle\CategoryBundle\Category;
 
 use Sulu\Bundle\CategoryBundle\Entity\Category;
-use Sulu\Component\Rest\ListBuilder\FieldDescriptor\DoctrineFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Bundle\CategoryBundle\Api\Category as CategoryWrapper;
 
 /**
