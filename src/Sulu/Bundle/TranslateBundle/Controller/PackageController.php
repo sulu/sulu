@@ -308,8 +308,8 @@ class PackageController extends RestController implements ClassResourceInterface
      */
     private function getFieldDescriptors()
     {
-        $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor('id', 'id', self::$entityName);
-        $this->fieldDescriptors['name'] = new DoctrineFieldDescriptor('name', 'name', self::$entityName);
+        $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor('id', 'id', self::$entityName, 'id', array(), true);
+        $this->fieldDescriptors['name'] = new DoctrineFieldDescriptor('name', 'name', self::$entityName, 'name', array(), true);
 
         return $this->fieldDescriptors;
     }

@@ -107,10 +107,10 @@ class CatalogueController extends RestController
      */
     protected function getFieldDescriptors()
     {
-        $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor('id', 'id', self::$entityName);
-        $this->fieldDescriptors['locale'] = new DoctrineFieldDescriptor('locale', 'locale', self::$entityName);
-        $this->fieldDescriptors['packageId'] = new DoctrineFieldDescriptor('package', 'packageId', self::$entityName);
-        $this->fieldDescriptors['isDefault'] = new DoctrineFieldDescriptor('isDefault', 'isDefault', self::$entityName);
+        $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor('id', 'id', self::$entityName, 'id', array(), true, false, '', '50px');
+        $this->fieldDescriptors['locale'] = new DoctrineFieldDescriptor('locale', 'locale', self::$entityName, 'locale', array(), true, false, '', '50px');
+        $this->fieldDescriptors['packageId'] = new DoctrineFieldDescriptor('package', 'packageId', self::$entityName, 'package', array(), true, false, '', '50px');
+        $this->fieldDescriptors['isDefault'] = new DoctrineFieldDescriptor('isDefault', 'isDefault', self::$entityName, 'default');
 
         return $this->fieldDescriptors;
     }
