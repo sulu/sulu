@@ -20,8 +20,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\RestHelperInterface;
-use Sulu\Component\Rest\ListBuilder\DoctrineListBuilderFactory;
-use Sulu\Component\Rest\ListBuilder\FieldDescriptor\DoctrineFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 
 /**
  * Makes the groups accessible through a REST-API
@@ -174,7 +174,7 @@ class GroupController extends RestController implements ClassResourceInterface
 
                 $group->setChanged(new \DateTime());
 
-                if (!$this->processRoles($group, $request->get('roles'))) {
+                if (!$this->processRoles($group, $request->get('roles', array()))) {
                     throw new RestException('Could not update dependencies!');
                 }
 
@@ -198,6 +198,14 @@ class GroupController extends RestController implements ClassResourceInterface
      */
     protected function processRoles(Group $group, $roles)
     {
+        /** @var RestHelperInterface $restHelper */
+        $restHelper = $this->get('sulu_core.doctrine_rest_helper');
+
+        $get = function($entity) {
+            /** @var Role $entity */
+            return $entity->getId();
+        };
+
         $delete = function ($role) use ($group) {
             $this->getDoctrine()->getManager()->remove($role);
         };
@@ -210,7 +218,7 @@ class GroupController extends RestController implements ClassResourceInterface
             return $this->addRole($group, $role);
         };
 
-        return $this->processPut($group->getRoles(), $roles, $delete, $update, $add);
+        return $restHelper->processSubEntities($group->getRoles(), $roles, $get, $add, $update, $delete);
     }
 
     /**
