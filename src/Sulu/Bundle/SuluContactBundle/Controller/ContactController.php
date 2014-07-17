@@ -284,8 +284,7 @@ class ContactController extends AbstractContactController
                 $request->query->all(),
                 $listBuilder->getCurrentPage(),
                 $listBuilder->getLimit(),
-                $listBuilder->count(),
-                $this->fieldDescriptors
+                $listBuilder->count()
             );
 
         } else {
