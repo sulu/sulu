@@ -458,8 +458,7 @@ class AccountController extends AbstractContactController
                 $request->query->all(),
                 $listBuilder->getCurrentPage(),
                 $listBuilder->getLimit(),
-                $listBuilder->count(),
-                $this->fieldDescriptors
+                $listBuilder->count()
             );
         } else {
             $contacts = $this->getDoctrine()->getRepository(self::$entityName)->findAll();
