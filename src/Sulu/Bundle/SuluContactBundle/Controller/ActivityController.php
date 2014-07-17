@@ -80,7 +80,6 @@ class ActivityController extends RestController implements ClassResourceInterfac
             '',
             '',
             '',
-            true,
             false
         );
         $this->fieldDescriptors['subject'] = new DoctrineFieldDescriptor(
@@ -94,7 +93,6 @@ class ActivityController extends RestController implements ClassResourceInterfac
             '',
             '',
             '',
-            true,
             false
 
         );
@@ -109,7 +107,6 @@ class ActivityController extends RestController implements ClassResourceInterfac
             '',
             '',
             '',
-            false,
             false
         );
         $this->fieldDescriptors['dueDate'] = new DoctrineFieldDescriptor(
@@ -123,7 +120,6 @@ class ActivityController extends RestController implements ClassResourceInterfac
             'date',
             '',
             '',
-            true,
             false
         );
         $this->fieldDescriptors['startDate'] = new DoctrineFieldDescriptor(
@@ -137,7 +133,6 @@ class ActivityController extends RestController implements ClassResourceInterfac
             'date',
             '',
             '',
-            false,
             false
         );
         $this->fieldDescriptors['created'] = new DoctrineFieldDescriptor(
@@ -151,7 +146,6 @@ class ActivityController extends RestController implements ClassResourceInterfac
             'date',
             '',
             '',
-            false,
             false
         );
         $this->fieldDescriptors['changed'] = new DoctrineFieldDescriptor(
@@ -165,7 +159,6 @@ class ActivityController extends RestController implements ClassResourceInterfac
             'date',
             '',
             '',
-            false,
             false
         );
 
@@ -185,7 +178,6 @@ class ActivityController extends RestController implements ClassResourceInterfac
             'translation',
             '',
             '',
-            true,
             false
         );
 
@@ -205,7 +197,6 @@ class ActivityController extends RestController implements ClassResourceInterfac
             'translation',
             '',
             '',
-            true,
             false
         );
 
@@ -225,31 +216,43 @@ class ActivityController extends RestController implements ClassResourceInterfac
             'translation',
             '',
             '',
-            true,
             false
         );
 
         // TODO use fullName when implemented
-//        $this->fieldDescriptors['assignedContact'] = new DoctrineConcatenationFieldDescriptor(
-//            array(
-//                new DoctrineFieldDescriptor('firstName', 'firstName', self::$entityName),
-//                new DoctrineFieldDescriptor('lastName', 'lastName', self::$entityName)
-//            ),
-//            'fullName',
-//            'public.fullName'
-//        );
-
-//        $this->fieldDescriptors['fullName'] = new DoctrineConcatenationFieldDescriptor(
-//            array(
-//                new DoctrineFieldDescriptor('firstName', 'firstName', self::$entityName),
-//                new DoctrineFieldDescriptor('lastName', 'lastName', self::$entityName)
-//            ),
-//            'fullName',
-//            'public.fullName'
-//        );
+        $this->fieldDescriptors['assignedContact'] = new DoctrineConcatenationFieldDescriptor(
+            array(
+                new DoctrineFieldDescriptor(
+                    'firstName',
+                    'firstName',
+                    self::$contactEntityName,
+                    'public.firstName',
+                    array(
+                        self::$contactEntityName => new DoctrineJoinDescriptor(
+                                self::$contactEntityName, self::$entityName . '.assignedContact'
+                            )
+                    )
+                ),
+                new DoctrineFieldDescriptor(
+                    'lastName',
+                    'lastName',
+                    self::$contactEntityName,
+                    'public.lastName',
+                    array(
+                        self::$contactEntityName => new DoctrineJoinDescriptor(
+                                self::$contactEntityName, self::$entityName . '.assignedContact'
+                            )
+                    )
+                )
+            ),
+            'assignedContact',
+            'contact.activities.assignedContact'
+        );
 
         $this->joinDescriptors['account'] = new DoctrineFieldDescriptor(
-            'id', 'account', self::$accountEntityName,
+            'id',
+            'account',
+            self::$accountEntityName,
             '',
             array(
                 self::$accountEntityName => new DoctrineJoinDescriptor(
@@ -258,12 +261,13 @@ class ActivityController extends RestController implements ClassResourceInterfac
                     )
             ),
             '',
-            true,
             false
         );
 
         $this->joinDescriptors['contact'] = new DoctrineFieldDescriptor(
-            'id', 'contact', self::$contactEntityName . 'contact',
+            'id',
+            'contact',
+            self::$contactEntityName . 'contact',
             '',
             array(
                 self::$contactEntityName . 'contact' => new DoctrineJoinDescriptor(
@@ -271,7 +275,6 @@ class ActivityController extends RestController implements ClassResourceInterfac
                         self::$entityName . '.contact'
                     )
             ),
-            true,
             false
         );
     }
