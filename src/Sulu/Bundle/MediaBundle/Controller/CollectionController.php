@@ -80,7 +80,7 @@ class CollectionController extends RestController implements ClassResourceInterf
                 $id,
                 function ($id) use ($locale, $collectionManager) {
                     /** @var CollectionEntity $collectionEntity */
-                    return $collectionManager->get($id, $locale);
+                    return $collectionManager->getById($id, $locale);
                 }
             );
         } catch (CollectionNotFoundException $cnf) {
@@ -107,7 +107,7 @@ class CollectionController extends RestController implements ClassResourceInterf
             /** @var ListRestHelperInterface $listRestHelper */
             $listRestHelper = $this->get('sulu_core.list_rest_helper');
 
-            $collections = $collectionManager->getAll($this->getLocale($request->get('locale')), $parent, $depth);
+            $collections = $collectionManager->get($this->getLocale($request->get('locale')), $parent, $depth);
 
             $all = count($collections); // TODO
 

@@ -26,7 +26,7 @@ interface CollectionManagerInterface
      * @param int $locale the locale which the collection should be return
      * @return Collection[]
      */
-    public function get($id, $locale);
+    public function getById($id, $locale);
 
     /**
      * Returns a collection with a given id
@@ -35,7 +35,7 @@ interface CollectionManagerInterface
      * @param int $depth the depth to filter for
      * @return Collection
      */
-    public function getAll($locale, $parent = null, $depth = null);
+    public function get($locale, $parent = null, $depth = null);
 
     /**
      * Creates a new collection or overrides an existing one
