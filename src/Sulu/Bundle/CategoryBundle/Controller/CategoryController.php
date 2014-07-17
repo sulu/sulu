@@ -15,13 +15,16 @@ use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Put;
 use Hateoas\Representation\CollectionRepresentation;
-use Sulu\Component\Rest\ListBuilder\ListRepresentation;
+use Sulu\Bundle\CategoryBundle\Category\CategoryListRepresentation;
 use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\RestController;
 use Symfony\Component\HttpFoundation\Request;
+use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
+use Sulu\Component\Rest\RestHelperInterface;
 
 /**
  * Makes categories available through a REST API
@@ -103,8 +106,11 @@ class CategoryController extends RestController implements ClassResourceInterfac
      */
     public function getFieldsAction()
     {
+        $cm = $this->get('sulu_category.category_manager');
+        $cm->createFieldDescriptors();
+
         // default contacts list
-        return $this->handleView($this->view(array_values($this->get('sulu_category.category_manager')->getFieldDescriptors()), 200));
+        return $this->handleView($this->view(array_values($cm->getFieldDescriptors()), 200));
     }
 
     /**
@@ -153,7 +159,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
 
             $all = count($wrappers); // TODO
 
-            $list = new ListRepresentation(
+            $list = new CategoryListRepresentation(
                 $wrappers,
                 self::$entityKey,
                 'get_categories',

@@ -14,7 +14,8 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\DBAL\DBALException;
 use Sulu\Bundle\CategoryBundle\Entity\Category as CategoryEntity;
 use Sulu\Bundle\CategoryBundle\Api\Category as CategoryWrapper;
-use Sulu\Component\Rest\ListBuilder\FieldDescriptor\DoctrineFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 use Sulu\Bundle\CategoryBundle\Event\CategoryEvents;
 use Sulu\Bundle\CategoryBundle\Event\CategoryDeleteEvent;
 use Sulu\Component\Security\UserRepositoryInterface;
@@ -69,8 +70,6 @@ class CategoryManager implements CategoryManagerInterface
         $this->userRepository = $userRepository;
         $this->categoryRepository = $categoryRepository;
         $this->eventDispatcher = $eventDispatcher;
-
-        $this->initializeFieldDescriptors();
     }
 
     /**
@@ -93,16 +92,45 @@ class CategoryManager implements CategoryManagerInterface
     /**
      * Initializes the field descriptors used by the list-helper
      */
-    private function initializeFieldDescriptors()
+    public function createFieldDescriptors()
     {
-        $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor('id', 'id', self::$categoryEntityName);
-        $this->fieldDescriptors['name'] = new DoctrineFieldDescriptor('translation', 'name', self::$categoryTranslationEntityName,
+        $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor(
+            'id',
+            'id',
+            self::$categoryEntityName,
+            'public.id',
+            array(),
+            true
+        );
+        $this->fieldDescriptors['name'] = new DoctrineFieldDescriptor(
+            'translation',
+            'name',
+            self::$categoryTranslationEntityName,
+            'public.name',
             array(
-                self::$categoryTranslationEntityName => self::$categoryEntityName . '.translations'
+                self::$categoryTranslationEntityName => new DoctrineJoinDescriptor(
+                        self::$categoryTranslationEntityName,
+                        self::$categoryEntityName .
+                        '.translations'
+                    )
             )
         );
-        $this->fieldDescriptors['created'] = new DoctrineFieldDescriptor('created', 'created', self::$categoryEntityName);
-        $this->fieldDescriptors['changed'] = new DoctrineFieldDescriptor('changed', 'changed', self::$categoryEntityName);
+        $this->fieldDescriptors['created'] = new DoctrineFieldDescriptor(
+            'created',
+            'created',
+            self::$categoryEntityName,
+            'public.created',
+            array(),
+            true
+        );
+        $this->fieldDescriptors['changed'] = new DoctrineFieldDescriptor(
+            'changed',
+            'changed',
+            self::$categoryEntityName,
+            'public.changed',
+            array(),
+            true
+        );
 
     }
 
