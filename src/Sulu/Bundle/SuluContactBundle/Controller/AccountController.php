@@ -24,7 +24,7 @@ use Sulu\Bundle\ContactBundle\Entity\TermsOfDelivery;
 use Sulu\Bundle\ContactBundle\Entity\TermsOfPayment;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
-use Sulu\Component\Rest\ListBuilder\FieldDescriptor\DoctrineJoinDescriptor;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 use Sulu\Component\Rest\ListBuilder\ListRestHelper;
 use \DateTime;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,8 +32,7 @@ use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Rest\ListBuilder\DoctrineListBuilderFactory;
-use Sulu\Component\Rest\ListBuilder\FieldDescriptor\DoctrineFieldDescriptor;
-
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
@@ -65,75 +64,201 @@ class AccountController extends AbstractContactController
      */
     protected $bundlePrefix = 'contact.accounts.';
 
+    // TODO: Move the field descriptors to a manager
     /**
-     * TODO: Move the field descriptors to a manager
      * @var DoctrineFieldDescriptor[]
      */
     protected $fieldDescriptors;
 
-    /**
-     * TODO: move the field descriptors to a manager
-     */
-    public function __construct() {
+    // TODO: move the field descriptors to a manager
+    public function __construct()
+    {
         $this->fieldDescriptors = array();
-        $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor('id', 'id', self::$entityName, array(),
-            true, false, '', '50px', '', false, 'public.id');
-
-        $this->fieldDescriptors['number'] = new DoctrineFieldDescriptor('number', 'number', self::$entityName, array(),
-            false, false, '', '90px', '', false, 'contact.accounts.number');
-
-        $this->fieldDescriptors['name'] = new DoctrineFieldDescriptor('name', 'name', self::$entityName, array(),
-            false, true, '', '', '', false, 'public.name');
-
-        $this->fieldDescriptors['corporation'] = new DoctrineFieldDescriptor('corporation', 'corporation', self::$entityName, array(),
-            false, false, '', '', '', false, 'contact.accounts.corporation');
-
-        $this->fieldDescriptors['created'] = new DoctrineFieldDescriptor('created', 'created', self::$entityName, array(),
-            true, false, 'date', '', '', false, 'public.created');
-
-        $this->fieldDescriptors['changed'] = new DoctrineFieldDescriptor('changed', 'changed', self::$entityName, array(),
-            false, false, 'date', '', '', false, 'public.changed');
-
-        $this->fieldDescriptors['type'] = new DoctrineFieldDescriptor('type', 'type', self::$entityName, array(),
-            true, false, '', '150px', '', false, 'contact.accounts.type');
-
-        $this->fieldDescriptors['disabled'] = new DoctrineFieldDescriptor('disabled', 'disabled', self::$entityName, array(),
-            true, false, '', '', '', false, 'public.deactivate');
-
-        $this->fieldDescriptors['uid'] = new DoctrineFieldDescriptor('uid', 'uid', self::$entityName, array(),
-            true, false, '', '', '', false, 'contact.accounts.uid');
-
-        $this->fieldDescriptors['registerNumber'] = new DoctrineFieldDescriptor('registerNumber', 'registerNumber', self::$entityName, array(),
-            true, false, '', '', '', false, 'contact.accounts.registerNumber');
-
-        $this->fieldDescriptors['mainPhone'] = new DoctrineFieldDescriptor('mainPhone', 'mainPhone', self::$entityName, array(),
-            false, false, '', '', '', false, 'public.phone');
-
-        $this->fieldDescriptors['mainEmail'] = new DoctrineFieldDescriptor('mainEmail', 'mainEmail', self::$entityName, array(),
-            false, false, '', '', '', false, 'public.email');
-
-        $this->fieldDescriptors['mainFax'] = new DoctrineFieldDescriptor('mainFax', 'mainFax', self::$entityName, array(),
-            true, false, '', '', '', false, 'public.phone');
-
-        $this->fieldDescriptors['mainUrl'] = new DoctrineFieldDescriptor('mainUrl', 'mainUrl', self::$entityName, array(),
-            true, false, '', '', '', false, 'public.phone');
-
-        $this->fieldDescriptors['placeOfJurisdiction'] = new DoctrineFieldDescriptor('placeOfJurisdiction', 'placeOfJurisdiction', self::$entityName, array(),
-            true, false, '', '', '', false, 'contact.accounts.placeOfJurisdiction');
-
-        $this->fieldDescriptors['mainContact'] = new DoctrineFieldDescriptor('lastName', 'mainContact', self::$contactEntityName,
-            array(
-                self::$contactEntityName => new DoctrineJoinDescriptor(self::$contactEntityName, self::$entityName . '.mainContact')
-            ),
-            false, false, '', '', '', false, 'contact.contacts.main-contact'
+        $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor(
+            'id',
+            'id',
+            self::$entityName,
+            'public.id', array(),
+            true,
+            false,
+            '',
+            '50px'
         );
 
-        $this->fieldDescriptors['city'] = new DoctrineFieldDescriptor('city', 'city', self::$addressEntityName,
+        $this->fieldDescriptors['number'] = new DoctrineFieldDescriptor(
+            'number',
+            'number',
+            self::$entityName,
+            'contact.accounts.number',
+            array(),
+            false,
+            false,
+            '',
+            '90px'
+        );
+
+        $this->fieldDescriptors['name'] = new DoctrineFieldDescriptor('name',
+            'name',
+            self::$entityName,
+            'public.name',
+            array(),
+            false,
+            true
+        );
+
+        $this->fieldDescriptors['corporation'] = new DoctrineFieldDescriptor(
+            'corporation',
+            'corporation',
+            self::$entityName,
+            'contact.accounts.corporation'
+        );
+
+        $this->fieldDescriptors['created'] = new DoctrineFieldDescriptor(
+            'created',
+            'created',
+            self::$entityName,
+            'public.created',
+            array(),
+            true,
+            false,
+            'date'
+        );
+
+        $this->fieldDescriptors['changed'] = new DoctrineFieldDescriptor(
+            'changed',
+            'changed',
+            self::$entityName,
+            'public.changed',
+            array(),
+            false,
+            false,
+            'date'
+        );
+
+        $this->fieldDescriptors['type'] = new DoctrineFieldDescriptor(
+            'type',
+            'type',
+            self::$entityName,
+            'contact.accounts.type',
+            array(),
+            true,
+            false,
+            '',
+            '150px'
+        );
+
+        $this->fieldDescriptors['disabled'] = new DoctrineFieldDescriptor(
+            'disabled',
+            'disabled',
+            self::$entityName,
+            'public.deactivate',
+            array(),
+            true
+        );
+
+        $this->fieldDescriptors['uid'] = new DoctrineFieldDescriptor(
+            'uid',
+            'uid',
+            self::$entityName,
+            'contact.accounts.uid',
+            array(),
+            true
+        );
+
+        $this->fieldDescriptors['registerNumber'] = new DoctrineFieldDescriptor(
+            'registerNumber',
+            'registerNumber',
+            self::$entityName,
+            'contact.accounts.registerNumber',
+            array(),
+            true
+        );
+
+        $this->fieldDescriptors['mainPhone'] = new DoctrineFieldDescriptor(
+            'mainPhone',
+            'mainPhone',
+            self::$entityName,
+            'public.phone'
+        );
+
+        $this->fieldDescriptors['mainEmail'] = new DoctrineFieldDescriptor(
+            'mainEmail',
+            'mainEmail',
+            self::$entityName,
+            'public.email'
+        );
+
+        $this->fieldDescriptors['mainFax'] = new DoctrineFieldDescriptor(
+            'mainFax',
+            'mainFax',
+            self::$entityName,
+            'public.phone',
+            array(),
+            true,
+            false
+        );
+
+        $this->fieldDescriptors['mainUrl'] = new DoctrineFieldDescriptor(
+            'mainUrl',
+            'mainUrl',
+            self::$entityName,
+            'public.phone',
+            array(),
+            true
+        );
+
+        $this->fieldDescriptors['placeOfJurisdiction'] = new DoctrineFieldDescriptor(
+            'placeOfJurisdiction',
+            'placeOfJurisdiction',
+            self::$entityName,
+            'contact.accounts.placeOfJurisdiction',
+            array(),
+            true
+        );
+
+        $this->fieldDescriptors['mainContact'] = new DoctrineFieldDescriptor(
+            'lastName',
+            'mainContact',
+            self::$contactEntityName,
+            'contact.contacts.main-contact',
             array(
-                self::$accountAddressEntityName => new DoctrineJoinDescriptor(self::$accountAddressEntityName, self::$entityName . '.accountAddresses', self::$accountAddressEntityName . '.main = true', 'LEFT'),
-                self::$addressEntityName => new DoctrineJoinDescriptor(self::$addressEntityName, self::$accountAddressEntityName . '.address')
+                self::$contactEntityName => new DoctrineJoinDescriptor(
+                        self::$contactEntityName,
+                        self::$entityName .
+                        '.mainContact'
+                    )
             ),
-            false, false, '', '50px', '', false, 'contact.address.city'
+            false,
+            false,
+            '',
+            '',
+            '',
+            false
+        );
+
+        $this->fieldDescriptors['city'] = new DoctrineFieldDescriptor(
+            'city',
+            'city',
+            self::$addressEntityName,
+            'contact.address.city',
+            array(
+                self::$accountAddressEntityName => new DoctrineJoinDescriptor(
+                        self::$accountAddressEntityName,
+                        self::$entityName .
+                        '.accountAddresses',
+                        self::$accountAddressEntityName . '.main = true', 'LEFT'
+                    ),
+                self::$addressEntityName => new DoctrineJoinDescriptor(
+                        self::$addressEntityName,
+                        self::$accountAddressEntityName . '.address'
+                    )
+            ),
+            false,
+            false,
+            '',
+            '50px',
+            '',
+            false
         );
     }
 
@@ -333,7 +458,8 @@ class AccountController extends AbstractContactController
                 $request->query->all(),
                 $listBuilder->getCurrentPage(),
                 $listBuilder->getLimit(),
-                $listBuilder->count()
+                $listBuilder->count(),
+                $this->fieldDescriptors
             );
         } else {
             $contacts = $this->getDoctrine()->getRepository(self::$entityName)->findAll();
@@ -408,13 +534,14 @@ class AccountController extends AbstractContactController
         return $this->handleView($view);
     }
 
-    private function setResponsiblePerson(ObjectManager $em, Account $account, $responsiblePerson){
-        if(!!$responsiblePerson) {
+    private function setResponsiblePerson(ObjectManager $em, Account $account, $responsiblePerson)
+    {
+        if (!!$responsiblePerson) {
             $id = $responsiblePerson['id'];
             /* @var Contact $contact */
             $contact = $em->getRepository(self::$contactEntityName)->find($id);
 
-            if(!$contact){
+            if (!$contact) {
                 throw new EntityNotFoundException(self::$contactEntityName, $id);
             }
             $account->setResponsiblePerson($contact);
