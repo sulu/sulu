@@ -10,6 +10,13 @@
 
 namespace Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor;
 
+use JMS\Serializer\Annotation\ExclusionPolicy;
+
+/**
+ * This field descriptor can be used to concatenate multiple field descriptors
+ * @package Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor
+ * @ExclusionPolicy("all")
+ */
 class DoctrineConcatenationFieldDescriptor extends AbstractDoctrineFieldDescriptor
 {
     /**
