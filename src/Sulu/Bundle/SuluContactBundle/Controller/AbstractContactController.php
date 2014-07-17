@@ -139,7 +139,8 @@ abstract class AbstractContactController extends RestController implements Class
      */
     protected function processEmails($contact, $emails)
     {
-        $get = function($email) use ($contact) {
+        $get = function($email) {
+            /** @var Email $email */
             return $email->getId();
         };
 
@@ -766,8 +767,13 @@ abstract class AbstractContactController extends RestController implements Class
      */
     protected function processBankAccounts($contact, $bankAccounts)
     {
+        $get = function ($bankAccount) {
+            return $bankAccount->getId();
+        };
+
         $delete = function ($bankAccounts) use ($contact) {
             $contact->removeBankAccount($bankAccounts);
+
             return true;
         };
 
@@ -779,7 +785,14 @@ abstract class AbstractContactController extends RestController implements Class
             return $this->addBankAccount($contact, $bankAccounts);
         };
 
-        return $this->processPut($contact->getBankAccounts(), $bankAccounts, $delete, $update, $add);
+        return $this->getRestHelper()->processSubEntities(
+            $contact->getBankAccounts(),
+            $bankAccounts,
+            $get,
+            $add,
+            $update,
+            $delete
+        );
     }
 
     /**
