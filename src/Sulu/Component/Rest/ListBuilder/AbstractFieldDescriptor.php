@@ -78,13 +78,13 @@ abstract class AbstractFieldDescriptor
 
     public function __construct(
         $name,
+        $translation = null,
         $disabled = false,
         $default = false,
         $type = '',
         $width = '',
         $minWidth = '',
-        $editable = false,
-        $translation = null
+        $editable = false
     )
     {
         $this->name = $name;
