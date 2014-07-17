@@ -926,13 +926,13 @@ class AccountControllerTest extends DatabaseTestCase
     public function testGetListSearch()
     {
         $client = $this->createTestClient();
-        $client->request('GET', '/api/accounts?flat=true&search=Nothing&searchFields=name,emails_emailType_name');
+        $client->request('GET', '/api/accounts?flat=true&search=Nothing&searchFields=name');
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(0, $response->total);
         $this->assertEquals(0, count($response->_embedded->accounts));
 
-        $client->request('GET', '/api/accounts?flat=true&search=Comp&searchFields=name,emails_emailType_name');
+        $client->request('GET', '/api/accounts?flat=true&search=Comp&searchFields=name');
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(1, $response->total);
@@ -1095,32 +1095,59 @@ class AccountControllerTest extends DatabaseTestCase
         $this->assertEquals('Note1', $response->notes[0]->value);
         $this->assertEquals('Note2', $response->notes[1]->value);
 
-        $this->assertEquals(2, sizeof($response->addresses));
-        $this->assertEquals('Bahnhofstraße', $response->addresses[0]->street);
-        $this->assertEquals('2', $response->addresses[0]->number);
-        $this->assertEquals('0022', $response->addresses[0]->zip);
-        $this->assertEquals('Dornbirn', $response->addresses[0]->city);
-        $this->assertEquals('state1', $response->addresses[0]->state);
-        $this->assertEquals('Musterland', $response->addresses[0]->country->name);
-        $this->assertEquals('ML', $response->addresses[0]->country->code);
-        $this->assertEquals('Private', $response->addresses[0]->addressType->name);
+        if($response->addresses[0]->street === 'Bahnhofstraße') {
+            $this->assertEquals(2, sizeof($response->addresses));
+            $this->assertEquals('Bahnhofstraße', $response->addresses[0]->street);
+            $this->assertEquals('2', $response->addresses[0]->number);
+            $this->assertEquals('0022', $response->addresses[0]->zip);
+            $this->assertEquals('Dornbirn', $response->addresses[0]->city);
+            $this->assertEquals('state1', $response->addresses[0]->state);
+            $this->assertEquals('Musterland', $response->addresses[0]->country->name);
+            $this->assertEquals('ML', $response->addresses[0]->country->code);
+            $this->assertEquals('Private', $response->addresses[0]->addressType->name);
 
-        $this->assertEquals(true,$response->addresses[0]->billingAddress);
-        $this->assertEquals(true,$response->addresses[0]->primaryAddress);
-        $this->assertEquals(false,$response->addresses[0]->deliveryAddress);
-        $this->assertEquals('Dornbirn',$response->addresses[0]->postboxCity);
-        $this->assertEquals('6850',$response->addresses[0]->postboxPostcode);
-        $this->assertEquals('4711',$response->addresses[0]->postboxNumber);
+            $this->assertEquals(true, $response->addresses[0]->billingAddress);
+            $this->assertEquals(true, $response->addresses[0]->primaryAddress);
+            $this->assertEquals(false, $response->addresses[0]->deliveryAddress);
+            $this->assertEquals('Dornbirn', $response->addresses[0]->postboxCity);
+            $this->assertEquals('6850', $response->addresses[0]->postboxPostcode);
+            $this->assertEquals('4711', $response->addresses[0]->postboxNumber);
 
-        $this->assertEquals('Rathausgasse', $response->addresses[1]->street);
-        $this->assertEquals('3', $response->addresses[1]->number);
-        $this->assertEquals('2222', $response->addresses[1]->zip);
-        $this->assertEquals('Dornbirn', $response->addresses[1]->city);
-        $this->assertEquals('state1', $response->addresses[1]->state);
-        $this->assertEquals('Musterland', $response->addresses[1]->country->name);
-        $this->assertEquals('ML', $response->addresses[1]->country->code);
-        $this->assertEquals('Private', $response->addresses[1]->addressType->name);
+            $this->assertEquals('Rathausgasse', $response->addresses[1]->street);
+            $this->assertEquals('3', $response->addresses[1]->number);
+            $this->assertEquals('2222', $response->addresses[1]->zip);
+            $this->assertEquals('Dornbirn', $response->addresses[1]->city);
+            $this->assertEquals('state1', $response->addresses[1]->state);
+            $this->assertEquals('Musterland', $response->addresses[1]->country->name);
+            $this->assertEquals('ML', $response->addresses[1]->country->code);
+            $this->assertEquals('Private', $response->addresses[1]->addressType->name);
+        } else {
+            $this->assertEquals(2, sizeof($response->addresses));
+            $this->assertEquals('Bahnhofstraße', $response->addresses[1]->street);
+            $this->assertEquals('2', $response->addresses[1]->number);
+            $this->assertEquals('0022', $response->addresses[1]->zip);
+            $this->assertEquals('Dornbirn', $response->addresses[1]->city);
+            $this->assertEquals('state1', $response->addresses[1]->state);
+            $this->assertEquals('Musterland', $response->addresses[1]->country->name);
+            $this->assertEquals('ML', $response->addresses[1]->country->code);
+            $this->assertEquals('Private', $response->addresses[1]->addressType->name);
 
+            $this->assertEquals(true, $response->addresses[1]->billingAddress);
+            $this->assertEquals(true, $response->addresses[1]->primaryAddress);
+            $this->assertEquals(false, $response->addresses[1]->deliveryAddress);
+            $this->assertEquals('Dornbirn', $response->addresses[1]->postboxCity);
+            $this->assertEquals('6850', $response->addresses[1]->postboxPostcode);
+            $this->assertEquals('4711', $response->addresses[1]->postboxNumber);
+
+            $this->assertEquals('Rathausgasse', $response->addresses[0]->street);
+            $this->assertEquals('3', $response->addresses[0]->number);
+            $this->assertEquals('2222', $response->addresses[0]->zip);
+            $this->assertEquals('Dornbirn', $response->addresses[0]->city);
+            $this->assertEquals('state1', $response->addresses[0]->state);
+            $this->assertEquals('Musterland', $response->addresses[0]->country->name);
+            $this->assertEquals('ML', $response->addresses[0]->country->code);
+            $this->assertEquals('Private', $response->addresses[0]->addressType->name);
+        }
 
         $client->request(
             'GET',
@@ -1159,31 +1186,59 @@ class AccountControllerTest extends DatabaseTestCase
         $this->assertEquals('Note1', $response->notes[0]->value);
         $this->assertEquals('Note2', $response->notes[1]->value);
 
-        $this->assertEquals(2, sizeof($response->addresses));
-        $this->assertEquals('Bahnhofstraße', $response->addresses[0]->street);
-        $this->assertEquals('2', $response->addresses[0]->number);
-        $this->assertEquals('0022', $response->addresses[0]->zip);
-        $this->assertEquals('Dornbirn', $response->addresses[0]->city);
-        $this->assertEquals('state1', $response->addresses[0]->state);
-        $this->assertEquals('Musterland', $response->addresses[0]->country->name);
-        $this->assertEquals('ML', $response->addresses[0]->country->code);
-        $this->assertEquals('Private', $response->addresses[0]->addressType->name);
-
-        $this->assertEquals(true,$response->addresses[0]->billingAddress);
-        $this->assertEquals(true,$response->addresses[0]->primaryAddress);
-        $this->assertEquals(false,$response->addresses[0]->deliveryAddress);
-        $this->assertEquals('Dornbirn',$response->addresses[0]->postboxCity);
-        $this->assertEquals('6850',$response->addresses[0]->postboxPostcode);
-        $this->assertEquals('4711',$response->addresses[0]->postboxNumber);
-
-        $this->assertEquals('Rathausgasse', $response->addresses[1]->street);
-        $this->assertEquals('3', $response->addresses[1]->number);
-        $this->assertEquals('2222', $response->addresses[1]->zip);
-        $this->assertEquals('Dornbirn', $response->addresses[1]->city);
-        $this->assertEquals('state1', $response->addresses[1]->state);
-        $this->assertEquals('Musterland', $response->addresses[1]->country->name);
-        $this->assertEquals('ML', $response->addresses[1]->country->code);
-        $this->assertEquals('Private', $response->addresses[1]->addressType->name);
+        if($response->addresses[0]->street === 'Bahnhofstraße') {
+            $this->assertEquals(2, sizeof($response->addresses));
+            $this->assertEquals('Bahnhofstraße', $response->addresses[0]->street);
+            $this->assertEquals('2', $response->addresses[0]->number);
+            $this->assertEquals('0022', $response->addresses[0]->zip);
+            $this->assertEquals('Dornbirn', $response->addresses[0]->city);
+            $this->assertEquals('state1', $response->addresses[0]->state);
+            $this->assertEquals('Musterland', $response->addresses[0]->country->name);
+            $this->assertEquals('ML', $response->addresses[0]->country->code);
+            $this->assertEquals('Private', $response->addresses[0]->addressType->name);
+    
+            $this->assertEquals(true,$response->addresses[0]->billingAddress);
+            $this->assertEquals(true,$response->addresses[0]->primaryAddress);
+            $this->assertEquals(false,$response->addresses[0]->deliveryAddress);
+            $this->assertEquals('Dornbirn',$response->addresses[0]->postboxCity);
+            $this->assertEquals('6850',$response->addresses[0]->postboxPostcode);
+            $this->assertEquals('4711',$response->addresses[0]->postboxNumber);
+    
+            $this->assertEquals('Rathausgasse', $response->addresses[1]->street);
+            $this->assertEquals('3', $response->addresses[1]->number);
+            $this->assertEquals('2222', $response->addresses[1]->zip);
+            $this->assertEquals('Dornbirn', $response->addresses[1]->city);
+            $this->assertEquals('state1', $response->addresses[1]->state);
+            $this->assertEquals('Musterland', $response->addresses[1]->country->name);
+            $this->assertEquals('ML', $response->addresses[1]->country->code);
+            $this->assertEquals('Private', $response->addresses[1]->addressType->name);
+        } else {
+            $this->assertEquals(2, sizeof($response->addresses));
+            $this->assertEquals('Bahnhofstraße', $response->addresses[1]->street);
+            $this->assertEquals('2', $response->addresses[1]->number);
+            $this->assertEquals('0022', $response->addresses[1]->zip);
+            $this->assertEquals('Dornbirn', $response->addresses[1]->city);
+            $this->assertEquals('state1', $response->addresses[1]->state);
+            $this->assertEquals('Musterland', $response->addresses[1]->country->name);
+            $this->assertEquals('ML', $response->addresses[1]->country->code);
+            $this->assertEquals('Private', $response->addresses[1]->addressType->name);
+    
+            $this->assertEquals(true,$response->addresses[1]->billingAddress);
+            $this->assertEquals(true,$response->addresses[1]->primaryAddress);
+            $this->assertEquals(false,$response->addresses[1]->deliveryAddress);
+            $this->assertEquals('Dornbirn',$response->addresses[1]->postboxCity);
+            $this->assertEquals('6850',$response->addresses[1]->postboxPostcode);
+            $this->assertEquals('4711',$response->addresses[1]->postboxNumber);
+    
+            $this->assertEquals('Rathausgasse', $response->addresses[0]->street);
+            $this->assertEquals('3', $response->addresses[0]->number);
+            $this->assertEquals('2222', $response->addresses[0]->zip);
+            $this->assertEquals('Dornbirn', $response->addresses[0]->city);
+            $this->assertEquals('state1', $response->addresses[0]->state);
+            $this->assertEquals('Musterland', $response->addresses[0]->country->name);
+            $this->assertEquals('ML', $response->addresses[0]->country->code);
+            $this->assertEquals('Private', $response->addresses[0]->addressType->name);
+        }
     }
 
     public function testPutNoDetails()
@@ -1949,10 +2004,16 @@ class AccountControllerTest extends DatabaseTestCase
 
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertEquals(false,$response->addresses[0]->primaryAddress);
-        $this->assertEquals(false,$response->addresses[1]->primaryAddress);
-        $this->assertEquals(true,$response->addresses[2]->primaryAddress);
 
+        if ($response->addresses[1]->primaryAddress === false) {
+            $this->assertEquals(false, $response->addresses[0]->primaryAddress);
+            $this->assertEquals(false, $response->addresses[1]->primaryAddress);
+            $this->assertEquals(true, $response->addresses[2]->primaryAddress);
+        } else {
+            $this->assertEquals(false, $response->addresses[0]->primaryAddress);
+            $this->assertEquals(true, $response->addresses[1]->primaryAddress);
+            $this->assertEquals(false, $response->addresses[2]->primaryAddress);
+        }
         $client->request(
             'GET',
             '/api/accounts/1'
@@ -1960,9 +2021,16 @@ class AccountControllerTest extends DatabaseTestCase
 
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertEquals(false,$response->addresses[0]->primaryAddress);
-        $this->assertEquals(false,$response->addresses[1]->primaryAddress);
-        $this->assertEquals(true,$response->addresses[2]->primaryAddress);
+
+        if ($response->addresses[1]->primaryAddress === false) {
+            $this->assertEquals(false, $response->addresses[0]->primaryAddress);
+            $this->assertEquals(false, $response->addresses[1]->primaryAddress);
+            $this->assertEquals(true, $response->addresses[2]->primaryAddress);
+        } else {
+            $this->assertEquals(false, $response->addresses[0]->primaryAddress);
+            $this->assertEquals(true, $response->addresses[1]->primaryAddress);
+            $this->assertEquals(false, $response->addresses[2]->primaryAddress);
+        }
     }
 
     public function testTriggerAction()

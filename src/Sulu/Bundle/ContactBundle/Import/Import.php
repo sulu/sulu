@@ -1065,6 +1065,9 @@ class Import
             /** @var Account $account */
             $account = $this->getAccountByKey($externalId);
 
+            if (!$account) {
+                throw new \Exception(sprintf('account with id %s could not be found.', $externalId));
+            }
             // get parent account
             $parent = $this->getAccountByKey($data['account_parent']);
             $account->setParent($parent);
