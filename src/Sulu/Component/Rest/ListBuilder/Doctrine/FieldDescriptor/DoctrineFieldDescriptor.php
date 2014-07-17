@@ -8,16 +8,16 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Rest\ListBuilder\FieldDescriptor;
+namespace Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor;
 
 use JMS\Serializer\Annotation\ExclusionPolicy;
 
 /**
  * This class defines the necessary information for a field to resolve it within a Doctrine Query for the ListBuilder.
- * @package Sulu\Component\Rest\ListBuilder\FieldDescriptor
+ * @package Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor
  * @ExclusionPolicy("all")
  */
-class DoctrineFieldDescriptor extends AbstractFieldDescriptor
+class DoctrineFieldDescriptor extends AbstractDoctrineFieldDescriptor
 {
     /**
      * The name of the field in the database
@@ -41,6 +41,7 @@ class DoctrineFieldDescriptor extends AbstractFieldDescriptor
         $fieldName,
         $name,
         $entityName,
+        $translation = null,
         $joins = array(),
         $disabled = false,
         $default = false,
@@ -48,11 +49,10 @@ class DoctrineFieldDescriptor extends AbstractFieldDescriptor
         $type = '',
         $width = '',
         $minWidth = '',
-        $editable = false,
-        $translation = null
+        $editable = false
     )
     {
-        parent::__construct($name, $disabled, $default, $sortable, $type, $width, $minWidth, $editable, $translation);
+        parent::__construct($name, $translation, $disabled, $default, $type, $width, $minWidth, $sortable, $editable);
 
         $this->fieldName = $fieldName;
         $this->entityName = $entityName;
@@ -63,7 +63,7 @@ class DoctrineFieldDescriptor extends AbstractFieldDescriptor
      * Returns the full name of the field, including the entity
      * @return string
      */
-    public function getFullName()
+    public function getSelect()
     {
         return $this->entityName . '.' . $this->getFieldName();
     }

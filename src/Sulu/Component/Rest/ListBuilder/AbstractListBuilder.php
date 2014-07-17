@@ -10,8 +10,6 @@
 
 namespace Sulu\Component\Rest\ListBuilder;
 
-use Sulu\Component\Rest\ListBuilder\FieldDescriptor\AbstractFieldDescriptor;
-
 abstract class AbstractListBuilder implements ListBuilderInterface
 {
     /**

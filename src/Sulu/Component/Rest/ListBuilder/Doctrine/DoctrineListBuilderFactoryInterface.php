@@ -8,11 +8,11 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Rest\ListBuilder;
+namespace Sulu\Component\Rest\ListBuilder\Doctrine;
 
 /**
  * Defines the interface for the Factory of the DoctrineListBuilde
- * @package Sulu\Component\Rest\ListBuilder
+ * @package Sulu\Component\Rest\ListBuilder\Doctrine
  */
 interface DoctrineListBuilderFactoryInterface
 {

@@ -8,13 +8,13 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Rest\ListBuilder;
+namespace Sulu\Component\Rest\ListBuilder\Doctrine;
 
 use Doctrine\ORM\EntityManager;
 
 /**
  * Factory for DoctrineListBuilders
- * @package Sulu\Component\Rest\ListBuilder
+ * @package Sulu\Component\Rest\ListBuilder\Doctrine
  */
 class DoctrineListBuilderFactory
 {

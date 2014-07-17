@@ -17,7 +17,6 @@ use JMS\Serializer\Annotation\XmlAttribute;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use Hateoas\Configuration\Annotation\Relation;
 use Hateoas\Configuration\Annotation\Route;
-use Sulu\Component\Rest\ListBuilder\FieldDescriptor\AbstractFieldDescriptor;
 
 /**
  * This class represents a list for our common rest services
@@ -59,7 +58,8 @@ use Sulu\Component\Rest\ListBuilder\FieldDescriptor\AbstractFieldDescriptor;
  *      href = @Route(
  *          "expr(object.getRoute())",
  *          parameters = "expr(object.getParameters() + { sortBy: '{sortBy}', sortOrder: '{sortOrder}' })",
- *          absolute = "expr(object.isAbsolute())"
+ *          absolute = "expr(object.isAbsolute())",
+ *          generator = "templated_uri"
  *      )
  * )
  */

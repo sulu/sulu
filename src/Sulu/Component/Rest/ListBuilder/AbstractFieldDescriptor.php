@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Rest\ListBuilder\FieldDescriptor;
+namespace Sulu\Component\Rest\ListBuilder;
 
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
@@ -85,14 +85,14 @@ abstract class AbstractFieldDescriptor
 
     public function __construct(
         $name,
+        $translation = null,
         $disabled = false,
         $default = false,
         $sortable = true,
         $type = '',
         $width = '',
         $minWidth = '',
-        $editable = false,
-        $translation = null
+        $editable = false
     )
     {
         $this->name = $name;

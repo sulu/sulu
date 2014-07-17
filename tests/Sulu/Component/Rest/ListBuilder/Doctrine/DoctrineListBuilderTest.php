@@ -8,11 +8,12 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Rest\ListBuilder;
+namespace Sulu\Component\Rest\ListBuilder\Doctrine;
 
 use PHPUnit_Framework_Assert;
-use Sulu\Component\Rest\ListBuilder\FieldDescriptor\DoctrineFieldDescriptor;
-use Sulu\Component\Rest\ListBuilder\FieldDescriptor\DoctrineJoinDescriptor;
+use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilder;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 
 class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
 {
@@ -108,7 +109,7 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
     {
         $this->doctrineListBuilder->addField(
             new DoctrineFieldDescriptor(
-                'desc', 'desc_alias', self::$translationEntityName, array(
+                'desc', 'desc_alias', self::$translationEntityName, 'translation', array(
                     self::$translationEntityName => new DoctrineJoinDescriptor(
                             self::$translationEntityName, self::$entityName . '.translations'
                         )
@@ -131,7 +132,7 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
     {
         $this->doctrineListBuilder->addSearchField(
             new DoctrineFieldDescriptor(
-                'desc', 'desc_alias', self::$translationEntityName, array(
+                'desc', 'desc_alias', self::$translationEntityName, 'translation', array(
                     self::$translationEntityName => new DoctrineJoinDescriptor(
                             self::$translationEntityName, self::$entityName . '.translations'
                         )
@@ -150,7 +151,7 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
     {
         $this->doctrineListBuilder->sort(
             new DoctrineFieldDescriptor(
-                'desc', 'desc_alias', self::$translationEntityName, array(
+                'desc', 'desc_alias', self::$translationEntityName, 'translation', array(
                     self::$translationEntityName => new DoctrineJoinDescriptor(
                             self::$translationEntityName, self::$entityName . '.translations'
                         )
@@ -207,7 +208,7 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
             array(
                 new DoctrineFieldDescriptor('name', 'name_alias', self::$entityName),
                 new DoctrineFieldDescriptor(
-                    'desc', 'desc_alias', self::$translationEntityName, array(
+                    'desc', 'desc_alias', self::$translationEntityName, 'translation', array(
                         self::$translationEntityName => new DoctrineJoinDescriptor(
                                 self::$translationEntityName, self::$entityName . '.translations'
                             )
@@ -266,12 +267,12 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
     {
         $fieldDescriptors = array(
             'id1' => new DoctrineFieldDescriptor(
-                    null, null, null, array(
+                    null, null, null, null, array(
                         new DoctrineJoinDescriptor(null, null, null, DoctrineJoinDescriptor::JOIN_METHOD_LEFT)
                     )
                 ),
             'id2' => new DoctrineFieldDescriptor(
-                    null, null, null, array(
+                    null, null, null, null, array(
                         new DoctrineJoinDescriptor(null, null, null, DoctrineJoinDescriptor::JOIN_METHOD_INNER)
                     )
                 ),
@@ -292,6 +293,7 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
                     null,
                     null,
                     null,
+                    null,
                     array(
                         self::$entityName . '1' => new DoctrineJoinDescriptor(
                             self::$entityName,
@@ -302,6 +304,7 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
                     )
                 ),
             'id2' => new DoctrineFieldDescriptor(
+                    null,
                     null,
                     null,
                     null,
