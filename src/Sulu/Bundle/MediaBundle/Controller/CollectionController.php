@@ -164,9 +164,9 @@ class CollectionController extends RestController implements ClassResourceInterf
                 $collectionManager = $this->getCollectionManager();
                 $collectionManager->delete($id);
             } catch (CollectionNotFoundException $cnf) {
-                throw new EntityNotFoundException(self::$entityName, $id); // will through 404 Entity not found
+                throw new EntityNotFoundException(self::$entityName, $id); // will throw 404 Entity not found
             } catch (MediaException $me) {
-                throw new RestException($me->getMessage(), $me->getCode()); // will through 400 Bad Request
+                throw new RestException($me->getMessage(), $me->getCode()); // will throw 400 Bad Request
             }
         };
 
