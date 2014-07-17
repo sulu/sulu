@@ -73,11 +73,6 @@ class ListRepresentation extends PaginatedRepresentation
     protected $total;
 
     /**
-     * @var AbstractFieldDescriptor[]
-     */
-    protected $fieldDescriptors;
-
-    /**
      * @param mixed $data The data which will be presented
      * @param string $rel The name of the relation inside of the _embedded field
      * @param string $route The name of the route, for generating the links
@@ -85,9 +80,8 @@ class ListRepresentation extends PaginatedRepresentation
      * @param integer $page The number of the current page
      * @param integer $limit The size of one page
      * @param integer $total The total number of elements
-     * @param AbstractFieldDescriptor[] $fieldDescriptors The field descriptors for the resource
      */
-    public function __construct($data, $rel, $route, $parameters, $page, $limit, $total, $fieldDescriptors)
+    public function __construct($data, $rel, $route, $parameters, $page, $limit, $total)
     {
         parent::__construct(
             new CollectionRepresentation($data, $rel),
@@ -98,7 +92,6 @@ class ListRepresentation extends PaginatedRepresentation
             ceil($total / $limit)
         );
 
-        $this->fieldDescriptors = $fieldDescriptors;
         $this->total = $total;
     }
 }
