@@ -21,8 +21,7 @@
         "jackalope/jackalope-jackrabbit": "1.1.*",
         "doctrine/phpcr-bundle": "1.1.*",
         "doctrine/phpcr-odm": "1.1.*",
-        "willdurand/hateoas-bundle": "0.3.*",
-        "hautelook/templated-uri-bundle": "1.0.*"
+        "willdurand/hateoas-bundle": "0.3.*"
     },
     "require-dev": {
         "symfony/symfony": "2.5.*",

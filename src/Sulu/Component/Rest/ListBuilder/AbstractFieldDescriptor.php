@@ -49,6 +49,13 @@ abstract class AbstractFieldDescriptor
     private $default;
 
     /**
+     * Defines if this field is sortable
+     * @var boolean
+     * @Expose
+     */
+    private $sortable;
+
+    /**
      * The type of the field (only used for special fields like dates)
      * @var string
      * @Expose
@@ -81,6 +88,7 @@ abstract class AbstractFieldDescriptor
         $translation = null,
         $disabled = false,
         $default = false,
+        $sortable = true,
         $type = '',
         $width = '',
         $minWidth = '',
@@ -90,6 +98,7 @@ abstract class AbstractFieldDescriptor
         $this->name = $name;
         $this->disabled = $disabled;
         $this->default = $default;
+        $this->sortable = $sortable;
         $this->type = $type;
         $this->width = $width;
         $this->minWidth = $minWidth;
@@ -148,6 +157,14 @@ abstract class AbstractFieldDescriptor
     public function getDefault()
     {
         return $this->default;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getSortable()
+    {
+        return $this->sortable;
     }
 
     /**
