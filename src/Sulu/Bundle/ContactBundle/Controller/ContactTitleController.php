@@ -14,7 +14,7 @@ use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Put;
 use Hateoas\Representation\CollectionRepresentation;
-use Sulu\Bundle\ContactBundle\Entity\AccountCategory;
+use Sulu\Bundle\ContactBundle\Entity\ContactTitle;
 use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;

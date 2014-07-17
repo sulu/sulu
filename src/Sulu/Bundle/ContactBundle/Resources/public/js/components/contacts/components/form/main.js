@@ -388,15 +388,29 @@ define([], function() {
             },
 
             titleDeleted: function(indexes) {
-                if (!!indexes && indexes > 0) {
+                if (!!indexes && indexes.length > 0) {
                     this.sandbox.util.each(indexes, function(index, el) {
                         this.deleteItem(el);
                     }.bind(this));
                 }
             },
 
-            titleSaved: function(data) {
-                debugger;
+            titleSaved: function(changedData) {
+                if (!!changedData && changedData.length > 0) {
+                    this.sandbox.util.save(
+                            'api/contact/titles',
+                            'PATCH',
+                            changedData)
+                        .then(function(response) {
+                            this.sandbox.emit(
+                                'husky.select.title-select.update',
+                                response,
+                                [],
+                                true);
+                        }.bind(this)).fail(function(status, error) {
+                            this.sandbox.logger.error(status, error);
+                        }.bind(this));
+                    }
             },
 
             /**
@@ -441,6 +455,14 @@ define([], function() {
                 this.sandbox.on('husky.select.title-select.saved', function(data) {
                     this.titleSaved(data);
                 }.bind(this));
+
+                this.sandbox.on('husky.select.title-select.selected.item', function(id) {
+                    if (id > 0) {
+                        this.selectedAccountCategory = id;
+                        this.setHeaderBar(false);
+                    }
+                }.bind(this));
+
             }
         };
     })();
