@@ -19,6 +19,7 @@ use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\CollectionTypeNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Security\UserRepositoryInterface;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -27,6 +28,12 @@ use Sulu\Bundle\MediaBundle\Api\Collection;
 
 class DefaultCollectionManager implements CollectionManagerInterface
 {
+    private static $entityName = 'SuluMediaBundle:Collection';
+    private static $entityCollectionType = 'SuluMediaBundle:Collection';
+    private static $entityCollectionMeta = 'SuluMediaBUndle:CollectionMeta';
+    private static $entityUser = 'SuluSecurityBundle:User';
+    private static $entityContact = 'SuluContactBundle:Contact';
+
     /**
      * @var CollectionRepositoryInterface
      */
@@ -91,7 +98,7 @@ class DefaultCollectionManager implements CollectionManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function get($id, $locale)
+    public function getById($id, $locale)
     {
         $collection = $this->collectionRepository->findCollectionById($id);
         if (!$collection) {
@@ -103,7 +110,7 @@ class DefaultCollectionManager implements CollectionManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getAll($locale, $parent = null, $depth = null)
+    public function get($locale, $parent = null, $depth = null)
     {
         $collectionEntities = $this->collectionRepository->findCollections($parent, $depth);
         $collections = [];
@@ -114,7 +121,6 @@ class DefaultCollectionManager implements CollectionManagerInterface
     }
 
     /**
-     * TODO
      * @return DoctrineFieldDescriptor[]
      */
     private function initializeFieldDescriptors()
@@ -122,6 +128,90 @@ class DefaultCollectionManager implements CollectionManagerInterface
         $fieldDescriptors = array();
 
         $this->fieldDescriptors = $fieldDescriptors;
+
+        $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor(
+            'id',
+            'id',
+            self::$entityName,
+            'id',
+            array(),
+            true,
+            false,
+            '',
+            '50px'
+        );
+        $this->fieldDescriptors['type_name'] = new DoctrineFieldDescriptor(
+            'name',
+            'type_name',
+            self::$entityCollectionType,
+            'locale',
+            array(
+                self::$entityCollectionType => new DoctrineJoinDescriptor(
+                    self::$entityCollectionType,
+                    self::$entityName . '.type'
+                )
+            )
+        );
+        $this->fieldDescriptors['title'] = new DoctrineFieldDescriptor(
+            'title',
+            'title',
+            self::$entityCollectionMeta,
+            'title',
+            array(
+                self::$entityName => new DoctrineJoinDescriptor(
+                    self::$entityCollectionMeta,
+                    self::$entityName . '.meta'
+                )
+            ),
+            true,
+            false,
+            '',
+            '50px'
+        );
+        $this->fieldDescriptors['description'] = new DoctrineFieldDescriptor(
+            'description',
+            'description',
+            self::$entityCollectionMeta,
+            'description',
+            array(
+                self::$entityName => new DoctrineJoinDescriptor(
+                    self::$entityCollectionMeta,
+                    self::$entityName . '.meta'
+                )
+            )
+        );
+        $this->fieldDescriptors['changer'] = new DoctrineFieldDescriptor(
+            'firstname',
+            'changer',
+            self::$entityContact,
+            'changer',
+            array(
+                self::$entityUser => new DoctrineJoinDescriptor(
+                    self::$entityUser,
+                    self::$entityName . '.changer'
+                ),
+                self::$entityContact => new DoctrineJoinDescriptor(
+                    self::$entityContact,
+                    self::$entityUser . '.contact'
+                )
+            )
+        );
+        $this->fieldDescriptors['creator'] = new DoctrineFieldDescriptor(
+            'firstname',
+            'creator',
+            self::$entityContact,
+            'creator',
+            array(
+                self::$entityUser => new DoctrineJoinDescriptor(
+                    self::$entityUser,
+                    self::$entityName . '.creator'
+                ),
+                self::$entityContact => new DoctrineJoinDescriptor(
+                    self::$entityContact,
+                    self::$entityUser . '.contact'
+                )
+            )
+        );
 
         return $this->fieldDescriptors;
     }
