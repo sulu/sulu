@@ -681,7 +681,7 @@ class ContactControllerTest extends DatabaseTestCase
     public function testGetListSearch()
     {
         $client = $this->createTestClient();
-        $client->request('GET', '/api/contacts?flat=true&search=Nothing&searchFields=firstName,lastName');
+        $client->request('GET', '/api/contacts?flat=true&search=Nothing&searchFields=fullName');
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
@@ -689,14 +689,14 @@ class ContactControllerTest extends DatabaseTestCase
         $this->assertEquals(0, $response->total);
         $this->assertEquals(0, count($response->_embedded->contacts));
 
-        $client->request('GET', '/api/contacts?flat=true&search=Max&searchFields=firstName,lastName');
+        $client->request('GET', '/api/contacts?flat=true&search=Max&searchFields=fullName');
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(1, $response->total);
         $this->assertEquals(1, count($response->_embedded->contacts));
-        $this->assertEquals('Max', $response->_embedded->contacts[0]->firstName);
+        $this->assertEquals('Max Mustermann', $response->_embedded->contacts[0]->fullName);
     }
 
     public function testPut()
@@ -1302,8 +1302,7 @@ class ContactControllerTest extends DatabaseTestCase
 
         $this->assertEquals(1, $response->total);
 
-        $this->assertEquals('Max', $response->_embedded->contacts[0]->firstName);
-        $this->assertEquals('Mustermann', $response->_embedded->contacts[0]->lastName);
+        $this->assertEquals('Max Mustermann', $response->_embedded->contacts[0]->fullName);
         $this->assertEquals('Dr', $response->_embedded->contacts[0]->title);
 
         $this->assertEquals(1, $response->_embedded->contacts[0]->formOfAddress);
@@ -1314,22 +1313,20 @@ class ContactControllerTest extends DatabaseTestCase
     public function testGetListFields()
     {
         $client = $this->createTestClient();
-        $client->request('GET', '/api/contacts?flat=true&fields=id,firstName,lastName');
+        $client->request('GET', '/api/contacts?flat=true&fields=id,fullName');
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(1, $response->total);
         $this->assertEquals(1, $response->_embedded->contacts[0]->id);
-        $this->assertEquals('Max', $response->_embedded->contacts[0]->firstName);
-        $this->assertEquals('Mustermann', $response->_embedded->contacts[0]->lastName);
+        $this->assertEquals('Max Mustermann', $response->_embedded->contacts[0]->fullName);
 
         $client = $this->createTestClient();
-        $client->request('GET', '/api/contacts?flat=true&fields=id,firstName');
+        $client->request('GET', '/api/contacts?flat=true&fields=id,fullName');
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(1, $response->total);
         $this->assertEquals(1, $response->_embedded->contacts[0]->id);
-        $this->assertEquals('Max', $response->_embedded->contacts[0]->firstName);
-        $this->assertFalse(isset($response->_embedded->contacts[0]->lastName));
+        $this->assertEquals('Max Mustermann', $response->_embedded->contacts[0]->fullName);
     }
 
     public function testDelete()

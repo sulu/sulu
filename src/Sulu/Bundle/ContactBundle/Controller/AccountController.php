@@ -593,13 +593,13 @@ class AccountController extends AbstractContactController
                 $account->setChanger($user);
 
                 // process details
-                if (!($this->processUrls($account, $request->get('urls'))
-                    && $this->processEmails($account, $request->get('emails'))
-                    && $this->processFaxes($account, $request->get('faxes'))
-                    && $this->processPhones($account, $request->get('phones'))
-                    && $this->processAddresses($account, $request->get('addresses'))
-                    && $this->processTags($account, $request->get('tags'))
-                    && $this->processNotes($account, $request->get('notes')))
+                if (!($this->processUrls($account, $request->get('urls', array()))
+                    && $this->processEmails($account, $request->get('emails', array()))
+                    && $this->processFaxes($account, $request->get('faxes', array()))
+                    && $this->processPhones($account, $request->get('phones', array()))
+                    && $this->processAddresses($account, $request->get('addresses', array()))
+                    && $this->processTags($account, $request->get('tags', array()))
+                    && $this->processNotes($account, $request->get('notes', array())))
                 ) {
                     throw new RestException('Updating dependencies is not possible', 0);
                 }
@@ -703,7 +703,7 @@ class AccountController extends AbstractContactController
 
                 // process details
                 if (!is_null($request->get('bankAccounts'))) {
-                    $this->processBankAccounts($account, $request->get('bankAccounts'));
+                    $this->processBankAccounts($account, $request->get('bankAccounts', array()));
                 }
 
                 $this->processTerms($request, $account);
