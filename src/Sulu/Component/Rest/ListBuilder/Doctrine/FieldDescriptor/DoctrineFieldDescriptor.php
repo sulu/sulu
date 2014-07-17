@@ -45,10 +45,10 @@ class DoctrineFieldDescriptor extends AbstractDoctrineFieldDescriptor
         $joins = array(),
         $disabled = false,
         $default = false,
-        $sortable = true,
         $type = '',
         $width = '',
         $minWidth = '',
+        $sortable = true,
         $editable = false
     )
     {
