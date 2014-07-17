@@ -88,10 +88,11 @@
             <argument>%sulu_media.format_cache.save_image%</argument>
         </service>
 
-        <service id="sulu.content.type.media_selection" class="%sulu_media.media_selection.class%">
+        <service id="sulu_media.type.media_selection" class="%sulu_media.media_selection.class%">
             <argument type="service" id="sulu_media.media_manager"/>
             <argument type="service" id="sulu_media.rest_object_helper"/>
             <argument type="string">SuluMediaBundle:Template:content-types/media-selection.html.twig</argument>
+            <tag name="sulu.content.type" alias="media_selection"/>
         </service>
 
         <service id="sulu_media.rest_object_helper" class="%sulu_media.rest_object_helper.class%">
