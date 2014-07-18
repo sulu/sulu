@@ -253,7 +253,7 @@ class DefaultCollectionManager implements CollectionManagerInterface
      */
     private function modifyCollection($data, $user)
     {
-        $collection = $this->get($data['id'], $data['locale']);
+        $collection = $this->getById($data['id'], $data['locale']);
         $data['changer'] = $user;
         $data['changed'] = new \DateTime();
 
