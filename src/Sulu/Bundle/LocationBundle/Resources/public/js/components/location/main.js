@@ -25,7 +25,7 @@ define([], function() {
                  coordinates: 'Coordinates'
              },
              instanceName: null,
-             mapSource: 'google_maps',
+             mapSources: {}
         },
 
         constants = {
@@ -43,52 +43,6 @@ define([], function() {
             code: '',
             country: '',
             coordinates: ''
-        },
-
-        /**
-         * Namespace for events
-         *
-         * @type {string}
-         */
-        eventNamespace = 'sulu.location',
-
-        /**
-         * Raised when all overlay components returned their value
-         * @event sulu.media-selection.input-retrieved
-         */
-        INPUT_RETRIEVED = function() {
-            return createEventName.call(this, 'input-retrieved');
-        },
-
-        /**
-         * Raised when the overlay data has been changed
-         * @event sulu.media-selection.data-changed
-         */
-        DATA_CHANGED = function() {
-            return createEventName.call(this, 'data-changed');
-        },
-
-        /**
-         * Raised before data is requested with AJAX
-         * @event sulu.media-selection.data-request
-         */
-        DATA_REQUEST = function() {
-            return createEventName.call(this, 'data-request');
-        },
-
-        /**
-         * Raised when data has returned from the ajax request
-         * @event sulu.media-selection.data-retrieved
-         */
-        DATA_RETRIEVED = function() {
-            return createEventName.call(this, 'data-retrieved');
-        },
-
-        /**
-         * returns normalized event names
-         */
-        createEventName = function(postFix) {
-            return eventNamespace + (this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
         },
 
         templates = {
@@ -149,7 +103,9 @@ define([], function() {
                             '<div class="form-group grid-col-6">',
                                 '<label for="map_source">Map Source</label>',
                                 '<select class="form-element" name="map_source" class="map-source" data-mapper-property="map_source">',
-                                    '<option value="google_maps">Google Maps</option>',
+                                    '<% _.each(mapSources, function ($i, $v) { %>',
+                                        '<option value="<%= $i %>"><%= $v %></option>',
+                                    '<% }); %>',
                                 '</select>',
                             '</div>',
                         '</div>',
@@ -276,7 +232,8 @@ define([], function() {
                             {
                                 title: this.sandbox.translate(this.options.translations.configureLocation),
                                 data: this._template('overlay', {
-                                    data: this.formData
+                                    data: this.formData,
+                                    mapSources: this.options.mapSources
                                 }),
                                 okCallback: function () {
                                     // @todo: Validation
