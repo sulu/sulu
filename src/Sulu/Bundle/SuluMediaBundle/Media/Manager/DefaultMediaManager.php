@@ -327,7 +327,7 @@ class DefaultMediaManager implements MediaManagerInterface
 
     /**
      * Modified an exists media
-     * @param $uploadedFile
+     * @param UploadedFile $uploadedFile
      * @param $data
      * @param $user
      * @return Media
@@ -433,7 +433,7 @@ class DefaultMediaManager implements MediaManagerInterface
 
     /**
      * Create a new media
-     * @param $uploadedFile
+     * @param UploadedFile $uploadedFile
      * @param $data
      * @param $user
      * @return MediaEntity
