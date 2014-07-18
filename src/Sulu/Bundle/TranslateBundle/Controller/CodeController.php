@@ -13,9 +13,9 @@ namespace Sulu\Bundle\TranslateBundle\Controller;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\TranslateBundle\Translate\TranslateCollectionRepresentation;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
+use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
-use Sulu\Component\Rest\ListBuilder\DoctrineListBuilderFactory;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\ListBuilder\ListRestHelperInterface;
 use Sulu\Component\Rest\Listing\ListRestHelper;
@@ -25,6 +25,7 @@ use Sulu\Bundle\TranslateBundle\Entity\CodeRepository;
 use Sulu\Bundle\TranslateBundle\Entity\Translation;
 use Sulu\Component\Rest\RestHelperInterface;
 use Symfony\Component\HttpFoundation\Request;
+use FOS\RestBundle\Controller\Annotations\Get;
 
 /**
  * Makes the translation codes accessible trough an REST-API
@@ -360,12 +361,10 @@ class CodeController extends RestController implements ClassResourceInterface
             self::$translationEntity,
             'value',
             array(
-                self::$catalogueEntity =>   new DoctrineJoinDescriptor(
-                        self::$catalogueEntity,
-                        self::$translationEntity . '.catalogue',
-                        self::$catalogueEntity . '.locale = ' . $locale,
-                        DoctrineJoinDescriptor::JOIN_METHOD_INNER
-                    ),
+                self::$translationEntity =>   new DoctrineJoinDescriptor(
+                        self::$translationEntity,
+                        self::$entityName . '.translations'
+                    )
             ),
             true,
             false,
