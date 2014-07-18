@@ -580,9 +580,7 @@ class ContactController extends AbstractContactController
                     }
                     $positionId = $request->get('position');
                     if ($positionId && is_numeric($positionId)) {
-                        if ($position) {
-                            $position = $this->getDoctrine()->getRepository(self::$positionEntityName)->find($positionId);
-                        }
+                        $position = $this->getDoctrine()->getRepository(self::$positionEntityName)->find($positionId);
                     } else {
                         $position = null;
                     }
