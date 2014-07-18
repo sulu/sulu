@@ -1098,8 +1098,64 @@ class AccountController extends AbstractContactController
             false
         );
 
-        // TODO fullname, position, isMainContact
+        $this->accountContactFieldDescriptors['fullName'] = new DoctrineConcatenationFieldDescriptor(
+            array(
+                new DoctrineFieldDescriptor(
+                    'firstName',
+                    'mainContact',
+                    self::$contactEntityName,
+                    'contact.contacts.main-contact',
+                    array(
+                        self::$accountContactEntityName => new DoctrineJoinDescriptor(
+                                self::$accountContactEntityName,
+                                self::$entityName .
+                                '.accountContacts'
+                            ),
+                        self::$contactEntityName => new DoctrineJoinDescriptor(
+                                self::$contactEntityName,
+                                self::$accountContactEntityName .
+                                '.contact'
+                            )
+                    )
+                ),
+                new DoctrineFieldDescriptor(
+                    'lastName',
+                    'mainContact',
+                    self::$contactEntityName,
+                    'contact.contacts.main-contact',
+                    array(
+                        self::$accountContactEntityName => new DoctrineJoinDescriptor(
+                                self::$accountContactEntityName,
+                                self::$entityName .
+                                '.accountContacts'
+                            ),
+                        self::$contactEntityName => new DoctrineJoinDescriptor(
+                                self::$contactEntityName,
+                                self::$accountContactEntityName .
+                                '.contact'
+                            )
+                    )
+                )
+            ),
+            'fullName',
+            'public.name',
+            ' ',
+            false,
+            true,
+            '',
+            '',
+            '160px'
+        );
 
+        $this->accountContactFieldDescriptors['position'] = new DoctrineFieldDescriptor(
+            'position',
+            'position',
+            self::$accountContactEntityName,
+            'contact.contacts.position',
+            array(),
+            false,
+            true
+        );
     }
 
 }
