@@ -70,6 +70,8 @@ class ContactController extends AbstractContactController
      */
     protected $fieldDescriptors;
 
+    protected $accountContactFieldDescriptors;
+
     // TODO: move field descriptors to a manager
     public function __construct()
     {
@@ -186,7 +188,7 @@ class ContactController extends AbstractContactController
                 new DoctrineFieldDescriptor('lastName', 'lastName', self::$entityName)
             ),
             'fullName',
-            'public.fullName'
+            'public.name'
         );
 
         $this->fieldDescriptors['account'] = new DoctrineFieldDescriptor(
@@ -237,14 +239,38 @@ class ContactController extends AbstractContactController
                     )
             )
         );
+
+        // field descriptors for the account contact list
+        $this->accountContactFieldDescriptors = array();
+        $this->accountContactFieldDescriptors['id']  = $this->fieldDescriptors['id'];
+        $this->accountContactFieldDescriptors['fullName']  = $this->fieldDescriptors['fullName'];
+        $this->accountContactFieldDescriptors['accountContacts_position'] = $this->fieldDescriptors['accountContacts_position'];
+        $this->accountContactFieldDescriptors['isMainContact'] = new DoctrineFieldDescriptor(
+            'main',
+            'isMainContact',
+            self::$accountContactEntityName,
+            'contact.contacts.main-contact',
+            array(
+                self::$accountContactEntityName => new DoctrineJoinDescriptor(
+                        self::$accountContactEntityName,
+                        self::$entityName . '.accountContacts'
+                    ),
+            ),
+            false
+        );
     }
 
     /**
      * returns all fields that can be used by list
+     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function fieldsAction()
+    public function fieldsAction(Request $request)
     {
+        if(!!$request->get('accountContacts')) {
+            return $this->handleView($this->view(array_values($this->accountContactFieldDescriptors), 200));
+        }
+
         // default contacts list
         return $this->handleView($this->view(array_values($this->fieldDescriptors), 200));
     }

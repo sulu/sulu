@@ -47,6 +47,7 @@ class AccountController extends AbstractContactController
      */
     protected static $entityName = 'SuluContactBundle:Account';
     protected static $entityKey = 'accounts';
+    protected static $contactEntityKey = 'contacts';
     protected static $contactEntityName = 'SuluContactBundle:Contact';
     protected static $accountCategoryEntityName = 'SuluContactBundle:AccountCategory';
     protected static $accountContactEntityName = 'SuluContactBundle:AccountContact';
@@ -69,11 +70,14 @@ class AccountController extends AbstractContactController
      * @var DoctrineFieldDescriptor[]
      */
     protected $fieldDescriptors;
+    protected $accountContactFieldDescriptors;
 
     // TODO: move the field descriptors to a manager
     public function __construct()
     {
         $this->fieldDescriptors = array();
+        $this->initAccountContactFieldDescriptors();
+
         $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor(
             'id',
             'id',
@@ -216,6 +220,7 @@ class AccountController extends AbstractContactController
             true
         );
 
+        // TODO just lastname or fullname?
         $this->fieldDescriptors['mainContact'] = new DoctrineFieldDescriptor(
             'lastName',
             'mainContact',
@@ -303,34 +308,34 @@ class AccountController extends AbstractContactController
      */
     public function getContactsAction($id, Request $request)
     {
+        // TODO problems with subresources
         if ($request->get('flat') == 'true') {
 
-            $filterMainContact = null;
-            $listHelper = $this->get('sulu_core.list_rest_helper');
-            $fields = $listHelper->getFields();
+            /** @var RestHelperInterface $restHelper */
+            $restHelper = $this->getRestHelper();
 
-            // check if contact is principle point of contact
-            if ($fields && array_search('isMainContact', $fields)) {
-                $mainContactString = 'accountContacts_account_mainContact_id';
-                // add to fields to query
-                $fields[] = $mainContactString;
-                $request->query->add(array('fields' => implode(',', $fields)));
-                // filter result
-                $filterMainContact = function ($content) use ($mainContactString, $fields) {
-                    if (array_search('isMainContact', $fields)) {
-                        $content['isMainContact'] = $content['id'] === $content[$mainContactString];
-                    }
-                    unset($content[$mainContactString]);
-                    return $content;
-                };
-            }
+            /** @var DoctrineListBuilderFactory $factory */
+            $factory = $this->get('sulu_core.doctrine_list_builder_factory');
 
-            // flat structure
-            $view = $this->responseList(array('accountContacts_account_id' => $id), self::$contactEntityName, $filterMainContact);
+            $listBuilder = $factory->create(self::$entityName);
+
+            $restHelper->initializeListBuilder($listBuilder, $this->accountContactFieldDescriptors);
+
+            $list = new ListRepresentation(
+                $listBuilder->execute(),
+                self::$entityKey,
+                'get_account_contacts',
+                array_merge(array('id' => $id), $request->query->all()),
+                $listBuilder->getCurrentPage(),
+                $listBuilder->getLimit(),
+                $listBuilder->count()
+            );
+
         } else {
             $contacts = $this->getDoctrine()->getRepository(self::$contactEntityName)->findByAccountId($id);
-            $view = $this->view($this->createHalResponse($contacts), 200);
+            $list = new CollectionRepresentation($contacts, self::$contactEntityKey);
         }
+        $view = $this->view($list, 200);
         return $this->handleView($view);
     }
 
@@ -1041,4 +1046,41 @@ class AccountController extends AbstractContactController
     {
         return $this->get('sulu_contact.account_manager');
     }
+
+    /**
+     * Inits the account contact descriptors
+     */
+    protected function initAccountContactFieldDescriptors()
+    {
+        $this->accountContactFieldDescriptors = array();
+        $this->accountContactFieldDescriptors['id'] = new DoctrineFieldDescriptor(
+            'id',
+            'id',
+            self::$contactEntityName,
+            'contact.contacts.main-contact',
+            array(
+                self::$accountContactEntityName => new DoctrineJoinDescriptor(
+                        self::$accountContactEntityName,
+                        self::$entityName .
+                        '.accountContacts'
+                    ),
+                self::$contactEntityName => new DoctrineJoinDescriptor(
+                        self::$contactEntityName,
+                        self::$accountContactEntityName .
+                        '.contact'
+                    )
+            ),
+            false,
+            false,
+            '',
+            '',
+            '',
+            false
+        );
+
+         // TODO fullname, position, isMainContact
+
+    }
+
+
 }
