@@ -6,41 +6,42 @@ use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
 
 /**
- * ContactTitle
+ * Position
  */
-class ContactTitle implements JsonSerializable
+class Position implements JsonSerializable
 {
     /**
      * @var string
      */
-    private $title;
+    private $position;
 
     /**
      * @var integer
      */
     private $id;
 
+
     /**
-     * Set title
+     * Set position
      *
-     * @param string $title
-     * @return ContactTitle
+     * @param string $position
+     * @return Position
      */
-    public function setTitle($title)
+    public function setPosition($position)
     {
-        $this->title = $title;
+        $this->position = $position;
 
         return $this;
     }
 
     /**
-     * Get title
+     * Get position
      *
      * @return string
      */
-    public function getTitle()
+    public function getPosition()
     {
-        return $this->title;
+        return $this->position;
     }
 
     /**
@@ -64,7 +65,7 @@ class ContactTitle implements JsonSerializable
     {
         return [
             'id'=>$this->getId(),
-            'title'=>$this->getTitle()
+            'position'=>$this->getPosition()
         ];
     }
 }

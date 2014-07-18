@@ -387,23 +387,33 @@ define([], function() {
                 this.saved = saved;
             },
 
-            titleDeleted: function(indexes) {
+            /**
+            * Delete callback function for editable drop down
+            * @param indexes - indexes to delete
+            * @param url - api url
+            */
+            itemDeleted: function(indexes, url) {
                 if (!!indexes && indexes.length > 0) {
                     this.sandbox.util.each(indexes, function(index, el) {
-                        this.deleteItem(el);
+                        this.deleteItem(el, url);
                     }.bind(this));
                 }
             },
 
-            titleSaved: function(changedData) {
+            /**
+            * Save callback function for editable drop down
+            * @param changedData - data to save
+            * @param url - api url
+            */
+            itemSaved: function(changedData, url, instance) {
                 if (!!changedData && changedData.length > 0) {
                     this.sandbox.util.save(
-                            'api/contact/titles',
+                            url,
                             'PATCH',
                             changedData)
                         .then(function(response) {
                             this.sandbox.emit(
-                                'husky.select.title-select.update',
+                                instance + '.update',
                                 response,
                                 [],
                                 true);
@@ -416,14 +426,36 @@ define([], function() {
             /**
             * delete elements
             * @param id
+            * @param url - api url
             */
-            deleteItem: function(id) {
-                this.sandbox.util.save('api/contact/titles/' + id, 'DELETE')
+            deleteItem: function(id, url) {
+                this.sandbox.util.save(url + '/' + id, 'DELETE')
                     .then(function() {
                     }.bind(this)).fail(function(status, error) {
                         this.sandbox.logger.error(status, error);
                         return null;
                     }.bind(this));
+            },
+
+            /**
+            * Register events for editable drop downs
+            * @param instanceName
+            */
+            initializeDropDownListender: function(instanceName, url) {
+                var instance = 'husky.select.' + instanceName;
+                // Listen for changes in title selection drop down
+                this.sandbox.on(instance + '.deleted', function(data) {
+                    this.itemDeleted(data, url);
+                }.bind(this));
+                this.sandbox.on(instance + '.saved', function(data) {
+                    this.itemSaved(data, url, instance);
+                }.bind(this));
+                this.sandbox.on(instance + '.selected.item', function(id) {
+                    if (id > 0) {
+                        this.selectedAccountCategory = id;
+                        this.setHeaderBar(false);
+                    }
+                }.bind(this));
             },
 
             // event listens for changes in form
@@ -448,21 +480,12 @@ define([], function() {
                     this.setHeaderBar(false);
                 }.bind(this));
 
-                // Listen for changes in title selection drop down 
-                this.sandbox.on('husky.select.title-select.deleted', function(data) {
-                    this.titleDeleted(data);
-                }.bind(this));
-                this.sandbox.on('husky.select.title-select.saved', function(data) {
-                    this.titleSaved(data);
-                }.bind(this));
-
-                this.sandbox.on('husky.select.title-select.selected.item', function(id) {
-                    if (id > 0) {
-                        this.selectedAccountCategory = id;
-                        this.setHeaderBar(false);
-                    }
-                }.bind(this));
-
+                this.initializeDropDownListender(
+                        'title-select',
+                        'api/contact/titles');
+                this.initializeDropDownListender(
+                        'position-select',
+                        'api/contact/positions');
             }
         };
     })();

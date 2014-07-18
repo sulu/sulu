@@ -52,6 +52,7 @@ class ContactController extends AbstractContactController
     protected static $accountEntityName = 'SuluContactBundle:Account';
     protected static $accountContactEntityName = 'SuluContactBundle:AccountContact';
     protected static $titleEntityName = 'SuluContactBundle:ContactTitle';
+    protected static $positionEntityName = 'SuluContactBundle:Position';
     protected static $addressEntityName = 'SuluContactBundle:Address';
     protected static $contactAddressEntityName = 'SuluContactBundle:ContactAddress';
 
@@ -557,6 +558,8 @@ class ContactController extends AbstractContactController
                     if ($title) {
                         $contact->setTitle($title);
                     }
+                } else {
+                    $contact->setTitle(null);
                 }
                 $contact->setChanged(new DateTime());
 
@@ -575,10 +578,18 @@ class ContactController extends AbstractContactController
                     if (!$parent) {
                         throw new EntityNotFoundException(self::$accountEntityName, $parentData['id']);
                     }
+                    $positionId = $request->get('position');
+                    if ($positionId && is_numeric($positionId)) {
+                        if ($position) {
+                            $position = $this->getDoctrine()->getRepository(self::$positionEntityName)->find($positionId);
+                        }
+                    } else {
+                        $position = null;
+                    }
                     $accountContact = $this->getMainAccountContactOrCreateNew(
                         $contact,
                         $parent,
-                        $request->get('position')
+                        $position
                     );
 
                     if ($accountContact) {

@@ -13,8 +13,12 @@
         </id>
 
         <field name="main" type="boolean" column="main" nullable="false" />
-        <field name="position" type="string" column="position" nullable="true" />
-        
+
+        <many-to-one field="position" target-entity="Sulu\Bundle\ContactBundle\Entity\Position">
+            <join-columns>
+                <join-column name="idPositions" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
+            </join-columns>
+        </many-to-one>
         <many-to-one field="contact" target-entity="Sulu\Bundle\ContactBundle\Entity\Contact" inversed-by="accountContacts">
             <join-columns>
                 <join-column name="idContacts" referenced-column-name="id" nullable="false" on-delete="CASCADE"></join-column>
