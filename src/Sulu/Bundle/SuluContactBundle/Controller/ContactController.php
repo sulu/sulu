@@ -103,7 +103,7 @@ class ContactController extends AbstractContactController
             ),
             'fullName',
             'public.name',
-            '',
+            ' ',
             false,
             true
         );
