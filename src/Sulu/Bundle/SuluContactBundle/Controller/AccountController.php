@@ -35,6 +35,7 @@ use Sulu\Component\Rest\ListBuilder\DoctrineListBuilderFactory;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineConcatenationFieldDescriptor;
 
 /**
  * Makes accounts available through a REST API
@@ -90,7 +91,8 @@ class AccountController extends AbstractContactController
             '90px'
         );
 
-        $this->fieldDescriptors['name'] = new DoctrineFieldDescriptor('name',
+        $this->fieldDescriptors['name'] = new DoctrineFieldDescriptor(
+            'name',
             'name',
             self::$entityName,
             'public.name',
@@ -126,32 +128,47 @@ class AccountController extends AbstractContactController
                     )
             ),
             false,
-            false,
-            '',
-            '50px',
-            '',
-            false
+            true,
+            true
         );
 
-        // TODO just lastname or fullname?
-        $this->fieldDescriptors['mainContact'] = new DoctrineFieldDescriptor(
-            'lastName',
-            'mainContact',
-            self::$contactEntityName,
-            'contact.contacts.main-contact',
+        $this->fieldDescriptors['mainContact'] = new DoctrineConcatenationFieldDescriptor(
             array(
-                self::$contactEntityName => new DoctrineJoinDescriptor(
-                        self::$contactEntityName,
-                        self::$entityName .
-                        '.mainContact'
+                new DoctrineFieldDescriptor(
+                    'lastName',
+                    'mainContact',
+                    self::$contactEntityName,
+                    'contact.contacts.main-contact',
+                    array(
+                        self::$contactEntityName => new DoctrineJoinDescriptor(
+                                self::$contactEntityName,
+                                self::$entityName .
+                                '.mainContact'
+                            )
                     )
+                ),
+                new DoctrineFieldDescriptor(
+                    'lastName',
+                    'mainContact',
+                    self::$contactEntityName,
+                    'contact.contacts.main-contact',
+                    array(
+                        self::$contactEntityName => new DoctrineJoinDescriptor(
+                                self::$contactEntityName,
+                                self::$entityName .
+                                '.mainContact'
+                            )
+                    )
+                )
             ),
+            'mainContact',
+            'contact.contacts.main-contact',
+            ' ',
             false,
-            false,
+            true,
             '',
             '',
-            '',
-            false
+            '160px'
         );
 
         $this->fieldDescriptors['mainPhone'] = new DoctrineFieldDescriptor(
@@ -239,8 +256,6 @@ class AccountController extends AbstractContactController
             array(),
             true
         );
-
-
 
         $this->fieldDescriptors['mainFax'] = new DoctrineFieldDescriptor(
             'mainFax',
@@ -1083,9 +1098,8 @@ class AccountController extends AbstractContactController
             false
         );
 
-         // TODO fullname, position, isMainContact
+        // TODO fullname, position, isMainContact
 
     }
-
 
 }
