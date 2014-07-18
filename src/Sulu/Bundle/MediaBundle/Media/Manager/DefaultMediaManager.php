@@ -28,7 +28,7 @@ use Sulu\Bundle\MediaBundle\Media\Exception\InvalidFileException;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Sulu\Bundle\MediaBundle\Media\FileValidator\FileValidatorInterface;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
-use Sulu\Component\Rest\ListBuilder\FieldDescriptor\DoctrineFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Security\UserInterface;
 use Sulu\Component\Security\UserRepositoryInterface;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
@@ -133,7 +133,8 @@ class DefaultMediaManager implements MediaManagerInterface
         $maxFileSize,
         $blockedMimeTypes,
         $mediaTypes
-    ) {
+    )
+    {
         $this->mediaRepository = $mediaRepository;
         $this->collectionRepository = $collectionRepository;
         $this->em = $em;
@@ -154,147 +155,118 @@ class DefaultMediaManager implements MediaManagerInterface
      */
     private function initializeFieldDescriptors()
     {
-        $fieldDescriptors['id'] = new DoctrineFieldDescriptor('id', 'id', self::ENTITY_NAME_MEDIA, array());
-        $fieldDescriptors['collection'] = new DoctrineFieldDescriptor('collection', 'idCollections', self::ENTITY_NAME_MEDIA, array());
+        $fieldDescriptors['id'] = new DoctrineFieldDescriptor(
+            'id', 'id',
+            self::ENTITY_NAME_MEDIA, 'public.id',
+            array(), true, false, '', '50px', ''
+        );
 
-        $fieldDescriptors['name'] = new DoctrineFieldDescriptor('name', 'name', self::ENTITY_NAME_FILEVERSION, array(
-            self::ENTITY_NAME_FILE => new DoctrineJoinDescriptor(
-                    self::ENTITY_NAME_FILE,
-                    self::ENTITY_NAME_MEDIA . '.file'
-                ),
-            self::ENTITY_NAME_FILEVERSION => new DoctrineJoinDescriptor(
-                    self::ENTITY_NAME_FILEVERSION,
-                    self::ENTITY_NAME_FILE . '.fileVersion',
-                    self::ENTITY_NAME_FILEVERSION . '.version = ' . self::ENTITY_NAME_FILE . '.version'
-                )
-        ));
-        $fieldDescriptors['size'] = new DoctrineFieldDescriptor('size', 'size', self::ENTITY_NAME_FILEVERSION, array(
-            self::ENTITY_NAME_FILE => new DoctrineJoinDescriptor(
-                    self::ENTITY_NAME_FILE,
-                    self::ENTITY_NAME_MEDIA . '.file'
-                ),
-            self::ENTITY_NAME_FILEVERSION => new DoctrineJoinDescriptor(
-                    self::ENTITY_NAME_FILEVERSION,
-                    self::ENTITY_NAME_FILE . '.fileVersion',
-                    self::ENTITY_NAME_FILEVERSION . '.version = ' . self::ENTITY_NAME_FILE . '.version'
-                )
-        ));
-        $fieldDescriptors['changed'] = new DoctrineFieldDescriptor('changed', 'changed', self::ENTITY_NAME_FILEVERSION, array(
-            self::ENTITY_NAME_FILE => new DoctrineJoinDescriptor(
-                    self::ENTITY_NAME_FILE,
-                    self::ENTITY_NAME_MEDIA . '.file'
-                ),
-            self::ENTITY_NAME_FILEVERSION => new DoctrineJoinDescriptor(
-                    self::ENTITY_NAME_FILEVERSION,
-                    self::ENTITY_NAME_FILE . '.fileVersion',
-                    self::ENTITY_NAME_FILEVERSION . '.version = ' . self::ENTITY_NAME_FILE . '.version'
-                )
-        ));
-        $fieldDescriptors['changer'] = new DoctrineFieldDescriptor('changer', 'firstName', self::ENTITY_NAME_CONTACT, array(
-            self::ENTITY_NAME_FILE => new DoctrineJoinDescriptor(
-                    self::ENTITY_NAME_FILE,
-                    self::ENTITY_NAME_MEDIA . '.file'
-                ),
-            self::ENTITY_NAME_FILEVERSION => new DoctrineJoinDescriptor(
-                    self::ENTITY_NAME_FILEVERSION,
-                    self::ENTITY_NAME_FILE . '.fileVersion',
-                    self::ENTITY_NAME_FILEVERSION . '.version = ' . self::ENTITY_NAME_FILE . '.version'
-                ),
-            self::ENTITY_NAME_USER => new DoctrineJoinDescriptor(
-                    self::ENTITY_NAME_USER,
-                    self::ENTITY_NAME_FILEVERSION . '.changer'
-                ),
-            self::ENTITY_NAME_CONTACT => new DoctrineJoinDescriptor(
-                    self::ENTITY_NAME_CONTACT,
-                    self::ENTITY_NAME_USER . '.contact'
-                )
-        ));
-        $fieldDescriptors['created'] = new DoctrineFieldDescriptor('created', 'created', self::ENTITY_NAME_FILEVERSION, array(
-            self::ENTITY_NAME_FILE => new DoctrineJoinDescriptor(
-                    self::ENTITY_NAME_FILE,
-                    self::ENTITY_NAME_MEDIA . '.file'
-                ),
-            self::ENTITY_NAME_FILEVERSION => new DoctrineJoinDescriptor(
-                    self::ENTITY_NAME_FILEVERSION,
-                    self::ENTITY_NAME_FILE . '.fileVersion',
-                    self::ENTITY_NAME_FILEVERSION . '.version = ' . self::ENTITY_NAME_FILE . '.version'
-                )
-        ));
-        $fieldDescriptors['creator'] = new DoctrineFieldDescriptor('creator', 'firstName', self::ENTITY_NAME_CONTACT, array(
-            self::ENTITY_NAME_FILE => new DoctrineJoinDescriptor(
-                    self::ENTITY_NAME_FILE,
-                    self::ENTITY_NAME_MEDIA . '.file'
-                ),
-            self::ENTITY_NAME_FILEVERSION => new DoctrineJoinDescriptor(
-                    self::ENTITY_NAME_FILEVERSION,
-                    self::ENTITY_NAME_FILE . '.fileVersion',
-                    self::ENTITY_NAME_FILEVERSION . '.version = ' . self::ENTITY_NAME_FILE . '.version'
-                ),
-            self::ENTITY_NAME_USER => new DoctrineJoinDescriptor(
-                self::ENTITY_NAME_USER,
-                self::ENTITY_NAME_FILEVERSION . '.creator'
-            ),
-            self::ENTITY_NAME_CONTACT => new DoctrineJoinDescriptor(
-                self::ENTITY_NAME_CONTACT,
-                self::ENTITY_NAME_USER . '.contact'
+        $fieldDescriptors['thumbnails'] = new DoctrineFieldDescriptor(
+            'id', 'thumbnails',
+            self::ENTITY_NAME_MEDIA, 'media.media.thumbnails',
+            array(), false, true, 'thumbnails'
+        );
+
+        $fieldDescriptors['name'] = new DoctrineFieldDescriptor(
+            'name', 'name', self::ENTITY_NAME_FILEVERSION, 'public.name',
+            array(
+                self::ENTITY_NAME_FILE => new DoctrineJoinDescriptor(
+                        self::ENTITY_NAME_FILE,
+                        self::ENTITY_NAME_MEDIA . '.file'
+                    ),
+                self::ENTITY_NAME_FILEVERSION => new DoctrineJoinDescriptor(
+                        self::ENTITY_NAME_FILEVERSION,
+                        self::ENTITY_NAME_FILE . '.fileVersion',
+                        self::ENTITY_NAME_FILEVERSION . '.version = ' . self::ENTITY_NAME_FILE . '.version'
+                    )
             )
-        ));
-        $fieldDescriptors['version'] = new DoctrineFieldDescriptor('version', 'version', self::ENTITY_NAME_MEDIA, array(
-            self::ENTITY_NAME_FILE => new DoctrineJoinDescriptor(
-                    self::ENTITY_NAME_FILE,
-                    self::ENTITY_NAME_MEDIA . '.file'
-                )
-        ));
+        );
+        $fieldDescriptors['size'] = new DoctrineFieldDescriptor(
+            'size', 'size', self::ENTITY_NAME_FILEVERSION, 'media.media.size',
+            array(
+                self::ENTITY_NAME_FILE => new DoctrineJoinDescriptor(
+                        self::ENTITY_NAME_FILE,
+                        self::ENTITY_NAME_MEDIA . '.file'
+                    ),
+                self::ENTITY_NAME_FILEVERSION => new DoctrineJoinDescriptor(
+                        self::ENTITY_NAME_FILEVERSION,
+                        self::ENTITY_NAME_FILE . '.fileVersion',
+                        self::ENTITY_NAME_FILEVERSION . '.version = ' . self::ENTITY_NAME_FILE . '.version'
+                    )
+            ),
+            false, true, 'bytes'
+        );
 
-        $fieldDescriptors['type'] = new DoctrineFieldDescriptor('type', 'name', self::ENTITY_NAME_MEDIATYPE, array(
-            self::ENTITY_NAME_FILEVERSION => self::ENTITY_NAME_FILE . '.fileVersion'
-        ));
+        $fieldDescriptors['changed'] = new DoctrineFieldDescriptor(
+            'changed', 'changed', self::ENTITY_NAME_FILEVERSION, 'public.changed',
+            array(
+                self::ENTITY_NAME_FILE => new DoctrineJoinDescriptor(
+                        self::ENTITY_NAME_FILE,
+                        self::ENTITY_NAME_MEDIA . '.file'
+                    ),
+                self::ENTITY_NAME_FILEVERSION => new DoctrineJoinDescriptor(
+                        self::ENTITY_NAME_FILEVERSION,
+                        self::ENTITY_NAME_FILE . '.fileVersion',
+                        self::ENTITY_NAME_FILEVERSION . '.version = ' . self::ENTITY_NAME_FILE . '.version'
+                    )
+            ),
+            true, false, 'date'
+        );
 
-        $fieldDescriptors['title'] = new DoctrineFieldDescriptor('title', 'title', self::ENTITY_NAME_FILEVERSIONMETA, array(
-            self::ENTITY_NAME_FILE => new DoctrineJoinDescriptor(
-                    self::ENTITY_NAME_FILE,
-                    self::ENTITY_NAME_MEDIA . '.file'
-                ),
-            self::ENTITY_NAME_FILEVERSION => new DoctrineJoinDescriptor(
-                    self::ENTITY_NAME_FILEVERSION,
-                    self::ENTITY_NAME_FILE . '.fileVersion',
-                    self::ENTITY_NAME_FILEVERSION . '.version = ' . self::ENTITY_NAME_FILE . '.version'
-                ),
-            self::ENTITY_NAME_FILEVERSIONMETA => new DoctrineJoinDescriptor(
-                    self::ENTITY_NAME_FILEVERSIONMETA,
-                    self::ENTITY_NAME_FILEVERSION . '.meta'
-                )
-        ));
-        $fieldDescriptors['description'] = new DoctrineFieldDescriptor('description', 'description', self::ENTITY_NAME_FILEVERSIONMETA, array(
-            self::ENTITY_NAME_FILE => new DoctrineJoinDescriptor(
-                    self::ENTITY_NAME_FILE,
-                    self::ENTITY_NAME_MEDIA . '.file'
-                ),
-            self::ENTITY_NAME_FILEVERSION => new DoctrineJoinDescriptor(
-                    self::ENTITY_NAME_FILEVERSION,
-                    self::ENTITY_NAME_FILE . '.fileVersion',
-                    self::ENTITY_NAME_FILEVERSION . '.version = ' . self::ENTITY_NAME_FILE . '.version'
-                ),
-            self::ENTITY_NAME_FILEVERSIONMETA => new DoctrineJoinDescriptor(
-                    self::ENTITY_NAME_FILEVERSIONMETA,
-                    self::ENTITY_NAME_FILEVERSION . '.meta'
-                )
-        ));
-        $fieldDescriptors['locale'] = new DoctrineFieldDescriptor('locale', 'locale', self::ENTITY_NAME_FILEVERSIONMETA, array(
-            self::ENTITY_NAME_FILE => new DoctrineJoinDescriptor(
-                    self::ENTITY_NAME_FILE,
-                    self::ENTITY_NAME_MEDIA . '.file'
-                ),
-            self::ENTITY_NAME_FILEVERSION => new DoctrineJoinDescriptor(
-                    self::ENTITY_NAME_FILEVERSION,
-                    self::ENTITY_NAME_FILE . '.fileVersion',
-                    self::ENTITY_NAME_FILEVERSION . '.version = ' . self::ENTITY_NAME_FILE . '.version'
-                ),
-            self::ENTITY_NAME_FILEVERSIONMETA => new DoctrineJoinDescriptor(
-                    self::ENTITY_NAME_FILEVERSIONMETA,
-                    self::ENTITY_NAME_FILEVERSION . '.meta'
-                )
-        ));
+        $fieldDescriptors['created'] = new DoctrineFieldDescriptor(
+            'created', 'created', self::ENTITY_NAME_FILEVERSION, 'public.created',
+            array(
+                self::ENTITY_NAME_FILE => new DoctrineJoinDescriptor(
+                        self::ENTITY_NAME_FILE,
+                        self::ENTITY_NAME_MEDIA . '.file'
+                    ),
+                self::ENTITY_NAME_FILEVERSION => new DoctrineJoinDescriptor(
+                        self::ENTITY_NAME_FILEVERSION,
+                        self::ENTITY_NAME_FILE . '.fileVersion',
+                        self::ENTITY_NAME_FILEVERSION . '.version = ' . self::ENTITY_NAME_FILE . '.version'
+                    )
+            ),
+            true, false, 'date'
+        );
+
+        $fieldDescriptors['title'] = new DoctrineFieldDescriptor(
+            'title', 'title', self::ENTITY_NAME_FILEVERSIONMETA, 'public.title',
+            array(
+                self::ENTITY_NAME_FILE => new DoctrineJoinDescriptor(
+                        self::ENTITY_NAME_FILE,
+                        self::ENTITY_NAME_MEDIA . '.file'
+                    ),
+                self::ENTITY_NAME_FILEVERSION => new DoctrineJoinDescriptor(
+                        self::ENTITY_NAME_FILEVERSION,
+                        self::ENTITY_NAME_FILE . '.fileVersion',
+                        self::ENTITY_NAME_FILEVERSION . '.version = ' . self::ENTITY_NAME_FILE . '.version'
+                    ),
+                self::ENTITY_NAME_FILEVERSIONMETA => new DoctrineJoinDescriptor(
+                        self::ENTITY_NAME_FILEVERSIONMETA,
+                        self::ENTITY_NAME_FILEVERSION . '.meta'
+                    )
+            ),
+            false, true, 'title'
+        );
+
+        $fieldDescriptors['description'] = new DoctrineFieldDescriptor(
+            'description', 'description', self::ENTITY_NAME_FILEVERSIONMETA, 'media.media.description',
+            array(
+                self::ENTITY_NAME_FILE => new DoctrineJoinDescriptor(
+                        self::ENTITY_NAME_FILE,
+                        self::ENTITY_NAME_MEDIA . '.file'
+                    ),
+                self::ENTITY_NAME_FILEVERSION => new DoctrineJoinDescriptor(
+                        self::ENTITY_NAME_FILEVERSION,
+                        self::ENTITY_NAME_FILE . '.fileVersion',
+                        self::ENTITY_NAME_FILEVERSION . '.version = ' . self::ENTITY_NAME_FILE . '.version'
+                    ),
+                self::ENTITY_NAME_FILEVERSIONMETA => new DoctrineJoinDescriptor(
+                        self::ENTITY_NAME_FILEVERSIONMETA,
+                        self::ENTITY_NAME_FILEVERSION . '.meta'
+                    )
+            )
+        );
 
         $this->fieldDescriptors = $fieldDescriptors;
 
@@ -336,7 +308,7 @@ class DefaultMediaManager implements MediaManagerInterface
     {
         $media = array();
         $mediaEntities = $this->mediaRepository->findMedia($collection, $ids, $limit);
-        foreach($mediaEntities as $mediaEntity) {
+        foreach ($mediaEntities as $mediaEntity) {
             $media[] = $this->addFormatsAndUrl(new Media($mediaEntity, $locale));
         }
         return $media;

@@ -58,7 +58,7 @@ class MediaController extends RestController implements ClassResourceInterface
      */
     public function getFieldsAction()
     {
-        $fieldDescriptors = $this->getMediaManager()->getFieldDescriptors();
+        $fieldDescriptors = array_values($this->getMediaManager()->getFieldDescriptors());
         return $this->handleView($this->view($fieldDescriptors, 200));
     }
 
@@ -123,7 +123,7 @@ class MediaController extends RestController implements ClassResourceInterface
             $list = new ListRepresentation(
                 $media,
                 self::$entityKey,
-                'get_collections',
+                'cget_media',
                 $request->query->all(),
                 $listRestHelper->getPage(),
                 $listRestHelper->getLimit(),
