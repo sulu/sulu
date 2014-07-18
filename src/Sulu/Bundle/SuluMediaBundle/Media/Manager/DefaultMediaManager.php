@@ -394,6 +394,7 @@ class DefaultMediaManager implements MediaManagerInterface
             $data['type'] = $this->getMediaType($uploadedFile);
             $data['version'] = $version;
 
+            $fileVersion = clone($currentFileVersion);
             $fileVersion->setChanged(new Datetime());
             $fileVersion->setCreated(new Datetime());
             $fileVersion->setChanger($user);
