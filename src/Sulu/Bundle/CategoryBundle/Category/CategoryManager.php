@@ -14,7 +14,8 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\DBAL\DBALException;
 use Sulu\Bundle\CategoryBundle\Entity\Category as CategoryEntity;
 use Sulu\Bundle\CategoryBundle\Api\Category as CategoryWrapper;
-use Sulu\Bundle\CategoryBundle\Category\CategoryRepositoryInterface;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 use Sulu\Bundle\CategoryBundle\Event\CategoryEvents;
 use Sulu\Bundle\CategoryBundle\Event\CategoryDeleteEvent;
 use Sulu\Component\Security\UserRepositoryInterface;
@@ -28,6 +29,9 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  */
 class CategoryManager implements CategoryManagerInterface
 {
+    protected static $categoryEntityName = 'SuluCategoryBundle:Category';
+    protected static $categoryTranslationEntityName = 'SuluCategoryBundle:CategoryTranslation';
+
     /**
      * @var ObjectManager
      */
@@ -48,6 +52,12 @@ class CategoryManager implements CategoryManagerInterface
      */
     private $categoryRepository;
 
+    /**
+     * Describes the fields, which are handled by the controller
+     * @var DoctrineFieldDescriptor[]
+     */
+    protected $fieldDescriptors = array();
+
     public function __construct(
         CategoryRepositoryInterface $categoryRepository,
         UserRepositoryInterface $userRepository,
@@ -59,6 +69,68 @@ class CategoryManager implements CategoryManagerInterface
         $this->userRepository = $userRepository;
         $this->categoryRepository = $categoryRepository;
         $this->eventDispatcher = $eventDispatcher;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getFieldDescriptors()
+    {
+        return $this->fieldDescriptors;
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getFieldDescriptor($key)
+    {
+        return $this->fieldDescriptors[$key];
+    }
+
+    /**
+     * Initializes the field descriptors used by the list-helper
+     */
+    public function createFieldDescriptors()
+    {
+        $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor(
+            'id',
+            'id',
+            self::$categoryEntityName,
+            'public.id',
+            array(),
+            true
+        );
+        $this->fieldDescriptors['name'] = new DoctrineFieldDescriptor(
+            'translation',
+            'name',
+            self::$categoryTranslationEntityName,
+            'public.name',
+            array(
+                self::$categoryTranslationEntityName => new DoctrineJoinDescriptor(
+                        self::$categoryTranslationEntityName,
+                        self::$categoryEntityName .
+                        '.translations'
+                    )
+            )
+        );
+        $this->fieldDescriptors['created'] = new DoctrineFieldDescriptor(
+            'created',
+            'created',
+            self::$categoryEntityName,
+            'public.created',
+            array(),
+            true
+        );
+        $this->fieldDescriptors['changed'] = new DoctrineFieldDescriptor(
+            'changed',
+            'changed',
+            self::$categoryEntityName,
+            'public.changed',
+            array(),
+            true
+        );
+
     }
 
     /**
@@ -128,7 +200,8 @@ class CategoryManager implements CategoryManagerInterface
      * @param string $locale
      * @return null|CategoryWrapper
      */
-    public function getApiObject($category, $locale) {
+    public function getApiObject($category, $locale)
+    {
         if ($category instanceof CategoryEntity) {
             return new CategoryWrapper($category, $locale);
         } else {
@@ -142,9 +215,10 @@ class CategoryManager implements CategoryManagerInterface
      * @param string $locale
      * @return CategoryWrapper[]
      */
-    public function getApiObjects($categories, $locale) {
+    public function getApiObjects($categories, $locale)
+    {
         $arrReturn = [];
-        foreach($categories as $category) {
+        foreach ($categories as $category) {
             array_push($arrReturn, $this->getApiObject($category, $locale));
         }
         return $arrReturn;
