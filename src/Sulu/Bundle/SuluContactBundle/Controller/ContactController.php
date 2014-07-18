@@ -284,19 +284,22 @@ class ContactController extends AbstractContactController
             true
         );
 
-//        $this->accountContactFieldDescriptors['isMainContact'] = new DoctrineFieldDescriptor(
-//            'main',
-//            'isMainContact',
-//            self::$accountContactEntityName,
-//            'contact.contacts.main-contact',
-//            array(
-//                self::$accountContactEntityName => new DoctrineJoinDescriptor(
-//                        self::$accountContactEntityName,
-//                        self::$entityName . '.accountContacts'
-//                    ),
-//            ),
-//            false
-//        );
+        // FIXME use field descriptor with expression when implemented
+        $this->accountContactFieldDescriptors['isMainContact'] = new DoctrineFieldDescriptor(
+            'main',
+            'isMainContact',
+            self::$accountContactEntityName,
+            'contact.contacts.main-contact',
+            array(
+                self::$accountContactEntityName => new DoctrineJoinDescriptor(
+                        self::$accountContactEntityName,
+                        self::$entityName . '.accountContacts'
+                    ),
+            ),
+            false,
+            true,
+            'radio'
+        );
     }
 
     /**
