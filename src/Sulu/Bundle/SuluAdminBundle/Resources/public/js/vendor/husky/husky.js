@@ -1,4 +1,3 @@
-
 /** vim: et:ts=4:sw=4:sts=4
  * @license RequireJS 2.1.9 Copyright (c) 2010-2012, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
@@ -31048,6 +31047,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
                 data: null,
                 instanceName: '',
                 searchInstanceName: null,
+                searchFields: [],
                 columnOptionsInstanceName: null,
                 defaultMeasureUnit: 'px',
                 preselected: [],
@@ -32490,7 +32490,12 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
                     var template, url;
 
                     template = this.sandbox.uritemplate.parse(this.data.links.find.href);
-                    url = this.sandbox.uritemplate.expand(template, {searchString: searchString, searchFields: searchFields});
+
+                    if(!!searchFields) {
+                        url = this.sandbox.uritemplate.expand(template, {searchString: searchString, searchFields: searchFields});
+                    } else {
+                        url = this.sandbox.uritemplate.expand(template, {searchString: searchString, searchFields: this.options.searchFields.join(',')});
+                    }
 
                     this.destroy();
                     this.loading();
@@ -47561,3 +47566,4 @@ define('husky_extensions/util',[],function() {
         }
     };
 });
+
