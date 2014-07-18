@@ -9,9 +9,10 @@
 
 require.config({
     paths: {
-        'sululocation': '../../sululocation/js',
-        'type/location': '../../sululocation/js/validation/types/location',
-        'map/leaflet': '../../sululocation/js/validation/map/leaflet'
+        sululocation: '../../sululocation/js',
+        "type/location": '../../sululocation/js/validation/types/location',
+        "map/leaflet": '../../sululocation/js/components/location'
+        "leaflet": '../../sululocation/js/vendor/leaflet/leaflet'
     }
 });
 

@@ -15,6 +15,27 @@ module.exports = function (grunt) {
                         dest: '../../../../../../web/bundles/sululocation/'
                     }
                 ]
+            },
+            bower: {
+                files: [
+                    {
+                        expand: true,
+                        flatten: true,
+                        src: [
+                            'bower_components/leaflet/dist/leaflet.js',
+                            'bower_components/leaflet/dist/leaflet.css',
+                        ], 
+                        dest: 'Resources/public/js/vendor/leaflet'
+                    },
+                    {
+                        expand: true,
+                        flatten: true,
+                        src: [
+                            'bower_components/leaflet/dist/images/*',
+                        ], 
+                        dest: 'Resources/public/js/vendor/leaflet/images'
+                    }
+                ]
             }
         },
         clean: {
@@ -39,19 +60,6 @@ module.exports = function (grunt) {
             scripts: {
                 files: ['Resources/public/**'],
                 tasks: ['publish']
-            }
-        },
-        jshint: {
-            options: {
-                jshintrc: '.jshintrc'
-            }
-        },
-        cssmin: {
-            // TODO: options: { banner: '<%= meta.banner %>' },
-            compress: {
-                files: {
-                    'dist/main.min.css': ['Resources/public/css/']
-                }
             }
         },
         compass: {
@@ -82,6 +90,7 @@ module.exports = function (grunt) {
     grunt.registerTask('publish', [
         'compass:dev',
         'clean:public',
+        'copy:bower',
         'copy:public'
     ]);
 

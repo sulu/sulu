@@ -16,6 +16,7 @@
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
         <link rel="stylesheet" href="/bundles/suluadmin/js/vendor/husky/husky.min.css">
         <link rel="stylesheet" href="../../css/main.css">
+        <link rel="stylesheet" href="../../js/vendor/leaflet/leaflet.css">
         <style type="text/css">
             h1 {
                 padding: 20px 0 0 00px;
@@ -66,7 +67,14 @@
                         name: 'location@sululocation',
                         options: {
                             el: '#location_content',
-                            mapProviders: { leaflet: 'Leaflet (OSM)', google: 'Google'},
+                            mapProviders: { 
+                                leaflet: {
+                                    title: 'Leaflet (OSM)',
+                                },
+                                google: {
+                                    title: 'Google',
+                                }
+                            }
                         }
                     }
                 ]).then(function() {

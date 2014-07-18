@@ -35,7 +35,9 @@ define([], function() {
             contentClass: 'location-content',
             configureButtonClass: 'location-content-configure',
             overlayClass: 'location-overlay-content',
-            formId: 'location-content-overlay-form'
+            formId: 'location-content-overlay-form',
+            mapElementId: 'location-map',
+            mapElementClass: 'location-map',
         },
 
         dataDefaults = {
@@ -57,7 +59,7 @@ define([], function() {
             content: [
                     '<div class="grid-row">',
                         '<div class="grid-col-6 container">',
-                            '<img src="/bundles/sululocation/js/test/map.png"/>',
+                            '<div id="<%= constants.mapElementId %>" class="<%= constants.mapElementClass %>"><img src="/bundles/sululocation/js/test/map.png"/></div>',
                             '<div class="provider">Provider: <%= data.map_provider %></div>',
                         '</div>',
                         '<div class="grid-col-6">',
@@ -193,8 +195,16 @@ define([], function() {
         createComponent: function () {
             this.render();
             this.renderContent();
+            this.renderMap();
             this.bindEvents();
             this.startOverlay();
+        },
+
+        renderMap: function () {
+            this.sandbox.dom.find('#' + constants.mapElementId).empty();
+            require(['map/leaflet'], function (map) {
+                map.show(constants.mapElementId, 47.366915, 9.77052, 11);
+            });
         },
 
         bindEvents: function () {

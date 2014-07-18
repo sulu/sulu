@@ -182,3 +182,8 @@
 .location-overlay-content .tag-list input {
   margin: 7px 0 0 0;
 }
+
+/* line 167, ../scss/modules/location.scss */
+.location-map {
+  height: 200px;
+}
