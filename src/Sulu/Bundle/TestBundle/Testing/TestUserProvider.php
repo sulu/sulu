@@ -35,7 +35,7 @@ class TestUserProvider implements UserProviderInterface
             $this->user = new TestUser();
             $this->user->setPassword('test');
             $this->user->setUsername('test');
-            $this->user->setFullname('test');
+            $this->user->setFullname('Max Mustermann');
             $this->user->setLocale('en');
 
             $em->persist($this->user);
