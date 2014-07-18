@@ -4,6 +4,7 @@
     <parameters>
         <parameter key="sulu.content.type.location.class">Sulu\Bundle\LocationBundle\Content\Types\LocationContent</parameter>
         <parameter key="sulu_location.admin.class">Sulu\Bundle\LocationBundle\Admin\SuluLocationAdmin</parameter>
+        <parameter key="sulu_location.map_manager.class">Sulu\Bundle\LocationBundle\Map\MapManager</parameter>
     </parameters>
 
     <services>
@@ -11,12 +12,17 @@
         <service id="sulu.content.type.location" class="%sulu.content.type.location.class%">
             <argument type="service" id="sulu_content.node_repository"/>
             <argument>%sulu.content.type.location.template%</argument>
+            <argument type="service" id="sulu_location.map_manager"/>
         </service>
 
+        <!-- Admin class -->
         <service id="sulu_location.admin" class="%sulu_location.admin.class%">
             <argument>%sulu_admin.name%</argument>
             <tag name="sulu.admin" />
         </service>
+
+        <!-- Map services -->
+        <service id="sulu_location.map_manager" class="%sulu_location.map_manager.class%" />
     </services>
 </container>
 

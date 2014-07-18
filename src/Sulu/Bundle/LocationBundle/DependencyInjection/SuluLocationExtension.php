@@ -33,9 +33,30 @@ class SuluLocationExtension extends Extension
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');
 
+        $this->configureContentTypes($config, $container);
+        $this->configureMapManager($config, $container);
+    }
+
+    private function configureContentTypes($config, $container)
+    {
         $container->setParameter(
             'sulu.content.type.location.template',
             $config['types']['location']['template']
         );
+    }
+
+    private function configureMapManager($config, $container)
+    {
+        $mapManager = $container->getDefinition('sulu_location.map_manager');
+
+        foreach ($config['enabled_providers'] as $enabledProviderName) {
+            $providerConfig = $config['providers'][$enabledProviderName];
+            $mapManager->addMethodCall('registerProvider', array(
+                $enabledProviderName,
+                $providerConfig
+            ));
+        }
+
+        $mapManager->addMethodCall('setDefaultProviderName', array($config['default_provider']));
     }
 }

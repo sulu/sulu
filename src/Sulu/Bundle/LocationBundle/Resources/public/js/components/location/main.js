@@ -25,7 +25,9 @@ define([], function() {
                  coordinates: 'Coordinates'
              },
              instanceName: null,
-             mapSources: {}
+             mapProviders: {},
+             mapProvider: null,
+             countries: {}
         },
 
         constants = {
@@ -56,7 +58,7 @@ define([], function() {
                     '<div class="grid-row">',
                         '<div class="grid-col-6 container">',
                             '<img src="/bundles/sululocation/js/test/map.png"/>',
-                            '<div class="source">Source: <%= data.map_source %></div>',
+                            '<div class="provider">Provider: <%= data.map_provider %></div>',
                         '</div>',
                         '<div class="grid-col-6">',
                             '<div class="container grid">',
@@ -101,10 +103,10 @@ define([], function() {
                     '<form id="<%= constants.formId %>">',
                         '<div class="grid-row">',
                             '<div class="form-group grid-col-6">',
-                                '<label for="map_source">Map Source</label>',
-                                '<select class="form-element" name="map_source" class="map-source" data-mapper-property="map_source">',
-                                    '<% _.each(mapSources, function ($i, $v) { %>',
-                                        '<option value="<%= $i %>"><%= $v %></option>',
+                                '<label for="map_provider">Map Provider</label>',
+                                '<select class="form-element" name="map_provider" class="map-provider" data-mapper-property="map_provider">',
+                                    '<% _.each(mapProviders, function ($v, $i) { %>',
+                                        '<option value="<%= $i %>"><%= $v.title %></option>',
                                     '<% }); %>',
                                 '</select>',
                             '</div>',
@@ -139,7 +141,9 @@ define([], function() {
                             '<div class="form-group grid-col-6">',
                                 '<label for="country"><%= translations.country %></label>',
                                 '<select class="form-element" name="country" data-mapper-property="country">',
-                                    '<option value="as">Austria</option>',
+                                    '<% _.each(countries, function (name, key) { %>',
+                                        '<option value="<%= key %>"><%= name %></option>',
+                                    '<% }); %>',
                                 '</select>',
                             '</div>',
                             '<div class="form-group grid-col-6">',
@@ -171,13 +175,13 @@ define([], function() {
          * default params
          */
         _template: function (name, params) {
-            var tmplSource = templates[name];
+            var tmpl = templates[name];
             var params = this.sandbox.util.extend(true, {}, {
                 constants: constants,
                 translations: this.options.translations
             }, params);
 
-            return _.template(tmplSource, params);
+            return _.template(tmpl, params);
         },
 
         initialize: function() {
@@ -233,7 +237,8 @@ define([], function() {
                                 title: this.sandbox.translate(this.options.translations.configureLocation),
                                 data: this._template('overlay', {
                                     data: this.formData,
-                                    mapSources: this.options.mapSources
+                                    mapProviders: this.options.mapProviders,
+                                    countries: this.options.countries
                                 }),
                                 okCallback: function () {
                                     // @todo: Validation

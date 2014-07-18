@@ -8,13 +8,15 @@ class LocationContentTest extends \PHPUnit_Framework_TestCase
 {
     protected $nodeRepository;
     protected $locationContent;
+    protected $mapManager;
 
     public function setUp()
     {
         $this->nodeRepository = $this->getMock('Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface');
         $this->phpcrNode = $this->getMock('PHPCR\NodeInterface');
         $this->suluProperty = $this->getMock('Sulu\Component\Content\PropertyInterface');
-        $this->locationContent = new LocationContent($this->nodeRepository, 'Foo:bar.html.twig');
+        $this->mapManager = $this->getMock('Sulu\Bundle\LocationBundle\Map\MapManager');
+        $this->locationContent = new LocationContent($this->nodeRepository, 'Foo:bar.html.twig', $this->mapManager);
 
     }
 
@@ -100,5 +102,31 @@ class LocationContentTest extends \PHPUnit_Framework_TestCase
             'fr',
             'segment'
         );
+    }
+
+    public function testGetParams()
+    {
+        $expected = array(
+            'countries' => array(
+                'at' => 'Austria',
+                'fr' => 'France',
+                'gb' => 'Great Britain',
+            ),
+            'mapProviders' => array(
+                'foo' => 'Foo',
+                'bar' => 'Bar',
+            ),
+            'defaultProvider' => 'leaflet',
+        );
+
+        $this->mapManager->expects($this->once())
+            ->method('getProvidersAsArray')
+            ->will($this->returnValue($expected['mapProviders']));
+
+        $this->mapManager->expects($this->once())
+            ->method('getDefaultProviderName')
+            ->will($this->returnValue('leaflet'));
+
+        $this->assertEquals($expected, $this->locationContent->getDefaultParams());
     }
 }

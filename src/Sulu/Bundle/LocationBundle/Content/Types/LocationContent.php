@@ -15,6 +15,7 @@ use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\PropertyInterface;
+use Sulu\Bundle\LocationBundle\Map\MapManager;
 
 /**
  * ContentType for TextEditor
@@ -33,10 +34,16 @@ class LocationContent extends ComplexContentType
      */
     private $template;
 
-    function __construct(NodeRepositoryInterface $nodeRepository, $template)
+    /**
+     * @var MapManager
+     */
+    private $mapManager;
+
+    function __construct(NodeRepositoryInterface $nodeRepository, $template, MapManager $mapManager)
     {
         $this->nodeRepository = $nodeRepository;
         $this->template = $template;
+        $this->mapManager = $mapManager;
     }
 
     /**
@@ -58,7 +65,9 @@ class LocationContent extends ComplexContentType
                 'at' => 'Austria',
                 'fr' => 'France',
                 'gb' => 'Great Britain'
-            )
+            ),
+            'mapProviders' => $this->mapManager->getProvidersAsArray(),
+            'defaultProvider' => $this->mapManager->getDefaultProviderName(),
         );
     }
 
