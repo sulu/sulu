@@ -25,8 +25,35 @@ class WidgetGroupsController extends Controller
 
     public function contactInfoAction(Request $request) {
         $aliases = array(
-            'myWidget1',
-            'myWidget2'
+            'sulu-contact-contact-info',
+            'sulu-contact-toolbar'
+        );
+        return new Response($this->getWidgetsHandler()->render($aliases, $request->query->all()));
+    }
+
+    public function accountInfoAction(Request $request) {
+        $aliases = array(
+            'sulu-contact-account-info',
+            'sulu-contact-contacts',
+            'sulu-contact-toolbar'
+        );
+        return new Response($this->getWidgetsHandler()->render($aliases, $request->query->all()));
+    }
+
+    public function contactDetailAction(Request $request) {
+        $aliases = array(
+            'sulu-contact-toolbar',
+            'sulu-contact-account-address',
+            'sulu-contact-table'
+        );
+        return new Response($this->getWidgetsHandler()->render($aliases, $request->query->all()));
+    }
+
+    public function accountDetailAction(Request $request) {
+        $aliases = array(
+            'sulu-contact-toolbar',
+            'sulu-contact-contacts',
+            'sulu-contact-table'
         );
         return new Response($this->getWidgetsHandler()->render($aliases, $request->query->all()));
     }
