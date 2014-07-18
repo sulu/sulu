@@ -26,6 +26,7 @@ use Hateoas\Configuration\Annotation\Route;
  *      "all",
  *      href = @Route(
  *          "expr(object.getRoute())",
+ *          parameters = "expr({ flat: 'true'})",
  *          absolute = "expr(object.isAbsolute())",
  *      )
  * )
