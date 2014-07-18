@@ -78,17 +78,6 @@ class AccountController extends AbstractContactController
         $this->fieldDescriptors = array();
         $this->initAccountContactFieldDescriptors();
 
-        $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor(
-            'id',
-            'id',
-            self::$entityName,
-            'public.id', array(),
-            true,
-            false,
-            '',
-            '50px'
-        );
-
         $this->fieldDescriptors['number'] = new DoctrineFieldDescriptor(
             'number',
             'number',
@@ -107,7 +96,9 @@ class AccountController extends AbstractContactController
             'public.name',
             array(),
             false,
-            true
+            true,
+            '',
+            '300px'
         );
 
         $this->fieldDescriptors['corporation'] = new DoctrineFieldDescriptor(
@@ -115,6 +106,77 @@ class AccountController extends AbstractContactController
             'corporation',
             self::$entityName,
             'contact.accounts.corporation'
+        );
+
+        $this->fieldDescriptors['city'] = new DoctrineFieldDescriptor(
+            'city',
+            'city',
+            self::$addressEntityName,
+            'contact.address.city',
+            array(
+                self::$accountAddressEntityName => new DoctrineJoinDescriptor(
+                        self::$accountAddressEntityName,
+                        self::$entityName .
+                        '.accountAddresses',
+                        self::$accountAddressEntityName . '.main = true', 'LEFT'
+                    ),
+                self::$addressEntityName => new DoctrineJoinDescriptor(
+                        self::$addressEntityName,
+                        self::$accountAddressEntityName . '.address'
+                    )
+            ),
+            false,
+            false,
+            '',
+            '50px',
+            '',
+            false
+        );
+
+        // TODO just lastname or fullname?
+        $this->fieldDescriptors['mainContact'] = new DoctrineFieldDescriptor(
+            'lastName',
+            'mainContact',
+            self::$contactEntityName,
+            'contact.contacts.main-contact',
+            array(
+                self::$contactEntityName => new DoctrineJoinDescriptor(
+                        self::$contactEntityName,
+                        self::$entityName .
+                        '.mainContact'
+                    )
+            ),
+            false,
+            false,
+            '',
+            '',
+            '',
+            false
+        );
+
+        $this->fieldDescriptors['mainPhone'] = new DoctrineFieldDescriptor(
+            'mainPhone',
+            'mainPhone',
+            self::$entityName,
+            'public.phone'
+        );
+
+        $this->fieldDescriptors['mainEmail'] = new DoctrineFieldDescriptor(
+            'mainEmail',
+            'mainEmail',
+            self::$entityName,
+            'public.email'
+        );
+
+        $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor(
+            'id',
+            'id',
+            self::$entityName,
+            'public.id', array(),
+            true,
+            false,
+            '',
+            '50px'
         );
 
         $this->fieldDescriptors['created'] = new DoctrineFieldDescriptor(
@@ -134,7 +196,7 @@ class AccountController extends AbstractContactController
             self::$entityName,
             'public.changed',
             array(),
-            false,
+            true,
             false,
             'date'
         );
@@ -178,19 +240,7 @@ class AccountController extends AbstractContactController
             true
         );
 
-        $this->fieldDescriptors['mainPhone'] = new DoctrineFieldDescriptor(
-            'mainPhone',
-            'mainPhone',
-            self::$entityName,
-            'public.phone'
-        );
 
-        $this->fieldDescriptors['mainEmail'] = new DoctrineFieldDescriptor(
-            'mainEmail',
-            'mainEmail',
-            self::$entityName,
-            'public.email'
-        );
 
         $this->fieldDescriptors['mainFax'] = new DoctrineFieldDescriptor(
             'mainFax',
@@ -206,9 +256,10 @@ class AccountController extends AbstractContactController
             'mainUrl',
             'mainUrl',
             self::$entityName,
-            'public.phone',
+            'public.url',
             array(),
-            true
+            true,
+            false
         );
 
         $this->fieldDescriptors['placeOfJurisdiction'] = new DoctrineFieldDescriptor(
@@ -218,52 +269,6 @@ class AccountController extends AbstractContactController
             'contact.accounts.placeOfJurisdiction',
             array(),
             true
-        );
-
-        // TODO just lastname or fullname?
-        $this->fieldDescriptors['mainContact'] = new DoctrineFieldDescriptor(
-            'lastName',
-            'mainContact',
-            self::$contactEntityName,
-            'contact.contacts.main-contact',
-            array(
-                self::$contactEntityName => new DoctrineJoinDescriptor(
-                        self::$contactEntityName,
-                        self::$entityName .
-                        '.mainContact'
-                    )
-            ),
-            false,
-            false,
-            '',
-            '',
-            '',
-            false
-        );
-
-        $this->fieldDescriptors['city'] = new DoctrineFieldDescriptor(
-            'city',
-            'city',
-            self::$addressEntityName,
-            'contact.address.city',
-            array(
-                self::$accountAddressEntityName => new DoctrineJoinDescriptor(
-                        self::$accountAddressEntityName,
-                        self::$entityName .
-                        '.accountAddresses',
-                        self::$accountAddressEntityName . '.main = true', 'LEFT'
-                    ),
-                self::$addressEntityName => new DoctrineJoinDescriptor(
-                        self::$addressEntityName,
-                        self::$accountAddressEntityName . '.address'
-                    )
-            ),
-            false,
-            false,
-            '',
-            '50px',
-            '',
-            false
         );
     }
 
