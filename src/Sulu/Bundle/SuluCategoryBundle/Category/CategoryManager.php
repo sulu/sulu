@@ -29,7 +29,6 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  */
 class CategoryManager implements CategoryManagerInterface
 {
-
     protected static $categoryEntityName = 'SuluCategoryBundle:Category';
     protected static $categoryTranslationEntityName = 'SuluCategoryBundle:CategoryTranslation';
 

@@ -24,25 +24,18 @@ use Sulu\Component\Rest\ListBuilder\ListRepresentation;
  * @package Sulu\Component\Rest\ListBuilder
  * @ExclusionPolicy("all")
  * @Relation(
- *      "children",
- *      href = @Route(
- *          "expr(object.getRoute())",
- *          parameters = "expr(object.getParameters() + { parent: '{parentId}' })",
- *          absolute = "expr(object.isAbsolute())",
- *      )
- * )
+ *     "children",
+ *     href = @Route(
+ *         "expr(object.getRoute())",
+ *         parameters = "expr({ parent: '{parentId}' } + object.getParameters())",
+ *         absolute = "expr(object.isAbsolute())",
+ *     )
  * )
  */
 class CategoryListRepresentation extends ListRepresentation
 {
     /**
-     * @param mixed $data The data which will be presented
-     * @param string $rel The name of the relation inside of the _embedded field
-     * @param string $route The name of the route, for generating the links
-     * @param array $parameters The parameters to append to the route
-     * @param integer $page The number of the current page
-     * @param integer $limit The size of one page
-     * @param integer $total The total number of elements
+     * {@inheritDoc}
      */
     public function __construct($data, $rel, $route, $parameters, $page, $limit, $total)
     {
