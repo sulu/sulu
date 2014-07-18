@@ -39,14 +39,14 @@ class AccountContact
     public function setMain($main)
     {
         $this->main = $main;
-    
+
         return $this;
     }
 
     /**
      * Get main
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getMain()
     {
@@ -56,7 +56,7 @@ class AccountContact
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -72,14 +72,14 @@ class AccountContact
     public function setContact(\Sulu\Bundle\ContactBundle\Entity\Contact $contact)
     {
         $this->contact = $contact;
-    
+
         return $this;
     }
 
     /**
      * Get contact
      *
-     * @return \Sulu\Bundle\ContactBundle\Entity\Contact 
+     * @return \Sulu\Bundle\ContactBundle\Entity\Contact
      */
     public function getContact()
     {
@@ -95,14 +95,14 @@ class AccountContact
     public function setAccount(\Sulu\Bundle\ContactBundle\Entity\Account $account)
     {
         $this->account = $account;
-    
+
         return $this;
     }
 
     /**
      * Get account
      *
-     * @return \Sulu\Bundle\ContactBundle\Entity\Account 
+     * @return \Sulu\Bundle\ContactBundle\Entity\Account
      */
     public function getAccount()
     {

@@ -109,6 +109,8 @@ class AccountRepository extends EntityRepository
             if ($contacts === true) {
                 $qb->leftJoin('account.accountContacts', 'accountContacts')
                     ->leftJoin('accountContacts.contact', 'contacts')
+                    ->leftJoin('accountContacts.position', 'position')
+                    ->addSelect('position')
                     ->addSelect('accountContacts')
                     ->addSelect('contacts');
             }
@@ -182,6 +184,8 @@ class AccountRepository extends EntityRepository
                 ->leftJoin('account.accountContacts','accountContacts')
                 ->leftJoin('accountContacts.contact','contacts')
                 ->leftJoin('account.mainContact', 'mainContact')
+                ->leftJoin('accountContacts.position', 'position')
+                ->addSelect('position')
                 ->addSelect('mainContact')
                 ->addSelect('bankAccounts')
                 ->addSelect('addresses')

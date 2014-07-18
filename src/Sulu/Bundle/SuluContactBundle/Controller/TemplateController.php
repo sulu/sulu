@@ -15,7 +15,9 @@ class TemplateController extends RestController
      */
     public function contactListAction()
     {
-        return $this->render('SuluContactBundle:Template:contact.list.html.twig');
+        return $this->render(
+            'SuluContactBundle:Template:contact.list.html.twig'
+        );
     }
 
     /**
@@ -24,7 +26,9 @@ class TemplateController extends RestController
      */
     public function accountListAction()
     {
-        return $this->render('SuluContactBundle:Template:account.list.html.twig');
+        return $this->render(
+            'SuluContactBundle:Template:account.list.html.twig'
+        );
     }
 
     /**
@@ -33,14 +37,20 @@ class TemplateController extends RestController
      */
     public function contactFormAction()
     {
-        // Get the contact titles
         $titleEntity = 'SuluContactBundle:ContactTitle';
-        $titles = $this->getDoctrine()->getRepository($titleEntity)->findAll();
+        $titles = $this->getDoctrine()->getRepository(
+            $titleEntity
+        )->findAll();
+
+        $positionEntity = 'SuluContactBundle:Position';
+        $positions = $this->getDoctrine()->getRepository(
+            $positionEntity
+        )->findAll();
 
         $data = $this->getRenderArray();
         $data['form_of_address'] = [];
         $data['titles'] = $titles;
-        $data['positions'] = [];
+        $data['positions'] = $positions;
         foreach ($this->container->getParameter('sulu_contact.form_of_address') as $el) {
             $data['form_of_address'][] = $el;
         }
