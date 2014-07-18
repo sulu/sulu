@@ -23,14 +23,6 @@ use Hateoas\Configuration\Annotation\Route;
  * @package Sulu\Component\Rest\ListBuilder
  * @ExclusionPolicy("all")
  * @Relation(
- *      "all",
- *      href = @Route(
- *          "expr(object.getRoute())",
- *          parameters = "expr({ flat: 'true'})",
- *          absolute = "expr(object.isAbsolute())",
- *      )
- * )
- * @Relation(
  *      "filter",
  *      href = @Route(
  *          "expr(object.getRoute())",
