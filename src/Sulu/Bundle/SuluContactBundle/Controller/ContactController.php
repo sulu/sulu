@@ -250,15 +250,16 @@ class ContactController extends AbstractContactController
             true
         );
 
-        $this->fieldDescriptors['accountContacts_position'] = new DoctrineFieldDescriptor(
+        $this->fieldDescriptors['position'] = new DoctrineFieldDescriptor(
             'position',
-            'accountContacts_position',
+            'position',
             self::$accountContactEntityName,
             'contact.contacts.position',
             array(
                 self::$accountContactEntityName => new DoctrineJoinDescriptor(
                         self::$accountContactEntityName,
-                        self::$entityName . '.accountContacts'
+                        self::$entityName . '.accountContacts',
+                        self::$accountContactEntityName . '.main = true', 'LEFT'
                     ),
             ),
             true
@@ -268,20 +269,34 @@ class ContactController extends AbstractContactController
         $this->accountContactFieldDescriptors = array();
         $this->accountContactFieldDescriptors['id']  = $this->fieldDescriptors['id'];
         $this->accountContactFieldDescriptors['fullName']  = $this->fieldDescriptors['fullName'];
-        $this->accountContactFieldDescriptors['accountContacts_position'] = $this->fieldDescriptors['accountContacts_position'];
-        $this->accountContactFieldDescriptors['isMainContact'] = new DoctrineFieldDescriptor(
-            'main',
-            'isMainContact',
+        $this->accountContactFieldDescriptors['position'] = new DoctrineFieldDescriptor(
+            'position',
+            'position',
             self::$accountContactEntityName,
-            'contact.contacts.main-contact',
+            'contact.contacts.position',
             array(
                 self::$accountContactEntityName => new DoctrineJoinDescriptor(
                         self::$accountContactEntityName,
                         self::$entityName . '.accountContacts'
                     ),
             ),
-            false
+            false,
+            true
         );
+
+//        $this->accountContactFieldDescriptors['isMainContact'] = new DoctrineFieldDescriptor(
+//            'main',
+//            'isMainContact',
+//            self::$accountContactEntityName,
+//            'contact.contacts.main-contact',
+//            array(
+//                self::$accountContactEntityName => new DoctrineJoinDescriptor(
+//                        self::$accountContactEntityName,
+//                        self::$entityName . '.accountContacts'
+//                    ),
+//            ),
+//            false
+//        );
     }
 
     /**
