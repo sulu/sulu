@@ -26,7 +26,7 @@ use Hateoas\Configuration\Annotation\Route;
  *      "all",
  *      href = @Route(
  *          "expr(object.getRoute())",
- *          parameters = "expr({ flat: 'true', id:  object.getParameter('id'), fields: object.getParameter('fields'), search: object.getParameter('search'), searchFields: object.getParameter('searchFields') })",
+ *          parameters = "expr({ flat: 'true'})",
  *          absolute = "expr(object.isAbsolute())",
  *      )
  * )
@@ -94,16 +94,5 @@ class ListRepresentation extends PaginatedRepresentation
         );
 
         $this->total = $total;
-    }
-
-    /**
-     * Returns the parameter with the given key
-     * @param string $key The key of the parameter
-     * @return mixed
-     */
-    public function getParameter($key) {
-        $parameters = $this->getParameters();
-
-        return array_key_exists($key, $parameters) ? $parameters[$key] : '';
     }
 }
