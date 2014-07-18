@@ -75,6 +75,7 @@ class MediaControllerTest extends DatabaseTestCase
 
         self::$entities = array(
             self::$em->getClassMetadata('Sulu\Bundle\TestBundle\Entity\TestUser'),
+            self::$em->getClassMetadata('Sulu\Bundle\TestBundle\Entity\TestContact'),
             self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\Collection'),
             self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\CollectionType'),
             self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\CollectionMeta'),

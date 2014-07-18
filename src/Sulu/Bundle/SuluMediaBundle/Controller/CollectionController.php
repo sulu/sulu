@@ -17,7 +17,6 @@ use FOS\RestBundle\Controller\Annotations\Put;
 use Hateoas\Representation\CollectionRepresentation;
 use SebastianBergmann\Exporter\Exception;
 use Sulu\Bundle\MediaBundle\Api\Collection;
-use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionFieldDescriptorInterface;
 use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface;
 use Sulu\Bundle\MediaBundle\Entity\Collection as CollectionEntity;
 use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
