@@ -41,7 +41,8 @@ abstract class DatabaseTestCase extends WebTestCase
         self::$tool = new SchemaTool(self::$em);
 
         self::$userClasses = array(
-            self::$em->getClassMetaData('Sulu\Bundle\TestBundle\Entity\TestUser')
+            self::$em->getClassMetaData('Sulu\Bundle\TestBundle\Entity\TestContact'),
+            self::$em->getClassMetaData('Sulu\Bundle\TestBundle\Entity\TestUser'),
         );
 
         self::$tool->dropSchema(self::$userClasses);
