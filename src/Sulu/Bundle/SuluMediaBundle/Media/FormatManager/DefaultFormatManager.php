@@ -25,7 +25,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class DefaultFormatManager implements FormatManagerInterface
 {
-
     /**
      * The repository for communication with the database
      * @var MediaRepository
@@ -283,5 +282,4 @@ class DefaultFormatManager implements FormatManagerInterface
     {
         return $this->formatCache->purge($idMedia, $fileName, $options);
     }
-
 } 

@@ -22,8 +22,8 @@ use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyMediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\InvalidFileTypeException;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\Manager\ManagerInterface;
 
-class ImagineImageConverter implements ImageConverterInterface {
-
+class ImagineImageConverter implements ImageConverterInterface
+{
     /**
      * @var array
      */
@@ -145,5 +145,4 @@ class ImagineImageConverter implements ImageConverterInterface {
     {
         $this->commandManager->get($command)->execute($this->image, $parameters);
     }
-
 } 

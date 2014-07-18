@@ -19,7 +19,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 interface FormatManagerInterface
 {
-
     /**
      * Return the image by a given url
      * @param int $id
