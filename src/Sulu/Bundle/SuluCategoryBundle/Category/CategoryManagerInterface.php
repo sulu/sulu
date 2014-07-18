@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\CategoryBundle\Category;
 
 use Sulu\Bundle\CategoryBundle\Entity\Category;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Bundle\CategoryBundle\Api\Category as CategoryWrapper;
 
 /**
@@ -66,4 +67,17 @@ interface CategoryManagerInterface
      * @return CategoryWrapper[]
      */
     public function getApiObjects($categories, $locale);
+
+    /**
+     * Returns the FieldDescriptors for the categories
+     * @return DoctrineFieldDescriptor[]
+     */
+    public function getFieldDescriptors();
+
+    /**
+     * Returns the FieldDescriptor for the given key
+     * @param string $key The key of the FieldDescriptor to return
+     * @return DoctrineFieldDescriptor
+     */
+    public function getFieldDescriptor($key);
 } 
