@@ -11,6 +11,8 @@
 namespace Sulu\Bundle\TestBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\VirtualProperty;
+use JMS\Serializer\Annotation\SerializedName;
 
 /**
  * TestContact
@@ -76,6 +78,18 @@ class TestContact
     public function getLastName()
     {
         return $this->lastName;
+    }
+
+    /**
+     * Get fullName
+     *
+     * @VirtualProperty
+     * @SerializedName("fullName")
+     * @return string
+     */
+    public function getFullName()
+    {
+        return $this->firstName . ' ' . $this->lastName;
     }
 
     /**
