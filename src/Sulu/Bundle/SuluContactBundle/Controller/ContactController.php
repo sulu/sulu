@@ -105,7 +105,10 @@ class ContactController extends AbstractContactController
             'public.name',
             ' ',
             false,
-            true
+            true,
+            '',
+            '',
+            '160px'
         );
 
         $this->fieldDescriptors['city'] = new DoctrineFieldDescriptor(
