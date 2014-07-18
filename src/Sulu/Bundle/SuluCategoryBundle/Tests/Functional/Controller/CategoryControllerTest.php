@@ -112,11 +112,11 @@ class CategoryControllerTest extends DatabaseTestCase
         self::$tool = new SchemaTool(self::$em);
 
         self::$entities = array(
+            self::$em->getClassMetadata('Sulu\Bundle\TestBundle\Entity\TestContact'),
+            self::$em->getClassMetadata('Sulu\Bundle\TestBundle\Entity\TestUser'),
             self::$em->getClassMetadata('Sulu\Bundle\CategoryBundle\Entity\Category'),
             self::$em->getClassMetadata('Sulu\Bundle\CategoryBundle\Entity\CategoryMeta'),
             self::$em->getClassMetadata('Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation'),
-            self::$em->getClassMetadata('Sulu\Bundle\TestBundle\Entity\TestContact'),
-            self::$em->getClassMetadata('Sulu\Bundle\TestBundle\Entity\TestUser'),
         );
 
         self::$tool->dropSchema(self::$entities);
