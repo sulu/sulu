@@ -25,7 +25,7 @@
   padding-right: 3px;
 }
 /* line 27, ../scss/modules/location.scss */
-.location-header .fa-gears {
+.location-header .location-content-configure {
   display: block;
   position: absolute;
   top: 10px;
@@ -38,7 +38,7 @@
   border-radius: 2px;
 }
 /* line 39, ../scss/modules/location.scss */
-.location-header .fa-gears:hover {
+.location-header .location-content-configure:hover {
   background: #efefef;
 }
 
