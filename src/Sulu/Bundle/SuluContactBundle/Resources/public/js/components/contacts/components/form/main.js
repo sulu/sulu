@@ -416,8 +416,10 @@ define([], function() {
                                 instance + '.update',
                                 response,
                                 [],
+                                true,
                                 true);
                         }.bind(this)).fail(function(status, error) {
+                            this.sandbox.emit(instance + '.revert');
                             this.sandbox.logger.error(status, error);
                         }.bind(this));
                     }
@@ -432,6 +434,7 @@ define([], function() {
                 this.sandbox.util.save(url + '/' + id, 'DELETE')
                     .then(function() {
                     }.bind(this)).fail(function(status, error) {
+                        this.sandbox.emit(instance + '.revert');
                         this.sandbox.logger.error(status, error);
                         return null;
                     }.bind(this));

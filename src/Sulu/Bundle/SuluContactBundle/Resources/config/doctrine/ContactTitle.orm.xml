@@ -7,5 +7,8 @@
             <generator strategy="AUTO"/>
         </id>
         <field name="title" type="string" column="title" length="60"/>
+        <unique-constraints>
+            <unique-constraint columns="title" />
+        </unique-constraints>
     </entity>
 </doctrine-mapping>
