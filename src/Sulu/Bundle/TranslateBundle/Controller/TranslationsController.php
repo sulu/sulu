@@ -13,6 +13,7 @@ namespace Sulu\Bundle\TranslateBundle\Controller;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\RestController;
 use Sulu\Component\Rest\Exception\NoDefaultCatalogueException;
 use Sulu\Component\Rest\Exception\ToManyDefaultCatalogueException;
@@ -28,6 +29,113 @@ class TranslationsController extends RestController implements ClassResourceInte
      * @var string
      */
     protected static $entityName = 'SuluTranslateBundle:Translation';
+
+    /**
+     * @var string
+     */
+    protected static $entityNameCode = 'SuluTranslateBundle:Code';
+
+    /**
+     * @var DoctrineFieldDescriptor[]
+     */
+    protected $fieldDescriptors = array();
+
+    /**
+     * returns all fields that can be used by list
+     * @Get("translations/fields")
+     * @return mixed
+     */
+    public function getFieldsAction()
+    {
+        $fieldDescriptors = array_values($this->getFieldDescriptors());
+        return $this->handleView($this->view($fieldDescriptors, 200));
+    }
+
+    /**
+     * @return DoctrineFieldDescriptor[]
+     */
+    public function getFieldDescriptors()
+    {
+        $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor(
+            'id',
+            'id',
+            self::$entityName,
+            'id',
+            array(),
+            true,
+            false,
+            '',
+            '50px'
+        );
+        $this->fieldDescriptors['value'] = new DoctrineFieldDescriptor(
+            'value',
+            'value',
+            self::$entityName,
+            'value',
+            array(),
+            true,
+            false,
+            '',
+            '90px'
+        );
+        $this->fieldDescriptors['suggestion'] = new DoctrineFieldDescriptor(
+            'suggestion',
+            'suggestion',
+            self::$entityName,
+            'suggestion',
+            array()
+        );
+        $this->fieldDescriptors['code'] = new DoctrineFieldDescriptor(
+            'code',
+            'code',
+            self::$entityNameCode,
+            'code',
+            array(
+                self::$entityNameCode =>   new DoctrineJoinDescriptor(
+                        self::$entityNameCode,
+                        self::$entityName . '.code'
+                    ),
+            )
+        );
+        $this->fieldDescriptors['backend'] = new DoctrineFieldDescriptor(
+            'backend',
+            'backend',
+            self::$entityNameCode,
+            'backend',
+            array(
+                self::$entityNameCode =>   new DoctrineJoinDescriptor(
+                        self::$entityNameCode,
+                        self::$entityName . '.code'
+                    ),
+            )
+        );
+        $this->fieldDescriptors['frontend'] = new DoctrineFieldDescriptor(
+            'frontend',
+            'frontend',
+            self::$entityNameCode,
+            'frontend',
+            array(
+                self::$entityNameCode =>   new DoctrineJoinDescriptor(
+                        self::$entityNameCode,
+                        self::$entityName . '.code'
+                    ),
+            )
+        );
+        $this->fieldDescriptors['length'] = new DoctrineFieldDescriptor(
+            'length',
+            'length',
+            self::$entityNameCode,
+            'length',
+            array(
+                self::$entityNameCode =>   new DoctrineJoinDescriptor(
+                        self::$entityNameCode,
+                        self::$entityName . '.code'
+                    ),
+            )
+        );
+
+        return $this->fieldDescriptors;
+    }
 
     /**
      * Lists all the translations or filters the translations by parameters for a single catalogue

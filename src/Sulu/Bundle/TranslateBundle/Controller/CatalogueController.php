@@ -14,8 +14,8 @@ use FOS\RestBundle\Routing\ClassResourceInterface;
 use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Bundle\TranslateBundle\Translate\TranslateCollectionRepresentation;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
+use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
-use Sulu\Component\Rest\ListBuilder\DoctrineListBuilderFactory;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\RestController;
 use Sulu\Component\Rest\RestHelperInterface;
@@ -35,6 +35,18 @@ class CatalogueController extends RestController
      * @var DoctrineFieldDescriptor[]
      */
     protected $fieldDescriptors = array();
+
+    /**
+     * returns all fields that can be used by list
+     * @Get("catalogues/fields")
+     * @param Request $request
+     * @return mixed
+     */
+    public function getFieldsAction(Request $request)
+    {
+        $fieldDescriptors = array_values($this->getFieldDescriptors($request->getLocale()));
+        return $this->handleView($this->view($fieldDescriptors, 200));
+    }
 
     /**
      * Returns the catalogue with the given id

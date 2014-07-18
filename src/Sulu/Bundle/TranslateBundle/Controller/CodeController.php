@@ -46,13 +46,24 @@ class CodeController extends RestController implements ClassResourceInterface
     protected $fieldDescriptors = array();
 
     /**
+     * returns all fields that can be used by list
+     * @Get("codes/fields")
+     * @param Request $request
+     * @return mixed
+     */
+    public function getFieldsAction(Request $request)
+    {
+        $fieldDescriptors = array_values($this->getFieldDescriptors($request->getLocale()));
+        return $this->handleView($this->view($fieldDescriptors, 200));
+    }
+
+    /**
      * Lists all the codes or filters the codes by parameters
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function cgetAction(Request $request)
     {
-
         if ($request->get('flat')=='true') {
             // flat structure
             return $this->listAction($request);
@@ -122,7 +133,7 @@ class CodeController extends RestController implements ClassResourceInterface
 
         $listBuilder = $factory->create(self::$entityName);
 
-        $restHelper->initializeListBuilder($listBuilder, $this->getFieldDescriptors());
+        $restHelper->initializeListBuilder($listBuilder, $this->getFieldDescriptors($request->getLocale()));
 
         foreach ($filter as $key => $value) {
             $listBuilder->where($this->getFieldDescriptor($key), $value);
@@ -312,12 +323,34 @@ class CodeController extends RestController implements ClassResourceInterface
     }
 
     /**
+     * @param string $locale
      * @return DoctrineFieldDescriptor[]
      */
-    private function getFieldDescriptors()
+    private function getFieldDescriptors($locale)
     {
-        $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor('id', 'id', self::$entityName);
-        $this->fieldDescriptors['code'] = new DoctrineFieldDescriptor('code', 'code', self::$entityName);
+        $locale = $this->getDoctrine()->getConnection()->quote(strtoupper($locale));
+        $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor(
+            'id',
+            'id',
+            self::$entityName,
+            'id',
+            array(),
+            true,
+            false,
+            '',
+            '50px'
+        );
+        $this->fieldDescriptors['code'] = new DoctrineFieldDescriptor(
+            'code',
+            'code',
+            self::$entityName,
+            'code',
+            array(),
+            true,
+            false,
+            '',
+            '90px'
+        );
         $this->fieldDescriptors['backend'] = new DoctrineFieldDescriptor('backend', 'backend', self::$entityName);
         $this->fieldDescriptors['frontend'] = new DoctrineFieldDescriptor('frontend', 'frontend', self::$entityName);
         $this->fieldDescriptors['length'] = new DoctrineFieldDescriptor('length', 'length', self::$entityName);
@@ -327,11 +360,17 @@ class CodeController extends RestController implements ClassResourceInterface
             self::$translationEntity,
             'value',
             array(
-                self::$translationEntity => new DoctrineJoinDescriptor(
-                        self::$translationEntity,
-                        self::$entityName . '.translations'
-                    )
-            )
+                self::$catalogueEntity =>   new DoctrineJoinDescriptor(
+                        self::$catalogueEntity,
+                        self::$translationEntity . '.catalogue',
+                        self::$catalogueEntity . '.locale = ' . $locale,
+                        DoctrineJoinDescriptor::JOIN_METHOD_INNER
+                    ),
+            ),
+            true,
+            false,
+            '',
+            '90px'
         );
         $this->fieldDescriptors['translations_catalogue_locale'] = new DoctrineFieldDescriptor(
             'locale',
@@ -339,13 +378,15 @@ class CodeController extends RestController implements ClassResourceInterface
             self::$catalogueEntity,
             'locale',
             array(
-                self::$translationEntity => new DoctrineJoinDescriptor(
-                        self::$translationEntity,
-                        self::$entityName . '.translations'
+                self::$packageEntity => new DoctrineJoinDescriptor(
+                        self::$packageEntity,
+                        self::$entityName . '.package'
                     ),
                 self::$catalogueEntity =>   new DoctrineJoinDescriptor(
                         self::$catalogueEntity,
-                        self::$translationEntity . '.catalogue'
+                        self::$packageEntity . '.catalogue',
+                        self::$catalogueEntity . '.locale = ' . $locale,
+                        DoctrineJoinDescriptor::JOIN_METHOD_LEFT
                     ),
             )
         );
@@ -367,14 +408,16 @@ class CodeController extends RestController implements ClassResourceInterface
             self::$catalogueEntity,
             'catalogue',
             array(
-                self::$translationEntity => new DoctrineJoinDescriptor(
-                        self::$translationEntity,
-                        self::$entityName . '.translations'
+                self::$packageEntity => new DoctrineJoinDescriptor(
+                        self::$packageEntity,
+                        self::$entityName . '.package'
                     ),
                 self::$catalogueEntity =>   new DoctrineJoinDescriptor(
                         self::$catalogueEntity,
-                        self::$translationEntity . '.catalogue'
-                    )
+                        self::$packageEntity . '.catalogues',
+                        self::$catalogueEntity . '.locale = ' . $locale,
+                        DoctrineJoinDescriptor::JOIN_METHOD_LEFT
+                    ),
             )
         );
         $this->fieldDescriptors['location_name'] = new DoctrineFieldDescriptor(
