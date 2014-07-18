@@ -10,16 +10,24 @@
 
 namespace Sulu\Bundle\MediaBundle\Controller;
 
+use Hateoas\Representation\CollectionRepresentation;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Put;
 
+use Sulu\Bundle\MediaBundle\Media\Exception\MediaException;
+use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
+use Sulu\Bundle\MediaBundle\Media\Manager\MediaFieldDescriptorInterface;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
+use Sulu\Component\Rest\ListBuilder\DoctrineListBuilderFactory;
+use Sulu\Component\Rest\ListBuilder\ListRepresentation;
+use Sulu\Component\Rest\ListBuilder\ListRestHelperInterface;
 use Sulu\Component\Rest\RestController;
+use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Security\UserInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Config\Definition\Exception\Exception;
@@ -33,50 +41,16 @@ use FOS\RestBundle\Controller\Annotations\Post;
  */
 class MediaController extends RestController implements ClassResourceInterface
 {
-    /**
-     * {@inheritdoc}
-     */
-    protected $entityName = 'SuluMediaBundle:Media';
 
     /**
-     * {@inheritdoc}
+     * @var string
      */
-    protected $fieldsHidden = array('id', 'created', 'changed');
+    protected static $entityName = 'SuluMediaBundle:Media';
 
     /**
-     * {@inheritdoc}
+     * @var string
      */
-    protected $fieldsSortOrder = array(0 => 'id');
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $fieldsTranslationKeys = array('id' => 'public.id');
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $fieldsEditable = array();
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $fieldsValidation = array();
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $fieldsWidth = array();
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $fieldsRelations = array('title', 'name', 'description', 'thumbnails', 'size'); // TODO change thumbnails to format when husky updated
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $bundlePrefix = 'media.media.';
+    protected static $entityKey = 'media';
 
     /**
      * returns all fields that can be used by list
@@ -85,16 +59,8 @@ class MediaController extends RestController implements ClassResourceInterface
      */
     public function getFieldsAction()
     {
-        return $this->responseFields();
-    }
-
-    /**
-     * persists a setting
-     * @Put("media/fields")
-     */
-    public function putFieldsAction()
-    {
-        return $this->responsePersistSettings();
+        $fieldDescriptors = array_values($this->getMediaManager()->getFieldDescriptors());
+        return $this->handleView($this->view($fieldDescriptors, 200));
     }
 
     /**
@@ -105,18 +71,20 @@ class MediaController extends RestController implements ClassResourceInterface
      */
     public function getAction($id, Request $request)
     {
-        $locale = $this->getLocale($request->get('locale'));
-        $mM = $this->getMediaManager();
-        $view = $this->responseGetById(
-            $id,
-            function ($id) use ($locale, $mM) {
-                /**
-                 * @var MediaEntity $mediaEntity
-                 */
-                $mediaEntity = $mM->findById($id);
-                return $mM->getApiObject($mediaEntity, $locale);
-            }
-        );
+        try {
+            $locale = $this->getLocale($request->get('locale'));
+            $mediaManager = $this->getMediaManager();
+            $view = $this->responseGetById(
+                $id,
+                function ($id) use ($locale, $mediaManager) {
+                    return $mediaManager->getById($id, $locale);
+                }
+            );
+        } catch (MediaNotFoundException $me) {
+            $view = $this->view($me->toArray(), 404);
+        } catch (MediaException $me) {
+            $view = $this->view($me->toArray(), 400);
+        }
 
         return $this->handleView($view);
     }
@@ -128,18 +96,39 @@ class MediaController extends RestController implements ClassResourceInterface
      */
     public function cgetAction(Request $request)
     {
-        $collection = $request->get('collection');
-        $limit = $request->get('limit');
-        $ids = $request->get('ids');
-        if ($ids !== null) {
-            $ids = explode(',', $ids);
+        try {
+            $collection = $request->get('collection');
+            $limit = $request->get('limit');
+            $ids = $request->get('ids');
+            if ($ids !== null) {
+                $ids = explode(',', $ids);
+            }
+
+            /** @var ListRestHelperInterface $listRestHelper */
+            $listRestHelper = $this->get('sulu_core.list_rest_helper');
+
+            $mediaManager = $this->getMediaManager();
+            $media = $mediaManager->get($this->getLocale($request->get('locale')), $collection, $ids, $limit);
+
+            $all = count($media); // TODO
+
+            $list = new ListRepresentation(
+                $media,
+                self::$entityKey,
+                'cget_media',
+                $request->query->all(),
+                $listRestHelper->getPage(),
+                $listRestHelper->getLimit(),
+                $all
+            );
+
+            $view = $this->view($list, 200);
+        } catch (MediaNotFoundException $me) {
+            $view = $this->view($me->toArray(), 404);
+        } catch (MediaException $me) {
+            $view = $this->view($me->toArray(), 400);
         }
 
-        $mM = $this->getMediaManager();
-        $media = $mM->find($collection, $ids, $limit);
-        $wrappers = $mM->getApiObjects($media, $this->getLocale($request->get('locale')));
-        $halResponse = $this->createHalResponse($wrappers, true);
-        $view = $this->view($halResponse, 200);
         return $this->handleView($view);
     }
 
@@ -187,7 +176,13 @@ class MediaController extends RestController implements ClassResourceInterface
     public function deleteAction($id)
     {
         $delete = function ($id) {
-            $this->getMediaManager()->delete($id);
+            try {
+                $this->getMediaManager()->delete($id);
+            } catch (MediaNotFoundException $cnf) {
+                throw new EntityNotFoundException(self::$entityName, $id); // will throw 404 Entity not found
+            } catch (MediaException $me) {
+                throw new RestException($me->getMessage(), $me->getCode()); // will throw 400 Bad Request
+            }
         };
 
         $view = $this->responseDelete($id, $delete);
@@ -203,18 +198,17 @@ class MediaController extends RestController implements ClassResourceInterface
     protected function saveEntity($id, Request $request)
     {
         try {
-            $mM = $this->getMediaManager();
+            $mediaManager = $this->getMediaManager();
             $data = $this->getData($request, $id ? false : true);
             $data['id'] = $id;
             $uploadedFile = $this->getUploadedFile($request, 'fileVersion');
-            $categoryEntity = $mM->save($uploadedFile, $data, $this->getUser()->getId());
-            $categoryWrapper = $mM->getApiObject($categoryEntity, $this->getLocale($request->get('locale')));
+            $media = $mediaManager->save($uploadedFile, $data, $this->getUser()->getId());
 
-            $view = $this->view($categoryWrapper, 200);
-        } catch (EntityNotFoundException $enfe) {
-            $view = $this->view($enfe->toArray(), 404);
-        } catch (RestException $exc) {
-            $view = $this->view($exc->toArray(), 400);
+            $view = $this->view($media, 200);
+        } catch (MediaNotFoundException $me) {
+            $view = $this->view($me->toArray(), 404);
+        } catch (MediaException $me) {
+            $view = $this->view($me->toArray(), 400);
         }
 
         return $this->handleView($view);

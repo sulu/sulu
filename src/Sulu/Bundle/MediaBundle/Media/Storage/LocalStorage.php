@@ -14,12 +14,25 @@ use \stdClass;
 
 class LocalStorage implements StorageInterface
 {
+    /**
+     * @var string
+     */
     private $storageOption = null;
 
+    /**
+     * @var string
+     */
     private $uploadPath;
 
+    /**
+     * @var int
+     */
     private $segments;
 
+    /**
+     * @param string $uploadPath
+     * @param int $segments
+     */
     public function __construct($uploadPath, $segments)
     {
         $this->uploadPath = $uploadPath;
