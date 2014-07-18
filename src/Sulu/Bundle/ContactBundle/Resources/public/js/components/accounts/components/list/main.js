@@ -239,6 +239,8 @@ define([
                     el: this.sandbox.dom.find('#companies-list', this.$el),
                     url: '/admin/api/accounts?flat=true' + dataUrlAddition,
                     resultKey: 'accounts',
+                    searchInstanceName: 'accounts',
+                    searchFields: ['name'],
                     contentFilters: {
                         // display account type name instead of type number
                         type: function(content) {
