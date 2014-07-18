@@ -76,6 +76,78 @@ class ContactController extends AbstractContactController
     public function __construct()
     {
         $this->fieldDescriptors = array();
+
+        $this->fieldDescriptors['account'] = new DoctrineFieldDescriptor(
+            'name',
+            'account',
+            self::$accountEntityName,
+            'contact.contacts.company',
+            array(
+                self::$accountContactEntityName => new DoctrineJoinDescriptor(
+                        self::$accountContactEntityName,
+                        self::$entityName . '.accountContacts'
+                    ),
+                self::$accountEntityName => new DoctrineJoinDescriptor(
+                        self::$accountEntityName,
+                        self::$accountContactEntityName . '.account'
+                    )
+            ),
+            false,
+            true
+        );
+
+        $this->fieldDescriptors['fullName'] = new DoctrineConcatenationFieldDescriptor(
+            array(
+                new DoctrineFieldDescriptor('firstName', 'firstName', self::$entityName),
+                new DoctrineFieldDescriptor('lastName', 'lastName', self::$entityName)
+            ),
+            'fullName',
+            'public.name',
+            '',
+            false,
+            true
+        );
+
+        $this->fieldDescriptors['city'] = new DoctrineFieldDescriptor(
+            'city',
+            'city',
+            self::$addressEntityName,
+            'contact.address.city',
+            array(
+                self::$contactAddressEntityName => new DoctrineJoinDescriptor(
+                        self::$contactAddressEntityName,
+                        self::$entityName . '.contactAddresses',
+                        self::$contactAddressEntityName . '.main = true', 'LEFT'
+                    ),
+                self::$addressEntityName => new DoctrineJoinDescriptor(
+                        self::$addressEntityName,
+                        self::$contactAddressEntityName . '.address'
+                    )
+            ),
+            false,
+            true
+        );
+
+        $this->fieldDescriptors['mainPhone'] = new DoctrineFieldDescriptor(
+            'mainPhone',
+            'mainPhone',
+            self::$entityName,
+            'public.phone',
+            array(),
+            false,
+            true
+        );
+
+        $this->fieldDescriptors['mainEmail'] = new DoctrineFieldDescriptor(
+            'mainEmail',
+            'mainEmail',
+            self::$entityName,
+            'public.email',
+            array(),
+            false,
+            true
+        );
+
         $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor(
             'id',
             'id',
@@ -104,13 +176,6 @@ class ContactController extends AbstractContactController
             'public.url',
             array(),
             true
-        );
-
-        $this->fieldDescriptors['mainEmail'] = new DoctrineFieldDescriptor(
-            'mainEmail',
-            'mainEmail',
-            self::$entityName,
-            'public.email'
         );
 
         $this->fieldDescriptors['created'] = new DoctrineFieldDescriptor(
@@ -182,32 +247,6 @@ class ContactController extends AbstractContactController
             true
         );
 
-        $this->fieldDescriptors['fullName'] = new DoctrineConcatenationFieldDescriptor(
-            array(
-                new DoctrineFieldDescriptor('firstName', 'firstName', self::$entityName),
-                new DoctrineFieldDescriptor('lastName', 'lastName', self::$entityName)
-            ),
-            'fullName',
-            'public.name'
-        );
-
-        $this->fieldDescriptors['account'] = new DoctrineFieldDescriptor(
-            'name',
-            'account',
-            self::$accountEntityName,
-            'contact.contacts.company',
-            array(
-                self::$accountContactEntityName => new DoctrineJoinDescriptor(
-                        self::$accountContactEntityName,
-                        self::$entityName . '.accountContacts'
-                    ),
-                self::$accountEntityName => new DoctrineJoinDescriptor(
-                        self::$accountEntityName,
-                        self::$accountContactEntityName . '.account'
-                    )
-            )
-        );
-
         $this->fieldDescriptors['accountContacts_position'] = new DoctrineFieldDescriptor(
             'position',
             'accountContacts_position',
@@ -220,24 +259,6 @@ class ContactController extends AbstractContactController
                     ),
             ),
             true
-        );
-
-        $this->fieldDescriptors['city'] = new DoctrineFieldDescriptor(
-            'city',
-            'city',
-            self::$addressEntityName,
-            'contact.address.city',
-            array(
-                self::$contactAddressEntityName => new DoctrineJoinDescriptor(
-                        self::$contactAddressEntityName,
-                        self::$entityName . '.contactAddresses',
-                        self::$contactAddressEntityName . '.main = true', 'LEFT'
-                    ),
-                self::$addressEntityName => new DoctrineJoinDescriptor(
-                        self::$addressEntityName,
-                        self::$contactAddressEntityName . '.address'
-                    )
-            )
         );
 
         // field descriptors for the account contact list
