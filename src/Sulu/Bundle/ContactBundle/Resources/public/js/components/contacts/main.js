@@ -95,8 +95,6 @@ define([
         },
 
         removeActivities: function(ids) {
-
-//            // TODO loading
             this.confirmDeleteDialog(function(wasConfirmed) {
                 if (wasConfirmed) {
                     var activity;
@@ -116,13 +114,11 @@ define([
         },
 
         saveActivity: function(data) {
-
             var isNew = true;
             if (!!data.id) {
                 isNew = false;
             }
 
-            // TODO loading icon
             this.activity = Activity.findOrCreate({id: data.id});
             this.activity.set(data);
             this.activity.save(null, {
@@ -163,7 +159,6 @@ define([
         },
 
         loadActivity: function(id) {
-            // TODO loading icon
             if (!!id) {
                 this.activity = Activity.findOrCreate({id: id});
                 this.activity.fetch({
