@@ -610,13 +610,13 @@ class Media extends ApiWrapper
                 $this->getFileVersion()->addMeta($meta);
 
                 return $meta;
-            } elseif (isset($metaCollection[0])) {
+            } elseif (!$metaCollection->isEmpty()) {
                 // return first when create false
-                return $metaCollection[0];
+                return $metaCollection->first();
             }
-        } elseif ($metaCollectionFiltered[0]) {
+        } else {
             // return exists
-            return $metaCollectionFiltered[0];
+            return $metaCollectionFiltered->first();
         }
 
         return null;
