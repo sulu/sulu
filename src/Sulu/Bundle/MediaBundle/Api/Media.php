@@ -33,7 +33,6 @@ use JMS\Serializer\Annotation\ExclusionPolicy;
  */
 class Media extends ApiEntityWrapper
 {
-
     /**
      * @var string
      */
@@ -63,7 +62,6 @@ class Media extends ApiEntityWrapper
      * @var FileVersion
      */
     protected $fileVersion = null;
-
 
     public function __construct(Entity $collection, $locale, $version = null)
     {
@@ -634,5 +632,4 @@ class Media extends ApiEntityWrapper
         }
         throw new EntityNotFoundException('SuluMediaBundle:FileVersion', $this->entity->getId());
     }
-
-} 
+}
