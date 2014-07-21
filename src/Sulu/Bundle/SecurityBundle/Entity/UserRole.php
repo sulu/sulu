@@ -23,6 +23,7 @@ use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
  */
 class UserRole extends ApiEntity
 {
+
     /**
      * @var integer
      * @Expose
@@ -41,7 +42,7 @@ class UserRole extends ApiEntity
     private $user;
 
     /**
-     * @var \Sulu\Bundle\SecurityBundle\Entity\Role
+     * @var \Sulu\Bundle\SecurityBundle\Entity\RoleInterface
      * @Expose
      */
     private $role;
@@ -119,7 +120,7 @@ class UserRole extends ApiEntity
      * @param \Sulu\Bundle\SecurityBundle\Entity\Role $role
      * @return UserRole
      */
-    public function setRole(\Sulu\Bundle\SecurityBundle\Entity\Role $role)
+    public function setRole(\Sulu\Bundle\SecurityBundle\Entity\RoleInterface $role)
     {
         $this->role = $role;
 
@@ -129,7 +130,7 @@ class UserRole extends ApiEntity
     /**
      * Get role
      *
-     * @return \Sulu\Bundle\SecurityBundle\Entity\Role
+     * @return \Sulu\Bundle\SecurityBundle\Entity\RoleInterface
      */
     public function getRole()
     {

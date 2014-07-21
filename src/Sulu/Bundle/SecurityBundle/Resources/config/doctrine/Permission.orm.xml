@@ -11,7 +11,7 @@
         <field name="module" type="string" column="module" nullable="true" length="60"/>
         <field name="permissions" type="smallint" column="permissions"/>
 
-        <many-to-one field="role" target-entity="Sulu\Bundle\SecurityBundle\Entity\Role" inversed-by="permissions">
+        <many-to-one field="role" target-entity="Sulu\Bundle\SecurityBundle\Entity\RoleInterface" inversed-by="permissions">
             <join-column name="idRoles" referenced-column-name="id" on-delete="CASCADE"/>
         </many-to-one>
 

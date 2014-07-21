@@ -12,7 +12,7 @@
         <many-to-one field="user" target-entity="Sulu\Bundle\SecurityBundle\Entity\User" inversed-by="userRoles">
             <join-column name="idUsers" referenced-column-name="id" on-delete="CASCADE"/>
         </many-to-one>
-        <many-to-one field="role" target-entity="Sulu\Bundle\SecurityBundle\Entity\Role" inversed-by="userRoles">
+        <many-to-one field="role" target-entity="Sulu\Bundle\SecurityBundle\Entity\RoleInterface" inversed-by="userRoles">
             <join-column name="idRoles" referenced-column-name="id" on-delete="CASCADE"/>
         </many-to-one>
     </entity>
