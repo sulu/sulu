@@ -72,7 +72,6 @@ class CreateUserCommand extends ContainerAwareCommand
         $now = new DateTime();
 
         $contact = new Contact();
-        $contact->setTitle('');
         $contact->setFirstName($firstName);
         $contact->setLastName($lastName);
         $contact->addEmail($email);
