@@ -13,6 +13,8 @@ namespace Sulu\Bundle\TestBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Sulu\Component\Security\UserInterface;
 use Symfony\Component\Security\Core\Role\Role;
+use JMS\Serializer\Annotation\VirtualProperty;
+use JMS\Serializer\Annotation\SerializedName;
 
 /**
  * TestUser
@@ -94,10 +96,13 @@ class TestUser implements UserInterface
      * Set locale
      *
      * @param $locale
+     * @return TestUser
      */
     public function setLocale($locale)
     {
         $this->locale = $locale;
+
+        return $this;
     }
 
     /**
@@ -108,6 +113,18 @@ class TestUser implements UserInterface
     public function getLocale()
     {
         return $this->locale;
+    }
+
+    /**
+     * Get fullname
+     *
+     * @VirtualProperty
+     * @SerializedName("fullName")
+     * @return string
+     */
+    public function getFullName()
+    {
+        return $this->getContact()->getFullName();
     }
 
     /**
