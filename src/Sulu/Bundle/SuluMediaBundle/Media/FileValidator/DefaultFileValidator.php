@@ -14,31 +14,37 @@ use Sulu\Bundle\MediaBundle\Media\Exception\InvalidFileException;
 use Sulu\Bundle\MediaBundle\Media\Exception\InvalidFileTypeException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MaxFileSizeExceededException;
 use Sulu\Bundle\MediaBundle\Media\Exception\UploadFileNotSetException;
-use Sulu\Bundle\MediaBundle\Media\Exception\UploadFileValidationException;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class DefaultFileValidator implements FileValidatorInterface
 {
+    /**
+     * @var array
+     */
     protected $blockedMimeTypes = array();
 
+    /**
+     * @var int
+     */
     protected $maxFileSize = 0;
 
     /**
-     * @param File $file
+     * @param UploadedFile $file
      * @param array $methods
-     * @throws InvalidFileException
+     * @return mixed|void
      * @throws InvalidFileTypeException
-     * @throws MaxFileSizeExceededException
+     * @throws InvalidFileException
      * @throws UploadFileNotSetException
+     * @throws MaxFileSizeExceededException
      */
-    public function validate (File $file, $methods = array(
+    public function validate (UploadedFile $file, $methods = array(
             self::VALIDATOR_FILE_SET,
             self::VALIDATOR_FILE_ERRORS,
             self::VALIDATOR_BLOCK_FILE_TYPES,
             self::VALIDATOR_MAX_FILE_SIZE
         ))
     {
-
         if (in_array(self::VALIDATOR_FILE_ERRORS, $methods) && $file->getError() > 0) {
             throw new InvalidFileException('The file upload had an error('.$file->getError().'): ' . $file->getErrorMessage());
         }

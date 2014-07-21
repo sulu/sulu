@@ -313,6 +313,7 @@ define(function () {
                     el: this.$find(constants.datagridSelector),
                     url: '/admin/api/media?collection=' + this.options.data.id,
                     view: listViews[this.listView].name,
+                    resultKey: 'media',
                     pagination: false,
                     viewOptions: {
                         table: {
