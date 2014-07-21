@@ -2,37 +2,71 @@
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-    <entity name="Sulu\Bundle\ContactBundle\Entity\Activity" table="co_activities">
+    <entity name="Sulu\Bundle\ContactBundle\Entity\Activity" table="co_activities" repository-class="Sulu\Bundle\ContactBundle\Entity\ActivityRepository">
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
         </id>
-        <field name="name" type="string" column="name" length="60"/>
-        <field name="due" type="datetime" column="due" nullable="true"/>
-        <field name="priority" type="integer" column="priority" nullable="true"/>
-        <field name="reminder" type="datetime" column="reminder" nullable="true"/>
-        <field name="notification" type="boolean" column="notification"/>
+
+        <field name="subject" type="string" column="subject" length="60" nullable="false"/>
+        <field name="note" type="string" column="note" length="1000" nullable="true"/>
+
+        <field name="dueDate" type="datetime" column="dueDate" nullable="false"/>
+        <field name="startDate" type="datetime" column="startDate" nullable="true"/>
+
         <field name="created" type="datetime" column="created"/>
         <field name="changed" type="datetime" column="changed"/>
+
         <many-to-one field="changer" target-entity="Sulu\Component\Security\UserInterface">
             <join-columns>
                 <join-column name="idUsersChanger" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
             </join-columns>
         </many-to-one>
+
         <many-to-one field="creator" target-entity="Sulu\Component\Security\UserInterface">
             <join-columns>
                 <join-column name="idUsersCreator" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
             </join-columns>
         </many-to-one>
+
         <many-to-one field="activityStatus" target-entity="Sulu\Bundle\ContactBundle\Entity\ActivityStatus"
                      inversed-by="activities">
             <join-columns>
-                <join-column name="idActivityStatuses" referenced-column-name="id" nullable="false"/>
+                <join-column name="idActivityStatuses" referenced-column-name="id" nullable="true"/>
             </join-columns>
         </many-to-one>
+
+        <many-to-one field="activityPriority" target-entity="Sulu\Bundle\ContactBundle\Entity\ActivityPriority"
+                     inversed-by="activities">
+            <join-columns>
+                <join-column name="idActivityPriorities" referenced-column-name="id" nullable="true"/>
+            </join-columns>
+        </many-to-one>
+
+        <many-to-one field="activityType" target-entity="Sulu\Bundle\ContactBundle\Entity\ActivityType"
+                     inversed-by="activities">
+            <join-columns>
+                <join-column name="idActivityTypes" referenced-column-name="id" nullable="true"/>
+            </join-columns>
+        </many-to-one>
+
+        <many-to-one field="assignedContact" target-entity="Sulu\Bundle\ContactBundle\Entity\Contact"
+                     inversed-by="assignedActivities">
+            <join-columns>
+                <join-column name="idAssignedContacts" referenced-column-name="id" nullable="true"  on-delete="SET NULL"/>
+            </join-columns>
+        </many-to-one>
+
         <many-to-one field="contact" target-entity="Sulu\Bundle\ContactBundle\Entity\Contact" inversed-by="activities">
             <join-columns>
-                <join-column name="idContacts" referenced-column-name="id" nullable="false"/>
+                <join-column name="idContacts" referenced-column-name="id" nullable="true" on-delete="SET NULL"/>
             </join-columns>
         </many-to-one>
+
+        <many-to-one field="account" target-entity="Sulu\Bundle\ContactBundle\Entity\Account" inversed-by="activities">
+            <join-columns>
+                <join-column name="idAccounts" referenced-column-name="id" nullable="true" on-delete="SET NULL"/>
+            </join-columns>
+        </many-to-one>
+
     </entity>
 </doctrine-mapping>

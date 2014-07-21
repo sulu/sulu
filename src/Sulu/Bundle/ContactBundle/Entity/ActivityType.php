@@ -6,9 +6,9 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Exclude;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 /**
- * ActivityStatus
+ * ActivityType
  */
-class ActivityStatus extends ApiEntity implements \JsonSerializable
+class ActivityType extends ApiEntity implements \JsonSerializable
 {
     /**
      * @var string
@@ -38,7 +38,7 @@ class ActivityStatus extends ApiEntity implements \JsonSerializable
      * Set name
      *
      * @param string $name
-     * @return ActivityStatus
+     * @return ActivityType
      */
     public function setName($name)
     {
@@ -71,7 +71,7 @@ class ActivityStatus extends ApiEntity implements \JsonSerializable
      * Add activities
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Activity $activities
-     * @return ActivityStatus
+     * @return ActivityType
      */
     public function addActivitie(\Sulu\Bundle\ContactBundle\Entity\Activity $activities)
     {
