@@ -1,4 +1,3 @@
-
 /** vim: et:ts=4:sw=4:sts=4
  * @license RequireJS 2.1.9 Copyright (c) 2010-2012, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
@@ -34631,10 +34630,10 @@ define('__component__$auto-complete@husky',[], function () {
                 iconHTML = '<span class="fa-' + this.options.suggestionImg + ' icon"></span>';
             }
             this._template = this.sandbox.util.template('' +
-                '<div class="' + this.options.suggestionClass + '" data-id="<%= id %>">' +
+                '<div class="' + this.options.suggestionClass + '" data-id="<%= context[\'id \']%>">' +
                 '   <div class="border">' +
                 iconHTML +
-                '		<div class="text"><%= name %></div>' +
+                '		<div class="text"><%= context[this.options.valueKey] %></div>' +
                 '	</div>' +
                 '</div>');
         },
@@ -34646,7 +34645,7 @@ define('__component__$auto-complete@husky',[], function () {
         buildTemplate: function (context) {
             var domObj;
             if (this._template !== null) {
-                domObj = this.sandbox.dom.createElement(this._template(context));
+                domObj = this.sandbox.dom.createElement(this._template({context:context}));
                 if (this.isExcluded(context)) {
                     this.sandbox.dom.addClass(domObj, 'disabled');
                 }
@@ -47752,3 +47751,4 @@ define('husky_extensions/util',[],function() {
         }
     };
 });
+
