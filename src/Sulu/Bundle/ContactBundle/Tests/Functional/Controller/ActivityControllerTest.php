@@ -125,54 +125,111 @@ class ActivityControllerTest extends DatabaseTestCase
         self::$em->flush();
     }
 
-    public function tearDown()
+    public
+    function tearDown()
     {
         parent::tearDown();
         self::$tool->dropSchema(self::$entities);
     }
 
-    public function setUpSchema()
+    public
+    function setUpSchema()
     {
         self::$tool = new SchemaTool(self::$em);
 
         self::$entities = array(
-            self::$em->getClassMetadata('Sulu\Bundle\TestBundle\Entity\TestUser'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AccountCategory'),
-            self::$em->getClassMetadata('Sulu\Bundle\TestBundle\Entity\TestUser'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Account'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ActivityStatus'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ActivityPriority'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ActivityType'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Activity'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Address'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AccountAddress'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ContactAddress'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AddressType'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\BankAccount'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Contact'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ContactLocale'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Country'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Email'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\EmailType'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Note'),
+            self::$em->getClassMetadata(
+                'Sulu\Bundle\TestBundle\Entity\TestUser'
+            ),
+            self::$em->getClassMetadata(
+                'Sulu\Bundle\ContactBundle\Entity\AccountCategory'
+            ),
+            self::$em->getClassMetadata(
+                'Sulu\Bundle\TestBundle\Entity\TestUser'
+            ),
+            self::$em->getClassMetadata(
+                'Sulu\Bundle\ContactBundle\Entity\Account'
+            ),
+            self::$em->getClassMetadata(
+                'Sulu\Bundle\ContactBundle\Entity\ActivityStatus'
+            ),
+            self::$em->getClassMetadata(
+                'Sulu\Bundle\ContactBundle\Entity\ActivityPriority'
+            ),
+            self::$em->getClassMetadata(
+                'Sulu\Bundle\ContactBundle\Entity\ActivityType'
+            ),
+            self::$em->getClassMetadata(
+                'Sulu\Bundle\ContactBundle\Entity\Activity'
+            ),
+            self::$em->getClassMetadata(
+                'Sulu\Bundle\ContactBundle\Entity\Address'
+            ),
+            self::$em->getClassMetadata(
+                'Sulu\Bundle\ContactBundle\Entity\AccountAddress'
+            ),
+            self::$em->getClassMetadata(
+                'Sulu\Bundle\ContactBundle\Entity\ContactAddress'
+            ),
+            self::$em->getClassMetadata(
+                'Sulu\Bundle\ContactBundle\Entity\AddressType'
+            ),
+            self::$em->getClassMetadata(
+                'Sulu\Bundle\ContactBundle\Entity\BankAccount'
+            ),
+            self::$em->getClassMetadata(
+                'Sulu\Bundle\ContactBundle\Entity\Contact'
+            ),
+            self::$em->getClassMetadata(
+                'Sulu\Bundle\ContactBundle\Entity\ContactLocale'
+            ),
+            self::$em->getClassMetadata(
+                'Sulu\Bundle\ContactBundle\Entity\Country'
+            ),
+            self::$em->getClassMetadata(
+                'Sulu\Bundle\ContactBundle\Entity\Email'
+            ),
+            self::$em->getClassMetadata(
+                'Sulu\Bundle\ContactBundle\Entity\EmailType'
+            ),
+            self::$em->getClassMetadata(
+                'Sulu\Bundle\ContactBundle\Entity\Note'
+            ),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Fax'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\FaxType'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Phone'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\PhoneType'),
+            self::$em->getClassMetadata(
+                'Sulu\Bundle\ContactBundle\Entity\FaxType'
+            ),
+            self::$em->getClassMetadata(
+                'Sulu\Bundle\ContactBundle\Entity\Phone'
+            ),
+            self::$em->getClassMetadata(
+                'Sulu\Bundle\ContactBundle\Entity\PhoneType'
+            ),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Url'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\UrlType'),
+            self::$em->getClassMetadata(
+                'Sulu\Bundle\ContactBundle\Entity\UrlType'
+            ),
             self::$em->getClassMetadata('Sulu\Bundle\TagBundle\Entity\Tag'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AccountCategory'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AccountContact'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\TermsOfPayment'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\TermsOfDelivery')
+            self::$em->getClassMetadata(
+                'Sulu\Bundle\ContactBundle\Entity\AccountCategory'
+            ),
+            self::$em->getClassMetadata(
+                'Sulu\Bundle\ContactBundle\Entity\AccountContact'
+            ),
+            self::$em->getClassMetadata(
+                'Sulu\Bundle\ContactBundle\Entity\TermsOfPayment'
+            ),
+            self::$em->getClassMetadata(
+                'Sulu\Bundle\ContactBundle\Entity\TermsOfDelivery'
+            )
         );
 
         self::$tool->dropSchema(self::$entities);
         self::$tool->createSchema(self::$entities);
     }
 
-    private function createTestClient()
+    private
+    function createTestClient()
     {
         return $this->createClient(
             array(),
@@ -183,7 +240,8 @@ class ActivityControllerTest extends DatabaseTestCase
         );
     }
 
-    public function testGet()
+    public
+    function testGet()
     {
         $client = $this->createTestClient();
 
@@ -256,7 +314,8 @@ class ActivityControllerTest extends DatabaseTestCase
         }
     }
 
-    public function testGetFlatByAccount()
+    public
+    function testGetFlatByAccount()
     {
         $client = $this->createTestClient();
 
@@ -284,7 +343,8 @@ class ActivityControllerTest extends DatabaseTestCase
         $this->assertEquals('Vorname Nachname', $data[0]->assignedContact);
     }
 
-    public function testGetFlatByContact()
+    public
+    function testGetFlatByContact()
     {
         $client = $this->createTestClient();
 
@@ -313,7 +373,8 @@ class ActivityControllerTest extends DatabaseTestCase
         $this->assertEquals('Vorname Nachname', $data[0]->assignedContact);
     }
 
-    public function testPost()
+    public
+    function testPost()
     {
         $client = $this->createTestClient();
 
@@ -359,7 +420,8 @@ class ActivityControllerTest extends DatabaseTestCase
         $this->assertEquals(1, $response->assignedContact->id);
     }
 
-    public function testPostInValidContact()
+    public
+    function testPostInValidContact()
     {
         $client = $this->createTestClient();
 
@@ -391,7 +453,8 @@ class ActivityControllerTest extends DatabaseTestCase
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
     }
 
-    public function testPostInValidAccount()
+    public
+    function testPostInValidAccount()
     {
         $client = $this->createTestClient();
 
@@ -423,7 +486,8 @@ class ActivityControllerTest extends DatabaseTestCase
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
     }
 
-    public function testPostInValidAssignedContact()
+    public
+    function testPostInValidAssignedContact()
     {
         $client = $this->createTestClient();
 
@@ -455,7 +519,8 @@ class ActivityControllerTest extends DatabaseTestCase
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
     }
 
-    public function testPostMissingSubject()
+    public
+    function testPostMissingSubject()
     {
         $client = $this->createTestClient();
 
@@ -486,7 +551,8 @@ class ActivityControllerTest extends DatabaseTestCase
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
     }
 
-    public function testPut()
+    public
+    function testPut()
     {
         $client = $this->createTestClient();
 
@@ -532,7 +598,8 @@ class ActivityControllerTest extends DatabaseTestCase
         $this->assertEquals(1, $response->assignedContact->id);
     }
 
-    public function testPutInvalidId()
+    public
+    function testPutInvalidId()
     {
         $client = $this->createTestClient();
 
@@ -564,7 +631,8 @@ class ActivityControllerTest extends DatabaseTestCase
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
     }
 
-    public function testDelete()
+    public
+    function testDelete()
     {
         $client = $this->createTestClient();
 
@@ -586,7 +654,8 @@ class ActivityControllerTest extends DatabaseTestCase
         $this->assertEquals(1, count($response->_embedded->activities));
     }
 
-    public function testDeleteInvalidId()
+    public
+    function testDeleteInvalidId()
     {
         $client = $this->createTestClient();
 
