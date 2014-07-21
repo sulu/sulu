@@ -211,7 +211,7 @@ input, select {
 }
 @media only screen and (max-width: 1600px) {
   /* line 187, ../scss/modules/layout.scss */
-  .has-visible-sidebar .content-column.fixed {
+  .has-visible-sidebar .sidebar-column.fixed + .content-column.fixed {
     float: none;
     width: auto;
     max-width: 900px;
