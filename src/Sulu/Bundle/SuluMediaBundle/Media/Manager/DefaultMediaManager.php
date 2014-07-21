@@ -155,19 +155,34 @@ class DefaultMediaManager implements MediaManagerInterface
     private function initializeFieldDescriptors()
     {
         $fieldDescriptors['id'] = new DoctrineFieldDescriptor(
-            'id', 'id',
-            self::ENTITY_NAME_MEDIA, 'public.id',
-            array(), true, false, '', '50px', ''
+            'id',
+            'id',
+            self::ENTITY_NAME_MEDIA,
+            'public.id',
+            array(),
+            true,
+            false,
+            '',
+            '50px',
+            ''
         );
 
         $fieldDescriptors['thumbnails'] = new DoctrineFieldDescriptor(
-            'id', 'thumbnails',
-            self::ENTITY_NAME_MEDIA, 'media.media.thumbnails',
-            array(), false, true, 'thumbnails'
+            'id',
+            'thumbnails',
+            self::ENTITY_NAME_MEDIA,
+            'media.media.thumbnails',
+            array(),
+            false,
+            true,
+            'thumbnails'
         );
 
         $fieldDescriptors['name'] = new DoctrineFieldDescriptor(
-            'name', 'name', self::ENTITY_NAME_FILEVERSION, 'public.name',
+            'name',
+            'name',
+            self::ENTITY_NAME_FILEVERSION,
+            'public.name',
             array(
                 self::ENTITY_NAME_FILE => new DoctrineJoinDescriptor(
                         self::ENTITY_NAME_FILE,
@@ -181,7 +196,10 @@ class DefaultMediaManager implements MediaManagerInterface
             )
         );
         $fieldDescriptors['size'] = new DoctrineFieldDescriptor(
-            'size', 'size', self::ENTITY_NAME_FILEVERSION, 'media.media.size',
+            'size',
+            'size',
+            self::ENTITY_NAME_FILEVERSION,
+            'media.media.size',
             array(
                 self::ENTITY_NAME_FILE => new DoctrineJoinDescriptor(
                         self::ENTITY_NAME_FILE,
@@ -193,11 +211,16 @@ class DefaultMediaManager implements MediaManagerInterface
                         self::ENTITY_NAME_FILEVERSION . '.version = ' . self::ENTITY_NAME_FILE . '.version'
                     )
             ),
-            false, true, 'bytes'
+            false,
+            true,
+            'bytes'
         );
 
         $fieldDescriptors['changed'] = new DoctrineFieldDescriptor(
-            'changed', 'changed', self::ENTITY_NAME_FILEVERSION, 'public.changed',
+            'changed',
+            'changed',
+            self::ENTITY_NAME_FILEVERSION,
+            'public.changed',
             array(
                 self::ENTITY_NAME_FILE => new DoctrineJoinDescriptor(
                         self::ENTITY_NAME_FILE,
@@ -209,11 +232,16 @@ class DefaultMediaManager implements MediaManagerInterface
                         self::ENTITY_NAME_FILEVERSION . '.version = ' . self::ENTITY_NAME_FILE . '.version'
                     )
             ),
-            true, false, 'date'
+            true,
+            false,
+            'date'
         );
 
         $fieldDescriptors['created'] = new DoctrineFieldDescriptor(
-            'created', 'created', self::ENTITY_NAME_FILEVERSION, 'public.created',
+            'created',
+            'created',
+            self::ENTITY_NAME_FILEVERSION,
+            'public.created',
             array(
                 self::ENTITY_NAME_FILE => new DoctrineJoinDescriptor(
                         self::ENTITY_NAME_FILE,
@@ -225,11 +253,16 @@ class DefaultMediaManager implements MediaManagerInterface
                         self::ENTITY_NAME_FILEVERSION . '.version = ' . self::ENTITY_NAME_FILE . '.version'
                     )
             ),
-            true, false, 'date'
+            true,
+            false,
+            'date'
         );
 
         $fieldDescriptors['title'] = new DoctrineFieldDescriptor(
-            'title', 'title', self::ENTITY_NAME_FILEVERSIONMETA, 'public.title',
+            'title',
+            'title',
+            self::ENTITY_NAME_FILEVERSIONMETA,
+            'public.title',
             array(
                 self::ENTITY_NAME_FILE => new DoctrineJoinDescriptor(
                         self::ENTITY_NAME_FILE,
@@ -245,11 +278,16 @@ class DefaultMediaManager implements MediaManagerInterface
                         self::ENTITY_NAME_FILEVERSION . '.meta'
                     )
             ),
-            false, true, 'title'
+            false,
+            true,
+            'title'
         );
 
         $fieldDescriptors['description'] = new DoctrineFieldDescriptor(
-            'description', 'description', self::ENTITY_NAME_FILEVERSIONMETA, 'media.media.description',
+            'description',
+            'description',
+            self::ENTITY_NAME_FILEVERSIONMETA,
+            'media.media.description',
             array(
                 self::ENTITY_NAME_FILE => new DoctrineJoinDescriptor(
                         self::ENTITY_NAME_FILE,
