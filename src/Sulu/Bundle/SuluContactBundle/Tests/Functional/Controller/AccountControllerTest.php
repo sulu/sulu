@@ -271,6 +271,27 @@ class AccountControllerTest extends DatabaseTestCase
         $this->assertTrue(isset($response->message));
     }
 
+
+    public function testGetEmptyAccountContacts()
+    {
+        $account = new Account();
+        $account->setName('test');
+        $account->setChanged(new DateTime());
+        $account->setCreated(new DateTime());
+
+        self::$em->persist($account);
+        self::$em->flush();
+
+        $client = $this->createTestClient();
+        $client->request('GET', '/api/accounts/' . $account->getId() . '/contacts?flat=true');
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $this->assertEquals(0, $response->total);
+        $this->assertCount(0, $response->_embedded->contacts);
+    }
+
     public function testPost()
     {
         $client = $this->createTestClient();

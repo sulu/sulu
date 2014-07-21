@@ -210,7 +210,7 @@ define([
                     url: '/admin/api/accounts/' + this.options.data.id + '/contacts?flat=true',
                     searchInstanceName: 'contacts',
                     searchFields: ['fullName'],
-                    resultKey: 'accounts',
+                    resultKey: 'contacts',
                     contentFilters: {
                         isMainContact: 'radio'
                     },
