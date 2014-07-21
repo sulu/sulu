@@ -12,4 +12,5 @@ sulu_translate.codes:
 
 sulu_translate.translations:
     type: rest
+    parent: sulu_translate.catalogues
     resource: Sulu\Bundle\TranslateBundle\Controller\TranslationsController

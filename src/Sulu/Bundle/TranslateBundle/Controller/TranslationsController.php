@@ -13,29 +13,137 @@ namespace Sulu\Bundle\TranslateBundle\Controller;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\RestController;
-use Sulu\Component\Rest\Exception\NoDefaultCatalogueException;
-use Sulu\Component\Rest\Exception\ToManyDefaultCatalogueException;
 use Sulu\Bundle\TranslateBundle\Entity\Catalogue;
 use Sulu\Bundle\TranslateBundle\Entity\Code;
 use Sulu\Bundle\TranslateBundle\Entity\Translation;
 use Sulu\Bundle\TranslateBundle\Entity\TranslationRepository;
 use Symfony\Component\HttpFoundation\Request;
+use FOS\RestBundle\Controller\Annotations\Get;
 
 class TranslationsController extends RestController implements ClassResourceInterface
 {
     /**
      * @var string
      */
-    protected $entityName = 'SuluTranslateBundle:Translation';
+    protected static $entityName = 'SuluTranslateBundle:Translation';
+
+    /**
+     * @var string
+     */
+    protected static $entityNameCode = 'SuluTranslateBundle:Code';
+
+    /**
+     * @var DoctrineFieldDescriptor[]
+     */
+    protected $fieldDescriptors = array();
+
+    /**
+     * returns all fields that can be used by list
+     * @Get("translations/fields")
+     * @return mixed
+     */
+    public function getFieldsAction()
+    {
+        $fieldDescriptors = array_values($this->getFieldDescriptors());
+        return $this->handleView($this->view($fieldDescriptors, 200));
+    }
+
+    /**
+     * @return DoctrineFieldDescriptor[]
+     */
+    public function getFieldDescriptors()
+    {
+        $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor(
+            'id',
+            'id',
+            self::$entityName,
+            'id',
+            array(),
+            true,
+            false,
+            '',
+            '50px'
+        );
+        $this->fieldDescriptors['value'] = new DoctrineFieldDescriptor(
+            'value',
+            'value',
+            self::$entityName,
+            'value',
+            array(),
+            true,
+            false,
+            '',
+            '90px'
+        );
+        $this->fieldDescriptors['suggestion'] = new DoctrineFieldDescriptor(
+            'suggestion',
+            'suggestion',
+            self::$entityName,
+            'suggestion',
+            array()
+        );
+        $this->fieldDescriptors['code'] = new DoctrineFieldDescriptor(
+            'code',
+            'code',
+            self::$entityNameCode,
+            'code',
+            array(
+                self::$entityNameCode =>   new DoctrineJoinDescriptor(
+                        self::$entityNameCode,
+                        self::$entityName . '.code'
+                    ),
+            )
+        );
+        $this->fieldDescriptors['backend'] = new DoctrineFieldDescriptor(
+            'backend',
+            'backend',
+            self::$entityNameCode,
+            'backend',
+            array(
+                self::$entityNameCode =>   new DoctrineJoinDescriptor(
+                        self::$entityNameCode,
+                        self::$entityName . '.code'
+                    ),
+            )
+        );
+        $this->fieldDescriptors['frontend'] = new DoctrineFieldDescriptor(
+            'frontend',
+            'frontend',
+            self::$entityNameCode,
+            'frontend',
+            array(
+                self::$entityNameCode =>   new DoctrineJoinDescriptor(
+                        self::$entityNameCode,
+                        self::$entityName . '.code'
+                    ),
+            )
+        );
+        $this->fieldDescriptors['length'] = new DoctrineFieldDescriptor(
+            'length',
+            'length',
+            self::$entityNameCode,
+            'length',
+            array(
+                self::$entityNameCode =>   new DoctrineJoinDescriptor(
+                        self::$entityNameCode,
+                        self::$entityName . '.code'
+                    ),
+            )
+        );
+
+        return $this->fieldDescriptors;
+    }
 
     /**
      * Lists all the translations or filters the translations by parameters for a single catalogue
      * plus a suggestion
+     * @param Request $request
      * @param $slug
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function cgetAction($slug)
+    public function cgetAction(Request $request, $slug)
     {
         try {
             // find codes by catalogueID
@@ -96,13 +204,12 @@ class TranslationsController extends RestController implements ClassResourceInte
 
     /**
      * updates an array of translations
+     * @param Request $request
      * @param $slug
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function patchAction($slug)
+    public function patchAction(Request $request, $slug)
     {
-        /** @var Request $request */
-        $request = $this->getRequest();
         $i = 0;
         while ($item = $request->get($i)) {
             $this->saveTranslation($slug, $item);
@@ -123,7 +230,7 @@ class TranslationsController extends RestController implements ClassResourceInte
     {
         /** @var TranslationRepository $repository */
         $repository = $this->getDoctrine()
-            ->getRepository($this->entityName);
+            ->getRepository(self::$entityName);
 
         if (isset($item['id']) && $item['id'] != null) {
             // code exists

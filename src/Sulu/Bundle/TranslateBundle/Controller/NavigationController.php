@@ -4,6 +4,7 @@ namespace Sulu\Bundle\TranslateBundle\Controller;
 
 use Sulu\Bundle\AdminBundle\Admin\ContentNavigation;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class NavigationController extends Controller
@@ -13,11 +14,12 @@ class NavigationController extends Controller
 
     /**
      * returns navigation by parameters GET['type']
+     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function contentAction()
+    public function contentAction(Request $request)
     {
-        $type = $this->getRequest()->get('type');
+        $type = $request->get('type');
 
         /** @var ContentNavigation $contentNavigation */
         if ($this->has(self::SERVICE_NAME)) {

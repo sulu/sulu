@@ -206,13 +206,13 @@ class Package extends ApiEntity
     /**
      * Get catalogues
      *
-     * @return array
+     * @return \Doctrine\Common\Collections\Collection
      * @VirtualProperty
      * @SerializedName("catalogues")
      * @Type("array")
      */
     public function getCatalogues()
     {
-        return array_values($this->catalogues->toArray());
+        return $this->catalogues;
     }
 }

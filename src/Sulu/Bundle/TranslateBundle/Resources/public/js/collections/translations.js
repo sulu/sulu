@@ -28,7 +28,7 @@ define([
         },
 
         parse: function(resp) {
-            return resp._embedded;
+            return resp._embedded.translations;
         },
 
         save: function(sandbox, translations, options) {

@@ -75,12 +75,14 @@ define([], function() {
                 {
                     el: this.$find('#package-list'),
                     url: '/admin/api/packages?flat=true',
+                    resultKey: 'packages',
                     viewOptions: {
                         table: {
                             fullWidth: true
                         }
                     }
-                });
+                }
+            );
         }
     };
 });

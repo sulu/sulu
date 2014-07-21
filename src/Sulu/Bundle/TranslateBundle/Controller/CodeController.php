@@ -11,12 +11,21 @@
 namespace Sulu\Bundle\TranslateBundle\Controller;
 
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use Sulu\Bundle\TranslateBundle\Translate\TranslateCollectionRepresentation;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
+use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
+use Sulu\Component\Rest\ListBuilder\ListRepresentation;
+use Sulu\Component\Rest\ListBuilder\ListRestHelperInterface;
 use Sulu\Component\Rest\Listing\ListRestHelper;
 use Sulu\Component\Rest\RestController;
 use Sulu\Bundle\TranslateBundle\Entity\Code;
 use Sulu\Bundle\TranslateBundle\Entity\CodeRepository;
 use Sulu\Bundle\TranslateBundle\Entity\Translation;
+use Sulu\Component\Rest\RestHelperInterface;
+use Symfony\Component\HttpFoundation\Request;
+use FOS\RestBundle\Controller\Annotations\Get;
 
 /**
  * Makes the translation codes accessible trough an REST-API
@@ -24,36 +33,56 @@ use Sulu\Bundle\TranslateBundle\Entity\Translation;
  */
 class CodeController extends RestController implements ClassResourceInterface
 {
-    protected $entityName = 'SuluTranslateBundle:Code';
+    protected static $entityName = 'SuluTranslateBundle:Code';
+    protected static $catalogueEntity = 'SuluTranslateBundle:Catalogue';
+    protected static $packageEntity = 'SuluTranslateBundle:Package';
+    protected static $locationEntity = 'SuluTranslateBundle:Location';
+    protected static $translationEntity = 'SuluTranslateBundle:Translation';
 
-    private $codeEntity = 'SuluTranslateBundle:Code';
-    private $catalogueEntity = 'SuluTranslateBundle:Catalogue';
-    private $packageEntity = 'SuluTranslateBundle:Package';
-    private $locationEntity = 'SuluTranslateBundle:Location';
-    private $translationEntity = 'SuluTranslateBundle:Translation';
+    protected static $entityKey = 'codes';
+
+    /**
+     * @var DoctrineFieldDescriptor[]
+     */
+    protected $fieldDescriptors = array();
+
+    /**
+     * returns all fields that can be used by list
+     * @Get("codes/fields")
+     * @param Request $request
+     * @return mixed
+     */
+    public function getFieldsAction(Request $request)
+    {
+        $fieldDescriptors = array_values($this->getFieldDescriptors($request->getLocale()));
+        return $this->handleView($this->view($fieldDescriptors, 200));
+    }
 
     /**
      * Lists all the codes or filters the codes by parameters
+     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function cgetAction()
+    public function cgetAction(Request $request)
     {
-
-        if ($this->getRequest()->get('flat')=='true') {
+        if ($request->get('flat')=='true') {
             // flat structure
-            return $this->listAction();
+            return $this->listAction($request);
         } else {
+            /** @var ListRestHelperInterface $listRestHelper */
             $listHelper = $this->get('sulu_core.list_rest_helper');
             $limit = $listHelper->getLimit();
             $offset = $listHelper->getOffset();
-            $sorting = $listHelper->getSorting();
+            $sortOrder = $listHelper->getSortOrder();
+            $sortColumn = $listHelper->getSortColumn();
+            $sorting = array($sortColumn => $sortOrder);
 
             /** @var CodeRepository $repository */
             $repository = $this->getDoctrine()
-                ->getRepository($this->codeEntity);
+                ->getRepository(self::$entityName);
 
-            $catalogueId = $this->getRequest()->get('catalogueId');
-            $packageId = $this->getRequest()->get('packageId');
+            $catalogueId = $request->get('catalogueId');
+            $packageId = $request->get('packageId');
             if ($catalogueId != null) {
                 // TODO Add limit, offset & sorting for find by filter catalogue
                 $codes = $repository->findByCatalogue($catalogueId);
@@ -66,11 +95,12 @@ class CodeController extends RestController implements ClassResourceInterface
                 }
             }
 
-            $response = $this->createHalResponse($codes);
-
-            $view = $this->view($response, 200);
+            $list = new TranslateCollectionRepresentation(
+                $codes,
+                self::$entityKey
+            );
         }
-
+        $view = $this->view($list, 200);
         return $this->handleView($view);
     }
 
@@ -78,22 +108,49 @@ class CodeController extends RestController implements ClassResourceInterface
      * Lists all the codes or filters the codes by parameters
      * Special function for lists
      * route /codes/list
+     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    private function listAction()
+    private function listAction(Request $request)
     {
-        $where = array();
-        $packageId = $this->getRequest()->get('packageId');
-        if ($packageId != null) {
-            $where['package_id'] = $packageId;
-        }
-        $catalogueId = $this->getRequest()->get('catalogueId');
-        if ($catalogueId != null) {
-            $where['translations_catalogue_id'] = $catalogueId;
+        $filter = array();
+
+        $catalogueId = $request->get('catalogueId');
+        $packageId = $request->get('packageId');
+
+        if ($packageId) {
+            $filter['packageId'] = $packageId;
         }
 
-        $view = $this->responseList($where);
+        if ($catalogueId) {
+            $filter['catalogueId'] = $catalogueId;
+        }
 
+        /** @var RestHelperInterface $restHelper */
+        $restHelper = $this->get('sulu_core.doctrine_rest_helper');
+
+        /** @var DoctrineListBuilderFactory $factory */
+        $factory = $this->get('sulu_core.doctrine_list_builder_factory');
+
+        $listBuilder = $factory->create(self::$entityName);
+
+        $restHelper->initializeListBuilder($listBuilder, $this->getFieldDescriptors($request->getLocale()));
+
+        foreach ($filter as $key => $value) {
+            $listBuilder->where($this->getFieldDescriptor($key), $value);
+        }
+
+        $list = new ListRepresentation(
+            $listBuilder->execute(),
+            self::$entityKey,
+            'get_codes',
+            $request->query->all(),
+            $listBuilder->getCurrentPage(),
+            $listBuilder->getLimit(),
+            $listBuilder->count()
+        );
+
+        $view = $this->view($list, 200);
         return $this->handleView($view);
     }
 
@@ -107,7 +164,7 @@ class CodeController extends RestController implements ClassResourceInterface
         // TODO Complete or filter for Fields?
         $find = function ($id) {
             return $this->getDoctrine()
-                ->getRepository($this->codeEntity)
+                ->getRepository(self::$entityName)
                 ->getCodeById($id);
         };
 
@@ -118,17 +175,18 @@ class CodeController extends RestController implements ClassResourceInterface
 
     /**
      * Creates a new code
+     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function postAction()
+    public function postAction(Request $request)
     {
-        $c = $this->getRequest()->get('code');
-        $backend = $this->getRequest()->get('backend');
-        $frontend = $this->getRequest()->get('frontend');
-        $length = $this->getRequest()->get('length');
-        $package = $this->getRequest()->get('package');
-        $location = $this->getRequest()->get('location');
-        $translations = $this->getRequest()->get('translations');
+        $c = $request->get('code');
+        $backend = $request->get('backend');
+        $frontend = $request->get('frontend');
+        $length = $request->get('length');
+        $package = $request->get('package');
+        $location = $request->get('location');
+        $translations = $request->get('translations');
 
         if ($c != null && $backend != null && $frontend != null && $location != null && $package != null) {
             $em = $this->getDoctrine()->getManager();
@@ -139,8 +197,8 @@ class CodeController extends RestController implements ClassResourceInterface
             $code->setFrontend($frontend);
             $code->setLength($length);
             $code->setCode($c);
-            $code->setPackage($em->getReference($this->packageEntity, $package['id']));
-            $code->setLocation($em->getReference($this->locationEntity, $location['id']));
+            $code->setPackage($em->getReference(self::$packageEntity, $package['id']));
+            $code->setLocation($em->getReference(self::$locationEntity, $location['id']));
 
             $em->persist($code);
             $em->flush();
@@ -154,7 +212,7 @@ class CodeController extends RestController implements ClassResourceInterface
                     $code->addTranslation($t);
 
                     // TODO Catalogue: which format?
-                    $t->setCatalogue($em->getReference($this->catalogueEntity, $translation['catalogue']['id']));
+                    $t->setCatalogue($em->getReference(self::$catalogueEntity, $translation['catalogue']['id']));
                     $em->persist($t);
                 }
             }
@@ -171,28 +229,29 @@ class CodeController extends RestController implements ClassResourceInterface
 
     /**
      * Updates the code for the given id
+     * @param Request $request
      * @param integer $id The id of the package to update
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function putAction($id)
+    public function putAction(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
 
         /** @var Code $code */
         $code = $this->getDoctrine()
-            ->getRepository($this->codeEntity)
+            ->getRepository(self::$entityName)
             ->getCodeById($id);
 
-        $c = $this->getRequest()->get('code');
-        $backend = $this->getRequest()->get('backend');
-        $frontend = $this->getRequest()->get('frontend');
-        $length = $this->getRequest()->get('length');
-        $package = $this->getRequest()->get('package');
-        $location = $this->getRequest()->get('location');
-        $translations = $this->getRequest()->get('translations');
+        $c = $request->get('code');
+        $backend = $request->get('backend');
+        $frontend = $request->get('frontend');
+        $length = $request->get('length');
+        $package = $request->get('package');
+        $location = $request->get('location');
+        $translations = $request->get('translations');
 
         $translationRepository = $this->getDoctrine()
-            ->getRepository($this->translationEntity);
+            ->getRepository(self::$translationEntity);
 
         if (!$code) {
             // No Code exists
@@ -202,8 +261,8 @@ class CodeController extends RestController implements ClassResourceInterface
             $code->setBackend($backend);
             $code->setFrontend($frontend);
             $code->setLength($length);
-            $code->setPackage($em->getReference($this->packageEntity, $package['id']));
-            $code->setLocation($em->getReference($this->locationEntity, $location['id']));
+            $code->setPackage($em->getReference(self::$packageEntity, $package['id']));
+            $code->setLocation($em->getReference(self::$locationEntity, $location['id']));
 
             if ($translations != null && sizeof($translations) > 0) {
                 foreach ($translations as $translationData) {
@@ -218,14 +277,14 @@ class CodeController extends RestController implements ClassResourceInterface
                     if ($translation != null) {
                         $translation->setValue($translationData['value']);
                         $translation->setCode($code);
-                        $translation->setCatalogue($em->getReference($this->catalogueEntity, $translationData['catalogue']['id']));
+                        $translation->setCatalogue($em->getReference(self::$catalogueEntity, $translationData['catalogue']['id']));
                     } else {
                         // Create a new Translation
                         $translation = new Translation();
                         $translation->setValue($translationData['value']);
                         $translation->setCode($code);
                         $code->addTranslation($translation);
-                        $translation->setCatalogue($em->getReference($this->catalogueEntity, $translationData['catalogue']['id']));
+                        $translation->setCatalogue($em->getReference(self::$catalogueEntity, $translationData['catalogue']['id']));
                         $em->persist($translation);
                     }
                 }
@@ -247,11 +306,11 @@ class CodeController extends RestController implements ClassResourceInterface
     {
         $delete = function ($id) {
             $code = $this->getDoctrine()
-                ->getRepository($this->codeEntity)
+                ->getRepository(self::$entityName)
                 ->getCodeById($id);
 
             if (!$code) {
-                throw new EntityNotFoundException($this->codeEntity, $id);
+                throw new EntityNotFoundException(self::$entityName, $id);
             }
 
             $em = $this->getDoctrine()->getManager();
@@ -262,5 +321,127 @@ class CodeController extends RestController implements ClassResourceInterface
         $view = $this->responseDelete($id, $delete);
 
         return $this->handleView($view);
+    }
+
+    /**
+     * @param string $locale
+     * @return DoctrineFieldDescriptor[]
+     */
+    private function getFieldDescriptors($locale)
+    {
+        $locale = $this->getDoctrine()->getConnection()->quote(strtoupper($locale));
+        $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor(
+            'id',
+            'id',
+            self::$entityName,
+            'id',
+            array(),
+            true,
+            false,
+            '',
+            '50px'
+        );
+        $this->fieldDescriptors['code'] = new DoctrineFieldDescriptor(
+            'code',
+            'code',
+            self::$entityName,
+            'code',
+            array(),
+            true,
+            false,
+            '',
+            '90px'
+        );
+        $this->fieldDescriptors['backend'] = new DoctrineFieldDescriptor('backend', 'backend', self::$entityName);
+        $this->fieldDescriptors['frontend'] = new DoctrineFieldDescriptor('frontend', 'frontend', self::$entityName);
+        $this->fieldDescriptors['length'] = new DoctrineFieldDescriptor('length', 'length', self::$entityName);
+        $this->fieldDescriptors['translations_value'] = new DoctrineFieldDescriptor(
+            'value',
+            'translations_value',
+            self::$translationEntity,
+            'value',
+            array(
+                self::$translationEntity =>   new DoctrineJoinDescriptor(
+                        self::$translationEntity,
+                        self::$entityName . '.translations'
+                    )
+            ),
+            true,
+            false,
+            '',
+            '90px'
+        );
+        $this->fieldDescriptors['translations_catalogue_locale'] = new DoctrineFieldDescriptor(
+            'locale',
+            'translations_catalogue_locale',
+            self::$catalogueEntity,
+            'locale',
+            array(
+                self::$packageEntity => new DoctrineJoinDescriptor(
+                        self::$packageEntity,
+                        self::$entityName . '.package'
+                    ),
+                self::$catalogueEntity =>   new DoctrineJoinDescriptor(
+                        self::$catalogueEntity,
+                        self::$packageEntity . '.catalogue',
+                        self::$catalogueEntity . '.locale = ' . $locale,
+                        DoctrineJoinDescriptor::JOIN_METHOD_LEFT
+                    ),
+            )
+        );
+        $this->fieldDescriptors['packageId'] = new DoctrineFieldDescriptor(
+            'id',
+            'packageId',
+            self::$packageEntity,
+            'package',
+            array(
+                self::$packageEntity =>     new DoctrineJoinDescriptor(
+                        self::$packageEntity,
+                        self::$entityName . '.package'
+                    )
+            )
+        );
+        $this->fieldDescriptors['catalogueId'] = new DoctrineFieldDescriptor(
+            'id',
+            'catalogueId',
+            self::$catalogueEntity,
+            'catalogue',
+            array(
+                self::$packageEntity => new DoctrineJoinDescriptor(
+                        self::$packageEntity,
+                        self::$entityName . '.package'
+                    ),
+                self::$catalogueEntity =>   new DoctrineJoinDescriptor(
+                        self::$catalogueEntity,
+                        self::$packageEntity . '.catalogues',
+                        self::$catalogueEntity . '.locale = ' . $locale,
+                        DoctrineJoinDescriptor::JOIN_METHOD_LEFT
+                    ),
+            )
+        );
+        $this->fieldDescriptors['location_name'] = new DoctrineFieldDescriptor(
+            'name',
+            'location_name',
+            self::$locationEntity,
+            'location',
+            array(
+                self::$locationEntity =>    new DoctrineJoinDescriptor(
+                        self::$locationEntity,
+                        self::$entityName . '.location'
+                    )
+            )
+        );
+
+
+        return $this->fieldDescriptors;
+    }
+
+    /**
+     * @param $key
+     * @return DoctrineFieldDescriptor
+     */
+    private function getFieldDescriptor($key)
+    {
+        return $this->fieldDescriptors[$key];
     }
 }
