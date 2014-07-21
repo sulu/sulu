@@ -90,7 +90,6 @@ define([
                         remoteUrl: '/admin/api/contacts?flat=true&fields=id,fullName&searchFields=fullName',
                         getParameter: 'search',
                         resultKey: 'contacts',
-//                        value: data,
                         instanceName: 'contact',
                         valueKey: 'fullName',
                         noNewValues: true
