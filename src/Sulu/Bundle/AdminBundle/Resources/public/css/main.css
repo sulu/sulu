@@ -428,43 +428,38 @@ input, select {
   margin-top: 40px;
 }
 
-/* line 5, ../scss/modules/gridgroup.scss */
-.sulu-grid-group {
-  padding-top: 35px;
-}
-/* line 8, ../scss/modules/gridgroup.scss */
+/* line 6, ../scss/modules/gridgroup.scss */
 .sulu-grid-group .group-slide {
   width: 100%;
-  padding-left: 18px;
   padding-bottom: 40px;
 }
-/* line 12, ../scss/modules/gridgroup.scss */
+/* line 9, ../scss/modules/gridgroup.scss */
 .sulu-grid-group .group-slide .grid-container {
   min-height: 140px;
 }
-/* line 19, ../scss/modules/gridgroup.scss */
+/* line 16, ../scss/modules/gridgroup.scss */
 .sulu-grid-group .entity .head {
-  height: 40px;
-  line-height: 40px;
+  height: 50px;
+  line-height: 50px;
   border-bottom: 1px solid #cccccc;
   cursor: pointer;
 }
-/* line 25, ../scss/modules/gridgroup.scss */
+/* line 22, ../scss/modules/gridgroup.scss */
 .sulu-grid-group .entity .head .icon {
   float: left;
-  font-size: 18px;
-  width: 25px;
+  font-size: 16px;
+  padding: 0 10px 0 5px;
   color: #3E3E3E;
-  line-height: 40px;
+  line-height: 50px;
   text-align: center;
 }
-/* line 33, ../scss/modules/gridgroup.scss */
+/* line 30, ../scss/modules/gridgroup.scss */
 .sulu-grid-group .entity .head::after {
   display: table;
   content: "";
   clear: both;
 }
-/* line 39, ../scss/modules/gridgroup.scss */
+/* line 36, ../scss/modules/gridgroup.scss */
 .sulu-grid-group .entity .color {
   float: left;
   width: 20px;
@@ -472,13 +467,12 @@ input, select {
   border-radius: 10px;
   margin-top: 10px;
 }
-/* line 46, ../scss/modules/gridgroup.scss */
+/* line 43, ../scss/modules/gridgroup.scss */
 .sulu-grid-group .entity .entity-title {
   float: left;
-  font-size: 18px;
+  font-size: 14px;
   margin-top: 5px;
-  padding-left: 5px;
   padding-right: 5px;
   border-radius: 3px;
-  line-height: 28px;
+  line-height: 38px;
 }
