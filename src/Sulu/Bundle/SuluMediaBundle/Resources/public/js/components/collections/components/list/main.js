@@ -112,15 +112,15 @@ define(function () {
                         resultKey: 'collections',
                         matchings: [
                             {
-                                id: 'title',
+                                name: 'title',
                                 type: 'title'
                             },
                             {
-                                id: 'mediaNumber',
+                                name: 'mediaNumber',
                                 type: 'count'
                             },
                             {
-                                id: 'thumbnails',
+                                name: 'thumbnails',
                                 type: 'thumbnails'
                             }
                         ]

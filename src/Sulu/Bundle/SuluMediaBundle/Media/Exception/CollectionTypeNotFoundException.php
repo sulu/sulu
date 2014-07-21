@@ -13,13 +13,13 @@ namespace Sulu\Bundle\MediaBundle\Media\Exception;
 /**
  * @package Sulu\Bundle\MediaBundle\Media\Exception
  */
-class CollectionNotFoundException extends MediaException
+class CollectionTypeNotFoundException extends MediaException
 {
     /**
      * @param string $message
      */
     public function __construct($message)
     {
-        parent::__construct($message, self::EXCEPTION_CODE_COLLECTION_NOT_FOUND);
+        parent::__construct($message, self::EXCEPTION_CODE_COLLECTION_TYPE_NOT_FOUND);
     }
 }

@@ -15,16 +15,25 @@ use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
+use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
+use Sulu\Bundle\MediaBundle\Media\Exception\CollectionTypeNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
-use Sulu\Component\Rest\ListBuilder\FieldDescriptor\DoctrineFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Security\UserRepositoryInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Sulu\Bundle\MediaBundle\Entity\Collection as CollectionEntity;
-use Sulu\Bundle\MediaBundle\Api\Collection as CollectionWrapper;
+use Sulu\Bundle\MediaBundle\Api\Collection;
 
-class DefaultCollectionManager implements CollectionManagerInterface, CollectionFieldDescriptorInterface
+class DefaultCollectionManager implements CollectionManagerInterface
 {
+    private static $entityName = 'SuluMediaBundle:Collection';
+    private static $entityCollectionType = 'SuluMediaBundle:Collection';
+    private static $entityCollectionMeta = 'SuluMediaBUndle:CollectionMeta';
+    private static $entityUser = 'SuluSecurityBundle:User';
+    private static $entityContact = 'SuluContactBundle:Contact';
+
     /**
      * @var CollectionRepositoryInterface
      */
@@ -87,7 +96,31 @@ class DefaultCollectionManager implements CollectionManagerInterface, Collection
     }
 
     /**
-     * TODO
+     * {@inheritdoc}
+     */
+    public function getById($id, $locale)
+    {
+        $collection = $this->collectionRepository->findCollectionById($id);
+        if (!$collection) {
+            throw new CollectionNotFoundException('Collection with the ID ' . $id . ' was not found.');
+        }
+        return $this->addPreviews(new Collection($collection, $locale));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function get($locale, $parent = null, $depth = null)
+    {
+        $collectionEntities = $this->collectionRepository->findCollections($parent, $depth);
+        $collections = [];
+        foreach($collectionEntities as $entity) {
+            $collections[] =  $this->addPreviews(new Collection($entity, $locale));
+        }
+        return $collections;
+    }
+
+    /**
      * @return DoctrineFieldDescriptor[]
      */
     private function initializeFieldDescriptors()
@@ -95,6 +128,90 @@ class DefaultCollectionManager implements CollectionManagerInterface, Collection
         $fieldDescriptors = array();
 
         $this->fieldDescriptors = $fieldDescriptors;
+
+        $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor(
+            'id',
+            'id',
+            self::$entityName,
+            'id',
+            array(),
+            true,
+            false,
+            '',
+            '50px'
+        );
+        $this->fieldDescriptors['type_name'] = new DoctrineFieldDescriptor(
+            'name',
+            'type_name',
+            self::$entityCollectionType,
+            'locale',
+            array(
+                self::$entityCollectionType => new DoctrineJoinDescriptor(
+                    self::$entityCollectionType,
+                    self::$entityName . '.type'
+                )
+            )
+        );
+        $this->fieldDescriptors['title'] = new DoctrineFieldDescriptor(
+            'title',
+            'title',
+            self::$entityCollectionMeta,
+            'title',
+            array(
+                self::$entityName => new DoctrineJoinDescriptor(
+                    self::$entityCollectionMeta,
+                    self::$entityName . '.meta'
+                )
+            ),
+            true,
+            false,
+            '',
+            '50px'
+        );
+        $this->fieldDescriptors['description'] = new DoctrineFieldDescriptor(
+            'description',
+            'description',
+            self::$entityCollectionMeta,
+            'description',
+            array(
+                self::$entityName => new DoctrineJoinDescriptor(
+                    self::$entityCollectionMeta,
+                    self::$entityName . '.meta'
+                )
+            )
+        );
+        $this->fieldDescriptors['changer'] = new DoctrineFieldDescriptor(
+            'firstname',
+            'changer',
+            self::$entityContact,
+            'changer',
+            array(
+                self::$entityUser => new DoctrineJoinDescriptor(
+                    self::$entityUser,
+                    self::$entityName . '.changer'
+                ),
+                self::$entityContact => new DoctrineJoinDescriptor(
+                    self::$entityContact,
+                    self::$entityUser . '.contact'
+                )
+            )
+        );
+        $this->fieldDescriptors['creator'] = new DoctrineFieldDescriptor(
+            'firstname',
+            'creator',
+            self::$entityContact,
+            'creator',
+            array(
+                self::$entityUser => new DoctrineJoinDescriptor(
+                    self::$entityUser,
+                    self::$entityName . '.creator'
+                ),
+                self::$entityContact => new DoctrineJoinDescriptor(
+                    self::$entityContact,
+                    self::$entityUser . '.contact'
+                )
+            )
+        );
 
         return $this->fieldDescriptors;
     }
@@ -118,22 +235,6 @@ class DefaultCollectionManager implements CollectionManagerInterface, Collection
     /**
      * {@inheritdoc}
      */
-    public function find($parent = null, $depth = null)
-    {
-        return $this->collectionRepository->findCollections($parent, $depth);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function findById($id)
-    {
-        return $this->collectionRepository->findCollectionById($id);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function save($data, $userId)
     {
         if (isset($data['id'])) {
@@ -152,24 +253,20 @@ class DefaultCollectionManager implements CollectionManagerInterface, Collection
      */
     private function modifyCollection($data, $user)
     {
-        $collectionEntity = $this->findById($data['id']);
-        if (!$collectionEntity) {
-            throw new EntityNotFoundException($collectionEntity, $data['id']);
-        }
+        $collection = $this->getById($data['id'], $data['locale']);
+        $data['changer'] = $user;
+        $data['changed'] = new \DateTime();
 
-        $collectionEntity->setChanged(new \DateTime());
-        $collectionEntity->setChanger($user);
-
-        $collectionWrapper = $this->setDataToCollectionWrapper(
-            $this->getApiObject($collectionEntity, $data['locale']),
+        $collection = $this->setDataToCollection(
+            $collection,
             $data
         );
 
-        $collectionEntity = $collectionWrapper->getEntity();
+        $collectionEntity = $collection->getEntity();
         $this->em->persist($collectionEntity);
         $this->em->flush();
 
-        return $collectionEntity;
+        return $collection;
     }
 
     /**
@@ -179,62 +276,95 @@ class DefaultCollectionManager implements CollectionManagerInterface, Collection
      */
     private function createCollection($data, $user)
     {
-        $collectionEntity = new CollectionEntity();
-        $collectionEntity->setCreator($user);
-        $collectionEntity->setChanger($user);
-        $collectionEntity->setCreated(new \DateTime());
-        $collectionEntity->setChanged(new \DateTime());
+        $data['changer'] = $user;
+        $data['creator'] = $user;
+        $data['changed'] = new \DateTime();
+        $data['created'] = new \DateTime();
 
-        $collectionWrapper = $this->setDataToCollectionWrapper(
-            $this->getApiObject($collectionEntity, $data['locale']),
+        $collectionEntity = new CollectionEntity();
+        $collection = new Collection($collectionEntity, $data['locale']);
+
+        $collection = $this->setDataToCollection(
+            $collection,
             $data
         );
 
-        $collectionEntity = $collectionWrapper->getEntity();
+        $collectionEntity = $collection->getEntity();
         $this->em->persist($collectionEntity);
         $this->em->flush();
 
-        return $collectionEntity;
+        return $collection;
     }
 
     /**
      * Data can be set over by array
-     * @param $collectionWrapper
+     * @param $collection
      * @param $data
      * @return $this
      */
-    protected function setDataToCollectionWrapper(CollectionWrapper $collectionWrapper, $data)
+    protected function setDataToCollection(Collection $collection, $data)
     {
-        foreach ($data as $key => $value) {
+        // set parent
+        if (!empty($data['parent'])) {
+            $collectionEntity = $this->collectionRepository->findCollectionById($data['parent']);
+            $collection->setParent($collectionEntity); // set parent
+        } else {
+            $collection->setParent(null); // is collection in root
+        }
+
+        // set other data
+        foreach ($data as $attribute => $value) {
             if ($value) {
-                switch ($key) {
-                    case 'parent':
-                        $value = $this->findById($value);
+                switch ($attribute) {
+                    case 'title':
+                        $collection->setTitle($value);
+                        break;
+                    case 'description':
+                        $collection->setDescription($value);
+                        break;
+                    case 'style':
+                        $collection->setStyle($value);
                         break;
                     case 'type':
-                        $value = $this->getTypeById($value);
+                        if (!isset($value['id'])) {
+                            break;
+                        }
+                        $type = $this->getTypeById($value['id']);
+                        $collection->setType($type);
                         break;
-                }
-                $setDataMethod = 'set' . ucfirst($key);
-                if (method_exists($collectionWrapper, $setDataMethod)) {
-                    $collectionWrapper->$setDataMethod($value);
+                    case 'changed':
+                        $collection->setChanged($value);
+                        break;
+                    case 'created':
+                        $collection->setCreated($value);
+                        break;
+                    case 'changer':
+                        $collection->setChanger($value);
+                        break;
+                    case 'creator':
+                        $collection->setCreator($value);
+                        break;
+                    case 'properties':
+                        $collection->setProperties($value);
+                        break;
                 }
             }
         }
 
-        return $collectionWrapper;
+        return $collection;
     }
 
     /**
      * @param $typeId
      * @return CollectionType
-     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
+     * @throws CollectionTypeNotFoundException
      */
     protected function getTypeById($typeId)
     {
+        /** @var CollectionType $type */
         $type = $this->em->getRepository('SuluMediaBundle:CollectionType')->find($typeId);
         if (!$type) {
-            throw new EntityNotFoundException('SuluMediaBundle:CollectionType', $typeId);
+            throw new CollectionTypeNotFoundException('Collection Type with the ID ' . $typeId . ' not found');
         }
         return $type;
     }
@@ -247,35 +377,11 @@ class DefaultCollectionManager implements CollectionManagerInterface, Collection
         $collectionEntity = $this->collectionRepository->findCollectionById($id);
 
         if (!$collectionEntity) {
-            throw new EntityNotFoundException('SuluMediaBundle:Collection', $id);
+            throw new CollectionNotFoundException('Collection with the ID ' . $id . ' was not found.');
         }
 
         $this->em->remove($collectionEntity);
         $this->em->flush();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getApiObject($collection, $locale)
-    {
-        if ($collection instanceof CollectionEntity) {
-            return $this->addPreviews(new CollectionWrapper($collection, $locale));
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getApiObjects($collections, $locale)
-    {
-        $arrReturn = [];
-        foreach($collections as $collection) {
-            array_push($arrReturn, $this->getApiObject($collection, $locale));
-        }
-        return $arrReturn;
     }
 
     /**
@@ -289,13 +395,13 @@ class DefaultCollectionManager implements CollectionManagerInterface, Collection
     }
 
     /**
-     * @param CollectionWrapper $collectionWrapper
-     * @return CollectionWrapper
+     * @param Collection $collection
+     * @return Collection
      */
-    protected function addPreviews(CollectionWrapper $collectionWrapper)
+    protected function addPreviews(Collection $collection)
     {
-        return $collectionWrapper->setPreviews(
-            $this->getPreviews($collectionWrapper->getId(), $collectionWrapper->getLocale())
+        return $collection->setPreviews(
+            $this->getPreviews($collection->getId(), $collection->getLocale())
         );
     }
 
@@ -364,5 +470,4 @@ class DefaultCollectionManager implements CollectionManagerInterface, Collection
 
         return array();
     }
-
 } 

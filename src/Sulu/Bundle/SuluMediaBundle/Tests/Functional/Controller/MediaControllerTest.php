@@ -75,6 +75,7 @@ class MediaControllerTest extends DatabaseTestCase
 
         self::$entities = array(
             self::$em->getClassMetadata('Sulu\Bundle\TestBundle\Entity\TestUser'),
+            self::$em->getClassMetadata('Sulu\Bundle\TestBundle\Entity\TestContact'),
             self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\Collection'),
             self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\CollectionType'),
             self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\CollectionMeta'),
@@ -261,13 +262,10 @@ class MediaControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(1, $response->id);
-
-        $this->assertEquals('Image Type', $response->type);
-
+        $this->assertEquals(2, $response->type->id);
+        $this->assertEquals('Image Type', $response->type->name);
         $this->assertEquals('photo.jpeg', $response->name);
-
         $this->assertEquals('photo', $response->title);
-
         $this->assertEquals('description', $response->description);
     }
 
@@ -374,7 +372,7 @@ class MediaControllerTest extends DatabaseTestCase
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
 
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(0, $response->code);
+        $this->assertEquals(5015, $response->code);
         $this->assertTrue(isset($response->message));
     }
 
@@ -474,7 +472,7 @@ class MediaControllerTest extends DatabaseTestCase
     /**
      * @description Test PUT to create a new FileVersion
      */
-    public function testPut()
+    public function testFileVersionUpdate()
     {
         $client = $this->createTestClient();
 
@@ -483,7 +481,7 @@ class MediaControllerTest extends DatabaseTestCase
         $photo = new UploadedFile($imagePath, 'photo.jpeg', 'image/jpeg', 160768);
 
         $client->request(
-            'PUT',
+            'POST',
             '/api/media/1',
             array(
                 'collection' => 1,
@@ -577,7 +575,7 @@ class MediaControllerTest extends DatabaseTestCase
     /**
      * @description Test PUT to create a new FileVersion
      */
-    public function testPutWithoutDetails()
+    public function testFileVersionUpdateWithoutDetails()
     {
         $client = $this->createTestClient();
 
@@ -586,7 +584,7 @@ class MediaControllerTest extends DatabaseTestCase
         $photo = new UploadedFile($imagePath, 'photo.jpeg', 'image/jpeg', 160768);
 
         $client->request(
-            'PUT',
+            'POST',
             '/api/media/1',
             array(
                 'collection' => 1
@@ -627,7 +625,7 @@ class MediaControllerTest extends DatabaseTestCase
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
 
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(0, $response->code);
+        $this->assertEquals(5015, $response->code);
         $this->assertTrue(isset($response->message));
     }
 
@@ -651,7 +649,7 @@ class MediaControllerTest extends DatabaseTestCase
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
 
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(0, $response->code);
+        $this->assertEquals(5015, $response->code);
         $this->assertTrue(isset($response->message));
     }
 

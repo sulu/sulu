@@ -82,9 +82,7 @@ class MediaSelectionContainer implements \Serializable
      */
     private function loadData($locale)
     {
-        $medias = $this->mediaManager->find(null, $this->ids);
-
-        return $this->mediaManager->getApiObjects($medias, $locale);
+        return $this->mediaManager->get($locale, null, $this->ids);
     }
 
     /**
