@@ -53,6 +53,7 @@ class ActivityController extends RestController implements ClassResourceInterfac
      */
     protected $basePath = 'admin/api/activities';
     protected $bundlePrefix = 'contact.activities.';
+    protected static $entityKey = 'activities';
 
     /**
      * TODO: move the field descriptors to a manager
