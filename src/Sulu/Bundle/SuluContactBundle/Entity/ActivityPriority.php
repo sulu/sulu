@@ -4,11 +4,12 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Exclude;
+use JsonSerializable;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 /**
- * ActivityStatus
+ * ActivityPriority
  */
-class ActivityStatus extends ApiEntity implements \JsonSerializable
+class ActivityPriority extends ApiEntity implements JsonSerializable
 {
     /**
      * @var string
@@ -38,7 +39,7 @@ class ActivityStatus extends ApiEntity implements \JsonSerializable
      * Set name
      *
      * @param string $name
-     * @return ActivityStatus
+     * @return ActivityPriority
      */
     public function setName($name)
     {
@@ -71,7 +72,7 @@ class ActivityStatus extends ApiEntity implements \JsonSerializable
      * Add activities
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Activity $activities
-     * @return ActivityStatus
+     * @return ActivityPriority
      */
     public function addActivitie(\Sulu\Bundle\ContactBundle\Entity\Activity $activities)
     {

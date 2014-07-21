@@ -72,6 +72,7 @@ define(function() {
                     el: this.sandbox.dom.find('#people-list', this.$el),
                     url: '/admin/api/contacts?flat=true',
                     searchInstanceName: 'contacts',
+                    searchFields: ['fullName'],
                     resultKey: 'contacts',
                     viewOptions: {
                         table: {

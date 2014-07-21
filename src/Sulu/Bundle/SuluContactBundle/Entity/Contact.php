@@ -78,6 +78,7 @@ class Contact extends ApiEntity
 
     /**
      * @var \Doctrine\Common\Collections\Collection
+     * @Exclude
      */
     private $activities;
 
@@ -182,6 +183,11 @@ class Contact extends ApiEntity
      * @var string
      */
     private $mainUrl;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $assignedActivities;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
@@ -1115,5 +1121,38 @@ class Contact extends ApiEntity
     public function getContactAddresses()
     {
         return $this->contactAddresses;
+    }
+
+    /**
+     * Add assignedActivities
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\Activity $assignedActivities
+     * @return Contact
+     */
+    public function addAssignedActivitie(\Sulu\Bundle\ContactBundle\Entity\Activity $assignedActivities)
+    {
+        $this->assignedActivities[] = $assignedActivities;
+    
+        return $this;
+    }
+
+    /**
+     * Remove assignedActivities
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\Activity $assignedActivities
+     */
+    public function removeAssignedActivitie(\Sulu\Bundle\ContactBundle\Entity\Activity $assignedActivities)
+    {
+        $this->assignedActivities->removeElement($assignedActivities);
+    }
+
+    /**
+     * Get assignedActivities
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getAssignedActivities()
+    {
+        return $this->assignedActivities;
     }
 }

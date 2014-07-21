@@ -29,7 +29,10 @@
 
         <one-to-many field="locales" target-entity="Sulu\Bundle\ContactBundle\Entity\ContactLocale"
                      mapped-by="contact"/>
+
         <one-to-many field="activities" target-entity="Sulu\Bundle\ContactBundle\Entity\Activity" mapped-by="contact"/>
+
+        <one-to-many field="assignedActivities" target-entity="Sulu\Bundle\ContactBundle\Entity\Activity" mapped-by="assignedContact"/>
 
         <one-to-many field="contactAddresses" target-entity="Sulu\Bundle\ContactBundle\Entity\ContactAddress" mapped-by="contact"/>
 
