@@ -217,7 +217,7 @@ define([
                 // on success save contacts id
                 success: function(response) {
                     this.activity = this.flattenActivityObjects(response.toJSON());
-                    this.activity.assignedContact = this.activity.contact.fullName;
+                    this.activity.assignedContact = this.activity.assignedContact.fullName;
 
                     if (!!isNew) {
                         this.sandbox.emit(
