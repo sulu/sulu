@@ -472,11 +472,6 @@ define(function() {
                 this.sandbox.dom.on(this.group[id].$el, 'click', function() {
                     this.toggleGroup(this.group[id]);
                 }.bind(this), '.head');
-
-                this.sandbox.dom.on(this.group[id].$el, 'click', function(event) {
-                    this.sandbox.dom.stopPropagation(event);
-                    this.showAllRecords(id);
-                }.bind(this), '.' + constants.titleClass);
             }
         },
 
