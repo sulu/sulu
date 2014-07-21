@@ -111,7 +111,7 @@ class CollectionRepository extends EntityRepository implements CollectionReposit
                 ->addSelect('media');
 
             if ($parent !== null) {
-                $qb->where('parent.id = :$parent');
+                $qb->where('parent.id = :parent');
             }
             if ($depth !== null) {
                 $qb->where('collection.depth = :depth');
@@ -120,7 +120,7 @@ class CollectionRepository extends EntityRepository implements CollectionReposit
             $query = $qb->getQuery();
             $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
             if ($parent !== null) {
-                $query->setParameter('$parent', $parent);
+                $query->setParameter('parent', $parent);
             }
             if ($depth !== null) {
                 $query->setParameter('depth', $depth);
