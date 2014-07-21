@@ -398,16 +398,9 @@ define(function() {
             var $column = this.sandbox.dom.find(constants.columnSelector);
 
             if (!this.sandbox.dom.hasClass($column, constants.maxWidthClass)) {
-                var $parent = this.sandbox.dom.parent($column);
-
                 this.sandbox.dom.removeClass($column, constants.smallFixedClass);
                 this.sandbox.dom.removeClass($column, constants.fixedWidthClass);
                 this.sandbox.dom.addClass($column, constants.maxWidthClass);
-
-                // make sure the column is the last child of its parent. Otherwise
-                // it isn't possible to take the max width
-                this.sandbox.dom.detach($column);
-                this.sandbox.dom.append($parent, $column);
             }
         },
 
