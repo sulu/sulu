@@ -249,14 +249,16 @@ define(['text!sulucontact/components/activities/activity.form.html'], function(A
             this.sandbox.sulu.initListToolbarAndList.call(this, 'activitiesContactsFields', '/admin/api/activities/fields',
                 {
                     el: this.$find('#list-toolbar-container'),
-                    instanceName: 'activities-toolbar',
+                    instanceName: 'activities',
                     inHeader: true,
                     template: listTemplate.call(this)
                 },
                 {
                     el: this.sandbox.dom.find('#activities-list', this.$el),
                     url: url,
-                    searchInstanceName: 'activities-list',
+                    searchInstanceName: 'activities',
+                    searchFields: ['subject'],
+                    resultKey: 'activities',
                     viewOptions: {
                         table: {
                             selectItem: {
