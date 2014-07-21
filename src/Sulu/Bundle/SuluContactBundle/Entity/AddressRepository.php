@@ -3,6 +3,7 @@
 namespace Sulu\Bundle\ContactBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query;
 
 /**
  * AddressRepository

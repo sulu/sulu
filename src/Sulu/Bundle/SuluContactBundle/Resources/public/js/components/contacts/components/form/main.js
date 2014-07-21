@@ -82,6 +82,7 @@ define([], function() {
                         options: {
                             el: '#company',
                             remoteUrl: '/admin/api/accounts?searchFields=name&flat=true&fields=id,name',
+                            resultKey: 'accounts',
                             getParameter: 'search',
                             value: data.account,
                             instanceName: this.companyInstanceName,
@@ -136,6 +137,7 @@ define([], function() {
                                 el: '#tags',
                                 instanceName: this.autoCompleteInstanceName,
                                 getParameter: 'search',
+                                itemsKey: 'tags',
                                 remoteUrl: '/admin/api/tags?flat=true&sortBy=name',
                                 completeIcon: 'tag',
                                 noNewTags: true

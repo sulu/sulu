@@ -87,9 +87,9 @@ define([
                     name: 'auto-complete@husky',
                     options: {
                         el: constants.contactSelector,
-                        remoteUrl: '/admin/api/contacts?flat=true&fields=id,firstName,lastName,fullName&searchFields=firstName,lastName',
+                        remoteUrl: '/admin/api/contacts?flat=true&fields=id,fullName&searchFields=fullName',
                         getParameter: 'search',
-//                        value: data.account,
+                        resultKey: 'contacts',
                         instanceName: 'contact',
                         valueKey: 'fullName',
                         noNewValues: true
@@ -209,6 +209,8 @@ define([
                     el: this.sandbox.dom.find('#people-list', this.$el),
                     url: '/admin/api/accounts/' + this.options.data.id + '/contacts?flat=true',
                     searchInstanceName: 'contacts',
+                    searchFields: ['fullName'],
+                    resultKey: 'accounts',
                     contentFilters: {
                         isMainContact: 'radio'
                     },

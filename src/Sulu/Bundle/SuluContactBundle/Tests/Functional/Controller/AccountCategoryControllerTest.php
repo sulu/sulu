@@ -91,7 +91,6 @@ class AccountCategoryControllerTest extends DatabaseTestCase
 
     public function testPost()
     {
-
         $client = $this->createTestClient();
 
         $client->request(
@@ -117,14 +116,14 @@ class AccountCategoryControllerTest extends DatabaseTestCase
         $response2 = json_decode($client2->getResponse()->getContent());
         $this->assertEquals(200, $client2->getResponse()->getStatusCode());
 
-        $this->assertEquals('Hauptsitz', $response2->_embedded[0]->category);
-        $this->assertEquals(1, $response2->_embedded[0]->id);
+        $this->assertEquals('Hauptsitz', $response2->_embedded->accountCategories[0]->category);
+        $this->assertEquals(1, $response2->_embedded->accountCategories[0]->id);
 
-        $this->assertEquals('Nebensitz', $response2->_embedded[1]->category);
-        $this->assertEquals(2, $response2->_embedded[1]->id);
+        $this->assertEquals('Nebensitz', $response2->_embedded->accountCategories[1]->category);
+        $this->assertEquals(2, $response2->_embedded->accountCategories[1]->id);
 
-        $this->assertEquals('Nebensitz 2', $response2->_embedded[2]->category);
-        $this->assertEquals(3, $response2->_embedded[2]->id);
+        $this->assertEquals('Nebensitz 2', $response2->_embedded->accountCategories[2]->category);
+        $this->assertEquals(3, $response2->_embedded->accountCategories[2]->id);
 
     }
 
@@ -179,7 +178,7 @@ class AccountCategoryControllerTest extends DatabaseTestCase
         $client = $this->createTestClient();
         $client->request(
             'PUT',
-            'api/account/categories/1',
+            'api/accounts/1/category',
             array(
                 'category' => 'Nebensitz 3'
             )
@@ -200,11 +199,11 @@ class AccountCategoryControllerTest extends DatabaseTestCase
         $response2 = json_decode($client2->getResponse()->getContent());
         $this->assertEquals(200, $client2->getResponse()->getStatusCode());
 
-        $this->assertEquals('Nebensitz', $response2->_embedded[0]->category);
-        $this->assertEquals(2, $response2->_embedded[0]->id);
+        $this->assertEquals('Nebensitz', $response2->_embedded->accountCategories[0]->category);
+        $this->assertEquals(2, $response2->_embedded->accountCategories[0]->id);
 
-        $this->assertEquals('Nebensitz 3', $response2->_embedded[1]->category);
-        $this->assertEquals(1, $response2->_embedded[1]->id);
+        $this->assertEquals('Nebensitz 3', $response2->_embedded->accountCategories[1]->category);
+        $this->assertEquals(1, $response2->_embedded->accountCategories[1]->id);
 
     }
 
@@ -213,7 +212,7 @@ class AccountCategoryControllerTest extends DatabaseTestCase
         $client = $this->createTestClient();
         $client->request(
             'PUT',
-            'api/account/categories/100',
+            'api/account/100/category',
             array(
                 'category' => 'Nebensitz 3'
             )
@@ -238,7 +237,7 @@ class AccountCategoryControllerTest extends DatabaseTestCase
         $response2 = json_decode($client2->getResponse()->getContent());
         $this->assertEquals(200, $client2->getResponse()->getStatusCode());
 
-        $this->assertEquals(1, $response2->total);
+        $this->assertEquals(1, count($response2->_embedded->accountCategories));
     }
 
     public function testDeleteInvalidId()
@@ -257,7 +256,7 @@ class AccountCategoryControllerTest extends DatabaseTestCase
         $response2 = json_decode($client2->getResponse()->getContent());
         $this->assertEquals(200, $client2->getResponse()->getStatusCode());
 
-        $this->assertEquals(2, $response2->total);
+        $this->assertEquals(2, count($response2->_embedded->accountCategories));
     }
 
     public function testPatch()
@@ -295,26 +294,26 @@ class AccountCategoryControllerTest extends DatabaseTestCase
         $response2 = json_decode($client2->getResponse()->getContent());
         $this->assertEquals(200, $client2->getResponse()->getStatusCode());
 
-        $this->assertEquals(3, $response2->total);
+        $this->assertEquals(3, count($response2->_embedded->accountCategories));
 
-        if($response2->_embedded[0]->category == 'Changed Hauptsitz') {
-            $this->assertEquals('Changed Hauptsitz', $response2->_embedded[0]->category);
-            $this->assertEquals(1, $response2->_embedded[0]->id);
+        if($response2->_embedded->accountCategories[0]->category == 'Changed Hauptsitz') {
+            $this->assertEquals('Changed Hauptsitz', $response2->_embedded->accountCategories[0]->category);
+            $this->assertEquals(1, $response2->_embedded->accountCategories[0]->id);
 
-            $this->assertEquals('Nebensitz', $response2->_embedded[1]->category);
-            $this->assertEquals(2, $response2->_embedded[1]->id);
+            $this->assertEquals('Nebensitz', $response2->_embedded->accountCategories[1]->category);
+            $this->assertEquals(2, $response2->_embedded->accountCategories[1]->id);
 
-            $this->assertEquals('Neuer Nebensitz', $response2->_embedded[2]->category);
-            $this->assertEquals(3, $response2->_embedded[2]->id);
+            $this->assertEquals('Neuer Nebensitz', $response2->_embedded->accountCategories[2]->category);
+            $this->assertEquals(3, $response2->_embedded->accountCategories[2]->id);
         } else {
-            $this->assertEquals('Changed Hauptsitz', $response2->_embedded[2]->category);
-            $this->assertEquals(1, $response2->_embedded[2]->id);
+            $this->assertEquals('Changed Hauptsitz', $response2->_embedded->accountCategories[2]->category);
+            $this->assertEquals(1, $response2->_embedded->accountCategories[2]->id);
 
-            $this->assertEquals('Nebensitz', $response2->_embedded[0]->category);
-            $this->assertEquals(2, $response2->_embedded[0]->id);
+            $this->assertEquals('Nebensitz', $response2->_embedded->accountCategories[0]->category);
+            $this->assertEquals(2, $response2->_embedded->accountCategories[0]->id);
 
-            $this->assertEquals('Neuer Nebensitz', $response2->_embedded[1]->category);
-            $this->assertEquals(3, $response2->_embedded[1]->id);
+            $this->assertEquals('Neuer Nebensitz', $response2->_embedded->accountCategories[1]->category);
+            $this->assertEquals(3, $response2->_embedded->accountCategories[1]->id);
         }
     }
 
@@ -323,7 +322,7 @@ class AccountCategoryControllerTest extends DatabaseTestCase
         $client = $this->createTestClient();
         $client->request(
             'PATCH',
-            'api/account/categories',
+            'api/accounts/1/category/999',
             array(
                 array(
                     'id' => 1,
@@ -373,13 +372,10 @@ class AccountCategoryControllerTest extends DatabaseTestCase
         $response2 = json_decode($client2->getResponse()->getContent());
         $this->assertEquals(200, $client2->getResponse()->getStatusCode());
 
-        $this->assertEquals(2, $response2->total);
+        $this->assertEquals('Hauptsitz', $response2->_embedded->accountCategories[0]->category);
+        $this->assertEquals(1, $response2->_embedded->accountCategories[0]->id);
 
-        $this->assertEquals('Hauptsitz', $response2->_embedded[0]->category);
-        $this->assertEquals(1, $response2->_embedded[0]->id);
-
-        $this->assertEquals('Nebensitz', $response2->_embedded[1]->category);
-        $this->assertEquals(2, $response2->_embedded[1]->id);
+        $this->assertEquals('Nebensitz', $response2->_embedded->accountCategories[1]->category);
+        $this->assertEquals(2, $response2->_embedded->accountCategories[1]->id);
     }
-
 }
