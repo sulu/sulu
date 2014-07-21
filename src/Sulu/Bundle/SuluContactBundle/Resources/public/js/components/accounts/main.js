@@ -194,6 +194,7 @@ define([
                 // on success save contacts id
                 success: function(response) {
                     this.activity = this.flattenActivityObjects(response.toJSON());
+                    this.activity.assignedContact = this.activity.contact.fullName;
 
                     if (!!isNew) {
                         this.sandbox.emit('sulu.contacts.account.activity.added', this.activity);
@@ -300,7 +301,7 @@ define([
         getSystemMembers: function(){
             this.sandbox.util.load('api/contacts?bySystem=true')
                 .then(function(response) {
-                    this.responsiblePersons = response._embedded;
+                    this.responsiblePersons = response._embedded.contacts;
                     this.sandbox.util.foreach(this.responsiblePersons, function(el) {
                         var contact = Contact.findOrCreate(el);
                         el = contact.toJSON();

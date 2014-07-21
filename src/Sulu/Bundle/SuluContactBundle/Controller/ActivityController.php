@@ -75,8 +75,8 @@ class ActivityController extends RestController implements ClassResourceInterfac
             self::$entityName,
             'public.id',
             array(),
-            false,
             true,
+            false,
             '',
             '',
             '',
@@ -93,7 +93,7 @@ class ActivityController extends RestController implements ClassResourceInterfac
             '',
             '',
             '',
-            false
+            true
 
         );
         $this->fieldDescriptors['note'] = new DoctrineFieldDescriptor(
@@ -102,8 +102,8 @@ class ActivityController extends RestController implements ClassResourceInterfac
             self::$entityName,
             'contact.activities.note',
             array(),
-            false,
             true,
+            false,
             '',
             '',
             '',
@@ -120,7 +120,7 @@ class ActivityController extends RestController implements ClassResourceInterfac
             'date',
             '',
             '',
-            false
+            true
         );
         $this->fieldDescriptors['startDate'] = new DoctrineFieldDescriptor(
             'startDate',
@@ -178,7 +178,7 @@ class ActivityController extends RestController implements ClassResourceInterfac
             'translation',
             '',
             '',
-            false
+            true
         );
 
         $this->fieldDescriptors['activityPriority'] = new DoctrineFieldDescriptor(
@@ -197,7 +197,7 @@ class ActivityController extends RestController implements ClassResourceInterfac
             'translation',
             '',
             '',
-            false
+            true
         );
 
         $this->fieldDescriptors['activityType'] = new DoctrineFieldDescriptor(
@@ -216,10 +216,9 @@ class ActivityController extends RestController implements ClassResourceInterfac
             'translation',
             '',
             '',
-            false
+            true
         );
 
-        // TODO use fullName when implemented
         $this->fieldDescriptors['assignedContact'] = new DoctrineConcatenationFieldDescriptor(
             array(
                 new DoctrineFieldDescriptor(
