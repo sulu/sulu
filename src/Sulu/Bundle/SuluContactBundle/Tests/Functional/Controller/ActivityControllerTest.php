@@ -195,7 +195,7 @@ class ActivityControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
-        $data = $response->_embedded->items;
+        $data = $response->_embedded->activities;
 
         $this->assertEquals(2, count($data));
 
@@ -252,8 +252,6 @@ class ActivityControllerTest extends DatabaseTestCase
             $this->assertEquals(1, $data[0]->activityStatus->id);
             $this->assertEquals(1, $data[0]->activityType->id);
             $this->assertEquals(1, $data[0]->activityPriority->id);
-            $this->assertEquals(1, $data[0]->contact->id);
-            $this->assertEquals(false, array_key_exists('account', $data[0]));
             $this->assertEquals(1, $data[0]->assignedContact->id);
         }
     }
@@ -270,7 +268,7 @@ class ActivityControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
-        $data = $response->_embedded->items;
+        $data = $response->_embedded->activities;
         $this->assertEquals(1, $response->total);
 
         $this->assertEquals(1, $data[0]->id);
@@ -283,9 +281,7 @@ class ActivityControllerTest extends DatabaseTestCase
         $this->assertEquals('activityState', $data[0]->activityStatus);
         $this->assertEquals('activityType', $data[0]->activityType);
         $this->assertEquals('activityPriortiy', $data[0]->activityPriority);
-        $this->assertEquals(false, array_key_exists('contact', $data[0]));
-        $this->assertEquals(1, $data[0]->account);
-        $this->assertEquals('Nachname', $data[0]->assignedContact);
+        $this->assertEquals('Vorname Nachname', $data[0]->assignedContact);
     }
 
     public function testGetFlatByContact()
@@ -300,7 +296,7 @@ class ActivityControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
-        $data = $response->_embedded->items;
+        $data = $response->_embedded->activities;
 
         $this->assertEquals(1, $response->total);
 
@@ -314,9 +310,7 @@ class ActivityControllerTest extends DatabaseTestCase
         $this->assertEquals('activityState', $data[0]->activityStatus);
         $this->assertEquals('activityType', $data[0]->activityType);
         $this->assertEquals('activityPriortiy', $data[0]->activityPriority);
-        $this->assertEquals(1, $data[0]->contact);
-        $this->assertEquals(false, array_key_exists('account', $data[0]));
-        $this->assertEquals('Nachname', $data[0]->assignedContact);
+        $this->assertEquals('Vorname Nachname', $data[0]->assignedContact);
     }
 
     public function testPost()
@@ -589,7 +583,7 @@ class ActivityControllerTest extends DatabaseTestCase
 
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertEquals(1, count($response->_embedded->items));
+        $this->assertEquals(1, count($response->_embedded->activities));
     }
 
     public function testDeleteInvalidId()
@@ -611,7 +605,7 @@ class ActivityControllerTest extends DatabaseTestCase
 
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertEquals(2, count($response->_embedded->items));
+        $this->assertEquals(2, count($response->_embedded->activities));
     }
 
 }
