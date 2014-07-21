@@ -360,7 +360,7 @@ class AccountController extends AbstractContactController
 
             $list = new ListRepresentation(
                 $values,
-                self::$entityKey,
+                'contacts',
                 'get_account_contacts',
                 array_merge(array('id' => $id), $request->query->all()),
                 $listBuilder->getCurrentPage(),
@@ -1093,7 +1093,9 @@ class AccountController extends AbstractContactController
         $contactJoin = array(
             self::$accountContactEntityName => new DoctrineJoinDescriptor(
                     self::$accountContactEntityName,
-                    self::$entityName . '.accountContacts'
+                    self::$entityName . '.accountContacts',
+                    null,
+                    DoctrineJoinDescriptor::JOIN_METHOD_INNER
                 ),
             self::$contactEntityName => new DoctrineJoinDescriptor(
                     self::$contactEntityName,
@@ -1161,7 +1163,9 @@ class AccountController extends AbstractContactController
             array(
                 self::$accountContactEntityName => new DoctrineJoinDescriptor(
                         self::$accountContactEntityName,
-                        self::$entityName . '.accountContacts'
+                        self::$entityName . '.accountContacts',
+                        null,
+                        DoctrineJoinDescriptor::JOIN_METHOD_INNER
                     ),
             ),
             false,
