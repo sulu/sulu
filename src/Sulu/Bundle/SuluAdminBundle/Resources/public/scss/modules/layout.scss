@@ -175,4 +175,18 @@
     width: auto;
     max-width: $contentFixedWidth;
   }
+
+
+}//
+// responsiveness for case: content (fixed) sidebar (fixed)
+// ------------------------------------------------------
+//
+
+// 1. makes the content-column fit the rest of the screen
+@media only screen and (max-width: 250px + $contentFixedWidth + $sidebarFixedWidth) {
+  .has-visible-sidebar .content-column.fixed {
+    float: none;
+    width: auto;
+    max-width: $contentFixedWidth;
+  }
 }
