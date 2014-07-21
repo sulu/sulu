@@ -333,10 +333,10 @@ class Group extends ApiEntity
     /**
      * Add roles
      *
-     * @param \Sulu\Bundle\SecurityBundle\Entity\Role $roles
+     * @param \Sulu\Bundle\SecurityBundle\Entity\RoleInterface $roles
      * @return Group
      */
-    public function addRole(\Sulu\Bundle\SecurityBundle\Entity\Role $roles)
+    public function addRole(\Sulu\Bundle\SecurityBundle\Entity\RoleInterface $roles)
     {
         $this->roles[] = $roles;
 
@@ -346,9 +346,9 @@ class Group extends ApiEntity
     /**
      * Remove roles
      *
-     * @param \Sulu\Bundle\SecurityBundle\Entity\Role $roles
+     * @param \Sulu\Bundle\SecurityBundle\Entity\RoleInterface $roles
      */
-    public function removeRole(\Sulu\Bundle\SecurityBundle\Entity\Role $roles)
+    public function removeRole(\Sulu\Bundle\SecurityBundle\Entity\RoleInterface $roles)
     {
         $this->roles->removeElement($roles);
     }

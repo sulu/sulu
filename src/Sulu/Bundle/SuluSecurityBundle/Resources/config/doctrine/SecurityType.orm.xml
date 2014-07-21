@@ -9,6 +9,6 @@
         </id>
         <field name="name" type="string" column="name" length="60"/>
 
-        <one-to-many field="roles" target-entity="Sulu\Bundle\SecurityBundle\Entity\Role" mapped-by="securityType"/>
+        <one-to-many field="roles" target-entity="Sulu\Bundle\SecurityBundle\Entity\RoleInterface" mapped-by="securityType"/>
     </entity>
 </doctrine-mapping>
