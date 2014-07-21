@@ -83,16 +83,6 @@ class LoadDefaultTypes extends AbstractFixture implements OrderedFixtureInterfac
         $addressType2->setName('address.home');
         $manager->persist($addressType2);
 
-        $addressType2 = new AddressType();
-        $addressType2->setId(3);
-        $addressType2->setName('address.delivery');
-        $manager->persist($addressType2);
-
-        $addressType2 = new AddressType();
-        $addressType2->setId(4);
-        $addressType2->setName('address.invoice');
-        $manager->persist($addressType2);
-
         $urlType1 = new UrlType();
         $urlType1->setId(1);
 
