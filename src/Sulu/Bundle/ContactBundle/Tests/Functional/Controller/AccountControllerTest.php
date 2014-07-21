@@ -32,6 +32,10 @@ use Sulu\Bundle\ContactBundle\Entity\FaxType;
 use Sulu\Bundle\ContactBundle\Entity\Url;
 use Sulu\Bundle\ContactBundle\Entity\UrlType;
 use Sulu\Bundle\TestBundle\Testing\DatabaseTestCase;
+use Sulu\Bundle\ContactBundle\Entity\Activity;
+use Sulu\Bundle\ContactBundle\Entity\ActivityPriority;
+use Sulu\Bundle\ContactBundle\Entity\ActivityStatus;
+use Sulu\Bundle\ContactBundle\Entity\ActivityType;
 
 class AccountControllerTest extends DatabaseTestCase
 {
@@ -176,6 +180,8 @@ class AccountControllerTest extends DatabaseTestCase
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Account'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Activity'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ActivityStatus'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ActivityPriority'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ActivityType'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Address'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AddressType'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AccountAddress'),
@@ -1998,16 +2004,12 @@ class AccountControllerTest extends DatabaseTestCase
 
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        usort($response->addresses, $this->sortAddressesPrimaryLast());
 
-        if ($response->addresses[0]->primaryAddress === false) {
-            $this->assertEquals(false, $response->addresses[0]->primaryAddress);
-            $this->assertEquals(false, $response->addresses[1]->primaryAddress);
-            $this->assertEquals(true, $response->addresses[2]->primaryAddress);
-        } else {
-            $this->assertEquals(true, $response->addresses[0]->primaryAddress);
-            $this->assertEquals(false, $response->addresses[1]->primaryAddress);
-            $this->assertEquals(false, $response->addresses[2]->primaryAddress);
-        }
+        $this->assertEquals(false, $response->addresses[0]->primaryAddress);
+        $this->assertEquals(false, $response->addresses[1]->primaryAddress);
+        $this->assertEquals(true, $response->addresses[2]->primaryAddress);
+
         $client->request(
             'GET',
             '/api/accounts/1'
@@ -2015,16 +2017,21 @@ class AccountControllerTest extends DatabaseTestCase
 
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        usort($response->addresses, $this->sortAddressesPrimaryLast());
 
-        if ($response->addresses[0]->primaryAddress === false) {
-            $this->assertEquals(false, $response->addresses[0]->primaryAddress);
-            $this->assertEquals(false, $response->addresses[1]->primaryAddress);
-            $this->assertEquals(true, $response->addresses[2]->primaryAddress);
-        } else {
-            $this->assertEquals(true, $response->addresses[0]->primaryAddress);
-            $this->assertEquals(false, $response->addresses[1]->primaryAddress);
-            $this->assertEquals(false, $response->addresses[2]->primaryAddress);
-        }
+        $this->assertEquals(false, $response->addresses[0]->primaryAddress);
+        $this->assertEquals(false, $response->addresses[1]->primaryAddress);
+        $this->assertEquals(true, $response->addresses[2]->primaryAddress);
+    }
+
+    public function sortAddressesPrimaryLast()
+    {
+        return function ($a, $b) {
+            if ($a->primaryAddress === true && $b->primaryAddress === false) {
+                return true;
+            }
+        return false;
+        };
     }
 
     public function testTriggerAction()

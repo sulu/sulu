@@ -77,6 +77,16 @@ class TemplateController extends RestController
     }
 
     /**
+     * Returns the activities form for contacts
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function contactActivitiesAction()
+    {
+        $values = $this->getActivityDropdownValues();
+        return $this->render('SuluContactBundle:Template:contact.activities.html.twig', $values);
+    }
+
+    /**
      * Returns an array for rendering a form
      * @return array
      */
@@ -99,6 +109,29 @@ class TemplateController extends RestController
             'defaultFaxType' => $defaults['faxType'],
             'defaultCountry' => $defaults['country']
         );
+    }
+
+    /**
+     * Returns the possible values for the dropdowns of activities
+     * @return array
+     */
+    private function getActivityDropdownValues()
+    {
+        $values = array();
+
+        $values['activityTypes'] = $this->getDoctrine()
+            ->getRepository('SuluContactBundle:ActivityType')
+            ->findAll();
+
+        $values['activityPriorities'] = $this->getDoctrine()
+            ->getRepository('SuluContactBundle:ActivityPriority')
+            ->findAll();
+
+        $values['activityStatuses'] = $this->getDoctrine()
+            ->getRepository('SuluContactBundle:ActivityStatus')
+            ->findAll();
+
+        return $values;
     }
 
     /**

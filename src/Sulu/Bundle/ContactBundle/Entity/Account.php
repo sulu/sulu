@@ -187,6 +187,12 @@ class Account extends ApiEntity
     private $responsiblePerson;
 
     /**
+     * @var \Doctrine\Common\Collections\Collection
+     * @Exclude
+     */
+    private $activities;
+
+    /**
      * @var string
      */
     private $externalId;
@@ -1085,6 +1091,17 @@ class Account extends ApiEntity
     }
 
     /**
+     * Add activities
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\Activity $activities
+     * @return Account
+     */
+    public function addActivitie(\Sulu\Bundle\ContactBundle\Entity\Activity $activities)
+    {
+        $this->activities[] = $activities;
+    }
+
+    /**
      * Get mainContact
      *
      * @return \Sulu\Bundle\ContactBundle\Entity\Contact 
@@ -1149,8 +1166,27 @@ class Account extends ApiEntity
     public function setMainFax($mainFax)
     {
         $this->mainFax = $mainFax;
-    
         return $this;
+    }
+
+    /**
+     * Remove activities
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\Activity $activities
+     */
+    public function removeActivitie(\Sulu\Bundle\ContactBundle\Entity\Activity $activities)
+    {
+        $this->activities->removeElement($activities);
+    }
+
+    /**
+     * Get activities
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getActivities()
+    {
+        return $this->activities;
     }
 
     /**

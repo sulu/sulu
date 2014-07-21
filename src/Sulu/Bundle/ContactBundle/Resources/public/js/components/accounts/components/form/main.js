@@ -159,7 +159,7 @@ define([], function() {
          * Inits the select for the account category
          */
         initCategorySelect: function(formData) {
-            this.preselectedElemendId = !!formData.accountCategory ? formData.accountCategory.id : null;
+            this.preselectedCategoryId = !!formData.accountCategory ? formData.accountCategory.id : null;
             this.accountCategoryData = null;
 
             this.sandbox.util.load(this.accountCategoryURL)
@@ -186,7 +186,7 @@ define([], function() {
                                 defaultLabel: this.sandbox.translate('contact.accounts.category.select'),
                                 valueName: 'category',
                                 repeatSelect: false,
-                                preSelectedElements: [this.preselectedElemendId],
+                                preSelectedElements: [this.preselectedCategoryId],
                                 data: data
                             }
                         }
@@ -202,7 +202,7 @@ define([], function() {
          * Inits the select for the account category
          */
         initResponsibleContactSelect: function(formData) {
-            this.preselectedElemendId = !!formData.responsiblePerson ? formData.responsiblePerson.id : null;
+            var preselectedResponsibleContactId = !!formData.responsiblePerson ? formData.responsiblePerson.id : null;
             this.responsiblePersons = null;
 
             this.sandbox.util.load(this.contactBySystemURL)
@@ -220,7 +220,7 @@ define([], function() {
                                 defaultLabel: this.sandbox.translate('dropdown.please-choose'),
                                 valueName: 'fullName',
                                 repeatSelect: false,
-                                preSelectedElements: [this.preselectedElemendId],
+                                preSelectedElements: [preselectedResponsibleContactId],
                                 data: this.responsiblePersons
                             }
                         }
@@ -480,7 +480,7 @@ define([], function() {
                 var selected = [];
 
                 this.accountCategoryData = this.copyArrayOfObjects(data);
-                selected.push(parseInt(!!this.selectedAccountCategory ? this.selectedAccountCategory : this.preselectedElemendId, 10));
+                selected.push(parseInt(!!this.selectedAccountCategory ? this.selectedAccountCategory : this.preselectedCategoryId, 10));
                 this.addDividerAndActionsForSelect(data);
 
                 // translate values for select but not for overlay
