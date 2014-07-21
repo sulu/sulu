@@ -245,7 +245,14 @@ define(['sulumedia/collection/collections'], function(Collections) {
                                     resultKey: this.options.resultKey,
                                     dataGridOptions: {
                                         view: 'table',
-                                        viewOptions: {table: {excludeFields: ['id'], showHead: false}},
+                                        resizeListeners: false,
+                                        viewOptions: {
+                                            table: {
+                                                excludeFields: ['id'],
+                                                showHead: false,
+                                                cssClass: 'minimal'
+                                            }
+                                        },
                                         pagination: false,
                                         matchings: [
                                             {
@@ -287,6 +294,17 @@ define(['sulumedia/collection/collections'], function(Collections) {
         bindDomEvents = function() {
             // chgange display options on click on a positon square
             this.sandbox.dom.on(getId.call(this, 'displayOption') + ' > div', 'click', changeDisplayOptions.bind(this));
+
+            // click on remove icons
+            this.sandbox.dom.on(getId.call(this, 'content'), 'click', removeHandler.bind(this), 'li .remove');
+        },
+
+        /**
+         * Handles the click event on the remove icon
+         * @param event
+         */
+        removeHandler = function(event) {
+            console.log(event);
         },
 
         /**
