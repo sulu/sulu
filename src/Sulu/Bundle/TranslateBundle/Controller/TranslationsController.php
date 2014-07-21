@@ -192,7 +192,7 @@ class TranslationsController extends RestController implements ClassResourceInte
 
             $response = array(
                 'total' => sizeof($translations),
-                '_embedded' => $translations
+                '_embedded' => array('translations' => $translations)
             );
 
             $view = $this->view($response, 200);
