@@ -28,7 +28,6 @@ use JMS\Serializer\Annotation\ExclusionPolicy;
  */
 class Collection extends ApiEntityWrapper
 {
-
     /**
      * @var array
      */
@@ -38,12 +37,6 @@ class Collection extends ApiEntityWrapper
      * @var array
      */
     protected $properties = array();
-
-    /**
-     * @var string
-     */
-    protected $locale;
-
 
     public function __construct(Entity $collection, $locale)
     {
@@ -423,5 +416,4 @@ class Collection extends ApiEntityWrapper
     {
         return $this->entity->getCreator();
     }
-
-} 
+}

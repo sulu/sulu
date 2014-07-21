@@ -206,7 +206,6 @@ class DefaultMediaManager implements MediaManagerInterface
         }
 
         if ($uploadedFile) {
-
             // new uploaded file
             $version++;
             $this->validator->validate($uploadedFile);
