@@ -19,7 +19,6 @@ class AccountCategory
      */
     private $id;
 
-
     /**
      * Set category
      *

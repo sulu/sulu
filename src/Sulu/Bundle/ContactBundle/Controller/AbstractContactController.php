@@ -23,7 +23,9 @@ use Sulu\Bundle\ContactBundle\Entity\BankAccount;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
+use Sulu\Component\Rest\ListBuilder\ListRestHelperInterface;
 use Sulu\Component\Rest\RestController;
+use Sulu\Component\Rest\RestHelperInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 
@@ -45,7 +47,15 @@ abstract class AbstractContactController extends RestController implements Class
      */
     protected function checkAndSetMainAddress($addresses)
     {
-        return $this->getContactManager()->setMainForCollection($addresses);
+        $this->getContactManager()->setMainForCollection($addresses);
+    }
+
+    /**
+     * @return RestHelperInterface
+     */
+    protected function getRestHelper()
+    {
+        return $this->get('sulu_core.doctrine_rest_helper');
     }
 
     /**
@@ -129,6 +139,11 @@ abstract class AbstractContactController extends RestController implements Class
      */
     protected function processEmails($contact, $emails)
     {
+        $get = function($email) {
+            /** @var Email $email */
+            return $email->getId();
+        };
+
         $delete = function ($email) use ($contact) {
             return $contact->removeEmail($email);
         };
@@ -141,7 +156,7 @@ abstract class AbstractContactController extends RestController implements Class
             return $this->addEmail($contact, $email);
         };
 
-        $result = $this->processPut($contact->getEmails(), $emails, $delete, $update, $add);
+        $result = $this->getRestHelper()->processSubEntities($contact->getEmails(), $emails, $get, $add, $update, $delete);
         // check main
         $this->getContactManager()->setMainEmail($contact);
 
@@ -217,6 +232,10 @@ abstract class AbstractContactController extends RestController implements Class
      */
     protected function processUrls($contact, $urls)
     {
+        $get = function($url) {
+            return $url->getId();
+        };
+
         $delete = function ($url) use ($contact) {
             return $contact->removeUrl($url);
         };
@@ -229,7 +248,8 @@ abstract class AbstractContactController extends RestController implements Class
             return $this->addUrl($contact, $url);
         };
 
-        $result = $this->processPut($contact->getUrls(), $urls, $delete, $update, $add);
+        $result = $this->getRestHelper()->processSubEntities($contact->getUrls(), $urls, $get, $add, $update, $delete);
+
         // check main
         $this->getContactManager()->setMainUrl($contact);
 
@@ -304,6 +324,10 @@ abstract class AbstractContactController extends RestController implements Class
      */
     protected function processPhones($contact, $phones)
     {
+        $get = function($phone) {
+            return $phone->getId();
+        };
+
         $delete = function ($phone) use ($contact) {
             return $contact->removePhone($phone);
         };
@@ -316,7 +340,8 @@ abstract class AbstractContactController extends RestController implements Class
             return $this->addPhone($contact, $phone);
         };
 
-        $result = $this->processPut($contact->getPhones(), $phones, $delete, $update, $add);
+        $result = $this->getRestHelper()->processSubEntities($contact->getPhones(), $phones, $get, $add, $update, $delete);
+
         // check main
         $this->getContactManager()->setMainPhone($contact);
 
@@ -390,6 +415,10 @@ abstract class AbstractContactController extends RestController implements Class
      */
     protected function processFaxes($contact, $faxes)
     {
+        $get = function($fax) {
+            return $fax->getId();
+        };
+
         $delete = function ($fax) use ($contact) {
             $contact->removeFax($fax);
 
@@ -406,7 +435,7 @@ abstract class AbstractContactController extends RestController implements Class
             return true;
         };
 
-        $result = $this->processPut($contact->getFaxes(), $faxes, $delete, $update, $add);
+        $result = $this->getRestHelper()->processSubEntities($contact->getFaxes(), $faxes, $get, $add, $update, $delete);
         // check main
         $this->getContactManager()->setMainFax($contact);
 
@@ -627,6 +656,10 @@ abstract class AbstractContactController extends RestController implements Class
      */
     protected function processNotes($contact, $notes)
     {
+        $get = function($note) {
+            return $note->getId();
+        };
+
         $delete = function ($note) use ($contact) {
             return $contact->removeNote($note);
         };
@@ -639,7 +672,8 @@ abstract class AbstractContactController extends RestController implements Class
             return $this->addNote($contact, $note);
         };
 
-        return $this->processPut($contact->getNotes(), $notes, $delete, $update, $add);
+        return $this->getRestHelper()->processSubEntities($contact->getNotes(), $notes, $get, $add, $update, $delete);
+
     }
 
     /**
@@ -690,6 +724,10 @@ abstract class AbstractContactController extends RestController implements Class
      */
     protected function processTags($contact, $tags)
     {
+        $get = function($tag) {
+            return $tag->getId();
+        };
+
         $delete = function ($tag) use ($contact) {
             return $contact->removeTag($tag);
         };
@@ -702,7 +740,7 @@ abstract class AbstractContactController extends RestController implements Class
             return $this->addTag($contact, $tag);
         };
 
-        return $this->processPut($contact->getTags(), $tags, $delete, $update, $add);
+        return $this->getRestHelper()->processSubEntities($contact->getTags(), $tags, $get, $add, $update, $delete);
     }
 
     /**
@@ -729,8 +767,13 @@ abstract class AbstractContactController extends RestController implements Class
      */
     protected function processBankAccounts($contact, $bankAccounts)
     {
+        $get = function ($bankAccount) {
+            return $bankAccount->getId();
+        };
+
         $delete = function ($bankAccounts) use ($contact) {
             $contact->removeBankAccount($bankAccounts);
+
             return true;
         };
 
@@ -742,7 +785,14 @@ abstract class AbstractContactController extends RestController implements Class
             return $this->addBankAccount($contact, $bankAccounts);
         };
 
-        return $this->processPut($contact->getBankAccounts(), $bankAccounts, $delete, $update, $add);
+        return $this->getRestHelper()->processSubEntities(
+            $contact->getBankAccounts(),
+            $bankAccounts,
+            $get,
+            $add,
+            $update,
+            $delete
+        );
     }
 
     /**
@@ -825,7 +875,7 @@ abstract class AbstractContactController extends RestController implements Class
             return true;
         };
 
-        $result = $this->processPut($this->getContactManager()->getAddressRelations($contact), $addresses, $delete, $update, $add, $getAddressId);
+        $result = $this->getRestHelper()->processSubEntities($this->getContactManager()->getAddressRelations($contact), $addresses, $getAddressId, $add, $update, $delete);
 
         // check if main exists, else take first address
         $this->checkAndSetMainAddress($this->getContactManager()->getAddressRelations($contact));

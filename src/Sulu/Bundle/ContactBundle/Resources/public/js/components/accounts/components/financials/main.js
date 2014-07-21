@@ -136,7 +136,7 @@ define([], function() {
                 .then(function(response) {
 
                     // data is data for select but not for overlay
-                    var data = response._embedded;
+                    var data = response._embedded.termsOfPayments;
                     this.termsOfPaymentData = this.copyArrayOfObjects(data);
 
                     // translate values for select but not for overlay
@@ -172,7 +172,7 @@ define([], function() {
                 .then(function(response) {
 
                     // data is data for select but not for overlay
-                    var data = response._embedded;
+                    var data = response._embedded.termsOfDeliveries;
                     this.termsOfDeliveryData = this.copyArrayOfObjects(data);
 
                     // translate values for select but not for overlay
