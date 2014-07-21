@@ -236,5 +236,4 @@ class CollectionController extends RestController implements ClassResourceInterf
     {
         return $this->get('sulu_media.collection_manager');
     }
-
 }
