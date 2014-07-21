@@ -5,11 +5,17 @@ namespace Sulu\Bundle\LocationBundle\Map;
 class MapManager
 {
     protected $providers;
+    protected $geoLocators;
     protected $defaultProviderName;
 
     public function registerProvider($name, $options)
     {
         $this->providers[$name] = $options;
+    }
+
+    public function registerGeolocator($name, $options)
+    {
+        $this->geolocators[$name] = $options;
     }
 
     public function getProvidersAsArray()

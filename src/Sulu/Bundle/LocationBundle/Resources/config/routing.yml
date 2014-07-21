@@ -1,3 +1,0 @@
-# sulu_location_homepage:
-#    pattern:  /hello/{name}
-#    defaults: { _controller: SuluLocationBundle:Default:index }

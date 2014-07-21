@@ -1,7 +1,8 @@
 define(['leaflet'], function (leaflet) {
     var leaflet = leaflet;
-    return {
-        show: function (selector, long, lat, zoom) {
+
+    return function Leaflet(options) {
+        this.show = function (selector, long, lat, zoom) {
             var map = leaflet.map(selector).setView([long, lat], zoom);
 
             var MarkerIcon = L.Icon.Default.extend({
@@ -19,8 +20,6 @@ define(['leaflet'], function (leaflet) {
             L.marker([long, lat], {
                 icon: new MarkerIcon
             }).addTo(map)
-                .bindPopup('A pretty CSS3 popup. <br> Easily customizable.')
-                .openPopup();
             }
     };
 });

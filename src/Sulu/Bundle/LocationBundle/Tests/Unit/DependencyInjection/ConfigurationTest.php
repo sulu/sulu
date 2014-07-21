@@ -18,14 +18,19 @@ class ConfigurationTest extends AbstractConfigurationTestCase
         'providers' => array(
             'leaflet' => array(
                 'title' => 'Leaflet (OSM)',
-                'geolocation_service' => 'nominatim',
+                'geolocator' => 'nominatim',
             ),
             'google' => array(
                 'title' => 'Google Maps',
                 'api_key' => '',
-                'geolocation_service' => 'nominatim',
+                'geolocator' => 'nominatim',
             ),
-        )
+        ),
+        'geolocators' => array(
+            'nominatim' => array(
+                'endpoint' => 'http://open.mapquestapi.com/nominatim/v1/search.php',
+            ),
+        ),
     );
 
     public function getConfiguration()

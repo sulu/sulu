@@ -57,6 +57,13 @@ class SuluLocationExtension extends Extension
             ));
         }
 
+        foreach ($config['geolocators'] as $geoLocatorName => $geoLocatorOptions) {
+            $mapManager->addMethodCall('registerGeolocator', array(
+                $geoLocatorName,
+                $geoLocatorOptions,
+            ));
+        }
+
         $mapManager->addMethodCall('setDefaultProviderName', array($config['default_provider']));
     }
 }

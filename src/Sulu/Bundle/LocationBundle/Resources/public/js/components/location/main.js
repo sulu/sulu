@@ -24,12 +24,26 @@ define([], function() {
                  town: 'Town',
                  country: 'Country',
                  coordinates: 'Coordinates (Long / Lat / Zoom)',
-                 map: 'Map'
+                 map: 'Map',
+                 search: 'Search'
              },
              instanceName: null,
              mapProviders: {},
-             mapProvider: null,
              countries: {}
+        },
+
+        dataDefaults = {
+            title: '',
+            street: '',
+            number: '',
+            code: '',
+            country: '',
+            location: {
+                long: '',
+                lat: '',
+                zoom: ''
+            },
+            mapProvider: 'leaflet'
         },
 
         constants = {
@@ -39,20 +53,13 @@ define([], function() {
             overlayClass: 'location-overlay-content',
             formId: 'location-content-overlay-form',
             mapElementId: 'location-map',
-            mapElementClass: 'location-map'
+            mapElementClass: 'location-map',
+            locateAddressClass: 'location-locate-address-button',
+            geolocatorSearchClass: 'geo_locator_search'
         },
 
         events = {
             RELOAD_DATA: 'sulu.location.reload_data'
-        },
-
-        dataDefaults = {
-            title: '',
-            street: '',
-            number: '',
-            code: '',
-            country: '',
-            coordinates: ''
         },
 
         templates = {
@@ -112,7 +119,7 @@ define([], function() {
                         '<div class="grid-row">',
                             '<div class="form-group grid-col-12">',
                                 '<label for="title"><%= translations.title %></label>',
-                                '<input class="form-element" type="text" data-mapper-property="title" value="<%= data.title %>"/ >',
+                                '<input class="form-element" type="text" placeholder="<%= translations.title %>" data-mapper-property="title" value="<%= data.title %>"/ >',
                             '</div>',
                         '</div>',
                         '<div class="grid-row">',
@@ -144,22 +151,22 @@ define([], function() {
                                     '<% }); %>',
                                 '</select>',
                             '</div>',
-                            '<div class="form-group grid-col-6">',
-                                '<div class="btn action large">',
-                                    '<span class="fa-map-marker icon"></span>',
-                                    '<span class="text"><%= translations.locateAddress %></div>',
-                                '</div>',
-                            '</div>',
                         '</div>',
                         '<h2 class="divider"><%= translations.map %></h2>',
                         '<div class="grid-row">',
                             '<div class="form-group grid-col-6">',
                                 '<label for="map_provider">Map Provider</label>',
-                                '<select class="form-element" name="map_provider" class="map-provider" data-mapper-property="map_provider">',
+                                '<select class="form-element" name="map_provider" class="map-provider" data-mapper-property="map-provider">',
                                     '<% _.each(mapProviders, function ($v, $i) { %>',
                                         '<option value="<%= $i %>"><%= $v.title %></option>',
                                     '<% }); %>',
                                 '</select>',
+                            '</div>',
+                        '</div>',
+                        '<div class="grid-row">',
+                            '<div class="form-group grid-col-12">',
+                                '<label for="title"><%= translations.search %></label>',
+                                '<input class="form-element <%= constants.geolocatorSearchClass %>" type="text" placeholder="<% translations.search %>"/ >',
                             '</div>',
                         '</div>',
                         '<div class="grid-row no-spacing">',
@@ -213,10 +220,25 @@ define([], function() {
 
         initialize: function() {
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
-            this.data = this.sandbox.util.extend(true, {}, dataDefaults, this.sandbox.dom.data(this.$el, 'location'));
+            this.loadData();
             this.createComponent();
         },
 
+        /**
+         * Load the data from the DOM element
+         */
+        loadData: function () {
+            this.data = this.sandbox.util.extend(true, {}, dataDefaults, this.sandbox.dom.data(this.$el, 'location'));
+        },
+
+        getFormData: function () {
+            var data = this.sandbox.form.getData('#' + constants.formId);
+            return data;
+        },
+
+        /**
+         * Create the component when initialized
+         */
         createComponent: function () {
             this.renderSkeleton();
             this.renderContent();
@@ -225,10 +247,13 @@ define([], function() {
             this.bindEvents();
         },
 
+        /**
+         * Bind events to the component
+         */
         bindEvents: function () {
             this.sandbox.on('husky.overlay.location-content.location.opened', this.createForm.bind(this));
             this.sandbox.on(events.RELOAD_DATA, function () {
-                this.data = this.$el.data('location');
+                this.loadData();
                 this.formData = this.data;
 
                 this.renderContent();
@@ -236,10 +261,16 @@ define([], function() {
             }.bind(this));
         },
 
+        /**
+         * Render the "skeleton" container
+         */
         renderSkeleton: function () {
             this.sandbox.dom.html(this.$el, this._template('skeleton', {}));
         },
 
+        /**
+         * Render the (read only) content, i.e. not the overlay.
+         */
         renderContent: function () {
             this.sandbox.dom.find('.' + constants.contentClass).empty().html(
                 this._template('content', {
@@ -248,18 +279,36 @@ define([], function() {
             );
         },
 
+        /**
+         * Render the map using the defined provider
+         */
         renderMap: function () {
             this.sandbox.dom.find('#' + constants.mapElementId).empty();
             var loc = this.data.location;
-            require(['map/leaflet'], function (map) {
+            var providerName = this.data.mapProvider;
+            var mapProviderConfig = this.options.mapProviders[providerName];
+
+            if (undefined == mapProviderConfig) {
+                alert('Map provider "' + providerName + '" is not configured');
+                return;
+            }
+
+            require(['map/' + providerName], function (Map) {
+                var map = new Map(mapProviderConfig);
                 map.show(constants.mapElementId, loc.long, loc.lat, loc.zoom);
             });
         },
 
+        /**
+         * Initialize the form (why a separate method?)
+         */
         createForm: function () {
             this.sandbox.form.create('#' + constants.formId);
         },
 
+        /**
+         * Initialize the overlay
+         */
         startOverlay: function () {
             this.formData = this.data;
 
@@ -285,13 +334,20 @@ define([], function() {
                                 }),
                                 okCallback: function () {
                                     // @todo: Validation
-                                    this.data = this.sandbox.form.getData('#' + constants.formId);
+                                    this.data = this.getFormData();
                                     this.sandbox.dom.data(this.$el, 'location', this.data);
                                     this.sandbox.emit('sulu.content.changed');
                                     this.sandbox.emit(events.RELOAD_DATA);
                                 }.bind(this)
                             }
                         ]
+                    }
+                },
+                {
+                    name: 'auto-complete@husky',
+                    options: {
+                        el: '.' + constants.geolocatorSearchClass,
+                        instanceName: this.options.instanceName + '.geolocator.search',
                     }
                 }
             ]);

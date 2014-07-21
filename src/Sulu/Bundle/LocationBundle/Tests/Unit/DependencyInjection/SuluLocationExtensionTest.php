@@ -24,7 +24,7 @@ class SuluLocationExtensionTest extends AbstractExtensionTestCase
                 array(
                     'title' => 'Google Maps',
                     'api_key' => null,
-                    'geolocation_service' => 'nominatim',
+                    'geolocator' => 'nominatim',
                 ),
             )
         );
@@ -34,10 +34,11 @@ class SuluLocationExtensionTest extends AbstractExtensionTestCase
                 'leaflet',
                 array(
                     'title' => 'Leaflet (OSM)',
-                    'geolocation_service' => 'nominatim',
+                    'geolocator' => 'nominatim',
                 ),
             )
         );
+
         $this->assertContainerBuilderHasServiceDefinitionWithMethodCall(
             'sulu_location.map_manager',
             'setDefaultProviderName', array(
