@@ -319,10 +319,12 @@ class DefaultMediaManager implements MediaManagerInterface
     public function save($uploadedFile, $data, $userId)
     {
         if (isset($data['id'])) {
-            return $this->modifyMedia($uploadedFile, $data, $this->getUser($userId));
+            $media = $this->modifyMedia($uploadedFile, $data, $this->getUser($userId));
         } else {
-            return $this->createMedia($uploadedFile, $data, $this->getUser($userId));
+            $media = $this->createMedia($uploadedFile, $data, $this->getUser($userId));
         }
+
+        return $this->addFormatsAndUrl($media);
     }
 
     /**

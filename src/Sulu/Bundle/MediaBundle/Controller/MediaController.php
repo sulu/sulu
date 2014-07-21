@@ -199,7 +199,7 @@ class MediaController extends RestController implements ClassResourceInterface
     {
         try {
             $mediaManager = $this->getMediaManager();
-            $data = $this->getData($request, $id ? false : true);
+            $data = $this->getData($request, $id === null);
             $data['id'] = $id;
             $uploadedFile = $this->getUploadedFile($request, 'fileVersion');
             $media = $mediaManager->save($uploadedFile, $data, $this->getUser()->getId());
