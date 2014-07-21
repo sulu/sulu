@@ -45,15 +45,53 @@
 
         <script src="/bundles/suluadmin/js/vendor/husky/husky.js"></script>
         <script type="text/javascript">
+            var data = {
+                'address_1': {
+                    'title': 'First Address',
+                    'number': '7564',
+                    'street': 'Ridiculus Rd',
+                    'town': 'Sambalpur',
+                    'code': '10401',
+                    'country': 'Uzebekistan',
+                    'location': {
+                        'long': 47.36691,
+                        'lat': 9.77052,
+                        'zoom': 1
+                    }
+                },
+                'address_2': {
+                    'title': 'Second Address',
+                    'number': '571',
+                    'street': 'Amet. Street',
+                    'town': 'Mineapolis',
+                    'code': '462764',
+                    'country': 'Uzebekistan',
+                    'location': {
+                        'long': 50.6136,
+                        'lat': -2.4590,
+                        'zoom': 12
+                    }
+                }
+            }
+
+            function set_data(dataIndex) {
+                $('#location_content').data('location', data[dataIndex]);
+            }
+
             var App;
 
             require.config({
-                baseUrl: '../../',
-                sululocation: '../../sululocation/js',
+                baseUrl: '..',
+                paths: {
+                    "map/leaflet": '../../sululocation/js/map/leaflet',
+                    "leaflet": '../../sululocation/js/vendor/leaflet/leaflet'
+                }
             });
 
             require(['husky'], function(Husky) {
                 'use strict';
+
+                set_data('address_1');
 
                 var app = Husky({ debug: { enable: true }});
                 var _ = app.sandbox.util._;
@@ -67,7 +105,7 @@
                         name: 'location@sululocation',
                         options: {
                             el: '#location_content',
-                            mapProviders: { 
+                            mapProviders: {
                                 leaflet: {
                                     title: 'Leaflet (OSM)',
                                 },
@@ -79,12 +117,23 @@
                     }
                 ]).then(function() {
                     app.logger.log('Aura started...');
+
+                    $('.load_data_button').on('click', function () {
+                        set_data($(this).attr('rel'));
+                        app.sandbox.emit('sulu.location.reload_data');
+                    });
                 });
             });
         </script>
 
         <div class="container">
             <div class="grid">
+                <div class="grid-row">
+                    <div class="grid-col-3 fixed-width">
+                        <button rel="address_1" class="load_data_button">Load Data 1</button>
+                        <button rel="address_2" class="load_data_button">Load Data 2</button>
+                    </div>
+                </div>
                 <div class="grid-row">
                     <div class="grid-col-6 fixed-width">
                         <div id="location_content"></div>

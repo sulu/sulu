@@ -40,6 +40,10 @@ define([], function() {
             mapElementClass: 'location-map',
         },
 
+        events = {
+            RELOAD_DATA: 'sulu.location.reload_data'
+        },
+
         dataDefaults = {
             title: '',
             street: '',
@@ -94,7 +98,7 @@ define([], function() {
                                 '</div>',
                                 '<div class="grid-row">',
                                     '<div class="grid-col-3 field"><%= translations.coordinates %>:</div>',
-                                    '<div class="grid-col-9"><%= data.coordinates %></div>',
+                                    '<div class="grid-col-9"><%= data.location.long %>, <%= data.location.lat %>, <%= data.location.zoom %></div>',
                                 '</div>',
                             '</div>',
                         '</div>',
@@ -193,25 +197,23 @@ define([], function() {
         },
 
         createComponent: function () {
-            this.render();
+            this.renderSkeleton();
             this.renderContent();
             this.renderMap();
             this.bindEvents();
             this.startOverlay();
         },
 
-        renderMap: function () {
-            this.sandbox.dom.find('#' + constants.mapElementId).empty();
-            require(['map/leaflet'], function (map) {
-                map.show(constants.mapElementId, 47.366915, 9.77052, 11);
-            });
-        },
-
         bindEvents: function () {
             this.sandbox.on('husky.overlay.location-content.location.opened', this.createForm.bind(this));
+            this.sandbox.on(events.RELOAD_DATA, function () {
+                this.data = this.$el.data('location');
+                this.renderContent();
+                this.renderMap();
+            }.bind(this));
         },
 
-        render: function () {
+        renderSkeleton: function () {
             this.sandbox.dom.html(this.$el, this._template('skeleton', {}));
         },
 
@@ -221,6 +223,14 @@ define([], function() {
                     data: this.data
                 })
             );
+        },
+
+        renderMap: function () {
+            this.sandbox.dom.find('#' + constants.mapElementId).empty();
+            var loc = this.data.location;
+            require(['map/leaflet'], function (map) {
+                map.show(constants.mapElementId, loc.long, loc.lat, loc.zoom);
+            });
         },
 
         createForm: function () {
@@ -255,7 +265,7 @@ define([], function() {
                                     this.data = this.sandbox.form.getData('#' + constants.formId);
                                     this.sandbox.dom.data(this.$el, 'location', this.data);
                                     this.sandbox.emit('sulu.content.changed');
-                                    this.renderContent();
+                                    this.sandbox.emit(events.RELOAD_DATA);
                                 }.bind(this)
                             }
                         ]
