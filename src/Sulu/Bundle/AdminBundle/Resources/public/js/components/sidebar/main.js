@@ -167,11 +167,19 @@ define([], function() {
          * Change the column to fixed width
          */
         changeToFixedWidth: function() {
-            var $column = this.sandbox.dom.find(constants.columnSelector);
+            var $column = this.sandbox.dom.find(constants.columnSelector),
+                $parent;
 
             if (!this.sandbox.dom.hasClass($column, constants.fixedWidthClass)) {
+                $parent = this.sandbox.dom.parent($column);
+
                 this.sandbox.dom.removeClass($column, constants.maxWidthClass);
                 this.sandbox.dom.addClass($column, constants.fixedWidthClass);
+
+                // make sure the column is not the last child of its parent. To enable
+                // other containers to take the max width
+                this.sandbox.dom.detach($column);
+                this.sandbox.dom.after(this.sandbox.dom.find('.navigation-column', $parent), $column);
             }
         },
 
