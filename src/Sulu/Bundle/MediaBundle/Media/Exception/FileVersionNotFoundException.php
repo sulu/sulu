@@ -13,7 +13,7 @@ namespace Sulu\Bundle\MediaBundle\Media\Exception;
 /**
  * @package Sulu\Bundle\MediaBundle\Media\Exception
  */
-class FileVersionNotFoundException extends UploadFileException
+class FileVersionNotFoundException extends MediaException
 {
     /**
      * @param string $message

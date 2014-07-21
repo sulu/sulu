@@ -11,8 +11,7 @@
 namespace Sulu\Bundle\MediaBundle\Content;
 
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
-use Sulu\Bundle\MediaBundle\Media\RestObject\Media;
-use Sulu\Bundle\MediaBundle\Media\RestObject\RestObjectHelper;
+use Sulu\Bundle\MediaBundle\Api\Media;
 use JMS\Serializer\Annotation\Exclude;
 
 /**
@@ -50,17 +49,11 @@ class MediaSelectionContainer implements \Serializable
 
     /**
      * @Exclude
-     * @var RestObjectHelper
-     */
-    private $restObjectHelper;
-
-    /**
-     * @Exclude
      * @var MediaManagerInterface
      */
     private $mediaManager;
 
-    function __construct($config, $displayOption, $ids, $localization, $mediaManager, $restObjectHelper)
+    function __construct($config, $displayOption, $ids, $localization, $mediaManager)
     {
         $this->config = $config;
         $this->displayOption = $displayOption;
@@ -89,9 +82,7 @@ class MediaSelectionContainer implements \Serializable
      */
     private function loadData($locale)
     {
-        $medias = $this->mediaManager->find(null, $this->ids);
-
-        return $this->mediaManager->getApiObjects($medias, $locale);
+        return $this->mediaManager->get($locale, null, $this->ids);
     }
 
     /**

@@ -12,26 +12,29 @@ namespace Sulu\Bundle\MediaBundle\Media\Manager;
 
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Api\Media as MediaWrapper;
+use Sulu\Component\Rest\ListBuilder\FieldDescriptor\DoctrineFieldDescriptor;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-interface MediaManagerInterface {
-
+interface MediaManagerInterface
+{
     /**
      * Returns media with a given collection and/or ids and/or limit
      * if no arguments passed returns all media
+     * @param string $locale the locale which the object will be returned
      * @param int $collection the id of the collection to filter for
      * @param array $ids the media ids
      * @param int $limit to limite the output
      * @return Media[]
      */
-    public function find($collection = null, $ids = null, $limit = null);
+    public function get($locale, $collection = null, $ids = null, $limit = null);
 
     /**
      * Returns a media with a given id
      * @param int $id the id of the category
+     * @param string $locale the locale which the object will be returned
      * @return Media
      */
-    public function findById($id);
+    public function getById($id, $locale);
 
     /**
      * Creates a new media or overrides an existing one
@@ -49,19 +52,15 @@ interface MediaManagerInterface {
     public function delete($id);
 
     /**
-     * Returns an API-Object for a given collection-entity. The API-Object wraps the entity
-     * and provides neat getters and setters
-     * @param Media $media
-     * @param string $locale
-     * @return MediaWrapper
+     * Return the FieldDescriptor by name
+     * @param string $key
+     * @return DoctrineFieldDescriptor
      */
-    public function getApiObject($media, $locale);
+    public function getFieldDescriptor($key);
 
     /**
-     * Same as getApiObject, but takes multiple media-entities
-     * @param Media[] $media
-     * @param string $locale
-     * @return MediaWrapper[]
+     * Return the FieldDescriptors
+     * @return $this
      */
-    public function getApiObjects($media, $locale);
+    public function getFieldDescriptors();
 }
