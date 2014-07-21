@@ -50,7 +50,6 @@ abstract class BaseRole implements RoleInterface
      */
     private $securityType;
 
-
     /**
      * Set name
      *
@@ -60,14 +59,14 @@ abstract class BaseRole implements RoleInterface
     public function setName($name)
     {
         $this->name = $name;
-    
+
         return $this;
     }
 
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -83,14 +82,14 @@ abstract class BaseRole implements RoleInterface
     public function setSystem($system)
     {
         $this->system = $system;
-    
+
         return $this;
     }
 
     /**
      * Get system
      *
-     * @return string 
+     * @return string
      */
     public function getSystem()
     {
@@ -106,14 +105,14 @@ abstract class BaseRole implements RoleInterface
     public function setCreated($created)
     {
         $this->created = $created;
-    
+
         return $this;
     }
 
     /**
      * Get created
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getCreated()
     {
@@ -129,14 +128,14 @@ abstract class BaseRole implements RoleInterface
     public function setChanged($changed)
     {
         $this->changed = $changed;
-    
+
         return $this;
     }
 
     /**
      * Get changed
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getChanged()
     {
@@ -146,7 +145,7 @@ abstract class BaseRole implements RoleInterface
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -162,14 +161,14 @@ abstract class BaseRole implements RoleInterface
     public function setChanger(\Sulu\Bundle\SecurityBundle\Entity\User $changer = null)
     {
         $this->changer = $changer;
-    
+
         return $this;
     }
 
     /**
      * Get changer
      *
-     * @return \Sulu\Bundle\SecurityBundle\Entity\User 
+     * @return \Sulu\Bundle\SecurityBundle\Entity\User
      */
     public function getChanger()
     {
@@ -185,14 +184,14 @@ abstract class BaseRole implements RoleInterface
     public function setCreator(\Sulu\Bundle\SecurityBundle\Entity\User $creator = null)
     {
         $this->creator = $creator;
-    
+
         return $this;
     }
 
     /**
      * Get creator
      *
-     * @return \Sulu\Bundle\SecurityBundle\Entity\User 
+     * @return \Sulu\Bundle\SecurityBundle\Entity\User
      */
     public function getCreator()
     {
@@ -208,14 +207,14 @@ abstract class BaseRole implements RoleInterface
     public function setSecurityType(\Sulu\Bundle\SecurityBundle\Entity\SecurityType $securityType = null)
     {
         $this->securityType = $securityType;
-    
+
         return $this;
     }
 
     /**
      * Get securityType
      *
-     * @return \Sulu\Bundle\SecurityBundle\Entity\SecurityType 
+     * @return \Sulu\Bundle\SecurityBundle\Entity\SecurityType
      */
     public function getSecurityType()
     {

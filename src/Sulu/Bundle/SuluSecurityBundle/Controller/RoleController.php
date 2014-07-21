@@ -390,8 +390,6 @@ class RoleController extends RestController implements ClassResourceInterface
      */
     protected function convertRole(Role $role)
     {
-        $roleData['_links'] = $role->getLinks();
-
         $roleData['id'] = $role->getId();
         $roleData['name'] = $role->getName();
         $roleData['system'] = $role->getSystem();
