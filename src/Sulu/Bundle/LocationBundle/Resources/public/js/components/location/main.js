@@ -16,13 +16,15 @@ define([], function() {
     var defaults = {
              translations: {
                  configureLocation: 'Configure Location',
+                 locateAddress: 'Locate Address',
                  title: 'Title',
                  street: 'Street',
                  number: 'Number',
                  code: 'Code',
                  town: 'Town',
                  country: 'Country',
-                 coordinates: 'Coordinates'
+                 coordinates: 'Coordinates (Long / Lat / Zoom)',
+                 map: 'Map'
              },
              instanceName: null,
              mapProviders: {},
@@ -37,7 +39,7 @@ define([], function() {
             overlayClass: 'location-overlay-content',
             formId: 'location-content-overlay-form',
             mapElementId: 'location-map',
-            mapElementClass: 'location-map',
+            mapElementClass: 'location-map'
         },
 
         events = {
@@ -108,16 +110,6 @@ define([], function() {
                 '<div class="<%= constants.overlayClass %> grid">',
                     '<form id="<%= constants.formId %>">',
                         '<div class="grid-row">',
-                            '<div class="form-group grid-col-6">',
-                                '<label for="map_provider">Map Provider</label>',
-                                '<select class="form-element" name="map_provider" class="map-provider" data-mapper-property="map_provider">',
-                                    '<% _.each(mapProviders, function ($v, $i) { %>',
-                                        '<option value="<%= $i %>"><%= $v.title %></option>',
-                                    '<% }); %>',
-                                '</select>',
-                            '</div>',
-                        '</div>',
-                        '<div class="grid-row">',
                             '<div class="form-group grid-col-12">',
                                 '<label for="title"><%= translations.title %></label>',
                                 '<input class="form-element" type="text" data-mapper-property="title" value="<%= data.title %>"/ >',
@@ -153,8 +145,37 @@ define([], function() {
                                 '</select>',
                             '</div>',
                             '<div class="form-group grid-col-6">',
-                                '<label for="coordinates"><%= translations.coordinates %></label>',
-                                '<input class="form-element" type="text" data-mapper-property="coordinates" value="<%= data.coordinates %>"/ >',
+                                '<div class="btn action large">',
+                                    '<span class="fa-map-marker icon"></span>',
+                                    '<span class="text"><%= translations.locateAddress %></div>',
+                                '</div>',
+                            '</div>',
+                        '</div>',
+                        '<h2 class="divider"><%= translations.map %></h2>',
+                        '<div class="grid-row">',
+                            '<div class="form-group grid-col-6">',
+                                '<label for="map_provider">Map Provider</label>',
+                                '<select class="form-element" name="map_provider" class="map-provider" data-mapper-property="map_provider">',
+                                    '<% _.each(mapProviders, function ($v, $i) { %>',
+                                        '<option value="<%= $i %>"><%= $v.title %></option>',
+                                    '<% }); %>',
+                                '</select>',
+                            '</div>',
+                        '</div>',
+                        '<div class="grid-row no-spacing">',
+                            '<div class="form-group grid-col-12">',
+                                '<label><%= translations.coordinates %></label>',
+                            '</div>',
+                        '</div>',
+                        '<div class="grid-row">',
+                            '<div class="form-group grid-col-5">',
+                                '<input class="form-element" type="text" data-mapper-property="location.long" value="<%= data.location.long %>"/ >',
+                            '</div>',
+                            '<div class="form-group grid-col-5">',
+                                '<input class="form-element" type="text" data-mapper-property="location.lat" value="<%= data.location.lat %>"/ >',
+                            '</div>',
+                            '<div class="form-group grid-col-2">',
+                                '<input class="form-element" type="text" data-mapper-property="location.zoom" value="<%= data.location.zoom %>"/ >',
                             '</div>',
                         '</div>',
                         '<div class="grid-row">',
@@ -200,14 +221,16 @@ define([], function() {
             this.renderSkeleton();
             this.renderContent();
             this.renderMap();
-            this.bindEvents();
             this.startOverlay();
+            this.bindEvents();
         },
 
         bindEvents: function () {
             this.sandbox.on('husky.overlay.location-content.location.opened', this.createForm.bind(this));
             this.sandbox.on(events.RELOAD_DATA, function () {
                 this.data = this.$el.data('location');
+                this.formData = this.data;
+
                 this.renderContent();
                 this.renderMap();
             }.bind(this));
