@@ -120,7 +120,7 @@ class AccountController extends AbstractContactController
                         self::$accountAddressEntityName,
                         self::$entityName .
                         '.accountAddresses',
-                        self::$accountAddressEntityName . '.main = true', 'LEFT'
+                        self::$accountAddressEntityName . '.main = true', DoctrineJoinDescriptor::JOIN_METHOD_LEFT
                     ),
                 self::$addressEntityName => new DoctrineJoinDescriptor(
                         self::$addressEntityName,
@@ -351,7 +351,7 @@ class AccountController extends AbstractContactController
             $values = $listBuilder->execute();
 
             foreach($values as &$value){
-                if($value['id'] === $account->getMainContact()->getId()){
+                if($account->getMainContact() != null && $value['id'] === $account->getMainContact()->getId()){
                     $value['isMainContact'] = true;
                 } else {
                     $value['isMainContact'] = false;
