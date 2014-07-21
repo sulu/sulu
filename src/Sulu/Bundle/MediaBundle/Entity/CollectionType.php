@@ -18,7 +18,6 @@ use JMS\Serializer\Annotation\Exclude;
  */
 class CollectionType
 {
-
     /**
      * @var string
      */

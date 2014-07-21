@@ -25,7 +25,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class DefaultFormatManager implements FormatManagerInterface
 {
-
     /**
      * The repository for communication with the database
      * @var MediaRepository
@@ -136,8 +135,11 @@ class DefaultFormatManager implements FormatManagerInterface
      */
     protected function prepareMedia($fileName, $path)
     {
-        if ('pdf' == pathinfo($fileName)['extension']) {
-            $this->convertPdfToImage($path);
+        $pathInfos = pathinfo($fileName);
+        if (isset($pathInfos['extension'])) {
+            if ('pdf' == $pathInfos['extension']) {
+                $this->convertPdfToImage($path);
+            }
         }
     }
 
@@ -166,7 +168,11 @@ class DefaultFormatManager implements FormatManagerInterface
      */
     protected function getFileExtension($fileName)
     {
-        $extension = pathinfo($fileName)['extension'];
+        $extension = null;
+        $pathInfo = pathinfo($fileName);
+        if (isset($pathInfo['extension'])) {
+            $extension = $pathInfo['extension'];
+        }
 
         switch ($extension) {
             case 'png':
@@ -251,21 +257,7 @@ class DefaultFormatManager implements FormatManagerInterface
     }
 
     /**
-     * @param string $fileName
-     * @param int $version
-     * @param array $storageOptions
-     * @return string
-     */
-    public function getOriginal($fileName, $version, $storageOptions)
-    {
-        return $this->originalStorage->load($fileName, $version, $storageOptions);
-    }
-
-    /**
-     * @param int $id
-     * @param string $fileName
-     * @param array $storageOptions
-     * @return array
+     * {@inheritdoc}
      */
     public function getFormats($id, $fileName, $storageOptions)
     {
@@ -283,4 +275,11 @@ class DefaultFormatManager implements FormatManagerInterface
         return $formats;
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function purge($idMedia, $fileName, $options)
+    {
+        return $this->formatCache->purge($idMedia, $fileName, $options);
+    }
 } 
