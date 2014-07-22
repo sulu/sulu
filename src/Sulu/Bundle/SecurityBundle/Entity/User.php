@@ -27,6 +27,7 @@ use Sulu\Component\Security\UserInterface;
  */
 class User extends ApiEntity implements UserInterface, Serializable
 {
+
     /**
      * @var string
      * @Expose
@@ -401,7 +402,6 @@ class User extends ApiEntity implements UserInterface, Serializable
     {
         return $this->userSettings;
     }
-
 
     /**
      * Set apiKey
