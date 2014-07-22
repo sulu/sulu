@@ -96,7 +96,7 @@ class MediaStreamController extends Controller
         $fileName = $fileVersion->getName();
         $fileSize = $fileVersion->getSize();
         $storageOptions = $fileVersion->getStorageOptions();
-        $mimeType = null;//$fileVersion->getMimeType();
+        $mimeType = $fileVersion->getMimeType();
         $version = $fileVersion->getVersion();
 
         $path = $this->getStorage()->load($fileName, $version, $storageOptions);
