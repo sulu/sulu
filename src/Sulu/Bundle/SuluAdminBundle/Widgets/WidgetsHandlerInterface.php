@@ -26,7 +26,7 @@ interface WidgetsHandlerInterface
     /**
      * add an widget to rendering process
      * @param WidgetInterface $widget
-     * @param integer $priority
+     * @param string $alias
      */
-    public function addWidget(WidgetInterface $widget, $priority);
+    public function addWidget(WidgetInterface $widget, $alias);
 }
