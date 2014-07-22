@@ -10,7 +10,6 @@
 
 namespace Sulu\Bundle\MediaBundle\DependencyInjection;
 
-
 use Sulu\Bundle\MediaBundle\Media\FormatLoader\XmlFormatLoader;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
@@ -31,8 +30,6 @@ class ImageFormatCompilerPass implements CompilerPassInterface
      * You can modify the container here before it is dumped to PHP code.
      *
      * @param ContainerBuilder $container
-     *
-     * @api
      */
     public function process(ContainerBuilder $container)
     {
@@ -57,8 +54,13 @@ class ImageFormatCompilerPass implements CompilerPassInterface
         foreach ($activeTheme->getThemes() as $theme) {
             foreach ($bundles as $bundle => $class) {
                 $reflector = new \ReflectionClass($class);
-                if ($reflector->getFileName() && file_exists(dirname($reflector->getFileName()) . '/Resources/themes/'.$theme.'/config/image-formats.xml')) {
-                    $themePath = dirname($reflector->getFileName()) . '/Resources/themes/'.$theme.'/config/image-formats.xml';
+                if ($reflector->getFileName() &&
+                    file_exists(
+                        dirname($reflector->getFileName()) . '/Resources/themes/' . $theme . '/config/image-formats.xml'
+                    )
+                ) {
+                    $themePath = dirname($reflector->getFileName())
+                        . '/Resources/themes/' . $theme . '/config/image-formats.xml';
 
                     $folder = dirname($themePath);
                     $fileName = basename($themePath);
@@ -77,5 +79,4 @@ class ImageFormatCompilerPass implements CompilerPassInterface
 
         return $activeFormats;
     }
-
-} 
+}
