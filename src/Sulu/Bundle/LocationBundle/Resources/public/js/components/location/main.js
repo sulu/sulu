@@ -44,11 +44,9 @@ define([], function() {
             number: '',
             code: '',
             country: '',
-            location: {
-                long: '',
-                lat: '',
-                zoom: ''
-            },
+            long: '',
+            lat: '',
+            zoom: '',
             mapProvider: 'leaflet'
         },
 
@@ -115,7 +113,7 @@ define([], function() {
                                 '</div>',
                                 '<div class="grid-row">',
                                     '<div class="grid-col-3 field"><%= translations.coordinates %>:</div>',
-                                    '<div class="grid-col-9"><%= data.location.long %>, <%= data.location.lat %>, <%= data.location.zoom %></div>',
+                                    '<div class="grid-col-9"><%= data.long %>, <%= data.lat %>, <%= data.zoom %></div>',
                                 '</div>',
                             '</div>',
                         '</div>',
@@ -184,13 +182,13 @@ define([], function() {
                         '</div>',
                         '<div class="grid-row coordinate-fields">',
                             '<div class="form-group grid-col-5">',
-                                '<input class="form-element longitude" type="text" data-mapper-property="location.long" value="<%= data.location.long %>"/ >',
+                                '<input class="form-element longitude" type="text" data-mapper-property="long" value="<%= data.long %>"/ >',
                             '</div>',
                             '<div class="form-group grid-col-5">',
-                                '<input class="form-element latitude" type="text" data-mapper-property="location.lat" value="<%= data.location.lat %>"/ >',
+                                '<input class="form-element latitude" type="text" data-mapper-property="lat" value="<%= data.lat %>"/ >',
                             '</div>',
                             '<div class="form-group grid-col-2">',
-                                '<input class="form-element zoom" type="text" data-mapper-property="location.zoom" value="<%= data.location.zoom %>"/ >',
+                                '<input class="form-element zoom" type="text" data-mapper-property="zoom" value="<%= data.zoom %>"/ >',
                             '</div>',
                         '</div>',
                         '<div class="grid-row">',
@@ -272,16 +270,21 @@ define([], function() {
             );
 
             this.sandbox.on(events.RELOAD_DATA, function () {
+                // reload the data from the DOM
                 this.loadData();
+
+                // reinitialize the form data
                 this.formData = this.data;
 
                 this.renderContent();
-                this.renderMap(constants.mapElementId, this.data.location);
+                this.renderMap(constants.mapElementId, this.data);
             }.bind(this));
         },
 
+        // Update the location from the location object returned from
+        // the webservice API
         updateLocationFromLocation: function (location) {
-            this.updateCoordinates(location.long, location.lat);
+            this.updateCoordinates(location.longitude, location.latitude);
             this.renderMap(constants.overlayMapElementId, {
                 'long': location.longitude,
                 'lat': location.latitude,
@@ -291,9 +294,9 @@ define([], function() {
 
         updateLocation: function () {
             this.renderMap(constants.overlayMapElementId, {
-                'long': this.formData.location.long,
-                'lat': this.formData.location.lat,
-                'zoom': this.formData.location.zoom
+                'long': this.formData.long,
+                'lat': this.formData.lat,
+                'zoom': this.formData.zoom
             });
         },
 
@@ -328,7 +331,7 @@ define([], function() {
                     data: this.data
                 })
             );
-            this.renderMap(constants.mapElementId, this.data.location);
+            this.renderMap(constants.mapElementId, this.data);
         },
 
         /**
@@ -353,7 +356,7 @@ define([], function() {
                     this.mapInstances[mapElementId] = map;
                 }.bind(this));
             } else {
-                this.mapInstances[mapElementId].show( location.long, location.lat, location.zoom);
+                this.mapInstances[mapElementId].show(location.long, location.lat, location.zoom);
             }
         },
 
@@ -363,7 +366,7 @@ define([], function() {
         createForm: function () {
             var element = this.sandbox.dom.find('.' + constants.geolocatorSearchClass);
             this.sandbox.form.create('#' + constants.formId);
-            this.renderMap(constants.overlayMapElementId, this.data.location, {
+            this.renderMap(constants.overlayMapElementId, this.data, {
                 // allow the marker to be dragged
                 draggableMarker: true,
 
@@ -376,8 +379,8 @@ define([], function() {
                 zoomChangeCallback: function (zoom) {
                     this.updateCoordinates(null, null, zoom);
                 }.bind(this),
-
             });
+
             this.sandbox.start([
                 {
                     name: 'auto-complete@husky',
@@ -395,9 +398,9 @@ define([], function() {
 
             this.sandbox.dom.find('.coordinate-fields input').on('change', function () {
                 var form = $('#' + constants.formId);
-                this.formData.location.long = this.sandbox.dom.find('.longitude', form).val();
-                this.formData.location.lat = this.sandbox.dom.find('.latitude', form).val();
-                this.formData.location.zoom = this.sandbox.dom.find('.zoom', form).val();
+                this.formData.long = this.sandbox.dom.find('.longitude', form).val();
+                this.formData.lat = this.sandbox.dom.find('.latitude', form).val();
+                this.formData.zoom = this.sandbox.dom.find('.zoom', form).val();
                 this.updateLocation();
             }.bind(this));
         },
