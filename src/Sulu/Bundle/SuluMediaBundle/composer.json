@@ -25,7 +25,8 @@
         "liip/theme-bundle": "@dev",
 
         "sulu/security-bundle": "@dev",
-        "sulu/contact-bundle": "@dev"
+        "sulu/contact-bundle": "@dev",
+        "willdurand/hateoas-bundle": "0.3.*"
     },
     "require-dev": {
         "sensio/framework-extra-bundle": "~3.0",
