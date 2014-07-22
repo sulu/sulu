@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Rest\Listing;
+namespace Sulu\Component\Rest\ListBuilder;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,12 +19,9 @@ use Symfony\Component\HttpFoundation\Request;
  * deliver some values needed by the inheriting controller.
  * These values are calculated from the request paramaters.
  *
- * For lists it allocates a Repository
- *
  * @package Sulu\Bundle\TranslateBundle\Controller
- * @deprecated
  */
-class ListRestHelper
+class ListRestHelper implements ListRestHelperInterface
 {
     /**
      * The current request object
@@ -33,48 +30,13 @@ class ListRestHelper
     protected $request;
 
     /**
-     * @var ObjectManager
-     */
-    protected $em;
-
-    /**
-     * temp property for saving total amount of entities
-     * @var int
-     */
-    private $totalNumberOfElements;
-
-    /**
      * The constructor takes the request as an argument, which
      * is injected by the service container
      * @param Request $request
-     * @param ObjectManager $em
      */
-    public function __construct(Request $request, ObjectManager $em)
+    public function __construct(Request $request)
     {
         $this->request = $request;
-        $this->em = $em;
-    }
-
-    /**
-     * Create a ListRepository for given EntityName
-     * @param string $entityName
-     * @return ListRepository
-     */
-    public function getRepository($entityName)
-    {
-        return new ListRepository($this->em, $this->em->getClassMetadata($entityName), $this);
-    }
-
-    /**
-     * Create a ListRepository for given EntityName and find Entities for list
-     * @param string $entityName
-     * @param array $where
-     * @param array $joinConditions
-     * @return array
-     */
-    public function find($entityName, $where = array(), $joinConditions = array())
-    {
-        return $this->getRepository($entityName)->find($where, 'u', false, $joinConditions);
     }
 
     /**
@@ -87,15 +49,21 @@ class ListRestHelper
     }
 
     /**
-     * Returns an array containing the desired sorting
-     * @return array
+     * Returns the desired sort column
+     * @return string
      */
-    public function getSorting()
+    public function getSortColumn()
     {
-        $sortOrder = $this->getRequest()->get('sortOrder', 'asc');
-        $sortBy = $this->getRequest()->get('sortBy', 'id');
+        return $this->getRequest()->get('sortBy', 'id');
+    }
 
-        return array($sortBy => $sortOrder);
+    /**
+     * Returns desired sort order
+     * @return string
+     */
+    public function getSortOrder()
+    {
+        return $this->getRequest()->get('sortOrder', 'asc');
     }
 
     /**
@@ -104,7 +72,7 @@ class ListRestHelper
      */
     public function getLimit()
     {
-        return $this->getRequest()->get('limit');
+        return $this->getRequest()->get('limit', 10);
     }
 
     /**
@@ -127,29 +95,6 @@ class ListRestHelper
     public function getPage()
     {
         return $this->getRequest()->get('page', 1);
-    }
-
-    /**
-     * returns total amount of pages
-     * @param int $totalNumber if not defined the total number is requested from DB
-     * @return float|int
-     */
-    public function getTotalPages($totalNumber = null)
-    {
-        if (is_null($totalNumber)) {
-            $totalNumber = $this->$totalNumberOfElements;
-        }
-        return $this->getLimit() ? (ceil($totalNumber / $this->getLimit())) : 1;
-    }
-
-    /**
-     * returns all field names for a certain entity
-     * @param $entityName
-     * @return array
-     */
-    public function getAllFields($entityName)
-    {
-        return $this->em->getClassMetadata($entityName)->getFieldNames();
     }
 
     /**
@@ -182,17 +127,4 @@ class ListRestHelper
 
         return ($searchFields != null) ? explode(',', $searchFields) : array();
     }
-
-    /**
-     * @param $entityName
-     * @param $where
-     * @param array $joinConditions
-     * @return int
-     */
-    public function getTotalNumberOfElements($entityName, $where, $joinConditions = array())
-    {
-        $this->totalNumberOfElements = $this->getRepository($entityName)->getCount($where, $joinConditions);
-        return $this->totalNumberOfElements;
-    }
-
 }

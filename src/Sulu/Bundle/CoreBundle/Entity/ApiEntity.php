@@ -7,6 +7,11 @@ use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\Accessor;
 
+/**
+ * An abstract class for Entities, defining some links
+ * @package Sulu\Bundle\CoreBundle\Entity
+ * @deprecated
+ */
 abstract class ApiEntity
 {
     /**

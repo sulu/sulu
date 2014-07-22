@@ -110,7 +110,7 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
 
         // check count of properties
         $properties = $structure->getProperties();
-        $this->assertEquals(5, sizeof($properties));
+        $this->assertEquals(6, sizeof($properties));
 
         // check title
         $this->assertArrayHasKey('title', $properties);
@@ -323,7 +323,6 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(2, $block1->getMinOccurs());
         $this->assertEquals(10, $block1->getMaxOccurs());
         $this->assertEquals(true, $block1->isMandatory());
-        $this->assertEquals(true, $block1->isMultilingual());
         $this->assertEquals('block', $block1->getContentTypeName());
 
         $types = $block1->getTypes();
@@ -365,7 +364,6 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, $block11->getMinOccurs());
         $this->assertEquals(1, $block11->getMaxOccurs());
         $this->assertEquals(false, $block11->isMandatory());
-        $this->assertEquals(true, $block11->isMultilingual());
         $this->assertEquals('block', $block11->getContentTypeName());
 
         $types = $block11->getTypes();
@@ -379,7 +377,6 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, $block111->getMinOccurs());
         $this->assertEquals(1, $block111->getMaxOccurs());
         $this->assertEquals(false, $block111->isMandatory());
-        $this->assertEquals(true, $block111->isMultilingual());
         $this->assertEquals('block', $block111->getContentTypeName());
 
         $types = $block111->getTypes();
@@ -419,7 +416,6 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, $block113->getMinOccurs());
         $this->assertEquals(1, $block113->getMaxOccurs());
         $this->assertEquals(false, $block113->isMandatory());
-        $this->assertEquals(true, $block113->isMultilingual());
         $this->assertEquals('block', $block113->getContentTypeName());
 
         $types = $block113->getTypes();
@@ -446,7 +442,6 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, $block112->getMinOccurs());
         $this->assertEquals(1, $block112->getMaxOccurs());
         $this->assertEquals(false, $block112->isMandatory());
-        $this->assertEquals(true, $block112->isMultilingual());
         $this->assertEquals('block', $block112->getContentTypeName());
 
         $types = $block112->getTypes();

@@ -8,9 +8,8 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Rest\Listing;
+namespace Sulu\Component\Rest\ListBuilder;
 
-use Sulu\Component\Rest\Listing\ListRestHelper;
 use Symfony\Component\HttpFoundation\Request;
 
 class ListRestHelperTest extends \PHPUnit_Framework_TestCase
@@ -36,7 +35,8 @@ class ListRestHelperTest extends \PHPUnit_Framework_TestCase
         $helper = new ListRestHelper($request, $this->em);
 
         $this->assertEquals(array('field1', 'field2', 'field3'), $helper->getFields());
-        $this->assertEquals(array('id' => 'desc'), $helper->getSorting());
+        $this->assertEquals('id', $helper->getSortColumn());
+        $this->assertEquals('desc', $helper->getSortOrder());
         $this->assertEquals('test', $helper->getSearchPattern());
         $this->assertEquals(array('title'), $helper->getSearchFields());
         $this->assertEquals(10, $helper->getLimit());
