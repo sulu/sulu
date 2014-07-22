@@ -37,6 +37,11 @@ class FileVersion
     /**
      * @var string
      */
+    private $mimeType;
+
+    /**
+     * @var string
+     */
     private $storageOptions;
 
     /**
@@ -173,6 +178,29 @@ class FileVersion
     public function getSize()
     {
         return $this->size;
+    }
+
+    /**
+     * Set mimeType
+     *
+     * @param string $mimeType
+     * @return FileVersion
+     */
+    public function setMimeType($mimeType)
+    {
+        $this->mimeType = $mimeType;
+
+        return $this;
+    }
+
+    /**
+     * Get mimeType
+     *
+     * @return string
+     */
+    public function getMimeType()
+    {
+        return $this->mimeType;
     }
 
     /**
