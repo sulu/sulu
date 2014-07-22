@@ -31,20 +31,12 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
      */
     private $mediaManager;
 
-    /**
-     * @var RestObjectHelper
-     */
-    private $restObjectHelper;
-
     protected function setUp()
     {
         $this->mediaManager = $this->getMock('\Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface');
-        $this->restObjectHelper = $this->getMockBuilder('\Sulu\Bundle\MediaBundle\Media\RestObject\RestObjectHelper')
-            ->disableOriginalConstructor()
-            ->getMock();
 
         $this->mediaSelection = new \Sulu\Bundle\MediaBundle\Content\Types\MediaSelectionContentType(
-            $this->mediaManager, $this->restObjectHelper, 'SuluMediaBundle:Template:image-selection.html.twig'
+            $this->mediaManager, 'SuluMediaBundle:Template:image-selection.html.twig'
         );
     }
 
@@ -157,8 +149,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
             'right',
             array(1, 2, 3, 4),
             'en',
-            $this->mediaManager,
-            $this->restObjectHelper
+            $this->mediaManager
         );
 
         $node = $this->getMockForAbstractClass(
@@ -207,8 +198,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
             'right',
             array(1, 2, 3, 4),
             'en',
-            $this->mediaManager,
-            $this->restObjectHelper
+            $this->mediaManager
         );
 
         $node = $this->getMockForAbstractClass(
