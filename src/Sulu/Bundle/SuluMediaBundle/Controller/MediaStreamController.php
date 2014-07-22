@@ -101,9 +101,7 @@ class MediaStreamController extends Controller
 
         $path = $this->getStorage()->load($fileName, $version, $storageOptions);
 
-        // in case you need the container
-        $container = $this->container;
-        $response = new StreamedResponse(function() use($container, $path) {
+        $response = new StreamedResponse(function() use($path) {
             flush(); // send headers
             $handle = fopen($path, 'r');
             while (!feof($handle)) {
