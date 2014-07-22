@@ -3,15 +3,18 @@
 // --------------------------------------------------
 
 .sulu-grid-group {
+  border-bottom: 2px solid #cccccc;
+
   .group-slide {
     width: 100%;
-    padding-bottom: 40px;
-    .grid-container {
-      min-height: 140px;
-    }
+    overflow-x: hidden;
+    padding-bottom: 1px;
   }
   .entity {
     $rowHeight: 50px;
+    &:last-child {
+      margin-bottom: -1px;
+    }
 
     .head {
       height: $rowHeight;
