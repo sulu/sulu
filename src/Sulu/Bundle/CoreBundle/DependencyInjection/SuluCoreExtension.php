@@ -182,10 +182,6 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
             'sulu.content.type.block.template',
             $contentConfig['types']['block']['template']
         );
-        $container->setParameter(
-            'sulu.content.type_prefix',
-            $contentConfig['type_prefix']
-        );
 
         // Template
         $container->setParameter(

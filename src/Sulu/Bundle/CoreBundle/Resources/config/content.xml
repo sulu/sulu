@@ -53,7 +53,6 @@
         <!-- content type manager -->
         <service id="sulu.content.type_manager" class="%sulu.content.type_manager.class%">
             <argument type="service" id="service_container"/>
-            <argument>%sulu.content.type_prefix%</argument>
         </service>
 
         <!-- structure manager -->
@@ -91,23 +90,28 @@
         <!-- simple content types -->
         <service id="sulu.content.type.text_line" class="%sulu.content.type.text_line.class%">
             <argument>%sulu.content.type.text_line.template%</argument>
+            <tag name="sulu.content.type" alias="text_line"/>
         </service>
         <service id="sulu.content.type.text_area" class="%sulu.content.type.text_line.class%">
             <argument>%sulu.content.type.text_area.template%</argument>
+            <tag name="sulu.content.type" alias="text_area"/>
         </service>
         <service id="sulu.content.type.text_editor" class="%sulu.content.type.text_editor.class%">
             <argument>%sulu.content.type.text_editor.template%</argument>
+            <tag name="sulu.content.type" alias="text_editor"/>
         </service>
 
         <!-- complex content types -->
         <service id="sulu.content.type.resource_locator" class="%sulu.content.type.resource_locator.class%">
             <argument type="service" id="sulu.content.rlp.strategy.tree"/>
             <argument>%sulu.content.type.resource_locator.template%</argument>
+            <tag name="sulu.content.type" alias="resource_locator"/>
         </service>
         <service id="sulu.content.type.block" class="%sulu.content.type.block.class%">
             <argument type="service" id="sulu.content.type_manager"/>
             <argument>%sulu.content.type.block.template%</argument>
             <argument>%sulu.content.language.namespace%</argument>
+            <tag name="sulu.content.type" alias="block"/>
         </service>
 
     </services>
