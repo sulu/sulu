@@ -10,54 +10,63 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\Manager;
 
-use Sulu\Bundle\MediaBundle\Entity\Media;
+use Sulu\Bundle\MediaBundle\Api\Media;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-/**
- * Defines the operations of the MediaManager.
- * The MediaManager is responsible for the centralized management of our media.
- * @package Sulu\Bundle\MediaBundle\Media
- */
 interface MediaManagerInterface
 {
     /**
-     * Load the media object
-     * @param $id
-     * @return Media
-     */
-    public function get($id);
-
-    /**
-     * Loads multiple media objct
-     * @param string[] $ids
+     * Returns media with a given collection and/or ids and/or limit
+     * if no arguments passed returns all media
+     * @param string $locale the locale which the object will be returned
+     * @param int $collection the id of the collection to filter for
+     * @param array $ids the media ids
+     * @param int $limit to limite the output
      * @return Media[]
      */
-    public function getMultiple($ids);
-    /**
-     * Adds a new file to a media
-     * @param $uploadedFile
-     * @param int $userId
-     * @param int $collectionId
-     * @param array $properties contains e.g. meta data (title, description, locale), content- and publish languages
-     * @return mixed
-     */
-    public function add($uploadedFile, $userId, $collectionId, $properties = array());
+    public function get($locale, $collection = null, $ids = null, $limit = null);
 
     /**
-     * Update the file to a new fileversion
-     * @param $uploadedFile
-     * @param int $userId
-     * @param int $id
-     * @param null|int $collectionId when null no changes!
-     * @param array $properties
-     * @return mixed
+     * Returns a media with a given id
+     * @param int $id the id of the category
+     * @param string $locale the locale which the object will be returned
+     * @return Media
      */
-    public function update($uploadedFile, $userId, $id, $collectionId = null, $properties = array());
+    public function getById($id, $locale);
 
     /**
-     * Remove a media
-     * @param $id
-     * @param $userId
+     * Creates a new media or overrides an existing one
+     * @param UploadedFile $uploadedFile
+     * @param array $data The data of the category to save
+     * @param int $userId The id of the user, who is doing this change
+     * @return Media
+     */
+    public function save($uploadedFile, $data, $userId);
+
+    /**
+     * Deletes a media with a given id
+     * @param int $id the id of the category to delete
+     */
+    public function delete($id);
+
+    /**
+     * Return the FieldDescriptor by name
+     * @param string $key
+     * @return DoctrineFieldDescriptor
+     */
+    public function getFieldDescriptor($key);
+
+    /**
+     * Return the FieldDescriptors
+     * @return $this
+     */
+    public function getFieldDescriptors();
+
+    /**
+     * Increase the download counter of a fileVersion
+     * @param int $fileVersionId
      * @return mixed
      */
-    public function remove($id, $userId);
+    public function increaseDownloadCounter($fileVersionId);
 }

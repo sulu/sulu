@@ -11,14 +11,32 @@
         <field name="name" type="string" column="name" length="255" />
         <field name="version" type="integer" column="version" />
         <field name="size" type="integer" column="size" />
+        <field name="downloadCounter" type="integer" column="downloadCounter">
+            <options>
+                <option name="default">0</option>
+            </options>
+        </field>
         <field name="storageOptions" type="text" column="storageOptions" nullable="true" />
+        <field name="mimeType" type="string" column="mimeType" length="255" nullable="true" />
 
         <field name="created" type="datetime" column="created"/>
         <field name="changed" type="datetime" column="changed"/>
 
-        <one-to-many field="contentLanguages" target-entity="Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage" mapped-by="fileVersion"/>
-        <one-to-many field="publishLanguages" target-entity="Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage" mapped-by="fileVersion"/>
-        <one-to-many field="meta" target-entity="Sulu\Bundle\MediaBundle\Entity\FileVersionMeta" mapped-by="fileVersion"/>
+        <one-to-many field="contentLanguages" target-entity="Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage" mapped-by="fileVersion">
+            <cascade>
+                <cascade-persist />
+            </cascade>
+        </one-to-many>
+        <one-to-many field="publishLanguages" target-entity="Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage" mapped-by="fileVersion">
+            <cascade>
+                <cascade-persist />
+            </cascade>
+        </one-to-many>
+        <one-to-many field="meta" target-entity="Sulu\Bundle\MediaBundle\Entity\FileVersionMeta" mapped-by="fileVersion">
+            <cascade>
+                <cascade-persist />
+            </cascade>
+        </one-to-many>
 
         <many-to-one field="file" target-entity="Sulu\Bundle\MediaBundle\Entity\File" inversed-by="fileVersions">
             <join-columns>
