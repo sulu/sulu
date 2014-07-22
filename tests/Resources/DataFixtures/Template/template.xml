@@ -22,18 +22,23 @@
                 <placeholder lang="en">Placeholder-Info-EN</placeholder>
             </meta>
 
-            <tag name="sulu.node.name" />
-            <tag name="sulu.node.title" priority="10" />
+            <tag name="sulu.node.name"/>
+            <tag name="sulu.node.title" priority="10"/>
         </property>
+
         <property name="url" type="resource_locator" mandatory="true">
-            <tag name="sulu.rlp.part" priority="1" />
+            <tag name="sulu.rlp.part" priority="1"/>
         </property>
+
         <property name="article" type="text_area" mandatory="false">
-            <tag name="sulu.node.title" priority="5" />
+            <tag name="sulu.node.title" priority="5"/>
         </property>
+
         <property name="pages" type="smart_content_selection" mandatory="false">
-            <tag name="sulu.node.title" />
+            <tag name="sulu.node.title"/>
         </property>
+
+        <property name="article_number" type="text_line" multilingual="false"/>
 
         <property name="images" type="image_selection" minOccurs="0" maxOccurs="2">
             <params>
