@@ -20,8 +20,11 @@ class ScaleCommand implements CommandInterface
     public function execute(&$image, $parameters)
     {
         $size = $image->getSize();
-        $newWidth = isset($parameters['x']) ? intval($parameters['x']) : null;
-        $newHeight = isset($parameters['y']) ? intval($parameters['y']) : null;
+
+        $retina = isset($parameters['retina']) && $parameters['retina'] != 'false' ? 2 : 1;
+
+        $newWidth = isset($parameters['x']) ? intval($parameters['x']) * $retina : null;
+        $newHeight = isset($parameters['y']) ? intval($parameters['y']) * $retina : null;
         $mode = isset($parameters['mode']) ? intval($parameters['mode']) : $image::THUMBNAIL_OUTBOUND;
 
         if ($newHeight == null) {
