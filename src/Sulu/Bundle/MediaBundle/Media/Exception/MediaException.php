@@ -120,6 +120,12 @@ class MediaException extends Exception
      */
     const EXCEPTION_CODE_MEDIA_TYPE_NOT_FOUND = 5017;
 
+    /**
+     * @var int
+     * @description no previews are generated for this extension
+     */
+    const EXCEPTION_INVALID_EXTENSION_FOR_PREVIEW = 5018;
+
     public function toArray()
     {
         return array(
