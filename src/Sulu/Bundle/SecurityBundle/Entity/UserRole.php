@@ -117,7 +117,7 @@ class UserRole extends ApiEntity
     /**
      * Set role
      *
-     * @param \Sulu\Bundle\SecurityBundle\Entity\Role $role
+     * @param \Sulu\Bundle\SecurityBundle\Entity\RoleInterface $role
      * @return UserRole
      */
     public function setRole(\Sulu\Bundle\SecurityBundle\Entity\RoleInterface $role)
