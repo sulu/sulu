@@ -71,9 +71,9 @@ class XmlFormatLoader extends FileLoader
                 foreach ($this->xpath->query('x:commands/x:command', $formatNode) as $commandNode) {
                     $action = $this->xpath->query('x:action', $commandNode)->item(0)->nodeValue;
                     $parameters = array();
-                    $parametersNode = $this->xpath->query('x:parameters', $commandNode)->item(0);
-                    foreach ($parametersNode->attributes as $key => $attribute) {
-                        $parameters[$key] = $attribute->value;
+                    $parameterNodes = $this->xpath->query('x:parameters/x:parameter', $commandNode);
+                    foreach ($parameterNodes as $parameterNode) {
+                        $parameters[$parameterNode->attributes->getNamedItem('name')->nodeValue] = $parameterNode->nodeValue;
                     }
 
                     $command = array(
