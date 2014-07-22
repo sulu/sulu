@@ -179,6 +179,8 @@ define([], function() {
          * @param {String} classes
          */
         addClasses: function(classes) {
+
+            // TODO rename to setClass and call reset before?
             this.sandbox.dom.addClass(this.$el, classes);
         },
 
@@ -268,7 +270,10 @@ define([], function() {
             if (!$element) {
                 var $widget;
                 this.loadWidget(url).then(function(widget) {
-                    $widget = this.sandbox.dom.createElement(widget);
+                    $widget = this.sandbox.dom.createElement(
+                        this.sandbox.util.template(
+                            widget, {translate: this.sandbox.translate}
+                        ));
                     this.widgets.push({
                         url: url,
                         $el: $widget
@@ -294,7 +299,10 @@ define([], function() {
             if (!$element) {
                 var $widget;
                 this.loadWidget(url).then(function(widget) {
-                    $widget = this.sandbox.dom.createElement(widget);
+                    $widget = this.sandbox.dom.createElement(
+                        this.sandbox.util.template(
+                            widget, {translate: this.sandbox.translate}
+                        ));
                     this.widgets.unshift({
                         url: url,
                         $el: $widget
@@ -323,7 +331,10 @@ define([], function() {
                     var $widget;
                     this.emptySidebar();
                     this.loadWidget(url).then(function(widget) {
-                        $widget = this.sandbox.dom.createElement(widget);
+                        $widget = this.sandbox.dom.createElement(
+                            this.sandbox.util.template(
+                                widget, {translate: this.sandbox.translate}
+                            ));
                         this.widgets.push({
                             url: url,
                             $el: $widget

@@ -2,17 +2,56 @@
 /*----------------------------------------*/
 
 .sulu-sidebar {
-  width: 100%;
-  height: 100%;
-  background: $white;
-  overflow: auto;
+    width: 100%;
+    height: 100%;
+    background: $white;
+    overflow: auto;
 
-  .sidebar-loader {
-    position: relative;
-    left: 0;
-    top: 50%;
-    margin-top: -50px;
-  }
+    .sidebar-loader {
+        position: relative;
+        left: 0;
+        top: 50%;
+        margin-top: -50px;
+    }
+
+    .action {
+        color: $black;
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+    .bold {
+        font-weight: bold;
+    }
+
+    .blue-icon {
+        width: 30px;
+        height: 20px;
+        cursor: pointer;
+        color: #fff;
+        background: #52b6ca;
+        text-align: center;
+        border-radius: 2px;
+        margin-left: 10px;
+        display: inline-block;
+        font-size: 15px;
+        opacity: 0;
+        -webkit-transition: opacity 100ms ease-in;
+        -webkit-transition-delay: 200ms;
+        -moz-transition: opacity 100ms ease-in 200ms;
+        -o-transition: opacity 100ms ease-in 200ms;
+        transition: opacity 100ms ease-in 200ms;
+    }
+
+    .show-icon:hover .blue-icon {
+        opacity: 1;
+    }
+
+    .big {
+        font-size: 18px;
+        font-weight: 200;
+    }
+
 }
 
 .sidebar-padding-50 > div {
