@@ -13,35 +13,45 @@ namespace Sulu\Bundle\MediaBundle\Media\Manager;
 use Doctrine\Common\Persistence\ObjectManager;
 
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
+use Sulu\Bundle\MediaBundle\Entity\MediaType;
+use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
+use Sulu\Bundle\MediaBundle\Media\Exception\MediaTypeNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Sulu\Bundle\TagBundle\Entity\Tag;
-use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
-use Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage;
-use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepository;
-use Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage;
-use Sulu\Bundle\MediaBundle\Entity\Media;
-use Sulu\Bundle\MediaBundle\Entity\MediaRepository;
 use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\InvalidFileException;
-use Sulu\Bundle\MediaBundle\Media\Exception\InvalidMediaTypeException;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Sulu\Bundle\MediaBundle\Media\FileValidator\FileValidatorInterface;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Security\UserInterface;
 use Sulu\Component\Security\UserRepositoryInterface;
-use DateTime;
+use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Sulu\Bundle\MediaBundle\Entity\Media as MediaEntity;
-use Sulu\Bundle\MediaBundle\Api\Media as MediaWrapper;
+use Sulu\Bundle\MediaBundle\Api\Media;
+use DateTime;
 
 /**
  * @package Sulu\Bundle\MediaBundle\Media\Manager
  */
 class DefaultMediaManager implements MediaManagerInterface
 {
+    const ENTITY_NAME_MEDIA = 'SuluMediaBundle:Media';
+    const ENTITY_NAME_MEDIATYPE = 'SuluMediaBundle:MediaType';
+    const ENTITY_NAME_FILE = 'SuluMediaBundle:File';
+    const ENTITY_NAME_FILEVERSION = 'SuluMediaBundle:FileVersion';
+    const ENTITY_NAME_FILEVERSIONMETA = 'SuluMediaBundle:FileVersionMeta';
+    const ENTITY_NAME_TAG = 'SuluTagBundle:Tag';
+    const ENTITY_NAME_FILEVERSIONCONTENTLANGUAGE = 'SuluMediaBundle:FileVersionContentLanguage';
+    const ENTITY_NAME_FILEVERSIONPUBLISHLANGUAGE = 'SuluMediaBundle:FileVersionPublishLanguage';
+    const ENTITY_NAME_CONTACT = 'SuluContactBundle:Contact';
+    const ENTITY_NAME_USER = 'SuluSecurityBundle:User';
+
     /**
      * The repository for communication with the database
      * @var MediaRepositoryInterface
@@ -95,6 +105,11 @@ class DefaultMediaManager implements MediaManagerInterface
     private $mediaTypes;
 
     /**
+     * @var DoctrineFieldDescriptor[]
+     */
+    private $fieldDescriptors = array();
+
+    /**
      * @param MediaRepositoryInterface $mediaRepository
      * @param CollectionRepository $collectionRepository
      * @param UserRepositoryInterface $userRepository
@@ -117,7 +132,8 @@ class DefaultMediaManager implements MediaManagerInterface
         $maxFileSize,
         $blockedMimeTypes,
         $mediaTypes
-    ) {
+    )
+    {
         $this->mediaRepository = $mediaRepository;
         $this->collectionRepository = $collectionRepository;
         $this->em = $em;
@@ -128,22 +144,211 @@ class DefaultMediaManager implements MediaManagerInterface
         $this->maxFileSize = $maxFileSize;
         $this->blockedMimeTypes = $blockedMimeTypes;
         $this->mediaTypes = $mediaTypes;
+
+        $this->initializeFieldDescriptors();
+    }
+
+    /**
+     * TODO
+     * @return array
+     */
+    private function initializeFieldDescriptors()
+    {
+        $fieldDescriptors['id'] = new DoctrineFieldDescriptor(
+            'id',
+            'id',
+            self::ENTITY_NAME_MEDIA,
+            'public.id',
+            array(),
+            true,
+            false,
+            '',
+            '50px',
+            ''
+        );
+
+        $fieldDescriptors['thumbnails'] = new DoctrineFieldDescriptor(
+            'id',
+            'thumbnails',
+            self::ENTITY_NAME_MEDIA,
+            'media.media.thumbnails',
+            array(),
+            false,
+            true,
+            'thumbnails'
+        );
+
+        $fieldDescriptors['name'] = new DoctrineFieldDescriptor(
+            'name',
+            'name',
+            self::ENTITY_NAME_FILEVERSION,
+            'public.name',
+            array(
+                self::ENTITY_NAME_FILE => new DoctrineJoinDescriptor(
+                        self::ENTITY_NAME_FILE,
+                        self::ENTITY_NAME_MEDIA . '.file'
+                    ),
+                self::ENTITY_NAME_FILEVERSION => new DoctrineJoinDescriptor(
+                        self::ENTITY_NAME_FILEVERSION,
+                        self::ENTITY_NAME_FILE . '.fileVersion',
+                        self::ENTITY_NAME_FILEVERSION . '.version = ' . self::ENTITY_NAME_FILE . '.version'
+                    )
+            )
+        );
+        $fieldDescriptors['size'] = new DoctrineFieldDescriptor(
+            'size',
+            'size',
+            self::ENTITY_NAME_FILEVERSION,
+            'media.media.size',
+            array(
+                self::ENTITY_NAME_FILE => new DoctrineJoinDescriptor(
+                        self::ENTITY_NAME_FILE,
+                        self::ENTITY_NAME_MEDIA . '.file'
+                    ),
+                self::ENTITY_NAME_FILEVERSION => new DoctrineJoinDescriptor(
+                        self::ENTITY_NAME_FILEVERSION,
+                        self::ENTITY_NAME_FILE . '.fileVersion',
+                        self::ENTITY_NAME_FILEVERSION . '.version = ' . self::ENTITY_NAME_FILE . '.version'
+                    )
+            ),
+            false,
+            true,
+            'bytes'
+        );
+
+        $fieldDescriptors['changed'] = new DoctrineFieldDescriptor(
+            'changed',
+            'changed',
+            self::ENTITY_NAME_FILEVERSION,
+            'public.changed',
+            array(
+                self::ENTITY_NAME_FILE => new DoctrineJoinDescriptor(
+                        self::ENTITY_NAME_FILE,
+                        self::ENTITY_NAME_MEDIA . '.file'
+                    ),
+                self::ENTITY_NAME_FILEVERSION => new DoctrineJoinDescriptor(
+                        self::ENTITY_NAME_FILEVERSION,
+                        self::ENTITY_NAME_FILE . '.fileVersion',
+                        self::ENTITY_NAME_FILEVERSION . '.version = ' . self::ENTITY_NAME_FILE . '.version'
+                    )
+            ),
+            true,
+            false,
+            'date'
+        );
+
+        $fieldDescriptors['created'] = new DoctrineFieldDescriptor(
+            'created',
+            'created',
+            self::ENTITY_NAME_FILEVERSION,
+            'public.created',
+            array(
+                self::ENTITY_NAME_FILE => new DoctrineJoinDescriptor(
+                        self::ENTITY_NAME_FILE,
+                        self::ENTITY_NAME_MEDIA . '.file'
+                    ),
+                self::ENTITY_NAME_FILEVERSION => new DoctrineJoinDescriptor(
+                        self::ENTITY_NAME_FILEVERSION,
+                        self::ENTITY_NAME_FILE . '.fileVersion',
+                        self::ENTITY_NAME_FILEVERSION . '.version = ' . self::ENTITY_NAME_FILE . '.version'
+                    )
+            ),
+            true,
+            false,
+            'date'
+        );
+
+        $fieldDescriptors['title'] = new DoctrineFieldDescriptor(
+            'title',
+            'title',
+            self::ENTITY_NAME_FILEVERSIONMETA,
+            'public.title',
+            array(
+                self::ENTITY_NAME_FILE => new DoctrineJoinDescriptor(
+                        self::ENTITY_NAME_FILE,
+                        self::ENTITY_NAME_MEDIA . '.file'
+                    ),
+                self::ENTITY_NAME_FILEVERSION => new DoctrineJoinDescriptor(
+                        self::ENTITY_NAME_FILEVERSION,
+                        self::ENTITY_NAME_FILE . '.fileVersion',
+                        self::ENTITY_NAME_FILEVERSION . '.version = ' . self::ENTITY_NAME_FILE . '.version'
+                    ),
+                self::ENTITY_NAME_FILEVERSIONMETA => new DoctrineJoinDescriptor(
+                        self::ENTITY_NAME_FILEVERSIONMETA,
+                        self::ENTITY_NAME_FILEVERSION . '.meta'
+                    )
+            ),
+            false,
+            true,
+            'title'
+        );
+
+        $fieldDescriptors['description'] = new DoctrineFieldDescriptor(
+            'description',
+            'description',
+            self::ENTITY_NAME_FILEVERSIONMETA,
+            'media.media.description',
+            array(
+                self::ENTITY_NAME_FILE => new DoctrineJoinDescriptor(
+                        self::ENTITY_NAME_FILE,
+                        self::ENTITY_NAME_MEDIA . '.file'
+                    ),
+                self::ENTITY_NAME_FILEVERSION => new DoctrineJoinDescriptor(
+                        self::ENTITY_NAME_FILEVERSION,
+                        self::ENTITY_NAME_FILE . '.fileVersion',
+                        self::ENTITY_NAME_FILEVERSION . '.version = ' . self::ENTITY_NAME_FILE . '.version'
+                    ),
+                self::ENTITY_NAME_FILEVERSIONMETA => new DoctrineJoinDescriptor(
+                        self::ENTITY_NAME_FILEVERSIONMETA,
+                        self::ENTITY_NAME_FILEVERSION . '.meta'
+                    )
+            )
+        );
+
+        $this->fieldDescriptors = $fieldDescriptors;
+
+        return $this->fieldDescriptors;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function find($collection = null, $ids = null, $limit = null)
+    public function getFieldDescriptor($key)
     {
-        return $this->mediaRepository->findMedia($collection, $ids, $limit);
+        return $this->fieldDescriptors[$key];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function findById($id)
+    public function getFieldDescriptors()
     {
-        return $this->mediaRepository->findMediaById($id);
+        return $this->fieldDescriptors;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getById($id, $locale)
+    {
+        $mediaEntity = $this->mediaRepository->findMediaById($id);
+        if (!$mediaEntity) {
+            throw new MediaNotFoundException('Media with the ID ' . $id . ' was not found.');
+        }
+        return $this->addFormatsAndUrl(new Media($mediaEntity, $locale));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function get($locale, $collection = null, $ids = null, $limit = null)
+    {
+        $media = array();
+        $mediaEntities = $this->mediaRepository->findMedia($collection, $ids, $limit);
+        foreach ($mediaEntities as $mediaEntity) {
+            $media[] = $this->addFormatsAndUrl(new Media($mediaEntity, $locale));
+        }
+        return $media;
     }
 
     /**
@@ -152,10 +357,12 @@ class DefaultMediaManager implements MediaManagerInterface
     public function save($uploadedFile, $data, $userId)
     {
         if (isset($data['id'])) {
-            return $this->modifyMedia($uploadedFile, $data, $this->getUser($userId));
+            $media = $this->modifyMedia($uploadedFile, $data, $this->getUser($userId));
         } else {
-            return $this->createMedia($uploadedFile, $data, $this->getUser($userId));
+            $media = $this->createMedia($uploadedFile, $data, $this->getUser($userId));
         }
+
+        return $this->addFormatsAndUrl($media);
     }
 
     /**
@@ -163,50 +370,50 @@ class DefaultMediaManager implements MediaManagerInterface
      * @param UploadedFile $uploadedFile
      * @param $data
      * @param $user
-     * @return object|Media
-     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
+     * @return Media
+     * @throws \Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException
      * @throws \Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException
+     * @throws \Symfony\Component\Filesystem\Exception\FileNotFoundException
      */
     private function modifyMedia($uploadedFile, $data, $user)
     {
 
-        $mediaEntity = $this->findById($data['id']);
+        $mediaEntity = $this->mediaRepository->findMediaById($data['id']);
         if (!$mediaEntity) {
-            throw new EntityNotFoundException($mediaEntity, $data['id']);
+            throw new MediaNotFoundException('Media with the ID ' . $data['id'] . ' not found');
         }
 
         $mediaEntity->setChanged(new \DateTime());
         $mediaEntity->setChanger($user);
 
+        $files = $mediaEntity->getFiles();
+        if (!isset($files[0])) {
+            throw new FileNotFoundException('File was not found in media entity with the id . ' . $data['id']);
+        }
 
         /**
          * @var File $file
          */
-        $file = $mediaEntity->getFiles()[0]; // currently a media can only have one file
+        $file = $files[0]; // currently a media can only have one file
 
         $file->setChanged(new Datetime());
         $file->setChanger($user);
 
         $version = $file->getVersion();
 
-        $fileName = null;
-        $oldStorageOptions = null;
+        $currentFileVersion = null;
 
         /**
          * @var FileVersion $fileVersion
          */
         foreach ($file->getFileVersions() as $fileVersion) {
-            if ($version == $file->getVersion()) {
-                $fileName = $fileVersion->getName();
-                $oldStorageOptions = $fileVersion->getStorageOptions();
-
-                // delete old fileversion from cache
-                $this->formatManager->purge($mediaEntity->getId(), $fileVersion->getName(), $fileVersion->getStorageOptions());
+            if ($version == $fileVersion->getVersion()) {
+                $currentFileVersion = $fileVersion;
                 break;
             }
         }
 
-        if (!$fileName) {
+        if (!$currentFileVersion) {
             throw new FileVersionNotFoundException ('Actual Version not found(' . $version . ')');
         }
 
@@ -217,41 +424,58 @@ class DefaultMediaManager implements MediaManagerInterface
 
             $data['storageOptions'] = $this->storage->save(
                 $uploadedFile->getPathname(),
-                $uploadedFile->getFilename(),
+                $uploadedFile->getClientOriginalName(),
                 $version,
-                $oldStorageOptions
+                $currentFileVersion->getStorageOptions()
             );
             $data['name'] = $uploadedFile->getClientOriginalName();
             $data['size'] = $uploadedFile->getSize();
             $data['mimeType'] = $uploadedFile->getMimeType();
+            $data['type'] = array(
+                'id' => $this->getMediaType($uploadedFile)
+            );
             $data['version'] = $version;
 
-            $fileVersion = new FileVersion();
+            $fileVersion = clone($currentFileVersion);
             $fileVersion->setChanged(new Datetime());
             $fileVersion->setCreated(new Datetime());
             $fileVersion->setChanger($user);
             $fileVersion->setCreator($user);
+
             $file->setVersion($version);
             $fileVersion->setVersion($version);
             $fileVersion->setFile($file);
             $file->addFileVersion($fileVersion);
+
+            // delete old fileversion from cache
+            $this->formatManager->purge($mediaEntity->getId(), $currentFileVersion->getName(), $currentFileVersion->getStorageOptions());
+        } else {
+            // not setable in update
+            $data['name'] = null;
+            $data['size'] = null;
+            $data['type'] = null;
+            $data['version'] = null;
+            $data['mimeType'] = null;
+            $data['storageOptions'] = null;
         }
 
-        $mediaWrapper = $this->setDataToMediaWrapper(
-            $this->getApiObject($mediaEntity, $data['locale']),
+        $media = new Media($mediaEntity, $data['locale']);
+
+        $media = $this->setDataToMedia(
+            $media,
             $data
         );
 
-        $mediaEntity = $mediaWrapper->getEntity();
+        $mediaEntity = $media->getEntity();
         $this->em->persist($mediaEntity);
         $this->em->flush();
 
-        return $mediaEntity;
+        return $media;
     }
 
     /**
      * Create a new media
-     * @param $uploadedFile
+     * @param UploadedFile $uploadedFile
      * @param $data
      * @param $user
      * @return MediaEntity
@@ -269,7 +493,9 @@ class DefaultMediaManager implements MediaManagerInterface
         $data['name'] = $uploadedFile->getClientOriginalName();
         $data['size'] = $uploadedFile->getSize();
         $data['mimeType'] = $uploadedFile->getMimeType();
-        $data['type'] = $this->getMediaType($uploadedFile);
+        $data['type'] = array(
+            'id' => $this->getMediaType($uploadedFile)
+        );
 
         $mediaEntity = new MediaEntity();
         $mediaEntity->setCreator($user);
@@ -296,16 +522,18 @@ class DefaultMediaManager implements MediaManagerInterface
         $file->addFileVersion($fileVersion);
         $mediaEntity->addFile($file);
 
-        $collectionWrapper = $this->setDataToMediaWrapper(
-            $this->getApiObject($mediaEntity, $data['locale']),
+        $media = new Media($mediaEntity, $data['locale']);
+
+        $media = $this->setDataToMedia(
+            $media,
             $data
         );
 
-        $collectionEntity = $collectionWrapper->getEntity();
-        $this->em->persist($collectionEntity);
+        $mediaEntity = $media->getEntity();
+        $this->em->persist($mediaEntity);
         $this->em->flush();
 
-        return $collectionEntity;
+        return $media;
     }
 
     /**
@@ -322,46 +550,113 @@ class DefaultMediaManager implements MediaManagerInterface
             }
         }
 
-        return $this->em->getRepository('SuluMediaBundle:MediaType')->find($id);
+        return $id;
     }
 
     /**
      * Data can be set over by array
-     * @param $mediaWrapper
+     * @param $media
      * @param $data
-     * @return MediaWrapper
+     * @return Media
      */
-    protected function setDataToMediaWrapper(MediaWrapper $mediaWrapper, $data)
+    protected function setDataToMedia(Media $media, $data)
     {
-        foreach ($data as $key => $value) {
+        foreach ($data as $attribute => $value) {
             if ($value) {
-                switch ($key) {
-                    case 'collection':
-                        $value = $this->getCollectionById($value);
+                switch ($attribute) {
+                    case 'size':
+                        $media->setSize($value);
                         break;
-                }
-                $setDataMethod = 'set' . ucfirst($key);
-                if (method_exists($mediaWrapper, $setDataMethod)) {
-                    $mediaWrapper->$setDataMethod($value);
+                    case 'title':
+                        $media->setTitle($value);
+                        break;
+                    case 'description':
+                        $media->setDescription($value);
+                        break;
+                    case 'version':
+                        $media->setVersion($value);
+                        break;
+                    case 'name':
+                        $media->setName($value);
+                        break;
+                    case 'url':
+                        $media->setUrl($value);
+                        break;
+                    case 'formats':
+                        $media->setFormats($value);
+                        break;
+                    case 'storageOptions':
+                        $media->setStorageOptions($value);
+                        break;
+                    case 'publishLanguages':
+                        $media->setPublishLanguages($value);
+                        break;
+                    case 'contentLanguages':
+                        $media->setContentLanguages($value);
+                        break;
+                    case 'tags':
+                        $media->setTags($value); // todo
+                        break;
+                    case 'properties':
+                        $media->setProperties($value);
+                        break;
+                    case 'changed':
+                        $media->setChanged($value);
+                        break;
+                    case 'created':
+                        $media->setCreated($value);
+                        break;
+                    case 'changer':
+                        $media->setChanger($value);
+                        break;
+                    case 'creator':
+                        $media->setCreator($value);
+                        break;
+                    case 'collection':
+                        $collectionEntity = $this->getCollectionById($value);
+                        $media->setCollection($collectionEntity); // set parent
+                        break;
+                    case 'type':
+                        if (!isset($value['id'])) {
+                            break;
+                        }
+                        $type = $this->getTypeById($value['id']);
+                        $media->setType($type);
+                        break;
                 }
             }
         }
 
-        return $mediaWrapper;
+        return $media;
     }
 
     /**
      * @param $collectionId
      * @return object
-     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
+     * @throws \Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException
      */
     protected function getCollectionById($collectionId)
     {
         $collection = $this->collectionRepository->find($collectionId);
         if (!$collection) {
-            throw new EntityNotFoundException('SuluMediaBundle:Collection', $collectionId);
+            throw new CollectionNotFoundException('Collection with the ID ' . $collectionId . ' not found.');
         }
         return $collection;
+    }
+
+    /**
+     * @param int $typeId
+     * @return MediaType
+     * @throws MediaTypeNotFoundException
+     */
+    protected function getTypeById($typeId)
+    {
+        /** @var MediaType $type */
+        $type = $this->em->getRepository('SuluMediaBundle:MediaType')->find($typeId);
+        if (!$type) {
+            throw new MediaTypeNotFoundException('Collection Type with the ID ' . $typeId . ' not found');
+        }
+        return $type;
     }
 
     /**
@@ -372,7 +667,7 @@ class DefaultMediaManager implements MediaManagerInterface
         $mediaEntity = $this->mediaRepository->findMediaById($id);
 
         if (!$mediaEntity) {
-            throw new EntityNotFoundException('SuluMediaBundle:Collection', $id);
+            throw new MediaNotFoundException('Media with the ID ' . $id . ' not found.');
         }
 
         $this->em->remove($mediaEntity);
@@ -380,44 +675,20 @@ class DefaultMediaManager implements MediaManagerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param Media $media
+     * @return Media
      */
-    public function getApiObject($media, $locale)
+    protected function addFormatsAndUrl(Media $media)
     {
-        if ($media instanceof MediaEntity) {
-            return $this->addFormatsAndUrl(new MediaWrapper($media, $locale));
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getApiObjects($media, $locale)
-    {
-        $arrReturn = [];
-        foreach($media as $mediaEntity) {
-            array_push($arrReturn, $this->getApiObject($mediaEntity, $locale));
-        }
-        return $arrReturn;
-    }
-
-    /**
-     * @param MediaWrapper $mediaWrapper
-     * @return MediaWrapper
-     */
-    protected function addFormatsAndUrl(MediaWrapper $mediaWrapper)
-    {
-        $mediaWrapper->setFormats(
-            $this->getFormats($mediaWrapper->getId(), $mediaWrapper->getName(), $mediaWrapper->getStorageOptions())
+        $media->setFormats(
+            $this->getFormats($media->getId(), $media->getName(), $media->getStorageOptions())
         );
 
-        $mediaWrapper->setUrl(
-            $this->getUrl($mediaWrapper->getName(), $mediaWrapper->getVersion(), $mediaWrapper->getStorageOptions())
+        $media->setUrl(
+            $this->getUrl($media->getName(), $media->getVersion(), $media->getStorageOptions())
         );
 
-        return $mediaWrapper;
+        return $media;
     }
 
     /**

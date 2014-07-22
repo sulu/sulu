@@ -16,7 +16,6 @@ namespace Sulu\Bundle\MediaBundle\Entity;
  */
 interface CollectionRepositoryInterface
 {
-
     /**
      * Finds the collection with a given id
      * @param int $id

@@ -27,9 +27,10 @@ define(function () {
 
         view: true,
 
-        fullSize: {
-            width: true,
-            keepPaddings: true
+        layout: {
+            content: {
+                width: 'max'
+            }
         },
 
         header: {
@@ -108,17 +109,18 @@ define(function () {
                         url: '/admin/api/collections',
                         view: 'group',
                         pagination: false,
+                        resultKey: 'collections',
                         matchings: [
                             {
-                                id: 'title',
+                                name: 'title',
                                 type: 'title'
                             },
                             {
-                                id: 'mediaNumber',
+                                name: 'mediaNumber',
                                 type: 'count'
                             },
                             {
-                                id: 'thumbnails',
+                                name: 'thumbnails',
                                 type: 'thumbnails'
                             }
                         ]
