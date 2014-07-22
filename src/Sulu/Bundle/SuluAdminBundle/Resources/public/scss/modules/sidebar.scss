@@ -8,6 +8,9 @@
   overflow: auto;
 
   .sidebar-loader {
-    margin-top: 40px;
+    position: relative;
+    left: 0;
+    top: 50%;
+    margin-top: -50px;
   }
 }
