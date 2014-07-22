@@ -12,8 +12,8 @@ namespace Sulu\Bundle\MediaBundle\Media\ImageConverter\Command;
 
 use Imagine\Image\Box;
 
-class ScaleCommand implements CommandInterface {
-
+class ScaleCommand implements CommandInterface
+{
     /**
      * {@inheritdoc}
      */
@@ -33,5 +33,4 @@ class ScaleCommand implements CommandInterface {
 
         $image = $image->thumbnail(new Box($newWidth, $newHeight), $mode);
     }
-
 } 

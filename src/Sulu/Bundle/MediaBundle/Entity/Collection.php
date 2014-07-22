@@ -149,7 +149,7 @@ class Collection
         $this->media = new \Doctrine\Common\Collections\ArrayCollection();
         $this->children = new \Doctrine\Common\Collections\ArrayCollection();
     }
-    
+
     /**
      * Set style
      *
@@ -159,14 +159,14 @@ class Collection
     public function setStyle($style)
     {
         $this->style = $style;
-    
+
         return $this;
     }
 
     /**
      * Get style
      *
-     * @return string 
+     * @return string
      */
     public function getStyle()
     {
@@ -182,14 +182,14 @@ class Collection
     public function setLft($lft)
     {
         $this->lft = $lft;
-    
+
         return $this;
     }
 
     /**
      * Get lft
      *
-     * @return integer 
+     * @return integer
      */
     public function getLft()
     {
@@ -205,14 +205,14 @@ class Collection
     public function setRgt($rgt)
     {
         $this->rgt = $rgt;
-    
+
         return $this;
     }
 
     /**
      * Get rgt
      *
-     * @return integer 
+     * @return integer
      */
     public function getRgt()
     {
@@ -228,14 +228,14 @@ class Collection
     public function setDepth($depth)
     {
         $this->depth = $depth;
-    
+
         return $this;
     }
 
     /**
      * Get depth
      *
-     * @return integer 
+     * @return integer
      */
     public function getDepth()
     {
@@ -251,14 +251,14 @@ class Collection
     public function setCreated($created)
     {
         $this->created = $created;
-    
+
         return $this;
     }
 
     /**
      * Get created
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getCreated()
     {
@@ -274,14 +274,14 @@ class Collection
     public function setChanged($changed)
     {
         $this->changed = $changed;
-    
+
         return $this;
     }
 
     /**
      * Get changed
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getChanged()
     {
@@ -291,7 +291,7 @@ class Collection
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -307,7 +307,7 @@ class Collection
     public function addMeta(\Sulu\Bundle\MediaBundle\Entity\CollectionMeta $meta)
     {
         $this->meta[] = $meta;
-    
+
         return $this;
     }
 
@@ -324,7 +324,7 @@ class Collection
     /**
      * Get meta
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getMeta()
     {
@@ -340,7 +340,7 @@ class Collection
     public function addMedia(\Sulu\Bundle\MediaBundle\Entity\Media $media)
     {
         $this->media[] = $media;
-    
+
         return $this;
     }
 
@@ -357,7 +357,7 @@ class Collection
     /**
      * Get media
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getMedia()
     {
@@ -373,7 +373,7 @@ class Collection
     public function addChildren(\Sulu\Bundle\MediaBundle\Entity\Collection $children)
     {
         $this->children[] = $children;
-    
+
         return $this;
     }
 
@@ -390,7 +390,7 @@ class Collection
     /**
      * Get children
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getChildren()
     {
@@ -406,14 +406,14 @@ class Collection
     public function setParent(\Sulu\Bundle\MediaBundle\Entity\Collection $parent = null)
     {
         $this->parent = $parent;
-    
+
         return $this;
     }
 
     /**
      * Get parent
      *
-     * @return \Sulu\Bundle\MediaBundle\Entity\Collection 
+     * @return \Sulu\Bundle\MediaBundle\Entity\Collection
      */
     public function getParent()
     {
@@ -429,14 +429,14 @@ class Collection
     public function setType(\Sulu\Bundle\MediaBundle\Entity\CollectionType $type)
     {
         $this->type = $type;
-    
+
         return $this;
     }
 
     /**
      * Get type
      *
-     * @return \Sulu\Bundle\MediaBundle\Entity\CollectionType 
+     * @return \Sulu\Bundle\MediaBundle\Entity\CollectionType
      */
     public function getType()
     {
