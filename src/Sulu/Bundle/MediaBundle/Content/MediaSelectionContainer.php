@@ -139,7 +139,7 @@ class MediaSelectionContainer implements \Serializable
      */
     public function serialize()
     {
-        return json_encode(
+        return serialize(
             array(
                 'data' => $this->getData(),
                 'config' => $this->getConfig(),
@@ -154,7 +154,7 @@ class MediaSelectionContainer implements \Serializable
      */
     public function unserialize($serialized)
     {
-        $values = json_decode($serialized, true);
+        $values = unserialize($serialized);
         $this->data = $values['data'];
         $this->config = $values['config'];
         $this->ids = $values['ids'];
