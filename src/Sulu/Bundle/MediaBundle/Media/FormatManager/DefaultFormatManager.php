@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\MediaBundle\Media\FormatManager;
 
 use Imagine\Image\ImageInterface;
+use Imagine\Imagick\Imagine;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\Media;
@@ -225,13 +226,13 @@ class DefaultFormatManager implements FormatManagerInterface
      */
     protected function prepareMedia($fileName, $path)
     {
-        $pathInfo = pathinfo($fileName);
-        if (isset($pathInfo['extension'])) {
-            switch ($pathInfo['extension']) {
-                case 'pdf':
-                    $this->convertPdfToImage($path);
-                    break;
-            }
+        switch ($this->getRealFileExtension($fileName)) {
+            case 'pdf':
+                $this->convertPdfToImage($path);
+                break;
+            case 'psd':
+                $this->convertPsdToImage($path);
+                break;
         }
     }
 
@@ -242,6 +243,19 @@ class DefaultFormatManager implements FormatManagerInterface
     {
         $command = $this->ghostScriptPath . ' -dNOPAUSE -sDEVICE=jpeg -dFirstPage=1 -dLastPage=1 -sOutputFile=' . $path . ' -dJPEGQ=100 -r300x300 -q ' . $path . ' -c quit';
         exec($command);
+    }
+
+    /**
+     * @param $path
+     */
+    protected function convertPsdToImage($path)
+    {
+        if (class_exists('Imagick')) {
+            $imagine = new Imagine();
+            $image = $imagine->open($path);
+            $image = $image->layers()[0];
+            file_put_contents($path, $image->get('png'));
+        }
     }
 
     /**
