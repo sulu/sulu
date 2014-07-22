@@ -11,7 +11,11 @@
         <field name="created" type="datetime" column="created"/>
         <field name="changed" type="datetime" column="changed"/>
         <field name="version" type="integer" column="version" />
-        <one-to-many field="fileVersions" target-entity="Sulu\Bundle\MediaBundle\Entity\FileVersion" mapped-by="file"/>
+        <one-to-many field="fileVersions" target-entity="Sulu\Bundle\MediaBundle\Entity\FileVersion" mapped-by="file">
+            <cascade>
+                <cascade-persist />
+            </cascade>
+        </one-to-many>
         <many-to-one field="media" target-entity="Sulu\Bundle\MediaBundle\Entity\Media" inversed-by="files">
             <join-columns>
                 <join-column name="idMedia" referenced-column-name="id" on-delete="CASCADE" nullable="false"/>

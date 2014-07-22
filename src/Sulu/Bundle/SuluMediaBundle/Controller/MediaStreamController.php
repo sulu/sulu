@@ -27,7 +27,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
-class WebsiteMediaController extends Controller
+class MediaStreamController extends Controller
 {
 
     /**
@@ -97,7 +97,7 @@ class WebsiteMediaController extends Controller
         $fileName = $fileVersion->getName();
         $fileSize = $fileVersion->getSize();
         $storageOptions = $fileVersion->getStorageOptions();
-        $mimeType = $fileVersion->getMimeType();
+        $mimeType = null;//$fileVersion->getMimeType();
         $version = $fileVersion->getVersion();
 
         $path = $this->getStorage()->load($fileName, $version, $storageOptions);

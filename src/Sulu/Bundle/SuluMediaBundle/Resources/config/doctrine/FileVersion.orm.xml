@@ -21,9 +21,21 @@
         <field name="created" type="datetime" column="created"/>
         <field name="changed" type="datetime" column="changed"/>
 
-        <one-to-many field="contentLanguages" target-entity="Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage" mapped-by="fileVersion"/>
-        <one-to-many field="publishLanguages" target-entity="Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage" mapped-by="fileVersion"/>
-        <one-to-many field="meta" target-entity="Sulu\Bundle\MediaBundle\Entity\FileVersionMeta" mapped-by="fileVersion"/>
+        <one-to-many field="contentLanguages" target-entity="Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage" mapped-by="fileVersion">
+            <cascade>
+                <cascade-persist />
+            </cascade>
+        </one-to-many>
+        <one-to-many field="publishLanguages" target-entity="Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage" mapped-by="fileVersion">
+            <cascade>
+                <cascade-persist />
+            </cascade>
+        </one-to-many>
+        <one-to-many field="meta" target-entity="Sulu\Bundle\MediaBundle\Entity\FileVersionMeta" mapped-by="fileVersion">
+            <cascade>
+                <cascade-persist />
+            </cascade>
+        </one-to-many>
 
         <many-to-one field="file" target-entity="Sulu\Bundle\MediaBundle\Entity\File" inversed-by="fileVersions">
             <join-columns>
