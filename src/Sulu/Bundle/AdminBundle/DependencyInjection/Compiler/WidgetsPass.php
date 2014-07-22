@@ -35,11 +35,14 @@ class WidgetsPass implements CompilerPassInterface
      * You can modify the container here before it is dumped to PHP code.
      *
      * @param ContainerBuilder $container
-     * @throws \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
+     * @throws \Symfony\Component\DependencyInjection\Exception\InvalidArgumentException
      * @api
      */
     public function process(ContainerBuilder $container)
     {
+        if (!$container->hasDefinition('sulu_admin.widgets_handler')) {
+            return;
+        }
         $widgetsHandler = $container->getDefinition('sulu_admin.widgets_handler');
 
         // get tagged services
