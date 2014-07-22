@@ -11,9 +11,13 @@
 namespace Sulu\Bundle\SecurityBundle\Command;
 
 use DateTime;
+use Doctrine\Bundle\DoctrineBundle\Registry;
+use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Common\Persistence\ObjectManagerAware;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
+use Sulu\Bundle\SecurityBundle\Entity\RoleInterface;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -24,24 +28,24 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class CreateUserCommand extends ContainerAwareCommand
 {
-
     /**
      * @see Command
      */
     protected function configure()
     {
-        $this
-            ->setName('sulu:security:user:create')
+        $this->setName('sulu:security:user:create')
             ->setDescription('Create a user.')
-            ->setDefinition(array(
-                new InputArgument('username', InputArgument::REQUIRED, 'The username'),
-                new InputArgument('firstName', InputArgument::REQUIRED, 'The FirstName'),
-                new InputArgument('lastName', InputArgument::REQUIRED, 'The LastName'),
-                new InputArgument('email', InputArgument::REQUIRED, 'The email'),
-                new InputArgument('locale', InputArgument::REQUIRED, 'The locale'),
-                new InputArgument('password', InputArgument::REQUIRED, 'The password'),
-                new InputOption('god', null, InputOption::VALUE_NONE, 'Set the user as God')
-            ));
+            ->setDefinition(
+                array(
+                    new InputArgument('username', InputArgument::REQUIRED, 'The username'),
+                    new InputArgument('firstName', InputArgument::REQUIRED, 'The FirstName'),
+                    new InputArgument('lastName', InputArgument::REQUIRED, 'The LastName'),
+                    new InputArgument('email', InputArgument::REQUIRED, 'The email'),
+                    new InputArgument('locale', InputArgument::REQUIRED, 'The locale'),
+                    new InputArgument('password', InputArgument::REQUIRED, 'The password'),
+                    new InputOption('god', null, InputOption::VALUE_NONE, 'Set the user as God')
+                )
+            );
     }
 
     /**
@@ -83,24 +87,13 @@ class CreateUserCommand extends ContainerAwareCommand
         $em->persist($contact);
         $em->flush();
 
-
         $user = new User();
         $user->setContact($contact);
         $user->setUsername($username);
         $user->setSalt($this->generateSalt());
         $user->setPassword($this->encodePassword($user, $password, $user->getSalt()));
         $user->setLocale($locale);
-
-        // find default role or create a new one
-        $role = $doctrine->getRepository('SuluSecurityBundle:Role')->findOneBy(array(), array('id' => 'ASC'), 1);
-        if (!$role) {
-            $role = new Role();
-            $role->setName('User');
-            $role->setSystem('Sulu');
-            $role->setCreated($now);
-            $role->setChanged($now);
-            $em->persist($role);
-        }
+        $role = $this->getRole($doctrine, $now, $em);
 
         $userRole = new UserRole();
         $userRole->setRole($role);
@@ -116,7 +109,6 @@ class CreateUserCommand extends ContainerAwareCommand
         $output->writeln(sprintf('Created user <comment>%s</comment>', $username));
     }
 
-
     /**
      * @see Command
      */
@@ -126,7 +118,7 @@ class CreateUserCommand extends ContainerAwareCommand
             $username = $this->getHelper('dialog')->askAndValidate(
                 $output,
                 'Please choose a username:',
-                function($username) {
+                function ($username) {
                     if (empty($username)) {
                         throw new \Exception('Username can not be empty');
                     }
@@ -141,7 +133,7 @@ class CreateUserCommand extends ContainerAwareCommand
             $result = $this->getHelper('dialog')->askAndValidate(
                 $output,
                 'Please choose a FirstName:',
-                function($username) {
+                function ($username) {
                     if (empty($username)) {
                         throw new \Exception('FirstName can not be empty');
                     }
@@ -156,7 +148,7 @@ class CreateUserCommand extends ContainerAwareCommand
             $result = $this->getHelper('dialog')->askAndValidate(
                 $output,
                 'Please choose a LastName:',
-                function($username) {
+                function ($username) {
                     if (empty($username)) {
                         throw new \Exception('LastName can not be empty');
                     }
@@ -171,7 +163,7 @@ class CreateUserCommand extends ContainerAwareCommand
             $email = $this->getHelper('dialog')->askAndValidate(
                 $output,
                 'Please choose an email:',
-                function($email) {
+                function ($email) {
                     if (empty($email)) {
                         throw new \Exception('Email can not be empty');
                     }
@@ -186,7 +178,7 @@ class CreateUserCommand extends ContainerAwareCommand
             $email = $this->getHelper('dialog')->askAndValidate(
                 $output,
                 'Please choose an locale:',
-                function($email) {
+                function ($email) {
                     if (empty($email)) {
                         throw new \Exception('Locale can not be empty');
                     }
@@ -201,7 +193,7 @@ class CreateUserCommand extends ContainerAwareCommand
             $password = $this->getHelper('dialog')->askAndValidate(
                 $output,
                 'Please choose a password:',
-                function($password) {
+                function ($password) {
                     if (empty($password)) {
                         throw new \Exception('Password can not be empty');
                     }
@@ -236,4 +228,25 @@ class CreateUserCommand extends ContainerAwareCommand
         return $encoder->encodePassword($password, $salt);
     }
 
+    /**
+     * @param Registry $doctrine
+     * @param DateTime $now
+     * @param ObjectManager $em
+     * @return object|RoleInterface
+     */
+    protected function getRole(Registry $doctrine, DateTime $now, ObjectManager $em)
+    {
+        // find default role or create a new one
+        $role = $doctrine->getRepository('SuluSecurityBundle:Role')->findOneBy(array(), array('id' => 'ASC'), 1);
+        if (!$role) {
+            $role = new Role();
+            $role->setName('User');
+            $role->setSystem('Sulu');
+            $role->setCreated($now);
+            $role->setChanged($now);
+            $em->persist($role);
+            return $role;
+        }
+        return $role;
+    }
 }
