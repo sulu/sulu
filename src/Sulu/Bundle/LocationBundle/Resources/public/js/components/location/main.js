@@ -29,7 +29,8 @@ define([], function() {
              },
              instanceName: null,
              mapProviders: {},
-             countries: {}
+             countries: {},
+             geolocationUrl: ''
         },
 
         dataDefaults = {
@@ -55,7 +56,7 @@ define([], function() {
             mapElementId: 'location-map',
             mapElementClass: 'location-map',
             locateAddressClass: 'location-locate-address-button',
-            geolocatorSearchClass: 'geo_locator_search'
+            geolocatorSearchClass: 'geolocator-search'
         },
 
         events = {
@@ -166,7 +167,7 @@ define([], function() {
                         '<div class="grid-row">',
                             '<div class="form-group grid-col-12">',
                                 '<label for="title"><%= translations.search %></label>',
-                                '<input class="form-element <%= constants.geolocatorSearchClass %>" type="text" placeholder="<% translations.search %>"/ >',
+                                '<div class="<%= constants.geolocatorSearchClass %>" type="text" placeholder="<% translations.search %>" ></div>',
                             '</div>',
                         '</div>',
                         '<div class="grid-row no-spacing">',
@@ -200,6 +201,7 @@ define([], function() {
     return {
         options: {},
         $button: null,
+        overlayContent: null,
 
         data: {},
         formData: {},
@@ -251,7 +253,7 @@ define([], function() {
          * Bind events to the component
          */
         bindEvents: function () {
-            this.sandbox.on('husky.overlay.location-content.location.opened', this.createForm.bind(this));
+            this.sandbox.on('husky.overlay.location-content.' + this.options.instanceName + '.opened', this.createForm.bind(this));
             this.sandbox.on(events.RELOAD_DATA, function () {
                 this.loadData();
                 this.formData = this.data;
@@ -303,7 +305,24 @@ define([], function() {
          * Initialize the form (why a separate method?)
          */
         createForm: function () {
+            var element = this.sandbox.dom.find('.' + constants.geolocatorSearchClass);
+            console.log('helkl');
+            console.log(element);
             this.sandbox.form.create('#' + constants.formId);
+            this.sandbox.start([
+                {
+                    name: 'auto-complete@husky',
+                    options: {
+                        el: element,
+                        instanceName: this.options.instanceName + '.geolocator.search',
+                        getParameter: 'query',
+                        suggestionImg: 'map-marker',
+                        remoteUrl: this.options.geolocatorUrl + '?providerName=nominatim',
+                        valueKey: 'displayTitle',
+                        resultKey: 'locations'
+                    }
+                }
+            ]);
         },
 
         /**
@@ -313,6 +332,7 @@ define([], function() {
             this.formData = this.data;
 
             var $element = this.sandbox.dom.createElement('<div></div>');
+            this.overlayContent = $element;
             this.sandbox.dom.append(this.$el, $element);
 
             this.sandbox.start([
@@ -330,7 +350,7 @@ define([], function() {
                                 data: this._template('overlay', {
                                     data: this.formData,
                                     mapProviders: this.options.mapProviders,
-                                    countries: this.options.countries
+                                    countries: {}
                                 }),
                                 okCallback: function () {
                                     // @todo: Validation
@@ -341,13 +361,6 @@ define([], function() {
                                 }.bind(this)
                             }
                         ]
-                    }
-                },
-                {
-                    name: 'auto-complete@husky',
-                    options: {
-                        el: '.' + constants.geolocatorSearchClass,
-                        instanceName: this.options.instanceName + '.geolocator.search',
                     }
                 }
             ]);

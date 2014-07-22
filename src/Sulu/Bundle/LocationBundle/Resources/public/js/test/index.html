@@ -105,6 +105,7 @@
                         name: 'location@sululocation',
                         options: {
                             el: '#location_content',
+                            instanceName: 'i1',
                             mapProviders: {
                                 leaflet: {
                                     title: 'Leaflet (OSM)',
@@ -113,6 +114,7 @@
                                     title: 'Google',
                                 }
                             },
+                            geolocatorUrl: '/admin/sulu_location/geolocator',
                             countries: {
                                 'England': 'England',
                                 'France': 'France',

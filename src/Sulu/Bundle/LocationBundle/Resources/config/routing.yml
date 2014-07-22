@@ -1,3 +1,3 @@
 sulu_location_geolocator_query:
-    pattern: /sulu_location/geolocator/{providerName}/query/{query}
+    pattern: /admin/sulu_location/geolocator
     defaults: { _controller: SuluLocationBundle:Geolocator:query }

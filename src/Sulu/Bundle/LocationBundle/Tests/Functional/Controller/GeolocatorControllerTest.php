@@ -40,7 +40,6 @@ class GeolocatorControllerTest extends DatabaseTestCase
         )));
 
         $response = $this->client->getResponse();
-        $response = json_decode($response->getContent());
-        var_dump($response);die();;
+        $this->assertEquals(200, $response->getStatusCode());
     }
 }

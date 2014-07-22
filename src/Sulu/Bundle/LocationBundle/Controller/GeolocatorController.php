@@ -26,6 +26,6 @@ class GeolocatorController extends Controller
 
         $res = $geolocator->locate($query);
 
-        return new JsonResponse($res->toArray());
+        return new JsonResponse(array('_embedded' => array('locations' => $res->toArray())));
     }
 }

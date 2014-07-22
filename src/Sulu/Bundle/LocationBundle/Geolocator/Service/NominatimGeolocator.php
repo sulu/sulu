@@ -62,6 +62,7 @@ class NominatimGeolocator implements GeolocatorInterface
                 }
             }
 
+            $location->setId($result['place_id']);
             $location->setLongitude($result['lon']);
             $location->setLatitude($result['lat']);
             $location->setDisplayTitle($result['display_name']);

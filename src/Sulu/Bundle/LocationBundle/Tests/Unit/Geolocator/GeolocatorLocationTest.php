@@ -16,7 +16,9 @@ class GeolocatorLocationTest extends \PHPUnit_Framework_TestCase
     public function testToArray()
     {
         $data = array(
+            'id' => null,
             'displayTitle' => 'This is title',
+            'name' => 'This is title',
             'street' => 'This is street',
             'number' => 'This is number',
             'code' => 'This is code',
