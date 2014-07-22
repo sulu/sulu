@@ -46,7 +46,8 @@ class TagControllerTest extends DatabaseTestCase
 
         self::$entities = array(
             self::$em->getClassMetadata('Sulu\Bundle\TagBundle\Entity\Tag'),
-            self::$em->getClassMetadata('Sulu\Bundle\TestBundle\Entity\TestUser')
+            self::$em->getClassMetadata('Sulu\Bundle\TestBundle\Entity\TestUser'),
+            self::$em->getClassMetadata('Sulu\Bundle\TestBundle\Entity\TestContact'),
         );
 
         self::$tool->dropSchema(self::$entities);
@@ -100,8 +101,8 @@ class TagControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(2, $response->total);
-        $this->assertEquals('tag1', $response->_embedded[0]->name);
-        $this->assertEquals('tag2', $response->_embedded[1]->name);
+        $this->assertEquals('tag1', $response->_embedded->tags[0]->name);
+        $this->assertEquals('tag2', $response->_embedded->tags[1]->name);
     }
 
     public function testGetByIdNotExisting()
@@ -461,13 +462,12 @@ class TagControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(6, $response->total);
-        $this->assertEquals('tag1', $response->_embedded[0]->name);
-        $this->assertEquals('tag2', $response->_embedded[1]->name);
-        $this->assertEquals('tag3', $response->_embedded[2]->name);
-        $this->assertEquals('tag4', $response->_embedded[3]->name);
-        $this->assertEquals('tag5', $response->_embedded[4]->name);
-        $this->assertEquals('tag6', $response->_embedded[5]->name);
-
+        $this->assertEquals('tag1', $response->_embedded->tags[0]->name);
+        $this->assertEquals('tag2', $response->_embedded->tags[1]->name);
+        $this->assertEquals('tag3', $response->_embedded->tags[2]->name);
+        $this->assertEquals('tag4', $response->_embedded->tags[3]->name);
+        $this->assertEquals('tag5', $response->_embedded->tags[4]->name);
+        $this->assertEquals('tag6', $response->_embedded->tags[5]->name);
     }
 
     public function testPatchExistingAsNew()
@@ -543,10 +543,10 @@ class TagControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(4, $response->total);
-        $this->assertEquals('tag1', $response->_embedded[0]->name);
-        $this->assertEquals('tag2', $response->_embedded[1]->name);
-        $this->assertEquals('tag11', $response->_embedded[2]->name);
-        $this->assertEquals('tag22', $response->_embedded[3]->name);
+        $this->assertEquals('tag1', $response->_embedded->tags[0]->name);
+        $this->assertEquals('tag2', $response->_embedded->tags[1]->name);
+        $this->assertEquals('tag11', $response->_embedded->tags[2]->name);
+        $this->assertEquals('tag22', $response->_embedded->tags[3]->name);
 
     }
 }
