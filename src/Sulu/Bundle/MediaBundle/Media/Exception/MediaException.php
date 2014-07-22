@@ -126,12 +126,6 @@ class MediaException extends Exception
      */
     const EXCEPTION_INVALID_EXTENSION_FOR_PREVIEW = 5018;
 
-    /**
-     * @var int
-     * @description the file was not found with the given version
-     */
-    const EXCEPTION_INVALID_FILE_VERSION = 5019;
-
     public function toArray()
     {
         return array(
