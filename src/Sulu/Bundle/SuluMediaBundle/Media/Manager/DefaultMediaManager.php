@@ -522,7 +522,6 @@ class DefaultMediaManager implements MediaManagerInterface
         $fileVersion->setCreated(new \DateTime());
         $fileVersion->setChanged(new \DateTime());
         $fileVersion->setVersion(1);
-        $fileVersion->setDownloadCounter(0);
         $fileVersion->setFile($file);
 
         $file->addFileVersion($fileVersion);
