@@ -190,4 +190,13 @@ class WebspaceCollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('s', $portalInformation['segment']);
         $this->assertEquals('portal1.lo', $portalInformation['url']);
     }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Unknown portal environment "unknown"
+     */
+    public function testGetPortalInformationsUnknown()
+    {
+        $this->webspaceCollection->getPortalInformations('unknown');
+    }
 }
