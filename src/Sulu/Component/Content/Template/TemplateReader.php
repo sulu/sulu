@@ -159,8 +159,8 @@ class TemplateReader implements LoaderInterface
             );
         }
 
-        $result['mandatory'] = $this->getBooleanValueFromXPath('@mandatory', $xpath, $node);
-        $result['multilingual'] = $this->getBooleanValueFromXPath('@multilingual', $xpath, $node, 'true');
+        $result['mandatory'] = $this->getBooleanValueFromXPath('@mandatory', $xpath, $node, false);
+        $result['multilingual'] = $this->getBooleanValueFromXPath('@multilingual', $xpath, $node, true);
         $result['tags'] = $this->loadTags('x:tag', $requiredTags, $tags, $xpath, $node);
         $result['params'] = $this->loadParams('x:params/x:param', $xpath, $node);
         $result['meta'] = $this->loadMeta('x:meta/x:*', $xpath, $node);
@@ -179,7 +179,7 @@ class TemplateReader implements LoaderInterface
             array('name', 'default-type', 'minOccurs', 'maxOccurs', 'colspan', 'cssClass')
         );
 
-        $result['mandatory'] = $this->getBooleanValueFromXPath('@mandatory', $xpath, $node);
+        $result['mandatory'] = $this->getBooleanValueFromXPath('@mandatory', $xpath, $node, false);
         $result['type'] = 'block';
         $result['tags'] = $this->loadTags('x:tag', $requiredTags, $tags, $xpath, $node);
         $result['params'] = $this->loadParams('x:params/x:param', $xpath, $node);
@@ -353,7 +353,11 @@ class TemplateReader implements LoaderInterface
      */
     private function getBooleanValueFromXPath($path, \DOMXPath $xpath, \DomNode $context = null, $default = null)
     {
-        return $this->getValueFromXPath($path, $xpath, $context, $default) === 'true' ? true : false;
+        if (($value = $this->getValueFromXPath($path, $xpath, $context)) != null) {
+            return $value === 'true' ? true : false;
+        } else {
+            return $default;
+        }
     }
 
     /**
