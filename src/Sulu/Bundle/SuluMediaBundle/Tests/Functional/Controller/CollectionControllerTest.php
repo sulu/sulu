@@ -556,6 +556,83 @@ class CollectionControllerTest extends DatabaseTestCase
     }
 
     /**
+     * @description Test PUT Action
+     */
+    public function testPutWithoutLocale()
+    {
+        $client = $this->createTestClient();
+
+        $client->request(
+            'PUT',
+            '/api/collections/1',
+            array(
+                'style' =>
+                    array(
+                        'type'  => 'circle',
+                        'color' => '#00ccff'
+                    )
+            ,
+                'type'  => 1,
+                'title'       => 'Test Collection changed',
+                'description' => 'This Description is only for testing changed',
+            )
+        );
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $client->request(
+            'GET',
+            '/api/collections/1'
+        );
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $style = new \stdClass();
+        $style->type = 'circle';
+        $style->color = '#00ccff';
+
+        $this->assertEquals($style, $response->style);
+        $this->assertEquals(1, $response->id);
+        $this->assertEquals(1, $response->type->id);
+        $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($response->created)));
+        $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($response->changed)));
+        $this->assertEquals('Test Collection changed', $response->title);
+        $this->assertEquals('This Description is only for testing changed', $response->description);
+        $this->assertEquals('en', $response->locale);
+
+        $client = $this->createTestClient();
+
+        $client->request(
+            'GET',
+            '/api/collections?locale=en'
+        );
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertNotEmpty($response);
+
+        $this->assertEquals(1, $response->total);
+
+        $this->assertTrue(isset($response->_embedded->collections[0]));
+        $responseFirstEntity = $response->_embedded->collections[0];
+
+        $style = new \stdClass();
+        $style->type = 'circle';
+        $style->color = '#00ccff';
+
+        $this->assertEquals($style, $responseFirstEntity->style);
+        $this->assertEquals(1, $responseFirstEntity->id);
+        $this->assertEquals(1, $responseFirstEntity->type->id);
+        $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($responseFirstEntity->created)));
+        $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($responseFirstEntity->changed)));
+        $this->assertEquals('Test Collection changed', $responseFirstEntity->title);
+        $this->assertEquals('This Description is only for testing changed', $responseFirstEntity->description);
+        $this->assertEquals('en', $responseFirstEntity->locale);
+    }
+
+    /**
      * @description Test PUT action without details
      */
     public function testPutNoDetails()
