@@ -1,3 +1,4 @@
+
 /** vim: et:ts=4:sw=4:sts=4
  * @license RequireJS 2.1.9 Copyright (c) 2010-2012, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
@@ -38521,12 +38522,12 @@ define('__component__$smart-content@husky',[], function() {
 
         constants = {
             containerSelector: '.smart-content-container',
-            headerSelector: '.smart-header',
-            contentSelector: '.smart-content',
+            headerSelector: '.header',
+            contentSelector: '.content',
             sourceSelector: '.source',
-            footerClass: 'smart-footer',
+            footerClass: 'footer',
             viewTogglerClass: 'view-toggler',
-            buttonClass: 'fa-filter',
+            buttonIcon: 'fa-filter',
             includeSubSelector: '.includeSubCheck',
             categoryDDClass: 'category-dropdown',
             tagListClass: 'tag-list',
@@ -38542,20 +38543,22 @@ define('__component__$smart-content@husky',[], function() {
         /** templates for component */
         templates = {
             skeleton: [
-                '<div class="smart-content-container form-element">',
-                '<div class="smart-header"></div>',
-                '<div class="smart-content"></div>',
+                '<div class="white-box smart-content-container form-element">',
+                '<div class="header"></div>',
+                '<div class="content"></div>',
                 '</div>'
             ].join(''),
             source: [
-                '<div class="source">',
+                '<span class="text">',
+                '<span class="source">',
                 '<span class="desc"><%= desc %></span>',
                 '<span class="val"><%= val %></span>',
-                '</div>'
+                '</span>',
+                '</span>'
             ].join(''),
             noContent: [
                 '<div class="no-content">',
-                '<span class="fa-file"></span>',
+                '<span class="fa-file icon"></span>',
                 '<div class="text"><%= noContentStr %></div>',
                 '</div>'
             ].join(''),
@@ -38851,9 +38854,9 @@ define('__component__$smart-content@husky',[], function() {
         },
 
         /**
-         * Renders the source text and prepends it to the header
+         * Renders the source text and inserts it to the header
          */
-        prependSource: function() {
+        insertSource: function() {
             var desc, $element = this.sandbox.dom.find(constants.dataSourceSelector, this.$overlayContent);
             this.sandbox.dom.text($element, this.sandbox.util.cropMiddle(this.overlayData.path, 30, '...'));
 
@@ -38862,9 +38865,9 @@ define('__component__$smart-content@husky',[], function() {
                 if (this.overlayData.includeSubFolders !== false) {
                     desc += ' (' + this.sandbox.translate(this.translations.subFoldersInclusive) + '):';
                 } else {
-                    desc += ':';
+                    desc += ': ';
                 }
-                this.sandbox.dom.prepend(this.$header, _.template(templates.source)({
+                this.sandbox.dom.append(this.$header, this.sandbox.util.template(templates.source)({
                     desc: desc,
                     val: this.overlayData.title
                 }));
@@ -38882,8 +38885,8 @@ define('__component__$smart-content@husky',[], function() {
          * Renders and appends the toggle-button
          */
         renderButton: function() {
-            this.$button = this.sandbox.dom.createElement('<a href="#"/>');
-            this.sandbox.dom.addClass(this.$button, constants.buttonClass);
+            this.$button = this.sandbox.dom.createElement('<span class="icon right border"/>');
+            this.sandbox.dom.prependClass(this.$button, constants.buttonIcon);
             this.sandbox.dom.append(this.$header, this.$button);
         },
 
@@ -38996,7 +38999,7 @@ define('__component__$smart-content@husky',[], function() {
             this.sandbox.on(DATA_RETRIEVED.call(this), function() {
                 this.renderContent();
                 this.removeSource();
-                this.prependSource();
+                this.insertSource();
             }.bind(this));
 
             this.sandbox.on(INPUT_RETRIEVED.call(this), function() {
@@ -39459,7 +39462,7 @@ define('__component__$smart-content@husky',[], function() {
  * @params {Boolean} [options.openOnStart] if true overlay is opened after initialization
  * @params {Boolean} [options.removeOnClose] if overlay component gets removed on close
  * @params {Boolean} [options.backdrop] if true backdrop will be shown
- * @params {String} [options.skin] set an overlay skin to manipulate overlay's appearance. Possible skins: '' or 'wide'
+ * @params {String} [options.skin] set an overlay skin to manipulate overlay's appearance. Possible skins: '', 'wide' or 'medium'
  * @params {Boolean} [options.backdropClose] if true overlay closes with click on backdrop
  * @params {String} [options.backdropColor] Color of the backdrop
  * @params {Number} [options.backdropAlpha] Alpha-value of the backdrop
@@ -47751,4 +47754,3 @@ define('husky_extensions/util',[],function() {
         }
     };
 });
-
