@@ -137,7 +137,11 @@ define([
             // change language
             this.sandbox.on('sulu.header.toolbar.language-changed', function(item) {
                 this.sandbox.sulu.saveUserSetting(CONTENT_LANGUAGE, item.localization);
-                this.sandbox.emit('sulu.content.contents.load', this.data.id, this.options.webspace, item.localization);
+                if (this.options.display !== 'column') {
+                    this.sandbox.emit('sulu.content.contents.load', this.data.id, this.options.webspace, item.localization);
+                } else {
+                   this.sandbox.emit('sulu.content.contents.list', this.options.webspace, item.localization);
+                }
             }, this);
 
             // change template
