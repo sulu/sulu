@@ -812,6 +812,10 @@ class ContentMapper implements ContentMapperInterface
         $childStructure = null;
         foreach ($node as $child) {
             $structure = $this->loadByNode($child, $languageCode, $webspaceKey, $excludeGhost, $loadGhostContent);
+            if ($structure === null) {
+                continue;
+            }
+
             $result[] = $structure;
             // search structure for child node
             if ($childNode !== null && $childNode === $child) {
