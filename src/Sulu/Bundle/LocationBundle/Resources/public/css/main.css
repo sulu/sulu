@@ -184,6 +184,6 @@
 }
 
 /* line 167, ../scss/modules/location.scss */
-.location-map {
+.location-map, .location-overlay-map {
   height: 200px;
 }

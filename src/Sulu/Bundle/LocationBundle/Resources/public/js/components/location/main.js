@@ -55,6 +55,8 @@ define([], function() {
             formId: 'location-content-overlay-form',
             mapElementId: 'location-map',
             mapElementClass: 'location-map',
+            overlayMapElementId: 'location-overlay-map',
+            overlayMapElementClass: 'location-overlay-map',
             locateAddressClass: 'location-locate-address-button',
             geolocatorSearchClass: 'geolocator-search'
         },
@@ -177,10 +179,10 @@ define([], function() {
                         '</div>',
                         '<div class="grid-row">',
                             '<div class="form-group grid-col-5">',
-                                '<input class="form-element" type="text" data-mapper-property="location.long" value="<%= data.location.long %>"/ >',
+                                '<input class="form-element longitude" type="text" data-mapper-property="location.long" value="<%= data.location.long %>"/ >',
                             '</div>',
                             '<div class="form-group grid-col-5">',
-                                '<input class="form-element" type="text" data-mapper-property="location.lat" value="<%= data.location.lat %>"/ >',
+                                '<input class="form-element latitude" type="text" data-mapper-property="location.lat" value="<%= data.location.lat %>"/ >',
                             '</div>',
                             '<div class="form-group grid-col-2">',
                                 '<input class="form-element" type="text" data-mapper-property="location.zoom" value="<%= data.location.zoom %>"/ >',
@@ -188,7 +190,7 @@ define([], function() {
                         '</div>',
                         '<div class="grid-row">',
                             '<div class="grid-col-12">',
-                                '<img src="/bundles/sululocation/js/test/map.png"/>',
+                                '<div id="<%= constants.overlayMapElementId %>" class="<%= constants.overlayMapElementClass %>"/>',
                             '</div>',
                             '<div class="small-font grey-font">Move pointer to change location on map</div>',
                         '</div>',
@@ -202,6 +204,9 @@ define([], function() {
         options: {},
         $button: null,
         overlayContent: null,
+
+        // object containing map domId => mapInstances
+        mapInstances: {},
 
         data: {},
         formData: {},
@@ -244,7 +249,6 @@ define([], function() {
         createComponent: function () {
             this.renderSkeleton();
             this.renderContent();
-            this.renderMap();
             this.startOverlay();
             this.bindEvents();
         },
@@ -254,13 +258,29 @@ define([], function() {
          */
         bindEvents: function () {
             this.sandbox.on('husky.overlay.location-content.' + this.options.instanceName + '.opened', this.createForm.bind(this));
+            this.sandbox.on(
+                'husky.auto-complete.' + this.options.instanceName + '.geolocator.search.select',
+                this.updateLocationFromLocation.bind(this)
+            );
+
             this.sandbox.on(events.RELOAD_DATA, function () {
                 this.loadData();
                 this.formData = this.data;
 
                 this.renderContent();
-                this.renderMap();
+                this.renderMap(constants.mapElementId, this.data.location);
             }.bind(this));
+        },
+
+        updateLocationFromLocation: function (location) {
+            var form = $('#' + constants.formId);
+            this.sandbox.dom.find('.longitude', form).val(location.longitude);
+            this.sandbox.dom.find('.latitude', form).val(location.latitude);
+            this.renderMap(constants.overlayMapElementId, {
+                'long': location.longitude,
+                'lat': location.latitude,
+                'zoom': this.data.zoom
+            });
         },
 
         /**
@@ -279,26 +299,32 @@ define([], function() {
                     data: this.data
                 })
             );
+            this.renderMap(constants.mapElementId, this.data.location);
         },
 
         /**
          * Render the map using the defined provider
          */
-        renderMap: function () {
-            this.sandbox.dom.find('#' + constants.mapElementId).empty();
-            var loc = this.data.location;
+        renderMap: function (mapElementId, location) {
+            var mapElement = this.sandbox.dom.find('#' + mapElementId);
             var providerName = this.data.mapProvider;
             var mapProviderConfig = this.options.mapProviders[providerName];
+            var mapElementId = mapElementId;
 
             if (undefined == mapProviderConfig) {
                 alert('Map provider "' + providerName + '" is not configured');
                 return;
             }
 
-            require(['map/' + providerName], function (Map) {
-                var map = new Map(mapProviderConfig);
-                map.show(constants.mapElementId, loc.long, loc.lat, loc.zoom);
-            });
+            if (this.mapInstances[mapElementId] == undefined) {
+                require(['map/' + providerName], function (Map) {
+                    var map = new Map(mapElementId, mapProviderConfig);
+                    map.show(location.long, location.lat, location.zoom);
+                    this.mapInstances[mapElementId] = map;
+                }.bind(this));
+            } else {
+                this.mapInstances[mapElementId].show( location.long, location.lat, location.zoom);
+            }
         },
 
         /**
@@ -306,9 +332,8 @@ define([], function() {
          */
         createForm: function () {
             var element = this.sandbox.dom.find('.' + constants.geolocatorSearchClass);
-            console.log('helkl');
-            console.log(element);
             this.sandbox.form.create('#' + constants.formId);
+            this.renderMap(constants.overlayMapElementId, this.data.location);
             this.sandbox.start([
                 {
                     name: 'auto-complete@husky',

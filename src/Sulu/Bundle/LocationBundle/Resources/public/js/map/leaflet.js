@@ -1,9 +1,25 @@
 define(['leaflet'], function (leaflet) {
     var leaflet = leaflet;
 
-    return function Leaflet(options) {
-        this.show = function (selector, long, lat, zoom) {
-            var map = leaflet.map(selector).setView([long, lat], zoom);
+    /**
+     * Leaflet map class
+     * @param selector - Put the map in the DOM element with this ID
+     * @param options - Options for the map
+     */
+    return function Leaflet(selector, options) {
+        var selector = selector;
+        var map = leaflet.map(selector);
+        var marker = null;
+
+        /**
+         * Show a position on the map
+         * @param long - Longitude
+         * @param lat - Latitude
+         * @param zoom - Zoom
+         */
+        this.show = function (long, lat, zoom) {
+
+            map.setView([lat, long], zoom)
 
             var MarkerIcon = L.Icon.Default.extend({
                 options: {
@@ -17,9 +33,14 @@ define(['leaflet'], function (leaflet) {
                 attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(map);
 
-            L.marker([long, lat], {
-                icon: new MarkerIcon
-            }).addTo(map)
+            if (null == marker) {
+                marker = L.marker([lat, long], {
+                    icon: new MarkerIcon
+                });
+                marker.addTo(map)
+            } else {
+                marker.setLatLng([lat, long]);
             }
+        };
     };
 });
