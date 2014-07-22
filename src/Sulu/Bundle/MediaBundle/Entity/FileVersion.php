@@ -42,7 +42,7 @@ class FileVersion
     /**
      * @var integer
      */
-    private $downloadCounter;
+    private $downloadCounter = 0;
 
     /**
      * @var \DateTime
@@ -476,5 +476,39 @@ class FileVersion
     public function getCreator()
     {
         return $this->creator;
+    }
+
+    /**
+     * don't clone id to create a new entities
+     */
+    public function __clone()
+    {
+        if ($this->id) {
+            $this->id = null;
+
+            /**
+             * @var FileVersionMeta $meta
+             */
+            foreach ($this->meta as $meta)
+            {
+                $meta->setId(null);
+            }
+
+            /**
+             * @var FileVersionContentLanguage $meta
+             */
+            foreach ($this->contentLanguages as $contentLanguage)
+            {
+                $contentLanguage->setId(null);
+            }
+
+            /**
+             * @var FileVersionPublishLanguage $meta
+             */
+            foreach ($this->publishLanguages as $publishLanguage)
+            {
+                $publishLanguage->setId(null);
+            }
+        }
     }
 }
