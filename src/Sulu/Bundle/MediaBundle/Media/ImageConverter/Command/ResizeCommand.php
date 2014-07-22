@@ -12,8 +12,8 @@ namespace Sulu\Bundle\MediaBundle\Media\ImageConverter\Command;
 
 use Imagine\Image\Box;
 
-class ResizeCommand implements CommandInterface {
-
+class ResizeCommand implements CommandInterface
+{
     /**
      * {@inheritdoc}
      */
@@ -31,5 +31,4 @@ class ResizeCommand implements CommandInterface {
         }
         $image->resize(new Box($newWidth, $newHeight));
     }
-
 } 

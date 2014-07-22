@@ -10,7 +10,6 @@
 
 namespace Sulu\Bundle\MediaBundle\Api;
 
-use Sulu\Bundle\CoreBundle\Entity\ApiEntityWrapper;
 use Sulu\Bundle\MediaBundle\Entity\Collection as Entity;
 use JMS\Serializer\Annotation\VirtualProperty;
 use JMS\Serializer\Annotation\SerializedName;
@@ -19,6 +18,8 @@ use DateTime;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use JMS\Serializer\Annotation\ExclusionPolicy;
+use Sulu\Component\Rest\ApiWrapper;
+use Sulu\Component\Security\UserInterface;
 
 /**
  * Class Collection
@@ -26,9 +27,8 @@ use JMS\Serializer\Annotation\ExclusionPolicy;
  * @package Sulu\Bundle\MediaBundle\Media\RestObject
  * @ExclusionPolicy("all")
  */
-class Collection extends ApiEntityWrapper
+class Collection extends ApiWrapper
 {
-
     /**
      * @var array
      */
@@ -38,12 +38,6 @@ class Collection extends ApiEntityWrapper
      * @var array
      */
     protected $properties = array();
-
-    /**
-     * @var string
-     */
-    protected $locale;
-
 
     public function __construct(Entity $collection, $locale)
     {
@@ -59,11 +53,9 @@ class Collection extends ApiEntityWrapper
     public function getChildren()
     {
         $childIds = array();
-        /**
-         * @var Entity $child
-         */
+        /** @var Entity $child */
         foreach ($this->entity->getChildren() as $child) {
-            array_push($childIds, $child->getId());
+            $childIds[] = $child->getId();
         }
 
         return $childIds;
@@ -75,25 +67,7 @@ class Collection extends ApiEntityWrapper
      */
     public function setDescription($description)
     {
-        $metaExists = false;
-
-        /**
-         * @var CollectionMeta $meta
-         */
-        foreach ($this->entity->getMeta() as $meta) {
-            if ($meta->getLocale() == $this->locale) {
-                $metaExists = true;
-                $meta->setDescription($description);
-            }
-        }
-
-        if (!$metaExists) {
-            $meta = new CollectionMeta();
-            $meta->setDescription($description);
-            $meta->setCollection($this->entity);
-            $meta->setLocale($this->locale);
-            $this->entity->addMeta($meta);
-        }
+        $this->getMeta(true)->setDescription($description);
 
         return $this;
     }
@@ -105,21 +79,12 @@ class Collection extends ApiEntityWrapper
      */
     public function getDescription()
     {
-        $description = null;
-        $counter = 0;
-
-        /**
-         * @var CollectionMeta $meta
-         */
-        foreach ($this->entity->getMeta() as $meta) {
-            $counter++;
-            // when meta not exists in locale return first created description
-            if ($meta->getLocale() == $this->locale || $counter == 1) {
-                $description = $meta->getDescription();
-            }
+        $meta = $this->getMeta();
+        if ($meta) {
+            return $meta->getDescription();
         }
 
-        return $description;
+        return null;
     }
 
     /**
@@ -141,11 +106,8 @@ class Collection extends ApiEntityWrapper
     {
         $mediaCount = 0;
 
-        /**
-         * @var Entity $child
-         */
+        /** @var Entity $child */
         foreach ($this->entity->getChildren() as $child) {
-            array_push($childIds, $child->getId());
             $mediaCount += count($child->getMedia());
         }
 
@@ -156,7 +118,7 @@ class Collection extends ApiEntityWrapper
     }
 
     /**
-     * @param Collection $parent
+     * @param Entity $parent
      * @return $this
      */
     public function setParent($parent)
@@ -172,11 +134,7 @@ class Collection extends ApiEntityWrapper
      */
     public function getParent()
     {
-        $parent = $this->entity->getParent();
-        if ($parent) {
-            return $parent->getId();
-        }
-        return null;
+        return ($parent = $this->entity->getParent()) ? $parent->getId() : null;
     }
 
     /**
@@ -250,6 +208,8 @@ class Collection extends ApiEntityWrapper
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("locale")
      * @return mixed
      */
     public function getLocale()
@@ -263,25 +223,7 @@ class Collection extends ApiEntityWrapper
      */
     public function setTitle($title)
     {
-        $metaExists = false;
-
-        /**
-         * @var CollectionMeta $meta
-         */
-        foreach ($this->entity->getMeta() as $meta) {
-            if ($meta->getLocale() == $this->locale) {
-                $metaExists = true;
-                $meta->setTitle($title);
-            }
-        }
-
-        if (!$metaExists) {
-            $meta = new CollectionMeta();
-            $meta->setTitle($title);
-            $meta->setCollection($this->entity);
-            $meta->setLocale($this->locale);
-            $this->entity->addMeta($meta);
-        }
+        $this->getMeta(true)->setTitle($title);
 
         return $this;
     }
@@ -293,21 +235,12 @@ class Collection extends ApiEntityWrapper
      */
     public function getTitle()
     {
-        $title = null;
-        $counter = 0;
-
-        /**
-         * @var CollectionMeta $meta
-         */
-        foreach ($this->entity->getMeta() as $meta) {
-            $counter++;
-            // when meta not exists in set locale return first created title
-            if ($meta->getLocale() == $this->locale || $counter == 1) {
-                $title = $meta->getTitle();
-            }
+        $meta = $this->getMeta();
+        if ($meta) {
+            return $meta->getTitle();
         }
 
-        return $title;
+        return null;
     }
 
     /**
@@ -323,17 +256,11 @@ class Collection extends ApiEntityWrapper
     /**
      * @VirtualProperty
      * @SerializedName("type")
-     * @return int
+     * @return CollectionType
      */
     public function getType()
     {
-        $typeId = null;
-        $type = $this->entity->getType();
-        if ($type) {
-            $typeId = $type->getId();
-        }
-
-        return $typeId;
+        return $this->entity->getType();
     }
 
     /**
@@ -361,7 +288,7 @@ class Collection extends ApiEntityWrapper
     }
 
     /**
-     * @param string $changer
+     * @param UserInterface $changer
      * @return $this
      */
     public function setChanger($changer)
@@ -377,7 +304,11 @@ class Collection extends ApiEntityWrapper
      */
     public function getChanger()
     {
-        return $this->entity->getChanger();
+        $user = $this->entity->getCreator();
+        if ($user) {
+            return $user->getFullName();
+        }
+        return null;
     }
 
     /**
@@ -405,7 +336,7 @@ class Collection extends ApiEntityWrapper
     }
 
     /**
-     * @param string $creator
+     * @param UserInterface $creator
      * @return $this
      */
     public function setCreator($creator)
@@ -421,7 +352,50 @@ class Collection extends ApiEntityWrapper
      */
     public function getCreator()
     {
-        return $this->entity->getCreator();
+        $user = $this->entity->getCreator();
+        if ($user) {
+            return $user->getFullName();
+        }
+        return null;
     }
 
+    /**
+     * @param bool $create
+     * @return CollectionMeta
+     */
+    private function getMeta($create = false)
+    {
+        $locale = $this->locale;
+        $metaCollection = $this->entity->getMeta();
+
+        // get meta only with this locale
+        $metaCollectionFiltered = $metaCollection->filter(function($meta) use ($locale) {
+            /** @var CollectionMeta $meta */
+            if ($meta->getLocale() == $locale) {
+                return true;
+            }
+            return false;
+        });
+
+        // check if meta was found
+        if ($metaCollectionFiltered->isEmpty()) {
+            if ($create) {
+                // create when not found
+                $meta = new CollectionMeta();
+                $meta->setLocale($this->locale);
+                $meta->setCollection($this->entity);
+                $this->entity->addMeta($meta);
+
+                return $meta;
+            } elseif (!$metaCollection->isEmpty()) {
+                // return first when create false
+                return $metaCollection->first();
+            }
+        } else {
+            // return exists
+            return $metaCollectionFiltered->first();
+        }
+
+        return null;
+    }
 } 

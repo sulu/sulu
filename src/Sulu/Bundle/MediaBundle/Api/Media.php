@@ -19,11 +19,14 @@ use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage;
 use Sulu\Bundle\MediaBundle\Entity\Media as Entity;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
+use Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use JMS\Serializer\Annotation\VirtualProperty;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\ExclusionPolicy;
+use Sulu\Component\Rest\ApiWrapper;
+use Sulu\Component\Security\UserInterface;
 
 /**
  * Class Media
@@ -31,9 +34,8 @@ use JMS\Serializer\Annotation\ExclusionPolicy;
  * @package Sulu\Bundle\MediaBundle\Media\RestObject
  * @ExclusionPolicy("all")
  */
-class Media extends ApiEntityWrapper
+class Media extends ApiWrapper
 {
-
     /**
      * @var string
      */
@@ -64,10 +66,9 @@ class Media extends ApiEntityWrapper
      */
     protected $fileVersion = null;
 
-
-    public function __construct(Entity $collection, $locale, $version = null)
+    public function __construct(Entity $media, $locale, $version = null)
     {
-        $this->entity = $collection;
+        $this->entity = $media;
         $this->locale = $locale;
         $this->version = $version;
     }
@@ -142,26 +143,7 @@ class Media extends ApiEntityWrapper
      */
     public function setTitle($title)
     {
-        $metaExists = false;
-
-        $fileVersion = $this->getFileVersion();
-        /**
-         * @var FileVersionMeta $meta
-         */
-        foreach ($fileVersion->getMeta() as $meta) {
-            if ($meta->getLocale() == $this->locale) {
-                $metaExists = true;
-                $meta->setTitle($title);
-            }
-        }
-
-        if (!$metaExists) {
-            $meta = new FileVersionMeta();
-            $meta->setTitle($title);
-            $meta->setLocale($this->locale);
-            $meta->setFileVersion($fileVersion);
-            $fileVersion->addMeta($meta);
-        }
+        $this->getMeta(true)->setTitle($title);
 
         return $this;
     }
@@ -174,15 +156,10 @@ class Media extends ApiEntityWrapper
     public function getTitle()
     {
         $title = null;
-        $counter = 0;
-
-        /**
-         * @var FileVersionMeta $meta
-         */
-        foreach ($this->getFileVersion()->getMeta() as $meta) {
-            $counter++;
-            // when meta not exists in locale return first created description
-            if ($meta->getLocale() == $this->locale || $counter == 1) {
+        /** @var FileVersionMeta $meta */
+        foreach ($this->getFileVersion()->getMeta() as $key => $meta) {
+            // get title of the meta in locale, when not exists return title of the first meta
+            if ($meta->getLocale() == $this->locale || $key == 0) {
                 $title = $meta->getTitle();
             }
         }
@@ -196,26 +173,7 @@ class Media extends ApiEntityWrapper
      */
     public function setDescription($description)
     {
-        $metaExists = false;
-
-        $fileVersion = $this->getFileVersion();
-        /**
-         * @var FileVersionMeta $meta
-         */
-        foreach ($fileVersion->getMeta() as $meta) {
-            if ($meta->getLocale() == $this->locale) {
-                $metaExists = true;
-                $meta->setDescription($description);
-            }
-        }
-
-        if (!$metaExists) {
-            $meta = new FileVersionMeta();
-            $meta->setDescription($description);
-            $meta->setLocale($this->locale);
-            $meta->setFileVersion($fileVersion);
-            $fileVersion->addMeta($meta);
-        }
+        $this->getMeta(true)->setDescription($description);
 
         return $this;
     }
@@ -228,15 +186,10 @@ class Media extends ApiEntityWrapper
     public function getDescription()
     {
         $description = null;
-        $counter = 0;
-
-        /**
-         * @var FileVersionMeta $meta
-         */
-        foreach ($this->getFileVersion()->getMeta() as $meta) {
-            $counter++;
-            // when meta not exists in locale return first created description
-            if ($meta->getLocale() == $this->locale || $counter == 1) {
+        /** @var FileVersionMeta $meta */
+        foreach ($this->getFileVersion()->getMeta() as $key => $meta) {
+            // get description of the meta in locale, when not exists return description of the first meta
+            if ($meta->getLocale() == $this->locale || $key == 0) {
                 $description = $meta->getDescription();
             }
         }
@@ -272,15 +225,11 @@ class Media extends ApiEntityWrapper
     public function getVersions()
     {
         $versions = array();
-        /**
-         * @var File $file
-         */
+        /** @var File $file */
         foreach ($this->entity->getFiles() as $file) {
-            /**
-             * @var FileVersion $fileVersion
-             */
+            /** @var FileVersion $fileVersion */
             foreach ($file->getFileVersions() as $fileVersion) {
-                array_push($versions, $fileVersion->getVersion());
+                $versions[] = $fileVersion->getVersion();
             }
             break; // currently only one file per media exists
         }
@@ -310,15 +259,11 @@ class Media extends ApiEntityWrapper
     /**
      * @VirtualProperty
      * @SerializedName("type")
-     * @return int
+     * @return MediaType
      */
     public function getType()
     {
-        $type = $this->entity->getType();
-        if ($type) {
-            return $type->getId();
-        }
-        return null;
+        return $this->entity->getType();
     }
 
     /**
@@ -357,24 +302,15 @@ class Media extends ApiEntityWrapper
      */
     public function setPublishLanguages($publishLanguages)
     {
-        /**
-         * @var FileVersionPublishLanguage $publishLanguage
-         */
         $fileVersion = $this->getFileVersion();
-        foreach ($publishLanguages as $key => $locale) {
-            foreach ($fileVersion->getPublishLanguages() as $publishLanguage) {
-                if ($publishLanguage->getLocale() == $locale) {
-                    unset($publishLanguages[$key]);
-                    break;
-                }
-            }
-        }
 
         foreach ($publishLanguages as $locale) {
             $publishLanguage = new FileVersionPublishLanguage();
             $publishLanguage->setFileVersion($fileVersion);
             $publishLanguage->setLocale($locale);
-            $fileVersion->addPublishLanguage($publishLanguage);
+            if(!$fileVersion->getPublishLanguages()->contains($publishLanguage)) {
+                $fileVersion->addPublishLanguage($publishLanguage);
+            }
         }
         return $this;
     }
@@ -387,12 +323,9 @@ class Media extends ApiEntityWrapper
     public function getPublishLanguages()
     {
         $publishLanguages = array();
-
-        /**
-         * @var FileVersionPublishLanguage $publishLanguage
-         */
+        /** @var FileVersionPublishLanguage $publishLanguage */
         foreach ($this->getFileVersion()->getPublishLanguages() as $publishLanguage) {
-            array_push($publishLanguages, $publishLanguage->getLocale());
+            $publishLanguages[] = $publishLanguage->getLocale();
         }
 
         return $publishLanguages;
@@ -405,23 +338,14 @@ class Media extends ApiEntityWrapper
     public function setContentLanguages($contentLanguages)
     {
         $fileVersion = $this->getFileVersion();
-        /**
-         * @var FileVersionContentLanguage $contentLanguage
-         */
-        foreach ($contentLanguages as $key => $locale) {
-            foreach ($fileVersion->getContentLanguages() as $contentLanguage) {
-                if ($contentLanguage->getLocale() == $locale) {
-                    unset($contentLanguages[$key]);
-                    break;
-                }
-            }
-        }
 
         foreach ($contentLanguages as $locale) {
             $contentLanguage = new FileVersionContentLanguage();
             $contentLanguage->setFileVersion($fileVersion);
             $contentLanguage->setLocale($locale);
-            $fileVersion->addContentLanguage($contentLanguage);
+            if (!$fileVersion->getContentLanguages()->contains($contentLanguage)) {
+                $fileVersion->addContentLanguage($contentLanguage);
+            }
         }
         return $this;
     }
@@ -434,39 +358,26 @@ class Media extends ApiEntityWrapper
     public function getContentLanguages()
     {
         $contentLanguages = array();
-        /**
-         * @var FileVersionContentLanguage $contentLanguage
-         */
+        /** @var FileVersionContentLanguage $contentLanguage */
         foreach ($this->getFileVersion()->getContentLanguages() as $contentLanguage) {
-            array_push($contentLanguages, $contentLanguage->getLocale());
+            $contentLanguages[] = $contentLanguage->getLocale();
         }
 
         return $contentLanguages;
     }
 
     /**
-     * @param array $tags
+     * @param \Doctrine\ $tags
      * @return $this
      */
     public function setTags($tags)
     {
         $fileVersion = $this->getFileVersion();
-        foreach ($tags as $key => $tagName) {
-            /**
-             * @var Tag $tag
-             */
-            foreach ($fileVersion->getTags() as $tag) {
-                if ($tag->getName() == $tagName) {
-                    unset($tags[$key]);
-                    break;
-                }
+        /** @var Tag $tag */
+        foreach ($tags as $tag) {
+            if (!$fileVersion->getTags()->contains($tag)) {
+                $fileVersion->addTag($tag);
             }
-        }
-
-        foreach ($tags as $tagName) {
-            $tag = new Tag();
-            $tag->setName($tagName);
-            $fileVersion->addTag($tag);
         }
 
         return $this;
@@ -479,15 +390,7 @@ class Media extends ApiEntityWrapper
      */
     public function getTags()
     {
-        $tags = array();
-
-        /**
-         * @var Tag $tag
-         */
-        foreach ($this->getFileVersion()->getTags() as $tag) {
-            $tags[$tag->getId()] = $tag->getName();
-        }
-        return $tags;
+        return $this->getFileVersion()->getTags();
     }
 
     /**
@@ -535,6 +438,20 @@ class Media extends ApiEntityWrapper
     }
 
     /**
+     * @param DateTime|string $changed
+     * @return $this
+     */
+    public function setChanged($changed)
+    {
+        if (is_string($changed)) {
+            $changed = new DateTime($changed);
+        }
+        $this->entity->setChanged($changed);
+
+        return $this;
+    }
+
+    /**
      * @VirtualProperty
      * @SerializedName("changed")
      * @return string
@@ -545,17 +462,41 @@ class Media extends ApiEntityWrapper
     }
 
     /**
+     * @param UserInterface $changer
+     * @return $this
+     */
+    public function setChanger($changer)
+    {
+        $this->entity->setChanger($changer);
+        return $this;
+    }
+
+    /**
      * @VirtualProperty
      * @SerializedName("changer")
      * @return string
      */
     public function getChanger()
     {
-        $changer = $this->getFileVersion()->getChanger();
-        if (method_exists($changer, 'getFullName')) {
-            return $changer->getFullName();
+        $user = $this->getFileVersion()->getChanger();
+        if ($user) {
+            return $user->getFullName();
         }
         return null;
+    }
+
+    /**
+     * @param DateTime|string $created
+     * @return $this
+     */
+    public function setCreated($created)
+    {
+        if (is_string($created)) {
+            $created = new DateTime($created);
+        }
+        $this->entity->setCreated($created);
+
+        return $this;
     }
 
     /**
@@ -569,15 +510,25 @@ class Media extends ApiEntityWrapper
     }
 
     /**
+     * @param UserInterface $creator
+     * @return $this
+     */
+    public function setCreator($creator)
+    {
+        $this->entity->setChanger($creator);
+        return $this;
+    }
+
+    /**
      * @VirtualProperty
      * @SerializedName("creator")
      * @return string
      */
     public function getCreator()
     {
-        $creator = $this->fileVersion->getCreator();
-        if (method_exists($creator, 'getFullName')) {
-            return $creator->getFullName();
+        $user = $this->getFileVersion()->getCreator();
+        if ($user) {
+            return $user->getFullName();
         }
         return null;
     }
@@ -604,26 +555,22 @@ class Media extends ApiEntityWrapper
 
     /**
      * @return FileVersion
-     * @throws \Doctrine\ORM\EntityNotFoundException
+     * @throws \Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException
      */
-    protected function getFileVersion()
+    private function getFileVersion()
     {
         if ($this->fileVersion !== null) {
             return $this->fileVersion;
         }
 
-        /**
-         * @var File $file
-         */
+        /** @var File $file */
         foreach ($this->entity->getFiles() as $file) {
             if ($this->version !== null) {
                 $version = $this->version;
             } else {
                 $version = $file->getVersion();
             }
-            /**
-             * @var FileVersion $fileVersion
-             */
+            /** @var FileVersion $fileVersion */
             foreach ($file->getFileVersions() as $fileVersion) {
                 if ($fileVersion->getVersion() == $version) {
                     $this->fileVersion = $fileVersion;
@@ -632,7 +579,46 @@ class Media extends ApiEntityWrapper
             }
             break; // currently only one file per media exists
         }
-        throw new EntityNotFoundException('SuluMediaBundle:FileVersion', $this->entity->getId());
+        throw new FileVersionNotFoundException('FileVersion for Media with ID '  .  $this->entity->getId() . ' was not found.');
     }
 
-} 
+    /**
+     * @param bool $create
+     * @return FileVersionMeta
+     */
+    private function getMeta($create = false)
+    {
+        $locale = $this->locale;
+        $metaCollection = $this->getFileVersion()->getMeta();
+
+        // get meta only with this locale
+        $metaCollectionFiltered = $metaCollection->filter(function($meta) use ($locale) {
+            /** @var FileVersionMeta $meta */
+            if ($meta->getLocale() == $locale) {
+                return true;
+            }
+            return false;
+        });
+
+        // check if meta was found
+        if ($metaCollectionFiltered->isEmpty()) {
+            if ($create) {
+                // create when not found
+                $meta = new FileVersionMeta();
+                $meta->setLocale($this->locale);
+                $meta->setFileVersion($this->getFileVersion());
+                $this->getFileVersion()->addMeta($meta);
+
+                return $meta;
+            } elseif (!$metaCollection->isEmpty()) {
+                // return first when create false
+                return $metaCollection->first();
+            }
+        } else {
+            // return exists
+            return $metaCollectionFiltered->first();
+        }
+
+        return null;
+    }
+}
