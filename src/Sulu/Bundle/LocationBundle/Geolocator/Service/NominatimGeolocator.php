@@ -6,14 +6,17 @@ use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorInterface;
 use Guzzle\Http\ClientInterface;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorResponse;
+use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorLocation;
 
 class NominatimGeolocator implements GeolocatorInterface
 {
     protected $client;
+    protected $baseUrl;
 
-    public function __construct(ClientInterface $client)
+    public function __construct(ClientInterface $client, $baseUrl = '')
     {
         $this->client = $client;
+        $this->baseUrl = $baseUrl;
     }
 
     /**
@@ -21,7 +24,7 @@ class NominatimGeolocator implements GeolocatorInterface
      */
     public function locate($query)
     {
-        $request = $this->client->get('', array(), array(
+        $request = $this->client->get($this->baseUrl, array(), array(
             'query' => array(
                 'q' => $query,
                 'format' => 'json',
@@ -39,11 +42,12 @@ class NominatimGeolocator implements GeolocatorInterface
             ));
         }
 
+        file_put_contents('foo', (string) $response->getBody());
         $results = $request->getResponse()->json();
-        $responses = array();
+        $response = new GeolocatorResponse();
 
         foreach ($results as $result) {
-            $response = new GeolocatorResponse();
+            $location = new GeolocatorLocation();
 
             foreach (array(
                 'setStreet' => 'road',
@@ -54,17 +58,17 @@ class NominatimGeolocator implements GeolocatorInterface
             ) as $method => $key) 
             {
                 if (isset($result['address'][$key])) {
-                    $response->$method($result['address'][$key]);
+                    $location->$method($result['address'][$key]);
                 }
             }
 
-            $response->setLongitude($result['lon']);
-            $response->setLatitude($result['lat']);
-            $response->setDisplayTitle($result['display_name']);
+            $location->setLongitude($result['lon']);
+            $location->setLatitude($result['lat']);
+            $location->setDisplayTitle($result['display_name']);
 
-            $responses[] = $response;
+            $response->addLocation($location);
         }
 
-        return $responses;
+        return $response;
     }
 }

@@ -1,0 +1,31 @@
+<?php
+
+namespace Sulu\Bundle\LocationBundle\Tests\Unit\Geolocator;
+
+use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorResponse;
+
+class GeolocatorResponseTest extends \PHPUnit_Framework_TestCase
+{
+    protected $geolocatorResponse;
+
+    public function setUp()
+    {
+        $this->response = new GeolocatorResponse();
+        $this->location = $this->getMock('Sulu\Bundle\LocationBundle\Geolocator\GeolocatorLocation');
+    }
+
+    public function testToArray()
+    {
+        $expected = array(
+            'foo' => 'bar',
+        );
+
+        $this->location->expects($this->once())
+            ->method('toArray')
+            ->will($this->returnValue($expected));
+
+        $this->response->addLocation($this->location);
+
+        $this->assertEquals(array($expected), $this->response->toArray());
+    }
+}

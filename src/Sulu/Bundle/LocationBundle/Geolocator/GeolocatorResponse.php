@@ -2,94 +2,27 @@
 
 namespace Sulu\Bundle\LocationBundle\Geolocator;
 
-class GeolocatorResponse
+class GeolocatorResponse implements \Countable
 {
-    protected $displayTitle;
-    protected $street;
-    protected $number;
-    protected $code;
-    protected $town;
-    protected $country;
-    protected $longitude;
-    protected $latitude;
+    protected $locations = array();
 
-    public function getDisplaytitle() 
+    public function addLocation(GeolocatorLocation $location)
     {
-        return $this->displayTitle;
-    }
-    
-    public function setDisplaytitle($displaytitle)
-    {
-        $this->displayTitle = $displaytitle;
+        $this->locations[] = $location;
     }
 
-    public function getStreet() 
+    public function toArray()
     {
-        return $this->street;
-    }
-    
-    public function setStreet($street)
-    {
-        $this->street = $street;
+        $res = array();
+        foreach ($this->locations as $location) {
+            $res[] = $location->toArray();
+        }
+
+        return $res;
     }
 
-    public function getNumber() 
+    public function count()
     {
-        return $this->number;
-    }
-    
-    public function setNumber($number)
-    {
-        $this->number = $number;
-    }
-
-    public function getCode() 
-    {
-        return $this->code;
-    }
-    
-    public function setCode($code)
-    {
-        $this->code = $code;
-    }
-
-    public function getTown() 
-    {
-        return $this->town;
-    }
-    
-    public function setTown($town)
-    {
-        $this->town = $town;
-    }
-    
-    public function getCountry() 
-    {
-        return $this->country;
-    }
-    
-    public function setCountry($country)
-    {
-        $this->country = $country;
-    }
-
-    public function getLongitude() 
-    {
-        return $this->longitude;
-    }
-    
-    public function setLongitude($longitude)
-    {
-        $this->longitude = $longitude;
-    }
-
-    public function getLatitude() 
-    {
-        return $this->latitude;
-    }
-    
-    public function setLatitude($latitude)
-    {
-        $this->latitude = $latitude;
+        return count($this->locations);
     }
 }

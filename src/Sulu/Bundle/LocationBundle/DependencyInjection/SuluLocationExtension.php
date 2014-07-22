@@ -32,9 +32,12 @@ class SuluLocationExtension extends Extension
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');
+        $loader->load('geolocator.xml');
 
         $this->configureContentTypes($config, $container);
         $this->configureMapManager($config, $container);
+
+        $this->configureGeolocators($config, $container);
     }
 
     private function configureContentTypes($config, $container)
@@ -65,5 +68,15 @@ class SuluLocationExtension extends Extension
         }
 
         $mapManager->addMethodCall('setDefaultProviderName', array($config['default_provider']));
+    }
+
+    private function configureGeolocators($config, $container)
+    {
+        $nominatim = function ($config, $container) {
+            $endpoint = $config['geolocators']['nominatim']['endpoint'];
+            $container->setParameter('sulu_location.geolocator.service.nominatim.endpoint', $endpoint);
+        };
+
+        $nominatim($config, $container);
     }
 }

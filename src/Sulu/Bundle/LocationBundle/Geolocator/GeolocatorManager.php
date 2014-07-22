@@ -27,8 +27,8 @@ class GeolocatorManager
     public function get($name)
     {
         if (!isset($this->geolocators[$name])) {
-            throw new \InvalidArgumentException(sprintf(
-                'Attempt to retrieve unkown geolocator "%s"', $name
+            throw new Exception\GeolocatorNotFoundException(sprintf(
+                'Attempt to retrieve unknown geolocator "%s"', $name
             ));
         }
 

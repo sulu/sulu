@@ -17,8 +17,6 @@ class NominatimGeolocatorTest extends \PHPUnit_Framework_TestCase
     {
         $client = new Client('http://open.mapquestapi.com/nominatim/v1/search.php', array());
         $this->mockPlugin = new MockPlugin();
-        $client->addSubscriber($this->mockPlugin);
-
 
         $this->geolocator = new NominatimGeolocator($client);
     }
@@ -59,10 +57,10 @@ class NominatimGeolocatorTest extends \PHPUnit_Framework_TestCase
             return;
         }
 
-        $result = current($results);
+        $result = current($results->toArray());
 
-        foreach ($expectationMap as $getter => $expectation) {
-            $this->assertEquals($expectation, $result->{'get' . ucfirst($getter)}());
+        foreach ($expectationMap as $field => $expectation) {
+            $this->assertEquals($expectation, $result[$field]);
         }
     }
 }
