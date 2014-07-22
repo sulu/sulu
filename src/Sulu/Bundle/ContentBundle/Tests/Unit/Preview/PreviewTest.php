@@ -38,27 +38,27 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $container = $this->prepareContainerMock();
         $mapper = $this->prepareMapperMock();
         $templating = $this->prepareTemplatingMock();
         $structureManager=$this->prepareStructureManagerMock();
+        $contentTypeManager = $this->prepareContentTypeManager();
         $controllerResolver = $this->prepareControllerResolver();
         $this->cache = new ArrayCache();
 
-        $this->preview = new Preview($container, $templating, $this->cache, $mapper, $structureManager, $controllerResolver, 3600);
+        $this->preview = new Preview($templating, $this->cache, $mapper, $structureManager, $contentTypeManager, $controllerResolver, 3600);
     }
 
-    public function prepareContainerMock()
+    public function prepareContentTypeManager()
     {
-        $container = $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface');
+        $container = $this->getMock('Sulu\Component\Content\ContentTypeManagerInterface');
 
         $container->expects($this->any())
             ->method('get')
             ->will(
                 $this->returnValueMap(
                     array(
-                        array('sulu.content.type.text_line', 1, new TextLine('')),
-                        array('sulu.content.type.text_area', 1, new TextArea(''))
+                        array('text_line', new TextLine('')),
+                        array('text_area', new TextArea(''))
                     )
                 )
             );
