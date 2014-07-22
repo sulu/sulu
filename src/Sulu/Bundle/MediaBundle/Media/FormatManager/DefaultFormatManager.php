@@ -129,7 +129,7 @@ class DefaultFormatManager implements FormatManagerInterface
                 $image = $this->converter->convert($original, $format);
 
                 // get image
-                $image = $image->get($imageExtension);
+                $image = $image->get($imageExtension, $this->getOptionsFromImage($image));
 
                 // set header
                 $headers = array(
@@ -207,7 +207,7 @@ class DefaultFormatManager implements FormatManagerInterface
     }
 
     /**
-     * @param $image
+     * @param ImageInterface $image
      * @return array
      */
     protected function getOptionsFromImage(ImageInterface $image)
