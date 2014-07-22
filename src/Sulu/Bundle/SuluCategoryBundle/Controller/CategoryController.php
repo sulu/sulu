@@ -14,14 +14,17 @@ use DateTime;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Put;
-use Sulu\Bundle\CategoryBundle\Api\Category as CategoryWrapper;
-use Sulu\Bundle\CategoryBundle\Entity\Category as CategoryEntity;
+use Hateoas\Representation\CollectionRepresentation;
+use Sulu\Bundle\CategoryBundle\Category\CategoryListRepresentation;
 use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\RestController;
 use Symfony\Component\HttpFoundation\Request;
+use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
+use Sulu\Component\Rest\RestHelperInterface;
 
 /**
  * Makes categories available through a REST API
@@ -32,7 +35,12 @@ class CategoryController extends RestController implements ClassResourceInterfac
     /**
      * {@inheritdoc}
      */
-    protected $entityName = 'SuluCategoryBundle:Category';
+    protected static $entityName = 'SuluCategoryBundle:Category';
+
+    /**
+     * {@inheritdoc}
+     */
+    protected static $entityKey = 'categories';
 
     /**
      * {@inheritdoc}
@@ -98,7 +106,11 @@ class CategoryController extends RestController implements ClassResourceInterfac
      */
     public function getFieldsAction()
     {
-        return $this->responseFields();
+        $cm = $this->get('sulu_category.category_manager');
+        $cm->createFieldDescriptors();
+
+        // default contacts list
+        return $this->handleView($this->view(array_values($cm->getFieldDescriptors()), 200));
     }
 
     /**
@@ -133,30 +145,37 @@ class CategoryController extends RestController implements ClassResourceInterfac
     {
         $parent = $request->get('parent');
         $depth = $request->get('depth');
-        $flat = $request->get('flat');
         $sortBy = $request->get('sortBy');
         $sortOrder = $request->get('sortOrder');
 
-        // todo: only return a flat response if the flat-parameter is set and return a nested result if it's not set
-        if (!$flat) {
-            throw new MissingArgumentException($this->entityName, 'flat');
+        $cm = $this->get('sulu_category.category_manager');
+
+        if ($request->get('flat') == 'true') {
+
+            $listRestHelper = $this->get('sulu_core.list_rest_helper');
+
+            $categories = $cm->find($parent, $depth, $sortBy, $sortOrder);
+            $wrappers = $cm->getApiObjects($categories, $this->getLocale($request->get('locale')));
+
+            $all = count($wrappers); // TODO
+
+            $list = new CategoryListRepresentation(
+                $wrappers,
+                self::$entityKey,
+                'get_categories',
+                $request->query->all(),
+                $listRestHelper->getPage(),
+                $listRestHelper->getLimit(),
+                $all
+            );
+
+        } else {
+            $categories = $cm->find($parent, $depth, $sortBy, $sortOrder);
+            $wrappers = $cm->getApiObjects($categories, $this->getLocale($request->get('locale')));
+            $list = new CollectionRepresentation($wrappers, self::$entityKey);
         }
 
-        $cm = $this->get('sulu_category.category_manager');
-        $categories = $cm->find($parent, $depth, $sortBy, $sortOrder);
-        $wrappers = $cm->getApiObjects($categories, $this->getLocale($request->get('locale')));
-        $halResponse = $this->createHalResponse($wrappers, true);
-        //add children link to hal-links array
-        $halResponse['_links']['children'] = $this->replaceOrAddUrlString(
-            $halResponse['_links']['self'],
-            'parent=', '{parentId}'
-        );
-        // remove depth parameter from children hal-link
-        $halResponse['_links']['children'] = $this->replaceOrAddUrlString(
-            $halResponse['_links']['children'],
-            'depth=', null
-        );
-        $view = $this->view($halResponse, 200);
+        $view = $this->view($list, 200);
         return $this->handleView($view);
     }
 
@@ -180,7 +199,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
     {
         try {
             if (!$request->get('name')) {
-                throw new MissingArgumentException($this->entityName, 'name');
+                throw new MissingArgumentException(self::$entityName, 'name');
             }
             return $this->saveEntity($id, $request);
         } catch (MissingArgumentException $exc) {
