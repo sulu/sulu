@@ -422,7 +422,7 @@ class DefaultMediaManager implements MediaManagerInterface
         }
 
         if (!$currentFileVersion) {
-            throw new FileVersionNotFoundException ('Actual Version not found(' . $version . ')');
+            throw new FileVersionNotFoundException ($mediaEntity->getId(), $version);
         }
 
         if ($uploadedFile) {
@@ -644,7 +644,7 @@ class DefaultMediaManager implements MediaManagerInterface
     {
         $collection = $this->collectionRepository->find($collectionId);
         if (!$collection) {
-            throw new CollectionNotFoundException('Collection with the ID ' . $collectionId . ' not found.');
+            throw new CollectionNotFoundException($collectionId);
         }
         return $collection;
     }
