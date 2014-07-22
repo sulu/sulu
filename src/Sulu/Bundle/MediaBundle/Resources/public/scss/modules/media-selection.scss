@@ -2,172 +2,17 @@
 // Media Selection
 // --------------------------------------------------
 
-.media-selection-container {
-    width: 100%;
-    height: 100%;
-    background: $white;
-    border-radius: 0 0 $borderRadius $borderRadius;
-}
-
-.media-selection-header {
-    position: relative;
-    top: 0px;
-    left: 0px;
-    height: 50px;
-    border-bottom: 1px solid $grayLighterer;
-    line-height: 50px;
-    padding-left: 20px;
-    font-size: $smallFontSize;
-
-    .desc {
-        color: $grayLight;
-        padding-right: 3px;
-    }
-
-    .add {
-        display: block;
-        position: absolute;
-        top: 10px;
-        left: 20px;
-        font-size: 16px;
-        line-height: 15px;
-        color: $white;
-        background-color: $blue;
-        padding: 5px 10px;
-        border: 0px solid $grayLighter;
-        border-radius: $borderRadiusSmall;
-    }
-
-    .display-option-outer {
-        position: relative;
-        width: 120px;
-        margin: 0 auto;
-
-        .display-option {
-            position: absolute;
-            width: 100px;
-            top: 10px;
-            height: 25px;
-        }
-    }
-
-    .config {
-        display: block;
-        position: absolute;
-        top: 10px;
-        right: 20px;
-        font-size: 16px;
-        line-height: 15px;
-        color: $black;
-        padding: 5px 10px;
-        border: 1px solid $grayLighter;
-        border-radius: $borderRadiusSmall;
-
-        &:hover {
-            background: $grayLightest;
-        }
-    }
-}
-
-.media-selection {
-    position: relative;
-    top: 0px;
-    left: 0px;
-
-    .loader {
-        padding: 50px 0;
-    }
-    .no-content {
-        text-align: center;
-        height: 210px;
-
-        .icon {
-            display: block;
-            position: absolute;
-            top: 0px;
-            left: 50%;
-            padding-top: 15px;
-            line-height: 125px;
-            margin-left: -65px;
-            font-size: 125px;
-            color: $grayLightest;
-        }
-        .text {
-            padding-top: 160px;
-            font-weight: bold;
-            color: $grayLightMedium;
-            font-size: 24px;
-        }
-    }
-    .items-list {
-        list-style-type: none;
-        margin: 0;
-        padding: 0 20px;
-
-        li {
-            font-size: $baseFontSize;
-            padding-bottom: 4px;
-            border-bottom: 1px solid $grayLighter;
-
-            .num {
-                color: $grayLight;
-                padding-right: 10px;
-
-                bottom: 18px;
-                position: relative;
-            }
-            .image {
-                color: $grayLight;
-                padding-right: 10px;
-                padding-top: 10px;
-
-                width: 50px;
-                height: 50px;
-            }
-            .value {
-                color: $grayLight;
-
-                bottom: 18px;
-                position: relative;
-            }
-            &:last-child {
-                border-width: 2px;
-            }
-        }
-    }
-}
-
-.media-selection-footer {
-    padding: 15px 20px 30px 20px;
-    line-height: 14px;
-    color: $grayLight;
-    font-size: $smallFontSize;
-    span {
-        padding-right: 5px;
-    }
-    .view-toggler {
-        color: $black;
-        cursor: pointer;
-    }
-}
-
 .media-selection-overlay-add {
-    .head-container {
+    .heading {
         width: 100%;
-        padding-top: 10px;
         border-bottom: 2px $grayLighter solid;
-        padding-bottom: 10px;
-        margin-bottom: 10px;
     }
-
-    h1 {
-        margin-bottom: 0px;
-
-        font-size: 20px;
-        color: $grayLight;
+    h3 {
+      font-size: 16px;
+      margin-top: 20px;
+      margin-bottom: 10px;
     }
-
-    .sulu-grid-group {
-        padding-top: 0px;
+    .overlay-loader {
+      margin: 20px 0;
     }
 }

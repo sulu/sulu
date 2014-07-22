@@ -12,16 +12,19 @@ namespace Sulu\Bundle\MediaBundle\Media\ImageConverter\Command;
 
 use Imagine\Image\Box;
 
-class ScaleCommand implements CommandInterface {
-
+class ScaleCommand implements CommandInterface
+{
     /**
      * {@inheritdoc}
      */
     public function execute(&$image, $parameters)
     {
         $size = $image->getSize();
-        $newWidth = isset($parameters['x']) ? intval($parameters['x']) : null;
-        $newHeight = isset($parameters['y']) ? intval($parameters['y']) : null;
+
+        $retina = isset($parameters['retina']) && $parameters['retina'] != 'false' ? 2 : 1;
+
+        $newWidth = isset($parameters['x']) ? intval($parameters['x']) * $retina : null;
+        $newHeight = isset($parameters['y']) ? intval($parameters['y']) * $retina : null;
         $mode = isset($parameters['mode']) ? intval($parameters['mode']) : $image::THUMBNAIL_OUTBOUND;
 
         if ($newHeight == null) {
@@ -33,5 +36,4 @@ class ScaleCommand implements CommandInterface {
 
         $image = $image->thumbnail(new Box($newWidth, $newHeight), $mode);
     }
-
 } 
