@@ -104,6 +104,4 @@ class XmlFormatLoader extends FileLoader
     {
         return is_string($resource) && 'xml' === pathinfo($resource, PATHINFO_EXTENSION);
     }
-
-
-} 
+}
