@@ -28,6 +28,6 @@
   margin-bottom: 10px;
 }
 /* line 15, ../scss/modules/media-selection.scss */
-.media-selection-overlay-add .overlay-content {
-  min-height: 380px;
+.media-selection-overlay-add .overlay-loader {
+  margin: 20px 0;
 }
