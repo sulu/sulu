@@ -102,7 +102,7 @@ class DefaultCollectionManager implements CollectionManagerInterface
     {
         $collection = $this->collectionRepository->findCollectionById($id);
         if (!$collection) {
-            throw new CollectionNotFoundException('Collection with the ID ' . $id . ' was not found.');
+            throw new CollectionNotFoundException($id);
         }
         return $this->addPreviews(new Collection($collection, $locale));
     }
@@ -377,7 +377,7 @@ class DefaultCollectionManager implements CollectionManagerInterface
         $collectionEntity = $this->collectionRepository->findCollectionById($id);
 
         if (!$collectionEntity) {
-            throw new CollectionNotFoundException('Collection with the ID ' . $id . ' was not found.');
+            throw new CollectionNotFoundException($id);
         }
 
         $this->em->remove($collectionEntity);

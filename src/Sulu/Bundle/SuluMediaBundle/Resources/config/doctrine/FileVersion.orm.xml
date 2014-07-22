@@ -11,6 +11,11 @@
         <field name="name" type="string" column="name" length="255" />
         <field name="version" type="integer" column="version" />
         <field name="size" type="integer" column="size" />
+        <field name="downloadCounter" type="integer" column="downloadCounter">
+            <options>
+                <option name="default">0</option>
+            </options>
+        </field>
         <field name="storageOptions" type="text" column="storageOptions" nullable="true" />
 
         <field name="created" type="datetime" column="created"/>

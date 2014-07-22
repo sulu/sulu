@@ -10,9 +10,8 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\Manager;
 
-use Sulu\Bundle\MediaBundle\Entity\Media;
-use Sulu\Bundle\MediaBundle\Api\Media as MediaWrapper;
-use Sulu\Component\Rest\ListBuilder\FieldDescriptor\DoctrineFieldDescriptor;
+use Sulu\Bundle\MediaBundle\Api\Media;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 interface MediaManagerInterface
@@ -63,4 +62,11 @@ interface MediaManagerInterface
      * @return $this
      */
     public function getFieldDescriptors();
+
+    /**
+     * Increase the download counter of a fileVersion
+     * @param int $fileVersionId
+     * @return mixed
+     */
+    public function increaseDownloadCounter($fileVersionId);
 }
