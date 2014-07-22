@@ -18,7 +18,8 @@
         "jms/serializer-bundle": "@dev",
         "sulu/sulu": "dev-develop",
         "stof/doctrine-extensions-bundle": "1.1.*@dev",
-        "sulu/admin-bundle": "dev-develop"
+        "sulu/admin-bundle": "dev-develop",
+        "willdurand/hateoas-bundle": "0.3.*"
     },
     "require-dev": {
         "sensio/framework-extra-bundle":  "~3.0",

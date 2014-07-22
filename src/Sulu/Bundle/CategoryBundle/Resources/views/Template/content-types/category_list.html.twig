@@ -3,6 +3,7 @@
         data-property="{{ property|json_encode }}"
         data-mapper-property="{{ property.name }}"
         data-aura-url="/admin/api/categories?flat=true&sortBy=depth&sortOrder=asc"
+        data-aura-result-key="categories"
         data-form="true"
         data-type="categoryList"
         data-aura-instance-name="{{ property.name }}"
@@ -10,5 +11,5 @@
         data-aura-children-property-name="children"
         data-aura-resize-listeners="false"
         data-aura-view-options='{"table":{"showHead":false,"cssClass":"white-box","selectItem":{"type":"checkbox","inFirstCell":true}}}'
-        data-aura-matchings='[{"id":"name","content":"Name"},{"id":"id","disabled":true},{"id":"children","disabled":true},{"id":"parent","disabled":true}]'>
+        data-aura-matchings='[{"name":"name","content":"Name"},{"name":"id","disabled":true},{"name":"children","disabled":true},{"name":"parent","disabled":true}]'>
 </div>
