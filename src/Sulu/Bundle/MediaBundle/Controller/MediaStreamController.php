@@ -29,7 +29,6 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class MediaStreamController extends Controller
 {
-
     /**
      * @var FormatManagerInterface
      */
