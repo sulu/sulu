@@ -16,7 +16,6 @@ namespace Sulu\Bundle\SecurityBundle\Entity;
  */
 interface RoleInterface
 {
-
     /**
      * Set name
      *

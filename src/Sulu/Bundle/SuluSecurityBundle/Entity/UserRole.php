@@ -23,7 +23,6 @@ use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
  */
 class UserRole extends ApiEntity
 {
-
     /**
      * @var integer
      * @Expose

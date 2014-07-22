@@ -20,7 +20,6 @@ use JMS\Serializer\Annotation\SerializedName;
  */
 class UserGroup extends ApiEntity
 {
-
     /**
      * @var string
      */
