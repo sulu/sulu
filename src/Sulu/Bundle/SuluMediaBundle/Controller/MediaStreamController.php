@@ -13,8 +13,8 @@ namespace Sulu\Bundle\MediaBundle\Controller;
 use Doctrine\ORM\EntityManager;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\Media;
+use Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyException;
-use Sulu\Bundle\MediaBundle\Media\Exception\InvalidFileVersionException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaException;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
@@ -126,7 +126,7 @@ class MediaStreamController extends Controller
      * @param int $id
      * @param int $version
      * @return null|FileVersion
-     * @throws \Sulu\Bundle\MediaBundle\Media\Exception\InvalidFileVersionException
+     * @throws \Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException
      */
     protected function getFileVersion($id, $version)
     {
@@ -152,7 +152,7 @@ class MediaStreamController extends Controller
         }
 
         if (!$currentFileVersion) {
-            throw new InvalidFileVersionException('File "' . $id . '" with the Version "' . $version . '" not found.');
+            throw new FileVersionNotFoundException($id, $version);
         }
 
         return $currentFileVersion;
