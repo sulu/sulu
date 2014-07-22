@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\FormatManager;
 
+use Imagine\Image\ImageInterface;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\Media;
@@ -105,9 +106,12 @@ class DefaultFormatManager implements FormatManagerInterface
         // convert Media to format
         $image = $this->converter->convert($original, $format);
 
+        // get options
+        $options = $this->getOptionsFromImage($image);
+
         // set extension
         $imageExtension = $this->getFileExtension($fileName);
-        $image = $image->get($imageExtension);
+        $image = $image->get($imageExtension, $options);
 
         // set header
         $headers = array(
@@ -130,21 +134,37 @@ class DefaultFormatManager implements FormatManagerInterface
     }
 
     /**
+     * @param $image
+     * @return array
+     */
+    protected function getOptionsFromImage(ImageInterface $image)
+    {
+        $options = array();
+        if (count($image->layers()) > 1) {
+            $options['animated'] = true;
+        }
+
+        return $options;
+    }
+
+    /**
      * @param string $fileName
      * @param string $path
      */
     protected function prepareMedia($fileName, $path)
     {
-        $pathInfos = pathinfo($fileName);
-        if (isset($pathInfos['extension'])) {
-            if ('pdf' == $pathInfos['extension']) {
-                $this->convertPdfToImage($path);
+        $pathInfo = pathinfo($fileName);
+        if (isset($pathInfo['extension'])) {
+            switch ($pathInfo['extension']) {
+                case 'pdf':
+                    $this->convertPdfToImage($path);
+                    break;
             }
         }
     }
 
     /**
-     * @param string  $path
+     * @param string $path
      */
     protected function convertPdfToImage($path)
     {
@@ -154,12 +174,14 @@ class DefaultFormatManager implements FormatManagerInterface
 
     /**
      * @param $filename
-     * @param $new_extension
+     * @param $newExtension
      * @return string
      */
-    protected function replaceExtension($filename, $new_extension) {
+    protected function replaceExtension($filename, $newExtension)
+    {
         $info = pathinfo($filename);
-        return $info['filename'] . '.' . $new_extension;
+
+        return $info['filename'] . '.' . $newExtension;
     }
 
     /**
@@ -231,14 +253,10 @@ class DefaultFormatManager implements FormatManagerInterface
         $storageOptions = null;
         $version = null;
 
-        /**
-         * @var File $file
-         */
+        /** @var File $file */
         foreach ($media->getFiles() as $file) {
             $version = $file->getVersion();
-            /**
-             * @var FileVersion $fileVersion
-             */
+            /** @var FileVersion $fileVersion */
             foreach ($file->getFileVersions() as $fileVersion) {
                 if ($fileVersion->getVersion() == $version) {
                     $fileName = $fileVersion->getName();
