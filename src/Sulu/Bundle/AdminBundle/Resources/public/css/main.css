@@ -425,7 +425,10 @@ input, select {
 }
 /* line 10, ../scss/modules/sidebar.scss */
 .sulu-sidebar .sidebar-loader {
-  margin-top: 40px;
+  position: relative;
+  left: 0;
+  top: 50%;
+  margin-top: -50px;
 }
 
 /* line 5, ../scss/modules/gridgroup.scss */

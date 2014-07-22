@@ -127,7 +127,8 @@ define([], function() {
          *              rightSpace: true
          *          },
          *          sidebar: {
-         *              width: 'max'
+         *              width: 'max',
+         *              url: '/admin/widget-groups/my-widget-group'
          *          }
          *      }
          */
@@ -179,7 +180,11 @@ define([], function() {
          * @param sidebar {Object|Boolean} the sidebar config object or true for default behaviour. If false sidebar gets hidden
          */
         handleLayoutSidebar = function(sidebar) {
-            this.sandbox.emit('sulu.sidebar.empty');
+            if (!!sidebar && !!sidebar.url) {
+                this.sandbox.emit('sulu.sidebar.set-widget', sidebar.url);
+            } else {
+                this.sandbox.emit('sulu.sidebar.empty');
+            }
             if (!!sidebar) {
                 var width = sidebar.width || 'max';
                 this.sandbox.emit('sulu.sidebar.change-width', width);

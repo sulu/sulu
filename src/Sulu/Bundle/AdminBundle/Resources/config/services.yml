@@ -1,9 +1,13 @@
 parameters:
     sulu_admin.admin_pool.class: Sulu\Bundle\AdminBundle\Admin\AdminPool
     sulu_admin.js_config_pool.class: Sulu\Bundle\AdminBundle\Admin\JsConfigPool
+    sulu_admin.widgets_handler.class: Sulu\Bundle\AdminBundle\Widgets\WidgetsHandler
 
 services:
     sulu_admin.admin_pool:
         class: %sulu_admin.admin_pool.class%
     sulu_admin.js_config_pool:
         class: %sulu_admin.js_config_pool.class%
+    sulu_admin.widgets_handler:
+            class: %sulu_admin.widgets_handler.class%
+            arguments: [@templating]

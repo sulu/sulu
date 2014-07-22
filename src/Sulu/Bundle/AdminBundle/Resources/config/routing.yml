@@ -26,3 +26,19 @@ sulu_admin.login_check:
 
 logout:
     path: /logout
+
+sulu_admin.widgets.contactInfo:
+    pattern: /widget-groups/contact-info
+    defaults: { _controller: SuluAdminBundle:WidgetGroups:contactInfo }
+
+sulu_admin.widgets.accountInfo:
+    pattern: /widget-groups/account-info
+    defaults: { _controller: SuluAdminBundle:WidgetGroups:accountInfo }
+
+sulu_admin.widgets.contactDetail:
+    pattern: /widget-groups/contact-detail
+    defaults: { _controller: SuluAdminBundle:WidgetGroups:contactDetail }
+
+sulu_admin.widgets.accountDetail:
+    pattern: /widget-groups/account-detail
+    defaults: { _controller: SuluAdminBundle:WidgetGroups:accountDetail }
