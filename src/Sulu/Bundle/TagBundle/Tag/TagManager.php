@@ -19,6 +19,8 @@ use Sulu\Bundle\TagBundle\Event\TagEvents;
 use Sulu\Bundle\TagBundle\Event\TagMergeEvent;
 use Sulu\Bundle\TagBundle\Tag\Exception\TagAlreadyExistsException;
 use Sulu\Bundle\TagBundle\Tag\Exception\TagNotFoundException;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 use Sulu\Component\Security\UserRepositoryInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
@@ -29,6 +31,10 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
  */
 class TagManager implements TagManagerInterface
 {
+    protected static $tagEntityName = 'SuluTagBundle:Tag';
+    protected static $userEntityName = 'SuluSecurityBundle:User';
+    protected static $contactEntityName = 'SuluContactBundle:Contact';
+
     /**
      * The repository for communication with the database
      * @var TagRepository
@@ -50,6 +56,12 @@ class TagManager implements TagManagerInterface
      */
     private $userRepository;
 
+    /**
+     * Describes the fields, which are handled by this controller
+     * @var DoctrineFieldDescriptor[]
+     */
+    protected $fieldDescriptors = array();
+
     public function __construct(
         TagRepositoryInterface $tagRepository,
         UserRepositoryInterface $userRepository,
@@ -61,6 +73,24 @@ class TagManager implements TagManagerInterface
         $this->em = $em;
         $this->eventDispatcher = $eventDispatcher;
         $this->userRepository = $userRepository;
+
+        $this->initializeFieldDescriptors();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getFieldDescriptors()
+    {
+        return $this->fieldDescriptors;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getFieldDescriptor($key)
+    {
+        return $this->fieldDescriptors[$key];
     }
 
     /**
@@ -243,5 +273,71 @@ class TagManager implements TagManagerInterface
         }
 
         return $resolvedTags;
+    }
+
+    private function initializeFieldDescriptors()
+    {
+        $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor(
+            'id',
+            'id',
+            self::$tagEntityName,
+            'public.id',
+            array(),
+            true,
+            false,
+            '',
+            '50px'
+        );
+        $this->fieldDescriptors['name'] = new DoctrineFieldDescriptor(
+            'name',
+            'name',
+            self::$tagEntityName,
+            'tags.name',
+            array(),
+            false,
+            true,
+            '',
+            '',
+            '',
+            true,
+            true
+        );
+        $this->fieldDescriptors['created'] = new DoctrineFieldDescriptor(
+            'created',
+            'created',
+            self::$tagEntityName,
+            'public.created',
+            array(),
+            true,
+            false,
+            'date'
+        );
+        $this->fieldDescriptors['changed'] = new DoctrineFieldDescriptor(
+            'changed',
+            'changed',
+            self::$tagEntityName,
+            'public.changed',
+            array(),
+            true,
+            false,
+            'date'
+        );
+        $this->fieldDescriptors['creator'] = new DoctrineFieldDescriptor(
+            'lastName',
+            'creator',
+            self::$contactEntityName,
+            'tags.author',
+            array(
+                self::$userEntityName => new DoctrineJoinDescriptor(
+                        self::$userEntityName,
+                        self::$tagEntityName . '.creator'
+                    ),
+                self::$contactEntityName => new DoctrineJoinDescriptor(
+                        self::$contactEntityName,
+                        self::$userEntityName . '.contact'
+                    )
+            ),
+            true
+        );
     }
 }

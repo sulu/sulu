@@ -33,8 +33,12 @@ define(function() {
         view: true,
         instanceNameToolbar: 'saveToolbar',
 
-        fullSize: {
-            width: true
+        layout: {
+            content: {
+                width: 'max',
+                leftSpace: false,
+                rightSpace: false
+            }
         },
 
         header: function() {
@@ -71,6 +75,7 @@ define(function() {
                 {
                     el: this.sandbox.dom.find('#tags-list', this.$el),
                     url: '/admin/api/tags?flat=true',
+                    resultKey: 'tags',
                     viewOptions: {
                         table: {
                             editable: true,

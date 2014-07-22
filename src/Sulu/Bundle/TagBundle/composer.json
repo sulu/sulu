@@ -3,7 +3,7 @@
     "type": "sulu-bundle",
     "description": "The Sulu Bundle for managing tags",
     "license": "MIT",
-    "version": "0.4.0",
+    "version": "dev-develop",
     "keywords": ["sulu", "tags"],
     "authors": [
         {
@@ -17,10 +17,11 @@
         "friendsofsymfony/rest-bundle": "@dev",
         "friendsofsymfony/http-cache": "@dev",
         "jms/serializer-bundle": "@dev",
-	"sulu/sulu": "dev-develop",
+        "sulu/sulu": "dev-develop",
         "sulu/contact-bundle": "dev-develop",
         "sulu/admin-bundle": "dev-develop",
-        "sulu/security-bundle": "dev-develop"
+        "sulu/security-bundle": "dev-develop",
+        "willdurand/hateoas-bundle": "0.3.*"
     },
     "require-dev": {
         "sensio/framework-extra-bundle":  "~3.0",
