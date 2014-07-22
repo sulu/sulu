@@ -16,10 +16,11 @@ namespace Sulu\Bundle\MediaBundle\Media\Exception;
 class FileVersionNotFoundException extends MediaException
 {
     /**
-     * @param string $message
+     * @param int $id
+     * @param int $version
      */
-    public function __construct($message)
+    public function __construct($id, $version)
     {
-        parent::__construct($message, self::EXCEPTION_CODE_FILE_VERSION_NOT_FOUND);
+        parent::__construct('FileVersion ' . $version . ' from the Media with ID ' . $id . ' ', self::EXCEPTION_CODE_FILE_VERSION_NOT_FOUND);
     }
 }

@@ -43,7 +43,7 @@
         <service id="sulu_media.format_cache" class="%sulu_media.format_cache.class%">
             <argument type="service" id="filesystem"/>
             <argument>%sulu_media.format_cache.path%</argument>
-            <argument>%sulu_media.format_cache.path.url%</argument>
+            <argument type="expression">service('router').getRouteCollection().get('sulu_media.website.image.proxy').getPath()</argument>
             <argument>%sulu_media.format_cache.segments%</argument>
             <argument>%sulu_media.image.formats%</argument>
         </service>
@@ -74,6 +74,7 @@
             <argument type="service" id="sulu_media.storage" />
             <argument type="service" id="sulu_media.file_validator" />
             <argument type="service" id="sulu_media.format_manager" />
+            <argument type="expression">service('router').getRouteCollection().get('sulu_media.website.media.download').getPath()</argument>
             <argument>%sulu_media.media.max_file_size%</argument>
             <argument>%sulu_media.media.blocked_file_types%</argument>
             <argument>%sulu_media.media.types%</argument>

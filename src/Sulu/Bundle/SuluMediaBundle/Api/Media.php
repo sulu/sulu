@@ -599,7 +599,7 @@ class Media extends ApiWrapper
             }
             break; // currently only one file per media exists
         }
-        throw new FileVersionNotFoundException('FileVersion for Media with ID '  .  $this->entity->getId() . ' was not found.');
+        throw new FileVersionNotFoundException($this->entity->getId(), $this->version);
     }
 
     /**
