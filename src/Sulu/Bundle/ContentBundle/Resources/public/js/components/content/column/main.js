@@ -69,10 +69,6 @@ define(function() {
                 this.sandbox.sulu.saveUserSetting(SHOW_GHOST_PAGES_KEY, this.showGhostPages);
                 this.startColumnNavigation();
             }, this);
-
-            this.sandbox.on('husky.select.language.selected.item', function(localeId) {
-                this.changeLanguage(this.getLocalizationForId(localeId));
-            }, this);
         },
 
         startColumnNavigation: function() {

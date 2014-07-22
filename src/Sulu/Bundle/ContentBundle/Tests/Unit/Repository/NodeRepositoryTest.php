@@ -214,6 +214,19 @@ class NodeRepositoryTest extends PhpcrTestCase
         $this->assertFalse($result['_embedded']['nodes'][0]['_embedded'][0]['hasSub']);
     }
 
+    public function testGetNodesTreeWithGhosts()
+    {
+        $data = $this->prepareGetTestData();
+
+        $result = $this->nodeRepository->getNodesTree($data->getUuid(), 'default', 'de', false, false);
+        $this->assertEquals(1, sizeof($result['_embedded']['nodes']));
+        $this->assertEquals('Testtitle', $result['_embedded']['nodes'][0]['title']);
+        $this->assertEquals('/testtitle', $result['_embedded']['nodes'][0]['path']);
+        $this->assertEquals('ghost', $result['_embedded']['nodes'][0]['type']['name']);
+        $this->assertEquals('en', $result['_embedded']['nodes'][0]['type']['value']);
+        $this->assertFalse($result['_embedded']['nodes'][0]['hasSub']);
+    }
+
     public function testExtensionData()
     {
         $data = $this->prepareGetTestData();
@@ -274,6 +287,10 @@ class NodeRepositoryTest extends PhpcrTestCase
 
         $locale = new Localization();
         $locale->setLanguage('en');
+        $this->webspace->addLocalization($locale);
+
+        $locale = new Localization();
+        $locale->setLanguage('de');
         $this->webspace->addLocalization($locale);
 
         $this->webspaceManager->expects($this->any())
