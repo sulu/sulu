@@ -216,6 +216,9 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
     {
         if ($this->contentTypeManager === null) {
             $this->contentTypeManager = new ContentTypeManager($this->container);
+            $this->contentTypeManager->mapAliasToServiceId('text_line', 'sulu.content.type.text_line');
+            $this->contentTypeManager->mapAliasToServiceId('text_area', 'sulu.content.type.text_area');
+            $this->contentTypeManager->mapAliasToServiceId('resource_locator', 'sulu.content.type.resource_locator');
         }
     }
 
