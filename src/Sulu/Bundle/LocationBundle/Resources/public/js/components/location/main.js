@@ -177,7 +177,7 @@ define([], function() {
                                 '<label><%= translations.coordinates %></label>',
                             '</div>',
                         '</div>',
-                        '<div class="grid-row">',
+                        '<div class="grid-row coordinate-fields">',
                             '<div class="form-group grid-col-5">',
                                 '<input class="form-element longitude" type="text" data-mapper-property="location.long" value="<%= data.location.long %>"/ >',
                             '</div>',
@@ -185,7 +185,7 @@ define([], function() {
                                 '<input class="form-element latitude" type="text" data-mapper-property="location.lat" value="<%= data.location.lat %>"/ >',
                             '</div>',
                             '<div class="form-group grid-col-2">',
-                                '<input class="form-element" type="text" data-mapper-property="location.zoom" value="<%= data.location.zoom %>"/ >',
+                                '<input class="form-element zoom" type="text" data-mapper-property="location.zoom" value="<%= data.location.zoom %>"/ >',
                             '</div>',
                         '</div>',
                         '<div class="grid-row">',
@@ -257,7 +257,10 @@ define([], function() {
          * Bind events to the component
          */
         bindEvents: function () {
+            // Initialize form when overlay is opened
             this.sandbox.on('husky.overlay.location-content.' + this.options.instanceName + '.opened', this.createForm.bind(this));
+
+            // update the location when user chooses a location from autoselect
             this.sandbox.on(
                 'husky.auto-complete.' + this.options.instanceName + '.geolocator.search.select',
                 this.updateLocationFromLocation.bind(this)
@@ -279,7 +282,15 @@ define([], function() {
             this.renderMap(constants.overlayMapElementId, {
                 'long': location.longitude,
                 'lat': location.latitude,
-                'zoom': this.data.zoom
+                'zoom': this.formData.zoom
+            });
+        },
+
+        updateLocation: function () {
+            this.renderMap(constants.overlayMapElementId, {
+                'long': this.formData.location.long,
+                'lat': this.formData.location.lat,
+                'zoom': this.formData.location.zoom
             });
         },
 
@@ -348,6 +359,14 @@ define([], function() {
                     }
                 }
             ]);
+
+            this.sandbox.dom.find('.coordinate-fields input').on('change', function () {
+                var form = $('#' + constants.formId);
+                this.formData.location.long = this.sandbox.dom.find('.longitude', form).val();
+                this.formData.location.lat = this.sandbox.dom.find('.latitude', form).val();
+                this.formData.location.zoom = this.sandbox.dom.find('.zoom', form).val();
+                this.updateLocation();
+            }.bind(this));
         },
 
         /**
