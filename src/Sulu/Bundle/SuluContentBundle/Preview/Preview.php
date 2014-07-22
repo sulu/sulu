@@ -13,12 +13,12 @@ namespace Sulu\Bundle\ContentBundle\Preview;
 use Doctrine\Common\Cache\Cache;
 use Sulu\Component\Content\Block\BlockPropertyInterface;
 use Sulu\Component\Content\ContentTypeInterface;
+use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\Section\SectionPropertyInterface;
 use Sulu\Component\Content\StructureManagerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
@@ -57,25 +57,24 @@ class Preview implements PreviewInterface
     private $lifeTime;
 
     /**
-     * @var ContainerInterface
+     * @var ContentTypeManagerInterface
      */
-    private $container;
+    private $contentTypeManager;
 
     public function __construct(
-        ContainerInterface $container,
         EngineInterface $templating,
         Cache $cache,
         ContentMapperInterface $mapper,
         StructureManagerInterface $structureManager,
+        ContentTypeManagerInterface $contentTypeManager,
         ControllerResolverInterface $controllerResolver,
         $lifeTime
-    )
-    {
-        $this->container = $container;
+    ) {
         $this->templating = $templating;
         $this->cache = $cache;
         $this->mapper = $mapper;
         $this->structureManager = $structureManager;
+        $this->contentTypeManager = $contentTypeManager;
         $this->controllerResolver = $controllerResolver;
         $this->lifeTime = $lifeTime;
     }
@@ -194,6 +193,7 @@ class Preview implements PreviewInterface
     {
         if ($this->started($userId, $contentUuid, $templateKey, $languageCode)) {
             $result = $this->readChanges($userId, $contentUuid, $templateKey, $languageCode);
+
             return $result !== false ? $result : array();
         } else {
             throw new PreviewNotFoundException($userId, $contentUuid);
@@ -248,6 +248,7 @@ class Preview implements PreviewInterface
                                     }
                                 }
                             );
+
                             return ($count === 0);
                         }
                     );
@@ -327,9 +328,9 @@ class Preview implements PreviewInterface
                 if (!ctype_digit(strval($sequence[$i]))) {
                     $propertyPath[] = $sequence[$i];
                     if ($propertyInstance instanceof BlockPropertyInterface) {
-                        $lastIndex = $indexSequence[sizeof($indexSequence)-1];
+                        $lastIndex = $indexSequence[sizeof($indexSequence) - 1];
 
-                        unset($indexSequence[sizeof($indexSequence)-1]);
+                        unset($indexSequence[sizeof($indexSequence) - 1]);
                         $indexSequence = array_values($indexSequence);
 
                         $propertyInstance = $propertyInstance->getProperties($lastIndex)[$sequence[$i]];
@@ -347,6 +348,7 @@ class Preview implements PreviewInterface
         } else {
             $cache[$property] = false;
         }
+
         return $cache[$property];
     }
 
@@ -365,7 +367,7 @@ class Preview implements PreviewInterface
         $structureCacheId = $this->getCacheKey($userId, $contentUuid, $templateKey, $languageCode, 'structure');
 
         return $this->cache->save($cacheId, $data, $this->lifeTime) &&
-            $this->cache->save($structureCacheId, $data->getKey(), $this->lifeTime);
+        $this->cache->save($structureCacheId, $data->getKey(), $this->lifeTime);
     }
 
     /**
@@ -388,6 +390,7 @@ class Preview implements PreviewInterface
         if ($this->cache->contains($id)) {
             return $this->cache->fetch($id);
         }
+
         return false;
     }
 
@@ -443,6 +446,7 @@ class Preview implements PreviewInterface
             $changes = $this->cache->fetch($id);
             // clean array if changes are read
             $this->cache->save($id, array(), $this->lifeTime);
+
             return $changes;
         }
 
@@ -504,6 +508,6 @@ class Preview implements PreviewInterface
      */
     protected function getContentType($name)
     {
-        return $this->container->get('sulu.content.type.' . $name);
+        return $this->contentTypeManager->get($name);
     }
 }
