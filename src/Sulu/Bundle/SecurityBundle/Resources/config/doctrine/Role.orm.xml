@@ -2,7 +2,7 @@
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-    <entity name="Sulu\Bundle\SecurityBundle\Entity\Role"
+    <entity name="Sulu\Bundle\SecurityBundle\Entity\Role" table="se_roles"
             repository-class="Sulu\Bundle\SecurityBundle\Entity\RoleRepository">
 
         <one-to-many field="permissions" target-entity="Sulu\Bundle\SecurityBundle\Entity\Permission" mapped-by="role"/>
