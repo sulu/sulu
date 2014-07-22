@@ -558,16 +558,23 @@ abstract class RestController extends FOSRestController
      * @param callback $deleteCallback
      * @param callback $updateCallback
      * @param callback $addCallback
+     * @param callback $entityIdCallback defines how to get the entity's id which will be compared with requestEntities' id
      * @return bool
      * @deprecated
      */
-    protected function processPut($entities, $requestEntities, $deleteCallback, $updateCallback, $addCallback)
+    protected function processPut($entities, $requestEntities, $deleteCallback, $updateCallback, $addCallback, $entityIdCallback = null)
     {
         $success = true;
+        // default for entityIdCallback
+        if ($entityIdCallback === null) {
+            $entityIdCallback = function($entity) {
+                return $entity->getId();
+            };
+        }
 
         if (!empty($entities)) {
             foreach ($entities as $entity) {
-                $this->findMatch($requestEntities, $entity->getId(), $matchedEntry, $matchedKey);
+                $this->findMatch($requestEntities, $entityIdCallback($entity), $matchedEntry, $matchedKey);
 
                 if ($matchedEntry == null) {
                     // delete entity if it is not listed anymore
@@ -581,7 +588,7 @@ abstract class RestController extends FOSRestController
                 }
 
                 // Remove done element from array
-                if ($matchedKey != null) {
+                if ($matchedKey !== null) {
                     unset($requestEntities[$matchedKey]);
                 }
             }
@@ -612,7 +619,7 @@ abstract class RestController extends FOSRestController
     }
 
     /**
-     * Tries to find an given id in a given set of entities. Returns the entity itself and its key with the
+     * Tries to find a given id in a given set of entities. Returns the entity itself and its key with the
      * $matchedEntry and $matchKey parameters.
      * @param array $requestEntities The set of entities to search in
      * @param integer $id The id to search
@@ -628,6 +635,7 @@ abstract class RestController extends FOSRestController
                 if (isset($entity['id']) && $entity['id'] == $id) {
                     $matchedEntry = $entity;
                     $matchedKey = $key;
+                    break;
                 }
             }
         }
