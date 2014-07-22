@@ -33,6 +33,11 @@ define([], function() {
              geolocationUrl: ''
         },
 
+        mapDefaults = {
+            draggableMarker: false,
+            positionUpdateCallback: null
+        },
+
         dataDefaults = {
             title: '',
             street: '',
@@ -276,9 +281,7 @@ define([], function() {
         },
 
         updateLocationFromLocation: function (location) {
-            var form = $('#' + constants.formId);
-            this.sandbox.dom.find('.longitude', form).val(location.longitude);
-            this.sandbox.dom.find('.latitude', form).val(location.latitude);
+            this.updateCoordinates(location.long, location.lat);
             this.renderMap(constants.overlayMapElementId, {
                 'long': location.longitude,
                 'lat': location.latitude,
@@ -292,6 +295,21 @@ define([], function() {
                 'lat': this.formData.location.lat,
                 'zoom': this.formData.location.zoom
             });
+        },
+
+        updateCoordinates: function (long, lat, zoom) {
+            var form = $('#' + constants.formId);
+            if (long) {
+                this.sandbox.dom.find('.longitude', form).val(long);
+            }
+
+            if (lat) {
+                this.sandbox.dom.find('.latitude', form).val(lat);
+            }
+
+            if (zoom) {
+                this.sandbox.dom.find('.zoom', form).val(zoom);
+            }
         },
 
         /**
@@ -316,11 +334,12 @@ define([], function() {
         /**
          * Render the map using the defined provider
          */
-        renderMap: function (mapElementId, location) {
+        renderMap: function (mapElementId, location, options) {
             var mapElement = this.sandbox.dom.find('#' + mapElementId);
             var providerName = this.data.mapProvider;
             var mapProviderConfig = this.options.mapProviders[providerName];
             var mapElementId = mapElementId;
+            var options = this.sandbox.util.extend({}, mapDefaults, options);
 
             if (undefined == mapProviderConfig) {
                 alert('Map provider "' + providerName + '" is not configured');
@@ -329,7 +348,7 @@ define([], function() {
 
             if (this.mapInstances[mapElementId] == undefined) {
                 require(['map/' + providerName], function (Map) {
-                    var map = new Map(mapElementId, mapProviderConfig);
+                    var map = new Map(mapElementId, mapProviderConfig, options);
                     map.show(location.long, location.lat, location.zoom);
                     this.mapInstances[mapElementId] = map;
                 }.bind(this));
@@ -344,7 +363,21 @@ define([], function() {
         createForm: function () {
             var element = this.sandbox.dom.find('.' + constants.geolocatorSearchClass);
             this.sandbox.form.create('#' + constants.formId);
-            this.renderMap(constants.overlayMapElementId, this.data.location);
+            this.renderMap(constants.overlayMapElementId, this.data.location, {
+                // allow the marker to be dragged
+                draggableMarker: true,
+
+                // update the coordinates when the marker is dragged
+                positionUpdateCallback: function (long, lat, zoom) {
+                    this.updateCoordinates(long, lat, null);
+                }.bind(this),
+
+                // update the zoom when the zoom is changed
+                zoomChangeCallback: function (zoom) {
+                    this.updateCoordinates(null, null, zoom);
+                }.bind(this),
+
+            });
             this.sandbox.start([
                 {
                     name: 'auto-complete@husky',

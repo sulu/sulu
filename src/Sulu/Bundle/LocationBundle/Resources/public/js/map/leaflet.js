@@ -6,10 +6,17 @@ define(['leaflet'], function (leaflet) {
      * @param selector - Put the map in the DOM element with this ID
      * @param options - Options for the map
      */
-    return function Leaflet(selector, options) {
+    return function Leaflet(selector, providerOptions, options) {
         var selector = selector;
+        var options = options;
         var map = leaflet.map(selector);
         var marker = null;
+
+        if (options.zoomChangeCallback) {
+            map.on('zoomend', function () {
+                options.zoomChangeCallback(map.getZoom());
+            });
+        }
 
         /**
          * Show a position on the map
@@ -34,11 +41,25 @@ define(['leaflet'], function (leaflet) {
             }).addTo(map);
 
             if (null == marker) {
+                // create new marker
                 marker = L.marker([lat, long], {
-                    icon: new MarkerIcon
+                    icon: new MarkerIcon,
+                    draggable: options.draggableMarker
                 });
+
+                // update coordinates
+                marker.on('drag', function (e) {
+                    var marker = e.target;
+                    var latLng = marker.getLatLng();
+                    if (options.positionUpdateCallback) {
+                        options.positionUpdateCallback(latLng.lng, latLng.lat);
+                    }
+                });
+
                 marker.addTo(map)
+
             } else {
+                // update existing marker
                 marker.setLatLng([lat, long]);
             }
         };
