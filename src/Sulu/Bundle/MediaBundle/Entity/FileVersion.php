@@ -45,6 +45,11 @@ class FileVersion
     private $storageOptions;
 
     /**
+     * @var integer
+     */
+    private $downloadCounter = 0;
+
+    /**
      * @var \DateTime
      */
     private $created;
@@ -219,6 +224,29 @@ class FileVersion
     public function getStorageOptions()
     {
         return $this->storageOptions;
+    }
+
+    /**
+     * Set downloadCounter
+     *
+     * @param integer $downloadCounter
+     * @return FileVersion
+     */
+    public function setDownloadCounter($downloadCounter)
+    {
+        $this->downloadCounter = $downloadCounter;
+
+        return $this;
+    }
+
+    /**
+     * Get downloadCounter
+     *
+     * @return integer
+     */
+    public function getDownloadCounter()
+    {
+        return $this->downloadCounter;
     }
 
     /**

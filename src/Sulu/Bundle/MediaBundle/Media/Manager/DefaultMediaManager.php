@@ -110,6 +110,11 @@ class DefaultMediaManager implements MediaManagerInterface
     private $fieldDescriptors = array();
 
     /**
+     * @var string
+     */
+    private $downloadPath;
+
+    /**
      * @param MediaRepositoryInterface $mediaRepository
      * @param CollectionRepository $collectionRepository
      * @param UserRepositoryInterface $userRepository
@@ -117,6 +122,7 @@ class DefaultMediaManager implements MediaManagerInterface
      * @param StorageInterface $storage
      * @param FileValidatorInterface $validator
      * @param FormatManagerInterface $formatManager
+     * @param string $downloadPath
      * @param string $maxFileSize
      * @param array $blockedMimeTypes
      * @param array $mediaTypes
@@ -129,6 +135,7 @@ class DefaultMediaManager implements MediaManagerInterface
         StorageInterface $storage,
         FileValidatorInterface $validator,
         FormatManagerInterface $formatManager,
+        $downloadPath,
         $maxFileSize,
         $blockedMimeTypes,
         $mediaTypes
@@ -141,6 +148,7 @@ class DefaultMediaManager implements MediaManagerInterface
         $this->storage = $storage;
         $this->validator = $validator;
         $this->formatManager = $formatManager;
+        $this->downloadPath = $downloadPath;
         $this->maxFileSize = $maxFileSize;
         $this->blockedMimeTypes = $blockedMimeTypes;
         $this->mediaTypes = $mediaTypes;
@@ -414,7 +422,7 @@ class DefaultMediaManager implements MediaManagerInterface
         }
 
         if (!$currentFileVersion) {
-            throw new FileVersionNotFoundException ('Actual Version not found(' . $version . ')');
+            throw new FileVersionNotFoundException ($mediaEntity->getId(), $version);
         }
 
         if ($uploadedFile) {
@@ -441,6 +449,7 @@ class DefaultMediaManager implements MediaManagerInterface
             $fileVersion->setCreated(new Datetime());
             $fileVersion->setChanger($user);
             $fileVersion->setCreator($user);
+            $fileVersion->setDownloadCounter(0);
 
             $file->setVersion($version);
             $fileVersion->setVersion($version);
@@ -639,7 +648,7 @@ class DefaultMediaManager implements MediaManagerInterface
     {
         $collection = $this->collectionRepository->find($collectionId);
         if (!$collection) {
-            throw new CollectionNotFoundException('Collection with the ID ' . $collectionId . ' not found.');
+            throw new CollectionNotFoundException($collectionId);
         }
         return $collection;
     }
@@ -675,6 +684,20 @@ class DefaultMediaManager implements MediaManagerInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function increaseDownloadCounter($fileVersionId)
+    {
+        $query = $this->em->createQueryBuilder()->update('SuluMediaBundle:FileVersion', 'fV')
+            ->set('fV.downloadCounter', 'fV.downloadCounter + 1')
+            ->where('fV.id = :id')
+            ->setParameter('id', $fileVersionId)
+            ->getQuery();
+
+        $query->execute();
+    }
+
+    /**
      * @param Media $media
      * @return Media
      */
@@ -685,7 +708,7 @@ class DefaultMediaManager implements MediaManagerInterface
         );
 
         $media->setUrl(
-            $this->getUrl($media->getName(), $media->getVersion(), $media->getStorageOptions())
+            $this->getUrl($media->getId(), $media->getName(), $media->getVersion())
         );
 
         return $media;
@@ -713,15 +736,22 @@ class DefaultMediaManager implements MediaManagerInterface
     }
 
     /**
+     * @param $id
      * @param $fileName
      * @param $version
-     * @param $storageOptions
-     * @return mixed
+     * @return string
      */
-    protected function getUrl($fileName, $version, $storageOptions)
+    protected function getUrl($id, $fileName, $version)
     {
-        return $this->storage->load($fileName, $version, $storageOptions);
+        return str_replace(
+            array(
+                '{id}',
+                '{slug}'
+            ),
+            array(
+                $id,
+                $fileName
+            ),
+            $this->downloadPath) . '?v=' . $version;
     }
-
-
 }
