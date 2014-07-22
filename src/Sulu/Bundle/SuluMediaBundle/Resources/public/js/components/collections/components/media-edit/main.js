@@ -56,7 +56,6 @@ define(function() {
         };
 
     return {
-        view: true,
 
         templates: ['/admin/media/template/media/info',
             '/admin/media/template/media/multiple-edit'],
@@ -150,6 +149,7 @@ define(function() {
                         openOnStart: true,
                         removeOnClose: true,
                         instanceName: 'media-edit',
+                        propagateEvents: false,
                         okCallback: this.changeSingleModel.bind(this)
                     }
                 }
@@ -181,6 +181,7 @@ define(function() {
                         openOnStart: true,
                         removeOnClose: true,
                         draggable: false,
+                        propagateEvents: false,
                         instanceName: 'media-multiple-edit',
                         okCallback: this.changeMultipleModel.bind(this)
                     }
@@ -217,18 +218,27 @@ define(function() {
          * Starts the dropzone for changeing the file-version
          */
         startDropzone: function() {
+            // replace the current media with the new one if a fileversion got uploaded
+            this.sandbox.off('husky.dropzone.file-version-'+ this.media.id +'.files-added');
+            this.sandbox.on('husky.dropzone.file-version-'+ this.media.id +'.files-added', function(newMedia) {
+                this.media = newMedia[0];
+                this.sandbox.emit('sulu.media.collections.save-media', this.media, null, true);
+                this.savedCallback();
+            }.bind(this));
+
             this.sandbox.start([
                 {
                     name: 'dropzone@husky',
                     options: {
                         el: constants.dropzoneSelector,
                         url: '/admin/api/media/' + this.media.id,
-                        method: 'PUT',
+                        method: 'POST',
                         paramName: 'fileVersion',
                         showOverlay: false,
                         skin: 'small',
                         titleKey: 'sulu.upload.small-dropzone-title',
-                        instanceName: 'file-version-' + this.media.id
+                        instanceName: 'file-version-' + this.media.id,
+                        maxFiles: 1
                     }
                 }
             ]);

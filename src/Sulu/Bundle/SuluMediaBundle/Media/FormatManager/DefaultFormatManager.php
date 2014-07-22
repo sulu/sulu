@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\FormatManager;
 
+use Imagine\Image\ImageInterface;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\Media;
@@ -25,7 +26,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class DefaultFormatManager implements FormatManagerInterface
 {
-
     /**
      * The repository for communication with the database
      * @var MediaRepository
@@ -137,12 +137,13 @@ class DefaultFormatManager implements FormatManagerInterface
      * @param $image
      * @return array
      */
-    protected function getOptionsFromImage($image)
+    protected function getOptionsFromImage(ImageInterface $image)
     {
         $options = array();
         if (count($image->layers()) > 1) {
             $options['animated'] = true;
         }
+
         return $options;
     }
 
@@ -163,7 +164,7 @@ class DefaultFormatManager implements FormatManagerInterface
     }
 
     /**
-     * @param string  $path
+     * @param string $path
      */
     protected function convertPdfToImage($path)
     {
@@ -173,12 +174,14 @@ class DefaultFormatManager implements FormatManagerInterface
 
     /**
      * @param $filename
-     * @param $new_extension
+     * @param $newExtension
      * @return string
      */
-    protected function replaceExtension($filename, $new_extension) {
+    protected function replaceExtension($filename, $newExtension)
+    {
         $info = pathinfo($filename);
-        return $info['filename'] . '.' . $new_extension;
+
+        return $info['filename'] . '.' . $newExtension;
     }
 
     /**
@@ -187,8 +190,11 @@ class DefaultFormatManager implements FormatManagerInterface
      */
     protected function getFileExtension($fileName)
     {
+        $extension = null;
         $pathInfo = pathinfo($fileName);
-        $extension = isset($pathInfo['extension']) ? $pathInfo['extension'] : '';
+        if (isset($pathInfo['extension'])) {
+            $extension = $pathInfo['extension'];
+        }
 
         switch ($extension) {
             case 'png':
@@ -247,7 +253,7 @@ class DefaultFormatManager implements FormatManagerInterface
         $storageOptions = null;
         $version = null;
 
-        /** @var File $file*/
+        /** @var File $file */
         foreach ($media->getFiles() as $file) {
             $version = $file->getVersion();
             /** @var FileVersion $fileVersion */
@@ -269,21 +275,7 @@ class DefaultFormatManager implements FormatManagerInterface
     }
 
     /**
-     * @param string $fileName
-     * @param int $version
-     * @param array $storageOptions
-     * @return string
-     */
-    public function getOriginal($fileName, $version, $storageOptions)
-    {
-        return $this->originalStorage->load($fileName, $version, $storageOptions);
-    }
-
-    /**
-     * @param int $id
-     * @param string $fileName
-     * @param array $storageOptions
-     * @return array
+     * {@inheritdoc}
      */
     public function getFormats($id, $fileName, $storageOptions)
     {
@@ -301,4 +293,11 @@ class DefaultFormatManager implements FormatManagerInterface
         return $formats;
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function purge($idMedia, $fileName, $options)
+    {
+        return $this->formatCache->purge($idMedia, $fileName, $options);
+    }
 } 
