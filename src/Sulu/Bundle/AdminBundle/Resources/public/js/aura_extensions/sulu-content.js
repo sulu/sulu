@@ -191,6 +191,12 @@ define([], function() {
             } else {
                 this.sandbox.emit('sulu.sidebar.hide');
             }
+
+            if(!!sidebar && !!sidebar.cssClasses){
+                this.sandbox.emit('sulu.sidebar.add-classes', sidebar.cssClasses);
+            } else {
+                this.sandbox.emit('sulu.sidebar.reset-classes');
+            }
         },
 
         /**

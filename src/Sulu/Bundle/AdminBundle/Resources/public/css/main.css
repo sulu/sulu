@@ -431,6 +431,11 @@ input, select {
   margin-top: -50px;
 }
 
+/* line 18, ../scss/modules/sidebar.scss */
+.sidebar-padding-50 > div {
+  padding: 50px;
+}
+
 /* line 5, ../scss/modules/gridgroup.scss */
 .sulu-grid-group {
   border-bottom: 2px solid #cccccc;

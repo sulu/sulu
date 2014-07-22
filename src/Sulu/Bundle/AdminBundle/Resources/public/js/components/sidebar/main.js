@@ -28,6 +28,7 @@ define([], function() {
         },
 
         constants = {
+            widgetContainerSelector: '#sulu-widgets',
             componentClass: 'sulu-sidebar',
             columnSelector: '.sidebar-column',
             fixedWidthClass: 'fixed',
@@ -43,7 +44,7 @@ define([], function() {
          *
          * @event sulu.sidebar.[INSTANCE_NAME].initialized
          */
-            INITIALIZED = function() {
+        INITIALIZED = function() {
             return createEventName.call(this, 'initialized');
         },
 
@@ -52,7 +53,7 @@ define([], function() {
          *
          * @event sulu.sidebar.[INSTANCE_NAME].hide
          */
-            HIDE_COLUMN = function() {
+        HIDE_COLUMN = function() {
             return createEventName.call(this, 'hide');
         },
 
@@ -62,10 +63,9 @@ define([], function() {
          * @event sulu.sidebar.[INSTANCE_NAME].append-widget
          * @param {String} url The url to load the widget from
          */
-            APPEND_WIDGET = function() {
+        APPEND_WIDGET = function() {
             return createEventName.call(this, 'append-widget');
         },
-
 
         /**
          * prepends a widget to the sidebar
@@ -73,10 +73,9 @@ define([], function() {
          * @event sulu.sidebar.[INSTANCE_NAME].prepend-widget
          * @param {String} url The url to load the widget from
          */
-            PREPEND_WIDGET = function() {
+        PREPEND_WIDGET = function() {
             return createEventName.call(this, 'prepend-widget');
         },
-
 
         /**
          * sets a widget as the only widget in the container
@@ -84,17 +83,16 @@ define([], function() {
          * @event sulu.sidebar.[INSTANCE_NAME].set-widget
          * @param {String} url The url to load the widget from
          */
-            SET_WIDGET = function() {
+        SET_WIDGET = function() {
             return createEventName.call(this, 'set-widget');
         },
-
 
         /**
          * listens on and empties the sidebar
          *
          * @event sulu.sidebar.[INSTANCE_NAME].empty
          */
-            EMPTY = function() {
+        EMPTY = function() {
             return createEventName.call(this, 'empty');
         },
 
@@ -104,8 +102,25 @@ define([], function() {
          * @event sulu.sidebar.[INSTANCE_NAME].change-width
          * @param {String} the new width-type. 'fixed' or 'max'
          */
-            CHANGE_WIDTH = function() {
+        CHANGE_WIDTH = function() {
             return createEventName.call(this, 'change-width');
+        },
+
+        /**
+         * changes the class(es) for the inner sidebar container
+         * @event sulu.sidebar.[INSTANCE_NAME].add-classes
+         * @param {String} the css class(es)
+         */
+        ADD_CLASSES = function() {
+            return createEventName.call(this, 'add-classes');
+        },
+
+        /**
+         * resets the class for the inner sidebar container
+         * @event sulu.sidebar.[INSTANCE_NAME].reset-classes
+         */
+        RESET_CLASSES = function() {
+            return createEventName.call(this, 'reset-classes');
         },
 
         createEventName = function(postfix) {
@@ -147,6 +162,24 @@ define([], function() {
             this.sandbox.on(APPEND_WIDGET.call(this), this.appendWidget.bind(this));
             this.sandbox.on(PREPEND_WIDGET.call(this), this.prependWidget.bind(this));
             this.sandbox.on(EMPTY.call(this), this.emptySidebar.bind(this));
+            this.sandbox.on(RESET_CLASSES.call(this), this.resetClasses.bind(this));
+            this.sandbox.on(ADD_CLASSES.call(this), this.addClasses.bind(this));
+        },
+
+        /**
+         * Removes previously set css classes
+         */
+        resetClasses: function() {
+            this.sandbox.dom.removeClass(this.$el);
+            this.sandbox.dom.addClass(this.$el, constants.componentClass);
+        },
+
+        /**
+         * Sets css classes on the inner container of the sidebar
+         * @param {String} classes
+         */
+        addClasses: function(classes) {
+            this.sandbox.dom.addClass(this.$el, classes);
         },
 
         /**
@@ -338,16 +371,18 @@ define([], function() {
          * Starts a loader for the sidebar
          */
         startLoader: function() {
-            var $container = this.sandbox.dom.createElement('<div class="'+ constants.loaderClass +'"/>');
+            var $container = this.sandbox.dom.createElement('<div class="' + constants.loaderClass + '"/>');
             this.sandbox.dom.append(this.$el, $container);
-            this.sandbox.start([{
-                name: 'loader@husky',
-                options: {
-                    el: $container,
-                    size: '100px',
-                    color: '#e4e4e4'
+            this.sandbox.start([
+                {
+                    name: 'loader@husky',
+                    options: {
+                        el: $container,
+                        size: '100px',
+                        color: '#e4e4e4'
+                    }
                 }
-            }]);
+            ]);
         },
 
         /**
