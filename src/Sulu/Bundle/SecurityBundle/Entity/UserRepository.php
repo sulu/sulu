@@ -25,7 +25,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class UserRepository extends EntityRepository implements UserRepositoryInterface
 {
-
     /**
      * @var RequestAnalyzerInterface
      */
@@ -52,7 +51,6 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
     public function findUserById($id)
     {
         try {
-
             $qb = $this->createQueryBuilder('user')
                 ->leftJoin('user.userRoles', 'userRoles')
                 ->leftJoin('userRoles.role', 'role')
@@ -88,7 +86,6 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
     public function findUserByContact($id)
     {
         try {
-
             $qb = $this->createQueryBuilder('user')
                 ->leftJoin('user.userRoles', 'userRoles')
                 ->leftJoin('userRoles.role', 'role')
@@ -129,7 +126,6 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
      */
     public function loadUserByUsername($username)
     {
-
         $qb = $this->createQueryBuilder('user')
             ->leftJoin('user.userRoles', 'userRoles')
             ->leftJoin('userRoles.role', 'role')
@@ -149,7 +145,7 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
         $query = $qb->getQuery();
         $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
         $query->setParameter('username', $username);
-//        $query->setParameter('system', $this->getSystem());
+
         try {
             /** @var User $user */
             $user = $query->getSingleResult();

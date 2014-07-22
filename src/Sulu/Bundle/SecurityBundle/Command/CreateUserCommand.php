@@ -28,14 +28,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class CreateUserCommand extends ContainerAwareCommand
 {
-
     /**
      * @see Command
      */
     protected function configure()
     {
-        $this
-            ->setName('sulu:security:user:create')
+        $this->setName('sulu:security:user:create')
             ->setDescription('Create a user.')
             ->setDefinition(
                 array(
@@ -95,7 +93,7 @@ class CreateUserCommand extends ContainerAwareCommand
         $user->setSalt($this->generateSalt());
         $user->setPassword($this->encodePassword($user, $password, $user->getSalt()));
         $user->setLocale($locale);
-        $role = $this->GetRole($doctrine, $now, $em);
+        $role = $this->getRole($doctrine, $now, $em);
 
         $userRole = new UserRole();
         $userRole->setRole($role);
@@ -236,9 +234,9 @@ class CreateUserCommand extends ContainerAwareCommand
      * @param ObjectManager $em
      * @return object|RoleInterface
      */
-    protected function GetRole(Registry $doctrine, DateTime $now, ObjectManager $em)
+    protected function getRole(Registry $doctrine, DateTime $now, ObjectManager $em)
     {
-// find default role or create a new one
+        // find default role or create a new one
         $role = $doctrine->getRepository('SuluSecurityBundle:Role')->findOneBy(array(), array('id' => 'ASC'), 1);
         if (!$role) {
             $role = new Role();

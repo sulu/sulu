@@ -27,7 +27,6 @@ use Sulu\Component\Security\UserInterface;
  */
 class User extends ApiEntity implements UserInterface, Serializable
 {
-
     /**
      * @var string
      * @Expose
