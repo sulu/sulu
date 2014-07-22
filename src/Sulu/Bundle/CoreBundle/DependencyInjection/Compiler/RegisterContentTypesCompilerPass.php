@@ -15,25 +15,20 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * Add tagged content types to the content manager
- *
- * @author Daniel Leech <daniel@dantleech.com>
+ * @package Sulu\Bundle\CoreBundle\Compiler
  */
-class RegisterContentTypesPass implements CompilerPassInterface
+class RegisterContentTypesCompilerPass implements CompilerPassInterface
 {
     /**
      * {@inheritDoc}
      */
     public function process(ContainerBuilder $container)
     {
-        if (!$container->hasDefinition(
-            'sulu.content.type_manager'
-        )) {
+        if (!$container->hasDefinition('sulu.content.type_manager')) {
             return;
         }
 
-        $contentTypeManager = $container->getDefinition(
-            'sulu.content.type_manager'
-        );
+        $contentTypeManager = $container->getDefinition('sulu.content.type_manager');
 
         $ids = $container->findTaggedServiceIds('sulu.content.type');
         foreach ($ids as $id => $attributes) {
