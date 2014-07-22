@@ -30,8 +30,8 @@ define([], function() {
             translations: {
                 noLinksSelected: 'internal-links.nolinks-selected',
                 addLinks: 'internal-links.add',
-                visible: 'internal-links.visible',
-                of: 'internal-links.of'
+                visible: 'public.visible',
+                of: 'public.of'
             }
         },
 
@@ -64,22 +64,6 @@ define([], function() {
         },
 
         /**
-         * raised before data is requested with AJAX
-         * @event sulu.internal-links.data-request
-         */
-        DATA_REQUEST = function() {
-            return createEventName.call(this, 'data-request');
-        },
-
-        /**
-         * raised when data has returned from the ajax request
-         * @event sulu.internal-links.data-retrieved
-         */
-        DATA_RETRIEVED = function() {
-            return createEventName.call(this, 'data-retrieved');
-        },
-
-        /**
          * returns normalized event names
          */
         createEventName = function(postFix) {
@@ -89,12 +73,12 @@ define([], function() {
         templates = {
             skeleton: function(options) {
                 return [
-                    '<div class="smart-content-container form-element" id="', options.ids.container, '">',
-                    '   <div class="smart-header">',
-                    '       <a href="#" class="fa-plus-circle add" id="', options.ids.addButton, '"></a>',
-                    '       <a href="#" class="fa-cog config" id="', options.ids.configButton, '" style="display: none;"></a>',
+                    '<div class="white-box form-element" id="', options.ids.container, '">',
+                    '   <div class="header">',
+                    '       <span class="fa-plus-circle icon left action" id="', options.ids.addButton, '"></span>',
+                    '       <span class="fa-cog icon right border " id="', options.ids.configButton, '" style="display: none;"></span>',
                     '   </div>',
-                    '   <div class="smart-content" id="', options.ids.content, '"></div>',
+                    '   <div class="content" id="', options.ids.content, '"></div>',
                     '</div>'
                 ].join('');
             },
@@ -102,7 +86,7 @@ define([], function() {
             noContent: function(noContentString) {
                 return [
                     '<div class="no-content">',
-                    '   <span class="fa-file icon"></span>',
+                    '   <span class="fa-coffee icon"></span>',
                     '   <div class="text">', noContentString, '</div>',
                     '</div>'
                 ].join('');
@@ -226,9 +210,9 @@ define([], function() {
                 loadContent.call(this);
             }.bind(this));
 
-            // data from ajax request retrieved
-            this.sandbox.on(DATA_RETRIEVED.call(this), function() {
-                renderContent.call(this);
+            // adjust position of overlay after column-navigation has initialized
+            this.sandbox.on('husky.column-navigation.'+ this.options.instanceName +'.initialized', function() {
+                this.sandbox.emit('husky.overlay.internal-links.' + this.options.instanceName + '.add.set-position');
             }.bind(this));
         },
 
@@ -244,13 +228,12 @@ define([], function() {
                             el: getId.call(this, 'columnNavigation'),
                             url: this.options.columnNavigationUrl,
                             instanceName: this.options.instanceName,
-                            noPageDescription: 'No Pages',
-                            sizeRelativeTo: '.smart-content-overlay .slide-0 .overlay-content',
-                            wrapper: {height: 100},
-                            editIcon: 'fa-check',
+                            editIcon: 'fa-plus-circle',
                             resultKey: this.options.resultKey,
                             showEdit: false,
-                            showStatus: false
+                            showStatus: false,
+                            responsive: false,
+                            skin: 'fixed-height-small'
                         }
                     }
                 ]
@@ -295,7 +278,7 @@ define([], function() {
             this.itemsVisible = (this.items.length < this.itemsVisible) ? this.items.length : this.itemsVisible;
 
             if (this.$footer === null || this.$footer === undefined) {
-                this.$footer = this.sandbox.dom.createElement('<div class="smart-footer"/>');
+                this.$footer = this.sandbox.dom.createElement('<div class="footer"/>');
             }
 
             this.sandbox.dom.html(this.$footer, [
@@ -325,6 +308,7 @@ define([], function() {
                         container: this.$el,
                         instanceName: 'internal-links.' + this.options.instanceName + '.add',
                         skin: 'wide',
+                        draggable: false,
                         slides: [
                             {
                                 title: this.sandbox.translate(this.options.translations.addLinks),
@@ -342,7 +326,7 @@ define([], function() {
          * extract data from overlay
          */
         getAddOverlayData = function() {
-            // TODO data will be retrieved with events
+            // TODO: data will be retrieved with events
             this.sandbox.emit(INPUT_RETRIEVED.call(this));
         },
 
@@ -384,11 +368,9 @@ define([], function() {
             if (this.URI.hasChanged === true) {
                 var thenFunction = function(data) {
                     this.items = data._embedded[this.options.resultKey] || [];
-
-                    this.sandbox.emit(DATA_RETRIEVED.call(this));
+                    renderContent.call(this)
                 }.bind(this);
 
-                this.sandbox.emit(DATA_REQUEST.call(this));
                 startLoader.call(this);
 
                 // reset item visible
@@ -397,11 +379,11 @@ define([], function() {
                 if (!!this.data.ids && this.data.ids.length > 0) {
                     this.sandbox.util.load(this.URI.str)
                         .then(thenFunction.bind(this))
-                        .then(function(error) {
+                        .fail(function(error) {
                             this.sandbox.logger.log(error);
                         }.bind(this));
                 } else {
-                    thenFunction.call(this, {});
+                    thenFunction.call(this, {_embedded: []});
                 }
             }
         },
