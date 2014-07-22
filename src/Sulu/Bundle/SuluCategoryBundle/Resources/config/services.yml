@@ -3,7 +3,7 @@ parameters:
     sulu_category.category_manager.class: Sulu\Bundle\CategoryBundle\Category\CategoryManager
     sulu_category.category_repository.class: Sulu\Bundle\CategoryBundle\Entity\CategoryRepository
     sulu_category.admin.content_navigation.class: Sulu\Bundle\CategoryBundle\Admin\SuluCategoryContentNavigation
-    sulu.content.type.category_list.class: Sulu\Bundle\CategoryBundle\Content\Types\CategoryList
+    sulu_category.content.type.category_list.class: Sulu\Bundle\CategoryBundle\Content\Types\CategoryList
 
 services:
     sulu_category.admin:
@@ -29,6 +29,8 @@ services:
             - "@event_dispatcher"
 
     # Content types
-    sulu.content.type.category_list:
-        class: %sulu.content.type.category_list.class%
-        arguments: ["@sulu_category.category_manager", %sulu.content.type.category_list.template%]
+    sulu_category.content.type.category_list:
+        class: %sulu_category.content.type.category_list.class%
+        arguments: ["@sulu_category.category_manager", %sulu_category.content.type.category_list.template%]
+        tags:
+            - { name: sulu.content.type, alias: category_list }
