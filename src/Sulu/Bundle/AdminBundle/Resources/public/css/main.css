@@ -432,8 +432,46 @@ input, select {
   top: 50%;
   margin-top: -50px;
 }
+/* line 17, ../scss/modules/sidebar.scss */
+.sulu-sidebar .action {
+  color: black;
+  cursor: pointer;
+  text-decoration: none;
+}
+/* line 23, ../scss/modules/sidebar.scss */
+.sulu-sidebar .bold {
+  font-weight: bold;
+}
+/* line 27, ../scss/modules/sidebar.scss */
+.sulu-sidebar .blue-icon {
+  width: 30px;
+  height: 20px;
+  cursor: pointer;
+  color: #fff;
+  background: #52b6ca;
+  text-align: center;
+  border-radius: 2px;
+  margin-left: 10px;
+  display: inline-block;
+  font-size: 15px;
+  opacity: 0;
+  -webkit-transition: opacity 100ms ease-in;
+  -webkit-transition-delay: 200ms;
+  -moz-transition: opacity 100ms ease-in 200ms;
+  -o-transition: opacity 100ms ease-in 200ms;
+  transition: opacity 100ms ease-in 200ms;
+}
+/* line 46, ../scss/modules/sidebar.scss */
+.sulu-sidebar .show-icon:hover .blue-icon {
+  opacity: 1;
+}
+/* line 50, ../scss/modules/sidebar.scss */
+.sulu-sidebar .big {
+  font-size: 18px;
+  font-weight: 200;
+}
 
-/* line 18, ../scss/modules/sidebar.scss */
+/* line 57, ../scss/modules/sidebar.scss */
 .sidebar-padding-50 > div {
   padding: 50px;
 }
