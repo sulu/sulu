@@ -13,13 +13,13 @@ namespace Sulu\Bundle\MediaBundle\Media\Exception;
 /**
  * @package Sulu\Bundle\MediaBundle\Media\Exception
  */
-class CollectionNotFoundException extends MediaException
+class InvalidExtensionForPreviewException extends MediaException
 {
     /**
-     * @param string $message
+     * @param string $extension
      */
-    public function __construct($message)
+    public function __construct($extension)
     {
-        parent::__construct($message, self::EXCEPTION_CODE_COLLECTION_NOT_FOUND);
+        parent::__construct('The extension "' . $extension . '" is not supported for preview.', self::EXCEPTION_INVALID_EXTENSION_FOR_PREVIEW);
     }
 }

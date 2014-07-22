@@ -20,7 +20,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class DefaultCommandManager extends ContainerAware implements ManagerInterface
 {
-
     /**
      * @var string The prefix to load the image command
      */
