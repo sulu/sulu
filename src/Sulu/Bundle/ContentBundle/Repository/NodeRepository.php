@@ -411,7 +411,7 @@ class NodeRepository implements NodeRepositoryInterface
         $appendWebspaceNode = false
     )
     {
-        $nodes = $this->getMapper()->loadTreeByUuid($uuid, $languageCode, $webspaceKey, $excludeGhosts, false);
+        $nodes = $this->getMapper()->loadTreeByUuid($uuid, $languageCode, $webspaceKey, $excludeGhosts, true);
 
         if ($appendWebspaceNode) {
             $webspace = $this->webspaceManager->getWebspaceCollection()->getWebspace($webspaceKey);
