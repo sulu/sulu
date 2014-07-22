@@ -29,9 +29,11 @@
         }
 
         .back {
+            display: block;
+            padding: 10px;
             position: absolute;
-            top: 22px;
-            left: -22px;
+            top: 12px;
+            left: -30px;
             font-size: 16px;
             color: $white;
             cursor: pointer;
