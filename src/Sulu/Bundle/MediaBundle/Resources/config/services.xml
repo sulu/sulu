@@ -90,9 +90,10 @@
             <argument type="string">%sulu_media.format_manager.extensions%</argument>
         </service>
 
-        <service id="sulu.content.type.media_selection" class="%sulu_media.media_selection.class%">
+        <service id="sulu_media.type.media_selection" class="%sulu_media.media_selection.class%">
             <argument type="service" id="sulu_media.media_manager"/>
             <argument type="string">SuluMediaBundle:Template:content-types/media-selection.html.twig</argument>
+            <tag name="sulu.content.type" alias="media_selection"/>
         </service>
 
         <service id="sulu_media.collection_manager" class="%sulu_media.collection_manager.class%">
