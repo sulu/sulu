@@ -16,6 +16,8 @@ use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepository;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyMediaNotFoundException;
+use Sulu\Bundle\MediaBundle\Media\Exception\InvalidExtensionForPreviewException;
+use Sulu\Bundle\MediaBundle\Media\Exception\MediaException;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\ImageConverterInterface;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Sulu\Bundle\MediaBundle\Media\FormatCache\FormatCacheInterface;
@@ -58,12 +60,18 @@ class DefaultFormatManager implements FormatManagerInterface
     private $saveImage = false;
 
     /**
+     * @var array
+     */
+    private $previewExtensions = array();
+
+    /**
      * @param MediaRepository $mediaRepository
      * @param StorageInterface $originalStorage
      * @param FormatCacheInterface $formatCache
      * @param ImageConverterInterface $converter
-     * @param $ghostScriptPath
-     * @param $saveImage
+     * @param string $ghostScriptPath
+     * @param string $saveImage
+     * @param array $previewExtensions
      */
     public function __construct(
         MediaRepository $mediaRepository,
@@ -71,7 +79,8 @@ class DefaultFormatManager implements FormatManagerInterface
         FormatCacheInterface $formatCache,
         ImageConverterInterface $converter,
         $ghostScriptPath,
-        $saveImage
+        $saveImage,
+        $previewExtensions
     ) {
         $this->mediaRepository = $mediaRepository;
         $this->originalStorage = $originalStorage;
@@ -79,6 +88,7 @@ class DefaultFormatManager implements FormatManagerInterface
         $this->converter = $converter;
         $this->ghostScriptPath = $ghostScriptPath;
         $this->saveImage = $saveImage == 'true' ? true : false;
+        $this->previewExtensions = $previewExtensions;
     }
 
     /**
@@ -86,51 +96,113 @@ class DefaultFormatManager implements FormatManagerInterface
      */
     public function returnImage($id, $format)
     {
-        // load Media
-        $media = $this->mediaRepository->findMediaById($id);
+        try {
+            // load Media
+            $media = $this->mediaRepository->findMediaById($id);
 
-        if (!$media) {
-            throw new ImageProxyMediaNotFoundException('Media was not found');
-        }
+            if (!$media) {
+                throw new ImageProxyMediaNotFoundException('Media was not found');
+            }
 
-        // load Media Data
-        list($fileName, $version, $storageOptions) = $this->getMediaData($media);
+            // load Media Data
+            list($fileName, $version, $storageOptions) = $this->getMediaData($media);
 
-        // load Original
-        $uri = $this->originalStorage->load($fileName, $version, $storageOptions);
-        $original = $this->createTmpFile($this->getFile($uri));
+            try {
+                // check if file has supported preview
+                $extension = $this->getRealFileExtension($fileName);
+                if (!in_array($extension, $this->previewExtensions)) {
+                    throw new InvalidExtensionForPreviewException($extension);
+                }
 
-        // prepare Media
-        $this->prepareMedia($fileName, $original);
+                // load Original
+                $uri = $this->originalStorage->load($fileName, $version, $storageOptions);
+                $original = $this->createTmpFile($this->getFile($uri));
 
-        // convert Media to format
-        $image = $this->converter->convert($original, $format);
+                // prepare Media
+                $this->prepareMedia($fileName, $original);
 
-        // get options
-        $options = $this->getOptionsFromImage($image);
+                // set extension
+                $imageExtension = $this->getImageExtension($fileName);
 
-        // set extension
-        $imageExtension = $this->getFileExtension($fileName);
-        $image = $image->get($imageExtension, $options);
+                // convert Media to format
+                $image = $this->converter->convert($original, $format);
 
-        // set header
-        $headers = array(
-            'Content-Type' => 'image/' . $imageExtension
-        );
+                // get image
+                $image = $image->get($imageExtension);
 
-        // save image
-        if ($this->saveImage) {
-            $this->formatCache->save(
-                $this->createTmpFile($image),
-                $media->getId(),
-                $this->replaceExtension($fileName, $this->getFileExtension($fileName)),
-                $storageOptions,
-                $format
-            );
+                // set header
+                $headers = array(
+                    'Content-Type' => 'image/' . $imageExtension
+                );
+
+                // save image
+                if ($this->saveImage) {
+                    $this->formatCache->save(
+                        $this->createTmpFile($image),
+                        $media->getId(),
+                        $this->replaceExtension($fileName, $imageExtension),
+                        $storageOptions,
+                        $format
+                    );
+                }
+            } catch (MediaException $e) {
+                // return when available a file extension icon
+                return $this->returnFileExtensionIcon($format, $this->getRealFileExtension($fileName));
+            }
+        } catch (MediaException $e) {
+            // return default image
+            return $this->returnFallbackImage($format);
         }
 
         // return image
         return new Response($image, 200, $headers);
+    }
+
+    /**
+     * @param string $format
+     * @param string $fileExtension
+     * @return Response
+     */
+    protected function returnFileExtensionIcon($format, $fileExtension)
+    {
+        $imageExtension = 'png';
+
+        $headers = array(
+            'Content-Type' => 'image/' . $imageExtension
+        );
+
+        $placeholder = dirname(__FILE__) . '/../../Resources/images/file-'.$fileExtension.'.png';
+
+        if (!file_exists(dirname(__FILE__) . '/../../Resources/images/file-'.$fileExtension.'.png')) {
+            return $this->returnFallbackImage($format);
+        }
+
+        $image = $this->converter->convert($placeholder, $format);
+
+        $image = $image->get($imageExtension);
+
+        return new Response($image, 200, $headers);
+    }
+
+    /**
+     * @param string $format
+     * @return Response
+     */
+    protected function returnFallbackImage($format)
+    {
+        $imageExtension = 'png';
+
+        $headers = array(
+            'Content-Type' => 'image/' . $imageExtension
+        );
+
+        $placeholder = dirname(__FILE__) . '/../../Resources/images/placeholder.png';
+
+        $image = $this->converter->convert($placeholder, $format);
+
+        $image = $image->get($imageExtension);
+
+        return new Response($image, 404, $headers);
     }
 
     /**
@@ -173,14 +245,12 @@ class DefaultFormatManager implements FormatManagerInterface
     }
 
     /**
-     * @param $filename
-     * @param $newExtension
+     * @param string $filename
+     * @param string $newExtension
      * @return string
      */
-    protected function replaceExtension($filename, $newExtension)
-    {
+    protected function replaceExtension($filename, $newExtension) {
         $info = pathinfo($filename);
-
         return $info['filename'] . '.' . $newExtension;
     }
 
@@ -188,18 +258,17 @@ class DefaultFormatManager implements FormatManagerInterface
      * @param string $fileName
      * @return string
      */
-    protected function getFileExtension($fileName)
+    protected function getImageExtension($fileName)
     {
-        $extension = null;
-        $pathInfo = pathinfo($fileName);
-        if (isset($pathInfo['extension'])) {
-            $extension = $pathInfo['extension'];
-        }
+        $extension = $this->getRealFileExtension($fileName);
 
         switch ($extension) {
             case 'png':
             case 'gif':
                 // do nothing
+                break;
+            case 'svg':
+                $extension = 'png';
                 break;
             default:
                 $extension = 'jpg';
@@ -207,6 +276,20 @@ class DefaultFormatManager implements FormatManagerInterface
         }
 
         return $extension;
+    }
+
+    /**
+     * @param $fileName
+     * @return null
+     */
+    protected function getRealFileExtension($fileName)
+    {
+        $pathInfo = pathinfo($fileName);
+        if (isset($pathInfo['extension'])) {
+            return $pathInfo['extension'];
+        }
+
+        return null;
     }
 
     /**
@@ -284,7 +367,7 @@ class DefaultFormatManager implements FormatManagerInterface
         foreach ($this->converter->getFormats() as $format) {
             $formats[$format['name']] = $this->formatCache->getMediaUrl(
                 $id,
-                $this->replaceExtension($fileName, $this->getFileExtension($fileName)),
+                $this->replaceExtension($fileName, $this->getImageExtension($fileName)),
                 $storageOptions,
                 $format['name']
             );
