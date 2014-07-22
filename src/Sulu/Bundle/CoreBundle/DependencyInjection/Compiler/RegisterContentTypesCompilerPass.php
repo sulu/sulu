@@ -33,11 +33,12 @@ class RegisterContentTypesCompilerPass implements CompilerPassInterface
         $ids = $container->findTaggedServiceIds('sulu.content.type');
         foreach ($ids as $id => $attributes) {
             if (!isset($attributes[0]['alias'])) {
-                throw new \InvalidArgumentException(sprintf(
-                    'No "alias" specified for content type "%s" with service ID: "%s"',
-                    $type,
-                    $id
-                ));
+                throw new \InvalidArgumentException(
+                    sprintf(
+                        'No "alias" specified for content type with service ID: "%s"',
+                        $id
+                    )
+                );
             }
 
             $contentTypeManager->addMethodCall(
