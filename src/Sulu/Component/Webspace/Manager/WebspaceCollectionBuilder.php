@@ -112,11 +112,11 @@ class WebspaceCollectionBuilder
                 $this->buildPortals($webspace);
             } catch (\InvalidArgumentException $iae) {
                 $this->logger->warning(
-                    'The file "' . $file->getRealPath() . '" does not match the schema and was skipped'
+                    'Error in file "' . $file->getRealPath() . '" (' . $iae->getMessage() .'). The file has been skipped'
                 );
             } catch (InvalidUrlDefinitionException $iude) {
                 $this->logger->warning(
-                    'The file "' . $file->getRealPath() . '" defined some invalid urls and was skipped'
+                    'Error: "' . $iude->getMessage() .'" in "' . $file->getRealPath() . '". File was skipped'
                 );
             }
         }
