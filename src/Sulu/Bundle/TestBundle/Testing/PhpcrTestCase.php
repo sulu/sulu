@@ -215,7 +215,7 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
     protected function prepareContentTypeManager()
     {
         if ($this->contentTypeManager === null) {
-            $this->contentTypeManager = new ContentTypeManager($this->container, 'sulu.content.type.');
+            $this->contentTypeManager = new ContentTypeManager($this->container);
         }
     }
 
