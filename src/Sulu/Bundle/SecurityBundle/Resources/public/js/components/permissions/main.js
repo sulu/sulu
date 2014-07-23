@@ -161,18 +161,16 @@ define([
         loadUser: function() {
             this.user = new User();
             this.user.url = '/admin/api/users?contactId=' + this.options.id;
-            this.user.fetch({
-                success: function(model, response, options) {
-                    if (options.xhr.status === 200) {
-                        this.contact = this.user.get('contact').toJSON();
-                        this.startComponent();
-                    } else {
-                        // no user with contact id found - user has to be created
-                        this.loadContact();
-                    }
-                }.bind(this),
-                error: function() {}.bind(this)
-            });
+
+            this.sandbox.util.load(this.user.url).then(function(data) {
+                if (!!data && !!data._embedded && !!data._embedded.users && data._embedded.users.length > 0) {
+                    this.user.set(data._embedded.users[0]);
+                    this.contact = this.user.get('contact').toJSON();
+                    this.startComponent();
+                } else {
+                    this.loadContact();
+                }
+            }.bind(this));
         },
 
         loadContact: function() {
