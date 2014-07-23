@@ -548,7 +548,7 @@ class ContactControllerTest extends DatabaseTestCase
         $this->assertEquals(2, $response->id);
         $this->assertEquals('Erika', $response->firstName);
         $this->assertEquals('Mustermann', $response->lastName);
-        $this->assertEquals('BSc', $response->title->title);
+        $this->assertEquals('MSc', $response->title->title);
         $this->assertEquals('Manager', $response->position->position);
         $this->assertEquals('erika.mustermann@muster.at', $response->emails[0]->email);
         $this->assertEquals('erika.mustermann@muster.de', $response->emails[1]->email);
