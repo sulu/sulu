@@ -3,7 +3,7 @@
     "type": "sulu-bundle",
     "description": "Test Bundle for the Sulu CMF",
     "license": "MIT",
-    "version": "0.5.0",
+    "version": "dev-develop",
     "keywords": ["sulu", "test"],
     "authors": [
         {
@@ -13,7 +13,7 @@
     ],
     "require": {
         "php": ">=5.4",
-        "sulu/sulu": "0.5.*"
+        "sulu/sulu": "dev-develop"
     },
     "require-dev": {
         "symfony/symfony": "2.5.*",
