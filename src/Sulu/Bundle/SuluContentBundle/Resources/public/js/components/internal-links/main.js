@@ -103,6 +103,7 @@ define([], function() {
                     '<li data-id="', id, '">',
                     '   <span class="num">', num, '</span>',
                     '   <span class="value">', value, '</span>',
+                    '   <span class="fa-times remove"></span>',
                     '</li>'
                 ].join('');
             }
@@ -136,7 +137,6 @@ define([], function() {
             this.$content = this.sandbox.dom.find(getId.call(this, 'content'), this.$el);
             this.$addButton = this.sandbox.dom.find(getId.call(this, 'addButton'), this.$el);
             this.$configButton = this.sandbox.dom.find(getId.call(this, 'configButton'), this.$el);
-            // TODO footer this.$footer
 
             // set preselected values
             if (!!this.sandbox.dom.data(this.$el, 'internal-links')) {
@@ -166,7 +166,6 @@ define([], function() {
             setDisplayOption.call(this);
 
             // init overlays
-            // TODO config overlay
             startAddOverlay.call(this);
 
             // load preselected items
@@ -191,18 +190,7 @@ define([], function() {
         bindCustomEvents = function() {
             this.sandbox.on('husky.overlay.internal-links.' + this.options.instanceName + '.add.initialized', initColumnNavigation.bind(this));
 
-            this.sandbox.on('husky.column-navigation.edit', function(item) {
-                if (this.data.ids.indexOf(item.id) === -1) {
-                    this.data.ids.push(item.id);
-                } else {
-                    this.data.ids = this.data.ids.filter(function(el) {
-                        return el !== item.id;
-                    });
-                }
-
-                setData.call(this, this.data);
-                this.sandbox.logger.log('selected items', this.data.ids);
-            }.bind(this));
+            this.sandbox.on('husky.column-navigation.'+ this.options.instanceName +'.edit', selectLink.bind(this));
 
             // data from overlay retrieved
             this.sandbox.on(INPUT_RETRIEVED.call(this), function() {
@@ -214,6 +202,71 @@ define([], function() {
             this.sandbox.on('husky.column-navigation.'+ this.options.instanceName +'.initialized', function() {
                 this.sandbox.emit('husky.overlay.internal-links.' + this.options.instanceName + '.add.set-position');
             }.bind(this));
+        },
+
+        /**
+         * Handles the selection of a link
+         * @param item {Object} the object of the link node
+         */
+        selectLink = function(item) {
+            if (this.data.ids.indexOf(item.id) === -1) {
+                this.data.ids.push(item.id);
+                this.items.push(item);
+
+                // render only one link if the list already exists, else render the whole content
+                if (!!this.$find('.items-list').length) {
+                    renderLinkItem.call(this, item);
+                    detachFooter.call(this);
+                    this.itemsVisible = this.options.visibleItems;
+                    renderFooter.call(this);
+                } else {
+                    renderContent.call(this)
+                }
+
+                setData.call(this, this.data);
+                this.sandbox.emit(DATA_CHANGED.call(this), this.data, this.$el);
+            }
+        },
+
+        /**
+         * Handles the click on the remove icons
+         * @param event
+         */
+        removeLink = function(event) {
+            var $element = this.sandbox.dom.parents(event.currentTarget, 'li'),
+                dataId = this.sandbox.dom.data($element, 'id');
+
+            // remove element from dom
+            this.sandbox.dom.remove($element);
+
+            // from js-arrays
+            this.data.ids.splice(this.data.ids.indexOf(dataId), 1);
+            removeItemWithId.call(this, dataId);
+
+            detachFooter.call(this);
+            if (this.items.length === 0) {
+                renderStartContent.call(this);
+            } else {
+                this.itemsVisible = this.options.visibleItems;
+                renderFooter.call(this);
+            }
+            this.sandbox.emit('husky.column-navigation.'+ this.options.instanceName +'.unmark', dataId);
+            setData.call(this, this.data);
+            this.sandbox.emit(DATA_CHANGED.call(this), this.data, this.$el);
+        },
+
+        /**
+         * Removes an item for a given id
+         * @param id {Number|String} the id of an item
+         */
+        removeItemWithId = function(id) {
+            for (var i = -1, length = this.items.length; ++i < length;) {
+                if (id === this.items[i].id) {
+                    this.items.splice(i ,1);
+                    return true;
+                }
+            }
+            return false;
         },
 
         /**
@@ -233,7 +286,9 @@ define([], function() {
                             showEdit: false,
                             showStatus: false,
                             responsive: false,
-                            skin: 'fixed-height-small'
+                            skin: 'fixed-height-small',
+                            markable: true,
+                            premarkedIds: this.data.ids
                         }
                     }
                 ]
@@ -248,6 +303,8 @@ define([], function() {
                 setData.call(this, {displayOption: this.sandbox.dom.val(getId.call(this, 'displayOption'))});
                 this.sandbox.emit(DATA_CHANGED.call(this), this.data, this.$el);
             }.bind(this));
+
+            this.sandbox.dom.on(this.$el, 'click', removeLink.bind(this), '.items-list .remove');
         },
 
         /**
@@ -255,20 +312,34 @@ define([], function() {
          */
         renderContent = function() {
             if (this.items.length !== 0) {
-                var ul = this.sandbox.dom.createElement('<ul class="items-list"/>'),
-                    i = -1, length = this.items.length;
+                this.linkList = this.sandbox.dom.createElement('<ul class="items-list"/>');
+
 
                 //loop stops if no more items are left or if number of rendered items matches itemsVisible
-                for (; ++i < length && i < this.itemsVisible;) {
-                    this.sandbox.dom.append(ul, templates.contentItem(this.items[i][this.options.idKey], i + 1, this.items[i][this.options.titleKey]));
+                for (var i = -1, length = this.items.length; ++i < length && i < this.itemsVisible;) {
+                    renderLinkItem.call(this, this.items[i]);
                 }
 
-                this.sandbox.dom.html(this.$content, ul);
+                this.sandbox.dom.html(this.$content, this.linkList);
                 renderFooter.call(this);
             } else {
                 renderStartContent.call(this);
                 detachFooter.call(this);
             }
+        },
+
+        /**
+         * Renders a single link item
+         * @param item
+         */
+        renderLinkItem = function(item) {
+            this.sandbox.dom.append(this.linkList,
+                templates.contentItem(
+                    item[this.options.idKey],
+                    this.sandbox.dom.find('li', this.linkList).length + 1,
+                    item[this.options.titleKey]
+                )
+            );
         },
 
         /**
@@ -308,11 +379,9 @@ define([], function() {
                         container: this.$el,
                         instanceName: 'internal-links.' + this.options.instanceName + '.add',
                         skin: 'wide',
-                        draggable: false,
                         slides: [
                             {
                                 title: this.sandbox.translate(this.options.translations.addLinks),
-                                okCallback: getAddOverlayData.bind(this),
                                 cssClass: 'internal-links-overlay-add',
                                 data: templates.data(this.options)
                             }
@@ -320,14 +389,6 @@ define([], function() {
                     }
                 }
             ]);
-        },
-
-        /**
-         * extract data from overlay
-         */
-        getAddOverlayData = function() {
-            // TODO: data will be retrieved with events
-            this.sandbox.emit(INPUT_RETRIEVED.call(this));
         },
 
         /**
@@ -411,9 +472,6 @@ define([], function() {
                 ].join('');
             // min source must be selected
             if (newURI !== this.URI.str) {
-                if (this.URI.str !== '') {
-                    this.sandbox.emit(DATA_CHANGED.call(this), this.data, this.$el);
-                }
                 this.URI.str = newURI;
                 this.URI.hasChanged = true;
             } else {
@@ -434,6 +492,7 @@ define([], function() {
             // extend default options
             this.options = this.sandbox.util.extend({}, defaults, this.options);
             this.data = {};
+            this.linkList = null;
 
             render.call(this);
         }
