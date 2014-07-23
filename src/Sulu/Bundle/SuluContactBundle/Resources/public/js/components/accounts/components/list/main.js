@@ -43,16 +43,12 @@ define([
          * @returns {object} tabs options
          */
         getTabsOptions = function() {
-            var returnObj = {
-                    callback: selectFilter.bind(this),
-                    preselect: false,
-                    preselector: 'position',
-                    data: null
-                },
-                items, i, len, index, type,
+            var items, i, len, index, type,
                 accountTypes,
                 contactSection = AppConfig.getSection('sulu-contact'),
-                accountType;
+                accountType,
+                preselect = false,
+                data;
 
             // check if accountTypes exist
             if (!contactSection || !contactSection.hasOwnProperty('accountTypes') ||
@@ -61,7 +57,6 @@ define([
             }
 
             accountTypes = contactSection.accountTypes;
-
             // generate items
             items = [
                 {
@@ -69,7 +64,7 @@ define([
                     title: this.sandbox.translate('public.all')
                 }
             ];
-            // parse info for tabs
+            // parse accounts for tabs
             for (index in accountTypes) {
                 if (index === 'basic') {
                     // exclude basic type from tabs
@@ -96,10 +91,16 @@ define([
                 dataUrlAddition += '&type=' + accountType.id;
             }
 
-            returnObj.data = {items: items};
-            returnObj.preselect = (!!accountType) ? parseInt(accountType.id, 10) + 1 : false;
+            preselect = (!!accountType) ? parseInt(accountType.id, 10) + 1 : false;
 
-            return returnObj;
+            return {
+                callback: selectFilter.bind(this),
+                preselector: 'position',
+                data: {
+                    items: items
+                },
+                preselect: preselect
+            };
         },
 
         selectFilter = function(item) {
@@ -120,8 +121,12 @@ define([
 
         view: true,
 
-        fullSize: {
-            width: true
+        layout: {
+            content: {
+                width: 'max',
+                leftSpace: false,
+                rightSpace: false
+            }
         },
 
         header: function() {
@@ -162,20 +167,23 @@ define([
 
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/contact/template/account/list'));
 
-            var items, i, len,
+            var i,
                 dataUrlAddition = '',
                 accountType,
-            // get account types
-                accountTypes = AppConfig.getSection('sulu-contact').accountTypes;
+                // get account types
+                accountTypes = AppConfig.getSection('sulu-contact').accountTypes,
+                assocAccountTypes = {};
 
+            // create LUT for accountTypes
+            for (i in accountTypes) {
+                assocAccountTypes[accountTypes[i].id] = accountTypes[i];
+                // get current accountType
+                if (!!this.options.accountType && i.toLowerCase() === this.options.accountType.toLowerCase()) {
+                    accountType = accountTypes[i];
+                }
+            }
             // define string urlAddition if accountType is set
             if (!!this.options.accountType) {
-                for (i in accountTypes) {
-                    if (i.toLowerCase() === this.options.accountType.toLowerCase()) {
-                        accountType = accountTypes[i];
-                        break;
-                    }
-                }
                 if (!accountType) {
                     throw 'accountType ' + accountType + ' does not exist!';
                 }
@@ -230,6 +238,15 @@ define([
                 {
                     el: this.sandbox.dom.find('#companies-list', this.$el),
                     url: '/admin/api/accounts?flat=true' + dataUrlAddition,
+                    resultKey: 'accounts',
+                    searchInstanceName: 'accounts',
+                    searchFields: ['name'],
+                    contentFilters: {
+                        // display account type name instead of type number
+                        type: function(content) {
+                            return this.sandbox.translate(assocAccountTypes[content].translation);
+                        }.bind(this)
+                    },
                     viewOptions: {
                         table: {
                             fullWidth: true

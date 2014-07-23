@@ -21,6 +21,7 @@ use Sulu\Component\Rest\RestController;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Controller\Annotations\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Hateoas\Representation\CollectionRepresentation;
 
 /**
  * Makes account categories available through a REST API
@@ -32,7 +33,8 @@ class TermsOfDeliveryController extends RestController implements ClassResourceI
     /**
      * {@inheritdoc}
      */
-    protected $entityName = 'SuluContactBundle:TermsOfDelivery';
+    protected static $entityName = 'SuluContactBundle:TermsOfDelivery';
+    protected static $entityKey = 'termsOfDeliveries';
 
     /**
      * Shows a single terms of delivery
@@ -46,7 +48,7 @@ class TermsOfDeliveryController extends RestController implements ClassResourceI
             $id,
             function ($id) {
                 return $this->getDoctrine()
-                    ->getRepository($this->entityName)
+                    ->getRepository(self::$entityName)
                     ->find($id);
             }
         );
@@ -62,9 +64,10 @@ class TermsOfDeliveryController extends RestController implements ClassResourceI
      */
     public function cgetAction()
     {
-        $termsOfDelivery = $this->getDoctrine()->getRepository($this->entityName)->findAll();
-        $view = $this->view($this->createHalResponse($termsOfDelivery), 200);
+        $termsOfDelivery = $this->getDoctrine()->getRepository(self::$entityName)->findAll();
+        $list = new CollectionRepresentation($termsOfDelivery, self::$entityKey);
 
+        $view = $this->view($list, 200);
         return $this->handleView($view);
     }
 
@@ -113,11 +116,11 @@ class TermsOfDeliveryController extends RestController implements ClassResourceI
         try {
             /** @var TermsOfDelivery $termsOfDelivery */
             $termsOfDelivery = $this->getDoctrine()
-                ->getRepository($this->entityName)
+                ->getRepository(self::$entityName)
                 ->find($id);
 
             if (!$termsOfDelivery) {
-                throw new EntityNotFoundException($this->entityName, $id);
+                throw new EntityNotFoundException(self::$entityName, $id);
             } else {
                 $terms = $request->get('terms');
 
@@ -153,11 +156,11 @@ class TermsOfDeliveryController extends RestController implements ClassResourceI
 
                 /* @var TermsOfDelivery $termsOfDelivery */
                 $termsOfDelivery = $this->getDoctrine()
-                    ->getRepository($this->entityName)
+                    ->getRepository(self::$entityName)
                     ->find($id);
 
                 if (!$termsOfDelivery) {
-                    throw new EntityNotFoundException($this->entityName, $id);
+                    throw new EntityNotFoundException(self::$entityName, $id);
                 }
 
                 $em = $this->getDoctrine()->getManager();
@@ -217,11 +220,11 @@ class TermsOfDeliveryController extends RestController implements ClassResourceI
         if (isset($item['id']) && !empty($item['id'])) {
             /* @var TermsOfDelivery $termsOfDelivery */
             $termsOfDelivery = $this->getDoctrine()
-                ->getRepository($this->entityName)
+                ->getRepository(self::$entityName)
                 ->find($item['id']);
 
             if ($termsOfDelivery == null) {
-                throw new EntityNotFoundException($this->entityName, $item['id']);
+                throw new EntityNotFoundException(self::$entityName, $item['id']);
             } else {
                 $termsOfDelivery->setTerms($item['terms']);
             }

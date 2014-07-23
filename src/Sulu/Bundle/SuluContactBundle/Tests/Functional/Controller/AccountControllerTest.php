@@ -14,6 +14,7 @@ namespace Sulu\Bundle\ContactBundle\Tests\Functional\Controller;
 use DateTime;
 use Doctrine\ORM\Tools\SchemaTool;
 use Sulu\Bundle\ContactBundle\Entity\Account;
+use Sulu\Bundle\ContactBundle\Entity\AccountAddress;
 use Sulu\Bundle\ContactBundle\Entity\AccountCategory;
 use Sulu\Bundle\ContactBundle\Entity\AccountContact;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
@@ -31,6 +32,10 @@ use Sulu\Bundle\ContactBundle\Entity\FaxType;
 use Sulu\Bundle\ContactBundle\Entity\Url;
 use Sulu\Bundle\ContactBundle\Entity\UrlType;
 use Sulu\Bundle\TestBundle\Testing\DatabaseTestCase;
+use Sulu\Bundle\ContactBundle\Entity\Activity;
+use Sulu\Bundle\ContactBundle\Entity\ActivityPriority;
+use Sulu\Bundle\ContactBundle\Entity\ActivityStatus;
+use Sulu\Bundle\ContactBundle\Entity\ActivityType;
 
 class AccountControllerTest extends DatabaseTestCase
 {
@@ -62,7 +67,6 @@ class AccountControllerTest extends DatabaseTestCase
         $url = new Url();
         $url->setUrl('http://www.company.example');
         $url->setUrlType($urlType);
-        $url->setMain(true);
         self::$account->addUrl($url);
 
         $emailType = new EmailType();
@@ -71,14 +75,12 @@ class AccountControllerTest extends DatabaseTestCase
         $email = new Email();
         $email->setEmail('office@company.example');
         $email->setEmailType($emailType);
-        $email->setMain(true);
         self::$account->addEmail($email);
 
         $phoneType = new PhoneType();
         $phoneType->setName('Private');
 
         $phone = new Phone();
-        $phone->setMain(true);
         $phone->setPhone('123456789');
         $phone->setPhoneType($phoneType);
         self::$account->addPhone($phone);
@@ -89,7 +91,6 @@ class AccountControllerTest extends DatabaseTestCase
         $fax = new Fax();
         $fax->setFax('123654789');
         $fax->setFaxType($faxType);
-        $fax->setMain(true);
         self::$account->addFax($fax);
 
         $country = new Country();
@@ -113,8 +114,13 @@ class AccountControllerTest extends DatabaseTestCase
         $address->setPostboxCity("Dornbirn");
         $address->setPostboxPostcode("6850");
         $address->setPostboxNumber("4711");
-        self::$account->addAddresse($address);
 
+        $accountAddress = new AccountAddress();
+        $accountAddress->setAddress($address);
+        $accountAddress->setAccount(self::$account);
+        $accountAddress->setMain(true);
+        self::$account->addAccountAddresse($accountAddress);
+        $address->addAccountAddresse($accountAddress);
 
         $contact = new Contact();
         $contact->setFirstName("Vorname");
@@ -146,6 +152,7 @@ class AccountControllerTest extends DatabaseTestCase
         self::$em->persist($country);
         self::$em->persist($addressType);
         self::$em->persist($address);
+        self::$em->persist($accountAddress);
         self::$em->persist($note);
         self::$em->persist($faxType);
         self::$em->persist($fax);
@@ -173,8 +180,12 @@ class AccountControllerTest extends DatabaseTestCase
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Account'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Activity'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ActivityStatus'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ActivityPriority'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ActivityType'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Address'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AddressType'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AccountAddress'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ContactAddress'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\BankAccount'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Contact'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ContactLocale'),
@@ -266,6 +277,27 @@ class AccountControllerTest extends DatabaseTestCase
         $this->assertTrue(isset($response->message));
     }
 
+
+    public function testGetEmptyAccountContacts()
+    {
+        $account = new Account();
+        $account->setName('test');
+        $account->setChanged(new DateTime());
+        $account->setCreated(new DateTime());
+
+        self::$em->persist($account);
+        self::$em->flush();
+
+        $client = $this->createTestClient();
+        $client->request('GET', '/api/accounts/' . $account->getId() . '/contacts?flat=true');
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $this->assertEquals(0, $response->total);
+        $this->assertCount(0, $response->_embedded->contacts);
+    }
+
     public function testPost()
     {
         $client = $this->createTestClient();
@@ -283,8 +315,7 @@ class AccountControllerTest extends DatabaseTestCase
                         'urlType' => array(
                             'id' => '1',
                             'name' => 'Private'
-                        ),
-                        'main' => 'true'
+                        )
                     )
                 ),
                 'emails' => array(
@@ -293,16 +324,14 @@ class AccountControllerTest extends DatabaseTestCase
                         'emailType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        ),
-                        'main' => 'true'
+                        )
                     ),
                     array(
                         'email' => 'erika.mustermann@muster.de',
                         'emailType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        ),
-                        'main' => 'false'
+                        )
                     )
                 ),
                 'phones' => array(
@@ -311,16 +340,14 @@ class AccountControllerTest extends DatabaseTestCase
                         'phoneType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        ),
-                        'main' => 'true'
+                        )
                     ),
                     array(
                         'phone' => '987654321',
                         'phoneType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        ),
-                        'main' => 'false'
+                        )
                     )
                 ),
                 'faxes' => array(
@@ -329,16 +356,14 @@ class AccountControllerTest extends DatabaseTestCase
                         'faxType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        ),
-                        'main' => 'true'
+                        )
                     ),
                     array(
                         'fax' => '987654321-1',
                         'faxType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        ),
-                        'main' => 'false'
+                        )
                     )
                 ),
                 'addresses' => array(
@@ -447,8 +472,7 @@ class AccountControllerTest extends DatabaseTestCase
                         'urlType' => array(
                             'id' => '1',
                             'name' => 'Private'
-                        ),
-                        'main' => 'true'
+                        )
                     )
                 ),
                 'emails' => array(
@@ -457,16 +481,14 @@ class AccountControllerTest extends DatabaseTestCase
                         'emailType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        ),
-                        'main' => 'true'
+                        )
                     ),
                     array(
                         'email' => 'erika.mustermann@muster.de',
                         'emailType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        ),
-                        'main' => 'false'
+                        )
                     )
                 ),
                 'phones' => array(
@@ -475,16 +497,14 @@ class AccountControllerTest extends DatabaseTestCase
                         'phoneType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        ),
-                        'main' => 'true'
+                        )
                     ),
                     array(
                         'phone' => '987654321',
                         'phoneType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        ),
-                        'main' => 'false'
+                        )
                     )
                 ),
                 'faxes' => array(
@@ -493,16 +513,14 @@ class AccountControllerTest extends DatabaseTestCase
                         'faxType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        ),
-                        'main' => 'true'
+                        )
                     ),
                     array(
                         'fax' => '987654321-1',
                         'faxType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        ),
-                        'main' => 'false'
+                        )
                     )
                 ),
                 'addresses' => array(
@@ -637,16 +655,14 @@ class AccountControllerTest extends DatabaseTestCase
                         'emailType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        ),
-                        'main' => 'false'
+                        )
                     ),
                     array(
                         'email' => 'erika.mustermann@muster.de',
                         'emailType' => array(
                             'id' => 1,
                             'name' => 'Work'
-                        ),
-                        'main' => 'false'
+                        )
                     )
                 ),
             )
@@ -668,16 +684,14 @@ class AccountControllerTest extends DatabaseTestCase
                         'phoneType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        ),
-                        'main' => 'true'
+                        )
                     ),
                     array(
                         'phone' => '987654321',
                         'phoneType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        ),
-                        'main' => 'false'
+                        )
                     )
                 ),
             )
@@ -751,8 +765,7 @@ class AccountControllerTest extends DatabaseTestCase
                         'urlType' => array(
                             'id' => '2',
                             'name' => 'Work'
-                        ),
-                        'main' => 'false'
+                        )
                     )
                 )
             )
@@ -777,16 +790,14 @@ class AccountControllerTest extends DatabaseTestCase
                         'emailType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        ),
-                        'main' => 'false'
+                        )
                     ),
                     array(
                         'email' => 'erika.mustermann@muster.de',
                         'emailType' => array(
                             'id' => 2,
                             'name' => 'Work'
-                        ),
-                        'main' => 'false'
+                        )
                     )
                 ),
             )
@@ -811,16 +822,14 @@ class AccountControllerTest extends DatabaseTestCase
                         'phoneType' => array(
                             'id' => 1,
                             'name' => 'Private'
-                        ),
-                        'main' => 'false'
+                        )
                     ),
                     array(
                         'phone' => '987654321',
                         'phoneType' => array(
                             'id' => 2,
                             'name' => 'Work'
-                        ),
-                        'main' => 'false'
+                        )
                     )
                 ),
             )
@@ -879,8 +888,7 @@ class AccountControllerTest extends DatabaseTestCase
                         'faxType' => array(
                             'id' => 2,
                             'name' => 'Work'
-                        ),
-                        'main' => 'false'
+                        )
                     )
                 ),
             )
@@ -933,24 +941,24 @@ class AccountControllerTest extends DatabaseTestCase
 
         $this->assertEquals(1, $response->total);
 
-        $this->assertEquals('Company', $response->_embedded[0]->name);
+        $this->assertEquals('Company', $response->_embedded->accounts[0]->name);
     }
 
     public function testGetListSearch()
     {
         $client = $this->createTestClient();
-        $client->request('GET', '/api/accounts?flat=true&search=Nothing&searchFields=name,emails_emailType_name');
+        $client->request('GET', '/api/accounts?flat=true&search=Nothing&searchFields=name');
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(0, $response->total);
-        $this->assertEquals(0, count($response->_embedded));
+        $this->assertEquals(0, count($response->_embedded->accounts));
 
-        $client->request('GET', '/api/accounts?flat=true&search=Comp&searchFields=name,emails_emailType_name');
+        $client->request('GET', '/api/accounts?flat=true&search=Comp&searchFields=name');
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(1, $response->total);
-        $this->assertEquals(1, count($response->_embedded));
-        $this->assertEquals('Company', $response->_embedded[0]->name);
+        $this->assertEquals(1, count($response->_embedded->accounts));
+        $this->assertEquals('Company', $response->_embedded->accounts[0]->name);
     }
 
     public function testPut()
@@ -1073,7 +1081,7 @@ class AccountControllerTest extends DatabaseTestCase
             )
         );
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        //$this->assertEquals(200, $client->getResponse()->getStatusCode());
 
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
@@ -1108,32 +1116,59 @@ class AccountControllerTest extends DatabaseTestCase
         $this->assertEquals('Note1', $response->notes[0]->value);
         $this->assertEquals('Note2', $response->notes[1]->value);
 
-        $this->assertEquals(2, sizeof($response->addresses));
-        $this->assertEquals('Bahnhofstraße', $response->addresses[0]->street);
-        $this->assertEquals('2', $response->addresses[0]->number);
-        $this->assertEquals('0022', $response->addresses[0]->zip);
-        $this->assertEquals('Dornbirn', $response->addresses[0]->city);
-        $this->assertEquals('state1', $response->addresses[0]->state);
-        $this->assertEquals('Musterland', $response->addresses[0]->country->name);
-        $this->assertEquals('ML', $response->addresses[0]->country->code);
-        $this->assertEquals('Private', $response->addresses[0]->addressType->name);
+        if($response->addresses[0]->street === 'Bahnhofstraße') {
+            $this->assertEquals(2, sizeof($response->addresses));
+            $this->assertEquals('Bahnhofstraße', $response->addresses[0]->street);
+            $this->assertEquals('2', $response->addresses[0]->number);
+            $this->assertEquals('0022', $response->addresses[0]->zip);
+            $this->assertEquals('Dornbirn', $response->addresses[0]->city);
+            $this->assertEquals('state1', $response->addresses[0]->state);
+            $this->assertEquals('Musterland', $response->addresses[0]->country->name);
+            $this->assertEquals('ML', $response->addresses[0]->country->code);
+            $this->assertEquals('Private', $response->addresses[0]->addressType->name);
 
-        $this->assertEquals(true,$response->addresses[0]->billingAddress);
-        $this->assertEquals(true,$response->addresses[0]->primaryAddress);
-        $this->assertEquals(false,$response->addresses[0]->deliveryAddress);
-        $this->assertEquals('Dornbirn',$response->addresses[0]->postboxCity);
-        $this->assertEquals('6850',$response->addresses[0]->postboxPostcode);
-        $this->assertEquals('4711',$response->addresses[0]->postboxNumber);
+            $this->assertEquals(true, $response->addresses[0]->billingAddress);
+            $this->assertEquals(true, $response->addresses[0]->primaryAddress);
+            $this->assertEquals(false, $response->addresses[0]->deliveryAddress);
+            $this->assertEquals('Dornbirn', $response->addresses[0]->postboxCity);
+            $this->assertEquals('6850', $response->addresses[0]->postboxPostcode);
+            $this->assertEquals('4711', $response->addresses[0]->postboxNumber);
 
-        $this->assertEquals('Rathausgasse', $response->addresses[1]->street);
-        $this->assertEquals('3', $response->addresses[1]->number);
-        $this->assertEquals('2222', $response->addresses[1]->zip);
-        $this->assertEquals('Dornbirn', $response->addresses[1]->city);
-        $this->assertEquals('state1', $response->addresses[1]->state);
-        $this->assertEquals('Musterland', $response->addresses[1]->country->name);
-        $this->assertEquals('ML', $response->addresses[1]->country->code);
-        $this->assertEquals('Private', $response->addresses[1]->addressType->name);
+            $this->assertEquals('Rathausgasse', $response->addresses[1]->street);
+            $this->assertEquals('3', $response->addresses[1]->number);
+            $this->assertEquals('2222', $response->addresses[1]->zip);
+            $this->assertEquals('Dornbirn', $response->addresses[1]->city);
+            $this->assertEquals('state1', $response->addresses[1]->state);
+            $this->assertEquals('Musterland', $response->addresses[1]->country->name);
+            $this->assertEquals('ML', $response->addresses[1]->country->code);
+            $this->assertEquals('Private', $response->addresses[1]->addressType->name);
+        } else {
+            $this->assertEquals(2, sizeof($response->addresses));
+            $this->assertEquals('Bahnhofstraße', $response->addresses[1]->street);
+            $this->assertEquals('2', $response->addresses[1]->number);
+            $this->assertEquals('0022', $response->addresses[1]->zip);
+            $this->assertEquals('Dornbirn', $response->addresses[1]->city);
+            $this->assertEquals('state1', $response->addresses[1]->state);
+            $this->assertEquals('Musterland', $response->addresses[1]->country->name);
+            $this->assertEquals('ML', $response->addresses[1]->country->code);
+            $this->assertEquals('Private', $response->addresses[1]->addressType->name);
 
+            $this->assertEquals(true, $response->addresses[1]->billingAddress);
+            $this->assertEquals(true, $response->addresses[1]->primaryAddress);
+            $this->assertEquals(false, $response->addresses[1]->deliveryAddress);
+            $this->assertEquals('Dornbirn', $response->addresses[1]->postboxCity);
+            $this->assertEquals('6850', $response->addresses[1]->postboxPostcode);
+            $this->assertEquals('4711', $response->addresses[1]->postboxNumber);
+
+            $this->assertEquals('Rathausgasse', $response->addresses[0]->street);
+            $this->assertEquals('3', $response->addresses[0]->number);
+            $this->assertEquals('2222', $response->addresses[0]->zip);
+            $this->assertEquals('Dornbirn', $response->addresses[0]->city);
+            $this->assertEquals('state1', $response->addresses[0]->state);
+            $this->assertEquals('Musterland', $response->addresses[0]->country->name);
+            $this->assertEquals('ML', $response->addresses[0]->country->code);
+            $this->assertEquals('Private', $response->addresses[0]->addressType->name);
+        }
 
         $client->request(
             'GET',
@@ -1172,31 +1207,59 @@ class AccountControllerTest extends DatabaseTestCase
         $this->assertEquals('Note1', $response->notes[0]->value);
         $this->assertEquals('Note2', $response->notes[1]->value);
 
-        $this->assertEquals(2, sizeof($response->addresses));
-        $this->assertEquals('Bahnhofstraße', $response->addresses[0]->street);
-        $this->assertEquals('2', $response->addresses[0]->number);
-        $this->assertEquals('0022', $response->addresses[0]->zip);
-        $this->assertEquals('Dornbirn', $response->addresses[0]->city);
-        $this->assertEquals('state1', $response->addresses[0]->state);
-        $this->assertEquals('Musterland', $response->addresses[0]->country->name);
-        $this->assertEquals('ML', $response->addresses[0]->country->code);
-        $this->assertEquals('Private', $response->addresses[0]->addressType->name);
-
-        $this->assertEquals(true,$response->addresses[0]->billingAddress);
-        $this->assertEquals(true,$response->addresses[0]->primaryAddress);
-        $this->assertEquals(false,$response->addresses[0]->deliveryAddress);
-        $this->assertEquals('Dornbirn',$response->addresses[0]->postboxCity);
-        $this->assertEquals('6850',$response->addresses[0]->postboxPostcode);
-        $this->assertEquals('4711',$response->addresses[0]->postboxNumber);
-
-        $this->assertEquals('Rathausgasse', $response->addresses[1]->street);
-        $this->assertEquals('3', $response->addresses[1]->number);
-        $this->assertEquals('2222', $response->addresses[1]->zip);
-        $this->assertEquals('Dornbirn', $response->addresses[1]->city);
-        $this->assertEquals('state1', $response->addresses[1]->state);
-        $this->assertEquals('Musterland', $response->addresses[1]->country->name);
-        $this->assertEquals('ML', $response->addresses[1]->country->code);
-        $this->assertEquals('Private', $response->addresses[1]->addressType->name);
+        if($response->addresses[0]->street === 'Bahnhofstraße') {
+            $this->assertEquals(2, sizeof($response->addresses));
+            $this->assertEquals('Bahnhofstraße', $response->addresses[0]->street);
+            $this->assertEquals('2', $response->addresses[0]->number);
+            $this->assertEquals('0022', $response->addresses[0]->zip);
+            $this->assertEquals('Dornbirn', $response->addresses[0]->city);
+            $this->assertEquals('state1', $response->addresses[0]->state);
+            $this->assertEquals('Musterland', $response->addresses[0]->country->name);
+            $this->assertEquals('ML', $response->addresses[0]->country->code);
+            $this->assertEquals('Private', $response->addresses[0]->addressType->name);
+    
+            $this->assertEquals(true,$response->addresses[0]->billingAddress);
+            $this->assertEquals(true,$response->addresses[0]->primaryAddress);
+            $this->assertEquals(false,$response->addresses[0]->deliveryAddress);
+            $this->assertEquals('Dornbirn',$response->addresses[0]->postboxCity);
+            $this->assertEquals('6850',$response->addresses[0]->postboxPostcode);
+            $this->assertEquals('4711',$response->addresses[0]->postboxNumber);
+    
+            $this->assertEquals('Rathausgasse', $response->addresses[1]->street);
+            $this->assertEquals('3', $response->addresses[1]->number);
+            $this->assertEquals('2222', $response->addresses[1]->zip);
+            $this->assertEquals('Dornbirn', $response->addresses[1]->city);
+            $this->assertEquals('state1', $response->addresses[1]->state);
+            $this->assertEquals('Musterland', $response->addresses[1]->country->name);
+            $this->assertEquals('ML', $response->addresses[1]->country->code);
+            $this->assertEquals('Private', $response->addresses[1]->addressType->name);
+        } else {
+            $this->assertEquals(2, sizeof($response->addresses));
+            $this->assertEquals('Bahnhofstraße', $response->addresses[1]->street);
+            $this->assertEquals('2', $response->addresses[1]->number);
+            $this->assertEquals('0022', $response->addresses[1]->zip);
+            $this->assertEquals('Dornbirn', $response->addresses[1]->city);
+            $this->assertEquals('state1', $response->addresses[1]->state);
+            $this->assertEquals('Musterland', $response->addresses[1]->country->name);
+            $this->assertEquals('ML', $response->addresses[1]->country->code);
+            $this->assertEquals('Private', $response->addresses[1]->addressType->name);
+    
+            $this->assertEquals(true,$response->addresses[1]->billingAddress);
+            $this->assertEquals(true,$response->addresses[1]->primaryAddress);
+            $this->assertEquals(false,$response->addresses[1]->deliveryAddress);
+            $this->assertEquals('Dornbirn',$response->addresses[1]->postboxCity);
+            $this->assertEquals('6850',$response->addresses[1]->postboxPostcode);
+            $this->assertEquals('4711',$response->addresses[1]->postboxNumber);
+    
+            $this->assertEquals('Rathausgasse', $response->addresses[0]->street);
+            $this->assertEquals('3', $response->addresses[0]->number);
+            $this->assertEquals('2222', $response->addresses[0]->zip);
+            $this->assertEquals('Dornbirn', $response->addresses[0]->city);
+            $this->assertEquals('state1', $response->addresses[0]->state);
+            $this->assertEquals('Musterland', $response->addresses[0]->country->name);
+            $this->assertEquals('ML', $response->addresses[0]->country->code);
+            $this->assertEquals('Private', $response->addresses[0]->addressType->name);
+        }
     }
 
     public function testPutNoDetails()
@@ -1810,7 +1873,7 @@ class AccountControllerTest extends DatabaseTestCase
                     ),
                     array(
                         'street' => 'Musterstraße',
-                        'number' => '1',
+                        'number' => '2',
                         'zip' => '0000',
                         'city' => 'Musterstadt',
                         'state' => 'Musterstate',
@@ -1836,14 +1899,14 @@ class AccountControllerTest extends DatabaseTestCase
 
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(true,$response->addresses[0]->primaryAddress);
-        $this->assertEquals(false,$response->addresses[1]->primaryAddress);
+        $this->assertEquals(false,$response->addresses[0]->primaryAddress);
+        $this->assertEquals(true,$response->addresses[1]->primaryAddress);
 
         $client->request('GET', '/api/accounts/' . $response->id);
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(true,$response->addresses[0]->primaryAddress);
-        $this->assertEquals(false,$response->addresses[1]->primaryAddress);
+        $this->assertEquals(false,$response->addresses[0]->primaryAddress);
+        $this->assertEquals(true,$response->addresses[1]->primaryAddress);
 
     }
 
@@ -1962,9 +2025,11 @@ class AccountControllerTest extends DatabaseTestCase
 
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertEquals(false,$response->addresses[0]->primaryAddress);
-        $this->assertEquals(true,$response->addresses[1]->primaryAddress);
-        $this->assertEquals(false,$response->addresses[2]->primaryAddress);
+        usort($response->addresses, $this->sortAddressesPrimaryLast());
+
+        $this->assertEquals(false, $response->addresses[0]->primaryAddress);
+        $this->assertEquals(false, $response->addresses[1]->primaryAddress);
+        $this->assertEquals(true, $response->addresses[2]->primaryAddress);
 
         $client->request(
             'GET',
@@ -1973,9 +2038,21 @@ class AccountControllerTest extends DatabaseTestCase
 
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertEquals(false,$response->addresses[0]->primaryAddress);
-        $this->assertEquals(true,$response->addresses[1]->primaryAddress);
-        $this->assertEquals(false,$response->addresses[2]->primaryAddress);
+        usort($response->addresses, $this->sortAddressesPrimaryLast());
+
+        $this->assertEquals(false, $response->addresses[0]->primaryAddress);
+        $this->assertEquals(false, $response->addresses[1]->primaryAddress);
+        $this->assertEquals(true, $response->addresses[2]->primaryAddress);
+    }
+
+    public function sortAddressesPrimaryLast()
+    {
+        return function ($a, $b) {
+            if ($a->primaryAddress === true && $b->primaryAddress === false) {
+                return true;
+            }
+        return false;
+        };
     }
 
     public function testTriggerAction()

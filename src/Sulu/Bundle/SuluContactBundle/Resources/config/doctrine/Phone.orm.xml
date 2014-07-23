@@ -7,7 +7,6 @@
             <generator strategy="AUTO"/>
         </id>
         <field name="phone" type="string" column="phone" length="60"/>
-        <field name="main" type="boolean" column="main" nullable="false"/>
         <many-to-one field="phoneType" target-entity="Sulu\Bundle\ContactBundle\Entity\PhoneType" inversed-by="phones">
             <join-columns>
                 <join-column name="idPhoneTypes" referenced-column-name="id" nullable="false"/>

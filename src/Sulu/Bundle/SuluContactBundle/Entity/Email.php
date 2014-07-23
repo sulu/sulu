@@ -30,11 +30,6 @@ class Email
     private $id;
 
     /**
-     * @var boolean
-     */
-    private $main;
-
-    /**
      * @var \Sulu\Bundle\ContactBundle\Entity\EmailType
      */
     private $emailType;
@@ -180,28 +175,5 @@ class Email
     public function getAccounts()
     {
         return $this->accounts;
-    }
-
-    /**
-     * Set main
-     *
-     * @param boolean $main
-     * @return Email
-     */
-    public function setMain($main)
-    {
-        $this->main = $main;
-    
-        return $this;
-    }
-
-    /**
-     * Get main
-     *
-     * @return boolean 
-     */
-    public function getMain()
-    {
-        return $this->main;
     }
 }

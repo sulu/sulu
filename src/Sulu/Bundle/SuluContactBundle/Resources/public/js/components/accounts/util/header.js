@@ -12,7 +12,7 @@ define(['app-config'], function(AppConfig) {
     'use strict';
 
     // sets headlines and breadcrumb
-    var setHeadlinesAndBreadCrumb = function(accountType, accountName) {
+    var setHeadlinesAndBreadCrumb = function(accountType, accountName, accountNumber) {
             var breadcrumb = [
                     {title: 'navigation.contacts'},
                     {title: 'contact.accounts.title', event: 'sulu.contacts.accounts.list'}
@@ -26,8 +26,8 @@ define(['app-config'], function(AppConfig) {
                 typeTranslation = this.sandbox.translate('contact.account.type.basic');
             }
 
-            if (accountName) {
-                breadcrumb.push({title: typeTranslation + ' #' + this.options.id});
+            if (accountNumber) {
+                breadcrumb.push({title: typeTranslation + ' #' + accountNumber});
                 title = accountName;
             } else {
                 breadcrumb.push({title: typeTranslation});
@@ -196,7 +196,7 @@ define(['app-config'], function(AppConfig) {
             // enable tabs based on type
             enableTabsByType.call(this, accountType);
             // set headline based on type and account
-            setHeadlinesAndBreadCrumb.call(this, accountType, account.name);
+            setHeadlinesAndBreadCrumb.call(this, accountType, account.name, account.number);
 
             setHeaderToolbar.call(this, accountType, accountTypes);
 
@@ -221,6 +221,10 @@ define(['app-config'], function(AppConfig) {
          */
         getAccountTypeIdByTypeName: function(accountTypeName) {
             return getAccountType.call(this, null, accountTypeName).id;
+        },
+
+        getAccountTypeById: function(id) {
+            return getAccountType.call({ id: id, type: id});
         }
     };
 });

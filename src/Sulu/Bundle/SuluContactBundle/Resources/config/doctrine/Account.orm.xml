@@ -19,9 +19,12 @@
         <field name="depth" type="integer" column="depth">
             <gedmo:tree-level/>
         </field>
-        <field name="name" type="string" column="name" length="60"/>
+        <field name="name" type="string" column="name" length="150"/>
 
-        <field name="division" type="string" column="division" length="255" nullable="true"/>
+        <field name="externalId" type="string" column="externalId" length="255" nullable="true" />
+        <field name="number" type="string" column="number" length="255" nullable="true"/>
+
+        <field name="corporation" type="string" column="corporation" length="255" nullable="true"/>
 
         <field name="created" type="datetime" column="created"/>
         <field name="changed" type="datetime" column="changed"/>
@@ -34,11 +37,27 @@
         <field name="registerNumber" type="string" column="registerNumber" nullable="true" />
         <field name="placeOfJurisdiction" type="string" column="placeOfJurisdiction" nullable="true" />
 
+        <!-- relational data flattened -->
+        <field name="mainEmail" type="string" column="mainEmail" nullable="true"/>
+        <field name="mainPhone" type="string" column="mainPhone" nullable="true"/>
+        <field name="mainFax" type="string" column="mainFax" nullable="true"/>
+        <field name="mainUrl" type="string" column="mainUrl" nullable="true"/>
+
         <one-to-many field="accountContacts" target-entity="Sulu\Bundle\ContactBundle\Entity\AccountContact" mapped-by="account"/>
+
+        <one-to-many field="accountAddresses" target-entity="Sulu\Bundle\ContactBundle\Entity\AccountAddress" mapped-by="account"/>
 
         <!-- enabled EXTRA_LAZY loading to avoid overhead while using slice() to get contacts -->
         <one-to-many field="children" target-entity="Sulu\Bundle\ContactBundle\Entity\Account" mapped-by="parent"
                      fetch="EXTRA_LAZY"/>
+
+        <one-to-many field="activities" target-entity="Sulu\Bundle\ContactBundle\Entity\Activity" mapped-by="account"/>
+
+        <many-to-one field="mainContact" target-entity="Sulu\Bundle\ContactBundle\Entity\Contact">
+            <join-columns>
+                <join-column name="idContactsMain" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
+            </join-columns>
+        </many-to-one>
 
         <many-to-one field="changer" target-entity="Sulu\Component\Security\UserInterface">
             <join-columns>
@@ -50,6 +69,7 @@
                 <join-column name="idUsersCreator" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
             </join-columns>
         </many-to-one>
+
         <many-to-one field="parent" target-entity="Sulu\Bundle\ContactBundle\Entity\Account" inversed-by="children">
             <join-columns>
                 <join-column name="idAccountsParent" referenced-column-name="id"/>
@@ -60,6 +80,12 @@
         <many-to-one field="accountCategory" target-entity="Sulu\Bundle\ContactBundle\Entity\AccountCategory">
             <join-columns>
                 <join-column name="idAccountCategory" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
+            </join-columns>
+        </many-to-one>
+
+        <many-to-one field="responsiblePerson" target-entity="Sulu\Bundle\ContactBundle\Entity\Contact">
+            <join-columns>
+                <join-column name="idResponsiblePerson" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
             </join-columns>
         </many-to-one>
 
@@ -82,19 +108,6 @@
                 </join-columns>
                 <inverse-join-columns>
                     <join-column name="idUrls" referenced-column-name="id"/>
-                </inverse-join-columns>
-            </join-table>
-            <order-by>
-                <order-by-field name="id" direction="ASC"/>
-            </order-by>
-        </many-to-many>
-        <many-to-many field="addresses" target-entity="Sulu\Bundle\ContactBundle\Entity\Address" inversed-by="accounts">
-            <join-table name="co_account_addresses">
-                <join-columns>
-                    <join-column name="idAccounts" referenced-column-name="id"/>
-                </join-columns>
-                <inverse-join-columns>
-                    <join-column name="idAddresses" referenced-column-name="id"/>
                 </inverse-join-columns>
             </join-table>
             <order-by>

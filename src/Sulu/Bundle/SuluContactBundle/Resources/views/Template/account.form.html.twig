@@ -12,6 +12,12 @@
                        data-mapper-property="name"/>
             </div>
         </div>
+        <div class="form-group grid-row small">
+            <label for="corporation"><%=translate('contact.accounts.corporation')%></label>
+            <div>
+                <input class="form-element" type="text" id="corporation" data-mapper-property="corporation"/>
+            </div>
+        </div>
         <div class="grid-row small">
             <div class="grid-col-6">
                 <div class="form-group">
@@ -40,6 +46,12 @@
                             <span class="icon"></span>
                         </div>
                     </div>
+                </div>
+            </div>
+            <div class="grid-col-6">
+                <div class="form-group">
+                    <label for="responsiblePerson"><%=translate('contact.accounts.responsiblePerson')%></label>
+                    <div id="responsiblePerson" data-mapper-property="responsiblePerson" data-type="husky-select" data-form="true"></div>
                 </div>
             </div>
         </div>

@@ -6,19 +6,25 @@
             <div class="grid-row small">
                 <div class="grid-col-6">
                     <div class="form-group">
+                        <label for="number"><%=translate('contact.accounts.number')%></label>
+                        <input id="number" class="form-element" type="text" data-mapper-property="number"/>
+                    </div>
+                </div>
+                <div class="grid-col-6">
+                    <div class="form-group">
                         <label for="uid"><%=translate('contact.accounts.uid')%></label>
                         <input id="uid" class="form-element" type="text" data-mapper-property="uid"/>
                     </div>
                 </div>
+            </div>
+
+            <div class="grid-row">
                 <div class="grid-col-6">
                     <div class="form-group">
                         <label for="register-number"><%=translate('contact.accounts.registerNumber')%></label>
                         <input id="register-number" class="form-element" type="text" data-mapper-property="registerNumber"/>
                     </div>
                 </div>
-            </div>
-
-            <div class="grid-row">
                 <div class="grid-col-6">
                     <div class="form-group">
                         <label for="placeOfJurisdiction"><%=translate('contact.accounts.placeOfJurisdiction')%></label>

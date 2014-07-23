@@ -2,7 +2,11 @@
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-    <entity name="Sulu\Bundle\ContactBundle\Entity\AccountContact" table="co_account_contacts">
+    <entity name="Sulu\Bundle\ContactBundle\Entity\AccountContact" table="co_account_contacts" repository-class="Sulu\Bundle\ContactBundle\Entity\AccountContactRepository">
+
+        <unique-constraints>
+            <unique-constraint columns="idContacts,idAccounts"/>
+        </unique-constraints>
 
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
@@ -10,13 +14,13 @@
 
         <field name="main" type="boolean" column="main" nullable="false" />
         <field name="position" type="string" column="position" nullable="true" />
-
-        <many-to-one field="contact" target-entity="Contact" inversed-by="accountContacts">
+        
+        <many-to-one field="contact" target-entity="Sulu\Bundle\ContactBundle\Entity\Contact" inversed-by="accountContacts">
             <join-columns>
                 <join-column name="idContacts" referenced-column-name="id" nullable="false" on-delete="CASCADE"></join-column>
             </join-columns>
         </many-to-one>
-        <many-to-one field="account" target-entity="Account" inversed-by="accountContacts">
+        <many-to-one field="account" target-entity="Sulu\Bundle\ContactBundle\Entity\Account" inversed-by="accountContacts">
             <join-columns>
                 <join-column name="idAccounts" referenced-column-name="id" nullable="false" on-delete="CASCADE"></join-column>
             </join-columns>

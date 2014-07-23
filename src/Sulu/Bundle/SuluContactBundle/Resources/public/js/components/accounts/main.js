@@ -9,8 +9,11 @@
 
 define([
     'sulucontact/model/account',
-    'accountsutil/header'
-], function(Account, AccountsUtilHeader) {
+    'sulucontact/model/contact',
+    'sulucontact/model/accountContact',
+    'accountsutil/header',
+    'sulucontact/model/activity'
+], function(Account, Contact, AccountContact, AccountsUtilHeader, Activity) {
 
     'use strict';
 
@@ -61,12 +64,34 @@ define([
                 this.renderFinancials().then(function() {
                     AccountsUtilHeader.setHeader.call(this, this.account, this.options.accountType);
                 }.bind(this));
+            } else if (this.options.display === 'activities') {
+                this.renderActivities().then(function() {
+                    AccountsUtilHeader.setHeader.call(
+                        this,
+                        this.account, this.options.accountType
+                    );
+                }.bind(this));
             } else {
                 throw 'display type wrong';
             }
         },
 
         bindCustomEvents: function() {
+
+            // listen for defaults for types/statuses/prios
+            this.sandbox.once(
+                'sulu.contacts.activities.set.defaults',
+                this.parseActivityDefaults.bind(this)
+            );
+
+            // shares defaults with subcomponents
+            this.sandbox.on('sulu.contacts.activities.get.defaults', function() {
+                this.sandbox.emit(
+                    'sulu.contacts.activities.set.defaults',
+                    this.activityDefaults
+                );
+            }, this);
+
             // delete contact
             this.sandbox.on('sulu.contacts.account.delete', this.del.bind(this));
 
@@ -85,6 +110,15 @@ define([
             // delete selected contacts
             this.sandbox.on('sulu.contacts.accounts.delete', this.delAccounts.bind(this));
 
+            // adds a new accountContact Relation
+            this.sandbox.on('sulu.contacts.accounts.contact.save', this.addAccountContact.bind(this));
+
+            // removes accountContact Relation
+            this.sandbox.on('sulu.contacts.accounts.contacts.remove', this.removeAccountContacts.bind(this));
+
+            // set main contact
+            this.sandbox.on('sulu.contacts.accounts.contacts.set-main', this.setMainContact.bind(this));
+
             // saves financial infos
             this.sandbox.on('sulu.contacts.accounts.financials.save', this.saveFinancials.bind(this));
 
@@ -94,7 +128,7 @@ define([
                 if (!!type) {
                     typeString = '/type:' + type;
                 }
-                this.sandbox.emit('sulu.router.navigate', 'contacts/accounts' + typeString, !noReload ? true : false, true);
+                this.sandbox.emit('sulu.router.navigate', 'contacts/accounts' + typeString, !noReload ? true : false, true, true);
             }, this);
 
             this.sandbox.on('sulu.contacts.account.types', function(data) {
@@ -111,6 +145,272 @@ define([
             this.sandbox.on('sulu.contacts.account.convert', function(data) {
                 this.convertAccount(data);
             }.bind(this));
+
+            // activities remove / save / add
+            this.sandbox.on(
+                'sulu.contacts.account.activities.delete',
+                this.removeActivities.bind(this)
+            );
+            this.sandbox.on(
+                'sulu.contacts.account.activity.save',
+                this.saveActivity.bind(this)
+            );
+            this.sandbox.on(
+                'sulu.contacts.account.activity.load',
+                this.loadActivity.bind(this)
+            );
+        },
+
+        /**
+         * Parses and translates defaults for acitivties
+         * @param defaults
+         */
+        parseActivityDefaults: function(defaults) {
+            var el, sub;
+            for (el in defaults) {
+                if (defaults.hasOwnProperty(el)) {
+                    for (sub in defaults[el]) {
+                        if (defaults[el].hasOwnProperty(sub)) {
+                            defaults[el][sub].translation =
+                                this.sandbox.translate(defaults[el][sub].name);
+                        }
+                    }
+                }
+            }
+            this.activityDefaults = defaults;
+        },
+
+        removeActivities: function(ids) {
+            this.sandbox.emit(
+                'sulu.overlay.show-warning',
+                'sulu.overlay.be-careful',
+                'sulu.overlay.delete-desc',
+                null,
+                function() {
+                    var activity;
+                    this.sandbox.util.foreach(ids, function(id) {
+                        activity = Activity.findOrCreate({id: id});
+                        activity.destroy({
+                            success: function() {
+                                this.sandbox.emit(
+                                    'sulu.contacts.account.activity.removed',
+                                    id
+                                );
+                            }.bind(this),
+                            error: function() {
+                                this.sandbox.logger.log("error while deleting activity");
+                            }.bind(this)
+                        });
+                    }.bind(this));
+                }.bind(this));
+        },
+
+        saveActivity: function(data) {
+            var isNew = true;
+            if (!!data.id) {
+                isNew = false;
+            }
+
+            this.activity = Activity.findOrCreate({id: data.id});
+            this.activity.set(data);
+            this.activity.save(null, {
+                // on success save contacts id
+                success: function(response) {
+                    this.activity = this.flattenActivityObjects(response.toJSON());
+                    this.activity.assignedContact = this.activity.assignedContact.fullName;
+
+                    if (!!isNew) {
+                        this.sandbox.emit(
+                            'sulu.contacts.account.activity.added',
+                            this.activity
+                        );
+                    } else {
+                        this.sandbox.emit(
+                            'sulu.contacts.account.activity.updated',
+                            this.activity
+                        );
+                    }
+
+                }.bind(this),
+                error: function() {
+                    this.sandbox.logger.log("error while saving activity");
+                }.bind(this)
+            });
+        },
+
+        /**
+         * Flattens type/status/priority
+         * @param activity
+         */
+        flattenActivityObjects: function(activity) {
+            if (!!activity.activityStatus) {
+                activity.activityStatus =
+                    this.sandbox.translate(activity.activityStatus.name);
+            }
+            if (!!activity.activityType) {
+                activity.activityType =
+                    this.sandbox.translate(activity.activityType.name);
+            }
+            if (!!activity.activityPriority) {
+                activity.activityPriority =
+                    this.sandbox.translate(activity.activityPriority.name);
+            }
+
+            return activity;
+        },
+
+        loadActivity: function(id) {
+            if (!!id) {
+                this.activity = Activity.findOrCreate({id: id});
+                this.activity.fetch({
+                    success: function(model) {
+                        this.activity = model;
+                        this.sandbox.emit(
+                            'sulu.contacts.account.activity.loaded',
+                            model.toJSON());
+                    }.bind(this),
+                    error: function(e1, e2) {
+                        this.sandbox.logger.log(
+                            'error while fetching activity',
+                            e1,
+                            e2
+                        );
+                    }.bind(this)
+                });
+            } else {
+                this.sandbox.logger.warn('no id given to load activity');
+            }
+        },
+
+        renderActivities: function() {
+
+            var $list,
+                dfd = this.sandbox.data.deferred();
+
+            // load data and show form
+            this.contact = new Contact();
+            $list = this.sandbox.dom.createElement('<div id="activities-list-container"/>');
+            this.html($list);
+
+            this.dfdAccount = this.sandbox.data.deferred();
+            this.dfdSystemContacts = this.sandbox.data.deferred();
+
+            if (!!this.options.id) {
+
+                this.getAccount(this.options.id);
+                this.getSystemMembers();
+
+                // start component when contact and system members are loaded
+                this.sandbox.data.when(this.dfdAccount, this.dfdSystemContacts).then(function() {
+                    dfd.resolve();
+                    this.sandbox.start([
+                        {
+                            name: 'activities@sulucontact',
+                            options: {
+                                el: $list,
+                                account: this.account.toJSON(),
+                                responsiblePersons: this.responsiblePersons,
+                                instanceName: 'account'
+                            }
+                        }
+                    ]);
+                }.bind(this));
+
+            } else {
+                this.sandbox.logger.error("activities are not available for unsaved contacts!");
+                dfd.reject();
+            }
+
+            return dfd.promise();
+        },
+
+        /**
+         * loads contact by id
+         */
+        getAccount: function(id) {
+            this.account = new Account({id: id});
+            this.account.fetch({
+                success: function(model) {
+                    this.account = model;
+                    this.dfdAccount.resolve();
+                }.bind(this),
+                error: function() {
+                    this.sandbox.logger.log('error while fetching contact');
+                }.bind(this)
+            });
+        },
+
+        /**
+         * loads system members
+         */
+        getSystemMembers: function() {
+            this.sandbox.util.load('api/contacts?bySystem=true')
+                .then(function(response) {
+                    this.responsiblePersons = response._embedded.contacts;
+                    this.sandbox.util.foreach(this.responsiblePersons, function(el) {
+                        var contact = Contact.findOrCreate(el);
+                        el = contact.toJSON();
+                    }.bind(this));
+                    this.dfdSystemContacts.resolve();
+                }.bind(this))
+                .fail(function(textStatus, error) {
+                    this.sandbox.logger.error(textStatus, error);
+                }.bind(this));
+        },
+
+        // sets main contact
+        setMainContact: function(id) {
+            // set mainContact
+            this.account.set({mainContact: Contact.findOrCreate({id: id})});
+            this.account.save(null, {
+                patch: true,
+                success: function(response) {
+                    // TODO: show success label
+                }.bind(this)
+            });
+        },
+
+        addAccountContact: function(id, position) {
+            // set id to contacts id;
+            var accountContact = AccountContact.findOrCreate({
+                id: id,
+                contact: Contact.findOrCreate({id: id}), account: this.account});
+            accountContact.set({position: position});
+
+            accountContact.save(null, {
+                // on success save contacts id
+                success: function(response) {
+                    var model = response.toJSON();
+                    this.sandbox.emit('sulu.contacts.accounts.contact.saved', model);
+                }.bind(this),
+                error: function() {
+                    this.sandbox.logger.log("error while saving contact");
+                }.bind(this)
+            });
+        },
+
+        /**
+         * removes mulitple AccountContacts
+         * @param ids
+         */
+        removeAccountContacts: function(ids) {
+            // show warning
+            this.sandbox.emit('sulu.overlay.show-warning', 'sulu.overlay.be-careful', 'sulu.overlay.delete-desc', null, function() {
+                // get ids of selected contacts
+                var accountContact;
+                this.sandbox.util.foreach(ids, function(id) {
+                    // set account and contact as well as  id to contacts id(so that request is going to be sent)
+                    accountContact = AccountContact.findOrCreate({id: id, contact: Contact.findOrCreate({id: id}), account: this.account});
+                    accountContact.destroy({
+                        success: function() {
+                            this.sandbox.emit('sulu.contacts.accounts.contacts.removed', id);
+                        }.bind(this),
+                        error: function() {
+                            this.sandbox.logger.log("error while deleting AccountContact");
+                        }.bind(this)
+                    });
+                }.bind(this));
+            }.bind(this));
         },
 
         /**
@@ -121,11 +421,11 @@ define([
                 if (wasConfirmed) {
                     this.account.set({type: data.id});
                     this.sandbox.emit('sulu.header.toolbar.item.loading', 'options-button');
-                    this.sandbox.util.ajax('/admin/api/accounts/'+this.account.id+'?action=convertAccountType&type='+data.name, {
+                    this.sandbox.util.ajax('/admin/api/accounts/' + this.account.id + '?action=convertAccountType&type=' + data.name, {
 
                         type: 'POST',
 
-                        success: function(response){
+                        success: function(response) {
                             var model = response;
                             this.sandbox.emit('sulu.header.toolbar.item.enable', 'options-button');
 
@@ -137,7 +437,7 @@ define([
                             this.sandbox.emit('sulu.account.type.converted');
                         }.bind(this),
 
-                        error: function(){
+                        error: function() {
                             this.sandbox.logger.log("error while saving profile");
                         }.bind(this)
                     });

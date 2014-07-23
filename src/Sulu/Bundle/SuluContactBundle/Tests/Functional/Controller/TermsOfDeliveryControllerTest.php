@@ -117,14 +117,14 @@ class TermsOfDeliveryControllerTest extends DatabaseTestCase
         $response2 = json_decode($client2->getResponse()->getContent());
         $this->assertEquals(200, $client2->getResponse()->getStatusCode());
 
-        $this->assertEquals('Term 1', $response2->_embedded[0]->terms);
-        $this->assertEquals(1, $response2->_embedded[0]->id);
+        $this->assertEquals('Term 1', $response2->_embedded->termsOfDeliveries[0]->terms);
+        $this->assertEquals(1, $response2->_embedded->termsOfDeliveries[0]->id);
 
-        $this->assertEquals('Term 2', $response2->_embedded[1]->terms);
-        $this->assertEquals(2, $response2->_embedded[1]->id);
+        $this->assertEquals('Term 2', $response2->_embedded->termsOfDeliveries[1]->terms);
+        $this->assertEquals(2, $response2->_embedded->termsOfDeliveries[1]->id);
 
-        $this->assertEquals('Term 3', $response2->_embedded[2]->terms);
-        $this->assertEquals(3, $response2->_embedded[2]->id);
+        $this->assertEquals('Term 3', $response2->_embedded->termsOfDeliveries[2]->terms);
+        $this->assertEquals(3, $response2->_embedded->termsOfDeliveries[2]->id);
 
     }
 
@@ -200,18 +200,18 @@ class TermsOfDeliveryControllerTest extends DatabaseTestCase
         $response2 = json_decode($client2->getResponse()->getContent());
         $this->assertEquals(200, $client2->getResponse()->getStatusCode());
 
-        if ($response2->_embedded[1]->terms === 'Term 2') {
-            $this->assertEquals('Term 2', $response2->_embedded[1]->terms);
-            $this->assertEquals(2, $response2->_embedded[1]->id);
+        if ($response2->_embedded->termsOfDeliveries[1]->terms === 'Term 2') {
+            $this->assertEquals('Term 2', $response2->_embedded->termsOfDeliveries[1]->terms);
+            $this->assertEquals(2, $response2->_embedded->termsOfDeliveries[1]->id);
 
-            $this->assertEquals('Term 1.1', $response2->_embedded[0]->terms);
-            $this->assertEquals(1, $response2->_embedded[0]->id);
+            $this->assertEquals('Term 1.1', $response2->_embedded->termsOfDeliveries[0]->terms);
+            $this->assertEquals(1, $response2->_embedded->termsOfDeliveries[0]->id);
         } else {
-            $this->assertEquals('Term 1.1', $response2->_embedded[1]->terms);
-            $this->assertEquals(1, $response2->_embedded[1]->id);
+            $this->assertEquals('Term 1.1', $response2->_embedded->termsOfDeliveries[1]->terms);
+            $this->assertEquals(1, $response2->_embedded->termsOfDeliveries[1]->id);
 
-            $this->assertEquals('Term 2', $response2->_embedded[0]->terms);
-            $this->assertEquals(2, $response2->_embedded[0]->id);
+            $this->assertEquals('Term 2', $response2->_embedded->termsOfDeliveries[0]->terms);
+            $this->assertEquals(2, $response2->_embedded->termsOfDeliveries[0]->id);
         }
     }
 
@@ -245,7 +245,7 @@ class TermsOfDeliveryControllerTest extends DatabaseTestCase
         $response2 = json_decode($client2->getResponse()->getContent());
         $this->assertEquals(200, $client2->getResponse()->getStatusCode());
 
-        $this->assertEquals(1, $response2->total);
+        $this->assertEquals(1, count($response2->_embedded->termsOfDeliveries));
     }
 
     public function testDeleteInvalidId()
@@ -264,7 +264,7 @@ class TermsOfDeliveryControllerTest extends DatabaseTestCase
         $response2 = json_decode($client2->getResponse()->getContent());
         $this->assertEquals(200, $client2->getResponse()->getStatusCode());
 
-        $this->assertEquals(2, $response2->total);
+        $this->assertEquals(2, count($response2->_embedded->termsOfDeliveries));
     }
 
     public function testPatch()
@@ -302,26 +302,26 @@ class TermsOfDeliveryControllerTest extends DatabaseTestCase
         $response2 = json_decode($client2->getResponse()->getContent());
         $this->assertEquals(200, $client2->getResponse()->getStatusCode());
 
-        $this->assertEquals(3, $response2->total);
+        $this->assertEquals(3, count($response2->_embedded->termsOfDeliveries));
 
-        if($response2->_embedded[0]->terms == 'Changed Term') {
-            $this->assertEquals('Changed Term', $response2->_embedded[0]->terms);
-            $this->assertEquals(1, $response2->_embedded[0]->id);
+        if($response2->_embedded->termsOfDeliveries[0]->terms == 'Changed Term') {
+            $this->assertEquals('Changed Term', $response2->_embedded->termsOfDeliveries[0]->terms);
+            $this->assertEquals(1, $response2->_embedded->termsOfDeliveries[0]->id);
 
-            $this->assertEquals('Neuer Term', $response2->_embedded[1]->terms);
-            $this->assertEquals(3, $response2->_embedded[1]->id);
+            $this->assertEquals('Neuer Term', $response2->_embedded->termsOfDeliveries[1]->terms);
+            $this->assertEquals(3, $response2->_embedded->termsOfDeliveries[1]->id);
 
-            $this->assertEquals('Term 2', $response2->_embedded[2]->terms);
-            $this->assertEquals(2, $response2->_embedded[2]->id);
+            $this->assertEquals('Term 2', $response2->_embedded->termsOfDeliveries[2]->terms);
+            $this->assertEquals(2, $response2->_embedded->termsOfDeliveries[2]->id);
         } else {
-            $this->assertEquals('Changed Term', $response2->_embedded[2]->terms);
-            $this->assertEquals(1, $response2->_embedded[2]->id);
+            $this->assertEquals('Changed Term', $response2->_embedded->termsOfDeliveries[2]->terms);
+            $this->assertEquals(1, $response2->_embedded->termsOfDeliveries[2]->id);
 
-            $this->assertEquals('Term 2', $response2->_embedded[0]->terms);
-            $this->assertEquals(2, $response2->_embedded[0]->id);
+            $this->assertEquals('Term 2', $response2->_embedded->termsOfDeliveries[0]->terms);
+            $this->assertEquals(2, $response2->_embedded->termsOfDeliveries[0]->id);
 
-            $this->assertEquals('Neuer Term', $response2->_embedded[1]->terms);
-            $this->assertEquals(3, $response2->_embedded[1]->id);
+            $this->assertEquals('Neuer Term', $response2->_embedded->termsOfDeliveries[1]->terms);
+            $this->assertEquals(3, $response2->_embedded->termsOfDeliveries[1]->id);
         }
     }
 
@@ -380,13 +380,13 @@ class TermsOfDeliveryControllerTest extends DatabaseTestCase
         $response2 = json_decode($client2->getResponse()->getContent());
         $this->assertEquals(200, $client2->getResponse()->getStatusCode());
 
-        $this->assertEquals(2, $response2->total);
+        $this->assertEquals(2, count($response2->_embedded->termsOfDeliveries));
 
-        $this->assertEquals('Term 1', $response2->_embedded[0]->terms);
-        $this->assertEquals(1, $response2->_embedded[0]->id);
+        $this->assertEquals('Term 1', $response2->_embedded->termsOfDeliveries[0]->terms);
+        $this->assertEquals(1, $response2->_embedded->termsOfDeliveries[0]->id);
 
-        $this->assertEquals('Term 2', $response2->_embedded[1]->terms);
-        $this->assertEquals(2, $response2->_embedded[1]->id);
+        $this->assertEquals('Term 2', $response2->_embedded->termsOfDeliveries[1]->terms);
+        $this->assertEquals(2, $response2->_embedded->termsOfDeliveries[1]->id);
     }
 
 }

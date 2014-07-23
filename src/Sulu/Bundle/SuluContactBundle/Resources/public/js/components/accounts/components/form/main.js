@@ -49,6 +49,7 @@ define([], function() {
 
             this.instanceNameTypeOverlay = 'accountCategories';
             this.accountCategoryURL = 'api/account/categories';
+            this.contactBySystemURL = 'api/contacts?bySystem=true';
 
             this.render();
             this.getAccountTypeData();
@@ -87,8 +88,9 @@ define([], function() {
                     name: 'auto-complete@husky',
                     options: {
                         el: '#company',
-                        remoteUrl: '/admin/api/accounts?searchFields=id,name&flat=true',
+                        remoteUrl: '/admin/api/accounts?searchFields=name&fields=id,name&flat=true',
                         getParameter: 'search',
+                        resultKey: 'accounts',
                         value: !!data.parent ? data.parent : null,
                         instanceName: 'companyAccount' + data.id,
                         valueName: 'name',
@@ -102,6 +104,7 @@ define([], function() {
 
             this.initForm(data);
             this.initCategorySelect(data);
+            this.initResponsibleContactSelect(data);
             this.startCategoryOverlay();
 
             this.setTags();
@@ -127,6 +130,7 @@ define([], function() {
                             el: '#tags',
                             instanceName: this.autoCompleteInstanceName,
                             getParameter: 'search',
+                            itemsKey: 'tags',
                             remoteUrl: '/admin/api/tags?flat=true&sortBy=name',
                             completeIcon: 'tag',
                             noNewTags: true
@@ -155,14 +159,14 @@ define([], function() {
          * Inits the select for the account category
          */
         initCategorySelect: function(formData) {
-            this.preselectedElemendId = !!formData.accountCategory ? formData.accountCategory.id : null;
+            this.preselectedCategoryId = !!formData.accountCategory ? formData.accountCategory.id : null;
             this.accountCategoryData = null;
 
             this.sandbox.util.load(this.accountCategoryURL)
                 .then(function(response) {
 
                     // data is data for select but not for overlay
-                    var data = response._embedded;
+                    var data = response._embedded.accountCategories;
                     this.accountCategoryData = this.copyArrayOfObjects(data);
 
                     // translate values for select but not for overlay
@@ -182,8 +186,42 @@ define([], function() {
                                 defaultLabel: this.sandbox.translate('contact.accounts.category.select'),
                                 valueName: 'category',
                                 repeatSelect: false,
-                                preSelectedElements: [this.preselectedElemendId],
+                                preSelectedElements: [this.preselectedCategoryId],
                                 data: data
+                            }
+                        }
+                    ]);
+
+                }.bind(this))
+                .fail(function(textStatus, error) {
+                    this.sandbox.logger.error(textStatus, error);
+                }.bind(this));
+        },
+
+        /**
+         * Inits the select for the account category
+         */
+        initResponsibleContactSelect: function(formData) {
+            var preselectedResponsibleContactId = !!formData.responsiblePerson ? formData.responsiblePerson.id : null;
+            this.responsiblePersons = null;
+
+            this.sandbox.util.load(this.contactBySystemURL)
+                .then(function(response) {
+
+                    this.responsiblePersons = response._embedded.contacts;
+
+                    this.sandbox.start([
+                        {
+                            name: 'select@husky',
+                            options: {
+                                el: '#responsiblePerson',
+                                instanceName: 'responsible-person',
+                                multipleSelect: false,
+                                defaultLabel: this.sandbox.translate('dropdown.please-choose'),
+                                valueName: 'fullName',
+                                repeatSelect: false,
+                                preSelectedElements: [preselectedResponsibleContactId],
+                                data: this.responsiblePersons
                             }
                         }
                     ]);
@@ -442,7 +480,7 @@ define([], function() {
                 var selected = [];
 
                 this.accountCategoryData = this.copyArrayOfObjects(data);
-                selected.push(parseInt(!!this.selectedAccountCategory ? this.selectedAccountCategory : this.preselectedElemendId, 10));
+                selected.push(parseInt(!!this.selectedAccountCategory ? this.selectedAccountCategory : this.preselectedCategoryId, 10));
                 this.addDividerAndActionsForSelect(data);
 
                 // translate values for select but not for overlay
@@ -517,6 +555,13 @@ define([], function() {
             this.sandbox.on('husky.select.account-category.selected.item', function(id) {
                 if (id > 0) {
                     this.selectedAccountCategory = id;
+                    this.setHeaderBar(false);
+                }
+            }.bind(this));
+
+            this.sandbox.on('husky.select.responsible-person.selected.item', function(id) {
+                if (id > 0) {
+                    this.selectedResponsiblePerson = id;
                     this.setHeaderBar(false);
                 }
             }.bind(this));
