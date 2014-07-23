@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified"
+           targetNamespace="http://schemas.sulu.io/media/formats" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns="http://schemas.sulu.io/media/formats">
+
+    <xs:complexType name="formatsType">
+        <xs:sequence>
+            <xs:element type="formatType" name="format" maxOccurs="unbounded" minOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="formatType">
+        <xs:sequence>
+            <xs:element type="xs:string" name="name"/>
+            <xs:element type="commandsType" name="commands" maxOccurs="unbounded" minOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="commandsType">
+        <xs:sequence>
+            <xs:element type="commandType" name="command" maxOccurs="unbounded" minOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="commandType">
+        <xs:sequence>
+            <xs:element type="xs:string" name="action"/>
+            <xs:element type="parametersType" name="parameters"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="parametersType">
+        <xs:sequence>
+            <xs:element type="parameterType" name="parameter" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="parameterType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="name"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:element name="formats" type="formatsType"/>
+</xs:schema>

@@ -21,7 +21,7 @@ define([
         },
 
         parse: function(resp) {
-            return resp._embedded;
+            return resp._embedded.collections;
         }
 
     });

@@ -11,8 +11,7 @@
 namespace Sulu\Bundle\MediaBundle\Content;
 
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
-use Sulu\Bundle\MediaBundle\Media\RestObject\Media;
-use Sulu\Bundle\MediaBundle\Media\RestObject\RestObjectHelper;
+use Sulu\Bundle\MediaBundle\Api\Media;
 use JMS\Serializer\Annotation\Exclude;
 
 /**
@@ -50,47 +49,44 @@ class MediaSelectionContainer implements \Serializable
 
     /**
      * @Exclude
-     * @var RestObjectHelper
-     */
-    private $restObjectHelper;
-
-    /**
-     * @Exclude
      * @var MediaManagerInterface
      */
     private $mediaManager;
 
-    function __construct($config, $displayOption, $ids, $localization, $mediaManager, $restObjectHelper)
+    function __construct($config, $displayOption, $ids, $localization, $mediaManager)
     {
         $this->config = $config;
         $this->displayOption = $displayOption;
         $this->ids = $ids;
         $this->localization = $localization;
         $this->mediaManager = $mediaManager;
-        $this->restObjectHelper = $restObjectHelper;
     }
 
     /**
      * returns data of container
+     * @param string $locale
      * @return Media[]
      */
-    public function getData()
+    public function getData($locale = 'en') // TODO delete "= 'en'" and set it on the position where the function is called
     {
         if ($this->data === null) {
-            $this->data = $this->loadData();
+            $this->data = $this->loadData($locale);
         }
 
         return $this->data;
     }
 
     /**
+     * @param string $locale
      * @return Media[]
      */
-    private function loadData()
+    private function loadData($locale)
     {
-        $medias = $this->mediaManager->getMultiple($this->ids);
-
-        return $this->getRestObjectHelper()->convertMediasToRestObjects($medias, $this->localization);
+        if (!empty($this->ids)) {
+            return $this->mediaManager->get($locale, null, $this->ids);
+        } else {
+            return array();
+        }
     }
 
     /**
@@ -143,7 +139,7 @@ class MediaSelectionContainer implements \Serializable
      */
     public function serialize()
     {
-        return json_encode(
+        return serialize(
             array(
                 'data' => $this->getData(),
                 'config' => $this->getConfig(),
@@ -158,19 +154,10 @@ class MediaSelectionContainer implements \Serializable
      */
     public function unserialize($serialized)
     {
-        $values = json_decode($serialized, true);
+        $values = unserialize($serialized);
         $this->data = $values['data'];
         $this->config = $values['config'];
         $this->ids = $values['ids'];
         $this->displayOption = $values['displayOption'];
-    }
-
-    /**
-     * getRestObjectHelper
-     * @return RestObjectHelper
-     */
-    protected function getRestObjectHelper()
-    {
-        return $this->restObjectHelper;
     }
 }

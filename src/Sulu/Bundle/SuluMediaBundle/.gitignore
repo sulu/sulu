@@ -1,5 +1,6 @@
 /Tests/Resources/app/cache/*
 /Tests/Resources/app/logs/*
+/Tests/uploads/
 /node_modules/
 /vendor/
 /composer.phar
@@ -10,3 +11,4 @@
 # IDEs
 .idea/*
 *.iml
+*.IGNORE

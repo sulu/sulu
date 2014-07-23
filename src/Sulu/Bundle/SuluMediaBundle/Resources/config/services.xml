@@ -9,13 +9,13 @@
         <parameter key="sulu_media.storage.class">Sulu\Bundle\MediaBundle\Media\Storage\LocalStorage</parameter>
         <parameter key="sulu_media.file_validator.class">Sulu\Bundle\MediaBundle\Media\FileValidator\DefaultFileValidator</parameter>
         <parameter key="sulu_media.format_manager.class">Sulu\Bundle\MediaBundle\Media\FormatManager\DefaultFormatManager</parameter>
-        <parameter key="sulu_media.format_cache">Sulu\Bundle\MediaBundle\Media\FormatCache\LocalFormatCache</parameter>
-        <parameter key="sulu_media.image.converter">Sulu\Bundle\MediaBundle\Media\ImageConverter\ImagineImageConverter</parameter>
+        <parameter key="sulu_media.format_cache.class">Sulu\Bundle\MediaBundle\Media\FormatCache\LocalFormatCache</parameter>
+        <parameter key="sulu_media.image.converter.class">Sulu\Bundle\MediaBundle\Media\ImageConverter\ImagineImageConverter</parameter>
         <parameter key="sulu_media.image.command_manager.class">Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\Manager\DefaultCommandManager</parameter>
         <parameter key="sulu_media.image.command.resize.class">Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\ResizeCommand</parameter>
         <parameter key="sulu_media.image.command.scale.class">Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\ScaleCommand</parameter>
         <parameter key="sulu_media.media_selection.class">Sulu\Bundle\MediaBundle\Content\Types\MediaSelectionContentType</parameter>
-        <parameter key="sulu_media.rest_object_helper.class">Sulu\Bundle\MediaBundle\Media\RestObject\RestObjectHelper</parameter>
+        <parameter key="sulu_media.collection_manager.class">Sulu\Bundle\MediaBundle\Collection\Manager\DefaultCollectionManager</parameter>
     </parameters>
     <services>
         <service id="sulu_media.admin" class="%sulu_media.admin.class%">
@@ -40,14 +40,14 @@
             <argument>%sulu_media.media.storage.local.segments%</argument>
         </service>
         <service id="sulu_media.file_validator" class="%sulu_media.file_validator.class%" />
-        <service id="sulu_media.format_cache" class="%sulu_media.format_cache%">
+        <service id="sulu_media.format_cache" class="%sulu_media.format_cache.class%">
             <argument type="service" id="filesystem"/>
             <argument>%sulu_media.format_cache.path%</argument>
-            <argument>%sulu_media.format_cache.path.url%</argument>
+            <argument type="expression">service('router').getRouteCollection().get('sulu_media.website.image.proxy').getPath()</argument>
             <argument>%sulu_media.format_cache.segments%</argument>
             <argument>%sulu_media.image.formats%</argument>
         </service>
-        <service id="sulu_media.image.converter" class="%sulu_media.image.converter%">
+        <service id="sulu_media.image.converter" class="%sulu_media.image.converter.class%">
             <argument>%sulu_media.image.formats%</argument>
             <argument type="service" id="sulu_media.image.command_manager" />
         </service>
@@ -72,8 +72,9 @@
             <argument type="service" id="sulu_security.user_repository" />
             <argument type="service" id="doctrine.orm.entity_manager" />
             <argument type="service" id="sulu_media.storage" />
-            <argument type="service" id="sulu_media.format_cache" />
             <argument type="service" id="sulu_media.file_validator" />
+            <argument type="service" id="sulu_media.format_manager" />
+            <argument type="expression">service('router').getRouteCollection().get('sulu_media.website.media.download').getPath()</argument>
             <argument>%sulu_media.media.max_file_size%</argument>
             <argument>%sulu_media.media.blocked_file_types%</argument>
             <argument>%sulu_media.media.types%</argument>
@@ -84,18 +85,25 @@
             <argument type="service" id="sulu_media.storage" />
             <argument type="service" id="sulu_media.format_cache" />
             <argument type="service" id="sulu_media.image.converter" />
-            <argument>%ghost_script.path%</argument>
-            <argument>%sulu_media.format_cache.save_image%</argument>
+            <argument type="string">%ghost_script.path%</argument>
+            <argument type="string">%sulu_media.format_cache.save_image%</argument>
+            <argument type="string">%sulu_media.format_manager.extensions%</argument>
         </service>
 
-        <service id="sulu.content.type.media_selection" class="%sulu_media.media_selection.class%">
+        <service id="sulu_media.type.media_selection" class="%sulu_media.media_selection.class%">
             <argument type="service" id="sulu_media.media_manager"/>
-            <argument type="service" id="sulu_media.rest_object_helper"/>
             <argument type="string">SuluMediaBundle:Template:content-types/media-selection.html.twig</argument>
+            <tag name="sulu.content.type" alias="media_selection"/>
         </service>
 
-        <service id="sulu_media.rest_object_helper" class="%sulu_media.rest_object_helper.class%">
+        <service id="sulu_media.collection_manager" class="%sulu_media.collection_manager.class%">
+            <argument type="service" id="sulu_media.collection_repository" />
+            <argument type="service" id="sulu_media.media_repository" />
             <argument type="service" id="sulu_media.format_manager" />
+            <argument type="service" id="sulu_security.user_repository" />
+            <argument type="service" id="doctrine.orm.entity_manager" />
+            <argument type="string">%sulu_media.collection.previews.limit%</argument>
+            <argument type="string">%sulu_media.collection.previews.format%</argument>
         </service>
     </services>
 </container>

@@ -22,7 +22,11 @@
         <field name="created" type="datetime" column="created"/>
         <field name="changed" type="datetime" column="changed"/>
 
-        <one-to-many field="meta" target-entity="Sulu\Bundle\MediaBundle\Entity\CollectionMeta" mapped-by="collection"/>
+        <one-to-many field="meta" target-entity="Sulu\Bundle\MediaBundle\Entity\CollectionMeta" mapped-by="collection">
+            <cascade>
+                <cascade-persist />
+            </cascade>
+        </one-to-many>
         <one-to-many field="media" target-entity="Sulu\Bundle\MediaBundle\Entity\Media" mapped-by="collection"/>
         <one-to-many field="children" target-entity="Sulu\Bundle\MediaBundle\Entity\Collection" mapped-by="parent"/>
 

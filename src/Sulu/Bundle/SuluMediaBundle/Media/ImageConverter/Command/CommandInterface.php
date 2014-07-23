@@ -17,13 +17,12 @@ use Imagine\Image\ImageInterface;
  * The ImageConverter Command is a interface to manage image manipulation.
  * @package Sulu\Bundle\MediaBundle\Media\ImageConverter\Command
  */
-interface CommandInterface {
-
+interface CommandInterface
+{
     /**
      * @param ImageInterface $image
      * @param $parameters
      * @return mixed
      */
     public function execute(&$image, $parameters);
-
 } 

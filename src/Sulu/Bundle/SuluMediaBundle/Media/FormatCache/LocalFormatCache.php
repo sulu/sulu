@@ -14,6 +14,8 @@ use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyInvalidUrl;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyUrlNotFoundException;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Bundle\FrameworkBundle\Routing\Router;
+use Symfony\Component\Routing\Route;
 
 /**
  * @package Sulu\Bundle\MediaBundle\Media\FormatCache
@@ -47,6 +49,9 @@ class LocalFormatCache implements FormatCacheInterface
 
     public function __construct(Filesystem $filesystem, $path, $pathUrl, $segments, $formats)
     {
+        /**
+         * @var Route $route
+         */
         $this->filesystem = $filesystem;
         $this->path = $path;
         $this->pathUrl = $pathUrl;
@@ -91,7 +96,7 @@ class LocalFormatCache implements FormatCacheInterface
      */
     public function getMediaUrl($id, $fileName, $options, $format)
     {
-        return $this->getPath($this->pathUrl, $id, $fileName, $format);
+        return $this->getPathUrl($this->pathUrl, $id, $fileName, $format);
     }
 
     /**
@@ -107,6 +112,21 @@ class LocalFormatCache implements FormatCacheInterface
         $prePath = rtrim($prePath, '/');
 
         return $prePath . '/' . $format . '/' . $segment . $id . '-' . $fileName;
+    }
+
+    /**
+     * @param string $prePath
+     * @param int $id
+     * @param string $fileName
+     * @param string $format
+     * @return string
+     */
+    protected function getPathUrl($prePath, $id, $fileName, $format)
+    {
+        $segment = ($id % $this->segments) . '/';
+        $prePath = rtrim($prePath, '/');
+
+        return str_replace('{slug}', $format . '/' . $segment . $id . '-' . $fileName, $prePath);
     }
 
     /**

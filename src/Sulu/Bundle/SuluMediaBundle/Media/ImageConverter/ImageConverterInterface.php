@@ -17,8 +17,8 @@ use Imagine\Image\ImageInterface;
  * The ImageConverter is a interface to manage conversions of an Image.
  * @package Sulu\Bundle\MediaBundle\Media\ImageConverter
  */
-interface ImageConverterInterface {
-
+interface ImageConverterInterface
+{
     /**
      * Convert an image and return the tmpPath
      * @param $originalPath
@@ -32,5 +32,4 @@ interface ImageConverterInterface {
      * @return array
      */
     public function getFormats();
-
 } 
