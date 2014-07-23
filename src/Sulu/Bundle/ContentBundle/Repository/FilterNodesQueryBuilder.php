@@ -71,7 +71,7 @@ class FilterNodesQueryBuilder
 
         // append order clause
         if (!empty($sql2Order)) {
-            $sortOrder = (isset($filterConfig['sortMethod']) && $filterConfig['sortMethod'] == 'asc')
+            $sortOrder = (isset($this->filterConfig['sortMethod']) && $this->filterConfig['sortMethod'] == 'asc')
                 ? 'ASC' : 'DESC';
             $sql2 .= ' ORDER BY ' . join(', ', $sql2Order) . ' ' . $sortOrder;
         }
