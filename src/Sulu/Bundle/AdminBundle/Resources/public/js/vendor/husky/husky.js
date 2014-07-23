@@ -17706,6 +17706,7 @@ require.config({
         'type/date': 'js/types/date',
         'type/decimal': 'js/types/decimal',
         'type/hiddenData': 'js/types/hiddenData',
+        'type/mappingData': 'js/types/mappingData',
         'type/email': 'js/types/email',
         'type/url': 'js/types/url',
         'type/label': 'js/types/label',
@@ -18072,11 +18073,17 @@ define('type/decimal',[
                 },
 
                 getModelData: function(val) {
+                    if(val === '') {
+                        return '';
+                    }
                     return Globalize.parseFloat(val);
                 },
 
                 getViewData: function(val) {
                     if(typeof val === 'string'){
+                        if(val === '') {
+                            return '';
+                        }
                         val = parseFloat(val);
                     }
                     return Globalize.format(val, this.options.format);
@@ -18134,6 +18141,80 @@ define('type/hiddenData',[
 
                 validate: function() {
                     return true;
+                }
+            };
+
+        return new Default($el, defaults, options, 'hiddenData', typeInterface);
+    };
+});
+
+/*
+ * This file is part of the Husky Validation.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ *
+ */
+
+define('type/mappingData',[
+    'type/default'
+], function(Default) {
+
+    
+
+    return function($el, options) {
+        var defaults = {
+                defaultValue: null,
+                mapping: null,
+                searchProperty: 'id',
+                showProperty: 'name'
+            },
+
+            typeInterface = {
+
+                setValue: function(value) {
+                    if (value !== null && typeof value !== 'object') {
+                        this.$el.data('value', value);
+                        this.$el.text(this.getMappingValue(value) || this.options.defaultValue);
+                    }
+                },
+
+                getValue: function() {
+
+                    var value = this.$el.data('value');
+
+                    if (value !== null) {
+                        return value;
+                    } else {
+                        return this.options.defaultValue;
+                    }
+                },
+
+                needsValidation: function() {
+                    return false;
+                },
+
+                validate: function() {
+                    return true;
+                },
+
+                getMappingValue: function(val) {
+
+                    var key, obj = this.options.mapping;
+
+                    if (!!obj) {
+                        for (key in this.options.mapping) {
+                            if (!!obj.hasOwnProperty(key)) {
+                                if (obj[key].hasOwnProperty(this.options.searchProperty) &&
+                                    obj[key].hasOwnProperty(this.options.showProperty) &&
+                                    String(obj[key][this.options.searchProperty]) === String(val)) {
+                                    return obj[key][this.options.showProperty];
+                                }
+                            }
+                        }
+                    }
                 }
             };
 
@@ -18769,8 +18850,15 @@ define('validator/required',[
                             return false;
                         }
 
+                        if(typeof val === 'undefined'){
+                            return false;
+                        }
+
+                        // the following condition works only for strings
+                        val = val.toString();
+
                         // notNull && notBlank && not undefined
-                        return typeof val !== 'undefined' && val.length > 0 && '' !== val.replace(/^\s+/g, '').replace(/\s+$/g, '');
+                        return val.length > 0 && '' !== val.replace(/^\s+/g, '').replace(/\s+$/g, '');
                     }
                     return true;
                 }
@@ -27074,7 +27162,7 @@ define('__component__$navigation@husky',[],function() {
                 hide: 'navigation.hide',
                 show: 'navigation.show'
             },
-            resizeWidth: 800,
+            resizeWidth: 1210,
             forceCollapse: false,
             systemName: 'Sulu 2.0',
             footer: true,
@@ -27085,6 +27173,7 @@ define('__component__$navigation@husky',[],function() {
             }
         },
         CONSTANTS = {
+            COMPONENT_CLASS: 'husky-navigation',
             UNCOLLAPSED_WIDTH: 250, //px
             COLLAPSED_WIDTH: 50, //px
             ITEM_LABEL_HEIGHT: 50, //px
@@ -27156,6 +27245,12 @@ define('__component__$navigation@husky',[],function() {
             VERSION_HISTORY_CLICKED = namespace + 'version-history.clicked',
 
         /**
+         * raised when the username gets clicked
+         * @event husky.navigation.username.clicked
+         */
+            USERNAME_CLICKED = namespace + 'username.clicked',
+
+        /**
          * show the navigation when it was hidden before
          * @event husky.navigation.show
          */
@@ -27218,15 +27313,15 @@ define('__component__$navigation@husky',[],function() {
             this.items = [];
 
             // add container class to current div
-            this.sandbox.dom.addClass(this.$el, 'navigation-container');
+            this.sandbox.dom.addClass(this.$el, CONSTANTS.COMPONENT_CLASS);
 
             // render skeleton
             this.sandbox.dom.html(this.$el, this.sandbox.template.parse(templates.skeleton,
                 this.sandbox.util.extend(true, {}, this.options, {translate: this.sandbox.translate}))
             );
 
-            this.$navigation = this.$find('.navigation', this.$el);
-            this.$navigationContent = this.$find('.navigation-content', this.$navigation);
+            this.$navigation = this.$find('.navigation');
+            this.$navigationContent = this.$find('.navigation-content');
 
             // start search component
             this.sandbox.start([
@@ -27404,6 +27499,11 @@ define('__component__$navigation@husky',[],function() {
             this.sandbox.dom.on(this.$el, 'click', function() {
                 this.sandbox.emit(VERSION_HISTORY_CLICKED);
             }.bind(this), 'footer .version a');
+
+            // user clicked
+            this.sandbox.dom.on(this.$el, 'click', function() {
+                this.sandbox.emit(USERNAME_CLICKED);
+            }.bind(this), 'footer .user');
         },
 
         /**
@@ -27717,6 +27817,9 @@ define('__component__$navigation@husky',[],function() {
 
         collapse: function() {
             if (this.hidden === false) {
+                this.sandbox.dom.one(this.$el, CONSTANTS.TRANSITIONEND_EVENT, function() {
+                    this.sandbox.dom.css(this.$el, {'width': ''});
+                }.bind(this));
                 this.sandbox.dom.addClass(this.$navigation, 'collapsed');
                 this.sandbox.dom.removeClass(this.$navigation, 'collapseIcon');
                 this.removeHeightforExpanded();
@@ -27731,12 +27834,17 @@ define('__component__$navigation@husky',[],function() {
 
         unCollapse: function(forced) {
             if ((this.stayCollapsed === false || forced === true) && this.hidden === false) {
+                if (forced) {
+                    // freeze width of parent so that the navigation overlaps the content
+                    this.sandbox.dom.width(this.$el, this.sandbox.dom.width(this.$navigation));
+                    this.sandbox.dom.addClass(this.$navigation, 'collapseIcon');
+                } else {
+                    this.sandbox.dom.removeClass(this.$navigation, 'collapseIcon');
+                    this.sandbox.dom.css(this.$el, {'width': ''});
+                }
                 this.sandbox.dom.removeClass(this.$navigation, 'collapsed');
                 this.hideToolTip();
                 this.setHeightForExpanded();
-                if (forced) {
-                    this.sandbox.dom.addClass(this.$navigation, 'collapseIcon');
-                }
                 if (this.collapsed) {
                     this.sandbox.emit(EVENT_UNCOLLAPSED, CONSTANTS.UNCOLLAPSED_WIDTH);
                     if (!forced) {
@@ -28209,10 +28317,7 @@ define('__component__$column-options@husky',[],function() {
 
     return {
 
-        view: true,
-
         initialize: function() {
-            console.log(this._ref);
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
             this.overlayLoaded = false;
 
@@ -28294,7 +28399,6 @@ define('__component__$column-options@husky',[],function() {
  * @param {Boolean} [options.addRowTop] adds row to the top of the table when add row is triggered
  * @param {Boolean} [options.startTabIndex] start index for tabindex
  * @param {String} [options.columnMinWidth] sets the minimal width of table columns
- * @param {String|Object} [options.contentContainer] the container which holds the datagrid; this options resizes the contentContainer for responsiveness
  * @param {String} [options.fullWidth] If true datagrid style will be full-width mode
  * @param {Array} [options.excludeFields=['id']] array of fields to exclude by the view
  * @param {Boolean} [options.showHead] if TRUE head would be showed
@@ -28322,7 +28426,6 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             editable: false,
             className: 'datagridcontainer',
             fullWidth: false,
-            contentContainer: null,
             removeRow: false,
             selectItem: {
                 type: 'checkbox',      // checkbox, radio button
@@ -28430,6 +28533,16 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          */
         OPEN_PARENTS = function() {
             return this.datagrid.createEventName.call(this.datagrid, 'table.open-parents');
+        },
+
+        /**
+         * triggered when a radio button inside the datagrid is clicked
+         * @event husky.datagrid.table.open-child
+         * @param {Number|String} id The id of the data-record to open the parents for
+         * @param {String} columnName column name
+         */
+        RADIO_SELECTED = function() {
+            return this.datagrid.createEventName.call(this.datagrid, 'radio.selected');
         },
 
         /**
@@ -28543,7 +28656,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          */
         destroy: function() {
             this.unbindDomEvents();
-            this.sandbox.stop(this.sandbox.dom.find('*', this.$tableContainer));
+            //this.sandbox.stop(this.sandbox.dom.find('*', this.$tableContainer));
             // remove full-width class if configured
             if (this.options.fullWidth === true) {
                 this.sandbox.dom.removeClass(this.$el, constants.fullWidthClass);
@@ -28619,6 +28732,12 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                 this.callIconCallback.bind(this), 'tr .grid-icon'
             );
 
+            // calls the radio-clicked event and stops further event-propagation
+            this.sandbox.dom.on(
+                this.sandbox.dom.find('.custom-radio.custom-filter',this.$tableContainer), 'click',
+                this.radioClickedCallback.bind(this)
+            );
+
             this.sandbox.dom.on(this.$tableContainer, 'click', function(event) {
                 this.sandbox.dom.stopPropagation(event);
             }.bind(this));
@@ -28656,6 +28775,18 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         },
 
         /**
+         * emits radio-clicked event and stops event propagation
+         */
+        radioClickedCallback: function(event) {
+            var parentTr = this.sandbox.dom.closest(event.currentTarget, 'tr'),
+                parentTd = this.sandbox.dom.closest(event.currentTarget, 'td'),
+                id = this.sandbox.dom.data(parentTr, 'id'),
+                field = this.sandbox.dom.data(parentTd, 'field');
+            this.sandbox.emit(RADIO_SELECTED.call(this), id, field);
+            event.stopPropagation();
+        },
+
+        /**
          * Emits the row-clicked event
          */
         emitRowClickedEvent: function(event) {
@@ -28681,21 +28812,8 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             this.errorInRow = [];
             this.bottomTabIndex = this.options.startTabIndex || 49999;
             this.topTabIndex = this.options.startTabIndex || 50000;
-
-            // initialize variables for needed for responsivness
-            if (!!this.options.contentContainer) {
-                if (this.sandbox.dom.css(this.options.contentContainer, 'max-width') === 'none') {
-                    this.originalMaxWidth = null;
-                } else {
-                    this.originalMaxWidth = this.datagrid.getNumberAndUnit(this.sandbox.dom.css(this.options.contentContainer, 'max-width')).number;
-                }
-                this.contentMarginRight = this.datagrid.getNumberAndUnit(this.sandbox.dom.css(this.options.contentContainer, 'margin-right')).number;
-                this.contentPaddings = this.datagrid.getNumberAndUnit(this.sandbox.dom.css(this.options.contentContainer, 'padding-right')).number;
-                this.contentPaddings += this.datagrid.getNumberAndUnit(this.sandbox.dom.css(this.options.contentContainer, 'padding-left')).number;
-            } else {
-                this.contentMarginRight = 0;
-                this.contentPaddings = 0;
-            }
+            this.contentMarginRight = 0;
+            this.contentPaddings = 0;
         },
 
         /**
@@ -28767,7 +28885,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          */
 
         prepareTableHead: function() {
-            var tblColumns, tblCellClass, headData, widthValues, checkboxValues, dataAttribute, isSortable,
+            var tblColumns, tblCellClass, headData, widthValues, dataAttribute,
                 tblColumnStyle, minWidth, count = 0;
 
             tblColumns = [];
@@ -28796,26 +28914,16 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
 
             this.sandbox.util.foreach(headData, function(column) {
                 if (this.options.excludeFields.indexOf(column.attribute) < 0) {
-                    isSortable = false;
-
-                    if (!!this.datagrid.data.links && !!this.data.links.sortable) {
-                        //is column sortable - check with received sort-links
-                        this.sandbox.util.each(this.data.links.sortable, function(index) {
-                            if (index === column.attribute) {
-                                isSortable = true;
-                                return false;
-                            }
-                        }.bind(this));
-                    }
 
                     // calculate width
                     tblColumnStyle = [];
+                    tblCellClass = '';
                     if (column.width) {
                         minWidth = column.width;
                     } else if (column.minWidth) {
                         minWidth = column.minWidth;
                     } else {
-                        minWidth = getTextWidth.call(this, column.content, [], isSortable);
+                        minWidth = getTextWidth.call(this, column.content, [], column.sortable);
                         minWidth = (minWidth > this.datagrid.getNumberAndUnit(this.options.columnMinWidth).number) ? minWidth + 'px' : this.options.columnMinWidth;
 
                     }
@@ -28849,7 +28957,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                     }
 
                     // add html to table header cell if sortable
-                    if (!!isSortable) {
+                    if (!!column.sortable) {
                         dataAttribute = ' data-attribute="' + column.attribute + '"';
                         tblCellClass += ((!!column.class) ? ' ' + column.class + ' ' + constants.sortableClass : ' ' + constants.sortableClass + '');
                         tblColumns.push('<th class="' + tblCellClass + '" style="' + tblColumnStyle.join(';') + '" ' + dataAttribute + '>' + column.content + '<span></span></th>');
@@ -29018,13 +29126,11 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                 tblCellStyle = 'style="max-width:' + this.datagrid.matchings[index].minWidth + '"';
 
                 // call the type manipulate to manipulate the content of the cell
-                if (!!type) {
-                    if (type === this.datagrid.types.THUMBNAILS) {
-                        tblCellContent = this.datagrid.manipulateContent(tblCellContent, type, this.options.thumbnailFormat);
-                        tblCellContent = '<img alt="' + tblCellContent[constants.thumbAltKey] + '" src="' + tblCellContent[constants.thumbSrcKey] + '"/>';
-                    } else {
-                        tblCellContent = this.datagrid.manipulateContent(tblCellContent, type);
-                    }
+                if (!!type && type === this.datagrid.types.THUMBNAILS) {
+                    tblCellContent = this.datagrid.manipulateContent(tblCellContent, type, this.options.thumbnailFormat);
+                    tblCellContent = '<img alt="' + tblCellContent[constants.thumbAltKey] + '" src="' + tblCellContent[constants.thumbSrcKey] + '"/>';
+                } else {
+                    tblCellContent = this.datagrid.processContentFilter(key, tblCellContent, type, index);
                 }
 
                 if (!!editable) {
@@ -29514,7 +29620,6 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         onResize: function() {
             var finalWidth,
                 contentPaddings = 0,
-                content = !!this.options.contentContainer ? this.options.contentContainer : this.$el,
                 tableWidth = this.sandbox.dom.width(this.$table),
                 tableOffset = this.sandbox.dom.offset(this.$table),
                 contentWidth = this.sandbox.dom.width(content),
@@ -29523,13 +29628,6 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                 originalMaxWidth = contentWidth;
 
             tableOffset.right = tableOffset.left + tableWidth;
-
-
-            if (!!this.options.contentContainer && !!this.originalMaxWidth) {
-                // get original max-width and right margin
-                originalMaxWidth = this.originalMaxWidth;
-                contentPaddings = this.contentPaddings;
-            }
 
             // if table is greater than max content width
             if (tableWidth > originalMaxWidth - contentPaddings && contentWidth < windowWidth - tableOffset.left) {
@@ -29555,18 +29653,6 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             // width is not allowed to be smaller than the width of content
             if (finalWidth < contentWidth) {
                 finalWidth = contentWidth;
-            }
-
-            // if contentContainer is set, adapt maximum size
-            if (!!this.options.contentContainer) {
-                if (this.options.fullWidth === true) {
-                    this.sandbox.dom.css(this.options.contentContainer, 'max-width', finalWidth + contentPaddings);
-                }
-                finalWidth = this.sandbox.dom.width(this.options.contentContainer);
-                if (!overlaps) {
-                    // if table does not overlap border, set content to original width
-                    this.sandbox.dom.css(this.options.contentContainer, 'max-width', '');
-                }
             }
 
             // now set width
@@ -29878,20 +29964,21 @@ define('husky_components/datagrid/decorators/thumbnail-view',[],function() {
 
         templates = {
             item: [
-                    '<div class="' + constants.itemClass + ' <%= styleClass %>">',
-                        '<div class="' + constants.imageClass + '">',
-                            '<img src="<%= imgSrc %>" alt="<%= imgAlt %>"/>',
-                        '</div>',
-                        '<div class="' + constants.textClass + '">',
-                            '<span class="' + constants.titleClass + '"><%= title %></span><br />',
-                            '<span class="' + constants.descriptionClass + '"><%= description %></span>',
-                        '</div>',
-                        '<div class="' + constants.checkboxClass + ' custom-checkbox no-spacing">',
-                            '<input type="checkbox"<% if (!!checked) { %> checked<% } %>/>',
-                            '<span class="icon"></span>',
-                        '</div>',
-                        '<div class="fa-' + constants.downloadIcon + ' ' + constants.downloadClass + '"></div>',
-                    '</div>'
+                '<div class="' + constants.itemClass + ' <%= styleClass %>">',
+                '   <div class="' + constants.imageClass + '">',
+                '       <div class="fa-coffee empty"></div>',
+                '       <img src="<%= imgSrc %>" alt="<%= imgAlt %>"/>',
+                '   </div>',
+                '   <div class="' + constants.textClass + '">',
+                '       <span class="' + constants.titleClass + '"><%= title %></span><br />',
+                '       <span class="' + constants.descriptionClass + '"><%= description %></span>',
+                '   </div>',
+                '   <div class="' + constants.checkboxClass + ' custom-checkbox no-spacing">',
+                '       <input type="checkbox"<% if (!!checked) { %> checked<% } %>/>',
+                '       <span class="icon"></span>',
+                '   </div>',
+                '   <div class="fa-' + constants.downloadIcon + ' ' + constants.downloadClass + '"></div>',
+                '</div>'
             ].join('')
         };
 
@@ -29965,23 +30052,30 @@ define('husky_components/datagrid/decorators/thumbnail-view',[],function() {
 
                 // foreach matching configured get the corresponding datum from the record
                 this.sandbox.util.foreach(this.datagrid.matchings, function(matching) {
+                    var argument, result;
+
+                    // get argument
+                    if (matching.type === this.datagrid.types.THUMBNAILS) {
+                        argument = this.thumbnailFormat;
+                    }
+
+                    // process
+                    result = this.datagrid.processContentFilter.call(this.datagrid,
+                        matching.attribute,
+                        record[matching.attribute],
+                        matching.type,
+                        argument
+                    );
 
                     // get the thumbnail and the title data (to place it on top)
                     // with the rest generate a description string
                     if (matching.type === this.datagrid.types.THUMBNAILS) {
-                        thumbnail = this.datagrid.manipulateContent.call(this.datagrid,
-                            record[matching.attribute],
-                            this.datagrid.types.THUMBNAILS,
-                            this.thumbnailFormat
-                        );
-                        imgSrc = thumbnail[constants.thumbnailSrcProperty];
-                        imgAlt = thumbnail[constants.thumbnailAltProperty];
+                        imgSrc = result[constants.thumbnailSrcProperty];
+                        imgAlt = result[constants.thumbnailAltProperty];
                     } else if (matching.type === this.datagrid.types.TITLE) {
-                        title = record[matching.attribute];
+                        title = result;
                     } else if (matching.type === this.datagrid.types.BYTES) {
-                        description.push(
-                            this.datagrid.manipulateContent.call(this.datagrid, record[matching.attribute], this.datagrid.types.BYTES)
-                        );
+                        description.push(result);
                     }
                 }.bind(this));
 
@@ -30028,7 +30122,7 @@ define('husky_components/datagrid/decorators/thumbnail-view',[],function() {
          * Destroys the view
          */
         destroy: function() {
-            this.sandbox.dom.off('body', 'click.grid-thumbnails.' + this.ddatagrid.options.instanceName);
+            this.sandbox.dom.off('body', 'click.grid-thumbnails.' + this.datagrid.options.instanceName);
             this.sandbox.dom.remove(this.$el);
         },
 
@@ -30259,16 +30353,31 @@ define('husky_components/datagrid/decorators/group-view',[],function () {
                 title = addition = '';
 
                 this.sandbox.util.foreach(this.datagrid.matchings, function(matching) {
+                    var argument, result,
+                        type = matching.type;
 
-                    // pick the important data out of each group
+                    // prepare data for processing
+                    if (matching.type === this.datagrid.types.COUNT) {
+                        argument = this.sandbox.translate(constants.elementsKey);
+                    } else if (matching.type === this.datagrid.types.THUMBNAILS) {
+                        type = null; // do not apply default processor on thumbnails
+                    }
+
+                    // process
+                    result = this.datagrid.processContentFilter.call(this.datagrid,
+                        matching.attribute,
+                        group[matching.attribute],
+                        type,
+                        argument
+                    );
+
+                    // set data
                     if (matching.type === this.datagrid.types.THUMBNAILS) {
-                        thumbnails = group[matching.attribute];
+                        thumbnails = result;
                     } else if (matching.type === this.datagrid.types.TITLE) {
-                        title = group[matching.attribute];
+                        title = result;
                     } else if(matching.type === this.datagrid.types.COUNT) {
-                        addition += this.datagrid.manipulateContent.call(this.datagrid,
-                            group[matching.attribute],
-                            matching.type, this.sandbox.translate(constants.elementsKey));
+                        addition += result;
                     }
                 }.bind(this));
 
@@ -30376,7 +30485,7 @@ define('husky_components/datagrid/decorators/group-view',[],function () {
  *
  * @param {Object} [paginationOptions] Configuration object
  * @param {Array} [options.showElementsSteps] Array which contains the steps for the Show-Elements-dropdown as integers
- * @param {Number} [options.pageSize] Data records per page
+ * @param {Number} [options.limit] Data records per page
  *
  * @param {Function} [initialize] function which gets called once at the start of the view
  * @param {Function} [render] function to render data
@@ -30388,7 +30497,7 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
 
      var defaults = {
             showElementsSteps: [10, 20, 50, 100, 500],
-            pageSize: 10
+            limit: 10
         },
 
         constants = {
@@ -30433,7 +30542,6 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
          * Translation keys used by this class
          */
         translations = {
-            showAllElements: 'pagination.show-all-elements',
             show: 'pagination.show',
             elementsOf: 'pagination.elements-of',
             elementsPerPage: 'pagination.elements-per-page'
@@ -30479,10 +30587,10 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
 
         /**
          * Returns the pagination page size
-         * @returns {Number} current Page size
+         * @returns {Number} current limit
          */
-        getPageSize: function() {
-            return this.options.pageSize;
+        getLimit: function() {
+            return this.options.limit;
         },
 
         /**
@@ -30515,17 +30623,9 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
 
             // show-elements dropdown item clicked
             this.sandbox.on('husky.dropdown.' + this.datagrid.options.instanceName + '-pagination-dropdown-show.item.click', function(item) {
-                if (this.data.pageSize !== item.id || this.data.total === this.data.numberOfAll) {
-                    // show all
-                    if (item.id === 0) {
-                        // only if not already all are shown
-                        if (this.data.total !== this.data.numberOfAll) {
-                            this.datagrid.changePage.call(this.datagrid, this.data.links.all);
-                        }
-                    } else {
-                        // always jump to the first page
-                        this.datagrid.changePage.call(this.datagrid, null, 1, item.id);
-                    }
+                if (this.data.limit !== item.id || this.data.embedded.length === this.data.total) {
+                    // always jump to the first page
+                    this.datagrid.changePage.call(this.datagrid, null, 1, item.id);
                 }
             }.bind(this));
         },
@@ -30554,7 +30654,7 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
          */
         nextPage: function() {
             if (!!this.data.links.next) {
-                this.datagrid.changePage.call(this.datagrid, this.data.links.next);
+                this.datagrid.changePage.call(this.datagrid, this.data.links.next.href);
             }
         },
 
@@ -30562,8 +30662,8 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
          * Triggers a page change to the previous page
          */
         prevPage: function() {
-            if (!!this.data.links.prev) {
-                this.datagrid.changePage.call(this.datagrid, this.data.links.prev);
+            if (!!this.data.links.previous) {
+                this.datagrid.changePage.call(this.datagrid, this.data.links.previous.href);
             }
         },
 
@@ -30586,14 +30686,10 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                 description;
 
             // if first defined step is bigger than the number of all elements don't display show-elements dropdown
-            if (this.data.numberOfAll > this.options.showElementsSteps[0]) {
-                if (this.data.total === this.data.numberOfAll) {
-                    description = this.sandbox.translate(translations.showAllElements);
-                } else {
-                    description = this.sandbox.translate(translations.show) +
-                        ' <strong>' + this.data.total + '</strong> ' +
-                        this.sandbox.translate(translations.elementsOf) + ' ' + this.data.numberOfAll;
-                }
+            if (this.data.total > this.options.showElementsSteps[0]) {
+                description = this.sandbox.translate(translations.show) +
+                    ' <strong>' + this.data.embedded.length + '</strong> ' +
+                    this.sandbox.translate(translations.elementsOf) + ' ' + this.data.total;
                 $showElements = this.sandbox.dom.createElement(this.sandbox.util.template(templates.showElements)({
                     'desc': description
                 }));
@@ -30662,7 +30758,7 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
             var i, length, data = [];
 
             for (i = -1, length = this.options.showElementsSteps.length; ++i < length;) {
-                if (this.options.showElementsSteps[i] > this.data.numberOfAll) {
+                if (this.options.showElementsSteps[i] > this.data.total) {
                     break;
                 }
                 data.push({
@@ -30670,12 +30766,6 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                     name: '<strong>' + this.options.showElementsSteps[i] + '</strong> ' + this.sandbox.translate(translations.elementsPerPage)
                 });
             }
-
-            data.push({divider: true});
-            data.push({
-                id: 0,
-                name: this.sandbox.translate(translations.showAllElements)
-            });
 
             this.sandbox.start([
                 {
@@ -30694,195 +30784,12 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
 });
 
 /**
- * @class ShowAllPagination (Datagrid Decorator)
- * @constructor
- *
- * @param {Object} [paginationOptions] Configuration object
- * @param {Number} [paginationOptions.pageSize] maximum elements per page
- * @param {Function} [paginationOptions.showAllHandler] function to call if pagination is clicked. If set pagination will always be displayed. Default action gets not executed if set.
- *
- * @param {Function} [initialize] function which gets called once at the start of the view
- * @param {Function} [render] function to render data
- * @param {Function} [rerender] function to rerender itself
- * @param {Function} [destroy] function to destroy the pagination and unbind events
- */
-define('husky_components/datagrid/decorators/showall-pagination',[],function () {
-
-    
-
-    var defaults = {
-            pageSize: 9,
-            showAllHandler: null
-        },
-
-        constants = {
-            paginationClass: 'pagination-wrapper showall',
-            squareClass: 'square',
-            textClass: 'text'
-        },
-
-        /**
-         * Translation keys used by this class
-         */
-            translations = {
-            showAll: 'pagination.show-all',
-            showOnly: 'pagination.show-only',
-            elements: 'pagination.elements'
-        },
-
-        /**
-         * Templates used by this class
-         */
-            templates = {
-            structure: [
-                '<div class="' + constants.squareClass + '"></div>',
-                '<div class="' + constants.textClass + '">',
-                    '<%= translate(desc) %>',
-                    '<strong> <%= number %></strong> ',
-                    '<%= translate(elements) %>',
-                '</div>'
-            ].join('')
-        };
-
-    return {
-
-        /**
-         * Initializes the pagination
-         * @param {Object} context The context of the datagrid
-         * @param {Object} options The options used by this pagination
-         */
-        initialize: function (context, options) {
-            // context of the datagrid-component
-            this.datagrid = context;
-
-            // make sandbox available in this-context
-            this.sandbox = this.datagrid.sandbox;
-
-            // merge defaults with pagination options
-            this.options = this.sandbox.util.extend(true, {}, defaults, options);
-
-            this.setVariables();
-        },
-
-        /**
-         * Renders the pagination
-         */
-        render: function (data, $container) {
-            this.$el = $container;
-            this.data = data;
-
-            this.$paginationContainer = this.sandbox.dom.createElement('<div class="' + constants.paginationClass + '"/>');
-            if (this.data.numberOfAll > this.data.total || !!this.options.showAllHandler) {
-                this.renderShowAll();
-            } else if (this.data.numberOfAll > this.options.pageSize) {
-                this.renderShowOnly();
-            } else {
-                return false;
-            }
-
-            this.sandbox.dom.append(this.$el, this.$paginationContainer);
-
-            this.bindDomEvents();
-
-            return true;
-        },
-
-        /**
-         * Renders the markup for showing all records
-         */
-        renderShowAll: function() {
-            this.sandbox.dom.html(this.$paginationContainer, this.sandbox.util.template(templates.structure)({
-                desc: translations.showAll,
-                number: this.data.numberOfAll,
-                elements: translations.elements,
-                translate: this.sandbox.translate
-            }));
-        },
-
-        /**
-         * Renders the markup for not showing all records
-         */
-        renderShowOnly: function() {
-            this.sandbox.dom.html(this.$paginationContainer, this.sandbox.util.template(templates.structure)({
-                desc: translations.showOnly,
-                number: this.options.pageSize,
-                elements: translations.elements,
-                translate: this.sandbox.translate
-            }));
-        },
-
-        /**
-         * Returns the pagination page size
-         * @returns {Number} current Page size
-         */
-        getPageSize: function () {
-            return this.options.pageSize;
-        },
-
-        /**
-         * Sets the classes properties
-         */
-        setVariables: function () {
-            this.$el = null;
-            this.$paginationContainer = null;
-            this.data = null;
-        },
-
-        /**
-         * Destroys the pagination
-         */
-        destroy: function () {
-            this.unbindDomEvents();
-            this.sandbox.dom.remove(this.$paginationContainer);
-        },
-
-        /**
-         * Binds dom related events
-         */
-        bindDomEvents: function () {
-            this.sandbox.dom.on(this.$paginationContainer, 'click', function() {
-                if (this.data.numberOfAll > this.data.total || !!this.options.showAllHandler) {
-                    this.showAll();
-                } else {
-                    this.showOnly();
-                }
-            }.bind(this));
-        },
-
-        /**
-         * Shows all elements in the datagrid
-         * or just executes the handler if passed
-         */
-        showAll: function() {
-            if (typeof this.options.showAllHandler !== 'function') {
-                this.datagrid.changePage.call(this.datagrid, this.data.links.all);
-            } else {
-                this.options.showAllHandler();
-            }
-        },
-
-        /**
-         * Shows only the configured amount of elements in the datagrid
-         */
-        showOnly: function() {
-            this.datagrid.changePage.call(this.datagrid, null, 1, this.options.pageSize);
-        },
-
-        /**
-         * Unbinds all events from the class
-         */
-        unbindDomEvents: function () {
-            this.sandbox.dom.off(this.$paginationContainer);
-        }
-    };
-});
-
-/**
  * @class DataGrid
  * @constructor
  *
  * @param {Object} [options] Configuration object
  * @param {Object} [options.data] if no url is provided (some functionality like search & sort will not work)
+ * @param {String} [options.resultKey] the name of the data-array in the embedded in the response
  * @param {String} [options.defaultMeasureUnit=px] the unit that should be taken
  * @param {Boolean|String} [options.pagination=dropdown] name of the pagination to use. If false no pagination will be initialized
  * @param {String} [options.view='table'] name of the view to use
@@ -30897,7 +30804,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
  * @param {Boolean|String} [options.childrenPropertyName] name of the property which contains the number of children. False to indaticate that list is flat
  * @param {Boolean} [options.onlySelectLeaves] If true only the outermost children can be selected
  * @param {Boolean} [options.resizeListeners] If true a resize-listener will be instantiated, which is responsible for responsiveness
- *
+ * @param {String|Function} [options.contentFilters] Used for filtering data at a specifig attribute / column. If defined as callback the rows value will be passed. If defined as a string, an existing filter template will be applied (see matching types)
  * @param {Array} [options.matchings] configuration array of columns if fieldsData isn't set
  * @param {String} [options.matchings.content] column title
  * @param {String} [options.matchings.width] width of column (used by the table view)
@@ -30913,9 +30820,8 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
         'husky_components/datagrid/decorators/table-view',
         'husky_components/datagrid/decorators/thumbnail-view',
         'husky_components/datagrid/decorators/group-view',
-        'husky_components/datagrid/decorators/dropdown-pagination',
-        'husky_components/datagrid/decorators/showall-pagination'
-    ], function(decoratorTableView, thumbnailView, groupView, decoratorDropdownPagination, showallPagination) {
+        'husky_components/datagrid/decorators/dropdown-pagination'
+    ], function(decoratorTableView, thumbnailView, groupView, decoratorDropdownPagination) {
 
         /**
          *    Default values for options
@@ -30930,18 +30836,21 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
                 paginationOptions: {
                     dropdown: {}
                 },
+                contentFilters: null,
                 sortable: true,
                 matchings: [],
                 url: null,
                 data: null,
                 instanceName: '',
                 searchInstanceName: null,
+                searchFields: [],
                 columnOptionsInstanceName: null,
                 defaultMeasureUnit: 'px',
                 preselected: [],
                 onlySelectLeaves: false,
                 childrenPropertyName: false,
-                resizeListeners: true
+                resizeListeners: true,
+                resultKey: 'items'
             },
 
             types = {
@@ -30949,7 +30858,9 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
                 THUMBNAILS: 'thumbnails',
                 TITLE: 'title',
                 BYTES: 'bytes',
-                COUNT: 'count'
+                RADIO: 'radio',
+                COUNT: 'count',
+                TRANSLATION: 'translation'
             },
 
             decorators = {
@@ -30959,9 +30870,101 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
                     group: groupView
                 },
                 paginations: {
-                    dropdown: decoratorDropdownPagination,
-                    showall: showallPagination
+                    dropdown: decoratorDropdownPagination
                 }
+            },
+
+            filters = {
+                /**
+                 * Takes bytes and returns a more readable string
+                 * @param bytes {Number}
+                 * @returns {string}
+                 */
+                bytes: function(bytes) {
+                    if (bytes === 0) {
+                        return '0 Byte';
+                    }
+                    var k = 1000,
+                        sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
+                        i = Math.floor(Math.log(bytes) / Math.log(k));
+                    return (bytes / Math.pow(k, i)).toPrecision(3) + ' ' + sizes[i];
+                },
+
+                title: function(content) {
+                    return content;
+                },
+
+                /**
+                 * Brings a date into the right format
+                 * @param date {String} the date to parse
+                 * @returns {String}
+                 */
+                date: function(date) {
+                    var parsedDate = this.sandbox.date.format(date);
+                    if (parsedDate !== null) {
+                        return parsedDate;
+                    }
+                    return date;
+                },
+
+                /**
+                 * Translates a string
+                 * @param val {String} the string to translate
+                 * @returns {String}
+                 */
+                translation: function(val) {
+                   return this.sandbox.translate(val);
+                },
+
+
+                /**
+                 * Attaches a postfix to a number
+                 * @param number
+                 * @param postfix
+                 */
+                count: function(number, postfix) {
+                    return (!!postfix) ? number + ' ' + postfix : number;
+                },
+
+                /**
+                 * Takes an array of thumbnails and returns an object with url and and alt
+                 * @param thumbnails {Array} array of thumbnails
+                 * @param format {String} the format of the thumbnail
+                 * @returns {Object} with url and alt property
+                 */
+                thumbnails: function(thumbnails, format) {
+                    var thumbnail = {
+                        url: null,
+                        alt: null
+                    };
+                    if (!!thumbnails[format]) {
+                        if (typeof thumbnails[format] === 'object') {
+                            thumbnail.url = thumbnails[format].url;
+                            thumbnail.alt = thumbnails[format].alt;
+                        } else {
+                            thumbnail.url = thumbnails[format];
+                            thumbnail.alt = '';
+                        }
+                    }
+                    return thumbnail;
+                },
+
+                /**
+                 * checks for bool value and sets radio to true
+                 */
+                radio: function(content, index, columnName) {
+                    var checked = (!content) ? false : true;
+                    return this.sandbox.util.template(templates.radio, {checked: checked, radioId: index, columnName: columnName});
+                }
+            },
+
+            templates = {
+                radio: [
+                    '<div class="custom-radio custom-filter">',
+                    '   <input name="radio-<%= columnName %>-<%= radioId %>" class="" type="radio" class="form-element" <% if (checked) { print("checked")} %>/>',
+                    '   <span class="icon"></span>',
+                    '</div>'
+                ].join('')
             },
 
             namespace = 'husky.datagrid.',
@@ -30972,7 +30975,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * raised after initialization has finished
              * @event husky.datagrid.initialized
              */
-            INITIALIZED = function() {
+                INITIALIZED = function() {
                 return this.createEventName('initialized');
             },
 
@@ -30980,7 +30983,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * raised when the the current page changes
              * @event husky.datagrid.page.change
              */
-            PAGE_CHANGE = function() {
+                PAGE_CHANGE = function() {
                 return this.createEventName('page.change');
             },
 
@@ -30988,7 +30991,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * raised when the data is updated
              * @event husky.datagrid.updated
              */
-            UPDATED = function() {
+                UPDATED = function() {
                 return this.createEventName('updated');
             },
 
@@ -30997,7 +31000,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * @event husky.datagrid.item.deselect
              * @param {String} id of deselected item
              */
-            ITEM_DESELECT = function() {
+                ITEM_DESELECT = function() {
                 return this.createEventName('item.deselect');
             },
 
@@ -31005,7 +31008,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * raised when selection of items changes
              * @event husky.datagrid.number.selections
              */
-            NUMBER_SELECTIONS = function() {
+                NUMBER_SELECTIONS = function() {
                 return this.createEventName('number.selections');
             },
 
@@ -31014,7 +31017,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * @event husky.datagrid.item.click
              * @param {String} id of item that was clicked
              */
-            ITEM_CLICK = function() {
+                ITEM_CLICK = function() {
                 return this.createEventName('item.click');
             },
 
@@ -31023,7 +31026,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * @event husky.datagrid.item.select
              * @param {String} if of selected item
              */
-            ITEM_SELECT = function() {
+                ITEM_SELECT = function() {
                 return this.createEventName('item.select');
             },
 
@@ -31031,7 +31034,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * raised when all items get deselected via the header checkbox
              * @event husky.datagrid.all.deselect
              */
-            ALL_DESELECT = function() {
+                ALL_DESELECT = function() {
                 return this.createEventName('all.deselect');
             },
 
@@ -31040,7 +31043,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * @event husky.datagrid.all.select
              * @param {Array} ids of all items that have been clicked
              */
-            ALL_SELECT = function() {
+                ALL_SELECT = function() {
                 return this.createEventName('all.select');
             },
 
@@ -31049,7 +31052,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * @event husky.datagrid.data.saved
              * @param {Object} data returned
              */
-            DATA_SAVED = function() {
+                DATA_SAVED = function() {
                 return this.createEventName('updated');
             },
 
@@ -31060,7 +31063,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * @param {String} error thrown
              *
              */
-            DATA_SAVE_FAILED = function() {
+                DATA_SAVE_FAILED = function() {
                 return this.createEventName('data.save.failed');
             },
 
@@ -31068,10 +31071,9 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * raised when editable table is changed
              * @event husky.datagrid.data.save
              */
-            DATA_CHANGED = function() {
+                DATA_CHANGED = function() {
                 return this.createEventName('data.changed');
             },
-
 
         /* PROVIDED EVENTS */
 
@@ -31079,7 +31081,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * raised when husky.datagrid.data.get is triggered
              * @event husky.datagrid.data.provide
              */
-            DATA_PROVIDE = function() {
+                DATA_PROVIDE = function() {
                 return this.createEventName('data.provide');
             },
 
@@ -31089,7 +31091,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * @param {String} viewId The identifier of the view
              * @param {Object} Options to merge with the current view options
              */
-            CHANGE_VIEW = function() {
+                CHANGE_VIEW = function() {
                 return this.createEventName('view.change');
             },
 
@@ -31098,7 +31100,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * @event husky.datagrid.pagination.change
              * @param {String} paginationId The identifier of the pagination
              */
-            CHANGE_PAGINATION = function() {
+                CHANGE_PAGINATION = function() {
                 return this.createEventName('pagination.change');
             },
 
@@ -31107,7 +31109,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * @event husky.datagrid.record.add
              * @param {Object} the data of the new record
              */
-            RECORD_ADD = function() {
+                RECORD_ADD = function() {
                 return this.createEventName('record.add');
             },
 
@@ -31117,7 +31119,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * @param {Object} the data of the new record
              * @param callback {Function} callback to execute after process has been finished
              */
-            RECORDS_ADD = function() {
+                RECORDS_ADD = function() {
                 return this.createEventName('records.add');
             },
 
@@ -31126,7 +31128,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * @event husky.datagrid.record.remove
              * @param {String} id of the record to be removed
              */
-            RECORD_REMOVE = function() {
+                RECORD_REMOVE = function() {
                 return this.createEventName('record.remove');
             },
 
@@ -31135,7 +31137,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * @event husky.datagrid.records.change
              * @param {Object|Array} the new data-record. Must at least contain an id-property. Can also be an array of data-records
              */
-            RECORDS_CHANGE = function() {
+                RECORDS_CHANGE = function() {
                 return this.createEventName('records.change');
             },
 
@@ -31143,7 +31145,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * used to trigger an update of the data
              * @event husky.datagrid.update
              */
-            UPDATE = function() {
+                UPDATE = function() {
                 return this.createEventName('update');
             },
 
@@ -31153,7 +31155,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * @param {String} searchField
              * @param {String} searchString
              */
-            DATA_SEARCH = function() {
+                DATA_SEARCH = function() {
                 return this.createEventName('data.search');
             },
 
@@ -31161,7 +31163,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * raised when data is sorted
              * @event husky.datagrid.data.sort
              */
-            DATA_SORT = function() {
+                DATA_SORT = function() {
                 return this.createEventName('data.sort');
             },
 
@@ -31170,7 +31172,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * @event husky.datagrid.url.update
              * @param {Object} url parameter : key
              */
-            URL_UPDATE = function() {
+                URL_UPDATE = function() {
                 return this.createEventName('url.update');
             },
 
@@ -31178,7 +31180,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * triggers husky.datagrid.data.provide
              * @event husky.datagrid.data.get
              */
-            DATA_GET = function() {
+                DATA_GET = function() {
                 return this.createEventName('data.get');
             },
 
@@ -31187,10 +31189,9 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * @event husky.datagrid.items.get-selected
              * @param  {Function} callback function receives array of selected items
              */
-            ITEMS_GET_SELECTED = function() {
+                ITEMS_GET_SELECTED = function() {
                 return this.createEventName('items.get-selected');
             },
-
 
         /**
          * Private Methods
@@ -31205,7 +31206,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * @param {String|Null} paramValue Value of the parameter. If not set, parameter will be removed from url
              * @returns {String} updated url
              */
-            setGetParameter = function(url, paramName, paramValue) {
+                setGetParameter = function(url, paramName, paramValue) {
                 if (url.indexOf(paramName + "=") >= 0) {
                     var prefix = url.substring(0, url.indexOf(paramName + "=")),
                         suffix = url.substring(url.indexOf(paramName + "="));
@@ -31230,66 +31231,6 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
                     }
                 }
                 return url;
-            },
-
-            /**
-             * Takes bytes and returns a more readable string
-             * @param bytes {Number}
-             * @returns {string}
-             */
-            parseBytes = function(bytes) {
-                if (bytes === 0) {
-                    return '0 Byte';
-                }
-                var k = 1000,
-                    sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
-                    i = Math.floor(Math.log(bytes) / Math.log(k));
-                return (bytes / Math.pow(k, i)).toPrecision(3) + ' ' + sizes[i];
-            },
-
-            /**
-             * Brings a date into the right format
-             * @param date {String} the date to parse
-             * @returns {String}
-             */
-            parseDate = function(date) {
-                var parsedDate = this.sandbox.date.format(date);
-                if (parsedDate !== null) {
-                    return parsedDate;
-                }
-                return date;
-            },
-
-            /**
-             * Attaches a postfix to a number
-             * @param number
-             * @param postfix
-             */
-            parseCount = function(number, postfix) {
-                return (!!postfix) ? number + ' ' + postfix : number;
-            },
-
-            /**
-             * Takes an array of thumbnails and returns an object with url and and alt
-             * @param thumbnails {Array} array of thumbnails
-             * @param format {String} the format of the thumbnail
-             * @returns {Object} with url and alt property
-             */
-            parseThumbnails = function(thumbnails, format) {
-                var thumbnail = {
-                    url: null,
-                    alt: null
-                };
-                if (!!thumbnails[format]) {
-                    if (typeof thumbnails[format] === 'object') {
-                    thumbnail.url = thumbnails[format].url;
-                    thumbnail.alt = thumbnails[format].alt;
-                    } else {
-                        thumbnail.url = thumbnails[format];
-                        thumbnail.alt = '';
-                    }
-                }
-                return thumbnail;
             };
 
         return {
@@ -31405,17 +31346,17 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
                         for (var key in matching) {
                             if (key === 'translation') {
                                 matchingObject.content = this.sandbox.translate(matching.translation);
-                            } else if (key === 'id') {
-                                matchingObject.attribute = matching.id;
+                            } else if (key === 'name') {
+                                matchingObject.attribute = matching.name;
                             } else {
                                 matchingObject[key] = matching[key];
                             }
                         }
                         // push the constructed matching to the global matchings array
                         this.matchings.push(matchingObject);
-                        this.requestFields.push(matching.id);
-                    } else if (matching.id === 'id') {
-                        this.requestFields.push(matching.id);
+                        this.requestFields.push(matching.name);
+                    } else if (matching.name === 'id') {
+                        this.requestFields.push(matching.name);
                     }
                     // always load the id (never ever even think about not loading the id)
                 }.bind(this));
@@ -31488,9 +31429,9 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * @param params url
              */
             load: function(params) {
-                this.currentUrl = params.url;
+                this.currentUrl = this.getUrl(params);
 
-                this.sandbox.util.load(this.getUrl(params), params.data)
+                this.sandbox.util.load(this.currentUrl, params.data)
                     .then(function(response) {
                         this.destroy();
                         this.parseData(response);
@@ -31563,13 +31504,27 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              */
             parseData: function(data) {
                 this.data = {};
-                this.data.links = data._links;
-                this.data.embedded = data._embedded;
+                this.data.links = this.parseLinks(data._links);
+                this.data.embedded = data._embedded[this.options.resultKey];
                 this.data.total = data.total;
-                this.data.numberOfAll = data.numberOfAll;
                 this.data.page = data.page;
                 this.data.pages = data.pages;
-                this.data.pageSize = data.pageSize;
+                this.data.limit = data.limit;
+            },
+
+            /**
+             * Unescapes all passed links
+             * @param links {Object}
+             * @returns {Object}
+             */
+            parseLinks: function(links) {
+                var linksObj = {};
+                this.sandbox.util.each(links, function(index, link) {
+                    linksObj[index] = {
+                        href: decodeURI(link.href)
+                    };
+                }.bind(this));
+                return linksObj;
             },
 
             /**
@@ -31678,7 +31633,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
                 var bool = true;
                 if (typeof pagination.initialize === 'undefined' ||
                     typeof pagination.render === 'undefined' ||
-                    typeof pagination.getPageSize === 'undefined' ||
+                    typeof pagination.getLimit === 'undefined' ||
                     typeof pagination.destroy === 'undefined') {
                     bool = false;
                 }
@@ -31696,11 +31651,11 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
                 }
 
                 var delimiter = '?', url = params.url;
-                if (!!this.options.pagination && !!this.paginations[this.paginationId].getPageSize()) {
+                if (!!this.options.pagination && !!this.paginations[this.paginationId].getLimit()) {
                     if (params.url.indexOf('?') !== -1) {
                         delimiter = '&';
                     }
-                    url = params.url + delimiter + 'pageSize=' + this.paginations[this.paginationId].getPageSize();
+                    url = params.url + delimiter + 'limit=' + this.paginations[this.paginationId].getLimit();
                     if (params.page > 1) {
                         url += '&page=' + params.page;
                     }
@@ -31729,17 +31684,38 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * @param content {String} the content of the cell
              * @param type {String} the columns type
              * @param argument {Number|String} argument to pass to the processor
+             * @param columnName {String} Name of the column
              * @returns {String} the manipulated content
              */
-            manipulateContent: function(content, type, argument) {
-                if (type === types.DATE) {
-                    content = parseDate.call(this, content, argument);
-                } else if (type === types.BYTES) {
-                    content = parseBytes.call(this, content, argument);
-                } else if (type === types.THUMBNAILS) {
-                    content = parseThumbnails.call(this, content, argument);
-                } else if (type === types.COUNT) {
-                    content = parseCount.call(this, content, argument);
+            manipulateContent: function(content, type, argument, columnName) {
+                if (filters.hasOwnProperty(type)) {
+                    return filters[type].call(this, content, argument, columnName);
+                }
+                return content;
+            },
+
+            /**
+             * Checks if a filter was set for specified column and processes it
+             * @param {String} attributeName name of processed attribute
+             * @param {String} content the content which is processed
+             * @param {String} [type] if no filter is set, the type is processed
+             * @param {Number|String} [argument] argument to pass to the processor
+             * @returns {String} the manipulated content
+             */
+            processContentFilter: function(attributeName, content, type, argument) {
+                // check if filter is set for current column
+                if (!!this.options.contentFilters && this.options.contentFilters.hasOwnProperty(attributeName)) {
+                    // check if filter is function or string and call filter
+                    if (typeof this.options.contentFilters[attributeName] === 'function') {
+                        return this.options.contentFilters[attributeName].call(this, content, argument);
+                    } else if (typeof this.options.contentFilters[attributeName] === 'string') {
+                        type = this.options.contentFilters[attributeName];
+                        return this.manipulateContent(content, type, argument, attributeName);
+                    }
+                }
+                // if no filter was set, check if type is set and call
+                else if (!!type) {
+                    return this.manipulateContent(content, type, argument);
                 }
                 return content;
             },
@@ -31833,7 +31809,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * Returns url without params
              */
             getUrlWithoutParams: function() {
-                var url = this.data.links.self;
+                var url = this.data.links.self.href;
 
                 if (url.indexOf('?') !== -1) {
                     return url.substring(0, url.indexOf('?'));
@@ -32136,8 +32112,6 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
                 for (var i = -1, length = this.data.embedded.length; ++i < length;) {
                     if (recordId === this.data.embedded[i].id) {
                         this.data.embedded.splice(i, 1);
-                        this.data.numberOfAll--;
-                        this.data.total--;
                         this.rerenderPagination();
                         return true;
                     }
@@ -32152,8 +32126,6 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
             pushRecords: function(records) {
                 for (var i = -1, length = records.length; ++i < length;) {
                     this.data.embedded.push(records[i]);
-                    this.data.numberOfAll++;
-                    this.data.total++;
                 }
                 this.rerenderPagination();
             },
@@ -32165,8 +32137,6 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
             unshiftRecords: function(records) {
                 for (var i = -1, length = records.length; ++i < length;) {
                     this.data.embedded.unshift(records[i]);
-                    this.data.numberOfAll++;
-                    this.data.total++;
                     this.rerenderPagination();
                 }
             },
@@ -32176,10 +32146,10 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * Emits husky.datagrid.updated event on success
              * @param uri {String} Url to load the new data from
              * @param page {Number} the page to change to
-             * @param pageSize {Number} new page size. Has to be set if no Uri is passed
+             * @param limit {Number} new page size. Has to be set if no Uri is passed
              */
-            changePage: function(uri, page, pageSize) {
-                if (!!this.data.links.pagination) {
+            changePage: function(uri, page, limit) {
+                if (!!this.data.links.pagination || !!uri) {
                     var url, uriTemplate;
 
                     // if a url is passed load the data from this url
@@ -32193,14 +32163,14 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
                             this.sandbox.logger.log("invalid page number or reached start/end!");
                             return;
                         }
-                        // if no pageSize is passed keep current pageSize
-                        if (!pageSize) {
-                            pageSize = this.data.pageSize;
+                        // if no limit is passed keep current limit
+                        if (!limit) {
+                            limit = this.data.limit;
                         }
 
                         // generate uri for loading
-                        uriTemplate = this.sandbox.uritemplate.parse(this.data.links.pagination);
-                        url = this.sandbox.uritemplate.expand(uriTemplate, {page: page, pageSize: pageSize});
+                        uriTemplate = this.sandbox.uritemplate.parse(this.data.links.pagination.href);
+                        url = this.sandbox.uritemplate.expand(uriTemplate, {page: page, limit: limit});
                     }
 
                     this.sandbox.emit(PAGE_CHANGE.call(this), url);
@@ -32221,14 +32191,13 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
                     this.resetSortingOptions();
 
                     this.load({
-                        url: this.data.links.self,
+                        url: this.data.links.self.href,
                         success: function() {
                             this.sandbox.emit(UPDATED.call(this));
                         }.bind(this)
                     });
                 }
             },
-
 
             /**
              * Filters fields out of the data passed to the view
@@ -32242,7 +32211,7 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
 
                     this.filterMatchings(matchings);
 
-                    uriTemplate = this.sandbox.uritemplate.parse(this.data.links.filter);
+                    uriTemplate = this.sandbox.uritemplate.parse(this.data.links.filter.href);
                     url = this.sandbox.uritemplate.expand(uriTemplate, {fieldsList: this.requestFields.join(',')});
 
                     this.destroy();
@@ -32263,17 +32232,17 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              * @param direction {String} the sort method to use 'asc' or 'desc'
              */
             sortGrid: function(attribute, direction) {
-                if (this.options.sortable === true && !!this.data.links.sortable[attribute]) {
+                if (this.options.sortable === true && !!this.data.links.sortable) {
                     var template, url;
 
                     // if passed attribute is sortable
-                    if (!!attribute && !!this.data.links.sortable[attribute]) {
+                    if (!!attribute) {
 
                         this.sort.attribute = attribute;
                         this.sort.direction = direction;
 
-                        template = this.sandbox.uritemplate.parse(this.data.links.sortable[attribute]);
-                        url = this.sandbox.uritemplate.expand(template, {sortOrder: direction});
+                        template = this.sandbox.uritemplate.parse(this.data.links.sortable.href);
+                        url = this.sandbox.uritemplate.expand(template, {sortBy: attribute, sortOrder: direction});
 
                         this.sandbox.emit(DATA_SORT.call(this));
 
@@ -32293,12 +32262,12 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
              */
             loadChildren: function(recordId) {
                 if (!!this.data.links.children) {
-                    var template = this.sandbox.uritemplate.parse(this.data.links.children),
+                    var template = this.sandbox.uritemplate.parse(this.data.links.children.href),
                         url = this.sandbox.uritemplate.expand(template, {parentId: recordId});
 
                     this.sandbox.util.load(this.getUrl({url: url}))
                         .then(function(response) {
-                            this.addRecordsHandler(response['_embedded']);
+                            this.addRecordsHandler(response._embedded[this.options.resultKey]);
                         }.bind(this))
                         .fail(function(status, error) {
                             this.sandbox.logger.error(status, error);
@@ -32315,8 +32284,13 @@ define('husky_components/datagrid/decorators/showall-pagination',[],function () 
                 if (!!this.data.links.find) {
                     var template, url;
 
-                    template = this.sandbox.uritemplate.parse(this.data.links.find);
-                    url = this.sandbox.uritemplate.expand(template, {searchString: searchString, searchFields: searchFields});
+                    template = this.sandbox.uritemplate.parse(this.data.links.find.href);
+
+                    if(!!searchFields) {
+                        url = this.sandbox.uritemplate.expand(template, {searchString: searchString, searchFields: searchFields});
+                    } else {
+                        url = this.sandbox.uritemplate.expand(template, {searchString: searchString, searchFields: this.options.searchFields.join(',')});
+                    }
 
                     this.destroy();
                     this.loading();
@@ -32631,12 +32605,18 @@ define('__component__$dropdown@husky',[], function() {
         // make dropDown visible
         showDropDown: function() {
             this.sandbox.logger.log(this.name, 'show dropdown');
+            this.sandbox.dom.removeClass(this.$dropDown, 'top');
             // on click on trigger outside check
             this.sandbox.dom.one(this.sandbox.dom.window, 'click', this.hideDropDown.bind(this));
             this.sandbox.dom.show(this.$dropDown);
             this.sandbox.emit('husky.dropdown.' + this.options.instanceName + '.showing');
             if (!!this.options.toggleClassOn) {
                 this.sandbox.dom.addClass(this.options.toggleClassOn, 'is-active');
+            }
+            // add up class if dropdown would pass the screen borders
+            if ((this.sandbox.dom.offset(this.$dropDown).top - this.sandbox.dom.scrollTop(this.sandbox.dom.window) +
+                this.sandbox.dom.outerHeight(this.$dropDown)) > this.sandbox.dom.height(this.sandbox.dom.window)) {
+                this.sandbox.dom.addClass(this.$dropDown, 'top');
             }
         },
 
@@ -32972,7 +32952,6 @@ define('__component__$search@husky',[], function() {
         render: function() {
             this.sandbox.dom.addClass(this.$el, 'search-container');
             this.sandbox.dom.addClass(this.$el, this.options.appearance);
-            console.log(this.options.slide);
             if (this.options.slide === true) {
                 this.sandbox.dom.addClass(this.$el, constants.slideClass);
                 this.collapse();
@@ -33277,8 +33256,6 @@ define('__component__$tabs@husky',[],function() {
         };
 
     return {
-
-        view: true,
 
         initialize: function() {
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
@@ -33622,23 +33599,33 @@ define('__component__$toolbar@husky',[],function() {
         /** events bound to sandbox */
         bindCustomEvents = function() {
             this.sandbox.on(ITEM_DISABLE.call(this), function(id, highlight) {
-                toggleEnabled.call(this, false, id, highlight);
+                if (!!this.items[id]) {
+                    toggleEnabled.call(this, false, id, highlight);
+                }
             }.bind(this));
 
             this.sandbox.on(ITEM_ENABLE.call(this), function(id, highlight) {
-                toggleEnabled.call(this, true, id, highlight);
+                if (!!this.items[id]) {
+                    toggleEnabled.call(this, true, id, highlight);
+                }
             }.bind(this));
 
             this.sandbox.on(ITEM_LOADING.call(this), function(id) {
-                itemLoading.call(this, id);
+                if (!!this.items[id]) {
+                    itemLoading.call(this, id);
+                }
             }.bind(this));
 
             this.sandbox.on(ITEM_HIDE.call(this), function(id) {
-                hideItem.call(this, this.items[id].$el);
+                if (!!this.items[id]) {
+                    hideItem.call(this, this.items[id].$el);
+                }
             }.bind(this));
 
             this.sandbox.on(ITEM_SHOW.call(this), function(id) {
-                showItem.call(this, this.items[id].$el);
+                if (!!this.items[id]) {
+                    showItem.call(this, this.items[id].$el);
+                }
             }.bind(this));
 
             this.sandbox.on(COLLAPSE.call(this), function() {
@@ -33650,15 +33637,17 @@ define('__component__$toolbar@husky',[],function() {
             }.bind(this));
 
             this.sandbox.on(ITEM_CHANGE.call(this), function(button, id, executeCallback) {
-                this.items[button].initialized.then(function() {
-                    var index = getItemIndexById.call(this, id, this.items[button]);
-                    changeMainListItem.call(this, this.items[button].$el, this.items[button].items[index]);
-                    if (executeCallback === true || !!this.items[button].items[index].callback) {
-                        if (typeof this.items[button].items[index].callback === 'function') {
-                            this.items[button].items[index].callback();
+                if (!!this.items[button]) {
+                    this.items[button].initialized.then(function () {
+                        var index = getItemIndexById.call(this, id, this.items[button]);
+                        changeMainListItem.call(this, this.items[button].$el, this.items[button].items[index]);
+                        if (executeCallback === true || !!this.items[button].items[index].callback) {
+                            if (typeof this.items[button].items[index].callback === 'function') {
+                                this.items[button].items[index].callback();
+                            }
                         }
-                    }
-                }.bind(this));
+                    }.bind(this));
+                }
             }.bind(this));
 
             this.sandbox.on(BUTTON_SET.call(this), function(button, newData) {
@@ -33666,18 +33655,20 @@ define('__component__$toolbar@husky',[],function() {
             }.bind(this));
 
             this.sandbox.on(ITEMS_SET.call(this), function(button, items, itemId) {
-                if (items.length > 0) {
-                    deleteDropdown.call(this, this.items[button]);
-                    this.sandbox.dom.addClass(this.sandbox.dom.children(this.items[button].$el, 'a'), 'dropdown-toggle');
-                    this.items[button].items = items;
-                    createDropdownMenu.call(this, this.items[button].$el, this.items[button]);
-                    setButtonWidth.call(this, this.items[button].$el, this.items[button]);
-                    if (!!itemId) {
-                        this.sandbox.emit(ITEM_CHANGE.call(this), this.items[button].id, itemId);
+                if (!!this.items[button]) {
+                    if (items.length > 0) {
+                        deleteDropdown.call(this, this.items[button]);
+                        this.sandbox.dom.addClass(this.sandbox.dom.children(this.items[button].$el, 'a'), 'dropdown-toggle');
+                        this.items[button].items = items;
+                        createDropdownMenu.call(this, this.items[button].$el, this.items[button]);
+                        setButtonWidth.call(this, this.items[button].$el, this.items[button]);
+                        if (!!itemId) {
+                            this.sandbox.emit(ITEM_CHANGE.call(this), this.items[button].id, itemId);
+                        }
+                    } else {
+                        deleteDropdown.call(this, this.items[button]);
+                        this.sandbox.dom.removeClass(this.sandbox.dom.children(this.items[button].$el, 'a'), 'dropdown-toggle');
                     }
-                } else {
-                    deleteDropdown.call(this, this.items[button]);
-                    this.sandbox.dom.removeClass(this.sandbox.dom.children(this.items[button].$el, 'a'), 'dropdown-toggle');
                 }
             }.bind(this));
         },
@@ -34466,7 +34457,6 @@ define('__component__$toolbar@husky',[],function() {
  * @param {String} [options.remoteUrl] url to fetch data on input
  * @param {String} [options.getParameter] name for GET-parameter in remote query
  * @param {String} [options.valueKey] Name of value-property in suggestion
- * @param {String} [options.totalKey] Key for total-property in JSON-result
  * @param {String} [options.resultKey] Key for suggestions-array in JSON result
  * @param {object} [options.value] with name (value of the input box), id (data-id of the input box)
  * @param {String} [options.instanceName] name of the component instance
@@ -34492,8 +34482,7 @@ define('__component__$auto-complete@husky',[], function () {
             remoteUrl: '',
             getParameter: 'query',
             valueKey: 'name',
-            totalKey: 'total',
-            resultKey: '_embedded',
+            resultKey: 'countries',
             value: null,
             instanceName: 'undefined',
             noNewValues: false,
@@ -34614,14 +34603,13 @@ define('__component__$auto-complete@husky',[], function () {
 
             this._template = null;
             this.data = null;
-            this.total = 0;
             this.matched = true;
             this.matches = [];
             this.executeBlurHandler = true;
             this.excludes = this.parseExcludes(this.options.excludes);
             this.localData = {};
-            this.localData[this.options.resultKey] = this.options.localData;
-            this.localData[this.options.totalKey] = this.options.localData.length;
+            this.localData._embedded = {};
+            this.localData._embedded[this.options.resultKey] = this.options.localData;
 
             this.setTemplate();
 
@@ -34641,10 +34629,10 @@ define('__component__$auto-complete@husky',[], function () {
                 iconHTML = '<span class="fa-' + this.options.suggestionImg + ' icon"></span>';
             }
             this._template = this.sandbox.util.template('' +
-                '<div class="' + this.options.suggestionClass + '" data-id="<%= id %>">' +
+                '<div class="' + this.options.suggestionClass + '" data-id="<%= context[\'id \']%>">' +
                 '   <div class="border">' +
                 iconHTML +
-                '		<div class="text"><%= name %></div>' +
+                '		<div class="text"><%= context[this.options.valueKey] %></div>' +
                 '	</div>' +
                 '</div>');
         },
@@ -34656,7 +34644,7 @@ define('__component__$auto-complete@husky',[], function () {
         buildTemplate: function (context) {
             var domObj;
             if (this._template !== null) {
-                domObj = this.sandbox.dom.createElement(this._template(context));
+                domObj = this.sandbox.dom.createElement(this._template({context:context}));
                 if (this.isExcluded(context)) {
                     this.sandbox.dom.addClass(domObj, 'disabled');
                 }
@@ -34999,14 +34987,13 @@ define('__component__$auto-complete@husky',[], function () {
 
         /**
          * Assigns loaded data to properties
-         * @param data {object} with total and data array
+         * @param data {object} with data array
          */
         handleData: function (data) {
             if (typeof data === 'object') {
-                this.total = data[this.options.totalKey];
                 this.data = [];
 
-                this.sandbox.util.foreach(data[this.options.resultKey], function (key) {
+                this.sandbox.util.foreach(data._embedded[this.options.resultKey], function (key) {
                     if (this.isExcluded(key) === false) {
                         this.data.push(key);
                     }
@@ -35037,7 +35024,7 @@ define('__component__$auto-complete@husky',[], function () {
  * @param {String} [options.instanceName] name of the component instance
  * @param {Array} [options.items] preloaded items
  * @param {String} [options.itemsUrl] url to load items
- * @param {String} [options.itemsKey] Key for AJAX response
+ * @param {String} [options.resultKey] Key for AJAX response
  * @param {Array} [options.suggestions] suggestions for suggestions box
  * @param {String} [options.suggestionsHeadline] Headline for suggestions bxo
  * @param {String} [options.suggestionsUrl] url to load suggestions
@@ -35077,7 +35064,7 @@ define('__component__$auto-complete-list@husky',[], function() {
                 instanceName: 'undefined',
                 items: [],
                 itemsUrl: '',
-                itemsKey: '_embedded',
+                resultKey: 'tags',
                 suggestions: [],
                 suggestionsHeadline: '',
                 suggestionsUrl: '',
@@ -35348,7 +35335,8 @@ define('__component__$auto-complete-list@husky',[], function() {
                                 prefetchUrl: this.options.prefetchUrl,
                                 remoteUrl: this.options.remoteUrl,
                                 getParameter: this.options.getParameter,
-                                suggestionImg: this.options.autoCompleteIcon
+                                suggestionImg: this.options.autoCompleteIcon,
+                                resultKey: this.options.resultKey
                             },
                             this.options.autocompleteOptions
                         )
@@ -35494,7 +35482,7 @@ define('__component__$auto-complete-list@husky',[], function() {
                     url: this.options.itemsUrl,
 
                     success: function(data) {
-                        this.options.items = this.options.items.concat(data[this.options.itemsKey]);
+                        this.options.items = this.options.items.concat(data._embedded[this.options.resultKey]);
                         this.startPlugins();
                         DATA_LOADED.call(this);
                     }.bind(this),
@@ -35982,8 +35970,6 @@ define('__component__$dependent-select@husky',[],function() {
 
     return {
 
-        view: true,
-
         initialize: function() {
 
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
@@ -36050,13 +36036,21 @@ define('__component__$dependent-select@husky',[],function() {
  * @param {String} [options.icon] icon to set into the label
  * @param {Function} [options.noItemsCallback] callback function which gets executed at click on label if no dropdown-items exist
  * @param {Boolean} [options.repeatSelect] If true dropdown item can be selected n-times in succession
+ * @param {Boolean} [options.editable] If true the menu items are editable
+ * @param {Object} [options.translations] translation keys for 'addItem' and 'editEntries'
+ * @param {String} [options.direction] 'bottom', 'top', or 'auto' pop up direction of the drop down.
  */
 
 define('__component__$select@husky',[], function() {
 
     
 
-    var defaults = {
+    var translations = {
+        addItem: 'select.add-item',
+        editEntries: 'select.edit-entries'
+    },
+
+        defaults = {
             data: [],                         // data array
             valueName: 'name',                // name of text property
             instanceName: 'undefined',        // instance name
@@ -36074,7 +36068,10 @@ define('__component__$select@husky',[], function() {
             fixedLabel: false,
             icon: null,
             noItemsCallback: null,
-            repeatSelect: false
+            repeatSelect: false,
+            editable: false,
+            direction: 'auto',
+            translations: translations
         },
 
         constants = {
@@ -36084,7 +36081,44 @@ define('__component__$select@husky',[], function() {
             deselectFieldKey: 'deselectindex',
             deselectFieldDefaultValue: '',
             disabledClass: 'disabled',
-            dropdownTopClass: 'top'
+            dropdownTopClass: 'top',
+            templateRemoveSelector: '.remove-row',
+            templateAddSelector: '#addRow',
+            editableFieldKey: 'editableindex',
+            typeRowSelector: '.type-row',
+            contentInnerSelector: '.content-inner'
+        },
+
+        templates = {
+            row: function() {
+                return[
+                    '<div class="grid-row type-row" data-id="">',
+                    '   <div class="grid-col-8 pull-left"><input class="form-element" type="text" value=""/></div>',
+                    '   <div class="grid-col-2 pull-right"><div class="remove-row btn gray-dark fit only-icon pull-right"><div class="fa-minus-circle"></div></div></div>',
+                    '</div>'].join('');
+            },
+            addOverlayRow: function(valueField, item) {
+                return [
+                    '<div class="grid-row type-row" data-id="', item.id ,'">',
+                    '    <div class="grid-col-8 pull-left"><input class="form-element" type="text" value="', item[valueField],'"/></div>',
+                    '    <div class="grid-col-2 pull-right"><div class="remove-row btn gray-dark fit only-icon pull-right"><div class="fa-minus-circle"></div></div></div>',
+                    '</div>',
+                ].join('')
+            },
+            addOverlaySkeleton: function() {
+                return [
+                    '<div class="content-inner">',
+                    '   <% _.each(data, function(item) { %>',
+                    '        <%= rowTemplate(valueName, item) %>',
+                    '   <% }); %>',
+                    '</div>',
+                    '<div class="grid-row">',
+                    '   <div id="addRow" class="addButton">',
+                            this.sandbox.translate(defaults.translations.addItem),
+                    '   </div>',
+                    '</div>'
+                ].join('');
+            }
         },
 
         /**
@@ -36136,6 +36170,13 @@ define('__component__$select@husky',[], function() {
             return getEventName.call(this, 'disable');
         },
         /**
+         * used for making the menu items editable
+         * @event husky.select[.INSTANCE_NAME].edit
+         */
+            EVENT_EDIT = function() {
+            return getEventName.call(this, 'edit');
+        },
+        /**
          * used for toggling enabled/disabled dropdown menu
          * @event husky.select[.INSTANCE_NAME].toggle
          */
@@ -36177,6 +36218,29 @@ define('__component__$select@husky',[], function() {
             EVENT_DATA_CHANGED = function() {
             return 'data-changed';
         },
+        /**
+         * Saved event
+         * @event husky.select.[instanceName].saved
+         */
+            EVENT_SAVED = function() {
+            return getEventName.call(this, 'saved');
+        },
+
+        /**
+         * Deleted event
+         * @event husky.select.[instanceName].deleted
+         */
+            EVENT_DELETED = function() {
+            return getEventName.call(this, 'deleted');
+        },
+
+        /**
+         * Revert event
+         * @event husky.select.[instanceName].revert
+         */
+            EVENT_REVERT = function() {
+            return getEventName.call(this, 'revert');
+        },
 
         getEventName = function(suffix) {
             return 'husky.select.' + this.options.instanceName + '.' + suffix;
@@ -36184,13 +36248,14 @@ define('__component__$select@husky',[], function() {
 
     return {
 
-
         initialize: function() {
-
             var selectedIds;
 
             this.sandbox.logger.log('initialize', this);
             this.options = this.sandbox.util.extend({}, defaults, this.options);
+
+            // Used as a fallback to revert to the last committed data
+            this.mergedData = this.options.data.slice(0);
 
             // if deselectfield is set to true, set it to default value
             if (!!this.options.deselectField && this.options.deselectField.toString() === 'true') {
@@ -36250,6 +36315,9 @@ define('__component__$select@husky',[], function() {
             if (this.options.disabled === true) {
                 this.disable();
             }
+
+            this.addEditEntry();
+
         },
 
         //sets the button in enabled state
@@ -36263,6 +36331,17 @@ define('__component__$select@husky',[], function() {
             this.sandbox.dom.addClass(this.sandbox.dom.children(this.$el, '.husky-select-container'), constants.disabledClass);
             this.hideDropDown();
             this.sandbox.dom.off(this.$el);
+        },
+
+        // If 'editable' flag is set in the options an 'Edit' menu entry is
+        // added to the list.
+        addEditEntry: function() {
+            if (this.options.editable === true) {
+                this.addDivider();
+                this.addDropdownElement(constants.editableFieldKey,
+                        this.sandbox.translate(translations.editEntries)
+                        );
+            }
         },
 
         // prepares data for dropDown, if options.data not set load with ajax
@@ -36279,8 +36358,8 @@ define('__component__$select@husky',[], function() {
             } else {
                 this.sandbox.logger.log('error: data not set');
             }
-            // TODO load data from url
         },
+
         /**
          * Adds a dropdown element to the dropdown list
          * @param id
@@ -36291,7 +36370,7 @@ define('__component__$select@husky',[], function() {
          */
         addDropdownElement: function(id, value, disabled, callback, updateLabel) {
             var $item,
-                idString = (!!id || id === 0) ? id.toString() : this.sandbox.util.uniqueId();
+                idString = (id != null) ? id.toString() : this.sandbox.util.uniqueId();
 
             if (this.options.preSelectedElements.indexOf(idString) >= 0 || this.options.preSelectedElements.indexOf(value) >= 0) {
                 $item = this.sandbox.dom.createElement(this.template.menuElement.call(this, idString, value, 'checked', updateLabel));
@@ -36382,10 +36461,9 @@ define('__component__$select@husky',[], function() {
             this.sandbox.on(EVENT_HIDE.call(this), this.hideDropDown.bind(this));
             this.sandbox.on(EVENT_DISABLE.call(this), this.disable.bind(this));
             this.sandbox.on(EVENT_ENABLE.call(this), this.enable.bind(this));
-
             this.sandbox.on(EVENT_GET_CHECKED.call(this), this.getChecked.bind(this));
-
             this.sandbox.on(EVENT_UPDATE.call(this), this.updateDropdown.bind(this));
+            this.sandbox.on(EVENT_REVERT.call(this), this.revert.bind(this));
         },
 
         /**
@@ -36432,22 +36510,41 @@ define('__component__$select@husky',[], function() {
         },
 
         /**
+         * Reverts the dropdown list
+         */
+        revert: function() {
+            this.updateDropdown(
+                    this.mergedData,
+                    this.options.preSelectedElements,
+                    false
+                    );
+        },
+
+        /**
          * Updates the dropdown list
          * @param data
          * @param preselected array of ids
+         * @param merge - merge given data with dom
          */
-        updateDropdown: function(data, preselected) {
-
+        updateDropdown: function(data, preselected, merge) {
+            if (!!merge) {
+                data = this.mergeDomAndRequestData(
+                        data, this.parseDataFromDom(this.domData, true));
+                this.mergedData = data.slice(0);
+            }
             this.options.preSelectedElements = preselected.map(String);
             this.selectedElements = [];
             this.selectedElementsValues = [];
             this.sandbox.dom.empty(this.$list);
+
+            this.options.data = data;
 
             if (!!data && data.length > 0) {
                 this.generateDropDown(data);
             } else {
                 this.sandbox.logger.warn('error invalid data for update!');
             }
+            this.addEditEntry();
         },
 
         updateSelectionAttribute: function() {
@@ -36484,6 +36581,274 @@ define('__component__$select@husky',[], function() {
             }
         },
 
+        /**
+         * Opens the overlay for edditing.
+         */
+        openEditDialog: function() {
+            this.elementsToRemove = [];
+            this.$elementsToRemove = [];
+
+            var $element = this.sandbox.dom.createElement('<div/>'),
+                $content = this.renderOverlayContent();
+            this.sandbox.dom.append('body', $element);
+
+            this.bindOverlayContentEvents($content);
+            this.sandbox.start([{ name: 'overlay@husky',
+                options: {
+                    el: $element,
+                    openOnStart:true,
+                    removeOnClose:true,
+                    instanceName: 'husky-select',
+                    title: this.sandbox.translate('public.edit-entries'),
+                    closeCallback: function() {
+                        this.onCloseWithCancel()
+                    }.bind(this),
+                    okCallback: function(data) {
+                        this.onCloseWithOk(data);
+                    }.bind(this),
+                    data: $content
+                }
+            }]);
+        },
+
+        /**
+         * Callback for close of overlay with ok button
+         */
+        onCloseWithOk: function(domData) {
+            this.domData = domData;
+            this.removeDeletedItems();
+            if (!!domData) {
+                this.saveNewEditedItemsAndClose(domData, 'PATCH');
+            }
+        },
+
+        saveNewEditedItemsAndClose: function(domData, method) {
+            var data = this.parseDataFromDom(domData),
+                changedData = this.getChangedData(data);
+
+            if (changedData.length > 0) {
+                var mergeData = this.mergeDomAndRequestData(changedData,
+                    this.parseDataFromDom(domData, true));
+                this.options.data = mergeData.slice(0);
+                this.updateDropdown(mergeData, this.options.preSelectedElements);
+                this.sandbox.emit(EVENT_SAVED.call(this), changedData);
+            }
+        },
+
+        /**
+         * Merges data
+         * @param updatedData
+         * @param parsedDomData
+         */
+        mergeDomAndRequestData: function(updatedData, parsedDomData) {
+            this.sandbox.util.foreach(parsedDomData, function(parsedEl) {
+                this.sandbox.util.foreach(updatedData, function(updatedEl) {
+                    if (parsedEl.id === updatedEl.id && parsedEl.id !== '') {
+                        parsedEl[this.options.valueName] = updatedEl[this.options.valueName];
+                    } else if (parsedEl[this.options.valueName] === updatedEl[this.options.valueName]) {
+                        parsedEl.id = updatedEl.id;
+                    }
+                }.bind(this));
+            }.bind(this));
+
+            return parsedDomData;
+        },
+
+        /**
+         * Bind overlay specific events
+         * @param $element
+         */
+        bindOverlayContentEvents: function($element) {
+            this.sandbox.dom.on($element,
+                    'click',
+                    this.markElementForRemoval.bind(this),
+                    constants.templateRemoveSelector);
+            this.sandbox.dom.on($element,
+                    'click',
+                    this.addElement.bind(this),
+                    constants.templateAddSelector);
+        },
+
+        /**
+         * Adds new item to the list or removes existing
+         * @param id of element to remove
+         * @param $row dom row of elment to remove
+         */
+        updateRemoveList: function(id, $row) {
+            if (this.elementsToRemove.indexOf(id) === -1) {
+                if (id != null) {
+                    this.elementsToRemove.push(id);
+                }
+                this.$elementsToRemove.push($row);
+            } else {
+                if (id != null) {
+                    this.elementsToRemove.splice(this.elementsToRemove.indexOf(id), 1);
+                }
+                this.$elementsToRemove.splice(this.elementsToRemove.indexOf($row), 1);
+            }
+        },
+
+        /**
+         * delete elements
+         * @param id
+         */
+        deleteItem: function(id) {
+            // Remove items
+            var origData = this.options.data.slice(0);
+            this.sandbox.util.each(origData, function(index, $el) {
+                if (id === $el.id) {
+                    var i = this.options.data.indexOf($el);
+                    this.options.data.splice(i, 1);
+                }
+            }.bind(this));
+            this.updateDropdown(
+                    this.options.data,
+                    this.options.preSelectedElements
+                    );
+        },
+
+        /**
+         * Deletes removed items
+         */
+        removeDeletedItems: function() {
+            // remove dom elements - important for the getChangedData method
+            if (!!this.$elementsToRemove && this.$elementsToRemove.length > 0) {
+                this.sandbox.util.each(this.$elementsToRemove, function(index, $el) {
+                    this.sandbox.dom.remove($el);
+                }.bind(this));
+            }
+
+            // remove items from db
+            if (!!this.elementsToRemove && this.elementsToRemove.length > 0) {
+                this.sandbox.util.each(this.elementsToRemove, function(index, el) {
+                    this.deleteItem(el);
+                }.bind(this));
+                this.sandbox.emit(EVENT_DELETED.call(this), this.elementsToRemove);
+                this.elementsToRemove = [];
+                this.$elementsToRemove = [];
+            }
+        },
+
+        /**
+         * Extracts data from dom structure
+         * @param domData
+         * @param excludeDeleted
+         */
+        parseDataFromDom: function(domData, excludeDeleted) {
+            var $rows = this.sandbox.dom.find(constants.typeRowSelector, domData),
+                data = [],
+                id, value, deleted, obj;
+
+            this.sandbox.dom.each($rows, function(index, $el) {
+
+                deleted = this.sandbox.dom.hasClass($el, 'faded');
+
+                if (!!excludeDeleted) {
+                    if (!deleted) {
+                        id = this.sandbox.dom.data($el, 'id');
+                        value = this.sandbox.dom.val(this.sandbox.dom.find('input', $el));
+                        if (value !== '') {
+                            obj = {id: id};
+                            obj[this.options.valueName] = value;
+                            data.push(obj);
+                        }
+                    }
+                } else {
+                    id = this.sandbox.dom.data($el, 'id');
+                    value = this.sandbox.dom.val(this.sandbox.dom.find('input', $el));
+                    if (value !== '') {
+                        obj = {id: id};
+                        obj[this.options.valueName] = value;
+                        data.push(obj);
+                    }
+                }
+
+            }.bind(this));
+
+            return data;
+        },
+
+        /**
+         * Compares original and new data
+         */
+        getChangedData: function(newData) {
+            var changedData = [];
+            this.sandbox.util.each(newData, function(idx, el) {
+                if (el.id === '') {
+                    changedData.push(el);
+                } else {
+                    this.sandbox.util.each(this.options.data, function(idx, origEl) {
+                        if (el.id === origEl.id &&
+                            el[this.options.valueName] !== origEl[this.options.valueName] &&
+                            el[this.options.valueName] !== '') {
+                            changedData.push(el);
+                        }
+                    }.bind(this));
+                }
+            }.bind(this));
+
+            return changedData;
+        },
+
+        /**
+         * Callback for close of overlay with cancel button
+         */
+        onCloseWithCancel: function() {
+            this.elementsToRemove = [];
+            this.$elementsToRemove = [];
+        },
+
+        /**
+         * Render content for the overlay
+         */
+        renderOverlayContent: function() {
+            var data = [];
+
+            return this.sandbox.dom.createElement(this.sandbox.util.template(
+                    templates.addOverlaySkeleton.call(this),
+                    {
+                        data: this.options.data,
+                        rowTemplate: templates.addOverlayRow,
+                        valueName: this.options.valueName
+                    }));
+        },
+        /**
+         * Adds an element
+         */
+        addElement: function(event) {
+            var $row = this.sandbox.dom.createElement(
+                        templates.addOverlayRow.call(
+                            this,
+                            this.options.valueName, {}
+                    ));
+            this.sandbox.dom.append(
+                    this.sandbox.dom.find(
+                        constants.contentInnerSelector),
+                    $row);
+        },
+
+        /**
+         * Marks an element for removal
+         */
+        markElementForRemoval: function(event) {
+            var $row = this.sandbox.dom.parent(this.sandbox.dom.parent(event.currentTarget)),
+                id = this.sandbox.dom.data($row, 'id');
+
+            if (id != null) {
+                this.updateRemoveList(id, $row);
+            }
+
+            this.toggleStateOfRow($row);
+        },
+
+        /**
+         * Marks a row as removed
+         * @param $row
+         */
+        toggleStateOfRow: function($row) {
+            this.sandbox.dom.toggleClass($row, 'faded');
+        },
+
         // trigger event with clicked item
         clickItem: function(event) {
 
@@ -36493,6 +36858,13 @@ define('__component__$select@husky',[], function() {
             callback = this.sandbox.dom.data(event.currentTarget, 'selectCallback');
             index = this.selectedElements.indexOf(key);
             updateLabel = this.sandbox.dom.attr(event.currentTarget, 'data-update-label');
+
+            // Edit button was pressed
+            if (key == constants.editableFieldKey) {
+                this.hideDropDown();
+                this.openEditDialog();
+                return;
+            }
 
             if (updateLabel !== 'false') {
 
@@ -36553,7 +36925,6 @@ define('__component__$select@husky',[], function() {
             if (typeof callback === 'function') {
                 callback();
             }
-
             if (index >= 0) {
                 this.triggerDeselect(key);
             } else {
@@ -36609,7 +36980,7 @@ define('__component__$select@husky',[], function() {
         },
 
         /**
-         * Handles the click on the drodpwn label
+         * Handles the click on the dropdown label
          */
         labelClickHandler: function() {
             // if dropdown is not empty
@@ -36646,10 +37017,13 @@ define('__component__$select@husky',[], function() {
                 ddTop = this.sandbox.dom.offset(this.$dropdownContainer).top,
                 windowHeight = this.sandbox.dom.height(this.sandbox.dom.window),
                 scrollTop = this.sandbox.dom.scrollTop(this.sandbox.dom.window);
-
-            // check if dropdown container overlaps bottom of browser
-            if (ddHeight + ddTop > windowHeight + scrollTop) {
+            if (this.options.direction === 'top') {
                 this.sandbox.dom.addClass(this.$dropdownContainer, constants.dropdownTopClass);
+            } else if (this.options.direction !== 'bottom') {
+                // check if dropdown container overlaps bottom of browser
+                if (ddHeight + ddTop > windowHeight + scrollTop) {
+                    this.sandbox.dom.addClass(this.$dropdownContainer, constants.dropdownTopClass);
+                }
             }
         },
 
@@ -36683,7 +37057,9 @@ define('__component__$select@husky',[], function() {
                 if (!!icon) {
                     iconSpan = '<span class="fa-' + icon + ' icon"></span>';
                 }
-                if (!!this.options.data && !!this.options.data.length) {
+                if (!!this.options.data &&
+                        !!this.options.data.length ||
+                        this.options.editable) {
                     dropdownToggle = '<span class="fa-caret-down toggle-icon"></span>';
                 }
                 return [
@@ -36890,11 +37266,16 @@ define('__component__$password-fields@husky',[], function() {
  * @params {String} [options.publishedName] name of published-key
  * @params {String} [options.typeName] name of type-key
  * @params {String} [options.titleName] name of title-key
+ * @params {String} [options.resultKey] The name of the array in the responded _embedded
  * @params {Number} [options.visibleRatio] minimum ratio of how much of a column must be visible to display the navigation
- * @params {String} [options.sizeRelativeTo] dom object which is used to calculate height / width (default $window)
+ * @params {Boolean} [options.responsive] If true the resize listener gets initialized. Otherwise the column navigation just takes up 100 % of the height and width
  * @params {Boolean} [options.showEdit] hide or display edit elements
  * @params {Boolean} [options.showEditIcon] hide or display edit icon element
  * @params {Boolean} [options.showStatus] hide or display status of elements
+ * @params {String} [options.skin] css class which gets added to the components element. Available: '', 'fixed-height-small'
+ * @params {Boolean} [options.markable] If true a node gets marked with a css class on click on the blue button
+ * @params {String} [options.markedClass] The css-class which gets set on the node if node gets marked
+ * @params {Array} [options.premarkedIds] an array of uuids of nodes which should be marked from the beginning on
  */
 define('__component__$column-navigation@husky',[], function() {
 
@@ -36911,7 +37292,7 @@ define('__component__$column-navigation@husky',[], function() {
             url: null,
             selected: null,
             data: null,
-            instanceName: 'undefined',
+            instanceName: '',
             hasSubName: 'hasSub',
             editIcon: 'fa-pencil',
             idName: 'id',
@@ -36922,10 +37303,15 @@ define('__component__$column-navigation@husky',[], function() {
             typeName: 'type',
             minVisibleRatio: 1 / 2,
             noPageDescription: 'public.no-pages',
-            sizeRelativeTo: null,
+            skin: '',
+            resultKey: 'nodes',
+            responsive: true,
             showEdit: true,
             showEditIcon: true,
-            showStatus: true
+            showStatus: true,
+            premarkedIds: [],
+            markedClass: 'marked',
+            markable: false
         },
 
         DISPLAYEDCOLUMNS = 2, // number of displayed columns with content
@@ -36937,17 +37323,38 @@ define('__component__$column-navigation@husky',[], function() {
         eventNamespace = 'husky.column-navigation.',
 
         /**
+         * @event husky.column-navigation.initialized
+         * @description thrown after initialization has finished
+         */
+        INITIALIZED = function() {
+            return createEventName.call(this, 'initialized');
+        },
+
+        /**
          * @event husky.column-navigation.loaded
          * @description the component has loaded everything successfully and will be rendered
          */
-        LOADED = eventNamespace + 'loaded',
+        LOADED = function() {
+            return createEventName.call(this, 'loaded');
+        },
 
         /**
          * @event husky.column-navigation.selected
          * @description an navigation element has been selected
          * @param {Object} selected object
          */
-        SELECTED = eventNamespace + 'selected',
+        SELECTED = function() {
+            return createEventName.call(this, 'selected');
+        },
+
+        /**
+         * @event husky.column-navigation.get-selected
+         * @description listens on and passes the selected nodes to a given callback
+         * @param {Function} callback to pass the ids to
+         */
+        GET_SELECTED = function() {
+            return createEventName.call(this, 'get-selected');
+        },
 
         /**
          * @event husky.column-navigation.settings
@@ -36955,43 +37362,64 @@ define('__component__$column-navigation@husky',[], function() {
          * @param {Object} selected column navigation object
          * @param {Object} clicked dropdown item
          */
-        SETTINGS = eventNamespace + 'settings',
+        SETTINGS = function() {
+            return createEventName.call(this, 'settings');
+        },
 
         /**
          * @event husky.column-navigation.add
          * @description the add button has been clicked
          * @param {Object} parent object from active column level
          */
-        ADD = eventNamespace + 'add',
+        ADD = function() {
+            return createEventName.call(this, 'add');
+        },
 
         /**
          * @event husky.column-navigation.edit
          * @description the edit icon has been clicked
          * @param {Object} clicked object
          */
-        EDIT = eventNamespace + 'edit',
+        EDIT = function() {
+            return createEventName.call(this, 'edit');
+        },
+
+        /**
+         * @event husky.column-navigation.unmark
+         * @description listens on and unmarks a node with a given id
+         * @param {Number|String} the id of the node to unmark
+         */
+        UNMARK = function() {
+            return createEventName.call(this, 'unmark');
+        },
 
         /**
          * @event husky.column-navigation.get-breadcrumb
          * @description the breadcrumb will be returned
          * @param {Function} callback function which will process the breadcrumb objects
          */
-        BREADCRUMB = eventNamespace + 'get-breadcrumb',
+        BREADCRUMB = function() {
+            return createEventName.call(this, 'get-breadcrumb');
+        },
 
         /**
          * @event husky.column-navigation.resize
          * @description the element will be resized
          * @param {Function} callback function which will process the breadcrumb objects
          */
-        RESIZE = eventNamespace + 'resize';
+        RESIZE = function() {
+            return createEventName.call(this, 'resize');
+        },
+
+        /** returns normalized event names */
+        createEventName = function(postFix) {
+            return eventNamespace + (this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
+        };
 
     return {
 
         initialize: function() {
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
-
-            // default relative
-            this.options.sizeRelativeTo = this.options.sizeRelativeTo || this.sandbox.dom.$window;
 
             this.$element = this.sandbox.dom.$(this.options.el);
             this.$selectedElement = null;
@@ -37003,12 +37431,16 @@ define('__component__$column-navigation@husky',[], function() {
 
             this.columns = [];
             this.selected = [];
+            // array with all marked ids
+            this.marked = this.options.premarkedIds || [];
 
             this.render();
             this.startBigLoader();
             this.load(this.options.url, 0);
             this.bindDOMEvents();
             this.bindCustomEvents();
+
+            this.sandbox.emit(INITIALIZED.call(this));
         },
 
         /**
@@ -37017,13 +37449,17 @@ define('__component__$column-navigation@husky',[], function() {
         render: function() {
             var $add, $settings, $wrapper;
 
+            this.sandbox.dom.addClass(this.$el, 'husky-column-navigation');
+            if (!!this.options.skin) {
+                this.sandbox.dom.addClass(this.$el, this.options.skin);
+            }
+
             $wrapper = this.sandbox.dom.$(this.template.wrapper.call(this));
             this.sandbox.dom.append(this.$element, $wrapper);
 
             // navigation container
 
             this.$columnContainer = this.sandbox.dom.$(this.template.columnContainer.call(this));
-            this.setContainerHeight();
             this.sandbox.dom.append($wrapper, this.$columnContainer);
 
             // options container - add and settings button
@@ -37040,8 +37476,10 @@ define('__component__$column-navigation@husky',[], function() {
                 this.sandbox.dom.append($wrapper, this.$optionsContainer);
             }
 
-            this.setContainerHeight();
-            this.setContainerMinWidth();
+            if (this.options.responsive === true) {
+                this.setContainerHeight();
+                this.setContainerMinWidth();
+            }
 
             //init dropdown for settings in options container
             if (!!this.options.data) {
@@ -37084,8 +37522,8 @@ define('__component__$column-navigation@husky',[], function() {
          * Sets the height of the container
          */
         setContainerHeight: function() {
-            var height = this.sandbox.dom.height(this.options.sizeRelativeTo),
-                top = this.sandbox.dom.offset(this.$el).top - (this.options.sizeRelativeTo !== this.sandbox.dom.$window ? this.sandbox.dom.offset(this.options.sizeRelativeTo).top : 0);
+            var height = this.sandbox.dom.height(this.sandbox.dom.$window),
+                top = this.sandbox.dom.offset(this.$el).top - (this.sandbox.dom.$window !== this.sandbox.dom.$window ? this.sandbox.dom.offset(this.sandbox.dom.$window).top : 0);
             top = top < 0 ? 0 : top;
 
             this.sandbox.dom.height(
@@ -37133,7 +37571,7 @@ define('__component__$column-navigation@husky',[], function() {
                         this.scrollIfNeeded(this.filledColumns + 1);
                         this.setOverflowClass();
                         this.showOptionsAtLast();
-                        this.sandbox.emit(LOADED);
+                        this.sandbox.emit(LOADED.call(this));
                     }.bind(this))
                     .fail(function(error) {
                         this.columnLoadStarted = false;
@@ -37158,17 +37596,17 @@ define('__component__$column-navigation@husky',[], function() {
 
             for (i = length; i > newColumn; i--) {
                 delete this.columns[i];
-                this.sandbox.dom.remove('#column-' + i);
+                this.sandbox.dom.remove('#column'+ this.options.instanceName +'-' + i);
                 this.filledColumns--;
             }
 
             // check if element in dom exists
-            tmp = this.sandbox.dom.find('#column-' + newColumn);
+            tmp = this.sandbox.dom.find('#column'+ this.options.instanceName +'-' + newColumn);
             if (tmp.length === 1) {
                 this.$addColumn = tmp[0];
             }
 
-            this.sandbox.dom.remove('#column-' + newColumn + ' li');
+            this.sandbox.dom.remove('#column'+ this.options.instanceName +'-' + newColumn + ' li');
 
         },
 
@@ -37193,7 +37631,7 @@ define('__component__$column-navigation@husky',[], function() {
 
             $list = this.sandbox.dom.find('ul', $column);
 
-            this.sandbox.util.each(data._embedded, function(index, value) {
+            this.sandbox.util.each(data._embedded[this.options.resultKey], function(index, value) {
 
                 this.storeDataItem(newColumn, value);
                 var $element = this.sandbox.dom.$(this.template.item.call(this, this.options.column.width, value));
@@ -37202,7 +37640,7 @@ define('__component__$column-navigation@husky',[], function() {
                 this.setItemsTextWidth($element);
 
                 // remember which item has subitems to display a whole tree when column navigation should be restored
-                if (!!value[this.options.hasSubName] && value._embedded.length > 0) {
+                if (!!value[this.options.hasSubName] && !! value._embedded[this.options.resultKey] && value._embedded[this.options.resultKey].length > 0) {
                     nodeWithSubNodes = value;
                     this.setElementSelected($element);
                     this.selected[newColumn] = value;
@@ -37363,11 +37801,17 @@ define('__component__$column-navigation@husky',[], function() {
             this.sandbox.dom.on(this.$el, 'click', this.editNode.bind(this), '.edit');
             this.sandbox.dom.on(this.$el, 'dblclick', this.editNode.bind(this), 'li');
 
-            this.sandbox.dom.on(this.sandbox.dom.$window, 'resize', function() {
-                this.setContainerHeight();
-                this.setContainerMaxWidth();
-                this.setOverflowClass();
-            }.bind(this));
+            this.sandbox.dom.on(this.$el, 'click', function(event) {
+                this.sandbox.dom.stopPropagation(event);
+            }.bind(this), 'input[type="checkbox"]');
+
+            if (this.options.responsive === true) {
+                this.sandbox.dom.on(this.sandbox.dom.$window, 'resize', function () {
+                    this.setContainerHeight();
+                    this.setContainerMaxWidth();
+                    this.setOverflowClass();
+                }.bind(this));
+            }
         },
 
         /**
@@ -37397,15 +37841,19 @@ define('__component__$column-navigation@husky',[], function() {
         },
 
         bindCustomEvents: function() {
-            this.sandbox.on(BREADCRUMB, this.getBreadCrumb.bind(this));
+            this.sandbox.on(BREADCRUMB.call(this), this.getBreadCrumb.bind(this));
+            this.sandbox.on(GET_SELECTED.call(this), this.getSelected.bind(this));
+            this.sandbox.on(UNMARK.call(this), this.unmark.bind(this));
 
             this.sandbox.on('husky.dropdown.' + this.options.instanceName + '.settings.dropdown.item.click', this.dropdownItemClicked.bind(this));
 
-            this.sandbox.on(RESIZE, function() {
-                this.setContainerHeight();
-                this.setContainerMaxWidth();
-                this.setOverflowClass();
-            }.bind(this));
+            if (this.options.responsive === true) {
+                this.sandbox.on(RESIZE.call(this), function () {
+                    this.setContainerHeight();
+                    this.setContainerMaxWidth();
+                    this.setOverflowClass();
+                }.bind(this));
+            }
         },
 
         dropdownItemClicked: function(item) {
@@ -37413,8 +37861,35 @@ define('__component__$column-navigation@husky',[], function() {
                 if (!!item.callback) {
                     item.callback(item, this.selected[this.lastHoveredColumn]);
                 } else {
-                    this.sandbox.emit(SETTINGS, item, this.selected[this.lastHoveredColumn]);
+                    this.sandbox.emit(SETTINGS.call(this), item, this.selected[this.lastHoveredColumn]);
                 }
+            }
+        },
+
+        /**
+         * Unmarks a node for a given id
+         * @param id {Number|String} the id of the node to unmark
+         */
+        unmark: function(id) {
+            var $element = this.$find('li[data-id="'+ id +'"]');
+            if (!!$element.length) {
+                this.sandbox.dom.removeClass($element, this.options.markedClass);
+                this.marked.splice(this.marked.indexOf(id), 1);
+            }
+        },
+
+        /**
+         * Passes all selected nodes to a callback
+         * @param callback {Function} the callback to pass the selected nodes to
+         */
+        getSelected: function(callback) {
+            var $checkboxes = this.$find('input[type="checkbox"]:checked'),
+                checkedNodes = [],
+                $column, $node;
+            if ($checkboxes.length !== 0) {
+                this.sandbox.util.foreach($checkboxes, function($checkbox) {
+                    //TODO: foreach checkbox get the node object and create the checked Nodes array
+                }.bind(this));
             }
         },
 
@@ -37527,7 +38002,7 @@ define('__component__$column-navigation@husky',[], function() {
 
                 if (this.sandbox.dom.hasClass(this.$selectedElement, 'selected')) { // is element already selected
 
-                    this.sandbox.emit(SELECTED, selectedItem);
+                    this.sandbox.emit(SELECTED.call(this), selectedItem);
 
                 } else { // element not selected
 
@@ -37546,7 +38021,7 @@ define('__component__$column-navigation@husky',[], function() {
 
                         // add element to breadcrumb
                         this.selected[column] = selectedItem;
-                        this.sandbox.emit(SELECTED, selectedItem);
+                        this.sandbox.emit(SELECTED.call(this), selectedItem);
 
                         if (!!selectedItem[this.options.hasSubName]) {
                             this.load(selectedItem._links.children, column);
@@ -37573,18 +38048,20 @@ define('__component__$column-navigation@husky',[], function() {
          * Sets the width of the container equal to the width of its columns
          */
         alignWithColumnsWidth: function() {
-            var $columnNavi = this.sandbox.dom.find('.column-navigation', this.$el);
-            this.setContainerMaxWidth();
+            if (this.options.responsive === true) {
+                var $columnNavi = this.sandbox.dom.find('.column-navigation', this.$el);
+                this.setContainerMaxWidth();
 
-            this.sandbox.dom.width(this.$el, this.sandbox.dom.find('.column', $columnNavi).length * this.options.column.width);
+                this.sandbox.dom.width(this.$el, this.sandbox.dom.find('.column', $columnNavi).length * this.options.column.width);
+            }
         },
 
         /**
          * Sets the max width of the container
          */
         setContainerMaxWidth: function() {
-            var width = this.sandbox.dom.width(this.options.sizeRelativeTo),
-                left = (this.options.sizeRelativeTo === this.sandbox.dom.$window ? this.sandbox.dom.offset(this.$el).left : 0);
+            var width = this.sandbox.dom.width(this.sandbox.dom.$window),
+                left = (this.sandbox.dom.$window === this.sandbox.dom.$window ? this.sandbox.dom.offset(this.$el).left : 0);
 
 
             this.sandbox.dom.css(this.$el, {
@@ -37622,7 +38099,7 @@ define('__component__$column-navigation@husky',[], function() {
          * @param {Number} column
          */
         removeCurrentSelected: function(column) {
-            var $items = this.sandbox.dom.find('li', '#column-' + column);
+            var $items = this.sandbox.dom.find('li', '#column'+ this.options.instanceName +'-' + column);
 
             this.sandbox.util.each($items, function(index, $el) {
                 this.sandbox.dom.removeClass($el, 'selected');
@@ -37636,7 +38113,7 @@ define('__component__$column-navigation@husky',[], function() {
          */
         addNode: function() {
             var parent = this.selected[this.lastHoveredColumn - 1] || null;
-            this.sandbox.emit(ADD, parent);
+            this.sandbox.emit(ADD.call(this), parent);
         },
 
         /**
@@ -37652,11 +38129,17 @@ define('__component__$column-navigation@husky',[], function() {
                 $listItem = this.sandbox.dom.$(event.currentTarget);
             }
             column = this.sandbox.dom.index(this.sandbox.dom.parents(event.currentTarget, '.column'));
-            id = this.sandbox.dom.data($listItem, 'id');
+            id = this.sandbox.dom.attr($listItem, 'data-id');
             item = this.columns[column][id];
 
+            if (this.options.markable === true) {
+                this.sandbox.dom.addClass($listItem, this.options.markedClass);
+                this.marked.push(id);
+                this.setItemsTextWidth($listItem);
+            }
+
             this.sandbox.dom.stopPropagation(event);
-            this.sandbox.emit(EDIT, item);
+            this.sandbox.emit(EDIT.call(this), item);
         },
 
         /**
@@ -37673,7 +38156,7 @@ define('__component__$column-navigation@husky',[], function() {
             },
 
             column: function(columnNumber, width) {
-                return ['<div data-column="', columnNumber, '" class="column" id="column-', columnNumber, '" style="width: ', width, 'px"><ul></ul></div>'].join('');
+                return ['<div data-column="', columnNumber, '" class="column" id="column'+ this.options.instanceName +'-', columnNumber, '" style="width: ', width, 'px"><ul></ul></div>'].join('');
             },
 
             noPage: function(description) {
@@ -37685,11 +38168,15 @@ define('__component__$column-navigation@husky',[], function() {
 
             item: function(width, data) {
 
-                var item = ['<li data-id="', data[this.options.idName], '" class="pointer">'];
+                var isMarked = (this.marked.indexOf(data[this.options.idName]) !== -1),
+                    item = ['<li data-id="', data[this.options.idName], '" class="pointer'+ ((isMarked === true) ? ' ' + this.options.markedClass : '' )+'">'];
+
+                // icons left
+                item.push('<span class="icons-left">');
+
+                item.push('<span class="fa-check pull-left markedIcon"></span>');
 
                 if (!!this.options.showStatus) {
-                    // icons left
-                    item.push('<span class="icons-left">');
                     // link
                     if (!!data[this.options.linkedName]) {
                         if (data[this.options.linkedName] === 'internal') {
@@ -37836,8 +38323,6 @@ define('__component__$loader@husky',[],function() {
 
     return {
 
-        view: true,
-
         initialize: function() {
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
@@ -37935,6 +38420,7 @@ define('__component__$ckeditor@husky',[], function() {
             delete config.initializedCallback;
             delete config.baseUrl;
             delete config.el;
+            delete config.property;
             delete config.name;
             delete config.ref;
             delete config._ref;
@@ -38042,7 +38528,9 @@ return {
  * @params {String} [options.presentAsParameter] parameter for the presentation-possibility id
  * @params {String} [options.limitResultParameter] parameter for the limit-result-value
  * @params {String} [options.idKey] key for the id in the returning JSON-result
- * @params {String} [options.resultKey] key for the data in the returning JSON-result
+ * @params {String} [options.resultKey] key for the data in the returning JSON-embedded-result
+ * @params {String} [options.tagsResultKey] key for the data in the returning JSON-embedded-result for the tags-component
+ * @params {String} [options.columnNavigationResultKey] key for the data in the returning JSON-embedded-result for the column-navigation component
  * @params {String} [options.titleKey] key for the title in the returning JSON-result
  * @params {String} [options.pathKey] key for the path in the returning JSON-result
  * @params {Boolean} [options.subFoldersDisabled] if true sub-folders overlay-item will be disabled
@@ -38117,7 +38605,9 @@ define('__component__$smart-content@husky',[], function() {
             limitResultParameter: 'limitResult',
             limitResultDisabled: false,
             idKey: 'id',
-            resultKey: '_embedded',
+            resultKey: 'items',
+            tagsResultKey: 'tags',
+            columnNavigationResultKey: 'nodes',
             titleKey: 'title',
             pathKey: 'path',
             translations: {},
@@ -38139,12 +38629,12 @@ define('__component__$smart-content@husky',[], function() {
 
         constants = {
             containerSelector: '.smart-content-container',
-            headerSelector: '.smart-header',
-            contentSelector: '.smart-content',
+            headerSelector: '.header',
+            contentSelector: '.content',
             sourceSelector: '.source',
-            footerClass: 'smart-footer',
+            footerClass: 'footer',
             viewTogglerClass: 'view-toggler',
-            buttonClass: 'fa-filter',
+            buttonIcon: 'fa-filter',
             includeSubSelector: '.includeSubCheck',
             categoryDDClass: 'category-dropdown',
             tagListClass: 'tag-list',
@@ -38160,20 +38650,22 @@ define('__component__$smart-content@husky',[], function() {
         /** templates for component */
         templates = {
             skeleton: [
-                '<div class="smart-content-container form-element">',
-                '<div class="smart-header"></div>',
-                '<div class="smart-content"></div>',
+                '<div class="white-box smart-content-container form-element">',
+                '<div class="header"></div>',
+                '<div class="content"></div>',
                 '</div>'
             ].join(''),
             source: [
-                '<div class="source">',
+                '<span class="text">',
+                '<span class="source">',
                 '<span class="desc"><%= desc %></span>',
                 '<span class="val"><%= val %></span>',
-                '</div>'
+                '</span>',
+                '</span>'
             ].join(''),
             noContent: [
                 '<div class="no-content">',
-                '<span class="fa-file"></span>',
+                '<span class="fa-coffee icon"></span>',
                 '<div class="text"><%= noContentStr %></div>',
                 '</div>'
             ].join(''),
@@ -38469,9 +38961,9 @@ define('__component__$smart-content@husky',[], function() {
         },
 
         /**
-         * Renders the source text and prepends it to the header
+         * Renders the source text and inserts it to the header
          */
-        prependSource: function() {
+        insertSource: function() {
             var desc, $element = this.sandbox.dom.find(constants.dataSourceSelector, this.$overlayContent);
             this.sandbox.dom.text($element, this.sandbox.util.cropMiddle(this.overlayData.path, 30, '...'));
 
@@ -38480,9 +38972,9 @@ define('__component__$smart-content@husky',[], function() {
                 if (this.overlayData.includeSubFolders !== false) {
                     desc += ' (' + this.sandbox.translate(this.translations.subFoldersInclusive) + '):';
                 } else {
-                    desc += ':';
+                    desc += ': ';
                 }
-                this.sandbox.dom.prepend(this.$header, _.template(templates.source)({
+                this.sandbox.dom.append(this.$header, this.sandbox.util.template(templates.source)({
                     desc: desc,
                     val: this.overlayData.title
                 }));
@@ -38500,8 +38992,8 @@ define('__component__$smart-content@husky',[], function() {
          * Renders and appends the toggle-button
          */
         renderButton: function() {
-            this.$button = this.sandbox.dom.createElement('<a href="#"/>');
-            this.sandbox.dom.addClass(this.$button, constants.buttonClass);
+            this.$button = this.sandbox.dom.createElement('<span class="icon right border"/>');
+            this.sandbox.dom.prependClass(this.$button, constants.buttonIcon);
             this.sandbox.dom.append(this.$header, this.$button);
         },
 
@@ -38614,7 +39106,7 @@ define('__component__$smart-content@husky',[], function() {
             this.sandbox.on(DATA_RETRIEVED.call(this), function() {
                 this.renderContent();
                 this.removeSource();
-                this.prependSource();
+                this.insertSource();
             }.bind(this));
 
             this.sandbox.on(INPUT_RETRIEVED.call(this), function() {
@@ -38757,7 +39249,7 @@ define('__component__$smart-content@husky',[], function() {
             }.bind(this));
 
             // activate button OK when a page is selected
-            this.sandbox.on('husky.column-navigation.edit', function(item) {
+            this.sandbox.on('husky.column-navigation.smart-content'+ this.options.instanceName +'.edit', function(item) {
                 this.sandbox.emit('husky.overlay.smart-content.' + this.options.instanceName + '.slide-left');
 
                 var $element = this.sandbox.dom.find(constants.dataSourceSelector, this.$overlayContent);
@@ -38786,12 +39278,12 @@ define('__component__$smart-content@husky',[], function() {
                             el: '#column-navigation-' + this.options.instanceName + '',
                             url: url,
                             selected: this.overlayData.dataSource,
-                            noPageDescription: 'No Pages',
-                            sizeRelativeTo: '.smart-content-overlay .slide-1 .overlay-content',
-                            wrapper: {height: 100},
+                            instanceName: 'smart-content' + this.options.instanceName,
+                            responsive: false,
                             editIcon: 'fa-check',
                             showEdit: false,
-                            showStatus: false
+                            showStatus: false,
+                            resultKey: this.options.columnNavigationResultKey
                         }
                     }
                 ]
@@ -38880,7 +39372,8 @@ define('__component__$smart-content@husky',[], function() {
                         remoteUrl: this.options.tagsAutoCompleteUrl,
                         autocomplete: (this.options.tagsAutoCompleteUrl !== ''),
                         getParameter: this.options.tagsGetParameter,
-                        noNewTags: true
+                        noNewTags: true,
+                        itemsKey: this.options.tagsResultKey
                     }
                 },
                 {
@@ -38965,7 +39458,7 @@ define('__component__$smart-content@husky',[], function() {
                     success: function(data) {
                         this.overlayData.title = data[this.options.titleKey];
                         this.overlayData.path = data[this.options.pathKey];
-                        this.items = data[this.options.resultKey];
+                        this.items = data._embedded[this.options.resultKey];
                         this.sandbox.emit(DATA_RETRIEVED.call(this));
                     }.bind(this),
 
@@ -39075,7 +39568,7 @@ define('__component__$smart-content@husky',[], function() {
  * @params {Boolean} [options.openOnStart] if true overlay is opened after initialization
  * @params {Boolean} [options.removeOnClose] if overlay component gets removed on close
  * @params {Boolean} [options.backdrop] if true backdrop will be shown
- * @params {String} [options.skin] set an overlay skin to manipulate overlay's appearance. Possible skins: '' or 'wide'
+ * @params {String} [options.skin] set an overlay skin to manipulate overlay's appearance. Possible skins: '', 'wide' or 'medium'
  * @params {Boolean} [options.backdropClose] if true overlay closes with click on backdrop
  * @params {String} [options.backdropColor] Color of the backdrop
  * @params {Number} [options.backdropAlpha] Alpha-value of the backdrop
@@ -39083,6 +39576,7 @@ define('__component__$smart-content@husky',[], function() {
  * @params {Array} [options.buttonsDefaultAlign] the align of the buttons in the footer ('center', 'left' or 'right'). Can be overriden by each button individually
  * @params {Array} [options.supportKeyInput] if true pressing enter will submit the overlay and esc will close it
  * @params {Array} [options.propagateEvents] If false click-events will be stoped at the components-element
+ * @params {Array} [options.verticalSpacing] defines the minimum spacing in pixel to the bottom and the top
  *
  * @params {Array} [options.slides] array of slide objects, will be rendered in a row and can slided with events
  * @params {String} [options.slides[].title] the title of the overlay
@@ -39117,6 +39611,7 @@ define('__component__$overlay@husky',[], function() {
     var defaults = {
             trigger: 'click',
             triggerEl: null,
+            verticalSpacing: 20, //px
             instanceName: 'undefined',
             draggable: true,
             openOnStart: false,
@@ -39579,24 +40074,29 @@ define('__component__$overlay@husky',[], function() {
 
                     this.overlay.$content = this.sandbox.dom.find(constants.contentSelector, this.overlay.$el);
 
-                    if (this.slides.length > 1) {
-                        // set width to n-width
-                        this.overlay.width = this.sandbox.dom.outerWidth(this.sandbox.dom.find('.slide', this.overlay.$slides));
-                        this.sandbox.dom.css(this.overlay.$slides, 'width', (this.slides.length * this.overlay.width) + 'px');
-
-                        var maxHeight = -1;
-
-                        $(this.overlay.$content).each(function() {
-                            maxHeight = maxHeight > $(this).height() ? maxHeight : $(this).height();
-                        });
-
-                        this.sandbox.dom.css(this.overlay.$content, 'height', maxHeight + 'px');
-                    }
-
                     this.insertOverlay(true);
+                    this.setSlidesHeight();
                 } else {
                     this.insertOverlay(true);
                 }
+            }
+        },
+
+        /**
+         * Sets the height of all slides equal
+         */
+        setSlidesHeight: function() {
+            if (this.slides.length > 1) {
+                var maxHeight = -1;
+                // set width to n-width
+                this.overlay.width = this.sandbox.dom.outerWidth(this.sandbox.dom.find('.slide', this.overlay.$slides));
+                this.sandbox.dom.css(this.overlay.$slides, 'width', (this.slides.length * this.overlay.width) + 'px');
+
+                $(this.overlay.$content).each(function() {
+                    maxHeight = maxHeight > $(this).height() ? maxHeight : $(this).height();
+                });
+
+                this.sandbox.dom.css(this.overlay.$content, 'height', maxHeight + 'px');
             }
         },
 
@@ -39914,6 +40414,11 @@ define('__component__$overlay@husky',[], function() {
                 this.sandbox.dom.on(this.overlay.$el, 'click', function(event) {
                     this.sandbox.dom.stopPropagation(event);
                 }.bind(this));
+                if (this.options.backdrop === true) {
+                    this.sandbox.dom.on(this.$backdrop, 'click', function(event) {
+                        this.sandbox.dom.stopPropagation(event);
+                    }.bind(this));
+                }
             }
 
             // close handler for close icon
@@ -40041,6 +40546,7 @@ define('__component__$overlay@husky',[], function() {
             this.overlay.collapsed = false;
             this.sandbox.dom.css(this.overlay.$content, {'overflow': 'visible'});
             this.sandbox.dom.height(this.overlay.$content, '');
+            this.setSlidesHeight();
         },
 
         /**
@@ -40049,15 +40555,15 @@ define('__component__$overlay@husky',[], function() {
          */
         resizeHandler: function() {
             //window is getting smaller - make overlay smaller
-            if (this.sandbox.dom.height(this.sandbox.dom.$window) < this.sandbox.dom.outerHeight(this.overlay.$el)) {
+            if (this.sandbox.dom.height(this.sandbox.dom.$window) < this.sandbox.dom.outerHeight(this.overlay.$el) + this.options.verticalSpacing*2) {
                 this.sandbox.dom.height(this.overlay.$content,
-                    (this.sandbox.dom.height(this.sandbox.dom.$window) - this.sandbox.dom.height(this.overlay.$el) + this.sandbox.dom.height(this.overlay.$content))
+                    (this.sandbox.dom.height(this.sandbox.dom.$window) - this.sandbox.dom.height(this.overlay.$el) + this.sandbox.dom.height(this.overlay.$content) - this.options.verticalSpacing*2)
                 );
                 this.sandbox.dom.css(this.overlay.$content, {'overflow': 'scroll'});
                 this.overlay.collapsed = true;
 
                 //window is getting bigger - make the overlay bigger
-            } else if (this.sandbox.dom.height(this.sandbox.dom.$window) > this.sandbox.dom.outerHeight(this.overlay.$el) &&
+            } else if (this.sandbox.dom.height(this.sandbox.dom.$window) > this.sandbox.dom.outerHeight(this.overlay.$el) + this.options.verticalSpacing*2 &&
                 this.overlay.collapsed === true) {
 
                 //if overlay reached its beginning height - stop
@@ -40068,7 +40574,7 @@ define('__component__$overlay@husky',[], function() {
                     // else enlarge further
                 } else {
                     this.sandbox.dom.height(this.overlay.$content,
-                        (this.sandbox.dom.height(this.sandbox.dom.$window) - this.sandbox.dom.height(this.overlay.$el) + this.sandbox.dom.height(this.overlay.$content))
+                        (this.sandbox.dom.height(this.sandbox.dom.$window) - this.sandbox.dom.height(this.overlay.$el) + this.sandbox.dom.height(this.overlay.$content) - this.options.verticalSpacing*2)
                     );
                 }
             }
@@ -40173,7 +40679,7 @@ define('__component__$label@husky',[],function() {
         ERROR: {
             title: 'Error',
             labelClass: 'husky-label-error',
-            fadeOut: false
+            fadeOutDelay: 10000
         },
         WARNING: {
             fadeOutDelay: 5000,
@@ -41453,6 +41959,7 @@ define('__component__$toggler@husky',[], function() {
  * @params {String} [options.paramName] the name of the parameter which will contain the file(s). Note that if uploadMultiple is set to true the parameter Name gets extended with '[]'
  * @params {Object} [options.headers] additional headers to pass with each request
  * @params {Boolean} [options.uploadMultiple] if true a request can upload multiple files
+ * @params {Number} [options.maxFiles] defines the maximum of files in the dropzone
  * @params {Function} [options.successCallback] callback which gets called if a file got successfully uploaded. First parameter is the file, the second the response
  * @params {Function} [options.beforeSendingCallback] callback which gets called before a file gets uploaded. First parameter is the file.
  * @params {Function} [options.removeFileCallback] callback which gets called after a file got removed. First parameter is the file.
@@ -41482,6 +41989,7 @@ define('__component__$dropzone@husky',[], function () {
             beforeSendingCallback: null,
             removeFileCallback: null,
             pluginOptions: {},
+            maxFiles: null,
             fadeOutDuration: 200, //ms
             fadeOutDelay: 1500, //ms
             showOverlay: true,
@@ -41717,6 +42225,7 @@ define('__component__$dropzone@husky',[], function () {
                     method: this.options.method,
                     paramName: this.options.paramName,
                     uploadMultiple: this.options.uploadMultiple,
+                    maxFiles: this.options.maxFiles,
                     headers: this.options.headers,
                     previewTemplate: this.sandbox.util.template(templates.uploadItem)({
                         cancelIcon: this.options.cancelLoadingIcon
@@ -41774,7 +42283,7 @@ define('__component__$dropzone@husky',[], function () {
                 };
 
             // merge the default plugin options with with passed ones
-            this.sandbox.util.extend(true, {}, options, this.options.pluginOptions);
+            options = this.sandbox.util.extend(true, {}, options, this.options.pluginOptions);
             this.sandbox.dropzone.initialize(this.$dropzone, options);
         },
 

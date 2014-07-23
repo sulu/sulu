@@ -23,6 +23,7 @@ define(function() {
             instanceName: 'undefined',
             gridUrl: '',
             preselected: [],
+            resultKey: '',
             dataGridOptions:{
                 view: 'thumbnail',
                 pagination: 'showall',
@@ -143,6 +144,15 @@ define(function() {
          */
         RECORD_CLICKED = function() {
             return createEventName.call(this, 'record-clicked');
+        },
+
+        /**
+         * triggered after a grid got opened or closed
+         *
+         * @event sulu.grid-group.[INSTANCE_NAME].height-changed
+         */
+        HEIGHT_CHANGED = function() {
+            return createEventName.call(this, 'height-changed');
         },
 
         /**
@@ -404,6 +414,11 @@ define(function() {
                 this.sandbox.emit(RECORD_CLICKED.call(this), recordId);
             }.bind(this));
 
+            // throw height changed event after initialization has finished
+            this.sandbox.on('husky.datagrid.' + this.options.instanceName + id + '.initialized', function() {
+                this.sandbox.emit(HEIGHT_CHANGED.call(this));
+            }.bind(this));
+
             this.group[id].datagridName = this.options.instanceName + id;
             this.group[id].datagridLoaded = true;
 
@@ -423,6 +438,7 @@ define(function() {
                         matchings: this.options.dataGridOptions.matchings,
                         viewOptions: this.options.dataGridOptions.viewOptions,
                         preselected: this.options.preselected,
+                        resultKey: this.options.resultKey,
                         instanceName: instanceName,
                         searchInstanceName: this.options.instanceName,
                         paginationOptions: {
@@ -470,11 +486,6 @@ define(function() {
                 this.sandbox.dom.on(this.group[id].$el, 'click', function() {
                     this.toggleGroup(this.group[id]);
                 }.bind(this), '.head');
-
-                this.sandbox.dom.on(this.group[id].$el, 'click', function(event) {
-                    this.sandbox.dom.stopPropagation(event);
-                    this.showAllRecords(id);
-                }.bind(this), '.' + constants.titleClass);
             }
         },
 
@@ -524,7 +535,10 @@ define(function() {
         slideUp: function(group) {
             this.sandbox.dom.slideUp(
                 this.sandbox.dom.find('.' + constants.slideClass, group.$el),
-                this.options.slideDuration
+                this.options.slideDuration,
+                function() {
+                    this.sandbox.emit(HEIGHT_CHANGED.call(this));
+                }.bind(this)
             );
             this.sandbox.dom.removeClass(
                 this.sandbox.dom.find('.head .icon', group.$el),
@@ -543,7 +557,10 @@ define(function() {
         slideDown: function(group) {
             this.sandbox.dom.slideDown(
                 this.sandbox.dom.find('.' + constants.slideClass, group.$el),
-                this.options.slideDuration
+                this.options.slideDuration,
+                function() {
+                    this.sandbox.emit(HEIGHT_CHANGED.call(this));
+                }.bind(this)
             );
             this.sandbox.dom.removeClass(
                 this.sandbox.dom.find('.head .icon', group.$el),
