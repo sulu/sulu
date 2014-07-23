@@ -14,11 +14,11 @@
             <argument>%kernel.cache_dir%</argument>
         </service>
         <service id="sulu_content.preview" class="%sulu_content.preview.class%">
-            <argument type="service" id="service_container"/>
             <argument type="service" id="templating"/>
             <argument type="service" id="sulu_content.preview.cache"/>
             <argument type="service" id="sulu.content.mapper"/>
             <argument type="service" id="sulu.content.structure_manager"/>
+            <argument type="service" id="sulu.content.type_manager"/>
             <argument type="service" id="controller_resolver"/>
             <argument>%sulu_content.preview.lifetime%</argument>
             <argument>%sulu_content.preview.template-namespace%</argument>
