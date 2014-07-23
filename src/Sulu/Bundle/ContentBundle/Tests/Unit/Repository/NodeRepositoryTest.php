@@ -20,6 +20,7 @@ use Sulu\Bundle\TestBundle\Testing\PhpcrTestCase;
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyTag;
 use Sulu\Component\Content\StructureExtension\StructureExtension;
+use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\Types\ResourceLocator;
 use Sulu\Component\Webspace\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceCollection;
@@ -269,6 +270,63 @@ class NodeRepositoryTest extends PhpcrTestCase
         $this->assertEquals('/testtitle', $result['_embedded']['nodes'][0]['path']);
     }
 
+    public function testGetFilteredNodesInOrder()
+    {
+        $data = array(
+            array(
+                'title' => 'Testtitle1',
+                'tags' => array(
+                    'tag1',
+                    'tag2'
+                ),
+                'url' => '/news/test1',
+                'article' => 'Test'
+            ),
+            array(
+                'title' => 'Testtitle2',
+                'tags' => array(
+                    'tag1',
+                    'tag2'
+                ),
+                'url' => '/news/test2',
+                'article' => 'Test'
+            ),
+        );
+
+        foreach ($data as &$element) {
+            $element = $this->mapper->save(
+                $element,
+                'overview',
+                'default',
+                'en',
+                1,
+                true,
+                null,
+                null,
+                StructureInterface::STATE_PUBLISHED
+            );
+            sleep(1);
+        }
+
+        $nodes = $this->nodeRepository->getFilteredNodes(
+            array('sortBy' => array('published'), 'sortMethod' => 'asc'),
+            'en',
+            'default'
+        );
+
+        $this->assertEquals('Testtitle1', $nodes[0]->title);
+        $this->assertEquals('Testtitle2', $nodes[1]->title);
+
+        $nodes = $this->nodeRepository->getFilteredNodes(
+            array('sortBy' => array('published'), 'sortMethod' => 'desc'),
+            'en',
+            'default'
+        );
+
+        $this->assertEquals('Testtitle2', $nodes[0]->title);
+        $this->assertEquals('Testtitle1', $nodes[1]->title);
+    }
+
     protected function setUp()
     {
         $this->prepareMapper();
@@ -376,7 +434,8 @@ class NodeRepositoryTest extends PhpcrTestCase
         $method->invokeArgs(
             $structureMock,
             array(
-                new Property('title', 'title', 'text_line', false, false, 1, 1, array(),
+                new Property(
+                    'title', 'title', 'text_line', false, false, 1, 1, array(),
                     array(
                         new PropertyTag('sulu.node.name', 100)
                     )
