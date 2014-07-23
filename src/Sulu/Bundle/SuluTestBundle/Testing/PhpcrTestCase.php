@@ -219,6 +219,7 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
             $this->contentTypeManager->mapAliasToServiceId('text_line', 'sulu.content.type.text_line');
             $this->contentTypeManager->mapAliasToServiceId('text_area', 'sulu.content.type.text_area');
             $this->contentTypeManager->mapAliasToServiceId('resource_locator', 'sulu.content.type.resource_locator');
+            $this->contentTypeManager->mapAliasToServiceId('block', 'sulu.content.type.block');
         }
     }
 
