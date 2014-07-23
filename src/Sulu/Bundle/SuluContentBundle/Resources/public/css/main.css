@@ -215,17 +215,31 @@
   margin: 0px;
 }
 
-/* line 2, ../scss/modules/seo.scss */
-#seo-form .inline-input {
-  width: 30px;
-}
-/* line 6, ../scss/modules/seo.scss */
-#seo-form .inline-label {
-  display: inline;
-  color: black;
+/* line 1, ../scss/modules/seo.scss */
+.seo-excerpt {
+  background: #fff;
+  width: 440px;
   position: relative;
-  top: -8px;
-  left: -10px;
+  margin: 0 auto;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+/* line 8, ../scss/modules/seo.scss */
+.seo-excerpt .title {
+  color: #1111BD;
+  font-size: 16px;
+}
+/* line 12, ../scss/modules/seo.scss */
+.seo-excerpt .url {
+  color: #307F3A;
+  font-size: 12px;
+  line-height: 15px;
+}
+/* line 17, ../scss/modules/seo.scss */
+.seo-excerpt .description {
+  font-size: 14px;
+  color: #000;
+  line-height: 16px;
 }
 
 /* line 2, ../scss/modules/resource-locator.scss */
