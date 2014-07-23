@@ -2,9 +2,9 @@
     background-color: $blue;
     width: 100%;
 
-    position: fixed;
+    position: absolute;
     top: 0;
-    left:0;
+    left: 0;
     z-index: 90;
     width: 100%;
 
@@ -12,8 +12,9 @@
         position: relative;
         top: 0px;
         left: 0px;
-        margin-left: 50px;
+        margin: 0 50px;
         height: $headerHeight;
+        @include single-transition(margin, $shrinkAnimationDuration);
     }
 
     .headline {
@@ -28,9 +29,11 @@
         }
 
         .back {
+            display: block;
+            padding: 10px;
             position: absolute;
-            top: 22px;
-            left: -22px;
+            top: 12px;
+            left: -30px;
             font-size: 16px;
             color: $white;
             cursor: pointer;
@@ -79,7 +82,10 @@
     }
 
     .tabs {
-        height: 50px;
+        height: $tabsHeight;
+        .tabs-container {
+          @include single-transition(padding, $shrinkAnimationDuration);
+        }
     }
 
     .info {
@@ -88,16 +94,39 @@
         left: 0px;
     }
 
-    // squeezed style for content full-width mode
-    &.squeezed {
-        .info, .headline {
-            left: $contentPaddingLeft;
-        }
-        .tabs, .bottom-row {
-            padding-left: $contentPaddingLeft;
-        }
-        .bottom-row {
-            padding-right: 30px;
-        }
+    // add top space to the content-container beneath the header
+    & + #content {
+      margin-top: $headerHeight;
+      padding-bottom: $headerHeight + $contentPaddingTop
     }
+    &.has-tabs + #content {
+      margin-top: $headerHeight + $tabsHeight;
+      padding-bottom: $headerHeight + $contentPaddingTop + $tabsHeight;
+    }
+}
+
+.sulu-header-background {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  background: $blue;
+  height: $headerHeight;
+  width: 100%;
+  &.has-tabs {
+    height: $headerHeight + $tabsHeight;
+    border-bottom: $tabsHeight solid $white;
+  }
+}
+
+.small-fixed {
+  .sulu-header .inner {
+    margin-left: $contentPaddingLeftSmall;
+    margin-right: $contentPaddingRightSmall;
+  }
+  .tabs-container {
+    padding-left: $contentPaddingLeftSmall;
+  }
+  .sulu-header .back {
+    opacity: 0;
+  }
 }

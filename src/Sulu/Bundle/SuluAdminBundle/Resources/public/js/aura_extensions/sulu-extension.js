@@ -35,9 +35,9 @@
                     var temp = swap ? {} : [], i;
                     for (i = 0; i < array.length; i++) {
                         if (swap) {
-                            temp[array[i].id] = i;
+                            temp[array[i].name] = i;
                         } else {
-                            temp.push(array[i].id);
+                            temp.push(array[i].name);
                         }
                     }
                     return temp;
@@ -116,7 +116,7 @@
                             newSetting,
                             serverindex, serverindexLeft, userKeys, serverKeysLeft, serverKeys, serverKeysSwap;
 
-                        if (userFields) {
+                        if (!!userFields) {
                             serverKeysLeft = getObjectIds.call(this, serverFields);
                             serverKeys = getObjectIds.call(this, serverFields);
                             serverKeysSwap = getObjectIds.call(this, serverFields, true);
@@ -255,12 +255,7 @@
                         gridDefaults = {
                             view: 'table',
                             pagination: 'dropdown',
-                            matchings: data,
-                            viewOptions: {
-                                table: {
-                                    contentContainer: '#content'
-                                }
-                            }
+                            matchings: data
                         },
                         gridOptions = this.sandbox.util.extend(true, {}, gridDefaults, datagridOptions);
 
