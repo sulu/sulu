@@ -7,7 +7,6 @@
             <generator strategy="AUTO"/>
         </id>
         <field name="email" type="string" column="email" length="60"/>
-        <field name="main" type="boolean" column="main" nullable="false"/>
         <many-to-one field="emailType" target-entity="Sulu\Bundle\ContactBundle\Entity\EmailType" inversed-by="emails">
             <join-columns>
                 <join-column name="idEmailTypes" referenced-column-name="id" nullable="false"/>

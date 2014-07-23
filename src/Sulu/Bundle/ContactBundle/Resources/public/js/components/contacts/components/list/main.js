@@ -33,8 +33,12 @@ define(function() {
     return {
         view: true,
 
-        fullSize: {
-            width: true
+        layout: {
+            content: {
+                width: 'max',
+                leftSpace: false,
+                rightSpace: false
+            }
         },
 
         header: {
@@ -68,6 +72,8 @@ define(function() {
                     el: this.sandbox.dom.find('#people-list', this.$el),
                     url: '/admin/api/contacts?flat=true',
                     searchInstanceName: 'contacts',
+                    searchFields: ['fullName'],
+                    resultKey: 'contacts',
                     viewOptions: {
                         table: {
                             fullWidth: true

@@ -75,16 +75,6 @@ class Address
     private $country;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $contacts;
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $accounts;
-
-    /**
      * @var boolean
      * @Expose
      */
@@ -125,8 +115,8 @@ class Address
      */
     public function __construct()
     {
-        $this->contacts = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->accounts = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->accountAddresses = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->contactAddresses = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -324,72 +314,6 @@ class Address
     }
 
     /**
-     * Add contacts
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Contact $contacts
-     * @return Address
-     */
-    public function addContact(\Sulu\Bundle\ContactBundle\Entity\Contact $contacts)
-    {
-        $this->contacts[] = $contacts;
-
-        return $this;
-    }
-
-    /**
-     * Remove contacts
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Contact $contacts
-     */
-    public function removeContact(\Sulu\Bundle\ContactBundle\Entity\Contact $contacts)
-    {
-        $this->contacts->removeElement($contacts);
-    }
-
-    /**
-     * Get contacts
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getContacts()
-    {
-        return $this->contacts;
-    }
-
-    /**
-     * Add accounts
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Account $accounts
-     * @return Address
-     */
-    public function addAccount(\Sulu\Bundle\ContactBundle\Entity\Account $accounts)
-    {
-        $this->accounts[] = $accounts;
-
-        return $this;
-    }
-
-    /**
-     * Remove accounts
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Account $accounts
-     */
-    public function removeAccount(\Sulu\Bundle\ContactBundle\Entity\Account $accounts)
-    {
-        $this->accounts->removeElement($accounts);
-    }
-
-    /**
-     * Get accounts
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getAccounts()
-    {
-        return $this->accounts;
-    }
-
-    /**
      * Set primaryAddress
      *
      * @param boolean $primaryAddress
@@ -398,14 +322,14 @@ class Address
     public function setPrimaryAddress($primaryAddress)
     {
         $this->primaryAddress = $primaryAddress;
-    
+
         return $this;
     }
 
     /**
      * Get primaryAddress
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getPrimaryAddress()
     {
@@ -421,14 +345,14 @@ class Address
     public function setDeliveryAddress($deliveryAddress)
     {
         $this->deliveryAddress = $deliveryAddress;
-    
+
         return $this;
     }
 
     /**
      * Get deliveryAddress
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getDeliveryAddress()
     {
@@ -444,14 +368,14 @@ class Address
     public function setBillingAddress($billingAddress)
     {
         $this->billingAddress = $billingAddress;
-    
+
         return $this;
     }
 
     /**
      * Get billingAddress
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getBillingAddress()
     {
@@ -467,14 +391,14 @@ class Address
     public function setPostboxNumber($postboxNumber)
     {
         $this->postboxNumber = $postboxNumber;
-    
+
         return $this;
     }
 
     /**
      * Get postboxNumber
      *
-     * @return string 
+     * @return string
      */
     public function getPostboxNumber()
     {
@@ -490,14 +414,14 @@ class Address
     public function setPostboxPostcode($postboxPostcode)
     {
         $this->postboxPostcode = $postboxPostcode;
-    
+
         return $this;
     }
 
     /**
      * Get postboxPostcode
      *
-     * @return string 
+     * @return string
      */
     public function getPostboxPostcode()
     {
@@ -513,17 +437,120 @@ class Address
     public function setPostboxCity($postboxCity)
     {
         $this->postboxCity = $postboxCity;
-    
+
         return $this;
     }
 
     /**
      * Get postboxCity
      *
-     * @return string 
+     * @return string
      */
     public function getPostboxCity()
     {
         return $this->postboxCity;
+    }
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $contactAddresses;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $accountAddresses;
+
+
+    /**
+     * Add contactAddresses
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\ContactAddress $contactAddresses
+     * @return Address
+     */
+    public function addContactAddresse(\Sulu\Bundle\ContactBundle\Entity\ContactAddress $contactAddresses)
+    {
+        $this->contactAddresses[] = $contactAddresses;
+
+        return $this;
+    }
+
+    /**
+     * Remove contactAddresses
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\ContactAddress $contactAddresses
+     */
+    public function removeContactAddress(\Sulu\Bundle\ContactBundle\Entity\ContactAddress $contactAddresses)
+    {
+        $this->contactAddresses->removeElement($contactAddresses);
+    }
+
+    /**
+     * Get contactAddresses
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getContactAddresses()
+    {
+        return $this->contactAddresses;
+    }
+
+    /**
+     * Add accountAddresses
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddresses
+     * @return Address
+     */
+    public function addAccountAddresse(\Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddresses)
+    {
+        $this->accountAddresses[] = $accountAddresses;
+
+        return $this;
+    }
+
+    /**
+     * Remove accountAddresses
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddresses
+     */
+    public function removeAccountAddresse(\Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddresses)
+    {
+        $this->accountAddresses->removeElement($accountAddresses);
+    }
+
+    /**
+     * Get accountAddresses
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getAccountAddresses()
+    {
+        return $this->accountAddresses;
+    }
+
+    /**
+     * returns if address has at least one relation to another entity
+     *
+     * @return Bool
+     */
+    public function hasRelations()
+    {
+
+        if (!$this->getContactAddresses()->isEmpty() ||
+            !$this->getAccountAddresses()->isEmpty()
+        ) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Remove contactAddresses
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\ContactAddress $contactAddresses
+     */
+    public function removeContactAddresse(\Sulu\Bundle\ContactBundle\Entity\ContactAddress $contactAddresses)
+    {
+        $this->contactAddresses->removeElement($contactAddresses);
     }
 }

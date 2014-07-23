@@ -1,49 +1,35 @@
 <?php
-/*
- * This file is part of the Sulu CMS.
- *
- * (c) MASSIVE ART WebServices GmbH
- *
- * This source file is subject to the MIT license that is bundled
- * with this source code in the file LICENSE.
- */
 
 namespace Sulu\Bundle\ContactBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Exclude;
-
-
+use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 
 /**
  * Activity
  */
-class Activity
+class Activity extends ApiEntity
 {
     /**
      * @var string
      */
-    private $name;
+    private $subject;
+
+    /**
+     * @var string
+     */
+    private $note;
 
     /**
      * @var \DateTime
      */
-    private $due;
-
-    /**
-     * @var integer
-     */
-    private $priority;
+    private $dueDate;
 
     /**
      * @var \DateTime
      */
-    private $reminder;
-
-    /**
-     * @var boolean
-     */
-    private $notification;
+    private $startDate;
 
     /**
      * @var \DateTime
@@ -61,6 +47,31 @@ class Activity
     private $id;
 
     /**
+     * @var \Sulu\Bundle\ContactBundle\Entity\ActivityStatus
+     */
+    private $activityStatus;
+
+    /**
+     * @var \Sulu\Bundle\ContactBundle\Entity\ActivityPriority
+     */
+    private $activityPriority;
+
+    /**
+     * @var \Sulu\Bundle\ContactBundle\Entity\ActivityType
+     */
+    private $activityType;
+
+    /**
+     * @var \Sulu\Bundle\ContactBundle\Entity\Contact
+     */
+    private $contact;
+
+    /**
+     * @var \Sulu\Bundle\ContactBundle\Entity\Account
+     */
+    private $account;
+
+    /**
      * @var \Sulu\Component\Security\UserInterface
      * @Exclude
      */
@@ -73,131 +84,100 @@ class Activity
     private $creator;
 
     /**
-     * @var \Sulu\Bundle\ContactBundle\Entity\ActivityStatus
-     *
-     */
-    private $activityStatus;
-
-    /**
      * @var \Sulu\Bundle\ContactBundle\Entity\Contact
-     * @Exclude
      */
-    private $contact;
-
+    private $assignedContact;
 
     /**
-     * Set name
+     * Set subject
      *
-     * @param string $name
+     * @param string $subject
      * @return Activity
      */
-    public function setName($name)
+    public function setSubject($subject)
     {
-        $this->name = $name;
-
+        $this->subject = $subject;
+    
         return $this;
     }
 
     /**
-     * Get name
+     * Get subject
      *
-     * @return string
+     * @return string 
      */
-    public function getName()
+    public function getSubject()
     {
-        return $this->name;
+        return $this->subject;
     }
 
     /**
-     * Set due
+     * Set note
      *
-     * @param \DateTime $due
+     * @param string $note
      * @return Activity
      */
-    public function setDue($due)
+    public function setNote($note)
     {
-        $this->due = $due;
-
+        $this->note = $note;
+    
         return $this;
     }
 
     /**
-     * Get due
+     * Get note
      *
-     * @return \DateTime
+     * @return string 
      */
-    public function getDue()
+    public function getNote()
     {
-        return $this->due;
+        return $this->note;
     }
 
     /**
-     * Set priority
+     * Set dueDate
      *
-     * @param integer $priority
+     * @param \DateTime $dueDate
      * @return Activity
      */
-    public function setPriority($priority)
+    public function setDueDate($dueDate)
     {
-        $this->priority = $priority;
-
+        $this->dueDate = $dueDate;
+    
         return $this;
     }
 
     /**
-     * Get priority
+     * Get dueDate
      *
-     * @return integer
+     * @return \DateTime 
      */
-    public function getPriority()
+    public function getDueDate()
     {
-        return $this->priority;
+        return $this->dueDate;
     }
 
     /**
-     * Set reminder
+     * Set startDate
      *
-     * @param \DateTime $reminder
+     * @param \DateTime $startDate
      * @return Activity
      */
-    public function setReminder($reminder)
+    public function setStartDate($startDate)
     {
-        $this->reminder = $reminder;
-
+        $this->startDate = $startDate;
+    
         return $this;
     }
 
     /**
-     * Get reminder
+     * Get startDate
      *
-     * @return \DateTime
+     * @return \DateTime 
      */
-    public function getReminder()
+    public function getStartDate()
     {
-        return $this->reminder;
-    }
-
-    /**
-     * Set notification
-     *
-     * @param boolean $notification
-     * @return Activity
-     */
-    public function setNotification($notification)
-    {
-        $this->notification = $notification;
-
-        return $this;
-    }
-
-    /**
-     * Get notification
-     *
-     * @return boolean
-     */
-    public function getNotification()
-    {
-        return $this->notification;
+        return $this->startDate;
     }
 
     /**
@@ -209,14 +189,14 @@ class Activity
     public function setCreated($created)
     {
         $this->created = $created;
-
+    
         return $this;
     }
 
     /**
      * Get created
      *
-     * @return \DateTime
+     * @return \DateTime 
      */
     public function getCreated()
     {
@@ -232,14 +212,14 @@ class Activity
     public function setChanged($changed)
     {
         $this->changed = $changed;
-
+    
         return $this;
     }
 
     /**
      * Get changed
      *
-     * @return \DateTime
+     * @return \DateTime 
      */
     public function getChanged()
     {
@@ -249,11 +229,126 @@ class Activity
     /**
      * Get id
      *
-     * @return integer
+     * @return integer 
      */
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set activityStatus
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\ActivityStatus $activityStatus
+     * @return Activity
+     */
+    public function setActivityStatus(\Sulu\Bundle\ContactBundle\Entity\ActivityStatus $activityStatus = null)
+    {
+        $this->activityStatus = $activityStatus;
+    
+        return $this;
+    }
+
+    /**
+     * Get activityStatus
+     *
+     * @return \Sulu\Bundle\ContactBundle\Entity\ActivityStatus 
+     */
+    public function getActivityStatus()
+    {
+        return $this->activityStatus;
+    }
+
+    /**
+     * Set activityPriority
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\ActivityPriority $activityPriority
+     * @return Activity
+     */
+    public function setActivityPriority(\Sulu\Bundle\ContactBundle\Entity\ActivityPriority $activityPriority = null)
+    {
+        $this->activityPriority = $activityPriority;
+    
+        return $this;
+    }
+
+    /**
+     * Get activityPriority
+     *
+     * @return \Sulu\Bundle\ContactBundle\Entity\ActivityPriority 
+     */
+    public function getActivityPriority()
+    {
+        return $this->activityPriority;
+    }
+
+    /**
+     * Set activityType
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\ActivityType $activityType
+     * @return Activity
+     */
+    public function setActivityType(\Sulu\Bundle\ContactBundle\Entity\ActivityType $activityType = null)
+    {
+        $this->activityType = $activityType;
+    
+        return $this;
+    }
+
+    /**
+     * Get activityType
+     *
+     * @return \Sulu\Bundle\ContactBundle\Entity\ActivityType 
+     */
+    public function getActivityType()
+    {
+        return $this->activityType;
+    }
+
+    /**
+     * Set contact
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\Contact $contact
+     * @return Activity
+     */
+    public function setContact(\Sulu\Bundle\ContactBundle\Entity\Contact $contact = null)
+    {
+        $this->contact = $contact;
+    
+        return $this;
+    }
+
+    /**
+     * Get contact
+     *
+     * @return \Sulu\Bundle\ContactBundle\Entity\Contact 
+     */
+    public function getContact()
+    {
+        return $this->contact;
+    }
+
+    /**
+     * Set account
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\Account $account
+     * @return Activity
+     */
+    public function setAccount(\Sulu\Bundle\ContactBundle\Entity\Account $account = null)
+    {
+        $this->account = $account;
+    
+        return $this;
+    }
+
+    /**
+     * Get account
+     *
+     * @return \Sulu\Bundle\ContactBundle\Entity\Account 
+     */
+    public function getAccount()
+    {
+        return $this->account;
     }
 
     /**
@@ -265,7 +360,7 @@ class Activity
     public function setChanger(\Sulu\Component\Security\UserInterface $changer = null)
     {
         $this->changer = $changer;
-
+    
         return $this;
     }
 
@@ -288,7 +383,7 @@ class Activity
     public function setCreator(\Sulu\Component\Security\UserInterface $creator = null)
     {
         $this->creator = $creator;
-
+    
         return $this;
     }
 
@@ -303,48 +398,25 @@ class Activity
     }
 
     /**
-     * Set activityStatus
+     * Set assignedContact
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\ActivityStatus $activityStatus
+     * @param \Sulu\Bundle\ContactBundle\Entity\Contact $assignedContact
      * @return Activity
      */
-    public function setActivityStatus(\Sulu\Bundle\ContactBundle\Entity\ActivityStatus $activityStatus)
+    public function setAssignedContact(\Sulu\Bundle\ContactBundle\Entity\Contact $assignedContact)
     {
-        $this->activityStatus = $activityStatus;
-
+        $this->assignedContact = $assignedContact;
+    
         return $this;
     }
 
     /**
-     * Get activityStatus
+     * Get assignedContact
      *
-     * @return \Sulu\Bundle\ContactBundle\Entity\ActivityStatus
+     * @return \Sulu\Bundle\ContactBundle\Entity\Contact 
      */
-    public function getActivityStatus()
+    public function getAssignedContact()
     {
-        return $this->activityStatus;
-    }
-
-    /**
-     * Set contact
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Contact $contact
-     * @return Activity
-     */
-    public function setContact(\Sulu\Bundle\ContactBundle\Entity\Contact $contact)
-    {
-        $this->contact = $contact;
-
-        return $this;
-    }
-
-    /**
-     * Get contact
-     *
-     * @return \Sulu\Bundle\ContactBundle\Entity\Contact
-     */
-    public function getContact()
-    {
-        return $this->contact;
+        return $this->assignedContact;
     }
 }

@@ -3,6 +3,9 @@ parameters:
     sulu_contact.admin.content_navigation.class: Sulu\Bundle\ContactBundle\Admin\SuluContactContentNavigation
     sulu_contact.js_config.class: Sulu\Bundle\AdminBundle\Admin\JsConfig
     sulu_contact.import.class: Sulu\Bundle\ContactBundle\Import\Import
+    sulu_contact.account_listener.class: Sulu\Bundle\ContactBundle\EventListener\AccountListener
+    sulu_contact.contact_manager.class: Sulu\Bundle\ContactBundle\Contact\ContactManager
+    sulu_contact.account_manager.class: Sulu\Bundle\ContactBundle\Contact\AccountManager
 
 services:
     sulu_contact.admin:
@@ -17,6 +20,8 @@ services:
         class: %sulu_contact.import.class%
         arguments:
           - @doctrine.orm.entity_manager
+          - @sulu_contact.account_manager
+          - @sulu_contact.contact_manager
           - %sulu_contact.defaults%
           - %sulu_contact.account_types%
           - %sulu_contact.form_of_address%
@@ -28,3 +33,18 @@ services:
           - accountTypes: %sulu_contact.account_types%
         tags:
         - { name: sulu.js_config }
+
+    sulu_contact.account_listener:
+        class: %sulu_contact.account_listener.class%
+        tags:
+          - { name: doctrine.event_listener, event: postPersist }
+
+    sulu_contact.account_manager:
+            class: %sulu_contact.account_manager.class%
+            arguments:
+              - @doctrine.orm.entity_manager
+
+    sulu_contact.contact_manager:
+            class: %sulu_contact.contact_manager.class%
+            arguments:
+              - @doctrine.orm.entity_manager

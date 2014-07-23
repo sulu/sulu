@@ -918,7 +918,6 @@ define([
     return {
 
         initialize: function() {
-
             this.initialized = false;
             this.$editOverlayContent = null;
             this.form = null;

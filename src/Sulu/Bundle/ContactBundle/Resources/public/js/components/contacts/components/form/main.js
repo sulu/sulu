@@ -47,8 +47,15 @@ define([], function() {
                 this.formId = '#contact-form';
                 this.autoCompleteInstanceName = 'accounts-';
 
+                this.dfdAllFieldsInitialized = this.sandbox.data.deferred();
                 this.dfdListenForChange = this.sandbox.data.deferred();
                 this.dfdFormIsSet = this.sandbox.data.deferred();
+                this.dfdBirthdayIsSet = this.sandbox.data.deferred();
+
+                // define when all fields are initialized
+                this.sandbox.data.when(this.dfdListenForChange, this.dfdBirthdayIsSet).then(function() {
+                    this.dfdAllFieldsInitialized.resolve();
+                }.bind(this));
 
                 this.setTitle();
                 this.render();
@@ -74,7 +81,8 @@ define([], function() {
                         name: 'auto-complete@husky',
                         options: {
                             el: '#company',
-                            remoteUrl: '/admin/api/accounts?searchFields=id,name&flat=true',
+                            remoteUrl: '/admin/api/accounts?searchFields=name&flat=true&fields=id,name',
+                            resultKey: 'accounts',
                             getParameter: 'search',
                             value: data.account,
                             instanceName: this.companyInstanceName,
@@ -129,6 +137,7 @@ define([], function() {
                                 el: '#tags',
                                 instanceName: this.autoCompleteInstanceName,
                                 getParameter: 'search',
+                                itemsKey: 'tags',
                                 remoteUrl: '/admin/api/tags?flat=true&sortBy=name',
                                 completeIcon: 'tag',
                                 noNewTags: true
@@ -258,6 +267,10 @@ define([], function() {
                 this.sandbox.on('sulu.header.back', function() {
                     this.sandbox.emit('sulu.contacts.contacts.list');
                 }, this);
+
+                this.sandbox.on('husky.input.birthday.initialized', function() {
+                    this.dfdBirthdayIsSet.resolve();
+                }, this);
             },
 
             initContactData: function() {
@@ -373,8 +386,10 @@ define([], function() {
                 this.saved = saved;
             },
 
+            // event listens for changes in form
             listenForChange: function() {
-                this.dfdListenForChange.then(function() {
+                // listen for change after TAGS and BIRTHDAY-field have been set
+                this.sandbox.data.when(this.dfdAllFieldsInitialized).then(function() {
 
                     this.sandbox.dom.on('#contact-form', 'change', function() {
                         this.setHeaderBar(false);

@@ -1,23 +1,14 @@
 <?php
-/*
- * This file is part of the Sulu CMS.
- *
- * (c) MASSIVE ART WebServices GmbH
- *
- * This source file is subject to the MIT license that is bundled
- * with this source code in the file LICENSE.
- */
 
 namespace Sulu\Bundle\ContactBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Exclude;
-
-
+use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 /**
  * ActivityStatus
  */
-class ActivityStatus
+class ActivityStatus extends ApiEntity implements \JsonSerializable
 {
     /**
      * @var string
@@ -31,6 +22,7 @@ class ActivityStatus
 
     /**
      * @var \Doctrine\Common\Collections\Collection
+     * @Exclude
      */
     private $activities;
 
@@ -41,7 +33,7 @@ class ActivityStatus
     {
         $this->activities = new \Doctrine\Common\Collections\ArrayCollection();
     }
-
+    
     /**
      * Set name
      *
@@ -51,14 +43,14 @@ class ActivityStatus
     public function setName($name)
     {
         $this->name = $name;
-
+    
         return $this;
     }
 
     /**
      * Get name
      *
-     * @return string
+     * @return string 
      */
     public function getName()
     {
@@ -68,7 +60,7 @@ class ActivityStatus
     /**
      * Get id
      *
-     * @return integer
+     * @return integer 
      */
     public function getId()
     {
@@ -84,7 +76,7 @@ class ActivityStatus
     public function addActivitie(\Sulu\Bundle\ContactBundle\Entity\Activity $activities)
     {
         $this->activities[] = $activities;
-
+    
         return $this;
     }
 
@@ -101,10 +93,25 @@ class ActivityStatus
     /**
      * Get activities
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return \Doctrine\Common\Collections\Collection 
      */
     public function getActivities()
     {
         return $this->activities;
+    }
+
+    /**
+     * (PHP 5 &gt;= 5.4.0)<br/>
+     * Specify data which should be serialized to JSON
+     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return mixed data which can be serialized by <b>json_encode</b>,
+     * which is a value of any type other than a resource.
+     */
+    public function jsonSerialize()
+    {
+        return array(
+            'id' => $this->getId(),
+            'name' => $this->getName()
+        );
     }
 }

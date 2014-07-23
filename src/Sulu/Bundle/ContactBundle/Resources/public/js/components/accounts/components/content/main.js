@@ -15,6 +15,9 @@ define(function() {
         header: {
             tabs: {
                 url: '/admin/contact/navigation/account'
+            },
+            toolbar: {
+                template: []
             }
         }
     };
