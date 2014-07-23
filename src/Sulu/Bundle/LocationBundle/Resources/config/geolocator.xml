@@ -14,7 +14,7 @@
         <service id="sulu_location.geolocator.guzzle.log_adapter" class="%sulu_location.guzzle.psr_log_adapter.class%">
             <argument type="service" id="logger" />
             <!-- Log to the specified channel -->
-            <tag name="monolog.logger" channel="sulu_location.geolocator" />
+            <tag name="monolog.logger" channel="sululocation_geolocator" />
         </service>
 
         <!-- Guzzle log subscriber -->
