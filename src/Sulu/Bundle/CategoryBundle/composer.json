@@ -4,7 +4,7 @@
     "description": "Adds category functionality to sulu",
     "license": "MIT",
     "keywords": ["sulu", "categories"],
-    "version": "0.2.0",
+    "version": "dev-develop",
     "authors": [
         {
             "name": "Sulu Community",
@@ -16,9 +16,9 @@
         "doctrine/orm": ">=2.2.3,<2.4-dev",
         "friendsofsymfony/rest-bundle": "dev-master",
         "jms/serializer-bundle": "@dev",
-        "sulu/sulu": "0.5.*",
+        "sulu/sulu": "dev-develop",
         "stof/doctrine-extensions-bundle": "1.1.*@dev",
-        "sulu/admin-bundle": "0.5.*",
+        "sulu/admin-bundle": "dev-develop",
         "willdurand/hateoas-bundle": "0.3.*"
     },
     "require-dev": {
@@ -26,7 +26,7 @@
         "symfony/symfony": "2.5.*",
         "doctrine/doctrine-bundle": "1.2.*",
         "symfony/monolog-bundle": "2.4.*",
-        "sulu/test-bundle": "0.5.*",
+        "sulu/test-bundle": "dev-develop",
         "phpunit/phpunit": "4.0.*",
         "friendsofsymfony/http-cache": "@dev"
     },
