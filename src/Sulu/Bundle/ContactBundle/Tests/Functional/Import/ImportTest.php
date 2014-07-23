@@ -16,6 +16,8 @@ use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\AddressType;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
+use Sulu\Bundle\ContactBundle\Entity\ContactTitle;
+use Sulu\Bundle\ContactBundle\Entity\Position;
 use Sulu\Bundle\ContactBundle\Entity\Country;
 use Sulu\Bundle\ContactBundle\Entity\FaxType;
 use Sulu\Bundle\ContactBundle\Entity\Phone;
@@ -159,7 +161,9 @@ class ImportTest extends DatabaseTestCase
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ActivityPriority'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ActivityType'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Contact'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ContactTitle'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ContactAddress'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Position'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AccountAddress'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\BankAccount'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Phone'),
@@ -199,7 +203,6 @@ class ImportTest extends DatabaseTestCase
         // test contact import
         $this->checkContactData();
 
-        // FIXME needed because of strange doctrine behaviour
         // http://stackoverflow.com/questions/18268464/doctrine-lazy-loading-in-symfony-test-environment
         self::$em->clear();
 
@@ -361,7 +364,7 @@ class ImportTest extends DatabaseTestCase
         $this->assertEquals(1, $contact->getId());
         $this->assertEquals('John', $contact->getFirstName());
         $this->assertEquals('Doe', $contact->getLastName());
-        $this->assertEquals('Secretary', $contact->getPosition());
+        $this->assertEquals('Secretary', $contact->getPosition()->getPosition());
         $this->assertEquals(1, $contact->getAccountContacts()[0]->getAccount()->getId());
 
         // addresss
@@ -395,8 +398,8 @@ class ImportTest extends DatabaseTestCase
         $this->assertEquals(2, $contact->getId());
         $this->assertEquals('Nicole', $contact->getFirstName());
         $this->assertEquals('Exemplary', $contact->getLastName());
-        $this->assertEquals('CEO', $contact->getPosition());
-        $this->assertEquals('Master', $contact->getTitle());
+        $this->assertEquals('CEO', $contact->getPosition()->getPosition());
+        $this->assertEquals('Master', $contact->getTitle()->getTitle());
         $this->assertEquals(2, $contact->getAccountContacts()[0]->getAccount()->getId());
 
         // addresss

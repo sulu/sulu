@@ -295,7 +295,7 @@ class Contact extends ApiEntity
     /**
      * Set title
      *
-     * @param string $title
+     * @param object $title
      * @return Contact
      */
     public function setTitle($title)
