@@ -14,7 +14,7 @@
     "require": {
         "php": ">=5.4",
 
-        "sulu/sulu": "0.5*",
+        "sulu/sulu": "0.5.*",
         "sulu/admin-bundle": "0.5.*",
         "sulu/contact-bundle": "0.5.*",
         "sulu/security-bundle": "0.5.*",
