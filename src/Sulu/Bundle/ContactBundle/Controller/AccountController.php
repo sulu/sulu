@@ -488,7 +488,7 @@ class AccountController extends AbstractContactController
 
             $listBuilder = $factory->create(self::$entityName);
 
-            if($type){
+            if ($type) {
                 $listBuilder->where($this->fieldDescriptors['type'], $type);
             }
 
