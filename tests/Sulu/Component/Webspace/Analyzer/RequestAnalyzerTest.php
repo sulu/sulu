@@ -98,6 +98,7 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
         $request = $this->getMock('\Symfony\Component\HttpFoundation\Request');
         $request->expects($this->any())->method('getHost')->will($this->returnValue('sulu.lo'));
         $request->expects($this->any())->method('getRequestUri')->will($this->returnValue('/test/path/to'));
+        $request->expects($this->once())->method('setLocale')->with('de_at');
         $this->requestAnalyzer->analyze($request);
 
         $this->assertEquals('de_at', $this->requestAnalyzer->getCurrentLocalization()->getLocalization());
