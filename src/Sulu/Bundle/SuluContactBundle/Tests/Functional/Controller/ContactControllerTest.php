@@ -16,6 +16,8 @@ use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\AddressType;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
+use Sulu\Bundle\ContactBundle\Entity\ContactTitle;
+use Sulu\Bundle\ContactBundle\Entity\Position;
 use Sulu\Bundle\ContactBundle\Entity\ContactAddress;
 use Sulu\Bundle\ContactBundle\Entity\Country;
 use Sulu\Bundle\ContactBundle\Entity\Email;
@@ -34,6 +36,8 @@ use Sulu\Bundle\ContactBundle\Entity\ActivityType;
 
 class ContactControllerTest extends DatabaseTestCase
 {
+    private $contactPosition = null;
+    private $contactTitle = null;
     /**
      * @var array
      */
@@ -46,13 +50,20 @@ class ContactControllerTest extends DatabaseTestCase
         $contact = new Contact();
         $contact->setFirstName('Max');
         $contact->setLastName('Mustermann');
-        $contact->setTitle('Dr');
         $contact->setPosition('CEO');
         $contact->setCreated(new DateTime());
         $contact->setChanged(new DateTime());
         $contact->setFormOfAddress(1);
         $contact->setSalutation("Sehr geehrter Herr Dr Mustermann");
         $contact->setDisabled(0);
+
+        $title = new ContactTitle();
+        $title->setTitle('MSc');
+
+        $contact->setTitle($title);
+
+        $position = new Position();
+        $position->setPosition('Manager');
 
         $account = new Account();
         $account->setLft(0);
@@ -132,6 +143,8 @@ class ContactControllerTest extends DatabaseTestCase
         $contact->addNote($note);
 
         self::$em->persist($contact);
+        self::$em->persist($title);
+        self::$em->persist($position);
         self::$em->persist($account);
         self::$em->persist($account1);
         self::$em->persist($phoneType);
@@ -148,6 +161,10 @@ class ContactControllerTest extends DatabaseTestCase
         self::$em->persist($note);
 
         self::$em->flush();
+
+        global $contactPosition, $contactTitle;
+        $contactTitle = $title;
+        $contactPosition = $position;
     }
 
     public function tearDown()
@@ -164,6 +181,8 @@ class ContactControllerTest extends DatabaseTestCase
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Activity'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ActivityStatus'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Contact'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ContactTitle'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Position'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Account'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AccountContact'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AccountAddress'),
@@ -206,7 +225,6 @@ class ContactControllerTest extends DatabaseTestCase
         $this->assertEquals('Max', $response->firstName);
         $this->assertEquals('Mustermann', $response->lastName);
         $this->assertEquals('Max Mustermann', $response->fullName);
-        $this->assertEquals('Dr', $response->title);
         $this->assertEquals('123456789', $response->phones[0]->phone);
         $this->assertEquals('Private', $response->phones[0]->phoneType->name);
         $this->assertEquals('123654789', $response->faxes[0]->fax);
@@ -246,6 +264,8 @@ class ContactControllerTest extends DatabaseTestCase
 
     public function testPostAccountIDNull()
     {
+        global $contactPosition, $contactTitle;
+
         $client = $this->createTestClient();
 
         $client->request(
@@ -254,8 +274,8 @@ class ContactControllerTest extends DatabaseTestCase
             array(
                 'firstName' => 'Erika',
                 'lastName' => 'Mustermann',
-                'title' => 'MSc',
-                'position' => 'Manager',
+                'title' => $contactTitle->getId(),
+                'position' => $contactPosition->getId(),
                 'account' => array(
                     'id' => null
                 ),
@@ -332,7 +352,7 @@ class ContactControllerTest extends DatabaseTestCase
 
         $this->assertEquals('Erika', $response->firstName);
         $this->assertEquals('Mustermann', $response->lastName);
-        $this->assertEquals('MSc', $response->title);
+        $this->assertEquals('MSc', $response->title->title);
         $this->assertEquals('erika.mustermann@muster.at', $response->emails[0]->email);
         $this->assertEquals('erika.mustermann@muster.de', $response->emails[1]->email);
         $this->assertEquals('123456789', $response->phones[0]->phone);
@@ -362,7 +382,7 @@ class ContactControllerTest extends DatabaseTestCase
         $this->assertEquals(2, $response->id);
         $this->assertEquals('Erika', $response->firstName);
         $this->assertEquals('Mustermann', $response->lastName);
-        $this->assertEquals('MSc', $response->title);
+        $this->assertEquals('MSc', $response->title->title);
         $this->assertEquals('erika.mustermann@muster.at', $response->emails[0]->email);
         $this->assertEquals('erika.mustermann@muster.de', $response->emails[1]->email);
         $this->assertEquals('123456789', $response->phones[0]->phone);
@@ -390,6 +410,8 @@ class ContactControllerTest extends DatabaseTestCase
 
     public function testPost()
     {
+        global $contactPosition, $contactTitle;
+
         $client = $this->createTestClient();
 
         $client->request(
@@ -398,8 +420,8 @@ class ContactControllerTest extends DatabaseTestCase
             array(
                 'firstName' => 'Erika',
                 'lastName' => 'Mustermann',
-                'title' => 'MSc',
-                'position' => 'Manager',
+                'title' => $contactTitle->getId(),
+                'position' => $contactPosition->getId(),
                 'account' => array(
                     'id' => 2
                 ),
@@ -493,8 +515,8 @@ class ContactControllerTest extends DatabaseTestCase
 
         $this->assertEquals('Erika', $response->firstName);
         $this->assertEquals('Mustermann', $response->lastName);
-        $this->assertEquals('MSc', $response->title);
-        $this->assertEquals('Manager', $response->position);
+        $this->assertEquals('MSc', $response->title->title);
+        $this->assertEquals('Manager', $response->position->position);
         $this->assertEquals('erika.mustermann@muster.at', $response->emails[0]->email);
         $this->assertEquals('erika.mustermann@muster.de', $response->emails[1]->email);
         $this->assertEquals('123456789', $response->phones[0]->phone);
@@ -526,8 +548,8 @@ class ContactControllerTest extends DatabaseTestCase
         $this->assertEquals(2, $response->id);
         $this->assertEquals('Erika', $response->firstName);
         $this->assertEquals('Mustermann', $response->lastName);
-        $this->assertEquals('MSc', $response->title);
-        $this->assertEquals('Manager', $response->position);
+        $this->assertEquals('BSc', $response->title->title);
+        $this->assertEquals('Manager', $response->position->position);
         $this->assertEquals('erika.mustermann@muster.at', $response->emails[0]->email);
         $this->assertEquals('erika.mustermann@muster.de', $response->emails[1]->email);
         $this->assertEquals('123456789', $response->phones[0]->phone);
@@ -556,6 +578,8 @@ class ContactControllerTest extends DatabaseTestCase
 
     public function testPostWithoutAdditionalData()
     {
+        global $contactPosition, $contactTitle;
+
         $client = $this->createTestClient();
 
         $client->request(
@@ -564,8 +588,8 @@ class ContactControllerTest extends DatabaseTestCase
             array(
                 'firstName' => 'Erika',
                 'lastName' => 'Mustermann',
-                'title' => 'MSc',
-                'position' => 'Manager',
+                'title' => $contactTitle->getId(),
+                'position' => $contactPosition->getId(),
                 'disabled' => 0,
                 'salutation' => 'Sehr geehrte Frau Dr Mustermann',
                 'formOfAddress' => array(
@@ -578,7 +602,7 @@ class ContactControllerTest extends DatabaseTestCase
 
         $this->assertEquals('Erika', $response->firstName);
         $this->assertEquals('Mustermann', $response->lastName);
-        $this->assertEquals('MSc', $response->title);
+        $this->assertEquals('MSc', $response->title->title);
 
         $client->request('GET', '/api/contacts/' . $response->id);
         $response = json_decode($client->getResponse()->getContent());
@@ -586,11 +610,13 @@ class ContactControllerTest extends DatabaseTestCase
         $this->assertEquals(2, $response->id);
         $this->assertEquals('Erika', $response->firstName);
         $this->assertEquals('Mustermann', $response->lastName);
-        $this->assertEquals('MSc', $response->title);
+        $this->assertEquals('MSc', $response->title->title);
     }
 
     public function testPostWithoutDisabledFlag()
     {
+        global $contactPosition, $contactTitle;
+
         $client = $this->createTestClient();
 
         $client->request(
@@ -599,8 +625,8 @@ class ContactControllerTest extends DatabaseTestCase
             array(
                 'firstName' => 'Erika',
                 'lastName' => 'Mustermann',
-                'title' => 'MSc',
-                'position' => 'Manager',
+                'title' => $contactTitle->getId(),
+                'position' => $contactPosition->getId(),
                 'salutation' => 'Sehr geehrte Frau Mustermann',
                 'formOfAddress' => array(
                     'id' => 0
@@ -616,6 +642,8 @@ class ContactControllerTest extends DatabaseTestCase
 
     public function testPostWithoutFormOfAddress()
     {
+        global $contactPosition, $contactTitle;
+
         $client = $this->createTestClient();
 
         $client->request(
@@ -624,8 +652,8 @@ class ContactControllerTest extends DatabaseTestCase
             array(
                 'firstName' => 'Erika',
                 'lastName' => 'Mustermann',
-                'title' => 'MSc',
-                'position' => 'Manager',
+                'title' => $contactTitle->getId(),
+                'position' => $contactPosition->getId(),
                 'salutation' => 'Sehr geehrte Frau Mustermann',
                 'disabled' => 0
             )
@@ -639,6 +667,8 @@ class ContactControllerTest extends DatabaseTestCase
 
     public function testPostWithEmptyAdditionalData()
     {
+        global $contactPosition, $contactTitle;
+
         $client = $this->createTestClient();
 
         $client->request(
@@ -647,8 +677,8 @@ class ContactControllerTest extends DatabaseTestCase
             array(
                 'firstName' => 'Erika',
                 'lastName' => 'Mustermann',
-                'title' => 'MSc',
-                'position' => 'Manager',
+                'title' => $contactTitle->getId(),
+                'position' => $contactPosition->getId(),
                 'emails' => array(),
                 'phones' => array(),
                 'notes' => array(),
@@ -665,7 +695,7 @@ class ContactControllerTest extends DatabaseTestCase
 
         $this->assertEquals('Erika', $response->firstName);
         $this->assertEquals('Mustermann', $response->lastName);
-        $this->assertEquals('MSc', $response->title);
+        $this->assertEquals('MSc', $response->title->title);
 
         $this->assertEquals(0, $response->formOfAddress);
         $this->assertEquals("Sehr geehrte Frau Dr Mustermann", $response->salutation);
@@ -677,7 +707,7 @@ class ContactControllerTest extends DatabaseTestCase
         $this->assertEquals(2, $response->id);
         $this->assertEquals('Erika', $response->firstName);
         $this->assertEquals('Mustermann', $response->lastName);
-        $this->assertEquals('MSc', $response->title);
+        $this->assertEquals('MSc', $response->title->title);
 
         $this->assertEquals(0, $response->formOfAddress);
         $this->assertEquals("Sehr geehrte Frau Dr Mustermann", $response->salutation);
@@ -707,6 +737,8 @@ class ContactControllerTest extends DatabaseTestCase
 
     public function testPut()
     {
+        global $contactPosition, $contactTitle;
+
         $client = $this->createTestClient();
 
         $client->request(
@@ -715,8 +747,8 @@ class ContactControllerTest extends DatabaseTestCase
             array(
                 'firstName' => 'John',
                 'lastName' => 'Doe',
-                'title' => 'MBA',
-                'position' => 'Manager',
+                'title' => $contactTitle->getId(),
+                'position' => $contactPosition->getId(),
                 'emails' => array(
                     array(
                         'id' => 1,
@@ -825,7 +857,7 @@ class ContactControllerTest extends DatabaseTestCase
 
         $this->assertEquals('John', $response->firstName);
         $this->assertEquals('Doe', $response->lastName);
-        $this->assertEquals('MBA', $response->title);
+        $this->assertEquals('MSc', $response->title->title);
         $this->assertEquals('john.doe@muster.at', $response->emails[0]->email);
         $this->assertEquals('john.doe@muster.de', $response->emails[1]->email);
         $this->assertEquals('321654987', $response->phones[0]->phone);
@@ -858,7 +890,7 @@ class ContactControllerTest extends DatabaseTestCase
 
         $this->assertEquals('John', $response->firstName);
         $this->assertEquals('Doe', $response->lastName);
-        $this->assertEquals('MBA', $response->title);
+        $this->assertEquals('MSc', $response->title->title);
         $this->assertEquals('john.doe@muster.at', $response->emails[0]->email);
         $this->assertEquals('john.doe@muster.de', $response->emails[1]->email);
         $this->assertEquals('321654987', $response->phones[0]->phone);
@@ -889,6 +921,8 @@ class ContactControllerTest extends DatabaseTestCase
 
     public function testPutDeleteAndAddWithoutId()
     {
+        global $contactPosition, $contactTitle;
+
         $client = $this->createTestClient();
 
         $client->request(
@@ -897,8 +931,8 @@ class ContactControllerTest extends DatabaseTestCase
             array(
                 'firstName' => 'John',
                 'lastName' => 'Doe',
-                'title' => 'MBA',
-                'position' => 'Manager',
+                'title' => $contactTitle->getId(),
+                'position' => $contactPosition->getId(),
                 'emails' => array(
                     array(
                         'email' => 'john.doe@muster.de',
@@ -967,7 +1001,7 @@ class ContactControllerTest extends DatabaseTestCase
 
         $this->assertEquals('John', $response->firstName);
         $this->assertEquals('Doe', $response->lastName);
-        $this->assertEquals('MBA', $response->title);
+        $this->assertEquals('MSc', $response->title->title);
         $this->assertEquals('john.doe@muster.de', $response->emails[0]->email);
         $this->assertEquals('789456123', $response->phones[0]->phone);
         $this->assertEquals('147258369-1', $response->faxes[0]->fax);
@@ -995,7 +1029,7 @@ class ContactControllerTest extends DatabaseTestCase
 
         $this->assertEquals('John', $response->firstName);
         $this->assertEquals('Doe', $response->lastName);
-        $this->assertEquals('MBA', $response->title);
+        $this->assertEquals('MSc', $response->title->title);
         $this->assertEquals('john.doe@muster.de', $response->emails[0]->email);
         $this->assertEquals('789456123', $response->phones[0]->phone);
         $this->assertEquals('147258369-1', $response->faxes[0]->fax);
@@ -1021,6 +1055,8 @@ class ContactControllerTest extends DatabaseTestCase
 
     public function testPutNoEmail()
     {
+        global $contactPosition, $contactTitle;
+
         $client = $this->createTestClient();
 
         $client->request(
@@ -1029,8 +1065,8 @@ class ContactControllerTest extends DatabaseTestCase
             array(
                 'firstName' => 'John',
                 'lastName' => 'Doe',
-                'title' => 'MBA',
-                'position' => 'Manager',
+                'title' => $contactTitle->getId(),
+                'position' => $contactPosition->getId(),
                 'emails' => array(),
                 'phones' => array(
                     array(
@@ -1099,7 +1135,7 @@ class ContactControllerTest extends DatabaseTestCase
 
         $this->assertEquals('John', $response->firstName);
         $this->assertEquals('Doe', $response->lastName);
-        $this->assertEquals('MBA', $response->title);
+        $this->assertEquals('MSc', $response->title->title);
         $this->assertEquals(0, count($response->emails));
 
         $this->assertEquals(true, $response->addresses[0]->billingAddress);
@@ -1116,6 +1152,8 @@ class ContactControllerTest extends DatabaseTestCase
 
     public function testPutNewCountryOnlyId()
     {
+        global $contactPosition, $contactTitle;
+
         $client = $this->createTestClient();
 
         $client->request(
@@ -1124,8 +1162,8 @@ class ContactControllerTest extends DatabaseTestCase
             array(
                 'firstName' => 'John',
                 'lastName' => 'Doe',
-                'title' => 'MBA',
-                'position' => 'Manager',
+                'title' => $contactTitle->getId(),
+                'position' => $contactPosition->getId(),
                 'emails' => array(),
                 'phones' => array(
                     array(
@@ -1187,7 +1225,7 @@ class ContactControllerTest extends DatabaseTestCase
 
         $this->assertEquals('John', $response->firstName);
         $this->assertEquals('Doe', $response->lastName);
-        $this->assertEquals('MBA', $response->title);
+        $this->assertEquals('MSc', $response->title->title);
         $this->assertEquals(0, count($response->emails));
 
         $this->assertEquals(2, $response->addresses[0]->country->id);
@@ -1199,6 +1237,8 @@ class ContactControllerTest extends DatabaseTestCase
 
     public function testPutNewAccount()
     {
+        global $contactPosition, $contactTitle;
+
         $client = $this->createTestClient();
 
         $client->request(
@@ -1207,8 +1247,8 @@ class ContactControllerTest extends DatabaseTestCase
             array(
                 'firstName' => 'John',
                 'lastName' => 'Doe',
-                'title' => 'MBA',
-                'position' => 'Manager',
+                'title' => $contactTitle->getId(),
+                'position' => $contactPosition->getId(),
                 'account' => array(
                     'id' => 2
                 ),
@@ -1273,7 +1313,7 @@ class ContactControllerTest extends DatabaseTestCase
 
         $this->assertEquals('John', $response->firstName);
         $this->assertEquals('Doe', $response->lastName);
-        $this->assertEquals('MBA', $response->title);
+        $this->assertEquals('MSc', $response->title->title);
         $this->assertEquals(0, count($response->emails));
 
         $this->assertEquals(2, $response->account->id);
@@ -1309,7 +1349,7 @@ class ContactControllerTest extends DatabaseTestCase
         $this->assertEquals(1, $response->total);
 
         $this->assertEquals('Max Mustermann', $response->_embedded->contacts[0]->fullName);
-        $this->assertEquals('Dr', $response->_embedded->contacts[0]->title);
+        $this->assertEquals('MSc', $response->_embedded->contacts[0]->title);
 
         $this->assertEquals(1, $response->_embedded->contacts[0]->formOfAddress);
         $this->assertEquals('Sehr geehrter Herr Dr Mustermann', $response->_embedded->contacts[0]->salutation);
@@ -1363,6 +1403,8 @@ class ContactControllerTest extends DatabaseTestCase
 
     public function testPutRemovedAccount()
     {
+        global $contactPosition, $contactTitle;
+
         $client = $this->createTestClient();
 
         $client->request(
@@ -1371,8 +1413,8 @@ class ContactControllerTest extends DatabaseTestCase
             array(
                 'firstName' => 'John',
                 'lastName' => 'Doe',
-                'title' => 'MBA',
-                'position' => 'Manager',
+                'title' => $contactTitle->getId(),
+                'position' => $contactPosition->getId(),
                 'account' => array(
                     'id' => 2
                 ),
@@ -1454,7 +1496,7 @@ class ContactControllerTest extends DatabaseTestCase
 
         $this->assertEquals('John', $response->firstName);
         $this->assertEquals('Doe', $response->lastName);
-        $this->assertEquals('MBA', $response->title);
+        $this->assertEquals('MSc', $response->title->title);
         $this->assertEquals('2', $response->account->id);
         $this->assertEquals('john.doe@muster.at', $response->emails[0]->email);
         $this->assertEquals('john.doe@muster.de', $response->emails[1]->email);
@@ -1479,8 +1521,8 @@ class ContactControllerTest extends DatabaseTestCase
             array(
                 'firstName' => 'John',
                 'lastName' => 'Doe',
-                'title' => 'MBA',
-                'position' => 'Manager',
+                'title' => $contactTitle->getId(),
+                'position' => $contactPosition->getId(),
                 'account' => array(
                     'id' => null
                 ),
@@ -1560,7 +1602,7 @@ class ContactControllerTest extends DatabaseTestCase
 
         $this->assertEquals('John', $response->firstName);
         $this->assertEquals('Doe', $response->lastName);
-        $this->assertEquals('MBA', $response->title);
+        $this->assertEquals('MSc', $response->title->title);
         $this->assertObjectNotHasAttribute('account', $response);
         $this->assertEquals('john.doe@muster.at', $response->emails[0]->email);
         $this->assertEquals('john.doe@muster.de', $response->emails[1]->email);
@@ -1584,7 +1626,7 @@ class ContactControllerTest extends DatabaseTestCase
 
         $this->assertEquals('John', $response->firstName);
         $this->assertEquals('Doe', $response->lastName);
-        $this->assertEquals('MBA', $response->title);
+        $this->assertEquals('MSc', $response->title->title);
         $this->assertObjectNotHasAttribute('account', $response);
         $this->assertEquals('john.doe@muster.at', $response->emails[0]->email);
         $this->assertEquals('john.doe@muster.de', $response->emails[1]->email);
@@ -1709,6 +1751,8 @@ class ContactControllerTest extends DatabaseTestCase
 
     public function testPrimaryAddressHandlingPut()
     {
+        global $contactPosition, $contactTitle;
+
         $client = $this->createTestClient();
 
         $client->request(
@@ -1717,8 +1761,8 @@ class ContactControllerTest extends DatabaseTestCase
             array(
                 'firstName' => 'John',
                 'lastName' => 'Doe',
-                'title' => 'MBA',
-                'position' => 'Manager',
+                'title' => $contactTitle->getId(),
+                'position' => $contactPosition->getId(),
                 'emails' => array(
                     array(
                         'id' => 1,

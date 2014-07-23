@@ -35,12 +35,12 @@ define([], function() {
             templates: ['/admin/contact/template/contact/form'],
 
             customTemplates: {
-                    addAddressesIcon: [
-                        '<div class="grid-row">',
-                        '    <div class="grid-col-12">',
-                        '       <span id="address-add" class="fa-plus-circle icon address-add clickable pointer m-left-140"></span>',
-                        '   </div>',
-                        '</div>'].join('')
+                addAddressesIcon: [
+                    '<div class="grid-row">',
+                    '    <div class="grid-col-12">',
+                    '       <span id="address-add" class="fa-plus-circle icon address-add clickable pointer m-left-140"></span>',
+                    '   </div>',
+                    '</div>'].join('')
             },
 
             initialize: function() {
@@ -359,7 +359,7 @@ define([], function() {
             },
 
             submit: function() {
-                this.sandbox.logger.log('save Model');
+                this.sandbox.logger.log('save Model', this.sandbox.form.getData(form));
 
                 if (this.sandbox.form.validate(form)) {
                     var data = this.sandbox.form.getData(form);
@@ -393,71 +393,11 @@ define([], function() {
             },
 
             /**
-            * Delete callback function for editable drop down
-            * @param indexes - indexes to delete
-            * @param url - api url
-            */
-            itemDeleted: function(indexes, url) {
-                if (!!indexes && indexes.length > 0) {
-                    this.sandbox.util.each(indexes, function(index, el) {
-                        this.deleteItem(el, url);
-                    }.bind(this));
-                }
-            },
-
-            /**
-            * Save callback function for editable drop down
-            * @param changedData - data to save
-            * @param url - api url
-            */
-            itemSaved: function(changedData, url, instance) {
-                if (!!changedData && changedData.length > 0) {
-                    this.sandbox.util.save(
-                            url,
-                            'PATCH',
-                            changedData)
-                        .then(function(response) {
-                            this.sandbox.emit(
-                                instance + '.update',
-                                response,
-                                [],
-                                true,
-                                true);
-                        }.bind(this)).fail(function(status, error) {
-                            this.sandbox.emit(instance + '.revert');
-                            this.sandbox.logger.error(status, error);
-                        }.bind(this));
-                    }
-            },
-
-            /**
-            * delete elements
-            * @param id
-            * @param url - api url
-            */
-            deleteItem: function(id, url) {
-                this.sandbox.util.save(url + '/' + id, 'DELETE')
-                    .then(function() {
-                    }.bind(this)).fail(function(status, error) {
-                        this.sandbox.emit(instance + '.revert');
-                        this.sandbox.logger.error(status, error);
-                        return null;
-                    }.bind(this));
-            },
-
-            /**
-            * Register events for editable drop downs
-            * @param instanceName
-            */
+             * Register events for editable drop downs
+             * @param instanceName
+             */
             initializeDropDownListender: function(instanceName, url) {
                 var instance = 'husky.select.' + instanceName;
-                // Listen for changes in title selection drop down
-                this.sandbox.on(instance + '.deleted', function(data) {
-                    this.itemDeleted(data, url);
-                }.bind(this));
-                this.sandbox.on(instance + '.saved', function(data) {
-                    this.itemSaved(data, url, instance);
-                }.bind(this));
                 this.sandbox.on(instance + '.selected.item', function(id) {
                     if (id > 0) {
                         this.selectedAccountCategory = id;
@@ -470,9 +410,9 @@ define([], function() {
             },
 
             /**
-            * Enables or disables the position dropdown
-            * @param data - event
-            */
+             * Enables or disables the position dropdown
+             * @param data - event
+             */
             enablePositionDropdown: function(enable) {
                 if (!!enable) {
                     this.sandbox.emit('husky.select.position-select.enable');
@@ -507,8 +447,8 @@ define([], function() {
                     this.sandbox.on(
                         'husky.auto-complete.companyContact1.select',
                         function(id) {
-                        this.enablePositionDropdown(true);
-                    }.bind(this));
+                            this.enablePositionDropdown(true);
+                        }.bind(this));
 
                 }.bind(this));
 
@@ -517,11 +457,11 @@ define([], function() {
                 }.bind(this));
 
                 this.initializeDropDownListender(
-                        'title-select',
-                        'api/contact/titles');
+                    'title-select',
+                    'api/contact/titles');
                 this.initializeDropDownListender(
-                        'position-select',
-                        'api/contact/positions');
+                    'position-select',
+                    'api/contact/positions');
             }
         };
     })();

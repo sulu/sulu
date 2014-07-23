@@ -9,8 +9,10 @@
 
 define([
     'sulucontact/model/contact',
-    'sulucontact/model/activity'
-], function(Contact, Activity) {
+    'sulucontact/model/activity',
+    'sulucontact/model/title',
+    'sulucontact/model/position'
+], function(Contact, Activity, Title, Position) {
 
     'use strict';
 
@@ -74,6 +76,13 @@ define([
             this.sandbox.on('sulu.contacts.contact.activities.delete', this.removeActivities.bind(this));
             this.sandbox.on('sulu.contacts.contact.activity.save', this.saveActivity.bind(this));
             this.sandbox.on('sulu.contacts.contact.activity.load', this.loadActivity.bind(this));
+
+            this.initializeDropDownListender(
+                'title-select',
+                'api/contact/titles');
+            this.initializeDropDownListender(
+                'position-select',
+                'api/contact/positions');
         },
 
         /**
@@ -334,6 +343,87 @@ define([
                 .fail(function(textStatus, error) {
                     this.sandbox.logger.error(textStatus, error);
                 }.bind(this));
+        },
+
+        /**
+         * Delete callback function for editable drop down
+         * @param indexes - indexes to delete
+         * @param url - api url
+         */
+        itemDeleted: function(ids, instanceName) {
+            if (!!ids && ids.length > 0) {
+                this.sandbox.util.each(ids, function(index, el) {
+                    this.deleteItem(el, instanceName);
+                }.bind(this));
+            }
+        },
+
+        /**
+         * delete elements
+         * @param id
+         * @param url - api url
+         */
+        deleteItem: function(id, instanceName) {
+            if (instanceName === 'title-select') {
+                this.delete(Title.findOrCreate({id: id}), instanceName);
+            } else if (instanceName === 'position-select') {
+                this.delete(Position.findOrCreate({id: id}), instanceName);
+            }
+        },
+
+        /**
+         * delete elements helper function
+         * @param entity
+         * @param instanceName
+         */
+        delete: function(entity, instanceName) {
+            entity.destroy({
+                success: function() {
+                }.bind(this),
+                error: function() {
+                    this.sandbox.emit('husky.select.' + instanceName + '.revert');
+                }.bind(this)
+            });
+        },
+
+        /**
+         * Save callback function for editable drop down
+         * @param changedData - data to save
+         * @param url - api url
+         */
+        itemSaved: function(changedData, url, instance) {
+            if (!!changedData && changedData.length > 0) {
+                this.sandbox.util.save(
+                    url,
+                    'PATCH',
+                    changedData)
+                    .then(function(response) {
+                        this.sandbox.emit(
+                                instance + '.update',
+                            response,
+                            [],
+                            true,
+                            true);
+                    }.bind(this)).fail(function(status, error) {
+                        this.sandbox.emit(instance + '.revert');
+                        this.sandbox.logger.error(status, error);
+                    }.bind(this));
+            }
+        },
+
+        /**
+         * Register events for editable drop downs
+         * @param instanceName
+         */
+        initializeDropDownListender: function(instanceName, url) {
+            var instance = 'husky.select.' + instanceName;
+            // Listen for changes in title selection drop down
+            this.sandbox.on(instance + '.deleted', function(data) {
+                this.itemDeleted(data, instanceName);
+            }.bind(this));
+            this.sandbox.on(instance + '.saved', function(data) {
+                this.itemSaved(data, url, instance);
+            }.bind(this));
         },
 
         /**
