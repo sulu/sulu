@@ -27,11 +27,11 @@ define([
                 },
 
                 setValue: function(value) {
-                    App.dom.data($el, 'location', value)
+                    App.dom.data($el, 'location', value);
                 },
 
                 getValue: function() {
-                    return App.dom.data($el, 'location')
+                    return App.dom.data($el, 'location');
                 },
 
                 needsValidation: function() {

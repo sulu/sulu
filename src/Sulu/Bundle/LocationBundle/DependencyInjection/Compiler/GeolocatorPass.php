@@ -5,6 +5,10 @@ namespace Sulu\Bundle\LocationBundle\DependencyInjection\Compiler;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
+/**
+ * This compiler pass registers tagged geolocator services
+ * with the geolocator manager
+ */
 class GeolocatorPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)

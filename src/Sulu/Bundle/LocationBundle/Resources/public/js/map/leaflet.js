@@ -1,4 +1,4 @@
-define(['leaflet'], function (leaflet) {
+define(['require', 'leaflet'], function (require, leaflet) {
     'use strict';
 
     /**
@@ -32,8 +32,8 @@ define(['leaflet'], function (leaflet) {
 
             var MarkerIcon = L.Icon.Default.extend({
                 options: {
-                    iconUrl: '../vendor/leaflet/images/marker-icon.png',
-                    shadowUrl: '../vendor/leaflet/images/marker-shadow.png'
+                    iconUrl: require.toUrl('../../../sululocation/js/vendor/leaflet/images/marker-icon.png'),
+                    shadowUrl: require.toUrl('../../../sululocation/js/vendor/leaflet/images/marker-shadow.png')
                 }
             });
 

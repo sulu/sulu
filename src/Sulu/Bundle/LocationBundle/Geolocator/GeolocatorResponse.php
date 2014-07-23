@@ -2,6 +2,9 @@
 
 namespace Sulu\Bundle\LocationBundle\Geolocator;
 
+/**
+ * Container for aggregating geolocations
+ */
 class GeolocatorResponse implements \Countable
 {
     protected $locations = array();

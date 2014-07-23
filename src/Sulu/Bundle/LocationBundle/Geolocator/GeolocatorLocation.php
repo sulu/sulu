@@ -2,22 +2,62 @@
 
 namespace Sulu\Bundle\LocationBundle\Geolocator;
 
+use Sulu\Component\Util\TextUtils;
+
+/**
+ * Data object representing a location returned
+ * by a geolocator.
+ */
 class GeolocatorLocation
 {
+    /**
+     * ID of this location (according to the geolocation vendor)
+     *
+     * @var mixed
+     */
     protected $id;
-    protected $displayTitle;
-    protected $street;
-    protected $number;
-    protected $code;
-    protected $town;
-    protected $country;
-    protected $longitude;
-    protected $latitude;
 
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
+    /**
+     * Title to display
+     *
+     * @var string
+     */
+    protected $displayTitle;
+
+    /**
+     * @var string
+     */
+    protected $street;
+
+    /**
+     * @var string
+     */
+    protected $number;
+
+    /**
+     * @var string
+     */
+    protected $code;
+
+    /**
+     * @var string
+     */
+    protected $town;
+
+    /**
+     * @var string
+     */
+    protected $country;
+
+    /**
+     * @var double
+     */
+    protected $longitude;
+
+    /**
+     * @var double
+     */
+    protected $latitude;
 
     public function getDisplayTitle() 
     {
@@ -118,7 +158,16 @@ class GeolocatorLocation
         $this->displayName = $displayName;
     }
     
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
 
+    /**
+     * Serialize the location to an array
+     *
+     * @return array
+     */
     public function toArray()
     {
         $res = array();
@@ -137,9 +186,7 @@ class GeolocatorLocation
             $res[$propertyName] = $this->{'get' . ucfirst($propertyName)}();
         }
 
-        $res['name'] = mb_strlen($this->getDisplayTitle(), 'UTF-8') > 100 ?
-            mb_substr($this->getDisplayTitle(), 0, 47, 'UTF-8') . '...' :
-            $this->getDisplayTitle();
+        $res['name'] = TextUtils::truncate($this->getDisplayTitle(), 75);;
 
         return $res;
     }

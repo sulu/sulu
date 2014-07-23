@@ -44,9 +44,9 @@ define([], function() {
             number: '',
             code: '',
             country: '',
-            long: '',
-            lat: '',
-            zoom: '',
+            long: 0,
+            lat: 0,
+            zoom: 0,
             mapProvider: 'leaflet'
         },
 
@@ -72,12 +72,12 @@ define([], function() {
 
         templates = {
             skeleton: [
-                '<div class="<%= constants.contentContainerClass %> form-element">',
-                    '<div class="location-header"><a href="#" class="<%= constants.configureButtonClass %>"><span class="fa-gears icon large"></span></a></div>',
-                    '<div class="<%= constants.contentClass %>">',
+                '<div class="<%= constants.contentContainerClass %> white-box form-element">',
+                    '<div class="header"><span class="fa-gears <%= constants.configureButtonClass %> icon right border"></span></div>',
+                    '<div class="content <%= constants.contentClass %>">',
                         '<div class="grid-row">',
                             '<div class="grid-col-6 container">',
-                                '<div id="<%= constants.mapElementId %>" class="<%= constants.mapElementClass %>"><img src="/bundles/sululocation/js/test/map.png"/></div>',
+                                '<div id="<%= constants.mapElementId %>" class="content <%= constants.mapElementClass %>"></div>',
                             '</div>',
                             '<div class="grid-col-6 <%= constants.contentFieldContainerClass %>">',
                             '</div>',
@@ -88,35 +88,35 @@ define([], function() {
             contentFields: [
                 '<div class="container grid">',
                     '<div class="grid-row">',
-                        '<div class="grid-col-3 field"><%= translations.title %>:</div>',
+                        '<div class="grid-col-3 text"><%= translations.title %>:</div>',
                         '<div class="grid-col-9"><%= data.title %></div>',
                     '</div>',
                     '<div class="grid-row no-spacing">',
-                        '<div class="grid-col-3 field"><%= translations.street %></div>',
+                        '<div class="grid-col-3 text"><%= translations.street %></div>',
                         '<div class="grid-col-9"><%= data.street %></div>',
                     '</div>',
                     '<div class="grid-row no-spacing">',
 
-                        '<div class="grid-col-3 field"><%= translations.number %>:</div>',
+                        '<div class="grid-col-3 text"><%= translations.number %>:</div>',
                         '<div class="grid-col-9"><%= data.number %></div>',
                     '</div>',
 
                     '<div class="grid-row no-spacing">',
-                        '<div class="grid-col-3 field"><%= translations.code %>:</div>',
+                        '<div class="grid-col-3 text"><%= translations.code %>:</div>',
                         '<div class="grid-col-9"><%= data.code %></div>',
                     '</div>',
 
                     '<div class="grid-row no-spacing">',
-                        '<div class="grid-col-3 field"><%= translations.town %>:</div>',
+                        '<div class="grid-col-3 text"><%= translations.town %>:</div>',
                         '<div class="grid-col-9"><%= data.town %></div>',
                     '</div>',
 
                     '<div class="grid-row">',
-                        '<div class="grid-col-3 field"><%= translations.country %>:</div>',
+                        '<div class="grid-col-3 text"><%= translations.country %>:</div>',
                         '<div class="grid-col-9"><%= data.country %></div>',
                     '</div>',
                     '<div class="grid-row">',
-                        '<div class="grid-col-3 field"><%= translations.coordinates %>:</div>',
+                        '<div class="grid-col-3 text"><%= translations.coordinates %>:</div>',
                         '<div class="grid-col-9"><%= data.long %>, <%= data.lat %>, <%= data.zoom %></div>',
                     '</div>',
                 '</div>',
@@ -155,7 +155,7 @@ define([], function() {
                                 '<label for="country"><%= translations.country %></label>',
                                 '<select class="form-element" name="country" data-mapper-property="country">',
                                     '<% _.each(countries, function (name, key) { %>',
-                                        '<option value="<%= key %>"><%= name %></option>',
+                                        '<option <% if (key == data.country) { %>selected="selected" <% }; %>value="<%= key %>"><%= name %></option>',
                                     '<% }); %>',
                                 '</select>',
                             '</div>',
@@ -164,9 +164,9 @@ define([], function() {
                         '<div class="grid-row">',
                             '<div class="form-group grid-col-6">',
                                 '<label for="map_provider">Map Provider</label>',
-                                '<select class="form-element" name="map_provider" class="map-provider" data-mapper-property="map-provider">',
-                                    '<% _.each(mapProviders, function ($v, $i) { %>',
-                                        '<option value="<%= $i %>"><%= $v.title %></option>',
+                                '<select class="form-element" name="map_provider" class="map-provider" data-mapper-property="mapProvider">',
+                                    '<% _.each(mapProviders, function (provider, key) { %>',
+                                        '<option <% if (key == data.mapProvider) { %>selected="selected" <% }; %>value="<%= key %>"><%= provider.title %></option>',
                                     '<% }); %>',
                                 '</select>',
                             '</div>',
@@ -242,6 +242,7 @@ define([], function() {
          */
         loadData: function () {
             this.data = this.sandbox.util.extend(true, {}, dataDefaults, this.sandbox.dom.data(this.$el, 'location'));
+            console.log(this.data);
         },
 
         getFormData: function () {
@@ -254,7 +255,7 @@ define([], function() {
             this.$formContent = this.sandbox.dom.createElement(this._template('overlay', {
                 data: this.formData,
                 mapProviders: this.options.mapProviders,
-                countries: {}
+                countries: this.options.countries
             }));
         },
 
@@ -383,7 +384,7 @@ define([], function() {
                         getParameter: 'query',
                         suggestionImg: 'map-marker',
                         remoteUrl: this.options.geolocatorUrl + '?providerName=nominatim',
-                        valueKey: 'displayTitle',
+                        valueKey: 'name',
                         resultKey: 'locations'
                     }
                 }

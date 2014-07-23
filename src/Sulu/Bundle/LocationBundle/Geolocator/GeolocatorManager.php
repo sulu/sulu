@@ -6,8 +6,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Container for geolocators
- *
- * @author Daniel Leech <daniel@massiveart.com>
  */
 class GeolocatorManager
 {
@@ -19,11 +17,17 @@ class GeolocatorManager
         $this->container = $container;
     }
 
-    public function register($alias, $serviceId)
+    /**
+     * Register a geolocator with the given name
+     */
+    public function register($name, $serviceId)
     {
-        $this->geolocators[$alias] = $serviceId;
+        $this->geolocators[$name] = $serviceId;
     }
 
+    /**
+     * Retrieve the named name
+     */
     public function get($name)
     {
         if (!isset($this->geolocators[$name])) {

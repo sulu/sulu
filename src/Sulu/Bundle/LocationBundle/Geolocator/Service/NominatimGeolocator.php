@@ -8,6 +8,11 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorResponse;
 use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorLocation;
 
+/**
+ * Geolocator which uses the open street maps nominatim service.
+ *
+ * http://wiki.openstreetmap.org/wiki/Nominatim
+ */
 class NominatimGeolocator implements GeolocatorInterface
 {
     protected $client;

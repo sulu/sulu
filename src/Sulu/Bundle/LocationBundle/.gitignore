@@ -1,6 +1,7 @@
 /Tests/Resources/app/cache/*
 /Tests/Resources/app/logs/*
 /node_modules/
+/bower_components/
 /vendor/
 /composer.phar
 /composer.lock
