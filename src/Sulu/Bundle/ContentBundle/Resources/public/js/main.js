@@ -13,6 +13,7 @@ require.config({
         "type/resourceLocator": '../../sulucontent/js/validation/types/resourceLocator',
         "type/textEditor": '../../sulucontent/js/validation/types/textEditor',
         "type/smartContent": '../../sulucontent/js/validation/types/smartContent',
+        "type/internalLinks": '../../sulucontent/js/validation/types/internalLinks',
         "type/block": '../../sulucontent/js/validation/types/block'
     }
 });
@@ -46,7 +47,7 @@ define({
         sandbox.mvc.routes.push({
             route: 'content/contents/:webspace/:language',
             callback: function(webspace, language) {
-                this.html('<div data-aura-component="content@sulucontent" data-aura-webspace="' + webspace + '" data-aura-language="' + language + '" data-aura-display="column"/>');
+                this.html('<div data-aura-component="content@sulucontent" data-aura-webspace="' + webspace + '" data-aura-language="' + language + '" data-aura-display="column" data-aura-preview="false"/>');
             }
         });
 
@@ -55,7 +56,7 @@ define({
             route: 'content/contents/:webspace/:language/add::id/:content',
             callback: function(webspace, language, id, content) {
                 this.html(
-                    '<div data-aura-component="content/components/content@sulucontent" data-aura-webspace="' + webspace + '" data-aura-language="' + language + '" data-aura-content="' + content + '" data-aura-parent="' + id + '"/>'
+                    '<div data-aura-component="content@sulucontent" data-aura-webspace="' + webspace + '" data-aura-language="' + language + '" data-aura-content="' + content + '" data-aura-parent="' + id + '"/>'
                 );
             }
         });
@@ -65,7 +66,7 @@ define({
             route: 'content/contents/:webspace/:language/add/:content',
             callback: function(webspace, language, content) {
                 this.html(
-                    '<div data-aura-component="content/components/content@sulucontent" data-aura-webspace="' + webspace + '" data-aura-language="' + language + '" data-aura-content="' + content + '"/>'
+                    '<div data-aura-component="content@sulucontent" data-aura-webspace="' + webspace + '" data-aura-language="' + language + '" data-aura-content="' + content + '"/>'
                 );
             }
         });
@@ -84,7 +85,7 @@ define({
             route: 'content/contents/:webspace/:language/edit::id/:content',
             callback: function(webspace, language, id, content) {
                 this.html(
-                    '<div data-aura-component="content/components/content@sulucontent" data-aura-webspace="' + webspace + '" data-aura-language="' + language + '" data-aura-content="' + content + '" data-aura-id="' + id + '" data-aura-preview="true"/>'
+                    '<div data-aura-component="content@sulucontent" data-aura-webspace="' + webspace + '" data-aura-language="' + language + '" data-aura-content="' + content + '" data-aura-id="' + id + '" data-aura-preview="true"/>'
                 );
             }
         });

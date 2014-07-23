@@ -343,32 +343,31 @@ class PreviewMessageComponentTest extends \PHPUnit_Framework_TestCase
 
     private function preparePreview()
     {
-        $container = $this->prepareContainerMock();
+        $contentTypeManager = $this->prepareContentTypeManager();
         $mapper = $this->prepareMapperMock();
         $templating = $this->prepareTemplatingMock();
         $this->structureManager = $this->prepareStructureManagerMock();
         $controllerResolver = $this->prepareControllerResolver();
         $cache = new ArrayCache();
 
-        return new Preview($container, $templating, $cache, $mapper, $this->structureManager, $controllerResolver, 3600);
+        return new Preview($templating, $cache, $mapper, $this->structureManager, $contentTypeManager, $controllerResolver, 3600);
     }
 
-    public function prepareContainerMock()
+    public function prepareContentTypeManager()
     {
-        $container = $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface');
+        $container = $this->getMock('Sulu\Component\Content\ContentTypeManagerInterface');
 
         $container->expects($this->any())->method('get')->will(
             $this->returnValueMap(
                 array(
-                    array('sulu.content.type.text_line', 1, new TextLine('')),
+                    array('text_line', new TextLine('')),
                     array(
-                        'sulu.content.type.resource_locator',
-                        1,
+                        'resource_locator',
                         new ResourceLocator($this->getMock(
                             'Sulu\Component\Content\Types\Rlp\Strategy\RLPStrategyInterface'
                         ), '')
                     ),
-                    array('sulu.content.type.text_area', 1, new TextArea(''))
+                    array('text_area', new TextArea(''))
                 )
             )
         );

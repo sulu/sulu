@@ -5,6 +5,9 @@
 /.sass-cache/
 *~
 
+# temp file / folders
+TEMP_*/
+
 # IDEs
 .idea/*
 *.iml

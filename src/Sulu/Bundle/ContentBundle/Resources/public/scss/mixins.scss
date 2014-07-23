@@ -1,0 +1,11 @@
+@mixin scale($scaler) {
+  transform:scale($scaler);
+  -ms-transform:scale($scaler); /* IE 9 */
+  -webkit-transform:scale($scaler); /* Opera, Chrome, and Safari */
+}
+
+@mixin transformOrigin($x, $y) {
+  transform-origin:$x $y;
+  -ms-transform-origin:$x $y; /* IE 9 */
+  -webkit-transform-origin:$x $y; /* Chrome, Safari, Opera */
+}

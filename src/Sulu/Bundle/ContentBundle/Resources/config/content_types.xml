@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <parameters>
+        <parameter key="sulu.content.type.smart_content.class">Sulu\Bundle\ContentBundle\Content\Types\SmartContent</parameter>
+        <parameter key="sulu.content.type.internal_links.class">Sulu\Bundle\ContentBundle\Content\Types\InternalLinks</parameter>
+        <parameter key="sulu.content.type.phone.class">Sulu\Bundle\ContentBundle\Content\Types\Phone</parameter>
+        <parameter key="sulu.content.type.password.class">Sulu\Bundle\ContentBundle\Content\Types\Password</parameter>
+        <parameter key="sulu.content.type.url.class">Sulu\Bundle\ContentBundle\Content\Types\Url</parameter>
+        <parameter key="sulu.content.type.email.class">Sulu\Bundle\ContentBundle\Content\Types\Email</parameter>
+        <parameter key="sulu.content.type.date.class">Sulu\Bundle\ContentBundle\Content\Types\Date</parameter>
+        <parameter key="sulu.content.type.time.class">Sulu\Bundle\ContentBundle\Content\Types\Time</parameter>
+        <parameter key="sulu.content.type.color.class">Sulu\Bundle\ContentBundle\Content\Types\Color</parameter>
+    </parameters>
+    <services>
+        <!-- content-types -->
+        <service id="sulu.content.type.smart_content" class="%sulu.content.type.smart_content.class%">
+            <argument type="service" id="sulu_content.node_repository"/>
+            <argument type="service" id="sulu_tag.tag_manager"/>
+            <argument>%sulu.content.type.smart_content.template%</argument>
+            <tag name="sulu.content.type" alias="smart_content" />
+        </service>
+
+        <service id="sulu.content.type.internal_links" class="%sulu.content.type.internal_links.class%">
+            <argument type="service" id="sulu.content.mapper"/>
+            <argument>%sulu.content.type.internal_links.template%</argument>
+            <tag name="sulu.content.type" alias="internal_links"/>
+        </service>
+
+        <service id="sulu.content.type.phone" class="%sulu.content.type.phone.class%">
+            <argument>%sulu.content.type.phone.template%</argument>
+            <tag name="sulu.content.type" alias="phone"/>
+        </service>
+        <service id="sulu.content.type.password" class="%sulu.content.type.password.class%">
+            <argument>%sulu.content.type.password.template%</argument>
+            <tag name="sulu.content.type" alias="password"/>
+        </service>
+        <service id="sulu.content.type.url" class="%sulu.content.type.url.class%">
+            <argument>%sulu.content.type.url.template%</argument>
+            <tag name="sulu.content.type" alias="url"/>
+        </service>
+        <service id="sulu.content.type.email" class="%sulu.content.type.email.class%">
+            <argument>%sulu.content.type.email.template%</argument>
+            <tag name="sulu.content.type" alias="email"/>
+        </service>
+        <service id="sulu.content.type.date" class="%sulu.content.type.date.class%">
+            <argument>%sulu.content.type.date.template%</argument>
+            <tag name="sulu.content.type" alias="date"/>
+        </service>
+        <service id="sulu.content.type.time" class="%sulu.content.type.time.class%">
+            <argument>%sulu.content.type.time.template%</argument>
+            <tag name="sulu.content.type" alias="time"/>
+        </service>
+        <service id="sulu.content.type.color" class="%sulu.content.type.color.class%">
+            <argument>%sulu.content.type.color.template%</argument>
+            <tag name="sulu.content.type" alias="color"/>
+        </service>
+    </services>
+</container>
