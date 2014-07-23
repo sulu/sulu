@@ -11,6 +11,13 @@ define([], function() {
 
     'use strict';
 
+    var defaults = {
+        maxDescriptionCharacters: 155,
+        maxKeywords: 5,
+        keywordsSeperator: ',',
+        excerptUrlPrefix: 'www.yoursite.com'
+    };
+
     return {
         view: true,
 
@@ -21,12 +28,24 @@ define([], function() {
         templates: ['/admin/content/template/content/seo'],
 
         initialize: function() {
+            this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
             this.sandbox.emit('sulu.app.ui.reset', { navigation: 'small', content: 'auto'});
             this.sandbox.emit('husky.toolbar.header.item.disable', 'template', false);
+
+            this.description = {
+                $el: null,
+                $counter: null
+            };
+            this.keywords = {
+                $el: null,
+                $counter: null,
+                count: 0
+            };
 
             this.formId = '#seo-form';
             this.load();
             this.bindCustomEvents();
+            this.bindDomEvents();
         },
 
         bindCustomEvents: function() {
@@ -34,6 +53,10 @@ define([], function() {
             this.sandbox.on('sulu.header.toolbar.save', function() {
                 this.submit();
             }, this);
+        },
+
+        bindDomEvents: function() {
+            this.sandbox.dom.on(this.$el, 'keyup', this.updateExcerpt.bind(this));
         },
 
         submit: function() {
@@ -53,7 +76,9 @@ define([], function() {
 
         render: function(data) {
             this.data = data;
-            this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/content/template/content/seo'));
+            this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/content/template/content/seo', {
+                siteUrl: this.options.excerptUrlPrefix + '/' + this.options.language + this.data.path
+            }));
 
             this.createForm(this.initData(data));
             this.listenForChange();
@@ -65,9 +90,66 @@ define([], function() {
 
         createForm: function(data) {
             this.sandbox.form.create(this.formId).initialized.then(function() {
-                this.sandbox.form.setData(this.formId, data);
-                this.listenForChange();
+                this.sandbox.form.setData(this.formId, data).then(function() {
+                    this.listenForChange();
+                    this.updateExcerpt();
+                    this.initializeDescriptionCounter();
+                    this.initializeKeywordsCounter();
+                }.bind(this));
             }.bind(this));
+        },
+
+        initializeKeywordsCounter: function() {
+            this.keywords.$el = this.$find('#seo-keywords');
+            this.keywords.$counter = this.$find('#keywords-left');
+            this.updateKeywordsCounter();
+            this.sandbox.dom.on(this.keywords.$el, 'keyup', this.updateKeywordsCounter.bind(this));
+            // prevent input if maximum size got reached
+            this.sandbox.dom.on(this.keywords.$el, 'keypress', function(event) {
+                if (this.keywords.count >= this.options.maxKeywords &&
+                    String.fromCharCode(event.keyCode) === this.options.keywordsSeperator) {
+                    return false;
+                }
+            }.bind(this));
+        },
+
+        updateExcerpt: function() {
+            // update title
+            this.sandbox.dom.html(this.$find('#seo-excerpt-title'), this.sandbox.dom.val(this.$find('#seo-title')));
+            // update url
+
+            // update description
+            this.sandbox.dom.html(this.$find('#seo-excerpt-description'), this.sandbox.dom.val(this.$find('#seo-description')));
+        },
+
+        initializeDescriptionCounter: function() {
+            this.description.$el = this.$find('#seo-description');
+            this.description.$counter = this.$find('#description-left');
+            this.updateDescriptionCounter();
+            this.sandbox.dom.on(this.description.$el, 'keyup', this.updateDescriptionCounter.bind(this));
+        },
+
+        updateDescriptionCounter: function() {
+            this.sandbox.dom.html(
+                this.description.$counter,
+                ' ' + (this.options.maxDescriptionCharacters - this.sandbox.dom.val(this.description.$el).length) + ' '
+            );
+        },
+
+        updateKeywordsCounter: function() {
+            var value = this.sandbox.dom.trim(
+                            this.sandbox.dom.trim(this.sandbox.dom.val(this.keywords.$el)),
+                            this.options.keywordsSeperator
+                        ),
+                keywords = value.split(this.options.keywordsSeperator);
+                // remove empty entries
+                keywords = keywords.filter(function(value) {
+                    return !!value;
+                });
+            this.keywords.count = keywords.length;
+            this.sandbox.dom.html(
+                this.keywords.$counter, (this.options.maxKeywords - this.keywords.count)
+            );
         },
 
         listenForChange: function() {
