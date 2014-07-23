@@ -32,8 +32,12 @@ define(function() {
 
         view: true,
 
-        fullSize: {
-            width: true
+        layout: {
+            content: {
+                width: 'max',
+                leftSpace: false,
+                rightSpace: false
+            }
         },
 
         header: function() {
@@ -68,6 +72,7 @@ define(function() {
                 {
                     el: this.sandbox.dom.find('#roles-list', this.$el),
                     url: '/admin/api/roles?flat=true',
+                    resultKey: 'roles',
                     viewOptions: {
                         table: {
                             fullWidth: true

@@ -127,9 +127,9 @@ class RolesControllerTest extends DatabaseTestCase
 
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(2, $response->total);
-        $this->assertEquals('Sulu Administrator', $response->_embedded[0]->name);
-        $this->assertEquals('Sulu', $response->_embedded[0]->system);
+        $this->assertEquals(2, count($response->_embedded->roles));
+        $this->assertEquals('Sulu Administrator', $response->_embedded->roles[0]->name);
+        $this->assertEquals('Sulu', $response->_embedded->roles[0]->system);
     }
 
     public function testGetById()
@@ -524,7 +524,7 @@ class RolesControllerTest extends DatabaseTestCase
 
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertEquals(2, $response->total);
+        $this->assertEquals(2, count($response->_embedded->roles));
 
 
         $client->request(
@@ -542,7 +542,7 @@ class RolesControllerTest extends DatabaseTestCase
 
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertEquals(1, $response->total);
+        $this->assertEquals(1, count($response->_embedded->roles));
     }
 
     public function testDeleteNotExisting()
@@ -568,15 +568,15 @@ class RolesControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
-        $this->assertEquals(2, $response->total);
+        $this->assertEquals(2, count($response->_embedded->roles));
 
-        $this->assertEquals('Sulu Administrator', $response->_embedded[0]->name);
-        $this->assertEquals('Sulu Editor', $response->_embedded[1]->name);
+        $this->assertEquals('Sulu Administrator', $response->_embedded->roles[0]->name);
+        $this->assertEquals('Sulu Editor', $response->_embedded->roles[1]->name);
 
-        $this->assertEquals('Sulu', $response->_embedded[0]->system);
-        $this->assertEquals('Sulu', $response->_embedded[1]->system);
+        $this->assertEquals('Sulu', $response->_embedded->roles[0]->system);
+        $this->assertEquals('Sulu', $response->_embedded->roles[1]->system);
 
-        $this->assertEquals('context1', $response->_embedded[0]->permissions[0]->context);
-        $this->assertEquals('context2', $response->_embedded[1]->permissions[1]->context);
+        $this->assertEquals('context1', $response->_embedded->roles[0]->permissions[0]->context);
+        $this->assertEquals('context2', $response->_embedded->roles[1]->permissions[1]->context);
     }
 }

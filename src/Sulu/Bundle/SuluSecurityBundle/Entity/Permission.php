@@ -39,7 +39,7 @@ class Permission
     private $id;
 
     /**
-     * @var \Sulu\Bundle\SecurityBundle\Entity\Role
+     * @var \Sulu\Bundle\SecurityBundle\Entity\RoleInterface
      */
     private $role;
 
@@ -108,10 +108,10 @@ class Permission
     /**
      * Set role
      *
-     * @param \Sulu\Bundle\SecurityBundle\Entity\Role $role
+     * @param \Sulu\Bundle\SecurityBundle\Entity\RoleInterface $role
      * @return Permission
      */
-    public function setRole(\Sulu\Bundle\SecurityBundle\Entity\Role $role = null)
+    public function setRole(\Sulu\Bundle\SecurityBundle\Entity\RoleInterface $role = null)
     {
         $this->role = $role;
 
@@ -121,7 +121,7 @@ class Permission
     /**
      * Get role
      *
-     * @return \Sulu\Bundle\SecurityBundle\Entity\Role
+     * @return \Sulu\Bundle\SecurityBundle\Entity\RoleInterface
      */
     public function getRole()
     {

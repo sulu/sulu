@@ -41,7 +41,7 @@
             </join-columns>
         </many-to-one>
 
-        <many-to-many field="roles" target-entity="Sulu\Bundle\SecurityBundle\Entity\Role" inversed-by="groups">
+        <many-to-many field="roles" target-entity="Sulu\Bundle\SecurityBundle\Entity\RoleInterface" inversed-by="groups">
             <join-table name="se_group_roles">
                 <join-columns>
                     <join-column name="idGroups" referenced-column-name="id"/>

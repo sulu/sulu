@@ -59,6 +59,7 @@ class User extends ApiEntity implements UserInterface, Serializable
 
     /**
      * @var \Doctrine\Common\Collections\Collection
+     * @Expose
      */
     private $userRoles;
 
@@ -75,6 +76,7 @@ class User extends ApiEntity implements UserInterface, Serializable
 
     /**
      * @var \Doctrine\Common\Collections\Collection
+     * @Expose
      */
     private $userGroups;
 
@@ -238,13 +240,11 @@ class User extends ApiEntity implements UserInterface, Serializable
     /**
      * Get userRoles
      *
-     * @return array
-     * @VirtualProperty
-     * @Type("array")
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function getUserRoles()
     {
-        return array_values($this->userRoles->toArray());
+        return $this->userRoles;
     }
 
     /**
@@ -362,12 +362,11 @@ class User extends ApiEntity implements UserInterface, Serializable
 
     /**
      * Get userGroups
-     * @VirtualProperty
-     * @Type("array")
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function getUserGroups()
     {
-        return array_values($this->userGroups->toArray());
+        return $this->userGroups;
     }
 
     /**
@@ -402,7 +401,6 @@ class User extends ApiEntity implements UserInterface, Serializable
     {
         return $this->userSettings;
     }
-
 
     /**
      * Set apiKey

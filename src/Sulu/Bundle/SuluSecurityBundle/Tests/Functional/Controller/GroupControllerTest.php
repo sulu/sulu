@@ -98,8 +98,8 @@ class GroupControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(2, $response->total);
-        $this->assertEquals('Group1', $response->_embedded[0]->name);
-        $this->assertEquals('Group2', $response->_embedded[1]->name);
+        $this->assertEquals('Group1', $response->_embedded->groups[0]->name);
+        $this->assertEquals('Group2', $response->_embedded->groups[1]->name);
     }
 
     public function testGetById()
@@ -202,7 +202,7 @@ class GroupControllerTest extends DatabaseTestCase
 
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertEquals(2, $response->total);
+        $this->assertEquals(2, count($response->_embedded->groups));
 
 
         $client->request(
@@ -220,6 +220,6 @@ class GroupControllerTest extends DatabaseTestCase
 
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertEquals(1, $response->total);
+        $this->assertEquals(1, count($response->_embedded->groups));
     }
 } 
