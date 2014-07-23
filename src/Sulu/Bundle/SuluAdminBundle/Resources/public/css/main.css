@@ -439,10 +439,12 @@ input, select {
   text-decoration: none;
 }
 /* line 23, ../scss/modules/sidebar.scss */
-.sulu-sidebar .bold {
-  font-weight: bold;
+.sulu-sidebar .label {
+  font-weight: 600;
+  margin: 0 0 5px 0;
+  color: #999999;
 }
-/* line 27, ../scss/modules/sidebar.scss */
+/* line 29, ../scss/modules/sidebar.scss */
 .sulu-sidebar .blue-icon {
   width: 30px;
   height: 20px;
@@ -461,17 +463,12 @@ input, select {
   -o-transition: opacity 100ms ease-in 200ms;
   transition: opacity 100ms ease-in 200ms;
 }
-/* line 46, ../scss/modules/sidebar.scss */
+/* line 48, ../scss/modules/sidebar.scss */
 .sulu-sidebar .show-icon:hover .blue-icon {
   opacity: 1;
 }
-/* line 50, ../scss/modules/sidebar.scss */
-.sulu-sidebar .big {
-  font-size: 18px;
-  font-weight: 200;
-}
 
-/* line 57, ../scss/modules/sidebar.scss */
+/* line 54, ../scss/modules/sidebar.scss */
 .sidebar-padding-50 > div {
   padding: 50px;
 }

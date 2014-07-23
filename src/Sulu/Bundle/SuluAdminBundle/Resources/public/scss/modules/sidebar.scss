@@ -20,8 +20,10 @@
         text-decoration: none;
     }
 
-    .bold {
-        font-weight: bold;
+    .label {
+        font-weight: 600;
+        margin: 0 0 5px 0;
+        color: $grey;
     }
 
     .blue-icon {
@@ -45,11 +47,6 @@
 
     .show-icon:hover .blue-icon {
         opacity: 1;
-    }
-
-    .big {
-        font-size: 18px;
-        font-weight: 200;
     }
 
 }
