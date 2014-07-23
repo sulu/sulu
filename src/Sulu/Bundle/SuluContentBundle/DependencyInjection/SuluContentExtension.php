@@ -36,7 +36,10 @@ class SuluContentExtension extends Extension
         $container->setParameter(
             'sulu.content.type.smart_content.template',
             $config['types']['smart_content']['template']
-
+        );
+        $container->setParameter(
+            'sulu.content.type.internal_links.template',
+            $config['types']['internal_links']['template']
         );
         $container->setParameter(
             'sulu.content.type.phone.template',
@@ -69,5 +72,7 @@ class SuluContentExtension extends Extension
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');
+        $loader->load('content_types.xml');
+        $loader->load('preview.xml');
     }
 }

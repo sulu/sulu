@@ -71,7 +71,7 @@ class FilterNodesQueryBuilder
 
         // append order clause
         if (!empty($sql2Order)) {
-            $sortOrder = (isset($filterConfig['sortMethod']) && $filterConfig['sortMethod'] == 'asc')
+            $sortOrder = (isset($this->filterConfig['sortMethod']) && $this->filterConfig['sortMethod'] == 'asc')
                 ? 'ASC' : 'DESC';
             $sql2 .= ' ORDER BY ' . join(', ', $sql2Order) . ' ' . $sortOrder;
         }
@@ -133,9 +133,7 @@ class FilterNodesQueryBuilder
         }
 
         // search only for published pages
-        if (!$preview) {
-            $sql2Where[] = 'c.[i18n:' . $languageCode . '-sulu-state] = ' . StructureInterface::STATE_PUBLISHED;
-        }
+        $sql2Where[] = 'c.[i18n:' . $languageCode . '-state] = ' . StructureInterface::STATE_PUBLISHED;
 
         return $sql2Where;
     }

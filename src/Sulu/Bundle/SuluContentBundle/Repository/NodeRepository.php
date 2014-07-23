@@ -52,7 +52,8 @@ class NodeRepository implements NodeRepositoryInterface
         SessionManagerInterface $sessionManager,
         UserManagerInterface $userManager,
         WebspaceManagerInterface $webspaceManager
-    ) {
+    )
+    {
         $this->mapper = $mapper;
         $this->sessionManager = $sessionManager;
         $this->userManager = $userManager;
@@ -86,6 +87,7 @@ class NodeRepository implements NodeRepositoryInterface
      * @param int $depth
      * @param bool $complete
      * @param bool $excludeGhosts
+     * @param string|null $extension
      * @return array
      */
     protected function prepareNode(
@@ -94,15 +96,22 @@ class NodeRepository implements NodeRepositoryInterface
         $languageCode,
         $depth = 1,
         $complete = true,
-        $excludeGhosts = false
-    ) {
+        $excludeGhosts = false,
+        $extension = null
+    )
+    {
         $result = $structure->toArray($complete);
 
-        // add default empty embedded property
+        // add node name
+        $result['sulu.node.name'] = $structure->getPropertyValueByTagName('sulu.node.name');
+
+        // add default embedded property with empty nodes array
         $result['_embedded'] = array();
+        $result['_embedded']['nodes'] = array();
+
         // add api links
         $result['_links'] = array(
-            'self' => $this->apiBasePath . '/' . $structure->getUuid(),
+            'self' => $this->apiBasePath . '/' . $structure->getUuid() . ($extension !== null ? '/' . $extension : ''),
             'children' => $this->apiBasePath . '?parent=' . $structure->getUuid()
                 . '&depth=' . $depth . '&webspace=' . $webspaceKey . '&language=' . $languageCode . ($excludeGhosts === true ? '&exclude-ghosts=true' : '')
         );
@@ -128,7 +137,8 @@ class NodeRepository implements NodeRepositoryInterface
         $breadcrumb = false,
         $complete = true,
         $loadGhostContent = false
-    ) {
+    )
+    {
         $structure = $this->getMapper()->load($uuid, $webspaceKey, $languageCode, $loadGhostContent);
 
         $result = $this->prepareNode($structure, $webspaceKey, $languageCode, 1, $complete);
@@ -188,7 +198,8 @@ class NodeRepository implements NodeRepositoryInterface
         $flat = true,
         $complete = true,
         $excludeGhosts = false
-    ) {
+    )
+    {
         $nodes = $this->getMapper()->loadByParent(
             $parent,
             $webspaceKey,
@@ -201,10 +212,40 @@ class NodeRepository implements NodeRepositoryInterface
 
         $parentNode = $this->getParentNode($parent, $webspaceKey, $languageCode);
         $result = $this->prepareNode($parentNode, $webspaceKey, $languageCode, 1, $complete, $excludeGhosts);
-        $result['_embedded'] = $this->prepareNodesTree($nodes, $webspaceKey, $languageCode, $complete, $excludeGhosts);
-        $result['total'] = sizeof($result['_embedded']);
+        $result['_embedded']['nodes'] = $this->prepareNodesTree($nodes, $webspaceKey, $languageCode, $complete, $excludeGhosts);
+        $result['total'] = sizeof($result['_embedded']['nodes']);
 
         return $result;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getNodesByIds(
+        $ids,
+        $webspaceKey,
+        $languageCode
+    )
+    {
+        $result = array();
+        $idString = '';
+
+        if (!empty($ids)) {
+            foreach ($ids as $id) {
+                $result[] = $this->getNode($id, $webspaceKey, $languageCode);
+            }
+            $idString = implode(',', $ids);
+        }
+
+        return array(
+            '_embedded' => array(
+                'nodes' => $result
+            ),
+            'total' => sizeof($result),
+            '_links' => array(
+                'self' => $this->apiBasePath . '?ids=' . $idString
+            )
+        );
     }
 
     /**
@@ -215,7 +256,8 @@ class NodeRepository implements NodeRepositoryInterface
         $languageCode,
         $depth = 1,
         $excludeGhosts = false
-    ) {
+    )
+    {
         $webspace = $this->webspaceManager->getWebspaceCollection()->getWebspace($webspaceKey);
 
         if ($depth > 0) {
@@ -249,7 +291,7 @@ class NodeRepository implements NodeRepositoryInterface
 
         // add default empty embedded property
         $data['_embedded'] = array(
-            $node
+            'nodes' => array($node)
         );
         // add api links
         $data['_links'] = array(
@@ -274,8 +316,8 @@ class NodeRepository implements NodeRepositoryInterface
         if ($api) {
             $parentNode = $this->getParentNode($queryBuilder->getParent(), $webspaceKey, $languageCode);
             $result = $this->prepareNode($parentNode, $webspaceKey, $languageCode, 1, false);
-            $result['_embedded'] = $this->prepareNodesTree($nodes, $webspaceKey, $languageCode, false);
-            $result['total'] = sizeof($result['_embedded']);
+            $result['_embedded']['nodes'] = $this->prepareNodesTree($nodes, $webspaceKey, $languageCode, false);
+            $result['total'] = sizeof($result['_embedded']['nodes']);
 
             return $result;
         } else {
@@ -313,7 +355,7 @@ class NodeRepository implements NodeRepositoryInterface
         foreach ($nodes as $node) {
             $result = $this->prepareNode($node, $webspaceKey, $languageCode, 1, $complete, $excludeGhosts);
             if ($node->getHasChildren() && $node->getChildren() != null) {
-                $result['_embedded'] = $this->prepareNodesTree(
+                $result['_embedded']['nodes'] = $this->prepareNodesTree(
                     $node->getChildren(),
                     $webspaceKey,
                     $languageCode,
@@ -340,7 +382,8 @@ class NodeRepository implements NodeRepositoryInterface
         $parentUuid = null,
         $state = null,
         $showInNavigation = null
-    ) {
+    )
+    {
         $node = $this->getMapper()->save(
             $data,
             $templateKey,
@@ -366,42 +409,107 @@ class NodeRepository implements NodeRepositoryInterface
         $languageCode,
         $excludeGhosts = false,
         $appendWebspaceNode = false
-    ) {
-        $nodes = $this->getMapper()->loadTreeByUuid($uuid, $languageCode, $webspaceKey, $excludeGhosts, false);
+    )
+    {
+        $nodes = $this->getMapper()->loadTreeByUuid($uuid, $languageCode, $webspaceKey, $excludeGhosts, true);
 
         if ($appendWebspaceNode) {
             $webspace = $this->webspaceManager->getWebspaceCollection()->getWebspace($webspaceKey);
             $result = array(
                 '_embedded' => array(
-                    array(
-                        'id' => $this->sessionManager->getContentNode($webspace->getKey())->getIdentifier(),
-                        'path' => '/',
-                        'title' => $webspace->getName(),
-                        'hasSub' => true,
-                        '_embedded' => $this->prepareNodesTree(
-                                $nodes,
-                                $webspaceKey,
-                                $languageCode,
-                                false,
-                                $excludeGhosts
-                            ),
-                        '_links' => array(
-                            'children' => $this->apiBasePath . '?depth=1&webspace=' . $webspaceKey . '&language=' . $languageCode . ($excludeGhosts === true ? '&exclude-ghosts=true' : '')
+                    'nodes' => array(
+                        array(
+                            'id' => $this->sessionManager->getContentNode($webspace->getKey())->getIdentifier(),
+                            'path' => '/',
+                            'title' => $webspace->getName(),
+                            'hasSub' => true,
+                            '_embedded' => $this->prepareNodesTree(
+                                    $nodes,
+                                    $webspaceKey,
+                                    $languageCode,
+                                    false,
+                                    $excludeGhosts
+                                ),
+                            '_links' => array(
+                                'children' => $this->apiBasePath . '?depth=1&webspace=' . $webspaceKey .
+                                    '&language=' . $languageCode . ($excludeGhosts === true ? '&exclude-ghosts=true' : '')
+                            )
                         )
                     )
                 )
             );
         } else {
             $result = array(
-                '_embedded' => $this->prepareNodesTree($nodes, $webspaceKey, $languageCode, false, $excludeGhosts)
+                '_embedded' => array(
+                    'nodes' => $this->prepareNodesTree($nodes, $webspaceKey, $languageCode, false, $excludeGhosts)
+                )
             );
         }
 
         // add api links
         $result['_links'] = array(
-            'self' => $this->apiBasePath . '/tree?uuid=' . $uuid . '&webspace=' . $webspaceKey . '&language=' . $languageCode . ($excludeGhosts === true ? '&exclude-ghosts=true' : '') . ($appendWebspaceNode === true ? '&webspace-node=true' : ''),
+            'self' => $this->apiBasePath . '/tree?uuid=' . $uuid . '&webspace=' . $webspaceKey . '&language=' .
+                $languageCode . ($excludeGhosts === true ? '&exclude-ghosts=true' : '') .
+                ($appendWebspaceNode === true ? '&webspace-node=true' : ''),
         );
 
         return $result;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function loadExtensionData($uuid, $extensionName, $webspaceKey, $languageCode)
+    {
+        $structure = $this->getMapper()->load($uuid, $webspaceKey, $languageCode);
+
+        // extract extension
+        $extension = $structure->getExtension($extensionName);
+        $data = $extension->getData();
+
+        // add uuid and path
+        $data['id'] = $structure->getUuid();
+        $data['path'] = $structure->getPath();
+        $data['sulu.node.name'] = $structure->getPropertyByTagName('sulu.node.name')->getValue();
+
+        // prepare data
+        $data['_links'] = array(
+            'self' => $this->apiBasePath . '/' . $uuid . '/' . $extensionName . '?webspace=' . $webspaceKey .
+                '&language=' . $languageCode,
+        );
+
+        return $data;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function saveExtensionData($uuid, $data, $extensionName, $webspaceKey, $languageCode, $userId)
+    {
+        $structure = $this->getMapper()->saveExtension(
+            $uuid,
+            $data,
+            $extensionName,
+            $webspaceKey,
+            $languageCode,
+            $userId
+        );
+
+        // extract extension
+        $extension = $structure->getExtension($extensionName);
+        $data = $extension->getData();
+
+        // add uuid and path
+        $data['id'] = $structure->getUuid();
+        $data['path'] = $structure->getPath();
+        $data['sulu.node.name'] = $structure->getPropertyByTagName('sulu.node.name')->getValue();
+
+        // prepare data
+        $data['_links'] = array(
+            'self' => $this->apiBasePath . '/' . $uuid . '/' . $extensionName . '?webspace=' . $webspaceKey .
+                '&language=' . $languageCode,
+        );
+
+        return $data;
     }
 }

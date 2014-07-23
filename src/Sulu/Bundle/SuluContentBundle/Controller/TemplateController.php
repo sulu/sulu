@@ -10,12 +10,12 @@
 
 namespace Sulu\Bundle\ContentBundle\Controller;
 
-use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
+use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManagerInterface;
-use Sulu\Component\Webspace\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -31,7 +31,15 @@ class TemplateController extends Controller
     {
         /** @var StructureManagerInterface $structureManager */
         $structureManager = $this->get('sulu.content.structure_manager');
-        $templates = $structureManager->getStructures();
+        $structures = $structureManager->getStructures();
+
+        $templates = array();
+        foreach($structures as $structure){
+            $templates[] = array(
+                'template' =>$structure->getKey()
+            );
+        }
+
         $data = array(
             '_embedded' => $templates,
             'total' => sizeof($templates),
@@ -41,10 +49,11 @@ class TemplateController extends Controller
 
     /**
      * renders one structure as form
+     * @param Request $request
      * @param string $key template key
      * @return Response
      */
-    public function contentAction($key = null)
+    public function contentAction(Request $request, $key = null)
     {
         $fireEvent = false;
         $templateIndex = null;
@@ -53,8 +62,8 @@ class TemplateController extends Controller
             $fireEvent = true;
         }
 
-        $webspace = $this->getRequest()->get('webspace');
-        $language = $this->getRequest()->get('language');
+        $webspace = $request->get('webspace');
+        $language = $request->get('language');
 
         $template = $this->getTemplateStructure($key);
 
@@ -62,7 +71,7 @@ class TemplateController extends Controller
             'SuluContentBundle:Template:content.html.twig',
             array(
                 'template' => $template,
-                'wsUrl' => 'ws://' . $this->getRequest()->getHttpHost(),
+                'wsUrl' => 'ws://' . $request->getHttpHost(),
                 'wsPort' => $this->container->getParameter('sulu_content.preview.websocket.port'),
                 'templateKey' => $key,
                 'fireEvent' => $fireEvent,
@@ -73,55 +82,32 @@ class TemplateController extends Controller
     }
 
     /**
-     * renders split screen
-     * @deprecated todo remove completly
-     *
-     * @param $webspace
-     * @param $language
-     * @param $contentUuid
+     * returns form for seo tab
      * @return Response
      */
-    public function splitScreenAction($webspace, $language, $contentUuid)
+    public function seoAction()
     {
         return $this->render(
-            'SuluContentBundle:Template:split-screen.html.twig',
-            array_merge(
-                $this->getTemplateVarsSplitScreen($contentUuid),
-                array(
-                    'webspace'=> $webspace,
-                    'language' => $language
-                )
-            )
+            'SuluContentBundle:Template:seo.html.twig'
         );
     }
 
     /**
-     * FIXME remove after change ui (from new window to inline)
-     * DEEP COPY from AdminController:indexAction
-     * @param $contentUuid
-     * @return array
+     * returns form for seo tab
+     * @return Response
      */
-    private function getTemplateVarsSplitScreen($contentUuid)
+    public function excerptAction()
     {
-        // get user data
-        $serviceId = $this->container->getParameter('sulu_admin.user_data_service');
-
-        $user = array();
-        if ($this->has($serviceId)) {
-            /** @var UserManagerInterface $userManager */
-            $userManager = $this->get($serviceId);
-            $user = $userManager->getCurrentUserData()->toArray();
-        }
-
-        // render template
-        return array(
-            'name' => $this->container->getParameter('sulu_admin.name'),
-            'user' => $user,
-            'contentUuid' => $contentUuid,
-            'url' => 'http://' . $this->getRequest()->getHttpHost()
+        return $this->render(
+            'SuluContentBundle:Template:excerpt.html.twig'
         );
     }
 
+    /**
+     * returns structure for given key
+     * @param string $key template key
+     * @return StructureInterface
+     */
     private function getTemplateStructure($key)
     {
         return $this->container->get('sulu.content.structure_manager')->getStructure($key);

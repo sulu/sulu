@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * handles preview with ajax cals and renders basic preview
+ * handles preview with ajax calls and renders basic preview
  */
 class PreviewController extends Controller
 {
