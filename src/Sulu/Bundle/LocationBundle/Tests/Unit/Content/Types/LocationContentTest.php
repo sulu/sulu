@@ -117,6 +117,7 @@ class LocationContentTest extends \PHPUnit_Framework_TestCase
                 'bar' => 'Bar',
             ),
             'defaultProvider' => 'leaflet',
+            'geolocators' => array('leaflet'),
         );
 
         $this->mapManager->expects($this->once())

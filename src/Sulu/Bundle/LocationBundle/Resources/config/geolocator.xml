@@ -2,18 +2,36 @@
 <container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <parameters>
-        <parameter key="sulu_location.guzzle_client.class">Guzzle\Http\Client</parameter>
+        <parameter key="sulu_location.guzzle.client.class">Guzzle\Http\Client</parameter>
+        <parameter key="sulu_location.guzzle.log_subscriber.class">Guzzle\Plugin\Log\LogPlugin</parameter>
+        <parameter key="sulu_location.guzzle.psr_log_adapter.class">Guzzle\Log\PsrLogAdapter</parameter>
         <parameter key="sulu_location.geolocator.manager.class">Sulu\Bundle\LocationBundle\Geolocator\GeolocatorManager</parameter>
         <parameter key="sulu_location.geolocator.nominatim.class">Sulu\Bundle\LocationBundle\Geolocator\Service\NominatimGeolocator</parameter>
     </parameters>
 
     <services>
-        <!-- Map services -->
-        <service id="sulu_location.geolocator.guzzle_client" class="%sulu_location.guzzle_client.class%"/>
+        <!-- Guzzle PSR log adapter -->
+        <service id="sulu_location.geolocator.guzzle.log_adapter" class="%sulu_location.guzzle.psr_log_adapter.class%">
+            <argument type="service" id="logger" />
+            <!-- Log to the specified channel -->
+            <tag name="monolog.logger" channel="sulu_location.geolocator" />
+        </service>
+
+        <!-- Guzzle log subscriber -->
+        <service id="sulu_location.geolocator.guzzle.log_subscriber" class="%sulu_location.guzzle.log_subscriber.class%" >
+            <argument type="service" id="sulu_location.geolocator.guzzle.log_adapter" />
+        </service>
+
+        <!-- Guzzle client -->
+        <service id="sulu_location.geolocator.guzzle.client" class="%sulu_location.guzzle.client.class%">
+            <call method="addSubscriber">
+                <argument type="service" id="sulu_location.geolocator.guzzle.log_subscriber" />
+            </call>
+        </service>
 
         <!-- Geolocator services -->
         <service id="sulu_location.gelocator.service.nominatim" class="%sulu_location.geolocator.nominatim.class%">
-            <argument type="service" id="sulu_location.geolocator.guzzle_client" />
+            <argument type="service" id="sulu_location.geolocator.guzzle.client" />
             <argument>%sulu_location.geolocator.service.nominatim.endpoint%</argument>
             <tag name="sulu_location.geolocator" alias="nominatim" />
         </service>

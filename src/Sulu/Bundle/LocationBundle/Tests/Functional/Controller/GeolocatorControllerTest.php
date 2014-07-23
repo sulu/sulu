@@ -21,7 +21,7 @@ class GeolocatorControllerTest extends DatabaseTestCase
             )
         );
 
-        $guzzleClient = $this->client->getContainer()->get('sulu_location.geolocator.guzzle_client');
+        $guzzleClient = $this->client->getContainer()->get('sulu_location.geolocator.guzzle.client');
         $this->mockPlugin = new MockPlugin();
         $guzzleClient->addSubscriber($this->mockPlugin);
     }
