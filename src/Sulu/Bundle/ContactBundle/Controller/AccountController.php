@@ -476,11 +476,8 @@ class AccountController extends AbstractContactController
      */
     public function cgetAction(Request $request)
     {
-        $where = array();
         $type = $request->get('type');
-        if ($type) {
-            $where['type'] = $type;
-        }
+
         if ($request->get('flat') == 'true') {
 
             /** @var RestHelperInterface $restHelper */
@@ -490,6 +487,10 @@ class AccountController extends AbstractContactController
             $factory = $this->get('sulu_core.doctrine_list_builder_factory');
 
             $listBuilder = $factory->create(self::$entityName);
+
+            if($type){
+                $listBuilder->where($this->fieldDescriptors['type'], $type);
+            }
 
             $restHelper->initializeListBuilder($listBuilder, $this->fieldDescriptors);
 
