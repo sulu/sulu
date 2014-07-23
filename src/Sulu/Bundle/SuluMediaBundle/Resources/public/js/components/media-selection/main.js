@@ -347,9 +347,12 @@ define(['sulumedia/collection/collections'], function(Collections) {
             this.sandbox.dom.remove($item);
             removeItemWithId.call(this, dataId);
             this.data.ids.splice(this.data.ids.indexOf(dataId), 1);
+            this.itemsVisible = this.options.visibleItems;
+            detachFooter.call(this);
             if (this.items.length === 0) {
                 renderStartContent.call(this);
-                detachFooter.call(this);
+            } else {
+                renderFooter.call(this);
             }
 
             this.sandbox.emit(DATA_CHANGED.call(this), this.data, this.$el);
