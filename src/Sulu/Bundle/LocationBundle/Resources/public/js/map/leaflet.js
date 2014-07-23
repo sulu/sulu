@@ -1,5 +1,5 @@
 define(['leaflet'], function (leaflet) {
-    var leaflet = leaflet;
+    'use strict';
 
     /**
      * Leaflet map class
@@ -7,10 +7,13 @@ define(['leaflet'], function (leaflet) {
      * @param options - Options for the map
      */
     return function Leaflet(selector, providerOptions, options) {
-        var selector = selector;
-        var options = options;
         var map = leaflet.map(selector);
         var marker = null;
+
+        // add an OpenStreetMap tile layer
+        L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
 
         if (options.zoomChangeCallback) {
             map.on('zoomend', function () {
@@ -25,8 +28,7 @@ define(['leaflet'], function (leaflet) {
          * @param zoom - Zoom
          */
         this.show = function (long, lat, zoom) {
-
-            map.setView([lat, long], zoom)
+            map.setView([lat, long], zoom);
 
             var MarkerIcon = L.Icon.Default.extend({
                 options: {
@@ -35,15 +37,10 @@ define(['leaflet'], function (leaflet) {
                 }
             });
 
-            // add an OpenStreetMap tile layer
-            L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-            }).addTo(map);
-
-            if (null == marker) {
+            if (null === marker) {
                 // create new marker
                 marker = L.marker([lat, long], {
-                    icon: new MarkerIcon,
+                    icon: new MarkerIcon(),
                     draggable: options.draggableMarker
                 });
 
@@ -56,7 +53,7 @@ define(['leaflet'], function (leaflet) {
                     }
                 });
 
-                marker.addTo(map)
+                marker.addTo(map);
 
             } else {
                 // update existing marker

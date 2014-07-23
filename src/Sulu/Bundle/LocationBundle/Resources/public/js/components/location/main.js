@@ -52,6 +52,7 @@ define([], function() {
 
         constants = {
             contentContainerClass: 'location-content-container',
+            contnetFieldContainerClass: 'location-content-fields-container',
             contentClass: 'location-content',
             configureButtonClass: 'location-content-configure',
             overlayClass: 'location-overlay-content',
@@ -61,7 +62,8 @@ define([], function() {
             overlayMapElementId: 'location-overlay-map',
             overlayMapElementClass: 'location-overlay-map',
             locateAddressClass: 'location-locate-address-button',
-            geolocatorSearchClass: 'geolocator-search'
+            geolocatorSearchClass: 'geolocator-search',
+            contentFieldContainerClass: 'location-content-field-container'
         },
 
         events = {
@@ -72,52 +74,52 @@ define([], function() {
             skeleton: [
                 '<div class="<%= constants.contentContainerClass %> form-element">',
                     '<div class="location-header"><a href="#" class="<%= constants.configureButtonClass %>"><span class="fa-gears icon large"></span></a></div>',
-                    '<div class="<%= constants.contentClass %>"></div>',
-                '</div>',
-            ].join(''),
-            content: [
-                    '<div class="grid-row">',
-                        '<div class="grid-col-6 container">',
-                            '<div id="<%= constants.mapElementId %>" class="<%= constants.mapElementClass %>"><img src="/bundles/sululocation/js/test/map.png"/></div>',
-                            '<div class="provider">Provider: <%= data.map_provider %></div>',
-                        '</div>',
-                        '<div class="grid-col-6">',
-                            '<div class="container grid">',
-                                '<div class="grid-row">',
-                                    '<div class="grid-col-3 field"><%= translations.title %>:</div>',
-                                    '<div class="grid-col-9"><%= data.title %></div>',
-                                '</div>',
-                                '<div class="grid-row no-spacing">',
-                                    '<div class="grid-col-3 field"><%= translations.street %></div>',
-                                    '<div class="grid-col-9"><%= data.street %></div>',
-                                '</div>',
-                                '<div class="grid-row no-spacing">',
-
-                                    '<div class="grid-col-3 field"><%= translations.number %>:</div>',
-                                    '<div class="grid-col-9"><%= data.number %></div>',
-                                '</div>',
-
-                                '<div class="grid-row no-spacing">',
-                                    '<div class="grid-col-3 field"><%= translations.code %>:</div>',
-                                    '<div class="grid-col-9"><%= data.code %></div>',
-                                '</div>',
-
-                                '<div class="grid-row no-spacing">',
-                                    '<div class="grid-col-3 field"><%= translations.town %>:</div>',
-                                    '<div class="grid-col-9"><%= data.town %></div>',
-                                '</div>',
-
-                                '<div class="grid-row">',
-                                    '<div class="grid-col-3 field"><%= translations.country %>:</div>',
-                                    '<div class="grid-col-9"><%= data.country %></div>',
-                                '</div>',
-                                '<div class="grid-row">',
-                                    '<div class="grid-col-3 field"><%= translations.coordinates %>:</div>',
-                                    '<div class="grid-col-9"><%= data.long %>, <%= data.lat %>, <%= data.zoom %></div>',
-                                '</div>',
+                    '<div class="<%= constants.contentClass %>">',
+                        '<div class="grid-row">',
+                            '<div class="grid-col-6 container">',
+                                '<div id="<%= constants.mapElementId %>" class="<%= constants.mapElementClass %>"><img src="/bundles/sululocation/js/test/map.png"/></div>',
+                            '</div>',
+                            '<div class="grid-col-6 <%= constants.contentFieldContainerClass %>">',
                             '</div>',
                         '</div>',
                     '</div>',
+                '</div>',
+            ].join(''),
+            contentFields: [
+                '<div class="container grid">',
+                    '<div class="grid-row">',
+                        '<div class="grid-col-3 field"><%= translations.title %>:</div>',
+                        '<div class="grid-col-9"><%= data.title %></div>',
+                    '</div>',
+                    '<div class="grid-row no-spacing">',
+                        '<div class="grid-col-3 field"><%= translations.street %></div>',
+                        '<div class="grid-col-9"><%= data.street %></div>',
+                    '</div>',
+                    '<div class="grid-row no-spacing">',
+
+                        '<div class="grid-col-3 field"><%= translations.number %>:</div>',
+                        '<div class="grid-col-9"><%= data.number %></div>',
+                    '</div>',
+
+                    '<div class="grid-row no-spacing">',
+                        '<div class="grid-col-3 field"><%= translations.code %>:</div>',
+                        '<div class="grid-col-9"><%= data.code %></div>',
+                    '</div>',
+
+                    '<div class="grid-row no-spacing">',
+                        '<div class="grid-col-3 field"><%= translations.town %>:</div>',
+                        '<div class="grid-col-9"><%= data.town %></div>',
+                    '</div>',
+
+                    '<div class="grid-row">',
+                        '<div class="grid-col-3 field"><%= translations.country %>:</div>',
+                        '<div class="grid-col-9"><%= data.country %></div>',
+                    '</div>',
+                    '<div class="grid-row">',
+                        '<div class="grid-col-3 field"><%= translations.coordinates %>:</div>',
+                        '<div class="grid-col-9"><%= data.long %>, <%= data.lat %>, <%= data.zoom %></div>',
+                    '</div>',
+                '</div>',
             ].join(''),
             overlay: [
                 '<div class="<%= constants.overlayClass %> grid">',
@@ -206,6 +208,7 @@ define([], function() {
     return {
         options: {},
         $button: null,
+        $formContent: null,
         overlayContent: null,
 
         // object containing map domId => mapInstances
@@ -220,12 +223,12 @@ define([], function() {
          */
         _template: function (name, params) {
             var tmpl = templates[name];
-            var params = this.sandbox.util.extend(true, {}, {
+            var tmplParams = this.sandbox.util.extend(true, {}, {
                 constants: constants,
                 translations: this.options.translations
             }, params);
 
-            return _.template(tmpl, params);
+            return this.sandbox.util.template(tmpl, tmplParams);
         },
 
         initialize: function() {
@@ -246,12 +249,22 @@ define([], function() {
             return data;
         },
 
+        initializeFormContent: function () {
+            this.formData = this.data;
+            this.$formContent = this.sandbox.dom.createElement(this._template('overlay', {
+                data: this.formData,
+                mapProviders: this.options.mapProviders,
+                countries: {}
+            }));
+        },
+
         /**
          * Create the component when initialized
          */
         createComponent: function () {
             this.renderSkeleton();
-            this.renderContent();
+            this.renderContentFields();
+            this.renderMap(constants.mapElementId, this.data);
             this.startOverlay();
             this.bindEvents();
         },
@@ -262,6 +275,9 @@ define([], function() {
         bindEvents: function () {
             // Initialize form when overlay is opened
             this.sandbox.on('husky.overlay.location-content.' + this.options.instanceName + '.opened', this.createForm.bind(this));
+            this.sandbox.on('husky.overlay.location-content.' + this.options.instanceName + '.initialized', function () {
+                this.startFormComponents();
+            }.bind(this));
 
             // update the location when user chooses a location from autoselect
             this.sandbox.on(
@@ -276,7 +292,7 @@ define([], function() {
                 // reinitialize the form data
                 this.formData = this.data;
 
-                this.renderContent();
+                this.renderContentFields();
                 this.renderMap(constants.mapElementId, this.data);
             }.bind(this));
         },
@@ -319,39 +335,36 @@ define([], function() {
          * Render the "skeleton" container
          */
         renderSkeleton: function () {
-            this.sandbox.dom.html(this.$el, this._template('skeleton', {}));
+            this.sandbox.dom.html(this.$el, this._template('skeleton', this.data));
         },
 
         /**
          * Render the (read only) content, i.e. not the overlay.
          */
-        renderContent: function () {
-            this.sandbox.dom.find('.' + constants.contentClass).empty().html(
-                this._template('content', {
+        renderContentFields: function () {
+            this.sandbox.dom.find('.' + constants.contentFieldContainerClass).empty().html(
+                this._template('contentFields', {
                     data: this.data
                 })
             );
-            this.renderMap(constants.mapElementId, this.data);
         },
 
         /**
          * Render the map using the defined provider
          */
         renderMap: function (mapElementId, location, options) {
-            var mapElement = this.sandbox.dom.find('#' + mapElementId);
             var providerName = this.data.mapProvider;
             var mapProviderConfig = this.options.mapProviders[providerName];
-            var mapElementId = mapElementId;
-            var options = this.sandbox.util.extend({}, mapDefaults, options);
+            var resolvedOptions = this.sandbox.util.extend({}, mapDefaults, options);
 
-            if (undefined == mapProviderConfig) {
-                alert('Map provider "' + providerName + '" is not configured');
+            if (undefined === mapProviderConfig) {
+                window.alert('Map provider "' + providerName + '" is not configured');
                 return;
             }
 
-            if (this.mapInstances[mapElementId] == undefined) {
+            if (undefined === this.mapInstances[mapElementId]) {
                 require(['map/' + providerName], function (Map) {
-                    var map = new Map(mapElementId, mapProviderConfig, options);
+                    var map = new Map(mapElementId, mapProviderConfig, resolvedOptions);
                     map.show(location.long, location.lat, location.zoom);
                     this.mapInstances[mapElementId] = map;
                 }.bind(this));
@@ -360,32 +373,12 @@ define([], function() {
             }
         },
 
-        /**
-         * Initialize the form (why a separate method?)
-         */
-        createForm: function () {
-            var element = this.sandbox.dom.find('.' + constants.geolocatorSearchClass);
-            this.sandbox.form.create('#' + constants.formId);
-            this.renderMap(constants.overlayMapElementId, this.data, {
-                // allow the marker to be dragged
-                draggableMarker: true,
-
-                // update the coordinates when the marker is dragged
-                positionUpdateCallback: function (long, lat, zoom) {
-                    this.updateCoordinates(long, lat, null);
-                }.bind(this),
-
-                // update the zoom when the zoom is changed
-                zoomChangeCallback: function (zoom) {
-                    this.updateCoordinates(null, null, zoom);
-                }.bind(this),
-            });
-
+        startFormComponents: function () {
             this.sandbox.start([
                 {
                     name: 'auto-complete@husky',
                     options: {
-                        el: element,
+                        el: this.sandbox.dom.find('.' + constants.geolocatorSearchClass, this.$formContent),
                         instanceName: this.options.instanceName + '.geolocator.search',
                         getParameter: 'query',
                         suggestionImg: 'map-marker',
@@ -395,6 +388,29 @@ define([], function() {
                     }
                 }
             ]);
+        },
+
+        /**
+         * Initialize the form (why a separate method?)
+         */
+        createForm: function () {
+            this.initializeFormContent();
+            var element = this.sandbox.dom.find('.' + constants.geolocatorSearchClass);
+            this.sandbox.form.create('#' + constants.formId);
+            this.renderMap(constants.overlayMapElementId, this.data, {
+                // allow the marker to be dragged
+                draggableMarker: true,
+
+                // update the coordinates when the marker is dragged
+                positionUpdateCallback: function (long, lat) {
+                    this.updateCoordinates(long, lat, null);
+                }.bind(this),
+
+                // update the zoom when the zoom is changed
+                zoomChangeCallback: function (zoom) {
+                    this.updateCoordinates(null, null, zoom);
+                }.bind(this),
+            });
 
             this.sandbox.dom.find('.coordinate-fields input').on('change', function () {
                 var form = $('#' + constants.formId);
@@ -409,9 +425,8 @@ define([], function() {
          * Initialize the overlay
          */
         startOverlay: function () {
-            this.formData = this.data;
-
             var $element = this.sandbox.dom.createElement('<div></div>');
+            this.initializeFormContent();
             this.overlayContent = $element;
             this.sandbox.dom.append(this.$el, $element);
 
@@ -427,11 +442,7 @@ define([], function() {
                         slides: [
                             {
                                 title: this.sandbox.translate(this.options.translations.configureLocation),
-                                data: this._template('overlay', {
-                                    data: this.formData,
-                                    mapProviders: this.options.mapProviders,
-                                    countries: {}
-                                }),
+                                data: this.$formContent,
                                 okCallback: function () {
                                     // @todo: Validation
                                     this.data = this.getFormData();
@@ -445,5 +456,5 @@ define([], function() {
                 }
             ]);
         }
-    }
-})
+    };
+});
