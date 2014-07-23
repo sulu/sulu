@@ -17,7 +17,6 @@ namespace Sulu\Bundle\MediaBundle\Media\FormatCache;
  */
 interface FormatCacheInterface
 {
-
     /**
      * Save image and return the url to the image
      * @param string $tmpPath
@@ -54,5 +53,4 @@ interface FormatCacheInterface
      * @return array ($id, $format)
      */
     public function analyzedMediaUrl($url);
-
 } 

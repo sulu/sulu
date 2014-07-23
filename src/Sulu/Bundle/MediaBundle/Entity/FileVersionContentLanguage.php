@@ -58,11 +58,23 @@ class FileVersionContentLanguage
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set id
+     *
+     * @param integer
+     * @return integer
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
     }
 
     /**
@@ -86,5 +98,15 @@ class FileVersionContentLanguage
     public function getFileVersion()
     {
         return $this->fileVersion;
+    }
+
+    /**
+     * don't clone id
+     */
+    public function __clone()
+    {
+        if ($this->id) {
+            $this->setId(null);
+        }
     }
 }

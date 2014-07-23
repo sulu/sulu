@@ -18,12 +18,10 @@ use Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\CommandInterface;
  */
 interface ManagerInterface
 {
-
     /**
      * Return a service which converts an image
      * @param string $name
      * @return CommandInterface
      */
     public function get($name);
-
 } 

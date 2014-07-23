@@ -13,8 +13,6 @@ namespace Sulu\Bundle\MediaBundle\Content\Types;
 use PHPCR\NodeInterface;
 use Sulu\Bundle\MediaBundle\Content\MediaSelectionContainer;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
-use Sulu\Bundle\MediaBundle\Media\RestObject\RestObjectHelper;
-use Sulu\Bundle\MediaBundle\Media\RestObject\RestObjectInterface;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\PropertyInterface;
 
@@ -29,19 +27,13 @@ class MediaSelectionContentType extends ComplexContentType
     private $mediaManager;
 
     /**
-     * @var RestObjectHelper
-     */
-    private $restObjectHelper;
-
-    /**
      * @var string
      */
     private $template;
 
-    function __construct($mediaManager, $restObjectHelper, $template)
+    function __construct($mediaManager, $template)
     {
         $this->mediaManager = $mediaManager;
-        $this->restObjectHelper = $restObjectHelper;
         $this->template = $template;
     }
 
@@ -89,14 +81,17 @@ class MediaSelectionContentType extends ComplexContentType
      */
     private function setData($data, PropertyInterface $property, $languageCode)
     {
-        $container = new MediaSelectionContainer(
-            isset($data['config']) ?  $data['config'] : array(),
-            isset($data['displayOption']) ? $data['displayOption'] : '',
-            isset($data['ids']) ? $data['ids'] : array(),
-            $languageCode,
-            $this->mediaManager,
-            $this->restObjectHelper
-        );
+        if ($data instanceof MediaSelectionContainer) {
+            $container = $data;
+        } else {
+            $container = new MediaSelectionContainer(
+                isset($data['config']) ?  $data['config'] : array(),
+                isset($data['displayOption']) ? $data['displayOption'] : '',
+                isset($data['ids']) ? $data['ids'] : array(),
+                $languageCode,
+                $this->mediaManager
+            );
+        }
 
         $property->setValue($container);
     }

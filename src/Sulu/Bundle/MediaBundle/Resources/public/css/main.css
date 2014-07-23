@@ -16,179 +16,18 @@
   margin-top: 30px;
 }
 
-/* line 5, ../scss/modules/media-selection.scss */
-.media-selection-container {
+/* line 6, ../scss/modules/media-selection.scss */
+.media-selection-overlay-add .heading {
   width: 100%;
-  height: 100%;
-  background: white;
-  border-radius: 0 0 3px 3px;
-}
-
-/* line 12, ../scss/modules/media-selection.scss */
-.media-selection-header {
-  position: relative;
-  top: 0px;
-  left: 0px;
-  height: 50px;
-  border-bottom: 1px solid #dddddd;
-  line-height: 50px;
-  padding-left: 20px;
-  font-size: 12px;
-}
-/* line 22, ../scss/modules/media-selection.scss */
-.media-selection-header .desc {
-  color: #999999;
-  padding-right: 3px;
-}
-/* line 27, ../scss/modules/media-selection.scss */
-.media-selection-header .add {
-  display: block;
-  position: absolute;
-  top: 10px;
-  left: 20px;
-  font-size: 16px;
-  line-height: 15px;
-  color: white;
-  background-color: #52b6ca;
-  padding: 5px 10px;
-  border: 0px solid #cccccc;
-  border-radius: 2px;
-}
-/* line 41, ../scss/modules/media-selection.scss */
-.media-selection-header .display-option-outer {
-  position: relative;
-  width: 120px;
-  margin: 0 auto;
-}
-/* line 46, ../scss/modules/media-selection.scss */
-.media-selection-header .display-option-outer .display-option {
-  position: absolute;
-  width: 100px;
-  top: 10px;
-  height: 25px;
-}
-/* line 54, ../scss/modules/media-selection.scss */
-.media-selection-header .config {
-  display: block;
-  position: absolute;
-  top: 10px;
-  right: 20px;
-  font-size: 16px;
-  line-height: 15px;
-  color: black;
-  padding: 5px 10px;
-  border: 1px solid #cccccc;
-  border-radius: 2px;
-}
-/* line 66, ../scss/modules/media-selection.scss */
-.media-selection-header .config:hover {
-  background: #efefef;
-}
-
-/* line 72, ../scss/modules/media-selection.scss */
-.media-selection {
-  position: relative;
-  top: 0px;
-  left: 0px;
-}
-/* line 77, ../scss/modules/media-selection.scss */
-.media-selection .loader {
-  padding: 50px 0;
-}
-/* line 80, ../scss/modules/media-selection.scss */
-.media-selection .no-content {
-  text-align: center;
-  height: 210px;
-}
-/* line 84, ../scss/modules/media-selection.scss */
-.media-selection .no-content .icon {
-  display: block;
-  position: absolute;
-  top: 0px;
-  left: 50%;
-  padding-top: 15px;
-  line-height: 125px;
-  margin-left: -65px;
-  font-size: 125px;
-  color: #efefef;
-}
-/* line 95, ../scss/modules/media-selection.scss */
-.media-selection .no-content .text {
-  padding-top: 160px;
-  font-weight: bold;
-  color: #e4e4e4;
-  font-size: 24px;
-}
-/* line 102, ../scss/modules/media-selection.scss */
-.media-selection .items-list {
-  list-style-type: none;
-  margin: 0;
-  padding: 0 20px;
-}
-/* line 107, ../scss/modules/media-selection.scss */
-.media-selection .items-list li {
-  font-size: 14px;
-  padding-bottom: 4px;
-  border-bottom: 1px solid #cccccc;
-}
-/* line 112, ../scss/modules/media-selection.scss */
-.media-selection .items-list li .num {
-  color: #999999;
-  padding-right: 10px;
-  bottom: 18px;
-  position: relative;
-}
-/* line 119, ../scss/modules/media-selection.scss */
-.media-selection .items-list li .image {
-  color: #999999;
-  padding-right: 10px;
-  padding-top: 10px;
-  width: 50px;
-  height: 50px;
-}
-/* line 127, ../scss/modules/media-selection.scss */
-.media-selection .items-list li .value {
-  color: #999999;
-  bottom: 18px;
-  position: relative;
-}
-/* line 133, ../scss/modules/media-selection.scss */
-.media-selection .items-list li:last-child {
-  border-width: 2px;
-}
-
-/* line 140, ../scss/modules/media-selection.scss */
-.media-selection-footer {
-  padding: 15px 20px 30px 20px;
-  line-height: 14px;
-  color: #999999;
-  font-size: 12px;
-}
-/* line 145, ../scss/modules/media-selection.scss */
-.media-selection-footer span {
-  padding-right: 5px;
-}
-/* line 148, ../scss/modules/media-selection.scss */
-.media-selection-footer .view-toggler {
-  color: black;
-  cursor: pointer;
-}
-
-/* line 155, ../scss/modules/media-selection.scss */
-.media-selection-overlay-add .head-container {
-  width: 100%;
-  padding-top: 10px;
   border-bottom: 2px #cccccc solid;
-  padding-bottom: 10px;
+}
+/* line 10, ../scss/modules/media-selection.scss */
+.media-selection-overlay-add h3 {
+  font-size: 16px;
+  margin-top: 20px;
   margin-bottom: 10px;
 }
-/* line 163, ../scss/modules/media-selection.scss */
-.media-selection-overlay-add h1 {
-  margin-bottom: 0px;
-  font-size: 20px;
-  color: #999999;
-}
-/* line 170, ../scss/modules/media-selection.scss */
-.media-selection-overlay-add .sulu-grid-group {
-  padding-top: 0px;
+/* line 15, ../scss/modules/media-selection.scss */
+.media-selection-overlay-add .overlay-loader {
+  margin: 20px 0;
 }

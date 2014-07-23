@@ -17,6 +17,8 @@ class AppKernel extends Kernel
             new FOS\RestBundle\FOSRestBundle(),
             new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
             new Symfony\Bundle\SecurityBundle\SecurityBundle(),
+            new Liip\ThemeBundle\LiipThemeBundle(),
+            new Bazinga\Bundle\HateoasBundle\BazingaHateoasBundle(),
 
             // Sulu
             new \Sulu\Bundle\AdminBundle\SuluAdminBundle(),

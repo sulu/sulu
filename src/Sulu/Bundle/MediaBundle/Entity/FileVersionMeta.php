@@ -115,6 +115,18 @@ class FileVersionMeta
     }
 
     /**
+     * Set id
+     *
+     * @param integer
+     * @return integer
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
+    }
+
+    /**
      * Set fileVersion
      *
      * @param \Sulu\Bundle\MediaBundle\Entity\FileVersion $fileVersion
@@ -135,5 +147,15 @@ class FileVersionMeta
     public function getFileVersion()
     {
         return $this->fileVersion;
+    }
+
+    /**
+     * don't clone id
+     */
+    public function __clone()
+    {
+        if ($this->id) {
+            $this->setId(null);
+        }
     }
 }

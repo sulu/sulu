@@ -395,31 +395,34 @@ define([
              * Takes a media or an array of media and saves it/them
              * @param media {Object|Array} the media object or an array of media objects
              * @param callback {Function} callback to execute after all media got saved
+             * @param noSave {Boolean} true to not save the media. Can be used if you just want to use the event but don't actually save the media
              */
-            saveMedia: function(media, callback) {
-                var model, length = 0;
+            saveMedia: function(media, callback, noSave) {
+                if (noSave !== true) {
+                    var model, length = 0;
 
-                // if passed argument is a single media object make an array with it
-                if (!this.sandbox.dom.isArray(media)) {
-                    media = [media];
+                    // if passed argument is a single media object make an array with it
+                    if (!this.sandbox.dom.isArray(media)) {
+                        media = [media];
+                    }
+
+                    this.sandbox.util.foreach(media, function(mediaEntity) {
+                        model = this.getMediaModel(mediaEntity.id);
+                        model.set(mediaEntity);
+
+                        model.save(null, {
+                            success: function(savedMedia) {
+                                this.sandbox.emit(MEDIA_SAVED.call(this), savedMedia.toJSON());
+                                if (++length === media.length) {
+                                    callback(savedMedia.toJSON());
+                                }
+                            }.bind(this),
+                            error: function() {
+                                this.sandbox.logger.log('Error while saving a single media');
+                            }.bind(this)
+                        });
+                    }.bind(this));
                 }
-
-                this.sandbox.util.foreach(media, function(mediaEntity) {
-                    model = this.getMediaModel(mediaEntity.id);
-                    model.set(mediaEntity);
-
-                    model.save(null, {
-                        success: function(savedMedia) {
-                            this.sandbox.emit(MEDIA_SAVED.call(this), savedMedia.toJSON());
-                            if (++length === media.length) {
-                                callback(savedMedia.toJSON());
-                            }
-                        }.bind(this),
-                        error: function() {
-                            this.sandbox.logger.log('Error while saving a single media');
-                        }.bind(this)
-                    });
-                }.bind(this));
             },
 
             /**

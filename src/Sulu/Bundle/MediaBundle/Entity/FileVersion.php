@@ -37,7 +37,17 @@ class FileVersion
     /**
      * @var string
      */
+    private $mimeType;
+
+    /**
+     * @var string
+     */
     private $storageOptions;
+
+    /**
+     * @var integer
+     */
+    private $downloadCounter = 0;
 
     /**
      * @var \DateTime
@@ -171,6 +181,29 @@ class FileVersion
     }
 
     /**
+     * Set mimeType
+     *
+     * @param string $mimeType
+     * @return FileVersion
+     */
+    public function setMimeType($mimeType)
+    {
+        $this->mimeType = $mimeType;
+
+        return $this;
+    }
+
+    /**
+     * Get mimeType
+     *
+     * @return string
+     */
+    public function getMimeType()
+    {
+        return $this->mimeType;
+    }
+
+    /**
      * Set storageOptions
      *
      * @param string $storageOptions
@@ -191,6 +224,29 @@ class FileVersion
     public function getStorageOptions()
     {
         return $this->storageOptions;
+    }
+
+    /**
+     * Set downloadCounter
+     *
+     * @param integer $downloadCounter
+     * @return FileVersion
+     */
+    public function setDownloadCounter($downloadCounter)
+    {
+        $this->downloadCounter = $downloadCounter;
+
+        return $this;
+    }
+
+    /**
+     * Get downloadCounter
+     *
+     * @return integer
+     */
+    public function getDownloadCounter()
+    {
+        return $this->downloadCounter;
     }
 
     /**
@@ -448,5 +504,39 @@ class FileVersion
     public function getCreator()
     {
         return $this->creator;
+    }
+
+    /**
+     * don't clone id to create a new entities
+     */
+    public function __clone()
+    {
+        if ($this->id) {
+            $this->id = null;
+
+            /**
+             * @var FileVersionMeta $meta
+             */
+            foreach ($this->meta as $meta)
+            {
+                $meta->setId(null);
+            }
+
+            /**
+             * @var FileVersionContentLanguage $meta
+             */
+            foreach ($this->contentLanguages as $contentLanguage)
+            {
+                $contentLanguage->setId(null);
+            }
+
+            /**
+             * @var FileVersionPublishLanguage $meta
+             */
+            foreach ($this->publishLanguages as $publishLanguage)
+            {
+                $publishLanguage->setId(null);
+            }
+        }
     }
 }

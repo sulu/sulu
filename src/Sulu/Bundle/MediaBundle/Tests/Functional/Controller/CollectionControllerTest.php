@@ -48,6 +48,7 @@ class CollectionControllerTest extends DatabaseTestCase
 
         self::$entities = array(
             self::$em->getClassMetadata('Sulu\Bundle\TestBundle\Entity\TestUser'),
+            self::$em->getClassMetadata('Sulu\Bundle\TestBundle\Entity\TestContact'),
             self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\Collection'),
             self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\CollectionType'),
             self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\CollectionMeta'),
@@ -149,13 +150,18 @@ class CollectionControllerTest extends DatabaseTestCase
         )), false);
 
         $this->assertEquals($style, $response->style);
-        $this->assertEquals(1, $response->id);
-        $this->assertEquals(1, $response->type);
-        $this->assertNotEmpty($response->created);
-        $this->assertNotEmpty($response->changed);
-        $this->assertEquals('Test Collection', $response->title);
         $this->assertEquals('This Description is only for testing', $response->description);
+        $this->assertEquals(1, $response->id);
+        $this->assertEquals(0, $response->mediaNumber);
+        $this->assertCount(0, $response->thumbnails);
+        $this->assertCount(0, $response->children);
         $this->assertEquals('en-gb', $response->locale);
+        $this->assertEquals('Test Collection', $response->title);
+        $this->assertEquals(1, $response->type->id);
+        $this->assertEquals('Default Collection Type', $response->type->name);
+        $this->assertEquals('Default Collection Type', $response->type->description);
+        $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($response->created)));
+        $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($response->changed)));
     }
 
     /**
@@ -177,9 +183,9 @@ class CollectionControllerTest extends DatabaseTestCase
 
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertNotEmpty($response);
+        $this->assertNotEmpty($response->_embedded->collections);
 
-        $this->assertEquals(1, $response->total);
+        $this->assertCount(1, $response->_embedded->collections);
     }
 
     /**
@@ -197,7 +203,7 @@ class CollectionControllerTest extends DatabaseTestCase
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
 
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(0, $response->code);
+        $this->assertEquals(5005, $response->code);
         $this->assertTrue(isset($response->message));
     }
 
@@ -224,7 +230,9 @@ class CollectionControllerTest extends DatabaseTestCase
                         'color' => $generateColor
                     )
             ,
-                'type'  => 1,
+                'type'  => array(
+                    'id' => 1
+                ),
                 'title'       => 'Test Collection 2',
                 'description' => 'This Description 2 is only for testing',
                 'parent'      => null,
@@ -242,9 +250,9 @@ class CollectionControllerTest extends DatabaseTestCase
         $this->assertEquals('en-gb', $response->locale);
         $this->assertEquals($style, $response->style);
         $this->assertEquals(2, $response->id);
-        $this->assertEquals(1, $response->type);
-        $this->assertNotEmpty($response->created);
-        $this->assertNotEmpty($response->changed);
+        $this->assertEquals(1, $response->type->id);
+        $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($response->created)));
+        $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($response->changed)));
         $this->assertEquals('Test Collection 2', $response->title);
         $this->assertEquals('This Description 2 is only for testing', $response->description);
         /*
@@ -271,7 +279,8 @@ class CollectionControllerTest extends DatabaseTestCase
         $this->assertEquals(2, $response->total);
 
         // check if first entity is unchanged
-        $responseFirstEntity = $response->_embedded[0];
+        $this->assertTrue(isset($response->_embedded->collections[0]));
+        $responseFirstEntity = $response->_embedded->collections[0];
 
         $style = new \stdClass();
         $style->type = 'circle';
@@ -280,14 +289,15 @@ class CollectionControllerTest extends DatabaseTestCase
         $this->assertEquals(1, $responseFirstEntity->id);
         $this->assertEquals('en-gb', $responseFirstEntity->locale);
         $this->assertEquals($style, $responseFirstEntity->style);
-        $this->assertEquals(1, $responseFirstEntity->type);
+        $this->assertEquals(1, $responseFirstEntity->type->id);
         $this->assertNotEmpty($responseFirstEntity->created);
         $this->assertNotEmpty($responseFirstEntity->changed);
         $this->assertEquals('Test Collection', $responseFirstEntity->title);
         $this->assertEquals('This Description is only for testing', $responseFirstEntity->description);
 
         // check second entity was created right
-        $responseSecondEntity = $response->_embedded[1];
+        $this->assertTrue(isset($response->_embedded->collections[1]));
+        $responseSecondEntity = $response->_embedded->collections[1];
 
 
         $style = new \stdClass();
@@ -297,7 +307,7 @@ class CollectionControllerTest extends DatabaseTestCase
         $this->assertEquals(2, $responseSecondEntity->id);
         $this->assertEquals('en-gb', $responseSecondEntity->locale);
         $this->assertEquals($style, $responseSecondEntity->style);
-        $this->assertEquals(1, $responseSecondEntity->type);
+        $this->assertEquals(1, $responseSecondEntity->type->id);
         $this->assertNotEmpty($responseSecondEntity->created);
         $this->assertNotEmpty($responseSecondEntity->changed);
         $this->assertEquals('Test Collection 2', $responseSecondEntity->title);
@@ -325,9 +335,9 @@ class CollectionControllerTest extends DatabaseTestCase
 
         $this->assertEquals('en', $response->locale);
         $this->assertEquals(2, $response->id);
-        $this->assertEquals(1, $response->type);
-        $this->assertNotEmpty($response->created);
-        $this->assertNotEmpty($response->changed);
+        $this->assertEquals(1, $response->type->id);
+        $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($response->created)));
+        $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($response->changed)));
         $this->assertEquals('Test Collection 2', $response->title);
 
 
@@ -351,7 +361,8 @@ class CollectionControllerTest extends DatabaseTestCase
         $this->assertEquals(2, $response->total);
 
         // check if first entity is unchanged
-        $responseFirstEntity = $response->_embedded[0];
+        $this->assertTrue(isset($response->_embedded->collections[0]));
+        $responseFirstEntity = $response->_embedded->collections[0];
 
         $style = new \stdClass();
         $style->type = 'circle';
@@ -360,20 +371,21 @@ class CollectionControllerTest extends DatabaseTestCase
         $this->assertEquals(1, $responseFirstEntity->id);
         $this->assertEquals('en-gb', $responseFirstEntity->locale);
         $this->assertEquals($style, $responseFirstEntity->style);
-        $this->assertEquals(1, $responseFirstEntity->type);
-        $this->assertNotEmpty($responseFirstEntity->created);
-        $this->assertNotEmpty($responseFirstEntity->changed);
+        $this->assertEquals(1, $responseFirstEntity->type->id);
+        $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($responseFirstEntity->created)));
+        $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($responseFirstEntity->changed)));
         $this->assertEquals('Test Collection', $responseFirstEntity->title);
         $this->assertEquals('This Description is only for testing', $responseFirstEntity->description);
 
         // check second entity was created right
-        $responseSecondEntity = $response->_embedded[1];
+        $this->assertTrue(isset($response->_embedded->collections[1]));
+        $responseSecondEntity = $response->_embedded->collections[1];
 
         $this->assertEquals(2, $responseSecondEntity->id);
         $this->assertEquals('en-gb', $responseSecondEntity->locale);
-        $this->assertEquals(1, $responseSecondEntity->type);
-        $this->assertNotEmpty($responseSecondEntity->created);
-        $this->assertNotEmpty($responseSecondEntity->changed);
+        $this->assertEquals(1, $responseSecondEntity->type->id);
+        $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($responseSecondEntity->created)));
+        $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($responseSecondEntity->changed)));
         $this->assertEquals('Test Collection 2', $responseSecondEntity->title);
 
 
@@ -397,7 +409,8 @@ class CollectionControllerTest extends DatabaseTestCase
         $this->assertEquals(2, $response->total);
 
         // check if first entity is unchanged
-        $responseFirstEntity = $response->_embedded[0];
+        $this->assertTrue(isset($response->_embedded->collections[0]));
+        $responseFirstEntity = $response->_embedded->collections[0];
 
         $style = new \stdClass();
         $style->type = 'circle';
@@ -406,20 +419,21 @@ class CollectionControllerTest extends DatabaseTestCase
         $this->assertEquals(1, $responseFirstEntity->id);
         $this->assertEquals('en', $responseFirstEntity->locale);
         $this->assertEquals($style, $responseFirstEntity->style);
-        $this->assertEquals(1, $responseFirstEntity->type);
-        $this->assertNotEmpty($responseFirstEntity->created);
-        $this->assertNotEmpty($responseFirstEntity->changed);
+        $this->assertEquals(1, $responseFirstEntity->type->id);
+        $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($responseFirstEntity->created)));
+        $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($responseFirstEntity->changed)));
         $this->assertEquals('Test Collection', $responseFirstEntity->title);
         $this->assertEquals('This Description is only for testing', $responseFirstEntity->description);
 
         // check second entity was created right
-        $responseSecondEntity = $response->_embedded[1];
+        $this->assertTrue(isset($response->_embedded->collections[1]));
+        $responseSecondEntity = $response->_embedded->collections[1];
 
         $this->assertEquals(2, $responseSecondEntity->id);
         $this->assertEquals('en', $responseSecondEntity->locale);
-        $this->assertEquals(1, $responseSecondEntity->type);
-        $this->assertNotEmpty($responseSecondEntity->created);
-        $this->assertNotEmpty($responseSecondEntity->changed);
+        $this->assertEquals(1, $responseSecondEntity->type->id);
+        $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($responseSecondEntity->created)));
+        $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($responseSecondEntity->changed)));
         $this->assertEquals('Test Collection 2', $responseSecondEntity->title);
     }
 
@@ -445,7 +459,9 @@ class CollectionControllerTest extends DatabaseTestCase
                         'color' => $generateColor
                     )
                 ,
-                'type'  => 2,
+                'type'  => array(
+                    'id' => 2
+                ),
                 'title'       => 'Test Collection 2',
                 'description' => 'This Description 2 is only for testing',
                 'locale'      => 'en-gb'
@@ -454,7 +470,7 @@ class CollectionControllerTest extends DatabaseTestCase
 
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(404, $client->getResponse()->getStatusCode());
+        $this->assertEquals(400, $client->getResponse()->getStatusCode());
         $this->assertTrue(isset($response->message));
     }
 
@@ -500,9 +516,9 @@ class CollectionControllerTest extends DatabaseTestCase
 
         $this->assertEquals($style, $response->style);
         $this->assertEquals(1, $response->id);
-        $this->assertEquals(1, $response->type);
-        $this->assertNotEmpty($response->created);
-        $this->assertNotEmpty($response->changed);
+        $this->assertEquals(1, $response->type->id);
+        $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($response->created)));
+        $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($response->changed)));
         $this->assertEquals('Test Collection changed', $response->title);
         $this->assertEquals('This Description is only for testing changed', $response->description);
         $this->assertEquals('en-gb', $response->locale);
@@ -522,7 +538,8 @@ class CollectionControllerTest extends DatabaseTestCase
 
         $this->assertEquals(1, $response->total);
 
-        $responseFirstEntity = $response->_embedded[0];
+        $this->assertTrue(isset($response->_embedded->collections[0]));
+        $responseFirstEntity = $response->_embedded->collections[0];
 
         $style = new \stdClass();
         $style->type = 'circle';
@@ -530,12 +547,89 @@ class CollectionControllerTest extends DatabaseTestCase
 
         $this->assertEquals($style, $responseFirstEntity->style);
         $this->assertEquals(1, $responseFirstEntity->id);
-        $this->assertEquals(1, $responseFirstEntity->type);
-        $this->assertNotEmpty($responseFirstEntity->created);
-        $this->assertNotEmpty($responseFirstEntity->changed);
+        $this->assertEquals(1, $responseFirstEntity->type->id);
+        $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($responseFirstEntity->created)));
+        $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($responseFirstEntity->changed)));
         $this->assertEquals('Test Collection changed', $responseFirstEntity->title);
         $this->assertEquals('This Description is only for testing changed', $responseFirstEntity->description);
         $this->assertEquals('en-gb', $responseFirstEntity->locale);
+    }
+
+    /**
+     * @description Test PUT Action
+     */
+    public function testPutWithoutLocale()
+    {
+        $client = $this->createTestClient();
+
+        $client->request(
+            'PUT',
+            '/api/collections/1',
+            array(
+                'style' =>
+                    array(
+                        'type'  => 'circle',
+                        'color' => '#00ccff'
+                    )
+            ,
+                'type'  => 1,
+                'title'       => 'Test Collection changed',
+                'description' => 'This Description is only for testing changed',
+            )
+        );
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $client->request(
+            'GET',
+            '/api/collections/1'
+        );
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $style = new \stdClass();
+        $style->type = 'circle';
+        $style->color = '#00ccff';
+
+        $this->assertEquals($style, $response->style);
+        $this->assertEquals(1, $response->id);
+        $this->assertEquals(1, $response->type->id);
+        $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($response->created)));
+        $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($response->changed)));
+        $this->assertEquals('Test Collection changed', $response->title);
+        $this->assertEquals('This Description is only for testing changed', $response->description);
+        $this->assertEquals('en', $response->locale);
+
+        $client = $this->createTestClient();
+
+        $client->request(
+            'GET',
+            '/api/collections?locale=en'
+        );
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertNotEmpty($response);
+
+        $this->assertEquals(1, $response->total);
+
+        $this->assertTrue(isset($response->_embedded->collections[0]));
+        $responseFirstEntity = $response->_embedded->collections[0];
+
+        $style = new \stdClass();
+        $style->type = 'circle';
+        $style->color = '#00ccff';
+
+        $this->assertEquals($style, $responseFirstEntity->style);
+        $this->assertEquals(1, $responseFirstEntity->id);
+        $this->assertEquals(1, $responseFirstEntity->type->id);
+        $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($responseFirstEntity->created)));
+        $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($responseFirstEntity->changed)));
+        $this->assertEquals('Test Collection changed', $responseFirstEntity->title);
+        $this->assertEquals('This Description is only for testing changed', $responseFirstEntity->description);
+        $this->assertEquals('en', $responseFirstEntity->locale);
     }
 
     /**
@@ -564,7 +658,9 @@ class CollectionControllerTest extends DatabaseTestCase
                         'color' => '#00ccff'
                     )
                 ,
-                'type'  => 2
+                'type'  => array (
+                    'id' => 2
+                )
             )
         );
 
@@ -583,7 +679,7 @@ class CollectionControllerTest extends DatabaseTestCase
 
         $this->assertEquals($style, $response->style);
 
-        $this->assertEquals(2, $response->type);
+        $this->assertEquals(2, $response->type->id);
     }
 
     /**
@@ -630,7 +726,7 @@ class CollectionControllerTest extends DatabaseTestCase
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
 
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(0, $response->code);
+        $this->assertEquals(5005, $response->code);
         $this->assertTrue(isset($response->message));
     }
 

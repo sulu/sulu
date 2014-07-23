@@ -18,7 +18,6 @@ use JMS\Serializer\Annotation\Exclude;
  */
 class File
 {
-
     /**
      * @var \DateTime
      */
