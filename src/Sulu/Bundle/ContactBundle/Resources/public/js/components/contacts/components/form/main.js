@@ -17,8 +17,7 @@ define([], function() {
         constants = {
             tagsId: '#tags',
             addressAddId: '#address-add',
-            addAddressWrapper: '.grid-row',
-            companyId: '#companyContact1'
+            addAddressWrapper: '.grid-row'
         },
 
         setHeaderToolbar = function() {
@@ -56,10 +55,6 @@ define([], function() {
                 // define when all fields are initialized
                 this.sandbox.data.when(this.dfdListenForChange, this.dfdBirthdayIsSet).then(function() {
                     this.dfdAllFieldsInitialized.resolve();
-
-                    if (!this.sandbox.dom.find(constants.companyId).val()) {
-                        this.enablePositionDropdown(false);
-                    }
                 }.bind(this));
 
                 this.setTitle();
@@ -277,6 +272,12 @@ define([], function() {
                 this.sandbox.on('husky.input.birthday.initialized', function() {
                     this.dfdBirthdayIsSet.resolve();
                 }, this);
+
+                this.sandbox.once('husky.select.position-select.initialize', function() {
+                    if (!this.sandbox.dom.find('#' + this.companyInstanceName).val()) {
+                        this.enablePositionDropdown(false);
+                    }
+                }, this);
             },
 
             initContactData: function() {
@@ -438,17 +439,20 @@ define([], function() {
                         this.setHeaderBar(false);
                     }.bind(this));
 
+                    // disable position dropdown when company is empty
                     this.sandbox.dom.on('#company', 'keyup', function(data) {
                         if (!data.target.value) {
                             this.enablePositionDropdown(false);
                         }
                     }.bind(this), "input, textarea");
 
-                    this.sandbox.on(
-                        'husky.auto-complete.companyContact1.select',
-                        function(id) {
-                            this.enablePositionDropdown(true);
-                        }.bind(this));
+                    // enabel position dropdown only if something got selected
+                    this.companySelected = 'husky.auto-complete.'
+                        + this.companyInstanceName
+                        + '.select';
+                    this.sandbox.on(this.companySelected, function(id) {
+                        this.enablePositionDropdown(true);
+                    }.bind(this));
 
                 }.bind(this));
 
