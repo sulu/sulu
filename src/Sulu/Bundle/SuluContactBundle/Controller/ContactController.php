@@ -77,6 +77,31 @@ class ContactController extends AbstractContactController
     {
         $this->fieldDescriptors = array();
 
+        $this->fieldDescriptors['fullName'] = new DoctrineConcatenationFieldDescriptor(
+            array(
+                new DoctrineFieldDescriptor('firstName', 'firstName', self::$entityName),
+                new DoctrineFieldDescriptor('lastName', 'lastName', self::$entityName)
+            ),
+            'fullName',
+            'public.name',
+            ' ',
+            false,
+            true,
+            '',
+            '',
+            '160px'
+        );
+
+        $this->fieldDescriptors['mainEmail'] = new DoctrineFieldDescriptor(
+            'mainEmail',
+            'mainEmail',
+            self::$entityName,
+            'public.email',
+            array(),
+            false,
+            true
+        );
+
         $this->fieldDescriptors['account'] = new DoctrineFieldDescriptor(
             'name',
             'account',
@@ -94,21 +119,6 @@ class ContactController extends AbstractContactController
             ),
             false,
             true
-        );
-
-        $this->fieldDescriptors['fullName'] = new DoctrineConcatenationFieldDescriptor(
-            array(
-                new DoctrineFieldDescriptor('firstName', 'firstName', self::$entityName),
-                new DoctrineFieldDescriptor('lastName', 'lastName', self::$entityName)
-            ),
-            'fullName',
-            'public.name',
-            ' ',
-            false,
-            true,
-            '',
-            '',
-            '160px'
         );
 
         $this->fieldDescriptors['city'] = new DoctrineFieldDescriptor(
@@ -136,16 +146,6 @@ class ContactController extends AbstractContactController
             'mainPhone',
             self::$entityName,
             'public.phone',
-            array(),
-            false,
-            true
-        );
-
-        $this->fieldDescriptors['mainEmail'] = new DoctrineFieldDescriptor(
-            'mainEmail',
-            'mainEmail',
-            self::$entityName,
-            'public.email',
             array(),
             false,
             true
