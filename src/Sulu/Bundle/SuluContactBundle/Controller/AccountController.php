@@ -17,6 +17,7 @@ use FOS\RestBundle\Controller\Annotations\Put;
 use FOS\RestBundle\Controller\Annotations\Post;
 use Sulu\Bundle\ContactBundle\Contact\AbstractContactManager;
 use Sulu\Bundle\ContactBundle\Entity\AccountContact;
+use Sulu\Bundle\ContactBundle\Entity\Position;
 use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\Account;
@@ -48,6 +49,7 @@ class AccountController extends AbstractContactController
      */
     protected static $entityName = 'SuluContactBundle:Account';
     protected static $entityKey = 'accounts';
+    protected static $positionEntityName = 'SuluContactBundle:Position';
     protected static $contactEntityKey = 'contacts';
     protected static $contactEntityName = 'SuluContactBundle:Contact';
     protected static $accountCategoryEntityName = 'SuluContactBundle:AccountCategory';
@@ -1145,9 +1147,14 @@ class AccountController extends AbstractContactController
         $this->accountContactFieldDescriptors['position'] = new DoctrineFieldDescriptor(
             'position',
             'position',
-            self::$accountContactEntityName,
+            self::$positionEntityName,
             'contact.contacts.position',
-            array(),
+            array(
+                self::$positionEntityName => new DoctrineJoinDescriptor(
+                        self::$positionEntityName,
+                        self::$accountContactEntityName . '.position'
+                    )
+            ),
             false,
             true
         );
