@@ -133,7 +133,7 @@ class ContactTitleController extends RestController implements ClassResourceInte
             } else {
                 $name = $request->get('title');
 
-                if ($name == null || $name == '') {
+                if (empty($name)) {
                     throw new RestException('There is no title-name for the given title');
                 } else {
                     $em = $this->getDoctrine()->getManager();
