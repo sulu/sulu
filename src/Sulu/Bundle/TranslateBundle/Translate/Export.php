@@ -220,10 +220,10 @@ class Export
         $messages = array();
         foreach ($translations as $translation) {
             /** @var $translation Translation */
-            if (!array_key_exists($messages, $translation->getCode()->getCode())) {
+            if (!array_key_exists($translation->getCode()->getCode(), $messages)) {
                 $messages[$translation->getCode()->getCode()] = $translation->getValue();
             } else {
-                throw new \InvalidArgumentException($translation->getCode()->getCode(), 'tr-ode seems to come up multiple times');
+                throw new \InvalidArgumentException($translation->getCode()->getCode().', translation-code seems to come up multiple times');
             }
         }
 
