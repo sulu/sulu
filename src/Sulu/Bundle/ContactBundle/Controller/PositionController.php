@@ -133,7 +133,7 @@ class PositionController extends RestController implements ClassResourceInterfac
             } else {
                 $name = $request->get('position');
 
-                if ($name == null || $name == '') {
+                if (empty($name)) {
                     throw new RestException('There is no position-name for the given name');
                 } else {
                     $em = $this->getDoctrine()->getManager();
