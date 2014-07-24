@@ -21,11 +21,11 @@ use Sulu\Bundle\TranslateBundle\Translate\Import;
  * The command to execute an import on the console
  * @package Sulu\Bundle\TranslateBundle\Command
  */
-class ImportCommand extends ContainerAwareCommand
+class ImportFileCommand extends ContainerAwareCommand
 {
     protected function configure()
     {
-        $this->setName('sulu:translate:import')
+        $this->setName('sulu:translate:import:file')
             ->setDescription('Import a xliff catalogue in Sulu')
             ->addArgument(
                 'file',
@@ -47,6 +47,27 @@ class ImportCommand extends ContainerAwareCommand
                 'p',
                 InputOption::VALUE_REQUIRED,
                 'The id of the package to import the values from the file'
+            )
+            ->addOption(
+                'defaultLocale',
+                'dl',
+                InputOption::VALUE_OPTIONAL,
+                'Specifies if a catalogue gets set as default if it needs to be created',
+                'en'
+            )
+            ->addOption(
+                'frontend',
+                'f',
+                InputOption::VALUE_OPTIONAL,
+                'Specifies wheter the translations are available in frontend',
+                false
+            )
+            ->addOption(
+                'backend',
+                'b',
+                InputOption::VALUE_OPTIONAL,
+                'Specifies wheter the translations are available in backend',
+                true
             );
     }
 
@@ -56,19 +77,24 @@ class ImportCommand extends ContainerAwareCommand
         $name = $input->getArgument('name');
         $locale = $input->getArgument('locale');
         $packageId = $input->getOption('packageId');
+        $defaultLocale = $input->getOption('defaultLocale');
+        $backend = $input->getOption('backend');
+        $frontend = $input->getOption('frontend');
 
         $import = $this->getContainer()->get('sulu_translate.import');
 
         $import->setFile($file);
         $import->setName($name);
-        $import->setFormat(Import::XLIFF); //FIXME design configurable, if there will be more supported formats
+        $import->setFormat(Import::XLIFF);
         $import->setLocale($locale);
+        $import->setDefaultLocale($defaultLocale);
+        $import->setOutput($output);
 
         if ($packageId) {
             $import->setPackageId($packageId);
         }
 
-        $import->execute();
-        $output->writeln('Successfully imported file to Sulu Database!');
+        $import->executeFromFile($backend, $frontend);
+        $output->writeln('Successfully imported single file to Sulu Database!');
     }
 }

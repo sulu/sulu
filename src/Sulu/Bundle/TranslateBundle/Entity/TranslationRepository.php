@@ -52,23 +52,20 @@ class TranslationRepository extends EntityRepository
 
     /**
      * find translation with a few filters
-     * @param $packageId
      * @param $locale
      * @param null $backend
      * @param null $frontend
      * @param null $location
      * @return array
      */
-    public function findFiltered($packageId, $locale, $backend = null, $frontend = null, $location = null)
+    public function findFiltered($locale, $backend = null, $frontend = null, $location = null)
     {
         $dql = 'SELECT tr
                     FROM SuluTranslateBundle:Translation tr
                         JOIN tr.catalogue ca
-                        JOIN ca.package pa
                         JOIN tr.code co
                         LEFT JOIN co.location lo
-                    WHERE ca.locale = :locale
-                      	AND pa.id = :packageId';
+                    WHERE ca.locale = :locale';
 
         // add additional conditions, if they are set
         if ($backend != null) {
@@ -90,7 +87,6 @@ class TranslationRepository extends EntityRepository
             ->createQuery($dql)
             ->setParameters(
                 array(
-                    'packageId' => $packageId,
                     'locale' => $locale
                 )
             );

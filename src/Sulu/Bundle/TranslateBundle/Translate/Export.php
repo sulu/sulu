@@ -14,6 +14,7 @@ use Doctrine\ORM\EntityManager;
 use Sulu\Bundle\TranslateBundle\Translate\Dumper\JsonFileDumper;
 use Symfony\Component\Translation\Dumper\XliffFileDumper;
 use Symfony\Component\Translation\MessageCatalogue;
+use Sulu\Bundle\TranslateBundle\Entity\Translation;
 
 /**
  * Configures and starts an export of a translate catalogue
@@ -28,12 +29,6 @@ class Export
      * @var EntityManager
      */
     private $em;
-
-    /**
-     * The id of the package to export
-     * @var integer
-     */
-    private $packageId;
 
     /**
      * The locale of the catalogue to export
@@ -66,6 +61,12 @@ class Export
     private $path;
 
     /**
+     * The name of the file to export
+     * @var string
+     */
+    private $filename;
+
+    /**
      * Defines if the frontend translations should be included
      * @var boolean
      */
@@ -83,6 +84,23 @@ class Export
     public function setFormat($format)
     {
         $this->format = $format;
+    }
+
+    /**
+     * Sets the filename
+     * @param string $filename
+     */
+    public function setFilename($filename)
+    {
+        $this->filename = $filename;
+    }
+
+    /**
+     * Returns the name of the file to export
+     * @return string
+     */
+    public function getFilename() {
+        return $this->filename;
     }
 
     /**
@@ -110,22 +128,6 @@ class Export
     public function getLocale()
     {
         return $this->locale;
-    }
-
-    /**
-     * @param int $packageId
-     */
-    public function setPackageId($packageId)
-    {
-        $this->packageId = $packageId;
-    }
-
-    /**
-     * @return int
-     */
-    public function getPackageId()
-    {
-        return $this->packageId;
     }
 
     /**
@@ -202,15 +204,12 @@ class Export
     }
 
     /**
-     *
+     * Executes the export
      */
     public function execute()
     {
-        $package = $this->em->getRepository('SuluTranslateBundle:Package')
-            ->find($this->getPackageId());
         $translations = $this->em->getRepository('SuluTranslateBundle:Translation')
             ->findFiltered(
-                $this->getPackageId(),
                 $this->getLocale(),
                 $this->getBackend(),
                 $this->getFrontend(),
@@ -221,12 +220,16 @@ class Export
         $messages = array();
         foreach ($translations as $translation) {
             /** @var $translation Translation */
-            $messages[$translation->getCode()->getCode()] = $translation->getValue();
+            if (!array_key_exists($messages, $translation->getCode()->getCode())) {
+                $messages[$translation->getCode()->getCode()] = $translation->getValue();
+            } else {
+                throw new \InvalidArgumentException($translation->getCode()->getCode(), 'tr-ode seems to come up multiple times');
+            }
         }
 
         $messageCatalogue = new MessageCatalogue(
             $this->getLocale(),
-            array($package->getName() => $messages)
+            array($this->filename => $messages)
         );
 
         // Write the file

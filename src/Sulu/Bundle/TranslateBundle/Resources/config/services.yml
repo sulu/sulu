@@ -12,7 +12,7 @@ services:
             - { name: sulu.admin }
     sulu_translate.import:
         class: %sulu_translate.import.class%
-        arguments: ["@doctrine.orm.entity_manager"]
+        arguments: ["@doctrine.orm.entity_manager", "@kernel"]
     sulu_translate.export:
         class: %sulu_translate.export.class%
         arguments: ["@doctrine.orm.entity_manager"]

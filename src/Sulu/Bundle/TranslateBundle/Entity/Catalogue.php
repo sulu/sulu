@@ -120,10 +120,12 @@ class Catalogue extends ApiEntity
      */
     public function findTranslation($key)
     {
-        foreach ($this->getTranslations() as $translation) {
-            /** @var $translation Translation */
-            if ($translation->getCode()->getCode() == $key) {
-                return $translation;
+        if ($translations = $this->getTranslations()) {
+            foreach ($translations as $translation) {
+                /** @var $translation Translation */
+                if ($translation->getCode()->getCode() == $key) {
+                    return $translation;
+                }
             }
         }
 
