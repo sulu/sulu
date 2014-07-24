@@ -31,8 +31,8 @@ class NavigationController extends Controller
     {
 
         /** @var ContentNavigation $contentNavigation */
-        if ($this->has(self::SERVICE_NAME)) {
-            $contentNavigation = $this->get(self::SERVICE_NAME);
+        if ($this->has(static::SERVICE_NAME)) {
+            $contentNavigation = $this->get(static::SERVICE_NAME);
         }
 
         return new Response(json_encode($contentNavigation->toArray('roles')));
