@@ -43,7 +43,7 @@ define([], function() {
             if (options.positionUpdateCallback) {
                 google.maps.event.addListener(this.marker, 'position_changed', function () {
                         options.positionUpdateCallback(this.marker.position.B, this.marker.position.k);
-                });
+                }.bind(this));
             }
 
             // register zoom change callback

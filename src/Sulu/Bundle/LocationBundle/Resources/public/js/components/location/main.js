@@ -63,8 +63,10 @@ define([], function() {
             overlayMapElementClass: 'location-overlay-map',
             locateAddressClass: 'location-locate-address-button',
             geolocatorSearchClass: 'geolocator-search',
-            contentFieldContainerClass: 'location-content-field-container'
+            contentFieldContainerClass: 'location-content-field-container',
+            mapProviderSelectClass: 'location-content-provider-select'
         },
+
 
         events = {
             RELOAD_DATA: 'sulu.location.reload_data'
@@ -77,7 +79,7 @@ define([], function() {
                     '<div class="content <%= constants.contentClass %>">',
                         '<div class="grid-row">',
                             '<div class="grid-col-6 container">',
-                                '<div id="<%= constants.mapElementId %>" class="content <%= constants.mapElementClass %>"></div>',
+                                '<div id="<%= constants.mapElementId %>" class="content"></div>',
                             '</div>',
                             '<div class="grid-col-6 <%= constants.contentFieldContainerClass %>">',
                             '</div>',
@@ -164,7 +166,7 @@ define([], function() {
                         '<div class="grid-row">',
                             '<div class="form-group grid-col-6">',
                                 '<label for="map_provider">Map Provider</label>',
-                                '<select class="form-element" name="map_provider" class="map-provider" data-mapper-property="mapProvider">',
+                                '<select class="<%= constants.mapProviderSelectClass %> form-element" name="map_provider" class="map-provider" data-mapper-property="mapProvider">',
                                     '<% _.each(mapProviders, function (provider, key) { %>',
                                         '<option <% if (key == data.mapProvider) { %>selected="selected" <% }; %>value="<%= key %>"><%= provider.title %></option>',
                                     '<% }); %>',
@@ -206,13 +208,15 @@ define([], function() {
 
 
     return {
+        maps: {},
         options: {},
         $button: null,
         $formContent: null,
         overlayContent: null,
 
         // object containing map domId => mapInstances
-        mapInstances: {},
+        mapInstance: null,
+        currentMapProviderName: null,
 
         data: {},
         formData: {},
@@ -233,8 +237,36 @@ define([], function() {
 
         initialize: function() {
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
+            this.configureMaps();
             this.loadData();
             this.createComponent();
+        },
+
+        // Register map configurations for the two different map targets
+        // (content and overlay)
+        configureMaps: function () {
+            this.maps = {
+                content: {
+                    elementId: constants.mapElementId,
+                    draggableMarker: false,
+                    positionUpdateCallback: function () {},
+                    zoomChangeCallback: function () {},
+                },
+                overlay: {
+                    elementId: constants.overlayMapElementId,
+                    draggableMarker: true,
+
+                    // update the coordinates when marker position changed
+                    positionUpdateCallback: function (long, lat) {
+                        this.updateCoordinates(long, lat, null);
+                    }.bind(this),
+
+                    // update the zoom when the zoom is changed
+                    zoomChangeCallback: function (zoom) {
+                        this.updateCoordinates(null, null, zoom);
+                    }.bind(this)
+                }
+            };
         },
 
         /**
@@ -242,7 +274,7 @@ define([], function() {
          */
         loadData: function () {
             this.data = this.sandbox.util.extend(true, {}, dataDefaults, this.sandbox.dom.data(this.$el, 'location'));
-            console.log(this.data);
+            this.formData = this.data;
         },
 
         getFormData: function () {
@@ -265,7 +297,7 @@ define([], function() {
         createComponent: function () {
             this.renderSkeleton();
             this.renderContentFields();
-            this.renderMap(constants.mapElementId, this.data);
+            this.renderMap('content', this.data);
             this.startOverlay();
             this.bindEvents();
         },
@@ -294,7 +326,7 @@ define([], function() {
                 this.formData = this.data;
 
                 this.renderContentFields();
-                this.renderMap(constants.mapElementId, this.data);
+                this.renderMap('content', this.data);
             }.bind(this));
         },
 
@@ -302,7 +334,7 @@ define([], function() {
         // the webservice API
         updateLocationFromLocation: function (location) {
             this.updateCoordinates(location.longitude, location.latitude);
-            this.renderMap(constants.overlayMapElementId, {
+            this.renderMap('overlay', {
                 'long': location.longitude,
                 'lat': location.latitude,
                 'zoom': this.formData.zoom
@@ -310,7 +342,7 @@ define([], function() {
         },
 
         updateLocation: function () {
-            this.renderMap(constants.overlayMapElementId, {
+            this.renderMap('overlay', {
                 'long': this.formData.long,
                 'lat': this.formData.lat,
                 'zoom': this.formData.zoom
@@ -353,24 +385,36 @@ define([], function() {
         /**
          * Render the map using the defined provider
          */
-        renderMap: function (mapElementId, location, options) {
-            var providerName = this.data.mapProvider;
-            var mapProviderConfig = this.options.mapProviders[providerName];
+        renderMap: function (mapId, location) {
+            var options = this.maps[mapId];
+            var mapElementId = options.elementId;
+            var mapProviderName = this.formData.mapProvider;
+            var mapProviderConfig = this.options.mapProviders[mapProviderName];
+            var mapInnerElementId = mapElementId + '-inner';
+
             var resolvedOptions = this.sandbox.util.extend({}, mapDefaults, options);
 
             if (undefined === mapProviderConfig) {
-                window.alert('Map provider "' + providerName + '" is not configured');
+                window.alert('Map provider "' + mapProviderName + '" is not configured');
                 return;
             }
 
-            if (undefined === this.mapInstances[mapElementId]) {
-                require(['map/' + providerName], function (Map) {
-                    var map = new Map(mapElementId, mapProviderConfig, resolvedOptions);
+            // If the provider name has changed, or no map has been yet instantiated
+            // then instantiate a new map
+            if (null === this.mapInstance || this.currentMapProviderName != mapProviderName) {
+                require(['map/' + mapProviderName], function (Map) {
+                    var parentEl = this.sandbox.dom.find('#' + mapElementId);
+                    parentEl.empty().append(
+                        this.sandbox.dom.createElement('<div id="' + mapInnerElementId + '" class="' + constants.mapElementClass + '"></div>')
+                    );
+
+                    var map = new Map(mapInnerElementId, mapProviderConfig, resolvedOptions);
                     map.show(location.long, location.lat, location.zoom);
-                    this.mapInstances[mapElementId] = map;
+                    this.mapInstance = map;
                 }.bind(this));
+            // otherwise just update the position
             } else {
-                this.mapInstances[mapElementId].show(location.long, location.lat, location.zoom);
+                this.mapInstance.show(location.long, location.lat, location.zoom);
             }
         },
 
@@ -398,20 +442,7 @@ define([], function() {
             this.initializeFormContent();
             var element = this.sandbox.dom.find('.' + constants.geolocatorSearchClass);
             this.sandbox.form.create('#' + constants.formId);
-            this.renderMap(constants.overlayMapElementId, this.data, {
-                // allow the marker to be dragged
-                draggableMarker: true,
-
-                // update the coordinates when the marker is dragged
-                positionUpdateCallback: function (long, lat) {
-                    this.updateCoordinates(long, lat, null);
-                }.bind(this),
-
-                // update the zoom when the zoom is changed
-                zoomChangeCallback: function (zoom) {
-                    this.updateCoordinates(null, null, zoom);
-                }.bind(this),
-            });
+            this.renderMap('overlay', this.data);                // update the coordinates when the marker is dragged
 
             this.sandbox.dom.find('.coordinate-fields input').on('change', function () {
                 var form = $('#' + constants.formId);
@@ -419,6 +450,16 @@ define([], function() {
                 this.formData.lat = this.sandbox.dom.find('.latitude', form).val();
                 this.formData.zoom = this.sandbox.dom.find('.zoom', form).val();
                 this.updateLocation();
+            }.bind(this));
+            
+            this.sandbox.dom.find('.' + constants.mapProviderSelectClass).on('change', function (el) {
+                var providerName = $(el.currentTarget).val();
+                this.formData.mapProvider = providerName;
+                this.renderMap('overlay', {
+                    'long': this.formData.long,
+                    'lat': this.formData.lat,
+                    'zoom': this.formData.zoom
+                });
             }.bind(this));
         },
 
