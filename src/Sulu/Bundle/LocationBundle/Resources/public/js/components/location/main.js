@@ -47,7 +47,7 @@ define([], function() {
             long: 0,
             lat: 0,
             zoom: 0,
-            mapProvider: 'leaflet'
+            mapProvider: 'google'
         },
 
         constants = {

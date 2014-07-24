@@ -12,7 +12,9 @@ require.config({
         sululocation: '../../sululocation/js',
         "type/location": '../../sululocation/js/validation/types/location',
         "map/leaflet": '../../sululocation/js/map/leaflet',
-        "leaflet": '../../sululocation/js/vendor/leaflet/leaflet'
+        "map/google": '../../sululocation/js/map/google',
+        "leaflet": '../../sululocation/js/vendor/leaflet/leaflet',
+        "async": "../../sululocation/js/vendor/requirejs-plugins/async"
     }
 });
 

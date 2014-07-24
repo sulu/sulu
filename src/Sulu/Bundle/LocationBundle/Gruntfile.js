@@ -34,6 +34,14 @@ module.exports = function (grunt) {
                             'bower_components/leaflet/dist/images/*',
                         ], 
                         dest: 'Resources/public/js/vendor/leaflet/images'
+                    },
+                    {
+                        expand: true,
+                        flatten: true,
+                        src: [
+                            'bower_components/requirejs-plugins/src/async.js'
+                        ], 
+                        dest: 'Resources/public/js/vendor/requirejs-plugins'
                     }
                 ]
             }
