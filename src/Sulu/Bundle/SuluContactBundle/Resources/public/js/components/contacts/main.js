@@ -402,7 +402,7 @@ define([
                         this.sandbox.emit(
                                 instance + '.update',
                             response,
-                            [],
+                            null,
                             true,
                             true);
                     }.bind(this)).fail(function(status, error) {
