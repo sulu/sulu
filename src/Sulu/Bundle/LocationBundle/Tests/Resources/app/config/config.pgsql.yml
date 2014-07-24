@@ -15,6 +15,18 @@ fos_rest:
     routing_loader:
         default_format: json
 
+doctrine:
+    dbal:
+        host: localhost
+        dbname: sulu_test
+        user: root
+        password:
+    orm:
+        auto_generate_proxy_classes: %kernel.debug%
+        auto_mapping: true
+        resolve_target_entities:
+            Sulu\Component\Security\UserInterface: Sulu\Bundle\TestBundle\Entity\TestUser
+
 monolog:
     handlers:
         main:
