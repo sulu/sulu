@@ -10,7 +10,6 @@
         <field name="firstName" type="string" column="firstName" length="60"/>
         <field name="middleName" type="string" column="middleName" length="60" nullable="true"/>
         <field name="lastName" type="string" column="lastName" length="60"/>
-        <field name="title" type="string" column="title" length="60" nullable="true"/>
         <field name="birthday" type="date" column="birthday" nullable="true"/>
         <field name="created" type="datetime" column="created"/>
         <field name="changed" type="datetime" column="changed"/>
@@ -49,6 +48,12 @@
                 <join-column name="idUsersCreator" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
             </join-columns>
         </many-to-one>
+        <many-to-one field="title" target-entity="Sulu\Bundle\ContactBundle\Entity\ContactTitle">
+            <join-columns>
+                <join-column name="idTitles" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
+            </join-columns>
+        </many-to-one>
+
 
         <many-to-many field="urls" target-entity="Sulu\Bundle\ContactBundle\Entity\Url" inversed-by="contacts">
             <join-table name="co_contact_urls">

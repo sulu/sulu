@@ -14,6 +14,7 @@ use DateTime;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Put;
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use Sluggable\Fixture\Position;
 use Sulu\Bundle\ContactBundle\Contact\AbstractContactManager;
 use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\AccountContact;
@@ -51,6 +52,8 @@ class ContactController extends AbstractContactController
     protected static $entityKey = 'contacts';
     protected static $accountEntityName = 'SuluContactBundle:Account';
     protected static $accountContactEntityName = 'SuluContactBundle:AccountContact';
+    protected static $titleEntityName = 'SuluContactBundle:ContactTitle';
+    protected static $positionEntityName = 'SuluContactBundle:Position';
     protected static $addressEntityName = 'SuluContactBundle:Address';
     protected static $contactAddressEntityName = 'SuluContactBundle:ContactAddress';
 
@@ -226,9 +229,14 @@ class ContactController extends AbstractContactController
         $this->fieldDescriptors['title'] = new DoctrineFieldDescriptor(
             'title',
             'title',
-            self::$entityName,
+            self::$titleEntityName,
             'public.title',
-            array(),
+            array(
+                self::$titleEntityName => new DoctrineJoinDescriptor(
+                        self::$titleEntityName,
+                        self::$entityName . '.title'
+                    )
+            ),
             true
         );
 
@@ -253,32 +261,39 @@ class ContactController extends AbstractContactController
         $this->fieldDescriptors['position'] = new DoctrineFieldDescriptor(
             'position',
             'position',
-            self::$accountContactEntityName,
-            'contact.contacts.position',
-            array(
-                self::$accountContactEntityName => new DoctrineJoinDescriptor(
-                        self::$accountContactEntityName,
-                        self::$entityName . '.accountContacts',
-                        self::$accountContactEntityName . '.main = true', 'LEFT'
-                    ),
-            ),
-            true
-        );
-
-        // field descriptors for the account contact list
-        $this->accountContactFieldDescriptors = array();
-        $this->accountContactFieldDescriptors['id']  = $this->fieldDescriptors['id'];
-        $this->accountContactFieldDescriptors['fullName']  = $this->fieldDescriptors['fullName'];
-        $this->accountContactFieldDescriptors['position'] = new DoctrineFieldDescriptor(
-            'position',
-            'position',
-            self::$accountContactEntityName,
+            self::$positionEntityName,
             'contact.contacts.position',
             array(
                 self::$accountContactEntityName => new DoctrineJoinDescriptor(
                         self::$accountContactEntityName,
                         self::$entityName . '.accountContacts'
                     ),
+                self::$positionEntityName => new DoctrineJoinDescriptor(
+                        self::$positionEntityName,
+                        self::$accountContactEntityName . '.position'
+                    )
+            ),
+            true
+        );
+
+        // field descriptors for the account contact list
+        $this->accountContactFieldDescriptors = array();
+        $this->accountContactFieldDescriptors['id'] = $this->fieldDescriptors['id'];
+        $this->accountContactFieldDescriptors['fullName'] = $this->fieldDescriptors['fullName'];
+        $this->accountContactFieldDescriptors['position'] = new DoctrineFieldDescriptor(
+            'position',
+            'position',
+            self::$positionEntityName,
+            'contact.contacts.position',
+            array(
+                self::$accountContactEntityName => new DoctrineJoinDescriptor(
+                        self::$accountContactEntityName,
+                        self::$entityName . '.accountContacts'
+                    ),
+                self::$positionEntityName => new DoctrineJoinDescriptor(
+                        self::$positionEntityName,
+                        self::$accountContactEntityName . '.position'
+                    )
             ),
             false,
             true
@@ -309,7 +324,7 @@ class ContactController extends AbstractContactController
      */
     public function fieldsAction(Request $request)
     {
-        if(!!$request->get('accountContacts')) {
+        if (!!$request->get('accountContacts')) {
             return $this->handleView($this->view(array_values($this->accountContactFieldDescriptors), 200));
         }
 
@@ -477,7 +492,7 @@ class ContactController extends AbstractContactController
             $contact->setFirstName($firstName);
             $contact->setLastName($lastName);
 
-            $contact->setTitle($request->get('title'));
+            $this->setTitleOnContact($contact, $request->get('title'));
 
             $parentData = $request->get('account');
             if ($parentData != null &&
@@ -493,8 +508,16 @@ class ContactController extends AbstractContactController
                 if (!$parent) {
                     throw new EntityNotFoundException(self::$accountEntityName, $parentData['id']);
                 }
+
+                // Set position on contact
+                $position = null;
+                $positionId = $request->get('position');
+                if ($positionId && is_numeric($positionId)) {
+                    $position = $this->getDoctrine()->getRepository(self::$positionEntityName)->find($positionId);
+                }
+
                 // create new account-contact relation
-                $this->createMainAccountContact($contact, $parent, $request->get('position'));
+                $this->createMainAccountContact($contact, $parent, $position);
             }
             $birthday = $request->get('birthday');
             if (!empty($birthday)) {
@@ -583,6 +606,22 @@ class ContactController extends AbstractContactController
     }
 
     /**
+     * @param $contact
+     * @param $titleId
+     */
+    private function setTitleOnContact($contact, $titleId) {
+        if ($titleId && is_numeric($titleId)) {
+            $title = $this->getDoctrine()->getRepository(
+                self::$titleEntityName)->find($titleId);
+            if ($title) {
+                $contact->setTitle($title);
+            }
+        } else {
+            $contact->setTitle(null);
+        }
+    }
+
+    /**
      * @param $id
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
@@ -607,7 +646,9 @@ class ContactController extends AbstractContactController
                 $contact->setFirstName($request->get('firstName'));
                 $contact->setLastName($request->get('lastName'));
 
-                $contact->setTitle($request->get('title'));
+                // Set title relation on contact
+                $this->setTitleOnContact($contact, $request->get('title'));
+
                 $contact->setChanged(new DateTime());
 
                 // set account relation
@@ -625,10 +666,18 @@ class ContactController extends AbstractContactController
                     if (!$parent) {
                         throw new EntityNotFoundException(self::$accountEntityName, $parentData['id']);
                     }
+
+                    // Set position on contact
+                    $position = null;
+                    $positionId = $request->get('position');
+                    if ($positionId && is_numeric($positionId)) {
+                        $position = $this->getDoctrine()->getRepository(self::$positionEntityName)->find($positionId);
+                    }
+
                     $accountContact = $this->getMainAccountContactOrCreateNew(
                         $contact,
                         $parent,
-                        $request->get('position')
+                        $position
                     );
 
                     if ($accountContact) {

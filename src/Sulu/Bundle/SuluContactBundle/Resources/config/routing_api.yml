@@ -6,6 +6,14 @@ sulu_contact.accounts:
     type: rest
     resource: Sulu\Bundle\ContactBundle\Controller\AccountController
 
+sulu_contact.contacttitle:
+    type: rest
+    resource: Sulu\Bundle\ContactBundle\Controller\ContactTitleController
+
+sulu_contact.contactposition:
+    type: rest
+    resource: Sulu\Bundle\ContactBundle\Controller\PositionController
+
 sulu_contact.accountcategory:
     type: rest
     resource: Sulu\Bundle\ContactBundle\Controller\AccountCategoryController

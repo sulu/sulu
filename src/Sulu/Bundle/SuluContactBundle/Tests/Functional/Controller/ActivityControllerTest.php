@@ -221,6 +221,12 @@ class ActivityControllerTest extends DatabaseTestCase
             ),
             self::$em->getClassMetadata(
                 'Sulu\Bundle\ContactBundle\Entity\TermsOfDelivery'
+            ),
+            self::$em->getClassMetadata(
+                'Sulu\Bundle\ContactBundle\Entity\Position'
+            ),
+            self::$em->getClassMetadata(
+                'Sulu\Bundle\ContactBundle\Entity\ContactTitle'
             )
         );
 
