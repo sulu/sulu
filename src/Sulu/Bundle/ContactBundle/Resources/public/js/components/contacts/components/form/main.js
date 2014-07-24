@@ -360,7 +360,7 @@ define([], function() {
             },
 
             submit: function() {
-                this.sandbox.logger.log('save Model', this.sandbox.form.getData(form));
+                this.sandbox.logger.log('save Model');
 
                 if (this.sandbox.form.validate(form)) {
                     var data = this.sandbox.form.getData(form);
@@ -401,7 +401,6 @@ define([], function() {
                 var instance = 'husky.select.' + instanceName;
                 this.sandbox.on(instance + '.selected.item', function(id) {
                     if (id > 0) {
-                        this.selectedAccountCategory = id;
                         this.setHeaderBar(false);
                     }
                 }.bind(this));
