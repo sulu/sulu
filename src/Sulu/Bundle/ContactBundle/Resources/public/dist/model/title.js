@@ -1,0 +1,1 @@
+define(["mvc/relationalmodel"],function(a){"use strict";return a({urlRoot:"/admin/api/contact/titles",defaults:function(){return{id:null,title:""}}})});

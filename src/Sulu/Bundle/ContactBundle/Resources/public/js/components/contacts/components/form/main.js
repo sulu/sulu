@@ -34,12 +34,12 @@ define([], function() {
             templates: ['/admin/contact/template/contact/form'],
 
             customTemplates: {
-                    addAddressesIcon: [
-                        '<div class="grid-row">',
-                        '    <div class="grid-col-12">',
-                        '       <span id="address-add" class="fa-plus-circle icon address-add clickable pointer m-left-140"></span>',
-                        '   </div>',
-                        '</div>'].join('')
+                addAddressesIcon: [
+                    '<div class="grid-row">',
+                    '    <div class="grid-col-12">',
+                    '       <span id="address-add" class="fa-plus-circle icon address-add clickable pointer m-left-140"></span>',
+                    '   </div>',
+                    '</div>'].join('')
             },
 
             initialize: function() {
@@ -148,6 +148,7 @@ define([], function() {
             },
 
             bindTagEvents: function(data) {
+
                 if (!!data.tags && data.tags.length > 0) {
                     // set tags after auto complete list was initialized
                     this.sandbox.on('husky.auto-complete-list.' + this.autoCompleteInstanceName + '.initialized', function() {
@@ -271,6 +272,12 @@ define([], function() {
                 this.sandbox.on('husky.input.birthday.initialized', function() {
                     this.dfdBirthdayIsSet.resolve();
                 }, this);
+
+                this.sandbox.once('husky.select.position-select.initialize', function() {
+                    if (!this.sandbox.dom.find('#' + this.companyInstanceName).val()) {
+                        this.enablePositionDropdown(false);
+                    }
+                }, this);
             },
 
             initContactData: function() {
@@ -386,6 +393,34 @@ define([], function() {
                 this.saved = saved;
             },
 
+            /**
+             * Register events for editable drop downs
+             * @param instanceName
+             */
+            initializeDropDownListender: function(instanceName, url) {
+                var instance = 'husky.select.' + instanceName;
+                this.sandbox.on(instance + '.selected.item', function(id) {
+                    if (id > 0) {
+                        this.setHeaderBar(false);
+                    }
+                }.bind(this));
+                this.sandbox.on(instance + '.deselected.item', function() {
+                    this.setHeaderBar(false);
+                }.bind(this));
+            },
+
+            /**
+             * Enables or disables the position dropdown
+             * @param data - event
+             */
+            enablePositionDropdown: function(enable) {
+                if (!!enable) {
+                    this.sandbox.emit('husky.select.position-select.enable');
+                } else {
+                    this.sandbox.emit('husky.select.position-select.disable');
+                }
+            },
+
             // event listens for changes in form
             listenForChange: function() {
                 // listen for change after TAGS and BIRTHDAY-field have been set
@@ -403,10 +438,33 @@ define([], function() {
                         this.setHeaderBar(false);
                     }.bind(this));
 
+                    // disable position dropdown when company is empty
+                    this.sandbox.dom.on('#company', 'keyup', function(data) {
+                        if (!data.target.value) {
+                            this.enablePositionDropdown(false);
+                        }
+                    }.bind(this), "input, textarea");
+
+                    // enabel position dropdown only if something got selected
+                    this.companySelected = 'husky.auto-complete.'
+                        + this.companyInstanceName
+                        + '.select';
+                    this.sandbox.on(this.companySelected, function(id) {
+                        this.enablePositionDropdown(true);
+                    }.bind(this));
+
                 }.bind(this));
+
                 this.sandbox.on('husky.select.form-of-address.selected.item', function() {
                     this.setHeaderBar(false);
                 }.bind(this));
+
+                this.initializeDropDownListender(
+                    'title-select',
+                    'api/contact/titles');
+                this.initializeDropDownListender(
+                    'position-select',
+                    'api/contact/positions');
             }
         };
     })();

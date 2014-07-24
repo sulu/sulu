@@ -25,6 +25,8 @@ use Sulu\Bundle\ContactBundle\Entity\BankAccount;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\ContactAddress;
 use Sulu\Bundle\ContactBundle\Entity\ContactRepository;
+use Sulu\Bundle\ContactBundle\Entity\ContactTitle;
+use Sulu\Bundle\ContactBundle\Entity\Position;
 use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\ContactBundle\Entity\Fax;
 use Sulu\Bundle\ContactBundle\Entity\Note;
@@ -67,6 +69,8 @@ class Import
     protected $accountContactEntityName = 'SuluContactBundle:AccountContact';
     protected $accountCategoryEntityName = 'SuluContactBundle:AccountCategory';
     protected $tagEntityName = 'SuluTagBundle:Tag';
+    protected $titleEntityName = 'SuluContactBundle:ContactTitle';
+    protected $positionEntityName = 'SuluContactBundle:Position';
     protected $countryEntityName = 'SuluContactBundle:Country';
 
 
@@ -235,6 +239,18 @@ class Import
     protected $tags = array();
 
     /**
+     * used as temp storage for titles
+     * @var array
+     */
+    protected $titles = array();
+
+    /**
+     * used as temp storage for positions
+     * @var array
+     */
+    protected $positions = array();
+
+    /**
      * @param EntityManager $em
      * @param $accountManager
      * @param $contactManager
@@ -295,6 +311,8 @@ class Import
         // set default types
         $this->defaultTypes = $this->getDefaults();
         $this->loadTags();
+        $this->loadTitles();
+        $this->loadPositions();
         $this->loadAccountCategories();
     }
 
@@ -712,6 +730,44 @@ class Import
     }
 
     /**
+     * Adds a title to an account / contact
+     * @param $titleName
+     * @param $entity
+     */
+    protected function addTitle($titleName, $entity)
+    {
+        $titleName = trim($titleName);
+        if (array_key_exists($titleName, $this->titles)) {
+            $title = $this->titles[$titleName];
+        } else {
+            $title = new ContactTitle();
+            $title ->setTitle($titleName);
+            $this->em->persist($title);
+            $this->titles[$title->getTitle()] = $title;
+        }
+        $entity->setTitle($title);
+    }
+
+    /**
+     * Adds a position to an account / contact
+     * @param $positionName
+     * @param $entity
+     */
+    protected function addPosition($positionName, $entity)
+    {
+        $positionName = trim($positionName);
+        if (array_key_exists($positionName, $this->positions)) {
+            $position = $this->positions[$positionName];
+        } else {
+            $position = new Position();
+            $position ->setPosition($positionName);
+            $this->em->persist($position);
+            $this->positions[$position->getPosition()] = $position;
+        }
+        $entity->setPosition($position);
+    }
+
+    /**
      * creates an address entity based on passed data
      * @param $data
      * @return null|Address
@@ -892,12 +948,9 @@ class Import
             // TODO: dont accept this
             $contact->setLastName('');
         }
-        if ($this->checkData('contact_title', $data)) {
-            $contact->setTitle($data['contact_title']);
-        }
 
-        if ($this->checkData('contact_position', $data)) {
-            $contact->setPosition($data['contact_position']);
+        if ($this->checkData('contact_title', $data)) {
+            $this->addTitle($data['contact_title'], $contact);
         }
 
         if ($this->checkData('contact_formOfAddress', $data)) {
@@ -993,7 +1046,7 @@ class Import
 
                 // set position
                 if ($this->checkData('contact_position', $data)) {
-                    $accountContact->setPosition($data['contact_position']);
+                    $this->addPosition($data['contact_position'], $accountContact);
                 }
             }
         }
@@ -1138,6 +1191,24 @@ class Import
         /** @var Tag $tag */
         foreach ($tags as $tag) {
             $this->tags[$tag->getName()] = $tag;
+        }
+    }
+
+    protected function loadTitles()
+    {
+        $titles = $this->em->getRepository($this->titleEntityName)->findAll();
+        /** @var Title $title */
+        foreach ($titles as $title) {
+            $this->titles[$title->getTitle()] = $title;
+        }
+    }
+
+    protected function loadPositions()
+    {
+        $positions = $this->em->getRepository($this->positionEntityName)->findAll();
+        /** @var Position $position */
+        foreach ($positions as $position) {
+            $this->positions[$position->getPosition()] = $position;
         }
     }
 
