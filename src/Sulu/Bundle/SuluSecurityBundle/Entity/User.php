@@ -402,7 +402,6 @@ class User extends ApiEntity implements UserInterface, Serializable
         return $this->userSettings;
     }
 
-
     /**
      * Set apiKey
      *

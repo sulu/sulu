@@ -41,7 +41,7 @@ class UserRole extends ApiEntity
     private $user;
 
     /**
-     * @var \Sulu\Bundle\SecurityBundle\Entity\Role
+     * @var \Sulu\Bundle\SecurityBundle\Entity\RoleInterface
      * @Expose
      */
     private $role;
@@ -116,10 +116,10 @@ class UserRole extends ApiEntity
     /**
      * Set role
      *
-     * @param \Sulu\Bundle\SecurityBundle\Entity\Role $role
+     * @param \Sulu\Bundle\SecurityBundle\Entity\RoleInterface $role
      * @return UserRole
      */
-    public function setRole(\Sulu\Bundle\SecurityBundle\Entity\Role $role)
+    public function setRole(\Sulu\Bundle\SecurityBundle\Entity\RoleInterface $role)
     {
         $this->role = $role;
 
@@ -129,7 +129,7 @@ class UserRole extends ApiEntity
     /**
      * Get role
      *
-     * @return \Sulu\Bundle\SecurityBundle\Entity\Role
+     * @return \Sulu\Bundle\SecurityBundle\Entity\RoleInterface
      */
     public function getRole()
     {

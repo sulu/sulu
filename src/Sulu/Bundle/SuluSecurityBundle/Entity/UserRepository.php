@@ -12,12 +12,12 @@ namespace Sulu\Bundle\SecurityBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\Query;
 use Sulu\Component\Security\UserRepositoryInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Doctrine\ORM\Query;
 
 /**
  * Repository for the User, implementing some additional functions
@@ -51,7 +51,6 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
     public function findUserById($id)
     {
         try {
-
             $qb = $this->createQueryBuilder('user')
                 ->leftJoin('user.userRoles', 'userRoles')
                 ->leftJoin('userRoles.role', 'role')
@@ -74,7 +73,6 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
             $query->setParameter('userId', $id);
 
             return $query->getSingleResult();
-
         } catch (NoResultException $ex) {
             return null;
         }
@@ -88,7 +86,6 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
     public function findUserByContact($id)
     {
         try {
-
             $qb = $this->createQueryBuilder('user')
                 ->leftJoin('user.userRoles', 'userRoles')
                 ->leftJoin('userRoles.role', 'role')
@@ -111,7 +108,6 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
             $query->setParameter('contactId', $id);
 
             return $query->getSingleResult();
-
         } catch (NoResultException $ex) {
             return null;
         }
@@ -143,26 +139,23 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
             ->addSelect('grp')
             ->addSelect('settings')
             ->addSelect('permissions')
-            ->where('user.username=:username')
-            // TODO add groups for system recognition
-            ->andWhere(
-                'EXISTS(
-                    SELECT ur.id
-                    FROM Sulu\Bundle\SecurityBundle\Entity\Role r
-                    LEFT JOIN r.userRoles ur
-                    LEFT JOIN ur.user u
-                    WHERE u.id = user.id
-                    AND r.system = :system
-                )'
-            );
+            ->where('user.username=:username');
 
+        // TODO add groups for system recognition
         $query = $qb->getQuery();
         $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
         $query->setParameter('username', $username);
-        $query->setParameter('system', $this->getSystem());
 
         try {
-            return $query->getSingleResult();
+            /** @var User $user */
+            $user = $query->getSingleResult();
+            foreach ($user->getUserRoles() as $ur) {
+                /** @var UserRole $ur */
+                if ($ur->getRole()->getSystem() == $this->getSystem()) {
+                    return $user;
+                }
+            }
+            throw new NoResultException();
         } catch (NoResultException $nre) {
             $message = sprintf(
                 'Unable to find an SuluSecurityBundle:User object identified by %s',
@@ -170,7 +163,6 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
             );
             throw new UsernameNotFoundException($message, 0, $nre);
         }
-
     }
 
     /**

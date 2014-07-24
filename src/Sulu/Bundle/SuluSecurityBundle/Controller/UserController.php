@@ -21,7 +21,6 @@ use Sulu\Component\Rest\RestController;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\SecurityBundle\Entity\UserSetting;
-use FOS\RestBundle\Controller\Annotations\Get;
 use Symfony\Component\HttpFoundation\Request;
 use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
@@ -44,7 +43,6 @@ class UserController extends RestController implements ClassResourceInterface
     const ENTITY_NAME_CONTACT = 'SuluContactBundle:Contact';
     const ENTITY_NAME_USER_SETTING = 'SuluSecurityBundle:UserSetting';
 
-    // TODO: move field descriptors to a manager
     /**
      * Contains the field descriptors used by the list response
      * @var DoctrineFieldDescriptor[]
@@ -225,8 +223,8 @@ class UserController extends RestController implements ClassResourceInterface
             $password = $request->get('password');
             $contact = $request->get('contact');
             $locale = $request->get('locale');
-            $userRoles = $request->get('userRoles', array());
-            $userGroups = $request->get('userGroups', array());
+            $userRoles = $request->get('userRoles');
+            $userGroups = $request->get('userGroups');
 
             $em = $this->getDoctrine()->getManager();
 
@@ -382,7 +380,7 @@ class UserController extends RestController implements ClassResourceInterface
         /** @var RestHelperInterface $restHelper */
         $restHelper = $this->get('sulu_core.doctrine_rest_helper');
 
-        $get = function($entity) {
+        $get = function ($entity) {
             /** @var User $entity */
             return $entity->getId();
         };
@@ -414,7 +412,7 @@ class UserController extends RestController implements ClassResourceInterface
         /** @var RestHelperInterface $restHelper */
         $restHelper = $this->get('sulu_core.doctrine_rest_helper');
 
-        $get = function($entity) {
+        $get = function ($entity) {
             /** @var User $entity */
             return $entity->getId();
         };
@@ -456,7 +454,7 @@ class UserController extends RestController implements ClassResourceInterface
         }
 
         if ($user->getUserRoles()) {
-            foreach($user->getUserRoles() as $containedRole) {
+            foreach ($user->getUserRoles() as $containedRole) {
                 if ($containedRole->getRole()->getId() === $role->getId()) {
                     $alreadyContains = true;
                 }
@@ -579,7 +577,6 @@ class UserController extends RestController implements ClassResourceInterface
         }
     }
 
-
     /***
      * Checks if the id is valid
      * @param $id
@@ -590,7 +587,6 @@ class UserController extends RestController implements ClassResourceInterface
     {
         return (is_int((int)$id) && $id > 0);
     }
-
 
     /**
      * Returns the contact with the given id
@@ -682,6 +678,7 @@ class UserController extends RestController implements ClassResourceInterface
         if (!$view) {
             $view = $this->view($list, 200);
         }
+
         return $this->handleView($view);
     }
 }
