@@ -18,10 +18,16 @@ class GoogleGeolocator implements GeolocatorInterface
     const ENDPOINT = 'https://maps.googleapis.com/maps/api/geocode/json';
 
     protected $client;
+    protected $apiKey;
 
-    public function __construct(ClientInterface $client)
+    /**
+     * @param Client $client Guzzle HTTP client
+     * @param string $apiKey API key (can be empty string)
+     */
+    public function __construct(ClientInterface $client, $apiKey)
     {
         $this->client = $client;
+        $this->apiKey = $apiKey;
     }
 
     /**
@@ -29,11 +35,16 @@ class GoogleGeolocator implements GeolocatorInterface
      */
     public function locate($query)
     {
-        $request = $this->client->get(self::ENDPOINT, array(), array(
+        $endpoint = self::ENDPOINT;
+
+        if ($this->apiKey) {
+            $endpoint .= '?key=' . $this->apiKey;
+        }
+
+        $request = $this->client->get($endpoint, array(), array(
             'query' => array(
                 'address' => $query,
             ),
-            'debug' => true
         ));
 
         $this->client->send($request);
@@ -69,6 +80,7 @@ class GoogleGeolocator implements GeolocatorInterface
                 }
             }
 
+            // google provides no ID - so we just make one up ...
             $location->setId(md5(serialize($result)));
             $location->setDisplayTitle($result['formatted_address']);
 
@@ -99,4 +111,3 @@ class GoogleGeolocator implements GeolocatorInterface
         return $response;
     }
 }
-

@@ -7,19 +7,26 @@ use Guzzle\Http\Client;
 use Sulu\Bundle\LocationBundle\Geolocator\Service\GoogleGeolocator;
 use Guzzle\Plugin\Mock\MockPlugin;
 use Guzzle\Http\Message\Response;
+use Guzzle\Log\ArrayLogAdapter;
+use Guzzle\Plugin\Log\LogPlugin;
 
 class GoogleGeolocatorTest extends \PHPUnit_Framework_TestCase
 {
     protected $geolocator;
     protected $mockPlugin;
+    protected $client;
 
     public function setUp()
     {
-        $client = new Client();
+        $this->client = new Client();
         $this->mockPlugin = new MockPlugin();
-        $client->addSubscriber($this->mockPlugin);
+        $this->client->addSubscriber($this->mockPlugin);
 
-        $this->geolocator = new GoogleGeolocator($client);
+        $this->logAdapter = new ArrayLogAdapter();
+        $this->loggingPlugin = new LogPlugin($this->logAdapter);
+        $this->client->addSubscriber($this->loggingPlugin);
+
+        $this->geolocator = new GoogleGeolocator($this->client, '');
     }
 
     public function provideLocate()
@@ -77,6 +84,17 @@ class GoogleGeolocatorTest extends \PHPUnit_Framework_TestCase
         foreach ($expectationMap as $field => $expectation) {
             $this->assertEquals($expectation, $result[$field]);
         }
+    }
+
+    public function testApiKey()
+    {
+        $this->mockPlugin->addResponse(new Response(200, null, '{"status": "OK","results":[]}'));
+        $geolocator = new GoogleGeolocator($this->client, 'foobar');
+        $geolocator->locate('foobar');
+        $logs = $this->logAdapter->getLogs();
+        $this->assertCount(1, $logs);
+        $log = current($logs);
+        $this->assertContains('key=foobar', $log['message']);
     }
 }
 

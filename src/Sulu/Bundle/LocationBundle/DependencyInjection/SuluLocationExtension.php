@@ -67,11 +67,20 @@ class SuluLocationExtension extends Extension
 
     private function configureGeolocators($config, $container)
     {
+        $geolocatorName = $config['geolocator'];
+        $container->setParameter('sulu_location.geolocator.name', $geolocatorName);
+
         $nominatim = function ($config, $container) {
             $endpoint = $config['geolocators']['nominatim']['endpoint'];
             $container->setParameter('sulu_location.geolocator.service.nominatim.endpoint', $endpoint);
         };
 
+        $google = function ($config, $container) {
+            $apiKey = $config['geolocators']['google']['api_key'];
+            $container->setParameter('sulu_location.geolocator.service.google.api_key', $apiKey);
+        };
+
         $nominatim($config, $container);
+        $google($config, $container);
     }
 }

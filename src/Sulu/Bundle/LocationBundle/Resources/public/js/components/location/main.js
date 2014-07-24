@@ -30,7 +30,8 @@ define([], function() {
              instanceName: null,
              mapProviders: {},
              countries: {},
-             geolocationUrl: ''
+             geolocationUrl: '',
+             geolocatorName: 'nominatim'
         },
 
         mapDefaults = {
@@ -427,7 +428,7 @@ define([], function() {
                         instanceName: this.options.instanceName + '.geolocator.search',
                         getParameter: 'query',
                         suggestionImg: 'map-marker',
-                        remoteUrl: this.options.geolocatorUrl + '?providerName=nominatim',
+                        remoteUrl: this.options.geolocatorUrl + '?providerName=google',
                         valueKey: 'name',
                         resultKey: 'locations'
                     }
