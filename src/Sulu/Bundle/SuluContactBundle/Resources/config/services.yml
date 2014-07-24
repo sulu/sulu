@@ -4,8 +4,16 @@ parameters:
     sulu_contact.js_config.class: Sulu\Bundle\AdminBundle\Admin\JsConfig
     sulu_contact.import.class: Sulu\Bundle\ContactBundle\Import\Import
     sulu_contact.account_listener.class: Sulu\Bundle\ContactBundle\EventListener\AccountListener
+
     sulu_contact.contact_manager.class: Sulu\Bundle\ContactBundle\Contact\ContactManager
     sulu_contact.account_manager.class: Sulu\Bundle\ContactBundle\Contact\AccountManager
+
+    sulu_contact.contact.widgets.account_address.class: Sulu\Bundle\ContactBundle\Widgets\AccountAddress
+    sulu_contact.contact.widgets.account_info.class: Sulu\Bundle\ContactBundle\Widgets\AccountInfo
+    sulu_contact.contact.widgets.contacts.class: Sulu\Bundle\ContactBundle\Widgets\Contacts
+    sulu_contact.contact.widgets.table.class: Sulu\Bundle\ContactBundle\Widgets\Table
+    sulu_contact.contact.widgets.toolbar.class: Sulu\Bundle\ContactBundle\Widgets\Toolbar
+    sulu_contact.contact.widgets.contact_info.class: Sulu\Bundle\ContactBundle\Widgets\ContactInfo
 
 services:
     sulu_contact.admin:
@@ -48,3 +56,37 @@ services:
             class: %sulu_contact.contact_manager.class%
             arguments:
               - @doctrine.orm.entity_manager
+              
+    sulu_contact.contact.widgets.account_address:
+         class: %sulu_contact.contact.widgets.account_address.class%
+         tags:
+             - {name: sulu.widget, alias: sulu-contact-account-address}
+ 
+    sulu_contact.contact.widgets.account_info:
+         class: %sulu_contact.contact.widgets.account_info.class%
+         tags:
+             - {name: sulu.widget, alias: sulu-contact-account-info}
+ 
+    sulu_contact.contact.widgets.contact_info:
+         class: %sulu_contact.contact.widgets.contact_info.class%
+         tags:
+             - {name: sulu.widget, alias: sulu-contact-contact-info}
+         arguments:
+             - @doctrine.orm.entity_manager
+             - @sulu_contact.contact_manager
+             - @sulu_contact.account_manager
+ 
+    sulu_contact.contact.widgets.contacts:
+         class: %sulu_contact.contact.widgets.contacts.class%
+         tags:
+             - {name: sulu.widget, alias: sulu-contact-contacts}
+ 
+    sulu_contact.contact.widgets.table:
+         class: %sulu_contact.contact.widgets.table.class%
+         tags:
+             - {name: sulu.widget, alias: sulu-contact-table}
+ 
+    sulu_contact.contact.widgets.toolbar:
+         class: %sulu_contact.contact.widgets.toolbar.class%
+         tags:
+             - {name: sulu.widget, alias: sulu-contact-toolbar}
