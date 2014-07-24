@@ -283,13 +283,17 @@ class ContactController extends AbstractContactController
         $this->accountContactFieldDescriptors['position'] = new DoctrineFieldDescriptor(
             'position',
             'position',
-            self::$accountContactEntityName,
+            self::$positionEntityName,
             'contact.contacts.position',
             array(
                 self::$accountContactEntityName => new DoctrineJoinDescriptor(
                         self::$accountContactEntityName,
                         self::$entityName . '.accountContacts'
                     ),
+                self::$positionEntityName => new DoctrineJoinDescriptor(
+                        self::$positionEntityName,
+                        self::$accountContactEntityName . '.position'
+                    )
             ),
             false,
             true
