@@ -126,6 +126,10 @@ define([
                 width: 'max',
                 leftSpace: false,
                 rightSpace: false
+            },
+            sidebar: {
+                width: 'fixed',
+                url: '/admin/widget-groups/account-info'
             }
         },
 
@@ -170,7 +174,7 @@ define([
             var i,
                 dataUrlAddition = '',
                 accountType,
-                // get account types
+            // get account types
                 accountTypes = AppConfig.getSection('sulu-contact').accountTypes,
                 assocAccountTypes = {};
 

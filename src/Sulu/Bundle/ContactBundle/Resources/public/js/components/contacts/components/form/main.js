@@ -31,6 +31,13 @@ define([], function() {
 
             view: true,
 
+            layout: {
+                sidebar: {
+                    width: 'fixed',
+                    url: '/admin/widget-groups/contact-detail'
+                }
+            },
+
             templates: ['/admin/contact/template/contact/form'],
 
             customTemplates: {
@@ -220,11 +227,11 @@ define([], function() {
              * Adds or removes icon to add addresses
              * @param numberOfAddresses
              */
-            updateAddressesAddIcon: function(numberOfAddresses){
+            updateAddressesAddIcon: function(numberOfAddresses) {
                 var $addIcon = this.sandbox.dom.find(constants.addressAddId),
                     addIcon;
 
-                if(!!numberOfAddresses && numberOfAddresses > 0 && $addIcon.length === 0) {
+                if (!!numberOfAddresses && numberOfAddresses > 0 && $addIcon.length === 0) {
                     addIcon = this.sandbox.dom.createElement(this.customTemplates.addAddressesIcon);
                     this.sandbox.dom.after(this.sandbox.dom.find('#addresses'), addIcon);
                 } else if (numberOfAddresses === 0 && $addIcon.length > 0) {
@@ -237,12 +244,12 @@ define([], function() {
 
             bindCustomEvents: function() {
 
-                this.sandbox.on('sulu.contact-form.added.address', function(){
+                this.sandbox.on('sulu.contact-form.added.address', function() {
                     this.numberOfAddresses++;
                     this.updateAddressesAddIcon(this.numberOfAddresses);
                 }, this);
 
-                this.sandbox.on('sulu.contact-form.removed.address', function(){
+                this.sandbox.on('sulu.contact-form.removed.address', function() {
                     this.numberOfAddresses--;
                     this.updateAddressesAddIcon(this.numberOfAddresses);
                 }, this);

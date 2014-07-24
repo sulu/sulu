@@ -26,6 +26,13 @@ define([], function() {
 
         view: true,
 
+        layout: {
+            sidebar: {
+                width: 'fixed',
+                    url: '/admin/widget-groups/account-detail'
+            }
+        },
+
         templates: ['/admin/contact/template/account/form'],
 
         customTemplates: {
