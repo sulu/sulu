@@ -10,7 +10,6 @@
 
 namespace Sulu\Component\Manager;
 
-
 /**
  * Abstract Controller for basic Manager functionality
  * @package Sulu\Component\Manager
