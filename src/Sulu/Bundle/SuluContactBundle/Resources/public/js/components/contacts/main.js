@@ -378,7 +378,8 @@ define([
          */
         delete: function(entity, instanceName) {
             entity.destroy({
-                success: function() {
+                success: function(response) {
+                    this.sandbox.emit('husky.select.' + instanceName + '.deleted');
                 }.bind(this),
                 error: function() {
                     this.sandbox.emit('husky.select.' + instanceName + '.revert');
