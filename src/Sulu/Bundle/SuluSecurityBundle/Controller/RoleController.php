@@ -25,6 +25,7 @@ use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
+use Sulu\Bundle\SecurityBundle\Entity\RoleInterface;
 
 /**
  * Makes the roles accessible through a REST-API
@@ -60,7 +61,7 @@ class RoleController extends RestController implements ClassResourceInterface
         $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor(
             'id',
             'id',
-            self::$entityName,
+            static::$entityName,
             'public.id',
             array(),
             false, false, '', '50px'
@@ -68,19 +69,19 @@ class RoleController extends RestController implements ClassResourceInterface
         $this->fieldDescriptors['system'] = new DoctrineFieldDescriptor(
             'system',
             'system',
-            self::$entityName,
+            static::$entityName,
             'security.roles.system'
         );
         $this->fieldDescriptors['name'] = new DoctrineFieldDescriptor(
             'name',
             'name',
-            self::$entityName,
+            static::$entityName,
             'public.name'
         );
         $this->fieldDescriptors['created'] = new DoctrineFieldDescriptor(
             'created',
             'created',
-            self::$entityName,
+            static::$entityName,
             'public.created',
             array(),
             false, false, 'date'
@@ -88,7 +89,7 @@ class RoleController extends RestController implements ClassResourceInterface
         $this->fieldDescriptors['changed'] = new DoctrineFieldDescriptor(
             'changed',
             'changed',
-            self::$entityName,
+            static::$entityName,
             'public.changed',
             array(),
             true, false, 'date'
@@ -127,13 +128,13 @@ class RoleController extends RestController implements ClassResourceInterface
             /** @var DoctrineListBuilderFactory $factory */
             $factory = $this->get('sulu_core.doctrine_list_builder_factory');
 
-            $listBuilder = $factory->create(self::$entityName);
+            $listBuilder = $factory->create(static::$entityName);
 
             $restHelper->initializeListBuilder($listBuilder, $this->fieldDescriptors);
 
             $list = new ListRepresentation(
                 $listBuilder->execute(),
-                self::$entityKey,
+                static::$entityKey,
                 'get_roles',
                 $request->query->all(),
                 $listBuilder->getCurrentPage(),
@@ -141,7 +142,7 @@ class RoleController extends RestController implements ClassResourceInterface
                 $listBuilder->count()
             );
         } else {
-            $roles = $this->getDoctrine()->getRepository(self::$entityName)->findAllRoles();
+            $roles = $this->getDoctrine()->getRepository(static::$entityName)->findAllRoles();
             $convertedRoles = [];
             if ($roles != null) {
                 foreach ($roles as $role) {
@@ -149,7 +150,7 @@ class RoleController extends RestController implements ClassResourceInterface
                 }
 
             }
-            $list = new CollectionRepresentation($convertedRoles, self::$entityKey);
+            $list = new CollectionRepresentation($convertedRoles, static::$entityKey);
         }
         $view = $this->view($list, 200);
         return $this->handleView($view);
@@ -166,7 +167,7 @@ class RoleController extends RestController implements ClassResourceInterface
         $find = function ($id) {
             /** @var Role $role */
             $role = $this->getDoctrine()
-                ->getRepository(self::$entityName)
+                ->getRepository(static::$entityName)
                 ->findRoleById($id);
 
             return $this->convertRole($role);
@@ -232,12 +233,12 @@ class RoleController extends RestController implements ClassResourceInterface
     {
         /** @var Role $role */
         $role = $this->getDoctrine()
-            ->getRepository(self::$entityName)
+            ->getRepository(static::$entityName)
             ->findRoleById($id);
 
         try {
             if (!$role) {
-                throw new EntityNotFoundException(self::$entityName, $id);
+                throw new EntityNotFoundException(static::$entityName, $id);
             } else {
                 $em = $this->getDoctrine()->getManager();
 
@@ -280,11 +281,11 @@ class RoleController extends RestController implements ClassResourceInterface
     {
         $delete = function ($id) {
             $role = $this->getDoctrine()
-                ->getRepository(self::$entityName)
+                ->getRepository(static::$entityName)
                 ->findRoleById($id);
 
             if (!$role) {
-                throw new EntityNotFoundException(self::$entityName, $id);
+                throw new EntityNotFoundException(static::$entityName, $id);
             }
 
             $em = $this->getDoctrine()->getManager();
@@ -299,11 +300,11 @@ class RoleController extends RestController implements ClassResourceInterface
 
     /**
      * Process all permissions from request
-     * @param Role $role The contact on which is worked
+     * @param RoleInterface $role The contact on which is worked
      * @param $permissions
      * @return bool True if the processing was successful, otherwise false
      */
-    protected function processPermissions(Role $role, $permissions)
+    protected function processPermissions(RoleInterface $role, $permissions)
     {
         /** @var RestHelperInterface $restHelper */
         $restHelper = $this->get('sulu_core.doctrine_rest_helper');
@@ -331,20 +332,20 @@ class RoleController extends RestController implements ClassResourceInterface
 
     /**
      * Adds a permission to the given role
-     * @param Role $role
+     * @param RoleInterface $role
      * @param $permissionData
      * @return bool
      * @throws EntityNotFoundException
      */
-    protected function addPermission(Role $role, $permissionData)
+    protected function addPermission(RoleInterface $role, $permissionData)
     {
         $em = $this->getDoctrine()->getManager();
         $alreadyContains = false;
 
         if (isset($permissionData['id'])) {
-            $permission = $em->getRepository(self::ENTITY_NAME_PERMISSION)->find($permissionData['id']);
+            $permission = $em->getRepository(static::ENTITY_NAME_PERMISSION)->find($permissionData['id']);
             if (!$permission) {
-                throw new EntityNotFoundException(self::ENTITY_NAME_PERMISSION, $permissionData['id']);
+                throw new EntityNotFoundException(static::ENTITY_NAME_PERMISSION, $permissionData['id']);
             }
             // only add if not already contains
             $alreadyContains = $role->getPermissions()->contains($permission);
@@ -385,10 +386,10 @@ class RoleController extends RestController implements ClassResourceInterface
 
     /**
      * Converts a role object into an array for the rest service
-     * @param Role $role
+     * @param RoleInterface $role
      * @return array
      */
-    protected function convertRole(Role $role)
+    protected function convertRole(RoleInterface $role)
     {
         $roleData['id'] = $role->getId();
         $roleData['name'] = $role->getName();
@@ -432,7 +433,7 @@ class RoleController extends RestController implements ClassResourceInterface
 
     /**
      * Sets the securityType from the given data to the role
-     * @param $role
+     * @param RoleInterface $role
      * @param $securityTypeData
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      */
