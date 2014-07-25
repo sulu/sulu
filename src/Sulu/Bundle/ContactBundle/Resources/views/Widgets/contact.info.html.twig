@@ -3,8 +3,16 @@
         <span id="contact-id" class="hidden">{{ data.id }}</span>
 
         <h2 class="m-bottom-0 action">{{ data.fullName }}
-            <span class="blue-icon"><span class="fa-pencil"></span></span></h2>
-        <span class="block action">{{ data.title }}{{ data.position }}</span>
+            <span class="blue-icon"><span class="fa-pencil"></span></span>
+        </h2>
+        <span class="block action">
+            {% if data.title is defined %}
+                {{ data.title }}
+            {% endif %}
+            {% if data.position is defined %}
+                {{ data.position }}
+            {% endif %}
+        </span>
     </div>
 
     {% if data.address is defined %}
@@ -39,7 +47,7 @@
                 <%=translate('contacts.sidebar.web-and-mail')%></h5>
             {% if data.email is not empty %}
                 <span class="block">
-                 <a class="action" href="mailto:{{ data.email }}" traget="_blank">{{ data.email }}</a>
+                 <a class="action" href="mailto:{{ data.email }}" target="_blank">{{ data.email }}</a>
              </span>
             {% endif %}
             {% if data.url is not empty %}
@@ -67,7 +75,5 @@
          </span>
         </div>
     {% endif %}
-{% else %}
-    {{ data.errorMessage }}
 {% endif %}
 

@@ -1293,4 +1293,23 @@ class Account extends ApiEntity
         }
         return null;
     }
+
+    /**
+     * Get contacts
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getContacts()
+    {
+        $accountContacts = $this->getAccountContacts();
+        $contacts = [];
+
+        if (!is_null($accountContacts)) {
+            /** @var AccountContact $accountContact */
+            foreach ($accountContacts as $accountContact) {
+                $contacts[] = $accountContact->getContact();
+            }
+        }
+        return $contacts;
+    }
 }
