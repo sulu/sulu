@@ -27,9 +27,10 @@ interface CategoryRepositoryInterface
 
     /**
      * finds all categories, can be filtered with parent and depth
+     * @param array $ids array of white-list of ids to filter
      * @param int $parent the id of the parent
      * @param int $depth the depth-level
      * @return Category[]
      */
-    public function findCategories($parent = null, $depth = null);
-} 
+    public function findCategories($ids = null, $parent = null, $depth = null);
+}

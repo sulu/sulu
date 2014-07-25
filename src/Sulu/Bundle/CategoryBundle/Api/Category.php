@@ -239,4 +239,21 @@ class Category extends ApiEntityWrapper
         }
         return $return;
     }
+
+    /**
+     * Returns an array representation of the object
+     * @return array
+     */
+    public function toArray()
+    {
+        return array(
+            'id' => $this->getId(),
+            'name' => $this->getName(),
+            'meta' => $this->getMeta(),
+            'creator' => $this->getCreator(),
+            'changer' => $this->getChanger(),
+            'created' => $this->getCreated(),
+            'changed' => $this->getChanged()
+        );
+    }
 }

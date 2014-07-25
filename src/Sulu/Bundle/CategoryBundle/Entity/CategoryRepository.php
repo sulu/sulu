@@ -70,13 +70,14 @@ class CategoryRepository extends EntityRepository implements CategoryRepositoryI
 
     /**
      * Returns all categories. Can be filtered with parent and depth
+     * @param array $ids array of white-list of ids to filter
      * @param number $parent the id of the parent to filter for
      * @param number $depth the depth-level to filter for
      * @param string|null $sortBy column name to sort the categories by
      * @param string|null $sortOrder sort order
      * @return mixed|null
      */
-    public function findCategories($parent = null, $depth = null, $sortBy = null, $sortOrder = null) {
+    public function findCategories($ids = null, $parent = null, $depth = null, $sortBy = null, $sortOrder = null) {
         try {
             $qb = $this->createQueryBuilder('category')
                 ->leftJoin('category.meta', 'categoryMeta')
@@ -106,6 +107,10 @@ class CategoryRepository extends EntityRepository implements CategoryRepositoryI
             }
             if ($depth !== null) {
                 $qb->andWhere('category.depth = :depth');
+            }
+            if ($ids !== null && count($ids) > 0) {
+                $qb->andWhere($qb->expr()->in('category.id', ':ids'));
+                $qb->setParameter('ids', $ids);
             }
 
             if ($sortBy) {
