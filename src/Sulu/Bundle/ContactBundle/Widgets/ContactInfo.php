@@ -15,6 +15,8 @@ use Sulu\Bundle\AdminBundle\Widgets\WidgetException;
 use Sulu\Bundle\AdminBundle\Widgets\WidgetInterface;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\Address;
+use Sulu\Bundle\AdminBundle\Widgets\WidgetParameterException;
+use Sulu\Bundle\AdminBundle\Widgets\WidgetEntityNotFoundException;
 
 /**
  * example widget for contact controller
@@ -71,14 +73,14 @@ class ContactInfo implements WidgetInterface
             )->find($id);
 
             if (!$contact) {
-                throw new WidgetException(
+                throw new WidgetEntityNotFoundException(
                     'Entity ' . $this->contactEntityName . ' with id ' . $id . ' not found!',
                     $id
                 );
             }
             return $this->parseContactForListSidebar($contact);
         } else {
-            throw new WidgetException(
+            throw new WidgetParameterException(
                 'Required parameter contact not found or empty!'
             );
         }

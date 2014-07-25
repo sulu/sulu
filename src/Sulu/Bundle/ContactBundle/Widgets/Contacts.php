@@ -12,6 +12,8 @@ namespace Sulu\Bundle\ContactBundle\Widgets;
 
 use Sulu\Bundle\AdminBundle\Widgets\WidgetInterface;
 use Sulu\Bundle\AdminBundle\Widgets\WidgetException;
+use Sulu\Bundle\AdminBundle\Widgets\WidgetParameterException;
+use Sulu\Bundle\AdminBundle\Widgets\WidgetEntityNotFoundException;
 use Doctrine\ORM\EntityManager;
 use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
@@ -72,14 +74,14 @@ class Contacts implements WidgetInterface
             )->find($id);
 
             if (!$account) {
-                throw new WidgetException(
+                throw new WidgetEntityNotFoundException(
                     'Entity ' . $this->accountEntityName . ' with id ' . $id . ' not found!',
                     $id
                 );
             }
             return $this->parseContactsForAccountSidebar($account);
         } else {
-            throw new WidgetException(
+            throw new WidgetParameterException(
                 'Required parameter contact not found or empty!'
             );
         }
@@ -100,8 +102,7 @@ class Contacts implements WidgetInterface
 
         if (count($contacts) > 0) {
             $data = [];
-
-            while ($i < count($contacts) - 1 && $i < $maxAccounts) {
+            while ($i < count($contacts) && $i < $maxAccounts) {
                 $data[$i]['id'] = $contacts[$i]->getId();
                 $data[$i]['fullName'] = $contacts[$i]->getFullName();
                 $data[$i]['phone'] = $contacts[$i]->getMainPhone();

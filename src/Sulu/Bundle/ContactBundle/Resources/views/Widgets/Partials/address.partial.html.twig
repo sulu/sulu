@@ -1,0 +1,12 @@
+{% if address is defined %}
+    <div class="grid-row m-bottom-30">
+        <h5 class="label"><%=translate('public.address')%></h5>
+            <span class="block grey">
+                {{ address.street }}
+                {{ address.number }}
+                {{ address.zip }}
+                {{ address.city }}
+                {{ address.country }}
+            </span>
+    </div>
+{% endif %}
