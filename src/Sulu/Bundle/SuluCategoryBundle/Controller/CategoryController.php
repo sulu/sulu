@@ -147,6 +147,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
         $depth = $request->get('depth');
         $sortBy = $request->get('sortBy');
         $sortOrder = $request->get('sortOrder');
+        $ids = $request->get('ids');
 
         $cm = $this->get('sulu_category.category_manager');
 
@@ -154,7 +155,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
 
             $listRestHelper = $this->get('sulu_core.list_rest_helper');
 
-            $categories = $cm->find($parent, $depth, $sortBy, $sortOrder);
+            $categories = $cm->find($ids, $parent, $depth, $sortBy, $sortOrder);
             $wrappers = $cm->getApiObjects($categories, $this->getLocale($request->get('locale')));
 
             $all = count($wrappers); // TODO
@@ -170,7 +171,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
             );
 
         } else {
-            $categories = $cm->find($parent, $depth, $sortBy, $sortOrder);
+            $categories = $cm->find($ids, $parent, $depth, $sortBy, $sortOrder);
             $wrappers = $cm->getApiObjects($categories, $this->getLocale($request->get('locale')));
             $list = new CollectionRepresentation($wrappers, self::$entityKey);
         }

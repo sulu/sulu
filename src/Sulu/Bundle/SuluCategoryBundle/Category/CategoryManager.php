@@ -136,15 +136,16 @@ class CategoryManager implements CategoryManagerInterface
     /**
      * Returns tags with a given parent and/or a given depth-level
      * if no arguments passed returns all categories
+     * @param array $ids array of white-list of ids to filter
      * @param int $parent the id of the parent to filter for
      * @param int $depth the depth-level to filter for
      * @param string|null $sortBy column name to sort the categories by
      * @param string|null $sortOrder sort order
      * @return CategoryEntity[]
      */
-    public function find($parent = null, $depth = null, $sortBy = null, $sortOrder = null)
+    public function find($ids = null, $parent = null, $depth = null, $sortBy = null, $sortOrder = null)
     {
-        return $this->categoryRepository->findCategories($parent, $depth, $sortBy, $sortOrder);
+        return $this->categoryRepository->findCategories($ids, $parent, $depth, $sortBy, $sortOrder);
     }
 
     /**
