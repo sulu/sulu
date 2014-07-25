@@ -974,6 +974,11 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
 }
 
 /* line 113, ../scss/typo.scss */
+.smaller-font {
+  font-size: 10px;
+}
+
+/* line 117, ../scss/typo.scss */
 .grey-font {
   color: #999999;
 }
@@ -8387,15 +8392,26 @@ a.btn-black, a.btn-highlight {
 }
 
 /* line 1, ../scss/modules/column-navigation.scss */
+.husky-column-navigation {
+  height: 100%;
+}
+/* line 6, ../scss/modules/column-navigation.scss */
+.husky-column-navigation.fixed-height-small .column-navigation-wrapper .column-navigation {
+  height: 350px;
+}
+
+/* line 13, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper {
   overflow: hidden;
   position: relative;
   top: 0px;
   left: 0px;
   min-width: 100%;
+  height: 100%;
 }
-/* line 8, ../scss/modules/column-navigation.scss */
+/* line 21, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation {
+  height: 100%;
   background-color: white;
   border-style: solid;
   border-color: #cccccc;
@@ -8406,18 +8422,19 @@ a.btn-black, a.btn-highlight {
   min-height: 200px;
   max-height: 750px;
 }
-/* line 20, ../scss/modules/column-navigation.scss */
+/* line 34, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation.overflow .column:last-child {
   border-right: none;
 }
-/* line 25, ../scss/modules/column-navigation.scss */
+/* line 39, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .column-navigation-loader {
-  position: relative;
+  position: absolute;
   left: 0;
   top: 50%;
-  margin-top: -50px;
+  margin-top: -70px;
+  width: 100%;
 }
-/* line 32, ../scss/modules/column-navigation.scss */
+/* line 47, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .column {
   border-right: 1px solid #cccccc;
   overflow-y: auto;
@@ -8429,37 +8446,36 @@ a.btn-black, a.btn-highlight {
   top: 0px;
   left: 0px;
 }
-/* line 43, ../scss/modules/column-navigation.scss */
+/* line 58, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .column .no-page {
   position: absolute;
   top: 50%;
   left: 0px;
-  height: 110px;
   width: 100%;
   text-align: center;
   color: #cccccc;
   height: 160px;
   margin-top: -55px;
 }
-/* line 54, ../scss/modules/column-navigation.scss */
+/* line 68, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .column .no-page .fa-file-o {
   font-size: 72px;
   line-height: 80px;
 }
-/* line 58, ../scss/modules/column-navigation.scss */
+/* line 72, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .column .no-page .text {
   padding-top: 5px;
   font-size: 14px;
   font-weight: bold;
 }
-/* line 65, ../scss/modules/column-navigation.scss */
+/* line 79, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .column ul {
   list-style-type: none;
   margin: 0;
   padding: 0;
   font-size: 14px;
 }
-/* line 71, ../scss/modules/column-navigation.scss */
+/* line 85, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .column ul li {
   padding: 15px 11px 15px 15px;
   height: 50px;
@@ -8472,44 +8488,52 @@ a.btn-black, a.btn-highlight {
   -ms-user-select: none;
   -o-user-select: none;
 }
-/* line 80, ../scss/modules/column-navigation.scss */
+/* line 94, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .column ul li:hover {
   background-color: #f1f1f1;
 }
-/* line 82, ../scss/modules/column-navigation.scss */
+/* line 96, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .column ul li:hover .edit {
   display: block;
 }
-/* line 86, ../scss/modules/column-navigation.scss */
+/* line 100, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .column ul li.selected {
   background-color: #f1f1f1;
 }
-/* line 89, ../scss/modules/column-navigation.scss */
+/* line 103, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .column ul li.selected .item-text {
   font-weight: bold;
 }
-/* line 94, ../scss/modules/column-navigation.scss */
+/* line 108, ../scss/modules/column-navigation.scss */
+.column-navigation-wrapper .column-navigation .column ul li.marked .markedIcon {
+  display: block;
+}
+/* line 111, ../scss/modules/column-navigation.scss */
+.column-navigation-wrapper .column-navigation .column ul li.marked .edit {
+  display: none;
+}
+/* line 116, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .column ul .inactive {
   color: #cccccc;
 }
-/* line 98, ../scss/modules/column-navigation.scss */
+/* line 120, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .column ul .not-published {
   color: #e8ce33;
   margin-top: 2px;
   font-size: 40px;
 }
-/* line 106, ../scss/modules/column-navigation.scss */
+/* line 128, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .item-text {
   padding-top: 2px;
   display: block;
   overflow: hidden;
   word-wrap: break-word;
 }
-/* line 113, ../scss/modules/column-navigation.scss */
+/* line 135, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .item-text.ghost {
   color: #999999;
 }
-/* line 117, ../scss/modules/column-navigation.scss */
+/* line 139, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .ghost {
   background: #52b6ca;
   padding: 0 2px;
@@ -8519,33 +8543,47 @@ a.btn-black, a.btn-highlight {
   border-radius: 3px;
   font-size: 10px;
 }
-/* line 126, ../scss/modules/column-navigation.scss */
+/* line 148, ../scss/modules/column-navigation.scss */
+.column-navigation-wrapper .column-navigation .markedIcon {
+  width: 14px;
+  margin-right: 5px;
+  margin-top: 1px;
+  color: #999999;
+  display: none;
+}
+/* line 155, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .icons-right {
   position: absolute;
   right: 5px;
   top: 15px;
   height: 20px;
 }
-/* line 131, ../scss/modules/column-navigation.scss */
+/* line 160, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .icons-right * {
   line-height: 20px;
 }
-/* line 135, ../scss/modules/column-navigation.scss */
+/* line 164, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .icons-left {
   display: block;
   float: left;
   height: 20px;
   font-size: 14px;
 }
-/* line 140, ../scss/modules/column-navigation.scss */
-.column-navigation-wrapper .column-navigation .icons-left * {
+/* line 169, ../scss/modules/column-navigation.scss */
+.column-navigation-wrapper .column-navigation .icons-left > * {
   line-height: 20px;
 }
-/* line 143, ../scss/modules/column-navigation.scss */
+/* line 172, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .icons-left .ghost {
   line-height: 15px;
 }
-/* line 147, ../scss/modules/column-navigation.scss */
+/* line 175, ../scss/modules/column-navigation.scss */
+.column-navigation-wrapper .column-navigation .icons-left .custom-checkbox {
+  line-height: 15px;
+  margin-right: 8px;
+  margin-top: 2px;
+}
+/* line 181, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .edit {
   background-color: #52b6ca;
   padding: 0px 10px;
@@ -8555,14 +8593,14 @@ a.btn-black, a.btn-highlight {
   display: none;
   margin-right: 0;
 }
-/* line 156, ../scss/modules/column-navigation.scss */
+/* line 190, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .husky-column-navigation-loader {
   position: relative;
   top: 2px;
   left: -2px;
   padding-left: 2px;
 }
-/* line 163, ../scss/modules/column-navigation.scss */
+/* line 197, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .arrow {
   display: inline-block;
   width: 11px;
@@ -8572,7 +8610,7 @@ a.btn-black, a.btn-highlight {
   color: black;
   margin: 0;
 }
-/* line 174, ../scss/modules/column-navigation.scss */
+/* line 208, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .add {
   display: inline-block;
   width: 50%;
@@ -8584,7 +8622,7 @@ a.btn-black, a.btn-highlight {
   -moz-border-radius-bottomleft: 5px;
   font-size: 16px;
 }
-/* line 186, ../scss/modules/column-navigation.scss */
+/* line 220, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .settings {
   display: inline-block;
   width: 50%;
@@ -9068,7 +9106,11 @@ a.btn-black, a.btn-highlight {
 .husky-datagrid tbody tr:hover .grid-icon {
   opacity: 1;
 }
-/* line 83, ../scss/modules/datagrid.scss */
+/* line 84, ../scss/modules/datagrid.scss */
+.husky-datagrid tbody tr.selected {
+  background: white;
+}
+/* line 88, ../scss/modules/datagrid.scss */
 .husky-datagrid tbody .grid-icon {
   width: 30px;
   height: 20px;
@@ -9086,15 +9128,15 @@ a.btn-black, a.btn-highlight {
   -o-transition: opacity 100ms ease-in 200ms;
   transition: opacity 100ms ease-in 200ms;
 }
-/* line 95, ../scss/modules/datagrid.scss */
+/* line 100, ../scss/modules/datagrid.scss */
 .husky-datagrid tbody .grid-icon.right {
   float: right;
 }
-/* line 101, ../scss/modules/datagrid.scss */
+/* line 106, ../scss/modules/datagrid.scss */
 .husky-datagrid .table-container {
   overflow: auto;
 }
-/* line 104, ../scss/modules/datagrid.scss */
+/* line 109, ../scss/modules/datagrid.scss */
 .husky-datagrid .table-container.overflow:after {
   content: "\f061";
   color: #cccccc;
@@ -9103,78 +9145,78 @@ a.btn-black, a.btn-highlight {
   right: -26px;
   top: 40%;
 }
-/* line 115, ../scss/modules/datagrid.scss */
+/* line 120, ../scss/modules/datagrid.scss */
 .husky-datagrid .table-container.no-head thead {
   display: none;
 }
-/* line 119, ../scss/modules/datagrid.scss */
+/* line 124, ../scss/modules/datagrid.scss */
 .husky-datagrid .table-container.no-head tbody tr:last-child {
   border-bottom: none;
 }
-/* line 126, ../scss/modules/datagrid.scss */
+/* line 131, ../scss/modules/datagrid.scss */
 .husky-datagrid .datagrid-loader {
   position: absolute;
   top: 50%;
   left: 50%;
   margin: -50px 0 0 -50px;
 }
-/* line 133, ../scss/modules/datagrid.scss */
+/* line 138, ../scss/modules/datagrid.scss */
 .husky-datagrid .dropdown-menu {
   margin-top: 5px;
 }
-/* line 136, ../scss/modules/datagrid.scss */
+/* line 141, ../scss/modules/datagrid.scss */
 .husky-datagrid .dropdown-toggle::after {
   margin-left: 12px;
 }
-/* line 140, ../scss/modules/datagrid.scss */
+/* line 145, ../scss/modules/datagrid.scss */
 .husky-datagrid.loading {
   min-height: 150px;
 }
-/* line 149, ../scss/modules/datagrid.scss */
+/* line 154, ../scss/modules/datagrid.scss */
 .husky-datagrid.fullwidth th:first-child,
 .husky-datagrid.fullwidth td:first-child {
   padding-left: 50px;
 }
-/* line 153, ../scss/modules/datagrid.scss */
+/* line 158, ../scss/modules/datagrid.scss */
 .husky-datagrid.fullwidth .pagination-wrapper {
   padding-left: 40px;
   padding-right: 30px;
 }
-/* line 157, ../scss/modules/datagrid.scss */
+/* line 162, ../scss/modules/datagrid.scss */
 .husky-datagrid.fullwidth .overflow + .pagination-wrapper {
   padding-right: 0;
 }
-/* line 162, ../scss/modules/datagrid.scss */
+/* line 167, ../scss/modules/datagrid.scss */
 .husky-datagrid.white-box {
   padding: 0 20px;
   overflow: hidden;
 }
-/* line 165, ../scss/modules/datagrid.scss */
+/* line 170, ../scss/modules/datagrid.scss */
 .husky-datagrid.white-box .table-container {
   margin-bottom: -1px;
 }
-/* line 169, ../scss/modules/datagrid.scss */
+/* line 174, ../scss/modules/datagrid.scss */
 .husky-datagrid.white-box tbody tr:first-child {
   height: 49px;
 }
-/* line 172, ../scss/modules/datagrid.scss */
+/* line 177, ../scss/modules/datagrid.scss */
 .husky-datagrid.white-box tbody tr:last-child {
   border-bottom: none;
 }
-/* line 175, ../scss/modules/datagrid.scss */
+/* line 180, ../scss/modules/datagrid.scss */
 .husky-datagrid.white-box tbody td {
   padding-left: 0;
   padding-right: 0;
 }
-/* line 182, ../scss/modules/datagrid.scss */
+/* line 187, ../scss/modules/datagrid.scss */
 .husky-datagrid.minimal {
   padding: 0;
 }
-/* line 185, ../scss/modules/datagrid.scss */
+/* line 190, ../scss/modules/datagrid.scss */
 .husky-datagrid.minimal tbody td.thumb {
   width: 1px;
 }
-/* line 187, ../scss/modules/datagrid.scss */
+/* line 192, ../scss/modules/datagrid.scss */
 .husky-datagrid.minimal tbody td.thumb img {
   height: 30px;
 }
