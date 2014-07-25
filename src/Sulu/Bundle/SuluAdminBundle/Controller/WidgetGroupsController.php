@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\AdminBundle\Controller;
 
+use Sulu\Bundle\AdminBundle\Widgets\WidgetException;
 use Sulu\Bundle\AdminBundle\Widgets\WidgetsHandlerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,51 +18,93 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * renderes the Widgets
+ *
  * @package Sulu\Bundle\AdminBundle\Controller
  */
 class WidgetGroupsController extends Controller
 {
     protected $widgetsHandler;
 
-    public function contactInfoAction(Request $request) {
+    public function contactInfoAction(Request $request)
+    {
         $aliases = array(
-            'sulu-contact-contact-info',
-            'sulu-contact-toolbar'
+            'sulu-contact-contact-info'
         );
-        return new Response($this->getWidgetsHandler()->render($aliases, $request->query->all()));
+        try {
+            return new Response(
+                $this->getWidgetsHandler()->render(
+                    $aliases,
+                    $request->query->all()
+                )
+            );
+        } catch (WidgetException $ex) {
+            return new Response($ex->getMessage());
+        }
     }
 
-    public function accountInfoAction(Request $request) {
+    public function accountInfoAction(Request $request)
+    {
         $aliases = array(
             'sulu-contact-account-info',
             'sulu-contact-contacts'
         );
-        return new Response($this->getWidgetsHandler()->render($aliases, $request->query->all()));
+        try {
+            return new Response(
+                $this->getWidgetsHandler()->render(
+                    $aliases,
+                    $request->query->all()
+                )
+            );
+        } catch (WidgetException $ex) {
+            return new Response($ex->getMessage());
+        }
     }
 
-    public function contactDetailAction(Request $request) {
+    public function contactDetailAction(Request $request)
+    {
         $aliases = array(
             'sulu-contact-toolbar',
             'sulu-contact-account-address',
             'sulu-contact-table'
         );
-        return new Response($this->getWidgetsHandler()->render($aliases, $request->query->all()));
+        try {
+            return new Response(
+                $this->getWidgetsHandler()->render(
+                    $aliases,
+                    $request->query->all()
+                )
+            );
+        } catch (WidgetException $ex) {
+            return new Response($ex->getMessage());
+        }
     }
 
-    public function accountDetailAction(Request $request) {
+    public function accountDetailAction(Request $request)
+    {
         $aliases = array(
             'sulu-contact-toolbar',
             'sulu-contact-contacts',
             'sulu-contact-table'
         );
-        return new Response($this->getWidgetsHandler()->render($aliases, $request->query->all()));
+        try {
+            return new Response(
+                $this->getWidgetsHandler()->render(
+                    $aliases,
+                    $request->query->all()
+                )
+            );
+        } catch (WidgetException $ex) {
+            return new Response($ex->getMessage());
+        }
     }
 
     /**
      * Returns the widget handler service
+     *
      * @return WidgetsHandlerInterface
      */
-    private function getWidgetsHandler() {
+    private function getWidgetsHandler()
+    {
         if ($this->widgetsHandler === null) {
             $this->widgetsHandler = $this->get('sulu_admin.widgets_handler');
         }
