@@ -4,10 +4,11 @@
             <span class="blue-icon"><span class="fa-pencil"></span></span>
         </h2>
         <span class="block action">
-            {% if data.title is defined %}
+            {% if data.title is defined and data.position is defined %}
+                {{ [data.title, data.position]|join(', ') }}
+            {% elseif data.title is defined %}
                 {{ data.title }}
-            {% endif %}
-            {% if data.position is defined %}
+            {% elseif data.position is defined %}
                 {{ data.position }}
             {% endif %}
         </span>
