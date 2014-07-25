@@ -98,25 +98,4 @@ class ContactManager extends AbstractContactManager
     {
         return $entity->getContactAddresses();
     }
-
-    /**
-     * Returns the main address
-     *
-     * @param $entity
-     * @return mixed
-     */
-    public function getMainAddress($entity)
-    {
-        $contactAddresses = $entity->getContactAddresses();
-
-        if (!is_null($contactAddresses)) {
-            /** @var ContactAddress $contactAddress */
-            foreach ($contactAddresses as $contactAddress) {
-                if (!!$contactAddress->getMain()) {
-                    return $contactAddress->getAddress();
-                }
-            }
-        }
-        return null;
-    }
 }

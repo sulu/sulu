@@ -69,7 +69,6 @@ class ContactInfo implements WidgetInterface
      * @return array
      */
     public function getData($options)
-
     {
         $errorMessage = array(
             'errorMessage' => 'Invalid contact id !'
@@ -114,7 +113,7 @@ class ContactInfo implements WidgetInterface
         $data['url'] = $contact->getMainUrl();
 
         /* @var Address $contactAddress */
-        $contactAddress = $this->contactManager->getMainAddress($contact);
+        $contactAddress = $contact->getMainAddress();
 
         if (!!$contactAddress) {
             $data['address']['street'] = $contactAddress->getStreet();
@@ -131,9 +130,7 @@ class ContactInfo implements WidgetInterface
                 ->getMainEmail();
 
             /* @var Address $accountAddress */
-            $accountAddress = $this->accountManager->getMainAddress(
-                $contact->getMainAccount()
-            );
+            $accountAddress = $contact->getMainAccount()->getMainAddress();
 
             if (!!$accountAddress) {
                 $data['company']['address']['city'] = $accountAddress
@@ -142,7 +139,6 @@ class ContactInfo implements WidgetInterface
                     ->getCountry()->getName();
             }
         }
-
         return $data;
     }
 }
