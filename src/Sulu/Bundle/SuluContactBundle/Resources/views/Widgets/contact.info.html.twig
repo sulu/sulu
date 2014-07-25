@@ -16,46 +16,15 @@
     </div>
 
     {% if data.address is defined %}
-        <div class="grid-row m-bottom-30">
-            <h5 class="label"><%=translate('public.address')%></h5>
-            <span class="block grey">
-                {{ data.address.street }}
-                {{ data.address.number }}
-                {{ data.address.zip }}
-                {{ data.address.city }}
-                {{ data.address.country }}
-            </span>
-        </div>
+        {% include 'SuluContactBundle:Widgets:Partials/address.partial.html.twig' with {'address': data.address} only %}
     {% endif %}
 
     {% if data.phone or data.fax  is not empty %}
-        <div class="grid-row m-bottom-30">
-            <h5 class="label"><%=translate('public.phone')%></h5>
-            {% if data.phone is not empty %}
-                <span class="grey block">(<%=translate('public.phone')%>) {{ data.phone }}</span>
-            {% endif %}
-
-            {% if data.fax  is not empty %}
-                <span class="grey block">(<%=translate('public.fax')%>) {{ data.fax }}</span>
-            {% endif %}
-        </div>
+        {% include 'SuluContactBundle:Widgets:Partials/phoneFax.partial.html.twig' with {'phone': data.phone, 'fax': data.fax} only %}
     {% endif %}
 
     {% if data.email or data.url is not empty %}
-        <div class="grid-row m-bottom-30">
-            <h5 class="label">
-                <%=translate('contacts.sidebar.web-and-mail')%></h5>
-            {% if data.email is not empty %}
-                <span class="block">
-                 <a class="action" href="mailto:{{ data.email }}" target="_blank">{{ data.email }}</a>
-             </span>
-            {% endif %}
-            {% if data.url is not empty %}
-                <span class="block">
-                 <a class="action" href="{{ data.url }}" target="_blank">{{ data.url }}</a>
-             </span>
-            {% endif %}
-        </div>
+        {% include 'SuluContactBundle:Widgets:Partials/emailUrl.partial.html.twig' with {'email': data.email, 'url': data.url} only %}
     {% endif %}
 
     {% if data.company is defined %}

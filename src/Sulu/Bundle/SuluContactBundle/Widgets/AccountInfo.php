@@ -16,6 +16,8 @@ use Doctrine\ORM\EntityManager;
 use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\AdminBundle\Widgets\WidgetException;
+use Sulu\Bundle\AdminBundle\Widgets\WidgetParameterException;
+use Sulu\Bundle\AdminBundle\Widgets\WidgetEntityNotFoundException;
 
 /**
  * example widget for contact controller
@@ -72,14 +74,14 @@ class AccountInfo implements WidgetInterface
             )->find($id);
 
             if (!$account) {
-                throw new WidgetException(
+                throw new WidgetEntityNotFoundException(
                     'Entity ' . $this->accountEntityName . ' with id ' . $id . ' not found!',
                     $id
                 );
             }
             return $this->parseAccountForListSidebar($account);
         } else {
-            throw new WidgetException(
+            throw new WidgetParameterException(
                 'Required parameter account not found or empty!'
             );
         }
