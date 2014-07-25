@@ -34,8 +34,7 @@ class WidgetGroupsController extends Controller
     public function accountInfoAction(Request $request) {
         $aliases = array(
             'sulu-contact-account-info',
-            'sulu-contact-contacts',
-            'sulu-contact-toolbar'
+            'sulu-contact-contacts'
         );
         return new Response($this->getWidgetsHandler()->render($aliases, $request->query->all()));
     }
