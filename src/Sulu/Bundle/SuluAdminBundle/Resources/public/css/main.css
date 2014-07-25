@@ -464,11 +464,16 @@ input, select {
   transition: opacity 100ms ease-in 200ms;
 }
 /* line 48, ../scss/modules/sidebar.scss */
+.sulu-sidebar .blue-icon > span {
+  vertical-align: text-top;
+  margin-top: -3px;
+}
+/* line 53, ../scss/modules/sidebar.scss */
 .sulu-sidebar .show-icon:hover .blue-icon {
   opacity: 1;
 }
 
-/* line 54, ../scss/modules/sidebar.scss */
+/* line 59, ../scss/modules/sidebar.scss */
 .sidebar-padding-50 > div {
   padding: 50px;
 }
