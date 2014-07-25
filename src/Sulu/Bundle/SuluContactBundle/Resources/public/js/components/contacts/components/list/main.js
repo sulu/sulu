@@ -12,23 +12,31 @@ define(function() {
     'use strict';
 
     var bindCustomEvents = function() {
-        // navigate to edit contact
-        this.sandbox.on('husky.datagrid.item.click', function(item) {
-            this.sandbox.emit('sulu.sidebar.set-widget', '/admin/widget-groups/contact-info?contact=' + item);
-        }, this);
+            // navigate to edit contact
+            this.sandbox.on('husky.datagrid.item.click', function(item) {
+                this.sandbox.emit('sulu.sidebar.set-widget', '/admin/widget-groups/contact-info?contact=' + item);
+            }, this);
 
-        // delete clicked
-        this.sandbox.on('sulu.list-toolbar.delete', function() {
-            this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
-                this.sandbox.emit('sulu.contacts.contacts.delete', ids);
-            }.bind(this));
-        }, this);
+            // delete clicked
+            this.sandbox.on('sulu.list-toolbar.delete', function() {
+                this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
+                    this.sandbox.emit('sulu.contacts.contacts.delete', ids);
+                }.bind(this));
+            }, this);
 
-        // add clicked
-        this.sandbox.on('sulu.list-toolbar.add', function() {
-            this.sandbox.emit('sulu.contacts.contacts.new');
-        }, this);
-    };
+            // add clicked
+            this.sandbox.on('sulu.list-toolbar.add', function() {
+                this.sandbox.emit('sulu.contacts.contacts.new');
+            }, this);
+        },
+
+        bindSidebarEvents = function() {
+            this.sandbox.dom.off('#sidebar');
+            this.sandbox.dom.on('#sidebar', 'click', function(event) {
+                var id = this.sandbox.dom.data(event.currentTarget,'id');
+                this.sandbox.emit('sulu.contacts.contacts.load', id);
+            }.bind(this), '#sidebar-contact-list');
+        };
 
     return {
         view: true,
@@ -60,6 +68,7 @@ define(function() {
         initialize: function() {
             this.render();
             bindCustomEvents.call(this);
+            bindSidebarEvents.call(this);
         },
 
         render: function() {
