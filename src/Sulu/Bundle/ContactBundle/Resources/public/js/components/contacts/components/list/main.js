@@ -99,6 +99,7 @@ define(function() {
                                     }.bind(this)
                                 }
                             ],
+                            highlightSelected: true,
                             fullWidth: true
                         }
                     }
