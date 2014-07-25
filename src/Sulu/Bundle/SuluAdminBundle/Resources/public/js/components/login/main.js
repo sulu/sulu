@@ -47,7 +47,7 @@ define(function() {
          * Initialize the component
          */
         initialize: function() {
-            alert('login');
+            // todo: login
             this.sandbox.emit(INITIALIZED.call(this));
         }
     };
