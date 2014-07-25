@@ -286,11 +286,15 @@ define(['app-config'], function(AppConfig) {
                 this.setHeaderBar(false);
             }.bind(this));
 
-            this.sandbox.dom.on(this.formId, 'form-add', function(e, propertyName) {
+            this.sandbox.dom.on(this.formId, 'form-add', function(e, propertyName, data) {
                 this.createConfiguration(e.currentTarget);
 
                 // start new subcomponents
-                this.sandbox.start($(e.currentTarget));
+                this.sandbox.start(
+                    this.sandbox.dom.last(
+                        this.sandbox.dom.children(this.$find('[data-mapper-property="'+ propertyName +'"]'))
+                    )
+                );
 
                 // update changes
                 var changes = this.sandbox.form.getData(this.formId);
