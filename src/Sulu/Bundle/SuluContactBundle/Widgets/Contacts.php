@@ -11,6 +11,10 @@
 namespace Sulu\Bundle\ContactBundle\Widgets;
 
 use Sulu\Bundle\AdminBundle\Widgets\WidgetInterface;
+use Sulu\Bundle\AdminBundle\Widgets\WidgetException;
+use Doctrine\ORM\EntityManager;
+use Sulu\Bundle\ContactBundle\Entity\Account;
+use Sulu\Bundle\ContactBundle\Entity\Contact;
 
 /**
  * example widget for contact controller
@@ -19,6 +23,16 @@ use Sulu\Bundle\AdminBundle\Widgets\WidgetInterface;
  */
 class Contacts implements WidgetInterface
 {
+
+    protected $em;
+
+    protected $accountEntityName = 'SuluContactBundle:Account';
+
+    function __construct(EntityManager $em)
+    {
+        $this->em = $em;
+    }
+
     /**
      * return name of widget
      *
@@ -43,11 +57,60 @@ class Contacts implements WidgetInterface
      * returns data to render template
      *
      * @param array $options
+     * @throws WidgetException
      * @return array
      */
     public function getData($options)
     {
-        // TODO: fetch contact here - (options contains all request parameters)
-        return $options;
+        if (!empty($options) &&
+            array_key_exists('account', $options) &&
+            !empty($options['account'])
+        ) {
+            $id = $options['account'];
+            $account = $this->em->getRepository(
+                $this->accountEntityName
+            )->find($id);
+
+            if (!$account) {
+                throw new WidgetException(
+                    'Entity ' . $this->accountEntityName . ' with id ' . $id . ' not found!',
+                    $id
+                );
+            }
+            return $this->parseContactsForAccountSidebar($account);
+        } else {
+            throw new WidgetException(
+                'Required parameter contact not found or empty!'
+            );
+        }
+    }
+
+    /**
+     * Returns the data neede for the account list-sidebar
+     *
+     * @param Account $account
+     * @return array
+     */
+    protected function parseContactsForAccountSidebar(Account $account)
+    {
+
+        $maxAccounts = 2;
+        $i = 0;
+        $contacts = $account->getContacts();
+
+        if (count($contacts) > 0) {
+            $data = [];
+
+            while ($i < count($contacts) - 1 && $i < $maxAccounts) {
+                $data[$i]['id'] = $contacts[$i]->getId();
+                $data[$i]['fullName'] = $contacts[$i]->getFullName();
+                $data[$i]['phone'] = $contacts[$i]->getMainPhone();
+                $data[$i]['email'] = $contacts[$i]->getMainEmail();
+                $i++;
+            }
+            return $data;
+        } else {
+            return null;
+        }
     }
 }

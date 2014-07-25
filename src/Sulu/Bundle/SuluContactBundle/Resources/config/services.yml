@@ -66,6 +66,8 @@ services:
          class: %sulu_contact.contact.widgets.account_info.class%
          tags:
              - {name: sulu.widget, alias: sulu-contact-account-info}
+         arguments:
+             - @doctrine.orm.entity_manager
  
     sulu_contact.contact.widgets.contact_info:
          class: %sulu_contact.contact.widgets.contact_info.class%
@@ -73,13 +75,13 @@ services:
              - {name: sulu.widget, alias: sulu-contact-contact-info}
          arguments:
              - @doctrine.orm.entity_manager
-             - @sulu_contact.contact_manager
-             - @sulu_contact.account_manager
  
     sulu_contact.contact.widgets.contacts:
          class: %sulu_contact.contact.widgets.contacts.class%
          tags:
              - {name: sulu.widget, alias: sulu-contact-contacts}
+         arguments:
+             - @doctrine.orm.entity_manager
  
     sulu_contact.contact.widgets.table:
          class: %sulu_contact.contact.widgets.table.class%

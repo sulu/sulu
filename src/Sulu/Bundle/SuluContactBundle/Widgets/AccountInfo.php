@@ -10,7 +10,12 @@
 
 namespace Sulu\Bundle\ContactBundle\Widgets;
 
+use Doctrine\ORM\EntityNotFoundException;
 use Sulu\Bundle\AdminBundle\Widgets\WidgetInterface;
+use Doctrine\ORM\EntityManager;
+use Sulu\Bundle\ContactBundle\Entity\Account;
+use Sulu\Bundle\ContactBundle\Entity\Address;
+use Sulu\Bundle\AdminBundle\Widgets\WidgetException;
 
 /**
  * example widget for contact controller
@@ -19,6 +24,15 @@ use Sulu\Bundle\AdminBundle\Widgets\WidgetInterface;
  */
 class AccountInfo implements WidgetInterface
 {
+    protected $em;
+
+    protected $accountEntityName = 'SuluContactBundle:Account';
+
+    function __construct(EntityManager $em)
+    {
+        $this->em = $em;
+    }
+
     /**
      * return name of widget
      *
@@ -43,11 +57,65 @@ class AccountInfo implements WidgetInterface
      * returns data to render template
      *
      * @param array $options
+     * @throws WidgetException
      * @return array
      */
     public function getData($options)
     {
-        // TODO: fetch contact here - (options contains all request parameters)
-        return $options;
+        if (!empty($options) &&
+            array_key_exists('account', $options) &&
+            !empty($options['account'])
+        ) {
+            $id = $options['account'];
+            $account = $this->em->getRepository(
+                $this->accountEntityName
+            )->find($id);
+
+            if (!$account) {
+                throw new WidgetException(
+                    'Entity ' . $this->accountEntityName . ' with id ' . $id . ' not found!',
+                    $id
+                );
+            }
+            return $this->parseAccountForListSidebar($account);
+        } else {
+            throw new WidgetException(
+                'Required parameter account not found or empty!'
+            );
+        }
+    }
+
+    /**
+     * Returns the data neede for the account list-sidebar
+     *
+     * @param Account $account
+     * @return array
+     */
+    protected function parseAccountForListSidebar(Account $account)
+    {
+        $data = [];
+
+        $data['id'] = $account->getId();
+        $data['name'] = $account->getName();
+
+        /* @var Address $accountAddress */
+        $accountAddress = $account->getMainAddress();
+
+        if (!!$accountAddress) {
+            $data['address']['street'] = $accountAddress->getStreet();
+            $data['address']['number'] = $accountAddress->getNumber();
+            $data['address']['zip'] = $accountAddress->getZip();
+            $data['address']['city'] = $accountAddress->getCity();
+            $data['address']['country'] = $accountAddress->getCountry(
+            )->getName();
+        }
+
+        $data['phone'] = $account->getMainPhone();
+        $data['fax'] = $account->getMainFax();
+
+        $data['email'] = $account->getMainEmail();
+        $data['url'] = $account->getMainUrl();
+
+        return $data;
     }
 }

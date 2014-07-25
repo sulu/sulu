@@ -11,11 +11,9 @@
 namespace Sulu\Bundle\ContactBundle\Widgets;
 
 use Doctrine\ORM\EntityManager;
+use Sulu\Bundle\AdminBundle\Widgets\WidgetException;
 use Sulu\Bundle\AdminBundle\Widgets\WidgetInterface;
-use Sulu\Bundle\ContactBundle\Contact\AccountManager;
-use Sulu\Bundle\ContactBundle\Contact\ContactManager;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
-use Sulu\Bundle\ContactBundle\Entity\ContactTitle;
 use Sulu\Bundle\ContactBundle\Entity\Address;
 
 /**
@@ -26,20 +24,12 @@ use Sulu\Bundle\ContactBundle\Entity\Address;
 class ContactInfo implements WidgetInterface
 {
     protected $em;
-    protected $contactManager;
-    protected $accountManager;
 
     protected $contactEntityName = 'SuluContactBundle:Contact';
 
-    function __construct(
-        EntityManager $em,
-        ContactManager $contactManager,
-        AccountManager $accountManager
-    )
+    function __construct(EntityManager $em)
     {
         $this->em = $em;
-        $this->contactManager = $contactManager;
-        $this->accountManager = $accountManager;
     }
 
     /**
@@ -66,31 +56,32 @@ class ContactInfo implements WidgetInterface
      * returns data to render template
      *
      * @param array $options
+     * @throws WidgetException
      * @return array
      */
     public function getData($options)
     {
-        $errorMessage = array(
-            'errorMessage' => 'Invalid contact id !'
-        );
+        if (!empty($options) &&
+            array_key_exists('contact', $options) &&
+            !empty($options['contact'])
+        ) {
+            $id = $options['contact'];
+            $contact = $this->em->getRepository(
+                $this->contactEntityName
+            )->find($id);
 
-        if (!empty($options)) {
-
-            if (array_key_exists('contact', $options)) {
-                $id = $options['contact'];
-                $contact = $this->em->getRepository(
-                    $this->contactEntityName
-                )->find($id);
-
-                if (!$contact) {
-                    return $errorMessage;
-                }
-
-                return $this->parseContactForListSidebar($contact);
+            if (!$contact) {
+                throw new WidgetException(
+                    'Entity ' . $this->contactEntityName . ' with id ' . $id . ' not found!',
+                    $id
+                );
             }
+            return $this->parseContactForListSidebar($contact);
+        } else {
+            throw new WidgetException(
+                'Required parameter contact not found or empty!'
+            );
         }
-
-        return $errorMessage;
     }
 
     /**
@@ -105,8 +96,14 @@ class ContactInfo implements WidgetInterface
 
         $data['id'] = $contact->getId();
         $data['fullName'] = $contact->getFullName();
-        $data['title'] = $contact->getTitle()->getTitle();
-        $data['position'] = $contact->getPosition()->getPosition();
+
+        if ($contact->getTitle()) {
+            $data['title'] = $contact->getTitle()->getTitle();
+        }
+        if ($contact->getPosition()) {
+            $data['position'] = $contact->getPosition()->getPosition();
+        }
+
         $data['phone'] = $contact->getMainPhone();
         $data['email'] = $contact->getMainEmail();
         $data['fax'] = $contact->getMainFax();

@@ -14,13 +14,17 @@ define([
 
     'use strict';
 
-    var defaults = {
-            accountType: null
-        },
-        bindCustomEvents = function() {
-            // navigate to edit contact
-            this.sandbox.on('husky.datagrid.item.click', function(item) {
-                this.sandbox.emit('sulu.contacts.accounts.load', item);
+    var bindCustomEvents = function() {
+            // navigate to edit account
+            this.sandbox.on('husky.datagrid.item.click', function(id) {
+                this.sandbox.emit(
+                    'sulu.sidebar.set-widget',
+                    '/admin/widget-groups/account-info?account=' + id
+                );
+                this.sandbox.emit(
+                    'sulu.sidebar.set-widget',
+                    '/admin/widget-groups/contacts?account=' + id
+                );
             }, this);
 
             // delete clicked
@@ -43,12 +47,11 @@ define([
          * @returns {object} tabs options
          */
         getTabsOptions = function() {
-            var items, i, len, index, type,
+            var items, i, index, type,
                 accountTypes,
                 contactSection = AppConfig.getSection('sulu-contact'),
                 accountType,
-                preselect = false,
-                data;
+                preselect;
 
             // check if accountTypes exist
             if (!contactSection || !contactSection.hasOwnProperty('accountTypes') ||
@@ -129,7 +132,7 @@ define([
             },
             sidebar: {
                 width: 'fixed',
-                url: '/admin/widget-groups/account-info'
+                cssClasses: 'sidebar-padding-50'
             }
         },
 
@@ -253,6 +256,16 @@ define([
                     },
                     viewOptions: {
                         table: {
+                            icons: [
+                                {
+                                    icon: 'pencil',
+                                    column: 'name',
+                                    align: 'left',
+                                    callback: function(id) {
+                                        this.sandbox.emit('sulu.contacts.accounts.load', id);
+                                    }.bind(this)
+                                }
+                            ],
                             fullWidth: true
                         }
                     }
