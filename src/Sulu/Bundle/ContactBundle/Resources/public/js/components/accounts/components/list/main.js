@@ -21,10 +21,6 @@ define([
                     'sulu.sidebar.set-widget',
                     '/admin/widget-groups/account-info?account=' + id
                 );
-                this.sandbox.emit(
-                    'sulu.sidebar.set-widget',
-                    '/admin/widget-groups/contacts?account=' + id
-                );
             }, this);
 
             // delete clicked
@@ -38,6 +34,14 @@ define([
             this.sandbox.on('sulu.list-toolbar.add', function() {
                 this.sandbox.emit('sulu.contacts.accounts.new');
             }, this);
+        },
+
+        bindSidebarEvents = function() {
+            this.sandbox.dom.off('#sidebar');
+            this.sandbox.dom.on('#sidebar', 'click', function(event) {
+                var id = this.sandbox.dom.data(event.currentTarget,'id');
+                this.sandbox.emit('sulu.contacts.accounts.load', id);
+            }.bind(this), '#sidebar-accounts-list');
         },
 
         dataUrlAddition = '',
@@ -166,6 +170,7 @@ define([
         initialize: function() {
             this.render();
             bindCustomEvents.call(this);
+            bindSidebarEvents.call(this);
         },
 
         render: function() {
