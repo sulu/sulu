@@ -421,10 +421,7 @@ class AccountController extends AbstractContactController
             $accountContact->setContact($contact);
 
             // Set position on contact
-            $position = $this->getPosition($request->get('position'),
-                                           self::$positionEntityName
-                                           );
-
+            $position = $this->getPosition($request->get('position'));
             $accountContact->setPosition($position);
             $contact->setCurrentPosition($position);
 
@@ -434,15 +431,15 @@ class AccountController extends AbstractContactController
 
             $isMainContact = false;
             if ($account->getMainContact()) {
-              $isMainContact = $account->getMainContact()->getId() === $contact->getId();
+                $isMainContact = $account->getMainContact()->getId() === $contact->getId();
             }
 
             $contactArray = array(
-                                  'id' => $contact->getId(),
-                                  'fullName' => $contact->getFullName(),
-                                  'position' => $position->getPosition(),
-                                  'isMainContact' => $isMainContact
-                                  );
+                'id' => $contact->getId(),
+                'fullName' => $contact->getFullName(),
+                'position' => $position->getPosition(),
+                'isMainContact' => $isMainContact
+            );
 
             $view = $this->view($contactArray, 200);
         } catch (EntityNotFoundException $enfe) {
