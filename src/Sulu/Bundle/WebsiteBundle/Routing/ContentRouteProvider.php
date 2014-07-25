@@ -26,7 +26,7 @@ use Symfony\Component\Routing\RouteCollection;
  * The PortalRouteProvider should load the dynamic routes created by Sulu
  * @package Sulu\Bundle\WebsiteBundle\Routing
  */
-class PortalRouteProvider implements RouteProviderInterface
+class ContentRouteProvider implements RouteProviderInterface
 {
     /**
      * @var ContentMapperInterface
@@ -38,20 +38,13 @@ class PortalRouteProvider implements RouteProviderInterface
      */
     private $requestAnalyzer;
 
-    /**
-     * @var ActiveTheme
-     */
-    private $activeTheme;
-
     public function __construct(
         ContentMapperInterface $contentMapper,
-        RequestAnalyzerInterface $requestAnalyzer,
-        ActiveTheme $activeTheme
+        RequestAnalyzerInterface $requestAnalyzer
     )
     {
         $this->contentMapper = $contentMapper;
         $this->requestAnalyzer = $requestAnalyzer;
-        $this->activeTheme = $activeTheme;
     }
 
     /**
@@ -85,9 +78,6 @@ class PortalRouteProvider implements RouteProviderInterface
             // just show the page
             $portal = $this->requestAnalyzer->getCurrentPortal();
             $language = $this->requestAnalyzer->getCurrentLocalization()->getLocalization();
-
-            // Set current theme
-            $this->activeTheme->setName($portal->getWebspace()->getTheme()->getKey());
 
             try {
                 $content = $this->contentMapper->loadByResourceLocator(
