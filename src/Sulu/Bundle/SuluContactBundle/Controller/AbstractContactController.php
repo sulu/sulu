@@ -882,4 +882,18 @@ abstract class AbstractContactController extends RestController implements Class
 
         return $result;
     }
+
+    /**
+     * Get a position object
+     * @param $id The position id
+     * @return object if a position is found for the given id, otherwise null
+     */
+    protected function getPosition($id, $entityName)
+    {
+      if ($id) {
+        return $this->getDoctrine()->getRepository($entityName)->find($id);
+      }
+      return null;
+    }
+
 }

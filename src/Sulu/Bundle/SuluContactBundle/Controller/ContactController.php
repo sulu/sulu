@@ -510,11 +510,9 @@ class ContactController extends AbstractContactController
                 }
 
                 // Set position on contact
-                $position = null;
-                $positionId = $request->get('position');
-                if ($positionId && is_numeric($positionId)) {
-                    $position = $this->getDoctrine()->getRepository(self::$positionEntityName)->find($positionId);
-                }
+                $position = $this->getPosition($request->get('position'),
+                                               self::$positionEntityName
+                                               );
 
                 // create new account-contact relation
                 $this->createMainAccountContact($contact, $parent, $position);
