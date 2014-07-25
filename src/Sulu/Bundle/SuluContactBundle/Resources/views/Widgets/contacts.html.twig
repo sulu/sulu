@@ -1,7 +1,7 @@
 {% if data is defined %}
 <h5 class="label"><%=translate('contacts.sidebar.contacts')%></h5>
     {% for contact in data %}
-        <div class="grid-row m-bottom-10">
+        <div class="grid-row m-bottom-15">
             <span id="account-id" class="hidden">{{ contact.id }}</span>
             <h4 class="m-bottom-0 m-top-0">{{ contact.fullName }}</h4>
             {% if contact.phone is not empty %}
