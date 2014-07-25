@@ -4,23 +4,19 @@
 
         <h2 class="m-bottom-0 action">{{ data.fullName }}
             <span class="blue-icon"><span class="fa-pencil"></span></span></h2>
-            <span class="block action">
-             {{ data.title }}
-                {{ data.position }}
-                </span>
-
+        <span class="block action">{{ data.title }}{{ data.position }}</span>
     </div>
 
     {% if data.address is defined %}
         <div class="grid-row m-bottom-30">
             <h5 class="label"><%=translate('public.address')%></h5>
             <span class="block grey">
-             {{ data.address.street }}
+                {{ data.address.street }}
                 {{ data.address.number }}
                 {{ data.address.zip }}
                 {{ data.address.city }}
                 {{ data.address.country }}
-                </span>
+            </span>
         </div>
     {% endif %}
 
@@ -60,7 +56,7 @@
             <h4 class="m-top-0 m-bottom-0">{{ data.company.name }}</h4>
             {% if data.company.address is defined %}
                 <span class="grey block">
-             {{ data.company.address.city }}
+                    {{ data.company.address.city }}
                     {{ data.company.address.country }}
                 </span>
             {% endif %}
