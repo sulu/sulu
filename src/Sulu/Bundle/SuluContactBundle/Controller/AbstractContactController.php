@@ -35,6 +35,9 @@ use Symfony\Component\HttpFoundation\Request;
  */
 abstract class AbstractContactController extends RestController implements ClassResourceInterface
 {
+
+    protected static $positionEntityName = 'SuluContactBundle:Position';
+
     /**
      * @return AbstractContactManager
      */
@@ -882,4 +885,18 @@ abstract class AbstractContactController extends RestController implements Class
 
         return $result;
     }
+
+    /**
+     * Get a position object
+     * @param $id The position id
+     * @return Position|null
+     */
+    protected function getPosition($id)
+    {
+      if ($id) {
+          return $this->getDoctrine()->getRepository(self::$positionEntityName)->find($id);
+      }
+      return null;
+    }
+
 }
