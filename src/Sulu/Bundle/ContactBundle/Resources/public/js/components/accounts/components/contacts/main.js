@@ -18,8 +18,9 @@ define([
             relationFormSelector: '#contact-relation-form',
             contactSelector: '#contact-field',
             positionSelector: '#company-contact-position',
-            companyPosition: null,
         },
+
+        companyPosition = null,
 
         bindCustomEvents = function() {
             // navigate to edit contact
@@ -56,7 +57,7 @@ define([
 
             // when a position is selected in the company overlay
             this.sandbox.on('husky.select.company-position-select.selected.item', function(id) {
-                constants.companyPosition = id;
+                companyPosition = id;
             }, this);
         },
 
@@ -105,7 +106,6 @@ define([
 
             this.sandbox.util.load('/admin/api/contact/positions')
                 .then(function(response) {
-                    this.positionSelectData = response._embedded.positions;
                     this.sandbox.start([
                         {
                             name: 'select@husky',
@@ -114,7 +114,7 @@ define([
                                 instanceName: 'company-position-select',
                                 valueName: 'position',
                                 returnValue: 'id',
-                                data: this.positionSelectData,
+                                data: response._embedded.positions,
                                 noNewValues: true
                             }
                         }
@@ -193,11 +193,7 @@ define([
             var contactInput = this.sandbox.dom.find(constants.contactSelector + ' input', constants.relationFormSelector),
                 id = this.sandbox.dom.data(contactInput, 'id');
             if (!!id) {
-                this.sandbox.emit('sulu.contacts.accounts.contact.save',
-                                  id,
-                                  constants.companyPosition
-                                 );
-                constants.companyPosition = null;
+                this.sandbox.emit('sulu.contacts.accounts.contact.save', id, companyPosition);
             }
         };
 
