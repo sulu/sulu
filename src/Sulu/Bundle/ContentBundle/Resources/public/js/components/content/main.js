@@ -172,8 +172,8 @@ define([
             }, this);
 
             // save the current package
-            this.sandbox.on('sulu.content.contents.save', function(data) {
-                this.save(data);
+            this.sandbox.on('sulu.content.contents.save', function(data, template) {
+                this.save(data, template);
             }, this);
 
             // wait for navigation events
@@ -306,15 +306,14 @@ define([
             });
         },
 
-        save: function(data) {
+        save: function(data, template) {
             this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
 
             this.content = new Content(data);
             if (!!this.options.id) {
                 this.content.set({id: this.options.id});
             }
-
-            this.content.fullSave(this.template, this.options.webspace, this.options.language, this.options.parent, this.state, null, {
+            this.content.fullSave(template || this.template, this.options.webspace, this.options.language, this.options.parent, this.state, null, {
                 // on success save contents id
                 success: function(response) {
                     var model = response.toJSON();
@@ -522,11 +521,12 @@ define([
             } else {
                 def = this.sandbox.data.deferred();
                 this.loadDataDeferred.then(function() {
-                    var x = {
+                    var url = '/admin/content/navigation/content' + (!!this.data.id ? '?type=' + this.data.nodeType + '&id=' + this.data.id : ''),
+                        x = {
                         noBack: noBack,
 
                         tabs: {
-                            url: '/admin/content/navigation/content?type=' + this.data.nodeType + '&id=' + this.data.id
+                            url: url
                         },
 
                         toolbar: {

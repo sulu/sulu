@@ -23,6 +23,7 @@
                 <title lang="de">Interner Pfad</title>
                 <title lang="en">Internal Path</title>
             </meta>
+            <tag name="sulu.rlp"/>
         </property>
     </properties>
 </template>

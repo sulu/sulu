@@ -12,6 +12,7 @@ namespace Sulu\Bundle\ContentBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\ContentNavigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
+use Sulu\Component\Content\Structure;
 
 class SuluContentContentNavigation extends ContentNavigation
 {
@@ -94,12 +95,12 @@ class SuluContentContentNavigation extends ContentNavigation
      */
     public function generate($showSettings, $type)
     {
-        if ($type === 1) {
-            $this->addNavigationItem($this->getContent());
-        }else if ($type === 2) {
+        if ($type === Structure::NODE_TYPE_INTERNAL_LINK) {
             $this->addNavigationItem($this->getInternalLink());
-        } else if ($type === 4) {
+        } else if ($type === Structure::NODE_TYPE_EXTERNAL_LINK) {
             $this->addNavigationItem($this->getExternalLink());
+        } else {
+            $this->addNavigationItem($this->getContent());
         }
 
         $this->addNavigationItem($this->getSeo());

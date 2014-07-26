@@ -23,6 +23,7 @@
                 <title lang="de">Link</title>
                 <title lang="en">Link</title>
             </meta>
+            <tag name="sulu.rlp"/>
         </property>
     </properties>
 </template>
