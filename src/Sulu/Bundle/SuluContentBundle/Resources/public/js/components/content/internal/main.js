@@ -36,7 +36,7 @@ define([], function() {
                 var data = this.sandbox.form.getData(this.formId);
                 this.data = this.sandbox.util.extend({}, this.data, data);
 
-                this.sandbox.emit('sulu.content.contents.save', this.data);
+                this.sandbox.emit('sulu.content.contents.save', this.data, 'internal-link');
             }
         },
 
