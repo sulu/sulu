@@ -164,6 +164,10 @@ class CategoryManager implements CategoryManagerInterface
      */
     public function findByIds(array $ids)
     {
+        if (empty($ids)) {
+            return null;
+        }
+
         return $this->categoryRepository->findCategoryByIds($ids);
     }
 
@@ -227,6 +231,10 @@ class CategoryManager implements CategoryManagerInterface
      */
     public function getApiObjects($categories, $locale)
     {
+        if (empty($categories)) {
+            return array();
+        }
+
         $arrReturn = [];
         foreach ($categories as $category) {
             array_push($arrReturn, $this->getApiObject($category, $locale));
