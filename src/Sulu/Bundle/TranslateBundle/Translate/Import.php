@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\TranslateBundle\Translate;
 
 use Doctrine\ORM\EntityManager;
+use Psr\Log\InvalidArgumentException;
 use Sulu\Bundle\TranslateBundle\Entity\Catalogue;
 use Sulu\Bundle\TranslateBundle\Entity\Code;
 use Sulu\Bundle\TranslateBundle\Entity\Package;
@@ -21,6 +22,9 @@ use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\HttpKernel\Bundle;
 use Symfony\Component\Translation\Loader;
 use Symfony\Component\Translation\Loader\XliffFileLoader;
+use Symfony\Component\Translation\Exception\InvalidResourceException;
+use Symfony\Component\Translation\Exception\NotFoundResourceException;
+
 
 /**
  * Configures and starts an import from an translation catalogue
@@ -282,6 +286,8 @@ class Import
 
     /**
      * Executes the import. Imports a single file
+     * @param boolean $backend True to make translations available in the backend
+     * @param boolean $frontend True to make translations available in the frontend
      */
     public function executeFromFile($backend = true, $frontend = false)
     {
@@ -293,13 +299,15 @@ class Import
                 break;
         }
         $package = $this->getPackageforFile($this->packageId);
-        $this->importFile($package, $loader, null, $this->file, $backend, $frontend);
+        $this->importFile($package, $loader, null, $this->file, $backend, $frontend, true);
     }
 
     /**
      * Executes the import. All translations found in the bundles get imported
+     * @param boolean $backend True to import the backend file
+     * @param boolean $frontend True to import the frontend file
      */
-    public function executeFromBundles()
+    public function executeFromBundles($backend = true, $frontend = true)
     {
         foreach ($this->kernel->getBundles() as $bundle) {
             $hasTranslations = null;
@@ -315,7 +323,7 @@ class Import
             }
 
             if ($hasTranslations === true) {
-                $this->importBundle($bundle, $pathToTranslations);
+                $this->importBundle($bundle, $pathToTranslations, $backend, $frontend);
             }
         }
     }
@@ -324,10 +332,12 @@ class Import
      * Imports the translations file for a bundle
      * @param Bundle $bundle
      * @param $path
+     * @param boolean $backend True to import the backend file
+     * @param boolean $frontend True to import the frontend file
      */
-    private function importBundle($bundle, $path)
+    private function importBundle($bundle, $path, $backend, $frontend)
     {
-        $this->output->writeln('Import translations from ' . $bundle->getName() . ' ...');
+        $this->communicate('Import translations from ' . $bundle->getName() . ' ...');
 
         // get correct loader according to format
         $loader = null;
@@ -340,10 +350,16 @@ class Import
         }
 
         $package = $this->getPackageforBundle($bundle);
-        $this->importFile(
-            $package, $loader, $path, $this->backendDomain . '.' . $this->locale . $extension);
-        $this->importFile(
-            $package, $loader, $path, $this->frontendDomain . '.' . $this->locale . $extension, $this->locale, false, true);
+        if ($backend === true) {
+            $this->importFile(
+                $package, $loader,
+                $path, $this->backendDomain . '.' . $this->locale . $extension);
+        }
+        if ($frontend === true) {
+            $this->importFile(
+                $package, $loader,
+                $path, $this->frontendDomain . '.' . $this->locale . $extension, false, true);
+        }
     }
 
     /**
@@ -366,18 +382,29 @@ class Import
             }
             $catalogue->setPackage($package);
             $catalogue->setLocale($this->locale);
-            $this->em->persist($package);
+            $package->addCatalogue($catalogue);
             $this->em->persist($catalogue);
         } else {
             // load the given package and catalogue
             $package = $this->em->getRepository('SuluTranslateBundle:Package')
-                ->find($this->packageId);
+                ->find($packageId);
+
+            if (!$package) {
+                throw new PackageNotFoundException($packageId);
+            }
+
+            if ($this->name) {
+                $package->setName($this->name);
+            }
 
             if (!$package) {
                 // If the given package is not existing throw an exception
-                throw new PackageNotFoundException($this->packageId);
+                throw new PackageNotFoundException($packageId);
             }
         }
+        $this->em->persist($package);
+        $this->em->flush();
+
         return $package;
     }
 
@@ -407,11 +434,14 @@ class Import
      * @param string $filename The filename
      * @param bool $backend True to make the file available in the backend
      * @param bool $frontend True to make the file available in the frontend
+     * @param bool $throw If true the methods throws exception if the a file cannot be found
+     * @throws NotFoundResourceException
+     * @throws InvalidResourceException
      */
-    private function importFile($package, $loader, $path, $filename, $backend = true, $frontend = false)
+    private function importFile($package, $loader, $path, $filename, $backend = true, $frontend = false, $throw = false)
     {
         try {
-            $this->output->writeln('<comment>- begin importing: ' . $filename.'</comment>');
+            $this->communicate('<comment>- begin importing: ' . $filename . '</comment>');
 
             $filePath = ($path) ? $path . '/' . $filename : $filename;
             $file = $loader->load($filePath, $this->locale);
@@ -436,6 +466,7 @@ class Import
                     $catalogue->setIsDefault(false);
                 }
                 $catalogue->setPackage($package);
+                $package->addCatalogue($catalogue);
                 $catalogue->setLocale($this->locale);
                 $this->em->persist($catalogue);
             }
@@ -468,13 +499,36 @@ class Import
                     $this->em->flush();
                     $this->em->persist($translate);
                 }
-                $this->output->write('.');
+                $this->communicate('.', true);
             }
             $this->em->flush();
-            $this->output->writeln(' ');
-            $this->output->writeln('<info>- successfully imported: ' . $filename.'</info>');
+            $this->communicate(' ');
+            $this->communicate('<info>- successfully imported: ' . $filename . '</info>');
 
         } catch (\InvalidArgumentException $e) {
+            if ($e instanceof NotFoundResourceException) {
+                if ($throw === true) {
+                    throw $e;
+                }
+            } else {
+                throw $e;
+            }
+        }
+    }
+
+    /**
+     * Outputs a value
+     * @param $value
+     * @param bool $inline
+     */
+    private function communicate($value, $inline = false)
+    {
+        if ($this->output) {
+            if ($inline === true) {
+                $this->output->write($value);
+            } else {
+                $this->output->writeln($value);
+            }
         }
     }
 }

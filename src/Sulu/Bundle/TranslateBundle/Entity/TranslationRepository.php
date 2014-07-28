@@ -56,13 +56,15 @@ class TranslationRepository extends EntityRepository
      * @param null $backend
      * @param null $frontend
      * @param null $location
+     * @param null $packageId
      * @return array
      */
-    public function findFiltered($locale, $backend = null, $frontend = null, $location = null)
+    public function findFiltered($locale, $backend = null, $frontend = null, $location = null, $packageId = null)
     {
         $dql = 'SELECT tr
                     FROM SuluTranslateBundle:Translation tr
                         JOIN tr.catalogue ca
+                        JOIN ca.package pa
                         JOIN tr.code co
                         LEFT JOIN co.location lo
                     WHERE ca.locale = :locale';
@@ -81,6 +83,11 @@ class TranslationRepository extends EntityRepository
         if ($location != null) {
             $dql .= '
                       AND lo.name = :location';
+        }
+
+        if ($packageId != null) {
+            $dql .= '
+                      AND pa.id = :packageId';
         }
 
         $query = $this->getEntityManager()
@@ -102,6 +109,10 @@ class TranslationRepository extends EntityRepository
 
         if ($location != null) {
             $query->setParameter('location', $location);
+        }
+
+        if ($packageId != null) {
+            $query->setParameter('packageId', $packageId);
         }
 
         return $query->getResult();

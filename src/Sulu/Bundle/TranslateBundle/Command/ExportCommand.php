@@ -39,6 +39,12 @@ class ExportCommand extends ContainerAwareCommand
                 'json'
             )
             ->addOption(
+                'package',
+                'p',
+                InputOption::VALUE_OPTIONAL,
+                'The id of the package of which the translations should be exported. If not given all packages will be exported'
+            )
+            ->addOption(
                 'backend',
                 'b',
                 InputOption::VALUE_NONE,
@@ -58,14 +64,14 @@ class ExportCommand extends ContainerAwareCommand
             )
             ->addOption(
                 'path',
-                'p',
+                null,
                 InputOption::VALUE_OPTIONAL,
                 'Sets the path to which the file should be exported',
                 'web/js/translations'
             )
             ->addOption(
                 'filename',
-                'fn',
+                null,
                 InputOption::VALUE_OPTIONAL,
                 'sets the filename of the exported file',
                 'sulu'
@@ -81,6 +87,7 @@ class ExportCommand extends ContainerAwareCommand
         $location = $input->getOption('location');
         $path = $input->getOption('path');
         $filename = $input->getOption('filename');
+        $packageId = $input->getOption('package');
 
         $export = $this->getContainer()->get('sulu_translate.export');
 
@@ -107,6 +114,9 @@ class ExportCommand extends ContainerAwareCommand
         }
         if ($path) {
             $export->setPath($path);
+        }
+        if ($packageId) {
+            $export->setPackageId($packageId);
         }
         $export->execute();
 

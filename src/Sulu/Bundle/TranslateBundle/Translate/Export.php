@@ -37,6 +37,12 @@ class Export
     private $locale;
 
     /**
+     * The id of the package to export
+     * @var integer
+     */
+    private $packageId;
+
+    /**
      * The format to export the catalogue in
      * @var string
      */
@@ -204,6 +210,22 @@ class Export
     }
 
     /**
+     * @param int $packageId
+     */
+    public function setPackageId($packageId)
+    {
+        $this->packageId = $packageId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPackageId()
+    {
+        return $this->packageId;
+    }
+
+    /**
      * Executes the export
      */
     public function execute()
@@ -213,7 +235,8 @@ class Export
                 $this->getLocale(),
                 $this->getBackend(),
                 $this->getFrontend(),
-                $this->getLocation()
+                $this->getLocation(),
+                $this->getPackageId()
             );
 
         // Convert translations to format suitable for Symfony's MessageCatalogue
