@@ -9,6 +9,8 @@
  */
 
 namespace Sulu\Bundle\ContactBundle\Contact;
+use Sulu\Bundle\ContactBundle\Entity\ContactTitle;
+use Sulu\Bundle\ContactBundle\Entity\Position;
 use Doctrine\Common\Persistence\AbstractManagerRegistry;
 use Doctrine\Common\Persistence\ObjectManager;
 
