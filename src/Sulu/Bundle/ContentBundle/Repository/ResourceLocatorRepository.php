@@ -112,7 +112,9 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
         }
 
         return array(
-            '_embedded' => $result,
+            '_embedded' => array(
+                'resourcelocators' => $result
+            ),
             '_links' => array(
                 'self' => $this->getBasePath($uuid) . '/history?language=' . $languageCode . '&webspace=' . $webspaceKey
             ),

@@ -105,8 +105,10 @@ class NodeRepository implements NodeRepositoryInterface
         // add node name
         $result['sulu.node.name'] = $structure->getPropertyValueByTagName('sulu.node.name');
 
-        // add default empty embedded property
+        // add default embedded property with empty nodes array
         $result['_embedded'] = array();
+        $result['_embedded']['nodes'] = array();
+
         // add api links
         $result['_links'] = array(
             'self' => $this->apiBasePath . '/' . $structure->getUuid() . ($extension !== null ? '/' . $extension : ''),
@@ -210,8 +212,8 @@ class NodeRepository implements NodeRepositoryInterface
 
         $parentNode = $this->getParentNode($parent, $webspaceKey, $languageCode);
         $result = $this->prepareNode($parentNode, $webspaceKey, $languageCode, 1, $complete, $excludeGhosts);
-        $result['_embedded'] = $this->prepareNodesTree($nodes, $webspaceKey, $languageCode, $complete, $excludeGhosts);
-        $result['total'] = sizeof($result['_embedded']);
+        $result['_embedded']['nodes'] = $this->prepareNodesTree($nodes, $webspaceKey, $languageCode, $complete, $excludeGhosts);
+        $result['total'] = sizeof($result['_embedded']['nodes']);
 
         return $result;
     }
@@ -223,10 +225,11 @@ class NodeRepository implements NodeRepositoryInterface
         $ids,
         $webspaceKey,
         $languageCode
-    ) {
+    )
+    {
         $result = array();
         $idString = '';
-        
+
         if (!empty($ids)) {
             foreach ($ids as $id) {
                 $result[] = $this->getNode($id, $webspaceKey, $languageCode);
@@ -235,7 +238,9 @@ class NodeRepository implements NodeRepositoryInterface
         }
 
         return array(
-            '_embedded' => $result,
+            '_embedded' => array(
+                'nodes' => $result
+            ),
             'total' => sizeof($result),
             '_links' => array(
                 'self' => $this->apiBasePath . '?ids=' . $idString
@@ -286,7 +291,7 @@ class NodeRepository implements NodeRepositoryInterface
 
         // add default empty embedded property
         $data['_embedded'] = array(
-            $node
+            'nodes' => array($node)
         );
         // add api links
         $data['_links'] = array(
@@ -311,8 +316,8 @@ class NodeRepository implements NodeRepositoryInterface
         if ($api) {
             $parentNode = $this->getParentNode($queryBuilder->getParent(), $webspaceKey, $languageCode);
             $result = $this->prepareNode($parentNode, $webspaceKey, $languageCode, 1, false);
-            $result['_embedded'] = $this->prepareNodesTree($nodes, $webspaceKey, $languageCode, false);
-            $result['total'] = sizeof($result['_embedded']);
+            $result['_embedded']['nodes'] = $this->prepareNodesTree($nodes, $webspaceKey, $languageCode, false);
+            $result['total'] = sizeof($result['_embedded']['nodes']);
 
             return $result;
         } else {
@@ -350,7 +355,7 @@ class NodeRepository implements NodeRepositoryInterface
         foreach ($nodes as $node) {
             $result = $this->prepareNode($node, $webspaceKey, $languageCode, 1, $complete, $excludeGhosts);
             if ($node->getHasChildren() && $node->getChildren() != null) {
-                $result['_embedded'] = $this->prepareNodesTree(
+                $result['_embedded']['nodes'] = $this->prepareNodesTree(
                     $node->getChildren(),
                     $webspaceKey,
                     $languageCode,
@@ -406,34 +411,38 @@ class NodeRepository implements NodeRepositoryInterface
         $appendWebspaceNode = false
     )
     {
-        $nodes = $this->getMapper()->loadTreeByUuid($uuid, $languageCode, $webspaceKey, $excludeGhosts, false);
+        $nodes = $this->getMapper()->loadTreeByUuid($uuid, $languageCode, $webspaceKey, $excludeGhosts, true);
 
         if ($appendWebspaceNode) {
             $webspace = $this->webspaceManager->getWebspaceCollection()->getWebspace($webspaceKey);
             $result = array(
                 '_embedded' => array(
-                    array(
-                        'id' => $this->sessionManager->getContentNode($webspace->getKey())->getIdentifier(),
-                        'path' => '/',
-                        'title' => $webspace->getName(),
-                        'hasSub' => true,
-                        '_embedded' => $this->prepareNodesTree(
-                                $nodes,
-                                $webspaceKey,
-                                $languageCode,
-                                false,
-                                $excludeGhosts
-                            ),
-                        '_links' => array(
-                            'children' => $this->apiBasePath . '?depth=1&webspace=' . $webspaceKey .
-                                '&language=' . $languageCode . ($excludeGhosts === true ? '&exclude-ghosts=true' : '')
+                    'nodes' => array(
+                        array(
+                            'id' => $this->sessionManager->getContentNode($webspace->getKey())->getIdentifier(),
+                            'path' => '/',
+                            'title' => $webspace->getName(),
+                            'hasSub' => true,
+                            '_embedded' => $this->prepareNodesTree(
+                                    $nodes,
+                                    $webspaceKey,
+                                    $languageCode,
+                                    false,
+                                    $excludeGhosts
+                                ),
+                            '_links' => array(
+                                'children' => $this->apiBasePath . '?depth=1&webspace=' . $webspaceKey .
+                                    '&language=' . $languageCode . ($excludeGhosts === true ? '&exclude-ghosts=true' : '')
+                            )
                         )
                     )
                 )
             );
         } else {
             $result = array(
-                '_embedded' => $this->prepareNodesTree($nodes, $webspaceKey, $languageCode, false, $excludeGhosts)
+                '_embedded' => array(
+                    'nodes' => $this->prepareNodesTree($nodes, $webspaceKey, $languageCode, false, $excludeGhosts)
+                )
             );
         }
 

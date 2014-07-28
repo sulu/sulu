@@ -1,24 +1,90 @@
-.preview {
+.sulu-content-preview {
+  width: 100%;
+  height: 100%;
+  border-left: 1px solid #666;
+  text-align: center;
+  white-space: nowrap;
+  overflow: auto;
 
-}
-
-.preview-wrapper {
-    overflow: scroll;
-    background-color: #ffffff;
-    position: fixed;
+  &::before {
+    content: '';
+    display: inline-block;
     height: 100%;
-    top: 0;
-    right: 0;
-    z-index: 100; /* because of a css bug in the toolbar */
-    border-left: 1px solid #666;
-}
+    vertical-align: middle;
+    margin-right: -0.25em;
+  }
 
-.preview-iframe {
+  .wrapper {
+    display: inline-block;
+    vertical-align: middle;
+    white-space: normal;
+    overflow: hidden;
+  }
+
+  iframe {
     border: 0;
+    width: 100%;
     height: 100%;
+  }
+
+  &.auto {
+    .wrapper {
+      width: 100%;
+      height: 100%;
+    }
+    .viewport {
+      width: 100%;
+      height: 100%;
+    }
+  }
+  &.desktop {
+    background: #999999;
+    .wrapper {
+      width: 100%;
+      height: 100%;
+    }
+    .viewport {
+      width: 1024px;
+      height: 100%;
+    }
+  }
+  &.smartphone {
+    background: #999999;
+    .wrapper {
+      width: 378px;
+      height: 794px;
+      background-image: url('../img/smartphone_portrait.png');
+      background-size: 378px;
+      background-repeat: no-repeat;
+      background-position: 0 0;
+      padding-top: 115px;
+      padding-left: 30px;
+    }
+    .viewport {
+      width: (640px)/2;
+      height: (1136px)/2;
+    }
+  }
+  &.tablet {
+    background: #999999;
+    .wrapper {
+      width: 836px;
+      height: 1282px;
+      background-image: url('../img/tablet_portrait.png');
+      background-size: 836px;
+      background-repeat: no-repeat;
+      background-position: 0 0;
+      padding-top: 122px;
+      padding-left: 30px;
+    }
+    .viewport {
+      width: (1536px)/2;
+      height: (2048px)/2;
+    }
+  }
 }
 
-.preview-toolbar {
+.sulu-preview-toolbar {
     position: fixed;
     top: 0;
     right: 0;
@@ -28,7 +94,6 @@
     font-weight: 100;
 
     .right {
-        float: right;
         background: #21272E;
         height: 100%;
         border-radius: 0 0 0 3px;
@@ -38,14 +103,16 @@
             overflow: hidden;
             text-align: center;
             padding-top: 5px;
-            border-left: 1px solid #fff;
             height: 30px;
-            font-size: 20px;
+            font-size: 18px;
+            padding-left: 2px;
             line-height: 24px;
         }
 
         .resolutions {
-            .drop-down-trigger {
+          border-right: 1px solid #fff;
+          min-width: 125px;
+          .drop-down-trigger {
                 color: #fff;
                 padding: 5px 10px;
             }
@@ -67,7 +134,7 @@
                 top: 35px;
                 left: -5px;
                 border: 0;
-                width: auto;
+                width: 100%;
             }
         }
     }
@@ -84,4 +151,16 @@
         font-size: 20px;
         line-height: 32px;
     }
+}
+
+// screen max-width = width of navigation + width of fixed content + min width of maximum-sized sidebar
+@media only screen and (max-width: 50px + $contentFixedSmallWidth + $sidebarMaxCollapseWidth) {
+  .sulu-preview-toolbar {
+    .resolutions {
+      display: none;
+    }
+    .new-window {
+      border-radius: 0 0 0 2px;
+    }
+  }
 }

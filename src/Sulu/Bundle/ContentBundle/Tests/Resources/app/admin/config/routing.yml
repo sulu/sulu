@@ -3,5 +3,6 @@ sulu_content:
     prefix: /content
 
 sulu_content_api:
+    type: rest
     resource: "@SuluContentBundle/Resources/config/routing_api.yml"
     prefix: /api
