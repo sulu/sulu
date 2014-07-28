@@ -28,14 +28,6 @@ define(function() {
             this.sandbox.on('sulu.list-toolbar.add', function() {
                 this.sandbox.emit('sulu.contacts.contacts.new');
             }, this);
-        },
-
-        bindSidebarEvents = function() {
-            this.sandbox.dom.off('#sidebar');
-            this.sandbox.dom.on('#sidebar', 'click', function(event) {
-                var id = this.sandbox.dom.data(event.currentTarget,'id');
-                this.sandbox.emit('sulu.contacts.contacts.load', id);
-            }.bind(this), '#sidebar-contact-list');
         };
 
     return {
@@ -68,7 +60,6 @@ define(function() {
         initialize: function() {
             this.render();
             bindCustomEvents.call(this);
-            bindSidebarEvents.call(this);
         },
 
         render: function() {

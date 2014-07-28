@@ -11,24 +11,21 @@
 namespace Sulu\Bundle\ContactBundle\Widgets;
 
 use Sulu\Bundle\AdminBundle\Widgets\WidgetInterface;
-use Sulu\Bundle\AdminBundle\Widgets\WidgetException;
 use Sulu\Bundle\AdminBundle\Widgets\WidgetParameterException;
 use Sulu\Bundle\AdminBundle\Widgets\WidgetEntityNotFoundException;
 use Doctrine\ORM\EntityManager;
 use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
-
 /**
  * example widget for contact controller
  *
  * @package Sulu\Bundle\ContactBundle\Widgets
  */
-class MainContact implements WidgetInterface
+class MainAccount implements WidgetInterface
 {
-
     protected $em;
 
-    protected $accountEntityName = 'SuluContactBundle:Account';
+    protected $contactEntityName = 'SuluContactBundle:Contact';
 
     function __construct(EntityManager $em)
     {
@@ -42,7 +39,7 @@ class MainContact implements WidgetInterface
      */
     public function getName()
     {
-        return 'contacts';
+        return 'contact-main-account';
     }
 
     /**
@@ -52,60 +49,64 @@ class MainContact implements WidgetInterface
      */
     public function getTemplate()
     {
-        return 'SuluContactBundle:Widgets:account.main.contact.html.twig';
+        return 'SuluContactBundle:Widgets:contact.main.account.html.twig';
     }
 
     /**
      * returns data to render template
      *
      * @param array $options
-     * @throws WidgetException
+     * @throws WidgetEntityNotFoundException
+     * @throws WidgetParameterException
      * @return array
      */
     public function getData($options)
     {
         if (!empty($options) &&
-            array_key_exists('account', $options) &&
-            !empty($options['account'])
+            array_key_exists('contact', $options) &&
+            !empty($options['contact'])
         ) {
-            $id = $options['account'];
-            $account = $this->em->getRepository(
-                $this->accountEntityName
+            $id = $options['contact'];
+            $contact = $this->em->getRepository(
+                $this->contactEntityName
             )->find($id);
 
-            if (!$account) {
+            if (!$contact) {
                 throw new WidgetEntityNotFoundException(
-                    'Entity ' . $this->accountEntityName . ' with id ' . $id . ' not found!',
+                    'Entity ' . $this->contactEntityName . ' with id ' . $id . ' not found!',
                     $id
                 );
             }
-            return $this->parseMainContact($account);
+            return $this->parseMainAccount($contact);
         } else {
             throw new WidgetParameterException(
-                'Required parameter account not found or empty!'
+                'Required parameter contact not found or empty!'
             );
         }
     }
 
     /**
-     * Returns the data needed for the account list-sidebar
+     * Parses the main account data
      *
-     * @param Account $account
+     * @param Contact $contact
      * @return array
      */
-    protected function parseMainContact(Account $account)
+    protected function parseMainAccount(Contact $contact)
     {
-        $contact = $account->getMainContact();
+        $account = $contact->getMainAccount();
 
-        if ($contact) {
+        if ($account) {
             $data = [];
-            $data['id'] = $contact->getId();
-            $data['fullName'] = $contact->getFullName();
-            $data['phone'] = $contact->getMainPhone();
-            $data['email'] = $contact->getMainEmail();
+            $data['id'] = $account->getId();
+            $data['name'] = $account->getName();
+            $data['phone'] = $account->getMainPhone();
+            $data['email'] = $account->getMainEmail();
+            $data['url'] = $account->getMainUrl();
             return $data;
         } else {
             return null;
         }
     }
+
+
 }

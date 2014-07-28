@@ -124,12 +124,13 @@ class ContactInfo implements WidgetInterface
         }
 
         if (!!$contact->getMainAccount()) {
-            $data['company']['name'] = $contact->getMainAccount()->getName();
-            $data['company']['email'] = $contact->getMainAccount()
-                ->getMainEmail();
+            $mainAccount = $contact->getMainAccount();
+            $data['company']['id'] = $mainAccount->getId();
+            $data['company']['name'] = $mainAccount->getName();
+            $data['company']['email'] = $mainAccount->getMainEmail();
 
             /* @var Address $accountAddress */
-            $accountAddress = $contact->getMainAccount()->getMainAddress();
+            $accountAddress = $mainAccount->getMainAddress();
 
             if (!!$accountAddress) {
                 $data['company']['address']['city'] = $accountAddress

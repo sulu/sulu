@@ -34,8 +34,7 @@ define([], function() {
             layout: {
                 sidebar: {
                     width: 'fixed',
-                    cssClasses: 'sidebar-padding-50',
-                    url: '/admin/widget-groups/contact-detail'
+                    cssClasses: 'sidebar-padding-50'
                 }
             },
 
@@ -70,6 +69,14 @@ define([], function() {
                 this.setHeaderBar(true);
                 setHeaderToolbar.call(this);
                 this.listenForChange();
+
+                if (!!this.options.data.id) {
+                    this.initSidebar('/admin/widget-groups/contact-detail?contact=', this.options.data.id);
+                }
+            },
+
+            initSidebar: function(url, id){
+                this.sandbox.emit('sulu.sidebar.set-widget', url + id);
             },
 
             render: function() {

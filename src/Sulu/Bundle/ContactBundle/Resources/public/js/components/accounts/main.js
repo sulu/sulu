@@ -46,7 +46,7 @@ define([
 
         initialize: function() {
             this.bindCustomEvents();
-            this.bindGeneralSidebarEvents();
+            this.bindSidebarEvents();
             this.account = null;
             this.accountType = null;
             this.accountTypes = null;
@@ -166,7 +166,7 @@ define([
         /**
          * Binds general sidebar events
          */
-        bindGeneralSidebarEvents: function(){
+        bindSidebarEvents: function(){
             this.sandbox.dom.off('#sidebar');
 
             this.sandbox.dom.on('#sidebar', 'click', function(event) {
