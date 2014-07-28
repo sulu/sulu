@@ -4,7 +4,7 @@
     "description": "Adds category functionality to sulu",
     "license": "MIT",
     "keywords": ["sulu", "categories"],
-    "version": "0.2.0",
+    "version": "0.2.1",
     "authors": [
         {
             "name": "Sulu Community",
