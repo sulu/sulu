@@ -100,6 +100,7 @@ define([
                         $element = $removeButton.closest('.' + this.propertyName + '-element');
 
                     if (this.canRemove()) {
+                        this.form.removeFields($element);
                         $element.remove();
 
                         $(form.$el).trigger('form-remove', [this.propertyName]);
