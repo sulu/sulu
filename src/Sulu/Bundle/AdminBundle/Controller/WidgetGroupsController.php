@@ -25,6 +25,11 @@ class WidgetGroupsController extends Controller
 {
     protected $widgetsHandler;
 
+    /**
+     * Sidebar for contact list view
+     * @param Request $request
+     * @return Response
+     */
     public function contactInfoAction(Request $request)
     {
         $aliases = array(
@@ -42,11 +47,16 @@ class WidgetGroupsController extends Controller
         }
     }
 
+    /**
+     * Sidebar for account list view
+     * @param Request $request
+     * @return Response
+     */
     public function accountInfoAction(Request $request)
     {
         $aliases = array(
             'sulu-contact-account-info',
-            'sulu-contact-contacts'
+            'sulu-contact-main-contact'
         );
         try {
             return new Response(
@@ -60,12 +70,15 @@ class WidgetGroupsController extends Controller
         }
     }
 
+    /**
+     * Sidebar for contact detail view
+     * @param Request $request
+     * @return Response
+     */
     public function contactDetailAction(Request $request)
     {
         $aliases = array(
-            'sulu-contact-toolbar',
-            'sulu-contact-account-address',
-            'sulu-contact-table'
+            'sulu-contact-main-account'
         );
         try {
             return new Response(
@@ -79,12 +92,15 @@ class WidgetGroupsController extends Controller
         }
     }
 
+    /**
+     * Sidebar for account detail view
+     * @param Request $request
+     * @return Response
+     */
     public function accountDetailAction(Request $request)
     {
         $aliases = array(
-            'sulu-contact-toolbar',
-            'sulu-contact-contacts',
-            'sulu-contact-table'
+            'sulu-contact-main-contact'
         );
         try {
             return new Response(

@@ -123,7 +123,7 @@ define([], function() {
          *          content: {
          *              width: 'fixed',
          *              topSpace: false,
-         *              leftSpace: false,   asdf
+         *              leftSpace: false,
          *              rightSpace: true
          *          },
          *          sidebar: {
