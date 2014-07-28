@@ -68,7 +68,7 @@ define([], function() {
 
             this.render();
 
-            this.listenForChange()
+            this.listenForChange();
 
             if (!!this.options.data.id) {
                 this.initSidebar('/admin/widget-groups/account-detail?account=', this.options.data.id);

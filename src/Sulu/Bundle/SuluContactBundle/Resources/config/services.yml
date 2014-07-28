@@ -8,11 +8,11 @@ parameters:
     sulu_contact.contact_manager.class: Sulu\Bundle\ContactBundle\Contact\ContactManager
     sulu_contact.account_manager.class: Sulu\Bundle\ContactBundle\Contact\AccountManager
 
-    sulu_contact.contact.widgets.account_address.class: Sulu\Bundle\ContactBundle\Widgets\AccountAddress
     sulu_contact.contact.widgets.account_info.class: Sulu\Bundle\ContactBundle\Widgets\AccountInfo
-    sulu_contact.contact.widgets.account_main_contact_contact.class: Sulu\Bundle\ContactBundle\Widgets\MainContact
+    sulu_contact.contact.widgets.account_main_contact.class: Sulu\Bundle\ContactBundle\Widgets\MainContact
 
     sulu_contact.contact.widgets.contact_info.class: Sulu\Bundle\ContactBundle\Widgets\ContactInfo
+    sulu_contact.contact.widgets.contact_main_account.class: Sulu\Bundle\ContactBundle\Widgets\MainAccount
 
     sulu_contact.contact.widgets.table.class: Sulu\Bundle\ContactBundle\Widgets\Table
     sulu_contact.contact.widgets.toolbar.class: Sulu\Bundle\ContactBundle\Widgets\Toolbar
@@ -59,11 +59,14 @@ services:
             class: %sulu_contact.contact_manager.class%
             arguments:
               - @doctrine.orm.entity_manager
-              
-    sulu_contact.contact.widgets.account_address:
-         class: %sulu_contact.contact.widgets.account_address.class%
+
+
+    sulu_contact.contact.widgets.main_account:
+         class: %sulu_contact.contact.widgets.contact_main_account.class%
          tags:
-             - {name: sulu.widget, alias: sulu-contact-account-address}
+             - {name: sulu.widget, alias: sulu-contact-main-account}
+         arguments:
+             - @doctrine.orm.entity_manager
  
     sulu_contact.contact.widgets.account_info:
          class: %sulu_contact.contact.widgets.account_info.class%
@@ -78,9 +81,9 @@ services:
              - {name: sulu.widget, alias: sulu-contact-contact-info}
          arguments:
              - @doctrine.orm.entity_manager
- 
-    sulu_contact.contact.widgets.contact:
-         class: %sulu_contact.contact.widgets.account_main_contact_contact.class%
+
+    sulu_contact.contact.widgets.main_contact:
+         class: %sulu_contact.contact.widgets.account_main_contact.class%
          tags:
              - {name: sulu.widget, alias: sulu-contact-main-contact}
          arguments:

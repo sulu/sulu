@@ -5,7 +5,7 @@
         {% if data.phone is not empty %}
             <span class="grey block">(<%=translate('public.phone')%>) {{ data.phone }}</span>
         {% endif %}
-        <span class="grey block"><a class="action" href="mailto:{{ data.email }}" target="_blank">{{ data.email }}</a></span>
+        <span class="grey block"><a class="action" href="mailto:{{ data.email }}">{{ data.email }}</a></span>
     </div>
 {% endif %}
 

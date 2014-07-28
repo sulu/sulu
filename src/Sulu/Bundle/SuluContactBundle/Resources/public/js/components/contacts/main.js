@@ -20,6 +20,7 @@ define([
 
         initialize: function() {
             this.bindCustomEvents();
+            this.bindSidebarEvents();
 
             if (this.options.display === 'list') {
                 this.renderList();
@@ -83,6 +84,23 @@ define([
             this.initializeDropDownListender(
                 'position-select',
                 'api/contact/positions');
+        },
+
+        /**
+         * Binds general sidebar events
+         */
+        bindSidebarEvents: function(){
+            this.sandbox.dom.off('#sidebar');
+
+            this.sandbox.dom.on('#sidebar', 'click', function(event) {
+                var id = this.sandbox.dom.data(event.currentTarget,'id');
+                this.sandbox.emit('sulu.contacts.contacts.load', id);
+            }.bind(this), '#sidebar-contact-list');
+
+            this.sandbox.dom.on('#sidebar', 'click', function(event) {
+                var id = this.sandbox.dom.data(event.currentTarget,'id');
+                this.sandbox.emit('sulu.router.navigate', 'contacts/accounts/edit:' + id + '/details');
+            }.bind(this), '#main-account');
         },
 
         /**
