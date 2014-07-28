@@ -29,7 +29,7 @@ define([], function() {
         layout: {
             sidebar: {
                 width: 'fixed',
-                    url: '/admin/widget-groups/account-detail'
+                cssClasses: 'sidebar-padding-50'
             }
         },
 
@@ -58,10 +58,19 @@ define([], function() {
             this.accountCategoryURL = 'api/account/categories';
             this.contactBySystemURL = 'api/contacts?bySystem=true';
 
+
             this.render();
             this.getAccountTypeData();
             this.setHeaderBar(true);
             this.listenForChange();
+
+            if (!!this.options.data.id) {
+                this.initSidebar('/admin/widget-groups/account-detail?account=', this.options.data.id);
+            }
+        },
+
+        initSidebar: function(url, id){
+            this.sandbox.emit('sulu.sidebar.set-widget', url + id);
         },
 
         getAccountTypeData: function() {

@@ -175,10 +175,9 @@ define([
         view: true,
 
         layout: {
-            content: {
-                width: 'max',
-                leftSpace: false,
-                rightSpace: false
+            sidebar: {
+                width: 'fixed',
+                cssClasses: 'sidebar-padding-50'
             }
         },
 
@@ -187,6 +186,14 @@ define([
         initialize: function() {
             this.render();
             bindCustomEvents.call(this);
+
+            if (!!this.options.data.id) {
+                this.initSidebar('/admin/widget-groups/account-detail?account=', this.options.data.id);
+            }
+        },
+
+        initSidebar: function(url, id){
+            this.sandbox.emit('sulu.sidebar.set-widget', url + id);
         },
 
         render: function() {

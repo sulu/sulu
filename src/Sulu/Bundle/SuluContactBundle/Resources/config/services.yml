@@ -10,10 +10,13 @@ parameters:
 
     sulu_contact.contact.widgets.account_address.class: Sulu\Bundle\ContactBundle\Widgets\AccountAddress
     sulu_contact.contact.widgets.account_info.class: Sulu\Bundle\ContactBundle\Widgets\AccountInfo
-    sulu_contact.contact.widgets.contacts.class: Sulu\Bundle\ContactBundle\Widgets\Contacts
+    sulu_contact.contact.widgets.account_main_contact_contact.class: Sulu\Bundle\ContactBundle\Widgets\MainContact
+
+    sulu_contact.contact.widgets.contact_info.class: Sulu\Bundle\ContactBundle\Widgets\ContactInfo
+
     sulu_contact.contact.widgets.table.class: Sulu\Bundle\ContactBundle\Widgets\Table
     sulu_contact.contact.widgets.toolbar.class: Sulu\Bundle\ContactBundle\Widgets\Toolbar
-    sulu_contact.contact.widgets.contact_info.class: Sulu\Bundle\ContactBundle\Widgets\ContactInfo
+
 
 services:
     sulu_contact.admin:
@@ -76,10 +79,10 @@ services:
          arguments:
              - @doctrine.orm.entity_manager
  
-    sulu_contact.contact.widgets.contacts:
-         class: %sulu_contact.contact.widgets.contacts.class%
+    sulu_contact.contact.widgets.contact:
+         class: %sulu_contact.contact.widgets.account_main_contact_contact.class%
          tags:
-             - {name: sulu.widget, alias: sulu-contact-contacts}
+             - {name: sulu.widget, alias: sulu-contact-main-contact}
          arguments:
              - @doctrine.orm.entity_manager
  

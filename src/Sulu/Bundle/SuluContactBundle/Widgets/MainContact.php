@@ -23,7 +23,7 @@ use Sulu\Bundle\ContactBundle\Entity\Contact;
  *
  * @package Sulu\Bundle\ContactBundle\Widgets
  */
-class Contacts implements WidgetInterface
+class MainContact implements WidgetInterface
 {
 
     protected $em;
@@ -52,7 +52,7 @@ class Contacts implements WidgetInterface
      */
     public function getTemplate()
     {
-        return 'SuluContactBundle:Widgets:contacts.html.twig';
+        return 'SuluContactBundle:Widgets:account.main.contact.html.twig';
     }
 
     /**
@@ -79,7 +79,7 @@ class Contacts implements WidgetInterface
                     $id
                 );
             }
-            return $this->parseContactsForAccountSidebar($account);
+            return $this->parseMainContactForAccountSidebar($account);
         } else {
             throw new WidgetParameterException(
                 'Required parameter contact not found or empty!'
@@ -88,27 +88,21 @@ class Contacts implements WidgetInterface
     }
 
     /**
-     * Returns the data neede for the account list-sidebar
+     * Returns the data needed for the account list-sidebar
      *
      * @param Account $account
      * @return array
      */
-    protected function parseContactsForAccountSidebar(Account $account)
+    protected function parseMainContactForAccountSidebar(Account $account)
     {
+        $contact = $account->getMainContact();
 
-        $maxAccounts = 2;
-        $i = 0;
-        $contacts = $account->getContacts();
-
-        if (count($contacts) > 0) {
+        if ($contact) {
             $data = [];
-            while ($i < count($contacts) && $i < $maxAccounts) {
-                $data[$i]['id'] = $contacts[$i]->getId();
-                $data[$i]['fullName'] = $contacts[$i]->getFullName();
-                $data[$i]['phone'] = $contacts[$i]->getMainPhone();
-                $data[$i]['email'] = $contacts[$i]->getMainEmail();
-                $i++;
-            }
+            $data['id'] = $contact->getId();
+            $data['fullName'] = $contact->getFullName();
+            $data['phone'] = $contact->getMainPhone();
+            $data['email'] = $contact->getMainEmail();
             return $data;
         } else {
             return null;

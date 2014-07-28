@@ -37,11 +37,11 @@ define([
         },
 
         bindSidebarEvents = function() {
-            this.sandbox.dom.off('#sidebar');
-            this.sandbox.dom.on('#sidebar', 'click', function(event) {
-                var id = this.sandbox.dom.data(event.currentTarget,'id');
-                this.sandbox.emit('sulu.contacts.accounts.load', id);
-            }.bind(this), '#sidebar-accounts-list');
+//            this.sandbox.dom.off('#sidebar');
+//            this.sandbox.dom.on('#sidebar', 'click', function(event) {
+//                var id = this.sandbox.dom.data(event.currentTarget,'id');
+//                this.sandbox.emit('sulu.contacts.accounts.load', id);
+//            }.bind(this), '#sidebar-accounts-list');
         },
 
         dataUrlAddition = '',
