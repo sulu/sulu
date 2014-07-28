@@ -279,7 +279,6 @@ define(['app-config'], function(AppConfig) {
         bindFormEvents: function() {
             this.sandbox.dom.on(this.formId, 'form-remove', function(e, propertyName) {
                 // TODO removed elements remove from config
-
                 var changes = this.sandbox.form.getData(this.formId);
                 this.initSortableBlock();
                 this.updatePreview(propertyName, changes[propertyName]);
