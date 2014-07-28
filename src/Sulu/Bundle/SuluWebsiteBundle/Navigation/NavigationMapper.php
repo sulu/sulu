@@ -77,18 +77,9 @@ class NavigationMapper implements NavigationMapperInterface
                 $children = $this->generateNavigation($content->getChildren(), $preview, $webspace, $language);
             }
             if (($preview || ($content->getPublishedState() && $content->getNavigation() !== false))) {
-                $url = $content->getPropertyByTagName('sulu.rlp')->getValue();
-                $title = $content->getPropertyByTagName('sulu.node.name')->getValue();
+                $url = $content->getResourceLocator();
+                $title = $content->getNodeName();
 
-                // FIXME copy from ContentPathTwigExtension (centralize in a own service)
-                if ($content->getNodeType() === Structure::NODE_TYPE_EXTERNAL_LINK) {
-                    // FIXME URL schema
-                    $url = 'http://' . $url;
-                } elseif ($content->getNodeType() === Structure::NODE_TYPE_INTERNAL_LINK) {
-                    $linkPage = $this->contentMapper->load($url, $webspace, $language);
-                    $url = $linkPage->getPropertyValueByTagName('sulu.rlp');
-                    $title = $linkPage->getPropertyByTagName('sulu.node.name')->getValue();
-                }
                 $result[] = new NavigationItem(
                     $content, $title, $url, $children, $content->getUuid()
                 );

@@ -59,20 +59,7 @@ class ContentPathTwigExtension extends \Twig_Extension
         if ($item instanceof NavigationItem) {
             $rl = $item->getUrl();
         } elseif ($item instanceof StructureInterface) {
-            $rl = $item->getPropertyValueByTagName('sulu.rlp');
-
-            // FIXME copy from NavigationMapper (centralize in a own service)
-            if ($item->getNodeType() === Structure::NODE_TYPE_EXTERNAL_LINK) {
-                // FIXME URL schema
-                $rl = 'http://' . $rl;
-            } elseif ($item->getNodeType() === Structure::NODE_TYPE_INTERNAL_LINK) {
-                $linkPage = $this->contentMapper->load(
-                    $rl,
-                    $this->requestAnalyzer->getCurrentWebspace()->getKey(),
-                    $this->requestAnalyzer->getCurrentLocalization()->getLocalization()
-                );
-                $rl = $linkPage->getPropertyValueByTagName('sulu.rlp');
-            }
+            $rl = $item->getResourceLocator();
         } elseif (isset($item['url'])) {
             $rl = $item['url'];
         } else {
