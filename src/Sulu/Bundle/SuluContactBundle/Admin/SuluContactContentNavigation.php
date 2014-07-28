@@ -36,6 +36,7 @@ class SuluContactContentNavigation extends ContentNavigation
         $activities->setContentType('contact');
         $activities->setContentComponent('contacts@sulucontact');
         $activities->setContentComponentOptions(array('display'=>'activities'));
+        $activities->setContentDisplay(array('edit'));
         $this->addNavigationItem($activities);
 
         /* ACCOUNTS */
@@ -53,6 +54,7 @@ class SuluContactContentNavigation extends ContentNavigation
         $activities->setContentType('account');
         $activities->setContentComponent('accounts@sulucontact');
         $activities->setContentComponentOptions(array('display'=>'activities'));
+        $activities->setContentDisplay(array('edit'));
         $this->addNavigationItem($activities);
 
         // contacts
