@@ -10,7 +10,6 @@
 
 namespace Sulu\Bundle\ContactBundle\Tests\Functional\Controller;
 
-
 use DateTime;
 use Doctrine\ORM\Tools\SchemaTool;
 use Sulu\Bundle\ContactBundle\Entity\Account;
@@ -18,6 +17,8 @@ use Sulu\Bundle\ContactBundle\Entity\AccountAddress;
 use Sulu\Bundle\ContactBundle\Entity\AccountCategory;
 use Sulu\Bundle\ContactBundle\Entity\AccountContact;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
+use Sulu\Bundle\ContactBundle\Entity\ContactTitle;
+use Sulu\Bundle\ContactBundle\Entity\Position;
 use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\AddressType;
 use Sulu\Bundle\ContactBundle\Entity\BankAccount;
@@ -185,6 +186,8 @@ class AccountControllerTest extends DatabaseTestCase
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Address'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AddressType'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AccountAddress'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ContactTitle'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Position'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ContactAddress'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\BankAccount'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Contact'),
