@@ -16338,6 +16338,7 @@ define('aura/ext/components', [],function() {
   };
 });
 
+
 /*
  * This file is part of the Husky Validation.
  *
@@ -16980,14 +16981,11 @@ define('form/validation',[
         // define validation interface
             result = {
                 validate: function(force) {
-                    var result = true, focus = false;
+                    var result = true;
                     // validate each element
                     $.each(form.elements, function(key, element) {
                         if (!element.validate(force)) {
-                            if (!focus) {
-                                element.$el.focus();
-                                focus = true;
-                            }
+                            // TODO: scroll to first invalid element you can't use $.focus because an element mustn't be an input
                             result = false;
                         }
                     });
@@ -19125,7 +19123,6 @@ define('validator/regex',[
     };
 
 });
-
 
 define("husky-validation", function(){});
 
@@ -31378,10 +31375,20 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
              * Preselects items because of passed options via javascript and the dom
              */
             preSelectItems: function() {
-                var dataSelected = this.sandbox.dom.data(this.$el, 'selected');
+                var dataSelected = this.sandbox.dom.data(this.$el, 'selected'),
+                    convertedArray = [];
                 if (!!dataSelected) {
                     this.options.preselected = this.sandbox.util.union(this.options.preselected, dataSelected);
                 }
+                // convert to an array which only contains ids as integers
+                this.sandbox.util.foreach(this.options.preselected, function(element) {
+                    if (typeof element === 'object') {
+                        convertedArray.push(element.id);
+                    } else {
+                        convertedArray.push(element);
+                    }
+                }.bind(this));
+                this.options.preselected = convertedArray;
                 this.setSelectedItems(this.options.preselected);
                 this.setSelectedItemsToData();
             },
@@ -36339,7 +36346,11 @@ define('__component__$select@husky',[], function() {
             if (this.options.editable === true) {
                 this.addDivider();
                 this.addDropdownElement(constants.editableFieldKey,
-                        this.sandbox.translate(translations.editEntries)
+                        this.sandbox.translate(translations.editEntries),
+                        false,
+                        null,
+                        null,
+                        false
                         );
             }
         },
@@ -36368,12 +36379,21 @@ define('__component__$select@husky',[], function() {
          * @param callback
          * @param updateLabel
          */
-        addDropdownElement: function(id, value, disabled, callback, updateLabel) {
+        addDropdownElement: function(id, value, disabled, callback, updateLabel, checkboxVisible) {
+            checkboxVisible = checkboxVisible !== false;
             var $item,
                 idString = (id != null) ? id.toString() : this.sandbox.util.uniqueId();
 
-            if (this.options.preSelectedElements.indexOf(idString) >= 0 || this.options.preSelectedElements.indexOf(value) >= 0) {
-                $item = this.sandbox.dom.createElement(this.template.menuElement.call(this, idString, value, 'checked', updateLabel));
+            if (this.options.preSelectedElements.indexOf(idString) >= 0 ||
+                    this.options.preSelectedElements.indexOf(value) >= 0) {
+                $item = this.sandbox.dom.createElement(this.template.menuElement.call(
+                            this,
+                            idString,
+                            value,
+                            'checked',
+                            updateLabel,
+                            true));
+
                 this.selectedElements.push(idString);
                 this.selectedElementsValues.push(value);
                 if (this.options.emitValues === true) {
@@ -36382,7 +36402,14 @@ define('__component__$select@husky',[], function() {
                     this.triggerPreSelect(value);
                 }
             } else {
-                $item = this.sandbox.dom.createElement(this.template.menuElement.call(this, idString, value, '', updateLabel));
+                $item = this.sandbox.dom.createElement(this.template.menuElement.call(
+                            this,
+                            idString,
+                            value,
+                            '',
+                            updateLabel,
+                            checkboxVisible)
+                        );
             }
 
             // store callback if callback is set
@@ -36515,7 +36542,7 @@ define('__component__$select@husky',[], function() {
         revert: function() {
             this.updateDropdown(
                     this.mergedData,
-                    this.options.preSelectedElements,
+                    this.selectedElements,
                     false
                     );
         },
@@ -36532,7 +36559,10 @@ define('__component__$select@husky',[], function() {
                         data, this.parseDataFromDom(this.domData, true));
                 this.mergedData = data.slice(0);
             }
-            this.options.preSelectedElements = preselected.map(String);
+            if (preselected !== null) {
+                this.options.preSelectedElements = preselected.map(String);
+            }
+
             this.selectedElements = [];
             this.selectedElementsValues = [];
             this.sandbox.dom.empty(this.$list);
@@ -36630,7 +36660,7 @@ define('__component__$select@husky',[], function() {
                 var mergeData = this.mergeDomAndRequestData(changedData,
                     this.parseDataFromDom(domData, true));
                 this.options.data = mergeData.slice(0);
-                this.updateDropdown(mergeData, this.options.preSelectedElements);
+                this.updateDropdown(mergeData, this.selectedElements);
                 this.sandbox.emit(EVENT_SAVED.call(this), changedData);
             }
         },
@@ -36703,7 +36733,7 @@ define('__component__$select@husky',[], function() {
             }.bind(this));
             this.updateDropdown(
                     this.options.data,
-                    this.options.preSelectedElements
+                    this.selectedElements
                     );
         },
 
@@ -37077,11 +37107,11 @@ define('__component__$select@husky',[], function() {
                     '</div>'
                 ].join('');
             },
-            menuElement: function(index, value, checked, updateLabel) {
+            menuElement: function(index, value, checked, updateLabel, checkboxVisible) {
                 var hiddenClass = '',
                     update = 'true';
 
-                if (this.options.multipleSelect === false) {
+                if (this.options.multipleSelect === false || !checkboxVisible) {
                     hiddenClass = ' hidden';
                 }
 
