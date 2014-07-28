@@ -28,7 +28,7 @@
 
     {% if data.company is defined %}
         <div class="grid-row m-bottom-30">
-            <h5 class="label"><%=translate('public.company')%></h5>
+            <h5 class="label"><%=translate('contacts.sidebar.mainCompany')%></h5>
             <h4 class="m-top-0 m-bottom-0 action" data-id="{{ data.company.id }}" id="main-account">{{ data.company.name }}</h4>
             {% if data.company.address is defined %}
                 <span class="grey block">
