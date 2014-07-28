@@ -299,6 +299,13 @@ interface StructureInterface extends \JsonSerializable
     public function getPropertyValueByTagName($tagName);
 
     /**
+     * indicates tag exists
+     * @param string $tag
+     * @return bool
+     */
+    public function hasTag($tag);
+
+    /**
      * @param StructureExtensionInterface $extension
      */
     public function addExtension(StructureExtensionInterface $extension);
@@ -340,4 +347,28 @@ interface StructureInterface extends \JsonSerializable
      * @param boolean $internal
      */
     public function setInternal($internal);
+
+    /**
+     * returns resourcelocator addicted to the type
+     * @return string
+     */
+    public function getResourceLocator();
+
+    /**
+     * returns node name addicted to the type
+     * @return string
+     */
+    public function getNodeName();
+
+    /**
+     * returns content node that holds the internal link
+     * @return StructureInterface
+     */
+    public function getInternalLinkContent();
+
+    /**
+     * set content node that holds the internal link
+     * @param StructureInterface $internalLinkContent
+     */
+    public function setInternalLinkContent($internalLinkContent);
 }

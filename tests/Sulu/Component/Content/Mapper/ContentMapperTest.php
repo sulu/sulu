@@ -23,6 +23,7 @@ use Sulu\Component\Content\ContentEvents;
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyTag;
 use Sulu\Component\Content\Section\SectionProperty;
+use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\StructureExtension\StructureExtension;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Webspace\Localization;
@@ -56,12 +57,16 @@ class ContentMapperTest extends PhpcrTestCase
             return $this->getStructureMock(5);
         } elseif ($structureKey == 'extension') {
             return $this->getStructureMock(6);
+        } elseif ($structureKey == 'internal') {
+            return $this->getStructureMock(7, false);
+        } elseif ($structureKey == 'external') {
+            return $this->getStructureMock(8, false);
         }
 
         return null;
     }
 
-    public function getStructureMock($type = 1)
+    public function getStructureMock($type = 1, $url = true)
     {
         $structureMock = $this->getMockForAbstractClass(
             '\Sulu\Component\Content\Structure',
@@ -90,12 +95,16 @@ class ContentMapperTest extends PhpcrTestCase
             )
         );
 
-        $method->invokeArgs(
-            $structureMock,
-            array(
-                new Property('url', '', 'resource_locator', false, true)
-            )
-        );
+        if ($url) {
+            $method->invokeArgs(
+                $structureMock,
+                array(
+                    new Property(
+                        'url', '', 'resource_locator', false, true, 1, 1, array(), array(new PropertyTag('sulu.rlp', 1))
+                    )
+                )
+            );
+        }
 
         if ($type == 1) {
             $method->invokeArgs(
@@ -171,6 +180,40 @@ class ContentMapperTest extends PhpcrTestCase
 
             $structureMock->addExtension(new TestExtension('test1'));
             $structureMock->addExtension(new TestExtension('test2', 'test2'));
+        } elseif ($type == 7) {
+            $method->invokeArgs(
+                $structureMock,
+                array(
+                    new Property(
+                        'internal',
+                        '',
+                        'text_line',
+                        true,
+                        true,
+                        1,
+                        1,
+                        array(),
+                        array(new PropertyTag('sulu.rlp', 1))
+                    )
+                )
+            );
+        } elseif ($type == 8) {
+            $method->invokeArgs(
+                $structureMock,
+                array(
+                    new Property(
+                        'external',
+                        '',
+                        'text_line',
+                        true,
+                        true,
+                        1,
+                        1,
+                        array(),
+                        array(new PropertyTag('sulu.rlp', 1))
+                    )
+                )
+            );
         }
 
         return $structureMock;
@@ -2561,6 +2604,41 @@ class ContentMapperTest extends PhpcrTestCase
         );
 
         $this->mapper->saveExtension($structure->getUuid(), $dataTest2DE, 'test2', 'default', 'de', 1);
+    }
+
+    public function testGetRlAndName()
+    {
+        $data1 = array(
+            'name' => 'Test',
+            'url' => '/test/test',
+            'blog' => 'Thats a good test'
+        );
+        $structure1 = $this->mapper->save($data1, 'extension', 'default', 'en', 1);
+
+        $data2 = array(
+            'name' => 'Test',
+            'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK,
+            'internal' => $structure1->getUuid()
+        );
+        $structure2 = $this->mapper->save($data2, 'internal', 'default', 'en', 1);
+
+        $this->assertEquals(Structure::NODE_TYPE_INTERNAL_LINK, $structure2->getNodeType());
+        $this->assertEquals($structure1->getUuid(), $structure2->getInternalLinkContent()->getUuid());
+
+        $this->assertEquals($structure1->getResourceLocator(), $structure2->getResourceLocator());
+        $this->assertEquals($structure1->getNodeName(), $structure2->getNodeName());
+
+        $data3 = array(
+            'name' => 'Test',
+            'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK,
+            'external' => 'www.google.at'
+        );
+        $structure3 = $this->mapper->save($data3, 'external', 'default', 'en', 1);
+
+        $this->assertEquals(Structure::NODE_TYPE_EXTERNAL_LINK, $structure3->getNodeType());
+
+        $this->assertEquals('http://www.google.at', $structure3->getResourceLocator());
+        $this->assertEquals('Test', $structure3->getNodeName());
     }
 }
 

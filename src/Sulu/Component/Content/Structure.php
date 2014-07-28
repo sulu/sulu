@@ -185,6 +185,12 @@ abstract class Structure implements StructureInterface
     private $internal;
 
     /**
+     * content node that holds the internal link
+     * @var StructureInterface
+     */
+    private $internalLinkContent;
+
+    /**
      * @param $key string
      * @param $view string
      * @param $controller string
@@ -776,6 +782,67 @@ abstract class Structure implements StructureInterface
     public function setInternal($internal)
     {
         $this->internal = $internal;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getResourceLocator()
+    {
+        if (
+            $this->getNodeType() === Structure::NODE_TYPE_INTERNAL_LINK &&
+            $this->getInternalLinkContent()->hasTag('sulu.rlp')
+        ) {
+            return $this->getInternalLinkContent()->getPropertyValueByTagName('sulu.rlp');
+        } elseif ($this->getNodeType() === Structure::NODE_TYPE_EXTERNAL_LINK) {
+            // FIXME URL schema
+            return 'http://' . $this->getPropertyByTagName('sulu.rlp')->getValue();
+        } elseif ($this->hasTag('sulu.rlp')) {
+            return $this->getPropertyValueByTagName('sulu.rlp');
+        }
+
+        return null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getNodeName()
+    {
+        if (
+            $this->getNodeType() === Structure::NODE_TYPE_INTERNAL_LINK &&
+            $this->getInternalLinkContent()->hasTag('sulu.node.name')
+        ) {
+            return $this->internalLinkContent->getPropertyValueByTagName('sulu.node.name');
+        } elseif ($this->hasTag('sulu.node.name')) {
+            return $this->getPropertyValueByTagName('sulu.node.name');
+        }
+
+        return null;
+    }
+
+    /**
+     * @return StructureInterface
+     */
+    public function getInternalLinkContent()
+    {
+        return $this->internalLinkContent;
+    }
+
+    /**
+     * @param StructureInterface $internalLinkContent
+     */
+    public function setInternalLinkContent($internalLinkContent)
+    {
+        $this->internalLinkContent = $internalLinkContent;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasTag($tag)
+    {
+        return array_key_exists($tag, $this->tags);
     }
 
     /**

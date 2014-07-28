@@ -371,6 +371,13 @@ class ContentMapper implements ContentMapperInterface
             $node->getPropertyValueWithDefault($this->properties->getName('published'), null)
         );
 
+        // load dependencies for internal links
+        $this->loadInternalLinkDependencies(
+            $structure,
+            $languageCode,
+            $webspaceKey
+        );
+
         // throw an content.node.save event
         $event = new ContentNodeEvent($node, $structure);
         $this->eventDispatcher->dispatch(ContentEvents::NODE_SAVE, $event);
@@ -959,11 +966,19 @@ class ContentMapper implements ContentMapperInterface
             }
         }
 
-        // save data of extensions
+        // load data of extensions
         foreach ($structure->getExtensions() as $extension) {
             $extension->setLanguageCode($localization, $this->languageNamespace, $this->internalPrefix);
             $extension->load($contentNode, $webspaceKey, $availableLocalization);
         }
+
+        $this->loadInternalLinkDependencies(
+            $structure,
+            $localization,
+            $webspaceKey,
+            $excludeGhost,
+            $loadGhostContent
+        );
 
         // throw an content.node.load event (disabled for now)
         //$event = new ContentNodeEvent($contentNode, $structure);
@@ -974,6 +989,37 @@ class ContentMapper implements ContentMapperInterface
         }
 
         return $structure;
+    }
+
+    /**
+     * loads dependencies for internal links
+     * @param StructureInterface $content
+     * @param string $localization
+     * @param string $webspaceKey
+     * @param bool $excludeGhost
+     * @param bool $loadGhostContent
+     */
+    private function loadInternalLinkDependencies(
+        StructureInterface $content,
+        $localization,
+        $webspaceKey,
+        $excludeGhost = true,
+        $loadGhostContent = false
+    ) {
+        if ($content->getNodeType() === Structure::NODE_TYPE_INTERNAL_LINK && $content->hasTag('sulu.rlp')) {
+            $internal = $content->getPropertyValueByTagName('sulu.rlp');
+
+            if (!empty($internal)) {
+                $content->setInternalLinkContent(
+                    $this->load(
+                        $internal,
+                        $webspaceKey,
+                        $localization,
+                        $excludeGhost
+                    )
+                );
+            }
+        }
     }
 
     /**
