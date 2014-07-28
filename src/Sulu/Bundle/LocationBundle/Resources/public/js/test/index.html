@@ -55,7 +55,8 @@
                     'country': 'Uzebekistan',
                     'long': 47.36691,
                     'lat': 9.77052,
-                    'zoom': 1
+                    'zoom': 1,
+                    'mapProvider': 'google'
                 },
                 'address_2': {
                     'title': 'Second Address',
@@ -80,7 +81,9 @@
                 baseUrl: '..',
                 paths: {
                     "map/leaflet": '../../sululocation/js/map/leaflet',
-                    "leaflet": '../../sululocation/js/vendor/leaflet/leaflet'
+                    "map/google": '../../sululocation/js/map/google',
+                    "leaflet": '../../sululocation/js/vendor/leaflet/leaflet',
+                    "async": '../../sululocation/js/vendor/requirejs-plugins/async'
                 }
             });
 
@@ -108,6 +111,7 @@
                                 },
                                 google: {
                                     title: 'Google',
+                                    api_key: null,
                                 }
                             },
                             geolocatorUrl: '/admin/sulu_location/geolocator',

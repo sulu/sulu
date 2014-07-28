@@ -15,7 +15,7 @@ class NominatimGeolocatorTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $client = new Client('http://open.mapquestapi.com/nominatim/v1/search.php', array());
+        $client = new Client();
         $this->mockPlugin = new MockPlugin();
         $client->addSubscriber($this->mockPlugin);
 

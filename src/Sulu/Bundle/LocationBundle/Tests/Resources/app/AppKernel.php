@@ -33,6 +33,12 @@ class AppKernel extends Kernel
 
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
-        $loader->load(__DIR__ . '/config/config.yml');
+        if (array_key_exists('APP_DB', $GLOBALS) &&
+            file_exists(__DIR__ . '/config/config.' . $GLOBALS['APP_DB'] . '.yml')
+        ) {
+            $loader->load(__DIR__ . '/config/config.' . $GLOBALS['APP_DB'] . '.yml');
+        } else {
+            $loader->load(__DIR__ . '/config/config.mysql.yml');
+        }
     }
 }

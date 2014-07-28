@@ -16,8 +16,7 @@ class LocationContentTest extends \PHPUnit_Framework_TestCase
         $this->phpcrNode = $this->getMock('PHPCR\NodeInterface');
         $this->suluProperty = $this->getMock('Sulu\Component\Content\PropertyInterface');
         $this->mapManager = $this->getMock('Sulu\Bundle\LocationBundle\Map\MapManager');
-        $this->locationContent = new LocationContent($this->nodeRepository, 'Foo:bar.html.twig', $this->mapManager);
-
+        $this->locationContent = new LocationContent($this->nodeRepository, 'Foo:bar.html.twig', $this->mapManager, 'some_geolocator');
     }
 
     protected function initReadTest($data)
@@ -117,7 +116,7 @@ class LocationContentTest extends \PHPUnit_Framework_TestCase
                 'bar' => 'Bar',
             ),
             'defaultProvider' => 'leaflet',
-            'geolocators' => array('leaflet'),
+            'geolocatorName' => 'some_geolocator',
         );
 
         $this->mapManager->expects($this->once())

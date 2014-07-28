@@ -24,7 +24,6 @@ class SuluLocationExtensionTest extends AbstractExtensionTestCase
                 array(
                     'title' => 'Google Maps',
                     'api_key' => null,
-                    'geolocator' => 'nominatim',
                 ),
             )
         );
@@ -34,7 +33,6 @@ class SuluLocationExtensionTest extends AbstractExtensionTestCase
                 'leaflet',
                 array(
                     'title' => 'Leaflet (OSM)',
-                    'geolocator' => 'nominatim',
                 ),
             )
         );

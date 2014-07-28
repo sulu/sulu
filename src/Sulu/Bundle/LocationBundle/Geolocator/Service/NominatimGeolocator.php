@@ -35,7 +35,6 @@ class NominatimGeolocator implements GeolocatorInterface
                 'format' => 'json',
                 'addressdetails' => 1,
             ),
-            'debug' => true
         ));
 
         $this->client->send($request);
@@ -47,7 +46,6 @@ class NominatimGeolocator implements GeolocatorInterface
             ));
         }
 
-        file_put_contents('foo', (string) $response->getBody());
         $results = $request->getResponse()->json();
         $response = new GeolocatorResponse();
 

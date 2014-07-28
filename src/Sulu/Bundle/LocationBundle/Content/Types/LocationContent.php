@@ -37,11 +37,17 @@ class LocationContent extends ComplexContentType
      */
     private $mapManager;
 
-    function __construct(NodeRepositoryInterface $nodeRepository, $template, MapManager $mapManager)
+    /**
+     * @var string
+     */
+    private $geolocatorName;
+
+    function __construct(NodeRepositoryInterface $nodeRepository, $template, MapManager $mapManager, $geolocatorName)
     {
         $this->nodeRepository = $nodeRepository;
         $this->template = $template;
         $this->mapManager = $mapManager;
+        $this->geolocatorName = $geolocatorName;
     }
 
     /**
@@ -66,7 +72,7 @@ class LocationContent extends ComplexContentType
             ),
             'mapProviders' => $this->mapManager->getProvidersAsArray(),
             'defaultProvider' => $this->mapManager->getDefaultProviderName(),
-            'geolocators' => array('leaflet'),
+            'geolocatorName' => $this->geolocatorName,
         );
     }
 

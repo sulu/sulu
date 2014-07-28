@@ -12,7 +12,7 @@
     "tests"
   ],
   "dependencies": {
-    "leaflet": "0.7.3"
+    "leaflet": "0.7.3",
+    "requirejs-plugins": "~1.0.2"
   }
 }
-

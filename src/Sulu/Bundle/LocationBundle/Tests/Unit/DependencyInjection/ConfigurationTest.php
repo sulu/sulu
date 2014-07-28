@@ -15,20 +15,22 @@ class ConfigurationTest extends AbstractConfigurationTestCase
         ),
         'enabled_providers' => array('leaflet', 'google'),
         'default_provider' => 'leaflet',
+        'geolocator' => 'nominatim',
         'providers' => array(
             'leaflet' => array(
                 'title' => 'Leaflet (OSM)',
-                'geolocator' => 'nominatim',
             ),
             'google' => array(
                 'title' => 'Google Maps',
                 'api_key' => '',
-                'geolocator' => 'nominatim',
             ),
         ),
         'geolocators' => array(
             'nominatim' => array(
                 'endpoint' => 'http://open.mapquestapi.com/nominatim/v1/search.php',
+            ),
+            'google' => array(
+                'api_key' => '',
             ),
         ),
     );
