@@ -17,7 +17,7 @@ use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Theme;
 use Sulu\Component\Webspace\Webspace;
 
-class PortalRouteProviderTest extends \PHPUnit_Framework_TestCase
+class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
 {
     public function testStateTest()
     {
@@ -42,7 +42,7 @@ class PortalRouteProviderTest extends \PHPUnit_Framework_TestCase
         $contentMapper = $this->getContentMapperMock($structure);
         $contentMapper->expects($this->any())->method('loadByResourceLocator')->will($this->returnValue($structure));
 
-        $portalRouteProvider = new PortalRouteProvider($contentMapper, $requestAnalyzer, $activeTheme);
+        $portalRouteProvider = new ContentRouteProvider($contentMapper, $requestAnalyzer, $activeTheme);
 
         $request = $this->getRequestMock($path);
 
@@ -78,7 +78,7 @@ class PortalRouteProviderTest extends \PHPUnit_Framework_TestCase
         $contentMapper = $this->getContentMapperMock($structure);
         $contentMapper->expects($this->any())->method('loadByResourceLocator')->will($this->returnValue($structure));
 
-        $portalRouteProvider = new PortalRouteProvider($contentMapper, $requestAnalyzer, $activeTheme);
+        $portalRouteProvider = new ContentRouteProvider($contentMapper, $requestAnalyzer, $activeTheme);
 
         $request = $this->getRequestMock($path);
 
@@ -112,7 +112,7 @@ class PortalRouteProviderTest extends \PHPUnit_Framework_TestCase
         $contentMapper = $this->getContentMapperMock($structure);
         $contentMapper->expects($this->any())->method('loadByResourceLocator')->will($this->returnValue($structure));
 
-        $portalRouteProvider = new PortalRouteProvider($contentMapper, $requestAnalyzer, $activeTheme);
+        $portalRouteProvider = new ContentRouteProvider($contentMapper, $requestAnalyzer, $activeTheme);
 
         $request = $this->getRequestMock($path);
 
@@ -148,7 +148,7 @@ class PortalRouteProviderTest extends \PHPUnit_Framework_TestCase
         $contentMapper = $this->getContentMapperMock($structure);
         $contentMapper->expects($this->any())->method('loadByResourceLocator')->will($this->returnValue($structure));
 
-        $portalRouteProvider = new PortalRouteProvider($contentMapper, $requestAnalyzer, $activeTheme);
+        $portalRouteProvider = new ContentRouteProvider($contentMapper, $requestAnalyzer, $activeTheme);
 
         $request = $this->getRequestMock($path);
 
@@ -188,7 +188,7 @@ class PortalRouteProviderTest extends \PHPUnit_Framework_TestCase
         $contentMapper = $this->getContentMapperMock($structure);
         $contentMapper->expects($this->any())->method('loadByResourceLocator')->will($this->returnValue(null));
 
-        $portalRouteProvider = new PortalRouteProvider($contentMapper, $requestAnalyzer, $activeTheme);
+        $portalRouteProvider = new ContentRouteProvider($contentMapper, $requestAnalyzer, $activeTheme);
 
         $request = $this->getRequestMock($path);
 
@@ -227,7 +227,7 @@ class PortalRouteProviderTest extends \PHPUnit_Framework_TestCase
             $this->throwException(new ResourceLocatorNotFoundException())
         );
 
-        $portalRouteProvider = new PortalRouteProvider($contentMapper, $requestAnalyzer, $activeTheme);
+        $portalRouteProvider = new ContentRouteProvider($contentMapper, $requestAnalyzer, $activeTheme);
 
         $request = $this->getRequestMock($path);
 
@@ -269,7 +269,7 @@ class PortalRouteProviderTest extends \PHPUnit_Framework_TestCase
         $contentMapper = $this->getContentMapperMock($structure);
         $contentMapper->expects($this->any())->method('loadByResourceLocator')->will($this->returnValue(null));
 
-        $portalRouteProvider = new PortalRouteProvider($contentMapper, $requestAnalyzer, $activeTheme);
+        $portalRouteProvider = new ContentRouteProvider($contentMapper, $requestAnalyzer, $activeTheme);
 
         $request = $this->getRequestMock($path);
 
