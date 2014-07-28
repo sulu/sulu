@@ -164,10 +164,6 @@ class CategoryManager implements CategoryManagerInterface
      */
     public function findByIds(array $ids)
     {
-        if (empty($ids)) {
-            return null;
-        }
-
         return $this->categoryRepository->findCategoryByIds($ids);
     }
 

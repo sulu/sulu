@@ -92,6 +92,10 @@ class CategoryRepository extends EntityRepository implements CategoryRepositoryI
     public function findCategoryByIds(array $ids)
     {
         try {
+            if (empty($ids)) {
+                throw new NoResultException();
+            }
+
             $qb = $this->getCategoryQuery();
 
             $qb->where($qb->expr()->in('category.id', ':ids'));
@@ -99,7 +103,7 @@ class CategoryRepository extends EntityRepository implements CategoryRepositoryI
 
             return $qb->getQuery()->getResult();
         } catch (NoResultException $ex) {
-            return null;
+            return array();
         }
     }
 
