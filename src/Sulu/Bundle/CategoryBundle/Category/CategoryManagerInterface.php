@@ -26,9 +26,11 @@ interface CategoryManagerInterface
      * if no arguments passed returns all categories
      * @param int $parent the id of the parent to filter for
      * @param int $depth the depth-level to filter for
+     * @param string|null $sortBy column name to sort the categories by
+     * @param string|null $sortOrder sort order
      * @return Category[]
      */
-    public function find($parent = null, $depth = null);
+    public function find($parent = null, $depth = null, $sortBy = null, $sortOrder = null);
 
     /**
      * Returns a category with a given id
@@ -36,6 +38,13 @@ interface CategoryManagerInterface
      * @return Category
      */
     public function findById($id);
+
+    /**
+     * Returns the categories with the given ids
+     * @param $ids
+     * @return Category
+     */
+    public function findByIds(array $ids);
 
     /**
      * Creates a new category or overrides an existing one
