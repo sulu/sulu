@@ -17,8 +17,10 @@ define([
     var constants = {
             relationFormSelector: '#contact-relation-form',
             contactSelector: '#contact-field',
-            positionSelector: '#position'
+            positionSelector: '#company-contact-position',
         },
+
+        companyPosition = null,
 
         bindCustomEvents = function() {
             // navigate to edit contact
@@ -51,6 +53,11 @@ define([
             // when radio button is clicked
             this.sandbox.on('husky.datagrid.radio.selected', function(id, columName) {
                 this.sandbox.emit('sulu.contacts.accounts.contacts.set-main', id);
+            }, this);
+
+            // when a position is selected in the company overlay
+            this.sandbox.on('husky.select.company-position-select.selected.item', function(id) {
+                companyPosition = id;
             }, this);
         },
 
@@ -96,6 +103,26 @@ define([
                     }
                 }
             ]);
+
+            this.sandbox.util.load('/admin/api/contact/positions')
+                .then(function(response) {
+                    this.sandbox.start([
+                        {
+                            name: 'select@husky',
+                            options: {
+                                el: constants.positionSelector,
+                                instanceName: 'company-position-select',
+                                valueName: 'position',
+                                returnValue: 'id',
+                                data: response._embedded.positions,
+                                noNewValues: true
+                            }
+                        }
+                    ]);
+                }.bind(this))
+                .fail(function(textStatus, error) {
+                    this.sandbox.logger.error(textStatus, error);
+                }.bind(this));
 
             this.data = data;
         },
@@ -161,13 +188,12 @@ define([
             ];
         },
 
-    // adds a new contact relation
+        // adds a new contact relation
         addContactRelation = function() {
             var contactInput = this.sandbox.dom.find(constants.contactSelector + ' input', constants.relationFormSelector),
-                id = this.sandbox.dom.data(contactInput, 'id'),
-                position = this.sandbox.dom.val(this.sandbox.dom.find(constants.positionSelector, constants.relationFormSelector));
+                id = this.sandbox.dom.data(contactInput, 'id');
             if (!!id) {
-                this.sandbox.emit('sulu.contacts.accounts.contact.save', id, position);
+                this.sandbox.emit('sulu.contacts.accounts.contact.save', id, companyPosition);
             }
         };
 

@@ -419,14 +419,29 @@ class AccountController extends AbstractContactController
             $accountContact->setMain($contact->getAccountContacts()->isEmpty());
             $accountContact->setAccount($account);
             $accountContact->setContact($contact);
-            $accountContact->setPosition($request->get('position'));
-            $contact->setCurrentPosition($request->get('position'));
+
+            // Set position on contact
+            $position = $this->getPosition($request->get('position'));
+            $accountContact->setPosition($position);
+            $contact->setCurrentPosition($position);
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($accountContact);
             $em->flush();
 
-            $view = $this->view($contact, 200);
+            $isMainContact = false;
+            if ($account->getMainContact()) {
+                $isMainContact = $account->getMainContact()->getId() === $contact->getId();
+            }
+
+            $contactArray = array(
+                'id' => $contact->getId(),
+                'fullName' => $contact->getFullName(),
+                'position' => $position->getPosition(),
+                'isMainContact' => $isMainContact
+            );
+
+            $view = $this->view($contactArray, 200);
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
         } catch (RestException $exc) {
