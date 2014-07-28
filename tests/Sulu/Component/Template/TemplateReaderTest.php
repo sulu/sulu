@@ -22,7 +22,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
             'key' => 'template',
             'view' => 'page.html.twig',
             'controller' => 'SuluContentBundle:Default:index',
-            'cacheLifetime' => 2400,
+            'cacheLifetime' => '2400',
             'properties' => array(
                 'title' => array(
                     'name' => 'title',
@@ -32,6 +32,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'colspan' => null,
                     'cssClass' => null,
                     'mandatory' => true,
+                    'multilingual' => true,
                     'tags' => array(
                         array(
                             'name' => 'sulu.node.name',
@@ -66,6 +67,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'colspan' => null,
                     'cssClass' => null,
                     'mandatory' => true,
+                    'multilingual' => true,
                     'tags' => array(
                         array(
                             'name' => 'sulu.rlp.part',
@@ -83,6 +85,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'colspan' => null,
                     'cssClass' => null,
                     'mandatory' => false,
+                    'multilingual' => true,
                     'tags' => array(
                         array(
                             'name' => 'sulu.node.title',
@@ -100,12 +103,26 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'colspan' => null,
                     'cssClass' => null,
                     'mandatory' => false,
+                    'multilingual' => true,
                     'tags' => array(
                         array(
                             'name' => 'sulu.node.title',
                             'priority' => null
                         )
                     ),
+                    'params' => array(),
+                    'meta' => array()
+                ),
+                'article_number' => array(
+                    'name' => 'article_number',
+                    'type' => 'text_line',
+                    'minOccurs' => null,
+                    'maxOccurs' => null,
+                    'colspan' => null,
+                    'cssClass' => null,
+                    'mandatory' => false,
+                    'multilingual' => false,
+                    'tags' => array(),
                     'params' => array(),
                     'meta' => array()
                 ),
@@ -116,7 +133,8 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'maxOccurs' => 2,
                     'colspan' => null,
                     'cssClass' => null,
-                    'mandatory' => null,
+                    'mandatory' => false,
+                    'multilingual' => true,
                     'tags' => array(),
                     'params' => array(
                         array(
@@ -199,6 +217,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'colspan' => null,
                     'cssClass' => null,
                     'mandatory' => true,
+                    'multilingual' => true,
                     'tags' => array(
                         array(
                             'name' => 'sulu.node.name',
@@ -220,6 +239,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'colspan' => null,
                     'cssClass' => null,
                     'mandatory' => true,
+                    'multilingual' => true,
                     'tags' => array(
                         array(
                             'name' => 'sulu.rlp.part',
@@ -237,6 +257,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'colspan' => null,
                     'cssClass' => null,
                     'mandatory' => true,
+                    'multilingual' => true,
                     'tags' => array(),
                     'params' => array(),
                     'meta' => array()
@@ -275,6 +296,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                     'colspan' => null,
                                     'cssClass' => null,
                                     'mandatory' => true,
+                                    'multilingual' => true,
                                     'tags' => array(),
                                     'params' => array(),
                                     'meta' => array()
@@ -283,6 +305,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                     'name' => 'article1.1',
                                     'type' => 'text_area',
                                     'mandatory' => true,
+                                    'multilingual' => true,
                                     'minOccurs' => 2,
                                     'maxOccurs' => null,
                                     'colspan' => null,
@@ -333,6 +356,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                                                     'colspan' => null,
                                                                     'cssClass' => null,
                                                                     'mandatory' => true,
+                                                                    'multilingual' => true,
                                                                     'tags' => array(
                                                                         array(
                                                                             'name' => 'sulu.node.title',
@@ -350,6 +374,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                                                     'colspan' => null,
                                                                     'cssClass' => null,
                                                                     'mandatory' => true,
+                                                                    'multilingual' => true,
                                                                     'tags' => array(),
                                                                     'params' => array(),
                                                                     'meta' => array()
@@ -379,6 +404,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                                                                     'colspan' => null,
                                                                                     'cssClass' => null,
                                                                                     'mandatory' => true,
+                                                                                    'multilingual' => true,
                                                                                     'tags' => array(),
                                                                                     'params' => array(),
                                                                                     'meta' => array()
@@ -416,6 +442,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                                                     'colspan' => null,
                                                                     'cssClass' => null,
                                                                     'mandatory' => true,
+                                                                    'multilingual' => true,
                                                                     'tags' => array(),
                                                                     'params' => array(),
                                                                     'meta' => array()
@@ -440,6 +467,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'colspan' => null,
                     'cssClass' => null,
                     'mandatory' => true,
+                    'multilingual' => true,
                     'tags' => array(),
                     'params' => array(),
                     'meta' => array()
@@ -484,6 +512,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'colspan' => null,
                     'cssClass' => null,
                     'mandatory' => true,
+                    'multilingual' => true,
                     'tags' => array(
                         array(
                             'name' => 'sulu.node.name',
@@ -505,6 +534,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'colspan' => null,
                     'cssClass' => null,
                     'mandatory' => true,
+                    'multilingual' => true,
                     'tags' => array(
                         array(
                             'name' => 'sulu.rlp.part',
@@ -548,8 +578,9 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                     'colspan' => null,
                                     'cssClass' => null,
                                     'mandatory' => true,
-                                    'tags'=>array(),
-                                    'params'=>array(),
+                                    'multilingual' => true,
+                                    'tags' => array(),
+                                    'params' => array(),
                                     'meta' => array()
                                 ),
                                 'article' => array(
@@ -560,8 +591,9 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                     'colspan' => null,
                                     'cssClass' => null,
                                     'mandatory' => true,
-                                    'tags'=>array(),
-                                    'params'=>array(),
+                                    'multilingual' => true,
+                                    'tags' => array(),
+                                    'params' => array(),
                                     'meta' => array()
                                 )
                             )
@@ -578,8 +610,9 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                     'colspan' => null,
                                     'cssClass' => null,
                                     'mandatory' => true,
-                                    'tags'=>array(),
-                                    'params'=>array(),
+                                    'multilingual' => true,
+                                    'tags' => array(),
+                                    'params' => array(),
                                     'meta' => array()
                                 ),
                                 'name' => array(
@@ -590,8 +623,9 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                     'colspan' => null,
                                     'cssClass' => null,
                                     'mandatory' => true,
-                                    'tags'=>array(),
-                                    'params'=>array(),
+                                    'multilingual' => true,
+                                    'tags' => array(),
+                                    'params' => array(),
                                     'meta' => array()
                                 ),
                                 'article' => array(
@@ -602,8 +636,9 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                     'colspan' => null,
                                     'cssClass' => null,
                                     'mandatory' => true,
-                                    'tags'=>array(),
-                                    'params'=>array(),
+                                    'multilingual' => true,
+                                    'tags' => array(),
+                                    'params' => array(),
                                     'meta' => array()
                                 )
                             )
@@ -618,6 +653,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'colspan' => null,
                     'cssClass' => null,
                     'mandatory' => true,
+                    'multilingual' => true,
                     'tags' => array(),
                     'params' => array(),
                     'meta' => array()
@@ -640,7 +676,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
             'key' => 'template',
             'view' => 'page.html.twig',
             'controller' => 'SuluContentBundle:Default:index',
-            'cacheLifetime' => 2400,
+            'cacheLifetime' => '2400',
             'properties' => array(
                 'title' => array(
                     'name' => 'title',
@@ -649,7 +685,8 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'maxOccurs' => null,
                     'colspan' => 6,
                     'cssClass' => null,
-                    'mandatory' => 1,
+                    'mandatory' => true,
+                    'multilingual' => true,
                     'tags' => array(
                         '0' => array(
                             'name' => 'sulu.node.name',
@@ -701,6 +738,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                             'colspan' => 6,
                             'cssClass' => 'test',
                             'mandatory' => true,
+                            'multilingual' => true,
                             'tags' => array(
                                 '0' => Array
                                 (
@@ -720,6 +758,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                             'colspan' => 6,
                             'cssClass' => null,
                             'mandatory' => null,
+                            'multilingual' => true,
                             'tags' => array(
                                 '0' => Array
                                 (
@@ -766,6 +805,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                             'colspan' => null,
                                             'cssClass' => null,
                                             'mandatory' => null,
+                                            'multilingual' => true,
                                             'tags' => array(),
                                             'params' => array(),
                                             'meta' => array()
@@ -784,6 +824,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'colspan' => null,
                     'cssClass' => null,
                     'mandatory' => false,
+                    'multilingual' => true,
                     'tags' => array(
                         '0' => array(
                             'name' => 'sulu.node.title',
@@ -801,6 +842,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'colspan' => 6,
                     'cssClass' => null,
                     'mandatory' => false,
+                    'multilingual' => true,
                     'tags' => array(),
                     'params' => array(
                         '0' => array(
@@ -860,5 +902,4 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
 
         return $aReturn;
     }
-
 }

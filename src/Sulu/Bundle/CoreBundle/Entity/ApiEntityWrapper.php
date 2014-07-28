@@ -3,7 +3,12 @@ namespace Sulu\Bundle\CoreBundle\Entity;
 
 use JMS\Serializer\Annotation\Exclude;
 
-class ApiEntityWrapper extends ApiEntity {
+/**
+ * The abstract base class for an API object, which wraps another entity
+ * @package Sulu\Bundle\CoreBundle\Entity
+ * @deprecated
+ */
+class ApiEntityWrapper {
 
     /**
      * the entity which is wrapped by this class

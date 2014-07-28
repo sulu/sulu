@@ -334,4 +334,34 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('ca', $localizations[1]->getCountry());
         $this->assertEquals(null, $localizations[1]->getShadow());
     }
+
+    public function testSingleLanguage()
+    {
+        $webspace = $this->loader->load(
+            __DIR__ . '/../../../../Resources/DataFixtures/Webspace/valid/sulu.io_singleLanguage.xml'
+        );
+
+        $localizations = $webspace->getLocalizations();
+
+        $this->assertEquals('en', $localizations[0]->getLanguage());
+        $this->assertNull($localizations[0]->getCountry());
+        $this->assertNull($localizations[0]->getShadow());
+        $this->assertNull($localizations[0]->getParent());
+
+        $prodUrl = $webspace->getPortals()[0]->getEnvironments()[0]->getUrls()[0];
+
+        $this->assertEquals('sulu-single-language.at', $prodUrl->getUrl());
+        $this->assertEquals('en', $prodUrl->getLanguage());
+        $this->assertNull($prodUrl->getCountry());
+        $this->assertNull($prodUrl->getRedirect());
+        $this->assertNull($prodUrl->getSegment());
+
+        $devUrl = $webspace->getPortals()[0]->getEnvironments()[1]->getUrls()[0];
+
+        $this->assertEquals('sulu-single-language.lo', $devUrl->getUrl());
+        $this->assertEquals('en', $devUrl->getLanguage());
+        $this->assertNull($devUrl->getCountry());
+        $this->assertNull($devUrl->getRedirect());
+        $this->assertNull($devUrl->getSegment());
+    }
 }

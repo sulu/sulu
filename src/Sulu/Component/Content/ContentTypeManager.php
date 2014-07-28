@@ -14,41 +14,61 @@ use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * manages content types
+ * ContentTypeManager
+ *
+ * Uses an alias => service ID map to fetch content types from
+ * the dependency injection container.
+ *
  * @package Sulu\Component\Content
  */
 class ContentTypeManager extends ContainerAware implements ContentTypeManagerInterface
 {
-
     /**
-     * @var string The prefix to load the content from
-     * Default value is given in configuration and set to: 'sulu.content.types.'
+     * @var array
      */
-    private $prefix;
+    protected $aliasServiceIdMap = array();
 
     /**
      * @param ContainerInterface $container
-     * @param string $prefix
      */
-    public function __construct(ContainerInterface $container, $prefix)
+    public function __construct(ContainerInterface $container)
     {
         $this->setContainer($container);
-        $this->prefix = $prefix;
+    }
+
+    /**
+     * Map a content type alias to a service ID
+     *
+     * @param string $alias - Alias for content type, e.g. media
+     * @param string $serviceId - ID of corresponding service in the DI container
+     */
+    public function mapAliasToServiceId($alias, $serviceId)
+    {
+        $this->aliasServiceIdMap[$alias] = $serviceId;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function get($contentTypeName)
+    public function get($alias)
     {
-        return $this->container->get($this->prefix . $contentTypeName);
+        if (!isset($this->aliasServiceIdMap[$alias])) {
+            throw new \InvalidArgumentException(sprintf(
+                'Content type with alias "%s" has not been registered.',
+                $alias
+            ));
+        }
+
+        $serviceId = $this->aliasServiceIdMap[$alias];
+
+        return $this->container->get($serviceId);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function has($contentTypeName)
+    public function has($alias)
     {
-        return $this->container->has($this->prefix . $contentTypeName);
+        return isset($this->aliasServiceIdMap[$alias]);
     }
 }

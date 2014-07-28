@@ -12,27 +12,49 @@ namespace Sulu\Component\Content;
 
 class ContentTypeManagerTest extends \PHPUnit_Framework_TestCase
 {
+    protected $container;
+
+    public function setUp()
+    {
+        $this->container = $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface');
+        $this->manager = new ContentTypeManager($this->container);
+
+        $this->manager->mapAliasToServiceId('content_1.alias', 'content_1.service.id');
+        $this->manager->mapAliasToServiceId('content_2.alias', 'content_2.service.id');
+    }
+
     public function testGetContentType()
     {
-        $container = $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface');
-        $container->expects($this->once())->method('get')->with('foo.bar');
-        $manager = new ContentTypeManager($container, 'foo.');
-        $manager->get('bar');
+        $this->container->expects($this->once())
+            ->method('get')
+            ->with('content_1.service.id');
+
+        $this->manager->get('content_1.alias');
     }
 
-    public function testHasContentType()
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage has not been registered
+     */
+    public function testGetContentTypeNotRegistered()
     {
-        $container = $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface');
-        $container->expects($this->once())->method('has')->with('foo.bar')->will($this->returnValue(true));
-        $manager = new ContentTypeManager($container, 'foo.');
-        $this->assertTrue($manager->has('bar'));
+        $this->manager->get('invalid.alias');
     }
 
-    public function testHasFalseContentType()
+    public function provideHas()
     {
-        $container = $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface');
-        $container->expects($this->once())->method('has')->with('foo.x')->will($this->returnValue(false));
-        $manager = new ContentTypeManager($container, 'foo.');
-        $this->assertFalse($manager->has('x'));
+        return array(
+            array('content_1.alias', true),
+            array('invalid.alias', false),
+        );
+    }
+
+    /**
+     * @dataProvider provideHas
+     */
+    public function testHas($alias, $expected)
+    {
+        $res = $this->manager->has($alias);
+        $this->assertEquals($expected, $res);
     }
 }

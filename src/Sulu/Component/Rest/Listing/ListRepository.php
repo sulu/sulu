@@ -14,6 +14,11 @@ use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityRepository;
 
+/**
+ * Class ListRepository
+ * @package Sulu\Component\Rest\Listing
+ * @deprecated
+ */
 class ListRepository extends EntityRepository
 {
     /**

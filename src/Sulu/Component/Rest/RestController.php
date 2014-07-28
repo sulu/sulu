@@ -11,12 +11,11 @@
 namespace Sulu\Component\Rest;
 
 use FOS\RestBundle\Controller\FOSRestController;
-use Sulu\Bundle\AdminBundle\UserManager\CurrentUserDataInterface;
-use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\Listing\ListRestHelper;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Abstract Controller for extracting some required rest functionality
@@ -28,7 +27,13 @@ abstract class RestController extends FOSRestController
      * The type of the entity, which is handled by the concrete controller
      * @var string
      */
-    protected $entityName;
+    protected static $entityName;
+
+    /**
+     * The key of the entity which will be used in the embedded part of the REST Response
+     * @var string
+     */
+    protected static $entityKey;
 
     /**
      * contains all attributes that are not sortable
@@ -37,8 +42,16 @@ abstract class RestController extends FOSRestController
     protected $unsortable = array();
 
     /**
+     * contains all attributes that are sortable
+     * if defined unsortable gets ignored
+     * @var array
+     */
+    protected $sortable = array();
+
+    /**
      * contains all fields that should be excluded from api
      * @var array
+     * @deprecated
      */
     protected $fieldsExcluded = array();
 
@@ -64,6 +77,7 @@ abstract class RestController extends FOSRestController
     /**
      * contains all field relations
      * @var array
+     * @deprecated
      */
     protected $fieldsRelations = array();
 
@@ -76,6 +90,7 @@ abstract class RestController extends FOSRestController
     /**
      * contains custom translation keys like array(fieldName => translationKey)
      * @var array
+     * @deprecated
      */
     protected $fieldsTranslationKeys = array();
 
@@ -99,6 +114,7 @@ abstract class RestController extends FOSRestController
 
     /**
      * @var array contains the widths of the fields
+     * @deprecated
      */
     protected $fieldsWidth = array();
 
@@ -125,8 +141,28 @@ abstract class RestController extends FOSRestController
     protected $bundlePrefix = '';
 
     /**
+     * Returns the language.
+     *
+     * @param Request $request
+     * @return mixed
+     */
+    protected function getLocale($request)
+    {
+        $lang = $request->get('locale');
+        if (!$lang) {
+            if ($this->getUser()) {
+                $lang = $this->getUser()->getLocale() ? : $this->container->getParameter('locale');
+            } else {
+                $lang = $this->container->getParameter('locale');
+            }
+        }
+        return $lang;
+    }
+
+    /**
      * Creates a response which contains all fields of the current entity
      * @return \Symfony\Component\HttpFoundation\Response
+     * @deprecated
      */
     public function responseFields()
     {
@@ -138,7 +174,7 @@ abstract class RestController extends FOSRestController
             /** @var ListRestHelper $listHelper */
             $listHelper = $this->get('sulu_core.list_rest_helper');
 
-            $fields = $listHelper->getAllFields($this->entityName);
+            $fields = $listHelper->getAllFields(self::$entityName);
 
             // excluded fields
             $fields = array_diff($fields, $this->fieldsExcluded);
@@ -199,7 +235,7 @@ abstract class RestController extends FOSRestController
      * @param $fieldsHidden
      * @return array
      */
-    private function addFieldAttributes($fields, $fieldsHidden)
+    protected function addFieldAttributes($fields, $fieldsHidden = array())
     {
         // add translations
         $fieldsArray = array();
@@ -254,6 +290,7 @@ abstract class RestController extends FOSRestController
      * @param Function $entityFilter function for filtering entities
      * @param array $joinConditions to specify join conditions
      * @return \Symfony\Component\HttpFoundation\Response
+     * @deprecated
      */
     protected function responseList($where = array(), $entityName = null, $entityFilter = null, $joinConditions = array())
     {
@@ -261,7 +298,7 @@ abstract class RestController extends FOSRestController
         $listHelper = $this->get('sulu_core.list_rest_helper');
 
         if (is_null($entityName)) {
-            $entityName = $this->entityName;
+            $entityName = self::$entityName;
         }
 
         $entities = $listHelper->find($entityName, $where, $joinConditions);
@@ -279,7 +316,7 @@ abstract class RestController extends FOSRestController
             'total' => sizeof($entities),
             'page' => $listHelper->getPage(),
             'pages' => $pages,
-            'pageSize' => $listHelper->getLimit(),
+            'limit' => $listHelper->getLimit(),
             'numberOfAll' => $numberOfAll
         );
 
@@ -289,12 +326,14 @@ abstract class RestController extends FOSRestController
     /**
      * creates HAL conform response-array out of an entity collection
      * @param array $entities
+     * @param boolean $returnListLinks
      * @return array
+     * @deprecated
      */
-    protected function createHalResponse(array $entities)
+    protected function createHalResponse(array $entities, $returnListLinks = false)
     {
         return array(
-            '_links' => $this->getHalLinks($entities),
+            '_links' => $this->getHalLinks($entities, 1, $returnListLinks),
             '_embedded' => $entities,
             'total' => count($entities),
         );
@@ -306,6 +345,7 @@ abstract class RestController extends FOSRestController
      * @param int $pages
      * @param bool $returnListLinks
      * @return array
+     * @deprecated
      */
     protected function getHalLinks(array $entities, $pages = 1, $returnListLinks = false)
     {
@@ -315,7 +355,7 @@ abstract class RestController extends FOSRestController
         $path = $this->getRequest()->getRequestUri();
         $path = $this->replaceOrAddUrlString(
             $path,
-            $listHelper->getParameterName('pageSize') . '=',
+            'limit=',
             $listHelper->getLimit(),
             false
         );
@@ -338,23 +378,28 @@ abstract class RestController extends FOSRestController
         // create sort links
         $sortable = array();
         if ($returnListLinks && count($entities) > 0) {
-            $keys = array_keys($entities[0]);
+            $keys = array();
+            if (sizeof($this->sortable) > 0) {
+                $keys = $this->sortable;
+            } elseif (is_array($entities[0])) {
+                $keys = array_keys($entities[0]);
+            }
             // remove page
             $sortUrl = $this->replaceOrAddUrlString(
                 $path,
-                $listHelper->getParameterName('page') . '=',
+                'page=',
                 null
             );
             foreach ($keys as $key) {
                 if (!in_array($key, $this->unsortable)) {
                     $sortPath = $this->replaceOrAddUrlString(
                         $sortUrl,
-                        $listHelper->getParameterName('sortBy') . '=',
+                        'sortBy=',
                         $key
                     );
                     $sortable[$key] = $this->replaceOrAddUrlString(
                         $sortPath,
-                        $listHelper->getParameterName('sortOrder') . '=',
+                        'sortOrder=',
                         '{sortOrder}'
                     );
                 }
@@ -364,57 +409,57 @@ abstract class RestController extends FOSRestController
         // create search link
         $searchLink = $this->replaceOrAddUrlString(
             $path,
-            $listHelper->getParameterName('search') . '=',
+            'search=',
             '{searchString}'
         );
 
         $searchLink = $this->replaceOrAddUrlString(
             $searchLink,
-            $listHelper->getParameterName('searchFields') . '=',
+            'searchFields=',
             '{searchFields}'
         );
 
         $searchLink = $this->replaceOrAddUrlString(
             $searchLink,
-            $listHelper->getParameterName('page') . '=',
+            'page=',
             '1'
         );
 
         // create all link
         $allLink = $this->replaceOrAddUrlString(
             $path,
-            $listHelper->getParameterName('pageSize') . '=',
+            'limit=',
             null
         );
 
         $allLink = $this->replaceOrAddUrlString(
             $allLink,
-            $listHelper->getParameterName('page') . '=',
+            'page=',
             null
         );
 
         // create filter link
         $filterLink = $this->replaceOrAddUrlString(
             $path,
-            $listHelper->getParameterName('fields') . '=',
+            'fields=',
             '{fieldsList}'
         );
 
         // create pagination link
-        $paginationLink = $this->replaceOrAddUrlString($path, $listHelper->getParameterName('pageSize') . '=', '{pageSize}');
+        $paginationLink = $this->replaceOrAddUrlString($path, 'limit=', '{limit}');
 
 
         return array(
             'self' => $path,
             'first' => ($pages > 1) ?
-                    $this->replaceOrAddUrlString($path, $listHelper->getParameterName('page') . '=', 1) : null,
+                    $this->replaceOrAddUrlString($path, 'page=', 1) : null,
             'last' => ($pages > 1) ?
-                    $this->replaceOrAddUrlString($path, $listHelper->getParameterName('page') . '=', $pages) : null,
+                    $this->replaceOrAddUrlString($path, 'page=', $pages) : null,
             'next' => ($page < $pages) ?
-                    $this->replaceOrAddUrlString($path, $listHelper->getParameterName('page') . '=', $page + 1) : null,
+                    $this->replaceOrAddUrlString($path, 'page=', $page + 1) : null,
             'prev' => ($page > 1 && $pages > 1) ?
-                    $this->replaceOrAddUrlString($path, $listHelper->getParameterName('page') . '=', $page - 1) : null,
-            'pagination' => $this->replaceOrAddUrlString($paginationLink, $listHelper->getParameterName('page') . '=', '{page}'),
+                    $this->replaceOrAddUrlString($path, 'page=', $page - 1) : null,
+            'pagination' => $this->replaceOrAddUrlString($paginationLink, 'page=', '{page}'),
             'find' => $returnListLinks ? $searchLink : null,
             'filter' => $returnListLinks ? $filterLink : null,
             'sortable' => $returnListLinks ? $sortable : null,
@@ -429,6 +474,7 @@ abstract class RestController extends FOSRestController
      * @param string $value replace value
      * @param bool $add defines if value should be added
      * @return mixed|string
+     * @deprecated
      */
     public function replaceOrAddUrlString($url, $key, $value, $add = true)
     {
@@ -470,7 +516,7 @@ abstract class RestController extends FOSRestController
         $entity = $findCallback($id);
 
         if (!$entity) {
-            $exception = new EntityNotFoundException($this->entityName, $id);
+            $exception = new EntityNotFoundException(self::$entityName, $id);
             // Return a 404 together with an error message, given by the exception, if the entity is not found
             $view = $this->view(
                 $exception->toArray(),
@@ -507,21 +553,28 @@ abstract class RestController extends FOSRestController
     /**
      * This method processes a put request (delete non-existing entities, update existing entities, add new
      * entries), and let the single actions be modified by callbacks
-     * @param $entities
+     * @param ApiEntity[] $entities
      * @param $requestEntities
      * @param callback $deleteCallback
      * @param callback $updateCallback
      * @param callback $addCallback
+     * @param callback $entityIdCallback defines how to get the entity's id which will be compared with requestEntities' id
      * @return bool
+     * @deprecated
      */
-    protected function processPut($entities, $requestEntities, $deleteCallback, $updateCallback, $addCallback)
+    protected function processPut($entities, $requestEntities, $deleteCallback, $updateCallback, $addCallback, $entityIdCallback = null)
     {
         $success = true;
+        // default for entityIdCallback
+        if ($entityIdCallback === null) {
+            $entityIdCallback = function($entity) {
+                return $entity->getId();
+            };
+        }
 
         if (!empty($entities)) {
             foreach ($entities as $entity) {
-                /** @var ApiEntity $entity */
-                $this->findMatch($requestEntities, $entity->getId(), $matchedEntry, $matchedKey);
+                $this->findMatch($requestEntities, $entityIdCallback($entity), $matchedEntry, $matchedKey);
 
                 if ($matchedEntry == null) {
                     // delete entity if it is not listed anymore
@@ -535,7 +588,7 @@ abstract class RestController extends FOSRestController
                 }
 
                 // Remove done element from array
-                if (!is_null($matchedKey)) {
+                if ($matchedKey !== null) {
                     unset($requestEntities[$matchedKey]);
                 }
             }
@@ -566,7 +619,7 @@ abstract class RestController extends FOSRestController
     }
 
     /**
-     * Tries to find an given id in a given set of entities. Returns the entity itself and its key with the
+     * Tries to find a given id in a given set of entities. Returns the entity itself and its key with the
      * $matchedEntry and $matchKey parameters.
      * @param array $requestEntities The set of entities to search in
      * @param integer $id The id to search
@@ -582,6 +635,7 @@ abstract class RestController extends FOSRestController
                 if (isset($entity['id']) && $entity['id'] == $id) {
                     $matchedEntry = $entity;
                     $matchedKey = $key;
+                    break;
                 }
             }
         }

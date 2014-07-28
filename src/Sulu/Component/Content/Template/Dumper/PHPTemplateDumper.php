@@ -45,7 +45,6 @@ class PHPTemplateDumper
         }
     }
 
-
     /**
      * Creates a new class with the data from the given collection
      * @param array $results

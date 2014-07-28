@@ -78,12 +78,18 @@ class WebspaceCollection implements \IteratorAggregate
     }
 
     /**
-     * Returns the portal informations for the given environments
+     * Returns the portal informations for the given environment
      * @param $environment string The environment to deliver
      * @return PortalInformation[]
      */
     public function getPortalInformations($environment)
     {
+        if (!isset($this->portalInformations[$environment])) {
+            throw new \InvalidArgumentException(sprintf(
+                'Unknown portal environment "%s"', $environment
+            ));
+        }
+
         return $this->portalInformations[$environment];
     }
 

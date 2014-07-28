@@ -71,7 +71,7 @@ new Property(
 {{ _self.renderArray(property.meta) }},
             '{{ property.type }}',
             {{ property.mandatory != null and property.mandatory ? 'true' : 'false' }},
-            {{ property.multilingual != null ? (property.multilingual? 'true':'false') : 'true' }},
+            {{ property.multilingual is same as(false) ? 'false' : 'true' }},
             {{ property.maxOccurs != null ? property.maxOccurs : 1 }},
             {{ property.minOccurs != null ? property.minOccurs : 1 }},
             array(
@@ -93,7 +93,7 @@ new BlockProperty(
 {{ _self.renderArray(property.meta) }},
             '{{ property['default-type'] }}',
             {{ property.mandatory != null and property.mandatory ? 'true' : 'false' }},
-            {{ property.multilingual != null ? (property.multilingual? 'true':'false') : 'true' }},
+            {{ property.multilingual is same as(false) ? 'false' : 'true' }},
             {{ property.maxOccurs != null ? property.maxOccurs : 1 }},
             {{ property.minOccurs != null ? property.minOccurs : 1 }},
             array(

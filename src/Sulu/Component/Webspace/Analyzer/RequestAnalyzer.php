@@ -20,6 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class RequestAnalyzer implements RequestAnalyzerInterface
 {
+
     /**
      * Describes the match
      * @var int
@@ -118,7 +119,7 @@ class RequestAnalyzer implements RequestAnalyzerInterface
                 $this->setCurrentWebspace($portalInformation->getWebspace());
 
                 $this->setCurrentSegment($portalInformation->getSegment());
-
+                $request->setLocale($portalInformation->getLocalization()->getLocalization());
                 // get the path and set it on the request
                 $this->setCurrentResourceLocator(
                     substr(

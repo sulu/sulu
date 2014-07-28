@@ -85,7 +85,7 @@ class Property implements PropertyInterface, \JsonSerializable
         $metaData,
         $contentTypeName,
         $mandatory = false,
-        $multilingual = false,
+        $multilingual = true,
         $maxOccurs = 1,
         $minOccurs = 1,
         $params = array(),

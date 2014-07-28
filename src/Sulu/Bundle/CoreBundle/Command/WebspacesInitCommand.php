@@ -20,6 +20,7 @@ use Sulu\Component\Webspace\Webspace;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
 use \DateTime;
 
@@ -66,7 +67,9 @@ class WebspacesInitCommand extends ContainerAwareCommand
         );
 
         /** @var WebspaceManagerInterface $webspaceManager */
+        $consoleLogger = new ConsoleLogger($output);
         $webspaceManager = $this->getContainer()->get('sulu_core.webspace.webspace_manager');
+        $webspaceManager->setLogger($consoleLogger);
 
         /** @var SessionInterface $session */
         $session = $this->getContainer()->get('sulu.phpcr.session')->getSession();
@@ -75,7 +78,7 @@ class WebspacesInitCommand extends ContainerAwareCommand
         $userId = $input->getOption('user-id');
         $template = $input->getOption('template');
 
-        $output->write('Create basic nodes');
+        $output->writeln('<comment>Create basic nodes</comment>');
 
         /** @var Webspace $webspace */
         foreach ($webspaceManager->getWebspaceCollection() as $webspace) {

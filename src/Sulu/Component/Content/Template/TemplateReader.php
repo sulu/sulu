@@ -106,9 +106,9 @@ class TemplateReader implements LoaderInterface
     private function loadTemplateAttributes(\DOMXPath $xpath)
     {
         $result = array(
-            'key'           => $this->getValueFromXPath('/x:template/x:key', $xpath),
-            'view'          => $this->getValueFromXPath('/x:template/x:view', $xpath),
-            'controller'    => $this->getValueFromXPath('/x:template/x:controller', $xpath),
+            'key' => $this->getValueFromXPath('/x:template/x:key', $xpath),
+            'view' => $this->getValueFromXPath('/x:template/x:view', $xpath),
+            'controller' => $this->getValueFromXPath('/x:template/x:controller', $xpath),
             'cacheLifetime' => $this->getValueFromXPath('/x:template/x:cacheLifetime', $xpath),
         );
 
@@ -161,7 +161,8 @@ class TemplateReader implements LoaderInterface
             );
         }
 
-        $result['mandatory'] = $this->getBooleanValueFromXPath('@mandatory', $xpath, $node);
+        $result['mandatory'] = $this->getBooleanValueFromXPath('@mandatory', $xpath, $node, false);
+        $result['multilingual'] = $this->getBooleanValueFromXPath('@multilingual', $xpath, $node, true);
         $result['tags'] = $this->loadTags('x:tag', $requiredTags, $tags, $xpath, $node);
         $result['params'] = $this->loadParams('x:params/x:param', $xpath, $node);
         $result['meta'] = $this->loadMeta('x:meta/x:*', $xpath, $node);
@@ -180,7 +181,7 @@ class TemplateReader implements LoaderInterface
             array('name', 'default-type', 'minOccurs', 'maxOccurs', 'colspan', 'cssClass')
         );
 
-        $result['mandatory'] = $this->getBooleanValueFromXPath('@mandatory', $xpath, $node);
+        $result['mandatory'] = $this->getBooleanValueFromXPath('@mandatory', $xpath, $node, false);
         $result['type'] = 'block';
         $result['tags'] = $this->loadTags('x:tag', $requiredTags, $tags, $xpath, $node);
         $result['params'] = $this->loadParams('x:params/x:param', $xpath, $node);
@@ -352,9 +353,13 @@ class TemplateReader implements LoaderInterface
     /**
      * returns boolean value of path
      */
-    private function getBooleanValueFromXPath($path, \DOMXPath $xpath, \DomNode $context = null)
+    private function getBooleanValueFromXPath($path, \DOMXPath $xpath, \DomNode $context = null, $default = null)
     {
-        return $this->getValueFromXPath($path, $xpath, $context) === 'true' ? true : false;
+        if (($value = $this->getValueFromXPath($path, $xpath, $context)) != null) {
+            return $value === 'true' ? true : false;
+        } else {
+            return $default;
+        }
     }
 
     /**

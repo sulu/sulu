@@ -1971,6 +1971,9 @@ class ContentMapperTest extends PhpcrTestCase
         $this->mapper->save($data, 'mandatory', 'default', 'de', 1);
     }
 
+    /**
+     * @return StructureInterface[]
+     */
     private function prepareBigTreeTestData()
     {
         $data = array(
@@ -2164,6 +2167,16 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals(0, sizeof($layer3[2]->getChildren()));
         $this->assertEquals('SubSubNews-3', $layer3[2]->name);
         $this->assertFalse($layer3[2]->getHasChildren());
+    }
+
+    public function testLoadEmptyTreeExcludedGhosts()
+    {
+        $data = $this->prepareBigTreeTestData();
+        $child = $data[1]->getChildren()[0]->getChildren()[2]->getChildren()[1];
+
+        $result = $this->mapper->loadTreeByUuid($child->getUuid(), 'en', 'default', true, true);
+
+        $this->assertCount(0, $result);
     }
 
     public function testSection()

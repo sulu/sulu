@@ -22,6 +22,7 @@ use Symfony\Component\HttpFoundation\Request;
  * For lists it allocates a Repository
  *
  * @package Sulu\Bundle\TranslateBundle\Controller
+ * @deprecated
  */
 class ListRestHelper
 {
@@ -41,20 +42,6 @@ class ListRestHelper
      * @var int
      */
     private $totalNumberOfElements;
-
-    /**
-     * url parameter naming
-     * @var array
-     */
-    protected $parameterNames = array(
-        'sortBy' => 'sortBy',
-        'sortOrder' => 'sortOrder',
-        'pageSize' => 'pageSize',
-        'page' => 'page',
-        'search' => 'search',
-        'searchFields' => 'searchFields',
-        'fields' => 'fields',
-    );
 
     /**
      * The constructor takes the request as an argument, which
@@ -105,8 +92,8 @@ class ListRestHelper
      */
     public function getSorting()
     {
-        $sortOrder = $this->getRequest()->get($this->getParameterName('sortOrder'), 'asc');
-        $sortBy = $this->getRequest()->get($this->getParameterName('sortBy'), 'id');
+        $sortOrder = $this->getRequest()->get('sortOrder', 'asc');
+        $sortBy = $this->getRequest()->get('sortBy', 'id');
 
         return array($sortBy => $sortOrder);
     }
@@ -117,20 +104,20 @@ class ListRestHelper
      */
     public function getLimit()
     {
-        return $this->getRequest()->get($this->getParameterName('pageSize'));
+        return $this->getRequest()->get('limit');
     }
 
     /**
      * Returns the calculated value for the starting position based
-     * on the page and pagesize values
+     * on the page and limit values
      * @return integer|null
      */
     public function getOffset()
     {
-        $page = $this->getRequest()->get($this->getParameterName('page'), 1);
-        $pageSize = $this->getRequest()->get($this->getParameterName('pageSize'));
+        $page = $this->getRequest()->get('page', 1);
+        $limit = $this->getRequest()->get('limit');
 
-        return ($pageSize != null) ? $pageSize * ($page - 1) : null;
+        return ($limit != null) ? $limit * ($page - 1) : null;
     }
 
     /**
@@ -139,7 +126,7 @@ class ListRestHelper
      */
     public function getPage()
     {
-        return $this->getRequest()->get($this->getParameterName('page'), 1);
+        return $this->getRequest()->get('page', 1);
     }
 
     /**
@@ -172,7 +159,7 @@ class ListRestHelper
      */
     public function getFields()
     {
-        $fields = $this->getRequest()->get($this->getParameterName('fields'));
+        $fields = $this->getRequest()->get('fields');
         return ($fields != null) ? explode(',', $fields) : null;
     }
 
@@ -182,7 +169,7 @@ class ListRestHelper
      */
     public function getSearchPattern()
     {
-        return $this->getRequest()->get($this->getParameterName('search'));
+        return $this->getRequest()->get('search');
     }
 
     /**
@@ -191,7 +178,7 @@ class ListRestHelper
      */
     public function getSearchFields()
     {
-        $searchFields = $this->getRequest()->get($this->getParameterName('searchFields'));
+        $searchFields = $this->getRequest()->get('searchFields');
 
         return ($searchFields != null) ? explode(',', $searchFields) : array();
     }
@@ -208,16 +195,4 @@ class ListRestHelper
         return $this->totalNumberOfElements;
     }
 
-    /**
-     * returns parameter
-     * @param $key
-     * @return string|null
-     */
-    public function getParameterName($key)
-    {
-        if (array_key_exists($key, $this->parameterNames)) {
-            return $this->parameterNames[$key];
-        }
-        return null;
-    }
 }

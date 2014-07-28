@@ -157,6 +157,11 @@ class WebspaceManager implements WebspaceManagerInterface
         return $this->webspaceCollection;
     }
 
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
+
     /**
      * Sets the options for the manager
      * @param $options
