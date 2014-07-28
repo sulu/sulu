@@ -279,18 +279,21 @@ define(['app-config'], function(AppConfig) {
         bindFormEvents: function() {
             this.sandbox.dom.on(this.formId, 'form-remove', function(e, propertyName) {
                 // TODO removed elements remove from config
-
                 var changes = this.sandbox.form.getData(this.formId);
                 this.initSortableBlock();
                 this.updatePreview(propertyName, changes[propertyName]);
                 this.setHeaderBar(false);
             }.bind(this));
 
-            this.sandbox.dom.on(this.formId, 'form-add', function(e, propertyName) {
+            this.sandbox.dom.on(this.formId, 'form-add', function(e, propertyName, data) {
                 this.createConfiguration(e.currentTarget);
 
                 // start new subcomponents
-                this.sandbox.start($(e.currentTarget));
+                this.sandbox.start(
+                    this.sandbox.dom.last(
+                        this.sandbox.dom.children(this.$find('[data-mapper-property="'+ propertyName +'"]'))
+                    )
+                );
 
                 // update changes
                 var changes = this.sandbox.form.getData(this.formId);
