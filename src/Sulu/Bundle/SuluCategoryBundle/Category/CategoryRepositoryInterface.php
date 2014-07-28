@@ -26,10 +26,17 @@ interface CategoryRepositoryInterface
     public function findCategoryById($id);
 
     /**
+     * Finds the categories with the given ids
+     * @param array $ids The ids to load
+     * @return Category[]
+     */
+    public function findCategoryByIds(array $ids);
+
+    /**
      * finds all categories, can be filtered with parent and depth
      * @param int $parent the id of the parent
      * @param int $depth the depth-level
      * @return Category[]
      */
     public function findCategories($parent = null, $depth = null);
-} 
+}

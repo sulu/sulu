@@ -31,31 +31,7 @@ class CategoryRepository extends EntityRepository implements CategoryRepositoryI
     public function findCategoryById($id)
     {
         try {
-            $qb = $this->createQueryBuilder('category')
-                ->leftJoin('category.meta', 'categoryMeta')
-                ->leftJoin('category.translations', 'categoryTranslations')
-                ->leftJoin('category.parent', 'categoryParent')
-                ->leftJoin('category.children', 'categoryChildren')
-                /*
-                ->leftJoin('category.creator', 'creator')
-                ->leftJoin('creator.contact', 'creatorContact')
-                ->leftJoin('category.changer', 'changer')
-                ->leftJoin('changer.contact', 'changerContact')
-                */
-
-                ->addSelect('category')
-                ->addSelect('categoryMeta')
-                ->addSelect('categoryTranslations')
-                ->addSelect('categoryParent')
-                ->addSelect('categoryChildren')
-                /*
-                ->addSelect('creator')
-                ->addSelect('creatorContact')
-                ->addSelect('changer')
-                ->addSelect('changerContact')
-                */
-
-                ->where('category.id = :categoryId');
+            $qb = $this->getCategoryQuery()->where('category.id = :categoryId');
 
             $query = $qb->getQuery();
             $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
@@ -76,30 +52,10 @@ class CategoryRepository extends EntityRepository implements CategoryRepositoryI
      * @param string|null $sortOrder sort order
      * @return mixed|null
      */
-    public function findCategories($parent = null, $depth = null, $sortBy = null, $sortOrder = null) {
+    public function findCategories($parent = null, $depth = null, $sortBy = null, $sortOrder = null)
+    {
         try {
-            $qb = $this->createQueryBuilder('category')
-                ->leftJoin('category.meta', 'categoryMeta')
-                ->leftJoin('category.translations', 'categoryTranslations')
-                ->leftJoin('category.parent', 'categoryParent')
-                ->leftJoin('category.children', 'categoryChildren')
-                /*
-                ->leftJoin('category.creator', 'creator')
-                ->leftJoin('creator.contact', 'creatorContact')
-                ->leftJoin('category.changer', 'changer')
-                ->leftJoin('changer.contact', 'changerContact')
-                */
-
-                ->addSelect('categoryMeta')
-                ->addSelect('categoryTranslations')
-                ->addSelect('categoryParent')
-                ->addSelect('categoryChildren');
-                /*
-                ->addSelect('creator')
-                ->addSelect('creatorContact')
-                ->addSelect('changer')
-                ->addSelect('changerContact');
-                */
+            $qb = $this->getCategoryQuery();
 
             if ($parent !== null) {
                 $qb->andWhere('categoryParent.id = :parentId');
@@ -126,5 +82,61 @@ class CategoryRepository extends EntityRepository implements CategoryRepositoryI
         } catch (NoResultException $ex) {
             return null;
         }
+    }
+
+    /**
+     * Finds the categories with the given ids
+     * @param array $ids The ids to load
+     * @return Category[]
+     */
+    public function findCategoryByIds(array $ids)
+    {
+        try {
+            if (empty($ids)) {
+                throw new NoResultException();
+            }
+
+            $qb = $this->getCategoryQuery();
+
+            $qb->where($qb->expr()->in('category.id', ':ids'));
+            $qb->setParameter('ids', $ids);
+
+            return $qb->getQuery()->getResult();
+        } catch (NoResultException $ex) {
+            return array();
+        }
+    }
+
+    /**
+     * Returns the general part of the query
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    private function getCategoryQuery()
+    {
+        $qb = $this->createQueryBuilder('category')
+            ->leftJoin('category.meta', 'categoryMeta')
+            ->leftJoin('category.translations', 'categoryTranslations')
+            ->leftJoin('category.parent', 'categoryParent')
+            ->leftJoin('category.children', 'categoryChildren')
+            /*
+            ->leftJoin('category.creator', 'creator')
+            ->leftJoin('creator.contact', 'creatorContact')
+            ->leftJoin('category.changer', 'changer')
+            ->leftJoin('changer.contact', 'changerContact')
+            */
+
+            ->addSelect('category')
+            ->addSelect('categoryMeta')
+            ->addSelect('categoryTranslations')
+            ->addSelect('categoryParent')
+            ->addSelect('categoryChildren');
+            /*
+            ->addSelect('creator')
+            ->addSelect('creatorContact')
+            ->addSelect('changer')
+            ->addSelect('changerContact')
+            */
+
+        return $qb;
     }
 }

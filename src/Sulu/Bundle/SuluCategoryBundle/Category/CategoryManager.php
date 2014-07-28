@@ -158,6 +158,16 @@ class CategoryManager implements CategoryManagerInterface
     }
 
     /**
+     * Returns the categories with the given ids
+     * @param array $ids
+     * @return CategoryEntity[]
+     */
+    public function findByIds(array $ids)
+    {
+        return $this->categoryRepository->findCategoryByIds($ids);
+    }
+
+    /**
      * Creates a new category or overrides an existing one
      * @param array $data The data of the category to save
      * @param int $userId The id of the user, who is doing this change
@@ -217,6 +227,10 @@ class CategoryManager implements CategoryManagerInterface
      */
     public function getApiObjects($categories, $locale)
     {
+        if (empty($categories)) {
+            return array();
+        }
+
         $arrReturn = [];
         foreach ($categories as $category) {
             array_push($arrReturn, $this->getApiObject($category, $locale));
