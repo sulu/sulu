@@ -403,6 +403,9 @@ define([
 
                 if (!!this.options.preview && this.data.nodeType === 1) {
                     this.renderPreview(data);
+                } else {
+                    this.sandbox.emit('sulu.sidebar.hide');
+                    this.sandbox.emit('sulu.app.toggle-shrinker', false);
                 }
 
                 this.setHeaderBar(true);
