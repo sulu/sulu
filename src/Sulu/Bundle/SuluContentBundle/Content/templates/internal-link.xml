@@ -18,10 +18,11 @@
             </meta>
             <tag name="sulu.node.name"/>
         </property>
-        <property name="internalpath" type="text_line" mandatory="true">
+
+        <property name="internalnode" type="text_line" mandatory="true">
             <meta>
-                <title lang="de">Interner Pfad</title>
-                <title lang="en">Internal Path</title>
+                <title lang="de">Interner Knoten</title>
+                <title lang="en">Internal Node</title>
             </meta>
             <tag name="sulu.rlp"/>
         </property>
