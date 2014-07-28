@@ -34,6 +34,7 @@ define([], function() {
             layout: {
                 sidebar: {
                     width: 'fixed',
+                    cssClasses: 'sidebar-padding-50',
                     url: '/admin/widget-groups/contact-detail'
                 }
             },

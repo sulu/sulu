@@ -46,6 +46,13 @@ define([], function() {
 
         view: true,
 
+        layout: {
+            sidebar: {
+                width: 'fixed',
+                cssClasses: 'sidebar-padding-50'
+            }
+        },
+
         templates: ['/admin/contact/template/account/financials'],
 
         initialize: function() {
@@ -61,7 +68,15 @@ define([], function() {
 
             this.render();
 
-            this.listenForChange();
+            this.listenForChange()
+
+            if (!!this.options.data.id) {
+                this.initSidebar('/admin/widget-groups/account-detail?account=', this.options.data.id);
+            }
+        },
+
+        initSidebar: function(url, id){
+            this.sandbox.emit('sulu.sidebar.set-widget', url + id);
         },
 
         render: function() {
