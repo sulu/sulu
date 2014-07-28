@@ -71,7 +71,7 @@ class FilterNodesQueryBuilder
 
         // append order clause
         if (!empty($sql2Order)) {
-            $sortOrder = (isset($filterConfig['sortMethod']) && $filterConfig['sortMethod'] == 'asc')
+            $sortOrder = (isset($this->filterConfig['sortMethod']) && $this->filterConfig['sortMethod'] == 'asc')
                 ? 'ASC' : 'DESC';
             $sql2 .= ' ORDER BY ' . join(', ', $sql2Order) . ' ' . $sortOrder;
         }
@@ -119,7 +119,7 @@ class FilterNodesQueryBuilder
     /**
      * build where clauses
      */
-    private function buildWhereClauses($languageCode, $preview)
+    private function buildWhereClauses($languageCode)
     {
         $sql2Where = array();
         // build where clause for datasource
@@ -133,9 +133,7 @@ class FilterNodesQueryBuilder
         }
 
         // search only for published pages
-        if (!$preview) {
-            $sql2Where[] = 'c.[i18n:' . $languageCode . '-state] = ' . StructureInterface::STATE_PUBLISHED;
-        }
+        $sql2Where[] = 'c.[i18n:' . $languageCode . '-state] = ' . StructureInterface::STATE_PUBLISHED;
 
         return $sql2Where;
     }
@@ -166,7 +164,7 @@ class FilterNodesQueryBuilder
     {
         $sql2Where = array();
         foreach ($this->getConfig('tags', array()) as $tag) {
-            $sql2Where[] = 'c.[sulu_locale:' . $languageCode . '-tags] = ' . $tag;
+            $sql2Where[] = 'c.[i18n:' . $languageCode . '-tags] = ' . $tag;
         }
 
         return $sql2Where;

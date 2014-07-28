@@ -97,6 +97,10 @@ class SmartContentContainer implements \Serializable
     public function setConfig(array $config)
     {
         $this->config = $config;
+        // TODO Remove when multi sorting is possible in javascript component
+        if (isset($this->config['sortBy'])) {
+            $this->config['sortBy'] = array($this->config['sortBy']);
+        }
     }
 
     /**
@@ -105,7 +109,12 @@ class SmartContentContainer implements \Serializable
      */
     public function getConfig()
     {
-        return $this->config;
+        $config = $this->config;
+        // TODO Remove when multi sorting is possible in javascript component
+        if (isset($config['sortBy'])) {
+            $config['sortBy'] = $config['sortBy'][0];
+        }
+        return $config;
     }
 
     /**
@@ -132,7 +141,7 @@ class SmartContentContainer implements \Serializable
      */
     private function loadData($config)
     {
-        if (array_key_exists('dataSource',$config) && $config['dataSource'] !== '') {
+        if (array_key_exists('dataSource', $config) && $config['dataSource'] !== '') {
             return $this->nodeRepository->getFilteredNodes(
                 $config,
                 $this->languageCode,
@@ -176,7 +185,7 @@ class SmartContentContainer implements \Serializable
     {
         return json_encode(
             array(
-                'data' => $this->getData(),
+                'data'   => $this->getData(),
                 'config' => $this->getConfig()
             )
         );

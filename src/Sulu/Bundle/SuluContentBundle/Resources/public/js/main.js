@@ -47,7 +47,7 @@ define({
         sandbox.mvc.routes.push({
             route: 'content/contents/:webspace/:language',
             callback: function(webspace, language) {
-                this.html('<div data-aura-component="content@sulucontent" data-aura-webspace="' + webspace + '" data-aura-language="' + language + '" data-aura-display="column"/>');
+                this.html('<div data-aura-component="content@sulucontent" data-aura-webspace="' + webspace + '" data-aura-language="' + language + '" data-aura-display="column" data-aura-preview="false"/>');
             }
         });
 

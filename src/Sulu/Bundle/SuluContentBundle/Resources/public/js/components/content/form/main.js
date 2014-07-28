@@ -13,6 +13,12 @@ define(['app-config'], function(AppConfig) {
 
     return {
 
+        view: true,
+
+        layout: {
+            changeNothing: true
+        },
+
         // if ws != null then use it
         ws: null,
         wsUrl: '',
@@ -23,13 +29,12 @@ define(['app-config'], function(AppConfig) {
 
         saved: true,
         contentChanged: false,
+        animateTemplateDropdown: false,
 
         initialize: function() {
-            this.sandbox.emit('sulu.app.ui.reset', { navigation: 'small', content: 'auto'});
             this.sandbox.emit('husky.toolbar.header.item.enable', 'template', false);
 
             this.dfdListenForChange = this.sandbox.data.deferred();
-
             this.load();
         },
 
@@ -42,6 +47,7 @@ define(['app-config'], function(AppConfig) {
 
             // change template
             this.sandbox.on('sulu.dropdown.template.item-clicked', function(item) {
+                this.animateTemplateDropdown = true;
                 this.checkRenderTemplate(item);
             }, this);
 
@@ -76,12 +82,9 @@ define(['app-config'], function(AppConfig) {
 
         render: function(data) {
             this.bindCustomEvents();
+            this.listenForChange();
 
             this.data = data;
-
-            this.formId = '#content-form-container';
-            this.$container = this.sandbox.dom.createElement('<div id="content-form-container"/>');
-            this.html(this.$container);
 
             if (!!this.data.template) {
                 this.checkRenderTemplate(this.data.template);
@@ -111,8 +114,8 @@ define(['app-config'], function(AppConfig) {
         showRenderTemplateDialog: function(item) {
             // show warning dialog
             this.sandbox.emit('sulu.overlay.show-warning',
-                this.sandbox.translate('content.template.dialog.title'),
-                this.sandbox.translate('content.template.dialog.content'),
+                'sulu.overlay.be-careful',
+                'content.template.dialog.content',
 
                 function() {
                     // cancel callback
@@ -127,11 +130,14 @@ define(['app-config'], function(AppConfig) {
         },
 
         loadFormTemplate: function(item) {
+            var tmp, url;
             if (!!item) {
                 this.template = item.template;
             }
+            this.formId = '#content-form-container';
+            this.$container = this.sandbox.dom.createElement('<div id="content-form-container"/>');
+            this.html(this.$container);
 
-            var tmp, url;
             if (!!this.sandbox.form.getObject(this.formId)) {
                 tmp = this.data;
                 this.data = this.sandbox.form.getData(this.formId);
@@ -164,15 +170,12 @@ define(['app-config'], function(AppConfig) {
                 context = this.sandbox.util.extend({}, defaults),
                 tpl = this.sandbox.util.template(template, context);
 
-            this.sandbox.dom.remove(this.formId + ' *');
             this.sandbox.dom.html(this.formId, tpl);
             this.setStateDropdown(data);
 
             this.propertyConfiguration = {};
             this.createForm(data).then(function() {
                 this.bindDomEvents();
-                this.listenForChange();
-
                 this.updatePreviewOnly();
 
                 this.changeTemplateDropdownHandler();
@@ -194,6 +197,7 @@ define(['app-config'], function(AppConfig) {
 
                     if (!!this.options.preview) {
                         this.initPreview();
+                        this.updatePreview();
                         this.options.preview = false;
                     }
 
@@ -212,9 +216,8 @@ define(['app-config'], function(AppConfig) {
                 property.$el = this.sandbox.dom.$(item);
 
                 // remove property from data
-                // FIXME move to sandbox data remove
-                $(item).data('property', null);
-                $(item).removeAttr('data-property', null);
+                this.sandbox.dom.data(item, 'property', null);
+                this.sandbox.dom.removeAttr(item, 'data-property', null);
 
                 // foreach tag
                 this.sandbox.util.foreach(property.tags, function(tag) {
@@ -408,7 +411,7 @@ define(['app-config'], function(AppConfig) {
 
         listenForChange: function() {
             this.dfdListenForChange.then(function() {
-                this.sandbox.dom.on(this.formId, 'keyup change', function() {
+                this.sandbox.dom.on(this.$el, 'keyup change', function() {
                     this.setHeaderBar(false);
                     this.contentChanged = true;
                 }.bind(this), '.trigger-save-button');
@@ -421,10 +424,11 @@ define(['app-config'], function(AppConfig) {
         },
 
         changeTemplateDropdownHandler: function() {
-            if (this.template !== '' && this.template !== undefined && this.template !== null) {
+            if (!!this.template) {
                 this.sandbox.emit('sulu.header.toolbar.item.change', 'template', this.template);
             }
-            this.sandbox.emit('sulu.header.toolbar.item.enable', 'template', true);
+            this.sandbox.emit('sulu.header.toolbar.item.enable', 'template', this.animateTemplateDropdown);
+            this.animateTemplateDropdown = false;
         },
 
         submit: function() {
@@ -553,12 +557,6 @@ define(['app-config'], function(AppConfig) {
 
             this.ws.onmessage = function(e) {
                 var data = JSON.parse(e.data);
-
-                if (data.command === 'start' && data.content === this.data.id && !!data.params.other) {
-                    // FIXME do it after restart form
-                    this.updatePreview();
-                }
-
                 this.sandbox.logger.log('Message:', data);
             }.bind(this);
 
