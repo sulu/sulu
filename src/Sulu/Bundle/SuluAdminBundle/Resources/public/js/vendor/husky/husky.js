@@ -28783,15 +28783,16 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Highlights clicked row and removes highlight from other rows
          * @param event
          */
-        highlightRow: function(event){
-           var $row = event.currentTarget,
-            $rows = this.sandbox.dom.find('tbody tr',this.$el);
+        highlightRow: function(event) {
+            var $row = event.currentTarget,
+                $selectedRow = this.sandbox.dom.find(
+                    'tbody tr.' + constants.selected,
+                    this.$el
+                );
 
-            this.sandbox.util.each($rows, function(index,$el){
-                this.sandbox.dom.removeClass($el,constants.selected);
-            }.bind(this));
-
-            this.sandbox.dom.addClass($row,constants.selected);
+            this.sandbox.dom.removeClass($selectedRow, constants.
+                selected);
+            this.sandbox.dom.addClass($row, constants.selected);
         },
 
         /**
@@ -28810,11 +28811,20 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Emits the row-clicked event
          */
         emitRowClickedEvent: function(event) {
-            var id = this.sandbox.dom.$(event.currentTarget).data('id');
-            if (!!id) {
-                this.datagrid.emitItemClickedEvent.call(this.datagrid, id);
-            } else {
-                this.datagrid.emitItemClickedEvent.call(this.datagrid, event);
+
+            if (!this.rowClicked) {
+                this.rowClicked = true;
+                var id = this.sandbox.dom.$(event.currentTarget).data('id');
+                if (!!id) {
+                    this.datagrid.emitItemClickedEvent.call(this.datagrid, id);
+                } else {
+                    this.datagrid.emitItemClickedEvent.call(this.datagrid, event);
+                }
+
+                // set row clicked back to prevent double click
+                setTimeout(function(){
+                    this.rowClicked = false;
+                }.bind(this), 500);
             }
         },
 
@@ -28834,6 +28844,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             this.topTabIndex = this.options.startTabIndex || 50000;
             this.contentMarginRight = 0;
             this.contentPaddings = 0;
+            this.rowClicked = false;
         },
 
         /**

@@ -31,7 +31,6 @@ class AdminController extends Controller
             if ($userManager->getCurrentUserData()->isLoggedIn()) {
                 $user = $userManager->getCurrentUserData()->toArray();
 
-
                 // get js config from bundles
                 $jsconfig = array();
                 if ($this->has($jsconfigServiceId)) {
@@ -45,10 +44,12 @@ class AdminController extends Controller
                 } else {
                     $template = 'SuluAdminBundle:Admin:index.html.twig';
                 }
+
                 return $this->render(
                     $template,
                     array(
                         'name' => $this->container->getParameter('sulu_admin.name'),
+                        'suluVersion' => $this->container->getParameter('sulu.version'),
                         'user' => $user,
                         'config' => $jsconfig
                     )
