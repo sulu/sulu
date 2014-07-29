@@ -202,16 +202,19 @@
   border-radius: 2px;
 }
 
-/* line 27, ../scss/modules/general.scss */
-.internal-links-overlay .overlay-header {
+/* line 28, ../scss/modules/general.scss */
+.internal-links-overlay .overlay-header,
+.single-internal-overlay .overlay-header {
   margin-bottom: 1px;
 }
-/* line 30, ../scss/modules/general.scss */
-.internal-links-overlay .overlay-content {
+/* line 31, ../scss/modules/general.scss */
+.internal-links-overlay .overlay-content,
+.single-internal-overlay .overlay-content {
   margin: 0px;
 }
-/* line 34, ../scss/modules/general.scss */
-.internal-links-overlay .overlay-footer {
+/* line 35, ../scss/modules/general.scss */
+.internal-links-overlay .overlay-footer,
+.single-internal-overlay .overlay-footer {
   margin: 0px;
 }
 

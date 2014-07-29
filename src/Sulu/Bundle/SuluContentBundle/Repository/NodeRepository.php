@@ -423,13 +423,15 @@ class NodeRepository implements NodeRepositoryInterface
                             'path' => '/',
                             'title' => $webspace->getName(),
                             'hasSub' => true,
-                            '_embedded' => $this->prepareNodesTree(
-                                    $nodes,
-                                    $webspaceKey,
-                                    $languageCode,
-                                    false,
-                                    $excludeGhosts
-                                ),
+                            '_embedded' => array(
+                                'nodes' => $this->prepareNodesTree(
+                                        $nodes,
+                                        $webspaceKey,
+                                        $languageCode,
+                                        false,
+                                        $excludeGhosts
+                                    )
+                            ),
                             '_links' => array(
                                 'children' => $this->apiBasePath . '?depth=1&webspace=' . $webspaceKey .
                                     '&language=' . $languageCode . ($excludeGhosts === true ? '&exclude-ghosts=true' : '')
