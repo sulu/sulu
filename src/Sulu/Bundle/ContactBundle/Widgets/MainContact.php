@@ -28,6 +28,7 @@ class MainContact implements WidgetInterface
 
     protected $em;
 
+    protected $widgetName = 'MainContact';
     protected $accountEntityName = 'SuluContactBundle:Account';
 
     function __construct(EntityManager $em)
@@ -76,13 +77,16 @@ class MainContact implements WidgetInterface
             if (!$account) {
                 throw new WidgetEntityNotFoundException(
                     'Entity ' . $this->accountEntityName . ' with id ' . $id . ' not found!',
+                    $this->widgetName,
                     $id
                 );
             }
             return $this->parseMainContact($account);
         } else {
             throw new WidgetParameterException(
-                'Required parameter account not found or empty!'
+                'Required parameter account not found or empty!',
+                $this->widgetName,
+                'account'
             );
         }
     }
