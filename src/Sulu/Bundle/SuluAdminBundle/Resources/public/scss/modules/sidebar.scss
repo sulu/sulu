@@ -45,6 +45,11 @@
         transition: opacity 100ms ease-in 200ms;
     }
 
+    .blue-icon > span {
+        vertical-align: text-top;
+        margin-top:-3px;
+    }
+
     .show-icon:hover .blue-icon {
         opacity: 1;
     }

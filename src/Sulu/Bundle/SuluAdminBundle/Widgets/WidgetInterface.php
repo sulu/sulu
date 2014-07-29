@@ -31,6 +31,7 @@ interface WidgetInterface
     /**
      * returns data to render template
      * @param array $options
+     * @throws WidgetException
      * @return array
      */
     public function getData($options);
