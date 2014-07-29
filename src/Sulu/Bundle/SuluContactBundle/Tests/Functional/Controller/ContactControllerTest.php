@@ -1648,6 +1648,8 @@ class ContactControllerTest extends DatabaseTestCase
 
     public function testPrimaryAddressHandlingPost()
     {
+        global $contactPosition;
+
         $client = $this->createTestClient();
 
         $client->request(
@@ -1657,7 +1659,7 @@ class ContactControllerTest extends DatabaseTestCase
                 'firstName' => 'Erika',
                 'lastName' => 'Mustermann',
                 'title' => 'MSc',
-                'position' => 'Manager',
+                'position' => $contactPosition->getId(),
                 'account' => array(
                     'id' => 2
                 ),

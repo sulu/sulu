@@ -25,7 +25,6 @@ use Sulu\Bundle\ContactBundle\Entity\Contact;
  */
 class MainContact implements WidgetInterface
 {
-
     protected $em;
 
     protected $widgetName = 'MainContact';

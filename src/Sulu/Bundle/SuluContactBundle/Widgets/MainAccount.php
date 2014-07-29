@@ -68,9 +68,7 @@ class MainAccount implements WidgetInterface
             !empty($options['contact'])
         ) {
             $id = $options['contact'];
-            $contact = $this->em->getRepository(
-                $this->contactEntityName
-            )->find($id);
+            $contact = $this->em->getRepository($this->contactEntityName)->find($id);
 
             if (!$contact) {
                 throw new WidgetEntityNotFoundException(
@@ -111,6 +109,4 @@ class MainAccount implements WidgetInterface
             return null;
         }
     }
-
-
 }
