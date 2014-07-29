@@ -45,7 +45,7 @@ require.config({
         'husky'
     ]
 });
-
+var globalApp;
 require(['husky', 'app-config'], function(Husky, AppConfig) {
 
     'use strict';
@@ -83,5 +83,6 @@ require(['husky', 'app-config'], function(Husky, AppConfig) {
         });
 
         app.start();
+        globalApp = app;
     });
 });
