@@ -244,7 +244,11 @@ define([
                     contentFilters: {
                         // display account type name instead of type number
                         type: function(content) {
-                            return this.sandbox.translate(assocAccountTypes[content].translation);
+                            if(!!content) {
+                                return this.sandbox.translate(assocAccountTypes[content].translation);
+                            } else {
+                                return '';
+                            }
                         }.bind(this)
                     },
                     viewOptions: {
