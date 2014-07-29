@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+    <file source-language="de" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="fbf455837741abced4a73a4ba3fdf006" resname="single-internal-link.title">
+                <source>single-internal-link.title</source>
+                <target>Select single Internal Link</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>
