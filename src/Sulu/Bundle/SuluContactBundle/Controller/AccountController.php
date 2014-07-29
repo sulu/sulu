@@ -236,7 +236,7 @@ class AccountController extends AbstractContactController
             'disabled',
             'disabled',
             self::$entityName,
-            'public.deactivate',
+            'public.locked',
             array(),
             true
         );
