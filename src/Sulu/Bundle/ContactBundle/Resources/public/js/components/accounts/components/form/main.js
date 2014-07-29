@@ -58,7 +58,6 @@ define([], function() {
             this.accountCategoryURL = 'api/account/categories';
             this.contactBySystemURL = 'api/contacts?bySystem=true';
 
-
             this.render();
             this.getAccountTypeData();
             this.setHeaderBar(true);

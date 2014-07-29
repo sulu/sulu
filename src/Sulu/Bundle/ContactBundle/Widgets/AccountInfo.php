@@ -70,9 +70,7 @@ class AccountInfo implements WidgetInterface
             !empty($options['account'])
         ) {
             $id = $options['account'];
-            $account = $this->em->getRepository(
-                $this->accountEntityName
-            )->find($id);
+            $account = $this->em->getRepository($this->accountEntityName)->find($id);
 
             if (!$account) {
                 throw new WidgetEntityNotFoundException(
@@ -81,6 +79,7 @@ class AccountInfo implements WidgetInterface
                     $id
                 );
             }
+
             return $this->parseAccountForListSidebar($account);
         } else {
             throw new WidgetParameterException(
@@ -107,7 +106,7 @@ class AccountInfo implements WidgetInterface
         /* @var Address $accountAddress */
         $accountAddress = $account->getMainAddress();
 
-        if (!!$accountAddress) {
+        if ($accountAddress) {
             $data['address']['street'] = $accountAddress->getStreet();
             $data['address']['number'] = $accountAddress->getNumber();
             $data['address']['zip'] = $accountAddress->getZip();

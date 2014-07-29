@@ -69,9 +69,7 @@ class ContactInfo implements WidgetInterface
             !empty($options['contact'])
         ) {
             $id = $options['contact'];
-            $contact = $this->em->getRepository(
-                $this->contactEntityName
-            )->find($id);
+            $contact = $this->em->getRepository($this->contactEntityName)->find($id);
 
             if (!$contact) {
                 throw new WidgetEntityNotFoundException(
@@ -118,7 +116,7 @@ class ContactInfo implements WidgetInterface
         /* @var Address $contactAddress */
         $contactAddress = $contact->getMainAddress();
 
-        if (!!$contactAddress) {
+        if ($contactAddress) {
             $data['address']['street'] = $contactAddress->getStreet();
             $data['address']['number'] = $contactAddress->getNumber();
             $data['address']['zip'] = $contactAddress->getZip();
@@ -127,7 +125,7 @@ class ContactInfo implements WidgetInterface
             )->getName();
         }
 
-        if (!!$contact->getMainAccount()) {
+        if ($contact->getMainAccount()) {
             $mainAccount = $contact->getMainAccount();
             $data['company']['id'] = $mainAccount->getId();
             $data['company']['name'] = $mainAccount->getName();
