@@ -68,7 +68,7 @@ class Configuration implements ConfigurationInterface
                         ->addDefaultsIfNotSet()
                         ->children()
                             ->scalarNode('template')
-                                ->defaultValue('SuluContentBundle:Template:content-types/internal_links.html.twig')
+                                ->defaultValue('SuluContentBundle:Template:content-types/internal_link.html.twig')
                             ->end()
                         ->end()
                     ->end()
