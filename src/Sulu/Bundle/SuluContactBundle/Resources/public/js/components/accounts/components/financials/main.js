@@ -70,10 +70,6 @@ define([], function() {
             this.html(this.renderTemplate(this.templates[0]));
 
             this.initForm(data);
-            this.initTermsSelect(data);
-
-            this.startTermsOfPaymentOverlay();
-            this.startTermsOfDeliveryOverlay();
 
             this.bindDomEvents();
             this.bindCustomEvents();
@@ -83,10 +79,14 @@ define([], function() {
          * Shows the overlay to manage account categories
          */
         startTermsOfPaymentOverlay: function() {
+            var $container = this.sandbox.dom.createElement('<div/>');
+            this.sandbox.dom.append(this.$el, $container);
+
             this.sandbox.start([
                 {
                     name: 'type-overlay@suluadmin',
                     options: {
+                        el: $container,
                         overlay: {
                             el: constants.overlaySelectorTermsOfPayment,
                             instanceName: this.termsOfPaymentInstanceName,
@@ -104,10 +104,14 @@ define([], function() {
          * Shows the overlay to manage account categories
          */
         startTermsOfDeliveryOverlay: function() {
+            var $container = this.sandbox.dom.createElement('<div/>');
+            this.sandbox.dom.append(this.$el, $container);
+
             this.sandbox.start([
                 {
                     name: 'type-overlay@suluadmin',
                     options: {
+                        el: $container,
                         overlay: {
                             el: constants.overlaySelectorTermsOfDelivery,
                             instanceName: this.termsOfDeliveryInstanceName,
@@ -254,7 +258,7 @@ define([], function() {
                 };
 
             this.sandbox.dom.remove(constants.overlaySelectorTermsOfDelivery);
-            this.sandbox.dom.append('body', $overlayContainer);
+            this.sandbox.dom.append(this.$el, $overlayContainer);
             this.sandbox.emit('sulu.types.' + this.termsOfDeliveryInstanceName + '.open', config);
         },
 
@@ -276,7 +280,7 @@ define([], function() {
                 };
 
             this.sandbox.dom.remove(constants.overlaySelectorTermsOfPayment);
-            this.sandbox.dom.append('body', $overlayContainer);
+            this.sandbox.dom.append(this.$el, $overlayContainer);
             this.sandbox.emit('sulu.types.' + this.termsOfPaymentInstanceName + '.open', config);
         },
 
@@ -286,6 +290,10 @@ define([], function() {
 
             formObject.initialized.then(function() {
                 this.setFormData(data);
+                this.initTermsSelect(data);
+
+                this.startTermsOfPaymentOverlay();
+                this.startTermsOfDeliveryOverlay();
             }.bind(this));
         },
 

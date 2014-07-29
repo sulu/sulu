@@ -103,9 +103,6 @@ define([], function() {
             ]);
 
             this.initForm(data);
-            this.initCategorySelect(data);
-            this.initResponsibleContactSelect(data);
-            this.startCategoryOverlay();
 
             this.setTags();
 
@@ -258,7 +255,7 @@ define([], function() {
                 };
 
             this.sandbox.dom.remove('#overlayContainer');
-            this.sandbox.dom.append('body', $overlayContainer);
+            this.sandbox.dom.append(this.$el, $overlayContainer);
             this.sandbox.emit('sulu.types.' + this.instanceNameTypeOverlay + '.open', config);
         },
 
@@ -266,10 +263,13 @@ define([], function() {
          * Shows the overlay to manage account categories
          */
         startCategoryOverlay: function() {
+            var $container = this.sandbox.dom.createElement('<div/>');
+            this.sandbox.dom.append(this.$el, $container);
             this.sandbox.start([
                 {
                     name: 'type-overlay@suluadmin',
                     options: {
+                        el: $container,
                         overlay: {
                             el: '#overlayContainer',
                             instanceName: 'accountCategories',
@@ -383,6 +383,9 @@ define([], function() {
                 var formObject = this.sandbox.form.create(this.form);
                 formObject.initialized.then(function() {
                     this.setFormData(data);
+                    this.initCategorySelect(data);
+                    this.initResponsibleContactSelect(data);
+                    this.startCategoryOverlay();
                 }.bind(this));
             }.bind(this));
 
