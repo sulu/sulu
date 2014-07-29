@@ -8,13 +8,13 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\AdminBundle\SplitView;
+namespace Sulu\Bundle\AdminBundle\Widgets;
 
 /**
- * represents a single widget in a splitview
- * @package Sulu\Bundle\AdminBundle\SplitView
+ * represents a single widget
+ * @package Sulu\Bundle\AdminBundle\Widgets
  */
-interface SplitViewWidgetInterface
+interface WidgetInterface
 {
     /**
      * return name of widget
@@ -30,8 +30,8 @@ interface SplitViewWidgetInterface
 
     /**
      * returns data to render template
-     * @param mixed $id
+     * @param array $options
      * @return array
      */
-    public function getData($id);
+    public function getData($options);
 } 

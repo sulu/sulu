@@ -8,14 +8,14 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\AdminBundle\Tests\SplitView;
+namespace Sulu\Bundle\AdminBundle\Tests\Widgets;
 
-use Sulu\Bundle\AdminBundle\SplitView\SplitView;
-use Sulu\Bundle\AdminBundle\SplitView\SplitViewInterface;
-use Sulu\Bundle\AdminBundle\SplitView\SplitViewWidgetInterface;
+use Sulu\Bundle\AdminBundle\Widgets\WidgetsHandler;
+use Sulu\Bundle\AdminBundle\Widgets\WidgetsHandlerInterface;
+use Sulu\Bundle\AdminBundle\Widgets\WidgetInterface;
 use Symfony\Component\Templating\EngineInterface;
 
-class SplitViewTest extends \PHPUnit_Framework_TestCase
+class WidgetsHandlerTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var \Twig_LoaderInterface
@@ -28,26 +28,26 @@ class SplitViewTest extends \PHPUnit_Framework_TestCase
     private $templateEngine;
 
     /**
-     * @var SplitViewInterface
+     * @var WidgetsHandlerInterface
      */
-    private $splitView;
+    private $widgetsHandler;
 
     protected function setUp()
     {
         $this->templateEngine = $this->getMock('\Symfony\Component\Templating\EngineInterface');
 
-        $this->splitView = new SplitView($this->templateEngine, 'TEST-123');
+        $this->widgetsHandler = new WidgetsHandler($this->templateEngine);
     }
 
     /**
      * @param $name
      * @param $template
      * @param $data
-     * @return SplitViewWidgetInterface
+     * @return WidgetInterface
      */
     private function getWidget($name, $template, $data)
     {
-        $widget = $this->getMock('\Sulu\Bundle\AdminBundle\SplitView\SplitViewWidgetInterface');
+        $widget = $this->getMock('\Sulu\Bundle\AdminBundle\Widgets\WidgetInterface');
 
         $widget->expects($this->any())
             ->method('getName')
@@ -72,17 +72,17 @@ class SplitViewTest extends \PHPUnit_Framework_TestCase
 
     public function testRender()
     {
-        $this->splitView->addWidget(
+        $this->widgetsHandler->addWidget(
             $this->getWidget('widget1', 'SuluTestBundle:widget:widget1.html.twig', array('test' => '1')),
-            10
+            'widget-1'
         );
-        $this->splitView->addWidget(
+        $this->widgetsHandler->addWidget(
             $this->getWidget('widget3', 'SuluTestBundle:widget:widget3.html.twig', array('test' => '3')),
-            5
+            'widget-3'
         );
-        $this->splitView->addWidget(
+        $this->widgetsHandler->addWidget(
             $this->getWidget('widget2', 'SuluTestBundle:widget:widget2.html.twig', array('test' => '2')),
-            20
+            'widget-2'
         );
 
         $param = false;
@@ -101,18 +101,18 @@ class SplitViewTest extends \PHPUnit_Framework_TestCase
                 )
             );
 
-        $this->assertTrue($this->splitView->render(1));
+        $this->assertTrue($this->widgetsHandler->render(
+            array('widget-2', 'widget-1', 'widget-3'),
+            array('testParam' => 'super')
+        ));
         $this->assertNotFalse($param);
         $this->assertNotFalse($template);
 
-        $this->assertEquals('SuluAdminBundle:SplitView:widgets.html.twig', $template);
+        $this->assertEquals('SuluAdminBundle:Widgets:widgets.html.twig', $template);
         $this->assertEquals(
             array(
-                'header'=>'TEST-123',
-                'id' => 1,
                 'widgets' => array(
                     array(
-                        'priority' => 20,
                         'name' => 'widget2',
                         'template' =>'SuluTestBundle:widget:widget2.html.twig',
                         'data' => array(
@@ -120,7 +120,6 @@ class SplitViewTest extends \PHPUnit_Framework_TestCase
                         )
                     ),
                     array(
-                        'priority' => 10,
                         'name' => 'widget1',
                         'template' =>'SuluTestBundle:widget:widget1.html.twig',
                         'data' => array(
@@ -128,13 +127,15 @@ class SplitViewTest extends \PHPUnit_Framework_TestCase
                         )
                     ),
                     array(
-                        'priority' => 5,
                         'name' => 'widget3',
                         'template' =>'SuluTestBundle:widget:widget3.html.twig',
                         'data' => array(
                             'test' => 3
                         )
                     )
+                ),
+                'parameters' => array(
+                    'testParam' => 'super'
                 )
             ),
             $param
