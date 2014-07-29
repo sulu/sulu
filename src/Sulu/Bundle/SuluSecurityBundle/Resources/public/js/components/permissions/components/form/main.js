@@ -17,6 +17,13 @@ define([], function() {
 
         name: 'Sulu Security Permissions Form',
 
+        layout: {
+            sidebar: {
+                width: 'fixed',
+                cssClasses: 'sidebar-padding-50'
+            }
+        },
+
         templates: ['/admin/security/template/permission/form'],
 
         view: true,
@@ -47,10 +54,20 @@ define([], function() {
             this.initializeHeaderbar();
 
             this.sandbox.form.create(this.formId);
+
+            if (!!this.options.data.contact && !!this.options.data.contact.id) {
+                this.initSidebar(
+                    '/admin/widget-groups/contact-detail?contact=',
+                    this.options.data.contact.id
+                );
+            }
+        },
+
+        initSidebar: function(url, id) {
+            this.sandbox.emit('sulu.sidebar.set-widget', url + id);
         },
 
         // Headerbar
-
         initializeHeaderbar: function() {
             this.currentType = '';
             this.currentState = '';
