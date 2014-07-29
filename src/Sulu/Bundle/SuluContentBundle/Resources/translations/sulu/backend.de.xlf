@@ -6,6 +6,14 @@
                 <source>single-internal-link.title</source>
                 <target>Interner Link auswählen</target>
             </trans-unit>
+            <trans-unit id="fbf4558371239fbed1233a4ba3fdf006" resname="content-navigation.contents.internal-link">
+                <source>content-navigation.contents.internal-link</source>
+                <target>Interner Link</target>
+            </trans-unit>
+            <trans-unit id="fbf1328371239fbed4a73a4ba3fdf006" resname="content-navigation.contents.external-link">
+                <source>content-navigation.contents.external-link</source>
+                <target>Externer Link</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
