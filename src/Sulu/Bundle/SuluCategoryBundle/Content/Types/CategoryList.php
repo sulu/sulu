@@ -65,8 +65,16 @@ class CategoryList extends ComplexContentType
      */
     public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
-        $categories = $node->getPropertyValueWithDefault($property->getName(), array());
-        $this->setData($categories, $property);
+        $data = array();
+        $categoryIds = $node->getPropertyValueWithDefault($property->getName(), array());
+        $categories = $this->categoryManager->findByIds($categoryIds);
+        $categories = $this->categoryManager->getApiObjects($categories, $languageCode);
+
+        foreach($categories as $category) {
+            $data[] = $category->toArray();
+        }
+
+        $this->setData($data, $property);
     }
 
     /**
