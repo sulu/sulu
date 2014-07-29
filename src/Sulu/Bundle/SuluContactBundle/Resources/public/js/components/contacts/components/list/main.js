@@ -28,6 +28,7 @@ define(function() {
             this.sandbox.on('sulu.list-toolbar.add', function() {
                 this.sandbox.emit('sulu.contacts.contacts.new');
             }, this);
+
         };
 
     return {

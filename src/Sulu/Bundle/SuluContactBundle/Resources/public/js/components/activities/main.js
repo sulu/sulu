@@ -76,14 +76,14 @@ define(
                 // get defaults for priorities/statuses/types
                 this.sandbox.emit('sulu.contacts.activities.get.defaults');
 
-                if(!!this.contact) {
+                if (!!this.contact && !!this.contact.id) {
                     this.initSidebar(this.options.widgetUrl, this.contact.id);
-                }else {
+                } else if (!!this.account && !!this.account.id) {
                     this.initSidebar(this.options.widgetUrl, this.account.id);
                 }
             },
 
-            initSidebar: function(url, id){
+            initSidebar: function(url, id) {
                 this.sandbox.emit('sulu.sidebar.set-widget', url + id);
             },
 

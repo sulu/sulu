@@ -70,12 +70,15 @@ define([], function() {
                 setHeaderToolbar.call(this);
                 this.listenForChange();
 
-                if (!!this.options.data.id) {
-                    this.initSidebar('/admin/widget-groups/contact-detail?contact=', this.options.data.id);
+                if (!!this.options.data && !!this.options.data.id) {
+                    this.initSidebar(
+                        '/admin/widget-groups/contact-detail?contact=',
+                        this.options.data.id
+                    );
                 }
             },
 
-            initSidebar: function(url, id){
+            initSidebar: function(url, id) {
                 this.sandbox.emit('sulu.sidebar.set-widget', url + id);
             },
 
