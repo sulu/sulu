@@ -16,8 +16,7 @@ namespace Sulu\Component\Content;
 abstract class ComplexContentType implements ContentTypeInterface
 {
     /**
-     * returns default parameters
-     * @return array
+     * {@inheritdoc}
      */
     public function getDefaultParams()
     {
@@ -25,9 +24,7 @@ abstract class ComplexContentType implements ContentTypeInterface
     }
 
     /**
-     * magic getter for twig templates
-     * @param $property
-     * @return mixed|null
+     * {@inheritdoc}
      */
     public function __get($property)
     {
@@ -36,5 +33,13 @@ abstract class ComplexContentType implements ContentTypeInterface
         } else {
             return null;
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDefaultValue()
+    {
+        return null;
     }
 }

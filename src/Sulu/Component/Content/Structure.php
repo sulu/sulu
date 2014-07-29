@@ -791,6 +791,7 @@ abstract class Structure implements StructureInterface
     {
         if (
             $this->getNodeType() === Structure::NODE_TYPE_INTERNAL_LINK &&
+            $this->getInternalLinkContent() !== null &&
             $this->getInternalLinkContent()->hasTag('sulu.rlp')
         ) {
             return $this->getInternalLinkContent()->getPropertyValueByTagName('sulu.rlp');
@@ -811,6 +812,7 @@ abstract class Structure implements StructureInterface
     {
         if (
             $this->getNodeType() === Structure::NODE_TYPE_INTERNAL_LINK &&
+            $this->getInternalLinkContent() !== null &&
             $this->getInternalLinkContent()->hasTag('sulu.node.name')
         ) {
             return $this->internalLinkContent->getPropertyValueByTagName('sulu.node.name');

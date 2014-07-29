@@ -297,7 +297,12 @@ class ContentMapper implements ContentMapperInterface
                     );
                 }
             } elseif ($property->getMandatory()) {
-                throw new MandatoryPropertyException($templateKey, $property);
+                $type = $this->getContentType($property->getContentTypeName());
+                $type->read($node, $property, $webspaceKey, $languageCode, null);
+
+                if ($property->getValue() === $type->getDefaultValue()) {
+                    throw new MandatoryPropertyException($templateKey, $property);
+                }
             } elseif (!$partialUpdate) {
                 $type = $this->getContentType($property->getContentTypeName());
                 // if it is not a partial update remove property

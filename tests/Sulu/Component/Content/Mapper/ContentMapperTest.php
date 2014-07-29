@@ -1997,20 +1997,10 @@ class ContentMapperTest extends PhpcrTestCase
     {
         $data = array(
             'name' => 'Testname',
-            'blog' => 'German',
             'url' => '/news/test'
         );
-        $structure = $this->mapper->save($data, 'mandatory', 'default', 'de', 1);
-
-        $this->assertEquals($data['name'], $structure->getPropertyValue('name'));
-        $this->assertEquals($data['blog'], $structure->getPropertyValue('blog'));
-        $this->assertEquals($data['url'], $structure->getPropertyValue('url'));
 
         $this->setExpectedException('\Sulu\Component\Content\Exception\MandatoryPropertyException', 'Data for mandatory property blog in template mandatory not found');
-        $data = array(
-            'name' => 'Testname',
-            'url' => '/news/test'
-        );
         $this->mapper->save($data, 'mandatory', 'default', 'de', 1);
     }
 
