@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * processes given tag and append widgets to given widgets-handler service
+ * Processes given tag and append widgets to given widgets-handler service
  * @package Sulu\Bundle\AdminBundle\DependencyInjection\Compiler
  */
 class WidgetsPass implements CompilerPassInterface
