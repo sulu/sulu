@@ -19,11 +19,12 @@ use Sulu\Bundle\TranslateBundle\Entity\Translation;
 use Sulu\Bundle\TranslateBundle\Translate\Exception\PackageNotFoundException;
 use Symfony\Component\Console\Output\Output;
 use Symfony\Component\HttpKernel\KernelInterface;
-use Symfony\Component\HttpKernel\Bundle;
+use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\Translation\Loader;
 use Symfony\Component\Translation\Loader\XliffFileLoader;
 use Symfony\Component\Translation\Exception\InvalidResourceException;
 use Symfony\Component\Translation\Exception\NotFoundResourceException;
+use Symfony\Component\Translation\Loader\LoaderInterface;
 
 
 /**
@@ -292,6 +293,7 @@ class Import
     public function executeFromFile($backend = true, $frontend = false)
     {
         // get correct loader according to format
+        /** @var LoaderInterface $loader */
         $loader = null;
         switch ($this->getFormat()) {
             case self::XLIFF:
@@ -310,14 +312,13 @@ class Import
     public function executeFromBundles($backend = true, $frontend = true)
     {
         foreach ($this->kernel->getBundles() as $bundle) {
-            $hasTranslations = null;
+            $hasTranslations = true;
             $pathToTranslations = '';
 
             try {
                 $pathToTranslations = $this->kernel->locateResource(
                     '@' . $bundle->getName() . '/' . $this->path
                 );
-                $hasTranslations = true;
             } catch (\InvalidArgumentException $e) {
                 $hasTranslations = false;
             }
@@ -330,7 +331,7 @@ class Import
 
     /**
      * Imports the translations file for a bundle
-     * @param Bundle $bundle
+     * @param BundleInterface $bundle
      * @param $path
      * @param boolean $backend True to import the backend file
      * @param boolean $frontend True to import the frontend file
@@ -340,6 +341,7 @@ class Import
         $this->communicate('Import translations from ' . $bundle->getName() . ' ...');
 
         // get correct loader according to format
+        /** @var LoaderInterface $loader */
         $loader = null;
         $extension = '';
         switch ($this->getFormat()) {
@@ -410,7 +412,7 @@ class Import
 
     /**
      * Looks if a package for a bundles exists and returns it. If not creates a new one
-     * @param Bundle $bundle
+     * @param BundleInterface $bundle
      * @return Package
      */
     private function getPackageforBundle($bundle)

@@ -129,7 +129,7 @@ class Package extends ApiEntity
     {
         if ($codes = $this->getCodes()) {
             foreach ($codes as $code) {
-                /** @var $code Translation */
+                /** @var $code Code */
                 if ($code->getCode() == $key) {
                     return $code;
                 }
