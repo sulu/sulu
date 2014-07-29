@@ -210,9 +210,9 @@ class NodeRepositoryTest extends PhpcrTestCase
         $this->assertTrue($result['_embedded']['nodes'][0]['hasSub']);
 
         $this->assertEquals(1, sizeof($result['_embedded']['nodes'][0]['_embedded']));
-        $this->assertEquals('Testtitle', $result['_embedded']['nodes'][0]['_embedded'][0]['title']);
-        $this->assertEquals('/testtitle', $result['_embedded']['nodes'][0]['_embedded'][0]['path']);
-        $this->assertFalse($result['_embedded']['nodes'][0]['_embedded'][0]['hasSub']);
+        $this->assertEquals('Testtitle', $result['_embedded']['nodes'][0]['_embedded']['nodes'][0]['title']);
+        $this->assertEquals('/testtitle', $result['_embedded']['nodes'][0]['_embedded']['nodes'][0]['path']);
+        $this->assertFalse($result['_embedded']['nodes'][0]['_embedded']['nodes'][0]['hasSub']);
     }
 
     public function testGetNodesTreeWithGhosts()
