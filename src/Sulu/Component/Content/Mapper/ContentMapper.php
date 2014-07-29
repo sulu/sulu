@@ -976,7 +976,6 @@ class ContentMapper implements ContentMapperInterface
             $structure,
             $localization,
             $webspaceKey,
-            $excludeGhost,
             $loadGhostContent
         );
 
@@ -996,14 +995,12 @@ class ContentMapper implements ContentMapperInterface
      * @param StructureInterface $content
      * @param string $localization
      * @param string $webspaceKey
-     * @param bool $excludeGhost
      * @param bool $loadGhostContent
      */
     private function loadInternalLinkDependencies(
         StructureInterface $content,
         $localization,
         $webspaceKey,
-        $excludeGhost = true,
         $loadGhostContent = false
     ) {
         if ($content->getNodeType() === Structure::NODE_TYPE_INTERNAL_LINK && $content->hasTag('sulu.rlp')) {
@@ -1015,7 +1012,7 @@ class ContentMapper implements ContentMapperInterface
                         $internal,
                         $webspaceKey,
                         $localization,
-                        $excludeGhost
+                        $loadGhostContent
                     )
                 );
             }
