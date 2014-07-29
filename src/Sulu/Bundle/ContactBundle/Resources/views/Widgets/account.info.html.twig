@@ -1,4 +1,4 @@
-{% if data.id is defined %}
+{% if data.id is defined and data is not null%}
     <div id="sidebar-accounts-list" data-id="{{ data.id }}" class="show-icon grid-row m-bottom-20">
         <h2 class="m-bottom-0 action">{{ data.name }}
             <span class="blue-icon"><span class="fa-pencil"></span></span>

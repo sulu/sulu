@@ -213,12 +213,12 @@ define([
             this.render();
             bindCustomEvents.call(this);
 
-            if (!!this.options.data.id) {
+            if (!!this.options.data && !!this.options.data.id) {
                 this.initSidebar('/admin/widget-groups/account-detail?account=', this.options.data.id);
             }
         },
 
-        initSidebar: function(url, id){
+        initSidebar: function(url, id) {
             this.sandbox.emit('sulu.sidebar.set-widget', url + id);
         },
 
