@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * renderes the Widgets
+ * Renders the Widgets
  *
  * @package Sulu\Bundle\AdminBundle\Controller
  */
@@ -35,6 +35,7 @@ class WidgetGroupsController extends Controller
         $aliases = array(
             'sulu-contact-contact-info'
         );
+
         try {
             return new Response(
                 $this->getWidgetsHandler()->render(
@@ -58,6 +59,7 @@ class WidgetGroupsController extends Controller
             'sulu-contact-account-info',
             'sulu-contact-main-contact'
         );
+
         try {
             return new Response(
                 $this->getWidgetsHandler()->render(
@@ -80,6 +82,7 @@ class WidgetGroupsController extends Controller
         $aliases = array(
             'sulu-contact-main-account'
         );
+
         try {
             return new Response(
                 $this->getWidgetsHandler()->render(
@@ -102,6 +105,7 @@ class WidgetGroupsController extends Controller
         $aliases = array(
             'sulu-contact-main-contact'
         );
+
         try {
             return new Response(
                 $this->getWidgetsHandler()->render(
