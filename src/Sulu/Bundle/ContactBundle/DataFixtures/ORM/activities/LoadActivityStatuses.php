@@ -24,7 +24,7 @@ class LoadActivityStatuses implements FixtureInterface, OrderedFixtureInterface
         $metadata = $manager->getClassMetaData(get_class(new ActivityStatus()));
         $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
 
-        $file = dirname(__FILE__) . '/../activityStatuses.xml';
+        $file = dirname(__FILE__) . '/../../activityStatuses.xml';
         $doc = new DOMDocument();
         $doc->load($file);
 
