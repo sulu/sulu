@@ -16337,7 +16337,6 @@ define('aura/ext/components', [],function() {
   };
 });
 
-
 /*
  * This file is part of the Husky Validation.
  *
@@ -16980,11 +16979,14 @@ define('form/validation',[
         // define validation interface
             result = {
                 validate: function(force) {
-                    var result = true;
+                    var result = true, focus = false;
                     // validate each element
                     $.each(form.elements, function(key, element) {
                         if (!element.validate(force)) {
-                            // TODO: scroll to first invalid element you can't use $.focus because an element mustn't be an input
+                            if (!focus) {
+                                element.$el.focus();
+                                focus = true;
+                            }
                             result = false;
                         }
                     });
@@ -17703,7 +17705,6 @@ require.config({
         'type/date': 'js/types/date',
         'type/decimal': 'js/types/decimal',
         'type/hiddenData': 'js/types/hiddenData',
-        'type/mappingData': 'js/types/mappingData',
         'type/email': 'js/types/email',
         'type/url': 'js/types/url',
         'type/label': 'js/types/label',
@@ -18070,17 +18071,11 @@ define('type/decimal',[
                 },
 
                 getModelData: function(val) {
-                    if(val === '') {
-                        return '';
-                    }
                     return Globalize.parseFloat(val);
                 },
 
                 getViewData: function(val) {
                     if(typeof val === 'string'){
-                        if(val === '') {
-                            return '';
-                        }
                         val = parseFloat(val);
                     }
                     return Globalize.format(val, this.options.format);
@@ -18138,80 +18133,6 @@ define('type/hiddenData',[
 
                 validate: function() {
                     return true;
-                }
-            };
-
-        return new Default($el, defaults, options, 'hiddenData', typeInterface);
-    };
-});
-
-/*
- * This file is part of the Husky Validation.
- *
- * (c) MASSIVE ART WebServices GmbH
- *
- * This source file is subject to the MIT license that is bundled
- * with this source code in the file LICENSE.
- *
- */
-
-define('type/mappingData',[
-    'type/default'
-], function(Default) {
-
-    
-
-    return function($el, options) {
-        var defaults = {
-                defaultValue: null,
-                mapping: null,
-                searchProperty: 'id',
-                showProperty: 'name'
-            },
-
-            typeInterface = {
-
-                setValue: function(value) {
-                    if (value !== null && typeof value !== 'object') {
-                        this.$el.data('value', value);
-                        this.$el.text(this.getMappingValue(value) || this.options.defaultValue);
-                    }
-                },
-
-                getValue: function() {
-
-                    var value = this.$el.data('value');
-
-                    if (value !== null) {
-                        return value;
-                    } else {
-                        return this.options.defaultValue;
-                    }
-                },
-
-                needsValidation: function() {
-                    return false;
-                },
-
-                validate: function() {
-                    return true;
-                },
-
-                getMappingValue: function(val) {
-
-                    var key, obj = this.options.mapping;
-
-                    if (!!obj) {
-                        for (key in this.options.mapping) {
-                            if (!!obj.hasOwnProperty(key)) {
-                                if (obj[key].hasOwnProperty(this.options.searchProperty) &&
-                                    obj[key].hasOwnProperty(this.options.showProperty) &&
-                                    String(obj[key][this.options.searchProperty]) === String(val)) {
-                                    return obj[key][this.options.showProperty];
-                                }
-                            }
-                        }
-                    }
                 }
             };
 
@@ -18847,15 +18768,8 @@ define('validator/required',[
                             return false;
                         }
 
-                        if(typeof val === 'undefined'){
-                            return false;
-                        }
-
-                        // the following condition works only for strings
-                        val = val.toString();
-
                         // notNull && notBlank && not undefined
-                        return val.length > 0 && '' !== val.replace(/^\s+/g, '').replace(/\s+$/g, '');
+                        return typeof val !== 'undefined' && val.length > 0 && '' !== val.replace(/^\s+/g, '').replace(/\s+$/g, '');
                     }
                     return true;
                 }
@@ -19122,6 +19036,7 @@ define('validator/regex',[
     };
 
 });
+
 
 define("husky-validation", function(){});
 
@@ -27592,7 +27507,11 @@ define('__component__$navigation@husky',[],function() {
 
                 if (this.sandbox.dom.hasClass(match, 'js-navigation-sub-item')) {
                     parent = this.sandbox.dom.closest(match, '.navigation-items');
-                    this.toggleItems(null, parent);
+
+                    // toggle parent only when it is not expaneded
+                    if(!this.sandbox.dom.hasClass(parent, 'is-expanded')){
+                        this.toggleItems(null, parent);
+                    }
                 }
                 this.selectSubItem(null, match, false);
                 this.checkBottomHit(null, match);
@@ -28406,6 +28325,7 @@ define('__component__$column-options@husky',[],function() {
  * @param {Boolean} [options.hideChildrenAtBeginning] if true children get hidden, if all children are loaded at the beginning
  * @param {String|Number|Null} [options.openChildId] the id of the children to open all parents for. (only relevant in a child-list)
  * @param {String|Number|Null} [options.cssClass] css-class to give the the components element. (e.g. "white-box")
+ * @param {Boolean} [options.highlightSelected] highlights the clicked row when selected
  *
  * @param {Boolean} [rendered] property used by the datagrid-main class
  * @param {Function} [initialize] function which gets called once at the start of the view
@@ -28724,13 +28644,6 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                 this.emitRowClickedEvent.bind(this), 'tbody tr'
             );
 
-            if(!!this.options.highlightSelected){
-                this.sandbox.dom.on(
-                    this.$tableContainer, 'click',
-                    this.highlightRow.bind(this), 'tbody tr'
-                );
-            }
-
             // calls the icon-callback on click on an icon
             this.sandbox.dom.on(
                 this.$tableContainer, 'click',
@@ -28780,18 +28693,18 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         },
 
         /**
-         * Highlights clicked row and removes highlight from other rows
+         * Highlights clicked row and removes highlighting from the previously
+         * highlighted
          * @param event
          */
         highlightRow: function(event) {
             var $row = event.currentTarget,
                 $selectedRow = this.sandbox.dom.find(
-                    'tbody tr.' + constants.selected,
+                        'tbody tr.' + constants.selected,
                     this.$el
                 );
 
-            this.sandbox.dom.removeClass($selectedRow, constants.
-                selected);
+            this.sandbox.dom.removeClass($selectedRow, constants.selected);
             this.sandbox.dom.addClass($row, constants.selected);
         },
 
@@ -28811,17 +28724,21 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Emits the row-clicked event
          */
         emitRowClickedEvent: function(event) {
-
             if (!this.rowClicked) {
                 this.rowClicked = true;
                 var id = this.sandbox.dom.$(event.currentTarget).data('id');
+
+                if (!!this.options.highlightSelected) {
+                    this.highlightRow(event);
+                }
+
                 if (!!id) {
                     this.datagrid.emitItemClickedEvent.call(this.datagrid, id);
                 } else {
                     this.datagrid.emitItemClickedEvent.call(this.datagrid, event);
                 }
 
-                // set row clicked back to prevent double click
+                // set row clicked back to prevent multiple emits on double click
                 setTimeout(function(){
                     this.rowClicked = false;
                 }.bind(this), 500);
@@ -29221,10 +29138,9 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Adds configured icons to a cell
          * @param $container {Object} the dom-object to append the icons to
          * @param column {String} the identifier of the column
-         * @param row {Object} the row object
          * @
          */
-        addIconsToCell: function($container, column, row) {
+        addIconsToCell: function($container, column) {
             if (!!this.options.icons) {
                 var i, length, $icon;
 
@@ -29872,7 +29788,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         openAllParents: function(id) {
             var $child = this.sandbox.dom.find('tr[data-id="'+ id +'"]', this.$tableContainer),
                 parentId = this.sandbox.dom.data($child, 'parent'),
-                $parent = this.sandbox.dom.find('tr[data-id="'+ parentId +'"]', this.$tableContainer)
+                $parent = this.sandbox.dom.find('tr[data-id="'+ parentId +'"]', this.$tableContainer);
             if (!!parentId && !!$parent) {
                 if (!!this.sandbox.dom.data($parent, 'parent')) {
                     this.openAllParents(parentId);

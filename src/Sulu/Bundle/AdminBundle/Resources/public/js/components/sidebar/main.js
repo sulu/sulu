@@ -179,8 +179,6 @@ define([], function() {
          * @param {String} classes
          */
         addClasses: function(classes) {
-
-            // TODO rename to setClass and call reset before?
             this.sandbox.dom.addClass(this.$el, classes);
         },
 
