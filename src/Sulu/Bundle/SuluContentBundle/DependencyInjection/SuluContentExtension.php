@@ -42,6 +42,10 @@ class SuluContentExtension extends Extension
             $config['types']['internal_links']['template']
         );
         $container->setParameter(
+            'sulu.content.type.single_internal_link.template',
+            $config['types']['single_internal_link']['template']
+        );
+        $container->setParameter(
             'sulu.content.type.phone.template',
             $config['types']['phone']['template']
         );
