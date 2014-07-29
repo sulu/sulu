@@ -169,6 +169,8 @@ class UserControllerTest extends DatabaseTestCase
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Account'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AccountContact'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ContactAddress'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ContactTitle'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Position'),
 
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\User'),
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\UserSetting'),
