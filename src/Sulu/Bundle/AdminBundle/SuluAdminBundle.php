@@ -13,9 +13,9 @@ namespace Sulu\Bundle\AdminBundle;
 use Sulu\Bundle\AdminBundle\DependencyInjection\Compiler\AddAdminPass;
 use Sulu\Bundle\AdminBundle\DependencyInjection\Compiler\AddJsConfigPass;
 use Sulu\Bundle\AdminBundle\DependencyInjection\Compiler\WidgetsPass;
+use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Sulu\Bundle\AdminBundle\DependencyInjection\Compiler\SuluVersionPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class SuluAdminBundle extends Bundle
 {
