@@ -27,6 +27,7 @@ class ContactInfo implements WidgetInterface
 {
     protected $em;
 
+    protected $widgetName = 'ContactInfo';
     protected $contactEntityName = 'SuluContactBundle:Contact';
 
     function __construct(EntityManager $em)
@@ -75,13 +76,16 @@ class ContactInfo implements WidgetInterface
             if (!$contact) {
                 throw new WidgetEntityNotFoundException(
                     'Entity ' . $this->contactEntityName . ' with id ' . $id . ' not found!',
+                    $this->widgetName,
                     $id
                 );
             }
             return $this->parseContactForListSidebar($contact);
         } else {
             throw new WidgetParameterException(
-                'Required parameter contact not found or empty!'
+                'Required parameter contact not found or empty!',
+                $this->widgetName,
+                'contact'
             );
         }
     }
