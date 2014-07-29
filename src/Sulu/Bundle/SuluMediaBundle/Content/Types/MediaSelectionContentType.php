@@ -38,6 +38,25 @@ class MediaSelectionContentType extends ComplexContentType
     }
 
     /**
+     * @return array
+     */
+    public function getDefaultParams()
+    {
+        return array(
+            'types' => null
+        );
+    }
+
+    /**
+     * @param $params
+     * @return array
+     */
+    public function getParams($params)
+    {
+        return array_merge($this->getDefaultParams(), $params);
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getType()
@@ -84,10 +103,13 @@ class MediaSelectionContentType extends ComplexContentType
         if ($data instanceof MediaSelectionContainer) {
             $container = $data;
         } else {
+            $params = $this->getParams($property->getParams());
+            $types = $params['types'];
             $container = new MediaSelectionContainer(
                 isset($data['config']) ?  $data['config'] : array(),
                 isset($data['displayOption']) ? $data['displayOption'] : '',
                 isset($data['ids']) ? $data['ids'] : array(),
+                $types,
                 $languageCode,
                 $this->mediaManager
             );
