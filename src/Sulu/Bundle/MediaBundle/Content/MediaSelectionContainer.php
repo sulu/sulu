@@ -39,7 +39,7 @@ class MediaSelectionContainer implements \Serializable
      * @Exclude
      * @var string
      */
-    private $localization;
+    private $locale;
 
     /**
      * @Exclude
@@ -53,24 +53,23 @@ class MediaSelectionContainer implements \Serializable
      */
     private $mediaManager;
 
-    function __construct($config, $displayOption, $ids, $localization, $mediaManager)
+    function __construct($config, $displayOption, $ids, $locale, $types, $mediaManager)
     {
         $this->config = $config;
         $this->displayOption = $displayOption;
         $this->ids = $ids;
-        $this->localization = $localization;
+        $this->locale = $locale;
         $this->mediaManager = $mediaManager;
     }
 
     /**
      * returns data of container
-     * @param string $locale
      * @return Media[]
      */
-    public function getData($locale = 'en') // TODO delete "= 'en'" and set it on the position where the function is called
+    public function getData()
     {
         if ($this->data === null) {
-            $this->data = $this->loadData($locale);
+            $this->data = $this->loadData($this->locale);
         }
 
         return $this->data;
@@ -83,7 +82,7 @@ class MediaSelectionContainer implements \Serializable
     private function loadData($locale)
     {
         if (!empty($this->ids)) {
-            return $this->mediaManager->get($locale, null, $this->ids);
+            return $this->mediaManager->get($locale, array('ids' => $this->ids));
         } else {
             return array();
         }

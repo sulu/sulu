@@ -13,7 +13,6 @@ namespace Sulu\Bundle\MediaBundle\Tests\Unit\Content\Types;
 //FIXME remove on update to phpunit 3.8, caused by https://github.com/sebastianbergmann/phpunit/issues/604
 use PHPUnit_Framework_TestCase;
 use Sulu\Bundle\MediaBundle\Content\MediaSelectionContainer;
-use Sulu\Bundle\MediaBundle\Media\RestObject\RestObjectHelper;
 
 interface NodeInterface extends \PHPCR\NodeInterface, \Iterator
 {
