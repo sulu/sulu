@@ -146,16 +146,12 @@ class PackageControllerTest extends DatabaseTestCase
     {
         $client = static::createClient();
 
-        $client->request('GET', '/api/packages?flat=true&fields=name');
+        $client->request('GET', '/api/packages?flat=true&fields=id,name');
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('Sulu', $response->_embedded->packages[0]->name);
         $this->assertEquals('Global', $response->_embedded->packages[1]->name);
         $this->assertEquals('Portal', $response->_embedded->packages[2]->name);
-
-        $this->assertFalse(isset($response->_embedded->packages[0]->id));
-        $this->assertFalse(isset($response->_embedded->packages[1]->id));
-        $this->assertFalse(isset($response->_embedded->packages[2]->id));
 
         $client->request('GET', '/api/packages?flat=true&fields=name,id');
         $response = json_decode($client->getResponse()->getContent());

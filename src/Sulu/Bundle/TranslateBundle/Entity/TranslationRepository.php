@@ -52,14 +52,14 @@ class TranslationRepository extends EntityRepository
 
     /**
      * find translation with a few filters
-     * @param $packageId
      * @param $locale
      * @param null $backend
      * @param null $frontend
      * @param null $location
+     * @param null $packageId
      * @return array
      */
-    public function findFiltered($packageId, $locale, $backend = null, $frontend = null, $location = null)
+    public function findFiltered($locale, $backend = null, $frontend = null, $location = null, $packageId = null)
     {
         $dql = 'SELECT tr
                     FROM SuluTranslateBundle:Translation tr
@@ -67,8 +67,7 @@ class TranslationRepository extends EntityRepository
                         JOIN ca.package pa
                         JOIN tr.code co
                         LEFT JOIN co.location lo
-                    WHERE ca.locale = :locale
-                      	AND pa.id = :packageId';
+                    WHERE ca.locale = :locale';
 
         // add additional conditions, if they are set
         if ($backend != null) {
@@ -86,11 +85,15 @@ class TranslationRepository extends EntityRepository
                       AND lo.name = :location';
         }
 
+        if ($packageId != null) {
+            $dql .= '
+                      AND pa.id = :packageId';
+        }
+
         $query = $this->getEntityManager()
             ->createQuery($dql)
             ->setParameters(
                 array(
-                    'packageId' => $packageId,
                     'locale' => $locale
                 )
             );
@@ -106,6 +109,10 @@ class TranslationRepository extends EntityRepository
 
         if ($location != null) {
             $query->setParameter('location', $location);
+        }
+
+        if ($packageId != null) {
+            $query->setParameter('packageId', $packageId);
         }
 
         return $query->getResult();

@@ -42,4 +42,32 @@ class PackageRepository extends EntityRepository
             return null;
         }
     }
+
+    /**
+     * returns a package for a given name
+     * @param $name
+     * @return Package|null
+     */
+    public function getPackageByName($name) {
+        try {
+            $qb = $this->createQueryBuilder('package')
+                ->leftJoin('package.catalogues', 'catalogues')
+                ->addSelect('catalogues')
+                ->leftJoin('package.codes', 'codes')
+                ->addSelect('codes')
+                ->leftJoin('catalogues.translations', 'translations')
+                ->addSelect('translations')
+                ->leftJoin('translations.code', 'code')
+                ->addSelect('code')
+                ->where('package.name=:packageName');
+
+            $query = $qb->getQuery();
+            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+            $query->setParameter('packageName', $name);
+
+            return $query->getSingleResult();
+        } catch (NoResultException $ex) {
+            return null;
+        }
+    }
 }

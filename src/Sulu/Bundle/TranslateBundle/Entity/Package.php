@@ -127,10 +127,12 @@ class Package extends ApiEntity
      */
     public function findCode($key)
     {
-        foreach ($this->getCodes() as $code) {
-            /** @var $code Translation */
-            if ($code->getCode() == $key) {
-                return $code;
+        if ($codes = $this->getCodes()) {
+            foreach ($codes as $code) {
+                /** @var $code Code */
+                if ($code->getCode() == $key) {
+                    return $code;
+                }
             }
         }
 

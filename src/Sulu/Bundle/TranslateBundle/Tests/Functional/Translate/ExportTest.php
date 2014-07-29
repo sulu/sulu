@@ -44,6 +44,10 @@ class ExportTest extends DatabaseTestCase
 
         $this->export = new Export(self::$em);
 
+        //
+        // Package - id 1
+        // -------------------------------
+
         //Insert some data in the database
         $package = new Package();
         $package->setName('Export');
@@ -109,6 +113,75 @@ class ExportTest extends DatabaseTestCase
         $translation3->setValue('Exports are configurable');
         self::$em->persist($translation3);
 
+        //
+        // Package - id 2
+        // -------------------------------
+
+        //Insert some data in the database
+        $package2 = new Package();
+        $package2->setName('Export2');
+        self::$em->persist($package2);
+
+        $catalogue2 = new Catalogue();
+        $catalogue2->setPackage($package2);
+        $catalogue2->setIsDefault(false);
+        $catalogue2->setLocale('en');
+        self::$em->persist($catalogue2);
+
+        $location21 = new Location();
+        $location21->setName('Newsletter');
+        $location21->setPackage($package2);
+        self::$em->persist($location21);
+
+        $location22 = new Location();
+        $location22->setName('Portals');
+        $location22->setPackage($package2);
+        self::$em->persist($location22);
+
+        $code21 = new Code();
+        $code21->setPackage($package2);
+        $code21->setCode('export.easy2');
+        $code21->setBackend(true);
+        $code21->setFrontend(true);
+        $code21->setLocation($location21);
+        self::$em->persist($code21);
+
+        $code22 = new Code();
+        $code22->setPackage($package2);
+        $code22->setCode('export.great2');
+        $code22->setBackend(true);
+        $code22->setFrontend(false);
+        $code22->setLocation($location21);
+        self::$em->persist($code22);
+
+        $code23 = new Code();
+        $code23->setPackage($package2);
+        $code23->setCode('export.configurable2');
+        $code23->setBackend(false);
+        $code23->setFrontend(true);
+        $code23->setLocation($location22);
+        self::$em->persist($code23);
+
+        self::$em->flush();
+
+        $translation21 = new Translation();
+        $translation21->setCatalogue($catalogue2);
+        $translation21->setCode($code21);
+        $translation21->setValue('Exports made super easy');
+        self::$em->persist($translation21);
+
+        $translation22 = new Translation();
+        $translation22->setCatalogue($catalogue2);
+        $translation22->setCode($code22);
+        $translation22->setValue('Exports are super great');
+        self::$em->persist($translation22);
+
+        $translation23 = new Translation();
+        $translation23->setCatalogue($catalogue2);
+        $translation23->setCode($code23);
+        $translation23->setValue('Exports are super configurable');
+        self::$em->persist($translation23);
+
         self::$em->flush();
     }
 
@@ -141,12 +214,13 @@ class ExportTest extends DatabaseTestCase
     {
         $this->export->setPackageId(1);
         $this->export->setLocale('en');
+        $this->export->setFilename('sulu');
         $this->export->setFormat(Export::XLIFF);
         $this->export->setPath(self::$fixturePath . '/');
         $this->export->execute();
 
-        $expectedHash = md5_file(self::$fixturePath . '/export.xlf');
-        $actualHash = md5_file(self::$fixturePath . '/Export.en.xlf');
+        $expectedHash = md5_file(self::$fixturePath . '/samples/export.xlf');
+        $actualHash = md5_file(self::$fixturePath . '/sulu.en.xlf');
 
         $this->assertEquals($expectedHash, $actualHash);
     }
@@ -155,13 +229,14 @@ class ExportTest extends DatabaseTestCase
     {
         $this->export->setPackageId(1);
         $this->export->setLocale('en');
+        $this->export->setFilename('sulu');
         $this->export->setFormat(Export::XLIFF);
         $this->export->setLocation('Newsletter');
         $this->export->setPath(self::$fixturePath . '/');
         $this->export->execute();
 
-        $expectedHash = md5_file(self::$fixturePath . '/export.newsletter.xlf');
-        $actualHash = md5_file(self::$fixturePath . '/Export.en.xlf');
+        $expectedHash = md5_file(self::$fixturePath . '/samples/export.newsletter.xlf');
+        $actualHash = md5_file(self::$fixturePath . '/sulu.en.xlf');
 
         $this->assertEquals($expectedHash, $actualHash);
 
@@ -169,11 +244,12 @@ class ExportTest extends DatabaseTestCase
         $this->export->setLocale('en');
         $this->export->setFormat(Export::XLIFF);
         $this->export->setLocation('Portals');
+        $this->export->setFilename('sulu');
         $this->export->setPath(self::$fixturePath . '/');
         $this->export->execute();
 
-        $expectedHash = md5_file(self::$fixturePath . '/export.portals.xlf');
-        $actualHash = md5_file(self::$fixturePath . '/Export.en.xlf');
+        $expectedHash = md5_file(self::$fixturePath . '/samples/export.portals.xlf');
+        $actualHash = md5_file(self::$fixturePath . '/sulu.en.xlf');
 
         $this->assertEquals($expectedHash, $actualHash);
     }
@@ -185,11 +261,12 @@ class ExportTest extends DatabaseTestCase
         $this->export->setFormat(Export::XLIFF);
         $this->export->setFrontend(null);
         $this->export->setBackend(true);
+        $this->export->setFilename('sulu');
         $this->export->setPath(self::$fixturePath . '/');
         $this->export->execute();
 
-        $expectedHash = md5_file(self::$fixturePath . '/export.backend.xlf');
-        $actualHash = md5_file(self::$fixturePath . '/Export.en.xlf');
+        $expectedHash = md5_file(self::$fixturePath . '/samples/export.backend.xlf');
+        $actualHash = md5_file(self::$fixturePath . '/sulu.en.xlf');
 
         $this->assertEquals($expectedHash, $actualHash);
 
@@ -199,10 +276,11 @@ class ExportTest extends DatabaseTestCase
         $this->export->setFrontend(true);
         $this->export->setBackend(null);
         $this->export->setPath(self::$fixturePath . '/');
+        $this->export->setFilename('sulu');
         $this->export->execute();
 
-        $expectedHash = md5_file(self::$fixturePath . '/export.frontend.xlf');
-        $actualHash = md5_file(self::$fixturePath . '/Export.en.xlf');
+        $expectedHash = md5_file(self::$fixturePath . '/samples/export.frontend.xlf');
+        $actualHash = md5_file(self::$fixturePath . '/sulu.en.xlf');
 
         $this->assertEquals($expectedHash, $actualHash);
     }
@@ -213,10 +291,39 @@ class ExportTest extends DatabaseTestCase
         $this->export->setLocale('en');
         $this->export->setFormat(Export::JSON);
         $this->export->setPath(self::$fixturePath . '/');
+        $this->export->setFilename('sulu');
         $this->export->execute();
 
-        $expectedHash = md5_file(self::$fixturePath . '/export.json');
-        $actualHash = md5_file(self::$fixturePath . '/Export.en.json');
+        $expectedHash = md5_file(self::$fixturePath . '/samples/export.json');
+        $actualHash = md5_file(self::$fixturePath . '/sulu.en.json');
+
+        $this->assertEquals($expectedHash, $actualHash);
+    }
+
+    public function testJsonExportWithoutPackageId()
+    {
+        $this->export->setLocale('en');
+        $this->export->setFormat(Export::JSON);
+        $this->export->setPath(self::$fixturePath . '/');
+        $this->export->setFilename('sulu');
+        $this->export->execute();
+
+        $expectedHash = md5_file(self::$fixturePath . '/samples/export.all.json');
+        $actualHash = md5_file(self::$fixturePath . '/sulu.en.json');
+
+        $this->assertEquals($expectedHash, $actualHash);
+    }
+
+    public function testXlfExportWithoutPackageId()
+    {
+        $this->export->setLocale('en');
+        $this->export->setFormat(Export::XLIFF);
+        $this->export->setPath(self::$fixturePath . '/');
+        $this->export->setFilename('sulu');
+        $this->export->execute();
+
+        $expectedHash = md5_file(self::$fixturePath . '/samples/export.all.xlf');
+        $actualHash = md5_file(self::$fixturePath . '/sulu.en.xlf');
 
         $this->assertEquals($expectedHash, $actualHash);
     }

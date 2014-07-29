@@ -26,12 +26,7 @@ class ExportCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this->setName('sulu:translate:export')
-            ->setDescription('Export a catalogue from Sulu')
-            ->addArgument(
-                'packageId',
-                InputArgument::REQUIRED,
-                'The id of the package to export'
-            )
+            ->setDescription('Export all catalogues with a locale')
             ->addArgument(
                 'locale',
                 InputArgument::REQUIRED,
@@ -41,7 +36,13 @@ class ExportCommand extends ContainerAwareCommand
                 'format',
                 InputArgument::OPTIONAL,
                 'The format of the export',
-                'xliff'
+                'json'
+            )
+            ->addOption(
+                'package',
+                'p',
+                InputOption::VALUE_OPTIONAL,
+                'The id of the package of which the translations should be exported. If not given all packages will be exported'
             )
             ->addOption(
                 'backend',
@@ -63,25 +64,33 @@ class ExportCommand extends ContainerAwareCommand
             )
             ->addOption(
                 'path',
-                'p',
+                null,
                 InputOption::VALUE_OPTIONAL,
-                'Sets the path to which the file should be exported'
+                'Sets the path to which the file should be exported',
+                'web/js/translations'
+            )
+            ->addOption(
+                'filename',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'sets the filename of the exported file',
+                'sulu'
             );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $packageId = $input->getArgument('packageId');
         $locale = $input->getArgument('locale');
         $format = $input->getArgument('format');
         $backend = $input->getOption('backend');
         $frontend = $input->getOption('frontend');
         $location = $input->getOption('location');
         $path = $input->getOption('path');
+        $filename = $input->getOption('filename');
+        $packageId = $input->getOption('package');
 
         $export = $this->getContainer()->get('sulu_translate.export');
 
-        $export->setPackageId($packageId);
         $export->setLocale($locale);
 
         // Parse format
@@ -90,12 +99,10 @@ class ExportCommand extends ContainerAwareCommand
             case 'xlf':
                 $export->setFormat(Export::XLIFF);
                 break;
-            case 'json':
-                $export->setFormat(Export::JSON);
-                break;
             default:
-                $export->setFormat(Export::XLIFF);
+                $export->setFormat(Export::JSON);
         }
+        $export->setFilename($filename);
         if ($backend) {
             $export->setBackend($backend);
         }
@@ -108,8 +115,11 @@ class ExportCommand extends ContainerAwareCommand
         if ($path) {
             $export->setPath($path);
         }
+        if ($packageId) {
+            $export->setPackageId($packageId);
+        }
         $export->execute();
 
-        $output->writeln('Successfully exported translation to file!');
+        $output->writeln('Successfully exported translations to file!');
     }
 }
