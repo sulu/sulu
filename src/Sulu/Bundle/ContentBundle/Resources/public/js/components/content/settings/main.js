@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define([], function() {
+define(['app-config'], function(AppConfig) {
 
     'use strict';
 
@@ -91,7 +91,7 @@ define([], function() {
             data.nodeType = parseInt(this.sandbox.dom.val('input[name="nodeType"]:checked'));
 
             this.data = this.sandbox.util.extend(true, {}, this.data, data);
-            this.sandbox.emit('sulu.content.contents.save', this.data);
+            this.sandbox.emit('sulu.content.contents.save', this.data, (data.nodeType === 2 ? 'internal-link' : data.nodeType === 4 ? 'external-link' : AppConfig.getSection('sulu-content')['defaultTemplate']));
         }
     };
 });
