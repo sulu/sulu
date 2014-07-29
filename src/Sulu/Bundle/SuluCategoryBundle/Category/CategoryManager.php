@@ -101,6 +101,14 @@ class CategoryManager implements CategoryManagerInterface
             array(),
             true
         );
+        $this->fieldDescriptors['key'] = new DoctrineFieldDescriptor(
+            'category_key',
+            'key',
+            self::$categoryEntityName,
+            'public.key',
+            array(),
+            true
+        );
         $this->fieldDescriptors['name'] = new DoctrineFieldDescriptor(
             'translation',
             'name',
