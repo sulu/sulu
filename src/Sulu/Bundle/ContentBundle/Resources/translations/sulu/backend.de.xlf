@@ -14,6 +14,26 @@
                 <source>content-navigation.contents.external-link</source>
                 <target>Externer Link</target>
             </trans-unit>
+            <trans-unit id="fbf1328371239fbed4a73a4basdfdf006" resname="sulu.content.form.settings.show-in-navigation">
+                <source>sulu.content.form.settings.show-in-navigation</source>
+                <target>In Navigation anzeigen</target>
+            </trans-unit>
+            <trans-unit id="fbfasdf371239fbed4a73a4basdfdf006" resname="sulu.content.form.settings.type">
+                <source>sulu.content.form.settings.type</source>
+                <target>Inhalts Typ</target>
+            </trans-unit>
+            <trans-unit id="fbfasdf371239fbed4a73a4123dfdf006" resname="sulu.content.form.settings.type.content">
+                <source>sulu.content.form.settings.type.content</source>
+                <target>Inhalt</target>
+            </trans-unit>
+            <trans-unit id="f1234df371239fbed4a73a4123dfdf006" resname="sulu.content.form.settings.type.internal-link">
+                <source>sulu.content.form.settings.type.internal-link</source>
+                <target>Interner Link</target>
+            </trans-unit>
+            <trans-unit id="f1234df371239fbed4a73a4123dfdf006" resname="sulu.content.form.settings.type.external-link">
+                <source>sulu.content.form.settings.type.external-link</source>
+                <target>Externer Link</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
