@@ -925,14 +925,16 @@ class ContentMapper implements ContentMapperInterface
             $internal = $content->getPropertyValueByTagName('sulu.rlp');
 
             if (!empty($internal)) {
-                $content->setInternalLinkContent(
+                $internalContent =
                     $this->load(
                         $internal,
                         $webspaceKey,
                         $localization,
                         $loadGhostContent
-                    )
-                );
+                    );
+                if($internalContent !== null) {
+                    $content->setInternalLinkContent($internalContent);
+                }
             }
         }
     }
@@ -1026,7 +1028,7 @@ class ContentMapper implements ContentMapperInterface
         $parentContent = $this->loadByNode($parentNode, $languageCode, $webspaceKey);
         $parentResourceLocator = '/';
         if ($parentContent->hasTag('sulu.rlp')) {
-            $parentResourceLocator = $parentContent->getResourceLocator('sulu.rlp');
+            $parentResourceLocator = $parentContent->getPropertyValueByTagName('sulu.rlp');
         }
 
         // prepare pathes
