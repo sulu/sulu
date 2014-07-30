@@ -11,7 +11,10 @@
 namespace Sulu\Bundle\WebsiteBundle\Routing;
 
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Sulu\Component\Webspace\Portal;
+use Sulu\Component\Webspace\PortalInformation;
 use Symfony\Component\Config\Loader\Loader;
+use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
@@ -26,9 +29,20 @@ class PortalLoader extends Loader
      */
     private $webspaceManager;
 
-    public function __construct(WebspaceManagerInterface $webspaceManager)
+    /**
+     * @var string
+     */
+    private $environment;
+
+    /**
+     * @var RouteCollection
+     */
+    private $collection;
+
+    public function __construct(WebspaceManagerInterface $webspaceManager, $environment)
     {
         $this->webspaceManager = $webspaceManager;
+        $this->environment = $environment;
     }
 
     /**
@@ -36,15 +50,15 @@ class PortalLoader extends Loader
      */
     public function load($resource, $type = null)
     {
-        $collection = new RouteCollection();
+        $this->collection = new RouteCollection();
 
         $importedRoutes = $this->import($resource, null);
 
-        foreach ($importedRoutes as $importedName => $importedRoute) {
-            $collection->add($importedName, $importedRoute);
+        foreach ($importedRoutes as $importedRouteName => $importedRoute) {
+            $this->generatePortalRoutes($importedRoute, $importedRouteName);
         }
 
-        return $collection;
+        return $this->collection;
     }
 
     /**
@@ -53,5 +67,22 @@ class PortalLoader extends Loader
     public function supports($resource, $type = null)
     {
         return $type === 'portal';
+    }
+
+    /**
+     * @param $importedRoute
+     * @param $importedRouteName
+     */
+    private function generatePortalRoutes(Route $importedRoute, $importedRouteName)
+    {
+        $i = 0;
+        foreach ($this->webspaceManager->getPortalInformations($this->environment) as $portalInformation) {
+            $route = clone $importedRoute;
+            $route->setHost($portalInformation->getHost());
+            $route->setPath($portalInformation->getPrefix() . $route->getPath());
+
+            $this->collection->add($portalInformation->getPortal()->getKey() . $i . '.' . $importedRouteName, $route);
+            $i++;
+        }
     }
 }
