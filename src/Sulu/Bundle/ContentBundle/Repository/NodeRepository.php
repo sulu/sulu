@@ -308,7 +308,7 @@ class NodeRepository implements NodeRepositoryInterface
     {
         // build sql2 query
         $queryBuilder = new FilterNodesQueryBuilder($filterConfig, $this->sessionManager, $this->webspaceManager);
-        $sql2 = $queryBuilder->build($languageCode, $preview);
+        $sql2 = $queryBuilder->build($languageCode);
 
         // execute query and return results
         $nodes = $this->getMapper()->loadBySql2($sql2, $languageCode, $webspaceKey, $queryBuilder->getLimit());
