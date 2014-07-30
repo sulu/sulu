@@ -76,7 +76,11 @@ define([
                                 style: 'action',
                                 icon: 'plus-circle',
                                 data: (selectData.length > 1 ? selectData : []),
+                                repeatSelect: true,
                                 selectCallback: function(item) {
+                                    this.addChild(item, {}, true);
+                                }.bind(this),
+                                deselectCallback: function(item) {
                                     this.addChild(item, {}, true);
                                 }.bind(this),
                                 noItemsCallback: function() {
@@ -96,6 +100,7 @@ define([
                         $element = $removeButton.closest('.' + this.propertyName + '-element');
 
                     if (this.canRemove()) {
+                        this.form.removeFields($element);
                         $element.remove();
 
                         $(form.$el).trigger('form-remove', [this.propertyName]);
