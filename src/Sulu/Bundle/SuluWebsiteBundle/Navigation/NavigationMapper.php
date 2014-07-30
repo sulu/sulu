@@ -72,7 +72,10 @@ class NavigationMapper implements NavigationMapperInterface
             if (is_array($content->getChildren()) && sizeof($content->getChildren()) > 0) {
                 $children = $this->generateNavigation($content->getChildren(), $preview);
             }
-            if (($preview || ($content->getPublishedState() && $content->getNavigation() !== false))) {
+            if (
+                ($preview || ($content->getPublishedState() && $content->getNavigation() !== false)) &&
+                $content->hasProperty('sulu.rlp')
+            ) {
                 $url = $content->getPropertyByTagName('sulu.rlp')->getValue();
                 $title = $content->getPropertyByTagName('sulu.node.name')->getValue();
                 $result[] = new NavigationItem(
