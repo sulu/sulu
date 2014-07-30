@@ -139,6 +139,11 @@ class WebspaceManager implements WebspaceManagerInterface
         return $urls;
     }
 
+    public function getPortalInformations($environment)
+    {
+        return $this->getWebspaceCollection()->getPortalInformations($environment);
+    }
+
     /**
      * Returns all the webspaces managed by this specific instance
      * @return WebspaceCollection

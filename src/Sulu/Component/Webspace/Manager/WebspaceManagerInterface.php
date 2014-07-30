@@ -66,6 +66,13 @@ interface WebspaceManagerInterface
     public function getUrls($environment);
 
     /**
+     * Returns the portal informations managed by this WebspaceManger
+     * @param string $environment
+     * @return PortalInformation[]
+     */
+    public function getPortalInformations($environment);
+
+    /**
      * Returns all the webspaces managed by this specific instance
      * @return WebspaceCollection
      */

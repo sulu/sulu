@@ -493,4 +493,23 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('massiveart.lo/de/w', $urls);
         $this->assertContains('massiveart.lo/de/s', $urls);
     }
+
+    public function testGetPortalInformations()
+    {
+        $portalInformations = $this->webspaceManager->getPortalInformations('dev');
+
+        $this->assertCount(12, $portalInformations);
+        $this->assertArrayHasKey('sulu.lo', $portalInformations);
+        $this->assertArrayHasKey('sulu-single-language.lo', $portalInformations);
+        $this->assertArrayHasKey('sulu-without.lo', $portalInformations);
+        $this->assertArrayHasKey('massiveart.lo', $portalInformations);
+        $this->assertArrayHasKey('massiveart.lo/en-us/w', $portalInformations);
+        $this->assertArrayHasKey('massiveart.lo/en-us/s', $portalInformations);
+        $this->assertArrayHasKey('massiveart.lo/en-ca/w', $portalInformations);
+        $this->assertArrayHasKey('massiveart.lo/en-ca/s', $portalInformations);
+        $this->assertArrayHasKey('massiveart.lo/fr-ca/w', $portalInformations);
+        $this->assertArrayHasKey('massiveart.lo/fr-ca/s', $portalInformations);
+        $this->assertArrayHasKey('massiveart.lo/de/w', $portalInformations);
+        $this->assertArrayHasKey('massiveart.lo/de/s', $portalInformations);
+    }
 }
