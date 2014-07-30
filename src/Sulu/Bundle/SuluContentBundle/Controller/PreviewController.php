@@ -113,7 +113,11 @@ class PreviewController extends Controller
 
         $doc = new DOMDocument();
         $doc->encoding = 'utf-8';
+
+        // FIXME hack found in http://stackoverflow.com/a/6090728
+        libxml_use_internal_errors(true);
         $doc->loadHTML(utf8_decode($content));
+        libxml_clear_errors();
 
         $body = $doc->getElementsByTagName('body');
         $body = $body->item(0);
