@@ -1008,7 +1008,35 @@ class ContentMapper implements ContentMapperInterface
     /**
      * {@inheritdoc}
      */
-    public function move($uuid, $destParentUuid, $webspaceKey, $languageCode)
+    public function move($uuid, $destParentUuid, $userId, $webspaceKey, $languageCode)
+    {
+        return $this->copyOrMove($uuid, $destParentUuid, $userId, $webspaceKey, $languageCode);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function copy($uuid, $destParentUuid, $userId, $webspaceKey, $languageCode)
+    {
+        $result = $this->copyOrMove($uuid, $destParentUuid, $userId, $webspaceKey, $languageCode, false);
+
+        // session don't recognice a new child in parent, a refresh fixes that
+        $this->getSession()->refresh(false);
+
+        return $result;
+    }
+
+    /**
+     * copies (deleteSource = false) or move (deleteSource = true) the src (uuid) node to dest (parentUuid) node
+     * @param string $uuid
+     * @param string $destParentUuid
+     * @param integer $userId
+     * @param string $webspaceKey
+     * @param string $languageCode
+     * @param bool $deleteSource
+     * @return StructureInterface
+     */
+    private function copyOrMove($uuid, $destParentUuid, $userId, $webspaceKey, $languageCode, $deleteSource = true)
     {
         // prepare utility
         $session = $this->getSession();
@@ -1036,13 +1064,27 @@ class ContentMapper implements ContentMapperInterface
         $destPath = $parentNode->getPath() . '/' . $nodeName;
 
         // move node
-        $session->move($path, $destPath);
+        if ($deleteSource) {
+            $session->move($path, $destPath);
+        } else {
+            $session->getWorkspace()->copy($path, $destPath);
+            $session->save();
+
+            // load new phpcr and content node
+            $node = $session->getNode($destPath);
+            $content = $this->loadByNode($node, $languageCode, $webspaceKey);
+        }
 
         // correct resource locator
         if ($content->hasTag('sulu.rlp')) {
             // get resource locator pathes
             $srcResourceLocator = $content->getPropertyValueByTagName('sulu.rlp');
-            $resourceLocatorPart = PathHelper::getNodeName($srcResourceLocator);
+
+            if ($srcResourceLocator !== null) {
+                $resourceLocatorPart = PathHelper::getNodeName($srcResourceLocator);
+            } else {
+                $resourceLocatorPart = $content->getPropertyValueByTagName('sulu.node.name');
+            }
 
             // generate new resourcelocator
             $destResourceLocator = $strategy->generate(
@@ -1053,7 +1095,17 @@ class ContentMapper implements ContentMapperInterface
             );
 
             // move resourcelocator
-            $strategy->move($srcResourceLocator, $destResourceLocator, $webspaceKey, $languageCode);
+            if ($deleteSource) {
+                $strategy->move($srcResourceLocator, $destResourceLocator, $webspaceKey, $languageCode);
+            } else {
+                $strategy->save($node, $destResourceLocator, $webspaceKey, $languageCode);
+            }
+
+            $this->properties->setLanguage($languageCode);
+            $node->setProperty($this->properties->getName('changer'), $userId);
+            $node->setProperty($this->properties->getName('changed'), new DateTime());
+
+            $session->save();
         }
 
         return $this->loadByNode($node, $languageCode, $webspaceKey);
