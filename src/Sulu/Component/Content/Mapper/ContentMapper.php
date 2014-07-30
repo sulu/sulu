@@ -1003,6 +1003,25 @@ class ContentMapper implements ContentMapperInterface
      */
     public function move($uuid, $newParentUuid, $webspaceKey, $languageCode)
     {
+        // prepare phpcr
+        $session = $this->getSession();
+        $node = $session->getNodeByIdentifier($uuid);
+        $parentNode = $session->getNodeByIdentifier($newParentUuid);
+
+        // prepare content node
+        $content = $this->loadByNode($node, $languageCode, $webspaceKey);
+        $nodeName = $content->getPropertyValueByTagName('sulu.node.name');
+        $nodeName = $this->cleaner->cleanup($nodeName, $languageCode);
+        $nodeName = $this->getUniquePath($nodeName, $parentNode);
+
+        // prepare pathes
+        $path = $node->getPath();
+        $newPath = $parentNode->getPath() . '/' . $nodeName;
+
+        // move node
+        $session->move($path, $newPath);
+
+        return $this->loadByNode($node, $languageCode, $webspaceKey);
     }
 
     /**
