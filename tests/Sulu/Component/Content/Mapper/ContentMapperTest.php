@@ -2714,7 +2714,7 @@ class ContentMapperTest extends PhpcrTestCase
         $result = $this->mapper->move($data[5]->getUuid(), $data[0]->getUuid(), 'default', 'de');
 
         $this->assertEquals($data[5]->getUuid(), $result->getUuid());
-        $this->assertEquals('/page-1/sub-3', $result->getPath());
+        $this->assertEquals('/page-1/sub-2', $result->getPath());
 
         $test = $this->mapper->loadByParent($data[0]->getUuid(), 'default', 'de', 4);
         $this->assertEquals(3, sizeof($test));
@@ -2723,7 +2723,7 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals(2, sizeof($test));
 
         $test = $this->mapper->load($data[5]->getUuid(), 'default', 'de', 4);
-        $this->assertEquals('/page-1/subpage', $test->getResourceLocator());
+        $this->assertEquals('/page-1/sub-1-1', $test->getResourceLocator());
     }
 }
 

@@ -172,8 +172,7 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
     }
 
     /**
-     * returns strategy of current portal
-     * @return RLPStrategyInterface
+     * {@inheritdoc}
      */
     public function getStrategy()
     {

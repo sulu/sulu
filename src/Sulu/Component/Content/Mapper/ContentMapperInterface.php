@@ -201,10 +201,10 @@ interface ContentMapperInterface
     /**
      * moves given node to a new parent node
      * @param string $uuid
-     * @param string $newParentUuid
+     * @param string $destParentUuid
      * @param string $webspaceKey
      * @param string $languageCode
      * @return StructureInterface
      */
-    public function move($uuid, $newParentUuid, $webspaceKey, $languageCode);
+    public function move($uuid, $destParentUuid, $webspaceKey, $languageCode);
 }

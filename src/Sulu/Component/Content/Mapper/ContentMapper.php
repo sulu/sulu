@@ -14,6 +14,8 @@ use DateTime;
 use PHPCR\NodeInterface;
 use PHPCR\Query\QueryInterface;
 use PHPCR\SessionInterface;
+use PHPCR\Util\NodeHelper;
+use PHPCR\Util\PathHelper;
 use Sulu\Component\Content\BreadcrumbItem;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\ContentTypeManager;
@@ -111,6 +113,9 @@ class ContentMapper implements ContentMapperInterface
         StructureInterface::STATE_TEST
     );
 
+    /**
+     * @var MultipleTranslatedProperties
+     */
     private $properties;
 
     public function __construct(
@@ -1001,12 +1006,15 @@ class ContentMapper implements ContentMapperInterface
     /**
      * {@inheritdoc}
      */
-    public function move($uuid, $newParentUuid, $webspaceKey, $languageCode)
+    public function move($uuid, $destParentUuid, $webspaceKey, $languageCode)
     {
-        // prepare phpcr
+        // prepare utility
         $session = $this->getSession();
+        $strategy = $this->getResourceLocator()->getStrategy();
+
+        // load from phpcr
         $node = $session->getNodeByIdentifier($uuid);
-        $parentNode = $session->getNodeByIdentifier($newParentUuid);
+        $parentNode = $session->getNodeByIdentifier($destParentUuid);
 
         // prepare content node
         $content = $this->loadByNode($node, $languageCode, $webspaceKey);
@@ -1014,12 +1022,37 @@ class ContentMapper implements ContentMapperInterface
         $nodeName = $this->cleaner->cleanup($nodeName, $languageCode);
         $nodeName = $this->getUniquePath($nodeName, $parentNode);
 
+        // prepare parent content node
+        $parentContent = $this->loadByNode($parentNode, $languageCode, $webspaceKey);
+        $parentResourceLocator = '/';
+        if ($parentContent->hasTag('sulu.rlp')) {
+            $parentResourceLocator = $parentContent->getResourceLocator('sulu.rlp');
+        }
+
         // prepare pathes
         $path = $node->getPath();
-        $newPath = $parentNode->getPath() . '/' . $nodeName;
+        $destPath = $parentNode->getPath() . '/' . $nodeName;
 
         // move node
-        $session->move($path, $newPath);
+        $session->move($path, $destPath);
+
+        // correct resource locator
+        if ($content->hasTag('sulu.rlp')) {
+            // get resource locator pathes
+            $srcResourceLocator = $content->getPropertyValueByTagName('sulu.rlp');
+            $resourceLocatorPart = PathHelper::getNodeName($srcResourceLocator);
+
+            // generate new resourcelocator
+            $destResourceLocator = $strategy->generate(
+                $resourceLocatorPart,
+                $parentResourceLocator,
+                $webspaceKey,
+                $languageCode
+            );
+
+            // move resourcelocator
+            $strategy->move($srcResourceLocator, $destResourceLocator, $webspaceKey, $languageCode);
+        }
 
         return $this->loadByNode($node, $languageCode, $webspaceKey);
     }
@@ -1116,7 +1149,7 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * calculates publich state of node
+     * calculates publish state of node
      */
     private function getInheritedState(NodeInterface $contentNode, $statePropertyName, $webspaceKey)
     {
