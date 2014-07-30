@@ -574,6 +574,23 @@ class Media extends ApiWrapper
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("downloadCounter")
+     * @return string
+     */
+    public function getDownloadCounter()
+    {
+        $downloadCounter = 0;
+        foreach ($this->getEntity()->getFiles() as $file) {
+            /** @var FileVersion $fileVersion */
+            foreach ($file->getFileVersions() as $fileVersion) {
+                $downloadCounter += intval($fileVersion->getDownloadCounter());
+            }
+        }
+        return $downloadCounter;
+    }
+
+    /**
      * @return FileVersion
      * @throws \Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException
      */
