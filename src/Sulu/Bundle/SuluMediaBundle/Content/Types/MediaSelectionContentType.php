@@ -109,8 +109,8 @@ class MediaSelectionContentType extends ComplexContentType
                 isset($data['config']) ?  $data['config'] : array(),
                 isset($data['displayOption']) ? $data['displayOption'] : '',
                 isset($data['ids']) ? $data['ids'] : array(),
-                $types,
                 $languageCode,
+                $types,
                 $this->mediaManager
             );
         }
