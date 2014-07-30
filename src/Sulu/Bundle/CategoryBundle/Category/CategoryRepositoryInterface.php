@@ -33,10 +33,21 @@ interface CategoryRepositoryInterface
     public function findCategoryByIds(array $ids);
 
     /**
-     * finds all categories, can be filtered with parent and depth
-     * @param int $parent the id of the parent
-     * @param int $depth the depth-level
+     * Returns all categories. Can be filtered with parent and depth
+     * @param number $parent the id of the parent to filter for
+     * @param number $depth the depth-level to filter for
+     * @param string|null $sortBy column name to sort the categories by
+     * @param string|null $sortOrder sort order
+     * @return mixed|null
+     */
+    public function findCategories($parent = null, $depth = null, $sortBy = null, $sortOrder = null);
+
+    /**
+     * Returns the children for a given category
+     * @param int $key the key of the category to return the children for
+     * @param string|null $sortBy column name to sort by
+     * @param string|null $sortOrder sort order
      * @return Category[]
      */
-    public function findCategories($parent = null, $depth = null);
+    public function findChildren($key, $sortBy = null, $sortOrder = null);
 }

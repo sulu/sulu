@@ -220,6 +220,15 @@ class Category extends ApiEntityWrapper
     }
 
     /**
+     * Sets the key of the category
+     * @param string $key
+     */
+    public function setKey($key)
+    {
+        $this->entity->setKey($key);
+    }
+
+    /**
      * Takes a user entity and returns the fullname
      * @param $user
      * @return string

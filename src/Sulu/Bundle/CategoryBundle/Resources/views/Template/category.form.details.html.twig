@@ -7,5 +7,11 @@
                    data-validation-min-length="3"
                    data-mapper-property="name"/>
         </div>
+        <div class="grid-row">
+            <label for="change-key"><%= translate('public.key') %></label>
+            <input class="form-element" type="text" id="change-key" placeholder="<%= translate('sulu.category.category-key') %>"
+                   data-validation-required="false"
+                   data-mapper-property="key"/>
+        </div>
     </div>
 </form>

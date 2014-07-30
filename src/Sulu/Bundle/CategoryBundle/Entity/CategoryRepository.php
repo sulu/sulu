@@ -85,6 +85,36 @@ class CategoryRepository extends EntityRepository implements CategoryRepositoryI
     }
 
     /**
+     * Returns the children for a given category
+     * @param int $key the key of the category to return the children for
+     * @param string|null $sortBy column name to sort by
+     * @param string|null $sortOrder sort order
+     * @return Category[]
+     */
+    public function findChildren($key, $sortBy = null, $sortOrder = null) {
+        try {
+            $qb = $this->getCategoryQuery()
+                ->from('SuluCategoryBundle:Category', 'parent')
+                ->andWhere('parent.key = :key')
+                ->andWhere('category.lft BETWEEN parent.lft AND parent.rgt', 'category.lft != parent.lft');
+
+
+            if ($sortBy) {
+                $sortOrder = ($sortOrder) ? $sortOrder : 'asc';
+                $qb->addOrderBy('category.' . $sortBy, $sortOrder);
+            }
+
+            $qb->setParameter('key', $key);
+            $query = $qb->getQuery();
+            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+
+            return $query->getResult();
+        } catch (NoResultException $ex) {
+            return null;
+        }
+    }
+
+    /**
      * Finds the categories with the given ids
      * @param array $ids The ids to load
      * @return Category[]
