@@ -15,7 +15,6 @@ use PHPCR\NodeInterface;
 use PHPCR\Query\QueryInterface;
 use PHPCR\SessionInterface;
 use Sulu\Component\Content\BreadcrumbItem;
-use Sulu\Component\Content\BreadcrumbItemInterface;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\ContentTypeManager;
 use Sulu\Component\Content\ContentEvents;
@@ -38,6 +37,10 @@ use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
 
+/**
+ * Maps content nodes to phpcr nodes with content types and provides utility function to handle content nodes
+ * @package Sulu\Component\Content\Mapper
+ */
 class ContentMapper implements ContentMapperInterface
 {
     /**
@@ -156,20 +159,7 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * saves the given data in the content storage
-     * @param array $data The data to be saved
-     * @param string $templateKey Name of template
-     * @param string $webspaceKey Key of webspace
-     * @param string $languageCode Save data for given language
-     * @param int $userId The id of the user who saves
-     * @param bool $partialUpdate ignore missing property
-     * @param string $uuid uuid of node if exists
-     * @param string $parentUuid uuid of parent node
-     * @param int $state state of node
-     * @param string $showInNavigation
-     *
-     * @throws \Exception
-     * @return StructureInterface
+     * {@inheritdoc}
      */
     public function save(
         $data,
@@ -391,15 +381,7 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * save a extension with given name and data to an existing node
-     * @param string $uuid
-     * @param array $data
-     * @param string $extensionName
-     * @param string $webspaceKey
-     * @param string $languageCode
-     * @param integer $userId
-     * @throws \Sulu\Component\Content\Exception\TranslatedNodeNotFoundException
-     * @return StructureInterface
+     * {@inheritdoc}
      */
     public function saveExtension(
         $uuid,
@@ -443,15 +425,7 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * change state of given node
-     * @param NodeInterface $node node to change state
-     * @param int $state new state
-     * @param \Sulu\Component\Content\StructureInterface $structure
-     * @param string $statePropertyName
-     * @param string $publishedPropertyName
-     *
-     * @throws \Sulu\Component\Content\Exception\StateTransitionException
-     * @throws \Sulu\Component\Content\Exception\StateNotFoundException
+     * {@inheritdoc}
      */
     private function changeState(
         NodeInterface $node,
@@ -506,17 +480,7 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * saves the given data in the content storage
-     * @param array $data The data to be saved
-     * @param string $templateKey Name of template
-     * @param string $webspaceKey Key of webspace
-     * @param string $languageCode Save data for given language
-     * @param int $userId The id of the user who saves
-     * @param bool $partialUpdate ignore missing property
-     *
-     * @throws \PHPCR\ItemExistsException if new title already exists
-     *
-     * @return StructureInterface
+     * {@inheritdoc}
      */
     public function saveStartPage(
         $data,
@@ -572,16 +536,7 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * returns a list of data from children of given node
-     * @param NodeInterface $parent
-     * @param $webspaceKey
-     * @param $languageCode
-     * @param int $depth
-     * @param bool $flat
-     * @param bool $ignoreExceptions
-     * @param bool $excludeGhosts If true ghost pages are also loaded
-     * @throws \Exception
-     * @return array
+     * {@inheritdoc}
      */
     private function loadByParentNode(
         NodeInterface $parent,
@@ -643,12 +598,7 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * returns the data from the given id
-     * @param string $uuid UUID of the content
-     * @param string $webspaceKey Key of webspace
-     * @param string $languageCode Read data for given language
-     * @param bool $loadGhostContent True if also a ghost page should be returned, otherwise false
-     * @return StructureInterface
+     * {@inheritdoc}
      */
     public function load($uuid, $webspaceKey, $languageCode, $loadGhostContent = false)
     {
@@ -668,10 +618,7 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * returns the data from the given id
-     * @param string $webspaceKey Key of webspace
-     * @param string $languageCode Read data for given language
-     * @return StructureInterface
+     * {@inheritdoc}
      */
     public function loadStartPage($webspaceKey, $languageCode)
     {
@@ -686,12 +633,7 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * returns data from given path
-     * @param string $resourceLocator Resource locator
-     * @param string $webspaceKey Key of webspace
-     * @param string $languageCode
-     * @param string $segmentKey
-     * @return StructureInterface
+     * {@inheritdoc}
      */
     public function loadByResourceLocator($resourceLocator, $webspaceKey, $languageCode, $segmentKey = null)
     {
@@ -708,12 +650,7 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * returns the content returned by the given sql2 query as structures
-     * @param string $sql2 The query, which returns the content
-     * @param string $languageCode The language code
-     * @param string $webspaceKey The webspace key
-     * @param int $limit Limits the number of returned rows
-     * @return StructureInterface[]
+     * {@inheritdoc}
      */
     public function loadBySql2($sql2, $languageCode, $webspaceKey, $limit = null)
     {
@@ -730,13 +667,7 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * load tree from root to given path
-     * @param string $uuid
-     * @param string $languageCode
-     * @param string $webspaceKey
-     * @param bool $excludeGhost
-     * @param bool $loadGhostContent
-     * @return StructureInterface[]
+     * {@inheritdoc}
      */
     public function loadTreeByUuid(
         $uuid,
@@ -761,13 +692,7 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * load tree from root to given path
-     * @param string $path
-     * @param string $languageCode
-     * @param string $webspaceKey
-     * @param bool $excludeGhost
-     * @param bool $loadGhostContent
-     * @return StructureInterface[]
+     * {@inheritdoc}
      */
     public function loadTreeByPath(
         $path,
@@ -797,14 +722,7 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * returns a tree of nodes with the given endpoint
-     * @param NodeInterface $node
-     * @param string $languageCode
-     * @param string $webspaceKey
-     * @param bool $excludeGhost
-     * @param bool $loadGhostContent
-     * @param NodeInterface $childNode
-     * @return StructureInterface[]
+     * {@inheritdoc}
      */
     private function loadTreeByNode(
         NodeInterface $node,
@@ -872,13 +790,7 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * returns data from given node
-     * @param NodeInterface $contentNode
-     * @param string $localization
-     * @param string $webspaceKey
-     * @param bool $excludeGhost True if also a ghost page should be returned, otherwise false
-     * @param bool $loadGhostContent True if also ghost content should be returned, otherwise false
-     * @return StructureInterface
+     * {@inheritdoc}
      */
     private function loadByNode(
         NodeInterface $contentNode,
@@ -996,11 +908,7 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * loads dependencies for internal links
-     * @param StructureInterface $content
-     * @param string $localization
-     * @param string $webspaceKey
-     * @param bool $loadGhostContent
+     * {@inheritdoc}
      */
     private function loadInternalLinkDependencies(
         StructureInterface $content,
@@ -1025,11 +933,7 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * load breadcrumb for given uuid in given language
-     * @param $uuid
-     * @param $languageCode
-     * @param $webspaceKey
-     * @return BreadcrumbItemInterface[]
+     * {@inheritdoc}
      */
     public function loadBreadcrumb($uuid, $languageCode, $webspaceKey)
     {
@@ -1083,9 +987,7 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * deletes content with subcontent in given webspace
-     * @param string $uuid UUID of content
-     * @param string $webspaceKey Key of webspace
+     * {@inheritdoc}
      */
     public function delete($uuid, $webspaceKey)
     {
@@ -1094,6 +996,13 @@ class ContentMapper implements ContentMapperInterface
 
         $this->deleteRecursively($contentNode);
         $session->save();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function move($uuid, $newParentUuid, $webspaceKey, $languageCode)
+    {
     }
 
     /**
