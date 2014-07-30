@@ -57,11 +57,11 @@ class FilterNodesQueryBuilder
         $this->filterConfig = $filterConfig;
     }
 
-    public function build($languageCode, $preview)
+    public function build($languageCode)
     {
         // build sql2 query
         $sql2 = 'SELECT * FROM [sulu:content] AS c';
-        $sql2Where = $this->buildWhereClauses($languageCode, $preview);
+        $sql2Where = $this->buildWhereClauses($languageCode);
         $sql2Order = $this->buildOrderClauses($languageCode);
 
         // append where clause to sql2 query
