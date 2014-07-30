@@ -10,7 +10,11 @@
 
 namespace Sulu\Bundle\ContentBundle\Content\Types;
 
+use PHPCR\NodeInterface;
+use SebastianBergmann\Exporter\Exception;
+use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\SimpleContentType;
+use Sulu\Component\Rest\Exception\InvalidArgumentException;
 
 /**
  * ContentType for SingleInternalLink
@@ -24,6 +28,27 @@ class SingleInternalLink extends SimpleContentType
         parent::__construct('SingleInternalLink', '');
 
         $this->template = $template;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function write(
+        NodeInterface $node,
+        PropertyInterface $property,
+        $userId,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey
+    )
+    {
+        $value = $property->getValue();
+        if ($value !== $node->getIdentifier()) {
+            parent::write($node, $property, $userId, $webspaceKey, $languageCode,$segmentKey);
+        } else {
+            // FIXME validation and an own exception in sulu/sulu
+            throw new \Exception();
+        }
     }
 
     /**

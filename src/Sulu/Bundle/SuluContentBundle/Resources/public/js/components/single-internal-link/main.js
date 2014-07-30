@@ -57,9 +57,9 @@ define([], function() {
         templates = {
             skeleton: function(options) {
                 return [
-                    '<div class="form-element grid" id="', options.ids.container, '">',
+                    '<div class="grid-row" id="', options.ids.container, '">',
                     '   <div class="grid-col-11"><input type="text" class="form-element preview-update trigger-save-button" readonly="readonly" id="', options.ids.input, '"/></div>',
-                    '   <div class="grid-col-1"><div class="btn action fit icon-only" id="', options.ids.button, '"><span class="fa-search icon"></span></div></div>',
+                    '   <div class="grid-col-1"><div class="btn action only-icon" id="', options.ids.button, '"><span class="fa-search icon"></span></div></div>',
                     '</div>'
                 ].join('');
             },
