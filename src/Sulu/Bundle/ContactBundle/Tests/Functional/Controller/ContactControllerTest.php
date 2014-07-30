@@ -162,9 +162,8 @@ class ContactControllerTest extends DatabaseTestCase
 
         self::$em->flush();
 
-        global $contactPosition, $contactTitle;
-        $contactTitle = $title;
-        $contactPosition = $position;
+        $this->contactTitle = $title;
+        $this->contactPosition = $position;
     }
 
     public function tearDown()
@@ -264,8 +263,6 @@ class ContactControllerTest extends DatabaseTestCase
 
     public function testPostAccountIDNull()
     {
-        global $contactPosition, $contactTitle;
-
         $client = $this->createTestClient();
 
         $client->request(
@@ -274,8 +271,8 @@ class ContactControllerTest extends DatabaseTestCase
             array(
                 'firstName' => 'Erika',
                 'lastName' => 'Mustermann',
-                'title' => $contactTitle->getId(),
-                'position' => $contactPosition->getId(),
+                'title' => $this->contactTitle->getId(),
+                'position' => $this->contactPosition->getId(),
                 'account' => array(
                     'id' => null
                 ),
@@ -410,8 +407,6 @@ class ContactControllerTest extends DatabaseTestCase
 
     public function testPost()
     {
-        global $contactPosition, $contactTitle;
-
         $client = $this->createTestClient();
 
         $client->request(
@@ -420,8 +415,8 @@ class ContactControllerTest extends DatabaseTestCase
             array(
                 'firstName' => 'Erika',
                 'lastName' => 'Mustermann',
-                'title' => $contactTitle->getId(),
-                'position' => $contactPosition->getId(),
+                'title' => $this->contactTitle->getId(),
+                'position' => $this->contactPosition->getId(),
                 'account' => array(
                     'id' => 2
                 ),
@@ -578,8 +573,6 @@ class ContactControllerTest extends DatabaseTestCase
 
     public function testPostWithoutAdditionalData()
     {
-        global $contactPosition, $contactTitle;
-
         $client = $this->createTestClient();
 
         $client->request(
@@ -588,8 +581,8 @@ class ContactControllerTest extends DatabaseTestCase
             array(
                 'firstName' => 'Erika',
                 'lastName' => 'Mustermann',
-                'title' => $contactTitle->getId(),
-                'position' => $contactPosition->getId(),
+                'title' => $this->contactTitle->getId(),
+                'position' => $this->contactPosition->getId(),
                 'disabled' => 0,
                 'salutation' => 'Sehr geehrte Frau Dr Mustermann',
                 'formOfAddress' => array(
@@ -615,8 +608,6 @@ class ContactControllerTest extends DatabaseTestCase
 
     public function testPostWithoutDisabledFlag()
     {
-        global $contactPosition, $contactTitle;
-
         $client = $this->createTestClient();
 
         $client->request(
@@ -625,8 +616,8 @@ class ContactControllerTest extends DatabaseTestCase
             array(
                 'firstName' => 'Erika',
                 'lastName' => 'Mustermann',
-                'title' => $contactTitle->getId(),
-                'position' => $contactPosition->getId(),
+                'title' => $this->contactTitle->getId(),
+                'position' => $this->contactPosition->getId(),
                 'salutation' => 'Sehr geehrte Frau Mustermann',
                 'formOfAddress' => array(
                     'id' => 0
@@ -642,8 +633,6 @@ class ContactControllerTest extends DatabaseTestCase
 
     public function testPostWithoutFormOfAddress()
     {
-        global $contactPosition, $contactTitle;
-
         $client = $this->createTestClient();
 
         $client->request(
@@ -652,8 +641,8 @@ class ContactControllerTest extends DatabaseTestCase
             array(
                 'firstName' => 'Erika',
                 'lastName' => 'Mustermann',
-                'title' => $contactTitle->getId(),
-                'position' => $contactPosition->getId(),
+                'title' => $this->contactTitle->getId(),
+                'position' => $this->contactPosition->getId(),
                 'salutation' => 'Sehr geehrte Frau Mustermann',
                 'disabled' => 0
             )
@@ -667,8 +656,6 @@ class ContactControllerTest extends DatabaseTestCase
 
     public function testPostWithEmptyAdditionalData()
     {
-        global $contactPosition, $contactTitle;
-
         $client = $this->createTestClient();
 
         $client->request(
@@ -677,8 +664,8 @@ class ContactControllerTest extends DatabaseTestCase
             array(
                 'firstName' => 'Erika',
                 'lastName' => 'Mustermann',
-                'title' => $contactTitle->getId(),
-                'position' => $contactPosition->getId(),
+                'title' => $this->contactTitle->getId(),
+                'position' => $this->contactPosition->getId(),
                 'emails' => array(),
                 'phones' => array(),
                 'notes' => array(),
@@ -737,8 +724,6 @@ class ContactControllerTest extends DatabaseTestCase
 
     public function testPut()
     {
-        global $contactPosition, $contactTitle;
-
         $client = $this->createTestClient();
 
         $client->request(
@@ -747,8 +732,8 @@ class ContactControllerTest extends DatabaseTestCase
             array(
                 'firstName' => 'John',
                 'lastName' => 'Doe',
-                'title' => $contactTitle->getId(),
-                'position' => $contactPosition->getId(),
+                'title' => $this->contactTitle->getId(),
+                'position' => $this->contactPosition->getId(),
                 'emails' => array(
                     array(
                         'id' => 1,
@@ -921,8 +906,6 @@ class ContactControllerTest extends DatabaseTestCase
 
     public function testPutDeleteAndAddWithoutId()
     {
-        global $contactPosition, $contactTitle;
-
         $client = $this->createTestClient();
 
         $client->request(
@@ -931,8 +914,8 @@ class ContactControllerTest extends DatabaseTestCase
             array(
                 'firstName' => 'John',
                 'lastName' => 'Doe',
-                'title' => $contactTitle->getId(),
-                'position' => $contactPosition->getId(),
+                'title' => $this->contactTitle->getId(),
+                'position' => $this->contactPosition->getId(),
                 'emails' => array(
                     array(
                         'email' => 'john.doe@muster.de',
@@ -1055,8 +1038,6 @@ class ContactControllerTest extends DatabaseTestCase
 
     public function testPutNoEmail()
     {
-        global $contactPosition, $contactTitle;
-
         $client = $this->createTestClient();
 
         $client->request(
@@ -1065,8 +1046,8 @@ class ContactControllerTest extends DatabaseTestCase
             array(
                 'firstName' => 'John',
                 'lastName' => 'Doe',
-                'title' => $contactTitle->getId(),
-                'position' => $contactPosition->getId(),
+                'title' => $this->contactTitle->getId(),
+                'position' => $this->contactPosition->getId(),
                 'emails' => array(),
                 'phones' => array(
                     array(
@@ -1152,8 +1133,6 @@ class ContactControllerTest extends DatabaseTestCase
 
     public function testPutNewCountryOnlyId()
     {
-        global $contactPosition, $contactTitle;
-
         $client = $this->createTestClient();
 
         $client->request(
@@ -1162,8 +1141,8 @@ class ContactControllerTest extends DatabaseTestCase
             array(
                 'firstName' => 'John',
                 'lastName' => 'Doe',
-                'title' => $contactTitle->getId(),
-                'position' => $contactPosition->getId(),
+                'title' => $this->contactTitle->getId(),
+                'position' => $this->contactPosition->getId(),
                 'emails' => array(),
                 'phones' => array(
                     array(
@@ -1237,8 +1216,6 @@ class ContactControllerTest extends DatabaseTestCase
 
     public function testPutNewAccount()
     {
-        global $contactPosition, $contactTitle;
-
         $client = $this->createTestClient();
 
         $client->request(
@@ -1247,8 +1224,8 @@ class ContactControllerTest extends DatabaseTestCase
             array(
                 'firstName' => 'John',
                 'lastName' => 'Doe',
-                'title' => $contactTitle->getId(),
-                'position' => $contactPosition->getId(),
+                'title' => $this->contactTitle->getId(),
+                'position' => $this->contactPosition->getId(),
                 'account' => array(
                     'id' => 2
                 ),
@@ -1403,8 +1380,6 @@ class ContactControllerTest extends DatabaseTestCase
 
     public function testPutRemovedAccount()
     {
-        global $contactPosition, $contactTitle;
-
         $client = $this->createTestClient();
 
         $client->request(
@@ -1413,8 +1388,8 @@ class ContactControllerTest extends DatabaseTestCase
             array(
                 'firstName' => 'John',
                 'lastName' => 'Doe',
-                'title' => $contactTitle->getId(),
-                'position' => $contactPosition->getId(),
+                'title' => $this->contactTitle->getId(),
+                'position' => $this->contactPosition->getId(),
                 'account' => array(
                     'id' => 2
                 ),
@@ -1521,8 +1496,8 @@ class ContactControllerTest extends DatabaseTestCase
             array(
                 'firstName' => 'John',
                 'lastName' => 'Doe',
-                'title' => $contactTitle->getId(),
-                'position' => $contactPosition->getId(),
+                'title' => $this->contactTitle->getId(),
+                'position' => $this->contactPosition->getId(),
                 'account' => array(
                     'id' => null
                 ),
@@ -1648,8 +1623,6 @@ class ContactControllerTest extends DatabaseTestCase
 
     public function testPrimaryAddressHandlingPost()
     {
-        global $contactPosition;
-
         $client = $this->createTestClient();
 
         $client->request(
@@ -1659,7 +1632,7 @@ class ContactControllerTest extends DatabaseTestCase
                 'firstName' => 'Erika',
                 'lastName' => 'Mustermann',
                 'title' => 'MSc',
-                'position' => $contactPosition->getId(),
+                'position' => $this->contactPosition->getId(),
                 'account' => array(
                     'id' => 2
                 ),
@@ -1753,8 +1726,6 @@ class ContactControllerTest extends DatabaseTestCase
 
     public function testPrimaryAddressHandlingPut()
     {
-        global $contactPosition, $contactTitle;
-
         $client = $this->createTestClient();
 
         $client->request(
@@ -1763,8 +1734,8 @@ class ContactControllerTest extends DatabaseTestCase
             array(
                 'firstName' => 'John',
                 'lastName' => 'Doe',
-                'title' => $contactTitle->getId(),
-                'position' => $contactPosition->getId(),
+                'title' => $this->contactTitle->getId(),
+                'position' => $this->contactPosition->getId(),
                 'emails' => array(
                     array(
                         'id' => 1,
