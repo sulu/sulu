@@ -1845,6 +1845,10 @@
                 <source>sulu.content.seo.keywords-left</source>
                 <target></target>
             </trans-unit>
+            <trans-unit id="a50af522ac181350142c0b4720e29a3f" resname="poolalpin.contacts.condition.categorySelection">
+                <source>poolalpin.contacts.condition.categorySelection</source>
+                <target>Kategorieauswahl</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
