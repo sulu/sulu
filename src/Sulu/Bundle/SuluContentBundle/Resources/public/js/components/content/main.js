@@ -15,6 +15,12 @@ define([
 
     var CONTENT_LANGUAGE = 'contentLanguage',
 
+        /**
+         * node type constant for content
+         * @type {number}
+         */
+        TYPE_CONTENT = 1,
+
         constants = {
             resolutionDropdownData: [
                 {id: 1, name: 'sulu.preview.auto', cssClass: 'auto'},
@@ -176,7 +182,7 @@ define([
             // set default template
             this.sandbox.on('sulu.content.contents.default-template', function(name) {
                 this.template = name;
-                if (this.data.nodeType !== 1) {
+                if (this.data.nodeType !== TYPE_CONTENT) {
                     this.sandbox.emit('sulu.header.toolbar.item.change', 'template', name);
                     if (this.hiddenTemplate) {
                         this.hiddenTemplate = false;
@@ -401,7 +407,7 @@ define([
                 this.setTemplate(data);
                 this.setState(data);
 
-                if (!!this.options.preview && this.data.nodeType === 1) {
+                if (!!this.options.preview && this.data.nodeType === TYPE_CONTENT) {
                     this.renderPreview(data);
                 } else {
                     this.sandbox.emit('sulu.sidebar.hide');
@@ -528,7 +534,7 @@ define([
         setTemplate: function(data) {
             this.template = data.template;
 
-            if (this.data.nodeType === 1 && this.template !== '' && this.template !== undefined && this.template !== null) {
+            if (this.data.nodeType === TYPE_CONTENT && this.template !== '' && this.template !== undefined && this.template !== null) {
                 this.sandbox.emit('sulu.header.toolbar.item.change', 'template', this.template);
                 this.sandbox.emit('sulu.header.toolbar.item.show', 'template');
             }

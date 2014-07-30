@@ -11,6 +11,24 @@ define(['app-config'], function(AppConfig) {
 
     'use strict';
 
+    /**
+     * node type constant for content
+     * @type {number}
+     */
+    var TYPE_CONTENT = 1,
+
+        /**
+         * node type constant for internal
+         * @type {number}
+         */
+        TYPE_INTERNAL = 2,
+
+        /**
+         * node type constant for external
+         * @type {number}
+         */
+        TYPE_EXTERNAL = 4;
+
     return {
 
         view: true,
@@ -61,11 +79,11 @@ define(['app-config'], function(AppConfig) {
         setData: function(data) {
             var type = parseInt(data.nodeType);
 
-            if (type === 1) {
+            if (type === TYPE_CONTENT) {
                 this.sandbox.dom.attr('#content-node-type', 'checked', true);
-            } else if (type === 2) {
+            } else if (type === TYPE_EXTERNAL) {
                 this.sandbox.dom.attr('#internal-link-node-type', 'checked', true);
-            } else if (type === 4) {
+            } else if (type === TYPE_EXTERNAL) {
                 this.sandbox.dom.attr('#external-link-node-type', 'checked', true);
             }
 
@@ -91,7 +109,7 @@ define(['app-config'], function(AppConfig) {
             data.nodeType = parseInt(this.sandbox.dom.val('input[name="nodeType"]:checked'));
 
             this.data = this.sandbox.util.extend(true, {}, this.data, data);
-            this.sandbox.emit('sulu.content.contents.save', this.data, (data.nodeType === 2 ? 'internal-link' : data.nodeType === 4 ? 'external-link' : AppConfig.getSection('sulu-content')['defaultTemplate']));
+            this.sandbox.emit('sulu.content.contents.save', this.data, (data.nodeType === TYPE_INTERNAL ? 'internal-link' : data.nodeType === TYPE_EXTERNAL ? 'external-link' : AppConfig.getSection('sulu-content')['defaultTemplate']));
         }
     };
 });
