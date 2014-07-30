@@ -6,6 +6,10 @@ parameters:
     sulu_contact.account_listener.class: Sulu\Bundle\ContactBundle\EventListener\AccountListener
     sulu_contact.contact_manager.class: Sulu\Bundle\ContactBundle\Contact\ContactManager
     sulu_contact.account_manager.class: Sulu\Bundle\ContactBundle\Contact\AccountManager
+    sulu_contact.twig.class: Sulu\Bundle\ContactBundle\Twig\ContactTwigExtension
+    sulu_contact.twig.cache.class: Doctrine\Common\Cache\ArrayCache
+    sulu_contact.user_repository.class: Sulu\Bundle\SecurityBundle\Entity\UserRepository
+    sulu_contact.user_repository.entity: 'SuluSecurityBundle:User'
 
 services:
     sulu_contact.admin:
@@ -40,11 +44,29 @@ services:
           - { name: doctrine.event_listener, event: postPersist }
 
     sulu_contact.account_manager:
-            class: %sulu_contact.account_manager.class%
-            arguments:
-              - @doctrine.orm.entity_manager
+        class: %sulu_contact.account_manager.class%
+        arguments:
+          - @doctrine.orm.entity_manager
 
     sulu_contact.contact_manager:
-            class: %sulu_contact.contact_manager.class%
-            arguments:
-              - @doctrine.orm.entity_manager
+        class: %sulu_contact.contact_manager.class%
+        arguments:
+          - @doctrine.orm.entity_manager
+
+    sulu_contact.user_repository:
+        class: %sulu_contact.user_repository.class%
+        factory_service: doctrine
+        factory_method: getRepository
+        arguments:
+          - %sulu_contact.user_repository.entity%
+
+    sulu_contact.twig.cache:
+        class: %sulu_contact.twig.cache.class%
+
+    sulu_contact.twig:
+        class: %sulu_contact.twig.class%
+        arguments:
+          - @sulu_contact.twig.cache
+          - @sulu_contact.user_repository
+        tags:
+            - { name: twig.extension }
