@@ -1,0 +1,38 @@
+{% if data.id is defined and data is not null%}
+    <div id="sidebar-accounts-list" data-id="{{ data.id }}" class="show-icon grid-row m-bottom-20">
+        <h2 class="m-bottom-0 action">{{ data.name }}
+            <span class="blue-icon"><span class="fa-pencil"></span></span>
+        </h2>
+    </div>
+
+    {% if data.address is defined %}
+        {% include 'SuluContactBundle:Widgets:Partials/address.partial.html.twig' with {'address': data.address} only %}
+    {% endif %}
+
+    {% if data.phone or data.fax  is not empty %}
+        {% include 'SuluContactBundle:Widgets:Partials/phoneFax.partial.html.twig' with {'phone': data.phone, 'fax': data.fax} only %}
+    {% endif %}
+
+    {% if data.email or data.url is not empty %}
+        {% include 'SuluContactBundle:Widgets:Partials/emailUrl.partial.html.twig' with {'email': data.email, 'url': data.url} only %}
+    {% endif %}
+
+    {% if data.contacts is defined %}
+        <div class="grid-row m-bottom-30">
+            <h5 class="label"><%=translate('public.company')%></h5>
+            <h4 class="m-top-0 m-bottom-0">{{ data.company.name }}</h4>
+            {% if data.company.address is defined %}
+                <span class="grey block">
+                    {{ data.company.address.city }}
+                    {{ data.company.address.country }}
+                </span>
+            {% endif %}
+            <span class="block">
+             <a class="action" href="mailto:{{ data.company.email }}" target="_blank">
+                 {{ data.company.email }}
+             </a>
+         </span>
+        </div>
+    {% endif %}
+{% endif %}
+

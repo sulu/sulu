@@ -9,18 +9,21 @@
  */
 
 namespace Sulu\Bundle\ContactBundle\Contact;
+
 use Sulu\Bundle\ContactBundle\Entity\AccountAddress;
 use Sulu\Bundle\ContactBundle\Entity\Address;
 
 /**
  * This Manager handles Account functionality
  * Class AccountManager
+ *
  * @package Sulu\Bundle\ContactBundle\Contact
  */
 class AccountManager extends AbstractContactManager
 {
     /**
      * adds an address to the entity
+     *
      * @param Account $account The entity to add the address to
      * @param Address $address The address to be added
      * @param Bool $isMain Defines if the address is the main Address of the contact
@@ -48,6 +51,7 @@ class AccountManager extends AbstractContactManager
 
     /**
      * removes the address relation from a contact and also deletes the address if it has no more relations
+     *
      * @param $account
      * @param $accountAddress
      * @return mixed|void
@@ -61,7 +65,9 @@ class AccountManager extends AbstractContactManager
 
         // reload address to get all data (including relational data)
         $address = $accountAddress->getAddress();
-        $address = $this->em->getRepository('SuluContactBundle:Address')->findById($address->getId());
+        $address = $this->em->getRepository(
+            'SuluContactBundle:Address'
+        )->findById($address->getId());
 
         $isMain = $accountAddress->getMain();
 
@@ -84,6 +90,7 @@ class AccountManager extends AbstractContactManager
 
     /**
      * Returns a collection of relations to get addresses
+     *
      * @param $entity
      * @return mixed
      */
