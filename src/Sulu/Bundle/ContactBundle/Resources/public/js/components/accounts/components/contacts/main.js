@@ -75,7 +75,7 @@ define([
 
             // create container for overlay
             $overlay = this.sandbox.dom.createElement('<div />');
-            this.sandbox.dom.append('body', $overlay);
+            this.sandbox.dom.append(this.$el, $overlay);
 
             // create overlay with data
             this.sandbox.start([
