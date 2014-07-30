@@ -50,7 +50,9 @@ class MediaStreamController extends Controller
     public function getImageAction(Request $request)
     {
         try {
-            ob_end_clean();
+            if (ob_get_length()) {
+                ob_end_clean();
+            }
 
             $url = $request->getPathInfo();
 
@@ -68,7 +70,9 @@ class MediaStreamController extends Controller
     public function downloadAction(Request $request, $id)
     {
         try {
-            ob_end_clean();
+            if (ob_get_length()) {
+                ob_end_clean();
+            }
 
             $version = $request->get('v', null);
             $noCount = $request->get('no-count', false);
