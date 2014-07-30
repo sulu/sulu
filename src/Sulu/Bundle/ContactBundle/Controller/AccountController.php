@@ -109,7 +109,10 @@ class AccountController extends AbstractContactController
             'corporation',
             'corporation',
             self::$entityName,
-            'contact.accounts.corporation'
+            'contact.accounts.corporation',
+            array(),
+            true,
+            false
         );
 
         $this->fieldDescriptors['city'] = new DoctrineFieldDescriptor(
@@ -169,8 +172,7 @@ class AccountController extends AbstractContactController
             false,
             true,
             '',
-            '',
-            '160px'
+            '200px'
         );
 
         $this->fieldDescriptors['mainPhone'] = new DoctrineFieldDescriptor(
@@ -184,14 +186,21 @@ class AccountController extends AbstractContactController
             'mainEmail',
             'mainEmail',
             self::$entityName,
-            'public.email'
+            'public.email',
+            array(),
+            false,
+            true,
+            '',
+            '',
+            '140px'
         );
 
         $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor(
             'id',
             'id',
             self::$entityName,
-            'public.id', array(),
+            'public.id',
+            array(),
             true,
             false,
             '',
