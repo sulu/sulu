@@ -12,6 +12,7 @@ namespace Sulu\Component\Webspace\Manager;
 
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
+use Sulu\Component\Webspace\Url;
 use Sulu\Component\Webspace\Webspace;
 
 /**
@@ -50,6 +51,19 @@ interface WebspaceManagerInterface
      * @return array
      */
     public function findUrlsByResourceLocator($resourceLocator, $environment, $languageCode, $webspaceKey = null);
+
+    /**
+     * Returns all portals managed by this webspace manager
+     * @return Portal[]
+     */
+    public function getPortals();
+
+    /**
+     * Returns all URLs in the given environment managed by this WebspaceManager
+     * @param string $environment
+     * @return string[]
+     */
+    public function getUrls($environment);
 
     /**
      * Returns all the webspaces managed by this specific instance

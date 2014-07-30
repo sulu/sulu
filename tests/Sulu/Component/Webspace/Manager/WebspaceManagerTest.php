@@ -462,4 +462,35 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
         $result = $this->webspaceManager->findUrlsByResourceLocator('/test', 'dev', 'de_at', 'sulu_io');
         $this->assertEquals(array('http://sulu.lo/test'), $result);
     }
+
+    public function testGetPortals()
+    {
+        $portals = $this->webspaceManager->getPortals();
+
+        $this->assertCount(5, $portals);
+        $this->assertEquals('massiveart_us', $portals['massiveart_us']->getKey());
+        $this->assertEquals('massiveart_ca', $portals['massiveart_ca']->getKey());
+        $this->assertEquals('sulucmf_at', $portals['sulucmf_at']->getKey());
+        $this->assertEquals('sulucmf_singlelanguage_at', $portals['sulucmf_singlelanguage_at']->getKey());
+        $this->assertEquals('sulucmf_withoutportallocalizations_at', $portals['sulucmf_withoutportallocalizations_at']->getKey());
+    }
+
+    public function testGetUrls()
+    {
+        $urls = $this->webspaceManager->getUrls('dev');
+
+        $this->assertCount(12, $urls);
+        $this->assertContains('sulu.lo', $urls);
+        $this->assertContains('sulu-single-language.lo', $urls);
+        $this->assertContains('sulu-without.lo', $urls);
+        $this->assertContains('massiveart.lo', $urls);
+        $this->assertContains('massiveart.lo/en-us/w', $urls);
+        $this->assertContains('massiveart.lo/en-us/s', $urls);
+        $this->assertContains('massiveart.lo/en-ca/w', $urls);
+        $this->assertContains('massiveart.lo/en-ca/s', $urls);
+        $this->assertContains('massiveart.lo/fr-ca/w', $urls);
+        $this->assertContains('massiveart.lo/fr-ca/s', $urls);
+        $this->assertContains('massiveart.lo/de/w', $urls);
+        $this->assertContains('massiveart.lo/de/s', $urls);
+    }
 }
