@@ -127,7 +127,6 @@ define([
             this.sandbox.on('sulu.contact-form.add-required', addRequires.bind(this));
             this.sandbox.on('sulu.contact-form.is.initialized', isInitialized.bind(this));
 
-            this.sandbox.off('husky.overlay.add-address.initialized', initializeDropdownForAddressTypes);
             this.sandbox.on('husky.overlay.add-address.initialized', initializeDropdownForAddressTypes.bind(this));
 
             this.sandbox.on(CONTENT_SET.call(this), cropAllLabels.bind(this));
@@ -182,23 +181,23 @@ define([
          * Initializes the husky select component when overlay is loaded
          */
         initializeDropdownForAddressTypes = function() {
-
-            this.sandbox.stop(constants.addressTypeSelector);
-            this.sandbox.start([
-                {
-                    name: 'select@husky',
-                    options: {
-                        el: constants.addressTypeSelector,
-                        defaultLabel: this.sandbox.translate('contact.address.type.select'),
-                        instanceName: 'addressTypes',
-                        data: this.options.fieldTypes.address,
-                        preSelectedElements: [this.options.defaultTypes.addressType.id],
-                        valueName: 'name',
-                        multipleSelect: false,
-                        emitValues: true
+            if (!!this.options.defaultTypes.addressType && !!this.options.defaultTypes.addressType.id) {
+                this.sandbox.start([
+                    {
+                        name: 'select@husky',
+                        options: {
+                            el: constants.addressTypeSelector,
+                            defaultLabel: this.sandbox.translate('contact.address.type.select'),
+                            instanceName: 'addressTypes',
+                            data: this.options.fieldTypes.address,
+                            preSelectedElements: [this.options.defaultTypes.addressType.id],
+                            valueName: 'name',
+                            multipleSelect: false,
+                            emitValues: true
+                        }
                     }
-                }
-            ]);
+                ]);
+            }
         },
 
         /**
@@ -625,7 +624,7 @@ define([
 
             // create container for overlay
             var $overlay = this.sandbox.dom.createElement('<div>');
-            this.sandbox.dom.append('body', $overlay);
+            this.sandbox.dom.append(this.$el, $overlay);
 
             this.$editOverlayContent = createEditOverlayContent.call(this);
 
@@ -680,7 +679,7 @@ define([
 
             // create container for overlay
             $overlay = this.sandbox.dom.createElement('<div>');
-            this.sandbox.dom.append('body', $overlay);
+            this.sandbox.dom.append(this.$el, $overlay);
 
             if (isNew) {
                 title = this.sandbox.translate('contact.address.add.label');
@@ -732,7 +731,7 @@ define([
 
             // create container for overlay
             $overlay = this.sandbox.dom.createElement('<div>');
-            this.sandbox.dom.append('body', $overlay);
+            this.sandbox.dom.append(this.$el, $overlay);
 
             if (isNew) {
                 title = this.sandbox.translate('contact.accounts.bankAccounts.add.label');
@@ -862,7 +861,7 @@ define([
 
             // create container for overlay
             $overlay = this.sandbox.dom.createElement('<div>');
-            this.sandbox.dom.append('body', $overlay);
+            this.sandbox.dom.append(this.$el, $overlay);
 
             // start overlay and dependent select
             this.sandbox.start([
