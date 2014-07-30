@@ -56,6 +56,12 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
                 }
             }
         }
+
+        if ($container->hasExtension('massive_build')) {
+            $container->prependExtensionConfig('massive_build', array(
+                'command_class' => 'Sulu\Bundle\CoreBundle\Command\SuluBuildCommand'
+            ));
+        }
     }
 
     /**
@@ -93,6 +99,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         }
 
         $loader->load('rest.xml');
+        $loader->load('build.xml');
     }
 
     /**
