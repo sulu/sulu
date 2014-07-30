@@ -14,13 +14,13 @@ define([
 
     'use strict';
 
-    var defaults = {
-            accountType: null
-        },
-        bindCustomEvents = function() {
-            // navigate to edit contact
-            this.sandbox.on('husky.datagrid.item.click', function(item) {
-                this.sandbox.emit('sulu.contacts.accounts.load', item);
+    var bindCustomEvents = function() {
+            // navigate to edit account
+            this.sandbox.on('husky.datagrid.item.click', function(id) {
+                this.sandbox.emit(
+                    'sulu.sidebar.set-widget',
+                    '/admin/widget-groups/account-info?account=' + id
+                );
             }, this);
 
             // delete clicked
@@ -43,12 +43,11 @@ define([
          * @returns {object} tabs options
          */
         getTabsOptions = function() {
-            var items, i, len, index, type,
+            var items, i, index, type,
                 accountTypes,
                 contactSection = AppConfig.getSection('sulu-contact'),
                 accountType,
-                preselect = false,
-                data;
+                preselect;
 
             // check if accountTypes exist
             if (!contactSection || !contactSection.hasOwnProperty('accountTypes') ||
@@ -126,6 +125,10 @@ define([
                 width: 'max',
                 leftSpace: false,
                 rightSpace: false
+            },
+            sidebar: {
+                width: 'fixed',
+                cssClasses: 'sidebar-padding-50'
             }
         },
 
@@ -170,7 +173,7 @@ define([
             var i,
                 dataUrlAddition = '',
                 accountType,
-                // get account types
+            // get account types
                 accountTypes = AppConfig.getSection('sulu-contact').accountTypes,
                 assocAccountTypes = {};
 
@@ -249,6 +252,17 @@ define([
                     },
                     viewOptions: {
                         table: {
+                            icons: [
+                                {
+                                    icon: 'pencil',
+                                    column: 'name',
+                                    align: 'left',
+                                    callback: function(id) {
+                                        this.sandbox.emit('sulu.contacts.accounts.load', id);
+                                    }.bind(this)
+                                }
+                            ],
+                            highlightSelected: true,
                             fullWidth: true
                         }
                     }

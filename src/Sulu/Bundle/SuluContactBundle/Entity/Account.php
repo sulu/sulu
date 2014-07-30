@@ -1273,4 +1273,43 @@ class Account extends ApiEntity
         }
         return $addresses;
     }
+
+    /**
+     * Returns the main address
+     *
+     * @return mixed
+     */
+    public function getMainAddress()
+    {
+        $accountAddresses = $this->getAccountAddresses();
+
+        if (!is_null($accountAddresses)) {
+            /** @var AccountAddress $accountAddress */
+            foreach ($accountAddresses as $accountAddress) {
+                if ($accountAddress->getMain()) {
+                    return $accountAddress->getAddress();
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Get contacts
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getContacts()
+    {
+        $accountContacts = $this->getAccountContacts();
+        $contacts = [];
+
+        if (!is_null($accountContacts)) {
+            /** @var AccountContact $accountContact */
+            foreach ($accountContacts as $accountContact) {
+                $contacts[] = $accountContact->getContact();
+            }
+        }
+        return $contacts;
+    }
 }

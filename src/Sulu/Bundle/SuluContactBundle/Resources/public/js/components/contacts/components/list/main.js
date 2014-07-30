@@ -12,23 +12,24 @@ define(function() {
     'use strict';
 
     var bindCustomEvents = function() {
-        // navigate to edit contact
-        this.sandbox.on('husky.datagrid.item.click', function(item) {
-            this.sandbox.emit('sulu.contacts.contacts.load', item);
-        }, this);
+            // navigate to edit contact
+            this.sandbox.on('husky.datagrid.item.click', function(item) {
+                this.sandbox.emit('sulu.sidebar.set-widget', '/admin/widget-groups/contact-info?contact=' + item);
+            }, this);
 
-        // delete clicked
-        this.sandbox.on('sulu.list-toolbar.delete', function() {
-            this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
-                this.sandbox.emit('sulu.contacts.contacts.delete', ids);
-            }.bind(this));
-        }, this);
+            // delete clicked
+            this.sandbox.on('sulu.list-toolbar.delete', function() {
+                this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
+                    this.sandbox.emit('sulu.contacts.contacts.delete', ids);
+                }.bind(this));
+            }, this);
 
-        // add clicked
-        this.sandbox.on('sulu.list-toolbar.add', function() {
-            this.sandbox.emit('sulu.contacts.contacts.new');
-        }, this);
-    };
+            // add clicked
+            this.sandbox.on('sulu.list-toolbar.add', function() {
+                this.sandbox.emit('sulu.contacts.contacts.new');
+            }, this);
+
+        };
 
     return {
         view: true,
@@ -38,6 +39,10 @@ define(function() {
                 width: 'max',
                 leftSpace: false,
                 rightSpace: false
+            },
+            sidebar: {
+                width: 'fixed',
+                cssClasses: 'sidebar-padding-50'
             }
         },
 
@@ -76,6 +81,17 @@ define(function() {
                     resultKey: 'contacts',
                     viewOptions: {
                         table: {
+                            icons: [
+                                {
+                                    icon: 'pencil',
+                                    column: 'fullName',
+                                    align: 'left',
+                                    callback: function(id) {
+                                        this.sandbox.emit('sulu.contacts.contacts.load', id);
+                                    }.bind(this)
+                                }
+                            ],
+                            highlightSelected: true,
                             fullWidth: true
                         }
                     }

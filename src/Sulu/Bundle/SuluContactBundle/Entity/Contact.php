@@ -1155,4 +1155,24 @@ class Contact extends ApiEntity
     {
         return $this->assignedActivities;
     }
+
+    /**
+     * Returns the main address
+     *
+     * @return mixed
+     */
+    public function getMainAddress()
+    {
+        $contactAddresses = $this->getContactAddresses();
+
+        if (!is_null($contactAddresses)) {
+            /** @var ContactAddress $contactAddress */
+            foreach ($contactAddresses as $contactAddress) {
+                if (!!$contactAddress->getMain()) {
+                    return $contactAddress->getAddress();
+                }
+            }
+        }
+        return null;
+    }
 }
