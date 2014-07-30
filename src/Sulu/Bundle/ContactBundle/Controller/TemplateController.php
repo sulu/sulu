@@ -37,20 +37,9 @@ class TemplateController extends RestController
      */
     public function contactFormAction()
     {
-        $titleEntity = 'SuluContactBundle:ContactTitle';
-        $titles = $this->getDoctrine()->getRepository(
-            $titleEntity
-        )->findAll();
-
-        $positionEntity = 'SuluContactBundle:Position';
-        $positions = $this->getDoctrine()->getRepository(
-            $positionEntity
-        )->findAll();
-
         $data = $this->getRenderArray();
         $data['form_of_address'] = [];
-        $data['titles'] = $titles;
-        $data['positions'] = $positions;
+
         foreach ($this->container->getParameter('sulu_contact.form_of_address') as $el) {
             $data['form_of_address'][] = $el;
         }
