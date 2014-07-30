@@ -16979,14 +16979,11 @@ define('form/validation',[
         // define validation interface
             result = {
                 validate: function(force) {
-                    var result = true, focus = false;
+                    var result = true;
                     // validate each element
                     $.each(form.elements, function(key, element) {
                         if (!element.validate(force)) {
-                            if (!focus) {
-                                element.$el.focus();
-                                focus = true;
-                            }
+                            // TODO: scroll to first invalid element you can't use $.focus because an element mustn't be an input
                             result = false;
                         }
                     });
@@ -17705,6 +17702,7 @@ require.config({
         'type/date': 'js/types/date',
         'type/decimal': 'js/types/decimal',
         'type/hiddenData': 'js/types/hiddenData',
+        'type/mappingData': 'js/types/mappingData',
         'type/email': 'js/types/email',
         'type/url': 'js/types/url',
         'type/label': 'js/types/label',
@@ -18071,11 +18069,17 @@ define('type/decimal',[
                 },
 
                 getModelData: function(val) {
+                    if(val === '') {
+                        return '';
+                    }
                     return Globalize.parseFloat(val);
                 },
 
                 getViewData: function(val) {
                     if(typeof val === 'string'){
+                        if(val === '') {
+                            return '';
+                        }
                         val = parseFloat(val);
                     }
                     return Globalize.format(val, this.options.format);
@@ -18133,6 +18137,80 @@ define('type/hiddenData',[
 
                 validate: function() {
                     return true;
+                }
+            };
+
+        return new Default($el, defaults, options, 'hiddenData', typeInterface);
+    };
+});
+
+/*
+ * This file is part of the Husky Validation.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ *
+ */
+
+define('type/mappingData',[
+    'type/default'
+], function(Default) {
+
+    
+
+    return function($el, options) {
+        var defaults = {
+                defaultValue: null,
+                mapping: null,
+                searchProperty: 'id',
+                showProperty: 'name'
+            },
+
+            typeInterface = {
+
+                setValue: function(value) {
+                    if (value !== null && typeof value !== 'object') {
+                        this.$el.data('value', value);
+                        this.$el.text(this.getMappingValue(value) || this.options.defaultValue);
+                    }
+                },
+
+                getValue: function() {
+
+                    var value = this.$el.data('value');
+
+                    if (value !== null) {
+                        return value;
+                    } else {
+                        return this.options.defaultValue;
+                    }
+                },
+
+                needsValidation: function() {
+                    return false;
+                },
+
+                validate: function() {
+                    return true;
+                },
+
+                getMappingValue: function(val) {
+
+                    var key, obj = this.options.mapping;
+
+                    if (!!obj) {
+                        for (key in this.options.mapping) {
+                            if (!!obj.hasOwnProperty(key)) {
+                                if (obj[key].hasOwnProperty(this.options.searchProperty) &&
+                                    obj[key].hasOwnProperty(this.options.showProperty) &&
+                                    String(obj[key][this.options.searchProperty]) === String(val)) {
+                                    return obj[key][this.options.showProperty];
+                                }
+                            }
+                        }
+                    }
                 }
             };
 
@@ -18768,8 +18846,15 @@ define('validator/required',[
                             return false;
                         }
 
+                        if(typeof val === 'undefined'){
+                            return false;
+                        }
+
+                        // the following condition works only for strings
+                        val = val.toString();
+
                         // notNull && notBlank && not undefined
-                        return typeof val !== 'undefined' && val.length > 0 && '' !== val.replace(/^\s+/g, '').replace(/\s+$/g, '');
+                        return val.length > 0 && '' !== val.replace(/^\s+/g, '').replace(/\s+$/g, '');
                     }
                     return true;
                 }
