@@ -2,9 +2,9 @@
 
 namespace Sulu\Bundle\LocationBundle\Tests\Unit\Content\Types;
 
-use Sulu\Bundle\LocationBundle\Content\Types\LocationContent;
+use Sulu\Bundle\LocationBundle\Content\Types\LocationContentType;
 
-class LocationContentTest extends \PHPUnit_Framework_TestCase
+class LocationContentTypeTest extends \PHPUnit_Framework_TestCase
 {
     protected $nodeRepository;
     protected $locationContent;
@@ -16,7 +16,7 @@ class LocationContentTest extends \PHPUnit_Framework_TestCase
         $this->phpcrNode = $this->getMock('PHPCR\NodeInterface');
         $this->suluProperty = $this->getMock('Sulu\Component\Content\PropertyInterface');
         $this->mapManager = $this->getMock('Sulu\Bundle\LocationBundle\Map\MapManager');
-        $this->locationContent = new LocationContent($this->nodeRepository, 'Foo:bar.html.twig', $this->mapManager, 'some_geolocator');
+        $this->locationContent = new LocationContentType($this->nodeRepository, 'Foo:bar.html.twig', $this->mapManager, 'some_geolocator');
     }
 
     protected function initReadTest($data)

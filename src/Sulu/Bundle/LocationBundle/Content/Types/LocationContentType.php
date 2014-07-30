@@ -20,7 +20,7 @@ use Sulu\Bundle\LocationBundle\Map\MapManager;
 /**
  * ContentType for TextEditor
  */
-class LocationContent extends ComplexContentType
+class LocationContentType extends ComplexContentType
 {
     /**
      * @var NodeRepositoryInterface
