@@ -117,6 +117,10 @@ class PreviewController extends Controller
         // FIXME hack found in http://stackoverflow.com/a/6090728
         libxml_use_internal_errors(true);
         $doc->loadHTML(utf8_decode($content));
+        $errors = json_encode(libxml_get_errors());
+        /** @var \Symfony\Bridge\Monolog\Logger $logger */
+        $logger = $this->get('logger');
+        $logger->debug('ERRORS in Preview Template: ' . $errors);
         libxml_clear_errors();
 
         $body = $doc->getElementsByTagName('body');

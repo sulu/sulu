@@ -252,4 +252,40 @@ class PreviewControllerTest extends DatabaseTestCase
         $this->assertTrue(strpos($response, '<nav>') > -1);
         $this->assertTrue(strpos($response, '</nav>') > -1);
     }
+
+    public function testRenderInvalidHtml()
+    {
+        $client = $this->createClient(
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test',
+            )
+        );
+
+        $data = array(
+            'title' => 'Testtitle',
+            'tags' => array(
+                'tag1',
+                'tag2'
+            ),
+            'url' => '/test',
+            'article' => 'Test'
+        );
+
+        $client->request('POST', '/api/nodes?template=invalidhtml&webspace=sulu_io&language=en', $data);
+        $response = json_decode($client->getResponse()->getContent());
+
+        $client->request(
+            'GET',
+            '/content/preview/' . $response->id . '?template=invalidhtml&webspace=sulu_io&language=en'
+        );
+        $response = $client->getResponse()->getContent();
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertTrue(strpos($response, '<h1>Hello Hikaru Sulu</h1>') > -1);
+        $this->assertTrue(preg_match('/^\<p\>This is a fabulous test case!\s*\<\/p\>/', $response) > -1);
+        $this->assertTrue(strpos($response, '<nav>') > -1);
+        $this->assertTrue(strpos($response, '</nav>') > -1);
+    }
 }
