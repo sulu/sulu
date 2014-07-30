@@ -146,7 +146,10 @@ class MediaControllerTest extends DatabaseTestCase
         $fileVersion->setName('photo.jpeg');
         $fileVersion->setFile($file);
         $fileVersion->setSize(1124214);
+        $fileVersion->setDownloadCounter(2);
         $fileVersion->setStorageOptions('{"segment":"1","fileName":"photo.jpeg"}');
+        mkdir(__DIR__ . '/../../uploads/media/1', 0777, true);
+        copy($this->getImagePath(), __DIR__ . '/../../uploads/media/1/photo.jpeg');
 
         // create meta
         $fileVersionMeta = new FileVersionMeta();
@@ -266,6 +269,7 @@ class MediaControllerTest extends DatabaseTestCase
         $this->assertEquals('Image Type', $response->type->name);
         $this->assertEquals('photo.jpeg', $response->name);
         $this->assertEquals('photo', $response->title);
+        $this->assertEquals('2', $response->downloadCounter);
         $this->assertEquals('description', $response->description);
     }
 
@@ -666,6 +670,40 @@ class MediaControllerTest extends DatabaseTestCase
         $client->request('GET', '/api/media');
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(1, $response->total);
+    }
+
+    /**
+     * @description Test Media DownloadCounter
+     */
+    public function testDownloadCounter()
+    {
+        $client = $this->createTestClient();
+
+        $client->request(
+            'GET',
+            '/media/1/download/photo.jpeg'
+        );
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $client = $this->createTestClient();
+
+        $client->request(
+            'GET',
+            '/api/media/1'
+        );
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(1, $response->id);
+        $this->assertEquals(2, $response->type->id);
+        $this->assertEquals('Image Type', $response->type->name);
+        $this->assertEquals('photo.jpeg', $response->name);
+        $this->assertEquals('photo', $response->title);
+        $this->assertEquals('3', $response->downloadCounter);
+        $this->assertEquals('description', $response->description);
     }
 
     /**
