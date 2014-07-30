@@ -20,6 +20,7 @@ define([
 
         initialize: function() {
             this.bindCustomEvents();
+            this.bindSidebarEvents();
 
             if (this.options.display === 'list') {
                 this.renderList();
@@ -83,6 +84,24 @@ define([
             this.initializeDropDownListender(
                 'position-select',
                 'api/contact/positions');
+        },
+
+        /**
+         * Binds general sidebar events
+         */
+        bindSidebarEvents: function(){
+            this.sandbox.dom.off('#sidebar');
+
+            this.sandbox.dom.on('#sidebar', 'click', function(event) {
+                var id = this.sandbox.dom.data(event.currentTarget,'id');
+                this.sandbox.emit('sulu.contacts.contacts.load', id);
+            }.bind(this), '#sidebar-contact-list');
+
+            this.sandbox.dom.on('#sidebar', 'click', function(event) {
+                var id = this.sandbox.dom.data(event.currentTarget,'id');
+                this.sandbox.emit('sulu.router.navigate', 'contacts/accounts/edit:' + id + '/details');
+                this.sandbox.emit('husky.navigation.select-item','contacts/accounts');
+            }.bind(this), '#main-account');
         },
 
         /**
@@ -153,14 +172,14 @@ define([
          * Flattens type/status/priority
          * @param activity
          */
-        flattenActivityObjects: function(activity){
-            if(!!activity.activityStatus){
+        flattenActivityObjects: function(activity) {
+            if (!!activity.activityStatus) {
                 activity.activityStatus = this.sandbox.translate(activity.activityStatus.name);
             }
-            if(!!activity.activityType){
+            if (!!activity.activityType) {
                 activity.activityType = this.sandbox.translate(activity.activityType.name);
             }
-            if(!!activity.activityPriority){
+            if (!!activity.activityPriority) {
                 activity.activityPriority = this.sandbox.translate(activity.activityPriority.name);
             }
 
@@ -302,7 +321,13 @@ define([
                 // start component when contact and system members are loaded
                 this.sandbox.data.when(this.dfdContact, this.dfdSystemContacts).then(function() {
                     this.sandbox.start([
-                        {name: 'activities@sulucontact', options: { el: $list, contact: this.contact.toJSON(), responsiblePersons: this.responsiblePersons, instanceName: 'contact'}}
+                        {name: 'activities@sulucontact', options: {
+                            el: $list,
+                            contact: this.contact.toJSON(),
+                            responsiblePersons: this.responsiblePersons,
+                            instanceName: 'contact',
+                            widgetUrl: '/admin/widget-groups/contact-detail?contact='
+                        }}
                     ]);
                 }.bind(this));
 
