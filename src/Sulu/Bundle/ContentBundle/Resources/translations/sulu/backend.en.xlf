@@ -30,7 +30,7 @@
                 <source>sulu.content.form.settings.type.internal-link</source>
                 <target>Internal Link</target>
             </trans-unit>
-            <trans-unit id="f1234df371239fbed4a73a4123dfdf006" resname="sulu.content.form.settings.type.external-link">
+            <trans-unit id="f1234df371239fbed4a73a4123dfdf007" resname="sulu.content.form.settings.type.external-link">
                 <source>sulu.content.form.settings.type.external-link</source>
                 <target>External Link</target>
             </trans-unit>
