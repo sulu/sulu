@@ -424,7 +424,55 @@ input, select {
 }
 /* line 10, ../scss/modules/sidebar.scss */
 .sulu-sidebar .sidebar-loader {
-  margin-top: 40px;
+  position: relative;
+  left: 0;
+  top: 50%;
+  margin-top: -50px;
+}
+/* line 17, ../scss/modules/sidebar.scss */
+.sulu-sidebar .action {
+  color: black;
+  cursor: pointer;
+  text-decoration: none;
+}
+/* line 23, ../scss/modules/sidebar.scss */
+.sulu-sidebar .label {
+  font-weight: 600;
+  margin: 0 0 5px 0;
+  color: #999999;
+}
+/* line 29, ../scss/modules/sidebar.scss */
+.sulu-sidebar .blue-icon {
+  width: 30px;
+  height: 20px;
+  cursor: pointer;
+  color: #fff;
+  background: #52b6ca;
+  text-align: center;
+  border-radius: 2px;
+  margin-left: 10px;
+  display: inline-block;
+  font-size: 15px;
+  opacity: 0;
+  -webkit-transition: opacity 100ms ease-in;
+  -webkit-transition-delay: 200ms;
+  -moz-transition: opacity 100ms ease-in 200ms;
+  -o-transition: opacity 100ms ease-in 200ms;
+  transition: opacity 100ms ease-in 200ms;
+}
+/* line 48, ../scss/modules/sidebar.scss */
+.sulu-sidebar .blue-icon > span {
+  vertical-align: text-top;
+  margin-top: -3px;
+}
+/* line 53, ../scss/modules/sidebar.scss */
+.sulu-sidebar .show-icon:hover .blue-icon {
+  opacity: 1;
+}
+
+/* line 59, ../scss/modules/sidebar.scss */
+.sidebar-padding-50 > div {
+  padding: 50px;
 }
 
 /* line 5, ../scss/modules/gridgroup.scss */
