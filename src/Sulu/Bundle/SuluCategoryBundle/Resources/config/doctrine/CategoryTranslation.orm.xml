@@ -9,7 +9,7 @@
             <generator strategy="AUTO"/>
         </id>
 
-        <field name="translation" column="translation" type="string" length="45"/>
+        <field name="translation" column="translation" type="string" length="255"/>
         <field name="locale" column="locale" type="string" length="5"/>
 
         <many-to-one field="category" target-entity="Sulu\Bundle\CategoryBundle\Entity\Category" inversed-by="name">
