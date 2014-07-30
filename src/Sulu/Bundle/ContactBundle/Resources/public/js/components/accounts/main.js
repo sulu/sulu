@@ -46,6 +46,7 @@ define([
 
         initialize: function() {
             this.bindCustomEvents();
+            this.bindSidebarEvents();
             this.account = null;
             this.accountType = null;
             this.accountTypes = null;
@@ -68,7 +69,8 @@ define([
                 this.renderActivities().then(function() {
                     AccountsUtilHeader.setHeader.call(
                         this,
-                        this.account, this.options.accountType
+                        this.account,
+                        this.options.accountType
                     );
                 }.bind(this));
             } else {
@@ -159,6 +161,24 @@ define([
                 'sulu.contacts.account.activity.load',
                 this.loadActivity.bind(this)
             );
+        },
+
+        /**
+         * Binds general sidebar events
+         */
+        bindSidebarEvents: function(){
+            this.sandbox.dom.off('#sidebar');
+
+            this.sandbox.dom.on('#sidebar', 'click', function(event) {
+                var id = this.sandbox.dom.data(event.currentTarget,'id');
+                this.sandbox.emit('sulu.contacts.accounts.load', id);
+            }.bind(this), '#sidebar-accounts-list');
+
+            this.sandbox.dom.on('#sidebar', 'click', function(event) {
+                var id = this.sandbox.dom.data(event.currentTarget,'id');
+                this.sandbox.emit('sulu.router.navigate', 'contacts/contacts/edit:' + id + '/details');
+                this.sandbox.emit('husky.navigation.select-item','contacts/contacts');
+            }.bind(this), '#main-contact');
         },
 
         /**
@@ -310,7 +330,8 @@ define([
                                 el: $list,
                                 account: this.account.toJSON(),
                                 responsiblePersons: this.responsiblePersons,
-                                instanceName: 'account'
+                                instanceName: 'account',
+                                widgetUrl: '/admin/widget-groups/account-detail?account='
                             }
                         }
                     ]);

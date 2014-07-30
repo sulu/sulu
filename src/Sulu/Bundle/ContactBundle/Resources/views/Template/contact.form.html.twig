@@ -28,6 +28,7 @@
                 <label for="title"><%=translate('contact.contacts.contactTitle')%></label>
                 <div id="contact-title"
                      data-form="true"
+                     data-aura-default-label="<%=translate('public.please-choose')%>"
                      data-aura-data="{{ titles|json_encode() }}"
                      data-aura-component="select@husky"
                      data-aura-instance-name="title-select"
@@ -72,6 +73,7 @@
                 <div id="contact-position"
                      data-form="true"
                      data-aura-data="{{ positions|json_encode() }}"
+                     data-aura-default-label="<%=translate('public.please-choose')%>"
                      data-aura-component="select@husky"
                      data-aura-instance-name="position-select"
                      data-aura-editable="true"
@@ -108,7 +110,7 @@
         </div>
         <div class="grid-col-6">
             <div class="form-group">
-                <label for="disabled"><%=translate('public.deactivate')%></label>
+                <label for="disabled"><%=translate('public.locked')%></label>
                 <div>
                     <div class="custom-checkbox">
                         <input class="form-element husky-validate" type="checkbox" id="disabled"

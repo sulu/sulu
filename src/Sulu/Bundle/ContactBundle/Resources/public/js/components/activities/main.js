@@ -52,6 +52,14 @@ define(
         return {
 
             view: true,
+
+            layout: {
+                sidebar: {
+                    width: 'fixed',
+                    cssClasses: 'sidebar-padding-50'
+                }
+            },
+
             templates: ['/admin/contact/template/contact/activities'],
 
             initialize: function() {
@@ -67,6 +75,16 @@ define(
 
                 // get defaults for priorities/statuses/types
                 this.sandbox.emit('sulu.contacts.activities.get.defaults');
+
+                if (!!this.contact && !!this.contact.id) {
+                    this.initSidebar(this.options.widgetUrl, this.contact.id);
+                } else if (!!this.account && !!this.account.id) {
+                    this.initSidebar(this.options.widgetUrl, this.account.id);
+                }
+            },
+
+            initSidebar: function(url, id) {
+                this.sandbox.emit('sulu.sidebar.set-widget', url + id);
             },
 
             bindCustomEvents: function() {
