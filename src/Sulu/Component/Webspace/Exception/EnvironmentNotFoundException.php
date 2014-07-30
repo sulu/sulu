@@ -1,0 +1,52 @@
+<?php
+/*
+ * This file is part of the Sulu CMF.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+namespace Sulu\Component\Webspace\Exception;
+
+use Sulu\Component\Webspace\Portal;
+
+/**
+ * This exception is thrown when an environment in a portal does not exist
+ * @package Sulu\Component\Webspace\Exception
+ */
+class EnvironmentNotFoundException extends PortalException
+{
+    /**
+     * @var Portal
+     */
+    private $portal;
+
+    /**
+     * @var string
+     */
+    private $environment;
+
+    public function __construct(Portal $portal, $environment)
+    {
+        $this->portal = $portal;
+        $this->environment = $environment;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEnvironment()
+    {
+        return $this->environment;
+    }
+
+    /**
+     * @return Portal
+     */
+    public function getPortal()
+    {
+        return $this->portal;
+    }
+}
