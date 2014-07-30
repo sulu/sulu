@@ -22,22 +22,23 @@ class PortalInformationTest extends \PHPUnit_Framework_TestCase
         $this->portalInformation = new PortalInformation(null, null, null, null, null);
     }
 
-    public function provideUrlHosts()
+    public function provideUrl()
     {
         return array(
-            array('sulu.lo', 'sulu.lo'),
-            array('sulu.io/', 'sulu.io'),
-            array('sulu.com/example', 'sulu.com')
+            array('sulu.lo', 'sulu.lo', ''),
+            array('sulu.io/', 'sulu.io', '/'),
+            array('sulu.com/example', 'sulu.com', '/example')
         );
     }
 
     /**
-     * @dataProvider provideUrlHosts
+     * @dataProvider provideUrl
      */
-    public function testGetHost($url, $host)
+    public function testGetHostAndPrefix($url, $host, $prefix)
     {
         $this->portalInformation->setUrl($url);
 
         $this->assertEquals($host, $this->portalInformation->getHost());
+        $this->assertEquals($prefix, $this->portalInformation->getPrefix());
     }
 }
