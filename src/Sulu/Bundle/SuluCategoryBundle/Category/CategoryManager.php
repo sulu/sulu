@@ -22,6 +22,7 @@ use Sulu\Component\Security\UserRepositoryInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Sulu\Component\Rest\Exception\RestException;
 
 /**
  * Responsible for centralized Category Management
@@ -142,7 +143,7 @@ class CategoryManager implements CategoryManagerInterface
     }
 
     /**
-     * Returns tags with a given parent and/or a given depth-level
+     * Returns categories with a given parent and/or a given depth-level
      * if no arguments passed returns all categories
      * @param int $parent the id of the parent to filter for
      * @param int $depth the depth-level to filter for
@@ -153,6 +154,17 @@ class CategoryManager implements CategoryManagerInterface
     public function find($parent = null, $depth = null, $sortBy = null, $sortOrder = null)
     {
         return $this->categoryRepository->findCategories($parent, $depth, $sortBy, $sortOrder);
+    }
+
+    /**
+     * Returns the children for a given category
+     * @param int $key the key of the category to search the children for
+     * @param string|null $sortBy column name to sort by
+     * @param string|null $sortOrder sort order
+     * @return CategoryEntity[]
+     */
+    public function findChildren($key, $sortBy = null, $sortOrder = null) {
+        return $this->categoryRepository->findChildren($key, $sortBy, $sortOrder);
     }
 
     /**
@@ -179,14 +191,19 @@ class CategoryManager implements CategoryManagerInterface
      * Creates a new category or overrides an existing one
      * @param array $data The data of the category to save
      * @param int $userId The id of the user, who is doing this change
+     * @throws \Sulu\Component\Rest\Exception\RestException
      * @return CategoryEntity
      */
     public function save($data, $userId)
     {
-        if (isset($data['id'])) {
-            return $this->modifyCategory($data, $this->getUser($userId));
-        } else {
-            return $this->createCategory($data, $this->getUser($userId));
+        try {
+            if (isset($data['id'])) {
+                return $this->modifyCategory($data, $this->getUser($userId));
+            } else {
+                return $this->createCategory($data, $this->getUser($userId));
+            }
+        } catch (\Doctrine\DBAL\DBALException $e) {
+            throw new RestException('Passed key was not unique', 1);
         }
     }
 
@@ -272,10 +289,13 @@ class CategoryManager implements CategoryManagerInterface
 
         $categoryWrapper = $this->getApiObject($categoryEntity, $data['locale']);
         $categoryWrapper->setName($data['name']);
-        if (isset($data['meta'])) {
+        if (array_key_exists('key', $data)) {
+            $categoryWrapper->setKey($data['key']);
+        }
+        if (array_key_exists('meta', $data)) {
             $categoryWrapper->setMeta($data['meta']);
         }
-        if (isset($data['parent'])) {
+        if (array_key_exists('parent', $data)) {
             $parentEntity = $this->findById($data['parent']);
             $categoryWrapper->setParent($parentEntity);
         }
@@ -305,6 +325,10 @@ class CategoryManager implements CategoryManagerInterface
         $categoryEntity->setChanger($user);
 
         $categoryWrapper = $this->getApiObject($categoryEntity, $data['locale']);
+        // set key
+        if (array_key_exists('key', $data)) {
+            $categoryWrapper->setKey($data['key']);
+        }
         // set name
         if (array_key_exists('name', $data)) {
             $categoryWrapper->setName($data['name']);

@@ -32,6 +32,7 @@ class CategoryControllerTest extends DatabaseTestCase
         $category = new Category();
         $category->setCreated(new \DateTime());
         $category->setChanged(new \DateTime());
+        $category->setKey('first-category-key');
 
         // name for first category
         $categoryTrans = new CategoryTranslation();
@@ -55,6 +56,7 @@ class CategoryControllerTest extends DatabaseTestCase
         $category2 = new Category();
         $category2->setCreated(new \DateTime());
         $category2->setChanged(new \DateTime());
+        $category2->setKey('second-category-key');
 
         // name for second category
         $categoryTrans2 = new CategoryTranslation();
@@ -87,14 +89,14 @@ class CategoryControllerTest extends DatabaseTestCase
         $category3->setChanged(new \DateTime());
         $category3->setParent($category);
 
-        // name for second category
+        // name for third category
         $categoryTrans3 = new CategoryTranslation();
         $categoryTrans3->setLocale('en');
         $categoryTrans3->setTranslation('Third Category');
         $categoryTrans3->setCategory($category3);
         $category3->addTranslation($categoryTrans3);
 
-        // meta for second category
+        // meta for third category
         $categoryMeta4 = new CategoryMeta();
         $categoryMeta4->setLocale('de');
         $categoryMeta4->setKey('another');
@@ -103,6 +105,30 @@ class CategoryControllerTest extends DatabaseTestCase
         $category3->addMeta($categoryMeta4);
 
         self::$em->persist($category3);
+
+        /* Fourth Category (child of third)
+        -------------------------------------*/
+        $category4 = new Category();
+        $category4->setCreated(new \DateTime());
+        $category4->setChanged(new \DateTime());
+        $category4->setParent($category3);
+
+        // name for fourth category
+        $categoryTrans4 = new CategoryTranslation();
+        $categoryTrans4->setLocale('en');
+        $categoryTrans4->setTranslation('Fourth Category');
+        $categoryTrans4->setCategory($category4);
+        $category4->addTranslation($categoryTrans4);
+
+        // meta for fourth category
+        $categoryMeta5 = new CategoryMeta();
+        $categoryMeta5->setLocale('de');
+        $categoryMeta5->setKey('anotherkey');
+        $categoryMeta5->setValue('Description of fourth Category');
+        $categoryMeta5->setCategory($category4);
+        $category4->addMeta($categoryMeta5);
+
+        self::$em->persist($category4);
 
         self::$em->flush();
     }
@@ -154,6 +180,7 @@ class CategoryControllerTest extends DatabaseTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
         $this->assertEquals('First Category', $response->name);
+        $this->assertEquals('first-category-key', $response->key);
         $this->assertEquals('en', $response->locale);
         $this->assertEquals(1, $response->id);
         $this->assertEquals(1, count($response->meta));
@@ -187,7 +214,7 @@ class CategoryControllerTest extends DatabaseTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(3, count($response->_embedded->categories));
+        $this->assertEquals(4, count($response->_embedded->categories));
     }
 
     public function testCGetWithParent()
@@ -233,9 +260,9 @@ class CategoryControllerTest extends DatabaseTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(3, count($response->_embedded->categories));
-        $this->assertEquals(3, $response->_embedded->categories[0]->id);
-        $this->assertEquals('Third Category', $response->_embedded->categories[0]->name);
+        $this->assertEquals(4, count($response->_embedded->categories));
+        $this->assertEquals(4, $response->_embedded->categories[0]->id);
+        $this->assertEquals('Fourth Category', $response->_embedded->categories[0]->name);
     }
 
     public function testPost()
@@ -246,6 +273,7 @@ class CategoryControllerTest extends DatabaseTestCase
             '/api/categories',
             array(
                 'name' => 'New Category',
+                'key' => 'new-category-key',
                 'meta' => array(
                     array(
                         'key' => 'myKey',
@@ -264,6 +292,7 @@ class CategoryControllerTest extends DatabaseTestCase
 
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals('New Category', $response->name);
+        $this->assertEquals('new-category-key', $response->key);
         $this->assertEquals(1, count($response->meta));
         $this->assertEquals('myKey', $response->meta[0]->key);
         $this->assertEquals('myValue', $response->meta[0]->value);
@@ -277,7 +306,7 @@ class CategoryControllerTest extends DatabaseTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(4, count($response->_embedded->categories));
+        $this->assertEquals(5, count($response->_embedded->categories));
     }
 
     public function testPut()
@@ -288,6 +317,7 @@ class CategoryControllerTest extends DatabaseTestCase
             '/api/categories/1',
             array(
                 'name' => 'Modified Category',
+                'key' => 'modified-category-key',
                 'meta' => array(
                     array(
                         'id' => 1,
@@ -307,6 +337,7 @@ class CategoryControllerTest extends DatabaseTestCase
 
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals('Modified Category', $response->name);
+        $this->assertEquals('modified-category-key', $response->key);
         $this->assertEquals(2, count($response->meta));
         $this->assertTrue('modifiedKey' === $response->meta[0]->key || 'newMeta' === $response->meta[0]->key);
         $this->assertTrue('This meta got overriden' === $response->meta[0]->value || 'This meta got added' === $response->meta[0]->value);
@@ -322,6 +353,7 @@ class CategoryControllerTest extends DatabaseTestCase
 
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals('Modified Category', $response->name);
+        $this->assertEquals('modified-category-key', $response->key);
         $this->assertEquals(2, count($response->meta));
         $this->assertTrue('modifiedKey' === $response->meta[0]->key || 'newMeta' === $response->meta[0]->key);
         $this->assertTrue('This meta got overriden' === $response->meta[0]->value || 'This meta got added' === $response->meta[0]->value);
@@ -409,6 +441,22 @@ class CategoryControllerTest extends DatabaseTestCase
         $this->assertEquals('Name changed through patch', $response->name);
     }
 
+    public function testPatchWithNotUniqueKey()
+    {
+        $client = $this->createTestClient();
+        $client->request(
+            'PATCH',
+            '/api/categories/3',
+            array(
+                'key' => 'first-category-key'
+            )
+        );
+
+        $this->assertEquals(400, $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(1, $response->code);
+    }
+
     public function testDelete()
     {
         $client = $this->createTestClient();
@@ -427,9 +475,10 @@ class CategoryControllerTest extends DatabaseTestCase
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(2, count($response->_embedded->categories));
+        $this->assertEquals(3, count($response->_embedded->categories));
         $this->assertEquals(1, $response->_embedded->categories[0]->id);
         $this->assertEquals(3, $response->_embedded->categories[1]->id);
+        $this->assertEquals(4, $response->_embedded->categories[2]->id);
     }
 
     public function testDeleteOfParent()
@@ -452,5 +501,37 @@ class CategoryControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(1, count($response->_embedded->categories));
         $this->assertEquals(2, $response->_embedded->categories[0]->id);
+    }
+
+    public function testGetChildren()
+    {
+        $client = $this->createTestClient();
+        $client->request(
+            'GET',
+            '/api/categories/first-category-key/children'
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertEquals(2, count($response->_embedded->categories));
+        $this->assertEquals(3, $response->_embedded->categories[0]->id);
+        $this->assertEquals(4, $response->_embedded->categories[1]->id);
+    }
+
+    public function testGetChildrenAsList()
+    {
+        $client = $this->createTestClient();
+        $client->request(
+            'GET',
+            '/api/categories/first-category-key/children?flat=true&sortBy=depth&sortOrder=desc'
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertEquals(2, count($response->_embedded->categories));
+        $this->assertEquals(4, $response->_embedded->categories[0]->id);
+        $this->assertEquals(3, $response->_embedded->categories[1]->id);
     }
 }
