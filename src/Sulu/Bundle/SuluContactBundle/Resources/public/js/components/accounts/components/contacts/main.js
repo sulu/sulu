@@ -26,6 +26,7 @@ define([
             // navigate to edit contact
             this.sandbox.on('husky.datagrid.item.click', function(item) {
                 this.sandbox.emit('sulu.contacts.contact.load', item);
+                this.sandbox.emit('husky.navigation.select-item', 'contacts/contacts');
             }, this);
 
             // delete clicked
@@ -201,10 +202,9 @@ define([
         view: true,
 
         layout: {
-            content: {
-                width: 'max',
-                leftSpace: false,
-                rightSpace: false
+            sidebar: {
+                width: 'fixed',
+                cssClasses: 'sidebar-padding-50'
             }
         },
 
@@ -213,6 +213,14 @@ define([
         initialize: function() {
             this.render();
             bindCustomEvents.call(this);
+
+            if (!!this.options.data && !!this.options.data.id) {
+                this.initSidebar('/admin/widget-groups/account-detail?account=', this.options.data.id);
+            }
+        },
+
+        initSidebar: function(url, id) {
+            this.sandbox.emit('sulu.sidebar.set-widget', url + id);
         },
 
         render: function() {

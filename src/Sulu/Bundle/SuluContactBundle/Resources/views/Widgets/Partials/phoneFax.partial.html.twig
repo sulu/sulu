@@ -1,0 +1,12 @@
+{% if phone or fax  is not empty %}
+    <div class="grid-row m-bottom-30">
+        <h5 class="label"><%=translate('public.phone')%></h5>
+        {% if phone is not empty %}
+            <span class="grey block">(<%=translate('public.phone')%>) {{ phone }}</span>
+        {% endif %}
+
+        {% if fax  is not empty %}
+            <span class="grey block">(<%=translate('public.fax')%>) {{ fax }}</span>
+        {% endif %}
+    </div>
+{% endif %}
