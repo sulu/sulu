@@ -173,6 +173,17 @@ class PortalInformation
     }
 
     /**
+     * @return string
+     */
+    public function getHost()
+    {
+        $hostLength = strpos($this->url, '/');
+        $hostLength = ($hostLength === false) ? strlen($this->url) : $hostLength;
+
+        return substr($this->url, 0, $hostLength);
+    }
+
+    /**
      * @param \Sulu\Component\Webspace\Webspace $webspace
      */
     public function setWebspace($webspace)
