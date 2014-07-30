@@ -14,11 +14,20 @@ use Exception;
 
 class WidgetException extends Exception
 {
+    protected $widget;
+
+    function __construct($message, $widget)
+    {
+        parent::__construct($message);
+        $this->widget = $widget;
+    }
+
     public function toArray()
     {
         return array(
             'code' => $this->code,
-            'message' => $this->message
+            'message' => $this->message,
+            'widget' => $this->widget
         );
     }
 }
