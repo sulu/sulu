@@ -32,7 +32,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->mediaManager = $this->getMock('\Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface');
+        $this->mediaManager = $this->getMock('\Sulu\Bundle\MeediaBundle\Media\Manager\MediaManagerInterface');
 
         $this->mediaSelection = new \Sulu\Bundle\MediaBundle\Content\Types\MediaSelectionContentType(
             $this->mediaManager, 'SuluMediaBundle:Template:image-selection.html.twig'
@@ -148,6 +148,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
             'right',
             array(1, 2, 3, 4),
             'en',
+            array(),
             $this->mediaManager
         );
 
@@ -197,6 +198,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
             'right',
             array(1, 2, 3, 4),
             'en',
+            array(),
             $this->mediaManager
         );
 
