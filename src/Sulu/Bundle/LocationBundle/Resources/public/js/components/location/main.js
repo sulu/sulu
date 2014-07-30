@@ -207,7 +207,6 @@ define([], function() {
             ].join('')
         };
 
-
     return {
         maps: {},
         options: {},
@@ -331,8 +330,12 @@ define([], function() {
             }.bind(this));
         },
 
-        // Update the location from the location object returned from
-        // the webservice API
+        /**
+         * Update the location from the location object returned from
+         * the webservice API
+         *
+         * @param location {object}
+         */
         updateLocationFromLocation: function (location) {
             this.updateCoordinates(location.longitude, location.latitude);
             this.renderMap('overlay', {
@@ -385,6 +388,9 @@ define([], function() {
 
         /**
          * Render the map using the defined provider
+         *
+         * @param mapId {integer}
+         * @param locatoin {object}
          */
         renderMap: function (mapId, location) {
             var options = this.maps[mapId];

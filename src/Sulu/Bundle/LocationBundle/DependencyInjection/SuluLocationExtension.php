@@ -35,6 +35,12 @@ class SuluLocationExtension extends Extension
         $this->configureGeolocators($config, $container);
     }
 
+    /**
+     * Configure the sulu content types
+     *
+     * @param array $config - Resolved configuration
+     * @param ContainerBuilder
+     */
     private function configureContentTypes($config, $container)
     {
         $container->setParameter(
@@ -43,7 +49,14 @@ class SuluLocationExtension extends Extension
         );
     }
 
-    private function configureMapManager($config, $container)
+    /**
+     * Configure the map manager - register the providers and geolocators
+     * with the map manager class.
+     *
+     * @param array $config - Resolved configuration
+     * @param ContainerBuilder
+     */
+    private function configureMapManager($config, ContainerBuilder $container)
     {
         $mapManager = $container->getDefinition('sulu_location.map_manager');
 
@@ -65,6 +78,12 @@ class SuluLocationExtension extends Extension
         $mapManager->addMethodCall('setDefaultProviderName', array($config['default_provider']));
     }
 
+    /**
+     * Configure the geolocator services.
+     *
+     * @param array $config - Resolved configuration
+     * @param ContainerBuilder
+     */
     private function configureGeolocators($config, $container)
     {
         $geolocatorName = $config['geolocator'];

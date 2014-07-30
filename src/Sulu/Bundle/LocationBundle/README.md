@@ -8,6 +8,10 @@ This bundle is part of the [Sulu Location Management Framework](https://github.c
 
 The SuluLocationBundle builds on other sulu-cmf bundles. It provides a solution to create/modify location nodes in sulu. It uses the LocationMapper functionality from [sulu-lib](https://github.com/sulu-cmf/sulu).
 
+## Documentation
+
+See [Resources/docs/index.md](https://github.com/sulu-cmf/SuluLocationBundle/Resources/docs/index.md)
+
 ## Features
 
 * Support for Google and OSM + anything if you create a provider class for it.

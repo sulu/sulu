@@ -1,4 +1,15 @@
 module.exports = function (grunt) {
+    var min = {},
+        path = require('path'),
+        srcpath = 'Resources/public/js',
+        destpath = 'Resources/public/dist';
+
+    grunt.file.expand({cwd: srcpath}, '**/*.js').forEach(function(relpath) {
+        min[relpath] = {
+            src: path.join(srcpath, relpath),
+            dest: path.join(destpath, relpath)
+        };
+    });
 
     // load all grunt tasks
     require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
@@ -11,6 +22,16 @@ module.exports = function (grunt) {
                     {
                         expand: true, 
                         cwd: 'Resources/public', 
+                        src: ['**', '!**/scss/**'], 
+                        dest: '../../../../../../web/bundles/sululocation/'
+                    }
+                ]
+            },
+            public_dev: {
+                files: [
+                    {
+                        expand: true, 
+                        cwd: 'Resources/public_dev', 
                         src: ['**', '!**/scss/**'], 
                         dest: '../../../../../../web/bundles/sululocation/'
                     }
@@ -92,14 +113,24 @@ module.exports = function (grunt) {
                     {src: ['Resources/public/dist/main.js'], dest: 'Resources/public/dist/main.js'}
                 ]
             }
-        }
+        },
+        cssmin: {
+            compress: {
+                files: {
+                    'Resources/public/css/main.min.css': ['Resources/public/css/main.css']
+                }
+            }
+        },
+        uglify: min
     });
 
     grunt.registerTask('publish', [
         'compass:dev',
+        'cssmin',
         'clean:public',
         'copy:bower',
-        'copy:public'
+        'copy:public',
+        'copy:public_dev'
     ]);
 
     grunt.registerTask('default', [
@@ -107,6 +138,7 @@ module.exports = function (grunt) {
     ]);
 
     grunt.registerTask('build', [
+        'uglify',
         'publish'
     ]);
 };

@@ -9,11 +9,21 @@ class GeolocatorResponse implements \Countable
 {
     protected $locations = array();
 
+    /**
+     * Add a location to the response
+     *
+     * @param GeolocatorLocation $location
+     */
     public function addLocation(GeolocatorLocation $location)
     {
         $this->locations[] = $location;
     }
 
+    /**
+     * Return an array representation of the response.
+     *
+     * @return array
+     */
     public function toArray()
     {
         $res = array();
@@ -24,6 +34,11 @@ class GeolocatorResponse implements \Countable
         return $res;
     }
 
+    /**
+     * Return the number of locations in the response.
+     *
+     * @return integer
+     */
     public function count()
     {
         return count($this->locations);
