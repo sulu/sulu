@@ -74,7 +74,7 @@ class NavigationMapper implements NavigationMapperInterface
             }
             if (
                 ($preview || ($content->getPublishedState() && $content->getNavigation() !== false)) &&
-                $content->hasProperty('sulu.rlp')
+                $content->hasTag('sulu.rlp')
             ) {
                 $url = $content->getPropertyByTagName('sulu.rlp')->getValue();
                 $title = $content->getPropertyByTagName('sulu.node.name')->getValue();
