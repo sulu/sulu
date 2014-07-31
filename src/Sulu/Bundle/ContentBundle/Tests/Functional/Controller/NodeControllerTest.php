@@ -837,7 +837,7 @@ class NodeControllerTest extends DatabaseTestCase
 
         $this->assertEquals(2, sizeof($items));
 
-        $this->assertEquals(11, sizeof($items[0]));
+        $this->assertEquals(13, sizeof($items[0]));
         $this->assertArrayHasKey('id', $items[0]);
         $this->assertEquals('test1', $items[0]['title']);
         $this->assertEquals('/test1', $items[0]['path']);
