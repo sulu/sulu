@@ -316,12 +316,12 @@ define(['sulumedia/collection/collections'], function(Collections) {
             }.bind(this));
 
             // set position of overlay if height of grid-group changes
-            this.sandbox.on('sulu.grid-group.images.height-changed', function() {
+            this.sandbox.on('sulu.grid-group.'+ this.options.instanceName +'.height-changed', function() {
                 this.sandbox.emit('husky.overlay.media-selection.' + this.options.instanceName + '.add' +'.set-position');
             }.bind(this));
 
             // set position of overlay if grid-group has initialized
-            this.sandbox.on('sulu.grid-group.images.initialized', function() {
+            this.sandbox.on('sulu.grid-group.'+ this.options.instanceName +'.initialized', function() {
                 this.sandbox.emit('husky.overlay.media-selection.' + this.options.instanceName + '.add' +'.set-position');
             }.bind(this));
         },
