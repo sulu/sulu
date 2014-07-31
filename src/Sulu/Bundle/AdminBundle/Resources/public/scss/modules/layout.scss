@@ -1,0 +1,196 @@
+// Column structure of the admin
+/*----------------------------------------*/
+
+#main {
+  height: 100%;
+  min-width: 50px + $contentMinWidth;
+}
+
+.content-column {
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  min-width: $contentMinWidth;
+  @include single-transition(width, $shrinkAnimationDuration);
+
+  .page {
+    height: 100%;
+  }
+
+  #content {
+    height: 100%;
+    overflow: auto;
+    padding: $contentPaddingTop $contentPaddingRight $contentPaddingBottom $contentPaddingLeft;
+    @include transition(padding-left $shrinkAnimationDuration, padding-right $shrinkAnimationDuration);
+
+    h2.mainheadline {
+      margin-top: 35px;
+    }
+
+    h1:first-child {
+      margin-top: 0;
+    }
+
+    .content-tabs-content {
+      padding-top: 80px;
+    }
+
+    &.no-left-space {
+      padding-left: 0;
+    }
+
+    &.no-right-space {
+      padding-right: 0;
+    }
+
+    &.no-transitions {
+      @include transition(none);
+    }
+
+
+    &.no-top-space {
+      padding-top: 0;
+    }
+  }
+
+  .sulu-app-shrink {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    z-index: 100;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    overflow: hidden;
+    background: #21272E;
+    color: $white;
+    text-align: center;
+    border-radius: 0 0 0 2px;
+    font-size: 20px;
+    line-height: 32px;
+    .fa-chevron-right {
+      padding-left: 3px;
+    }
+    .fa-chevron-left {
+      padding-right: 3px;
+    }
+  }
+
+  &.max {
+    float: none;
+    width: auto;
+  }
+
+  &.fixed {
+    width: $contentFixedWidth;
+    float: left;
+
+    &.small-fixed {
+      width: $contentFixedSmallWidth;
+      #content {
+        padding-left: $contentPaddingLeftSmall;
+        padding-right: $contentPaddingRightSmall;
+      }
+    }
+  }
+}
+
+.sidebar-column {
+  height: 100%;
+  overflow: hidden;
+  z-index: 101;
+  position: relative;
+
+  &.fixed {
+    width: $sidebarFixedWidth;
+    float: right;
+  }
+
+  &.max {
+    float: none;
+    width: auto;
+  }
+
+  &.hidden {
+    width: 0;
+    height: 0;
+    display: block;
+  }
+}
+
+//
+// responsiveness for case: content (max) sidebar (fixed)
+// ------------------------------------------------------
+//
+
+// 1. Hides the sidebar if the minimum content width is reached
+@media only screen and (max-width: 50px + $contentMinWidth + $sidebarFixedWidth) {
+  .sidebar-column.fixed {
+    width: 0;
+    height: 0;
+  }
+}
+
+//
+// responsiveness for case: content (fixed) sidebar (max)
+// ------------------------------------------------------
+//
+
+// 1. collapses to content-column to medium width
+@media only screen and (max-width: 50px + $contentFixedWidth + $sidebarMaxCollapseWidth) {
+  .has-visible-sidebar .content-column.fixed {
+    width: $contentFixedMediumWidth;
+  }
+}
+// 2. collapses the content-column to small width
+@media only screen and (max-width: 50px + $contentFixedMediumWidth + $sidebarMaxCollapseWidth) {
+  .has-visible-sidebar .content-column.fixed {
+    width: $contentFixedSmallWidth;
+  }
+}
+// 3. hides the sidebar and brings the content-column to fit the screen
+@media only screen and (max-width: 50px + $contentFixedSmallWidth + $sidebarMaxCollapseWidth) {
+  .sidebar-column.max {
+    width: 0;
+    height: 0;
+  }
+
+  .has-visible-sidebar .content-column.fixed {
+    float: none;
+    width: auto;
+    max-width: $contentFixedWidth;
+
+  }
+
+  .sulu-app-shrink {
+    display: none;
+  }
+}
+
+//
+// responsiveness for case: content (fixed) sidebar (hidden)
+// ------------------------------------------------------
+//
+
+// 1. makes the content-column fit the screen
+@media only screen and (max-width: 50px + $contentFixedWidth) {
+  .has-no-visible-sidebar .content-column.fixed {
+    float: none;
+    width: auto;
+    max-width: $contentFixedWidth;
+  }
+
+
+}//
+// responsiveness for case: content (fixed) sidebar (fixed)
+// ------------------------------------------------------
+//
+
+// 1. makes the content-column fit the rest of the screen
+@media only screen and (max-width: 250px + $contentFixedWidth + $sidebarFixedWidth) {
+  .has-visible-sidebar .sidebar-column.fixed + .content-column.fixed {
+    float: none;
+    width: auto;
+    max-width: $contentFixedWidth;
+  }
+}
