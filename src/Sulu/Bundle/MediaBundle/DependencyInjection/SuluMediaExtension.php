@@ -96,22 +96,22 @@ class SuluMediaExtension extends Extension
             array(
                 'id' => 1,
                 'type' => 'default',
-                'extensions' => array('*')
+                'mimeTypes' => array('*')
             ),
             array(
                 'id' => 2,
                 'type' => 'image',
-                'extensions' => array('jpg', 'jpeg', 'png', 'gif', 'svg')
+                'mimeTypes' => array('image/jpg', 'image/jpeg', 'image/png', 'image/gif', 'image/svg+xml', 'image/vnd.adobe.photoshop')
             ),
             array(
                 'id' => 3,
                 'type' => 'video',
-                'extensions' => array('mp4')
+                'mimeTypes' => array('video/mp4')
             ),
             array(
                 'id' => 4,
                 'type' => 'audio',
-                'extensions' => array('mp3')
+                'mimeTypes' => array('audio/mpeg')
             )
         ));
 

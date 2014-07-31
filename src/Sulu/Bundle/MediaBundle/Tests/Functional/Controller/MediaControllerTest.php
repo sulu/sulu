@@ -103,19 +103,19 @@ class MediaControllerTest extends DatabaseTestCase
 
         // Create Media Type
         $mediaType = new MediaType();
-        $mediaType->setName('Document Type');
+        $mediaType->setName('document');
         $mediaType->setDescription('This is a document');
 
         $imageType = new MediaType();
-        $imageType->setName('Image Type');
+        $imageType->setName('image');
         $imageType->setDescription('This is an image');
 
         $videoType = new MediaType();
-        $videoType->setName('Video Type');
+        $videoType->setName('video');
         $videoType->setDescription('This is a video');
 
         $videoType = new MediaType();
-        $videoType->setName('Audio Type');
+        $videoType->setName('audio');
         $videoType->setDescription('This is an audio');
 
         $media->setType($imageType);
@@ -144,6 +144,7 @@ class MediaControllerTest extends DatabaseTestCase
         $fileVersion->setCreated(new DateTime());
         $fileVersion->setChanged(new DateTime());
         $fileVersion->setName('photo.jpeg');
+        $fileVersion->setMimeType('image/jpg');
         $fileVersion->setFile($file);
         $fileVersion->setSize(1124214);
         $fileVersion->setDownloadCounter(2);
@@ -266,7 +267,7 @@ class MediaControllerTest extends DatabaseTestCase
 
         $this->assertEquals(1, $response->id);
         $this->assertEquals(2, $response->type->id);
-        $this->assertEquals('Image Type', $response->type->name);
+        $this->assertEquals('image', $response->type->name);
         $this->assertEquals('photo.jpeg', $response->name);
         $this->assertEquals('photo', $response->title);
         $this->assertEquals('2', $response->downloadCounter);
@@ -304,6 +305,73 @@ class MediaControllerTest extends DatabaseTestCase
         $client->request(
             'GET',
             '/api/media?collection=1'
+        );
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertNotEmpty($response);
+
+        $this->assertEquals(1, $response->total);
+        $this->assertEquals(1, $response->_embedded->media[0]->id);
+        $this->assertEquals('photo.jpeg', $response->_embedded->media[0]->name);
+    }
+
+    /**
+     * @description Test GET all Media
+     */
+    public function testcGetCollectionTypes()
+    {
+        $client = $this->createTestClient();
+
+        $client->request(
+            'GET',
+            '/api/media?collection=1&types=image'
+        );
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertNotEmpty($response);
+
+        $this->assertEquals(1, $response->total);
+        $this->assertEquals(1, $response->_embedded->media[0]->id);
+        $this->assertEquals('photo.jpeg', $response->_embedded->media[0]->name);
+    }
+
+    /**
+     * @description Test GET all Media
+     */
+    public function testcGetCollectionTypesNotExisting()
+    {
+        $client = $this->createTestClient();
+
+        $client->request(
+            'GET',
+            '/api/media?collection=1&types=audio'
+        );
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertNotEmpty($response);
+
+        $this->assertEquals(0, $response->total);
+    }
+
+    /**
+     * @description Test GET all Media
+     */
+    public function testcGetCollectionTypesMultiple()
+    {
+        $client = $this->createTestClient();
+
+        $client->request(
+            'GET',
+            '/api/media?collection=1&types=image,audio'
         );
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());

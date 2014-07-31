@@ -20,12 +20,11 @@ interface MediaManagerInterface
      * Returns media with a given collection and/or ids and/or limit
      * if no arguments passed returns all media
      * @param string $locale the locale which the object will be returned
-     * @param int $collection the id of the collection to filter for
-     * @param array $ids the media ids
-     * @param int $limit to limite the output
+     * @param array $filter collection, ids, types
+     * @param int $limit to limit the output
      * @return Media[]
      */
-    public function get($locale, $collection = null, $ids = null, $limit = null);
+    public function get($locale, $filter = array(), $limit = null);
 
     /**
      * Returns a media with a given id
