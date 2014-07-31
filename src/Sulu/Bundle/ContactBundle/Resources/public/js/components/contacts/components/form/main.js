@@ -65,8 +65,8 @@ define([], function() {
                 }.bind(this));
 
                 this.setTitle();
+
                 this.render();
-                this.setHeaderBar(true);
                 setHeaderToolbar.call(this);
                 this.listenForChange();
 
@@ -76,6 +76,8 @@ define([], function() {
                         this.options.data.id
                     );
                 }
+
+                this.setHeaderBar(true);
             },
 
             initSidebar: function(url, id) {
@@ -93,22 +95,6 @@ define([], function() {
                 var data = this.initContactData();
 
                 this.companyInstanceName = 'companyContact' + data.id;
-
-                this.sandbox.start([
-                    {
-                        name: 'auto-complete@husky',
-                        options: {
-                            el: '#company',
-                            remoteUrl: '/admin/api/accounts?searchFields=name&flat=true&fields=id,name',
-                            resultKey: 'accounts',
-                            getParameter: 'search',
-                            value: data.account,
-                            instanceName: this.companyInstanceName,
-                            valueName: 'name',
-                            noNewValues: true
-                        }
-                    }
-                ]);
 
                 this.initForm(data);
 
@@ -193,12 +179,18 @@ define([], function() {
                 this.fieldTypes = types;
             },
 
-            setFormData: function(data) {
+            setFormData: function(data, startForm) {
 
                 // add collection filters to form
                 this.sandbox.emit('sulu.contact-form.add-collectionfilters', form);
                 this.sandbox.form.setData(form, data).then(function() {
-                    this.sandbox.start(form);
+
+                    if(!!startForm){
+                        this.sandbox.start(form);
+                    } else {
+                        this.sandbox.start('#contact-fields');
+                    }
+
                     this.sandbox.emit('sulu.contact-form.add-required', ['email']);
                     this.sandbox.emit('sulu.contact-form.content-set');
                     this.dfdFormIsSet.resolve();
@@ -209,6 +201,22 @@ define([], function() {
 
             initForm: function(data) {
 
+                this.sandbox.start([
+                    {
+                        name: 'auto-complete@husky',
+                        options: {
+                            el: '#company',
+                            remoteUrl: '/admin/api/accounts?searchFields=name&flat=true&fields=id,name',
+                            resultKey: 'accounts',
+                            getParameter: 'search',
+                            value: !!data.account ? data.account : '',
+                            instanceName: this.companyInstanceName,
+                            valueName: 'name',
+                            noNewValues: true
+                        }
+                    }
+                ]);
+
                 this.numberOfAddresses = data.addresses.length;
                 this.updateAddressesAddIcon(this.numberOfAddresses);
 
@@ -217,7 +225,7 @@ define([], function() {
                     // set form data
                     var formObject = this.sandbox.form.create(form);
                     formObject.initialized.then(function() {
-                        this.setFormData(data);
+                        this.setFormData(data, true);
                     }.bind(this));
                 }.bind(this));
 
@@ -274,6 +282,7 @@ define([], function() {
                 this.sandbox.on('sulu.contacts.contacts.saved', function(data) {
                     this.options.data = data;
                     this.initContactData();
+                    this.setFormData(data);
                     this.setHeaderBar(true);
                 }, this);
 
@@ -296,6 +305,7 @@ define([], function() {
                         this.enablePositionDropdown(false);
                     }
                 }, this);
+
             },
 
             initContactData: function() {
@@ -415,7 +425,7 @@ define([], function() {
              * Register events for editable drop downs
              * @param instanceName
              */
-            initializeDropDownListender: function(instanceName, url) {
+            initializeDropDownListender: function(instanceName) {
                 var instance = 'husky.select.' + instanceName;
                 this.sandbox.on(instance + '.selected.item', function(id) {
                     if (id > 0) {
@@ -464,10 +474,10 @@ define([], function() {
                     }.bind(this), "input, textarea");
 
                     // enabel position dropdown only if something got selected
-                    this.companySelected = 'husky.auto-complete.'
-                        + this.companyInstanceName
-                        + '.select';
-                    this.sandbox.on(this.companySelected, function(id) {
+                    this.companySelected = 'husky.auto-complete.' +
+                        this.companyInstanceName +
+                        '.select';
+                    this.sandbox.on(this.companySelected, function() {
                         this.enablePositionDropdown(true);
                     }.bind(this));
 

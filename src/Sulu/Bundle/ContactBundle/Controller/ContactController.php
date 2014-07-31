@@ -92,7 +92,7 @@ class ContactController extends AbstractContactController
             true,
             '',
             '',
-            '160px'
+            '100px'
         );
 
         $this->fieldDescriptors['mainEmail'] = new DoctrineFieldDescriptor(
@@ -102,7 +102,10 @@ class ContactController extends AbstractContactController
             'public.email',
             array(),
             false,
-            true
+            true,
+            '',
+            '',
+            '140px'
         );
 
         $this->fieldDescriptors['account'] = new DoctrineFieldDescriptor(
@@ -113,7 +116,8 @@ class ContactController extends AbstractContactController
             array(
                 self::$accountContactEntityName => new DoctrineJoinDescriptor(
                         self::$accountContactEntityName,
-                        self::$entityName . '.accountContacts'
+                        self::$entityName . '.accountContacts',
+                        self::$accountContactEntityName . '.main = true', 'LEFT'
                     ),
                 self::$accountEntityName => new DoctrineJoinDescriptor(
                         self::$accountEntityName,

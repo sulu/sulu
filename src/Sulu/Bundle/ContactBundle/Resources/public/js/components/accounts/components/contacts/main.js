@@ -63,7 +63,7 @@ define([
         },
 
         createRelationOverlay = function(data) {
-            var template, $overlay;
+            var template, $overlay, $list;
 
             // extend data by additional variables
             data = this.sandbox.util.extend(true, {}, {
@@ -75,7 +75,8 @@ define([
 
             // create container for overlay
             $overlay = this.sandbox.dom.createElement('<div />');
-            this.sandbox.dom.append(this.$el, $overlay);
+            $list = this.sandbox.dom.find('#people-list');
+            this.sandbox.dom.append($list, $overlay);
 
             // create overlay with data
             this.sandbox.start([
@@ -211,6 +212,7 @@ define([
         templates: ['/admin/contact/template/contact/list'],
 
         initialize: function() {
+
             this.render();
             bindCustomEvents.call(this);
 
@@ -250,7 +252,6 @@ define([
                     },
                     viewOptions: {
                         table: {
-                            fullWidth: true,
                             selectItem: {
                                 type: 'checkbox'
                             },
