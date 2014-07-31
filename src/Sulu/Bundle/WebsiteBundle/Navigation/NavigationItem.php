@@ -93,6 +93,14 @@ class NavigationItem
     }
 
     /**
+     * @return int
+     */
+    public function getNodeType()
+    {
+        return $this->nodeType;
+    }
+
+    /**
      * @return \Sulu\Bundle\WebsiteBundle\Navigation\NavigationItem[]
      */
     public function getChildren()
