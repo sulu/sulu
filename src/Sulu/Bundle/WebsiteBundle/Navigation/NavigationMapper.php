@@ -81,7 +81,7 @@ class NavigationMapper implements NavigationMapperInterface
                 $title = $content->getNodeName();
 
                 $result[] = new NavigationItem(
-                    $content, $title, $url, $children, $content->getUuid()
+                    $content, $title, $url, $children, $content->getUuid(), $content->getNodeType()
                 );
             }
         }
