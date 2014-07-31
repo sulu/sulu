@@ -65,7 +65,7 @@ class ContentPathTwigExtension extends \Twig_Extension
         } else {
             $rl = '/';
         }
-        if ($this->requestAnalyzer !== null) {
+        if ($this->requestAnalyzer !== null && $item->getNodeType() !== Structure::NODE_TYPE_EXTERNAL_LINK) {
             return $this->requestAnalyzer->getCurrentResourceLocatorPrefix() . $rl;
         } else {
             return $rl;
