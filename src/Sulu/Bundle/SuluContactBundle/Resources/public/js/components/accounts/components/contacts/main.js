@@ -250,7 +250,6 @@ define([
                     },
                     viewOptions: {
                         table: {
-                            fullWidth: true,
                             selectItem: {
                                 type: 'checkbox'
                             },
