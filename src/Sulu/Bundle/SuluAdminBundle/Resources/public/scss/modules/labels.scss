@@ -1,8 +1,8 @@
 #labels-container {
     z-index: 1000;
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
-    margin-left: $contentPaddingLeft;
     width: 100%;
+    padding: 0 $contentPaddingRight 0 $contentPaddingLeft;
 }
