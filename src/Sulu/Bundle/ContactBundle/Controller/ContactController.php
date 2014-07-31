@@ -116,7 +116,8 @@ class ContactController extends AbstractContactController
             array(
                 self::$accountContactEntityName => new DoctrineJoinDescriptor(
                         self::$accountContactEntityName,
-                        self::$entityName . '.accountContacts'
+                        self::$entityName . '.accountContacts',
+                        self::$accountContactEntityName . '.main = true', 'LEFT'
                     ),
                 self::$accountEntityName => new DoctrineJoinDescriptor(
                         self::$accountEntityName,
