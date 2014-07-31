@@ -14,6 +14,7 @@ require.config({
         "type/textEditor": '../../sulucontent/js/validation/types/textEditor',
         "type/smartContent": '../../sulucontent/js/validation/types/smartContent',
         "type/internalLinks": '../../sulucontent/js/validation/types/internalLinks',
+        "type/singleInternalLink": '../../sulucontent/js/validation/types/singleInternalLink',
         "type/block": '../../sulucontent/js/validation/types/block'
     }
 });

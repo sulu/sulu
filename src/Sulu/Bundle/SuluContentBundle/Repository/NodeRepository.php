@@ -308,7 +308,7 @@ class NodeRepository implements NodeRepositoryInterface
     {
         // build sql2 query
         $queryBuilder = new FilterNodesQueryBuilder($filterConfig, $this->sessionManager, $this->webspaceManager);
-        $sql2 = $queryBuilder->build($languageCode, $preview);
+        $sql2 = $queryBuilder->build($languageCode);
 
         // execute query and return results
         $nodes = $this->getMapper()->loadBySql2($sql2, $languageCode, $webspaceKey, $queryBuilder->getLimit());
@@ -423,13 +423,15 @@ class NodeRepository implements NodeRepositoryInterface
                             'path' => '/',
                             'title' => $webspace->getName(),
                             'hasSub' => true,
-                            '_embedded' => $this->prepareNodesTree(
-                                    $nodes,
-                                    $webspaceKey,
-                                    $languageCode,
-                                    false,
-                                    $excludeGhosts
-                                ),
+                            '_embedded' => array(
+                                'nodes' => $this->prepareNodesTree(
+                                        $nodes,
+                                        $webspaceKey,
+                                        $languageCode,
+                                        false,
+                                        $excludeGhosts
+                                    )
+                            ),
                             '_links' => array(
                                 'children' => $this->apiBasePath . '?depth=1&webspace=' . $webspaceKey .
                                     '&language=' . $languageCode . ($excludeGhosts === true ? '&exclude-ghosts=true' : '')
