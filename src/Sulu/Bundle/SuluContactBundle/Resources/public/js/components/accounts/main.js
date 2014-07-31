@@ -396,7 +396,10 @@ define([
             var accountContact = AccountContact.findOrCreate({
                 id: id,
                 contact: Contact.findOrCreate({id: id}), account: this.account});
-            accountContact.set({position: position});
+
+            if(!!position) {
+                accountContact.set({position: position});
+            }
 
             accountContact.save(null, {
                 // on success save contacts id

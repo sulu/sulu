@@ -65,6 +65,9 @@ define([
         createRelationOverlay = function(data) {
             var template, $overlay, $list;
 
+            // reset company position
+            companyPosition = null;
+
             // extend data by additional variables
             data = this.sandbox.util.extend(true, {}, {
                 translate: this.sandbox.translate,
