@@ -6,7 +6,7 @@
         <div class="form-group grid-row small">
             <label for="name" class="required"><%=translate('contact.accounts.name')%></label>
             <div>
-                <input class="form-element" type="text" id="name"
+                <input class="form-element changeListener" type="text" id="name"
                        data-validation-required="true"
                        data-validation-min-length="3"
                        data-mapper-property="name"/>
@@ -15,7 +15,7 @@
         <div class="form-group grid-row small">
             <label for="corporation"><%=translate('contact.accounts.corporation')%></label>
             <div>
-                <input class="form-element" type="text" id="corporation" data-mapper-property="corporation"/>
+                <input class="form-element changeListener" type="text" id="corporation" data-mapper-property="corporation"/>
             </div>
         </div>
         <div class="grid-row small">
@@ -42,7 +42,7 @@
                     <label for="deactivated"><%=translate('public.locked')%></label>
                     <div>
                         <div class="custom-checkbox">
-                            <input class="form-element husky-validate" type="checkbox" id="deactivated" data-mapper-property="disabled">
+                            <input class="form-element husky-validate changeListener" type="checkbox" id="deactivated" data-mapper-property="disabled">
                             <span class="icon"></span>
                         </div>
                     </div>
