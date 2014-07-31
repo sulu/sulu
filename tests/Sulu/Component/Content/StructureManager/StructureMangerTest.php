@@ -80,7 +80,12 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
             $this->dumper,
             $this->logger,
             array(
-                'template_dir' => __DIR__ . '/../../../../Resources/DataFixtures/Template',
+                'template_dir' => array(
+                    array(
+                        'path' => __DIR__ . '/../../../../Resources/DataFixtures/Template',
+                        'internal' => false
+                    )
+                ),
                 'cache_dir' => $cacheDir
             ));
     }

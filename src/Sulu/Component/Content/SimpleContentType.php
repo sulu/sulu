@@ -135,4 +135,12 @@ abstract class SimpleContentType implements ContentTypeInterface
     {
         return array();
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDefaultValue()
+    {
+        return $this->defaultValue;
+    }
 }
