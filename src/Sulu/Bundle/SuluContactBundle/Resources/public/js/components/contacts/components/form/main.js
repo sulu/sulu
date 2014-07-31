@@ -456,11 +456,11 @@ define([], function() {
 
                     this.sandbox.dom.on('#contact-form', 'change', function() {
                         this.setHeaderBar(false);
-                    }.bind(this), "select, input, textarea");
+                    }.bind(this), "select.changeListener, input.changeListener, textarea.changeListener, .husky-input input .husky-auto-complete input");
 
                     this.sandbox.dom.on('#contact-form', 'keyup', function() {
                         this.setHeaderBar(false);
-                    }.bind(this), "input, textarea");
+                    }.bind(this), "input.changeListener, textarea.changeListener, .husky-input input, .husky-auto-complete input");
 
                     this.sandbox.on('sulu.contact-form.changed', function() {
                         this.setHeaderBar(false);
@@ -471,7 +471,7 @@ define([], function() {
                         if (!data.target.value) {
                             this.enablePositionDropdown(false);
                         }
-                    }.bind(this), "input, textarea");
+                    }.bind(this));
 
                     // enabel position dropdown only if something got selected
                     this.companySelected = 'husky.auto-complete.' +
