@@ -144,9 +144,9 @@ define(
 
                 this.sandbox.dom.on('husky.datagrid.number.selections', function(number) {
                     if (number > 0) {
-                        this.sandbox.emit('husky.toolbar.accounts.item.enable', 'delete');
+                        this.sandbox.emit('husky.toolbar.activities.item.enable', 'delete');
                     } else {
-                        this.sandbox.emit('husky.toolbar.accounts.item.disable', 'delete');
+                        this.sandbox.emit('husky.toolbar.activities.item.disable', 'delete');
                     }
                 }.bind(this));
             },
