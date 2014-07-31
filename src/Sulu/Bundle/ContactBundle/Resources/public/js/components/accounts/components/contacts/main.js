@@ -60,10 +60,21 @@ define([
             this.sandbox.on('husky.select.company-position-select.selected.item', function(id) {
                 companyPosition = id;
             }, this);
+
+            this.sandbox.dom.on('husky.datagrid.number.selections', function(number) {
+                if (number > 0) {
+                    this.sandbox.emit('husky.toolbar.contacts.item.enable', 'delete');
+                } else {
+                    this.sandbox.emit('husky.toolbar.contacts.item.disable', 'delete');
+                }
+            }.bind(this));
         },
 
         createRelationOverlay = function(data) {
             var template, $overlay, $list;
+
+            // reset company position
+            companyPosition = null;
 
             // extend data by additional variables
             data = this.sandbox.util.extend(true, {}, {
@@ -182,8 +193,10 @@ define([
 //                            callback: openColumnOptions.bind(this)
 //                        },
                         {
+                            id: 'delete',
                             title: this.sandbox.translate('contact.accounts.contact-remove'),
-                            callback: removeContact.bind(this)
+                            callback: removeContact.bind(this),
+                            disabled: true
                         }
                     ]
                 }

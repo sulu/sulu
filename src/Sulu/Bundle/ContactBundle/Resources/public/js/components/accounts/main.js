@@ -396,7 +396,10 @@ define([
             var accountContact = AccountContact.findOrCreate({
                 id: id,
                 contact: Contact.findOrCreate({id: id}), account: this.account});
-            accountContact.set({position: position});
+
+            if(!!position) {
+                accountContact.set({position: position});
+            }
 
             accountContact.save(null, {
                 // on success save contacts id
@@ -717,6 +720,8 @@ define([
             }
 
             var content = 'contact.accounts.delete.desc',
+                furtherChildren,
+                furtherContacts,
                 overlayType = 'show-warning',
                 title = 'sulu.overlay.be-careful',
                 okCallback = function() {
@@ -724,8 +729,12 @@ define([
                     callbackFunction.call(this, true, deleteContacts);
                 }.bind(this);
 
+
+
             // sub-account exists => deletion is not allowed
             if (parseInt(values.numChildren, 10) > 0) {
+
+                furtherChildren = values.numChildren - values.children.length;
                 overlayType = 'show-error';
                 title = 'sulu.overlay.error';
                 okCallback = undefined;
@@ -734,18 +743,21 @@ define([
                     foundMessage: this.sandbox.translate('contact.accounts.delete.sub-found'),
                     list: this.template.dependencyListAccounts.call(this, values.children),
                     numChildren: parseInt(values.numChildren, 10),
-                    andMore: this.sandbox.util.template(this.sandbox.translate('public.and-number-more'), {number: '<strong><%= values.numChildren - values.children.length) %></strong>'}),
+                    andMore: this.sandbox.util.template(this.sandbox.translate('public.and-number-more'), {number: furtherChildren}),
                     description: this.sandbox.translate('contact.accounts.delete.sub-found-desc')
                 });
             }
             // related contacts exist => show checkbox
             else if (parseInt(values.numContacts, 10) > 0) {
+
+                furtherContacts = values.numContacts - values.contacts.length;
+
                 // create message
                 content = this.sandbox.util.template(templates.dialogEntityFoundTemplate, {
                     foundMessage: this.sandbox.translate('contact.accounts.delete.contacts-found'),
                     list: this.template.dependencyListContacts.call(this, values.contacts),
                     numChildren: parseInt(values.numContacts, 10),
-                    andMore: this.sandbox.util.template(this.sandbox.translate('public.and-number-more'), {number: '<strong><%= values.numContacts - values.contacts.length) %></strong>'}),
+                    andMore: this.sandbox.util.template(this.sandbox.translate('public.and-number-more'), {number: furtherContacts}),
                     description: this.sandbox.translate('contact.accounts.delete.contacts-question'),
                     checkboxText: this.sandbox.util.template(this.sandbox.translate('contact.accounts.delete.contacts-checkbox'), {number: parseInt(values.numContacts, 10)})
                 });
