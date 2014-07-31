@@ -1,3 +1,4 @@
+
 /** vim: et:ts=4:sw=4:sts=4
  * @license RequireJS 2.1.9 Copyright (c) 2010-2012, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
@@ -29024,7 +29025,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                     if (!!row.parent) {
                         $parent = this.sandbox.dom.find('tr[data-id="' + row.parent + '"]', $container);
                     }
-                    if (!!$parent) {
+                    if (!!$parent && !!$parent.length) {
                         this.insertChild($row, $parent, row.parent, this.options.hideChildrenAtBeginning);
                     } else {
                         this.sandbox.dom.append($container, $row);
@@ -36081,6 +36082,8 @@ define('__component__$dependent-select@husky',[],function() {
  * @param {Boolean} [options.editable] If true the menu items are editable
  * @param {Object} [options.translations] translation keys for 'addItem' and 'editEntries'
  * @param {String} [options.direction] 'bottom', 'top', or 'auto' pop up direction of the drop down.
+ * @param {String} [options.resultKey] key in result set - default is empty and the _embedded property of the result set will be taken
+ * @param {String} [options.url] url to load data from
  */
 
 define('__component__$select@husky',[], function() {
@@ -36113,6 +36116,7 @@ define('__component__$select@husky',[], function() {
             repeatSelect: false,
             editable: false,
             direction: 'auto',
+            resultKey: '',
             translations: translations
         },
 
@@ -36144,8 +36148,8 @@ define('__component__$select@husky',[], function() {
                     '<div class="grid-row type-row" data-id="', item.id ,'">',
                     '    <div class="grid-col-8 pull-left"><input class="form-element" type="text" value="', item[valueField],'"/></div>',
                     '    <div class="grid-col-2 pull-right"><div class="remove-row btn gray-dark fit only-icon pull-right"><div class="fa-minus-circle"></div></div></div>',
-                    '</div>',
-                ].join('')
+                    '</div>'
+                ].join('');
             },
             addOverlaySkeleton: function() {
                 return [
@@ -36211,13 +36215,7 @@ define('__component__$select@husky',[], function() {
             EVENT_DISABLE = function() {
             return getEventName.call(this, 'disable');
         },
-        /**
-         * used for making the menu items editable
-         * @event husky.select[.INSTANCE_NAME].edit
-         */
-            EVENT_EDIT = function() {
-            return getEventName.call(this, 'edit');
-        },
+
         /**
          * used for toggling enabled/disabled dropdown menu
          * @event husky.select[.INSTANCE_NAME].toggle
@@ -36296,9 +36294,6 @@ define('__component__$select@husky',[], function() {
             this.sandbox.logger.log('initialize', this);
             this.options = this.sandbox.util.extend({}, defaults, this.options);
 
-            // Used as a fallback to revert to the last committed data
-            this.mergedData = this.options.data.slice(0);
-
             // if deselectfield is set to true, set it to default value
             if (!!this.options.deselectField && this.options.deselectField.toString() === 'true') {
                 this.options.deselectField = constants.deselectFieldDefaultValue;
@@ -36308,6 +36303,9 @@ define('__component__$select@husky',[], function() {
             this.selectedElements = [];
             this.selectedElementsValues = [];
             this.dropdownVisible = false;
+
+            // Used as a fallback to revert to the last committed data
+            this.mergedData = null;
 
             // when preselected elements is not set via options look in data-attribute
             if(!this.options.preSelectedElements || this.options.preSelectedElements.length === 0) {
@@ -36322,8 +36320,38 @@ define('__component__$select@husky',[], function() {
                 }
             }
 
-            this.render();
-            this.sandbox.emit(EVENT_INITIALIZED.call(this));
+            if (this.options.url) {
+                this.loadEntries(this.options.url);
+            } else if (!!this.options.data) {
+                this.mergedData = this.options.data.slice(0);
+                this.render();
+                this.sandbox.emit(EVENT_INITIALIZED.call(this));
+            } else {
+                this.sandbox.logger.warn('Neither data nor url defined!');
+            }
+        },
+
+        /**
+         * Loads entries from url
+         * @param url
+         */
+        loadEntries: function(url) {
+            this.sandbox.util.load(url)
+                .then(function(response) {
+
+                    if (!!this.options.resultKey) {
+                        this.options.data = response._embedded[this.options.resultKey];
+                    } else {
+                        this.options.data = response._embedded;
+                    }
+
+                    this.mergedData = this.options.data.slice(0);
+                    this.render();
+                    this.sandbox.emit(EVENT_INITIALIZED.call(this));
+                }.bind(this))
+                .fail(function(request, message, error) {
+                    this.sandbox.logger.warn(request, message, error);
+                }.bind(this));
         },
 
         render: function() {
@@ -36666,7 +36694,7 @@ define('__component__$select@husky',[], function() {
                     instanceName: 'husky-select',
                     title: this.sandbox.translate('public.edit-entries'),
                     closeCallback: function() {
-                        this.onCloseWithCancel()
+                        this.onCloseWithCancel();
                     }.bind(this),
                     okCallback: function(data) {
                         this.onCloseWithOk(data);
@@ -36687,12 +36715,13 @@ define('__component__$select@husky',[], function() {
             }
         },
 
-        saveNewEditedItemsAndClose: function(domData, method) {
+        saveNewEditedItemsAndClose: function(domData) {
             var data = this.parseDataFromDom(domData),
+                mergeData,
                 changedData = this.getChangedData(data);
 
             if (changedData.length > 0) {
-                var mergeData = this.mergeDomAndRequestData(changedData,
+                 mergeData = this.mergeDomAndRequestData(changedData,
                     this.parseDataFromDom(domData, true));
                 this.options.data = mergeData.slice(0);
                 this.updateDropdown(mergeData, this.selectedElements);
@@ -36867,8 +36896,6 @@ define('__component__$select@husky',[], function() {
          * Render content for the overlay
          */
         renderOverlayContent: function() {
-            var data = [];
-
             return this.sandbox.dom.createElement(this.sandbox.util.template(
                     templates.addOverlaySkeleton.call(this),
                     {
@@ -36880,7 +36907,7 @@ define('__component__$select@husky',[], function() {
         /**
          * Adds an element
          */
-        addElement: function(event) {
+        addElement: function() {
             var $row = this.sandbox.dom.createElement(
                         templates.addOverlayRow.call(
                             this,
@@ -36925,7 +36952,7 @@ define('__component__$select@husky',[], function() {
             updateLabel = this.sandbox.dom.attr(event.currentTarget, 'data-update-label');
 
             // Edit button was pressed
-            if (key == constants.editableFieldKey) {
+            if (key === constants.editableFieldKey) {
                 this.hideDropDown();
                 this.openEditDialog();
                 return;
@@ -47823,8 +47850,6 @@ define('husky_extensions/util',[],function() {
             app.core.util.load = function(url, data) {
                 var deferred = new app.sandbox.data.deferred();
 
-                app.logger.log('load', url);
-
                 app.sandbox.util.ajax({
                     url: url,
                     data: data || null,
@@ -47846,8 +47871,6 @@ define('husky_extensions/util',[],function() {
 
             app.core.util.save = function(url, type, data) {
                 var deferred = new app.sandbox.data.deferred();
-
-                app.logger.log('save', url);
 
                 app.sandbox.util.ajax({
 
@@ -47931,4 +47954,3 @@ define('husky_extensions/util',[],function() {
         }
     };
 });
-

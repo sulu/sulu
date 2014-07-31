@@ -6207,16 +6207,15 @@ hr.divider.small {
 /* line 24, ../scss/modules/form.scss */
 .form-element[readonly], [readonly].husky-input {
   background: none;
-  border: 0;
   color: #999999;
 }
 
-/* line 33, ../scss/modules/form.scss */
+/* line 32, ../scss/modules/form.scss */
 input[type="text"].input-round {
   border-radius: 30px;
 }
 
-/* line 39, ../scss/modules/form.scss */
+/* line 38, ../scss/modules/form.scss */
 input
 .input-description {
   margin-top: -5px;
@@ -6224,31 +6223,31 @@ input
   color: #999999;
 }
 
-/* line 45, ../scss/modules/form.scss */
+/* line 44, ../scss/modules/form.scss */
 .input-placeholder-style, input::-webkit-input-placeholder, input:-moz-placeholder, input ::-moz-placeholder, input :-ms-input-placeholder {
   color: #999999;
   font-weight: normal;
 }
 
-/* line 57, ../scss/modules/form.scss */
+/* line 56, ../scss/modules/form.scss */
 input ::-moz-placeholder {
   /* Firefox 19+ */
 }
 
-/* line 73, ../scss/modules/form.scss */
+/* line 72, ../scss/modules/form.scss */
 .form-group,
 .form-group-vertical,
 .form-vertical .form-group {
   min-height: 30px;
 }
-/* line 76, ../scss/modules/form.scss */
+/* line 75, ../scss/modules/form.scss */
 .form-group > :first-child,
 .form-group-vertical > :first-child,
 .form-vertical .form-group > :first-child {
   height: 20px;
   margin-bottom: 10px;
 }
-/* line 81, ../scss/modules/form.scss */
+/* line 80, ../scss/modules/form.scss */
 .form-group > :nth-child(2),
 .form-group-vertical > :nth-child(2),
 .form-vertical .form-group > :nth-child(2) {
@@ -6256,34 +6255,34 @@ input ::-moz-placeholder {
   vertical-align: middle;
 }
 
-/* line 89, ../scss/modules/form.scss */
+/* line 88, ../scss/modules/form.scss */
 .form-horizontal .form-group {
   display: table;
   table-layout: fixed;
   width: 100%;
 }
-/* line 95, ../scss/modules/form.scss */
+/* line 94, ../scss/modules/form.scss */
 .form-horizontal .form-group > * {
   display: table-cell;
 }
-/* line 99, ../scss/modules/form.scss */
+/* line 98, ../scss/modules/form.scss */
 .form-horizontal .form-group > :first-child {
   text-align: right;
   vertical-align: middle;
   padding-right: 20px;
   width: 140px;
 }
-/* line 106, ../scss/modules/form.scss */
+/* line 105, ../scss/modules/form.scss */
 .form-horizontal .form-group label.top {
   vertical-align: top;
   padding-top: 5px;
 }
-/* line 111, ../scss/modules/form.scss */
+/* line 110, ../scss/modules/form.scss */
 .form-horizontal .form-group > :nth-child(2) {
   width: 100%;
 }
 
-/* line 121, ../scss/modules/form.scss */
+/* line 120, ../scss/modules/form.scss */
 label {
   display: block;
   font-size: 14px;
@@ -6291,33 +6290,33 @@ label {
   cursor: pointer;
   white-space: nowrap;
 }
-/* line 128, ../scss/modules/form.scss */
+/* line 127, ../scss/modules/form.scss */
 label.large {
   font-size: 16px;
   font-weight: bold;
 }
-/* line 133, ../scss/modules/form.scss */
+/* line 132, ../scss/modules/form.scss */
 label .form-element, label .husky-input {
   margin-top: 5px;
   border: 1px solid #cccccc;
 }
-/* line 138, ../scss/modules/form.scss */
+/* line 137, ../scss/modules/form.scss */
 label.inline {
   font-size: 1em;
   font-weight: normal;
   display: inline;
   vertical-align: middle;
 }
-/* line 144, ../scss/modules/form.scss */
+/* line 143, ../scss/modules/form.scss */
 label.spacing-right {
   margin-right: 10px;
 }
-/* line 147, ../scss/modules/form.scss */
+/* line 146, ../scss/modules/form.scss */
 label.spacing-left {
   margin-left: 10px;
 }
 
-/* line 154, ../scss/modules/form.scss */
+/* line 153, ../scss/modules/form.scss */
 .custom-checkbox {
   width: 15px;
   height: 15px;
@@ -6327,12 +6326,12 @@ label.spacing-left {
   display: inline-block;
   margin: 0 5px 0 0;
 }
-/* line 166, ../scss/modules/form.scss */
+/* line 165, ../scss/modules/form.scss */
 .custom-checkbox.no-spacing {
   top: 0;
   margin: 0;
 }
-/* line 171, ../scss/modules/form.scss */
+/* line 170, ../scss/modules/form.scss */
 .custom-checkbox input {
   opacity: 0;
   width: 15px;
@@ -6345,20 +6344,20 @@ label.spacing-left {
   padding: 0;
   cursor: pointer;
 }
-/* line 185, ../scss/modules/form.scss */
+/* line 184, ../scss/modules/form.scss */
 .custom-checkbox input:checked + .icon, .custom-checkbox input.is-checked + .icon {
   border-color: #5dc774;
   background-color: #5dc774;
   color: white;
 }
-/* line 189, ../scss/modules/form.scss */
+/* line 188, ../scss/modules/form.scss */
 .custom-checkbox input:checked + .icon::after, .custom-checkbox input.is-checked + .icon::after {
   display: inline-block;
   margin-top: -1px;
   margin-left: -1px;
   content: "\f00c";
 }
-/* line 199, ../scss/modules/form.scss */
+/* line 198, ../scss/modules/form.scss */
 .custom-checkbox input + .icon {
   position: absolute;
   top: 0px;
@@ -6376,27 +6375,27 @@ label.spacing-left {
   border-radius: 2px;
 }
 
-/* line 224, ../scss/modules/form.scss */
+/* line 223, ../scss/modules/form.scss */
 textarea {
   resize: both;
 }
 
-/* line 228, ../scss/modules/form.scss */
+/* line 227, ../scss/modules/form.scss */
 textarea.vertical {
   resize: vertical;
 }
 
-/* line 232, ../scss/modules/form.scss */
+/* line 231, ../scss/modules/form.scss */
 textarea.horizontal {
   resize: horizontal;
 }
 
-/* line 236, ../scss/modules/form.scss */
+/* line 235, ../scss/modules/form.scss */
 textarea.noResize {
   resize: none;
 }
 
-/* line 240, ../scss/modules/form.scss */
+/* line 239, ../scss/modules/form.scss */
 textarea.form-element, textarea.husky-input {
   width: 100%;
   height: 40px;
@@ -6405,14 +6404,14 @@ textarea.form-element, textarea.husky-input {
   font-size: 14px;
   font-family: inherit;
 }
-/* line 247, ../scss/modules/form.scss */
+/* line 246, ../scss/modules/form.scss */
 textarea.form-element.small, textarea.small.husky-input {
   height: 70px;
   min-height: 70px;
   padding: 5px;
 }
 
-/* line 256, ../scss/modules/form.scss */
+/* line 255, ../scss/modules/form.scss */
 .custom-radio {
   width: 15px;
   height: 15px;
@@ -6422,12 +6421,12 @@ textarea.form-element.small, textarea.small.husky-input {
   display: inline-block;
   margin: 0 5px 0 0;
 }
-/* line 266, ../scss/modules/form.scss */
+/* line 265, ../scss/modules/form.scss */
 .custom-radio.no-spacing {
   top: 0;
   margin: 0;
 }
-/* line 271, ../scss/modules/form.scss */
+/* line 270, ../scss/modules/form.scss */
 .custom-radio input {
   width: 15px;
   height: 15px;
@@ -6440,11 +6439,11 @@ textarea.form-element.small, textarea.small.husky-input {
   margin: 0;
   padding: 0;
 }
-/* line 285, ../scss/modules/form.scss */
+/* line 284, ../scss/modules/form.scss */
 .custom-radio input:checked + .icon, .custom-radio input.is-checked + .icon {
   border-color: white;
 }
-/* line 288, ../scss/modules/form.scss */
+/* line 287, ../scss/modules/form.scss */
 .custom-radio input:checked + .icon::after, .custom-radio input.is-checked + .icon::after {
   content: "";
   display: block;
@@ -6453,7 +6452,7 @@ textarea.form-element.small, textarea.small.husky-input {
   border-radius: 15px;
   background-color: #5dc774;
 }
-/* line 299, ../scss/modules/form.scss */
+/* line 298, ../scss/modules/form.scss */
 .custom-radio input + .icon {
   display: block;
   position: absolute;
@@ -6469,23 +6468,23 @@ textarea.form-element.small, textarea.small.husky-input {
   margin: 0;
 }
 
-/* line 321, ../scss/modules/form.scss */
+/* line 320, ../scss/modules/form.scss */
 .cke.cke_chrome {
   box-shadow: none !important;
   border: 0 !important;
 }
-/* line 326, ../scss/modules/form.scss */
+/* line 325, ../scss/modules/form.scss */
 .cke .cke_inner {
   border: 1px solid #cccccc !important;
 }
-/* line 330, ../scss/modules/form.scss */
+/* line 329, ../scss/modules/form.scss */
 .cke .cke_inner,
 .cke .cke_wysiwyg_frame {
   border-bottom-left-radius: 3px !important;
   border-bottom-right-radius: 3px !important;
 }
 
-/* line 338, ../scss/modules/form.scss */
+/* line 337, ../scss/modules/form.scss */
 span.error {
   font-size: 14px;
   color: #ea524e;
@@ -7385,70 +7384,71 @@ table {
 }
 /* line 19, ../scss/modules/btns.scss */
 .btn.only-icon {
-  padding-left: 12px;
-  padding-right: 12px;
+  padding-left: 0;
+  padding-right: 0;
+  text-align: center;
 }
-/* line 23, ../scss/modules/btns.scss */
+/* line 24, ../scss/modules/btns.scss */
 .btn.action {
   background-color: #52b6ca;
   color: white;
 }
-/* line 27, ../scss/modules/btns.scss */
+/* line 28, ../scss/modules/btns.scss */
 .btn.action2 {
   background-color: #f2d212;
   color: white;
 }
-/* line 31, ../scss/modules/btns.scss */
+/* line 32, ../scss/modules/btns.scss */
 .btn.large {
   line-height: 40px;
   height: 40px;
 }
-/* line 35, ../scss/modules/btns.scss */
+/* line 36, ../scss/modules/btns.scss */
 .btn.small {
   font-size: 12px;
   height: 20px;
   line-height: 20px;
   border-radius: 2px;
 }
-/* line 41, ../scss/modules/btns.scss */
+/* line 42, ../scss/modules/btns.scss */
 .btn.small [class^="fa-"] {
   font-size: 10px;
 }
-/* line 44, ../scss/modules/btns.scss */
+/* line 45, ../scss/modules/btns.scss */
 .btn.small [class^="fa-"] + .text {
   font-size: 12px;
 }
-/* line 49, ../scss/modules/btns.scss */
+/* line 50, ../scss/modules/btns.scss */
 .btn.grey, .btn.gray {
   background-color: #cccccc;
   color: white;
 }
-/* line 53, ../scss/modules/btns.scss */
+/* line 54, ../scss/modules/btns.scss */
 .btn.black-text {
   color: black;
 }
-/* line 56, ../scss/modules/btns.scss */
+/* line 57, ../scss/modules/btns.scss */
 .btn.gray-dark {
   background-color: #999999;
   color: white;
 }
-/* line 60, ../scss/modules/btns.scss */
+/* line 61, ../scss/modules/btns.scss */
 .btn.black {
   background-color: black;
   color: white;
 }
-/* line 64, ../scss/modules/btns.scss */
+/* line 65, ../scss/modules/btns.scss */
 .btn.inactive {
   cursor: default;
 }
-/* line 67, ../scss/modules/btns.scss */
+/* line 68, ../scss/modules/btns.scss */
 .btn [class^="fa-"] {
   font-size: 18px;
   margin-left: -15px;
   display: inline;
   line-height: 32px;
 }
-/* line 73, ../scss/modules/btns.scss */
+/* line 74, ../scss/modules/btns.scss */
 .btn [class^="fa-"] + .text {
   font-size: 14px;
   display: inline-block;
@@ -7456,11 +7456,11 @@ table {
   margin-left: 5px;
   padding: 0;
 }
-/* line 81, ../scss/modules/btns.scss */
+/* line 82, ../scss/modules/btns.scss */
 .btn [class^="fa-"]:only-child {
   margin-left: 0;
 }
-/* line 85, ../scss/modules/btns.scss */
+/* line 86, ../scss/modules/btns.scss */
 .btn .text {
   padding: 0 8px;
 }
@@ -7468,43 +7468,43 @@ table {
 /**
 ** Buttons-classes on the bottom and should be replaced in the code with the classes above
 **/
-/* line 93, ../scss/modules/btns.scss */
+/* line 94, ../scss/modules/btns.scss */
 a.btn {
   color: #000;
   text-decoration: none;
 }
 
-/* line 98, ../scss/modules/btns.scss */
+/* line 99, ../scss/modules/btns.scss */
 .btn-large {
   padding: 0 25px;
   font-size: 18px;
   line-height: 30px;
 }
 
-/* line 104, ../scss/modules/btns.scss */
+/* line 105, ../scss/modules/btns.scss */
 .btn-black {
   background-color: #000;
   color: white;
 }
 
-/* line 109, ../scss/modules/btns.scss */
+/* line 110, ../scss/modules/btns.scss */
 .btn-highlight {
   background-color: #52b6ca;
   color: white;
 }
 
-/* line 114, ../scss/modules/btns.scss */
+/* line 115, ../scss/modules/btns.scss */
 a.btn-black, a.btn-highlight {
   color: white;
 }
 
-/* line 119, ../scss/modules/btns.scss */
+/* line 120, ../scss/modules/btns.scss */
 .btn-gray {
   background-color: #cccccc;
   color: black;
 }
 
-/* line 125, ../scss/modules/btns.scss */
+/* line 126, ../scss/modules/btns.scss */
 .addButton {
   border-radius: 3px;
   display: inline-block;
@@ -7517,7 +7517,7 @@ a.btn-black, a.btn-highlight {
   vertical-align: middle;
   cursor: pointer;
 }
-/* line 138, ../scss/modules/btns.scss */
+/* line 139, ../scss/modules/btns.scss */
 .addButton:before {
   content: "\f055";
   font-size: 10px;
