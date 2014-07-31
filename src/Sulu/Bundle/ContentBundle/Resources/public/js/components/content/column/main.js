@@ -13,6 +13,24 @@ define(function() {
 
     var SHOW_GHOST_PAGES_KEY = 'column-navigation-show-ghost-pages',
 
+        /**
+         * constant for move button id
+         * @type {number}
+         */
+        MOVE_BUTTON_ID = 3,
+
+        /**
+         * constant for copy button id
+         * @type {number}
+         */
+        COPY_BUTTON_ID = 4,
+
+        /**
+         * constant for delete button id
+         * @type {number}
+         */
+        DELETE_BUTTON_ID = 1,
+
         templates = {
             toggler: [
                 '<div id="show-ghost-pages"></div>',
@@ -29,6 +47,9 @@ define(function() {
         },
 
         initialize: function() {
+            // init vars
+            this.selectedItem = null;
+
             this.render();
             // shows a delete success label. If a node just got deleted
             this.sandbox.sulu.triggerDeleteSuccessLabel();
@@ -57,6 +78,7 @@ define(function() {
             }, this);
 
             this.sandbox.on('husky.column-navigation.selected', function(item) {
+                this.selectedItem = item;
                 this.sandbox.sulu.saveUserSetting(this.options.webspace + 'ColumnNavigationSelected', item.id);
             }, this);
 
@@ -69,6 +91,26 @@ define(function() {
                 this.sandbox.sulu.saveUserSetting(SHOW_GHOST_PAGES_KEY, this.showGhostPages);
                 this.startColumnNavigation();
             }, this);
+
+            // no typo event name includes '..' in husky
+            this.sandbox.on('husky.dropdown..settings.dropdown.item.click', function(item) {
+                if (item.id === MOVE_BUTTON_ID) {
+                    this.moveSelected();
+                } else if (item.id === COPY_BUTTON_ID) {
+                    this.copySelected();
+                } else if (item.id === DELETE_BUTTON_ID) {
+                    this.deleteSelected();
+                }
+            }.bind(this));
+        },
+
+        moveSelected: function() {
+        },
+
+        copySelected: function() {
+        },
+
+        deleteSelected: function() {
         },
 
         startColumnNavigation: function() {
@@ -85,7 +127,7 @@ define(function() {
                         url: this.getUrl(),
                         data: [
                             {
-                                id: 1,
+                                id: DELETE_BUTTON_ID,
                                 name: this.sandbox.translate('content.contents.settings.delete')
                             },
                             {
@@ -93,11 +135,11 @@ define(function() {
                                 divider: true
                             },
                             {
-                                id: 3,
+                                id: MOVE_BUTTON_ID,
                                 name: this.sandbox.translate('content.contents.settings.move')
                             },
                             {
-                                id: 4,
+                                id: COPY_BUTTON_ID,
                                 name: this.sandbox.translate('content.contents.settings.copy')
                             }
                         ]
