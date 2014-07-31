@@ -41,8 +41,10 @@ define(
                         icon: 'gear',
                         items: [
                             {
+                                id: 'delete',
                                 title: this.sandbox.translate('contact.activities.remove'),
-                                callback: this.removeActivities.bind(this)
+                                callback: this.removeActivities.bind(this),
+                                disabled: true
                             }
                         ]
                     }
@@ -138,6 +140,14 @@ define(
                     formObject.initialized.then(function() {
                         this.sandbox.form.setData(constants.activityFormSelector, this.overlayData);
                     }.bind(this));
+                }.bind(this));
+
+                this.sandbox.dom.on('husky.datagrid.number.selections', function(number) {
+                    if (number > 0) {
+                        this.sandbox.emit('husky.toolbar.activities.item.enable', 'delete');
+                    } else {
+                        this.sandbox.emit('husky.toolbar.activities.item.disable', 'delete');
+                    }
                 }.bind(this));
             },
 
