@@ -91,7 +91,8 @@ define(function() {
                                     }.bind(this)
                                 }
                             ],
-                            highlightSelected: true
+                            highlightSelected: true,
+                            fullWidth: true
                         }
                     }
                 }
