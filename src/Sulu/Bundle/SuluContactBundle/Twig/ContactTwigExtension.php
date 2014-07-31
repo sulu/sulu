@@ -41,7 +41,7 @@ class ContactTwigExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            new \Twig_SimpleFunction('resolveUser', array($this, 'resolveUserFunction'))
+            new \Twig_SimpleFunction('resolve_user', array($this, 'resolveUserFunction'))
         );
     }
 
