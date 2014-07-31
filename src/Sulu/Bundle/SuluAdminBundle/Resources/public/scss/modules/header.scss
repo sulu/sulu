@@ -88,16 +88,13 @@
         left: 0px;
     }
 
-    // squeezed style for content full-width mode
-    &.squeezed {
-        .info, .headline {
-            left: $contentPaddingLeft;
-        }
-        .tabs, .bottom-row {
-            padding-left: $contentPaddingLeft;
-        }
-        .bottom-row {
-            padding-right: 30px;
-        }
+    // add top space to the content-container beneath the header
+    & + .page {
+      margin-top: $headerHeight;
+      padding-bottom: $headerHeight
+    }
+    &.has-tabs + .page {
+      margin-top: $headerHeight + $tabsHeight;
+      padding-bottom: $headerHeight + $tabsHeight;
     }
 }
