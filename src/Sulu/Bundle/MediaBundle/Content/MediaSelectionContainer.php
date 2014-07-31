@@ -39,7 +39,7 @@ class MediaSelectionContainer implements \Serializable
      * @Exclude
      * @var string
      */
-    private $localization;
+    private $locale;
 
     /**
      * @Exclude
@@ -49,28 +49,34 @@ class MediaSelectionContainer implements \Serializable
 
     /**
      * @Exclude
+     * @var string
+     */
+    private $types;
+
+    /**
+     * @Exclude
      * @var MediaManagerInterface
      */
     private $mediaManager;
 
-    function __construct($config, $displayOption, $ids, $localization, $mediaManager)
+    function __construct($config, $displayOption, $ids, $locale, $types, $mediaManager)
     {
         $this->config = $config;
         $this->displayOption = $displayOption;
         $this->ids = $ids;
-        $this->localization = $localization;
+        $this->locale = $locale;
+        $this->types = $types;
         $this->mediaManager = $mediaManager;
     }
 
     /**
      * returns data of container
-     * @param string $locale
      * @return Media[]
      */
-    public function getData($locale = 'en') // TODO delete "= 'en'" and set it on the position where the function is called
+    public function getData()
     {
         if ($this->data === null) {
-            $this->data = $this->loadData($locale);
+            $this->data = $this->loadData($this->locale);
         }
 
         return $this->data;
@@ -83,7 +89,7 @@ class MediaSelectionContainer implements \Serializable
     private function loadData($locale)
     {
         if (!empty($this->ids)) {
-            return $this->mediaManager->get($locale, null, $this->ids);
+            return $this->mediaManager->get($locale, array('ids' => $this->ids));
         } else {
             return array();
         }
@@ -114,6 +120,14 @@ class MediaSelectionContainer implements \Serializable
         return $this->displayOption;
     }
 
+    /**
+     * @return string
+     */
+    public function getTypes()
+    {
+        return $this->types;
+    }
+
     public function __get($name)
     {
         switch ($name) {
@@ -125,13 +139,15 @@ class MediaSelectionContainer implements \Serializable
                 return $this->getIds();
             case 'displayOption':
                 return $this->getDisplayOption();
+            case 'types':
+                return $this->getTypes();
         }
         return null;
     }
 
     public function __isset($name)
     {
-        return ($name == 'data' || $name == 'config' || $name == 'ids' || $name == 'displayOption');
+        return ($name == 'data' || $name == 'config' || $name == 'ids' || $name == 'displayOption' || $name == 'types');
     }
 
     /**
@@ -144,6 +160,7 @@ class MediaSelectionContainer implements \Serializable
                 'data' => $this->getData(),
                 'config' => $this->getConfig(),
                 'ids' => $this->getIds(),
+                'types' => $this->getTypes(),
                 'displayOption' => $this->getDisplayOption()
             )
         );
@@ -158,6 +175,7 @@ class MediaSelectionContainer implements \Serializable
         $this->data = $values['data'];
         $this->config = $values['config'];
         $this->ids = $values['ids'];
+        $this->types = $values['types'];
         $this->displayOption = $values['displayOption'];
     }
 }

@@ -103,12 +103,20 @@ class MediaController extends RestController implements ClassResourceInterface
             if ($ids !== null) {
                 $ids = explode(',', $ids);
             }
+            $types = $request->get('types');
+            if ($types !== null) {
+                $types = explode(',', $types);
+            }
 
             /** @var ListRestHelperInterface $listRestHelper */
             $listRestHelper = $this->get('sulu_core.list_rest_helper');
 
             $mediaManager = $this->getMediaManager();
-            $media = $mediaManager->get($this->getLocale($request->get('locale')), $collection, $ids, $limit);
+            $media = $mediaManager->get($this->getLocale($request->get('locale')), array(
+                'collection' => $collection,
+                'ids' => $ids,
+                'types' => $types
+            ), $limit);
 
             $all = count($media); // TODO
 

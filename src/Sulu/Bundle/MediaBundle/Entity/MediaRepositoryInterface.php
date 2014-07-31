@@ -26,10 +26,9 @@ interface MediaRepositoryInterface
 
     /**
      * finds all media, can be filtered with parent
-     * @param int $collection
-     * @param array $ids
+     * @param array $filter
      * @param int $limit
      * @return mixed
      */
-    public function findMedia($collection = null, $ids = null, $limit = null);
+    public function findMedia($filter = array(), $limit = null);
 }
