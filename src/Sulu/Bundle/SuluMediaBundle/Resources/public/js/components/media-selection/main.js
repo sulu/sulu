@@ -268,7 +268,7 @@ define(['sulumedia/collection/collections'], function(Collections) {
                                     data: collections.toJSON(),
                                     el: this.sandbox.dom.find(getId.call(this, 'gridGroup')),
                                     instanceName: this.options.instanceName,
-                                    gridUrl: '/admin/api/media?collection=',
+                                    gridUrl: '/admin/api/media?'+(this.options.types != '' ? 'types='+this.options.types+'&' : '')+'collection=',
                                     preselected: this.data.ids,
                                     resultKey: this.options.resultKey,
                                     dataGridOptions: {

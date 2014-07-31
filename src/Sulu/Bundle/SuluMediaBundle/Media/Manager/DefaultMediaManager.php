@@ -349,10 +349,10 @@ class DefaultMediaManager implements MediaManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function get($locale, $collection = null, $ids = null, $limit = null)
+    public function get($locale, $filter = array(), $limit = null)
     {
         $media = array();
-        $mediaEntities = $this->mediaRepository->findMedia($collection, $ids, $limit);
+        $mediaEntities = $this->mediaRepository->findMedia($filter, $limit);
         foreach ($mediaEntities as $mediaEntity) {
             $media[] = $this->addFormatsAndUrl(new Media($mediaEntity, $locale));
         }
@@ -551,10 +551,10 @@ class DefaultMediaManager implements MediaManagerInterface
      */
     protected function getMediaType(UploadedFile $uploadedFile)
     {
-        $extension = $uploadedFile->getExtension();
+        $mimeType = $uploadedFile->getMimeType();
         $id = null;
         foreach ($this->mediaTypes as $mediaType) {
-            if (in_array($extension, $mediaType['extensions']) || in_array('*', $mediaType['extensions'])) {
+            if (in_array($mimeType, $mediaType['mimeTypes']) || in_array('*', $mediaType['mimeTypes'])) {
                 $id = $mediaType['id'];
             }
         }
@@ -621,6 +621,9 @@ class DefaultMediaManager implements MediaManagerInterface
                     case 'creator':
                         $media->setCreator($value);
                         break;
+                    case 'mimeType':
+                        $media->setMimeType($value);
+                        break;
                     case 'collection':
                         $collectionEntity = $this->getCollectionById($value);
                         $media->setCollection($collectionEntity); // set parent
@@ -677,6 +680,14 @@ class DefaultMediaManager implements MediaManagerInterface
 
         if (!$mediaEntity) {
             throw new MediaNotFoundException('Media with the ID ' . $id . ' not found.');
+        }
+
+        /** @var File $file */
+        foreach ($mediaEntity->getFiles() as $file) {
+            /** @var FileVersion $fileVersion */
+            foreach ($file->getFileVersions() as $fileVersion) {
+                $this->formatManager->purge($mediaEntity->getId(), $fileVersion->getName(), $fileVersion->getStorageOptions());
+            }
         }
 
         $this->em->remove($mediaEntity);

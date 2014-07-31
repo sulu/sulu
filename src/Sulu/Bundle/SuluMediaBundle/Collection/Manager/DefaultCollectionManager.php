@@ -415,7 +415,7 @@ class DefaultCollectionManager implements CollectionManagerInterface
         $formats = array();
 
         $medias = $this->mediaRepository
-            ->findMedia($id, null, $this->previewLimit);
+            ->findMedia(array('collection' => $id), $this->previewLimit);
 
         foreach ($medias as $media) {
             foreach ($media->getFiles() as $file) {
