@@ -102,6 +102,8 @@ define(function() {
                     this.moveSelected(selectedItem);
                 } else if (dropdownItem.id === COPY_BUTTON_ID) {
                     this.copySelected(selectedItem);
+                } else if (dropdownItem.id === DELETE_BUTTON_ID) {
+                    this.deleteSelected(selectedItem);
                 }
             }.bind(this));
 
@@ -171,6 +173,10 @@ define(function() {
          * @param {Object} selectedItem item selected in column-navigation
          */
         deleteSelected: function(selectedItem) {
+            this.sandbox.once('sulu.preview.deleted', function() {
+                this.restartColumnNavigation();
+            }.bind(this));
+            this.sandbox.emit('sulu.content.content.delete', selectedItem.id);
         },
 
         /**
