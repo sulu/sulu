@@ -81,7 +81,7 @@ class PortalLoader extends Loader
             $route->setHost($portalInformation->getHost());
             $route->setPath($portalInformation->getPrefix() . $route->getPath());
 
-            $this->collection->add($portalInformation->getPortal()->getKey() . $i . '.' . $importedRouteName, $route);
+            $this->collection->add($portalInformation->getUrl() . '.' . $importedRouteName, $route);
             $i++;
         }
     }
