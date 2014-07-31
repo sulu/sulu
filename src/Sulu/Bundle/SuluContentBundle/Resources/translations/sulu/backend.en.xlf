@@ -34,6 +34,26 @@
                 <source>sulu.content.form.settings.type.external-link</source>
                 <target>External Link</target>
             </trans-unit>
+            <trans-unit id="f1234df37123123ed4a73a4123dfdf006" resname="content.contents.settings.delete">
+                <source>content.contents.settings.delete</source>
+                <target>Delete node</target>
+            </trans-unit>
+            <trans-unit id="f1234df37123123ed4a73a4123dfdf007" resname="content.contents.settings.copy">
+                <source>content.contents.settings.copy</source>
+                <target>Copy node</target>
+            </trans-unit>
+            <trans-unit id="f1234df37123123ed4a73a4123dfdf008" resname="content.contents.settings.copy.title">
+                <source>content.contents.settings.copy.title</source>
+                <target>Choose new parent after copy</target>
+            </trans-unit>
+            <trans-unit id="f1234df37123123ed4a73a4123dfdf009" resname="content.contents.settings.move">
+                <source>content.contents.settings.move</source>
+                <target>Move node</target>
+            </trans-unit>
+            <trans-unit id="f1234df37123123ed4a73a4123dfdf00A" resname="content.contents.settings.move.title">
+                <source>content.contents.settings.move.title</source>
+                <target>Choose new parent after move</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
