@@ -88,11 +88,11 @@ define([], function() {
 
             this.sandbox.dom.on(this.formId, 'change', function() {
                 this.setHeaderBar(false);
-            }.bind(this), 'select, input');
+            }.bind(this), 'select.changeListener, input.changeListener, #permissions-grid input');
 
             this.sandbox.dom.on(this.formId, 'keyup', function() {
                 this.setHeaderBar(false);
-            }.bind(this), 'input');
+            }.bind(this), 'input.changeListener');
 
             this.sandbox.on('husky.select.systemLanguage.selected.item', function() {
                 this.setHeaderBar(false);

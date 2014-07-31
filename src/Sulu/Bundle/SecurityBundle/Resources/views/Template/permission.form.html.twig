@@ -3,13 +3,13 @@
         <div class="grid-col-6">
             <div class="form-group">
                 <label for="username"><%=translate('security.permission.username')%></label>
-                <input name="username" id="username" type="text" class="form-element" value="<%= (!!user) ? user.username : '' %>" data-validation-required="true" data-validation-min-length="3"/>
+                <input name="username" id="username" type="text" class="form-element changeListener" value="<%= (!!user) ? user.username : '' %>" data-validation-required="true" data-validation-min-length="3"/>
             </div>
         </div>
         <div class="grid-col-6">
             <div class="form-group">
                 <label for="email"><%=translate('security.permission.email')%></label>
-                <input name="email" tabindex="-1" id="email" type="text" class="form-element" readonly value="<%= (!!email) ? email : '' %>"/>
+                <input name="email" tabindex="-1" id="email" type="text" class="form-element changeListener" readonly value="<%= (!!email) ? email : '' %>"/>
             </div>
         </div>
     </div>
@@ -18,13 +18,13 @@
         <div class="grid-col-6">
             <div class="form-group">
                 <label for="password"><%=translate('security.permission.password')%></label>
-                <input name="password" id="password" type="text" class="form-element" data-validation-equal="passwords"/>
+                <input name="password" id="password" type="text" class="form-element changeListener" data-validation-equal="passwords"/>
             </div>
         </div>
         <div class="grid-col-6">
             <div class="form-group">
                 <label for="passwordRepeat"><%=translate('security.permission.passwordRepeat')%></label>
-                <input name="passwordRepeat" id="passwordRepeat" type="text" class="form-element" data-validation-equal="passwords"/>
+                <input name="passwordRepeat" id="passwordRepeat" type="text" class="form-element changeListener" data-validation-equal="passwords"/>
             </div>
         </div>
     </div>
