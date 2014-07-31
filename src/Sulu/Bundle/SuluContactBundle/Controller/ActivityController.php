@@ -95,7 +95,7 @@ class ActivityController extends RestController implements ClassResourceInterfac
             false,
             true,
             '',
-            '',
+            '180px',
             '',
             true
         );
@@ -211,8 +211,8 @@ class ActivityController extends RestController implements ClassResourceInterfac
                         self::$entityName . '.activityType'
                     )
             ),
-            false,
             true,
+            false,
             'translation',
             '',
             '',
