@@ -1829,6 +1829,9 @@
             <trans-unit id="a50af522a1231350142c0b4720e29a3f" resname="public.no-title">
                 <source>public.no-title</source>
                 <target>No Title</target>
+            <trans-unit id="a50af522ac181350142c0b4720e29a4f" resname="public.previous">
+                <source>public.previous</source>
+                <target>Back</target>
             </trans-unit>
         </body>
     </file>
