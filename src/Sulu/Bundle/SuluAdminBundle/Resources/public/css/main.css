@@ -375,12 +375,12 @@ input, select {
   left: 0px;
 }
 /* line 98, ../scss/modules/header.scss */
-.sulu-header + #content {
+.sulu-header + .page {
   margin-top: 150px;
   padding-bottom: 190px;
 }
 /* line 102, ../scss/modules/header.scss */
-.sulu-header.has-tabs + #content {
+.sulu-header.has-tabs + .page {
   margin-top: 200px;
   padding-bottom: 240px;
 }
