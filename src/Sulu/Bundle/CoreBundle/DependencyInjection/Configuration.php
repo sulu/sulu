@@ -217,7 +217,7 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('templates')
                     ->addDefaultsIfNotSet()
                     ->children()
-                        ->arrayNode('pathes')
+                        ->arrayNode('paths')
                             ->prototype('array')
                                 ->children()
                                     ->scalarNode('path')
