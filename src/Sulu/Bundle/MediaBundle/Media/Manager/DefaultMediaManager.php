@@ -679,6 +679,14 @@ class DefaultMediaManager implements MediaManagerInterface
             throw new MediaNotFoundException('Media with the ID ' . $id . ' not found.');
         }
 
+        /** @var File $file */
+        foreach ($mediaEntity->getFiles() as $file) {
+            /** @var FileVersion $fileVersion */
+            foreach ($file->getFileVersions() as $fileVersion) {
+                $this->formatManager->purge($mediaEntity->getId(), $fileVersion->getName(), $fileVersion->getStorageOptions());
+            }
+        }
+
         $this->em->remove($mediaEntity);
         $this->em->flush();
     }
