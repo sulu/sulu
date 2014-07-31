@@ -82,7 +82,13 @@ define(function() {
                         el: this.$find('#content-column'),
                         selected: this.getLastSelected(),
                         resultKey: 'nodes',
-                        url: this.getUrl()
+                        url: this.getUrl(),
+                        data:[
+                            {
+                                id: 1,
+                                name: this.sandbox.translate('asdf')
+                            }
+                        ]
                     }
                 }
             ]);
