@@ -202,24 +202,27 @@
   border-radius: 2px;
 }
 
-/* line 28, ../scss/modules/general.scss */
+/* line 29, ../scss/modules/general.scss */
 .internal-links-overlay .overlay-header,
-.single-internal-overlay .overlay-header {
+.single-internal-overlay .overlay-header,
+.overlay-container .overlay-header {
   margin-bottom: 1px;
 }
-/* line 31, ../scss/modules/general.scss */
+/* line 32, ../scss/modules/general.scss */
 .internal-links-overlay .overlay-content,
-.single-internal-overlay .overlay-content {
+.single-internal-overlay .overlay-content,
+.overlay-container .overlay-content {
   margin: 0px;
 }
-/* line 35, ../scss/modules/general.scss */
+/* line 36, ../scss/modules/general.scss */
 .internal-links-overlay .overlay-footer,
-.single-internal-overlay .overlay-footer {
+.single-internal-overlay .overlay-footer,
+.overlay-container .overlay-footer {
   margin: 0px;
 }
 
 /* smart content for column view */
-/* line 41, ../scss/modules/general.scss */
+/* line 42, ../scss/modules/general.scss */
 .column-navigation-wrapper {
   overflow: inherit;
 }

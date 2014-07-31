@@ -53,9 +53,6 @@ define(function() {
         },
 
         initialize: function() {
-            // init vars
-            this.selectedItem = null;
-
             this.render();
             // shows a delete success label. If a node just got deleted
             this.sandbox.sulu.triggerDeleteSuccessLabel();
@@ -75,16 +72,15 @@ define(function() {
         },
 
         bindCustomEvents: function() {
-            this.sandbox.on('husky.column-navigation.add', function(parent) {
+            this.sandbox.on('husky.column-navigation.node.add', function(parent) {
                 this.sandbox.emit('sulu.content.contents.new', parent);
             }, this);
 
-            this.sandbox.on('husky.column-navigation.edit', function(item) {
+            this.sandbox.on('husky.column-navigation.node.edit', function(item) {
                 this.sandbox.emit('sulu.content.contents.load', item.id);
             }, this);
 
-            this.sandbox.on('husky.column-navigation.selected', function(item) {
-                this.selectedItem = item;
+            this.sandbox.on('husky.column-navigation.node.selected', function(item) {
                 this.sandbox.sulu.saveUserSetting(this.options.webspace + 'ColumnNavigationSelected', item.id);
             }, this);
 
@@ -98,21 +94,25 @@ define(function() {
                 this.startColumnNavigation();
             }, this);
 
-            // no typo event name includes '..' in husky
-            this.sandbox.on('husky.dropdown..settings.dropdown.item.click', function(item) {
-                if (item.id === MOVE_BUTTON_ID) {
-                    this.moveSelected();
-                } else if (item.id === COPY_BUTTON_ID) {
-                    this.copySelected();
-                } else if (item.id === DELETE_BUTTON_ID) {
-                    this.deleteSelected();
+            this.sandbox.on('husky.column-navigation.node.settings', function(dropdownItem, selectedItem) {
+                if (dropdownItem.id === MOVE_BUTTON_ID) {
+                    this.moveSelected(selectedItem);
                 }
+            }.bind(this));
+
+            // adjust position of overlay after column-navigation has initialized
+            this.sandbox.on('husky.column-navigation.overlay.initialized', function() {
+                this.sandbox.emit('husky.overlay.overlay.set-position');
             }.bind(this));
         },
 
-        moveSelected: function() {
-            var $element = this.sandbox.dom.createElement('<div class="move-container"/>');
+        moveSelected: function(selectedItem) {
+            // wait once to initialize overlay
+            this.sandbox.once('husky.overlay.overlay.initialized', function() {
+                this.initColumnNavigation(selectedItem.id);
+            }.bind(this));
 
+            var $element = this.sandbox.dom.createElement('<div class="overlay-container"/>');
             this.sandbox.dom.append(this.$el, $element);
             this.sandbox.start([
                 {
@@ -120,10 +120,10 @@ define(function() {
                     options: {
                         openOnStart: true,
                         removeOnClose: true,
-                        cssClass: 'single-internal-overlay',
+                        cssClass: 'overlay',
                         el: $element,
                         container: this.$el,
-                        instanceName: 'move',
+                        instanceName: 'overlay',
                         skin: 'wide',
                         slides: [
                             {
@@ -139,12 +139,40 @@ define(function() {
                     }
                 }
             ]);
+
         },
 
         copySelected: function() {
         },
 
         deleteSelected: function() {
+        },
+
+        /**
+         * initialize column navigation
+         */
+        initColumnNavigation: function(id) {
+            var url = '/admin/api/nodes{/id}?tree=true&webspace=' + this.options.webspace + '&language=' + this.options.language + '&webspace-node=true';
+
+            this.sandbox.start(
+                [
+                    {
+                        name: 'column-navigation@husky',
+                        options: {
+                            el: '#child-column-navigation',
+                            selected: this.data,
+                            url: url.replace('{/id}', (!!id ? '/' + id : '')),
+                            instanceName: 'overlay',
+                            editIcon: 'fa-check-circle',
+                            resultKey: this.options.resultKey,
+                            showEdit: false,
+                            showStatus: false,
+                            responsive: false,
+                            skin: 'fixed-height-small'
+                        }
+                    }
+                ]
+            );
         },
 
         startColumnNavigation: function() {
@@ -156,6 +184,7 @@ define(function() {
                     name: 'column-navigation@husky',
                     options: {
                         el: this.$find('#content-column'),
+                        instanceName: 'node',
                         selected: this.getLastSelected(),
                         resultKey: 'nodes',
                         url: this.getUrl(),
