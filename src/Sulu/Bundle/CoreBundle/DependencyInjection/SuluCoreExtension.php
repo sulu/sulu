@@ -185,8 +185,8 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
 
         // Template
         $container->setParameter(
-            'sulu.content.template.default_path',
-            $contentConfig['templates']['default_path']
+            'sulu.content.template.pathes',
+            $contentConfig['templates']['pathes']
         );
 
         $loader->load('content.xml');

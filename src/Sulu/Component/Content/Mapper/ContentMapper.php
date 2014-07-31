@@ -28,6 +28,7 @@ use Sulu\Component\Content\Mapper\Translation\MultipleTranslatedProperties;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\Section\SectionPropertyInterface;
+use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManagerInterface;
 use Sulu\Component\Content\StructureType;
@@ -146,7 +147,8 @@ class ContentMapper implements ContentMapperInterface
                 'state',
                 'template',
                 'navigation',
-                'published'
+                'published',
+                'nodeType'
             ),
             $this->languageNamespace,
             $this->internalPrefix
@@ -248,6 +250,10 @@ class ContentMapper implements ContentMapperInterface
         $node->setProperty($this->properties->getName('changer'), $userId);
         $node->setProperty($this->properties->getName('changed'), $dateTime);
 
+        if (isset($data['nodeType'])) {
+            $node->setProperty($this->properties->getName('nodeType'), $data['nodeType']);
+        }
+
         // do not state transition for root (contents) node
         $contentRootNode = $this->getContentNode($webspaceKey);
         if ($node->getPath() !== $contentRootNode->getPath() && isset($state)) {
@@ -291,7 +297,12 @@ class ContentMapper implements ContentMapperInterface
                     );
                 }
             } elseif ($property->getMandatory()) {
-                throw new MandatoryPropertyException($templateKey, $property);
+                $type = $this->getContentType($property->getContentTypeName());
+                $type->read($node, $property, $webspaceKey, $languageCode, null);
+
+                if ($property->getValue() === $type->getDefaultValue()) {
+                    throw new MandatoryPropertyException($templateKey, $property);
+                }
             } elseif (!$partialUpdate) {
                 $type = $this->getContentType($property->getContentTypeName());
                 // if it is not a partial update remove property
@@ -347,6 +358,7 @@ class ContentMapper implements ContentMapperInterface
 
         $structure->setUuid($node->getPropertyValue('jcr:uuid'));
         $structure->setPath(str_replace($this->getContentNode($webspaceKey)->getPath(), '', $node->getPath()));
+        $structure->setNodeType($node->getPropertyValueWithDefault($this->properties->getName('nodeType'), Structure::NODE_TYPE_CONTENT));
         $structure->setWebspaceKey($webspaceKey);
         $structure->setLanguageCode($languageCode);
         $structure->setCreator($node->getPropertyValue($this->properties->getName('creator')));
@@ -362,6 +374,13 @@ class ContentMapper implements ContentMapperInterface
         );
         $structure->setPublished(
             $node->getPropertyValueWithDefault($this->properties->getName('published'), null)
+        );
+
+        // load dependencies for internal links
+        $this->loadInternalLinkDependencies(
+            $structure,
+            $languageCode,
+            $webspaceKey
         );
 
         // throw an content.node.save event
@@ -904,6 +923,7 @@ class ContentMapper implements ContentMapperInterface
 
         $structure->setUuid($contentNode->getPropertyValue('jcr:uuid'));
         $structure->setPath(str_replace($this->getContentNode($webspaceKey)->getPath(), '', $contentNode->getPath()));
+        $structure->setNodeType($contentNode->getPropertyValueWithDefault($this->properties->getName('nodeType'), Structure::NODE_TYPE_CONTENT));
         $structure->setWebspaceKey($webspaceKey);
         $structure->setLanguageCode($localization);
         $structure->setCreator($contentNode->getPropertyValueWithDefault($this->properties->getName('creator'), 0));
@@ -951,11 +971,18 @@ class ContentMapper implements ContentMapperInterface
             }
         }
 
-        // save data of extensions
+        // load data of extensions
         foreach ($structure->getExtensions() as $extension) {
             $extension->setLanguageCode($localization, $this->languageNamespace, $this->internalPrefix);
             $extension->load($contentNode, $webspaceKey, $availableLocalization);
         }
+
+        $this->loadInternalLinkDependencies(
+            $structure,
+            $localization,
+            $webspaceKey,
+            $loadGhostContent
+        );
 
         // throw an content.node.load event (disabled for now)
         //$event = new ContentNodeEvent($contentNode, $structure);
@@ -966,6 +993,35 @@ class ContentMapper implements ContentMapperInterface
         }
 
         return $structure;
+    }
+
+    /**
+     * loads dependencies for internal links
+     * @param StructureInterface $content
+     * @param string $localization
+     * @param string $webspaceKey
+     * @param bool $loadGhostContent
+     */
+    private function loadInternalLinkDependencies(
+        StructureInterface $content,
+        $localization,
+        $webspaceKey,
+        $loadGhostContent = false
+    ) {
+        if ($content->getNodeType() === Structure::NODE_TYPE_INTERNAL_LINK && $content->hasTag('sulu.rlp')) {
+            $internal = $content->getPropertyValueByTagName('sulu.rlp');
+
+            if (!empty($internal)) {
+                $content->setInternalLinkContent(
+                    $this->load(
+                        $internal,
+                        $webspaceKey,
+                        $localization,
+                        $loadGhostContent
+                    )
+                );
+            }
+        }
     }
 
     /**
@@ -1131,6 +1187,9 @@ class ContentMapper implements ContentMapperInterface
         }
     }
 
+    /**
+     * calculates publich state of node
+     */
     private function getInheritedState(NodeInterface $contentNode, $statePropertyName, $webspaceKey)
     {
         // index page is default PUBLISHED
