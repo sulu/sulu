@@ -36,9 +36,13 @@ sulu_core:
         password: admin
     content:
         templates:
-            default_path: %kernel.root_dir%/../Resources/templates
+             paths:
+                 app:
+                     path: %kernel.root_dir%/../Resources/templates
+                     internal: false
     webspace:
-        ~
+        request_analyzer:
+            enabled: false
 
 sulu_admin:
     name: SULU 2.0

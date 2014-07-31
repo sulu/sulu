@@ -34,6 +34,10 @@ sulu_content.excerpt:
     pattern: /template/content/excerpt.html
     defaults: { _controller: SuluContentBundle:Template:excerpt }
 
+sulu_content.template.settings:
+    pattern: /template/content/settings.html
+    defaults: { _controller: SuluContentBundle:Template:settings }
+
 # Preview
 sulu_content.preview.changes:
     pattern: /preview/{contentUuid}.json
@@ -49,7 +53,3 @@ sulu_content.preview.update:
     pattern: /preview/{contentUuid}
     methods: POST
     defaults: { _controller: SuluContentBundle:Preview:update }
-
-sulu_content.template.settings:
-    pattern: /template/content/settings.html
-    defaults: { _controller: SuluContentBundle:Template:settings }

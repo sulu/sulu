@@ -7,9 +7,27 @@
  * with this source code in the file LICENSE.
  */
 
-define([], function() {
+define(['app-config'], function(AppConfig) {
 
     'use strict';
+
+    /**
+     * node type constant for content
+     * @type {number}
+     */
+    var TYPE_CONTENT = 1,
+
+        /**
+         * node type constant for internal
+         * @type {number}
+         */
+        TYPE_INTERNAL = 2,
+
+        /**
+         * node type constant for external
+         * @type {number}
+         */
+        TYPE_EXTERNAL = 4;
 
     return {
 
@@ -35,6 +53,12 @@ define([], function() {
             this.sandbox.on('sulu.header.toolbar.save', function() {
                 this.submit();
             }, this);
+
+            // content saved
+            this.sandbox.on('sulu.content.contents.saved', function() {
+                // FIXME better solution?
+                window.location.reload();
+            }, this);
         },
 
         load: function() {
@@ -53,8 +77,14 @@ define([], function() {
         },
 
         setData: function(data) {
-            if (this.options.id === 'index') {
-                this.sandbox.dom.remove('#show-in-navigation-container');
+            var type = parseInt(data.nodeType);
+
+            if (type === TYPE_CONTENT) {
+                this.sandbox.dom.attr('#content-node-type', 'checked', true);
+            } else if (type === TYPE_EXTERNAL) {
+                this.sandbox.dom.attr('#internal-link-node-type', 'checked', true);
+            } else if (type === TYPE_EXTERNAL) {
+                this.sandbox.dom.attr('#external-link-node-type', 'checked', true);
             }
 
             this.sandbox.dom.attr('#show-in-navigation', 'checked', data.navigation);
@@ -76,9 +106,10 @@ define([], function() {
             var data = {};
 
             data.navigation = this.sandbox.dom.prop('#show-in-navigation', 'checked');
+            data.nodeType = parseInt(this.sandbox.dom.val('input[name="nodeType"]:checked'));
 
             this.data = this.sandbox.util.extend(true, {}, this.data, data);
-            this.sandbox.emit('sulu.content.contents.save', this.data);
+            this.sandbox.emit('sulu.content.contents.save', this.data, (data.nodeType === TYPE_INTERNAL ? 'internal-link' : data.nodeType === TYPE_EXTERNAL ? 'external-link' : AppConfig.getSection('sulu-content')['defaultTemplate']));
         }
     };
 });
