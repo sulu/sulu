@@ -286,6 +286,19 @@ class Import
     }
 
     /**
+     * Deletes all translation packages
+     */
+    public function resetPackages()
+    {
+        // load the given package and catalogue
+        $packages = $this->em->getRepository('SuluTranslateBundle:Package')->findAll();
+        foreach ($packages as $package) {
+            $this->em->remove($package);
+        }
+        $this->em->flush();
+    }
+
+    /**
      * Executes the import. Imports a single file
      * @param boolean $backend True to make translations available in the backend
      * @param boolean $frontend True to make translations available in the frontend
@@ -312,18 +325,9 @@ class Import
     public function executeFromBundles($backend = true, $frontend = true)
     {
         foreach ($this->kernel->getBundles() as $bundle) {
-            $hasTranslations = true;
-            $pathToTranslations = '';
+            $pathToTranslations = $bundle->getPath() . '/' . $this->path;
 
-            try {
-                $pathToTranslations = $this->kernel->locateResource(
-                    '@' . $bundle->getName() . '/' . $this->path
-                );
-            } catch (\InvalidArgumentException $e) {
-                $hasTranslations = false;
-            }
-
-            if ($hasTranslations === true) {
+            if (is_dir($pathToTranslations)) {
                 $this->importBundle($bundle, $pathToTranslations, $backend, $frontend);
             }
         }

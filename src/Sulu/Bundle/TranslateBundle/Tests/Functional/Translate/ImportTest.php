@@ -37,27 +37,26 @@ class ImportTest extends DatabaseTestCase
     {
         $this->setUpSchema();
 
-        $hikaruBundle = $this->getMock('Symfony\Component\HttpKernel\Bundle', array('getName'));
+        $hikaruBundle = $this->getMock('Symfony\Component\HttpKernel\Bundle', array('getName', 'getPath'));
         $hikaruBundle->expects($this->any())
             ->method('getName')
             ->will($this->returnValue('SuluHikaruBundle'));
+        $hikaruBundle->expects($this->any())
+            ->method('getPath')
+            ->will($this->returnValue(self::$fixturePath . '/bundles/SuluHikaruBundle'));
 
-        $sampleBundle = $this->getMock('Symfony\Component\HttpKernel\Bundle', array('getName'));
+        $sampleBundle = $this->getMock('Symfony\Component\HttpKernel\Bundle', array('getName', 'getPath'));
         $sampleBundle->expects($this->any())
             ->method('getName')
             ->will($this->returnValue('SuluSampleBundle'));
+        $sampleBundle->expects($this->any())
+            ->method('getPath')
+            ->will($this->returnValue(self::$fixturePath . '/bundles/SuluSampleBundle'));
 
         $kernel = $this->getMock('Symfony\Component\HttpKernel\KernelInterface');
-
         $kernel->expects($this->any())
             ->method('getBundles')
             ->will($this->returnValue(array($sampleBundle, $hikaruBundle)));
-
-        $kernel->expects($this->any())
-            ->method('locateResource')
-            ->will($this->returnCallback(function($bundlePath) {
-                return str_replace('@', self::$fixturePath.'/bundles/', $bundlePath);
-            }));
 
 
         $this->import = new Import(self::$em, $kernel);
@@ -352,5 +351,29 @@ class ImportTest extends DatabaseTestCase
         $this->assertEquals('Hikaru Frontend import 2', $translations[7]->getValue());
         $this->assertEquals('hikaru.frontend.test2', $translations[7]->getCode()->getCode());
         $this->assertEquals(2, $translations[7]->getCatalogue()->getId());
+    }
+
+    public function testResetPackages()
+    {
+        $this->import->setFormat(Import::XLIFF);
+        $this->import->setLocale('en');
+        $this->import->setFrontendDomain('frontend');
+        $this->import->setBackendDomain('backend');
+        $this->import->setPath('Resources/translations/sulu');
+        $this->import->executeFromBundles();
+
+        $this->import->resetPackages();
+
+        $packages = self::$em->getRepository('SuluTranslateBundle:Package')->findAll();
+        $this->assertEquals(0, count($packages));
+
+        $catalogues = self::$em->getRepository('SuluTranslateBundle:Catalogue')->findAll();
+        $this->assertEquals(0, count($catalogues));
+
+        $codes = self::$em->getRepository('SuluTranslateBundle:Code')->findAll();
+        $this->assertEquals(0, count($codes));
+
+        $translations = self::$em->getRepository('SuluTranslateBundle:Translation')->findAll();
+        $this->assertEquals(0, count($translations));
     }
 }
