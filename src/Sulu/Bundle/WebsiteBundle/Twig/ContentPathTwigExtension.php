@@ -11,6 +11,8 @@
 namespace Sulu\Bundle\WebsiteBundle\Twig;
 
 use Sulu\Bundle\WebsiteBundle\Navigation\NavigationItem;
+use Sulu\Component\Content\Mapper\ContentMapperInterface;
+use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 
@@ -25,8 +27,14 @@ class ContentPathTwigExtension extends \Twig_Extension
      */
     private $requestAnalyzer;
 
-    function __construct(RequestAnalyzerInterface $requestAnalyzer = null)
+    /**
+     * @var ContentMapperInterface
+     */
+    private $contentMapper;
+
+    function __construct(ContentMapperInterface $contentMapper, RequestAnalyzerInterface $requestAnalyzer = null)
     {
+        $this->contentMapper = $contentMapper;
         $this->requestAnalyzer = $requestAnalyzer;
     }
 
@@ -51,13 +59,13 @@ class ContentPathTwigExtension extends \Twig_Extension
         if ($item instanceof NavigationItem) {
             $rl = $item->getUrl();
         } elseif ($item instanceof StructureInterface) {
-            $rl = $item->url;
+            $rl = $item->getResourceLocator();
         } elseif (isset($item['url'])) {
             $rl = $item['url'];
         } else {
             $rl = '/';
         }
-        if ($this->requestAnalyzer !== null) {
+        if ($this->requestAnalyzer !== null && $item->getNodeType() !== Structure::NODE_TYPE_EXTERNAL_LINK) {
             return $this->requestAnalyzer->getCurrentResourceLocatorPrefix() . $rl;
         } else {
             return $rl;
