@@ -42,6 +42,10 @@
                 <source>labels.success.category-save-error</source>
                 <target>Beim Speichern der Kategorie ist ein Fehler aufgetreten</target>
             </trans-unit>
+            <trans-unit id="143d99fa2864553633a5ca2169f22236" resname="sulu.category.no-categories-available">
+                <source>sulu.category.no-categories-available</source>
+                <target>Keine Kategorien verfügbar</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
