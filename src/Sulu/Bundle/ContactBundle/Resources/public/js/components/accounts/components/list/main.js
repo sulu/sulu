@@ -266,8 +266,7 @@ define([
                                     }.bind(this)
                                 }
                             ],
-                            highlightSelected: true,
-                            fullWidth: true
+                            highlightSelected: true
                         }
                     }
                 });
