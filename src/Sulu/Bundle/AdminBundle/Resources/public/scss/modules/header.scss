@@ -97,11 +97,11 @@
     // add top space to the content-container beneath the header
     & + .page {
       margin-top: $headerHeight;
-      padding-bottom: $headerHeight + $contentPaddingTop
+      padding-bottom: $headerHeight
     }
     &.has-tabs + .page {
       margin-top: $headerHeight + $tabsHeight;
-      padding-bottom: $headerHeight + $contentPaddingTop + $tabsHeight;
+      padding-bottom: $headerHeight + $tabsHeight;
     }
 }
 
