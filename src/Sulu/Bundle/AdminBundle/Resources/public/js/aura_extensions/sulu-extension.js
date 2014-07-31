@@ -258,7 +258,7 @@
                             matchings: data,
                             viewOptions: {
                                 table: {
-                                    noItemsText: this.sandbox.translate('public.empty-list')
+                                    noItemsText: 'public.empty-list'
                                 }
                             }
                         },

@@ -29041,7 +29041,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                 }.bind(this));
             } else {
                 this.sandbox.dom.append(this.$el, this.sandbox.util.template(templates.empty)({
-                    text: this.options.noItemsText
+                    text: this.sandbox.translate(this.options.noItemsText)
                 }));
             }
         },
