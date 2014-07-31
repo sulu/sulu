@@ -27,22 +27,22 @@ class LoadMediaTypes extends AbstractFixture implements OrderedFixtureInterface
         $metadata = $manager->getClassMetaData(get_class($mediaDocument));
         $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
 
-        $mediaDocument->setName('media.document');
+        $mediaDocument->setName('document');
         $manager->persist($mediaDocument);
 
         $mediaImage = new MediaType();
         $mediaImage->setId(2);
-        $mediaImage->setName('media.image');
+        $mediaImage->setName('image');
         $manager->persist($mediaImage);
 
         $mediaVideo = new MediaType();
         $mediaVideo->setId(3);
-        $mediaVideo->setName('media.video');
+        $mediaVideo->setName('video');
         $manager->persist($mediaVideo);
 
         $mediaAudio = new MediaType();
         $mediaAudio->setId(4);
-        $mediaAudio->setName('media.audio');
+        $mediaAudio->setName('audio');
         $manager->persist($mediaAudio);
 
         $manager->flush();
