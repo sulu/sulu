@@ -35,7 +35,13 @@ define(function() {
             toggler: [
                 '<div id="show-ghost-pages"></div>',
                 '<label class="inline spacing-left" for="show-ghost-pages"><%= label %></label>'
-            ].join('')
+            ].join(''),
+
+            columnNavigation: function() {
+                return[
+                    '<div id="child-column-navigation"/>',
+                ].join('');
+            }
         };
 
     return {
@@ -105,6 +111,34 @@ define(function() {
         },
 
         moveSelected: function() {
+            var $element = this.sandbox.dom.createElement('<div class="move-container"/>');
+
+            this.sandbox.dom.append(this.$el, $element);
+            this.sandbox.start([
+                {
+                    name: 'overlay@husky',
+                    options: {
+                        openOnStart: true,
+                        removeOnClose: true,
+                        cssClass: 'single-internal-overlay',
+                        el: $element,
+                        container: this.$el,
+                        instanceName: 'move',
+                        skin: 'wide',
+                        slides: [
+                            {
+                                title: this.sandbox.translate('content.contents.settings.move.title'),
+                                data: templates.columnNavigation(),
+                                buttons: [
+                                    {
+                                        type: 'cancel'
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]);
         },
 
         copySelected: function() {
