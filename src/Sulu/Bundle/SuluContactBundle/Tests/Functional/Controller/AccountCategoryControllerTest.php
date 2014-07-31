@@ -129,6 +129,8 @@ class AccountCategoryControllerTest extends DatabaseTestCase
 
     public function testPostNonUniqueName()
     {
+        $this->setExpectedException('Doctrine\DBAL\DBALException');
+
         $client = $this->createTestClient();
         $client->request(
             'POST',
@@ -212,7 +214,7 @@ class AccountCategoryControllerTest extends DatabaseTestCase
         $client = $this->createTestClient();
         $client->request(
             'PUT',
-            'api/account/100/category',
+            'api/accounts/100/category',
             array(
                 'category' => 'Nebensitz 3'
             )
@@ -322,7 +324,7 @@ class AccountCategoryControllerTest extends DatabaseTestCase
         $client = $this->createTestClient();
         $client->request(
             'PATCH',
-            'api/accounts/1/category/999',
+            'api/account/categories',
             array(
                 array(
                     'id' => 1,
