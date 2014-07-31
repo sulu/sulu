@@ -255,7 +255,12 @@
                         gridDefaults = {
                             view: 'table',
                             pagination: 'dropdown',
-                            matchings: data
+                            matchings: data,
+                            viewOptions: {
+                                table: {
+                                    noItemsText: this.sandbox.translate('public.empty-list')
+                                }
+                            }
                         },
                         gridOptions = this.sandbox.util.extend(true, {}, gridDefaults, datagridOptions);
 
