@@ -218,6 +218,12 @@
   margin: 0px;
 }
 
+/* smart content for column view */
+/* line 41, ../scss/modules/general.scss */
+.column-navigation-wrapper {
+  overflow: inherit;
+}
+
 /* line 1, ../scss/modules/seo.scss */
 .seo-excerpt {
   background: #fff;

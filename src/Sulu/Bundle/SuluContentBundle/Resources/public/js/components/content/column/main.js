@@ -83,10 +83,22 @@ define(function() {
                         selected: this.getLastSelected(),
                         resultKey: 'nodes',
                         url: this.getUrl(),
-                        data:[
+                        data: [
                             {
                                 id: 1,
-                                name: this.sandbox.translate('asdf')
+                                name: this.sandbox.translate('content.contents.settings.delete')
+                            },
+                            {
+                                id: 2,
+                                divider: true
+                            },
+                            {
+                                id: 3,
+                                name: this.sandbox.translate('content.contents.settings.move')
+                            },
+                            {
+                                id: 4,
+                                name: this.sandbox.translate('content.contents.settings.copy')
                             }
                         ]
                     }
