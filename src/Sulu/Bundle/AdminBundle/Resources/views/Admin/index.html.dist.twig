@@ -12,7 +12,7 @@
 
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
-        <link rel="stylesheet" href="/bundles/suluadmin/dist/app.min.1406792687254.css">
+        <link rel="stylesheet" href="/bundles/suluadmin/dist/app.min.1406798400517.css">
 
         <link rel="stylesheet" type="text/css" href="/bundles/suluadmin/css/main.css"/>
         <link rel="stylesheet" type="text/css" href="/bundles/sulutranslate/css/main.css"/>
@@ -36,13 +36,15 @@
             ></div>
 
             <div class="content-column fixed">
-                <main class="grid" id="content" data-aura-component="app@suluadmin" data-aura-user="{{ user| json_encode }}"></main>
-                <div id="labels-container" data-aura-component="labels@suluadmin"></div>
+                <div class="page">
+                    <main class="grid" id="content" data-aura-component="app@suluadmin" data-aura-user="{{ user| json_encode }}"></main>
+                </div>
             </div>
             <div class="sidebar-column max">
                 <aside id="sidebar" data-aura-component="sidebar@suluadmin"></aside>
             </div>
         </div>
+        <div id="labels-container" data-aura-component="labels@suluadmin"></div>
         <div id="overlayContainer" data-aura-component="overlay@suluadmin"></div>
 
         <script type="text/javascript">
@@ -63,7 +65,7 @@
             var CKEDITOR_BASEPATH = '/bundles/suluadmin/js/vendor/husky/vendor/ckeditor/';
         </script>
 
-        <script data-main="/bundles/suluadmin/dist/app.min.1406792687254" src="/bundles/suluadmin/js/vendor/husky/husky.min.js"></script>
+        <script data-main="/bundles/suluadmin/dist/app.min.1406798400517" src="/bundles/suluadmin/js/vendor/husky/husky.min.js"></script>
 
     </body>
 </html>
