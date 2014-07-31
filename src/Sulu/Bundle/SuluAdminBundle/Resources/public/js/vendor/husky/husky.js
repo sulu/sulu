@@ -28679,7 +28679,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             }
             // remove inline-styles
             this.sandbox.dom.removeAttr(this.$el, 'style');
-            this.sandbox.dom.remove(this.$tableContainer);
+            this.sandbox.dom.empty(this.$el);
         },
 
         /**
