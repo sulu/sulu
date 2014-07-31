@@ -5555,61 +5555,60 @@ fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset
 
 /* line 6, ../scss/modules/overlay.scss */
 .husky-overlay-container {
-  width: 402px;
+  width: 400px;
   position: fixed;
   top: 0;
   left: 50%;
   background-color: white;
-  border: 1px solid #999999;
   z-index: 1000;
   border-radius: 3px;
   -webkit-box-shadow: rgba(0, 0, 0, 0.08) 3px 3px 0px 0px;
   -moz-box-shadow: rgba(0, 0, 0, 0.08) 3px 3px 0px 0px;
   box-shadow: rgba(0, 0, 0, 0.08) 3px 3px 0px 0px;
 }
-/* line 17, ../scss/modules/overlay.scss */
+/* line 16, ../scss/modules/overlay.scss */
 .husky-overlay-container.right-aligned {
   left: auto;
   right: 0;
 }
-/* line 22, ../scss/modules/overlay.scss */
+/* line 21, ../scss/modules/overlay.scss */
 .husky-overlay-container.overflow-hidden {
   /* FIXME select in slides hidden */
   overflow: hidden;
 }
-/* line 27, ../scss/modules/overlay.scss */
+/* line 26, ../scss/modules/overlay.scss */
 .husky-overlay-container.wide {
-  width: 602px;
+  width: 600px;
 }
-/* line 30, ../scss/modules/overlay.scss */
+/* line 29, ../scss/modules/overlay.scss */
 .husky-overlay-container.wide .slides .slide {
   width: 600px;
 }
-/* line 35, ../scss/modules/overlay.scss */
+/* line 34, ../scss/modules/overlay.scss */
 .husky-overlay-container.medium {
-  width: 462px;
+  width: 460px;
 }
-/* line 38, ../scss/modules/overlay.scss */
+/* line 37, ../scss/modules/overlay.scss */
 .husky-overlay-container.medium .slides .slide {
   width: 460px;
 }
-/* line 43, ../scss/modules/overlay.scss */
+/* line 42, ../scss/modules/overlay.scss */
 .husky-overlay-container.dropzone {
-  width: 702px;
+  width: 700px;
 }
-/* line 45, ../scss/modules/overlay.scss */
+/* line 44, ../scss/modules/overlay.scss */
 .husky-overlay-container.dropzone .slides .slide {
-  width: 702px;
+  width: 700px;
 }
-/* line 48, ../scss/modules/overlay.scss */
+/* line 47, ../scss/modules/overlay.scss */
 .husky-overlay-container.dropzone .overlay-content {
   margin-bottom: 20px;
 }
-/* line 51, ../scss/modules/overlay.scss */
+/* line 50, ../scss/modules/overlay.scss */
 .husky-overlay-container.dropzone .overlay-footer {
   display: none;
 }
-/* line 57, ../scss/modules/overlay.scss */
+/* line 56, ../scss/modules/overlay.scss */
 .husky-overlay-container .draggable .overlay-header {
   cursor: move;
   user-select: none;
@@ -5618,24 +5617,24 @@ fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset
   -ms-user-select: none;
   -o-user-select: none;
 }
-/* line 64, ../scss/modules/overlay.scss */
+/* line 63, ../scss/modules/overlay.scss */
 .husky-overlay-container.error .overlay-header {
   background: #ea524e;
   color: white;
 }
-/* line 67, ../scss/modules/overlay.scss */
+/* line 66, ../scss/modules/overlay.scss */
 .husky-overlay-container.error .overlay-header .title {
   color: black;
 }
-/* line 74, ../scss/modules/overlay.scss */
+/* line 73, ../scss/modules/overlay.scss */
 .husky-overlay-container.warning .overlay-header {
   background: #f2d212;
 }
-/* line 76, ../scss/modules/overlay.scss */
+/* line 75, ../scss/modules/overlay.scss */
 .husky-overlay-container.warning .overlay-header .title {
   color: black;
 }
-/* line 82, ../scss/modules/overlay.scss */
+/* line 81, ../scss/modules/overlay.scss */
 .husky-overlay-container .slides {
   position: relative;
   left: 0px;
@@ -5644,20 +5643,20 @@ fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset
   -o-transition: left 500ms;
   transition: left 500ms;
 }
-/* line 87, ../scss/modules/overlay.scss */
+/* line 86, ../scss/modules/overlay.scss */
 .husky-overlay-container .slides .slide {
   float: left;
   width: 400px;
 }
 
-/* line 94, ../scss/modules/overlay.scss */
+/* line 93, ../scss/modules/overlay.scss */
 .overlay-header {
   min-height: 50px;
   background: #efefef;
   position: relative;
   border-radius: 3px 3px 0 0;
 }
-/* line 100, ../scss/modules/overlay.scss */
+/* line 99, ../scss/modules/overlay.scss */
 .overlay-header .title {
   color: #999999;
   font-size: 23px;
@@ -5665,7 +5664,7 @@ fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset
   display: block;
   padding: 15px 40px 10px 20px;
 }
-/* line 108, ../scss/modules/overlay.scss */
+/* line 107, ../scss/modules/overlay.scss */
 .overlay-header .close-button {
   position: absolute;
   top: 0px;
@@ -5676,25 +5675,25 @@ fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset
   line-height: 12px;
   padding: 8px;
 }
-/* line 119, ../scss/modules/overlay.scss */
+/* line 118, ../scss/modules/overlay.scss */
 .overlay-header .tabs {
   display: inline-block;
 }
-/* line 123, ../scss/modules/overlay.scss */
+/* line 122, ../scss/modules/overlay.scss */
 .overlay-header .language-changer {
   width: 80px;
   position: absolute;
   bottom: 10px;
   right: 20px;
 }
-/* line 130, ../scss/modules/overlay.scss */
+/* line 129, ../scss/modules/overlay.scss */
 .overlay-header.small-header {
   background: transparent;
   min-height: 0;
   height: 25px;
 }
 
-/* line 137, ../scss/modules/overlay.scss */
+/* line 136, ../scss/modules/overlay.scss */
 .overlay-footer {
   padding: 10px;
   border-top: 1px solid #cccccc;
@@ -5707,58 +5706,58 @@ fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset
   content: ' ';
   display: block;
 }
-/* line 144, ../scss/modules/overlay.scss */
+/* line 143, ../scss/modules/overlay.scss */
 .overlay-footer .btn {
   display: inline-block;
   min-width: 70px;
   margin: 0 auto;
   padding: 0;
 }
-/* line 150, ../scss/modules/overlay.scss */
+/* line 149, ../scss/modules/overlay.scss */
 .overlay-footer .btn.tick {
   width: 70px;
   line-height: 28px;
 }
-/* line 155, ../scss/modules/overlay.scss */
+/* line 154, ../scss/modules/overlay.scss */
 .overlay-footer .btn.left {
   float: left;
   margin-right: 20px;
   margin-right: 0;
 }
-/* line 160, ../scss/modules/overlay.scss */
+/* line 159, ../scss/modules/overlay.scss */
 .overlay-footer .btn.right {
   float: right;
   margin-left: 20px;
   margin-right: 0;
 }
-/* line 167, ../scss/modules/overlay.scss */
+/* line 166, ../scss/modules/overlay.scss */
 .overlay-footer.center .btn {
   margin: 0 auto;
 }
-/* line 171, ../scss/modules/overlay.scss */
+/* line 170, ../scss/modules/overlay.scss */
 .overlay-footer.left .btn {
   float: left;
   margin-right: 20px;
 }
-/* line 176, ../scss/modules/overlay.scss */
+/* line 175, ../scss/modules/overlay.scss */
 .overlay-footer.right .btn {
   float: right;
   margin-left: 20px;
 }
 
-/* line 182, ../scss/modules/overlay.scss */
+/* line 181, ../scss/modules/overlay.scss */
 .overlay-content {
   padding-left: 0;
   margin: 0 20px 10px 20px;
 }
-/* line 186, ../scss/modules/overlay.scss */
+/* line 185, ../scss/modules/overlay.scss */
 .overlay-content .message {
   padding: 20px 0 25px 0;
   font-size: 16px;
   color: #999999;
 }
 
-/* line 193, ../scss/modules/overlay.scss */
+/* line 192, ../scss/modules/overlay.scss */
 .husky-overlay-backdrop {
   width: 100%;
   height: 100%;
@@ -6207,16 +6206,15 @@ hr.divider.small {
 /* line 24, ../scss/modules/form.scss */
 .form-element[readonly], [readonly].husky-input {
   background: none;
-  border: 0;
   color: #999999;
 }
 
-/* line 33, ../scss/modules/form.scss */
+/* line 32, ../scss/modules/form.scss */
 input[type="text"].input-round {
   border-radius: 30px;
 }
 
-/* line 39, ../scss/modules/form.scss */
+/* line 38, ../scss/modules/form.scss */
 input
 .input-description {
   margin-top: -5px;
@@ -6224,31 +6222,31 @@ input
   color: #999999;
 }
 
-/* line 45, ../scss/modules/form.scss */
+/* line 44, ../scss/modules/form.scss */
 .input-placeholder-style, input::-webkit-input-placeholder, input:-moz-placeholder, input ::-moz-placeholder, input :-ms-input-placeholder {
   color: #999999;
   font-weight: normal;
 }
 
-/* line 57, ../scss/modules/form.scss */
+/* line 56, ../scss/modules/form.scss */
 input ::-moz-placeholder {
   /* Firefox 19+ */
 }
 
-/* line 73, ../scss/modules/form.scss */
+/* line 72, ../scss/modules/form.scss */
 .form-group,
 .form-group-vertical,
 .form-vertical .form-group {
   min-height: 30px;
 }
-/* line 76, ../scss/modules/form.scss */
+/* line 75, ../scss/modules/form.scss */
 .form-group > :first-child,
 .form-group-vertical > :first-child,
 .form-vertical .form-group > :first-child {
   height: 20px;
   margin-bottom: 10px;
 }
-/* line 81, ../scss/modules/form.scss */
+/* line 80, ../scss/modules/form.scss */
 .form-group > :nth-child(2),
 .form-group-vertical > :nth-child(2),
 .form-vertical .form-group > :nth-child(2) {
@@ -6256,34 +6254,34 @@ input ::-moz-placeholder {
   vertical-align: middle;
 }
 
-/* line 89, ../scss/modules/form.scss */
+/* line 88, ../scss/modules/form.scss */
 .form-horizontal .form-group {
   display: table;
   table-layout: fixed;
   width: 100%;
 }
-/* line 95, ../scss/modules/form.scss */
+/* line 94, ../scss/modules/form.scss */
 .form-horizontal .form-group > * {
   display: table-cell;
 }
-/* line 99, ../scss/modules/form.scss */
+/* line 98, ../scss/modules/form.scss */
 .form-horizontal .form-group > :first-child {
   text-align: right;
   vertical-align: middle;
   padding-right: 20px;
   width: 140px;
 }
-/* line 106, ../scss/modules/form.scss */
+/* line 105, ../scss/modules/form.scss */
 .form-horizontal .form-group label.top {
   vertical-align: top;
   padding-top: 5px;
 }
-/* line 111, ../scss/modules/form.scss */
+/* line 110, ../scss/modules/form.scss */
 .form-horizontal .form-group > :nth-child(2) {
   width: 100%;
 }
 
-/* line 121, ../scss/modules/form.scss */
+/* line 120, ../scss/modules/form.scss */
 label {
   display: block;
   font-size: 14px;
@@ -6291,33 +6289,33 @@ label {
   cursor: pointer;
   white-space: nowrap;
 }
-/* line 128, ../scss/modules/form.scss */
+/* line 127, ../scss/modules/form.scss */
 label.large {
   font-size: 16px;
   font-weight: bold;
 }
-/* line 133, ../scss/modules/form.scss */
+/* line 132, ../scss/modules/form.scss */
 label .form-element, label .husky-input {
   margin-top: 5px;
   border: 1px solid #cccccc;
 }
-/* line 138, ../scss/modules/form.scss */
+/* line 137, ../scss/modules/form.scss */
 label.inline {
   font-size: 1em;
   font-weight: normal;
   display: inline;
   vertical-align: middle;
 }
-/* line 144, ../scss/modules/form.scss */
+/* line 143, ../scss/modules/form.scss */
 label.spacing-right {
   margin-right: 10px;
 }
-/* line 147, ../scss/modules/form.scss */
+/* line 146, ../scss/modules/form.scss */
 label.spacing-left {
   margin-left: 10px;
 }
 
-/* line 154, ../scss/modules/form.scss */
+/* line 153, ../scss/modules/form.scss */
 .custom-checkbox {
   width: 15px;
   height: 15px;
@@ -6327,12 +6325,12 @@ label.spacing-left {
   display: inline-block;
   margin: 0 5px 0 0;
 }
-/* line 166, ../scss/modules/form.scss */
+/* line 165, ../scss/modules/form.scss */
 .custom-checkbox.no-spacing {
   top: 0;
   margin: 0;
 }
-/* line 171, ../scss/modules/form.scss */
+/* line 170, ../scss/modules/form.scss */
 .custom-checkbox input {
   opacity: 0;
   width: 15px;
@@ -6345,20 +6343,20 @@ label.spacing-left {
   padding: 0;
   cursor: pointer;
 }
-/* line 185, ../scss/modules/form.scss */
+/* line 184, ../scss/modules/form.scss */
 .custom-checkbox input:checked + .icon, .custom-checkbox input.is-checked + .icon {
   border-color: #5dc774;
   background-color: #5dc774;
   color: white;
 }
-/* line 189, ../scss/modules/form.scss */
+/* line 188, ../scss/modules/form.scss */
 .custom-checkbox input:checked + .icon::after, .custom-checkbox input.is-checked + .icon::after {
   display: inline-block;
   margin-top: -1px;
   margin-left: -1px;
   content: "\f00c";
 }
-/* line 199, ../scss/modules/form.scss */
+/* line 198, ../scss/modules/form.scss */
 .custom-checkbox input + .icon {
   position: absolute;
   top: 0px;
@@ -6376,27 +6374,27 @@ label.spacing-left {
   border-radius: 2px;
 }
 
-/* line 224, ../scss/modules/form.scss */
+/* line 223, ../scss/modules/form.scss */
 textarea {
   resize: both;
 }
 
-/* line 228, ../scss/modules/form.scss */
+/* line 227, ../scss/modules/form.scss */
 textarea.vertical {
   resize: vertical;
 }
 
-/* line 232, ../scss/modules/form.scss */
+/* line 231, ../scss/modules/form.scss */
 textarea.horizontal {
   resize: horizontal;
 }
 
-/* line 236, ../scss/modules/form.scss */
+/* line 235, ../scss/modules/form.scss */
 textarea.noResize {
   resize: none;
 }
 
-/* line 240, ../scss/modules/form.scss */
+/* line 239, ../scss/modules/form.scss */
 textarea.form-element, textarea.husky-input {
   width: 100%;
   height: 40px;
@@ -6405,14 +6403,14 @@ textarea.form-element, textarea.husky-input {
   font-size: 14px;
   font-family: inherit;
 }
-/* line 247, ../scss/modules/form.scss */
+/* line 246, ../scss/modules/form.scss */
 textarea.form-element.small, textarea.small.husky-input {
   height: 70px;
   min-height: 70px;
   padding: 5px;
 }
 
-/* line 256, ../scss/modules/form.scss */
+/* line 255, ../scss/modules/form.scss */
 .custom-radio {
   width: 15px;
   height: 15px;
@@ -6422,12 +6420,12 @@ textarea.form-element.small, textarea.small.husky-input {
   display: inline-block;
   margin: 0 5px 0 0;
 }
-/* line 266, ../scss/modules/form.scss */
+/* line 265, ../scss/modules/form.scss */
 .custom-radio.no-spacing {
   top: 0;
   margin: 0;
 }
-/* line 271, ../scss/modules/form.scss */
+/* line 270, ../scss/modules/form.scss */
 .custom-radio input {
   width: 15px;
   height: 15px;
@@ -6440,11 +6438,11 @@ textarea.form-element.small, textarea.small.husky-input {
   margin: 0;
   padding: 0;
 }
-/* line 285, ../scss/modules/form.scss */
+/* line 284, ../scss/modules/form.scss */
 .custom-radio input:checked + .icon, .custom-radio input.is-checked + .icon {
   border-color: white;
 }
-/* line 288, ../scss/modules/form.scss */
+/* line 287, ../scss/modules/form.scss */
 .custom-radio input:checked + .icon::after, .custom-radio input.is-checked + .icon::after {
   content: "";
   display: block;
@@ -6453,7 +6451,7 @@ textarea.form-element.small, textarea.small.husky-input {
   border-radius: 15px;
   background-color: #5dc774;
 }
-/* line 299, ../scss/modules/form.scss */
+/* line 298, ../scss/modules/form.scss */
 .custom-radio input + .icon {
   display: block;
   position: absolute;
@@ -6469,23 +6467,23 @@ textarea.form-element.small, textarea.small.husky-input {
   margin: 0;
 }
 
-/* line 321, ../scss/modules/form.scss */
+/* line 320, ../scss/modules/form.scss */
 .cke.cke_chrome {
   box-shadow: none !important;
   border: 0 !important;
 }
-/* line 326, ../scss/modules/form.scss */
+/* line 325, ../scss/modules/form.scss */
 .cke .cke_inner {
   border: 1px solid #cccccc !important;
 }
-/* line 330, ../scss/modules/form.scss */
+/* line 329, ../scss/modules/form.scss */
 .cke .cke_inner,
 .cke .cke_wysiwyg_frame {
   border-bottom-left-radius: 3px !important;
   border-bottom-right-radius: 3px !important;
 }
 
-/* line 338, ../scss/modules/form.scss */
+/* line 337, ../scss/modules/form.scss */
 span.error {
   font-size: 14px;
   color: #ea524e;
@@ -7385,70 +7383,72 @@ table {
 }
 /* line 19, ../scss/modules/btns.scss */
 .btn.only-icon {
-  padding-left: 12px;
-  padding-right: 12px;
+  padding-left: 0;
+  padding-right: 0;
+  text-align: center;
+  min-width: 40px;
 }
-/* line 23, ../scss/modules/btns.scss */
+/* line 25, ../scss/modules/btns.scss */
 .btn.action {
   background-color: #52b6ca;
   color: white;
 }
-/* line 27, ../scss/modules/btns.scss */
+/* line 29, ../scss/modules/btns.scss */
 .btn.action2 {
   background-color: #f2d212;
   color: white;
 }
-/* line 31, ../scss/modules/btns.scss */
+/* line 33, ../scss/modules/btns.scss */
 .btn.large {
   line-height: 40px;
   height: 40px;
 }
-/* line 35, ../scss/modules/btns.scss */
+/* line 37, ../scss/modules/btns.scss */
 .btn.small {
   font-size: 12px;
   height: 20px;
   line-height: 20px;
   border-radius: 2px;
 }
-/* line 41, ../scss/modules/btns.scss */
+/* line 43, ../scss/modules/btns.scss */
 .btn.small [class^="fa-"] {
   font-size: 10px;
 }
-/* line 44, ../scss/modules/btns.scss */
+/* line 46, ../scss/modules/btns.scss */
 .btn.small [class^="fa-"] + .text {
   font-size: 12px;
 }
-/* line 49, ../scss/modules/btns.scss */
+/* line 51, ../scss/modules/btns.scss */
 .btn.grey, .btn.gray {
   background-color: #cccccc;
   color: white;
 }
-/* line 53, ../scss/modules/btns.scss */
+/* line 55, ../scss/modules/btns.scss */
 .btn.black-text {
   color: black;
 }
-/* line 56, ../scss/modules/btns.scss */
+/* line 58, ../scss/modules/btns.scss */
 .btn.gray-dark {
   background-color: #999999;
   color: white;
 }
-/* line 60, ../scss/modules/btns.scss */
+/* line 62, ../scss/modules/btns.scss */
 .btn.black {
   background-color: black;
   color: white;
 }
-/* line 64, ../scss/modules/btns.scss */
+/* line 66, ../scss/modules/btns.scss */
 .btn.inactive {
   cursor: default;
 }
-/* line 67, ../scss/modules/btns.scss */
+/* line 69, ../scss/modules/btns.scss */
 .btn [class^="fa-"] {
   font-size: 18px;
   margin-left: -15px;
   display: inline;
   line-height: 32px;
 }
-/* line 73, ../scss/modules/btns.scss */
+/* line 75, ../scss/modules/btns.scss */
 .btn [class^="fa-"] + .text {
   font-size: 14px;
   display: inline-block;
@@ -7456,11 +7456,11 @@ table {
   margin-left: 5px;
   padding: 0;
 }
-/* line 81, ../scss/modules/btns.scss */
+/* line 83, ../scss/modules/btns.scss */
 .btn [class^="fa-"]:only-child {
   margin-left: 0;
 }
-/* line 85, ../scss/modules/btns.scss */
+/* line 87, ../scss/modules/btns.scss */
 .btn .text {
   padding: 0 8px;
 }
@@ -7468,43 +7468,43 @@ table {
 /**
 ** Buttons-classes on the bottom and should be replaced in the code with the classes above
 **/
-/* line 93, ../scss/modules/btns.scss */
+/* line 95, ../scss/modules/btns.scss */
 a.btn {
   color: #000;
   text-decoration: none;
 }
 
-/* line 98, ../scss/modules/btns.scss */
+/* line 100, ../scss/modules/btns.scss */
 .btn-large {
   padding: 0 25px;
   font-size: 18px;
   line-height: 30px;
 }
 
-/* line 104, ../scss/modules/btns.scss */
+/* line 106, ../scss/modules/btns.scss */
 .btn-black {
   background-color: #000;
   color: white;
 }
 
-/* line 109, ../scss/modules/btns.scss */
+/* line 111, ../scss/modules/btns.scss */
 .btn-highlight {
   background-color: #52b6ca;
   color: white;
 }
 
-/* line 114, ../scss/modules/btns.scss */
+/* line 116, ../scss/modules/btns.scss */
 a.btn-black, a.btn-highlight {
   color: white;
 }
 
-/* line 119, ../scss/modules/btns.scss */
+/* line 121, ../scss/modules/btns.scss */
 .btn-gray {
   background-color: #cccccc;
   color: black;
 }
 
-/* line 125, ../scss/modules/btns.scss */
+/* line 127, ../scss/modules/btns.scss */
 .addButton {
   border-radius: 3px;
   display: inline-block;
@@ -7517,7 +7517,7 @@ a.btn-black, a.btn-highlight {
   vertical-align: middle;
   cursor: pointer;
 }
-/* line 138, ../scss/modules/btns.scss */
+/* line 140, ../scss/modules/btns.scss */
 .addButton:before {
   content: "\f055";
   font-size: 10px;
@@ -9106,7 +9106,11 @@ a.btn-black, a.btn-highlight {
 .husky-datagrid tbody tr:hover .grid-icon {
   opacity: 1;
 }
-/* line 83, ../scss/modules/datagrid.scss */
+/* line 84, ../scss/modules/datagrid.scss */
+.husky-datagrid tbody tr.selected {
+  background: white;
+}
+/* line 88, ../scss/modules/datagrid.scss */
 .husky-datagrid tbody .grid-icon {
   width: 30px;
   height: 20px;
@@ -9124,15 +9128,15 @@ a.btn-black, a.btn-highlight {
   -o-transition: opacity 100ms ease-in 200ms;
   transition: opacity 100ms ease-in 200ms;
 }
-/* line 95, ../scss/modules/datagrid.scss */
+/* line 100, ../scss/modules/datagrid.scss */
 .husky-datagrid tbody .grid-icon.right {
   float: right;
 }
-/* line 101, ../scss/modules/datagrid.scss */
+/* line 106, ../scss/modules/datagrid.scss */
 .husky-datagrid .table-container {
   overflow: auto;
 }
-/* line 104, ../scss/modules/datagrid.scss */
+/* line 109, ../scss/modules/datagrid.scss */
 .husky-datagrid .table-container.overflow:after {
   content: "\f061";
   color: #cccccc;
@@ -9141,78 +9145,99 @@ a.btn-black, a.btn-highlight {
   right: -26px;
   top: 40%;
 }
-/* line 115, ../scss/modules/datagrid.scss */
+/* line 120, ../scss/modules/datagrid.scss */
 .husky-datagrid .table-container.no-head thead {
   display: none;
 }
-/* line 119, ../scss/modules/datagrid.scss */
+/* line 124, ../scss/modules/datagrid.scss */
 .husky-datagrid .table-container.no-head tbody tr:last-child {
   border-bottom: none;
 }
-/* line 126, ../scss/modules/datagrid.scss */
+/* line 131, ../scss/modules/datagrid.scss */
 .husky-datagrid .datagrid-loader {
   position: absolute;
   top: 50%;
   left: 50%;
   margin: -50px 0 0 -50px;
 }
-/* line 133, ../scss/modules/datagrid.scss */
+/* line 138, ../scss/modules/datagrid.scss */
 .husky-datagrid .dropdown-menu {
   margin-top: 5px;
 }
-/* line 136, ../scss/modules/datagrid.scss */
+/* line 141, ../scss/modules/datagrid.scss */
 .husky-datagrid .dropdown-toggle::after {
   margin-left: 12px;
 }
-/* line 140, ../scss/modules/datagrid.scss */
+/* line 145, ../scss/modules/datagrid.scss */
 .husky-datagrid.loading {
   min-height: 150px;
 }
 /* line 149, ../scss/modules/datagrid.scss */
+.husky-datagrid .empty-list {
+  text-align: center;
+  color: #cccccc;
+  padding: 20px 0;
+  border-bottom: 2px solid #cccccc;
+}
+/* line 155, ../scss/modules/datagrid.scss */
+.husky-datagrid .empty-list .icon {
+  display: block;
+  font-size: 50px;
+  padding-bottom: 5px;
+}
+/* line 160, ../scss/modules/datagrid.scss */
+.husky-datagrid .empty-list span {
+  display: block;
+}
+/* line 170, ../scss/modules/datagrid.scss */
 .husky-datagrid.fullwidth th:first-child,
 .husky-datagrid.fullwidth td:first-child {
   padding-left: 50px;
 }
-/* line 153, ../scss/modules/datagrid.scss */
+/* line 174, ../scss/modules/datagrid.scss */
 .husky-datagrid.fullwidth .pagination-wrapper {
   padding-left: 40px;
   padding-right: 30px;
 }
-/* line 157, ../scss/modules/datagrid.scss */
+/* line 178, ../scss/modules/datagrid.scss */
 .husky-datagrid.fullwidth .overflow + .pagination-wrapper {
   padding-right: 0;
 }
-/* line 162, ../scss/modules/datagrid.scss */
+/* line 183, ../scss/modules/datagrid.scss */
 .husky-datagrid.white-box {
   padding: 0 20px;
   overflow: hidden;
 }
-/* line 165, ../scss/modules/datagrid.scss */
+/* line 186, ../scss/modules/datagrid.scss */
 .husky-datagrid.white-box .table-container {
   margin-bottom: -1px;
 }
-/* line 169, ../scss/modules/datagrid.scss */
+/* line 190, ../scss/modules/datagrid.scss */
 .husky-datagrid.white-box tbody tr:first-child {
   height: 49px;
 }
-/* line 172, ../scss/modules/datagrid.scss */
+/* line 193, ../scss/modules/datagrid.scss */
 .husky-datagrid.white-box tbody tr:last-child {
   border-bottom: none;
 }
-/* line 175, ../scss/modules/datagrid.scss */
+/* line 196, ../scss/modules/datagrid.scss */
 .husky-datagrid.white-box tbody td {
   padding-left: 0;
   padding-right: 0;
 }
-/* line 182, ../scss/modules/datagrid.scss */
+/* line 201, ../scss/modules/datagrid.scss */
+.husky-datagrid.white-box .empty-list {
+  border: none;
+}
+/* line 206, ../scss/modules/datagrid.scss */
 .husky-datagrid.minimal {
   padding: 0;
 }
-/* line 185, ../scss/modules/datagrid.scss */
+/* line 209, ../scss/modules/datagrid.scss */
 .husky-datagrid.minimal tbody td.thumb {
   width: 1px;
 }
-/* line 187, ../scss/modules/datagrid.scss */
+/* line 211, ../scss/modules/datagrid.scss */
 .husky-datagrid.minimal tbody td.thumb img {
   height: 30px;
 }
