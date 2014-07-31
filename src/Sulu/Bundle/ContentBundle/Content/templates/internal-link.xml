@@ -19,7 +19,7 @@
             <tag name="sulu.node.name"/>
         </property>
 
-        <property name="internalnode" type="single_internal_link">
+        <property name="internal" type="single_internal_link">
             <meta>
                 <title lang="de">Interner Knoten</title>
                 <title lang="en">Internal Node</title>
