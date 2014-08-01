@@ -558,16 +558,13 @@ define([], function() {
             this.dfdListenForChange.then(function() {
                 this.sandbox.dom.on('#contact-form', 'change', function() {
                     this.setHeaderBar(false);
-                }.bind(this), 'select.changeListener, ' +
-                    'input.changeListener, ' +
-                    'textarea.changeListener, ' +
-                    '.changeListener input,' +
+                }.bind(this), '.changeListener select, ' +
+                    '.changeListener input, ' +
                     '.changeListener textarea');
 
                 this.sandbox.dom.on('#contact-form', 'keyup', function() {
                     this.setHeaderBar(false);
-                }.bind(this), 'input.changeListener, ' +
-                    'textarea.changeListener, ' +
+                }.bind(this), '.changeListener select, ' +
                     '.changeListener input, ' +
                     '.changeListener textarea');
 
