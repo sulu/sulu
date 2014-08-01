@@ -39,7 +39,13 @@ define(function() {
 
             columnNavigation: function() {
                 return[
-                    '<div id="child-column-navigation"/>',
+                    '<div id="child-column-navigation"/>'
+                ].join('');
+            },
+
+            wait: function() {
+                return[
+                    '<div id="wait-container" style="margin-top: 50px"></div>'
                 ].join('');
             }
         };
@@ -119,11 +125,17 @@ define(function() {
          */
         moveSelected: function(selectedItem) {
             // callback called for clicking a node in tree
-            var editCallback = function(item) {
-                // TODO API integration
-
-                this.restartColumnNavigation();
-                this.sandbox.emit('husky.overlay.node.close');
+            var editCallback = function(parentItem) {
+                this.sandbox.emit('husky.overlay.node.slide-right');
+                this.sandbox.emit('sulu.content.contents.move', selectedItem.id, parentItem.id,
+                    function() {
+                        this.restartColumnNavigation();
+                        this.sandbox.emit('husky.overlay.node.close');
+                    }.bind(this),
+                    function(error) {
+                        this.sandbox.logger.error(error);
+                        this.sandbox.emit('husky.overlay.node.slide-left');
+                    }.bind(this));
             }.bind(this);
 
             this.moveOrCopySelected(selectedItem, editCallback, 'move');
@@ -135,11 +147,17 @@ define(function() {
          */
         copySelected: function(selectedItem) {
             // callback called for clicking a node in tree
-            var editCallback = function(item) {
-                // TODO API integration
-
-                this.restartColumnNavigation();
-                this.sandbox.emit('husky.overlay.node.close');
+            var editCallback = function(parentItem) {
+                this.sandbox.emit('husky.overlay.node.slide-right');
+                this.sandbox.emit('sulu.content.contents.copy', selectedItem.id, parentItem.id,
+                    function() {
+                        this.restartColumnNavigation();
+                        this.sandbox.emit('husky.overlay.node.close');
+                    }.bind(this),
+                    function(error) {
+                        this.sandbox.logger.error(error);
+                        this.sandbox.emit('husky.overlay.node.slide-left');
+                    }.bind(this));
             }.bind(this);
 
             this.moveOrCopySelected(selectedItem, editCallback, 'copy');
@@ -155,6 +173,7 @@ define(function() {
             // wait for overlay initialized to initialize overlay
             this.sandbox.once('husky.overlay.node.initialized', function() {
                 this.startOverlayColumnNavigation(selectedItem.id);
+                this.startOverlayLoader();
             }.bind(this));
 
             // wait for click on column navigation to send request
@@ -206,6 +225,11 @@ define(function() {
                                         type: 'cancel'
                                     }
                                 ]
+                            },
+                            {
+                                title: this.sandbox.translate('content.contents.settings.wait'),
+                                data: templates.wait(),
+                                buttons: []
                             }
                         ]
                     }
@@ -235,6 +259,24 @@ define(function() {
                             showStatus: false,
                             responsive: false,
                             skin: 'fixed-height-small'
+                        }
+                    }
+                ]
+            );
+        },
+
+        /**
+         * start loader in overlay
+         */
+        startOverlayLoader: function() {
+            this.sandbox.start(
+                [
+                    {
+                        name: 'loader@husky',
+                        options: {
+                            el: '#wait-container',
+                            size: '100px',
+                            color: '#e4e4e4'
                         }
                     }
                 ]
