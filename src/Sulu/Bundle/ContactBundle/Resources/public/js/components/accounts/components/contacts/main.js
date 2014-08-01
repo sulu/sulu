@@ -17,7 +17,7 @@ define([
     var constants = {
             relationFormSelector: '#contact-relation-form',
             contactSelector: '#contact-field',
-            positionSelector: '#company-contact-position',
+            positionSelector: '#company-contact-position'
         },
 
         companyPosition = null,
@@ -52,7 +52,7 @@ define([
             }, this);
 
             // when radio button is clicked
-            this.sandbox.on('husky.datagrid.radio.selected', function(id, columName) {
+            this.sandbox.on('husky.datagrid.radio.selected', function(id) {
                 this.sandbox.emit('sulu.contacts.accounts.contacts.set-main', id);
             }, this);
 
