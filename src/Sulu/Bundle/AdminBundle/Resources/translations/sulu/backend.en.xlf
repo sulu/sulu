@@ -6,6 +6,14 @@
                 <source>public.name</source>
                 <target>Name</target>
             </trans-unit>
+            <trans-unit id="fbf5558377419fbed4c73a4ba3fdf006" resname="public.key">
+                <source>public.key</source>
+                <target>Key</target>
+            </trans-unit>
+            <trans-unit id="fbf5558377419fbed4c73a4ba3fdf007" resname="public.empty-list">
+                <source>public.key</source>
+                <target>This list is empty</target>
+            </trans-unit>
             <trans-unit id="e4b14069a8a085ede200b7f5acb2d39e" resname="public.edit">
                 <source>public.edit</source>
                 <target>Edit</target>
@@ -1522,34 +1530,6 @@
                 <source>poolalpin.contacts.condition.quantity</source>
                 <target>Quantity</target>
             </trans-unit>
-            <trans-unit id="543c99ff2964652633a5ca2169f22236" resname="content-navigation.category.details">
-                <source>content-navigation.category.details</source>
-                <target>Details</target>
-            </trans-unit>
-            <trans-unit id="143c99ff2964652633a5ca2169f22236" resname="category.categories.title">
-                <source>category.categories.title</source>
-                <target>Categories</target>
-            </trans-unit>
-            <trans-unit id="623c99ff2964652633a5ca2169f22236" resname="navigation.settings.categories">
-                <source>navigation.settings.categories</source>
-                <target>Categories</target>
-            </trans-unit>
-            <trans-unit id="642c99ff2964652633a5ca2169f22236" resname="sulu.category.new-category">
-                <source>sulu.category.new-category</source>
-                <target>New category</target>
-            </trans-unit>
-            <trans-unit id="643999ff2964652633a5ca2169f22236" resname="sulu.category.category-name">
-                <source>sulu.category.category-name</source>
-                <target>Category name</target>
-            </trans-unit>
-            <trans-unit id="643a99ff2964652633a5ca2169f22236" resname="labels.success.category-save-desc">
-                <source>labels.success.category-save-desc</source>
-                <target>Category successfully saved</target>
-            </trans-unit>
-            <trans-unit id="643d99ff2964652633a5ca2169f22236" resname="labels.success.category-delete-desc">
-                <source>labels.success.category-delete-desc</source>
-                <target>Category successfully deleted</target>
-            </trans-unit>
             <trans-unit id="643d99ff2964652633a5ca2169f22237" resname="content-navigation.contacts.activities">
                 <source>content-navigation.contacts.activities</source>
                 <target>Activities</target>
@@ -1850,6 +1830,9 @@
                 <source>poolalpin.contacts.condition.categorySelection</source>
                 <target>Categoryselection</target>
             </trans-unit>
+            <trans-unit id="a50af522a1231350142c0b4720e29a3f" resname="public.no-title">
+                <source>public.no-title</source>
+                <target>No Title</target>
             <trans-unit id="a50af522ac181350142c0b4720e29a4f" resname="public.previous">
                 <source>public.previous</source>
                 <target>Back</target>
