@@ -490,7 +490,11 @@ class AccountController extends AbstractContactController
             $account = $this->getDoctrine()
                 ->getRepository(self::$entityName)
                 ->find($accountId);
-            $account->setMainContact(null);
+
+            // remove main contact when relation with main was removed
+            if($account->getMainContact() && strval($account->getMainContact()->getId()) === $contactId){
+                $account->setMainContact(null);
+            }
 
             // remove accountContact
             $em = $this->getDoctrine()->getManager();
