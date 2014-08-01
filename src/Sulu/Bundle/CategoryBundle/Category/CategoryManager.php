@@ -22,7 +22,7 @@ use Sulu\Component\Security\UserRepositoryInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Sulu\Component\Rest\Exception\RestException;
+use Sulu\Bundle\CategoryBundle\Category\Exception\KeyNotUniqueException;
 
 /**
  * Responsible for centralized Category Management
@@ -191,7 +191,7 @@ class CategoryManager implements CategoryManagerInterface
      * Creates a new category or overrides an existing one
      * @param array $data The data of the category to save
      * @param int $userId The id of the user, who is doing this change
-     * @throws \Sulu\Component\Rest\Exception\RestException
+     * @throws KeyNotUniqueException
      * @return CategoryEntity
      */
     public function save($data, $userId)
@@ -203,7 +203,7 @@ class CategoryManager implements CategoryManagerInterface
                 return $this->createCategory($data, $this->getUser($userId));
             }
         } catch (\Doctrine\DBAL\DBALException $e) {
-            throw new RestException('Passed key was not unique', 1);
+            throw new KeyNotUniqueException();
         }
     }
 

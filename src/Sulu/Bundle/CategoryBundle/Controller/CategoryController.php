@@ -19,12 +19,12 @@ use Sulu\Bundle\CategoryBundle\Category\CategoryListRepresentation;
 use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
-use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\RestController;
 use Symfony\Component\HttpFoundation\Request;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\RestHelperInterface;
+use Sulu\Bundle\CategoryBundle\Category\Exception\KeyNotUniqueException;
 
 /**
  * Makes categories available through a REST API
@@ -106,11 +106,11 @@ class CategoryController extends RestController implements ClassResourceInterfac
      */
     public function getFieldsAction()
     {
-        $cm = $this->get('sulu_category.category_manager');
-        $cm->createFieldDescriptors();
+        $categoryManager = $this->get('sulu_category.category_manager');
+        $categoryManager->createFieldDescriptors();
 
         // default contacts list
-        return $this->handleView($this->view(array_values($cm->getFieldDescriptors()), 200));
+        return $this->handleView($this->view(array_values($categoryManager->getFieldDescriptors()), 200));
     }
 
     /**
@@ -122,12 +122,12 @@ class CategoryController extends RestController implements ClassResourceInterfac
     public function getAction($id, Request $request)
     {
         $locale = $this->getLocale($request->get('locale'));
-        $cm = $this->get('sulu_category.category_manager');
+        $categoryManager = $this->get('sulu_category.category_manager');
         $view = $this->responseGetById(
             $id,
-            function ($id) use ($locale, $cm) {
-                $categoryEntity = $cm->findById($id);
-                return $cm->getApiObject($categoryEntity, $locale);
+            function ($id) use ($locale, $categoryManager) {
+                $categoryEntity = $categoryManager->findById($id);
+                return $categoryManager->getApiObject($categoryEntity, $locale);
             }
         );
 
@@ -146,9 +146,9 @@ class CategoryController extends RestController implements ClassResourceInterfac
         $sortOrder = $request->get('sortOrder');
         $request->query->add(array('key' => $key));
 
-        $cm = $this->get('sulu_category.category_manager');
-        $categories = $cm->findChildren($key, $sortBy, $sortOrder);
-        $wrappers = $cm->getApiObjects($categories, $this->getLocale($request->get('locale')));
+        $categoryManager = $this->get('sulu_category.category_manager');
+        $categories = $categoryManager->findChildren($key, $sortBy, $sortOrder);
+        $wrappers = $categoryManager->getApiObjects($categories, $this->getLocale($request->get('locale')));
         return $this->getMultipleResponse($wrappers, $request);
     }
 
@@ -166,9 +166,9 @@ class CategoryController extends RestController implements ClassResourceInterfac
         $sortBy = $request->get('sortBy');
         $sortOrder = $request->get('sortOrder');
 
-        $cm = $this->get('sulu_category.category_manager');
-        $categories = $cm->find($parent, $depth, $sortBy, $sortOrder);
-        $wrappers = $cm->getApiObjects($categories, $this->getLocale($request->get('locale')));
+        $categoryManager = $this->get('sulu_category.category_manager');
+        $categories = $categoryManager->find($parent, $depth, $sortBy, $sortOrder);
+        $wrappers = $categoryManager->getApiObjects($categories, $this->getLocale($request->get('locale')));
         return $this->getMultipleResponse($wrappers, $request);
     }
 
@@ -220,8 +220,8 @@ class CategoryController extends RestController implements ClassResourceInterfac
     public function deleteAction($id)
     {
         $delete = function ($id) {
-            $cm = $this->get('sulu_category.category_manager');
-            $cm->delete($id);
+            $categoryManager = $this->get('sulu_category.category_manager');
+            $categoryManager->delete($id);
         };
 
         $view = $this->responseDelete($id, $delete);
@@ -268,7 +268,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
     protected function saveEntity($id, Request $request)
     {
         try {
-            $cm = $this->get('sulu_category.category_manager');
+            $categoryManager = $this->get('sulu_category.category_manager');
             $key = $request->get('key');
             $data = [
                 'id' => $id,
@@ -278,13 +278,13 @@ class CategoryController extends RestController implements ClassResourceInterfac
                 'parent' => $request->get('parent'),
                 'locale' => $this->getLocale($request->get('locale'))
             ];
-            $categoryEntity = $cm->save($data, $this->getUser()->getId());
-            $categoryWrapper = $cm->getApiObject($categoryEntity, $this->getLocale($request->get('locale')));
+            $categoryEntity = $categoryManager->save($data, $this->getUser()->getId());
+            $categoryWrapper = $categoryManager->getApiObject($categoryEntity, $this->getLocale($request->get('locale')));
 
             $view = $this->view($categoryWrapper, 200);
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
-        } catch (RestException $exc) {
+        } catch (KeyNotUniqueException $exc) {
             $view = $this->view($exc->toArray(), 400);
         }
 
