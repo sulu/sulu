@@ -1838,6 +1838,10 @@
                 <source>public.previous</source>
                 <target>Back</target>
             </trans-unit>
+            <trans-unit id="a50af522de181350142c0b4720e29a4f" resname="public.overview">
+                <source>public.overview</source>
+                <target>Overview</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
