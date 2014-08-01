@@ -90,7 +90,7 @@ define(function() {
             }, this);
 
             this.sandbox.on('husky.column-navigation.node.selected', function(item) {
-                this.sandbox.sulu.saveUserSetting(this.options.webspace + 'ColumnNavigationSelected', item.id);
+                this.setLastSelected(item.id);
             }, this);
 
             this.sandbox.on('sulu.content.localizations', function(localizations) {
@@ -150,7 +150,9 @@ define(function() {
             var editCallback = function(parentItem) {
                 this.sandbox.emit('husky.overlay.node.slide-right');
                 this.sandbox.emit('sulu.content.contents.copy', selectedItem.id, parentItem.id,
-                    function() {
+                    function(data) {
+                        this.setLastSelected(data.id);
+
                         this.restartColumnNavigation();
                         this.sandbox.emit('husky.overlay.node.close');
                     }.bind(this),
@@ -352,6 +354,14 @@ define(function() {
          */
         getLastSelected: function() {
             return this.sandbox.sulu.getUserSetting(this.options.webspace + 'ColumnNavigationSelected');
+        },
+
+        /**
+         * save last selected id to user settings
+         * @param {String} id
+         */
+        setLastSelected: function(id) {
+            this.sandbox.sulu.saveUserSetting(this.options.webspace + 'ColumnNavigationSelected', id);
         },
 
         /**
