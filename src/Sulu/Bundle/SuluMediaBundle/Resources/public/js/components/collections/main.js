@@ -17,7 +17,12 @@ define([
 
         'use strict';
 
-        var namespace = 'sulu.media.collections.',
+        var collectionEditTabs = {
+                FILES: 'files',
+                SETTINGS: 'settings'
+            },
+
+        namespace = 'sulu.media.collections.',
 
             /**
              * listens on and changes the view to collections list
@@ -456,22 +461,35 @@ define([
              * @param options {Object} options to pass to the component
              */
             renderCollectionEdit: function(options) {
-                var $files = this.sandbox.dom.createElement('<div id="collection-files-container"/>'),
+                var $edit = this.sandbox.dom.createElement('<div id="collection-edit-container"/>'),
                     collection = this.getCollectionModel(this.options.id);
-                this.sandbox.dom.append(this.$el, $files);
+                this.sandbox.dom.append(this.$el, $edit);
 
                 collection.fetch({
                     success: function(collection) {
-                        this.sandbox.start([
-                            {
-                                name: 'collections/components/collection-edit@sulumedia',
-                                options: this.sandbox.util.extend(true, {}, {
-                                    el: $files,
-                                    activeTab: this.options.content,
-                                    data: collection.toJSON()
-                                }, options)
-                            }
-                        ]);
+                        if (options.activeTab === collectionEditTabs.FILES) {
+                            this.sandbox.start([
+                                {
+                                    name: 'collections/components/files@sulumedia',
+                                    options: this.sandbox.util.extend(true, {}, {
+                                        el: $edit,
+                                        data: collection.toJSON()
+                                    }, options)
+                                }
+                            ]);
+                        } else if (options.activeTab === collectionEditTabs.SETTINGS) {
+                            this.sandbox.start([
+                                {
+                                    name: 'collections/components/settings@sulumedia',
+                                    options: this.sandbox.util.extend(true, {}, {
+                                        el: $edit,
+                                        data: collection.toJSON()
+                                    }, options)
+                                }
+                            ]);
+                        } else {
+                            this.sandbox.logger.log('Error. No valid tab ' + this.options.content);
+                        }
                     }.bind(this),
                     error: function() {
                         this.sandbox.logger.log('Error while fetching a single collection');
