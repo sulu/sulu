@@ -74,6 +74,7 @@ define(function () {
                     url: '/admin/api/categories?flat=true&sortBy=depth&sortOrder=asc',
                     childrenPropertyName: 'children',
                     resultKey: 'categories',
+                    pagination: false,
                     viewOptions: {
                         table: {
                             openChildId: this.sandbox.sulu.getUserSetting(constants.lastClickedCategorySettingsKey),

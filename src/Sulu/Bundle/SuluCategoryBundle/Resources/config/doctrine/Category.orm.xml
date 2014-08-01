@@ -10,6 +10,8 @@
             <generator strategy="AUTO"/>
         </id>
 
+        <field name="key" column="category_key" type="string" length="45" nullable="true" unique="true"/>
+
         <field name="lft" type="integer" column="lft">
             <gedmo:tree-left/>
         </field>
