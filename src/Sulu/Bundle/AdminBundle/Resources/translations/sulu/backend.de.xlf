@@ -1837,6 +1837,10 @@
                 <source>public.previous</source>
                 <target>Zurück</target>
             </trans-unit>
+            <trans-unit id="a50af522de181350142c0b4720e29a4f" resname="public.overview">
+                <source>public.overview</source>
+                <target>Übersicht</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
