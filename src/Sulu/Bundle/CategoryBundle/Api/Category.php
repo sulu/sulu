@@ -30,6 +30,17 @@ class Category extends ApiEntityWrapper
     }
 
     /**
+     * Returns the key of the category
+     * @VirtualProperty
+     * @SerializedName("key")
+     * @return string
+     */
+    public function getKey()
+    {
+        return $this->entity->getKey();
+    }
+
+    /**
      * Returns the name of the Category dependent on the locale
      * @VirtualProperty
      * @SerializedName("name")
@@ -209,6 +220,15 @@ class Category extends ApiEntityWrapper
     }
 
     /**
+     * Sets the key of the category
+     * @param string $key
+     */
+    public function setKey($key)
+    {
+        $this->entity->setKey($key);
+    }
+
+    /**
      * Takes a user entity and returns the fullname
      * @param $user
      * @return string
@@ -248,6 +268,7 @@ class Category extends ApiEntityWrapper
     {
         return array(
             'id' => $this->getId(),
+            'key' => $this->getKey(),
             'name' => $this->getName(),
             'meta' => $this->getMeta(),
             'creator' => $this->getCreator(),

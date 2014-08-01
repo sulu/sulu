@@ -33,6 +33,15 @@ interface CategoryManagerInterface
     public function find($parent = null, $depth = null, $sortBy = null, $sortOrder = null);
 
     /**
+     * Returns the children for a given category
+     * @param int $key the key of the category to search the children for
+     * @param string|null $sortBy column name to sort by
+     * @param string|null $sortOrder sort order
+     * @return Category[]
+     */
+    public function findChildren($key, $sortBy = null, $sortOrder = null);
+
+    /**
      * Returns a category with a given id
      * @param int $id the id of the category
      * @return Category

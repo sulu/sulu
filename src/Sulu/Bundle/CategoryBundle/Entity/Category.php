@@ -40,6 +40,11 @@ class Category
     private $id;
 
     /**
+     * @var string
+     */
+    private $key;
+
+    /**
      * @var \Doctrine\Common\Collections\Collection
      */
     private $meta;
@@ -181,6 +186,29 @@ class Category
     {
         $this->changed = $changed;
     
+        return $this;
+    }
+
+    /**
+     * Get key
+     *
+     * @return string
+     */
+    public function getKey()
+    {
+        return $this->key;
+    }
+
+    /**
+     * Set key
+     *
+     * @param string $key
+     * @return Category
+     */
+    public function setKey($key)
+    {
+        $this->key = $key;
+
         return $this;
     }
 
