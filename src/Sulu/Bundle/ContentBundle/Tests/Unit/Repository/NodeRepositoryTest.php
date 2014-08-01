@@ -327,6 +327,143 @@ class NodeRepositoryTest extends PhpcrTestCase
         $this->assertEquals('Testtitle1', $nodes[1]->title);
     }
 
+    /**
+     * @return StructureInterface[]
+     */
+    private function prepareTestDataMoveCopy()
+    {
+        $data = array(
+            array(
+                'title' => 'Testtitle1',
+                'tags' => array(
+                    'tag1',
+                    'tag2'
+                ),
+                'url' => '/news/test1',
+                'article' => 'Test'
+            ),
+            array(
+                'title' => 'Testtitle2',
+                'tags' => array(
+                    'tag1',
+                    'tag2'
+                ),
+                'url' => '/news/test2',
+                'article' => 'Test'
+            ),
+        );
+
+        foreach ($data as &$element) {
+            $element = $this->mapper->save(
+                $element,
+                'overview',
+                'default',
+                'en',
+                1,
+                true,
+                null,
+                null,
+                StructureInterface::STATE_PUBLISHED
+            );
+        }
+
+        return $data;
+    }
+
+    public function testMove()
+    {
+        $data = $this->prepareTestDataMoveCopy();
+
+        $rootNode = $this->nodeRepository->getIndexNode('default', 'en');
+
+        $result = $this->nodeRepository->moveNode($data[0]->getUuid(), $data[1]->getUuid(), 'default', 'en', 2);
+        $structure = $this->nodeRepository->getNode($data[0]->getUuid(), 'default', 'en');
+
+        // check result
+        $this->assertEquals($structure, $result);
+
+        // check some properties
+        $this->assertEquals($data[0]->getUuid(), $result['id']);
+        $this->assertEquals('Testtitle1', $result['title']);
+        $this->assertEquals('/testtitle2/testtitle1', $result['path']);
+        $this->assertEquals(2, $result['changer']);
+
+        // check none existing source node
+        $firstLayerNodes = $this->nodeRepository->getNodes($rootNode['id'], 'default', 'en');
+        $this->assertEquals(1, sizeof($firstLayerNodes['_embedded']['nodes']));
+        $this->assertEquals('Testtitle2', $firstLayerNodes['_embedded']['nodes'][0]['title']);
+        $this->assertEquals('/testtitle2', $firstLayerNodes['_embedded']['nodes'][0]['path']);
+
+        $secondLayerNodes = $this->nodeRepository->getNodes($data[1]->getUuid(), 'default', 'en');
+        $this->assertEquals(1, sizeof($secondLayerNodes['_embedded']['nodes']));
+        $this->assertEquals('Testtitle1', $secondLayerNodes['_embedded']['nodes'][0]['title']);
+        $this->assertEquals('/testtitle2/testtitle1', $secondLayerNodes['_embedded']['nodes'][0]['path']);
+    }
+
+    public function testMoveNonExistingSource()
+    {
+        $data = $this->prepareTestDataMoveCopy();
+        $this->setExpectedException('Sulu\Component\Rest\Exception\RestException');
+
+        $this->nodeRepository->moveNode('123-123', $data[1]->getUuid(), 'default', 'en', 2);
+    }
+
+    public function testMoveNonExistingDestination()
+    {
+        $data = $this->prepareTestDataMoveCopy();
+        $this->setExpectedException('Sulu\Component\Rest\Exception\RestException');
+
+        $this->nodeRepository->moveNode($data[0]->getUuid(), '123-123', 'default', 'en', 2);
+    }
+
+    public function testCopy()
+    {
+        $data = $this->prepareTestDataMoveCopy();
+
+        $rootNode = $this->nodeRepository->getIndexNode('default', 'en');
+
+        $result = $this->nodeRepository->copyNode($data[0]->getUuid(), $data[1]->getUuid(), 'default', 'en', 2);
+        $structure = $this->nodeRepository->getNode($data[0]->getUuid(), 'default', 'en');
+
+        // check result
+        $this->assertNotEquals($structure, $result);
+
+        // check some properties
+        $this->assertNotEquals($data[0]->getUuid(), $result['id']);
+        $this->assertEquals('Testtitle1', $result['title']);
+        $this->assertEquals('/testtitle2/testtitle1', $result['path']);
+        $this->assertEquals(2, $result['changer']);
+
+        // check none existing source node
+        $firstLayerNodes = $this->nodeRepository->getNodes($rootNode['id'], 'default', 'en');
+        $this->assertEquals(2, sizeof($firstLayerNodes['_embedded']['nodes']));
+        $this->assertEquals('Testtitle1', $firstLayerNodes['_embedded']['nodes'][0]['title']);
+        $this->assertEquals('/testtitle1', $firstLayerNodes['_embedded']['nodes'][0]['path']);
+        $this->assertEquals('Testtitle2', $firstLayerNodes['_embedded']['nodes'][1]['title']);
+        $this->assertEquals('/testtitle2', $firstLayerNodes['_embedded']['nodes'][1]['path']);
+
+        $secondLayerNodes = $this->nodeRepository->getNodes($data[1]->getUuid(), 'default', 'en');
+        $this->assertEquals(1, sizeof($secondLayerNodes['_embedded']['nodes']));
+        $this->assertEquals('Testtitle1', $secondLayerNodes['_embedded']['nodes'][0]['title']);
+        $this->assertEquals('/testtitle2/testtitle1', $secondLayerNodes['_embedded']['nodes'][0]['path']);
+    }
+
+    public function testCopyNonExistingSource()
+    {
+        $data = $this->prepareTestDataMoveCopy();
+        $this->setExpectedException('Sulu\Component\Rest\Exception\RestException');
+
+        $this->nodeRepository->copyNode('123-123', $data[1]->getUuid(), 'default', 'en', 2);
+    }
+
+    public function testCopyNonExistingDestination()
+    {
+        $data = $this->prepareTestDataMoveCopy();
+        $this->setExpectedException('Sulu\Component\Rest\Exception\RestException');
+
+        $this->nodeRepository->copyNode($data[0]->getUuid(), '123-123', 'default', 'en', 2);
+    }
+
     protected function setUp()
     {
         $this->prepareMapper();
