@@ -1040,7 +1040,6 @@ class ContentMapper implements ContentMapperInterface
     {
         // prepare utility
         $session = $this->getSession();
-        $strategy = $this->getResourceLocator()->getStrategy();
 
         // load from phpcr
         $node = $session->getNodeByIdentifier($uuid);
@@ -1078,29 +1077,14 @@ class ContentMapper implements ContentMapperInterface
 
         // correct resource locator
         if ($content->hasTag('sulu.rlp')) {
-            // get resource locator pathes
-            $srcResourceLocator = $content->getPropertyValueByTagName('sulu.rlp');
-
-            if ($srcResourceLocator !== null) {
-                $resourceLocatorPart = PathHelper::getNodeName($srcResourceLocator);
-            } else {
-                $resourceLocatorPart = $content->getPropertyValueByTagName('sulu.node.name');
-            }
-
-            // generate new resourcelocator
-            $destResourceLocator = $strategy->generate(
-                $resourceLocatorPart,
+            $this->adoptResourceLocator(
+                $content,
+                $node,
                 $parentResourceLocator,
+                $deleteSource,
                 $webspaceKey,
                 $languageCode
             );
-
-            // move resourcelocator
-            if ($deleteSource) {
-                $strategy->move($srcResourceLocator, $destResourceLocator, $webspaceKey, $languageCode);
-            } else {
-                $strategy->save($node, $destResourceLocator, $webspaceKey, $languageCode);
-            }
         }
 
         // set changer of node
@@ -1111,6 +1095,51 @@ class ContentMapper implements ContentMapperInterface
         $session->save();
 
         return $this->loadByNode($node, $languageCode, $webspaceKey);
+    }
+
+    /**
+     * adopts resource locator for just moved or copied node
+     * @param StructureInterface $content
+     * @param NodeInterface $node
+     * @param string $parentResourceLocator
+     * @param boolean $deleteSource
+     * @param string $webspaceKey
+     * @param string $languageCode
+     */
+    private function adoptResourceLocator(
+        StructureInterface $content,
+        NodeInterface $node,
+        $parentResourceLocator,
+        $deleteSource,
+        $webspaceKey,
+        $languageCode
+    ) {
+        // get strategy
+        $strategy = $this->getResourceLocator()->getStrategy();
+
+        // get resource locator pathes
+        $srcResourceLocator = $content->getPropertyValueByTagName('sulu.rlp');
+
+        if ($srcResourceLocator !== null) {
+            $resourceLocatorPart = PathHelper::getNodeName($srcResourceLocator);
+        } else {
+            $resourceLocatorPart = $content->getPropertyValueByTagName('sulu.node.name');
+        }
+
+        // generate new resourcelocator
+        $destResourceLocator = $strategy->generate(
+            $resourceLocatorPart,
+            $parentResourceLocator,
+            $webspaceKey,
+            $languageCode
+        );
+
+        // move resourcelocator
+        if ($deleteSource) {
+            $strategy->move($srcResourceLocator, $destResourceLocator, $webspaceKey, $languageCode);
+        } else {
+            $strategy->save($node, $destResourceLocator, $webspaceKey, $languageCode);
+        }
     }
 
     /**
