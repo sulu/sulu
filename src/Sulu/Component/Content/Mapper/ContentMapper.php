@@ -1100,13 +1100,14 @@ class ContentMapper implements ContentMapperInterface
             } else {
                 $strategy->save($node, $destResourceLocator, $webspaceKey, $languageCode);
             }
-
-            $this->properties->setLanguage($languageCode);
-            $node->setProperty($this->properties->getName('changer'), $userId);
-            $node->setProperty($this->properties->getName('changed'), new DateTime());
-
-            $session->save();
         }
+
+        // set changer of node
+        $this->properties->setLanguage($languageCode);
+        $node->setProperty($this->properties->getName('changer'), $userId);
+        $node->setProperty($this->properties->getName('changed'), new DateTime());
+
+        $session->save();
 
         return $this->loadByNode($node, $languageCode, $webspaceKey);
     }
