@@ -1,4 +1,3 @@
-
 /** vim: et:ts=4:sw=4:sts=4
  * @license RequireJS 2.1.9 Copyright (c) 2010-2012, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
@@ -28745,9 +28744,11 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             );
 
             // calls the radio-clicked event and stops further event-propagation
+            // needs tbody selector to be called before the general listener on
+            // on checkboxes and radio
             this.sandbox.dom.on(
-                this.sandbox.dom.find('.custom-radio.custom-filter',this.$tableContainer), 'click',
-                this.radioClickedCallback.bind(this)
+                this.sandbox.dom.find('tbody', this.$tableContainer), 'click',
+                this.radioClickedCallback.bind(this), '.custom-radio.custom-filter'
             );
 
             this.sandbox.dom.on(this.$tableContainer, 'click', function(event) {
@@ -47988,3 +47989,4 @@ define('husky_extensions/util',[],function() {
         }
     };
 });
+
