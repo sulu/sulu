@@ -20,8 +20,11 @@ class AccountContactRepository extends EntityRepository
             $qb = $this->createQueryBuilder('accountContact')
                 ->leftJoin('accountContact.contact', 'contact')
                 ->leftJoin('accountContact.account', 'account')
+                ->leftJoin('account.mainContact', 'mainContact')
                 ->leftJoin('accountContact.position', 'position')
                 ->addSelect('position')
+                ->addSelect('mainContact')
+                ->addSelect('account')
                 ->where('account.id = :accountId AND contact.id = :contactId');
 
             $query = $qb->getQuery();
