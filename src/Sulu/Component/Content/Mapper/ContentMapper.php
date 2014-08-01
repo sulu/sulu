@@ -1063,10 +1063,11 @@ class ContentMapper implements ContentMapperInterface
         $path = $node->getPath();
         $destPath = $parentNode->getPath() . '/' . $nodeName;
 
-        // move node
         if ($deleteSource) {
+            // move node
             $session->move($path, $destPath);
         } else {
+            // copy node
             $session->getWorkspace()->copy($path, $destPath);
             $session->save();
 
