@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+    <file source-language="en" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="95f5d305ecefcbf58dcdd387ba6bce6c" resname="navigation.media">
+                <source>navigation.media</source>
+                <target>Assets</target>
+            </trans-unit>
+            <trans-unit id="3fd1f800bd2ecfb6af0abf749b716788" resname="navigation.media.collections">
+                <source>navigation.media.collections</source>
+                <target>Collections</target>
+            </trans-unit>
+            <trans-unit id="ed961112240c7d99faeacb57a28aa6f6" resname="content-navigation.media.files">
+                <source>content-navigation.media.files</source>
+                <target>Files</target>
+            </trans-unit>
+            <trans-unit id="2f58801f9b542aed46820bf42ee5cd53" resname="media.media.description">
+                <source>media.media.description</source>
+                <target>Description</target>
+            </trans-unit>
+            <trans-unit id="3c8f1c7c02abd468cc0794e987e2b2cf" resname="media.media.size">
+                <source>media.media.size</source>
+                <target>Filesize</target>
+            </trans-unit>
+            <trans-unit id="6f5e8f5b65fd4e7ae7ec509e742cc85f" resname="media.media.thumbnails">
+                <source>media.media.thumbnails</source>
+                <target>Thumbnail</target>
+            </trans-unit>
+            <trans-unit id="6f2c89027621ffebd6cfbe33bdf16455" resname="sulu.media.new-collection">
+                <source>sulu.media.new-collection</source>
+                <target>New collection</target>
+            </trans-unit>
+            <trans-unit id="71491ef900232b8755bf0842292e1ff4" resname="sulu.media.add-collection">
+                <source>sulu.media.add-collection</source>
+                <target>Add new collection</target>
+            </trans-unit>
+            <trans-unit id="90a2264459ba0f52ef7a4d3c0298d50" resname="content-navigation.media.settings">
+                <source>content-navigation.media.settings</source>
+                <target>Settings</target>
+            </trans-unit>
+            <trans-unit id="642c992f1929652633a5ce2178d2219f" resname="sulu.media.multiple-edit.title">
+                <source>sulu.media.multiple-edit.title</source>
+                <target>Edit medias</target>
+            </trans-unit>
+            <trans-unit id="643c99ff1964652633a5ca2178d2219f" resname="labels.success.media-save-desc">
+                <source>labels.success.media-save-desc</source>
+                <target>Media successfully saved</target>
+            </trans-unit>
+            <trans-unit id="643c99ff2964652633a5ca2169f22236" resname="labels.success.media-upload-desc">
+                <source>labels.success.media-upload-desc</source>
+                <target>Media successfully uploaded.</target>
+            </trans-unit>
+            <trans-unit id="c50af521ac121350142c0b4720e29a8a" resname="media-selection.collections">
+                <source>media-selection.collections</source>
+                <target>Collections</target>
+            </trans-unit>
+            <trans-unit id="2ed2e1bec2480b32fd6f8022a857c080" resname="media.collections.title">
+                <source>media.collections.title</source>
+                <target>Collections</target>
+            </trans-unit>
+            <trans-unit id="90a3264459ba0f52ef7a4d3c0298d5d" resname="media.collection.title">
+                <source>media.collection.title</source>
+                <target>Collection title</target>
+            </trans-unit>
+            <trans-unit id="90a3264459ba0f52ef7a4d3c0298d5f" resname="labels.success.collection-save-desc">
+                <source>labels.success.collection-save-desc</source>
+                <target>Collection successfully saved</target>
+            </trans-unit>
+            <trans-unit id="90a3272459ba0f52ef7a4d3c0298d5f" resname="labels.success.collection-deleted-desc">
+                <source>labels.success.collection-deleted-desc</source>
+                <target>Collection successfully deleted</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>
