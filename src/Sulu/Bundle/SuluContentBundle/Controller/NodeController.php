@@ -475,7 +475,7 @@ class NodeController extends RestController implements ClassResourceInterface
      * - copy: copy a node
      *   + destination: specifies the destination node
      *
-     * @Post("/node/{uuid}")
+     * @Post("/nodes/{uuid}")
      * @param string $uuid
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
