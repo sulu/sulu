@@ -1826,6 +1826,10 @@
                 <source>poolalpin.contacts.condition.categorySelection</source>
                 <target>Categoryselection</target>
             </trans-unit>
+            <trans-unit id="a50af522ac181350142c0b4720e29a4f" resname="public.previous">
+                <source>public.previous</source>
+                <target>Back</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

@@ -13,6 +13,10 @@
   min-width: $contentMinWidth;
   @include single-transition(width, $shrinkAnimationDuration);
 
+  .page {
+    height: 100%;
+  }
+
   #content {
     height: 100%;
     overflow: auto;
