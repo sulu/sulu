@@ -418,11 +418,15 @@ define([], function() {
         listenForChange: function() {
             this.sandbox.dom.on(this.form, 'change', function() {
                 this.setHeaderBar(false);
-            }.bind(this), "select, input, textarea");
-            // TODO: only activate this, if wanted
+            }.bind(this), '.changeListener select, ' +
+                '.changeListener input, ' +
+                '.changeListener textarea');
+
             this.sandbox.dom.on(this.form, 'keyup', function() {
                 this.setHeaderBar(false);
-            }.bind(this), "input, textarea");
+            }.bind(this), '.changeListener select, ' +
+                '.changeListener input, ' +
+                '.changeListener textarea');
 
             // if a field-type gets changed or a field gets deleted
             this.sandbox.on('sulu.contact-form.changed', function() {
