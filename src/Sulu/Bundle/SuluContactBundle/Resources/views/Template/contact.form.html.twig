@@ -1,7 +1,7 @@
 {% extends "SuluContactBundle:Template:base.form.html.twig" %}
 
 {% block static %}
-
+<div class="changeListener">
     <div class="grid-row small">
         <div class="grid-col-6">
             <div class="form-group">
@@ -48,14 +48,14 @@
         <div class="grid-col-6">
             <div class="form-group">
                 <label for="first-name" class="required"><%=translate('contact.contacts.firstName')%></label>
-                <input class="form-element changeListener" type="text" id="first-name" data-validation-required="true"
+                <input class="form-element" type="text" id="first-name" data-validation-required="true"
                        data-validation-min-length="3" data-mapper-property="firstName" value=""/>
             </div>
         </div>
         <div class="grid-col-6">
             <div class="form-group">
                 <label for="last-name" class="required"><%=translate('contact.contacts.lastName')%></label>
-                <input class="form-element changeListener" type="text" id="last-name" data-trigger="focusout"
+                <input class="form-element" type="text" id="last-name" data-trigger="focusout"
                        data-validation-required="true" data-validation-min-length="3" data-mapper-property="lastName"
                        value=""/>
             </div>
@@ -92,7 +92,7 @@
     <div class="grid-row small">
         <div class="form-group">
             <label for="salutation"><%=translate('contact.contacts.salutation')%></label>
-            <input class="form-element changeListener" type="text" id="salutation" data-trigger="focusout"
+            <input class="form-element" type="text" id="salutation" data-trigger="focusout"
                    data-mapper-property="salutation"/>
         </div>
     </div>
@@ -101,17 +101,16 @@
             <div class="form-group">
                 <label for="birthday"><%=translate('contact.contacts.birthday')%></label>
 
-                <div class="changeListener">
-                    <div id="birthday"
-                         data-form="true"
-                         data-type="husky-input"
-                         data-aura-component="input@husky"
-                         data-aura-skin="date"
-                         data-aura-instance-name="birthday"
-                         data-aura-input-id="input-birthday"
-                         data-aura-input-name="input-birthday"
-                         data-mapper-property="birthday"></div>
-                </div>
+                <div id="birthday"
+                     data-form="true"
+                     data-type="husky-input"
+                     data-aura-component="input@husky"
+                     data-aura-skin="date"
+                     data-aura-instance-name="birthday"
+                     data-aura-input-id="input-birthday"
+                     data-aura-input-name="input-birthday"
+                     data-mapper-property="birthday"></div>
+
             </div>
         </div>
         <div class="grid-col-6">
@@ -119,7 +118,7 @@
                 <label for="disabled"><%=translate('public.locked')%></label>
                 <div>
                     <div class="custom-checkbox">
-                        <input class="form-element husky-validate changeListener" type="checkbox" id="disabled"
+                        <input class="form-element husky-validate" type="checkbox" id="disabled"
                                data-mapper-property="disabled">
                         <span class="icon"></span>
                     </div>
@@ -127,4 +126,5 @@
             </div>
         </div>
     </div>
+</div>
 {% endblock %}
