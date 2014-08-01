@@ -14,6 +14,10 @@
                 <source>public.edit</source>
                 <target>Editieren</target>
             </trans-unit>
+            <trans-unit id="fbf5558377419fbed4c73a4ba3fdf007" resname="public.empty-list">
+                <source>public.key</source>
+                <target>Diese Liste ist leer</target>
+            </trans-unit>
             <trans-unit id="a10bd71863ade53bc0e1bd8822e8bdbc" resname="header.add">
                 <source>header.add</source>
                 <target>Hinzufügen</target>
