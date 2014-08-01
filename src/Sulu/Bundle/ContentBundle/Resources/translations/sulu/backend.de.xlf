@@ -58,10 +58,6 @@
                 <source>content.contents.settings.move.title</source>
                 <target>Neuer Vater für Verschieben wählen</target>
             </trans-unit>
-            <trans-unit id="f1234df37123123ed4a73a4123dfdf00B" resname="content.contents.settings.wait">
-                <source>content.contents.settings.wait</source>
-                <target>Bitte warten ...</target>
-            </trans-unit>
         </body>
     </file>
 </xliff>

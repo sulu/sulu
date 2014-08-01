@@ -39,13 +39,8 @@ define(function() {
 
             columnNavigation: function() {
                 return[
-                    '<div id="child-column-navigation"/>'
-                ].join('');
-            },
-
-            wait: function() {
-                return[
-                    '<div id="wait-container" style="margin-top: 50px"></div>'
+                    '<div id="child-column-navigation"/>',
+                    '<div id="wait-container" style="margin-top: 50px; margin-bottom: 200px; display: none;"></div>'
                 ].join('');
             }
         };
@@ -126,7 +121,7 @@ define(function() {
         moveSelected: function(selectedItem) {
             // callback called for clicking a node in tree
             var editCallback = function(parentItem) {
-                this.sandbox.emit('husky.overlay.node.slide-right');
+                this.showOverlayLoader();
                 this.sandbox.emit('sulu.content.contents.move', selectedItem.id, parentItem.id,
                     function() {
                         this.restartColumnNavigation();
@@ -134,7 +129,7 @@ define(function() {
                     }.bind(this),
                     function(error) {
                         this.sandbox.logger.error(error);
-                        this.sandbox.emit('husky.overlay.node.slide-left');
+                        this.hideOverlayLoader();
                     }.bind(this));
             }.bind(this);
 
@@ -148,7 +143,7 @@ define(function() {
         copySelected: function(selectedItem) {
             // callback called for clicking a node in tree
             var editCallback = function(parentItem) {
-                this.sandbox.emit('husky.overlay.node.slide-right');
+                this.showOverlayLoader();
                 this.sandbox.emit('sulu.content.contents.copy', selectedItem.id, parentItem.id,
                     function(data) {
                         this.setLastSelected(data.id);
@@ -158,7 +153,7 @@ define(function() {
                     }.bind(this),
                     function(error) {
                         this.sandbox.logger.error(error);
-                        this.sandbox.emit('husky.overlay.node.slide-left');
+                        this.hideOverlayLoader();
                     }.bind(this));
             }.bind(this);
 
@@ -227,11 +222,6 @@ define(function() {
                                         type: 'cancel'
                                     }
                                 ]
-                            },
-                            {
-                                title: this.sandbox.translate('content.contents.settings.wait'),
-                                data: templates.wait(),
-                                buttons: []
                             }
                         ]
                     }
@@ -283,6 +273,22 @@ define(function() {
                     }
                 ]
             );
+        },
+
+        /**
+         * show overlay loader
+         */
+        showOverlayLoader: function() {
+            this.sandbox.dom.css('#child-column-navigation', 'display', 'none');
+            this.sandbox.dom.css('#wait-container', 'display', 'block');
+        },
+
+        /**
+         * hide overlay loader
+         */
+        hideOverlayLoader: function() {
+            this.sandbox.dom.css('#child-column-navigation', 'display', 'block');
+            this.sandbox.dom.css('#wait-container', 'display', 'none');
         },
 
         /**
