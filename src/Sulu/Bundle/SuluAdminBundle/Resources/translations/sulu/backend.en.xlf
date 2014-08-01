@@ -10,6 +10,10 @@
                 <source>public.key</source>
                 <target>Key</target>
             </trans-unit>
+            <trans-unit id="fbf5558377419fbed4c73a4ba3fdf007" resname="public.empty-list">
+                <source>public.key</source>
+                <target>This list is empty</target>
+            </trans-unit>
             <trans-unit id="e4b14069a8a085ede200b7f5acb2d39e" resname="public.edit">
                 <source>public.edit</source>
                 <target>Edit</target>
