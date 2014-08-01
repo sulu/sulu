@@ -480,10 +480,18 @@ class AccountController extends AbstractContactController
             $accountContact = $this->getDoctrine()
                 ->getRepository(self::$accountContactEntityName)
                 ->findByForeignIds($accountId, $contactId);
+
             if (!$accountContact) {
                 throw new EntityNotFoundException('AccountContact', $accountId . $contactId);
             }
             $id = $accountContact->getId();
+
+            $account = $accountContact->getAccount();
+
+            // remove main contact when relation with main was removed
+            if($account->getMainContact() && strval($account->getMainContact()->getId()) === $contactId){
+                $account->setMainContact(null);
+            }
 
             // remove accountContact
             $em = $this->getDoctrine()->getManager();
