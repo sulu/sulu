@@ -100,15 +100,18 @@
         <div class="grid-col-6">
             <div class="form-group">
                 <label for="birthday"><%=translate('contact.contacts.birthday')%></label>
-                <div id="birthday"
-                     data-form="true"
-                     data-type="husky-input"
-                     data-aura-component="input@husky"
-                     data-aura-skin="date"
-                     data-aura-instance-name="birthday"
-                     data-aura-input-id="<~= uid ~>"
-                     data-aura-input-name="<~= uid ~>"
-                     data-mapper-property="birthday"></div>
+
+                <div class="changeListener">
+                    <div id="birthday"
+                         data-form="true"
+                         data-type="husky-input"
+                         data-aura-component="input@husky"
+                         data-aura-skin="date"
+                         data-aura-instance-name="birthday"
+                         data-aura-input-id="input-birthday"
+                         data-aura-input-name="input-birthday"
+                         data-mapper-property="birthday"></div>
+                </div>
             </div>
         </div>
         <div class="grid-col-6">
