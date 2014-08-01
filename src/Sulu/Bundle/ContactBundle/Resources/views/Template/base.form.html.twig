@@ -5,7 +5,6 @@
         {% block static %}
         {% endblock %}
 
-        <div class="changeListener">
         {% block contact %}
             <div id="contact-edit-form">
                 <div class="pos-rel">
@@ -119,7 +118,7 @@
                                     </span>
                                 </label>
 
-                                <div>
+                                <div class="changeListener">
                                     <div data-form="true"
                                          data-type="husky-input"
                                          data-aura-component="input@husky"
@@ -148,7 +147,7 @@
                                     </span>
                                 </label>
 
-                                <div>
+                                <div class="changeListener">
                                     <div data-form="true"
                                          data-type="husky-input"
                                          data-aura-component="input@husky"
@@ -178,7 +177,7 @@
                                     </span>
                                 </label>
 
-                                <div>
+                                <div class="changeListener">
                                     <div data-form="true"
                                          data-type="husky-input"
                                          data-aura-component="input@husky"
@@ -205,7 +204,7 @@
                                     </span>
                                 </label>
 
-                                <div>
+                                <div class="changeListener">
                                     <div data-form="true"
                                          data-type="husky-input"
                                          data-aura-component="input@husky"
@@ -229,7 +228,7 @@
                             <div class="form-group">
                                 <label for="<~= uid ~>" class="top visible"></label>
                                 <label class="top hidden" for="<~= uid ~>"><%= translate('public.note') %></label>
-                                <div>
+                                <div class="changeListener">
                                     <input type="hidden" data-mapper-property="id" class="id-value"/>
                                     <textarea id="<~= uid ~>" data-form="true" class="form-element" data-mapper-property="value"> </textarea>
                                 </div>
@@ -239,7 +238,7 @@
                 </div>
             </div>
         {% endblock %}
-            </div>
+
     </div>
 
     {% block tags %}
