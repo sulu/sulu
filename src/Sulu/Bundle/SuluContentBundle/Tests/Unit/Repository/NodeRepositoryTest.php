@@ -386,6 +386,7 @@ class NodeRepositoryTest extends PhpcrTestCase
         $this->assertEquals($data[0]->getUuid(), $result['id']);
         $this->assertEquals('Testtitle1', $result['title']);
         $this->assertEquals('/testtitle2/testtitle1', $result['path']);
+        $this->assertEquals('/news/test2/test1', $result['url']);
         $this->assertEquals(2, $result['changer']);
 
         // check none existing source node
@@ -393,11 +394,13 @@ class NodeRepositoryTest extends PhpcrTestCase
         $this->assertEquals(1, sizeof($firstLayerNodes['_embedded']['nodes']));
         $this->assertEquals('Testtitle2', $firstLayerNodes['_embedded']['nodes'][0]['title']);
         $this->assertEquals('/testtitle2', $firstLayerNodes['_embedded']['nodes'][0]['path']);
+        $this->assertEquals('/news/test2', $firstLayerNodes['_embedded']['nodes'][0]['url']);
 
         $secondLayerNodes = $this->nodeRepository->getNodes($data[1]->getUuid(), 'default', 'en');
         $this->assertEquals(1, sizeof($secondLayerNodes['_embedded']['nodes']));
         $this->assertEquals('Testtitle1', $secondLayerNodes['_embedded']['nodes'][0]['title']);
         $this->assertEquals('/testtitle2/testtitle1', $secondLayerNodes['_embedded']['nodes'][0]['path']);
+        $this->assertEquals('/news/test2/test1', $secondLayerNodes['_embedded']['nodes'][0]['url']);
     }
 
     public function testMoveNonExistingSource()
@@ -583,7 +586,17 @@ class NodeRepositoryTest extends PhpcrTestCase
         $method->invokeArgs(
             $structureMock,
             array(
-                new Property('url', 'url', 'resource_locator')
+                new Property(
+                    'url',
+                    'url',
+                    'resource_locator',
+                    false,
+                    true,
+                    1,
+                    1,
+                    array(),
+                    array(new PropertyTag('sulu.rlp', 1))
+                )
             )
         );
 
