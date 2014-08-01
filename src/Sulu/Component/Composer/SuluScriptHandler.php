@@ -22,17 +22,9 @@ class SuluScriptHandler extends ScriptHandler
     {
         $options = parent::getOptions($event);
         $appDir = $options['symfony-app-dir'];
-        $webDir = $options['symfony-web-dir'];
 
         $dir = dirname(dirname(dirname(dirname(dirname(dirname(dirname(__DIR__)))))));
 
-        parent::executeCommand(
-            $event,
-            $appDir,
-            'sulu:install:resources ' . escapeshellarg($dir . '/' . $appDir) . ' ' . escapeshellarg(
-                $dir . '/' . $webDir
-            )
-        );
         parent::executeCommand(
             $event,
             $appDir,
