@@ -1026,6 +1026,34 @@ class ContentMapper implements ContentMapperInterface
         return $result;
     }
 
+    public function orderBefore($uuid, $beforeUuid, $userId, $webspaceKey, $languageCode)
+    {
+        // prepare utility
+        $session = $this->getSession();
+
+        // load from phpcr
+        $nodes = $session->getNodesByIdentifier(array($uuid, $beforeUuid));
+
+        /** @var NodeInterface $nodeUp */
+        $nodeUp = $nodes->current();
+        $nodes->next();
+        /** @var NodeInterface $nodeDown */
+        $nodeDown = $nodes->current();
+        $parent = $nodeUp->getParent();
+
+        // reorder
+        $parent->orderBefore($nodeUp->getName(), $nodeDown->getName());
+
+        // set changer of node in specific language
+        $this->setChanger($nodeUp, $userId, $languageCode);
+        $this->setChanger($nodeDown, $userId, $languageCode);
+
+        // save session
+        $session->save();
+
+        return $this->load($uuid, $webspaceKey, $languageCode);
+    }
+
     /**
      * copies (deleteSource = false) or move (deleteSource = true) the src (uuid) node to dest (parentUuid) node
      * @param string $uuid
@@ -1087,14 +1115,19 @@ class ContentMapper implements ContentMapperInterface
             );
         }
 
-        // set changer of node
-        $this->properties->setLanguage($languageCode);
-        $node->setProperty($this->properties->getName('changer'), $userId);
-        $node->setProperty($this->properties->getName('changed'), new DateTime());
+        // set changer of node in specific language
+        $this->setChanger($node, $userId, $languageCode);
 
         $session->save();
 
         return $this->loadByNode($node, $languageCode, $webspaceKey);
+    }
+
+    private function setChanger(NodeInterface $node, $userId, $languageCode)
+    {
+        $this->properties->setLanguage($languageCode);
+        $node->setProperty($this->properties->getName('changer'), $userId);
+        $node->setProperty($this->properties->getName('changed'), new DateTime());
     }
 
     /**

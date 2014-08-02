@@ -2779,6 +2779,22 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals('/page-1/sub-2', $test->getResourceLocator());
         $this->assertEquals(2, $test->getChanger());
     }
+
+    public function testOrderBefore()
+    {
+        $data = $this->prepareCopyMoveTestData();
+
+        $result = $this->mapper->orderBefore($data[6]->getUuid(), $data[4]->getUuid(), 4, 'default', 'en');
+
+        $this->assertEquals($data[6]->getUuid(), $result->getUuid());
+        $this->assertEquals('/page-2/subpage', $result->getPath());
+        $this->assertEquals(4, $result->getChanger());
+
+        $result = $this->mapper->loadByParent($data[3]->getUuid(),'default','en');
+        $this->assertEquals('/page-2/subpage', $result[0]->getPath());
+        $this->assertEquals('/page-2/sub', $result[1]->getPath());
+        $this->assertEquals('/page-2/sub-1', $result[2]->getPath());
+    }
 }
 
 class TestExtension extends StructureExtension
