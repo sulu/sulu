@@ -1076,8 +1076,8 @@ class ContentMapper implements ContentMapperInterface
         }
 
         // correct resource locator
-        if ($content->hasTag('sulu.rlp')) {
-            $this->adoptResourceLocator(
+        if ($content->hasTag('sulu.rlp') && $content->getNodeType() === Structure::NODE_TYPE_CONTENT) {
+            $this->adaptResourceLocator(
                 $content,
                 $node,
                 $parentResourceLocator,
@@ -1106,7 +1106,7 @@ class ContentMapper implements ContentMapperInterface
      * @param string $webspaceKey
      * @param string $languageCode
      */
-    private function adoptResourceLocator(
+    private function adaptResourceLocator(
         StructureInterface $content,
         NodeInterface $node,
         $parentResourceLocator,
