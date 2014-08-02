@@ -1051,6 +1051,9 @@ class ContentMapper implements ContentMapperInterface
         // save session
         $session->save();
 
+        // session don't recognice a new child order, a refresh fixes that
+        $session->refresh(false);
+
         return $this->load($uuid, $webspaceKey, $languageCode);
     }
 
