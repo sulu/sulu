@@ -1127,4 +1127,56 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertEquals('test2', $items[3]['title']);
     }
 
+    public function testOrderNonExistingSource()
+    {
+        $data = array(
+            array(
+                'title' => 'test1',
+                'url' => '/test1'
+            )
+        );
+
+        $client = $this->createClient(
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test',
+            )
+        );
+        $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en', $data[0]);
+        $data[0] = json_decode($client->getResponse()->getContent(), true);
+
+        $client->request(
+            'POST',
+            '/api/nodes/123-123-123?webspace=sulu_io&language=en&action=order&destination=' . $data[0]['id']
+        );
+        $this->assertEquals(400, $client->getResponse()->getStatusCode());
+    }
+
+    public function testOrderNonExistingDestination()
+    {
+        $data = array(
+            array(
+                'title' => 'test1',
+                'url' => '/test1'
+            )
+        );
+
+        $client = $this->createClient(
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test',
+            )
+        );
+        $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en', $data[0]);
+        $data[0] = json_decode($client->getResponse()->getContent(), true);
+
+        $client->request(
+            'POST',
+            '/api/nodes/' . $data[0]['id'] . '?webspace=sulu_io&language=en&action=order&destination=123-123-123'
+        );
+        $this->assertEquals(400, $client->getResponse()->getStatusCode());
+    }
+
 }
