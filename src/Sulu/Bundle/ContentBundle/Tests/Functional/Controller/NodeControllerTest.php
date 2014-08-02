@@ -1096,7 +1096,7 @@ class NodeControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent(), true);
 
         // check some properties
-        $this->assertNotEquals($data[3]['id'], $response['id']);
+        $this->assertEquals($data[3]['id'], $response['id']);
         $this->assertEquals('test4', $response['title']);
         $this->assertEquals('/test4', $response['path']);
         $this->assertEquals('/test4', $response['url']);
@@ -1109,7 +1109,7 @@ class NodeControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent(), true);
 
         // check some properties
-        $this->assertNotEquals($data[2]['id'], $response['id']);
+        $this->assertEquals($data[2]['id'], $response['id']);
         $this->assertEquals('test3', $response['title']);
         $this->assertEquals('/test3', $response['path']);
         $this->assertEquals('/test3', $response['url']);
@@ -1117,8 +1117,8 @@ class NodeControllerTest extends DatabaseTestCase
         // get child nodes from root
         $client->request('GET', '/api/nodes?depth=1&webspace=sulu_io&language=en');
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $response = json_decode($client->getResponse()->getContent());
-        $items = $response->_embedded->nodes;
+        $response = json_decode($client->getResponse()->getContent(), true);
+        $items = $response['_embedded']['nodes'];
 
         $this->assertEquals(4, sizeof($items));
         $this->assertEquals('test3', $items[0]['title']);
