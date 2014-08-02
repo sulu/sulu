@@ -31,6 +31,12 @@ define(function() {
          */
         DELETE_BUTTON_ID = 1,
 
+        /**
+         * constant for order button id
+         * @type {number}
+         */
+        ORDER_BUTTON_ID = 5,
+
         templates = {
             toggler: [
                 '<div id="show-ghost-pages"></div>',
@@ -105,24 +111,21 @@ define(function() {
                     this.copySelected(selectedItem);
                 } else if (dropdownItem.id === DELETE_BUTTON_ID) {
                     this.deleteSelected(selectedItem);
+                } else if (dropdownItem.id === ORDER_BUTTON_ID) {
+                    this.orderSelected(selectedItem);
                 }
-            }.bind(this));
-
-            // adjust position of overlay after column-navigation has initialized
-            this.sandbox.on('husky.column-navigation.overlay.initialized', function() {
-                this.sandbox.emit('husky.overlay.node.set-position');
             }.bind(this));
         },
 
         /**
          * move item to another place in content tree
-         * @param {Object} selectedItem item selected in column-navigation
+         * @param {Object} item item selected in column-navigation
          */
-        moveSelected: function(selectedItem) {
+        moveSelected: function(item) {
             // callback called for clicking a node in tree
             var editCallback = function(parentItem) {
                 this.showOverlayLoader();
-                this.sandbox.emit('sulu.content.contents.move', selectedItem.id, parentItem.id,
+                this.sandbox.emit('sulu.content.contents.move', item.id, parentItem.id,
                     function() {
                         this.restartColumnNavigation();
                         this.sandbox.emit('husky.overlay.node.close');
@@ -133,18 +136,18 @@ define(function() {
                     }.bind(this));
             }.bind(this);
 
-            this.moveOrCopySelected(selectedItem, editCallback, 'move');
+            this.moveOrCopySelected(item, editCallback, 'move');
         },
 
         /**
          * copy item to another place in content tree
-         * @param {Object} selectedItem item selected in column-navigation
+         * @param {Object} item item selected in column-navigation
          */
-        copySelected: function(selectedItem) {
+        copySelected: function(item) {
             // callback called for clicking a node in tree
             var editCallback = function(parentItem) {
                 this.showOverlayLoader();
-                this.sandbox.emit('sulu.content.contents.copy', selectedItem.id, parentItem.id,
+                this.sandbox.emit('sulu.content.contents.copy', item.id, parentItem.id,
                     function(data) {
                         this.setLastSelected(data.id);
 
@@ -157,19 +160,19 @@ define(function() {
                     }.bind(this));
             }.bind(this);
 
-            this.moveOrCopySelected(selectedItem, editCallback, 'copy');
+            this.moveOrCopySelected(item, editCallback, 'copy');
         },
 
         /**
          * starts overlay and column-navigation and registers important event handler
-         * @param {Object} selectedItem item selected in column-navigation
+         * @param {Object} item item selected in column-navigation
          * @param {Function} editCallback called for clicking a node in tree
          * @param {String} title translation key part ('content.contents.settings.<<title>>.title')
          */
-        moveOrCopySelected: function(selectedItem, editCallback, title) {
+        moveOrCopySelected: function(item, editCallback, title) {
             // wait for overlay initialized to initialize overlay
             this.sandbox.once('husky.overlay.node.initialized', function() {
-                this.startOverlayColumnNavigation(selectedItem.id);
+                this.startOverlayColumnNavigation(item.id);
                 this.startOverlayLoader();
             }.bind(this));
 
@@ -181,25 +184,48 @@ define(function() {
                 this.sandbox.off('husky.column-navigation.overlay.edit', editCallback);
             }.bind(this));
 
-            this.startOverlay('content.contents.settings.' + title + '.title');
+            // adjust position of overlay after column-navigation has initialized
+            this.sandbox.once('husky.column-navigation.overlay.initialized', function() {
+                this.sandbox.emit('husky.overlay.node.set-position');
+            }.bind(this));
+
+            this.startOverlay('content.contents.settings.' + title + '.title', templates.columnNavigation());
         },
 
         /**
          * delete item in content tree
-         * @param {Object} selectedItem item selected in column-navigation
+         * @param {Object} item item selected in column-navigation
          */
-        deleteSelected: function(selectedItem) {
+        deleteSelected: function(item) {
             this.sandbox.once('sulu.preview.deleted', function() {
                 this.restartColumnNavigation();
             }.bind(this));
-            this.sandbox.emit('sulu.content.content.delete', selectedItem.id);
+            this.sandbox.emit('sulu.content.content.delete', item.id);
+        },
+
+        /**
+         * order item in his layer
+         * @param {Object} item
+         */
+        orderSelected: function(item) {
+            // callback called for clicking a node in tree
+            var editCallback = function(parentItem) {
+            }.bind(this);
+
+            // wait for overlay initialized to initialize overlay
+            this.sandbox.once('husky.overlay.node.initialized', function() {
+                // TODO start overlay table
+            }.bind(this));
+
+            this.startOverlay('content.contents.settings.order.title', templates.columnNavigation());
         },
 
         /**
          * start a new overlay
          * @param {String} titleKey translation key
+         * @param {String} template template for the content
          */
-        startOverlay: function(titleKey) {
+        startOverlay: function(titleKey, template) {
             var $element = this.sandbox.dom.createElement('<div class="overlay-container"/>');
             this.sandbox.dom.append(this.$el, $element);
             this.sandbox.start([
@@ -216,7 +242,7 @@ define(function() {
                         slides: [
                             {
                                 title: this.sandbox.translate(titleKey),
-                                data: templates.columnNavigation(),
+                                data: template,
                                 buttons: [
                                     {
                                         type: 'cancel'
@@ -332,6 +358,10 @@ define(function() {
                             {
                                 id: COPY_BUTTON_ID,
                                 name: this.sandbox.translate('content.contents.settings.copy')
+                            },
+                            {
+                                id: ORDER_BUTTON_ID,
+                                name: this.sandbox.translate('content.contents.settings.order')
                             }
                         ]
                     }
