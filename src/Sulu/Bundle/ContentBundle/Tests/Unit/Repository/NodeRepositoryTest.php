@@ -467,6 +467,87 @@ class NodeRepositoryTest extends PhpcrTestCase
         $this->nodeRepository->copyNode($data[0]->getUuid(), '123-123', 'default', 'en', 2);
     }
 
+    /**
+     * @return StructureInterface[]
+     */
+    private function prepareOrderBeforeData()
+    {
+        $data = array(
+            array(
+                'title' => 'Test1',
+                'url' => '/news/test1'
+            ),
+            array(
+                'title' => 'Test2',
+                'url' => '/news/test2'
+            ),
+            array(
+                'title' => 'Test3',
+                'url' => '/news/test3'
+            ),
+            array(
+                'title' => 'Test4',
+                'url' => '/news/test4'
+            ),
+        );
+
+        foreach ($data as &$element) {
+            $element = $this->mapper->save(
+                $element,
+                'overview',
+                'default',
+                'en',
+                1,
+                true,
+                null,
+                null,
+                StructureInterface::STATE_PUBLISHED
+            );
+        }
+
+        return $data;
+    }
+
+    public function testOrderBefore()
+    {
+        $data = $this->prepareOrderBeforeData();
+
+        $result = $this->nodeRepository->orderBefore($data[3]->getUuid(), $data[0]->getUuid(), 'default', 'en', 2);
+        $this->assertEquals('Test4', $result['title']);
+        $this->assertEquals('/test4', $result['path']);
+        $this->assertEquals('/news/test4', $result['url']);
+
+        $result = $this->nodeRepository->orderBefore($data[2]->getUuid(), $data[3]->getUuid(), 'default', 'en', 2);
+        $this->assertEquals('Test3', $result['title']);
+        $this->assertEquals('/test3', $result['path']);
+        $this->assertEquals('/news/test3', $result['url']);
+
+        $test = $this->nodeRepository->getNodes(null, 'default', 'en');
+        $this->assertEquals(4, sizeof($test['_embedded']['nodes']));
+        $nodes = $test['_embedded']['nodes'];
+
+        $this->assertEquals('Test3', $nodes[0]['title']);
+        $this->assertEquals('Test4', $nodes[1]['title']);
+        $this->assertEquals('Test1', $nodes[2]['title']);
+        $this->assertEquals('Test2', $nodes[3]['title']);
+    }
+
+    public function testOrderBeforeNonExistingSource()
+    {
+        $data = $this->prepareOrderBeforeData();
+        $this->setExpectedException('Sulu\Component\Rest\Exception\RestException');
+
+        $this->nodeRepository->orderBefore('123-123-123', $data[0]->getUuid(), 'default', 'en', 2);
+    }
+
+    public function testOrderBeforeNonExistingDestination()
+    {
+        $data = $this->prepareOrderBeforeData();
+        $this->setExpectedException('Sulu\Component\Rest\Exception\RestException');
+
+        $this->nodeRepository->orderBefore($data[0]->getUuid(), '123-123-123', 'default', 'en', 2);
+    }
+
     protected function setUp()
     {
         $this->prepareMapper();
