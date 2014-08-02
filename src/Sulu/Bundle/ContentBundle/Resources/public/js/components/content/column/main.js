@@ -48,6 +48,13 @@ define(function() {
                     '<div id="child-column-navigation"/>',
                     '<div id="wait-container" style="margin-top: 50px; margin-bottom: 200px; display: none;"></div>'
                 ].join('');
+            },
+
+            table: function() {
+                return[
+                    '<div id="child-table"/>',
+                    '<div id="wait-container" style="margin-top: 50px; margin-bottom: 200px; display: none;"></div>'
+                ].join('');
             }
         };
 
@@ -104,7 +111,7 @@ define(function() {
                 this.startColumnNavigation();
             }, this);
 
-            this.sandbox.on('husky.column-navigation.node.settings', function(dropdownItem, selectedItem) {
+            this.sandbox.on('husky.column-navigation.node.settings', function(dropdownItem, selectedItem, columnItems) {
                 if (dropdownItem.id === MOVE_BUTTON_ID) {
                     this.moveSelected(selectedItem);
                 } else if (dropdownItem.id === COPY_BUTTON_ID) {
@@ -112,7 +119,7 @@ define(function() {
                 } else if (dropdownItem.id === DELETE_BUTTON_ID) {
                     this.deleteSelected(selectedItem);
                 } else if (dropdownItem.id === ORDER_BUTTON_ID) {
-                    this.orderSelected(selectedItem);
+                    this.orderSelected(selectedItem, columnItems);
                 }
             }.bind(this));
         },
@@ -206,18 +213,52 @@ define(function() {
         /**
          * order item in his layer
          * @param {Object} item
+         * @param {Array} columnItems
          */
-        orderSelected: function(item) {
-            // callback called for clicking a node in tree
-            var editCallback = function(parentItem) {
-            }.bind(this);
+        orderSelected: function(item, columnItems) {
+            // event listener for select click
+            this.sandbox.dom.one(this.$el, 'click', function(e) {
+                var $item = this.sandbox.dom.parent(e.currentTarget),
+                    id = this.sandbox.dom.data($item, 'id');
+
+                // TODO API integration
+
+                this.restartColumnNavigation();
+                this.sandbox.emit('husky.overlay.node.close');
+            }.bind(this), '#child-table .options-select');
 
             // wait for overlay initialized to initialize overlay
-            this.sandbox.once('husky.overlay.node.initialized', function() {
-                // TODO start overlay table
+            this.sandbox.once('husky.overlay.node.opened', function() {
+                this.renderOverlayTable('#child-table', columnItems);
             }.bind(this));
 
-            this.startOverlay('content.contents.settings.order.title', templates.columnNavigation());
+            this.startOverlay('content.contents.settings.order.title', templates.table());
+        },
+
+        /**
+         * render a table with given items in given container
+         * @param {String|Object} domId
+         * @param {Array} items
+         */
+        renderOverlayTable: function(domId, items) {
+            var $container = this.sandbox.dom.find(domId),
+                html = ['<ul class="order-table">'], template, id, item;
+
+            for (id in items) {
+                if (items.hasOwnProperty(id)) {
+                    item = items[id];
+                    html.push(
+                            '<li data-id="' + item.id + '" data-path="' + item.path + '">' +
+                            '   <span class="node-name">' + this.sandbox.util.cropMiddle(item['sulu.node.name'], 35) + '</span>' +
+                            '   <span class="options-select"><i class="fa fa-arrow-up pointer"></i></span>' +
+                            '</li>'
+                    );
+                }
+            }
+            html.push('</ul>');
+            template = html.join('');
+
+            this.sandbox.dom.append($container, template);
         },
 
         /**
