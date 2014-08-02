@@ -516,11 +516,13 @@ class NodeRepositoryTest extends PhpcrTestCase
         $this->assertEquals('Test4', $result['title']);
         $this->assertEquals('/test4', $result['path']);
         $this->assertEquals('/news/test4', $result['url']);
+        $this->assertEquals(2, $result['changer']);
 
         $result = $this->nodeRepository->orderBefore($data[2]->getUuid(), $data[3]->getUuid(), 'default', 'en', 2);
         $this->assertEquals('Test3', $result['title']);
         $this->assertEquals('/test3', $result['path']);
         $this->assertEquals('/news/test3', $result['url']);
+        $this->assertEquals(2, $result['changer']);
 
         $test = $this->nodeRepository->getNodes(null, 'default', 'en');
         $this->assertEquals(4, sizeof($test['_embedded']['nodes']));
