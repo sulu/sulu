@@ -1051,4 +1051,80 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
     }
 
+    public function testOrder()
+    {
+        $data = array(
+            array(
+                'title' => 'test1',
+                'url' => '/test1'
+            ),
+            array(
+                'title' => 'test2',
+                'url' => '/test2'
+            ),
+            array(
+                'title' => 'test3',
+                'url' => '/test3'
+            ),
+            array(
+                'title' => 'test4',
+                'url' => '/test4'
+            )
+        );
+
+        $client = $this->createClient(
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test',
+            )
+        );
+        $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en', $data[0]);
+        $data[0] = json_decode($client->getResponse()->getContent(), true);
+        $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en', $data[1]);
+        $data[1] = json_decode($client->getResponse()->getContent(), true);
+        $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en', $data[2]);
+        $data[2] = json_decode($client->getResponse()->getContent(), true);
+        $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en', $data[3]);
+        $data[3] = json_decode($client->getResponse()->getContent(), true);
+
+        $client->request(
+            'POST',
+            '/api/nodes/' . $data[3]['id'] . '?webspace=sulu_io&language=en&action=order&destination=' . $data[0]['id']
+        );
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent(), true);
+
+        // check some properties
+        $this->assertNotEquals($data[3]['id'], $response['id']);
+        $this->assertEquals('test4', $response['title']);
+        $this->assertEquals('/test4', $response['path']);
+        $this->assertEquals('/test4', $response['url']);
+
+        $client->request(
+            'POST',
+            '/api/nodes/' . $data[2]['id'] . '?webspace=sulu_io&language=en&action=order&destination=' . $data[3]['id']
+        );
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent(), true);
+
+        // check some properties
+        $this->assertNotEquals($data[2]['id'], $response['id']);
+        $this->assertEquals('test3', $response['title']);
+        $this->assertEquals('/test3', $response['path']);
+        $this->assertEquals('/test3', $response['url']);
+
+        // get child nodes from root
+        $client->request('GET', '/api/nodes?depth=1&webspace=sulu_io&language=en');
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent());
+        $items = $response->_embedded->nodes;
+
+        $this->assertEquals(4, sizeof($items));
+        $this->assertEquals('test3', $items[0]['title']);
+        $this->assertEquals('test4', $items[1]['title']);
+        $this->assertEquals('test1', $items[2]['title']);
+        $this->assertEquals('test2', $items[3]['title']);
+    }
+
 }
