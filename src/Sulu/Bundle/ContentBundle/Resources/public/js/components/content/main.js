@@ -250,7 +250,7 @@ define([
             this.sandbox.on('sulu.content.contents.copy', this.copy, this);
 
             // order selected content
-            this.sandbox.on('sulu.content.contents.copy', this.order, this);
+            this.sandbox.on('sulu.content.contents.order', this.order, this);
 
             // get resource locator
             this.sandbox.once('sulu.content.contents.get-rl', function(title, callback) {

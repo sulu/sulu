@@ -222,7 +222,7 @@ define(function() {
                     id = this.sandbox.dom.data($item, 'id');
 
                 this.showOverlayLoader();
-                this.sandbox.emit('sulu.content.contents.copy', item.id, id,
+                this.sandbox.emit('sulu.content.contents.order', item.id, id,
                     function(data) {
                         this.setLastSelected(data.id);
 
@@ -240,7 +240,7 @@ define(function() {
 
             // wait for overlay initialized to initialize overlay
             this.sandbox.once('husky.overlay.node.opened', function() {
-                this.renderOverlayTable('#child-table', columnItems);
+                this.renderOverlayTable('#child-table', columnItems, item.id);
             }.bind(this));
 
             this.startOverlay('content.contents.settings.order.title', templates.table());
@@ -250,13 +250,14 @@ define(function() {
          * render a table with given items in given container
          * @param {String|Object} domId
          * @param {Array} items
+         * @param {String} exclude
          */
-        renderOverlayTable: function(domId, items) {
+        renderOverlayTable: function(domId, items, exclude) {
             var $container = this.sandbox.dom.find(domId),
                 html = ['<ul class="order-table">'], template, id, item;
 
             for (id in items) {
-                if (items.hasOwnProperty(id)) {
+                if (items.hasOwnProperty(id) && id !== exclude) {
                     item = items[id];
                     html.push(
                             '<li data-id="' + item.id + '" data-path="' + item.path + '">' +
