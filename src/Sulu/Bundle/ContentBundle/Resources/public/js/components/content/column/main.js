@@ -221,7 +221,18 @@ define(function() {
                 var $item = this.sandbox.dom.parent(e.currentTarget),
                     id = this.sandbox.dom.data($item, 'id');
 
-                // TODO API integration
+                this.showOverlayLoader();
+                this.sandbox.emit('sulu.content.contents.copy', item.id, id,
+                    function(data) {
+                        this.setLastSelected(data.id);
+
+                        this.restartColumnNavigation();
+                        this.sandbox.emit('husky.overlay.node.close');
+                    }.bind(this),
+                    function(error) {
+                        this.sandbox.logger.error(error);
+                        this.hideOverlayLoader();
+                    }.bind(this));
 
                 this.restartColumnNavigation();
                 this.sandbox.emit('husky.overlay.node.close');
@@ -347,6 +358,7 @@ define(function() {
          */
         showOverlayLoader: function() {
             this.sandbox.dom.css('#child-column-navigation', 'display', 'none');
+            this.sandbox.dom.css('#child-table', 'display', 'none');
             this.sandbox.dom.css('#wait-container', 'display', 'block');
         },
 
@@ -355,6 +367,7 @@ define(function() {
          */
         hideOverlayLoader: function() {
             this.sandbox.dom.css('#child-column-navigation', 'display', 'block');
+            this.sandbox.dom.css('#child-table', 'display', 'block');
             this.sandbox.dom.css('#wait-container', 'display', 'none');
         },
 
