@@ -187,7 +187,8 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
                 $this->language,
                 $this->defaultTemplate,
                 $this->languageNamespace,
-                $this->internalPrefix
+                $this->internalPrefix,
+                array('main','footer')
             );
 
             $resourceLocator = new ResourceLocator(
