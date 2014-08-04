@@ -125,7 +125,7 @@ define([], function() {
          *
          * @event sulu.header.[INSTANCE_NAME].initialized
          */
-        INITIALIZED = function() {
+            INITIALIZED = function() {
             return createEventName.call(this, 'initialized');
         },
 
@@ -134,7 +134,7 @@ define([], function() {
          *
          * @event sulu.header.[INSTANCE_NAME].back
          */
-        BACK = function() {
+            BACK = function() {
             return createEventName.call(this, 'back');
         },
 
@@ -144,7 +144,7 @@ define([], function() {
          * @event sulu.header.[INSTANCE_NAME].set-breadcrumb
          * @param {array} breadcrumb Array of breadcrumb-objects with a title and link attribute
          */
-        SET_BREADCRUMB = function() {
+            SET_BREADCRUMB = function() {
             return createEventName.call(this, 'set-breadcrumb');
         },
 
@@ -154,7 +154,7 @@ define([], function() {
          * @event sulu.header.[INSTANCE_NAME].set-title
          * @param {string} title to set
          */
-        SET_TITLE = function() {
+            SET_TITLE = function() {
             return createEventName.call(this, 'set-title');
         },
 
@@ -164,7 +164,7 @@ define([], function() {
          * @event sulu.header.[INSTANCE_NAME].set-title-color
          * @param {string} color to set
          */
-        SET_TITLE_COLOR = function() {
+            SET_TITLE_COLOR = function() {
             return createEventName.call(this, 'set-title-color');
         },
 
@@ -176,7 +176,7 @@ define([], function() {
          * @param {boolean} saved If false toolbar gets set in dirty state
          * @param {boolean} highlight True to change with highlight effect
          */
-        TOOLBAR_STATE_CHANGE = function() {
+            TOOLBAR_STATE_CHANGE = function() {
             return createEventName.call(this, 'toolbar.state.change');
         },
 
@@ -186,9 +186,9 @@ define([], function() {
          * @event sulu.header.[INSTANCE_NAME].get-height
          * @param {function} callback to pass the outer-height to
          */
-         GET_HEIGHT = function() {
+            GET_HEIGHT = function() {
             return createEventName.call(this, 'get-height');
-         },
+        },
 
         /**
          * listens on and initializes a blank toolbar with given options
@@ -196,9 +196,9 @@ define([], function() {
          * @event sulu.header.[INSTANCE_NAME].set-toolbar
          * @param {object} The options to pass to the toolbar-component
          */
-         SET_TOOLBAR = function() {
+            SET_TOOLBAR = function() {
             return createEventName.call(this, 'set-toolbar');
-         },
+        },
 
         /**
          * listens on and sets a given html-object into a container on the bottom of the header
@@ -206,7 +206,7 @@ define([], function() {
          * @event sulu.header.[INSTANCE_NAME].set-bottom-content
          * @param {object|string} the html-object/markup to insert
          */
-        SET_BOTTOM_CONTENT = function() {
+            SET_BOTTOM_CONTENT = function() {
             return createEventName.call(this, 'set-bottom-content');
         },
 
@@ -229,7 +229,7 @@ define([], function() {
          *
          * @event sulu.header.[INSTANCE_NAME].tabs.activate
          */
-        TABS_ACTIVATE = function() {
+            TABS_ACTIVATE = function() {
             return createEventName.call(this, 'tabs.activate');
         },
 
@@ -238,7 +238,7 @@ define([], function() {
          *
          * @event sulu.header.[INSTANCE_NAME].tabs.activate
          */
-        TABS_DEACTIVATE = function() {
+            TABS_DEACTIVATE = function() {
             return createEventName.call(this, 'tabs.deactivate');
         },
 
@@ -249,7 +249,7 @@ define([], function() {
          * @param {string} id The id of the button
          * @param {object} object with a icon and title
          */
-        TOOLBAR_BUTTON_SET = function() {
+            TOOLBAR_BUTTON_SET = function() {
             return createEventName.call(this, 'toolbar.button.set');
         },
 
@@ -259,7 +259,7 @@ define([], function() {
          * @event sulu.header.[INSTANCE_NAME].toolbar.item.loading
          * @param {string} id The id of the item
          */
-         TOOLBAR_ITEM_LOADING = function() {
+            TOOLBAR_ITEM_LOADING = function() {
             return createEventName.call(this, 'toolbar.item.loading');
         },
 
@@ -270,7 +270,7 @@ define([], function() {
          * @param {string} button The id of the button
          * @param {string} item the id or the index of the dropdown-item
          */
-        TOOLBAR_ITEM_CHANGE = function() {
+            TOOLBAR_ITEM_CHANGE = function() {
             return createEventName.call(this, 'toolbar.item.change');
         },
 
@@ -280,7 +280,7 @@ define([], function() {
          * @event sulu.header.[INSTANCE_NAME].toolbar.item.show
          * @param {string} button The id of the button
          */
-        TOOLBAR_ITEM_SHOW = function() {
+            TOOLBAR_ITEM_SHOW = function() {
             return createEventName.call(this, 'toolbar.item.show');
         },
 
@@ -290,7 +290,7 @@ define([], function() {
          * @event sulu.header.[INSTANCE_NAME].toolbar.item.enable
          * @param {string} button The id of the button
          */
-        TOOLBAR_ITEM_ENABLE = function() {
+            TOOLBAR_ITEM_ENABLE = function() {
             return createEventName.call(this, 'toolbar.item.enable');
         },
 
@@ -301,7 +301,7 @@ define([], function() {
          * @param id {string|number} id of the parent item
          * @param items {array} array of items to set
          */
-        TOOLBAR_ITEMS_SET = function() {
+            TOOLBAR_ITEMS_SET = function() {
             return createEventName.call(this, 'toolbar.items.set');
         },
 
@@ -310,7 +310,7 @@ define([], function() {
          * each function must return a an array with items for the toolbar
          * @type {{default: function, languageChanger: function, defaultLanguageChanger: function}}
          */
-        toolbarTemplates = {
+            toolbarTemplates = {
             default: function() {
                 return[
                     {
@@ -384,7 +384,7 @@ define([], function() {
 
                 button = this.sandbox.util.extend(true, {}, constants.languageChangerDefaults, {
                     id: 'language',
-                    title: this.sandbox.sulu.user.locale,
+                    title: this.options.toolbarLanguageChanger.preSelected || this.sandbox.sulu.user.locale,
                     items: items,
                     itemsOption: {
                         callback: function(item) {
@@ -444,7 +444,6 @@ define([], function() {
         };
 
     return {
-
         /**
          * Initializes the component
          */
@@ -533,7 +532,7 @@ define([], function() {
             if (!!this.options.toolbarLanguageChanger && !!this.options.toolbarLanguageChanger.url) {
                 languageChanger = toolbarTemplates.languageChanger.call(this,
                     this.options.toolbarLanguageChanger.url, this.options.toolbarLanguageChanger.callback);
-            } else if (this.options.toolbarLanguageChanger === true) {
+            } else if (!!this.options.toolbarLanguageChanger) {
                 languageChanger = toolbarTemplates.defaultLanguageChanger.call(this);
             }
             this.options.toolbarTemplate = this.options.toolbarTemplate.concat(languageChanger);
@@ -654,7 +653,7 @@ define([], function() {
          */
         startToolbarComponent: function(options, def) {
             var $container = this.sandbox.dom.createElement('<div />'),
-                // global default values
+            // global default values
                 componentOptions = {
                     el: $container,
                     skin: 'blueish',
@@ -859,7 +858,7 @@ define([], function() {
         setTitleColor: function(color) {
             this.sandbox.dom.addClass(this.$find('.' + constants.titleColorClass), constants.titleColorSetClass);
             this.sandbox.dom.css(this.$find('.' + constants.titleColorClass), {
-               'background-color': color
+                'background-color': color
             });
         },
 
