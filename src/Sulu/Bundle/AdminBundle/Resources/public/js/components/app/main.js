@@ -137,7 +137,7 @@ define(function() {
             this.sandbox.util._.each(this.sandbox.mvc.routes, function(route) {
                 router.route(route.route, function() {
                     this.sandbox.mvc.Store.reset();
-                    this.beforeNavigateCleanup();
+                    this.beforeNavigateCleanup(route);
                     route.callback.apply(this, arguments);
                 }.bind(this));
             }.bind(this));
@@ -202,12 +202,9 @@ define(function() {
 
             // only route if route has changed
             if (this.currentRoute !== route) {
-                this.currentRoute = route;
-
                 if (noLoader !== true && this.currentRoute !== route && this.currentRoute !== null) {
                     // todo: start loader
                 }
-
                 // navigate
                 router.navigate(route, {trigger: trigger});
                 this.sandbox.dom.scrollTop(this.sandbox.dom.$window, 0);
@@ -216,8 +213,10 @@ define(function() {
 
         /**
          * Cleans things up before navigating
+         * @param {String} route
          */
-        beforeNavigateCleanup: function() {
+        beforeNavigateCleanup: function(route) {
+            this.currentRoute = route;
             this.sandbox.dom.remove('.sulu-header-background');
 
             // FIXME App.stop is used in global context; possibly there is a better solution
