@@ -270,7 +270,7 @@ input, select {
 
 /* line 1, ../scss/modules/header.scss */
 .sulu-header {
-  background-color: #28b6ca;
+  background-color: #52b6ca;
   width: 100%;
   position: absolute;
   top: 0;
@@ -394,7 +394,7 @@ input, select {
   position: absolute;
   top: 0px;
   left: 0px;
-  background: #28b6ca;
+  background: #52b6ca;
   height: 150px;
   width: 100%;
 }
