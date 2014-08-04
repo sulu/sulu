@@ -627,10 +627,16 @@ define([
 
             // set correct backbone models
             if (!!data.termsOfPayment) {
-                this.account.set('termsOfPayment', TermsOfPayment.findOrCreate({id: data.termsOfPayment}));
+                this.account.set(
+                    'termsOfPayment',
+                    TermsOfPayment.findOrCreate({id: data.termsOfPayment})
+                );
             }
             if (!!data.termsOfDelivery) {
-                this.account.set('termsOfDelivery', TermsOfDelivery.findOrCreate({id: data.termsOfDelivery}));
+                this.account.set(
+                    'termsOfDelivery',
+                    TermsOfDelivery.findOrCreate({id: data.termsOfDelivery})
+                );
             }
 
             this.account.save(null, {
