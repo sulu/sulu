@@ -1,1 +1,1 @@
-define(["mvc/relationalmodel"],function(a){"use strict";return a({urlRoot:"/admin/api/termsOfDelivery",defaults:function(){return{id:null,terms:""}}})});
+define(["mvc/relationalmodel"],function(a){"use strict";return a({urlRoot:"/admin/api/termsofdeliveries",defaults:function(){return{id:null,terms:""}}})});
