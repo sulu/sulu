@@ -12,8 +12,10 @@ define([
     'sulucontact/model/contact',
     'sulucontact/model/accountContact',
     'accountsutil/header',
-    'sulucontact/model/activity'
-], function(Account, Contact, AccountContact, AccountsUtilHeader, Activity) {
+    'sulucontact/model/activity',
+    'sulucontact/model/termsOfPayment',
+    'sulucontact/model/termsOfDelivery'
+], function(Account, Contact, AccountContact, AccountsUtilHeader, Activity, TermsOfPayment, TermsOfDelivery) {
 
     'use strict';
 
@@ -161,23 +163,97 @@ define([
                 'sulu.contacts.account.activity.load',
                 this.loadActivity.bind(this)
             );
+
+            // handling of terms of delivery/payment eventlistener
+            this.sandbox.on(
+                'husky.select.terms-of-delivery.delete',
+                this.deleteTerms.bind(this, 'delivery')
+            );
+            this.sandbox.on(
+                'husky.select.terms-of-payment.delete',
+                this.deleteTerms.bind(this, 'payment')
+            );
+            this.sandbox.on(
+                'husky.select.terms-of-delivery.save',
+                this.saveTerms.bind(this, 'delivery')
+            );
+            this.sandbox.on(
+                'husky.select.terms-of-payment.save',
+                this.saveTerms.bind(this, 'payment')
+            );
+        },
+
+        deleteTerms: function(termsKey, ids) {
+            var condition, clazz, instanceName;
+            if (!!ids && ids.length > 0) {
+
+                if (termsKey === 'delivery') {
+                    clazz = TermsOfDelivery;
+                    instanceName = 'terms-of-delivery';
+                } else if (termsKey === 'payment') {
+                    clazz = TermsOfPayment;
+                    instanceName = 'terms-of-payment';
+                }
+
+                this.sandbox.util.each(ids, function(index, id) {
+                    condition = clazz.findOrCreate({id: id});
+                    condition.destroy({
+                        error: function() {
+                            this.sandbox.emit(
+                                    'husky.select.' + instanceName + '.revert'
+                            );
+                        }.bind(this)
+                    });
+                }.bind(this));
+
+            }
+        },
+
+        saveTerms: function(termsKey, data) {
+            var instanceName, urlSuffix;
+
+            if (!!data && data.length > 0) {
+                if (termsKey === 'delivery') {
+                    urlSuffix = 'termsofdeliveries';
+                    instanceName = 'terms-of-delivery';
+                } else if (termsKey === 'payment') {
+                    urlSuffix = 'termsofpayments';
+                    instanceName = 'terms-of-payment';
+                }
+
+                this.sandbox.util.save(
+                        '/admin/api/' + urlSuffix,
+                    'PATCH',
+                    data)
+                    .then(function(response) {
+                        this.sandbox.emit('husky.select.' + instanceName + '.update',
+                            response,
+                            null,
+                            true);
+                    }.bind(this)).fail(function(status, error) {
+                        this.sandbox.emit(
+                                'husky.select.' + instanceName + '.save.revert'
+                        );
+                        this.sandbox.logger.error(status, error);
+                    }.bind(this));
+            }
         },
 
         /**
          * Binds general sidebar events
          */
-        bindSidebarEvents: function(){
+        bindSidebarEvents: function() {
             this.sandbox.dom.off('#sidebar');
 
             this.sandbox.dom.on('#sidebar', 'click', function(event) {
-                var id = this.sandbox.dom.data(event.currentTarget,'id');
+                var id = this.sandbox.dom.data(event.currentTarget, 'id');
                 this.sandbox.emit('sulu.contacts.accounts.load', id);
             }.bind(this), '#sidebar-accounts-list');
 
             this.sandbox.dom.on('#sidebar', 'click', function(event) {
-                var id = this.sandbox.dom.data(event.currentTarget,'id');
+                var id = this.sandbox.dom.data(event.currentTarget, 'id');
                 this.sandbox.emit('sulu.router.navigate', 'contacts/contacts/edit:' + id + '/details');
-                this.sandbox.emit('husky.navigation.select-item','contacts/contacts');
+                this.sandbox.emit('husky.navigation.select-item', 'contacts/contacts');
             }.bind(this), '#main-contact');
         },
 
@@ -397,7 +473,7 @@ define([
                 id: id,
                 contact: Contact.findOrCreate({id: id}), account: this.account});
 
-            if(!!position) {
+            if (!!position) {
                 accountContact.set({position: position});
             }
 
@@ -531,6 +607,21 @@ define([
             this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
 
             this.account.set(data);
+
+            // set correct backbone models
+            if (!!data.termsOfPayment) {
+                this.account.set(
+                    'termsOfPayment',
+                    TermsOfPayment.findOrCreate({id: data.termsOfPayment})
+                );
+            }
+            if (!!data.termsOfDelivery) {
+                this.account.set(
+                    'termsOfDelivery',
+                    TermsOfDelivery.findOrCreate({id: data.termsOfDelivery})
+                );
+            }
+
             this.account.save(null, {
                 patch: true,
                 success: function(response) {
@@ -728,8 +819,6 @@ define([
                     var deleteContacts = this.sandbox.dom.find('#overlay-checkbox').length && this.sandbox.dom.prop('#overlay-checkbox', 'checked');
                     callbackFunction.call(this, true, deleteContacts);
                 }.bind(this);
-
-
 
             // sub-account exists => deletion is not allowed
             if (parseInt(values.numChildren, 10) > 0) {
