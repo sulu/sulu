@@ -388,6 +388,63 @@ class AccountController extends AbstractContactController
     }
 
     /**
+     * lists all addresses of an account
+     * optional parameter 'flat' calls listAction
+     * @param $id
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function getAddressesAction($id, Request $request)
+    {
+//        if ($request->get('flat') == 'true') {
+//
+//            /* @var Account $account */
+//            $account = $this->getDoctrine()
+//                ->getRepository(self::$entityName)
+//                ->find($id);
+//
+//            /** @var RestHelperInterface $restHelper */
+//            $restHelper = $this->getRestHelper();
+//
+//            /** @var DoctrineListBuilderFactory $factory */
+//            $factory = $this->get('sulu_core.doctrine_list_builder_factory');
+//
+//            $listBuilder = $factory->create(self::$entityName);
+//
+//            $restHelper->initializeListBuilder($listBuilder, $this->accountContactFieldDescriptors);
+//
+//            $listBuilder->where($this->fieldDescriptors['id'], $id);
+//
+//            // FIXME could be removed when field descriptor with expression is implemented and used
+//            $values = $listBuilder->execute();
+//
+//            foreach($values as &$value){
+//                if($account->getMainContact() != null && $value['id'] === $account->getMainContact()->getId()){
+//                    $value['isMainContact'] = true;
+//                } else {
+//                    $value['isMainContact'] = false;
+//                }
+//            }
+//
+//            $list = new ListRepresentation(
+//                $values,
+//                'contacts',
+//                'get_account_contacts',
+//                array_merge(array('id' => $id), $request->query->all()),
+//                $listBuilder->getCurrentPage(),
+//                $listBuilder->getLimit(),
+//                $listBuilder->count()
+//            );
+//
+//        } else {
+            $addresses = $this->getDoctrine()->getRepository(self::$addressEntityName)->findByAccountId($id);
+            $list = new CollectionRepresentation($addresses, 'addresses');
+//        }
+        $view = $this->view($list, 200);
+        return $this->handleView($view);
+    }
+
+    /**
      * @param $accountId
      * @param $contactId
      * @param Request $request
