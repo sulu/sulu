@@ -11,7 +11,15 @@
 namespace Sulu\Bundle\LocationBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Sulu\Bundle\LocationBundle\DependencyInjection\Compiler\GeolocatorPass;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class SuluLocationBundle extends Bundle
 {
+    public function build(ContainerBuilder $container)
+    {
+        parent::build($container);
+
+        $container->addCompilerPass(new GeolocatorPass());
+    }
 }

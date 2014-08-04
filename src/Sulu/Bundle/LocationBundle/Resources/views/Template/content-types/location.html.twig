@@ -1,15 +1,13 @@
 <div id="{{ id|raw }}"
      data-property='{{ property|json_encode }}'
      data-mapper-property="{{ property.name }}"
-     data-aura-component="locationcontent@sululocation"
-     data-type="smartContent"
+     data-aura-component="location@sululocation"
+     data-type="location"
      data-type-instance-name="{{ id|raw }}"
      data-instance-name="{{ id|raw }}"
      data-form="true"
-     data-aura-column-navigation-url="/admin/api/nodes{/dataSource}?tree=true&webspace={{ webspaceKey }}&language={{ languageCode }}&webspace-node=true"
-     data-aura-hide-categories="true"
-     data-aura-hide-present-as="true"
-     data-aura-url="/admin/api/nodes/filter?webspace={{ webspaceKey }}&language={{ languageCode }}"
-     data-aura-tags-auto-complete-url="/admin/api/tags?flat=true"
-     data-aura-sort-by='[{"id":"published","name":"<%= translate("public.published") %>"},{"id":"created","name":"<%= translate("public.created") %>"},{"id":"changed","name":"<%= translate("public.changed") %>"}]'></div>
-
+     data-aura-countries="{{ params.countries|json_encode }}"
+     data-aura-map-providers="{{ params.mapProviders|json_encode }}"
+     data-geolocator-url="{{ path('sulu_location_geolocator_query') }}"
+     >
+ </div>

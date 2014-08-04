@@ -15,18 +15,6 @@ fos_rest:
     routing_loader:
         default_format: json
 
-doctrine:
-    dbal:
-        host: localhost
-        dbname: sulu_test
-        user: root
-        password:
-    orm:
-        auto_generate_proxy_classes: %kernel.debug%
-        auto_mapping: true
-        resolve_target_entities:
-            Sulu\Component\Security\UserInterface: Sulu\Bundle\TestBundle\Entity\TestUser
-
 monolog:
     handlers:
         main:
@@ -53,7 +41,10 @@ sulu_core:
         ~
     content:
         templates:
-            default_path: %kernel.root_dir%/../Resources/templates
+            paths:
+                app:
+                    path: %kernel.root_dir%/../Resources/templates
+                    internal: false
             
 parameters:
     # Just a dirty hack to get the jms serializer bundle correctly working

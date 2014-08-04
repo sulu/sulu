@@ -16,15 +16,30 @@
         "friendsofsymfony/rest-bundle": "@dev",
         "jms/serializer-bundle": "@dev",
         "sulu/sulu": "dev-develop",
-        "sulu/admin-bundle": "dev-develop"
+        "sulu/admin-bundle": "dev-develop",
+        "friendsofsymfony/http-cache": "1.0.*@dev",
+        "matthiasnoback/symfony-dependency-injection-test": "v0.7.1",
+        "matthiasnoback/symfony-config-test": "v0.1.1",
+        "guzzle/http": "3.*",
+        "guzzle/plugin-mock": "*",
+        "guzzle/plugin-log": "*"
+
+
     },
     "require-dev": {
+        "sulu/content-bundle": "dev-develop",
+        "cboden/ratchet": "dev-master",
+        "sulu/website-bundle": "dev-develop",
+        "sulu/security-bundle": "dev-develop",
+        "sulu/contact-bundle": "dev-develop",
+        "sulu/tag-bundle": "dev-develop",
         "symfony/symfony": "2.5.*",
         "sensio/framework-extra-bundle": "~3.0",
         "symfony/monolog-bundle": "2.4.*",
         "doctrine/doctrine-bundle": "1.2.*",
         "phpunit/phpunit": "4.1.*",
-        "sulu/test-bundle": "dev-develop"
+        "sulu/test-bundle": "dev-develop",
+        "guzzle/plugin-mock": "*"
     },
     "autoload": {
         "psr-0": {

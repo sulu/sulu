@@ -1,4 +1,15 @@
 module.exports = function (grunt) {
+    var min = {},
+        path = require('path'),
+        srcpath = 'Resources/public/js',
+        destpath = 'Resources/public/dist';
+
+    grunt.file.expand({cwd: srcpath}, '**/*.js').forEach(function(relpath) {
+        min[relpath] = {
+            src: path.join(srcpath, relpath),
+            dest: path.join(destpath, relpath)
+        };
+    });
 
     // load all grunt tasks
     require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
@@ -8,7 +19,51 @@ module.exports = function (grunt) {
         copy: {
             public: {
                 files: [
-                    {expand: true, cwd: 'Resources/public', src: ['**', '!**/scss/**'], dest: '../../../../../../web/bundles/sululocation/'}
+                    {
+                        expand: true, 
+                        cwd: 'Resources/public', 
+                        src: ['**', '!**/scss/**'], 
+                        dest: '../../../../../../web/bundles/sululocation/'
+                    }
+                ]
+            },
+            public_dev: {
+                files: [
+                    {
+                        expand: true, 
+                        cwd: 'Resources/public_dev', 
+                        src: ['**', '!**/scss/**'], 
+                        dest: '../../../../../../web/bundles/sululocation/'
+                    }
+                ]
+            },
+            bower: {
+                files: [
+                    {
+                        expand: true,
+                        flatten: true,
+                        src: [
+                            'bower_components/leaflet/dist/leaflet.js',
+                            'bower_components/leaflet/dist/leaflet.css',
+                        ], 
+                        dest: 'Resources/public/js/vendor/leaflet'
+                    },
+                    {
+                        expand: true,
+                        flatten: true,
+                        src: [
+                            'bower_components/leaflet/dist/images/*',
+                        ], 
+                        dest: 'Resources/public/js/vendor/leaflet/images'
+                    },
+                    {
+                        expand: true,
+                        flatten: true,
+                        src: [
+                            'bower_components/requirejs-plugins/src/async.js'
+                        ], 
+                        dest: 'Resources/public/js/vendor/requirejs-plugins'
+                    }
                 ]
             }
         },
@@ -25,7 +80,7 @@ module.exports = function (grunt) {
         },
         watch: {
             options: {
-                nospawn: true
+                nospawn: false
             },
             compass: {
                 files: ['Resources/public/scss/{,*/}*.{scss,sass}'],
@@ -34,19 +89,6 @@ module.exports = function (grunt) {
             scripts: {
                 files: ['Resources/public/**'],
                 tasks: ['publish']
-            }
-        },
-        jshint: {
-            options: {
-                jshintrc: '.jshintrc'
-            }
-        },
-        cssmin: {
-            // TODO: options: { banner: '<%= meta.banner %>' },
-            compress: {
-                files: {
-                    'dist/main.min.css': ['Resources/public/css/']
-                }
             }
         },
         compass: {
@@ -58,15 +100,45 @@ module.exports = function (grunt) {
                     relativeAssets: false
                 }
             }
-        }
+        },
+        replace: {
+            build: {
+                options: {
+                    variables: {
+                        'sululocation/js': 'sululocation/dist'
+                    },
+                    prefix: ''
+                },
+                files: [
+                    {src: ['Resources/public/dist/main.js'], dest: 'Resources/public/dist/main.js'}
+                ]
+            }
+        },
+        cssmin: {
+            compress: {
+                files: {
+                    'Resources/public/css/main.min.css': ['Resources/public/css/main.css']
+                }
+            }
+        },
+        uglify: min
     });
 
     grunt.registerTask('publish', [
+        'compass:dev',
+        'cssmin',
         'clean:public',
-        'copy:public'
+        'copy:bower',
+        'copy:public',
+        'copy:public_dev'
     ]);
 
     grunt.registerTask('default', [
         'watch'
+    ]);
+
+    grunt.registerTask('build', [
+        'uglify',
+        'publish'
     ]);
 };

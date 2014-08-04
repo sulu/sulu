@@ -2,16 +2,29 @@
 <container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <parameters>
-        <parameter key="sulu.content.type.location.class">Sulu\Bundle\ContentBundle\Content\Types\SmartContent</parameter>
+        <parameter key="sulu_location.content.type.location.class">Sulu\Bundle\LocationBundle\Content\Types\LocationContentType</parameter>
+        <parameter key="sulu_location.admin.class">Sulu\Bundle\LocationBundle\Admin\SuluLocationAdmin</parameter>
+        <parameter key="sulu_location.map_manager.class">Sulu\Bundle\LocationBundle\Map\MapManager</parameter>
     </parameters>
 
     <services>
         <!-- content-types -->
-        <service id="sulu.content.type.location" class="%sulu.content.type.smart_content.class%">
+        <service id="sulu_location.content.type.location" class="%sulu_location.content.type.location.class%">
             <argument type="service" id="sulu_content.node_repository"/>
             <argument>%sulu.content.type.location.template%</argument>
+            <argument type="service" id="sulu_location.map_manager"/>
+            <argument>%sulu_location.geolocator.name%</argument>
+            <tag name="sulu.content.type" alias="location" />
         </service>
 
+        <!-- Admin class -->
+        <service id="sulu_location.admin" class="%sulu_location.admin.class%">
+            <argument>%sulu_admin.name%</argument>
+            <tag name="sulu.admin" />
+        </service>
+
+        <!-- Map services -->
+        <service id="sulu_location.map_manager" class="%sulu_location.map_manager.class%" />
     </services>
 </container>
 
