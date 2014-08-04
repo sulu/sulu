@@ -9,7 +9,12 @@ use Sulu\Component\Content\ContentContextAwareInterface;
 class Node extends BaseNode implements ContentContextAwareInterface
 {
     protected $contentContext;
-    protected $currentLocale = 'de';
+    protected $currentLocale;
+
+    public function setLocale($locale)
+    {
+        $this->currentLocale = $locale;
+    }
 
     public function setContentContext(ContentContextInterface $contentContext)
     {
@@ -35,4 +40,10 @@ class Node extends BaseNode implements ContentContextAwareInterface
     {
         return $this->getPropertyValueWithDefault($this->translateName($name), $defaultValue);
     }
+
+    public function hasTranslatedProperty($name)
+    {
+        return $this->hasProperty($this->translateName($name));
+    }
 }
+

@@ -227,6 +227,7 @@ class Configuration implements ConfigurationInterface
                     ->children()
                         ->arrayNode('paths')
                             ->prototype('array')
+
                                 ->children()
                                     ->scalarNode('path')
                                         ->example('%kernel.root_dir%/../Resources/templates')
