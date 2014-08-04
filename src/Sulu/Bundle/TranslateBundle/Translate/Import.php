@@ -325,6 +325,7 @@ class Import
     public function executeFromBundles($backend = true, $frontend = true)
     {
         foreach ($this->kernel->getBundles() as $bundle) {
+            // access bundle path directly to ignore bundle inheritance
             $pathToTranslations = $bundle->getPath() . '/' . $this->path;
 
             if (is_dir($pathToTranslations)) {
