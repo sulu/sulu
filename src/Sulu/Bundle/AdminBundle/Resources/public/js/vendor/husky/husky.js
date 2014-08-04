@@ -36296,23 +36296,23 @@ define('__component__$select@husky',[], function() {
             return 'data-changed';
         },
         /**
-         * Saved event
-         * @event husky.select.[instanceName].saved
+         * Save event for elements to save
+         * @event husky.select.[instanceName].save
          */
-            EVENT_SAVED = function() {
-            return getEventName.call(this, 'saved');
+            EVENT_SAVE = function() {
+            return getEventName.call(this, 'save');
         },
 
         /**
-         * Deleted event
-         * @event husky.select.[instanceName].deleted
+         * Deleted event for elements to delete
+         * @event husky.select.[instanceName].delete
          */
-            EVENT_DELETED = function() {
-            return getEventName.call(this, 'deleted');
+            EVENT_DELETE = function() {
+            return getEventName.call(this, 'delete');
         },
 
         /**
-         * Revert event
+         * Revert event for elements to be removed from the select
          * @event husky.select.[instanceName].revert
          */
             EVENT_REVERT = function() {
@@ -36762,7 +36762,7 @@ define('__component__$select@husky',[], function() {
                     this.parseDataFromDom(domData, true));
                 this.options.data = mergeData.slice(0);
                 this.updateDropdown(mergeData, this.selectedElements);
-                this.sandbox.emit(EVENT_SAVED.call(this), changedData);
+                this.sandbox.emit(EVENT_SAVE.call(this), changedData);
             }
         },
 
@@ -36854,7 +36854,7 @@ define('__component__$select@husky',[], function() {
                 this.sandbox.util.each(this.elementsToRemove, function(index, el) {
                     this.deleteItem(el);
                 }.bind(this));
-                this.sandbox.emit(EVENT_DELETED.call(this), this.elementsToRemove);
+                this.sandbox.emit(EVENT_DELETE.call(this), this.elementsToRemove);
                 this.elementsToRemove = [];
                 this.$elementsToRemove = [];
             }
@@ -37922,8 +37922,8 @@ define('__component__$column-navigation@husky',[], function() {
         bindDOMEvents: function() {
             this.sandbox.dom.on(this.$el, 'click', this.itemSelected.bind(this), 'li');
 
-            this.sandbox.dom.on(this.$el, 'mouseenter', this.itemMouseEnter.bind(this), 'li');
-            this.sandbox.dom.on(this.$el, 'mouseleave', this.itemMouseLeave.bind(this), 'li');
+            this.sandbox.dom.on(this.$el, 'mouseenter', this.itemMouseEnter.bind(this), '.column-navigation li');
+            this.sandbox.dom.on(this.$el, 'mouseleave', this.itemMouseLeave.bind(this), '.column-navigation li');
 
             this.sandbox.dom.on(this.$el, 'mouseenter', this.showOptions.bind(this), '.column');
             this.sandbox.dom.on(this.$el, 'click', this.addNode.bind(this), '#' + this.addId);
@@ -37988,9 +37988,9 @@ define('__component__$column-navigation@husky',[], function() {
         dropdownItemClicked: function(item) {
             if (!!this.selected[this.lastHoveredColumn]) {
                 if (!!item.callback) {
-                    item.callback(item, this.selected[this.lastHoveredColumn]);
+                    item.callback(item, this.selected[this.lastHoveredColumn], this.columns[this.lastHoveredColumn]);
                 } else {
-                    this.sandbox.emit(SETTINGS.call(this), item, this.selected[this.lastHoveredColumn]);
+                    this.sandbox.emit(SETTINGS.call(this), item, this.selected[this.lastHoveredColumn], this.columns[this.lastHoveredColumn]);
                 }
             }
         },
@@ -39617,7 +39617,7 @@ define('__component__$smart-content@husky',[], function() {
             );
 
             //data-source
-            temp = this.sandbox.dom.data(this.sandbox.dom.find(constants.dataSourceSelector, this.$overlayContent), 'id')
+            temp = this.sandbox.dom.data(this.sandbox.dom.find(constants.dataSourceSelector, this.$overlayContent), 'id');
             if (temp !== undefined) {
                 this.overlayData.dataSource = temp;
             }
