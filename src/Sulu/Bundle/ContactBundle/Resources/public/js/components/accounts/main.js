@@ -165,41 +165,35 @@ define([
             );
 
             // handling of terms of delivery/payment eventlistener
-            this.sandbox.on('husky.select.terms-of-delivery.deleted', this.deleteTermsOfDelivery.bind(this));
-            this.sandbox.on('husky.select.terms-of-payment.deleted', this.deleteTermsOfPayment.bind(this));
-            this.sandbox.on('husky.select.terms-of-delivery.saved', this.saveTermsOfDelivery.bind(this));
-            this.sandbox.on('husky.select.terms-of-payment.saved', this.saveTermsOfPayment.bind(this));
+            this.sandbox.on('husky.select.terms-of-delivery.delete', this.deleteTermsOfDelivery.bind(this));
+            this.sandbox.on('husky.select.terms-of-payment.delete', this.deleteTermsOfPayment.bind(this));
+            this.sandbox.on('husky.select.terms-of-delivery.save', this.saveTermsOfDelivery.bind(this));
+            this.sandbox.on('husky.select.terms-of-payment.save', this.saveTermsOfPayment.bind(this));
         },
 
         deleteTermsOfDelivery: function(ids){
             if (!!ids && ids.length > 0) {
-                this.sandbox.util.each(ids, function(index, el) {
-                    var condition = TermsOfDelivery.findOrCreate({id: el});
+                this.sandbox.util.each(ids, function(index, id) {
+                    var condition = TermsOfDelivery.findOrCreate({id: id});
                     condition.destroy({
-                        success: function() {
-                            this.sandbox.emit('husky.select.terms-of-delivery.deleted');
-                        }.bind(this),
                         error: function() {
                             this.sandbox.emit('husky.select.terms-of-delivery.revert');
                         }.bind(this)
-                    }.bind(this));
-                });
+                    });
+                }.bind(this));
             }
         },
 
         deleteTermsOfPayment: function(ids){
             if (!!ids && ids.length > 0) {
-                this.sandbox.util.each(ids, function(index, el) {
-                    var condition = TermsOfPayment.findOrCreate({id: el});
+                this.sandbox.util.each(ids, function(index, id) {
+                    var condition = TermsOfPayment.findOrCreate({id: id});
                     condition.destroy({
-                        success: function() {
-                            this.sandbox.emit('husky.select.terms-of-payment.deleted');
-                        }.bind(this),
                         error: function() {
                             this.sandbox.emit('husky.select.terms-of-payment.revert');
                         }.bind(this)
-                    }.bind(this));
-                });
+                    });
+                }.bind(this));
             }
         },
 
@@ -224,7 +218,7 @@ define([
         saveTermsOfPayment: function(data) {
             if (!!data && data.length > 0) {
                 this.sandbox.util.save(
-                    '/admin/api/termsofpayment',
+                    '/admin/api/termsofpayments',
                     'PATCH',
                     data)
                     .then(function(response) {
@@ -607,6 +601,15 @@ define([
             this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
 
             this.account.set(data);
+
+            // set correct backbone models
+            if(!!data.termsOfPayment){
+                this.account.set('termsOfPayment', TermsOfPayment.findOrCreate({id: data.termsOfPayment}));
+            }
+            if(!!data.termsOfDelivery){
+                this.account.set('termsOfDelivery', TermsOfDelivery.findOrCreate({id: data.termsOfDelivery}));
+            }
+
             this.account.save(null, {
                 patch: true,
                 success: function(response) {
