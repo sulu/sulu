@@ -23,7 +23,7 @@
  * @param {Object} [options.contentComponentOptions] options to forward to the content-component. Are further used for the content-tabs-component
  * @param {Object} [options.contentEl] element for the content-component
  * @param {Object} [options.toolbarOptions] options to pass to the toolbar-component
- * @param {Boolean|Object} [options.toolbarLanguageChanger] If true a system-language changer will be displayed. Can be an object to build a custom language changer
+ * @param {Boolean|Object} [options.toolbarLanguageChanger] If true a default-language changer will be displayed. Can be an object to build a custom language changer
  * @param {String} [options.toolbarLanguageChanger.url] url to fetch the dropdown-data from
  * @param {Function} [options.toolbarLanguageChanger.callback] callback to pass the clicked language-item to
  * @param {String} [options.toolbarLanguageChanger.preselected] id of the language selected at the beginning
@@ -93,161 +93,27 @@ define([], function() {
             }
         },
 
-        /**
-         * Predefined toolbar templates
-         * each function must return a an array with items for the toolbar
-         * @type {{default: function, languageChanger: function, systemLanguageChanger: function}}
-         */
-        toolbarTemplates = {
-            default: function() {
-                return[
-                    {
-                        id: 'save-button',
-                        icon: 'floppy-o',
-                        iconSize: 'large',
-                        class: 'highlight',
-                        position: 1,
-                        group: 'left',
-                        disabled: true,
-                        callback: function() {
-                            this.sandbox.emit('sulu.header.toolbar.save');
-                        }.bind(this)
-                    },
-                    {
-                        icon: 'gear',
-                        iconSize: 'large',
-                        group: 'left',
-                        id: 'options-button',
-                        position: 30,
-                        items: [
-                            {
-                                title: this.sandbox.translate('toolbar.delete'),
-                                callback: function() {
-                                    this.sandbox.emit('sulu.header.toolbar.delete');
-                                }.bind(this)
-                            }
-                        ]
-                    }
-                ];
-            },
-
-            languageChanger: function(url, callback) {
-                var button;
-
-                // default callback for language dropdown
-                if (typeof callback !== 'function') {
-                    callback = function(item) {
-                        this.sandbox.emit('sulu.header.toolbar.language-changed', item);
-                    }.bind(this);
-                }
-
-                button = this.sandbox.util.extend(true, {}, constants.languageChangerDefaults, {
-                            hidden: true,
-                            itemsOption: {
-                                url: url,
-                                titleAttribute: 'name',
-                                idAttribute: 'localization',
-                                translate: false,
-                                callback: callback
-                            }
-                });
-
-                return [button];
-            },
-
-            systemLanguageChanger: function() {
-                var button, items = [], i, length;
-
-                // generate dropdown-items
-                for (i = -1, length = this.sandbox.sulu.locales.length; ++ i<length;) {
-                    items.push({
-                        title: this.sandbox.sulu.locales[i],
-                        locale: this.sandbox.sulu.locales[i]
-                    });
-                }
-
-                button = this.sandbox.util.extend(true, {}, constants.languageChangerDefaults, {
-                    id: 'system-language',
-                    title: this.sandbox.sulu.user.locale,
-                    items: items,
-                    itemsOption: {
-                        callback: function(item) {
-                            this.sandbox.emit('sulu.app.change-user-locale', item.locale);
-                        }.bind(this)
-                    }
-                });
-
-                return [button];
-            }
-        },
-
         templates = {
             skeleton: [
                 '<div class="inner">',
-                    '<div class="'+ constants.infoClass +'"></div>',
-                    '<div class="'+ constants.headlineClass +'">',
-                        '<span class="fa-'+ constants.backIcon +' '+ constants.backClass +'"></span>',
-                        '<span class="'+ constants.titleColorClass +'"></span>',
-                        '<h1 class="bright"><%= headline %></h1>',
-                    '</div>',
-                    '<div class="bottom-row">',
-                        '<div class="'+ constants.bottomContentClass +'"></div>',
-                        '<div class="'+ constants.toolbarClass +'"></div>',
-                    '</div>',
+                '<div class="'+ constants.infoClass +'"></div>',
+                '<div class="'+ constants.headlineClass +'">',
+                '<span class="fa-'+ constants.backIcon +' '+ constants.backClass +'"></span>',
+                '<span class="'+ constants.titleColorClass +'"></span>',
+                '<h1 class="bright"><%= headline %></h1>',
+                '</div>',
+                '<div class="bottom-row">',
+                '<div class="'+ constants.bottomContentClass +'"></div>',
+                '<div class="'+ constants.toolbarClass +'"></div>',
+                '</div>',
                 '</div>'
             ].join(''),
 
             breadcrumbItem: [
                 '<li<% if(inactive === true) { %> class="inactive"<% } %>>',
-                    '<a data-sulu-navigate="true" data-sulu-event="<%= event %>" href="<%= link %>"><%= title %></a>',
+                '<a data-sulu-navigate="true" data-sulu-event="<%= event %>" href="<%= link %>"><%= title %></a>',
                 '</li>'
             ].join('\n')
-        },
-
-        changeStateCallbacks = {
-            default: function(saved, type, highlight) {
-                if (!!saved) {
-                    this.sandbox.emit('husky.toolbar.header.item.disable', 'save-button', !!highlight);
-                } else {
-                    this.sandbox.emit('husky.toolbar.header.item.enable', 'save-button', false);
-                }
-            }
-        },
-
-        /**
-         * Returns a template useable by the toolbar-component
-         * @param {Object|String} template Can be a JSON-string, String representing a function in toolbarTemplates or a valid array of objects
-         * @returns {Object} a template usable by the toolbar-component
-         */
-        getToolbarTemplate = function(template) {
-            var templateObj = template;
-            if (typeof template === 'string') {
-                try {
-                    templateObj = JSON.parse(template);
-                } catch (e) {
-                    if (!!toolbarTemplates[template]) {
-                        templateObj = toolbarTemplates[template].call(this);
-                    } else {
-                        this.sandbox.logger.log('no template found!');
-                    }
-                }
-            } else if (typeof templateObj === 'function') {
-                templateObj = template();
-            }
-            return templateObj;
-        },
-
-        /**
-         * Looks in changeStateCallbacks for a function and returns it
-         * @param {String} template String representing a function in changeStateCallbacks
-         * @returns {Function} the matched function
-         */
-        getChangeToolbarStateCallback = function(template) {
-            if (!!changeStateCallbacks[template]) {
-                return changeStateCallbacks[template];
-            } else {
-                this.sandbox.logger.log('no template found!');
-            }
         },
 
         createEventName = function(postfix) {
@@ -344,6 +210,16 @@ define([], function() {
             return createEventName.call(this, 'set-bottom-content');
         },
 
+        /**
+         * emited if the language changer got changed
+         *
+         * @event sulu.header.[INSTANCE_NAME].language-changed
+         * @param {string} the language which got changed to
+         */
+        LANGUAGE_CHANGED = function() {
+            return createEventName.call(this, 'language-changed');
+        },
+
         /*********************************************
          *   Abstract events
          ********************************************/
@@ -427,6 +303,144 @@ define([], function() {
          */
         TOOLBAR_ITEMS_SET = function() {
             return createEventName.call(this, 'toolbar.items.set');
+        },
+
+        /**
+         * Predefined toolbar templates
+         * each function must return a an array with items for the toolbar
+         * @type {{default: function, languageChanger: function, defaultLanguageChanger: function}}
+         */
+        toolbarTemplates = {
+            default: function() {
+                return[
+                    {
+                        id: 'save-button',
+                        icon: 'floppy-o',
+                        iconSize: 'large',
+                        class: 'highlight',
+                        position: 1,
+                        group: 'left',
+                        disabled: true,
+                        callback: function() {
+                            this.sandbox.emit('sulu.header.toolbar.save');
+                        }.bind(this)
+                    },
+                    {
+                        icon: 'gear',
+                        iconSize: 'large',
+                        group: 'left',
+                        id: 'options-button',
+                        position: 30,
+                        items: [
+                            {
+                                title: this.sandbox.translate('toolbar.delete'),
+                                callback: function() {
+                                    this.sandbox.emit('sulu.header.toolbar.delete');
+                                }.bind(this)
+                            }
+                        ]
+                    }
+                ];
+            },
+
+            save: function() {
+                return [toolbarTemplates.default.call(this)[0]];
+            },
+
+            languageChanger: function(url, callback) {
+                var button;
+
+                // default callback for language dropdown
+                if (typeof callback !== 'function') {
+                    callback = function(item) {
+                        this.sandbox.emit('sulu.header.toolbar.language-changed', item);
+                    }.bind(this);
+                }
+
+                button = this.sandbox.util.extend(true, {}, constants.languageChangerDefaults, {
+                    hidden: true,
+                    itemsOption: {
+                        url: url,
+                        titleAttribute: 'name',
+                        idAttribute: 'localization',
+                        translate: false,
+                        callback: callback
+                    }
+                });
+
+                return [button];
+            },
+
+            defaultLanguageChanger: function() {
+                var button, items = [], i, length;
+
+                // generate dropdown-items
+                for (i = -1, length = this.sandbox.sulu.locales.length; ++ i<length;) {
+                    items.push({
+                        title: this.sandbox.sulu.locales[i],
+                        locale: this.sandbox.sulu.locales[i]
+                    });
+                }
+
+                button = this.sandbox.util.extend(true, {}, constants.languageChangerDefaults, {
+                    id: 'language',
+                    title: this.sandbox.sulu.user.locale,
+                    items: items,
+                    itemsOption: {
+                        callback: function(item) {
+                            this.sandbox.emit(LANGUAGE_CHANGED.call(this), item.locale);
+                        }.bind(this)
+                    }
+                });
+
+                return [button];
+            }
+        },
+
+        changeStateCallbacks = {
+            default: function(saved, type, highlight) {
+                if (!!saved) {
+                    this.sandbox.emit('husky.toolbar.header.item.disable', 'save-button', !!highlight);
+                } else {
+                    this.sandbox.emit('husky.toolbar.header.item.enable', 'save-button', false);
+                }
+            }
+        },
+
+        /**
+         * Returns a template useable by the toolbar-component
+         * @param {Object|String} template Can be a JSON-string, String representing a function in toolbarTemplates or a valid array of objects
+         * @returns {Object} a template usable by the toolbar-component
+         */
+            getToolbarTemplate = function(template) {
+            var templateObj = template;
+            if (typeof template === 'string') {
+                try {
+                    templateObj = JSON.parse(template);
+                } catch (e) {
+                    if (!!toolbarTemplates[template]) {
+                        templateObj = toolbarTemplates[template].call(this);
+                    } else {
+                        this.sandbox.logger.log('no template found!');
+                    }
+                }
+            } else if (typeof templateObj === 'function') {
+                templateObj = template();
+            }
+            return templateObj;
+        },
+
+        /**
+         * Looks in changeStateCallbacks for a function and returns it
+         * @param {String} template String representing a function in changeStateCallbacks
+         * @returns {Function} the matched function
+         */
+            getChangeToolbarStateCallback = function(template) {
+            if (!!changeStateCallbacks[template]) {
+                return changeStateCallbacks[template];
+            } else {
+                this.sandbox.logger.log('no template found!');
+            }
         };
 
     return {
@@ -520,7 +534,7 @@ define([], function() {
                 languageChanger = toolbarTemplates.languageChanger.call(this,
                     this.options.toolbarLanguageChanger.url, this.options.toolbarLanguageChanger.callback);
             } else if (this.options.toolbarLanguageChanger === true) {
-                languageChanger = toolbarTemplates.systemLanguageChanger.call(this);
+                languageChanger = toolbarTemplates.defaultLanguageChanger.call(this);
             }
             this.options.toolbarTemplate = this.options.toolbarTemplate.concat(languageChanger);
         },
@@ -587,22 +601,42 @@ define([], function() {
         },
 
         /**
+         * Sets a new toolbar into the header
+         * @param options {Object} just toolbar-options. Or options with template and parentTemplate
+         */
+        setToolbar: function(options) {
+            if (!options.template) {
+                this.options.toolbarTemplate = null;
+                this.options.toolbarParentTemplate = null;
+                this.options.toolbarOptions = options;
+            } else {
+                this.options.toolbarTemplate = options.template;
+                this.options.toolbarParentTemplate = (!!options.parentTemplate) ? options.parentTemplate : null;
+                this.options.toolbarOptions = (!!options.toolbarOptions) ? options.toolbarOptions : {};
+                this.options.toolbarLanguageChanger = (!!options.languageChanger) ? options.languageChanger : null;
+            }
+            this.options.toolbarDisabled = false;
+            this.startToolbar();
+        },
+
+        /**
          * Handles the starting of the toolbar
          */
         startToolbar: function() {
             var def = this.sandbox.data.deferred();
 
             if (this.options.toolbarDisabled !== true) {
-                // merge passed toolbar-options with defaults
-                var options = this.sandbox.util.extend(true, {}, constants.toolbarDefaults, this.options.toolbarOptions);
+                var options = this.options.toolbarOptions;
 
-                // build icon-template and parent-template and merge all in this.options.toolbarTemplate
-                this.buildToolbarTemplate(this.options.toolbarTemplate, this.options.toolbarParentTemplate);
+                if (this.options.toolbarTemplate !== null) {
+                    // build icon-template and parent-template and merge all in this.options.toolbarTemplate
+                    this.buildToolbarTemplate(this.options.toolbarTemplate, this.options.toolbarParentTemplate);
 
-                // add built toolbarTemplate to the toolbar-options
-                options = this.sandbox.util.extend(true, {}, options, {
-                    data: this.options.toolbarTemplate
-                });
+                    // add built toolbarTemplate to the toolbar-options
+                    options = this.sandbox.util.extend(true, {}, constants.toolbarDefaults, options, {
+                        data: this.options.toolbarTemplate
+                    });
+                }
 
                 // start toolbar component with built options
                 this.startToolbarComponent(options, def);
@@ -632,16 +666,6 @@ define([], function() {
                 this.sandbox.on('husky.toolbar.header'+ this.options.instanceName +'.initialized', function() {
                     def.resolve();
                 }.bind(this));
-            }
-
-            // if passed template is a string get the corresponding default template
-            if (!!options.template && typeof options.template === 'string' && toolbarTemplates.hasOwnProperty(options.template)) {
-                options.data = toolbarTemplates[options.template];
-                if (typeof options.data === 'function') {
-                    options.data = options.data.call(this);
-                }
-                this.options.changeStateCallback = getChangeToolbarStateCallback.call(this, options.template);
-                this.options.parentChangeStateCallback = getChangeToolbarStateCallback.call(this, options.parentTemplate);
             }
 
             this.sandbox.stop(this.$find('.' + constants.toolbarClass));
@@ -690,7 +714,7 @@ define([], function() {
             }.bind(this));
 
             // set or reset a toolbar
-            this.sandbox.on(SET_TOOLBAR.call(this), this.startToolbarComponent.bind(this));
+            this.sandbox.on(SET_TOOLBAR.call(this), this.setToolbar.bind(this));
 
             // set content to the bottom-content-container
             this.sandbox.on(SET_BOTTOM_CONTENT.call(this), this.insertBottomContent.bind(this));
