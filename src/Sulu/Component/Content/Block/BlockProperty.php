@@ -87,6 +87,13 @@ class BlockProperty extends Property implements BlockPropertyInterface
      */
     public function getType($name)
     {
+        if (!isset($this->types[$name])) {
+            throw new \InvalidArgumentException(sprintf(
+                'The block type "%s" has not been registered. Known block types are: [%s]',
+                $name, implode(', ', array_keys($this->types))
+            ));
+        }
+
         return $this->types[$name];
     }
 
