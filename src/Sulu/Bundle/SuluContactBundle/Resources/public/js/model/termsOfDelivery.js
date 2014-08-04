@@ -10,7 +10,7 @@
 define(['mvc/relationalmodel'], function(RelationalModel) {
     'use strict';
     return RelationalModel({
-        urlRoot: '/admin/api/termsOfDelivery',
+        urlRoot: '/admin/api/termsofdeliveries',
         defaults: function() {
             return {
                 id: null,
