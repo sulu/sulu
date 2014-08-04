@@ -216,13 +216,13 @@ define([], function() {
          * @event sulu.header.[INSTANCE_NAME].language-changed
          * @param {string} the language which got changed to
          */
-            LANGUAGE_CHANGED = function() {
+        LANGUAGE_CHANGED = function() {
             return createEventName.call(this, 'language-changed');
         },
 
-    /*********************************************
-     *   Abstract events
-     ********************************************/
+        /*********************************************
+         *   Abstract events
+         ********************************************/
 
         /**
          * listens on activates tabs
@@ -444,7 +444,6 @@ define([], function() {
         };
 
     return {
-
         /**
          * Initializes the component
          */
