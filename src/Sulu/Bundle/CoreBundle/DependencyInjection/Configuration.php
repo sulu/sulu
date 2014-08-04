@@ -103,8 +103,8 @@ class Configuration implements ConfigurationInterface
                     ->addDefaultsIfNotSet()
                     ->children()
                         ->scalarNode('session')->defaultValue('Sulu\Component\PHPCR\Wrapper\Wrapped\Session')->end()
-                        ->scalarNode('node')->defaultValue('Sulu\Component\PHPCR\Wrapper\Wrapped\Node')->end()
-                        ->scalarNode('property')->defaultValue('Sulu\Component\PHPCR\Wrapper\Wrapped\Property')->end()
+                        ->scalarNode('node')->defaultValue('Sulu\Component\PHPCR\Model\Node')->end()
+                        ->scalarNode('property')->defaultValue('Sulu\Component\PHPCR\Model\Property')->end()
                     ->end()
                 ->end()
             ->end();

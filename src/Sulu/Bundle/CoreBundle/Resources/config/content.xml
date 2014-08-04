@@ -38,6 +38,7 @@
             <argument type="service" id="event_dispatcher"/>
             <argument type="service" id="sulu.content.localization_finder"/>
             <argument type="service" id="sulu.content.path_cleaner"/>
+            <argument type="service" id="sulu.content.context" />
             <argument type="service" id="debug.stopwatch" on-invalid="null"/>
         </service>
 

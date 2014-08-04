@@ -6,11 +6,15 @@
     <parameters>
         <parameter key="sulu.phpcr.session.class">Sulu\Component\PHPCR\SessionManager\SessionManager</parameter>
         <parameter key="sulu.phpcr.wrapped_session.class"><!-- Injected in extension from configuration --></parameter>
-        <parameter key="sulu.phpcr.wrapper.class">Sulu\Component\PHPCR\Wrapper\Wrapper\SimpleWrapper</parameter>
+        <parameter key="sulu.phpcr.wrapper.class">Sulu\Component\PHPCR\Wrapper\Wrapper\SuluWrapper</parameter>
     </parameters>
 
     <services>
-        <service id="sulu.phpcr.wrapper" class="%sulu.phpcr.wrapper.class%"/>
+        <service id="sulu.phpcr.wrapper" class="%sulu.phpcr.wrapper.class%">
+            <call method="setContentContext">
+                <argument type="service" id="sulu.content.context" />
+            </call>
+        </service>
 
         <service 
             id="sulu.phpcr.wrapped_session" 

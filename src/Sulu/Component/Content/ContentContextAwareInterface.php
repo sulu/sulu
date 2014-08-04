@@ -1,6 +1,6 @@
 <?php
 
-namespace Sulu\Component\Content\Mapper;
+namespace Sulu\Component\Content;
 
 /**
  * Classes implementing this interface can access
@@ -11,10 +11,5 @@ interface ContentContextAwareInterface
     /**
      * Set the PhpcrContext
      */
-    public function setContentContext(Context $context);
-
-    /**
-     * Get the Phpcr Context
-     */
-    public function getContentContext();
+    public function setContentContext(ContentContextInterface $context);
 }

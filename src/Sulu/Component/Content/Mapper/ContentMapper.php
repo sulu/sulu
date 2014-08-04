@@ -37,6 +37,7 @@ use Sulu\Component\PHPCR\PathCleanupInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
+use Sulu\Component\Content\ContentContext;
 
 class ContentMapper implements ContentMapperInterface
 {
@@ -66,16 +67,10 @@ class ContentMapper implements ContentMapperInterface
     private $localizationFinder;
 
     /**
-     * default language of translation
-     * @var string
+     * Content Context
+     * @var ContentContext
      */
-    private $defaultLanguage;
-
-    /**
-     * default template
-     * @var string
-     */
-    private $defaultTemplate;
+    private $contentContext;
 
     /**
      * @var Stopwatch
@@ -105,8 +100,7 @@ class ContentMapper implements ContentMapperInterface
         EventDispatcherInterface $eventDispatcher,
         LocalizationFinderInterface $localizationFinder,
         PathCleanupInterface $cleaner,
-        $defaultLanguage,
-        $defaultTemplate,
+        ContentContext $contentContext,
         $stopwatch = null
     ) {
         $this->contentTypeManager = $contentTypeManager;
@@ -114,9 +108,8 @@ class ContentMapper implements ContentMapperInterface
         $this->sessionManager = $sessionManager;
         $this->localizationFinder = $localizationFinder;
         $this->eventDispatcher = $eventDispatcher;
-        $this->defaultLanguage = $defaultLanguage;
-        $this->defaultTemplate = $defaultTemplate;
         $this->cleaner = $cleaner;
+        $this->contentContext = $contentContext;
 
         // optional
         $this->stopwatch = $stopwatch;
@@ -651,12 +644,9 @@ class ContentMapper implements ContentMapperInterface
             return null;
         }
 
-        // create translated properties
-        $this->properties->setLanguage($availableLocalization);
-
-        $templateKey = $contentNode->getPropertyValueWithDefault(
-            $this->properties->getName('template'),
-            $this->defaultTemplate
+        $templateKey = $contentNode->getTranslatedPropertyValue(
+            'template',
+            $this->contentContext->getTemplateDefault()
         );
 
         $structure = $this->getStructure($templateKey);
@@ -666,37 +656,37 @@ class ContentMapper implements ContentMapperInterface
             $structure->setType(StructureType::getGhost($availableLocalization));
         }
 
-        $structure->setHasTranslation($contentNode->hasProperty($this->properties->getName('template')));
+        $structure->setHasTranslation($contentNode->hasTranslatedasProperty('template'));
 
         $structure->setUuid($contentNode->getPropertyValue('jcr:uuid'));
         $structure->setPath(str_replace($this->getContentNode($webspaceKey)->getPath(), '', $contentNode->getPath()));
-        $structure->setNodeType($contentNode->getPropertyValueWithDefault($this->properties->getName('nodeType'), Structure::NODE_TYPE_CONTENT));
+        $structure->setNodeType($contentNode->getTranslatedPropertyValue($this->properties->getName('nodeType'), Structure::NODE_TYPE_CONTENT));
         $structure->setWebspaceKey($webspaceKey);
         $structure->setLanguageCode($localization);
-        $structure->setCreator($contentNode->getPropertyValueWithDefault($this->properties->getName('creator'), 0));
-        $structure->setChanger($contentNode->getPropertyValueWithDefault($this->properties->getName('changer'), 0));
+        $structure->setCreator($contentNode->getTranslatedPropertyValue($this->properties->getName('creator'), 0));
+        $structure->setChanger($contentNode->getTranslatedPropertyValue($this->properties->getName('changer'), 0));
         $structure->setCreated(
-            $contentNode->getPropertyValueWithDefault($this->properties->getName('created'), new \DateTime())
+            $contentNode->getTranslatedPropertyValue($this->properties->getName('created'), new \DateTime())
         );
         $structure->setChanged(
-            $contentNode->getPropertyValueWithDefault($this->properties->getName('changed'), new \DateTime())
+            $contentNode->getTranslatedPropertyValue($this->properties->getName('changed'), new \DateTime())
         );
         $structure->setHasChildren($contentNode->hasNodes());
 
         $structure->setNodeState(
-            $contentNode->getPropertyValueWithDefault(
+            $contentNode->getTranslatedPropertyValue(
                 $this->properties->getName('state'),
                 StructureInterface::STATE_TEST
             )
         );
         $structure->setNavigation(
-            $contentNode->getPropertyValueWithDefault($this->properties->getName('navigation'), false)
+            $contentNode->getTranslatedPropertyValueWithDefault($this->properties->getName('navigation'), false)
         );
         $structure->setGlobalState(
             $this->getInheritedState($contentNode, $this->properties->getName('state'), $webspaceKey)
         );
         $structure->setPublished(
-            $contentNode->getPropertyValueWithDefault($this->properties->getName('published'), null)
+            $contentNode->getTranslatedPropertyValueWithDefault($this->properties->getName('published'), null)
         );
 
         // go through every property in the template
@@ -802,7 +792,7 @@ class ContentMapper implements ContentMapperInterface
             // title
             $templateKey = $node->getPropertyValueWithDefault(
                 $this->properties->getName('template'),
-                $this->defaultTemplate
+                $this->contentContext->getTemplateDefault()
             );
             $structure = $this->getStructure($templateKey);
             $nodeNameProperty = $structure->getPropertyByTagName('sulu.node.name');
