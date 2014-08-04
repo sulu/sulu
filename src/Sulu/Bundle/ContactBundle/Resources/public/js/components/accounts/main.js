@@ -12,8 +12,10 @@ define([
     'sulucontact/model/contact',
     'sulucontact/model/accountContact',
     'accountsutil/header',
-    'sulucontact/model/activity'
-], function(Account, Contact, AccountContact, AccountsUtilHeader, Activity) {
+    'sulucontact/model/activity',
+    'sulucontact/model/termsOfPayment',
+    'sulucontact/model/termsOfDelivery',
+], function(Account, Contact, AccountContact, AccountsUtilHeader, Activity, TermsOfPayment, TermsOfDelivery) {
 
     'use strict';
 
@@ -161,6 +163,80 @@ define([
                 'sulu.contacts.account.activity.load',
                 this.loadActivity.bind(this)
             );
+
+            // handling of terms of delivery/payment eventlistener
+            this.sandbox.on('husky.select.terms-of-delivery.deleted', this.deleteTermsOfDelivery.bind(this));
+            this.sandbox.on('husky.select.terms-of-payment.deleted', this.deleteTermsOfPayment.bind(this));
+            this.sandbox.on('husky.select.terms-of-delivery.saved', this.saveTermsOfDelivery.bind(this));
+            this.sandbox.on('husky.select.terms-of-payment.saved', this.saveTermsOfPayment.bind(this));
+        },
+
+        deleteTermsOfDelivery: function(ids){
+            if (!!ids && ids.length > 0) {
+                this.sandbox.util.each(ids, function(index, el) {
+                    var condition = TermsOfDelivery.findOrCreate({id: el});
+                    condition.destroy({
+                        success: function() {
+                            this.sandbox.emit('husky.select.terms-of-delivery.deleted');
+                        }.bind(this),
+                        error: function() {
+                            this.sandbox.emit('husky.select.terms-of-delivery.revert');
+                        }.bind(this)
+                    }.bind(this));
+                });
+            }
+        },
+
+        deleteTermsOfPayment: function(ids){
+            if (!!ids && ids.length > 0) {
+                this.sandbox.util.each(ids, function(index, el) {
+                    var condition = TermsOfPayment.findOrCreate({id: el});
+                    condition.destroy({
+                        success: function() {
+                            this.sandbox.emit('husky.select.terms-of-payment.deleted');
+                        }.bind(this),
+                        error: function() {
+                            this.sandbox.emit('husky.select.terms-of-payment.revert');
+                        }.bind(this)
+                    }.bind(this));
+                });
+            }
+        },
+
+        saveTermsOfDelivery: function(data) {
+            if (!!data && data.length > 0) {
+                this.sandbox.util.save(
+                    '/admin/api/termsofdeliveries',
+                    'PATCH',
+                    data)
+                    .then(function(response) {
+                        this.sandbox.emit('husky.select.terms-of-delivery.update',
+                            response,
+                            null,
+                            true);
+                    }.bind(this)).fail(function(status, error) {
+                        this.sandbox.emit('husky.select.terms-of-delivery.save.revert');
+                        this.sandbox.logger.error(status, error);
+                    }.bind(this));
+            }
+        },
+
+        saveTermsOfPayment: function(data) {
+            if (!!data && data.length > 0) {
+                this.sandbox.util.save(
+                    '/admin/api/termsofpayment',
+                    'PATCH',
+                    data)
+                    .then(function(response) {
+                        this.sandbox.emit('husky.select.terms-of-payment.update',
+                            response,
+                            null,
+                            true);
+                    }.bind(this)).fail(function(status, error) {
+                        this.sandbox.emit('husky.select.terms-of-payment.save.revert');
+                        this.sandbox.logger.error(status, error);
+                    }.bind(this));
+            }
         },
 
         /**
