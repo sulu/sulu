@@ -41,7 +41,10 @@ sulu_core:
         ~
     content:
         templates:
-            default_path: %kernel.root_dir%/../Resources/templates
+            paths:
+                app:
+                    path: %kernel.root_dir%/../Resources/templates
+                    internal: false
             
 parameters:
     # Just a dirty hack to get the jms serializer bundle correctly working
