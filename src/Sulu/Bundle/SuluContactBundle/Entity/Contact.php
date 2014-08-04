@@ -196,6 +196,12 @@ class Contact extends ApiEntity
     private $contactAddresses;
 
     /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $medias;
+
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -1174,5 +1180,38 @@ class Contact extends ApiEntity
             }
         }
         return null;
+    }
+
+    /**
+     * Add medias
+     *
+     * @param \Sulu\Bundle\MediaBundle\Entity\Media $medias
+     * @return Contact
+     */
+    public function addMedia(\Sulu\Bundle\MediaBundle\Entity\Media $medias)
+    {
+        $this->medias[] = $medias;
+    
+        return $this;
+    }
+
+    /**
+     * Remove medias
+     *
+     * @param \Sulu\Bundle\MediaBundle\Entity\Media $medias
+     */
+    public function removeMedia(\Sulu\Bundle\MediaBundle\Entity\Media $medias)
+    {
+        $this->medias->removeElement($medias);
+    }
+
+    /**
+     * Get medias
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getMedias()
+    {
+        return $this->medias;
     }
 }
