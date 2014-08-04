@@ -35,4 +35,28 @@ class AddressRepository extends EntityRepository
             return null;
         }
     }
+
+    public function findByAccountId($id) {
+        try {
+            $qb = $this->createQueryBuilder('address')
+                ->leftJoin('address.accountAddresses', 'accountAddresses')
+                ->leftJoin('address.contactAddresses', 'contactAddresses')
+                ->leftJoin('address.country', 'country')
+                ->leftJoin('address.addressType', 'addressType')
+                ->leftJoin('accountAddresses.account', 'account')
+                ->addSelect('accountAddresses')
+                ->addSelect('contactAddresses')
+                ->addSelect('country')
+                ->addSelect('addressType')
+                ->where('account.id = :id');
+
+            $query = $qb->getQuery();
+            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+            $query->setParameter('id', $id);
+
+            return $query->getResult();
+        } catch (NoResultException $ex) {
+            return null;
+        }
+    }
 }
