@@ -115,9 +115,7 @@ define(function () {
             }.bind(this));
 
             // update datagrid if media-edit is finished
-            this.sandbox.on('sulu.media.collections.save-media', function (media) {
-                this.sandbox.emit('husky.datagrid.records.change', media);
-            }.bind(this));
+            this.sandbox.on('sulu.media.collections.save-media', this.updateGrid.bind(this));
 
             // delete a media
             this.sandbox.on('sulu.list-toolbar.delete', this.deleteMedia.bind(this));
@@ -127,6 +125,22 @@ define(function () {
 
             // edit media
             this.sandbox.on('sulu.list-toolbar.edit', this.editMedia.bind(this));
+        },
+
+        /**
+         * Updates the grid
+         * @param media {Object|Array} a media object or an array of media objects
+         */
+        updateGrid: function(media) {
+            var update = false;
+            if (!!media.locale && media.locale === this.options.locale) {
+                update = true;
+            } else if (media.length > 0 && media[0].locale === this.options.locale) {
+                update = true;
+            }
+            if (update === true) {
+                this.sandbox.emit('husky.datagrid.records.change', media);
+            }
         },
 
         /**

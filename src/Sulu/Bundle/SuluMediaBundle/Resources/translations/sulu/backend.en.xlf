@@ -70,6 +70,10 @@
                 <source>labels.success.collection-deleted-desc</source>
                 <target>Collection successfully deleted</target>
             </trans-unit>
+            <trans-unit id="90a3272459ba0f52ef7a4d3c0298d5c" resname="sulu.collections.delete-collection">
+                <source>sulu.collections.delete-collection</source>
+                <target>Delete collection</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

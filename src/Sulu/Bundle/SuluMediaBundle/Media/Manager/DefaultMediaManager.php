@@ -34,7 +34,6 @@ use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Sulu\Bundle\MediaBundle\Entity\Media as MediaEntity;
 use Sulu\Bundle\MediaBundle\Api\Media;
-use DateTime;
 
 /**
  * @package Sulu\Bundle\MediaBundle\Media\Manager
@@ -404,7 +403,7 @@ class DefaultMediaManager implements MediaManagerInterface
          */
         $file = $files[0]; // currently a media can only have one file
 
-        $file->setChanged(new Datetime());
+        $file->setChanged(new \Datetime());
         $file->setChanger($user);
 
         $version = $file->getVersion();
@@ -445,8 +444,8 @@ class DefaultMediaManager implements MediaManagerInterface
             $data['version'] = $version;
 
             $fileVersion = clone($currentFileVersion);
-            $fileVersion->setChanged(new Datetime());
-            $fileVersion->setCreated(new Datetime());
+            $fileVersion->setChanged(new \Datetime());
+            $fileVersion->setCreated(new \Datetime());
             $fileVersion->setChanger($user);
             $fileVersion->setCreator($user);
             $fileVersion->setDownloadCounter(0);
