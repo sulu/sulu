@@ -1382,7 +1382,6 @@
                 <source>contact.accounts.termsOfPayment.select</source>
                 <target>Please choose ...</target>
             </trans-unit>
-
             <trans-unit id="643c99ff2964652633a5ca2178d22236" resname="contact.account.condition.select">
                 <source>contact.account.condition.select</source>
                 <target>Bitte wählen ...</target>
