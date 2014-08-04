@@ -12,6 +12,7 @@ namespace Sulu\Component\Content\StructureExtension;
 
 use PHPCR\NodeInterface;
 use Sulu\Component\Content\Mapper\Translation\MultipleTranslatedProperties;
+use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
 
 /**
  * basic implementation of content mapper extension
@@ -120,6 +121,37 @@ abstract class StructureExtension implements StructureExtensionInterface
     protected function loadProperty(NodeInterface $node, $name, $default = '')
     {
         return $node->getPropertyValueWithDefault($this->getPropertyName($name), $default);
+    }
+
+    /**
+     * Returns value of given property name
+     * @param string $name property name
+     * @throws \Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException
+     * @return mixed
+     */
+    function __get($name)
+    {
+        if ($this->__isset($name)) {
+            return $this->data[$name];
+        } else {
+            throw new NoSuchPropertyException(
+                sprintf('Property "%s" not exists in extension "%s"', $name, $this->getName())
+            );
+        }
+    }
+
+    /**
+     * indicates that property exists
+     * @param $name
+     * @return bool
+     */
+    function __isset($name)
+    {
+        if (method_exists($this, 'get' . ucfirst($name))) {
+            return $this->{'get' . ucfirst($name)}();
+        } else {
+            return array_key_exists($name, $this->data);
+        }
     }
 
 } 
