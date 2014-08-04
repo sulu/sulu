@@ -1595,7 +1595,7 @@
             </trans-unit>
             <trans-unit id="643d99fa2964652633a5ca2169f22245" resname="poolalpin.customer-internal">
                 <source>poolalpin.customer-internal</source>
-                <target>DLH</target>
+                <target>Mitglied</target>
             </trans-unit>
             <trans-unit id="643d99fa2964652633a5ca2169f22246" resname="poolalpin.contact.notes">
                 <source>poolalpin.contact.notes</source>
