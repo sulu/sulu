@@ -165,35 +165,37 @@ define([
             );
 
             // handling of terms of delivery/payment eventlistener
-            this.sandbox.on('husky.select.terms-of-delivery.delete', this.deleteTermsOfDelivery.bind(this));
-            this.sandbox.on('husky.select.terms-of-payment.delete', this.deleteTermsOfPayment.bind(this));
+            this.sandbox.on('husky.select.terms-of-delivery.delete', this.deleteTerms.bind(this, 'delivery'));
+            this.sandbox.on('husky.select.terms-of-payment.delete', this.deleteTerms.bind(this, 'payment'));
             this.sandbox.on('husky.select.terms-of-delivery.save', this.saveTermsOfDelivery.bind(this));
             this.sandbox.on('husky.select.terms-of-payment.save', this.saveTermsOfPayment.bind(this));
         },
 
-        deleteTermsOfDelivery: function(ids) {
+        deleteTerms: function(termsKey, ids) {
+            var condition;
             if (!!ids && ids.length > 0) {
-                this.sandbox.util.each(ids, function(index, id) {
-                    var condition = TermsOfDelivery.findOrCreate({id: id});
-                    condition.destroy({
-                        error: function() {
-                            this.sandbox.emit('husky.select.terms-of-delivery.revert');
-                        }.bind(this)
-                    });
-                }.bind(this));
-            }
-        },
 
-        deleteTermsOfPayment: function(ids) {
-            if (!!ids && ids.length > 0) {
-                this.sandbox.util.each(ids, function(index, id) {
-                    var condition = TermsOfPayment.findOrCreate({id: id});
-                    condition.destroy({
-                        error: function() {
-                            this.sandbox.emit('husky.select.terms-of-payment.revert');
-                        }.bind(this)
-                    });
-                }.bind(this));
+                if (termsKey === 'delivery') {
+                    this.sandbox.util.each(ids, function(index, id) {
+                        condition = TermsOfDelivery.findOrCreate({id: id});
+                        condition.destroy({
+                            error: function() {
+                                this.sandbox.emit('husky.select.terms-of-delivery.revert');
+                            }.bind(this)
+                        });
+                    }.bind(this));
+
+                } else if (termsKey === 'payment') {
+                    this.sandbox.util.each(ids, function(index, id) {
+                        condition = TermsOfPayment.findOrCreate({id: id});
+                        condition.destroy({
+                            error: function() {
+                                this.sandbox.emit('husky.select.terms-of-payment.revert');
+                            }.bind(this)
+                        });
+                    }.bind(this));
+                }
+
             }
         },
 
