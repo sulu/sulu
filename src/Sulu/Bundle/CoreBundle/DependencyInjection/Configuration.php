@@ -218,6 +218,7 @@ class Configuration implements ConfigurationInterface
                     ->addDefaultsIfNotSet()
                     ->children()
                         ->arrayNode('paths')
+                            ->isRequired()
                             ->prototype('array')
                                 ->children()
                                     ->scalarNode('path')
