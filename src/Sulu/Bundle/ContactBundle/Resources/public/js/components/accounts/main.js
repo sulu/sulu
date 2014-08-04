@@ -60,11 +60,11 @@ define([
                     AccountsUtilHeader.setHeader.call(this, this.account, this.options.accountType);
                 }.bind(this));
             } else if (this.options.display === 'contacts') {
-                this.renderContacts().then(function() {
+                this.renderComponent(this.options.display, 'accounts-form-container').then(function() {
                     AccountsUtilHeader.setHeader.call(this, this.account, this.options.accountType);
                 }.bind(this));
             } else if (this.options.display === 'financials') {
-                this.renderFinancials().then(function() {
+                this.renderComponent(this.options.display,  'accounts-form-container').then(function() {
                     AccountsUtilHeader.setHeader.call(this, this.account, this.options.accountType);
                 }.bind(this));
             } else if (this.options.display === 'activities') {
@@ -74,6 +74,10 @@ define([
                         this.account,
                         this.options.accountType
                     );
+                }.bind(this));
+            } else if (this.options.display === 'documents') {
+                this.renderComponent(this.options.display, 'documents-form').then(function() {
+                    AccountsUtilHeader.setHeader.call(this, this.account, this.options.accountType);
                 }.bind(this));
             } else {
                 throw 'display type wrong';
@@ -461,7 +465,7 @@ define([
             this.account.set({mainContact: Contact.findOrCreate({id: id})});
             this.account.save(null, {
                 patch: true,
-                success: function(response) {
+                success: function() {
                     // TODO: show success label
                 }.bind(this)
             });
@@ -688,8 +692,8 @@ define([
             ]);
         },
 
-        renderFinancials: function() {
-            var $form = this.sandbox.dom.createElement('<div id="accounts-form-container"/>'),
+        renderComponent: function(componentName, containerId) {
+            var $form = this.sandbox.dom.createElement('<div id="'+containerId+'"/>'),
                 dfd = this.sandbox.data.deferred();
             this.html($form);
 
@@ -698,7 +702,7 @@ define([
                 this.account.fetch({
                     success: function(model) {
                         this.sandbox.start([
-                            {name: 'accounts/components/financials@sulucontact', options: { el: $form, data: model.toJSON()}}
+                            {name: 'accounts/components/'+componentName+'@sulucontact', options: { el: $form, data: model.toJSON()}}
                         ]);
                         dfd.resolve();
                     }.bind(this),
@@ -709,7 +713,6 @@ define([
                 });
             }
             return dfd.promise();
-
         },
 
         renderForm: function() {
@@ -743,29 +746,6 @@ define([
                     {name: 'accounts/components/form@sulucontact', options: { el: $form, data: this.account.toJSON()}}
                 ]);
                 dfd.resolve();
-            }
-            return dfd.promise();
-        },
-
-        renderContacts: function() {
-            var $form = this.sandbox.dom.createElement('<div id="accounts-contacts-container"/>'),
-                dfd = this.sandbox.data.deferred();
-            this.html($form);
-
-            if (!!this.options.id) {
-                this.account = new Account({id: this.options.id});
-                this.account.fetch({
-                    success: function(model) {
-                        this.sandbox.start([
-                            {name: 'accounts/components/contacts@sulucontact', options: { el: $form, data: model.toJSON()}}
-                        ]);
-                        dfd.resolve();
-                    }.bind(this),
-                    error: function() {
-                        this.sandbox.logger.log("error while fetching contact");
-                        dfd.reject();
-                    }.bind(this)
-                });
             }
             return dfd.promise();
         },
