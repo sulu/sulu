@@ -40,6 +40,12 @@ class ImportCommand extends ContainerAwareCommand
                 null
             )
             ->addOption(
+                'reset',
+                'r',
+                InputOption::VALUE_NONE,
+                'If set the all translations get deleted from the DB before importing'
+            )
+            ->addOption(
                 'packageId',
                 'p',
                 InputOption::VALUE_REQUIRED,
@@ -103,6 +109,7 @@ class ImportCommand extends ContainerAwareCommand
         $defaultLocale = $input->getOption('defaultLocale');
         $frontend = $input->getOption('frontend');
         $backend = $input->getOption('backend');
+        $reset = $input->getOption('reset');
 
         // options only for single-file import
         $file = $input->getOption('file');
@@ -120,6 +127,10 @@ class ImportCommand extends ContainerAwareCommand
         $import->setOutput($output);
         $import->setLocale($locale);
         $import->setDefaultLocale($defaultLocale);
+
+        if ($reset) {
+            $import->resetPackages();
+        }
 
         if ($file === null) {
             $import->setFrontendDomain($frontendDomain);
