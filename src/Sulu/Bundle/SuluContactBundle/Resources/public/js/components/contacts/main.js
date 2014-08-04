@@ -372,8 +372,8 @@ define([
 
         /**
          * Delete callback function for editable drop down
-         * @param indexes - indexes to delete
-         * @param url - api url
+         * @param ids - ids to delete
+         * @param instanceName
          */
         itemDeleted: function(ids, instanceName) {
             if (!!ids && ids.length > 0) {
@@ -386,13 +386,13 @@ define([
         /**
          * delete elements
          * @param id
-         * @param url - api url
+         * @param instanceName
          */
         deleteItem: function(id, instanceName) {
             if (instanceName === 'title-select') {
-                this.delete(Title.findOrCreate({id: id}), instanceName);
+                this.deleteEntity(Title.findOrCreate({id: id}), instanceName);
             } else if (instanceName === 'position-select') {
-                this.delete(Position.findOrCreate({id: id}), instanceName);
+                this.deleteEntity(Position.findOrCreate({id: id}), instanceName);
             }
         },
 
@@ -401,11 +401,8 @@ define([
          * @param entity
          * @param instanceName
          */
-        delete: function(entity, instanceName) {
+        deleteEntity: function(entity, instanceName) {
             entity.destroy({
-                success: function(response) {
-                    this.sandbox.emit('husky.select.' + instanceName + '.deleted');
-                }.bind(this),
                 error: function() {
                     this.sandbox.emit('husky.select.' + instanceName + '.revert');
                 }.bind(this)
@@ -416,6 +413,7 @@ define([
          * Save callback function for editable drop down
          * @param changedData - data to save
          * @param url - api url
+         * @param instance - name of select instance
          */
         itemSaved: function(changedData, url, instance) {
             if (!!changedData && changedData.length > 0) {
@@ -440,14 +438,15 @@ define([
         /**
          * Register events for editable drop downs
          * @param instanceName
+         * @param url
          */
         initializeDropDownListender: function(instanceName, url) {
             var instance = 'husky.select.' + instanceName;
             // Listen for changes in title selection drop down
-            this.sandbox.on(instance + '.deleted', function(data) {
+            this.sandbox.on(instance + '.delete', function(data) {
                 this.itemDeleted(data, instanceName);
             }.bind(this));
-            this.sandbox.on(instance + '.saved', function(data) {
+            this.sandbox.on(instance + '.save', function(data) {
                 this.itemSaved(data, url, instance);
             }.bind(this));
         },
