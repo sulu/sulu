@@ -92,8 +92,10 @@ define([], function() {
          */
         initTermsSelect: function(formData) {
 
-            this.preselectedTermsOfPaymentId = !!formData.termsOfPayment ? [formData.termsOfPayment.id] : '';
-            this.preselectedTermsOfDeliveryId = !!formData.termsOfDelivery ? [formData.termsOfDelivery.id] : '';
+            this.preselectedTermsOfPaymentId =
+                !!formData.termsOfPayment ? [formData.termsOfPayment.id] : '';
+            this.preselectedTermsOfDeliveryId =
+                !!formData.termsOfDelivery ? [formData.termsOfDelivery.id] : '';
 
             this.sandbox.start([
                 {
@@ -107,7 +109,6 @@ define([], function() {
                         repeatSelect: false,
                         direction: 'bottom',
                         editable: true,
-                        deselectField: 'select.no-choice',
                         resultKey: 'termsOfPayments',
                         preSelectedElements: [],
                         url: constants.cgetTermsOfPaymentURL
@@ -124,89 +125,12 @@ define([], function() {
                         repeatSelect: false,
                         direction: 'bottom',
                         editable: true,
-                        deselectField: 'select.no-choice',
                         resultKey: 'termsOfDeliveries',
                         preSelectedElements: this.preselectedTermsOfDeliveryId,
                         url: constants.cgetTermsOfDeliveryURL
                     }
                 }
             ]);
-        },
-
-        /**
-         * Copies array of objects
-         * @param data
-         * @returns {Array}
-         */
-        copyArrayOfObjects: function(data) {
-            var newArray = [];
-            this.sandbox.util.foreach(data, function(el) {
-                newArray.push(this.sandbox.util.extend(true, {}, el));
-            }.bind(this));
-
-            return newArray;
-        },
-
-        /**
-         * Adds divider and actions to dropdown elements
-         * @param data
-         */
-        addDividerAndActionsForPaymentSelect: function(data) {
-            data.push({divider: true});
-            data.push({id: -1, terms: this.sandbox.translate('public.edit-entries'), callback: this.showTermsOfPaymentOverlay.bind(this), updateLabel: false});
-        },
-
-        /**
-         * Adds divider and actions to dropdown elements
-         * @param data
-         */
-        addDividerAndActionsForDeliverySelect: function(data) {
-            data.push({divider: true});
-            data.push({id: -1, terms: this.sandbox.translate('public.edit-entries'), callback: this.showTermsOfDeliveryOverlay.bind(this), updateLabel: false});
-        },
-
-        /**
-         * Triggers event to show overlay
-         */
-        showTermsOfDeliveryOverlay: function() {
-
-            var $overlayContainer = this.sandbox.dom.$('<div id="' + constants.overlayIdTermsOfDelivery + '"></div>'),
-                config = {
-                    instanceName: this.termsOfDeliveryInstanceName,
-                    el: constants.overlaySelectorTermsOfDelivery,
-                    openOnStart: true,
-                    removeOnClose: true,
-                    triggerEl: null,
-                    title: this.sandbox.translate('public.edit-entries'),
-                    data: this.termsOfDeliveryData,
-                    valueName: 'terms'
-                };
-
-            this.sandbox.dom.remove(constants.overlaySelectorTermsOfDelivery);
-            this.sandbox.dom.append(this.$el, $overlayContainer);
-            this.sandbox.emit('sulu.types.' + this.termsOfDeliveryInstanceName + '.open', config);
-        },
-
-        /**
-         * Triggers event to show overlay
-         */
-        showTermsOfPaymentOverlay: function() {
-
-            var $overlayContainer = this.sandbox.dom.$('<div id="' + constants.overlayIdTermsOfPayment + '"></div>'),
-                config = {
-                    instanceName: this.termsOfPaymentInstanceName,
-                    el: constants.overlaySelectorTermsOfPayment,
-                    openOnStart: true,
-                    removeOnClose: true,
-                    triggerEl: null,
-                    title: this.sandbox.translate('public.edit-entries'),
-                    data: this.termsOfPaymentData,
-                    valueName: 'terms'
-                };
-
-            this.sandbox.dom.remove(constants.overlaySelectorTermsOfPayment);
-            this.sandbox.dom.append(this.$el, $overlayContainer);
-            this.sandbox.emit('sulu.types.' + this.termsOfPaymentInstanceName + '.open', config);
         },
 
         initForm: function(data) {

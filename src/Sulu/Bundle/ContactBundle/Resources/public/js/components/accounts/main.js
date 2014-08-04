@@ -165,10 +165,22 @@ define([
             );
 
             // handling of terms of delivery/payment eventlistener
-            this.sandbox.on('husky.select.terms-of-delivery.delete', this.deleteTerms.bind(this, 'delivery'));
-            this.sandbox.on('husky.select.terms-of-payment.delete', this.deleteTerms.bind(this, 'payment'));
-            this.sandbox.on('husky.select.terms-of-delivery.save', this.saveTermsOfDelivery.bind(this));
-            this.sandbox.on('husky.select.terms-of-payment.save', this.saveTermsOfPayment.bind(this));
+            this.sandbox.on(
+                'husky.select.terms-of-delivery.delete',
+                this.deleteTerms.bind(this, 'delivery')
+            );
+            this.sandbox.on(
+                'husky.select.terms-of-payment.delete',
+                this.deleteTerms.bind(this, 'payment')
+            );
+            this.sandbox.on(
+                'husky.select.terms-of-delivery.save',
+                this.saveTermsOfDelivery.bind(this)
+            );
+            this.sandbox.on(
+                'husky.select.terms-of-payment.save',
+                this.saveTermsOfPayment.bind(this)
+            );
         },
 
         deleteTerms: function(termsKey, ids) {
@@ -180,7 +192,9 @@ define([
                         condition = TermsOfDelivery.findOrCreate({id: id});
                         condition.destroy({
                             error: function() {
-                                this.sandbox.emit('husky.select.terms-of-delivery.revert');
+                                this.sandbox.emit(
+                                    'husky.select.terms-of-delivery.revert'
+                                );
                             }.bind(this)
                         });
                     }.bind(this));
@@ -190,7 +204,9 @@ define([
                         condition = TermsOfPayment.findOrCreate({id: id});
                         condition.destroy({
                             error: function() {
-                                this.sandbox.emit('husky.select.terms-of-payment.revert');
+                                this.sandbox.emit(
+                                    'husky.select.terms-of-payment.revert'
+                                );
                             }.bind(this)
                         });
                     }.bind(this));
@@ -211,7 +227,9 @@ define([
                             null,
                             true);
                     }.bind(this)).fail(function(status, error) {
-                        this.sandbox.emit('husky.select.terms-of-delivery.save.revert');
+                        this.sandbox.emit(
+                            'husky.select.terms-of-delivery.save.revert'
+                        );
                         this.sandbox.logger.error(status, error);
                     }.bind(this));
             }
@@ -224,12 +242,15 @@ define([
                     'PATCH',
                     data)
                     .then(function(response) {
-                        this.sandbox.emit('husky.select.terms-of-payment.update',
+                        this.sandbox.emit(
+                            'husky.select.terms-of-payment.update',
                             response,
                             null,
                             true);
                     }.bind(this)).fail(function(status, error) {
-                        this.sandbox.emit('husky.select.terms-of-payment.save.revert');
+                        this.sandbox.emit(
+                            'husky.select.terms-of-payment.save.revert'
+                        );
                         this.sandbox.logger.error(status, error);
                     }.bind(this));
             }
