@@ -213,7 +213,7 @@ define([], function() {
          * @param {Array|String} [header.toolbar.template] array of toolbar items to pass to the header component, can also be a string representing a template (e.g. 'default')
          * @param {Array|String} [header.toolbar.parentTemplate] same as toolbar.template, gets merged with toolbar template
          * @param {Object} [header.toolbar.options] object with options for the toolbar component
-         * @param {Object|Boolean} [header.toolbar.languageChanger] Object with url and callback to pass to the header. If true system language changer will be rendered. Default is true
+         * @param {Object|Boolean} [header.toolbar.languageChanger] Object with url and callback to pass to the header. If true default language changer will be rendered. Default is true
          *
          * @param {String} [header.tabs.url] Url to fetch tabs related data from
          * @param {Boolean} [header.tabs.fullControl] If true the header just displayes the tabs, but doesn't start the content-component
