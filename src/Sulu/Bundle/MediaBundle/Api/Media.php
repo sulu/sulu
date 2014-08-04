@@ -464,7 +464,7 @@ class Media extends ApiWrapper
     public function setChanged($changed)
     {
         if (is_string($changed)) {
-            $changed = new DateTime($changed);
+            $changed = new \DateTime($changed);
         }
         $this->entity->setChanged($changed);
 
@@ -512,7 +512,7 @@ class Media extends ApiWrapper
     public function setCreated($created)
     {
         if (is_string($created)) {
-            $created = new DateTime($created);
+            $created = new \DateTime($created);
         }
         $this->entity->setCreated($created);
 

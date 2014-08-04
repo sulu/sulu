@@ -14,7 +14,6 @@ use Sulu\Bundle\MediaBundle\Entity\Collection as Entity;
 use JMS\Serializer\Annotation\VirtualProperty;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\Expose;
-use DateTime;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use JMS\Serializer\Annotation\ExclusionPolicy;
@@ -270,7 +269,7 @@ class Collection extends ApiWrapper
     public function setChanged($changed)
     {
         if (is_string($changed)) {
-            $changed = new DateTime($changed);
+            $changed = new \DateTime($changed);
         }
         $this->entity->setChanged($changed);
 
@@ -318,7 +317,7 @@ class Collection extends ApiWrapper
     public function setCreated($created)
     {
         if (is_string($created)) {
-            $created = new DateTime($created);
+            $created = new \DateTime($created);
         }
         $this->entity->setCreated($created);
 

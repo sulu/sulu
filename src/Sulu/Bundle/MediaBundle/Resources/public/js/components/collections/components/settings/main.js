@@ -17,7 +17,7 @@ define(function () {
         },
 
         constants = {
-            settingsFormId: 'collection-settings',
+            settingsFormId: 'collection-settings'
         };
 
     return {
@@ -55,6 +55,9 @@ define(function () {
                 this.sandbox.emit('sulu.media.collections.list');
             }.bind(this));
 
+            // change the editing language
+            this.sandbox.on('sulu.header.language-changed', this.changeLanguage.bind(this));
+
             // save button clicked
             this.sandbox.on('sulu.header.toolbar.save', this.save.bind(this));
         },
@@ -67,6 +70,25 @@ define(function () {
                 this.sandbox.sulu.unlockDeleteSuccessLabel();
                 this.sandbox.emit('sulu.media.collections.collection-list');
             }.bind(this));
+        },
+
+        /**
+         * Changes the editing language
+         * @param locale {string} the new locale to edit the collection in
+         */
+        changeLanguage: function(locale) {
+            this.sandbox.emit('sulu.header.toolbar.item.loading', 'language');
+            this.sandbox.emit(
+                'sulu.media.collections.reload-collection',
+                this.options.data.id, {locale: locale},
+                function(collection) {
+                    this.options.data = collection;
+                    this.sandbox.form.setData('#' + constants.settingsFormId, this.options.data);
+                    this.setHeaderInfos();
+                    this.sandbox.emit('sulu.header.toolbar.item.enable', 'language', false);
+                }.bind(this)
+            );
+            this.sandbox.emit('sulu.media.collections-edit.set-locale', locale);
         },
 
         /**
@@ -108,7 +130,9 @@ define(function () {
                         title: this.sandbox.translate('sulu.collections.delete-collection'),
                         callback: this.deleteCollection.bind(this)
                     }],
-                    languageChanger: true
+                    languageChanger: {
+                        preSelected: this.options.locale
+                    }
                 }
             );
         },
