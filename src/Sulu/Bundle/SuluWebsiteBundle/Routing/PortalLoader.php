@@ -75,14 +75,12 @@ class PortalLoader extends Loader
      */
     private function generatePortalRoutes(Route $importedRoute, $importedRouteName)
     {
-        $i = 0;
         foreach ($this->webspaceManager->getPortalInformations($this->environment) as $portalInformation) {
             $route = clone $importedRoute;
             $route->setHost($portalInformation->getHost());
             $route->setPath($portalInformation->getPrefix() . $route->getPath());
 
             $this->collection->add($portalInformation->getUrl() . '.' . $importedRouteName, $route);
-            $i++;
         }
     }
 }
