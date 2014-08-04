@@ -37,6 +37,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
 
         if (isset($config['phpcr'])) {
             $phpcrConfig = $config['phpcr'];
+            unset($phpcrConfig['class_map']);
 
             foreach ($container->getExtensions() as $name => $extension) {
                 $prependConfig = array();
@@ -139,6 +140,16 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
     private function initPhpcr($phpcrConfig, ContainerBuilder $container, Loader\XmlFileLoader $loader)
     {
         $loader->load('phpcr.xml');
+
+        $wrapperExtension = $container->getDefinition('sulu.phpcr.wrapper');
+        $classMap = array(
+            'PHPCR\NodeInterface' => $phpcrConfig['class_map']['node'],
+            'PHPCR\PropertyInterface' => $phpcrConfig['class_map']['property'],
+            'PHPCR\SessionInterface' => $phpcrConfig['class_map']['session'],
+        );
+        $wrapperExtension->setArguments(array($classMap));
+
+        $container->setParameter('sulu.phpcr.wrapped_session.class', $phpcrConfig['class_map']['session']);
     }
 
     /**

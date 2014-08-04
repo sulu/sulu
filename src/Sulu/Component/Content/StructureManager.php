@@ -168,7 +168,7 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
                 $this->logger->warning(
                     'The file "' . $fileName . '" does not match the schema and was skipped'
                 );
-                throw new TemplateNotFoundException($fileName, $key);
+                throw $iae;
             } catch (InvalidXmlException $iude) {
                 $this->logger->warning(
                     'The file "' . $fileName . '" defined some invalid properties and was skipped'
@@ -205,8 +205,10 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
      */
     private function getTemplate($key)
     {
+        $paths = array();
         foreach ($this->options['template_dir'] as $templateDir) {
             $path = $templateDir['path'] . '/' . $key . '.xml';
+            $paths[] = $path;
 
             if (file_exists($path)) {
                 return array(
@@ -216,7 +218,11 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
             }
         }
 
-        return false;
+        throw new \Exception(sprintf(
+            'Could not find template with key "%s" looked in: %s', 
+            $key,
+            implode(', ', $paths)
+        ));
     }
 
     /**

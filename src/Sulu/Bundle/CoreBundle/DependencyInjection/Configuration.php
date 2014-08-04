@@ -97,7 +97,15 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->arrayNode('backend')
                     ->useAttributeAsKey('name')
-                    ->prototype('variable')
+                    ->prototype('variable')->end()
+                ->end()
+                ->arrayNode('class_map')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('session')->defaultValue('Sulu\Component\PHPCR\Wrapper\Wrapped\Session')->end()
+                        ->scalarNode('node')->defaultValue('Sulu\Component\PHPCR\Model\Node')->end()
+                        ->scalarNode('property')->defaultValue('Sulu\Component\PHPCR\Model\Property')->end()
+                    ->end()
                 ->end()
             ->end();
     }
@@ -219,6 +227,7 @@ class Configuration implements ConfigurationInterface
                     ->children()
                         ->arrayNode('paths')
                             ->prototype('array')
+
                                 ->children()
                                     ->scalarNode('path')
                                         ->example('%kernel.root_dir%/../Resources/templates')
