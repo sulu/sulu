@@ -198,7 +198,10 @@ class TemplateController extends Controller
      */
     public function settingsAction()
     {
-        return $this->render('SuluContentBundle:Template:settings.html.twig');
+        return $this->render(
+            'SuluContentBundle:Template:settings.html.twig',
+            array('navContexts' => $this->container->getParameter('sulu.content.nav_contexts'))
+        );
     }
 
 }

@@ -1,15 +1,17 @@
 <form id="settings-form" class="grid">
     <div class="grid-row form-group" id="show-in-navigation-container">
-        <label for="show-in-navigation">
-            <div class="custom-checkbox">
-                <input id="show-in-navigation" class="trigger-save-button form-element" type="checkbox"/>
-                <span class="icon"></span>
-            </div>
-            <span class="clickable"><%=translate('sulu.content.form.settings.show-in-navigation')%></span>
-        </label>
-    </div>
+        <label><%=translate('sulu.content.form.settings.nav-contexts')%></label>
 
-    <div class="grid-row section" id="show-in-navigation-container">
+        <div id="nav-contexts"
+             data-aura-component="select@husky"
+             data-aura-instance-name="nav-contexts"
+             data-aura-multiple-select="true"
+             data-aura-data='{{ navContexts|json_encode }}'
+             data-aura-default-label="<%=translate('sulu.content.form.settings.no-nav-contexts')%>"
+             data-aura-checked-all-label="<%=translate('sulu.content.form.settings.all-nav-contexts')%>"
+    ></div>
+
+    <div class="grid-row section m-top-40" id="show-in-navigation-container">
         <h2 class="divider m-bottom-20" title="Content Section">
             <%=translate('sulu.content.form.settings.type')%>
         </h2>
