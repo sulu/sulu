@@ -22,6 +22,8 @@
         <parameter key="sulu.content.rlp.mapper.phpcr.class">Sulu\Component\Content\Types\Rlp\Mapper\PhpcrMapper</parameter>
         <parameter key="sulu.content.rlp.strategy.tree.class">Sulu\Component\Content\Types\Rlp\Strategy\TreeStrategy</parameter>
         <parameter key="sulu.content.parent_child_any_finder.class">Sulu\Component\Content\Mapper\LocalizationFinder\ParentChildAnyFinder</parameter>
+
+        <parameter key="sulu.content.context.class">Sulu\Component\Content\ContentContext</parameter>
     </parameters>
 
     <services>
@@ -36,11 +38,14 @@
             <argument type="service" id="event_dispatcher"/>
             <argument type="service" id="sulu.content.localization_finder"/>
             <argument type="service" id="sulu.content.path_cleaner"/>
+            <argument type="service" id="debug.stopwatch" on-invalid="null"/>
+        </service>
+
+        <service id="sulu.content.context" public="false" class="%sulu.content.context.class%">
             <argument>%sulu.content.language.default%</argument>
             <argument>%sulu.content.template.default%</argument>
             <argument>%sulu.content.language.namespace%</argument>
             <argument>%sulu.content.internal_prefix%</argument>
-            <argument type="service" id="debug.stopwatch" on-invalid="null"/>
         </service>
 
         <!-- localization finder -->
