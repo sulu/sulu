@@ -15,17 +15,17 @@ define([], function() {
 
     var defaults = {
              translations: {
-                 configureLocation: 'Configure Location',
-                 locateAddress: 'Locate Address',
-                 title: 'Title',
-                 street: 'Street',
-                 number: 'Number',
-                 code: 'Code',
-                 town: 'Town',
-                 country: 'Country',
-                 coordinates: 'Coordinates (Long / Lat / Zoom)',
-                 map: 'Map',
-                 search: 'Search'
+                 configureLocation: 'sulu.location.configure',
+                 locateAddress: 'sulu.location.locate-address',
+                 title: 'sulu.location.title',
+                 street: 'sulu.location.street',
+                 number: 'sulu.location.number',
+                 code: 'sulu.location.code',
+                 town: 'sulu.location.town',
+                 country: 'sulu.location.country',
+                 coordinates: 'sulu.location.coords',
+                 map: 'sulu.location.map',
+                 search: 'sulu.location.search'
              },
              instanceName: null,
              mapProviders: {},
@@ -496,6 +496,8 @@ define([], function() {
                                     // @todo: Validation
                                     this.data = this.getFormData();
                                     this.sandbox.dom.data(this.$el, 'location', this.data);
+
+                                    this.sandbox.emit('sulu.preview.update', this.$el, this.data);
                                     this.sandbox.emit('sulu.content.changed');
                                     this.sandbox.emit(events.RELOAD_DATA);
                                 }.bind(this)

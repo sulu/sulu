@@ -14,18 +14,10 @@ define([
 
     'use strict';
 
-    var dataChangedHandler = function(data, $el) {
-        App.emit('sulu.preview.update', $el, data);
-        App.emit('sulu.content.changed');
-    };
-
     return function($el, options) {
         var defaults = {},
 
             subType = {
-                initializeSub: function() {
-                },
-
                 setValue: function(value) {
                     App.dom.data($el, 'location', value);
                 },
