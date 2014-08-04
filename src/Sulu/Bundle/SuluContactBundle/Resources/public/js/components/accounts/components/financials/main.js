@@ -27,10 +27,7 @@ define([], function() {
             overlaySelectorTermsOfDelivery: '#overlayContainerTermsOfDelivery',
 
             cgetTermsOfDeliveryURL: 'api/termsofdeliveries',
-            cgetTermsOfPaymentURL: 'api/termsofpayments',
-
-            getTermsOfDeliveryURL: 'api/termsofdelivery',
-            getTermsOfPaymentURL: 'api/termsofpayment'
+            cgetTermsOfPaymentURL: 'api/termsofpayments'
         },
 
         customTemplates = {
@@ -91,212 +88,49 @@ define([], function() {
         },
 
         /**
-         * Shows the overlay to manage account categories
-         */
-        startTermsOfPaymentOverlay: function() {
-            var $container = this.sandbox.dom.createElement('<div/>');
-            this.sandbox.dom.append(this.$el, $container);
-
-            this.sandbox.start([
-                {
-                    name: 'type-overlay@suluadmin',
-                    options: {
-                        el: $container,
-                        overlay: {
-                            el: constants.overlaySelectorTermsOfPayment,
-                            instanceName: this.termsOfPaymentInstanceName,
-                            removeOnClose: true
-                        },
-                        instanceName: this.termsOfPaymentInstanceName,
-                        url: constants.cgetTermsOfPaymentURL,
-                        data: this.termsOfPaymentData
-                    }
-                }
-            ]);
-        },
-
-        /**
-         * Shows the overlay to manage account categories
-         */
-        startTermsOfDeliveryOverlay: function() {
-            var $container = this.sandbox.dom.createElement('<div/>');
-            this.sandbox.dom.append(this.$el, $container);
-
-            this.sandbox.start([
-                {
-                    name: 'type-overlay@suluadmin',
-                    options: {
-                        el: $container,
-                        overlay: {
-                            el: constants.overlaySelectorTermsOfDelivery,
-                            instanceName: this.termsOfDeliveryInstanceName,
-                            removeOnClose: true
-                        },
-                        instanceName: this.termsOfDeliveryInstanceName,
-                        url: constants.cgetTermsOfDeliveryURL,
-                        data: this.termsOfDeliveryData
-                    }
-                }
-            ]);
-        },
-
-        /**
          * Inits the select for the account category
          */
         initTermsSelect: function(formData) {
 
-            this.preselectedTermsOfPaymentId = !!formData.termsOfPayment ? formData.termsOfPayment.id : null;
-            this.termsOfPaymentData = null;
-            this.preselectedTermsOfDeliveryId = !!formData.termsOfDelivery ? formData.termsOfDelivery.id : null;
-            this.termsOfDeliveryData = null;
+            this.preselectedTermsOfPaymentId =
+                !!formData.termsOfPayment ? [formData.termsOfPayment.id] : '';
+            this.preselectedTermsOfDeliveryId =
+                !!formData.termsOfDelivery ? [formData.termsOfDelivery.id] : '';
 
-            // init terms of payment field
-            this.sandbox.util.load(constants.cgetTermsOfPaymentURL)
-                .then(function(response) {
-
-                    // data is data for select but not for overlay
-                    var data = response._embedded.termsOfPayments;
-                    this.termsOfPaymentData = this.copyArrayOfObjects(data);
-
-                    // translate values for select but not for overlay
-                    this.sandbox.util.foreach(data, function(el) {
-                        el.terms = this.sandbox.translate(el.terms);
-                    }.bind(this));
-
-                    this.addDividerAndActionsForPaymentSelect(data);
-
-                    this.sandbox.start([
-                        {
-                            name: 'select@husky',
-                            options: {
-                                el: '#termsOfPayment',
-                                instanceName: this.termsOfPaymentInstanceName,
-                                multipleSelect: false,
-                                defaultLabel: this.sandbox.translate('contact.accounts.termsOfPayment.select'),
-                                valueName: 'terms',
-                                repeatSelect: false,
-                                preSelectedElements: [this.preselectedTermsOfPaymentId],
-                                data: data
-                            }
-                        }
-                    ]);
-
-                }.bind(this))
-                .fail(function(textStatus, error) {
-                    this.sandbox.logger.error(textStatus, error);
-                }.bind(this));
-
-            // init terms of delivery field
-            this.sandbox.util.load(constants.cgetTermsOfDeliveryURL)
-                .then(function(response) {
-
-                    // data is data for select but not for overlay
-                    var data = response._embedded.termsOfDeliveries;
-                    this.termsOfDeliveryData = this.copyArrayOfObjects(data);
-
-                    // translate values for select but not for overlay
-                    this.sandbox.util.foreach(data, function(el) {
-                        el.terms = this.sandbox.translate(el.terms);
-                    }.bind(this));
-
-                    this.addDividerAndActionsForDeliverySelect(data);
-
-                    this.sandbox.start([
-                        {
-                            name: 'select@husky',
-                            options: {
-                                el: '#termsOfDelivery',
-                                instanceName: this.termsOfDeliveryInstanceName,
-                                multipleSelect: false,
-                                defaultLabel: this.sandbox.translate('contact.accounts.termsOfDelivery.select'),
-                                valueName: 'terms',
-                                repeatSelect: false,
-                                preSelectedElements: [this.preselectedTermsOfDeliveryId],
-                                data: data
-                            }
-                        }
-                    ]);
-
-                }.bind(this))
-                .fail(function(textStatus, error) {
-                    this.sandbox.logger.error(textStatus, error);
-                }.bind(this));
-        },
-
-        /**
-         * Copies array of objects
-         * @param data
-         * @returns {Array}
-         */
-        copyArrayOfObjects: function(data) {
-            var newArray = [];
-            this.sandbox.util.foreach(data, function(el) {
-                newArray.push(this.sandbox.util.extend(true, {}, el));
-            }.bind(this));
-
-            return newArray;
-        },
-
-        /**
-         * Adds divider and actions to dropdown elements
-         * @param data
-         */
-        addDividerAndActionsForPaymentSelect: function(data) {
-            data.push({divider: true});
-            data.push({id: -1, terms: this.sandbox.translate('public.edit-entries'), callback: this.showTermsOfPaymentOverlay.bind(this), updateLabel: false});
-        },
-
-        /**
-         * Adds divider and actions to dropdown elements
-         * @param data
-         */
-        addDividerAndActionsForDeliverySelect: function(data) {
-            data.push({divider: true});
-            data.push({id: -1, terms: this.sandbox.translate('public.edit-entries'), callback: this.showTermsOfDeliveryOverlay.bind(this), updateLabel: false});
-        },
-
-        /**
-         * Triggers event to show overlay
-         */
-        showTermsOfDeliveryOverlay: function() {
-
-            var $overlayContainer = this.sandbox.dom.$('<div id="' + constants.overlayIdTermsOfDelivery + '"></div>'),
-                config = {
-                    instanceName: this.termsOfDeliveryInstanceName,
-                    el: constants.overlaySelectorTermsOfDelivery,
-                    openOnStart: true,
-                    removeOnClose: true,
-                    triggerEl: null,
-                    title: this.sandbox.translate('public.edit-entries'),
-                    data: this.termsOfDeliveryData,
-                    valueName: 'terms'
-                };
-
-            this.sandbox.dom.remove(constants.overlaySelectorTermsOfDelivery);
-            this.sandbox.dom.append(this.$el, $overlayContainer);
-            this.sandbox.emit('sulu.types.' + this.termsOfDeliveryInstanceName + '.open', config);
-        },
-
-        /**
-         * Triggers event to show overlay
-         */
-        showTermsOfPaymentOverlay: function() {
-
-            var $overlayContainer = this.sandbox.dom.$('<div id="' + constants.overlayIdTermsOfPayment + '"></div>'),
-                config = {
-                    instanceName: this.termsOfPaymentInstanceName,
-                    el: constants.overlaySelectorTermsOfPayment,
-                    openOnStart: true,
-                    removeOnClose: true,
-                    triggerEl: null,
-                    title: this.sandbox.translate('public.edit-entries'),
-                    data: this.termsOfPaymentData,
-                    valueName: 'terms'
-                };
-
-            this.sandbox.dom.remove(constants.overlaySelectorTermsOfPayment);
-            this.sandbox.dom.append(this.$el, $overlayContainer);
-            this.sandbox.emit('sulu.types.' + this.termsOfPaymentInstanceName + '.open', config);
+            this.sandbox.start([
+                {
+                    name: 'select@husky',
+                    options: {
+                        el: '#termsOfPayment',
+                        instanceName: this.termsOfPaymentInstanceName,
+                        multipleSelect: false,
+                        defaultLabel: this.sandbox.translate('public.please-choose'),
+                        valueName: 'terms',
+                        repeatSelect: false,
+                        direction: 'bottom',
+                        editable: true,
+                        resultKey: 'termsOfPayments',
+                        preSelectedElements: [],
+                        url: constants.cgetTermsOfPaymentURL
+                    }
+                },
+                {
+                    name: 'select@husky',
+                    options: {
+                        el: '#termsOfDelivery',
+                        instanceName: this.termsOfDeliveryInstanceName,
+                        multipleSelect: false,
+                        defaultLabel: this.sandbox.translate('public.please-choose'),
+                        valueName: 'terms',
+                        repeatSelect: false,
+                        direction: 'bottom',
+                        editable: true,
+                        resultKey: 'termsOfDeliveries',
+                        preSelectedElements: this.preselectedTermsOfDeliveryId,
+                        url: constants.cgetTermsOfDeliveryURL
+                    }
+                }
+            ]);
         },
 
         initForm: function(data) {
@@ -306,9 +140,6 @@ define([], function() {
             formObject.initialized.then(function() {
                 this.setFormData(data);
                 this.initTermsSelect(data);
-
-                this.startTermsOfPaymentOverlay();
-                this.startTermsOfDeliveryOverlay();
             }.bind(this));
         },
 
@@ -367,35 +198,6 @@ define([], function() {
                 this.updateBankAccountAddIcon(this.numberOfBankAccounts);
             }, this);
 
-            this.sandbox.on('sulu.types.' + this.termsOfDeliveryInstanceName + '.closed', function(data) {
-                var selected = [];
-
-                this.termsOfDeliveryData = this.copyArrayOfObjects(data);
-                selected.push(parseInt(!!this.selectedTermsOfDelivery ? this.selectedTermsOfDelivery : this.preselectedTermsOfDeliveryId, 10));
-                this.addDividerAndActionsForDeliverySelect(data);
-
-                // translate values for select but not for overlay
-                this.sandbox.util.foreach(data, function(el) {
-                    el.terms = this.sandbox.translate(el.terms);
-                }.bind(this));
-
-                this.sandbox.emit('husky.select.' + this.termsOfDeliveryInstanceName + '.update', data, selected);
-            }, this);
-
-            this.sandbox.on('sulu.types.' + this.termsOfPaymentInstanceName + '.closed', function(data) {
-                var selected = [];
-
-                this.termsOfPaymentData = this.copyArrayOfObjects(data);
-                selected.push(parseInt(!!this.selectedTermsOfPayment ? this.selectedTermsOfPayment : this.preselectedTermsOfPaymentId, 10));
-                this.addDividerAndActionsForPaymentSelect(data);
-
-                // translate values for select but not for overlay
-                this.sandbox.util.foreach(data, function(el) {
-                    el.terms = this.sandbox.translate(el.terms);
-                }.bind(this));
-
-                this.sandbox.emit('husky.select.' + this.termsOfPaymentInstanceName + '.update', data, selected);
-            }, this);
         },
 
         submit: function() {
