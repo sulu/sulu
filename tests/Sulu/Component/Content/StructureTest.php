@@ -51,7 +51,7 @@ class StructureTest extends \PHPUnit_Framework_TestCase
         $this->structure->setGlobalState(1);
         $this->structure->setNodeState(2);
         $this->structure->setPublished(new DateTime('2014-03-16'));
-        $this->structure->setNavigation(true);
+        $this->structure->setNavContexts(true);
         $this->structure->setHasTranslation(true);
 
     }

@@ -149,7 +149,7 @@ abstract class Structure implements StructureInterface
      * should be shown in navigation or not
      * @var boolean
      */
-    private $navigation;
+    private $navContexts;
 
     /**
      * structure translation is valid
@@ -209,7 +209,7 @@ abstract class Structure implements StructureInterface
         $this->published = null;
 
         // default hide in navigation
-        $this->navigation = false;
+        $this->navContexts = false;
 
         // default content node-type
         $this->nodeType = self::NODE_TYPE_CONTENT;
@@ -673,17 +673,17 @@ abstract class Structure implements StructureInterface
      * returns true if this node is shown in navigation
      * @return boolean
      */
-    public function getNavigation()
+    public function getNavContexts()
     {
-        return $this->navigation;
+        return $this->navContexts;
     }
 
     /**
-     * @param boolean $showInNavigation
+     * @param boolean $navContexts
      */
-    public function setNavigation($showInNavigation)
+    public function setNavContexts($navContexts)
     {
-        $this->navigation = $showInNavigation;
+        $this->navContexts = $navContexts;
     }
 
     /**
@@ -909,7 +909,7 @@ abstract class Structure implements StructureInterface
                 'published' => $this->getPublished(),
                 'globalState' => $this->getGlobalState(),
                 'publishedState' => $this->getPublishedState(),
-                'navigation' => $this->getNavigation(),
+                'navContexts' => $this->getNavContexts(),
                 'template' => $this->getKey(),
                 'hasSub' => $this->hasChildren,
                 'creator' => $this->creator,
@@ -938,7 +938,7 @@ abstract class Structure implements StructureInterface
                 'nodeState' => $this->getNodeState(),
                 'globalState' => $this->getGlobalState(),
                 'publishedState' => $this->getPublishedState(),
-                'navigation' => $this->getNavigation(),
+                'navContexts' => $this->getNavContexts(),
                 'hasSub' => $this->hasChildren,
                 'title' => $this->getPropertyValue('title')
             );
