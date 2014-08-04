@@ -193,7 +193,6 @@ define([
                 } else if (termsKey === 'payment') {
                     clazz = TermsOfPayment;
                     instanceName = 'terms-of-payment';
-
                 }
 
                 this.sandbox.util.each(ids, function(index, id) {
@@ -205,7 +204,6 @@ define([
                             );
                         }.bind(this)
                     });
-
                 }.bind(this));
 
             }
@@ -215,7 +213,6 @@ define([
             var instanceName, urlSuffix;
 
             if (!!data && data.length > 0) {
-
                 if (termsKey === 'delivery') {
                     urlSuffix = 'termsofdeliveries';
                     instanceName = 'terms-of-delivery';
