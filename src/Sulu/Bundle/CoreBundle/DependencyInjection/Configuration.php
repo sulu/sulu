@@ -231,6 +231,10 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
+                ->arrayNode('nav_contexts')
+                    ->prototype('scalar')->end()
+                    ->defaultValue(array('main', 'footer'))
+                ->end()
             ->end()
         ->end();
     }

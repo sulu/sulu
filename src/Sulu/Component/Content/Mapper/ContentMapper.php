@@ -21,6 +21,7 @@ use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\ContentTypeManager;
 use Sulu\Component\Content\ContentEvents;
 use Sulu\Component\Content\Event\ContentNodeEvent;
+use Sulu\Component\Content\Exception\InvalidNavigationContextExtension;
 use Sulu\Component\Content\Exception\MandatoryPropertyException;
 use Sulu\Component\Content\Exception\StateNotFoundException;
 use Sulu\Component\Content\Exception\TranslatedNodeNotFoundException;
@@ -118,6 +119,11 @@ class ContentMapper implements ContentMapperInterface
      */
     private $properties;
 
+    /**
+     * @var string[]
+     */
+    private $navContexts;
+
     public function __construct(
         ContentTypeManager $contentTypeManager,
         StructureManagerInterface $structureManager,
@@ -129,6 +135,7 @@ class ContentMapper implements ContentMapperInterface
         $defaultTemplate,
         $languageNamespace,
         $internalPrefix,
+        $navContexts,
         $stopwatch = null
     ) {
         $this->contentTypeManager = $contentTypeManager;
@@ -141,6 +148,7 @@ class ContentMapper implements ContentMapperInterface
         $this->languageNamespace = $languageNamespace;
         $this->internalPrefix = $internalPrefix;
         $this->cleaner = $cleaner;
+        $this->navContexts = $navContexts;
 
         // optional
         $this->stopwatch = $stopwatch;
@@ -256,7 +264,7 @@ class ContentMapper implements ContentMapperInterface
                 $this->properties->getName('published')
             );
         }
-        if (isset($data['navContexts'])) {
+        if (isset($data['navContexts']) && $this->validateNavContexts($data['navContexts'])) {
             $node->setProperty($this->properties->getName('navContexts'), $data['navContexts']);
         }
 
@@ -379,6 +387,23 @@ class ContentMapper implements ContentMapperInterface
         $this->eventDispatcher->dispatch(ContentEvents::NODE_SAVE, $event);
 
         return $structure;
+    }
+
+    /**
+     * validates navigation contexts
+     * @param string[] $navContexts
+     * @throws \Sulu\Component\Content\Exception\InvalidNavigationContextExtension
+     * @return boolean
+     */
+    private function validateNavContexts($navContexts)
+    {
+        foreach ($navContexts as $context) {
+            if (!in_array($context, $this->navContexts)) {
+                throw new InvalidNavigationContextExtension($navContexts, $this->navContexts);
+            }
+        }
+
+        return true;
     }
 
     /**
