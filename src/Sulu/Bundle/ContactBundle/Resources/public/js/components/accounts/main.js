@@ -175,81 +175,67 @@ define([
             );
             this.sandbox.on(
                 'husky.select.terms-of-delivery.save',
-                this.saveTermsOfDelivery.bind(this)
+                this.saveTerms.bind(this, 'delivery')
             );
             this.sandbox.on(
                 'husky.select.terms-of-payment.save',
-                this.saveTermsOfPayment.bind(this)
+                this.saveTerms.bind(this, 'payment')
             );
         },
 
         deleteTerms: function(termsKey, ids) {
-            var condition;
+            var condition, clazz, instanceName;
             if (!!ids && ids.length > 0) {
 
                 if (termsKey === 'delivery') {
-                    this.sandbox.util.each(ids, function(index, id) {
-                        condition = TermsOfDelivery.findOrCreate({id: id});
-                        condition.destroy({
-                            error: function() {
-                                this.sandbox.emit(
-                                    'husky.select.terms-of-delivery.revert'
-                                );
-                            }.bind(this)
-                        });
-                    }.bind(this));
-
+                    clazz = TermsOfDelivery;
+                    instanceName = 'terms-of-delivery';
                 } else if (termsKey === 'payment') {
-                    this.sandbox.util.each(ids, function(index, id) {
-                        condition = TermsOfPayment.findOrCreate({id: id});
-                        condition.destroy({
-                            error: function() {
-                                this.sandbox.emit(
-                                    'husky.select.terms-of-payment.revert'
-                                );
-                            }.bind(this)
-                        });
-                    }.bind(this));
+                    clazz = TermsOfPayment;
+                    instanceName = 'terms-of-payment';
+
                 }
 
+                this.sandbox.util.each(ids, function(index, id) {
+                    condition = clazz.findOrCreate({id: id});
+                    condition.destroy({
+                        error: function() {
+                            this.sandbox.emit(
+                                    'husky.select.' + instanceName + '.revert'
+                            );
+                        }.bind(this)
+                    });
+
+                }.bind(this));
+
             }
         },
 
-        saveTermsOfDelivery: function(data) {
+        saveTerms: function(termsKey, data) {
+            var instanceName, urlSuffix;
+
             if (!!data && data.length > 0) {
+
+                if (termsKey === 'delivery') {
+                    urlSuffix = 'termsofdeliveries';
+                    instanceName = 'terms-of-delivery';
+                } else if (termsKey === 'payment') {
+                    urlSuffix = 'termsofpayments';
+                    instanceName = 'terms-of-payment';
+                }
+
                 this.sandbox.util.save(
-                    '/admin/api/termsofdeliveries',
+                        '/admin/api/' + urlSuffix,
                     'PATCH',
                     data)
                     .then(function(response) {
-                        this.sandbox.emit('husky.select.terms-of-delivery.update',
+                        this.sandbox.emit('husky.select.' + instanceName + '.update',
                             response,
                             null,
                             true);
                     }.bind(this)).fail(function(status, error) {
                         this.sandbox.emit(
-                            'husky.select.terms-of-delivery.save.revert'
-                        );
-                        this.sandbox.logger.error(status, error);
-                    }.bind(this));
-            }
-        },
-
-        saveTermsOfPayment: function(data) {
-            if (!!data && data.length > 0) {
-                this.sandbox.util.save(
-                    '/admin/api/termsofpayments',
-                    'PATCH',
-                    data)
-                    .then(function(response) {
-                        this.sandbox.emit(
-                            'husky.select.terms-of-payment.update',
-                            response,
-                            null,
-                            true);
-                    }.bind(this)).fail(function(status, error) {
-                        this.sandbox.emit(
-                            'husky.select.terms-of-payment.save.revert'
+                                'husky.select.' + instanceName + '.save.revert'
                         );
                         this.sandbox.logger.error(status, error);
                     }.bind(this));
