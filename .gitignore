@@ -13,3 +13,5 @@
 /bin/jackrabbit-standalone*
 /bin/jackrabbit/*
 
+# phpunit
+/phpunit.xml
