@@ -1,0 +1,7 @@
+<div id="sulu-widgets">
+    {% for widget in widgets %}
+        <div class="widget widget-{{ widget.name }}">
+            {% include widget.template with widget only %}
+        </div>
+    {% endfor %}
+</div>

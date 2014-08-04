@@ -415,7 +415,7 @@ define(function() {
             }.bind(this));
 
             // throw height changed event after initialization has finished
-            this.sandbox.on('husky.datagrid.' + this.options.instanceName + id + '.initialized', function() {
+            this.sandbox.on('husky.datagrid.' + this.options.instanceName + id + '.view.rendered', function() {
                 this.sandbox.emit(HEIGHT_CHANGED.call(this));
             }.bind(this));
 
