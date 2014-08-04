@@ -198,9 +198,17 @@ class TemplateController extends Controller
      */
     public function settingsAction()
     {
+        $navContexts = array();
+        foreach ($this->container->getParameter('sulu.content.nav_contexts') as $context) {
+            $navContexts[] = array(
+                'name' => $context,
+                'id' => $context
+            );
+        }
+
         return $this->render(
             'SuluContentBundle:Template:settings.html.twig',
-            array('navContexts' => $this->container->getParameter('sulu.content.nav_contexts'))
+            array('navContexts' => $navContexts)
         );
     }
 

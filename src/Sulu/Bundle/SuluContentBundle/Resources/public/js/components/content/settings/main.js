@@ -86,7 +86,12 @@ define(['app-config'], function(AppConfig) {
                 this.sandbox.dom.attr('#external-link-node-type', 'checked', true);
             }
 
-            this.sandbox.dom.data('#nav-contexts', 'selection', data.navContexts).trigger('data-changed');
+
+            // updated after init
+            this.sandbox.on('husky.select.nav-contexts.initialize', function() {
+                this.sandbox.dom.data('#nav-contexts', 'selection', data.navContexts);
+                $('#nav-contexts').trigger('data-changed');
+            }.bind(this));
         },
 
         listenForChange: function() {
@@ -104,7 +109,7 @@ define(['app-config'], function(AppConfig) {
 
             var data = {};
 
-            data.navigation = this.sandbox.dom.data('#nav-contexts', 'selection');
+            data.navContexts = this.sandbox.dom.data('#nav-contexts', 'selection');
             data.nodeType = parseInt(this.sandbox.dom.val('input[name="nodeType"]:checked'));
 
             this.data = this.sandbox.util.extend(true, {}, this.data, data);
