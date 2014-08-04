@@ -14,7 +14,7 @@ define([
     'accountsutil/header',
     'sulucontact/model/activity',
     'sulucontact/model/termsOfPayment',
-    'sulucontact/model/termsOfDelivery',
+    'sulucontact/model/termsOfDelivery'
 ], function(Account, Contact, AccountContact, AccountsUtilHeader, Activity, TermsOfPayment, TermsOfDelivery) {
 
     'use strict';
@@ -171,7 +171,7 @@ define([
             this.sandbox.on('husky.select.terms-of-payment.save', this.saveTermsOfPayment.bind(this));
         },
 
-        deleteTermsOfDelivery: function(ids){
+        deleteTermsOfDelivery: function(ids) {
             if (!!ids && ids.length > 0) {
                 this.sandbox.util.each(ids, function(index, id) {
                     var condition = TermsOfDelivery.findOrCreate({id: id});
@@ -184,7 +184,7 @@ define([
             }
         },
 
-        deleteTermsOfPayment: function(ids){
+        deleteTermsOfPayment: function(ids) {
             if (!!ids && ids.length > 0) {
                 this.sandbox.util.each(ids, function(index, id) {
                     var condition = TermsOfPayment.findOrCreate({id: id});
@@ -236,18 +236,18 @@ define([
         /**
          * Binds general sidebar events
          */
-        bindSidebarEvents: function(){
+        bindSidebarEvents: function() {
             this.sandbox.dom.off('#sidebar');
 
             this.sandbox.dom.on('#sidebar', 'click', function(event) {
-                var id = this.sandbox.dom.data(event.currentTarget,'id');
+                var id = this.sandbox.dom.data(event.currentTarget, 'id');
                 this.sandbox.emit('sulu.contacts.accounts.load', id);
             }.bind(this), '#sidebar-accounts-list');
 
             this.sandbox.dom.on('#sidebar', 'click', function(event) {
-                var id = this.sandbox.dom.data(event.currentTarget,'id');
+                var id = this.sandbox.dom.data(event.currentTarget, 'id');
                 this.sandbox.emit('sulu.router.navigate', 'contacts/contacts/edit:' + id + '/details');
-                this.sandbox.emit('husky.navigation.select-item','contacts/contacts');
+                this.sandbox.emit('husky.navigation.select-item', 'contacts/contacts');
             }.bind(this), '#main-contact');
         },
 
@@ -467,7 +467,7 @@ define([
                 id: id,
                 contact: Contact.findOrCreate({id: id}), account: this.account});
 
-            if(!!position) {
+            if (!!position) {
                 accountContact.set({position: position});
             }
 
@@ -603,10 +603,10 @@ define([
             this.account.set(data);
 
             // set correct backbone models
-            if(!!data.termsOfPayment){
+            if (!!data.termsOfPayment) {
                 this.account.set('termsOfPayment', TermsOfPayment.findOrCreate({id: data.termsOfPayment}));
             }
-            if(!!data.termsOfDelivery){
+            if (!!data.termsOfDelivery) {
                 this.account.set('termsOfDelivery', TermsOfDelivery.findOrCreate({id: data.termsOfDelivery}));
             }
 
@@ -807,8 +807,6 @@ define([
                     var deleteContacts = this.sandbox.dom.find('#overlay-checkbox').length && this.sandbox.dom.prop('#overlay-checkbox', 'checked');
                     callbackFunction.call(this, true, deleteContacts);
                 }.bind(this);
-
-
 
             // sub-account exists => deletion is not allowed
             if (parseInt(values.numChildren, 10) > 0) {
