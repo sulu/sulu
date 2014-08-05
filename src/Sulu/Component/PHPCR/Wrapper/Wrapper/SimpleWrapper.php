@@ -4,6 +4,7 @@ namespace Sulu\Component\PHPCR\Wrapper\Wrapper;
 
 use Sulu\Component\PHPCR\Wrapper\WrapperInterface;
 use Sulu\Component\PHPCR\Wrapper\WrapperAwareInterface;
+use Sulu\Component\PHPCR\Wrapper\Exception\WrapperException;
 
 /**
  * The simple mapper simply maps nodes to the given target
@@ -29,14 +30,14 @@ class SimpleWrapper implements WrapperInterface
         $refl = new \ReflectionClass($wrapperClass);
 
         if (!$refl->isSubclassOf('Sulu\Component\PHPCR\Wrapper\WrappedObjectInterface')) {
-            throw new Exception\WrapperException(sprintf(
+            throw new WrapperException(sprintf(
                 'Wrapped class "%s" must implement WrappedObjectInterface',
                 $wrapperClass
             ));
         }
 
         if (!$refl->isSubclassOf($className)) {
-            throw new Exception\WrapperException(sprintf(
+            throw new WrapperException(sprintf(
                 'Wrapper class "%s" does not implement the interface for "%s"',
                 $wrapperClass,
                 $className
