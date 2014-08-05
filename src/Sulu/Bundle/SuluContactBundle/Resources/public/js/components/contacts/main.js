@@ -93,19 +93,20 @@ define([
         },
 
         saveDocuments: function(contactId, mediaIds) {
-            var media;
+            var contact = Contact.findOrCreate({id: contactId}),
+                media;
 
             this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
 
             // reset collection and add current selection
-            this.contact.get('medias').reset();
+            contact.get('medias').reset();
 
             this.sandbox.util.each(mediaIds, function(index, id) {
                 media = Media.findOrCreate({id: id});
-                this.contact.get('medias').add(media);
+                contact.get('medias').add(media);
             }.bind(this));
 
-            this.contact.save(null, {
+            contact.save(null, {
                 success: function(response) {
                     this.contact = response;
                     this.sandbox.emit('sulu.contacts.contacts.medias.saved', response.toJSON());
