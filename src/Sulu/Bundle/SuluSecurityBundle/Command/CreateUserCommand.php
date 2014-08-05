@@ -66,6 +66,13 @@ class CreateUserCommand extends ContainerAwareCommand
 
         $emailTypes = $doctrine->getRepository('SuluContactBundle:EmailType')->findAll();
 
+        if (!$emailTypes) {
+            throw new \RuntimeException(
+                'Cannot find any SuluContactBundle:EmailType entities in database, maybe you ' .
+                'should load the fixtures?'
+            );
+        }
+
         $email = new Email();
         $email->setEmail($emailText);
         $email->setEmailType($emailTypes[0]);
