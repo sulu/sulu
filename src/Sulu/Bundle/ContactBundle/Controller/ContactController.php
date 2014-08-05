@@ -772,18 +772,18 @@ class ContactController extends AbstractContactController
 
             if (!$contact) {
                 throw new EntityNotFoundException($contactEntity, $id);
-            } else {
-
-                // TODO most methods should use PATCH action instead of PUT
-
-                $em = $this->getDoctrine()->getManager();
-                if(!$this->processMedias($contact, $request->get('medias', array()))) {
-                    throw new RestException('Updating dependencies is not possible', 0);
-                }
-
-                $em->flush();
-                $view = $this->view($contact, 200);
             }
+
+            // TODO most methods should use PATCH action instead of PUT
+
+            $em = $this->getDoctrine()->getManager();
+            if (!$this->processMedias($contact, $request->get('medias', array()))) {
+                throw new RestException('Updating dependencies is not possible', 0);
+            }
+
+            $em->flush();
+            $view = $this->view($contact, 200);
+
         } catch (EntityNotFoundException $exc) {
             $view = $this->view($exc->toArray(), 404);
         } catch (RestException $exc) {
