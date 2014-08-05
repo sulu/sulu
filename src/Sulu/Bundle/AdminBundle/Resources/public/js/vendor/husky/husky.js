@@ -1,3 +1,4 @@
+
 /** vim: et:ts=4:sw=4:sts=4
  * @license RequireJS 2.1.9 Copyright (c) 2010-2012, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
@@ -33536,7 +33537,9 @@ define('__component__$toolbar@husky',[],function() {
 
         constants = {
             collapsedWidth: 50,
-            dropdownToggleWidth: 5 //px
+            dropdownToggleWidth: 5, //px
+            loaderWhiteColor: 'white',
+            loaderDarkColor: '#cccccc'
         },
 
         /** templates container */
@@ -33829,7 +33832,8 @@ define('__component__$toolbar@husky',[],function() {
             var item = this.items[id],
                 $item = this.sandbox.dom.find('[data-id="' + id + '"]', this.$el),
                 $itemLink = this.sandbox.dom.find('a', $item),
-                $loader, size;
+                $loader, size,
+                color = constants.loaderWhiteColor;
 
             if (item.loading) {
                 return;
@@ -33847,12 +33851,16 @@ define('__component__$toolbar@husky',[],function() {
             $loader = this.sandbox.dom.createElement('<span class="item-loader"></span>');
             this.sandbox.dom.append($item, $loader);
 
+            if (this.sandbox.dom.hasClass($item, 'highlight-white')) {
+                color = constants.loaderDarkColor;
+            }
+
             this.sandbox.start([{
                 name: 'loader@husky',
                 options: {
                     el: $loader,
                     size: size,
-                    color: 'white'
+                    color: color
                 }
             }]);
         },
@@ -40356,7 +40364,12 @@ define('__component__$overlay@husky',[], function() {
             this.overlay.slides[slide] = this.sandbox.util.extend({}, internalSlideDefaults);
 
             this.overlay.slides[slide].$el = this.sandbox.dom.createElement(
-                this.sandbox.util.template(templates.slideSkeleton, this.slides[slide])
+                this.sandbox.util.template(templates.slideSkeleton, {
+                    title: this.sandbox.util.cropMiddle(this.slides[slide].title, 38),
+                    closeIcon: this.slides[slide].closeIcon,
+                    index: this.slides[slide].index,
+                    cssClass: this.slides[slide].cssClass
+                })
             );
             this.overlay.slides[slide].$close = this.sandbox.dom.find(constants.closeSelector, this.overlay.slides[slide].$el);
             this.overlay.slides[slide].$footer = this.sandbox.dom.find(constants.footerSelector, this.overlay.slides[slide].$el);
@@ -42228,6 +42241,15 @@ define('__component__$dropzone@husky',[], function () {
             return createEventName.call(this, 'files-added');
         },
 
+        /**
+         * listens on and changes the url of the dropzone
+         * @event husky.dropzone.<instance-name>.change-url
+         * @param {String} the new url
+         */
+            CHANGE_URL = function () {
+            return createEventName.call(this, 'change-url');
+        },
+
         /** returns normalized event names */
             createEventName = function (postFix) {
             return eventNamespace + (this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
@@ -42248,6 +42270,7 @@ define('__component__$dropzone@husky',[], function () {
             this.lastUploadedFile = null;
             this.overlayOpened = false;
             this.lockPopUp = false;
+            this.url = this.options.url;
 
             this.bindCustomEvents();
             this.render();
@@ -42280,6 +42303,11 @@ define('__component__$dropzone@husky',[], function () {
             // opens the data-source folder-overlay
             this.sandbox.on(OPEN_DATA_SOURCE.call(this), function () {
                 this.sandbox.dom.trigger(this.$dropzone, 'click');
+            }.bind(this));
+
+            // change the url
+            this.sandbox.on(CHANGE_URL.call(this), function(url) {
+                this.url = url;
             }.bind(this));
 
             if (this.options.showOverlay) {
@@ -42408,6 +42436,11 @@ define('__component__$dropzone@husky',[], function () {
                         this.on('reset', function () {
                             this.sandbox.dom.removeClass(this.$dropzone, constants.droppedClass);
                         }.bind(that));
+
+                        // enables the to change the url dynamically
+                        this.on('processing', function () {
+                            this.options.url = that.url;
+                        });
                     }
                 };
 
@@ -47989,4 +48022,3 @@ define('husky_extensions/util',[],function() {
         }
     };
 });
-
