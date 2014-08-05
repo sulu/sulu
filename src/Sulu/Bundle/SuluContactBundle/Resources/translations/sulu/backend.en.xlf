@@ -22,6 +22,10 @@
                 <source>content-navigation.accounts.documents</source>
                 <target>Documents</target>
             </trans-unit>
+            <trans-unit id="a50af522ac181350142c0b4720e29a8f" resname="content-navigation.contacts.documents">
+                <source>content-navigation.contacts.documents</source>
+                <target>Documents</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

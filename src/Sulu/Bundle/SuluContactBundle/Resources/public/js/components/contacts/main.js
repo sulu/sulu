@@ -107,6 +107,7 @@ define([
             }.bind(this));
 
             contact.save(null, {
+                patch: true,
                 success: function(response) {
                     this.contact = response;
                     this.sandbox.emit('sulu.contacts.contacts.medias.saved', response.toJSON());
