@@ -175,6 +175,16 @@ define(function() {
         },
 
         /**
+         * listens on and reloads the whole group
+         *
+         * @event sulu.grid-group.[INSTANCE_NAME].reload
+         * @param {Object} new options with data and preselected
+         */
+        RELOAD = function() {
+            return createEventName.call(this, 'reload');
+        },
+
+        /**
          * listens on and updates the last-clicked datagrid
          *
          * @event sulu.grid-group.[INSTANCE_NAME].update-last-clicked
@@ -196,18 +206,26 @@ define(function() {
             // extend defaults with options
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
-            // stores all group objects with the corresponding id
-            this.group = {};
-            // stores key value paires of an array of selected elements as value and the corresponding datagrid-name as key
-            this.selectedRecords = {};
-            this.lastClickedGrid = null;
-            // save selected items
-            this.selected = this.options.preselected;
-
+            this.setVariables();
             this.bindCustomEvents();
             this.render();
 
             this.sandbox.emit(INITIALIZED.call(this));
+        },
+
+        /**
+         * Sets the initial variables
+         */
+        setVariables: function() {
+            // stores all group objects with the corresponding id
+            this.group = {};
+            // stores key value paires of an array of selected elements as value and the corresponding datagrid-name as key
+            this.selectedRecords = (!!this.selectedRecords) ? this.selectedRecords : {};
+            this.lastClickedGrid = null;
+            this.openedGroups = (!!this.openedGroups) ? this.openedGroups : [];
+            // save selected items
+            this.selected = (!!this.selected) ? this.selected.concat(this.options.preselected) : this.options.preselected;
+            this.selected = this.sandbox.util.uniq(this.selected);
         },
 
         /**
@@ -228,11 +246,28 @@ define(function() {
             this.sandbox.on(REMOVE_RECORD.call(this), this.removeRecord.bind(this));
             // add a new group
             this.sandbox.on(ADD_GROUP.call(this), this.addGroup.bind(this));
+            // reload
+            this.sandbox.on(RELOAD.call(this), this.reload.bind(this));
 
             // update the last clicked grid
             this.sandbox.on(UPDATE_LAST_CLICKED.call(this), function() {
                 this.sandbox.emit('husky.datagrid.' + this.lastClickedGrid + '.update');
             }.bind(this));
+        },
+
+        /**
+         * Reloads the grid-group
+         * @param options {Object} new options with data and preselected
+         */
+        reload: function(options) {
+            this.sandbox.stop('*');
+            this.sandbox.dom.html(this.$el, '');
+            this.options.data = (!!options.data) ? options.data : this.options.data;
+            if (!!options.preselected) {
+                this.options.preselected = this.options.preselected.concat(options.preselected);
+            }
+            this.setVariables();
+            this.render();
         },
 
         /**
@@ -353,6 +388,9 @@ define(function() {
                 datagridLoaded: false
             };
             this.bindGroupDomEvents(group.id);
+            if (this.openedGroups.indexOf(group.id) > -1) {
+                this.slideDown(this.group[group.id]);
+            }
         },
 
         /**
@@ -437,7 +475,7 @@ define(function() {
                         pagination: this.options.dataGridOptions.pagination,
                         matchings: this.options.dataGridOptions.matchings,
                         viewOptions: this.options.dataGridOptions.viewOptions,
-                        preselected: this.options.preselected,
+                        preselected: this.selected,
                         resultKey: this.options.resultKey,
                         instanceName: instanceName,
                         searchInstanceName: this.options.instanceName,
@@ -533,6 +571,7 @@ define(function() {
          * @param group {Object} the object of the group
          */
         slideUp: function(group) {
+            this.openedGroups.splice(this.openedGroups.indexOf(group.id), 1);
             this.sandbox.dom.slideUp(
                 this.sandbox.dom.find('.' + constants.slideClass, group.$el),
                 this.options.slideDuration,
@@ -555,6 +594,7 @@ define(function() {
          * @param group {Object} the object of the group
          */
         slideDown: function(group) {
+            this.openedGroups.push(group.id);
             this.sandbox.dom.slideDown(
                 this.sandbox.dom.find('.' + constants.slideClass, group.$el),
                 this.options.slideDuration,
