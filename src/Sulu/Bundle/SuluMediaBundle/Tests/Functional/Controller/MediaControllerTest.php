@@ -767,7 +767,7 @@ class MediaControllerTest extends DatabaseTestCase
 
         $this->assertEquals(1, $response->id);
         $this->assertEquals(2, $response->type->id);
-        $this->assertEquals('Image Type', $response->type->name);
+        $this->assertEquals('image', $response->type->name);
         $this->assertEquals('photo.jpeg', $response->name);
         $this->assertEquals('photo', $response->title);
         $this->assertEquals('3', $response->downloadCounter);
