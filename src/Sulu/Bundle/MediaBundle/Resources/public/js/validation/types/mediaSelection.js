@@ -31,7 +31,18 @@ define([
                 },
 
                 setValue: function(value) {
+                    // array of objects
+                    if(App.util.typeOf(value) === 'array' && App.util.typeOf(value[0]) === 'object') {
+                        var ids = [];
+                        App.util.foreach(value, function(el) {
+                            ids.push(el.id);
+                        }.bind(this));
+
+                        value.ids = ids;
+                    }
+
                     App.dom.data($el, 'media-selection', value);
+
                 },
 
                 getValue: function() {
