@@ -22,7 +22,8 @@
 
         "sulu/sulu": "dev-develop",
         "sulu/tag-bundle": "dev-develop",
-        "sulu/admin-bundle": "dev-develop"
+        "sulu/admin-bundle": "dev-develop",
+        "sulu/media-bundle": "dev-develop"
 
     },
     "require-dev": {
