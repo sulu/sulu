@@ -62,11 +62,6 @@ class ContentMapper implements ContentMapperInterface
     private $eventDispatcher;
 
     /**
-     * @var LocalizationFinderInterface
-     */
-    private $localizationFinder;
-
-    /**
      * Content Context
      * @var ContentContext
      */
@@ -98,7 +93,6 @@ class ContentMapper implements ContentMapperInterface
         StructureManagerInterface $structureManager,
         SessionManagerInterface $sessionManager,
         EventDispatcherInterface $eventDispatcher,
-        LocalizationFinderInterface $localizationFinder,
         PathCleanupInterface $cleaner,
         ContentContext $contentContext,
         $stopwatch = null
@@ -106,7 +100,6 @@ class ContentMapper implements ContentMapperInterface
         $this->contentTypeManager = $contentTypeManager;
         $this->structureManager = $structureManager;
         $this->sessionManager = $sessionManager;
-        $this->localizationFinder = $localizationFinder;
         $this->eventDispatcher = $eventDispatcher;
         $this->cleaner = $cleaner;
         $this->contentContext = $contentContext;
@@ -133,7 +126,7 @@ class ContentMapper implements ContentMapperInterface
      */
     public function save(
         $data,
-        $templateKey,
+        $structureTemplateKey,
         $webspaceKey,
         $languageCode,
         $userId,
@@ -144,10 +137,7 @@ class ContentMapper implements ContentMapperInterface
         $showInNavigation = null
     ) 
     {
-        $structure = $this->getStructure($templateKey);
-
-        $this->contentWriter->writeToStructure(
-            $structure,
+        $structure = $this->contentWriter->createOrUpdateStructure(
             $templateKey,
             $webspaceKey,
             $languageCode,
@@ -156,6 +146,8 @@ class ContentMapper implements ContentMapperInterface
             $uuid,
             $parentUuid
         );
+
+        $this->contentLoader->refreshStructure($structure);
 
         // @todo: Move the structure hydration somewhere else.
         $structure->setUuid($node->getPropertyValue('jcr:uuid'));
@@ -379,31 +371,6 @@ class ContentMapper implements ContentMapperInterface
         }
 
         return $results;
-    }
-
-    /**
-     * returns the data from the given id
-     * @param string $uuid UUID of the content
-     * @param string $webspaceKey Key of webspace
-     * @param string $languageCode Read data for given language
-     * @param bool $loadGhostContent True if also a ghost page should be returned, otherwise false
-     * @return StructureInterface
-     */
-    public function load($uuid, $webspaceKey, $languageCode, $loadGhostContent = false)
-    {
-        if ($this->stopwatch) {
-            $this->stopwatch->start('contentManager.load');
-        }
-        $session = $this->getSession();
-        $contentNode = $session->getNodeByIdentifier($uuid);
-
-        $result = $this->loadByNode($contentNode, $languageCode, $webspaceKey, false, $loadGhostContent);
-
-        if ($this->stopwatch) {
-            $this->stopwatch->stop('contentManager.load');
-        }
-
-        return $result;
     }
 
     /**
@@ -636,10 +603,16 @@ class ContentMapper implements ContentMapperInterface
             $this->stopwatch->start('contentManager.loadByNode');
         }
 
-        $this->contentLoader->loadFromNode(
-            $node
+        $structure = $this->contentLoader->loadFromNode(
+            $contentNode,
+            $webspaceKey,
+            array(
+                'exclude_ghost_content' => $excludeGhost,
+                'load_ghost_content' => $loadGhostContent
+            )
+        );
 
-        // throw an content.node.load event (disabled for now)
+        // @todo: throw an content.node.load event (disabled for now)
         //$event = new ContentNodeEvent($contentNode, $structure);
         //$this->eventDispatcher->dispatch(ContentEvents::NODE_LOAD, $event);
 
@@ -648,35 +621,6 @@ class ContentMapper implements ContentMapperInterface
         }
 
         return $structure;
-    }
-
-    /**
-     * loads dependencies for internal links
-     * @param StructureInterface $content
-     * @param string $localization
-     * @param string $webspaceKey
-     * @param bool $loadGhostContent
-     */
-    private function loadInternalLinkDependencies(
-        StructureInterface $content,
-        $localization,
-        $webspaceKey,
-        $loadGhostContent = false
-    ) {
-        if ($content->getNodeType() === Structure::NODE_TYPE_INTERNAL_LINK && $content->hasTag('sulu.rlp')) {
-            $internal = $content->getPropertyValueByTagName('sulu.rlp');
-
-            if (!empty($internal)) {
-                $content->setInternalLinkContent(
-                    $this->load(
-                        $internal,
-                        $webspaceKey,
-                        $localization,
-                        $loadGhostContent
-                    )
-                );
-            }
-        }
     }
 
     /**
@@ -765,16 +709,6 @@ class ContentMapper implements ContentMapperInterface
             }
         }
         $node->remove();
-    }
-
-    /**
-     * returns a structure with given key
-     * @param string $key key of content type
-     * @return StructureInterface
-     */
-    protected function getStructure($key)
-    {
-        return $this->structureManager->getStructure($key);
     }
 
     /**

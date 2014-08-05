@@ -8,9 +8,10 @@ class ContentWriter
     const PUBLISHED_PROPERTY_NAME = 'published';
 
     protected $sessionManager;
+    protected $structureManager;
 
-    public function write(
-        $structure,
+    public function writeToStructure(
+        $structureKey,
         $data,
         $languageCode,
         $userId,
@@ -21,10 +22,7 @@ class ContentWriter
         $showInNavigation = null
     )
     {
-        $contentRootNode = $this->getContentNode($webspaceKey);
-
-        /** @var PHPCR\SessionInterface */
-        $session = $this->sessionManager->getSession();
+        $structure = $this->structureManager->getStructure($structureKey);
 
         if ($parentUuid !== null) {
             $root = $session->getNodeByIdentifier($parentUuid);
@@ -37,6 +35,7 @@ class ContentWriter
 
         $currentDateTime = new \DateTime();
 
+        // @todo: This shouldn't be a closure, its just confusing.
         $newTranslatedNode = function (NodeInterface $node) use ($userId, $currentDateTime, &$state, &$showInNavigation) {
             $node->setTranslatedProperty('creator', $userId);
             $node->setTranslatedProperty('created', $currentDateTime);
@@ -77,6 +76,7 @@ class ContentWriter
                 }
             }
         }
+
         $node->setTranslatedProperty('template', $templateKey);
         $node->setTranslatedProperty('changer', $userId);
         $node->setTranslatedProperty('changed', $dateTime);
@@ -272,5 +272,21 @@ class ContentWriter
             'Could not determine state transition from "%s" to "%s". This should never happen.',
             $oldState, $state
         ));
+    }
+
+    private function getContentRootNode($webspaceKey)
+    {
+        $contentRootNode = $this->getContentNode($webspaceKey);
+
+        /** @var PHPCR\SessionInterface */
+        $session = $this->sessionManager->getSession();
+
+        $root = $contentRootNode;
+
+        if ($parentUuid !== null) {
+            $root = $session->getNodeByIdentifier($parentUuid);
+        }
+
+        return $root;
     }
 }
