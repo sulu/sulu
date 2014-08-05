@@ -36177,7 +36177,8 @@ define('__component__$select@husky',[], function() {
             templateAddSelector: '#addRow',
             editableFieldKey: 'editableindex',
             typeRowSelector: '.type-row',
-            contentInnerSelector: '.content-inner'
+            contentInnerSelector: '.content-inner',
+            toggleClass: '.toggle-icon'
         },
 
         templates = {
@@ -36329,6 +36330,16 @@ define('__component__$select@husky',[], function() {
 
         getEventName = function(suffix) {
             return 'husky.select.' + this.options.instanceName + '.' + suffix;
+        },
+
+        showCaret = function() {
+            this.sandbox.dom.show(getCaret.call(this));
+        },
+        hideCaret = function() {
+            this.sandbox.dom.hide(getCaret.call(this));
+        },
+        getCaret = function() {
+            return this.$find(constants.toggleClass);
         };
 
     return {
@@ -36666,20 +36677,29 @@ define('__component__$select@husky',[], function() {
                 data = this.mergeDomAndRequestData(
                         data, this.parseDataFromDom(this.domData, true));
                 this.mergedData = data.slice(0);
+            } else {
+                // empty selection
+                this.selectedElements = [];
+                this.selectedElementsValues = [];
+                this.updateSelectionAttribute();
+                this.dataChanged();
             }
-            if (preselected !== null) {
+            if (preselected != null) {
                 this.options.preSelectedElements = preselected.map(String);
             }
 
             this.selectedElements = [];
             this.selectedElementsValues = [];
+
             this.sandbox.dom.empty(this.$list);
 
             this.options.data = data;
 
             if (!!data && data.length > 0) {
+                showCaret.call(this);
                 this.generateDropDown(data);
             } else {
+                hideCaret.call(this);
                 this.sandbox.logger.warn('error invalid data for update!');
             }
             this.addEditEntry();
@@ -37190,14 +37210,14 @@ define('__component__$select@husky',[], function() {
 
         template: {
             basicStructure: function(defaultLabel, icon) {
-                var iconSpan = '', dropdownToggle = '';
+                var iconSpan = '', dropdownStyle = 'display:none';
                 if (!!icon) {
                     iconSpan = '<span class="fa-' + icon + ' icon"></span>';
                 }
                 if (!!this.options.data &&
                         !!this.options.data.length ||
                         this.options.editable) {
-                    dropdownToggle = '<span class="fa-caret-down toggle-icon"></span>';
+                    dropdownStyle = '';
                 }
                 return [
                     '<div class="husky-select-container">',
@@ -37206,7 +37226,7 @@ define('__component__$select@husky',[], function() {
                     iconSpan,
                     '           <span class="' + constants.labelClass + '">', defaultLabel, '</span>',
                     '       </div>',
-                    dropdownToggle,
+                    '       <span class="fa-caret-down toggle-icon" style="'+dropdownStyle+'"></span>',
                     '   </div>',
                     '   <div class="grid-row dropdown-list dropdown-shadow hidden ' + constants.dropdownContainerClass + '">',
                     '       <ul class="' + constants.listClass + '"></ul>',
