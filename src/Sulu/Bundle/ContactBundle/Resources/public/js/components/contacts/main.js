@@ -11,8 +11,9 @@ define([
     'sulucontact/model/contact',
     'sulucontact/model/activity',
     'sulucontact/model/title',
-    'sulucontact/model/position'
-], function(Contact, Activity, Title, Position) {
+    'sulucontact/model/position',
+    'sulumedia/model/media'
+], function(Contact, Activity, Title, Position, Media) {
 
     'use strict';
 
@@ -28,6 +29,8 @@ define([
                 this.renderForm();
             } else if (this.options.display === 'activities') {
                 this.renderActivities();
+            }  else if (this.options.display === 'documents') {
+                this.renderComponent('', this.options.display, 'documents-form', {type: 'contact'});
             } else {
                 throw 'display type wrong';
             }
@@ -84,6 +87,33 @@ define([
             this.initializeDropDownListender(
                 'position-select',
                 'api/contact/positions');
+
+            // handling documents
+            this.sandbox.on('sulu.contacts.contacts.medias.save', this.saveDocuments.bind(this));
+        },
+
+        saveDocuments: function(contactId, mediaIds) {
+            var media;
+
+            this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
+
+            // reset collection and add current selection
+            this.contact.get('medias').reset();
+
+            this.sandbox.util.each(mediaIds, function(index, id) {
+                media = Media.findOrCreate({id: id});
+                this.contact.get('medias').add(media);
+            }.bind(this));
+
+            this.contact.save(null, {
+                success: function(response) {
+                    this.contact = response;
+                    this.sandbox.emit('sulu.contacts.contacts.medias.saved', response.toJSON());
+                }.bind(this),
+                error: function() {
+                    this.sandbox.logger.error("Error while saving documents!");
+                }.bind(this)
+            });
         },
 
         /**
@@ -302,7 +332,6 @@ define([
         },
 
         renderActivities: function() {
-
             var $list;
 
             // load data and show form
@@ -334,6 +363,46 @@ define([
             } else {
                 this.sandbox.logger.error("activities are not available for unsaved contacts!");
             }
+        },
+
+        /**
+         * Adds a container with the given id and starts a component with the given name in it
+         * @param path path to component
+         * @param componentName
+         * @param containerId
+         * @param params additional params
+         * @returns {*}
+         */
+        renderComponent: function(path, componentName, containerId, params) {
+            var $form = this.sandbox.dom.createElement('<div id="' + containerId + '"/>'),
+                dfd = this.sandbox.data.deferred();
+
+            this.html($form);
+
+            if (!!this.options.id) {
+                this.contact = new Contact({id: this.options.id});
+                this.contact.fetch({
+                    success: function(model) {
+                        this.contact = model;
+                        this.sandbox.start([
+                            {
+                                name: path + componentName + '@sulucontact',
+                                options: {
+                                    el: $form,
+                                    data: model.toJSON(),
+                                    params: !!params ? params : {}
+                                }
+                            }
+                        ]);
+                        dfd.resolve();
+                    }.bind(this),
+                    error: function() {
+                        this.sandbox.logger.log("error while fetching contact");
+                        dfd.reject();
+                    }.bind(this)
+                });
+            }
+            return dfd.promise();
         },
 
         /**

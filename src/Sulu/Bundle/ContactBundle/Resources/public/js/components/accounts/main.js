@@ -179,15 +179,17 @@ define([
             var account = Account.findOrCreate({id: accountId}),
                 media;
 
+            this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
+
             // reset collection and add current selection
             account.get('medias').reset();
-            
+
             this.sandbox.util.each(mediaIds, function(index, id) {
                 media = Media.findOrCreate({id: id});
                 account.get('medias').add(media);
             }.bind(this));
 
-            this.account.save(null, {
+            account.save(null, {
                 success: function(response) {
                     var model = response.toJSON();
                     this.sandbox.emit('sulu.contacts.accounts.medias.saved', model);
