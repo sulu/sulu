@@ -692,13 +692,14 @@ class ContactController extends AbstractContactController
                     && $this->processNotes($contact, $request->get('notes', array()))
                     && $this->processFaxes($contact, $request->get('faxes', array()))
                     && $this->processTags($contact, $request->get('tags', array()))
-                    && $this->processUrls($contact, $request->get('urls', array())))
+                    && $this->processUrls($contact, $request->get('urls', array()))
+                    && $this->processMedias($contact, $request->get('medias', array())))
                 ) {
                     throw new RestException('Updating dependencies is not possible', 0);
                 }
 
                 $formOfAddress = $request->get('formOfAddress');
-                if (!is_null($formOfAddress) && array_key_exists('id', $formOfAddress)) {
+                if (!is_null($formOfAddress) && is_array($formOfAddress) && array_key_exists('id', $formOfAddress)) {
                     $contact->setFormOfAddress($formOfAddress['id']);
                 }
 

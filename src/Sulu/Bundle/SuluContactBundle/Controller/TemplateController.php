@@ -57,12 +57,12 @@ class TemplateController extends RestController
     }
 
     /**
-     * Returns the template for accounts documents
+     * Returns the template for account- and contact-documents
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function accountDocumentsAction()
+    public function basicDocumentsAction()
     {
-        return $this->render('SuluContactBundle:Template:account.documents.html.twig');
+        return $this->render('SuluContactBundle:Template:basic.documents.html.twig');
     }
 
     /**

@@ -48,8 +48,10 @@ class ContactRepository extends EntityRepository
             ->leftJoin('phones.phoneType', 'phoneType')
             ->leftJoin('u.tags', 'tags')
             ->leftJoin('u.urls', 'urls')
+            ->leftJoin('urls.urlType', 'urlType')
             ->leftJoin('u.title', 'title')
             ->leftJoin('accountContacts.position', 'position')
+            ->leftJoin('u.medias', 'medias')
             ->addSelect('position')
             ->addSelect('title')
             ->addSelect('accountContacts')
@@ -70,6 +72,8 @@ class ContactRepository extends EntityRepository
             ->addSelect('country')
             ->addSelect('addressType')
             ->addSelect('notes')
+            ->addSelect('urlType')
+            ->addSelect('medias')
             ->where('u.id=:id');
 
         $query = $qb->getQuery();

@@ -11,6 +11,32 @@ define([], function() {
 
     'use strict';
 
+    var setHeaderToolbar = function() {
+            this.sandbox.emit('sulu.header.set-toolbar', {
+                template: 'default'
+            });
+        },
+
+        /**
+         * Sets the title to the username
+         * default title as fallback
+         */
+        setTitle = function(data) {
+            var title = this.sandbox.translate('contact.contacts.title'),
+                breadcrumb = [
+                    {title: 'navigation.contacts'},
+                    {title: 'contact.contacts.title', event: 'sulu.contacts.contacts.list'}
+                ];
+
+            if (!!data && !!data.id) {
+                title = data.fullName;
+                breadcrumb.push({title: '#' + data.id});
+            }
+
+            this.sandbox.emit('sulu.header.set-title', title);
+            this.sandbox.emit('sulu.header.set-breadcrumb', breadcrumb);
+        };
+
     return {
 
         view: true,
@@ -22,12 +48,17 @@ define([], function() {
             }
         },
 
-        templates: ['/admin/contact/template/account/documents'],
+        templates: ['/admin/contact/template/basic/documents'],
 
         initialize: function() {
 
             this.form = '#documents-form';
 
+            // init header toolbar for contacts
+            if(this.options.params.type === 'contact') {
+                setTitle.call(this,this.options.data);
+                setHeaderToolbar.call(this);
+            }
             this.setHeaderBar(true);
             this.render();
 
@@ -75,6 +106,11 @@ define([], function() {
             }, this);
 
             this.sandbox.on('sulu.contacts.accounts.medias.saved', function(data){
+                this.setHeaderBar(true);
+                this.setForm(data);
+            }, this);
+
+            this.sandbox.on('sulu.contacts.contacts.medias.saved', function(data){
                 this.setHeaderBar(true);
                 this.setForm(data);
             }, this);
