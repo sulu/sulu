@@ -56,30 +56,50 @@ define([
 
             if (this.options.display === 'list') {
                 this.renderList();
+
             } else if (this.options.display === 'form') {
                 this.renderForm().then(function() {
-                    AccountsUtilHeader.setHeader.call(this, this.account, this.options.accountType);
-                }.bind(this));
+                        AccountsUtilHeader.setHeader.call(this, this.account, this.options.accountType);
+                    }.bind(this)
+                );
             } else if (this.options.display === 'contacts') {
-                this.renderComponent('accounts/components/', this.options.display, 'accounts-form-container', {}).then(function() {
-                    AccountsUtilHeader.setHeader.call(this, this.account, this.options.accountType);
-                }.bind(this));
+                this.renderComponent(
+                    'accounts/components/',
+                    this.options.display,
+                    'accounts-form-container', {}
+                ).then(function() {
+                        AccountsUtilHeader.setHeader.call(this, this.account, this.options.accountType);
+                    }.bind(this)
+                );
             } else if (this.options.display === 'financials') {
-                this.renderComponent('accounts/components/', this.options.display, 'accounts-form-container', {}).then(function() {
-                    AccountsUtilHeader.setHeader.call(this, this.account, this.options.accountType);
-                }.bind(this));
+                this.renderComponent(
+                    'accounts/components/',
+                    this.options.display,
+                    'accounts-form-container',
+                    {}
+                ).then(function() {
+                        AccountsUtilHeader.setHeader.call(this, this.account, this.options.accountType);
+                    }.bind(this)
+                );
             } else if (this.options.display === 'activities') {
                 this.renderActivities().then(function() {
-                    AccountsUtilHeader.setHeader.call(
-                        this,
-                        this.account,
-                        this.options.accountType
-                    );
-                }.bind(this));
+                        AccountsUtilHeader.setHeader.call(
+                            this,
+                            this.account,
+                            this.options.accountType
+                        );
+                    }.bind(this)
+                );
             } else if (this.options.display === 'documents') {
-                this.renderComponent('', this.options.display, 'documents-form', {type: 'account'}).then(function() {
-                    AccountsUtilHeader.setHeader.call(this, this.account, this.options.accountType);
-                }.bind(this));
+                this.renderComponent(
+                    '',
+                    this.options.display,
+                    'documents-form',
+                    {type: 'account'}
+                ).then(function() {
+                        AccountsUtilHeader.setHeader.call(this, this.account, this.options.accountType);
+                    }.bind(this)
+                );
             } else {
                 throw 'display type wrong';
             }
