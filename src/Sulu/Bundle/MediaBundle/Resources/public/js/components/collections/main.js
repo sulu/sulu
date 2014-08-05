@@ -22,6 +22,10 @@ define([
                 SETTINGS: 'settings'
             },
 
+            constants = {
+                lastVisitedCollectionKey: 'last-visited-collection'
+            },
+
             namespace = 'sulu.media.collections.',
 
             /**
@@ -589,6 +593,8 @@ define([
                 var $edit = this.sandbox.dom.createElement('<div id="collection-edit-container"/>'),
                     collection = this.getCollectionModel(this.options.id);
                 this.sandbox.dom.append(this.$el, $edit);
+
+                this.sandbox.sulu.saveUserSetting(constants.lastVisitedCollectionKey, this.options.id);
 
                 collection.fetch({
                     data: {locale: this.locale},
