@@ -2,6 +2,8 @@
 
 namespace Sulu\Component\Content\Mapper;
 
+use Sulu\Component\Content\StructureInterface;
+
 class ContentLoader
 {
     /**
@@ -25,7 +27,7 @@ class ContentLoader
 
     public function loadFromNode(
         SuluPhpcrNode $node,
-        $webspaceKey,
+        $requestedLocale,
         $options = array()
     )
     {
@@ -39,7 +41,7 @@ class ContentLoader
         // if load ghost content, override requestedLocale
         if ($options['load_ghost_content']) {
             $resolvedLocale = $this->requestedLocaleFinder->getAvailableLocalization(
-                $contentNode,
+                $phpcrNode,
                 $requestedLocale,
                 $webspaceKey
             );
@@ -49,19 +51,21 @@ class ContentLoader
             return null;
         }
 
-        $structure = $this->getStructureForNode($contentNode);
+        $structure = $this->getStructureForNode($phpcrNode);
 
         // set structure to ghost, if the available requestedLocale does not match the requested one
         if ($resolvedLocale != $requestedLocale) {
             $structure->setType(StructureType::getGhost($resolvedLocale));
         }
 
-        $this->refreshStructure($structure, $node);
+        $structure = $this->mapPhpcrNodeToStructure($node, $structure);
+
+        return $structure;
     }
 
     public function getStructureForNode(SuluPhpcrNode $node)
     {
-        $templateKey = $contentNode->getTranslatedPropertyValue(
+        $templateKey = $phpcrNode->getTranslatedPropertyValue(
             'template',
             $this->contentContext->getTemplateDefault()
         );
@@ -71,46 +75,48 @@ class ContentLoader
         return $structure;
     }
 
-    public function refreshStructure(
-        StructureInterface $structure, 
-        SuluPhpcrNode $contentNode, 
-        $webspaceKey
+    public function mapPhpcrNodeToStructure(
+        SuluPhpcrNode $phpcrNode,
+        StructureInterface $structure
     )
     {
-        $structure->setHasTranslation($contentNode->hasTranslatedProperty('template'));
-        $structure->setUuid($contentNode->getPropertyValue('jcr:uuid'));
+        $webspaceKey = $this->contentContext->getWebspaceKey();
 
-        // @todo: Refactor this
-        $structure->setPath(str_replace($this->getContentNode($webspaceKey)->getPath(), '', $contentNode->getPath()));
+        // @todo: Refactor this: 
+        $webspacePhpcrNode = $this->sessionManager->getContentNode($webspaceKey);
+        $structure->setPath($webspacePhpcrNode->getPath(), '', $phpcrNode->getPath());
+
+        $structure->setHasTranslation($phpcrNode->hasTranslatedProperty('template'));
+        $structure->setUuid($phpcrNode->getPropertyValue('jcr:uuid'));
         $structure->setNodeType(
-            $contentNode->getTranslatedPropertyValue('nodeType', Structure::NODE_TYPE_CONTENT)
+            $phpcrNode->getTranslatedPropertyValue('nodeType', Structure::NODE_TYPE_CONTENT)
         );
 
         $structure->setWebspaceKey($webspaceKey);
         $structure->setLanguageCode($node->getLocale());
-        $structure->setCreator($contentNode->getTranslatedPropertyValue('creator', 0));
-        $structure->setChanger($contentNode->getTranslatedPropertyValue('changer', 0));
+        $structure->setCreator($phpcrNode->getTranslatedPropertyValue('creator', 0));
+        $structure->setChanger($phpcrNode->getTranslatedPropertyValue('changer', 0));
         $structure->setCreated(
-            $contentNode->getTranslatedPropertyValue('created', new \DateTime())
+            $phpcrNode->getTranslatedPropertyValue('created', new \DateTime())
         );
         $structure->setChanged(
-            $contentNode->getTranslatedPropertyValue('changed', new \DateTime())
+            $phpcrNode->getTranslatedPropertyValue('changed', new \DateTime())
         );
-        $structure->setHasChildren($contentNode->hasNodes());
+        $structure->setHasChildren($phpcrNode->hasNodes());
         $structure->setNodeState(
-            $contentNode->getTranslatedPropertyValue(
+            $phpcrNode->getTranslatedPropertyValue(
                 'state',
                 StructureInterface::STATE_TEST
             )
         );
         $structure->setNavigation(
-            $contentNode->getTranslatedPropertyValue('navigation', false)
+            $phpcrNode->getTranslatedPropertyValue('navigation', false)
         );
         $structure->setGlobalState(
-            $this->getInheritedState($contentNode, 'state', $webspaceKey)
+            $this->getInheritedState($phpcrNode, 'state', $webspaceKey)
         );
         $structure->setPublished(
-            $contentNode->getTranslatedPropertyValue('published', null)
+            $phpcrNode->getTranslatedPropertyValue('published', null)
         );
 
         // go through every property in the template
@@ -119,7 +125,7 @@ class ContentLoader
             if (!($property instanceof SectionPropertyInterface)) {
                 $type = $this->getContentType($property->getContentTypeName());
                 $type->read(
-                    $contentNode,
+                    $phpcrNode,
                     new TranslatedProperty(
                         $property,
                         $resolvedLocale,
@@ -135,7 +141,7 @@ class ContentLoader
         // load data of extensions
         foreach ($structure->getExtensions() as $extension) {
             $extension->setLanguageCode($requestedLocale, $this->contentContext->getLanguageNamespace(), $this->contentContext->getPropertyPrefix());
-            $extension->load($contentNode, $webspaceKey, $resolvedLocale);
+            $extension->load($phpcrNode, $webspaceKey, $resolvedLocale);
         }
 
         // loads dependencies for internal links
@@ -168,19 +174,70 @@ class ContentLoader
      *
      * @return StructureInterface
      */
-    private function loadByUUid($uuid, $webspaceKey, $languageCode, $options = array())
+    private function loadByUUid($uuid, $languageCode, $options = array())
     {
         if ($this->stopwatch) {
             $this->stopwatch->start('contentManager.load');
         }
-        $session = $this->getSession();
-        $contentNode = $session->getNodeByIdentifier($uuid);
+        $session = $this->sessionManager->getSession();
+        $phpcrNode = $session->getNodeByIdentifier($uuid);
 
-        $result = $this->loadFromNode($contentNode, $languageCode, $webspaceKey, $options);
+        $result = $this->loadFromNode($phpcrNode, $languageCode, $options);
         if ($this->stopwatch) {
             $this->stopwatch->stop('contentManager.load');
         }
 
         return $result;
+    }
+
+    /**
+     * calculates publich state of node
+     */
+    private function getInheritedState(SuluPhpcrNode $node, $statePropertyName)
+    {
+        $webspaceKey = $this->contentContext->getWebspaceKey();
+
+        // @todo: $this->session->getWebspaceNodeByRole('content_index')
+        $contentRootNode = $this->sessionManager->getContentNode($webspaceKey);
+
+        // index page is default PUBLISHED
+        if ($node->getName() === $contentRootNode->getPath()) {
+            return StructureInterface::STATE_PUBLISHED;
+        }
+
+        // if test then return it
+        $state = $node->getPropertyValueWithDefault($statePropertyName, StructureInterface::STATE_TEST);
+
+        if ($state === StructureInterface::STATE_TEST) {
+            return StructureInterface::STATE_TEST;
+        }
+
+        $session = $this->sessionManager->getSession();
+        $workspace = $session->getWorkspace();
+        $queryManager = $workspace->getQueryManager();
+
+        $sql = 'SELECT *
+                FROM  [sulu:content] as parent INNER JOIN [sulu:content] as child
+                    ON ISDESCENDANTNODE(child, parent)
+                WHERE child.[jcr:uuid]="' . $node->getIdentifier() . '"';
+
+        $query = $queryManager->createQuery($sql, 'JCR-SQL2');
+        $result = $query->execute();
+
+        /** @var \PHPCR\NodeInterface $node */
+        foreach ($result->getNodes() as $node) {
+            // exclude /cmf/sulu_io/contents
+            if (
+                $node->getPath() !== $contentRootNode->getPath() &&
+                $node->getPropertyValueWithDefault(
+                    $statePropertyName,
+                    StructureInterface::STATE_TEST
+                ) === StructureInterface::STATE_TEST
+            ) {
+                return StructureInterface::STATE_TEST;
+            }
+        }
+
+        return StructureInterface::STATE_PUBLISHED;
     }
 }

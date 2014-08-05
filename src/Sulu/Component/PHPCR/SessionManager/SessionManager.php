@@ -70,6 +70,7 @@ class SessionManager implements SessionManagerInterface
 
     /**
      * returns the content node for given webspace
+     *
      * @param string $webspaceKey
      * @return NodeInterface
      */

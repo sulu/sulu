@@ -1,6 +1,6 @@
 <?php
 
-namespace vendor\sulu\sulu\src\Sulu\Component\Content\Mapper;
+namespace Sulu\Component\Content\Mapper;
 
 class ContentWriter
 {
@@ -9,8 +9,20 @@ class ContentWriter
 
     protected $sessionManager;
     protected $structureManager;
+    protected $contentContext;
 
-    public function writeToStructure(
+    public function __construct(
+        SessionManager $sessionManager,
+        StructureManager $structureManager,
+        ContentContext $contentContext
+    )
+    {
+        $this->sessionManager = $sessionManager;
+        $this->contentContext = $contentContext;
+        $this->structureManager = $structureManager;
+    }
+
+    public function createOrUpdateStructure(
         $structureKey,
         $data,
         $languageCode,
