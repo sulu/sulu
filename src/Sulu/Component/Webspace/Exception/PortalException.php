@@ -16,5 +16,4 @@ namespace Sulu\Component\Webspace\Exception;
  */
 class PortalException extends \Exception
 {
-
-} 
+}

@@ -30,6 +30,10 @@ class EnvironmentNotFoundException extends PortalException
 
     public function __construct(Portal $portal, $environment)
     {
+        parent::__construct(
+            sprintf('The environment "%s" could not be found in the portal "%s".', $environment, $portal->getKey())
+        );
+
         $this->portal = $portal;
         $this->environment = $environment;
     }

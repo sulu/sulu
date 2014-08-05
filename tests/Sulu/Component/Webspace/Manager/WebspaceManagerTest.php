@@ -101,13 +101,15 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(2, count($portal->getEnvironments()));
 
-        $this->assertEquals('prod', $portal->getEnvironments()[0]->getType());
-        $this->assertEquals(1, count($portal->getEnvironments()[0]->getUrls()));
-        $this->assertEquals('{language}.massiveart.{country}/{segment}', $portal->getEnvironments()[0]->getUrls()[0]->getUrl());
+        $environmentProd = $portal->getEnvironment('prod');
+        $this->assertEquals('prod', $environmentProd->getType());
+        $this->assertCount(1, $environmentProd->getUrls());
+        $this->assertEquals('{language}.massiveart.{country}/{segment}', $environmentProd->getUrls()[0]->getUrl());
 
-        $this->assertEquals('dev', $portal->getEnvironments()[1]->getType());
-        $this->assertEquals(1, count($portal->getEnvironments()[1]->getUrls()));
-        $this->assertEquals('massiveart.lo/{localization}/{segment}', $portal->getEnvironments()[1]->getUrls()[0]->getUrl());
+        $environmentDev = $portal->getEnvironment('dev');
+        $this->assertEquals('dev', $environmentDev->getType());
+        $this->assertCount(1, $environmentDev->getUrls());
+        $this->assertEquals('massiveart.lo/{localization}/{segment}', $environmentDev->getUrls()[0]->getUrl());
 
         $portal = $webspace->getPortals()[1];
 
@@ -126,22 +128,24 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(2, count($portal->getEnvironments()));
 
-        $this->assertEquals('prod', $portal->getEnvironments()[0]->getType());
-        $this->assertEquals(2, count($portal->getEnvironments()[0]->getUrls()));
-        $this->assertEquals('{language}.massiveart.{country}/{segment}', $portal->getEnvironments()[0]->getUrls()[0]->getUrl());
-        $this->assertEquals(null, $portal->getEnvironments()[0]->getUrls()[0]->getLanguage());
-        $this->assertEquals(null, $portal->getEnvironments()[0]->getUrls()[0]->getCountry());
-        $this->assertEquals(null, $portal->getEnvironments()[0]->getUrls()[0]->getSegment());
-        $this->assertEquals(null, $portal->getEnvironments()[0]->getUrls()[0]->getRedirect());
-        $this->assertEquals('www.massiveart.com', $portal->getEnvironments()[0]->getUrls()[1]->getUrl());
-        $this->assertEquals('en', $portal->getEnvironments()[0]->getUrls()[1]->getLanguage());
-        $this->assertEquals('ca', $portal->getEnvironments()[0]->getUrls()[1]->getCountry());
-        $this->assertEquals('s', $portal->getEnvironments()[0]->getUrls()[1]->getSegment());
-        $this->assertEquals(null, $portal->getEnvironments()[0]->getUrls()[1]->getRedirect());
+        $environmentProd = $portal->getEnvironment('prod');
+        $this->assertEquals('prod', $environmentProd->getType());
+        $this->assertEquals(2, count($environmentProd->getUrls()));
+        $this->assertEquals('{language}.massiveart.{country}/{segment}', $environmentProd->getUrls()[0]->getUrl());
+        $this->assertEquals(null, $environmentProd->getUrls()[0]->getLanguage());
+        $this->assertEquals(null, $environmentProd->getUrls()[0]->getCountry());
+        $this->assertEquals(null, $environmentProd->getUrls()[0]->getSegment());
+        $this->assertEquals(null, $environmentProd->getUrls()[0]->getRedirect());
+        $this->assertEquals('www.massiveart.com', $environmentProd->getUrls()[1]->getUrl());
+        $this->assertEquals('en', $environmentProd->getUrls()[1]->getLanguage());
+        $this->assertEquals('ca', $environmentProd->getUrls()[1]->getCountry());
+        $this->assertEquals('s', $environmentProd->getUrls()[1]->getSegment());
+        $this->assertEquals(null, $environmentProd->getUrls()[1]->getRedirect());
 
-        $this->assertEquals('dev', $portal->getEnvironments()[1]->getType());
-        $this->assertEquals(1, count($portal->getEnvironments()[1]->getUrls()));
-        $this->assertEquals('massiveart.lo/{localization}/{segment}', $portal->getEnvironments()[1]->getUrls()[0]->getUrl());
+        $environmentProd = $portal->getEnvironment('dev');
+        $this->assertEquals('dev', $environmentProd->getType());
+        $this->assertCount(1, $environmentProd->getUrls());
+        $this->assertEquals('massiveart.lo/{localization}/{segment}', $environmentProd->getUrls()[0]->getUrl());
     }
 
     public function testFindWebspaceByKey()
@@ -178,15 +182,17 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(2, count($portal->getEnvironments()));
 
-        $this->assertEquals('prod', $portal->getEnvironments()[0]->getType());
-        $this->assertEquals(2, count($portal->getEnvironments()[0]->getUrls()));
-        $this->assertEquals('sulu.at', $portal->getEnvironments()[0]->getUrls()[0]->getUrl());
-        $this->assertEquals('www.sulu.at', $portal->getEnvironments()[0]->getUrls()[1]->getUrl());
-        $this->assertEquals('sulu.at', $portal->getEnvironments()[0]->getUrls()[1]->getRedirect());
+        $environmentProd = $portal->getEnvironment('prod');
+        $this->assertEquals('prod', $environmentProd->getType());
+        $this->assertCount(2, $environmentProd->getUrls());
+        $this->assertEquals('sulu.at', $environmentProd->getUrls()[0]->getUrl());
+        $this->assertEquals('www.sulu.at', $environmentProd->getUrls()[1]->getUrl());
+        $this->assertEquals('sulu.at', $environmentProd->getUrls()[1]->getRedirect());
 
-        $this->assertEquals('dev', $portal->getEnvironments()[1]->getType());
-        $this->assertEquals(1, count($portal->getEnvironments()[1]->getUrls()));
-        $this->assertEquals('sulu.lo', $portal->getEnvironments()[1]->getUrls()[0]->getUrl());
+        $environmentDev = $portal->getEnvironment('dev');
+        $this->assertEquals('dev', $environmentDev->getType());
+        $this->assertCount(1, $environmentDev->getUrls());
+        $this->assertEquals('sulu.lo', $environmentDev->getUrls()[0]->getUrl());
     }
 
     public function testFindPortalByKey()
@@ -203,16 +209,18 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('at', $portal->getLocalizations()[0]->getCountry());
         $this->assertEquals('', $portal->getLocalizations()[0]->getShadow());
 
-        $this->assertEquals(2, count($portal->getEnvironments()));
+        $this->assertCount(2, $portal->getEnvironments());
 
-        $this->assertEquals('prod', $portal->getEnvironments()[0]->getType());
-        $this->assertEquals(2, count($portal->getEnvironments()[0]->getUrls()));
-        $this->assertEquals('sulu.at', $portal->getEnvironments()[0]->getUrls()[0]->getUrl());
-        $this->assertEquals('www.sulu.at', $portal->getEnvironments()[0]->getUrls()[1]->getUrl());
+        $environmentProd = $portal->getEnvironment('prod');
+        $this->assertEquals('prod', $environmentProd->getType());
+        $this->assertCount(2, $environmentProd->getUrls());
+        $this->assertEquals('sulu.at', $environmentProd->getUrls()[0]->getUrl());
+        $this->assertEquals('www.sulu.at', $environmentProd->getUrls()[1]->getUrl());
 
-        $this->assertEquals('dev', $portal->getEnvironments()[1]->getType());
-        $this->assertEquals(1, count($portal->getEnvironments()[1]->getUrls()));
-        $this->assertEquals('sulu.lo', $portal->getEnvironments()[1]->getUrls()[0]->getUrl());
+        $environmentDev = $portal->getEnvironment('dev');
+        $this->assertEquals('dev', $environmentDev->getType());
+        $this->assertCount(1, $environmentDev->getUrls());
+        $this->assertEquals('sulu.lo', $environmentDev->getUrls()[0]->getUrl());
     }
 
     public function testFindWebspaceByNotExistingKey()
@@ -263,16 +271,18 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('at', $portal->getLocalizations()[0]->getCountry());
         $this->assertEquals('', $portal->getLocalizations()[0]->getShadow());
 
-        $this->assertEquals(2, count($portal->getEnvironments()));
+        $this->assertCount(2, $portal->getEnvironments());
 
-        $this->assertEquals('prod', $portal->getEnvironments()[0]->getType());
-        $this->assertEquals(2, count($portal->getEnvironments()[0]->getUrls()));
-        $this->assertEquals('sulu.at', $portal->getEnvironments()[0]->getUrls()[0]->getUrl());
-        $this->assertEquals('www.sulu.at', $portal->getEnvironments()[0]->getUrls()[1]->getUrl());
+        $environmentProd = $portal->getEnvironment('prod');
+        $this->assertEquals('prod', $environmentProd->getType());
+        $this->assertCount(2, $environmentProd->getUrls());
+        $this->assertEquals('sulu.at', $environmentProd->getUrls()[0]->getUrl());
+        $this->assertEquals('www.sulu.at', $environmentProd->getUrls()[1]->getUrl());
 
-        $this->assertEquals('dev', $portal->getEnvironments()[1]->getType());
-        $this->assertEquals(1, count($portal->getEnvironments()[1]->getUrls()));
-        $this->assertEquals('sulu.lo', $portal->getEnvironments()[1]->getUrls()[0]->getUrl());
+        $environmentDev = $portal->getEnvironment('dev');
+        $this->assertEquals('dev', $environmentDev->getType());
+        $this->assertCount(1, $environmentDev->getUrls());
+        $this->assertEquals('sulu.lo', $environmentDev->getUrls()[0]->getUrl());
 
         $portalInformation = $this->webspaceManager->findPortalInformationByUrl('sulu.lo', 'dev');
         $this->assertEquals('de_at', $portalInformation->getLocalization()->getLocalization());
@@ -310,14 +320,16 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(2, count($portal->getEnvironments()));
 
-        $this->assertEquals('prod', $portal->getEnvironments()[0]->getType());
-        $this->assertEquals(2, count($portal->getEnvironments()[0]->getUrls()));
-        $this->assertEquals('sulu.at', $portal->getEnvironments()[0]->getUrls()[0]->getUrl());
-        $this->assertEquals('www.sulu.at', $portal->getEnvironments()[0]->getUrls()[1]->getUrl());
+        $environmentProd = $portal->getEnvironment('prod');
+        $this->assertEquals('prod', $environmentProd->getType());
+        $this->assertCount(2, $environmentProd->getUrls());
+        $this->assertEquals('sulu.at', $environmentProd->getUrls()[0]->getUrl());
+        $this->assertEquals('www.sulu.at', $environmentProd->getUrls()[1]->getUrl());
 
-        $this->assertEquals('dev', $portal->getEnvironments()[1]->getType());
-        $this->assertEquals(1, count($portal->getEnvironments()[1]->getUrls()));
-        $this->assertEquals('sulu.lo', $portal->getEnvironments()[1]->getUrls()[0]->getUrl());
+        $environmentDev = $portal->getEnvironment('dev');
+        $this->assertEquals('dev', $environmentDev->getType());
+        $this->assertCount(1, $environmentDev->getUrls());
+        $this->assertEquals('sulu.lo', $environmentDev->getUrls()[0]->getUrl());
     }
 
     public function testFindPortalInformationByUrlWithSegment()
@@ -342,15 +354,17 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(null, $portal->getLocalizations()[1]->getCountry());
         $this->assertEquals(false, $portal->getLocalizations()[1]->getShadow());
 
-        $this->assertEquals(2, count($portal->getEnvironments()));
+        $this->assertCount(2, $portal->getEnvironments());
 
-        $this->assertEquals('prod', $portal->getEnvironments()[0]->getType());
-        $this->assertEquals(1, count($portal->getEnvironments()[0]->getUrls()));
-        $this->assertEquals('{language}.massiveart.{country}/{segment}', $portal->getEnvironments()[0]->getUrls()[0]->getUrl());
+        $environmentProd = $portal->getEnvironment('prod');
+        $this->assertEquals('prod', $environmentProd->getType());
+        $this->assertCount(1, $environmentProd->getUrls());
+        $this->assertEquals('{language}.massiveart.{country}/{segment}', $environmentProd->getUrls()[0]->getUrl());
 
-        $this->assertEquals('dev', $portal->getEnvironments()[1]->getType());
-        $this->assertEquals(1, count($portal->getEnvironments()[1]->getUrls()));
-        $this->assertEquals('massiveart.lo/{localization}/{segment}', $portal->getEnvironments()[1]->getUrls()[0]->getUrl());
+        $environmentDev = $portal->getEnvironment('dev');
+        $this->assertEquals('dev', $environmentDev->getType());
+        $this->assertCount(1, $environmentDev->getUrls());
+        $this->assertEquals('massiveart.lo/{localization}/{segment}', $environmentDev->getUrls()[0]->getUrl());
     }
 
     public function testInvalidPart()
