@@ -159,6 +159,8 @@ class ContentMapper implements ContentMapperInterface
 
         // @todo: Move the structure hydration somewhere else.
         $structure->setUuid($node->getPropertyValue('jcr:uuid'));
+
+        // @todo: replace this with node->getResourceLocator ?
         $structure->setPath(str_replace($this->getContentNode($webspaceKey)->getPath(), '', $node->getPath()));
         $structure->setNodeType($node->getTranslatedPropertyValue('nodeType', Structure::NODE_TYPE_CONTENT));
         $structure->setWebspaceKey($webspaceKey);
@@ -167,7 +169,6 @@ class ContentMapper implements ContentMapperInterface
         $structure->setChanger($node->getTranslatedPropertyValue('changer'));
         $structure->setCreated($node->getTranslatedPropertyValue('created'));
         $structure->setChanged($node->getTranslatedPropertyValue('changed'));
-
         $structure->setNavigation(
             $node->getTranslatedPropertyValue('navigation', false)
         );
@@ -621,7 +622,7 @@ class ContentMapper implements ContentMapperInterface
      * @return StructureInterface
      */
     private function loadByNode(
-        NodeInterface $contentNode,
+        SuluPhpcrNode $contentNode,
         $localization,
         $webspaceKey,
         $excludeGhost = true,
@@ -635,96 +636,8 @@ class ContentMapper implements ContentMapperInterface
             $this->stopwatch->start('contentManager.loadByNode');
         }
 
-        if ($loadGhostContent) {
-            $availableLocalization = $this->localizationFinder->getAvailableLocalization(
-                $contentNode,
-                $localization,
-                $webspaceKey
-            );
-        } else {
-            $availableLocalization = $localization;
-        }
-
-        if ($excludeGhost && $availableLocalization != $localization) {
-            return null;
-        }
-
-        $templateKey = $contentNode->getTranslatedPropertyValue(
-            'template',
-            $this->contentContext->getTemplateDefault()
-        );
-
-        $structure = $this->getStructure($templateKey);
-
-        // set structure to ghost, if the available localization does not match the requested one
-        if ($availableLocalization != $localization) {
-            $structure->setType(StructureType::getGhost($availableLocalization));
-        }
-
-        $structure->setHasTranslation($contentNode->hasTranslatedProperty('template'));
-
-        $structure->setUuid($contentNode->getPropertyValue('jcr:uuid'));
-        $structure->setPath(str_replace($this->getContentNode($webspaceKey)->getPath(), '', $contentNode->getPath()));
-        $structure->setNodeType($contentNode->getTranslatedPropertyValue('nodeType', Structure::NODE_TYPE_CONTENT));
-        $structure->setWebspaceKey($webspaceKey);
-        $structure->setLanguageCode($localization);
-        $structure->setCreator($contentNode->getTranslatedPropertyValue('creator', 0));
-        $structure->setChanger($contentNode->getTranslatedPropertyValue('changer', 0));
-        $structure->setCreated(
-            $contentNode->getTranslatedPropertyValue('created', new \DateTime())
-        );
-        $structure->setChanged(
-            $contentNode->getTranslatedPropertyValue('changed', new \DateTime())
-        );
-        $structure->setHasChildren($contentNode->hasNodes());
-
-        $structure->setNodeState(
-            $contentNode->getTranslatedPropertyValue(
-                'state',
-                StructureInterface::STATE_TEST
-            )
-        );
-        $structure->setNavigation(
-            $contentNode->getTranslatedPropertyValue('navigation', false)
-        );
-        $structure->setGlobalState(
-            $this->getInheritedState($contentNode, 'state', $webspaceKey)
-        );
-        $structure->setPublished(
-            $contentNode->getTranslatedPropertyValue('published', null)
-        );
-
-        // go through every property in the template
-        /** @var PropertyInterface $property */
-        foreach ($structure->getProperties(true) as $property) {
-            if (!($property instanceof SectionPropertyInterface)) {
-                $type = $this->getContentType($property->getContentTypeName());
-                $type->read(
-                    $contentNode,
-                    new TranslatedProperty(
-                        $property,
-                        $availableLocalization,
-                        $this->contentContext->getLanguageNamespace()
-                    ),
-                    $webspaceKey,
-                    $availableLocalization,
-                    null
-                );
-            }
-        }
-
-        // load data of extensions
-        foreach ($structure->getExtensions() as $extension) {
-            $extension->setLanguageCode($localization, $this->contentContext->getLanguageNamespace(), $this->contentContext->getPropertyPrefix());
-            $extension->load($contentNode, $webspaceKey, $availableLocalization);
-        }
-
-        $this->loadInternalLinkDependencies(
-            $structure,
-            $localization,
-            $webspaceKey,
-            $loadGhostContent
-        );
+        $this->contentLoader->loadFromNode(
+            $node
 
         // throw an content.node.load event (disabled for now)
         //$event = new ContentNodeEvent($contentNode, $structure);

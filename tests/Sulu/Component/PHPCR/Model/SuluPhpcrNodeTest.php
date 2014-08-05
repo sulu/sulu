@@ -5,7 +5,7 @@ namespace Sulu\Component\PHPCR\Model;
 use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
 
-class NodeTest extends \PHPUnit_Framework_TestCase
+class SuluPhpcrNodeTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
@@ -13,7 +13,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
         $this->contentContext = $this->getMock('Sulu\Component\Content\ContentContextInterface');
         $this->wrapper = $this->getMock('Sulu\Component\PHPCR\Wrapper\WrapperInterface');
         $this->property = $this->getMockForAbstractClass('Sulu\Component\PHPCR\Model\TestProperty');
-        $this->node = new Node();
+        $this->node = new SuluPhpcrNode();
         $this->node->setWrapper($this->wrapper);
         $this->node->setContentContext($this->contentContext);
         $this->node->setWrappedObject($this->phpcrNode);

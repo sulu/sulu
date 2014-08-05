@@ -6,7 +6,7 @@ use Sulu\Component\PHPCR\Wrapper\Wrapped\Node as BaseNode;
 use Sulu\Component\Content\ContentContextInterface;
 use Sulu\Component\Content\ContentContextAwareInterface;
 
-class Node extends BaseNode implements ContentContextAwareInterface
+class SuluPhpcrNode extends BaseNode implements ContentContextAwareInterface
 {
     protected $contentContext;
     protected $currentLocale;
