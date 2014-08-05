@@ -32,6 +32,12 @@ use Sulu\Bundle\ContactBundle\Entity\Fax;
 use Sulu\Bundle\ContactBundle\Entity\FaxType;
 use Sulu\Bundle\ContactBundle\Entity\Url;
 use Sulu\Bundle\ContactBundle\Entity\UrlType;
+use Sulu\Bundle\MediaBundle\Entity\Media;
+use Sulu\Bundle\MediaBundle\Entity\Collection;
+use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
+use Sulu\Bundle\MediaBundle\Entity\CollectionType;
+use Sulu\Bundle\MediaBundle\Entity\File;
+use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\TestBundle\Testing\DatabaseTestCase;
 use Sulu\Bundle\ContactBundle\Entity\Activity;
 use Sulu\Bundle\ContactBundle\Entity\ActivityPriority;
@@ -163,6 +169,7 @@ class AccountControllerTest extends DatabaseTestCase
         $accountCategory->setCategory("Test");
         self::$em->persist($accountCategory);
 
+        $this->setUpMediaEntities();
         self::$em->flush();
     }
 
@@ -2108,6 +2115,126 @@ class AccountControllerTest extends DatabaseTestCase
         );
 
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
+    }
+
+    public function testAddMediaToAccount(){
+        $client = $this->createTestClient();
+        $client->request(
+            'PUT',
+            '/api/accounts/1',
+            array(
+                'name' => 'ExampleCompany',
+                'medias' => array(
+                    0 => array(
+                        'id' => 1
+                    )
+                )
+            )
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertNotNull('medias', $response);
+        $this->assertEquals(1, count($response->medias));
+        $this->assertEquals(1, $response->medias[0]->id);
+
+        $client->request(
+            'PUT',
+            '/api/accounts/1',
+            array(
+                'name' => 'ExampleCompany'
+            )
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertNotNull('medias', $response);
+        $this->assertEquals(0, count($response->medias));
+
+    }
+
+    public function setUpMediaEntities()
+    {
+        $mediaType = new MediaType();
+        $mediaType->setName('document');
+        $mediaType->setDescription('This is a document');
+
+        $imageType = new MediaType();
+        $imageType->setName('image');
+        $imageType->setDescription('This is an image');
+
+        $videoType = new MediaType();
+        $videoType->setName('video');
+        $videoType->setDescription('This is a video');
+
+        $audioType = new MediaType();
+        $audioType->setName('audio');
+        $audioType->setDescription('This is an audio');
+
+        $media = new Media();
+        $media->setCreated(new DateTime());
+        $media->setChanged(new DateTime());
+        $media->setType($imageType);
+
+        // create file
+        $file = new File();
+        $file->setVersion(1);
+        $file->setCreated(new DateTime());
+        $file->setChanged(new DateTime());
+        $file->setMedia($media);
+
+        $collection = new Collection();
+        $this->setUpCollection($collection);
+
+        $media->setCollection($collection);
+        self::$em->persist($media);
+        self::$em->persist($collection);
+        self::$em->persist($file);
+        self::$em->persist($videoType);
+        self::$em->persist($imageType);
+        self::$em->persist($audioType);
+        self::$em->persist($mediaType);
+    }
+
+    public function setUpCollection(&$collection)
+    {
+        $style = array(
+            'type' => 'circle',
+            'color' => '#ffcc00'
+        );
+
+        $collection->setStyle(json_encode($style));
+
+        $collection->setCreated(new DateTime());
+        $collection->setChanged(new DateTime());
+
+        // Create Collection Type
+        $collectionType = new CollectionType();
+        $collectionType->setName('Default Collection Type');
+        $collectionType->setDescription('Default Collection Type');
+
+        $collection->setType($collectionType);
+
+        // Collection Meta 1
+        $collectionMeta = new CollectionMeta();
+        $collectionMeta->setTitle('Test Collection');
+        $collectionMeta->setDescription('This Description is only for testing');
+        $collectionMeta->setLocale('en-gb');
+        $collectionMeta->setCollection($collection);
+
+        $collection->addMeta($collectionMeta);
+
+        // Collection Meta 2
+        $collectionMeta2 = new CollectionMeta();
+        $collectionMeta2->setTitle('Test Kollektion');
+        $collectionMeta2->setDescription('Dies ist eine Test Beschreibung');
+        $collectionMeta2->setLocale('de');
+        $collectionMeta2->setCollection($collection);
+
+        $collection->addMeta($collectionMeta2);
+
+        self::$em->persist($collection);
+        self::$em->persist($collectionType);
+        self::$em->persist($collectionMeta);
+        self::$em->persist($collectionMeta2);
     }
 
 }
