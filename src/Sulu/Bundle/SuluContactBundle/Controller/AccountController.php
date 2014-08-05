@@ -323,7 +323,7 @@ class AccountController extends AbstractContactController
 
         $view = $this->responseGetById(
             $id,
-            function ($id) use ($includes) {
+            function ($id) use ($includes){
                 return $this->getDoctrine()
                     ->getRepository(self::$entityName)
                     ->findAccountById($id, in_array('contacts', $includes));
@@ -888,7 +888,7 @@ class AccountController extends AbstractContactController
      */
     public function deleteAction($id, Request $request)
     {
-        $delete = function ($id) use ($request) {
+        $delete = function ($id) use ($request){
             /* @var Account $account */
             $account = $this->getDoctrine()
                 ->getRepository(self::$entityName)
@@ -1270,19 +1270,6 @@ class AccountController extends AbstractContactController
     {
         $this->accountAddressesFieldDescriptors = array();
 
-//        $addressJoin = array(
-//            self::$accountAddressEntityName => new DoctrineJoinDescriptor(
-//                    self::$accountAddressEntityName,
-//                    self::$entityName . '.accountAddresses',
-//                    null,
-//                    DoctrineJoinDescriptor::JOIN_METHOD_INNER
-//                ),
-//            self::$contactEntityName => new DoctrineJoinDescriptor(
-//                    self::$addressEntityName,
-//                    self::$accountAddressEntityName . '.address'
-//                )
-//        );
-
         $addressJoin = array(
             self::$accountAddressEntityName => new DoctrineJoinDescriptor(
                     self::$accountAddressEntityName,
@@ -1394,7 +1381,7 @@ class AccountController extends AbstractContactController
             true,
             '',
             '',
-            '160px'
+            '300px'
         );
     }
 
