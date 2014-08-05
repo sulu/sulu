@@ -1333,7 +1333,7 @@ class AccountController extends AbstractContactController
                             self::$addressEntityName,
                             '',
                             $addressJoin
-                        )
+                        ),
                     ),
                     'street',
                     ' '
@@ -1376,7 +1376,7 @@ class AccountController extends AbstractContactController
             ),
             'address',
             'public.address',
-            ' / ',
+            ', ',
             false,
             true,
             '',
