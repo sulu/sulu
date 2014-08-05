@@ -679,8 +679,7 @@ class AccountController extends AbstractContactController
                     && $this->processPhones($account, $request->get('phones', array()))
                     && $this->processAddresses($account, $request->get('addresses', array()))
                     && $this->processTags($account, $request->get('tags', array()))
-                    && $this->processNotes($account, $request->get('notes', array()))
-                    && $this->processMedias($account, $request->get('medias', array())))
+                    && $this->processNotes($account, $request->get('notes', array())))
                 ) {
                     throw new RestException('Updating dependencies is not possible', 0);
                 }
@@ -780,6 +779,10 @@ class AccountController extends AbstractContactController
                     if ($mainContact) {
                         $account->setMainContact($mainContact);
                     }
+                }
+
+                if(!is_null($request->get('medias'))) {
+                    $this->processMedias($account, $request->get('medias', array()));
                 }
 
                 // process details

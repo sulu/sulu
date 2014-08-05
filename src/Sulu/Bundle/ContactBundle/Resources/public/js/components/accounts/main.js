@@ -210,6 +210,7 @@ define([
             }.bind(this));
 
             account.save(null, {
+                patch: true,
                 success: function(response) {
                     var model = response.toJSON();
                     this.sandbox.emit('sulu.contacts.accounts.medias.saved', model);

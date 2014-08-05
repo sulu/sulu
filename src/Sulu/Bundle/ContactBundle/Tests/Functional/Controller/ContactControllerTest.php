@@ -1869,7 +1869,7 @@ class ContactControllerTest extends DatabaseTestCase
     public function testAddMediaToContact(){
         $client = $this->createTestClient();
         $client->request(
-            'PUT',
+            'PATCH',
             '/api/contacts/1',
             array(
                 'firstName' => 'John',
@@ -1885,12 +1885,12 @@ class ContactControllerTest extends DatabaseTestCase
         );
 
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertNotNull('medias', $response);
+        $this->assertNotNull($response->medias);
         $this->assertEquals(1, count($response->medias));
         $this->assertEquals(1, $response->medias[0]->id);
 
         $client->request(
-            'PUT',
+            'PATCH',
             '/api/contacts/1',
             array(
                 'firstName' => 'John',
@@ -1901,7 +1901,7 @@ class ContactControllerTest extends DatabaseTestCase
         );
 
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertNotNull('medias', $response);
+        $this->assertNotNull($response->medias);
         $this->assertEquals(0, count($response->medias));
 
     }

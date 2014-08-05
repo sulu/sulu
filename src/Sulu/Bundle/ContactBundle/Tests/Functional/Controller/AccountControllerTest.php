@@ -2120,7 +2120,7 @@ class AccountControllerTest extends DatabaseTestCase
     public function testAddMediaToAccount(){
         $client = $this->createTestClient();
         $client->request(
-            'PUT',
+            'PATCH',
             '/api/accounts/1',
             array(
                 'name' => 'ExampleCompany',
@@ -2133,12 +2133,12 @@ class AccountControllerTest extends DatabaseTestCase
         );
 
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertNotNull('medias', $response);
+        $this->assertNotNull($response->medias);
         $this->assertEquals(1, count($response->medias));
         $this->assertEquals(1, $response->medias[0]->id);
 
         $client->request(
-            'PUT',
+            'PATCH',
             '/api/accounts/1',
             array(
                 'name' => 'ExampleCompany'
@@ -2146,9 +2146,8 @@ class AccountControllerTest extends DatabaseTestCase
         );
 
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertNotNull('medias', $response);
+        $this->assertNotNull($response->medias);
         $this->assertEquals(0, count($response->medias));
-
     }
 
     public function setUpMediaEntities()

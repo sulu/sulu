@@ -754,4 +754,42 @@ class ContactController extends AbstractContactController
 
         return $contacts;
     }
+
+    /**
+     * @param $id
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function patchAction($id, Request $request)
+    {
+        $contactEntity = 'SuluContactBundle:Contact';
+
+        try {
+            /** @var Contact $contact */
+            $contact = $this->getDoctrine()
+                ->getRepository($contactEntity)
+                ->findById($id);
+
+            if (!$contact) {
+                throw new EntityNotFoundException($contactEntity, $id);
+            } else {
+
+                // TODO most methods should use PATCH action instead of PUT
+
+                $em = $this->getDoctrine()->getManager();
+                if(!$this->processMedias($contact, $request->get('medias', array()))) {
+                    throw new RestException('Updating dependencies is not possible', 0);
+                }
+
+                $em->flush();
+                $view = $this->view($contact, 200);
+            }
+        } catch (EntityNotFoundException $exc) {
+            $view = $this->view($exc->toArray(), 404);
+        } catch (RestException $exc) {
+            $view = $this->view($exc->toArray(), 400);
+        }
+
+        return $this->handleView($view);
+    }
 }
