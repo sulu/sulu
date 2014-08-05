@@ -23,6 +23,7 @@ use Sulu\Bundle\ContactBundle\Entity\BankAccount;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
+use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\ListRestHelperInterface;
 use Sulu\Component\Rest\RestController;
 use Sulu\Component\Rest\RestHelperInterface;
@@ -37,6 +38,7 @@ abstract class AbstractContactController extends RestController implements Class
 {
 
     protected static $positionEntityName = 'SuluContactBundle:Position';
+    protected static $mediaEntityName = 'SuluMediaBundle:Media';
 
     /**
      * @return AbstractContactManager
@@ -349,6 +351,57 @@ abstract class AbstractContactController extends RestController implements Class
         $this->getContactManager()->setMainPhone($contact);
 
         return $result;
+    }
+
+    /**
+     * Process all medias from request
+     * @param $entity Contact on which is processed
+     * @param $medias
+     * @return bool True if the processing was successful, otherwise false
+     */
+    protected function processMedias($entity, $medias)
+    {
+        $get = function ($media) {
+            return $media->getId();
+        };
+
+        $delete = function ($media) use ($entity) {
+            $entity->removeMedia($media);
+            return true;
+        };
+
+        $add = function ($media) use ($entity) {
+            return $this->addMedia($entity, $media);
+        };
+
+        $result = $this->getRestHelper()->processSubEntities($entity->getMedias(), $medias, $get, $add, null, $delete);
+
+        return $result;
+    }
+
+    /**
+     * Adds a new media to the entity
+     *
+     * @param $entity
+     * @param $mediaData
+     * @throws EntityNotFoundException
+     * @throws RestException
+     * @return bool true if there was no error
+     */
+    protected function addMedia($entity, $mediaData)
+    {
+        $em = $this->getDoctrine()->getManager();
+        if (!isset($mediaData['id'])) {
+            throw new RestException(self::$mediaEntityName . ' with id ' . $mediaData['id'] . 'not found!');
+        } else {
+            $media = $em->getRepository(self::$mediaEntityName)->find($mediaData['id']);
+            if (!$media) {
+                throw new EntityNotFoundException(self::$mediaEntityName, $mediaData['id']);
+            }
+            $entity->addMedia($media);
+        }
+
+        return true;
     }
 
     /**

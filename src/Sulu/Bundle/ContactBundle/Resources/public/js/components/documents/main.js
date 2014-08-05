@@ -11,10 +11,6 @@ define([], function() {
 
     'use strict';
 
-    var defaults = {
-
-    };
-
     return {
 
         view: true,
@@ -30,8 +26,7 @@ define([], function() {
 
         initialize: function() {
 
-            this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
-            this.saved = true;
+            this.form = '#documents-form';
 
             this.setHeaderBar(true);
             this.render();
@@ -47,53 +42,58 @@ define([], function() {
 
         render: function() {
             var data = this.options.data;
-
             this.html(this.renderTemplate(this.templates[0]));
-
             this.initForm(data);
 
-            this.bindDomEvents();
             this.bindCustomEvents();
         },
 
         initForm: function(data) {
             var formObject = this.sandbox.form.create(this.form);
             formObject.initialized.then(function() {
-                this.setFormData(data);
+                this.setForm(data);
             }.bind(this));
         },
 
-        setFormData: function(data) {
-            // add collection filters to form
-            this.sandbox.emit('sulu.contact-form.add-collectionfilters', this.form);
-            this.sandbox.form.setData(this.form, data).then(function() {
-                this.sandbox.start(this.form);
-            }.bind(this)).fail(function(error) {
+        setForm: function(data){
+            this.sandbox.form.setData(this.form, data).fail(function(error) {
                 this.sandbox.logger.error("An error occured when setting data!", error);
             }.bind(this));
         },
 
-        bindDomEvents: function() {
-
-        },
-
         bindCustomEvents: function() {
-            // account saved
             this.sandbox.on('sulu.header.toolbar.save', function() {
                 this.submit();
             }, this);
 
-            // back to list
             this.sandbox.on('sulu.header.back', function() {
                 this.sandbox.emit('sulu.contacts.accounts.list');
             }, this);
+
+            this.sandbox.on('sulu.media-selection.document-selection.data-changed', function() {
+                this.setHeaderBar(false);
+            }, this);
+
+            this.sandbox.on('sulu.contacts.accounts.medias.saved', function(data){
+                this.setHeaderBar(true);
+                this.setForm(data);
+            }, this);
         },
 
+        /**
+         * Submits the selection depending on the type
+         */
         submit: function() {
             if (this.sandbox.form.validate(this.form)) {
                 var data = this.sandbox.form.getData(this.form);
-                // TODO create event for saving accounts
-                this.sandbox.emit('sulu.contacts.accounts.financials.save', data);
+
+                if (this.options.params.type === 'account') {
+                    this.sandbox.emit('sulu.contacts.accounts.medias.save', this.options.data.id, data.medias.ids);
+                } else if (this.options.params.type === 'contact') {
+                    this.sandbox.emit('sulu.contacts.contacts.medias.save', this.options.data.id, data.medias.ids);
+                } else {
+                    this.sandbox.logger.error('Undefined type for documents component!');
+                }
             }
         },
 

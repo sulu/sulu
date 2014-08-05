@@ -14,8 +14,9 @@ define([
     'accountsutil/header',
     'sulucontact/model/activity',
     'sulucontact/model/termsOfPayment',
-    'sulucontact/model/termsOfDelivery'
-], function(Account, Contact, AccountContact, AccountsUtilHeader, Activity, TermsOfPayment, TermsOfDelivery) {
+    'sulucontact/model/termsOfDelivery',
+    'sulumedia/model/media'
+], function(Account, Contact, AccountContact, AccountsUtilHeader, Activity, TermsOfPayment, TermsOfDelivery, Media) {
 
     'use strict';
 
@@ -60,11 +61,11 @@ define([
                     AccountsUtilHeader.setHeader.call(this, this.account, this.options.accountType);
                 }.bind(this));
             } else if (this.options.display === 'contacts') {
-                this.renderComponent(this.options.display, 'accounts-form-container').then(function() {
+                this.renderComponent('accounts/components/', this.options.display, 'accounts-form-container', {}).then(function() {
                     AccountsUtilHeader.setHeader.call(this, this.account, this.options.accountType);
                 }.bind(this));
             } else if (this.options.display === 'financials') {
-                this.renderComponent(this.options.display,  'accounts-form-container').then(function() {
+                this.renderComponent('accounts/components/', this.options.display, 'accounts-form-container', {}).then(function() {
                     AccountsUtilHeader.setHeader.call(this, this.account, this.options.accountType);
                 }.bind(this));
             } else if (this.options.display === 'activities') {
@@ -76,7 +77,7 @@ define([
                     );
                 }.bind(this));
             } else if (this.options.display === 'documents') {
-                this.renderComponent(this.options.display, 'documents-form').then(function() {
+                this.renderComponent('', this.options.display, 'documents-form', {type: 'account'}).then(function() {
                     AccountsUtilHeader.setHeader.call(this, this.account, this.options.accountType);
                 }.bind(this));
             } else {
@@ -136,7 +137,12 @@ define([
                 if (!!type) {
                     typeString = '/type:' + type;
                 }
-                this.sandbox.emit('sulu.router.navigate', 'contacts/accounts' + typeString, !noReload ? true : false, true, true);
+                this.sandbox.emit(
+                    'sulu.router.navigate', 'contacts/accounts' + typeString,
+                    !noReload ? true : false,
+                    true,
+                    true
+                );
             }, this);
 
             this.sandbox.on('sulu.contacts.account.types', function(data) {
@@ -155,36 +161,41 @@ define([
             }.bind(this));
 
             // activities remove / save / add
-            this.sandbox.on(
-                'sulu.contacts.account.activities.delete',
-                this.removeActivities.bind(this)
-            );
-            this.sandbox.on(
-                'sulu.contacts.account.activity.save',
-                this.saveActivity.bind(this)
-            );
-            this.sandbox.on(
-                'sulu.contacts.account.activity.load',
-                this.loadActivity.bind(this)
-            );
+            this.sandbox.on('sulu.contacts.account.activities.delete', this.removeActivities.bind(this));
+            this.sandbox.on('sulu.contacts.account.activity.save', this.saveActivity.bind(this));
+            this.sandbox.on('sulu.contacts.account.activity.load', this.loadActivity.bind(this));
 
             // handling of terms of delivery/payment eventlistener
-            this.sandbox.on(
-                'husky.select.terms-of-delivery.delete',
-                this.deleteTerms.bind(this, 'delivery')
-            );
-            this.sandbox.on(
-                'husky.select.terms-of-payment.delete',
-                this.deleteTerms.bind(this, 'payment')
-            );
-            this.sandbox.on(
-                'husky.select.terms-of-delivery.save',
-                this.saveTerms.bind(this, 'delivery')
-            );
-            this.sandbox.on(
-                'husky.select.terms-of-payment.save',
-                this.saveTerms.bind(this, 'payment')
-            );
+            this.sandbox.on('husky.select.terms-of-delivery.delete', this.deleteTerms.bind(this, 'delivery'));
+            this.sandbox.on('husky.select.terms-of-payment.delete', this.deleteTerms.bind(this, 'payment'));
+            this.sandbox.on('husky.select.terms-of-delivery.save', this.saveTerms.bind(this, 'delivery'));
+            this.sandbox.on('husky.select.terms-of-payment.save', this.saveTerms.bind(this, 'payment'));
+
+            // handling documents
+            this.sandbox.on('sulu.contacts.accounts.medias.save', this.saveDocuments.bind(this));
+        },
+
+        saveDocuments: function(accountId, mediaIds) {
+            var account = Account.findOrCreate({id: accountId}),
+                media;
+
+            // reset collection and add current selection
+            account.get('medias').reset();
+            
+            this.sandbox.util.each(mediaIds, function(index, id) {
+                media = Media.findOrCreate({id: id});
+                account.get('medias').add(media);
+            }.bind(this));
+
+            this.account.save(null, {
+                success: function(response) {
+                    var model = response.toJSON();
+                    this.sandbox.emit('sulu.contacts.accounts.medias.saved', model);
+                }.bind(this),
+                error: function() {
+                    this.sandbox.logger.error("Error while saving documents!");
+                }.bind(this)
+            });
         },
 
         deleteTerms: function(termsKey, ids) {
@@ -209,7 +220,6 @@ define([
                         }.bind(this)
                     });
                 }.bind(this));
-
             }
         },
 
@@ -383,7 +393,6 @@ define([
         },
 
         renderActivities: function() {
-
             var $list,
                 dfd = this.sandbox.data.deferred();
 
@@ -692,17 +701,34 @@ define([
             ]);
         },
 
-        renderComponent: function(componentName, containerId) {
-            var $form = this.sandbox.dom.createElement('<div id="'+containerId+'"/>'),
+        /**
+         * Adds a container with the given id and starts a component with the given name in it
+         * @param path path to component
+         * @param componentName
+         * @param containerId
+         * @param params additional params
+         * @returns {*}
+         */
+        renderComponent: function(path, componentName, containerId, params) {
+            var $form = this.sandbox.dom.createElement('<div id="' + containerId + '"/>'),
                 dfd = this.sandbox.data.deferred();
+
             this.html($form);
 
             if (!!this.options.id) {
                 this.account = new Account({id: this.options.id});
                 this.account.fetch({
                     success: function(model) {
+                        this.account = model;
                         this.sandbox.start([
-                            {name: 'accounts/components/'+componentName+'@sulucontact', options: { el: $form, data: model.toJSON()}}
+                            {
+                                name: path + componentName + '@sulucontact',
+                                options: {
+                                    el: $form,
+                                    data: model.toJSON(),
+                                    params: !!params ? params : {}
+                                }
+                            }
                         ]);
                         dfd.resolve();
                     }.bind(this),

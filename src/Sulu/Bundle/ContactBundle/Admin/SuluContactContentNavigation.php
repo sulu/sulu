@@ -95,7 +95,7 @@ class SuluContactContentNavigation extends ContentNavigation
         $documents = new NavigationItem('content-navigation.accounts.documents');
         $documents->setAction('documents');
         $documents->setContentType('account');
-        $documents->setContentComponent('acconuts@sulucontact');
+        $documents->setContentComponent('accounts@sulucontact');
         $documents->setContentComponentOptions(array('display'=>'documents'));
         $documents->setContentDisplay(array('edit'));
         $this->addNavigationItem($documents);
