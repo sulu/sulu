@@ -55,8 +55,8 @@ define([], function() {
             this.form = '#documents-form';
 
             // init header toolbar for contacts
-            if(this.options.params.type === 'contact') {
-                setTitle.call(this,this.options.data);
+            if (this.options.params.type === 'contact') {
+                setTitle.call(this, this.options.data);
                 setHeaderToolbar.call(this);
             }
             this.setHeaderBar(true);
@@ -86,7 +86,7 @@ define([], function() {
             }.bind(this));
         },
 
-        setForm: function(data){
+        setForm: function(data) {
             this.sandbox.form.setData(this.form, data).fail(function(error) {
                 this.sandbox.logger.error("An error occured when setting data!", error);
             }.bind(this));
@@ -105,12 +105,12 @@ define([], function() {
                 this.setHeaderBar(false);
             }, this);
 
-            this.sandbox.on('sulu.contacts.accounts.medias.saved', function(data){
+            this.sandbox.on('sulu.contacts.accounts.medias.saved', function(data) {
                 this.setHeaderBar(true);
                 this.setForm(data);
             }, this);
 
-            this.sandbox.on('sulu.contacts.contacts.medias.saved', function(data){
+            this.sandbox.on('sulu.contacts.contacts.medias.saved', function(data) {
                 this.setHeaderBar(true);
                 this.setForm(data);
             }, this);

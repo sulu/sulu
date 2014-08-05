@@ -18,6 +18,10 @@
                 <source>contacts.sidebar.mainCompany</source>
                 <target>Main company</target>
             </trans-unit>
+            <trans-unit id="a50af522ac181350142c0b4720e29a7f" resname="content-navigation.accounts.documents">
+                <source>content-navigation.accounts.documents</source>
+                <target>Documents</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
