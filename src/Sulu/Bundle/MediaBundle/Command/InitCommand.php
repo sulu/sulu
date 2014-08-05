@@ -28,10 +28,10 @@ class InitCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $baseDir = dirname(dirname($this->getContainer()->get('kernel')->getRootDir()));
+        $baseDir = dirname($this->getContainer()->get('kernel')->getRootDir());
 
-        /** @var Filesystem $fileSystem */
-        $fileSystem = $this->getContainer()->get('filesystem');
+        /** @var Filesystem $filesystem */
+        $filesystem = $this->getContainer()->get('filesystem');
 
         $output->writeln('Create media dirs in ' . $baseDir);
 
@@ -40,7 +40,7 @@ class InitCommand extends ContainerAwareCommand
         $output->writeln('Create Upload dir in ' . $uploadDir);
 
         if (!is_dir($uploadDir)) {
-            $fileSystem->mkdir($uploadDir);
+            $filesystem->mkdir($uploadDir);
         } else {
             $output->writeLn('Directory ' . $uploadDir . ' already exists');
         }
@@ -50,7 +50,7 @@ class InitCommand extends ContainerAwareCommand
         $output->writeln('Create Media Cache dir in ' . $mediaCacheDir);
 
         if (!is_dir($mediaCacheDir)) {
-            $fileSystem->mkdir($mediaCacheDir);
+            $filesystem->mkdir($mediaCacheDir);
         } else {
             $output->writeLn('Directory ' . $mediaCacheDir . ' already exists');
         }
