@@ -25,7 +25,7 @@ class ExceptionController extends BaseExceptionController
         DebugLoggerInterface $logger = null,
         $_format = 'html'
     ) {
-        if ($exception->getClass() === 'Symfony\Component\HttpKernel\Exception\NotFoundHttpException') {
+        if ($exception->getStatusCode() == 404) {
             return new Response(
                 $this->twig->render(
                     'ClientWebsiteBundle:views:error404.html.twig',
