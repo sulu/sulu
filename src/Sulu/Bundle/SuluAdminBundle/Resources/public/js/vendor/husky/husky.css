@@ -8690,8 +8690,10 @@ a.btn-black, a.btn-highlight {
   border-radius: 0;
   position: static;
   margin: 0;
+  display: block;
+  margin-bottom: -5px;
 }
-/* line 50, ../scss/modules/auto-complete-list.scss */
+/* line 52, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list .husky-auto-complete input[type="text"] {
   margin: 7px 10px 7px 0 !important;
   padding: 0;
@@ -8701,9 +8703,10 @@ a.btn-black, a.btn-highlight {
   outline: 0;
   border-radius: 0;
   height: auto;
+  float: left;
 }
 
-/* line 63, ../scss/modules/auto-complete-list.scss */
+/* line 66, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list-selection {
   display: inline-block;
   margin: 4px 5px 4px 0;
@@ -8713,8 +8716,9 @@ a.btn-black, a.btn-highlight {
   color: #000;
   font-size: 12px;
   line-height: 20px;
+  float: left;
 }
-/* line 73, ../scss/modules/auto-complete-list.scss */
+/* line 77, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list-selection .tm-tag-remove {
   padding-left: 8px;
   cursor: pointer;
@@ -8722,12 +8726,12 @@ a.btn-black, a.btn-highlight {
   color: #262626;
   font-size: 14px;
 }
-/* line 75, ../scss/modules/auto-complete-list.scss */
+/* line 79, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list-selection .tm-tag-remove::before {
   content: "\f00d";
 }
 
-/* line 86, ../scss/modules/auto-complete-list.scss */
+/* line 90, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list-suggestions {
   bottom: 0;
   left: 0;
@@ -8737,7 +8741,7 @@ a.btn-black, a.btn-highlight {
   -moz-box-shadow: rgba(0, 0, 0, 0.06) 2px 2px 0px 0px;
   box-shadow: rgba(0, 0, 0, 0.06) 2px 2px 0px 0px;
 }
-/* line 93, ../scss/modules/auto-complete-list.scss */
+/* line 97, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list-suggestions h5 {
   margin: 0;
   padding: 5px 8px;
@@ -8745,12 +8749,12 @@ a.btn-black, a.btn-highlight {
   color: #999999;
   font-size: 12px;
 }
-/* line 101, ../scss/modules/auto-complete-list.scss */
+/* line 105, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list-suggestions ul {
   padding: 8px 8px 15px;
   margin: 0;
 }
-/* line 106, ../scss/modules/auto-complete-list.scss */
+/* line 110, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list-suggestions li {
   display: inline-block;
   margin-right: 5px;
@@ -8761,7 +8765,7 @@ a.btn-black, a.btn-highlight {
   font-size: 12px;
   cursor: pointer;
 }
-/* line 117, ../scss/modules/auto-complete-list.scss */
+/* line 121, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list-suggestions .deactivated {
   cursor: auto;
   color: #999999;

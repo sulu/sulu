@@ -479,6 +479,7 @@ define(function() {
                         resultKey: this.options.resultKey,
                         instanceName: instanceName,
                         searchInstanceName: this.options.instanceName,
+                        resizeListeners: false,
                         paginationOptions: {
                             showall: {
                                 showAllHandler: this.showAllRecords.bind(this, id)
