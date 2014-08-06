@@ -215,6 +215,11 @@ define([
                 },
 
                 setValue: function(value) {
+                    // server returns an object for single block (min: 1, max: 1)
+                    if (typeof value === 'object') {
+                        value = [value];
+                    }
+
                     var resolve = this.internalSetValue(value);
                     resolve.then(function() {
                         App.logger.log('resolved block set value');
