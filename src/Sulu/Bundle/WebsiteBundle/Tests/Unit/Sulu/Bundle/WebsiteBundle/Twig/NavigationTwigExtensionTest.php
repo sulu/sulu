@@ -10,7 +10,6 @@
  */
 
 use Prophecy\PhpUnit\ProphecyTestCase;
-use Sulu\Bundle\WebsiteBundle\Navigation\NavigationItem;
 use Sulu\Bundle\WebsiteBundle\Twig\NavigationTwigExtension;
 
 class NavigationTwigExtensionTest extends ProphecyTestCase
@@ -69,10 +68,23 @@ class NavigationTwigExtensionTest extends ProphecyTestCase
         $structure2->getUuid()->willReturn('321-321-321');
 
         $this->contentMapper->loadBreadcrumb('123-123-123', 'en', 'default')->willReturn(array(null, null, $structure2, null, null));
+        // not ok
         $this->navigationMapper->getNavigation('123-123-123', 'default', 'en', 1)->willReturn(false);
+        // is ok
         $this->navigationMapper->getNavigation('321-321-321', 'default', 'en', 1)->willReturn(true);
 
         $this->assertTrue($this->extension->navigationFunction($this->structure->reveal(), 1, 2));
+    }
+
+    public function testBreadcrumb()
+    {
+        $this->structure->getUuid()->willReturn('123-123-123');
+        $this->structure->getWebspaceKey()->willReturn('default');
+        $this->structure->getLanguageCode()->willReturn('en');
+
+        $this->navigationMapper->getBreadcrumb('123-123-123', 'default', 'en')->willReturn(true);
+
+        $this->assertTrue($this->extension->breadcrumbFunction($this->structure->reveal()));
     }
 
 }

@@ -43,7 +43,8 @@ class NavigationTwigExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            new \Twig_SimpleFunction('navigation', array($this, 'navigationFunction'))
+            new \Twig_SimpleFunction('navigation', array($this, 'navigationFunction')),
+            new \Twig_SimpleFunction('breadcrumb', array($this, 'breadcrumbFunction'))
         );
     }
 
@@ -67,6 +68,20 @@ class NavigationTwigExtension extends \Twig_Extension
         }
 
         return $this->navigationMapper->getNavigation($uuid, $content->getWebspaceKey(), $content->getLanguageCode(), $depth);
+    }
+
+    /**
+     * Returns breadcrumb for given node
+     * @param StructureInterface $content
+     * @return \Sulu\Bundle\WebsiteBundle\Navigation\NavigationItem[]
+     */
+    public function breadcrumbFunction(StructureInterface $content)
+    {
+        return $this->navigationMapper->getBreadcrumb(
+            $content->getUuid(),
+            $content->getWebspaceKey(),
+            $content->getLanguageCode()
+        );
     }
 
     /**

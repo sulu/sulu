@@ -74,6 +74,8 @@ class NavigationTest extends PhpcrTestCase
             return $this->getStructureMock();
         } elseif ($structureKey == 'overview') {
             return $this->getStructureMock();
+        } elseif ($structureKey == 'norlp') {
+            return $this->getStructureMock(false);
         }
 
         return null;
@@ -188,7 +190,7 @@ class NavigationTest extends PhpcrTestCase
         return $data;
     }
 
-    private function getStructureMock()
+    private function getStructureMock($rlp = true)
     {
         $structureMock = $this->getMockForAbstractClass(
             '\Sulu\Component\Content\Structure',
@@ -207,12 +209,24 @@ class NavigationTest extends PhpcrTestCase
             )
         );
 
-        $method->invokeArgs(
-            $structureMock,
-            array(
-                new Property('rl', '', 'resource_locator', false, false, 1, 1, array(), array(new PropertyTag('sulu.rlp', 1)))
-            )
-        );
+        if ($rlp) {
+            $method->invokeArgs(
+                $structureMock,
+                array(
+                    new Property(
+                        'rl',
+                        '',
+                        'resource_locator',
+                        false,
+                        false,
+                        1,
+                        1,
+                        array(),
+                        array(new PropertyTag('sulu.rlp', 1))
+                    )
+                )
+            );
+        }
 
         return $structureMock;
     }
@@ -270,5 +284,37 @@ class NavigationTest extends PhpcrTestCase
         $this->assertEquals(2, sizeof($breadcrumb));
         $this->assertEquals('News', $breadcrumb[0]->getTitle());
         $this->assertEquals('News-2', $breadcrumb[1]->getTitle());
+    }
+
+    public function testNavigationNoRlp()
+    {
+        // this node should not be visible in navigation
+        $this->mapper->save(
+            array('name' => 'Hikaru Sulu'),
+            'norlp',
+            'default',
+            'en',
+            1,
+            true,
+            null,
+            null,
+            StructureInterface::STATE_PUBLISHED,
+            'main'
+        );
+
+        $main = $this->navigation->getNavigation($this->data['news']->getUuid(), 'default', 'en', 1);
+        $this->assertEquals(2, sizeof($main));
+        $this->assertEquals(0, sizeof($main[0]->getChildren()));
+        $this->assertEquals(0, sizeof($main[1]->getChildren()));
+
+        $this->assertEquals($this->data['news/news-1']->getUuid(), $main[0]->getId());
+        $this->assertEquals('News-1', $main[0]->getTitle());
+        $this->assertInstanceOf('Sulu\Component\Content\StructureInterface', $main[0]->getContent());
+        $this->assertEquals('/news/news-1', $main[0]->getUrl());
+
+        $this->assertEquals($this->data['news/news-2']->getUuid(), $main[1]->getId());
+        $this->assertEquals('News-2', $main[1]->getTitle());
+        $this->assertInstanceOf('Sulu\Component\Content\StructureInterface', $main[1]->getContent());
+        $this->assertEquals('/news/news-2', $main[1]->getUrl());
     }
 }
