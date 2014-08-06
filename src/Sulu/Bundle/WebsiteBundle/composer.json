@@ -27,7 +27,6 @@
         "symfony/symfony": "2.5.*",
         "symfony/monolog-bundle": "2.4.*",
         "phpunit/phpunit": "3.7.*",
-        "phpspec/prophecy": "1.2.*",
         "phpspec/prophecy-phpunit": "1.0.*",
         "sulu/test-bundle": "dev-develop"
     },
