@@ -90,6 +90,8 @@ define(['app-config'], function(AppConfig) {
             // updated after init
             this.sandbox.on('husky.select.nav-contexts.initialize', function() {
                 this.sandbox.dom.data('#nav-contexts', 'selection', data.navContexts);
+                this.sandbox.dom.data('#nav-contexts', 'selectionValues', data.navContexts);
+
                 $('#nav-contexts').trigger('data-changed');
             }.bind(this));
         },
