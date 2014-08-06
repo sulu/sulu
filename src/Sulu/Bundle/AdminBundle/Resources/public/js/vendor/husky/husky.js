@@ -35467,7 +35467,7 @@ define('__component__$auto-complete-list@husky',[], function() {
              * (autocomplete-component needs to be running to start tagmanager)
              */
             bindStartTmEvent: function() {
-                this.sandbox.on('husky.auto-complete.' + this.options.instanceName + '.initialized', function(data) {
+                this.sandbox.once('husky.auto-complete.' + this.options.instanceName + '.initialized', function(data) {
                     this.$input = data;
                     this.startTagmanager();
                     this.bindEvents();
@@ -37099,6 +37099,7 @@ define('__component__$select@husky',[], function() {
             } else {
                 this.triggerSelect(key);
             }
+            this.sandbox.dom.trigger('changed');
         },
 
         // triggers select callback or emits event
@@ -42311,6 +42312,7 @@ define('__component__$dropzone@husky',[], function () {
             this.overlayOpened = false;
             this.lockPopUp = false;
             this.url = this.options.url;
+            this.filesDropped = 0;
 
             this.bindCustomEvents();
             this.render();
@@ -42433,14 +42435,21 @@ define('__component__$dropzone@husky',[], function () {
                         // store dropzone context
                         that.dropzone = this;
 
+                        this.on('drop', function(event) {
+                            this.filesDropped = event.dataTransfer.files.length;
+                        }.bind(that));
+
                         // gets called if file gets added (drop or via the upload window)
                         this.on('addedfile', function (file) {
                             that.sandbox.dom.addClass(that.$dropzone, constants.droppedClass);
 
+                            // call the after-drop callback on the last file
                             if (typeof that.options.afterDropCallback === 'function') {
-                                if (file === this.files[this.files.length -1]) {
+                                if (this.files.length === that.filesDropped) {
                                     that.options.afterDropCallback(file).then(function() {
-                                        that.sandbox.util.delay(this.processFile.bind(this, file), 0);
+                                        that.sandbox.util.foreach(this.files, function(file) {
+                                            that.sandbox.util.delay(this.processFile.bind(this, file), 0);
+                                        }.bind(this));
                                     }.bind(this));
                                 }
                             }
@@ -42539,6 +42548,7 @@ define('__component__$dropzone@husky',[], function () {
                 this.sandbox.emit('husky.overlay.dropzone-'+ this.options.instanceName +'.close');
             }
             this.sandbox.emit(FILES_ADDED.call(this), this.getResponseArray(this.dropzone.files));
+            this.filesDropped = 0;
             if (keepDom === true) {
                 this.dropzone.files = [];
             } else {
