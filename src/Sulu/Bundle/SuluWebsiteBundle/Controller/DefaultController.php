@@ -43,17 +43,6 @@ class DefaultController extends WebsiteController
         return $response;
     }
 
-    public function error404Action(Request $request)
-    {
-        return $this->renderError(
-            'ClientWebsiteBundle:views:error404.html.twig',
-            array(
-                'path'       => $request->get('path'),
-                'navigation' => array()
-            )
-        );
-    }
-
     public function redirectAction(Request $request)
     {
         $url = rtrim(str_replace(
