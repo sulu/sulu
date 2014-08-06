@@ -340,13 +340,6 @@ class NodeController extends RestController implements ClassResourceInterface
         $language = $this->getLanguage($request);
         $webspace = $this->getWebspace($request);
         $template = $this->getRequestParameter($request, 'template', true);
-        $navigation = $this->getRequestParameter($request, 'navigation');
-        if ($navigation === false || $navigation === '0') {
-            $navigation = false;
-        } else {
-            // default navigation
-            $navigation = 'main';
-        }
         $state = $this->getRequestParameter($request, 'state');
         if ($state !== null) {
             $state = intval($state);
@@ -361,8 +354,7 @@ class NodeController extends RestController implements ClassResourceInterface
             $this->getUser()->getId(),
             $uuid,
             null, // parentUuid
-            $state,
-            $navigation
+            $state
         );
 
         return $this->handleView(
