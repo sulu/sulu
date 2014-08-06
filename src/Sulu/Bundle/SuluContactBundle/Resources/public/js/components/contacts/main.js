@@ -110,17 +110,21 @@ define([
                             url: '/admin/api/contacts/' + contactId + '/medias/' + id,
                             data: id,
                             type: type
-                        }).done(function() {
-                            medias.push(id);
-                        }.bind(this))
-                            .fail(function() {
+                        }).fail(function() {
                                 this.sandbox.logger.error("Error while saving documents!");
-                            }.bind(this))
+                        }.bind(this))
                     );
+                    medias.push(id);
                 }.bind(this));
 
                 this.sandbox.util.when.apply(null, requests).then(function() {
-                    this.sandbox.emit('sulu.contacts.contacts.medias.saved', medias);
+                    if(type === 'DELETE') {
+                        this.sandbox.logger.warn(medias);
+                        this.sandbox.emit('sulu.contacts.accounts.medias.removed', medias);
+                    } else if(type === 'POST') {
+                        this.sandbox.logger.warn(medias);
+                        this.sandbox.emit('sulu.contacts.accounts.medias.saved', medias);
+                    }
                 }.bind(this));
             }
         },

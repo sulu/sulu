@@ -198,6 +198,9 @@ define([
         saveDocuments: function(accountId, newMediaIds, removedMediaIds) {
             this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
 
+            this.sandbox.logger.warn('newMediaIds',newMediaIds);
+            this.sandbox.logger.warn('removedMediaIds',removedMediaIds);
+
             this.processAjaxForDocuments(newMediaIds, accountId, 'POST');
             this.processAjaxForDocuments(removedMediaIds, accountId, 'DELETE');
         },
@@ -214,18 +217,19 @@ define([
                             url: '/admin/api/accounts/' + accountId + '/medias/'+id,
                             data: id,
                             type: type
-                        }).then(function(){
-                            medias.push(id);
-                        }.bind(this)).fail(function() {
+                        }).fail(function() {
                             this.sandbox.logger.error("Error while saving documents!");
                         }.bind(this))
                     );
+                    medias.push(id);
                 }.bind(this));
 
                 this.sandbox.util.when.apply(null, requests).then(function() {
                     if(type === 'DELETE') {
+                        this.sandbox.logger.warn(medias);
                         this.sandbox.emit('sulu.contacts.contacts.medias.removed', medias);
                     } else if(type === 'POST') {
+                        this.sandbox.logger.warn(medias);
                         this.sandbox.emit('sulu.contacts.contacts.medias.saved', medias);
                     }
                 }.bind(this));

@@ -155,7 +155,7 @@ define([], function() {
             this.setHeaderBar(true);
             this.newSelections = [];
             this.removedSelections = [];
-            this.currentSelection.concat(data);
+            this.currentSelection = this.currentSelection.concat(data);
         },
 
         deselectItem: function(id) {
