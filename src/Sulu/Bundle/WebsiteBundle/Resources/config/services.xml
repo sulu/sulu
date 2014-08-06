@@ -35,6 +35,9 @@
         <!-- twig extension: navigation -->
         <!-- optional request_analyzer: in admin not available -->
         <service id="sulu_website.twig.navigation" class="%sulu_website.twig.navigation.class%">
+            <argument type="service" id="sulu.content.mapper"/>
+            <argument type="service" id="sulu_website.navigation_mapper"/>
+
             <tag name="twig.extension"/>
         </service>
 
