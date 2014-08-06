@@ -11,7 +11,7 @@
 namespace Sulu\Bundle\WebsiteBundle\Routing;
 
 use Prophecy\Argument;
-use Prophecy\Prophet;
+use Prophecy\PhpUnit\ProphecyTestCase;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
@@ -20,13 +20,8 @@ use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
-class PortalLoaderTest extends \PHPUnit_Framework_TestCase
+class PortalLoaderTest extends ProphecyTestCase
 {
-    /**
-     * @var Prophet
-     */
-    private $prophet;
-
     /**
      * @var PortalLoader
      */
@@ -49,11 +44,11 @@ class PortalLoaderTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->prophet = new Prophet();
+        parent::setUp();
 
-        $this->webspaceManager = $this->prophet->prophesize('Sulu\Component\Webspace\Manager\WebspaceManagerInterface');
-        $this->loaderResolver = $this->prophet->prophesize('Symfony\Component\Config\Loader\LoaderResolverInterface');
-        $this->loader = $this->prophet->prophesize('Symfony\Component\Config\Loader\LoaderInterface');
+        $this->webspaceManager = $this->prophesize('Sulu\Component\Webspace\Manager\WebspaceManagerInterface');
+        $this->loaderResolver = $this->prophesize('Symfony\Component\Config\Loader\LoaderResolverInterface');
+        $this->loader = $this->prophesize('Symfony\Component\Config\Loader\LoaderInterface');
 
         $this->portalLoader = new PortalLoader($this->webspaceManager->reveal(), 'dev');
         $this->portalLoader->setResolver($this->loaderResolver->reveal());
@@ -94,10 +89,5 @@ class PortalLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('/de/route2', $routeCollection->get('sulu.io/de.route2')->getPath());
         $this->assertEquals('/example/route1', $routeCollection->get('sulu.com.route1')->getPath());
         $this->assertEquals('/route2', $routeCollection->get('sulu.com.route2')->getPath());
-    }
-
-    public function tearDown()
-    {
-        $this->prophet->checkPredictions();
     }
 }
