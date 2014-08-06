@@ -24,6 +24,7 @@
         "symfony-cmf/routing": "1.2.*@dev"
     },
     "require-dev": {
+        "phpspec/prophecy-phpunit": "~1.0",
         "symfony/symfony": "2.5.*",
         "symfony/monolog-bundle": "2.4.*",
         "phpunit/phpunit": "3.7.*",

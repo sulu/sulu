@@ -31,6 +31,12 @@ class NavigationTwigExtension extends \Twig_Extension
      */
     private $navigationMapper;
 
+    function __construct(ContentMapperInterface $contentMapper, NavigationMapperInterface $navigationMapper)
+    {
+        $this->contentMapper = $contentMapper;
+        $this->navigationMapper = $navigationMapper;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -60,7 +66,7 @@ class NavigationTwigExtension extends \Twig_Extension
             $uuid = $breadcrumb[$level]->getUuid();
         }
 
-        return $this->navigationMapper->getNavigation($uuid, $content->getWebspaceKey(), $content->getUuid(), $depth);
+        return $this->navigationMapper->getNavigation($uuid, $content->getWebspaceKey(), $content->getLanguageCode(), $depth);
     }
 
     /**
