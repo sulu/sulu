@@ -195,30 +195,41 @@ define([
             this.sandbox.on('sulu.contacts.accounts.medias.save', this.saveDocuments.bind(this));
         },
 
-        saveDocuments: function(accountId, mediaIds) {
-            var account = Account.findOrCreate({id: accountId}),
-                media;
-
+        saveDocuments: function(accountId, newMediaIds, removedMediaIds) {
             this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
 
-            // reset collection and add current selection
-            account.get('medias').reset();
+            this.processAjaxForDocuments(newMediaIds, accountId, 'POST');
+            this.processAjaxForDocuments(removedMediaIds, accountId, 'DELETE');
+        },
 
-            this.sandbox.util.each(mediaIds, function(index, id) {
-                media = Media.findOrCreate({id: id});
-                account.get('medias').add(media);
-            }.bind(this));
+        processAjaxForDocuments: function(mediaIds, accountId, type){
 
-            account.save(null, {
-                patch: true,
-                success: function(response) {
-                    var model = response.toJSON();
-                    this.sandbox.emit('sulu.contacts.accounts.medias.saved', model);
-                }.bind(this),
-                error: function() {
-                    this.sandbox.logger.error("Error while saving documents!");
-                }.bind(this)
-            });
+            var requests=[],
+                medias=[];
+
+            if(mediaIds.length > 0) {
+                this.sandbox.util.each(mediaIds, function(index, id) {
+                    requests.push(
+                        this.sandbox.util.ajax({
+                            url: '/admin/api/accounts/' + accountId + '/medias/'+id,
+                            data: id,
+                            type: type
+                        }).then(function(){
+                            medias.push(id);
+                        }.bind(this)).fail(function() {
+                            this.sandbox.logger.error("Error while saving documents!");
+                        }.bind(this))
+                    );
+                }.bind(this));
+
+                this.sandbox.util.when.apply(null, requests).then(function() {
+                    if(type === 'DELETE') {
+                        this.sandbox.emit('sulu.contacts.contacts.medias.removed', medias);
+                    } else if(type === 'POST') {
+                        this.sandbox.emit('sulu.contacts.contacts.medias.saved', medias);
+                    }
+                }.bind(this));
+            }
         },
 
         deleteTerms: function(termsKey, ids) {

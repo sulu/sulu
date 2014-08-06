@@ -53,17 +53,41 @@ define([], function() {
         initialize: function() {
 
             this.form = '#documents-form';
+            this.newSelections = [];
+            this.removedSelections = [];
+
+            this.currentSelection = this.getPropertyFromArrayOfObject(this.options.data.medias, 'id');
 
             // init header toolbar for contacts
             if (this.options.params.type === 'contact') {
                 setTitle.call(this, this.options.data);
                 setHeaderToolbar.call(this);
             }
+
             this.setHeaderBar(true);
             this.render();
 
             if (!!this.options.data && !!this.options.data.id) {
-                this.initSidebar('/admin/widget-groups/account-detail?account=', this.options.data.id);
+                if (this.options.params.type === 'contact') {
+                    this.initSidebar('/admin/widget-groups/contact-detail?contact=', this.options.data.id);
+                } else if (this.options.params.type === 'account') {
+                    this.initSidebar('/admin/widget-groups/account-detail?account=', this.options.data.id);
+                }
+            }
+        },
+
+        getPropertyFromArrayOfObject: function(data, propertyName) {
+            if (this.sandbox.util.typeOf(data) === 'array' &&
+                data.length > 0 &&
+                this.sandbox.util.typeOf(data[0]) === 'object')
+            {
+                var values = [];
+                this.sandbox.util.foreach(data, function(el) {
+                    values.push(el[propertyName]);
+                }.bind(this));
+                return values;
+            } else {
+                return data;
             }
         },
 
@@ -105,15 +129,55 @@ define([], function() {
                 this.setHeaderBar(false);
             }, this);
 
-            this.sandbox.on('sulu.contacts.accounts.medias.saved', function(data) {
-                this.setHeaderBar(true);
-                this.setForm(data);
-            }, this);
+            this.sandbox.on('sulu.contacts.contacts.medias.removed', this.resetAndRemoveFromCurrent.bind(this));
+            this.sandbox.on('sulu.contacts.accounts.medias.removed', this.resetAndRemoveFromCurrent.bind(this));
 
-            this.sandbox.on('sulu.contacts.contacts.medias.saved', function(data) {
-                this.setHeaderBar(true);
-                this.setForm(data);
-            }, this);
+            this.sandbox.on('sulu.contacts.accounts.medias.saved',  this.resetAndAddToCurrent.bind(this));
+            this.sandbox.on('sulu.contacts.contacts.medias.saved', this.resetAndAddToCurrent.bind(this));
+
+            this.sandbox.on('sulu.media-selection.document-selection.record-selected', this.selectItem.bind(this));
+            this.sandbox.on('sulu.media-selection.document-selection.record-deselected', this.deselectItem.bind(this));
+        },
+
+        resetAndRemoveFromCurrent: function(data){
+            this.setHeaderBar(true);
+            this.newSelections = [];
+            this.removedSelections = [];
+            this.sandbox.util.foreach(data, function(id){
+                if(this.currentSelection.indexOf(id)){
+                    this.currentSelection.splice(this.currentSelection.indexOf(id),1);
+                }
+            }.bind(this));
+
+        },
+
+        resetAndAddToCurrent: function(data){
+            this.setHeaderBar(true);
+            this.newSelections = [];
+            this.removedSelections = [];
+            this.currentSelection.concat(data);
+        },
+
+        deselectItem: function(id) {
+            // when an element is in current selection and was deselected
+            if(this.currentSelection.indexOf(id) > -1 && this.removedSelections.indexOf(id) === -1){
+                this.removedSelections.push(id);
+            }
+
+            if(this.newSelections.indexOf(id) > -1){
+                this.newSelections.splice(this.newSelections.indexOf(id), 1);
+            }
+        },
+
+        selectItem: function(id) {
+            // add element when it is really new and not already selected
+            if(this.currentSelection.indexOf(id) < 0 && this.newSelections.indexOf(id) < 0){
+                this.newSelections.push(id);
+            }
+
+            if(this.removedSelections.indexOf(id) > -1){
+                this.removedSelections.splice(this.removedSelections.indexOf(id), 1);
+            }
         },
 
         /**
@@ -121,12 +185,11 @@ define([], function() {
          */
         submit: function() {
             if (this.sandbox.form.validate(this.form)) {
-                var data = this.sandbox.form.getData(this.form);
 
                 if (this.options.params.type === 'account') {
-                    this.sandbox.emit('sulu.contacts.accounts.medias.save', this.options.data.id, data.medias.ids);
+                    this.sandbox.emit('sulu.contacts.accounts.medias.save', this.options.data.id, this.newSelections, this.removedSelections);
                 } else if (this.options.params.type === 'contact') {
-                    this.sandbox.emit('sulu.contacts.contacts.medias.save', this.options.data.id, data.medias.ids);
+                    this.sandbox.emit('sulu.contacts.contacts.medias.save', this.options.data.id, this.newSelections, this.removedSelections);
                 } else {
                     this.sandbox.logger.error('Undefined type for documents component!');
                 }
@@ -141,5 +204,5 @@ define([], function() {
             }
             this.saved = saved;
         }
-    };
+    };;
 });

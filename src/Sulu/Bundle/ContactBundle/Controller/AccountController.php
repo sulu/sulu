@@ -781,10 +781,6 @@ class AccountController extends AbstractContactController
                     }
                 }
 
-                if(!is_null($request->get('medias'))) {
-                    $this->processMedias($account, $request->get('medias', array()));
-                }
-
                 // process details
                 if (!is_null($request->get('bankAccounts'))) {
                     $this->processBankAccounts($account, $request->get('bankAccounts', array()));

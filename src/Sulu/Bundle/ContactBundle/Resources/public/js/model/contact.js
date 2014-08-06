@@ -17,8 +17,11 @@ define([
     'sulucontact/model/address',
     'sulucontact/model/note',
     'sulucontact/model/accountContact',
-    'sulumedia/model/media'
+    'sulucontact/model/contactMedia'
 ], function(RelationalModel, HasMany, HasOne, Account, Email, Phone, Address, Note, AccountContact, Media) {
+
+    'use strict';
+
     return RelationalModel({
         urlRoot: '/admin/api/contacts',
         defaults: function() {

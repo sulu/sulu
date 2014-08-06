@@ -11,9 +11,8 @@ define([
     'sulucontact/model/contact',
     'sulucontact/model/activity',
     'sulucontact/model/title',
-    'sulucontact/model/position',
-    'sulumedia/model/media'
-], function(Contact, Activity, Title, Position, Media) {
+    'sulucontact/model/position'
+], function(Contact, Activity, Title, Position) {
 
     'use strict';
 
@@ -92,30 +91,38 @@ define([
             this.sandbox.on('sulu.contacts.contacts.medias.save', this.saveDocuments.bind(this));
         },
 
-        saveDocuments: function(contactId, mediaIds) {
-            var contact = Contact.findOrCreate({id: contactId}),
-                media;
-
+        saveDocuments: function(contactId, newMediaIds, removedMediaIds) {
             this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
 
-            // reset collection and add current selection
-            contact.get('medias').reset();
+            this.processAjaxForDocuments(newMediaIds, contactId, 'POST');
+            this.processAjaxForDocuments(removedMediaIds, contactId, 'DELETE');
+        },
 
-            this.sandbox.util.each(mediaIds, function(index, id) {
-                media = Media.findOrCreate({id: id});
-                contact.get('medias').add(media);
-            }.bind(this));
+        processAjaxForDocuments: function(mediaIds, contactId, type){
 
-            contact.save(null, {
-                patch: true,
-                success: function(response) {
-                    this.contact = response;
-                    this.sandbox.emit('sulu.contacts.contacts.medias.saved', response.toJSON());
-                }.bind(this),
-                error: function() {
-                    this.sandbox.logger.error("Error while saving documents!");
-                }.bind(this)
-            });
+            var requests=[],
+                medias=[];
+
+            if(mediaIds.length > 0) {
+                this.sandbox.util.each(mediaIds, function(index, id) {
+                    requests.push(
+                        this.sandbox.util.ajax({
+                            url: '/admin/api/contacts/' + contactId + '/medias/' + id,
+                            data: id,
+                            type: type
+                        }).done(function() {
+                            medias.push(id);
+                        }.bind(this))
+                            .fail(function() {
+                                this.sandbox.logger.error("Error while saving documents!");
+                            }.bind(this))
+                    );
+                }.bind(this));
+
+                this.sandbox.util.when.apply(null, requests).then(function() {
+                    this.sandbox.emit('sulu.contacts.contacts.medias.saved', medias);
+                }.bind(this));
+            }
         },
 
         /**
