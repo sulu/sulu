@@ -144,11 +144,12 @@ define([], function() {
             this.newSelections = [];
             this.removedSelections = [];
             this.sandbox.util.foreach(data, function(id){
-                if(this.currentSelection.indexOf(id)){
+                if(this.currentSelection.indexOf(id) > -1){
                     this.currentSelection.splice(this.currentSelection.indexOf(id),1);
                 }
             }.bind(this));
 
+            this.setForm(this.currentSelection);
         },
 
         resetAndAddToCurrent: function(data){
@@ -156,6 +157,7 @@ define([], function() {
             this.newSelections = [];
             this.removedSelections = [];
             this.currentSelection = this.currentSelection.concat(data);
+            this.setForm(this.currentSelection);
         },
 
         deselectItem: function(id) {
