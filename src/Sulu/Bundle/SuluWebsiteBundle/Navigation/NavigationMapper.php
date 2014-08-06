@@ -79,7 +79,11 @@ class NavigationMapper implements NavigationMapperInterface
             if (is_array($content->getChildren()) && sizeof($content->getChildren()) > 0) {
                 $children = $this->generateNavigation($content->getChildren(), $webspace, $language);
             }
-            if ($content->getPublishedState() && $content->getNavigation() !== false) {
+
+            if (
+                $content->getPublishedState() && $content->getNavigation() !== false &&
+                $content->hasTag('sulu.rlp')
+            ) {
                 $url = $content->getResourceLocator();
                 $title = $content->getNodeName();
 
