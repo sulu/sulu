@@ -264,7 +264,7 @@ class ContentMapper implements ContentMapperInterface
                 $this->properties->getName('published')
             );
         }
-        if (isset($data['navContexts']) && $this->validateNavContexts($data['navContexts'])) {
+        if (isset($data['navContexts']) && $data['navContexts'] !== false && $this->validateNavContexts($data['navContexts'])) {
             $node->setProperty($this->properties->getName('navContexts'), $data['navContexts']);
         }
 
