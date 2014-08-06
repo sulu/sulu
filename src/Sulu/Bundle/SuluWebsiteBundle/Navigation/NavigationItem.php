@@ -43,11 +43,17 @@ class NavigationItem
      */
     private $children;
 
-    function __construct(StructureInterface $content, $title, $url, $children = array(), $id = null)
+    /**
+     * @var integer
+     */
+    private $nodeType;
+
+    function __construct(StructureInterface $content, $title, $url, $children = array(), $id = null, $nodeType = 1)
     {
         $this->content = $content;
         $this->title = $title;
         $this->url = $url;
+        $this->nodeType = $nodeType;
 
         $this->id = ($id === null ? uniqid() : $id);
 
@@ -84,6 +90,14 @@ class NavigationItem
     public function getUrl()
     {
         return $this->url;
+    }
+
+    /**
+     * @return int
+     */
+    public function getNodeType()
+    {
+        return $this->nodeType;
     }
 
     /**
