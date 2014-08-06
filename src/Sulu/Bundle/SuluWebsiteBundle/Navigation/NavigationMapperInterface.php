@@ -22,10 +22,9 @@ interface NavigationMapperInterface
      * @param $webspace
      * @param $language
      * @param int $depth
-     * @param boolean $preview
      * @return NavigationItem[]
      */
-    public function getNavigation($parent, $webspace, $language, $depth = 1, $preview = false);
+    public function getNavigation($parent, $webspace, $language, $depth = 1);
 
     /**
      * returns navigation from root
@@ -33,8 +32,7 @@ interface NavigationMapperInterface
      * @param string $webspace
      * @param string $language
      * @param int $depth
-     * @param boolean $preview
      * @return NavigationItem[]
      */
-    public function getMainNavigation($webspace, $language, $depth = 1, $preview = false);
+    public function getMainNavigation($webspace, $language, $depth = 1);
 } 

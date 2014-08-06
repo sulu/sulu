@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\WebsiteBundle\Controller;
 
 use Sulu\Bundle\WebsiteBundle\Navigation\NavigationMapper;
+use Sulu\Bundle\WebsiteBundle\Navigation\NavigationMapperInterface;
 use Sulu\Component\Content\StructureInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
@@ -78,16 +79,15 @@ abstract class WebsiteController extends Controller
         return $template->renderBlock($block, $attributes);
     }
 
-    protected function getMainNavigation(StructureInterface $structure, $depth = 1, $preview = false)
+    protected function getMainNavigation(StructureInterface $structure, $depth = 1)
     {
-        /** @var NavigationMapper $navigation */
+        /** @var NavigationMapperInterface $navigation */
         $navigation = $this->get('sulu_website.navigation_mapper');
 
         return $navigation->getMainNavigation(
             $structure->getWebspaceKey(),
             $structure->getLanguageCode(),
-            $depth,
-            $preview
+            $depth
         );
     }
 } 

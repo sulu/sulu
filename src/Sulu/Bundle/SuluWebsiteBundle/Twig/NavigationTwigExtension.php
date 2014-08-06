@@ -10,6 +10,9 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Twig;
 
+use Sulu\Bundle\WebsiteBundle\Navigation\NavigationItem;
+use Sulu\Bundle\WebsiteBundle\Navigation\NavigationMapperInterface;
+use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\StructureInterface;
 
 /**
@@ -18,6 +21,15 @@ use Sulu\Component\Content\StructureInterface;
  */
 class NavigationTwigExtension extends \Twig_Extension
 {
+    /**
+     * @var ContentMapperInterface
+     */
+    private $contentMapper;
+
+    /**
+     * @var NavigationMapperInterface
+     */
+    private $navigationMapper;
 
     /**
      * {@inheritdoc}
@@ -32,12 +44,23 @@ class NavigationTwigExtension extends \Twig_Extension
     /**
      * Returns navigation for content node at given level or (if level null) sub-navigation of page
      * @param StructureInterface $content
-     * @param integer|null  $level
-     * @return StructureInterface[]
+     * @param int $depth depth of navigation returned
+     * @param integer|null $level
+     * @return NavigationItem[]
      */
-    public function navigationFunction(StructureInterface $content, $level = null)
+    public function navigationFunction(StructureInterface $content, $depth = 1, $level = null)
     {
+        $uuid = $content->getUuid();
+        if ($level !== null) {
+            $breadcrumb = $this->contentMapper->loadBreadcrumb(
+                $uuid,
+                $content->getLanguageCode(),
+                $content->getWebspaceKey()
+            );
+            $uuid = $breadcrumb[$level]->getUuid();
+        }
 
+        return $this->navigationMapper->getNavigation($uuid, $content->getWebspaceKey(), $content->getUuid(), $depth);
     }
 
     /**
