@@ -74,6 +74,7 @@
             <argument type="service" id="sulu_media.storage" />
             <argument type="service" id="sulu_media.file_validator" />
             <argument type="service" id="sulu_media.format_manager" />
+            <argument type="service" id="sulu_tag.tag_manager" />
             <argument type="expression">service('router').getRouteCollection().get('sulu_media.website.media.download').getPath()</argument>
             <argument>%sulu_media.media.max_file_size%</argument>
             <argument>%sulu_media.media.blocked_file_types%</argument>

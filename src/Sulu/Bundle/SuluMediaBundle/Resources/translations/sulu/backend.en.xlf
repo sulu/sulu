@@ -74,6 +74,22 @@
                 <source>sulu.collections.delete-collection</source>
                 <target>Delete collection</target>
             </trans-unit>
+            <trans-unit id="80a3272459ba0f52ef7a4d3c0298d5f" resname="media-selection.new-collection">
+                <source>media-selection.new-collection</source>
+                <target>New collection</target>
+            </trans-unit>
+            <trans-unit id="90a3273459ba0f52ef7a4d3c0298d5f" resname="media-selection.create-new-collection">
+                <source>media-selection.create-new-collection</source>
+                <target>Create new collection</target>
+            </trans-unit>
+            <trans-unit id="90a9272459ba0f52ef7a4d3c0298d5f" resname="media-selection.upload-to-collection">
+                <source>media-selection.upload-to-collection</source>
+                <target>Upload to collection</target>
+            </trans-unit>
+            <trans-unit id="90a9272459ba0f52ef7a4d3c0298d5d" resname="media-selection.upload-new">
+                <source>media-selection.upload-new</source>
+                <target>Upload new</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
