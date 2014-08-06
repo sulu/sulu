@@ -36,14 +36,13 @@ class NavigationMapper implements NavigationMapperInterface
      * @param $webspace
      * @param $language
      * @param int $depth
-     * @param boolean $preview
      * @return NavigationItem[]
      */
-    public function getNavigation($parent, $webspace, $language, $depth = 1, $preview = false)
+    public function getNavigation($parent, $webspace, $language, $depth = 1)
     {
         $contents = $this->contentMapper->loadByParent($parent, $webspace, $language, $depth, false, true, true);
 
-        return $this->generateNavigation($contents, $preview, $webspace, $language);
+        return $this->generateNavigation($contents, $webspace, $language);
     }
 
     /**
@@ -52,31 +51,29 @@ class NavigationMapper implements NavigationMapperInterface
      * @param string $webspace
      * @param string $language
      * @param int $depth
-     * @param boolean $preview
      * @return NavigationItem[]
      */
-    public function getMainNavigation($webspace, $language, $depth = 1, $preview = false)
+    public function getMainNavigation($webspace, $language, $depth = 1)
     {
-        return $this->getNavigation(null, $webspace, $language, $depth, $preview);
+        return $this->getNavigation(null, $webspace, $language, $depth);
     }
 
     /**
      * @param StructureInterface[] $contents
-     * @param boolean $preview
      * @param string $webspace
      * @param string $language
      * @return NavigationItem[]
      */
-    private function generateNavigation($contents, $preview, $webspace, $language)
+    private function generateNavigation($contents, $webspace, $language)
     {
         $result = array();
 
         foreach ($contents as $content) {
             $children = array();
             if (is_array($content->getChildren()) && sizeof($content->getChildren()) > 0) {
-                $children = $this->generateNavigation($content->getChildren(), $preview, $webspace, $language);
+                $children = $this->generateNavigation($content->getChildren(), $webspace, $language);
             }
-            if (($preview || ($content->getPublishedState() && $content->getNavigation() !== false))) {
+            if ($content->getPublishedState() && $content->getNavigation() !== false) {
                 $url = $content->getResourceLocator();
                 $title = $content->getNodeName();
 
