@@ -692,8 +692,7 @@ class ContactController extends AbstractContactController
                     && $this->processNotes($contact, $request->get('notes', array()))
                     && $this->processFaxes($contact, $request->get('faxes', array()))
                     && $this->processTags($contact, $request->get('tags', array()))
-                    && $this->processUrls($contact, $request->get('urls', array()))
-                    && $this->processMedias($contact, $request->get('medias', array())))
+                    && $this->processUrls($contact, $request->get('urls', array())))
                 ) {
                     throw new RestException('Updating dependencies is not possible', 0);
                 }
@@ -774,12 +773,7 @@ class ContactController extends AbstractContactController
                 throw new EntityNotFoundException($contactEntity, $id);
             }
 
-            // TODO most methods should use PATCH action instead of PUT
-
             $em = $this->getDoctrine()->getManager();
-            if (!$this->processMedias($contact, $request->get('medias', array()))) {
-                throw new RestException('Updating dependencies is not possible', 0);
-            }
 
             $em->flush();
             $view = $this->view($contact, 200);

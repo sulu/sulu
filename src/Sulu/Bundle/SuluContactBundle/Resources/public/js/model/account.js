@@ -23,7 +23,7 @@ define([
     'sulucontact/model/contact',
     'sulucontact/model/termsOfDelivery',
     'sulucontact/model/termsOfPayment',
-    'sulumedia/model/media'
+    'sulucontact/model/accountMedia'
 ], function(RelationalModel, HasMany, Account, Email, Phone, Address, Url, Note, HasOne, AccountCategory, AccountContact, BankAccount, Contact, TermsOfDelivery, TermsOfPayment, Media) {
 
     'use strict';
