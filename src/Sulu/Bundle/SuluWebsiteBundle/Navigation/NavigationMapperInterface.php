@@ -35,4 +35,13 @@ interface NavigationMapperInterface
      * @return NavigationItem[]
      */
     public function getMainNavigation($webspace, $language, $depth = 1);
+
+    /**
+     * returns a breadcrumb navigation for given content-uuid
+     * @param string $uuid
+     * @param string $webspace
+     * @param string $language
+     * @return NavigationItem[]
+     */
+    public function getBreadcrumb($uuid, $webspace, $language);
 } 

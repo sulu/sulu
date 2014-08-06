@@ -31,12 +31,7 @@ class NavigationMapper implements NavigationMapperInterface
     }
 
     /**
-     * returns navigation for given parent
-     * @param string $parent uuid of parent node
-     * @param $webspace
-     * @param $language
-     * @param int $depth
-     * @return NavigationItem[]
+     * {@inheritdoc}
      */
     public function getNavigation($parent, $webspace, $language, $depth = 1)
     {
@@ -46,16 +41,27 @@ class NavigationMapper implements NavigationMapperInterface
     }
 
     /**
-     * returns navigation from root
-     * @param int $depth
-     * @param string $webspace
-     * @param string $language
-     * @param int $depth
-     * @return NavigationItem[]
+     * {@inheritdoc}
      */
     public function getMainNavigation($webspace, $language, $depth = 1)
     {
         return $this->getNavigation(null, $webspace, $language, $depth);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getBreadcrumb($uuid, $webspace, $language)
+    {
+        $breadcrumbItems = $this->contentMapper->loadBreadcrumb($uuid, $language, $webspace);
+
+        $result = array();
+        foreach ($breadcrumbItems as $item) {
+            $result[] = $this->contentMapper->load($item->getUuid(), $webspace, $language);
+        }
+        $result[] = $this->contentMapper->load($uuid, $webspace, $language);
+
+        return $this->generateNavigation($result, $webspace, $language);
     }
 
     /**
