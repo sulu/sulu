@@ -102,14 +102,7 @@ class ContentRouteProvider implements RouteProviderInterface
                     $collection->add($content->getKey() . '_' . uniqid(), $route);
                 }
             } catch (ResourceLocatorNotFoundException $rlnfe) {
-                $route = new Route(
-                    $request->getRequestUri(), array(
-                        '_controller' => 'SuluWebsiteBundle:Default:error404',
-                        'path' => $request->getRequestUri()
-                    )
-                );
-
-                $collection->add('error404_' . uniqid(), $route);
+                // just do not add any routes to the collection
             }
         }
 
