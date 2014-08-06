@@ -34557,7 +34557,7 @@ define('__component__$toolbar@husky',[],function() {
  * @param {Array} [options.excludes] Array of suggestions to exclude from the suggestion dropdown
  */
 
-define('__component__$auto-complete@husky',[], function () {
+define('__component__$auto-complete@husky',[], function() {
 
     
 
@@ -34588,7 +34588,7 @@ define('__component__$auto-complete@husky',[], function () {
          * raised after initialization
          * @event husky.auto-complete.initialized
          */
-            INITIALIZED = function () {
+        INITIALIZED = function() {
             return createEventName.call(this, 'initialized');
         },
 
@@ -34596,7 +34596,7 @@ define('__component__$auto-complete@husky',[], function () {
          * raised after prefetched data is retrieved
          * @event husky.auto-complete.prefetch-data
          */
-            PREFETCH_LOAD = function () {
+        PREFETCH_LOAD = function() {
             return createEventName.call(this, 'prefetch-data');
         },
 
@@ -34604,7 +34604,7 @@ define('__component__$auto-complete@husky',[], function () {
          * raised before remoted data is loaded
          * @event husky.auto-complete.remote-data-load
          */
-            REMOTE_LOAD = function () {
+        REMOTE_LOAD = function() {
             return createEventName.call(this, 'remote-data-load');
         },
 
@@ -34612,7 +34612,7 @@ define('__component__$auto-complete@husky',[], function () {
          * raised after remoted data is retrieved
          * @event husky.auto-complete.remote-data
          */
-            REMOTE_RETRIEVE = function () {
+        REMOTE_RETRIEVE = function() {
             return createEventName.call(this, 'remote-data');
         },
 
@@ -34620,7 +34620,7 @@ define('__component__$auto-complete@husky',[], function () {
          * raised before the component tries to request a match after blur
          * @event husky.auto-complete.request-match
          */
-            REQUEST_MATCH = function () {
+        REQUEST_MATCH = function() {
             return createEventName.call(this, 'request-match');
         },
 
@@ -34629,8 +34629,16 @@ define('__component__$auto-complete@husky',[], function () {
          * @event husky.auto-complete.select
          * @param {object} selected datum with id and name
          */
-            SELECT = function () {
+        SELECT = function() {
             return createEventName.call(this, 'select');
+        },
+
+        /**
+         * raised after selection has been removed
+         * @event husky.auto-complete.selection-removed
+         */
+        SELECTION_REMOVED = function() {
+            return createEventName.call(this, 'selection-removed');
         },
 
         /**
@@ -34638,7 +34646,7 @@ define('__component__$auto-complete@husky',[], function () {
          * @event husky.auto-complete.set-excludes
          * @param {array} array of objects to exclude from suggestions
          */
-            SET_EXCLUDES = function () {
+        SET_EXCLUDES = function() {
             return createEventName.call(this, 'set-excludes');
         },
 
@@ -34647,12 +34655,12 @@ define('__component__$auto-complete@husky',[], function () {
          * @event husky.auto-complete.is-matched
          * @param {Function} Callback which gets the booloan passed
          */
-            IS_MATCHED = function () {
+        IS_MATCHED = function() {
             return createEventName.call(this, 'is-matched');
         },
 
         /** returns normalized event names */
-            createEventName = function (postFix) {
+        createEventName = function(postFix) {
             return eventNamespace + (this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
         };
 
@@ -34662,7 +34670,7 @@ define('__component__$auto-complete@husky',[], function () {
          * Returns the id of the options.value object
          * @returns {Integer|null}
          */
-        getValueID: function () {
+        getValueID: function() {
             if (!!this.options.value) {
                 return this.options.value.id;
             } else {
@@ -34674,7 +34682,7 @@ define('__component__$auto-complete@husky',[], function () {
          * Returns the value of the options.value object
          * @returns {String}
          */
-        getValueName: function () {
+        getValueName: function() {
             if (!!this.options.value) {
                 return this.options.value[this.options.valueKey];
             } else {
@@ -34682,7 +34690,7 @@ define('__component__$auto-complete@husky',[], function () {
             }
         },
 
-        initialize: function () {
+        initialize: function() {
             this.sandbox.logger.log('initialize', this);
             this.sandbox.logger.log(arguments);
 
@@ -34711,7 +34719,7 @@ define('__component__$auto-complete@husky',[], function () {
         /**
          * Initializes the template for a suggestion element
          */
-        setTemplate: function () {
+        setTemplate: function() {
             var iconHTML = '';
             if (this.options.suggestionImg !== '') {
                 iconHTML = '<span class="fa-' + this.options.suggestionImg + ' icon"></span>';
@@ -34729,10 +34737,10 @@ define('__component__$auto-complete@husky',[], function () {
          * @param context {object} context for template - id, name
          * @returns {String} html of suggestion element
          */
-        buildTemplate: function (context) {
+        buildTemplate: function(context) {
             var domObj;
             if (this._template !== null) {
-                domObj = this.sandbox.dom.createElement(this._template({context:context}));
+                domObj = this.sandbox.dom.createElement(this._template({context: context}));
                 if (this.isExcluded(context)) {
                     this.sandbox.dom.addClass(domObj, 'disabled');
                 }
@@ -34743,7 +34751,7 @@ define('__component__$auto-complete@husky',[], function () {
         /**
          * Initializes and appends the input, starts the typeahead-auto-complete plugin
          */
-        render: function () {
+        render: function() {
             this.sandbox.dom.addClass(this.$el, 'husky-auto-complete');
             this.initValueField();
             this.appendValueField();
@@ -34754,7 +34762,7 @@ define('__component__$auto-complete@husky',[], function () {
         /**
          * Assigns an input box to an object property
          */
-        initValueField: function () {
+        initValueField: function() {
             this.$valueField = this.sandbox.dom.createElement('<input id="' + this.options.instanceName + '" ' +
                 'class="husky-validate" ' +
                 'type="text" ' +
@@ -34767,7 +34775,7 @@ define('__component__$auto-complete@husky',[], function () {
         /**
          * Appends the input box to the component container
          */
-        appendValueField: function () {
+        appendValueField: function() {
             if (!!this.$valueField.length) {
                 this.sandbox.dom.append(this.$el, this.$valueField);
             }
@@ -34776,13 +34784,13 @@ define('__component__$auto-complete@husky',[], function () {
         /**
          * Starts the typeahead auto-complete plugin
          */
-        bindTypeahead: function () {
+        bindTypeahead: function() {
             var delimiter = (this.options.remoteUrl.indexOf('?') === -1) ? '?' : '&';
             this.sandbox.autocomplete.init(this.$valueField, {
                 name: this.options.instanceName,
                 local: this.handleData(this.localData),
                 valueKey: this.options.valueKey,
-                template: function (context) {
+                template: function(context) {
                     //saves the fact that the current input has matches
                     this.matches.push(context);
                     this.matched = true;
@@ -34791,7 +34799,7 @@ define('__component__$auto-complete@husky',[], function () {
                 prefetch: {
                     url: this.options.prefetchUrl,
                     ttl: 1,
-                    filter: function (data) {
+                    filter: function(data) {
                         this.sandbox.emit(PREFETCH_LOAD.call(this));
                         this.handleData(data);
                         return this.data;
@@ -34799,10 +34807,10 @@ define('__component__$auto-complete@husky',[], function () {
                 },
                 remote: {
                     url: this.options.remoteUrl + delimiter + this.options.getParameter + '=%QUERY',
-                    beforeSend: function () {
+                    beforeSend: function() {
                         this.sandbox.emit(REMOTE_LOAD.call(this));
                     }.bind(this),
-                    filter: function (data) {
+                    filter: function(data) {
                         this.sandbox.emit(REMOTE_RETRIEVE.call(this));
                         this.handleData(data);
                         return this.data;
@@ -34826,7 +34834,7 @@ define('__component__$auto-complete@husky',[], function () {
          * @param context {object} context with id and name
          * @returns {Boolean}
          */
-        isExcluded: function (context) {
+        isExcluded: function(context) {
             for (var i = -1, length = this.excludes.length; ++i < length;) {
                 if (context.id !== null && context.id === this.excludes[i].id) {
                     return true;
@@ -34841,12 +34849,12 @@ define('__component__$auto-complete@husky',[], function () {
         /**
          * Binds custom events
          */
-        setCustomEvents: function () {
-            this.sandbox.on(SET_EXCLUDES.call(this), function (excludes) {
+        setCustomEvents: function() {
+            this.sandbox.on(SET_EXCLUDES.call(this), function(excludes) {
                 this.excludes = this.parseExcludes(excludes);
             }.bind(this));
 
-            this.sandbox.on(IS_MATCHED.call(this), function (callback) {
+            this.sandbox.on(IS_MATCHED.call(this), function(callback) {
                 if (this.isMatchedExactly() === true && this.getClosestMatch() !== null) {
                     callback(true);
                 } else {
@@ -34854,7 +34862,7 @@ define('__component__$auto-complete@husky',[], function () {
                 }
             }.bind(this));
 
-            this.sandbox.on('husky.auto-complete.' + this.options.instanceName + '.select', function (data) {
+            this.sandbox.on('husky.auto-complete.' + this.options.instanceName + '.select', function(data) {
                 this.selectedElement = data;
             }.bind(this));
         },
@@ -34863,11 +34871,11 @@ define('__component__$auto-complete@husky',[], function () {
          * Brings an array of suggestions to exclude into the right format
          * @param excludes
          */
-        parseExcludes: function (excludes) {
+        parseExcludes: function(excludes) {
             var arrayReturn = [];
 
             if (!!excludes.length) {
-                this.sandbox.util.foreach(excludes, function (exclude) {
+                this.sandbox.util.foreach(excludes, function(exclude) {
                     if (typeof exclude !== 'object') {
                         arrayReturn.push({
                             id: null,
@@ -34884,8 +34892,8 @@ define('__component__$auto-complete@husky',[], function () {
         /**
          * sets several events
          */
-        bindDomEvents: function () {
-            this.sandbox.dom.on(this.$valueField, 'typeahead:selected', function (event, datum) {
+        bindDomEvents: function() {
+            this.sandbox.dom.on(this.$valueField, 'typeahead:selected', function(event, datum) {
                 if (this.isExcluded(datum)) {
                     this.sandbox.dom.stopPropagation(event);
                     this.clearValueFieldValue();
@@ -34896,7 +34904,7 @@ define('__component__$auto-complete@husky',[], function () {
             }.bind(this));
 
             //remove state and matches on new input
-            this.sandbox.dom.on(this.$valueField, 'keypress', function (event) {
+            this.sandbox.dom.on(this.$valueField, 'keypress', function(event) {
                 if (event.keyCode !== 13) {
                     this.matched = false;
                     this.matches = [];
@@ -34904,15 +34912,15 @@ define('__component__$auto-complete@husky',[], function () {
             }.bind(this));
 
             //ensures that the blur callback does not get called
-            this.sandbox.dom.on(this.sandbox.dom.find('.tt-dropdown-menu', this.$el), 'mousedown', function () {
+            this.sandbox.dom.on(this.sandbox.dom.find('.tt-dropdown-menu', this.$el), 'mousedown', function() {
                 this.executeBlurHandler = false;
             }.bind(this));
 
-            this.sandbox.dom.on(this.sandbox.dom.find('.tt-dropdown-menu', this.$el), 'click', function () {
+            this.sandbox.dom.on(this.sandbox.dom.find('.tt-dropdown-menu', this.$el), 'click', function() {
                 return false;
             }.bind(this), '.disabled');
 
-            this.sandbox.dom.on(this.$valueField, 'blur', function () {
+            this.sandbox.dom.on(this.$valueField, 'blur', function() {
 
                 //don't do anything if the dropdown is clicked on
                 if (this.executeBlurHandler === true) {
@@ -34928,10 +34936,14 @@ define('__component__$auto-complete@husky',[], function () {
             }.bind(this));
 
             // clear data attribute when input is empty
-            this.sandbox.dom.on(this.$valueField, 'focusout', function () {
+            this.sandbox.dom.on(this.$valueField, 'focusout', function() {
                 if (this.sandbox.dom.val(this.$valueField) === '') {
-                    this.sandbox.dom.data(this.$valueField, 'id', 'null');
-                    this.sandbox.dom.removeAttr(this.$valueField, 'data-id');
+                    var dataId = this.sandbox.dom.attr(this.$valueField, 'data-id');
+                    if (dataId != null && dataId !== 'null') {
+                        this.sandbox.dom.removeAttr(this.$valueField, 'data-id');
+                        this.sandbox.dom.data(this.$valueField, 'data-id', 'null');
+                        this.sandbox.emit(SELECTION_REMOVED.call(this));
+                    }
                 }
             }.bind(this));
         },
@@ -34939,7 +34951,7 @@ define('__component__$auto-complete@husky',[], function () {
         /**
          * Gets called when the input box triggers the blur event
          */
-        handleBlur: function () {
+        handleBlur: function() {
 
             if (!!this.selectedElement) { // selected via dropdown
                 this.selectedElement = null;
@@ -34952,7 +34964,7 @@ define('__component__$auto-complete@husky',[], function () {
                 } else {
                     //request to check if a match exists
                     if (this.getValueFieldValue() !== '') {
-                        this.checkMatches(this.getValueFieldValue(), function (isMatched) {
+                        this.checkMatches(this.getValueFieldValue(), function(isMatched) {
                             if (isMatched === true) {
                                 this.setValueFieldValue(this.getClosestMatch().name);
                                 this.setValueFieldId(this.getClosestMatch().id);
@@ -34978,13 +34990,13 @@ define('__component__$auto-complete@husky',[], function () {
          * @param {Function} callback to pass a boolean to
          * @param {Boolean} exactly If true string must be have an identical match
          */
-        checkMatches: function (string, callback, exactly) {
+        checkMatches: function(string, callback, exactly) {
             var delimiter = (this.options.remoteUrl.indexOf('?') === -1) ? '?' : '&';
             this.sandbox.emit(REQUEST_MATCH.call(this));
             this.sandbox.util.ajax({
                 url: this.options.remoteUrl + delimiter + this.options.getParameter + '=' + string,
 
-                success: function (data) {
+                success: function(data) {
                     this.matches = this.handleData(data);
 
                     if (exactly !== true) {
@@ -35002,7 +35014,7 @@ define('__component__$auto-complete@husky',[], function () {
                     }
                 }.bind(this),
 
-                error: function (error) {
+                error: function(error) {
                     this.sandbox.logger.log('Error requesting auto-complete-matches', error);
                     callback(false);
                 }.bind(this)
@@ -35013,7 +35025,7 @@ define('__component__$auto-complete@husky',[], function () {
          * Returns the closest match for an input
          * @returns {object} closest match with id and name
          */
-        getClosestMatch: function () {
+        getClosestMatch: function() {
             if (!!this.matches.length && this.getValueFieldValue() !== '') {
                 return this.matches[0];
             }
@@ -35024,7 +35036,7 @@ define('__component__$auto-complete@husky',[], function () {
          * Returns the trimed value of the input field
          * @returns {String}
          */
-        getValueFieldValue: function () {
+        getValueFieldValue: function() {
             return this.sandbox.dom.val(this.$valueField);
         },
 
@@ -35032,14 +35044,14 @@ define('__component__$auto-complete@husky',[], function () {
          * Sets the input box value
          * @param value {String} new input value
          */
-        setValueFieldValue: function (value) {
+        setValueFieldValue: function(value) {
             this.sandbox.autocomplete.setValue(this.$valueField, value);
         },
 
         /**
          * Deletes the input box value
          */
-        clearValueFieldValue: function () {
+        clearValueFieldValue: function() {
             this.sandbox.autocomplete.setValue(this.$valueField, '');
         },
 
@@ -35047,7 +35059,7 @@ define('__component__$auto-complete@husky',[], function () {
          * Sets the data-id attribute on the input box
          * @param id {Integer} new data-id attribute value
          */
-        setValueFieldId: function (id) {
+        setValueFieldId: function(id) {
             this.sandbox.dom.attr(this.$valueField, {'data-id': id});
         },
 
@@ -35055,7 +35067,7 @@ define('__component__$auto-complete@husky',[], function () {
          * returns the matched property (true if auto-complete suggestion exist)
          * @returns {boolean}
          */
-        isMatched: function () {
+        isMatched: function() {
             return this.matched;
         },
 
@@ -35064,7 +35076,7 @@ define('__component__$auto-complete@husky',[], function () {
          * case-insensitive
          * @returns {boolean}
          */
-        isMatchedExactly: function () {
+        isMatchedExactly: function() {
             if (this.getClosestMatch() !== null) {
                 if (this.getValueFieldValue().toLowerCase() === this.getClosestMatch().name.toLowerCase()) {
                     return true;
@@ -35077,11 +35089,11 @@ define('__component__$auto-complete@husky',[], function () {
          * Assigns loaded data to properties
          * @param data {object} with data array
          */
-        handleData: function (data) {
+        handleData: function(data) {
             if (typeof data === 'object') {
                 this.data = [];
 
-                this.sandbox.util.foreach(data._embedded[this.options.resultKey], function (key) {
+                this.sandbox.util.foreach(data._embedded[this.options.resultKey], function(key) {
                     if (this.isExcluded(key) === false) {
                         this.data.push(key);
                     }
@@ -35455,7 +35467,7 @@ define('__component__$auto-complete-list@husky',[], function() {
              * (autocomplete-component needs to be running to start tagmanager)
              */
             bindStartTmEvent: function() {
-                this.sandbox.on('husky.auto-complete.' + this.options.instanceName + '.initialized', function(data) {
+                this.sandbox.once('husky.auto-complete.' + this.options.instanceName + '.initialized', function(data) {
                     this.$input = data;
                     this.startTagmanager();
                     this.bindEvents();
@@ -37087,6 +37099,7 @@ define('__component__$select@husky',[], function() {
             } else {
                 this.triggerSelect(key);
             }
+            this.sandbox.dom.trigger('changed');
         },
 
         // triggers select callback or emits event
@@ -40644,6 +40657,10 @@ define('__component__$overlay@husky',[], function() {
             this.activeTab = tab;
             this.hideAllTabsElements(slide);
             this.sandbox.dom.show(tab.$el);
+            if (this.dragged === false) {
+                this.resetResizeVariables();
+                this.resizeHandler();
+            }
         },
 
         /**
@@ -42125,9 +42142,11 @@ define('__component__$toggler@husky',[], function() {
  * @params {Function} [options.successCallback] callback which gets called if a file got successfully uploaded. First parameter is the file, the second the response
  * @params {Function} [options.beforeSendingCallback] callback which gets called before a file gets uploaded. First parameter is the file.
  * @params {Function} [options.removeFileCallback] callback which gets called after a file got removed. First parameter is the file.
+ * @params {Function} [options.afterDropCallback] callback which gets called after a file got dropped. Has to return a promise. If the promise gets resolved the file gets uploaded
  * @params {Object} [options.pluginOptions] Options to pass to the dropzone-plugin to completely override all options set by husky. Use with care.
  * @params {Boolean} [options.showOverlay] if true the dropzone will be displayed in an overlay if its not visible any more or the passed scroll-top is reached
  * @params {String} [options.skin] skin class for the dropzone. currently available: 'small' or '' (default)
+ * @params {Boolean} [options.keepFilesAfterSuccess] True to not slide the files away after uploading them successfully
  */
 define('__component__$dropzone@husky',[], function () {
 
@@ -42150,11 +42169,13 @@ define('__component__$dropzone@husky',[], function () {
             successCallback: null,
             beforeSendingCallback: null,
             removeFileCallback: null,
+            afterDropCallback: null,
             pluginOptions: {},
             maxFiles: null,
             fadeOutDuration: 200, //ms
             fadeOutDelay: 1500, //ms
             showOverlay: true,
+            keepFilesAfterSuccess: false,
             skin: ''
         },
 
@@ -42291,6 +42312,7 @@ define('__component__$dropzone@husky',[], function () {
             this.overlayOpened = false;
             this.lockPopUp = false;
             this.url = this.options.url;
+            this.filesDropped = 0;
 
             this.bindCustomEvents();
             this.render();
@@ -42404,6 +42426,7 @@ define('__component__$dropzone@husky',[], function () {
                     uploadMultiple: this.options.uploadMultiple,
                     maxFiles: this.options.maxFiles,
                     headers: this.options.headers,
+                    autoProcessQueue: !this.options.afterDropCallback,
                     previewTemplate: this.sandbox.util.template(templates.uploadItem)({
                         cancelIcon: this.options.cancelLoadingIcon
                     }),
@@ -42412,15 +42435,30 @@ define('__component__$dropzone@husky',[], function () {
                         // store dropzone context
                         that.dropzone = this;
 
+                        this.on('drop', function(event) {
+                            this.filesDropped = event.dataTransfer.files.length;
+                        }.bind(that));
+
                         // gets called if file gets added (drop or via the upload window)
                         this.on('addedfile', function (file) {
-                            this.sandbox.dom.addClass(this.$dropzone, constants.droppedClass);
+                            that.sandbox.dom.addClass(that.$dropzone, constants.droppedClass);
+
+                            // call the after-drop callback on the last file
+                            if (typeof that.options.afterDropCallback === 'function') {
+                                if (this.files.length === that.filesDropped) {
+                                    that.options.afterDropCallback(file).then(function() {
+                                        that.sandbox.util.foreach(this.files, function(file) {
+                                            that.sandbox.util.delay(this.processFile.bind(this, file), 0);
+                                        }.bind(this));
+                                    }.bind(this));
+                                }
+                            }
 
                             // prevent the the upload window to open on click on the preview item
-                            this.sandbox.dom.on(file.previewElement, 'click', function (event) {
+                            that.sandbox.dom.on(file.previewElement, 'click', function (event) {
                                 this.sandbox.dom.stopPropagation(event);
-                            }.bind(this));
-                        }.bind(that));
+                            }.bind(that));
+                        });
 
                         // gets called before the file is sent
                         this.on('sending', function (file) {
@@ -42441,7 +42479,7 @@ define('__component__$dropzone@husky',[], function () {
                                 } else {
                                     this.sandbox.emit(SUCCESS.call(this), file, response);
                                 }
-                                this.removeAllFiles();
+                                this.removeAllFiles(this.options.keepFilesAfterSuccess);
                             }
                         }.bind(that));
 
@@ -42454,7 +42492,9 @@ define('__component__$dropzone@husky',[], function () {
 
                         // gets called if all files are removed from the zone
                         this.on('reset', function () {
-                            this.sandbox.dom.removeClass(this.$dropzone, constants.droppedClass);
+                            if (this.options.keepFilesAfterSuccess === false) {
+                                this.sandbox.dom.removeClass(this.$dropzone, constants.droppedClass);
+                            }
                         }.bind(that));
 
                         // enables the to change the url dynamically
@@ -42472,11 +42512,15 @@ define('__component__$dropzone@husky',[], function () {
         /**
          * Removes all files from the dropzone
          * but only if all dropped files got uploaded
+         * @param keepDom {Boolean} true to keep the dom like it is
          */
-        removeAllFiles: function () {
+        removeAllFiles: function (keepDom) {
             // if all files got uploaded
             if (this.dropzone.getUploadingFiles.call(this.dropzone).length === 0) {
-                this.sandbox.util.delay(
+                if (keepDom === true) {
+                    this.afterFadeOut(true);
+                } else {
+                    this.sandbox.util.delay(
                     function () {
                         this.sandbox.dom.fadeOut(
                             this.sandbox.dom.find('.' + constants.uploadItemClass, this.$dropzone),
@@ -42490,20 +42534,27 @@ define('__component__$dropzone@husky',[], function () {
                     }.bind(this),
                     this.options.fadeOutDelay
                 );
+                }
             }
         },
 
         /**
          * Function gets called after all dropped files
          * have faded out
+         * @param keepDom {Boolean} true to keep the dom like it is
          */
-        afterFadeOut: function () {
+        afterFadeOut: function (keepDom) {
             if (this.overlayOpened === true) {
                 this.sandbox.emit('husky.overlay.dropzone-'+ this.options.instanceName +'.close');
             }
-            this.sandbox.dom.removeClass(this.$dropzone, constants.droppedClass);
             this.sandbox.emit(FILES_ADDED.call(this), this.getResponseArray(this.dropzone.files));
-            this.dropzone.removeAllFiles();
+            this.filesDropped = 0;
+            if (keepDom === true) {
+                this.dropzone.files = [];
+            } else {
+                this.sandbox.dom.removeClass(this.$dropzone, constants.droppedClass);
+                this.dropzone.removeAllFiles();
+            }
         },
 
         /**
