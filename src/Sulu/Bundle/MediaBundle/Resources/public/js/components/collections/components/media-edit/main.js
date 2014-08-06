@@ -30,7 +30,9 @@ define(function () {
             multipleEditFormSelector: '#media-multiple-edit',
             dropzoneSelector: '#file-version-change',
             multipleEditDescSelector: '.media-description',
-            descriptionCheckboxSelector: '#show-descriptions'
+            descriptionCheckboxSelector: '#show-descriptions',
+            singleEditClass: 'single-edit',
+            multiEditClass: 'multi-edit'
         },
 
         /**
@@ -152,7 +154,9 @@ define(function () {
          */
         editSingleMedia: function (media) {
             this.media = media;
-            this.$info = this.sandbox.dom.createElement(this.renderTemplate('/admin/media/template/media/info'));
+            this.$info = this.sandbox.dom.createElement(this.renderTemplate('/admin/media/template/media/info', {
+                media: this.media
+            }));
             this.startSingleOverlay();
         },
 
@@ -171,13 +175,9 @@ define(function () {
          * Starts the actual overlay for single-edit
          */
         startSingleOverlay: function () {
-            var $container = this.sandbox.dom.createElement('<div/>');
+            var $container = this.sandbox.dom.createElement('<div class="'+ constants.singleEditClass +'"/>');
             this.sandbox.dom.append(this.$el, $container);
-            this.sandbox.once('husky.overlay.media-edit.opened', function () {
-                this.sandbox.form.create(constants.infoFormSelector);
-                this.sandbox.form.setData(constants.infoFormSelector, this.media);
-                this.startDropzone();
-            }.bind(this));
+            this.bindSingleOverlayEvents();
             this.sandbox.start([
                 {
                     name: 'overlay@husky',
@@ -192,30 +192,50 @@ define(function () {
                             preSelected: this.media.locale
                         },
                         openOnStart: true,
-                        removeOnClose: true,
                         instanceName: 'media-edit',
                         propagateEvents: false,
-                        okCallback: this.changeSingleModel.bind(this)
+                        okCallback: this.changeSingleModel.bind(this),
+                        closeCallback: function() {
+                            this.sandbox.stop(constants.infoFormSelector + ' *');
+                            this.sandbox.off('husky.auto-complete-list.media-info-'+ this.media.id +'.item-added');
+                        }.bind(this)
                     }
                 }
             ]);
         },
 
         /**
+         * Binds events related to the single-edit overlay
+         */
+        bindSingleOverlayEvents: function() {
+            this.sandbox.once('husky.overlay.media-edit.opened', function () {
+                this.sandbox.form.create(constants.infoFormSelector);
+                this.sandbox.form.setData(constants.infoFormSelector, this.media).then(function() {
+                    this.sandbox.start(constants.infoFormSelector);
+                    this.startDropzone();
+                }.bind(this));
+            }.bind(this));
+            this.sandbox.once('husky.dropzone.file-version-'+ this.media.id +'.initialized', function() {
+                this.sandbox.emit('husky.overlay.media-edit.set-position');
+            }.bind(this));
+            this.sandbox.once('husky.auto-complete-list.media-info-'+ this.media.id +'.initialized', function() {
+                this.sandbox.emit('husky.overlay.media-edit.set-position');
+            }.bind(this));
+            this.sandbox.once('husky.overlay.media-edit.closed', function() {
+                this.sandbox.stop('.' + constants.singleEditClass);
+            }.bind(this));
+            this.sandbox.on('husky.auto-complete-list.media-info-'+ this.media.id +'.item-added', function() {
+                this.sandbox.emit('husky.overlay.media-edit.set-position');
+            }.bind(this));
+        },
+
+        /**
          * Starts the actual overlay for multiple-edit
          */
         startMultipleEditOverlay: function () {
-            var $container = this.sandbox.dom.createElement('<div/>');
+            var $container = this.sandbox.dom.createElement('<div class="'+ constants.multiEditClass +'"/>');
             this.sandbox.dom.append(this.$el, $container);
-            this.sandbox.once('husky.overlay.media-multiple-edit.opened', function () {
-                this.sandbox.form.create(constants.multipleEditFormSelector).initialized.then(function () {
-                    this.sandbox.form.setData(constants.multipleEditFormSelector, {
-                        records: this.medias
-                    }).then(function () {
-                            this.sandbox.emit('husky.overlay.media-multiple-edit.set-position');
-                        }.bind(this));
-                }.bind(this));
-            }.bind(this));
+            this.bindMultipleOverlayEvents();
             this.sandbox.start([
                 {
                     name: 'overlay@husky',
@@ -228,15 +248,35 @@ define(function () {
                             preSelected: this.medias[0].locale
                         },
                         openOnStart: true,
-                        removeOnClose: true,
                         draggable: false,
                         propagateEvents: false,
                         closeIcon: false,
                         instanceName: 'media-multiple-edit',
-                        okCallback: this.changeMultipleModel.bind(this)
+                        okCallback: this.changeMultipleModel.bind(this),
+                        closeCallback: function() {
+                            this.sandbox.stop(constants.multipleEditFormSelector + ' *');
+                        }.bind(this)
                     }
                 }
             ]);
+        },
+
+        /**
+         * Binds events related to the single-edit overlay
+         */
+        bindMultipleOverlayEvents: function() {
+            this.sandbox.once('husky.overlay.media-multiple-edit.opened', function () {
+                this.sandbox.form.create(constants.multipleEditFormSelector).initialized.then(function () {
+                    this.sandbox.form.setData(constants.multipleEditFormSelector, {
+                        records: this.medias
+                    }).then(function () {
+                            this.sandbox.emit('husky.overlay.media-multiple-edit.set-position');
+                        }.bind(this));
+                }.bind(this));
+            }.bind(this));
+            this.sandbox.once('husky.overlay.media-multiple-edit.closed', function() {
+                this.sandbox.stop('.' + constants.multiEditClass);
+            }.bind(this));
         },
 
         /**
@@ -301,7 +341,7 @@ define(function () {
         changeSingleModel: function () {
             if (this.sandbox.form.validate(constants.infoFormSelector)) {
                 var data = this.sandbox.form.getData(constants.infoFormSelector);
-                this.media = this.sandbox.util.extend(true, {}, this.media, data);
+                this.media = this.sandbox.util.extend(false, {}, this.media, data);
                 this.sandbox.emit('sulu.media.collections.save-media', this.media, this.savedCallback.bind(this));
                 this.media = null;
                 return true;
@@ -317,7 +357,7 @@ define(function () {
         changeMultipleModel: function () {
             if (this.sandbox.form.validate(constants.multipleEditFormSelector)) {
                 var data = this.sandbox.form.getData(constants.multipleEditFormSelector);
-                this.medias = this.sandbox.util.extend(true, [], this.medias, data.records);
+                this.medias = this.sandbox.util.extend(false, [], this.medias, data.records);
                 this.sandbox.emit('sulu.media.collections.save-media', this.medias, this.savedCallback.bind(this));
                 this.medias = null;
                 return true;

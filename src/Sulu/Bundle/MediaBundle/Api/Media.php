@@ -27,6 +27,7 @@ use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use Sulu\Component\Rest\ApiWrapper;
 use Sulu\Component\Security\UserInterface;
+use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 
 /**
  * Class Media
@@ -62,15 +63,21 @@ class Media extends ApiWrapper
     protected $version;
 
     /**
+     * @var TagManagerInterface
+     */
+    protected $tagManager;
+
+    /**
      * @var FileVersion
      */
     protected $fileVersion = null;
 
-    public function __construct(Entity $media, $locale, $version = null)
+    public function __construct(Entity $media, $locale, $version = null, TagManagerInterface $tagManager)
     {
         $this->entity = $media;
         $this->locale = $locale;
         $this->version = $version;
+        $this->tagManager = $tagManager;
     }
 
     /**
@@ -388,15 +395,18 @@ class Media extends ApiWrapper
 
     /**
      * @param \Doctrine\ $tags
+     * @param number $userId
      * @return $this
      */
-    public function setTags($tags)
+    public function setTags($tags, $userId)
     {
         $fileVersion = $this->getFileVersion();
+        $fileVersion->removeTags();
         /** @var Tag $tag */
         foreach ($tags as $tag) {
-            if (!$fileVersion->getTags()->contains($tag)) {
-                $fileVersion->addTag($tag);
+            $tagEntity = $this->tagManager->findOrCreateByName($tag, $userId);
+            if (!$fileVersion->getTags()->contains($tagEntity)) {
+                $fileVersion->addTag($tagEntity);
             }
         }
 
@@ -410,7 +420,11 @@ class Media extends ApiWrapper
      */
     public function getTags()
     {
-        return $this->getFileVersion()->getTags();
+        $tags = array();
+        foreach($this->getFileVersion()->getTags() as $tag) {
+            array_push($tags, $tag->getName());
+        }
+        return $tags;
     }
 
     /**

@@ -37,7 +37,7 @@ define(['sulumedia/collection/collections'], function (Collections) {
                 visible: 'public.visible',
                 of: 'public.of',
                 upload: 'media-selection.upload-new',
-                collection: 'media-selection.upload-in-collection',
+                collection: 'media-selection.upload-to-collection',
                 createNewCollection: 'media-selection.create-new-collection',
                 newCollection: 'media-selection.new-collection'
             }
@@ -186,6 +186,7 @@ define(['sulumedia/collection/collections'], function (Collections) {
             this.collections = new Collections();
             this.collectionArray = null;
             this.newCollectionId = null;
+            this.gridGroupDeprecated = false;
 
             this.options.ids = {
                 container: 'media-selection-' + this.options.instanceName + '-container',
@@ -238,7 +239,6 @@ define(['sulumedia/collection/collections'], function (Collections) {
             setDisplayOption.call(this);
 
             // init overlays
-            // TODO config overlay
             startAddOverlay.call(this);
 
             // load preselected items
@@ -300,6 +300,13 @@ define(['sulumedia/collection/collections'], function (Collections) {
                 });
             }.bind(this));
 
+            this.sandbox.on('husky.overlay.media-selection.'+ this.options.instanceName +'.add.opened', function () {
+                if (this.gridGroupDeprecated === true) {
+                    reloadGridGroup.call(this);
+                    this.gridGroupDeprecated = false;
+                }
+            }.bind(this));
+
             // data from overlay retrieved
             this.sandbox.on(INPUT_RETRIEVED.call(this), function () {
                 setURI.call(this);
@@ -340,6 +347,16 @@ define(['sulumedia/collection/collections'], function (Collections) {
         },
 
         /**
+         * Refreshes the data in the grid-group
+         */
+        reloadGridGroup = function() {
+            this.sandbox.emit('sulu.grid-group.'+ this.options.instanceName +'.reload', {
+                data: this.collectionArray,
+                preselected: this.data.ids
+            });
+        },
+
+        /**
          * Starts the grid group
          */
         startGridGroup = function () {
@@ -355,7 +372,6 @@ define(['sulumedia/collection/collections'], function (Collections) {
                         resultKey: this.options.resultKey,
                         dataGridOptions: {
                             view: 'table',
-                            resizeListeners: false,
                             viewOptions: {
                                 table: {
                                     excludeFields: ['id'],
@@ -465,12 +481,11 @@ define(['sulumedia/collection/collections'], function (Collections) {
          */
         addUploadedFile = function(media) {
             if (!!media.length) {
-                this.data.ids.push(media[0].id);
+                this.sandbox.util.foreach(media, function(singleMedia) {
+                    this.data.ids.push(singleMedia.id);
+                }.bind(this));
                 this.sandbox.emit('sulu.labels.success.show', 'labels.success.media-upload-desc', 'labels.success');
-                this.sandbox.emit('sulu.grid-group.'+ this.options.instanceName +'.reload', {
-                    data: this.collectionArray,
-                    preselected: this.data.ids,
-                });
+                reloadGridGroup.call(this)
             }
         },
 
@@ -502,7 +517,7 @@ define(['sulumedia/collection/collections'], function (Collections) {
             } else {
                 renderFooter.call(this);
             }
-
+            this.gridGroupDeprecated = true;
             this.sandbox.emit(DATA_CHANGED.call(this), this.data, this.$el);
         },
 
