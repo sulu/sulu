@@ -13,8 +13,7 @@ namespace Sulu\Component\Content\Mapper\Translation;
 
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyInterface;
-use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
-
+use Sulu\Component\Content\Exception\NoSuchPropertyException;
 /**
  * enables to translate multiple properties
  * @package Sulu\Component\Content\Mapper\Translation
@@ -69,7 +68,7 @@ class MultipleTranslatedProperties
     /**
      * returns translated property name
      * @param string $key
-     * @throws \Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException
+     * @throws \Sulu\Component\Content\Exception\NoSuchPropertyException
      * @return string
      */
     public function getName($key)
@@ -77,7 +76,7 @@ class MultipleTranslatedProperties
         if (isset($this->translatedProperties[$key])) {
             return $this->translatedProperties[$key]->getName();
         } else {
-            throw new NoSuchPropertyException();
+            throw new NoSuchPropertyException($key);
         }
     }
 }
