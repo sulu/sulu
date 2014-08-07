@@ -192,6 +192,7 @@ define([], function() {
             var input = this.sandbox.dom.val(getId.call(this, 'input')),
                 tree = this.sandbox.dom.html(getId.call(this, 'tree'));
 
+            this.sandbox.dom.data(this.$el, 'part', input);
             this.sandbox.dom.data(this.$el, 'value', tree + input);
         },
 

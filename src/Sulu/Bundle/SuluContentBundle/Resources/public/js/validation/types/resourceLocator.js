@@ -35,8 +35,10 @@ define([
                         return true;
                     }
 
-                    var val = this.getValue();
-                    return val.length > 0 && val !== '/';
+                    var val = this.getValue(),
+                        part = App.dom.data($el, 'part');
+                    
+                    return part.length > 0 && val !== '/';
                 }
             };
 
