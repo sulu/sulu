@@ -99,8 +99,14 @@ class CategoryList extends ComplexContentType
     {
         $categoryIds = array();
 
-        foreach ($property->getValue() as $categoryId) {
-            $categoryIds[] = $categoryId;
+        foreach ($property->getValue() as $category) {
+            if (is_numeric($category)) {
+                // int value for id
+                $categoryIds[] = $category;
+            } else {
+                // full category object use only id to save
+                $categoryIds[] = $category['id'];
+            }
         }
 
         $node->setProperty($property->getName(), $categoryIds);
