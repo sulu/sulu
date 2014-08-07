@@ -54,6 +54,19 @@
             </join-columns>
         </many-to-one>
 
+        <many-to-many field="categories" target-entity="Sulu\Bundle\CategoryBundle\Entity\Category">
+            <join-table name="co_contact_categories">
+                <join-columns>
+                    <join-column name="idContacts" referenced-column-name="id"/>
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="idCategories" referenced-column-name="id"/>
+                </inverse-join-columns>
+            </join-table>
+            <order-by>
+                <order-by-field name="id" direction="ASC"/>
+            </order-by>
+        </many-to-many>
 
         <many-to-many field="urls" target-entity="Sulu\Bundle\ContactBundle\Entity\Url" inversed-by="contacts">
             <join-table name="co_contact_urls">
