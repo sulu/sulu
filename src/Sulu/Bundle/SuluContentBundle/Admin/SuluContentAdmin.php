@@ -37,7 +37,6 @@ class SuluContentAdmin extends Admin
             $webspaceItem->addChild($contentItem);
 
             $indexPageItem = new NavigationItem('navigation.webspaces.index-page');
-            $indexPageItem->setId('index');
             $indexPageItem->setAction(
                 'content/contents/' . $webspace->getKey() . '/edit:index/details'
             );
