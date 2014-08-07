@@ -2730,6 +2730,35 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals(2, $test->getChanger());
     }
 
+    public function testMoveGhostPage()
+    {
+        $data = $this->prepareCopyMoveTestData();
+
+        $result = $this->mapper->move($data[5]->getUuid(), $data[0]->getUuid(), 2, 'default', 'en');
+
+        $this->assertEquals($data[5]->getUuid(), $result->getUuid());
+        $this->assertEquals('/page-1/sub-2', $result->getPath());
+        $this->assertEquals(2, $result->getChanger());
+
+        $result = $this->mapper->load($result->getUuid(), 'default', 'en', true);
+
+        $this->assertEquals($data[5]->getUuid(), $result->getUuid());
+        $this->assertEquals('/page-1/sub-2', $result->getPath());
+        $this->assertEquals(1, $result->getChanger());
+        $this->assertEquals('ghost', $result->getType()->getName());
+        $this->assertEquals('de', $result->getType()->getValue());
+
+        $test = $this->mapper->loadByParent($data[0]->getUuid(), 'default', 'de', 4);
+        $this->assertEquals(3, sizeof($test));
+
+        $test = $this->mapper->loadByParent($data[3]->getUuid(), 'default', 'de', 4);
+        $this->assertEquals(2, sizeof($test));
+
+        $test = $this->mapper->load($data[5]->getUuid(), 'default', 'de', 4);
+        $this->assertEquals('/page-1/sub-1-1', $test->getResourceLocator());
+        $this->assertEquals(1, $test->getChanger());
+    }
+
     public function testCopy()
     {
         $data = $this->prepareCopyMoveTestData();
