@@ -183,8 +183,12 @@ define([], function() {
                     value = '';
                 }
             }
-            var parts = value.split('/');
-            this.sandbox.dom.val(getId.call(this, 'input'), parts.pop());
+            var parts = value.split('/'),
+                part = parts.pop();
+
+            this.sandbox.dom.data(this.$el, 'part', part);
+
+            this.sandbox.dom.val(getId.call(this, 'input'), part);
             this.sandbox.dom.html(getId.call(this, 'tree'), parts.join('/') + '/');
         },
 
