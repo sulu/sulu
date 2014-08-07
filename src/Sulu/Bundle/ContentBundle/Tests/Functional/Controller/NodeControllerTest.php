@@ -485,15 +485,15 @@ class NodeControllerTest extends DatabaseTestCase
         $data[4] = (array) json_decode($client->getResponse()->getContent(), true);
 
         $client->request('PUT', '/api/nodes/' . $data[0]['id'] . '?state=2&template=default&webspace=sulu_io&language=en', $data[0]);
-        $data[0] = (array) json_decode($client->getResponse()->getContent());
+        $data[0] = (array) json_decode($client->getResponse()->getContent(), true);
         $client->request('PUT', '/api/nodes/' . $data[1]['id'] . '?state=2&template=default&webspace=sulu_io&language=en', $data[1]);
-        $data[1] = (array) json_decode($client->getResponse()->getContent());
+        $data[1] = (array) json_decode($client->getResponse()->getContent(), true);
         $client->request('PUT', '/api/nodes/' . $data[2]['id'] . '?state=2&template=default&webspace=sulu_io&language=en', $data[2]);
-        $data[2] = (array) json_decode($client->getResponse()->getContent());
+        $data[2] = (array) json_decode($client->getResponse()->getContent(), true);
         $client->request('PUT', '/api/nodes/' . $data[3]['id'] . '?state=2&template=default&webspace=sulu_io&language=en', $data[3]);
-        $data[3] = (array) json_decode($client->getResponse()->getContent());
+        $data[3] = (array) json_decode($client->getResponse()->getContent(), true);
         $client->request('PUT', '/api/nodes/' . $data[4]['id'] . '?state=2&template=default&webspace=sulu_io&language=en', $data[4]);
-        $data[4] = (array) json_decode($client->getResponse()->getContent());
+        $data[4] = (array) json_decode($client->getResponse()->getContent(), true);
 
         return $data;
     }
@@ -914,4 +914,141 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertEquals('/a2', $response['_embedded']['resourcelocators'][0]['resourceLocator']);
         $this->assertEquals('/a1', $response['_embedded']['resourcelocators'][1]['resourceLocator']);
     }
+
+    public function testMove()
+    {
+        $client = $this->createClient(
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test',
+            )
+        );
+        $data = $this->buildTree();
+
+        $client->request(
+            'POST',
+            '/api/nodes/' . $data[0]['id'] . '?webspace=sulu_io&language=en&action=move&destination=' . $data[1]['id']
+        );
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent(), true);
+
+        // check some properties
+        $this->assertEquals($data[0]['id'], $response['id']);
+        $this->assertEquals('test1', $response['title']);
+        $this->assertEquals('/test2/test1', $response['path']);
+        $this->assertEquals('/test2/test1', $response['url']);
+    }
+
+    public function testMoveNonExistingSource()
+    {
+        $client = $this->createClient(
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test',
+            )
+        );
+        $data = $this->buildTree();
+
+        $client->request(
+            'POST',
+            '/api/nodes/123-123?webspace=sulu_io&language=en&action=move&destination=' . $data[1]['id']
+        );
+        $this->assertEquals(400, $client->getResponse()->getStatusCode());
+    }
+
+    public function testMoveNonExistingDestination()
+    {
+        $client = $this->createClient(
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test',
+            )
+        );
+        $data = $this->buildTree();
+
+        $client->request(
+            'POST',
+            '/api/nodes/' . $data[0]['id'] . '?webspace=sulu_io&language=en&action=move&destination=123-123'
+        );
+        $this->assertEquals(400, $client->getResponse()->getStatusCode());
+    }
+
+    public function testCopy()
+    {
+        $client = $this->createClient(
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test',
+            )
+        );
+        $data = $this->buildTree();
+
+        $client->request(
+            'POST',
+            '/api/nodes/' . $data[0]['id'] . '?webspace=sulu_io&language=en&action=copy&destination=' . $data[1]['id']
+        );
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent(), true);
+
+        // check some properties
+        $this->assertNotEquals($data[0]['id'], $response['id']);
+        $this->assertEquals('test1', $response['title']);
+        $this->assertEquals('/test2/test1', $response['path']);
+        $this->assertEquals('/test2/test1', $response['url']);
+
+        // check old node
+        $client->request(
+            'GET',
+            '/api/nodes/' . $data[0]['id'] . '?webspace=sulu_io&language=en'
+        );
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent(), true);
+
+        // remove extension unececary for this test
+        unset($data[0]['extensions']);
+        unset($response['extensions']);
+
+        $this->assertEquals($data[0], $response);
+    }
+
+    public function testCopyNonExistingSource()
+    {
+        $client = $this->createClient(
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test',
+            )
+        );
+        $data = $this->buildTree();
+
+        $client->request(
+            'POST',
+            '/api/nodes/123-123?webspace=sulu_io&language=en&action=copy&destination=' . $data[1]['id']
+        );
+        $this->assertEquals(400, $client->getResponse()->getStatusCode());
+    }
+
+    public function testCopyNonExistingDestination()
+    {
+        $client = $this->createClient(
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test',
+            )
+        );
+        $data = $this->buildTree();
+
+        $client->request(
+            'POST',
+            '/api/nodes/' . $data[0]['id'] . '?webspace=sulu_io&language=en&action=copy&destination=123-123'
+        );
+        $this->assertEquals(400, $client->getResponse()->getStatusCode());
+    }
+
 }

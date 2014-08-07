@@ -19,3 +19,6 @@ TEMP_*/
 # test cache
 /Tests/Resources/app/admin/cache/*
 /Tests/Resources/app/admin/logs/*
+
+# custom phpunit xml
+phpunit.xml

@@ -2,6 +2,10 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
     <file source-language="de" datatype="plaintext" original="file.ext">
         <body>
+            <trans-unit id="f1234df37123123fd4a73a4123dfdf00A" resname="public.url-history.none">
+                <source>public.url-history.none</source>
+                <target>Keine alten URLs für diesen Inhalt vorhanden ...</target>
+            </trans-unit>
             <trans-unit id="fbf4558371239fbed4a73a4ba3fdf006" resname="single-internal-link.title">
                 <source>single-internal-link.title</source>
                 <target>Interner Link auswählen</target>
@@ -33,6 +37,26 @@
             <trans-unit id="f1234df371239fbed4a73a4123dfdf007" resname="sulu.content.form.settings.type.external-link">
                 <source>sulu.content.form.settings.type.external-link</source>
                 <target>Externer Link</target>
+            </trans-unit>
+            <trans-unit id="f1234df37123123ed4a73a4123dfdf006" resname="content.contents.settings.delete">
+                <source>content.contents.settings.delete</source>
+                <target>Knoten löschen</target>
+            </trans-unit>
+            <trans-unit id="f1234df37123123ed4a73a4123dfdf007" resname="content.contents.settings.copy">
+                <source>content.contents.settings.copy</source>
+                <target>Knoten kopieren</target>
+            </trans-unit>
+            <trans-unit id="f1234df37123123ed4a73a4123dfdf008" resname="content.contents.settings.copy.title">
+                <source>content.contents.settings.copy.title</source>
+                <target>Neuer Vater für Kopieren wählen</target>
+            </trans-unit>
+            <trans-unit id="f1234df37123123ed4a73a4123dfdf009" resname="content.contents.settings.move">
+                <source>content.contents.settings.move</source>
+                <target>Knoten verschieben</target>
+            </trans-unit>
+            <trans-unit id="f1234df37123123ed4a73a4123dfdf00A" resname="content.contents.settings.move.title">
+                <source>content.contents.settings.move.title</source>
+                <target>Neuer Vater für Verschieben wählen</target>
             </trans-unit>
         </body>
     </file>

@@ -19,6 +19,7 @@ use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
 use Sulu\Bundle\TestBundle\Testing\PhpcrTestCase;
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyTag;
+use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\StructureExtension\StructureExtension;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\Types\ResourceLocator;
@@ -327,6 +328,352 @@ class NodeRepositoryTest extends PhpcrTestCase
         $this->assertEquals('Testtitle1', $nodes[1]->title);
     }
 
+    /**
+     * @return StructureInterface[]
+     */
+    private function prepareTestDataMoveCopy()
+    {
+        $data = array(
+            array(
+                'title' => 'Testtitle1',
+                'tags' => array(
+                    'tag1',
+                    'tag2'
+                ),
+                'url' => '/news/test1',
+                'article' => 'Test'
+            ),
+            array(
+                'title' => 'Testtitle2',
+                'tags' => array(
+                    'tag1',
+                    'tag2'
+                ),
+                'url' => '/news/test2',
+                'article' => 'Test'
+            ),
+        );
+
+        foreach ($data as &$element) {
+            $element = $this->mapper->save(
+                $element,
+                'overview',
+                'default',
+                'en',
+                1,
+                true,
+                null,
+                null,
+                StructureInterface::STATE_PUBLISHED
+            );
+        }
+
+        return $data;
+    }
+
+    public function testMove()
+    {
+        $data = $this->prepareTestDataMoveCopy();
+
+        $rootNode = $this->nodeRepository->getIndexNode('default', 'en');
+
+        $result = $this->nodeRepository->moveNode($data[0]->getUuid(), $data[1]->getUuid(), 'default', 'en', 2);
+        $structure = $this->nodeRepository->getNode($data[0]->getUuid(), 'default', 'en');
+
+        // check result
+        $this->assertEquals($structure, $result);
+
+        // check some properties
+        $this->assertEquals($data[0]->getUuid(), $result['id']);
+        $this->assertEquals('Testtitle1', $result['title']);
+        $this->assertEquals('/testtitle2/testtitle1', $result['path']);
+        $this->assertEquals('/news/test2/test1', $result['url']);
+        $this->assertEquals(2, $result['changer']);
+
+        // check none existing source node
+        $firstLayerNodes = $this->nodeRepository->getNodes($rootNode['id'], 'default', 'en');
+        $this->assertEquals(1, sizeof($firstLayerNodes['_embedded']['nodes']));
+        $this->assertEquals('Testtitle2', $firstLayerNodes['_embedded']['nodes'][0]['title']);
+        $this->assertEquals('/testtitle2', $firstLayerNodes['_embedded']['nodes'][0]['path']);
+        $this->assertEquals('/news/test2', $firstLayerNodes['_embedded']['nodes'][0]['url']);
+
+        $secondLayerNodes = $this->nodeRepository->getNodes($data[1]->getUuid(), 'default', 'en');
+        $this->assertEquals(1, sizeof($secondLayerNodes['_embedded']['nodes']));
+        $this->assertEquals('Testtitle1', $secondLayerNodes['_embedded']['nodes'][0]['title']);
+        $this->assertEquals('/testtitle2/testtitle1', $secondLayerNodes['_embedded']['nodes'][0]['path']);
+        $this->assertEquals('/news/test2/test1', $secondLayerNodes['_embedded']['nodes'][0]['url']);
+    }
+
+    public function testMoveNonExistingSource()
+    {
+        $data = $this->prepareTestDataMoveCopy();
+        $this->setExpectedException('Sulu\Component\Rest\Exception\RestException');
+
+        $this->nodeRepository->moveNode('123-123', $data[1]->getUuid(), 'default', 'en', 2);
+    }
+
+    public function testMoveNonExistingDestination()
+    {
+        $data = $this->prepareTestDataMoveCopy();
+        $this->setExpectedException('Sulu\Component\Rest\Exception\RestException');
+
+        $this->nodeRepository->moveNode($data[0]->getUuid(), '123-123', 'default', 'en', 2);
+    }
+
+    public function testMoveInternalLink()
+    {
+        $data = $this->prepareTestDataMoveCopy();
+
+        $newData = array(
+            'title' => 'Testtitle1',
+            'internal_link' => $data[1]->getUuid(),
+            'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK
+        );
+
+        $data[0] = $this->mapper->save(
+            $newData,
+            'internal-link',
+            'default',
+            'en',
+            1,
+            true,
+            $data[0]->getUuid(),
+            null,
+            StructureInterface::STATE_PUBLISHED
+        );
+
+        $rootNode = $this->nodeRepository->getIndexNode('default', 'en');
+
+        $result = $this->nodeRepository->moveNode($data[0]->getUuid(), $data[1]->getUuid(), 'default', 'en', 2);
+        $structure = $this->nodeRepository->getNode($data[0]->getUuid(), 'default', 'en');
+
+        // check result
+        $this->assertEquals($structure, $result);
+
+        // check some properties
+        $this->assertEquals($data[0]->getUuid(), $result['id']);
+        $this->assertEquals('Testtitle1', $result['title']);
+        $this->assertEquals('/testtitle2/testtitle1', $result['path']);
+        $this->assertEquals($data[1]->getUuid(), $result['internal_link']);
+        $this->assertEquals(2, $result['changer']);
+
+        // check none existing source node
+        $firstLayerNodes = $this->nodeRepository->getNodes($rootNode['id'], 'default', 'en');
+        $this->assertEquals(1, sizeof($firstLayerNodes['_embedded']['nodes']));
+        $this->assertEquals('Testtitle2', $firstLayerNodes['_embedded']['nodes'][0]['title']);
+        $this->assertEquals('/testtitle2', $firstLayerNodes['_embedded']['nodes'][0]['path']);
+        $this->assertEquals('/news/test2', $firstLayerNodes['_embedded']['nodes'][0]['url']);
+
+        $secondLayerNodes = $this->nodeRepository->getNodes($data[1]->getUuid(), 'default', 'en');
+        $this->assertEquals(1, sizeof($secondLayerNodes['_embedded']['nodes']));
+        $this->assertEquals('Testtitle1', $secondLayerNodes['_embedded']['nodes'][0]['title']);
+        $this->assertEquals('/testtitle2/testtitle1', $secondLayerNodes['_embedded']['nodes'][0]['path']);
+        $this->assertEquals($data[1]->getUuid(), $secondLayerNodes['_embedded']['nodes'][0]['internal_link']);
+    }
+
+    public function testMoveExternalLink()
+    {
+        $data = $this->prepareTestDataMoveCopy();
+
+        $newData = array(
+            'title' => 'Testtitle1',
+            'external_link' => 'www.google.at',
+            'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK
+        );
+
+        $data[0] = $this->mapper->save(
+            $newData,
+            'external-link',
+            'default',
+            'en',
+            1,
+            true,
+            $data[0]->getUuid(),
+            null,
+            StructureInterface::STATE_PUBLISHED
+        );
+
+        $rootNode = $this->nodeRepository->getIndexNode('default', 'en');
+
+        $result = $this->nodeRepository->moveNode($data[0]->getUuid(), $data[1]->getUuid(), 'default', 'en', 2);
+        $structure = $this->nodeRepository->getNode($data[0]->getUuid(), 'default', 'en');
+
+        // check result
+        $this->assertEquals($structure, $result);
+
+        // check some properties
+        $this->assertEquals($data[0]->getUuid(), $result['id']);
+        $this->assertEquals('Testtitle1', $result['title']);
+        $this->assertEquals('/testtitle2/testtitle1', $result['path']);
+        $this->assertEquals('www.google.at', $result['external_link']);
+        $this->assertEquals(2, $result['changer']);
+
+        // check none existing source node
+        $firstLayerNodes = $this->nodeRepository->getNodes($rootNode['id'], 'default', 'en');
+        $this->assertEquals(1, sizeof($firstLayerNodes['_embedded']['nodes']));
+        $this->assertEquals('Testtitle2', $firstLayerNodes['_embedded']['nodes'][0]['title']);
+        $this->assertEquals('/testtitle2', $firstLayerNodes['_embedded']['nodes'][0]['path']);
+        $this->assertEquals('/news/test2', $firstLayerNodes['_embedded']['nodes'][0]['url']);
+
+        $secondLayerNodes = $this->nodeRepository->getNodes($data[1]->getUuid(), 'default', 'en');
+        $this->assertEquals(1, sizeof($secondLayerNodes['_embedded']['nodes']));
+        $this->assertEquals('Testtitle1', $secondLayerNodes['_embedded']['nodes'][0]['title']);
+        $this->assertEquals('/testtitle2/testtitle1', $secondLayerNodes['_embedded']['nodes'][0]['path']);
+        $this->assertEquals('www.google.at', $secondLayerNodes['_embedded']['nodes'][0]['external_link']);
+    }
+
+    public function testCopy()
+    {
+        $data = $this->prepareTestDataMoveCopy();
+
+        $rootNode = $this->nodeRepository->getIndexNode('default', 'en');
+
+        $result = $this->nodeRepository->copyNode($data[0]->getUuid(), $data[1]->getUuid(), 'default', 'en', 2);
+        $structure = $this->nodeRepository->getNode($data[0]->getUuid(), 'default', 'en');
+
+        // check result
+        $this->assertNotEquals($structure, $result);
+
+        // check some properties
+        $this->assertNotEquals($data[0]->getUuid(), $result['id']);
+        $this->assertEquals('Testtitle1', $result['title']);
+        $this->assertEquals('/testtitle2/testtitle1', $result['path']);
+        $this->assertEquals(2, $result['changer']);
+
+        // check none existing source node
+        $firstLayerNodes = $this->nodeRepository->getNodes($rootNode['id'], 'default', 'en');
+        $this->assertEquals(2, sizeof($firstLayerNodes['_embedded']['nodes']));
+        $this->assertEquals('Testtitle1', $firstLayerNodes['_embedded']['nodes'][0]['title']);
+        $this->assertEquals('/testtitle1', $firstLayerNodes['_embedded']['nodes'][0]['path']);
+        $this->assertEquals('Testtitle2', $firstLayerNodes['_embedded']['nodes'][1]['title']);
+        $this->assertEquals('/testtitle2', $firstLayerNodes['_embedded']['nodes'][1]['path']);
+
+        $secondLayerNodes = $this->nodeRepository->getNodes($data[1]->getUuid(), 'default', 'en');
+        $this->assertEquals(1, sizeof($secondLayerNodes['_embedded']['nodes']));
+        $this->assertEquals('Testtitle1', $secondLayerNodes['_embedded']['nodes'][0]['title']);
+        $this->assertEquals('/testtitle2/testtitle1', $secondLayerNodes['_embedded']['nodes'][0]['path']);
+    }
+
+    public function testCopyNonExistingSource()
+    {
+        $data = $this->prepareTestDataMoveCopy();
+        $this->setExpectedException('Sulu\Component\Rest\Exception\RestException');
+
+        $this->nodeRepository->copyNode('123-123', $data[1]->getUuid(), 'default', 'en', 2);
+    }
+
+    public function testCopyNonExistingDestination()
+    {
+        $data = $this->prepareTestDataMoveCopy();
+        $this->setExpectedException('Sulu\Component\Rest\Exception\RestException');
+
+        $this->nodeRepository->copyNode($data[0]->getUuid(), '123-123', 'default', 'en', 2);
+    }
+
+    public function testCopyInternalLink()
+    {
+        $data = $this->prepareTestDataMoveCopy();
+
+        $newData = array(
+            'title' => 'Testtitle1',
+            'internal_link' => $data[1]->getUuid(),
+            'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK
+        );
+
+        $data[0] = $this->mapper->save(
+            $newData,
+            'internal-link',
+            'default',
+            'en',
+            1,
+            true,
+            $data[0]->getUuid(),
+            null,
+            StructureInterface::STATE_PUBLISHED
+        );
+
+        $rootNode = $this->nodeRepository->getIndexNode('default', 'en');
+
+        $result = $this->nodeRepository->copyNode($data[0]->getUuid(), $data[1]->getUuid(), 'default', 'en', 2);
+        $structure = $this->nodeRepository->getNode($data[0]->getUuid(), 'default', 'en');
+
+        // check result
+        $this->assertNotEquals($structure, $result);
+
+        // check some properties
+        $this->assertNotEquals($data[0]->getUuid(), $result['id']);
+        $this->assertEquals('Testtitle1', $result['title']);
+        $this->assertEquals('/testtitle2/testtitle1', $result['path']);
+        $this->assertEquals(2, $result['changer']);
+
+        // check none existing source node
+        $firstLayerNodes = $this->nodeRepository->getNodes($rootNode['id'], 'default', 'en');
+        $this->assertEquals(2, sizeof($firstLayerNodes['_embedded']['nodes']));
+        $this->assertEquals('Testtitle1', $firstLayerNodes['_embedded']['nodes'][0]['title']);
+        $this->assertEquals('/testtitle1', $firstLayerNodes['_embedded']['nodes'][0]['path']);
+        $this->assertEquals($data[1]->getUuid(), $firstLayerNodes['_embedded']['nodes'][0]['internal_link']);
+        $this->assertEquals('Testtitle2', $firstLayerNodes['_embedded']['nodes'][1]['title']);
+        $this->assertEquals('/testtitle2', $firstLayerNodes['_embedded']['nodes'][1]['path']);
+
+        $secondLayerNodes = $this->nodeRepository->getNodes($data[1]->getUuid(), 'default', 'en');
+        $this->assertEquals(1, sizeof($secondLayerNodes['_embedded']['nodes']));
+        $this->assertEquals('Testtitle1', $secondLayerNodes['_embedded']['nodes'][0]['title']);
+        $this->assertEquals('/testtitle2/testtitle1', $secondLayerNodes['_embedded']['nodes'][0]['path']);
+        $this->assertEquals($data[1]->getUuid(), $secondLayerNodes['_embedded']['nodes'][0]['internal_link']);
+    }
+
+    public function testCopyExternalLink()
+    {
+        $data = $this->prepareTestDataMoveCopy();
+
+        $newData = array(
+            'title' => 'Testtitle1',
+            'external_link' => 'www.google.at',
+            'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK
+        );
+
+        $data[0] = $this->mapper->save(
+            $newData,
+            'external-link',
+            'default',
+            'en',
+            1,
+            true,
+            $data[0]->getUuid(),
+            null,
+            StructureInterface::STATE_PUBLISHED
+        );
+
+        $rootNode = $this->nodeRepository->getIndexNode('default', 'en');
+
+        $result = $this->nodeRepository->copyNode($data[0]->getUuid(), $data[1]->getUuid(), 'default', 'en', 2);
+        $structure = $this->nodeRepository->getNode($data[0]->getUuid(), 'default', 'en');
+
+        // check result
+        $this->assertNotEquals($structure, $result);
+
+        // check some properties
+        $this->assertNotEquals($data[0]->getUuid(), $result['id']);
+        $this->assertEquals('Testtitle1', $result['title']);
+        $this->assertEquals('/testtitle2/testtitle1', $result['path']);
+        $this->assertEquals(2, $result['changer']);
+
+        // check none existing source node
+        $firstLayerNodes = $this->nodeRepository->getNodes($rootNode['id'], 'default', 'en');
+        $this->assertEquals(2, sizeof($firstLayerNodes['_embedded']['nodes']));
+        $this->assertEquals('Testtitle1', $firstLayerNodes['_embedded']['nodes'][0]['title']);
+        $this->assertEquals('/testtitle1', $firstLayerNodes['_embedded']['nodes'][0]['path']);
+        $this->assertEquals('www.google.at', $firstLayerNodes['_embedded']['nodes'][0]['external_link']);
+        $this->assertEquals('Testtitle2', $firstLayerNodes['_embedded']['nodes'][1]['title']);
+        $this->assertEquals('/testtitle2', $firstLayerNodes['_embedded']['nodes'][1]['path']);
+
+        $secondLayerNodes = $this->nodeRepository->getNodes($data[1]->getUuid(), 'default', 'en');
+        $this->assertEquals(1, sizeof($secondLayerNodes['_embedded']['nodes']));
+        $this->assertEquals('Testtitle1', $secondLayerNodes['_embedded']['nodes'][0]['title']);
+        $this->assertEquals('/testtitle2/testtitle1', $secondLayerNodes['_embedded']['nodes'][0]['path']);
+        $this->assertEquals('www.google.at', $secondLayerNodes['_embedded']['nodes'][0]['external_link']);
+    }
+
     protected function setUp()
     {
         $this->prepareMapper();
@@ -412,9 +759,101 @@ class NodeRepositoryTest extends PhpcrTestCase
             return $this->getStructureMock(1);
         } elseif ($structureKey == 'default') {
             return $this->getStructureMock(2);
+        } elseif ($structureKey == 'internal-link') {
+            return $this->getStructureMockInternal();
+        } elseif ($structureKey == 'external-link') {
+            return $this->getStructureMockExternal();
         }
 
         return null;
+    }
+
+    public function getStructureMockInternal()
+    {
+        $structureMock = $this->getMockForAbstractClass(
+            '\Sulu\Component\Content\Structure',
+            array('internal_link', 'asdf', 'asdf', 2400)
+        );
+
+        $method = new ReflectionMethod(
+            get_class($structureMock), 'addChild'
+        );
+
+        $method->setAccessible(true);
+        $method->invokeArgs(
+            $structureMock,
+            array(
+                new Property(
+                    'title', 'title', 'text_line', false, false, 1, 1, array(),
+                    array(
+                        new PropertyTag('sulu.node.name', 1)
+                    )
+                )
+            )
+        );
+
+        $method->invokeArgs(
+            $structureMock,
+            array(
+                new Property(
+                    'internal_link',
+                    array(),
+                    'text_line',
+                    false,
+                    true,
+                    1,
+                    1,
+                    array(),
+                    array(new PropertyTag('sulu.rlp', 1))
+                )
+            )
+        );
+
+        return $structureMock;
+    }
+
+    public function getStructureMockExternal()
+    {
+        $structureMock = $this->getMockForAbstractClass(
+            '\Sulu\Component\Content\Structure',
+            array('internal_link', 'asdf', 'asdf', 2400)
+        );
+
+        $method = new ReflectionMethod(
+            get_class($structureMock), 'addChild'
+        );
+
+        $method->setAccessible(true);
+        $method->invokeArgs(
+            $structureMock,
+            array(
+                new Property(
+                    'title', 'title', 'text_line', false, false, 1, 1, array(),
+                    array(
+                        new PropertyTag('sulu.node.name', 1)
+                    )
+                )
+            )
+        );
+
+        $method->invokeArgs(
+            $structureMock,
+            array(
+                new Property(
+                    'external_link',
+                    array(),
+                    'text_line',
+                    false,
+                    true,
+                    1,
+                    1,
+                    array(),
+                    array(new PropertyTag('sulu.rlp', 1))
+                )
+            )
+        );
+
+        return $structureMock;
     }
 
     public function getStructureMock($type = 1)
@@ -446,7 +885,17 @@ class NodeRepositoryTest extends PhpcrTestCase
         $method->invokeArgs(
             $structureMock,
             array(
-                new Property('url', 'url', 'resource_locator')
+                new Property(
+                    'url',
+                    'url',
+                    'resource_locator',
+                    false,
+                    true,
+                    1,
+                    1,
+                    array(),
+                    array(new PropertyTag('sulu.rlp', 1))
+                )
             )
         );
 
