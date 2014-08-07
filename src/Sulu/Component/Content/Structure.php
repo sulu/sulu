@@ -146,8 +146,8 @@ abstract class Structure implements StructureInterface
     private $published;
 
     /**
-     * should be shown in navigation or not
-     * @var boolean
+     * defines in which navigation context assigned
+     * @var string[]
      */
     private $navContexts;
 
@@ -671,7 +671,7 @@ abstract class Structure implements StructureInterface
 
     /**
      * returns true if this node is shown in navigation
-     * @return boolean
+     * @return string[]
      */
     public function getNavContexts()
     {
