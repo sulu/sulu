@@ -248,7 +248,7 @@ interface StructureInterface extends \JsonSerializable
 
     /**
      * returns true if this node is shown in navigation
-     * @return boolean
+     * @return string[]
      */
     public function getNavContexts();
 
