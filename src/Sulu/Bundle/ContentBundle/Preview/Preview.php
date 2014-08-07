@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\ContentBundle\Preview;
 
 use Doctrine\Common\Cache\Cache;
+use Liip\ThemeBundle\ActiveTheme;
 use Sulu\Component\Content\Block\BlockPropertyInterface;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
@@ -19,6 +20,7 @@ use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\Section\SectionPropertyInterface;
 use Sulu\Component\Content\StructureManagerInterface;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
@@ -61,6 +63,16 @@ class Preview implements PreviewInterface
      */
     private $contentTypeManager;
 
+    /**
+     * @var WebspaceManagerInterface
+     */
+    private $webspaceManager;
+
+    /**
+     * @var ActiveTheme
+     */
+    private $activeTheme;
+
     public function __construct(
         EngineInterface $templating,
         Cache $cache,
@@ -68,6 +80,8 @@ class Preview implements PreviewInterface
         StructureManagerInterface $structureManager,
         ContentTypeManagerInterface $contentTypeManager,
         ControllerResolverInterface $controllerResolver,
+        WebspaceManagerInterface $webspaceManager,
+        ActiveTheme $activeTheme,
         $lifeTime
     ) {
         $this->templating = $templating;
@@ -76,6 +90,8 @@ class Preview implements PreviewInterface
         $this->structureManager = $structureManager;
         $this->contentTypeManager = $contentTypeManager;
         $this->controllerResolver = $controllerResolver;
+        $this->webspaceManager = $webspaceManager;
+        $this->activeTheme = $activeTheme;
         $this->lifeTime = $lifeTime;
     }
 
@@ -209,6 +225,10 @@ class Preview implements PreviewInterface
         $content = $this->loadStructure($userId, $contentUuid, $templateKey, $languageCode);
 
         if ($content != false) {
+            // set active theme
+            $webspace = $this->webspaceManager->findWebspaceByKey($content->getWebspaceKey());
+            $this->activeTheme->setName($webspace->getTheme()->getKey());
+
             // get controller and invoke action
             $request = new Request();
             $request->attributes->set('_controller', $content->getController());
