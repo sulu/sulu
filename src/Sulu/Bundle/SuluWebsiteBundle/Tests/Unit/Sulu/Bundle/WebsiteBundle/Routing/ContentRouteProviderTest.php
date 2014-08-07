@@ -49,10 +49,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         // Test the route provider
         $routes = $portalRouteProvider->getRouteCollectionForRequest($request);
 
-        $this->assertCount(1, $routes);
-        $route = $routes->getIterator()->current();
-        $this->assertEquals('SuluWebsiteBundle:Default:error404', $route->getDefaults()['_controller']);
-        $this->assertEquals('/', $route->getDefaults()['path']);
+        $this->assertCount(0, $routes);
     }
 
     public function testGetCollectionForRequest()
@@ -119,10 +116,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         // Test the route provider
         $routes = $portalRouteProvider->getRouteCollectionForRequest($request);
 
-        $this->assertCount(1, $routes);
-        $route = $routes->getIterator()->current();
-        $this->assertEquals('SuluWebsiteBundle:Default:error404', $route->getDefaults()['_controller']);
-        $this->assertEquals('/', $route->getDefaults()['path']);
+        $this->assertCount(0, $routes);
     }
 
     public function testGetCollectionForSingleLanguageRequestSlashOnly()
@@ -234,10 +228,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         // Test the route provider
         $routes = $portalRouteProvider->getRouteCollectionForRequest($request);
 
-        $this->assertCount(1, $routes);
-        $route = $routes->getIterator()->current();
-        $this->assertEquals('SuluWebsiteBundle:Default:error404', $route->getDefaults()['_controller']);
-        $this->assertEquals('/', $route->getDefaults()['path']);
+        $this->assertCount(0, $routes);
     }
 
     public function testGetCollectionForRedirect()
