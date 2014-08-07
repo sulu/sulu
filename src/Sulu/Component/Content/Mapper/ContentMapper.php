@@ -14,8 +14,9 @@ use DateTime;
 use PHPCR\NodeInterface;
 use PHPCR\Query\QueryInterface;
 use PHPCR\SessionInterface;
+use PHPCR\Util\NodeHelper;
+use PHPCR\Util\PathHelper;
 use Sulu\Component\Content\BreadcrumbItem;
-use Sulu\Component\Content\BreadcrumbItemInterface;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\ContentTypeManager;
 use Sulu\Component\Content\ContentEvents;
@@ -35,9 +36,14 @@ use Sulu\Component\Content\StructureType;
 use Sulu\Component\Content\Types\ResourceLocatorInterface;
 use Sulu\Component\PHPCR\PathCleanupInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
 
+/**
+ * Maps content nodes to phpcr nodes with content types and provides utility function to handle content nodes
+ * @package Sulu\Component\Content\Mapper
+ */
 class ContentMapper implements ContentMapperInterface
 {
     /**
@@ -100,6 +106,11 @@ class ContentMapper implements ContentMapperInterface
     private $cleaner;
 
     /**
+     * @var WebspaceManagerInterface
+     */
+    private $webspaceManager;
+
+    /**
      * excepted states
      * @var array
      */
@@ -108,6 +119,9 @@ class ContentMapper implements ContentMapperInterface
         StructureInterface::STATE_TEST
     );
 
+    /**
+     * @var MultipleTranslatedProperties
+     */
     private $properties;
 
     public function __construct(
@@ -117,6 +131,7 @@ class ContentMapper implements ContentMapperInterface
         EventDispatcherInterface $eventDispatcher,
         LocalizationFinderInterface $localizationFinder,
         PathCleanupInterface $cleaner,
+        WebspaceManagerInterface $webspaceManager,
         $defaultLanguage,
         $defaultTemplate,
         $languageNamespace,
@@ -133,6 +148,7 @@ class ContentMapper implements ContentMapperInterface
         $this->languageNamespace = $languageNamespace;
         $this->internalPrefix = $internalPrefix;
         $this->cleaner = $cleaner;
+        $this->webspaceManager = $webspaceManager;
 
         // optional
         $this->stopwatch = $stopwatch;
@@ -156,20 +172,7 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * saves the given data in the content storage
-     * @param array $data The data to be saved
-     * @param string $templateKey Name of template
-     * @param string $webspaceKey Key of webspace
-     * @param string $languageCode Save data for given language
-     * @param int $userId The id of the user who saves
-     * @param bool $partialUpdate ignore missing property
-     * @param string $uuid uuid of node if exists
-     * @param string $parentUuid uuid of parent node
-     * @param int $state state of node
-     * @param string $showInNavigation
-     *
-     * @throws \Exception
-     * @return StructureInterface
+     * {@inheritdoc}
      */
     public function save(
         $data,
@@ -391,15 +394,7 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * save a extension with given name and data to an existing node
-     * @param string $uuid
-     * @param array $data
-     * @param string $extensionName
-     * @param string $webspaceKey
-     * @param string $languageCode
-     * @param integer $userId
-     * @throws \Sulu\Component\Content\Exception\TranslatedNodeNotFoundException
-     * @return StructureInterface
+     * {@inheritdoc}
      */
     public function saveExtension(
         $uuid,
@@ -443,15 +438,7 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * change state of given node
-     * @param NodeInterface $node node to change state
-     * @param int $state new state
-     * @param \Sulu\Component\Content\StructureInterface $structure
-     * @param string $statePropertyName
-     * @param string $publishedPropertyName
-     *
-     * @throws \Sulu\Component\Content\Exception\StateTransitionException
-     * @throws \Sulu\Component\Content\Exception\StateNotFoundException
+     * {@inheritdoc}
      */
     private function changeState(
         NodeInterface $node,
@@ -506,17 +493,7 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * saves the given data in the content storage
-     * @param array $data The data to be saved
-     * @param string $templateKey Name of template
-     * @param string $webspaceKey Key of webspace
-     * @param string $languageCode Save data for given language
-     * @param int $userId The id of the user who saves
-     * @param bool $partialUpdate ignore missing property
-     *
-     * @throws \PHPCR\ItemExistsException if new title already exists
-     *
-     * @return StructureInterface
+     * {@inheritdoc}
      */
     public function saveStartPage(
         $data,
@@ -572,16 +549,7 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * returns a list of data from children of given node
-     * @param NodeInterface $parent
-     * @param $webspaceKey
-     * @param $languageCode
-     * @param int $depth
-     * @param bool $flat
-     * @param bool $ignoreExceptions
-     * @param bool $excludeGhosts If true ghost pages are also loaded
-     * @throws \Exception
-     * @return array
+     * {@inheritdoc}
      */
     private function loadByParentNode(
         NodeInterface $parent,
@@ -643,12 +611,7 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * returns the data from the given id
-     * @param string $uuid UUID of the content
-     * @param string $webspaceKey Key of webspace
-     * @param string $languageCode Read data for given language
-     * @param bool $loadGhostContent True if also a ghost page should be returned, otherwise false
-     * @return StructureInterface
+     * {@inheritdoc}
      */
     public function load($uuid, $webspaceKey, $languageCode, $loadGhostContent = false)
     {
@@ -668,10 +631,7 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * returns the data from the given id
-     * @param string $webspaceKey Key of webspace
-     * @param string $languageCode Read data for given language
-     * @return StructureInterface
+     * {@inheritdoc}
      */
     public function loadStartPage($webspaceKey, $languageCode)
     {
@@ -686,12 +646,7 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * returns data from given path
-     * @param string $resourceLocator Resource locator
-     * @param string $webspaceKey Key of webspace
-     * @param string $languageCode
-     * @param string $segmentKey
-     * @return StructureInterface
+     * {@inheritdoc}
      */
     public function loadByResourceLocator($resourceLocator, $webspaceKey, $languageCode, $segmentKey = null)
     {
@@ -708,12 +663,7 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * returns the content returned by the given sql2 query as structures
-     * @param string $sql2 The query, which returns the content
-     * @param string $languageCode The language code
-     * @param string $webspaceKey The webspace key
-     * @param int $limit Limits the number of returned rows
-     * @return StructureInterface[]
+     * {@inheritdoc}
      */
     public function loadBySql2($sql2, $languageCode, $webspaceKey, $limit = null)
     {
@@ -730,13 +680,7 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * load tree from root to given path
-     * @param string $uuid
-     * @param string $languageCode
-     * @param string $webspaceKey
-     * @param bool $excludeGhost
-     * @param bool $loadGhostContent
-     * @return StructureInterface[]
+     * {@inheritdoc}
      */
     public function loadTreeByUuid(
         $uuid,
@@ -761,13 +705,7 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * load tree from root to given path
-     * @param string $path
-     * @param string $languageCode
-     * @param string $webspaceKey
-     * @param bool $excludeGhost
-     * @param bool $loadGhostContent
-     * @return StructureInterface[]
+     * {@inheritdoc}
      */
     public function loadTreeByPath(
         $path,
@@ -797,14 +735,7 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * returns a tree of nodes with the given endpoint
-     * @param NodeInterface $node
-     * @param string $languageCode
-     * @param string $webspaceKey
-     * @param bool $excludeGhost
-     * @param bool $loadGhostContent
-     * @param NodeInterface $childNode
-     * @return StructureInterface[]
+     * {@inheritdoc}
      */
     private function loadTreeByNode(
         NodeInterface $node,
@@ -872,13 +803,7 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * returns data from given node
-     * @param NodeInterface $contentNode
-     * @param string $localization
-     * @param string $webspaceKey
-     * @param bool $excludeGhost True if also a ghost page should be returned, otherwise false
-     * @param bool $loadGhostContent True if also ghost content should be returned, otherwise false
-     * @return StructureInterface
+     * {@inheritdoc}
      */
     private function loadByNode(
         NodeInterface $contentNode,
@@ -996,11 +921,7 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * loads dependencies for internal links
-     * @param StructureInterface $content
-     * @param string $localization
-     * @param string $webspaceKey
-     * @param bool $loadGhostContent
+     * {@inheritdoc}
      */
     private function loadInternalLinkDependencies(
         StructureInterface $content,
@@ -1012,24 +933,22 @@ class ContentMapper implements ContentMapperInterface
             $internal = $content->getPropertyValueByTagName('sulu.rlp');
 
             if (!empty($internal)) {
-                $content->setInternalLinkContent(
+                $internalContent =
                     $this->load(
                         $internal,
                         $webspaceKey,
                         $localization,
                         $loadGhostContent
-                    )
-                );
+                    );
+                if($internalContent !== null) {
+                    $content->setInternalLinkContent($internalContent);
+                }
             }
         }
     }
 
     /**
-     * load breadcrumb for given uuid in given language
-     * @param $uuid
-     * @param $languageCode
-     * @param $webspaceKey
-     * @return BreadcrumbItemInterface[]
+     * {@inheritdoc}
      */
     public function loadBreadcrumb($uuid, $languageCode, $webspaceKey)
     {
@@ -1083,9 +1002,7 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * deletes content with subcontent in given webspace
-     * @param string $uuid UUID of content
-     * @param string $webspaceKey Key of webspace
+     * {@inheritdoc}
      */
     public function delete($uuid, $webspaceKey)
     {
@@ -1094,6 +1011,157 @@ class ContentMapper implements ContentMapperInterface
 
         $this->deleteRecursively($contentNode);
         $session->save();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function move($uuid, $destParentUuid, $userId, $webspaceKey, $languageCode)
+    {
+        return $this->copyOrMove($uuid, $destParentUuid, $userId, $webspaceKey, $languageCode);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function copy($uuid, $destParentUuid, $userId, $webspaceKey, $languageCode)
+    {
+        $result = $this->copyOrMove($uuid, $destParentUuid, $userId, $webspaceKey, $languageCode, false);
+
+        // session don't recognice a new child in parent, a refresh fixes that
+        $this->getSession()->refresh(false);
+
+        return $result;
+    }
+
+    /**
+     * copies (move = false) or move (move = true) the src (uuid) node to dest (parentUuid) node
+     * @param string $uuid
+     * @param string $destParentUuid
+     * @param integer $userId
+     * @param string $webspaceKey
+     * @param string $languageCode
+     * @param bool $move
+     * @return StructureInterface
+     */
+    private function copyOrMove($uuid, $destParentUuid, $userId, $webspaceKey, $languageCode, $move = true)
+    {
+        // find localizations
+        $webspace = $this->webspaceManager->findWebspaceByKey($webspaceKey);
+        $localizations = $webspace->getAllLocalizations();
+
+        // prepare utility
+        $session = $this->getSession();
+
+        // load from phpcr
+        $node = $session->getNodeByIdentifier($uuid);
+        $parentNode = $session->getNodeByIdentifier($destParentUuid);
+
+        // prepare content node
+        $content = $this->loadByNode($node, $languageCode, $webspaceKey, false, true);
+        $nodeName = $content->getPropertyValueByTagName('sulu.node.name');
+        $nodeName = $this->cleaner->cleanup($nodeName, $languageCode);
+        $nodeName = $this->getUniquePath($nodeName, $parentNode);
+
+        // prepare pathes
+        $path = $node->getPath();
+        $destPath = $parentNode->getPath() . '/' . $nodeName;
+
+        if ($move) {
+            // move node
+            $session->move($path, $destPath);
+        } else {
+            // copy node
+            $session->getWorkspace()->copy($path, $destPath);
+            $session->save();
+
+            // load new phpcr and content node
+            $node = $session->getNode($destPath);
+        }
+
+        foreach ($localizations as $locale) {
+            $content = $this->loadByNode($node, $locale->getLocalization(), $webspaceKey, false, true);
+
+            // prepare parent content node
+            $parentContent = $this->loadByNode($parentNode, $locale->getLocalization(), $webspaceKey, false, true);
+            $parentResourceLocator = '/';
+            if ($parentContent->hasTag('sulu.rlp')) {
+                $parentResourceLocator = $parentContent->getPropertyValueByTagName('sulu.rlp');
+            }
+            // correct resource locator
+            if (
+                $content->getType() === null && $content->hasTag('sulu.rlp') &&
+                $content->getNodeType() === Structure::NODE_TYPE_CONTENT
+            ) {
+                $this->adaptResourceLocator(
+                    $content,
+                    $node,
+                    $parentResourceLocator,
+                    $move,
+                    $webspaceKey,
+                    $locale->getLocalization()
+                );
+
+                // set changer of node
+                $this->properties->setLanguage($languageCode);
+                $node->setProperty($this->properties->getName('changer'), $userId);
+                $node->setProperty($this->properties->getName('changed'), new DateTime());
+            }
+        }
+
+        // set changer of node
+        $this->properties->setLanguage($languageCode);
+        $node->setProperty($this->properties->getName('changer'), $userId);
+        $node->setProperty($this->properties->getName('changed'), new DateTime());
+
+        $session->save();
+
+        return $this->loadByNode($node, $languageCode, $webspaceKey);
+    }
+
+    /**
+     * adopts resource locator for just moved or copied node
+     * @param StructureInterface $content
+     * @param NodeInterface $node
+     * @param string $parentResourceLocator
+     * @param boolean $move
+     * @param string $webspaceKey
+     * @param string $languageCode
+     */
+    private function adaptResourceLocator(
+        StructureInterface $content,
+        NodeInterface $node,
+        $parentResourceLocator,
+        $move,
+        $webspaceKey,
+        $languageCode
+    ) {
+        // get strategy
+        $strategy = $this->getResourceLocator()->getStrategy();
+
+        // get resource locator pathes
+        $srcResourceLocator = $content->getPropertyValueByTagName('sulu.rlp');
+
+        if ($srcResourceLocator !== null) {
+            $resourceLocatorPart = PathHelper::getNodeName($srcResourceLocator);
+        } else {
+            $resourceLocatorPart = $content->getPropertyValueByTagName('sulu.node.name');
+        }
+
+        // generate new resourcelocator
+        $destResourceLocator = $strategy->generate(
+            $resourceLocatorPart,
+            $parentResourceLocator,
+            $webspaceKey,
+            $languageCode
+        );
+
+        // move resourcelocator
+        if ($move) {
+            $strategy->move($srcResourceLocator, $destResourceLocator, $webspaceKey, $languageCode);
+        } else {
+            $strategy->save($node, $destResourceLocator, $webspaceKey, $languageCode);
+        }
     }
 
     /**
@@ -1188,7 +1256,7 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * calculates publich state of node
+     * calculates publish state of node
      */
     private function getInheritedState(NodeInterface $contentNode, $statePropertyName, $webspaceKey)
     {

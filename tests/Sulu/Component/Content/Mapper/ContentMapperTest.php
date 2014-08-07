@@ -2630,6 +2630,184 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals('http://www.google.at', $structure3->getResourceLocator());
         $this->assertEquals('Test', $structure3->getNodeName());
     }
+
+    /**
+     * @return StructureInterface[]
+     */
+    private function prepareCopyMoveTestData()
+    {
+        $data = array(
+            array(
+                'name' => 'Page-1',
+                'url' => '/page-1'
+            ),
+            array(
+                'name' => 'Sub',
+                'url' => '/page-1/sub'
+            ),
+            array(
+                'name' => 'Sub',
+                'url' => '/page-1/sub-1'
+            ),
+            array(
+                'name' => 'Page-2',
+                'url' => '/page-2'
+            ),
+            array(
+                'name' => 'Sub',
+                'url' => '/page-2/sub'
+            ),
+            array(
+                'name' => 'Sub',
+                'url' => '/page-2/sub-1'
+            ),
+            array(
+                'name' => 'SubPage',
+                'url' => '/page-2/subpage'
+            )
+        );
+
+        $this->eventDispatcher->expects($this->atLeastOnce())
+            ->method('dispatch')
+            ->with(
+                $this->equalTo(ContentEvents::NODE_SAVE),
+                $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeEvent')
+            );
+
+        $this->mapper->saveStartPage(array('name' => 'Start Page'), 'overview', 'default', 'de', 1);
+
+        // save content
+        $data[0] = $this->mapper->save($data[0], 'overview', 'default', 'de', 1);
+        $data[1] = $this->mapper->save($data[1], 'overview', 'default', 'de', 1, true, null, $data[0]->getUuid());
+        $data[2] = $this->mapper->save($data[2], 'overview', 'default', 'de', 1, true, null, $data[0]->getUuid());
+        $data[3] = $this->mapper->save($data[3], 'overview', 'default', 'de', 1);
+        $data[4] = $this->mapper->save($data[4], 'overview', 'default', 'de', 1, true, null, $data[3]->getUuid());
+        $data[5] = $this->mapper->save($data[5], 'overview', 'default', 'de', 1, true, null, $data[3]->getUuid());
+        $data[6] = $this->mapper->save($data[6], 'overview', 'default', 'de', 1, true, null, $data[3]->getUuid());
+
+        return $data;
+    }
+
+    public function testMove()
+    {
+        $data = $this->prepareCopyMoveTestData();
+
+        $result = $this->mapper->move($data[6]->getUuid(), $data[0]->getUuid(), 2, 'default', 'de');
+
+        $this->assertEquals($data[6]->getUuid(), $result->getUuid());
+        $this->assertEquals('/page-1/subpage', $result->getPath());
+        $this->assertEquals(2, $result->getChanger());
+
+        $test = $this->mapper->loadByParent($data[0]->getUuid(), 'default', 'de', 4);
+        $this->assertEquals(3, sizeof($test));
+
+        $test = $this->mapper->loadByParent($data[3]->getUuid(), 'default', 'de', 4);
+        $this->assertEquals(2, sizeof($test));
+
+        $test = $this->mapper->load($data[6]->getUuid(), 'default', 'de', 4);
+        $this->assertEquals('/page-1/subpage', $test->getResourceLocator());
+        $this->assertEquals(2, $test->getChanger());
+    }
+
+    public function testMoveExistingName()
+    {
+        $data = $this->prepareCopyMoveTestData();
+
+        $result = $this->mapper->move($data[5]->getUuid(), $data[0]->getUuid(), 2, 'default', 'de');
+
+        $this->assertEquals($data[5]->getUuid(), $result->getUuid());
+        $this->assertEquals('/page-1/sub-2', $result->getPath());
+        $this->assertEquals(2, $result->getChanger());
+
+        $test = $this->mapper->loadByParent($data[0]->getUuid(), 'default', 'de', 4);
+        $this->assertEquals(3, sizeof($test));
+
+        $test = $this->mapper->loadByParent($data[3]->getUuid(), 'default', 'de', 4);
+        $this->assertEquals(2, sizeof($test));
+
+        $test = $this->mapper->load($data[5]->getUuid(), 'default', 'de', 4);
+        $this->assertEquals('/page-1/sub-1-1', $test->getResourceLocator());
+        $this->assertEquals(2, $test->getChanger());
+    }
+
+    public function testMoveGhostPage()
+    {
+        $data = $this->prepareCopyMoveTestData();
+
+        $result = $this->mapper->move($data[5]->getUuid(), $data[0]->getUuid(), 2, 'default', 'en');
+
+        $this->assertEquals($data[5]->getUuid(), $result->getUuid());
+        $this->assertEquals('/page-1/sub-2', $result->getPath());
+        $this->assertEquals(2, $result->getChanger());
+
+        $result = $this->mapper->load($result->getUuid(), 'default', 'en', true);
+
+        $this->assertEquals($data[5]->getUuid(), $result->getUuid());
+        $this->assertEquals('/page-1/sub-2', $result->getPath());
+        $this->assertEquals(1, $result->getChanger());
+        $this->assertEquals('ghost', $result->getType()->getName());
+        $this->assertEquals('de', $result->getType()->getValue());
+
+        $test = $this->mapper->loadByParent($data[0]->getUuid(), 'default', 'de', 4);
+        $this->assertEquals(3, sizeof($test));
+
+        $test = $this->mapper->loadByParent($data[3]->getUuid(), 'default', 'de', 4);
+        $this->assertEquals(2, sizeof($test));
+
+        $test = $this->mapper->load($data[5]->getUuid(), 'default', 'de', 4);
+        $this->assertEquals('/page-1/sub-1-1', $test->getResourceLocator());
+        $this->assertEquals(1, $test->getChanger());
+    }
+
+    public function testCopy()
+    {
+        $data = $this->prepareCopyMoveTestData();
+
+        $result = $this->mapper->copy($data[6]->getUuid(), $data[0]->getUuid(), 2, 'default', 'de');
+
+        $this->assertNotEquals($data[6]->getUuid(), $result->getUuid());
+        $this->assertEquals('/page-1/subpage', $result->getPath());
+        $this->assertEquals(2, $result->getChanger());
+
+        $test = $this->mapper->loadByParent($data[0]->getUuid(), 'default', 'de', 4);
+        $this->assertEquals(3, sizeof($test));
+
+        $test = $this->mapper->loadByParent($data[3]->getUuid(), 'default', 'de', 4);
+        $this->assertEquals(3, sizeof($test));
+
+        $test = $this->mapper->load($data[6]->getUuid(), 'default', 'de', 4);
+        $this->assertEquals('/page-2/subpage', $test->getResourceLocator());
+        $this->assertEquals(1, $test->getChanger());
+
+        $test = $this->mapper->load($result->getUuid(), 'default', 'de', 4);
+        $this->assertEquals('/page-1/subpage', $test->getResourceLocator());
+        $this->assertEquals(2, $test->getChanger());
+    }
+
+    public function testCopyExistingName()
+    {
+        $data = $this->prepareCopyMoveTestData();
+
+        $result = $this->mapper->copy($data[5]->getUuid(), $data[0]->getUuid(), 2, 'default', 'de');
+
+        $this->assertNotEquals($data[5]->getUuid(), $result->getUuid());
+        $this->assertEquals('/page-1/sub-2', $result->getPath());
+        $this->assertEquals(2, $result->getChanger());
+
+        $test = $this->mapper->loadByParent($data[0]->getUuid(), 'default', 'de', 4);
+        $this->assertEquals(3, sizeof($test));
+
+        $test = $this->mapper->loadByParent($data[3]->getUuid(), 'default', 'de', 4);
+        $this->assertEquals(3, sizeof($test));
+
+        $test = $this->mapper->load($data[5]->getUuid(), 'default', 'de', 4);
+        $this->assertEquals('/page-2/sub-1', $test->getResourceLocator());
+        $this->assertEquals(1, $test->getChanger());
+
+        $test = $this->mapper->load($result->getUuid(), 'default', 'de', 4);
+        $this->assertEquals('/page-1/sub-2', $test->getResourceLocator());
+        $this->assertEquals(2, $test->getChanger());
+    }
 }
 
 class TestExtension extends StructureExtension
