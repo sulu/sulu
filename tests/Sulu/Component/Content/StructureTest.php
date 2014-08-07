@@ -102,7 +102,7 @@ class StructureTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(2, $structureArray['nodeState']);
         $this->assertEquals(1, $structureArray['globalState']);
-        $this->assertEquals(true, $structureArray['navigation']);
+        $this->assertEquals(true, $structureArray['navContexts']);
         $this->assertEquals(false, $structureArray['hasSub']);
         $this->assertEquals('ghost', $structureArray['type']['name']);
         $this->assertEquals('en_us', $structureArray['type']['value']);
