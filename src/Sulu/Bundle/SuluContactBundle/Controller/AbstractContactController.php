@@ -261,7 +261,7 @@ abstract class AbstractContactController extends RestController implements Class
 
     /**
      * Process all categories of request
-     * @param $contact The contact on which is processed
+     * @param $contact - the contact which is processed
      * @param $categories
      * @return bool True if the processing was successful, otherwise false
      */
@@ -276,7 +276,7 @@ abstract class AbstractContactController extends RestController implements Class
         };
 
         $add = function ($category) use ($contact) {
-            return $this->addCategorie($contact, $category);
+            return $this->addCategories($contact, $category);
         };
 
         $result = $this->getRestHelper()->processSubEntities($contact->getCategories(), $categories, $get, $add, null, $delete);
@@ -292,7 +292,7 @@ abstract class AbstractContactController extends RestController implements Class
      * @throws EntityNotFoundException
      * @throws EntityIdAlreadySetException
      */
-    protected function addCategorie($contact, $data)
+    protected function addCategories($contact, $data)
     {
         $success = true;
         $categoryEntity = 'SuluCategoryBundle:Category';
