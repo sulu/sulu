@@ -243,6 +243,12 @@ define([
                 this.delContents(ids);
             }, this);
 
+            // move selected content
+            this.sandbox.on('sulu.content.contents.move', this.move, this);
+
+            // move selected content
+            this.sandbox.on('sulu.content.contents.copy', this.copy, this);
+
             // get resource locator
             this.sandbox.once('sulu.content.contents.get-rl', function(title, callback) {
                 this.getResourceLocator(title, this.template, callback);
@@ -263,11 +269,47 @@ define([
                 });
         },
 
+        move: function(id, parentId, successCallback, errorCallback) {
+            var url = [
+                '/admin/api/nodes/', id, '?webspace=', this.options.webspace, '&language=' , this.options.language , '&action=move&destination=', parentId
+            ].join('');
+
+            this.sandbox.util.save(url, 'POST', {})
+                .then(function(data) {
+                    if (!!successCallback && typeof successCallback === 'function') {
+                        successCallback(data);
+                    }
+                }.bind(this))
+                .fail(function(jqXHR, textStatus, error) {
+                    if (!!errorCallback && typeof errorCallback === 'function') {
+                        errorCallback(error);
+                    }
+                }.bind(this));
+        },
+
+        copy: function(id, parentId, successCallback, errorCallback) {
+            var url = [
+                '/admin/api/nodes/', id, '?webspace=', this.options.webspace, '&language=' , this.options.language , '&action=copy&destination=', parentId
+            ].join('');
+
+            this.sandbox.util.save(url, 'POST', {})
+                .then(function(data) {
+                    if (!!successCallback && typeof successCallback === 'function') {
+                        successCallback(data);
+                    }
+                }.bind(this))
+                .fail(function(jqXHR, textStatus, error) {
+                    if (!!errorCallback && typeof errorCallback === 'function') {
+                        errorCallback(error);
+                    }
+                }.bind(this));
+        },
+
         del: function(id) {
             this.showConfirmSingleDeleteDialog(function(wasConfirmed) {
                 if (wasConfirmed) {
                     this.sandbox.emit('sulu.header.toolbar.item.loading', 'options-button');
-                    if (id !== this.content.get('id')) {
+                    if (!this.content || id !== this.content.get('id')) {
                         var content = new Content({id: id});
                         content.fullDestroy(this.options.webspace, this.options.language, {
                             processData: true,
