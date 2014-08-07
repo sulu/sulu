@@ -40182,6 +40182,7 @@ define('__component__$overlay@husky',[], function() {
             // in a clickhandler with openOnStart-option true
             //this.sandbox.stop();
 
+            this.sandbox.stop('*');
             this.sandbox.stopListening();
             this.sandbox.dom.remove(this.$el);
         },
