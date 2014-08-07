@@ -121,7 +121,9 @@ define(['app-config'], function(AppConfig) {
                     // cancel callback
                     this.sandbox.emit('sulu.header.toolbar.item.enable', 'template', false);
 
-                    return false;
+                    if (!!this.template) {
+                        this.sandbox.emit('sulu.header.toolbar.item.change', 'template', this.template);
+                    }
                 }.bind(this),
 
                 function() {
