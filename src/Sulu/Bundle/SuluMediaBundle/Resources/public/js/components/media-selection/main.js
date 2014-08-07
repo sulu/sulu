@@ -29,6 +29,7 @@ define(['sulumedia/collection/collections'], function (Collections) {
             thumbnailSize: '50x50',
             resultKey: 'media',
             positionSelectedClass: 'selected',
+            hidePositionElement: false,
             translations: {
                 noMediaSelected: 'media-selection.nomedia-selected',
                 addImages: 'media-selection.add-images',
@@ -99,13 +100,13 @@ define(['sulumedia/collection/collections'], function (Collections) {
         },
 
         templates = {
-            skeleton: function (options) {
+            skeleton: function(options, positionClass) {
                 return [
                     '<div class="white-box form-element" id="', options.ids.container, '">',
                     '   <div class="header">',
                     '       <span class="fa-plus-circle icon left action" id="', options.ids.addButton, '"></span>',
-                    '       <div class="position">',
-                    '<div class="husky-position" id="', options.ids.displayOption , '">',
+                    '       <div class="position ',positionClass,'">',
+                    '<div class="husky-position" id="', options.ids.displayOption ,'">',
                     '    <div class="top left" data-position="leftTop"></div>',
                     '    <div class="top middle" data-position="top"></div>',
                     '    <div class="top right" data-position="rightTop"></div>',
@@ -167,7 +168,7 @@ define(['sulumedia/collection/collections'], function (Collections) {
                     '   <span class="value">', value, '</span>',
                     '   <span class="fa-times remove"></span>',
                     '</li>'
-                ].join('')
+                ].join('');
             }
         },
 
@@ -201,7 +202,12 @@ define(['sulumedia/collection/collections'], function (Collections) {
                 collectionSelect: 'media-selection-' + this.options.instanceName + '-collection-select',
                 dropzone: 'media-selection-' + this.options.instanceName + '-dropzone'
             };
-            this.sandbox.dom.html(this.$el, templates.skeleton(this.options));
+
+            if(!!this.options.hidePositionElement){
+                this.sandbox.dom.html(this.$el, templates.skeleton(this.options, 'hidden'));
+            } else {
+                this.sandbox.dom.html(this.$el, templates.skeleton(this.options, ''));
+            }
 
             // init container
             this.$container = this.sandbox.dom.find(getId.call(this, 'container'), this.$el);
