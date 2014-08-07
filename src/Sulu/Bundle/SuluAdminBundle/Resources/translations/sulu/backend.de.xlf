@@ -18,6 +18,22 @@
                 <source>public.key</source>
                 <target>Diese Liste ist leer</target>
             </trans-unit>
+            <trans-unit id="a10bd71863ade53bc0e1bd8822e865fc" resname="public.tags">
+                <source>public.tags</source>
+                <target>Tags</target>
+            </trans-unit>
+            <trans-unit id="a10bd71863ade53bc0e1bd8822e865d5" resname="public.show-tags">
+                <source>public.show-tags</source>
+                <target>Show tags</target>
+            </trans-unit>
+            <trans-unit id="a10bd71863adc53bc0e1bd8822e865d5" resname="public.view-all">
+                <source>public.view-all</source>
+                <target>view all</target>
+            </trans-unit>
+            <trans-unit id="a10bd71863adc53bc0e1bd8822e865f5" resname="public.view-less">
+                <source>public.view-less</source>
+                <target>view less</target>
+            </trans-unit>
             <trans-unit id="a10bd71863ade53bc0e1bd8822e8bdbc" resname="header.add">
                 <source>header.add</source>
                 <target>Hinzufügen</target>
@@ -1092,22 +1108,6 @@
                 <source>contact.accounts.correspondence</source>
                 <target>Korrespondenz per</target>
             </trans-unit>
-            <trans-unit id="2f58801f9b542aed46820bf42ee5cd53" resname="media.media.description">
-                <source>media.media.description</source>
-                <target>Beschreibung</target>
-            </trans-unit>
-            <trans-unit id="3c8f1c7c02abd468cc0794e987e2b2cf" resname="media.media.size">
-                <source>media.media.size</source>
-                <target>Dateigröße</target>
-            </trans-unit>
-            <trans-unit id="6f5e8f5b65fd4e7ae7ec509e742cc85f" resname="media.media.thumbnails">
-                <source>media.media.thumbnails</source>
-                <target>Vorschaubild</target>
-            </trans-unit>
-            <trans-unit id="6f2c89027621ffebd6cfbe33bdf16455" resname="sulu.media.new-collection">
-                <source>sulu.media.new-collection</source>
-                <target>Neue Kollektion</target>
-            </trans-unit>
             <trans-unit id="f22404eb2d33ceaf238eefc31a71d124" resname="contact.contacts.salutation">
                 <source>contact.contacts.salutation</source>
                 <target>Grußformel</target>
@@ -1341,10 +1341,6 @@
                 <source>contact.accounts.termsOfPayment.select</source>
                 <target>Bitte wählen ...</target>
             </trans-unit>
-            <trans-unit id="643c99ff2964652633a5ca2169f22236" resname="labels.success.media-upload-desc">
-                <source>labels.success.media-upload-desc</source>
-                <target>Medien erfolgreich hochgeladen.</target>
-            </trans-unit>
             <trans-unit id="643d99ff2964652633a5ca2169f22237" resname="content-navigation.contacts.activities">
                 <source>content-navigation.contacts.activities</source>
                 <target>Aktivitäten</target>
@@ -1473,10 +1469,6 @@
                 <source>content-navigation.contents.excerpt</source>
                 <target>Auszug</target>
             </trans-unit>
-            <trans-unit id="243d99ff2f64652633a5ca2169f22254" resname="media-selection.nomedia-selected">
-                <source>media-selection.nomedia-selected</source>
-                <target>Keine Medien ausgewählt</target>
-            </trans-unit>
             <trans-unit id="443d99ff2f64652633a5ca2169f22254" resname="sulu.content.seo.title">
                 <source>sulu.content.seo.title</source>
                 <target>Titel</target>
@@ -1552,10 +1544,6 @@
             <trans-unit id="c364388d91823e70cc7d829be1e81abc" resname="select.add-item">
                 <source>select.add-item</source>
                 <target>Neuer Eintrag</target>
-            </trans-unit>
-            <trans-unit id="c50af528fc121350142c0b4720e29a8a" resname="media-selection.add-images">
-                <source>media-selection.add-images</source>
-                <target>Bilder hinzufügen</target>
             </trans-unit>
             <trans-unit id="c50af528fc121350142c0b4720e29a8c" resname="public.choose">
                 <source>public.choose</source>

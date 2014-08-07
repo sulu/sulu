@@ -112,6 +112,11 @@ define([], function () {
                 defaults.splice(2, 1);
                 return defaults;
             },
+            onlyAdd: function() {
+                var defaults = templates.default.call(this);
+                defaults.splice(1, 2);
+                return defaults;
+            },
             changeable: function () {
                 return [
                     {
