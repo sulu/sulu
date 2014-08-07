@@ -102,7 +102,7 @@ define(function() {
             this.startOverlay(this.sandbox.util.extend(true, {}, {
                 title: this.sandbox.translate(title),
                 message: this.sandbox.translate(message),
-                cancelCallback: cancelCallback,
+                closeCallback: cancelCallback,
                 type: 'error'
             }, options));
         },
