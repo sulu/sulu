@@ -1126,7 +1126,7 @@ class ContentMapper implements ContentMapperInterface
      * @param StructureInterface $content
      * @param NodeInterface $node
      * @param string $parentResourceLocator
-     * @param boolean $deleteSource
+     * @param boolean $move
      * @param string $webspaceKey
      * @param string $languageCode
      */
@@ -1134,7 +1134,7 @@ class ContentMapper implements ContentMapperInterface
         StructureInterface $content,
         NodeInterface $node,
         $parentResourceLocator,
-        $deleteSource,
+        $move,
         $webspaceKey,
         $languageCode
     ) {
@@ -1159,7 +1159,7 @@ class ContentMapper implements ContentMapperInterface
         );
 
         // move resourcelocator
-        if ($deleteSource) {
+        if ($move) {
             $strategy->move($srcResourceLocator, $destResourceLocator, $webspaceKey, $languageCode);
         } else {
             $strategy->save($node, $destResourceLocator, $webspaceKey, $languageCode);
