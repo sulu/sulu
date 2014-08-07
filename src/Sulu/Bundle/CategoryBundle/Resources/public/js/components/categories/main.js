@@ -134,7 +134,7 @@ define(['sulucategory/model/category',
          * Binds custom related events
          */
         bindCustomEvents: function () {
-            this.sandbox.on('sulu.category.locale-changed', this.renderForm.bind(this));
+            this.sandbox.on('sulu.header.language-changed', this.renderForm.bind(this));
 
             // navigate to category list
             this.sandbox.on(NAVIGATE_CATEGORY_LIST.call(this), this.navigateToList.bind(this));
