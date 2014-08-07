@@ -1090,9 +1090,21 @@
                 <source>contact.accounts.correspondence</source>
                 <target>Correspondence via</target>
             </trans-unit>
-            <trans-unit id="ebc1d1f4df64e6f9b1da751d60e4807b" resname="poolalpin.supplier-internal">
-                <source>poolalpin.supplier-internal</source>
-                <target>Bonus</target>
+            <trans-unit id="2f58801f9b542aed46820bf42ee5cd53" resname="media.media.description">
+                <source>media.media.description</source>
+                <target>Description</target>
+            </trans-unit>
+            <trans-unit id="3c8f1c7c02abd468cc0794e987e2b2cf" resname="media.media.size">
+                <source>media.media.size</source>
+                <target>Filesize</target>
+            </trans-unit>
+            <trans-unit id="6f5e8f5b65fd4e7ae7ec509e742cc85f" resname="media.media.thumbnails">
+                <source>media.media.thumbnails</source>
+                <target>Thumbnail</target>
+            </trans-unit>
+            <trans-unit id="6f2c89027621ffebd6cfbe33bdf16455" resname="sulu.media.new-collection">
+                <source>sulu.media.new-collection</source>
+                <target>New collection</target>
             </trans-unit>
             <trans-unit id="f22404eb2d33ceaf238eefc31a71d124" resname="contact.contacts.salutation">
                 <source>contact.contacts.salutation</source>
@@ -1326,145 +1338,13 @@
                 <source>contact.accounts.termsOfPayment.select</source>
                 <target>Please choose ...</target>
             </trans-unit>
-            <trans-unit id="643c99ff2964652633a5ca2178d22211" resname="poolalpin.contacts.bonusAccountable">
-                <source>poolalpin.contacts.bonusAccountable</source>
-                <target>Accounting</target>
-            </trans-unit>
-            <trans-unit id="643c99ff2964652633a5ca2178d22212" resname="poolalpin.contacts.classificationFrom">
-                <source>poolalpin.contacts.classificationFrom</source>
-                <target>From</target>
-            </trans-unit>
-            <trans-unit id="643c99ff2964652633a5ca2178d22213" resname="poolalpin.contacts.classificationTo">
-                <source>poolalpin.contacts.classificationTo</source>
-                <target>To</target>
-            </trans-unit>
-            <trans-unit id="643c99ff2964652633a5ca2178d22214" resname="poolalpin.contacts.bonusSettlement">
-                <source>poolalpin.contacts.bonusSettlement</source>
-                <target>Account bonus</target>
-            </trans-unit>
-            <trans-unit id="643c99ff2964652633a5ca2178d22215" resname="poolalpin.contacts.bonusInternal">
-                <source>poolalpin.contacts.bonusInternal</source>
-                <target>Bonusinfo intern</target>
-            </trans-unit>
-            <trans-unit id="643c99ff2964652633a5ca2178d22216" resname="poolalpin.contacts.conditions">
-                <source>poolalpin.contacts.conditions</source>
-                <target>Conditions</target>
-            </trans-unit>
-            <trans-unit id="643c99ff2964652633a5ca2178d22217" resname="poolalpin.contacts.modalities">
-                <source>poolalpin.contacts.modalities</source>
-                <target>Modalities</target>
-            </trans-unit>
-            <trans-unit id="643c99ff2964652633a5ca2178d22218" resname="poolalpin.contacts.condition.add.label">
-                <source>poolalpin.contacts.condition.add.label</source>
-                <target>Add bonus</target>
-            </trans-unit>
-            <trans-unit id="643c99ff2964652633a5ca2178d22219" resname="poolalpin.contacts.condition.label">
-                <source>poolalpin.contacts.condition.label</source>
-                <target>Bonus</target>
-            </trans-unit>
-            <trans-unit id="643c99ff2964652633a5ca2178d22220" resname="poolalpin.contacts.price">
-                <source>poolalpin.contacts.price</source>
-                <target>Price</target>
-            </trans-unit>
-            <trans-unit id="643c99ff2964652633a5ca2178d22221" resname="poolalpin.contacts.paymentMember">
-                <source>poolalpin.contacts.paymentMember</source>
-                <target>Payment Member</target>
-            </trans-unit>
-            <trans-unit id="643c99ff2964652633a5ca2178d22222" resname="poolalpin.contacts.bonusConditions">
-                <source>poolalpin.contacts.bonusConditions</source>
-                <target>Bonus</target>
-            </trans-unit>
-            <trans-unit id="643c99ff2964652633a5ca2178d22223" resname="poolalpin.contacts.cfp">
-                <source>poolalpin.contacts.cfp</source>
-                <target>CFP</target>
-            </trans-unit>
-            <trans-unit id="643c99ff2964652633a5ca2178d22224" resname="poolalpin.contacts.condition.description">
-                <source>poolalpin.contacts.condition.description</source>
-                <target>Description</target>
-            </trans-unit>
-            <trans-unit id="643c99ff2964652633a5ca2178d22225" resname="poolalpin.contacts.condition.person">
-                <source>poolalpin.contacts.condition.person</source>
-                <target>Contact person</target>
-            </trans-unit>
-            <trans-unit id="643c99ff2964652633a5ca2178d22226" resname="poolalpin.contacts.condition.mode">
-                <source>poolalpin.contacts.condition.mode</source>
-                <target>Mode</target>
-            </trans-unit>
-            <trans-unit id="643c99ff2964652633a5ca2178d22227" resname="poolalpin.contacts.condition.precentage">
-                <source>poolalpin.contacts.condition.precentage</source>
-                <target>Percentage</target>
-            </trans-unit>
-            <trans-unit id="643c99ff2964652633a5ca2178d22228" resname="poolalpin.contacts.condition.payout.percentage">
-                <source>poolalpin.contacts.condition.payout</source>
-                <target>Payout %</target>
-            </trans-unit>
-            <trans-unit id="643c99ff2964652633a5ca2178d22256" resname="poolalpin.contacts.condition.payout">
-                <source>poolalpin.contacts.condition.payout</source>
-                <target>Payout</target>
-            </trans-unit>
-            <trans-unit id="643c99ff2964652633a5ca2178d22229" resname="poolalpin.contacts.condition.conditionFrom">
-                <source>poolalpin.contacts.condition.conditionFrom</source>
-                <target>From</target>
-            </trans-unit>
-            <trans-unit id="643c99ff2964652633a5ca2178d22230" resname="poolalpin.contacts.condition.conditionTo">
-                <source>poolalpin.contacts.condition.conditionTo</source>
-                <target>To</target>
-            </trans-unit>
-            <trans-unit id="643c99ff2964652633a5ca2178d22231" resname="poolalpin.contacts.condition.note">
-                <source>poolalpin.contacts.condition.note</source>
-                <target>Note</target>
-            </trans-unit>
-            <trans-unit id="643c99ff2964652633a5ca2178d22232" resname="poolalpin.contacts.condition.edit.label">
-                <source>poolalpin.contacts.condition.edit.label</source>
-                <target>Edit condition</target>
-            </trans-unit>
-            <trans-unit id="643c99ff2964652633a5ca2178d22233" resname="poolalpin.contacts.condition.add.label">
-                <source>poolalpin.contacts.condition.add.label</source>
-                <target>Add condition</target>
-            </trans-unit>
-            <trans-unit id="643c99ff2964652633a5ca2178d22234" resname="poolalpin.contacts.condition.mode.amount">
-                <source>poolalpin.contacts.condition.mode.amount</source>
-                <target>Amount</target>
-            </trans-unit>
-            <trans-unit id="643c99ff2964652633a5ca2178d22235" resname="poolalpin.contacts.condition.mode.percentage">
-                <source>poolalpin.contacts.condition.mode.percentage</source>
-                <target>Percentage</target>
-            </trans-unit>
             <trans-unit id="643c99ff2964652633a5ca2178d22236" resname="contact.account.condition.select">
                 <source>contact.account.condition.select</source>
                 <target>Bitte wählen ...</target>
             </trans-unit>
-            <trans-unit id="643c99ff2964652633a5ca2178d22245" resname="poolalpin.contacts.condition.unit.litre">
-                <source>poolalpin.contacts.condition.unit.litre</source>
-                <target>Litre</target>
-            </trans-unit>
-            <trans-unit id="643c99ff2964652633a5ca2178d22237" resname="poolalpin.contacts.condition.unit.kg">
-                <source>poolalpin.contacts.condition.unit.kg</source>
-                <target>KG</target>
-            </trans-unit>
-            <trans-unit id="643c99ff2964652633a5ca2178d22238" resname="poolalpin.contacts.charging">
-                <source>poolalpin.contacts.charging</source>
-                <target>Charging</target>
-            </trans-unit>
-            <trans-unit id="643c99ff2964652633a5ca2178d22239" resname="poolalpin.contacts.contractType">
-                <source>poolalpin.contacts.contractType</source>
-                <target>Contracttype</target>
-            </trans-unit>
-            <trans-unit id="643c99ff2964652633a5ca2178d22241" resname="poolalpin.contacts.condition.price">
-                <source>poolalpin.contacts.condition.price</source>
-                <target>Price</target>
-            </trans-unit>
-            <trans-unit id="643c99ff2964652633a5ca2178d2242" resname="poolalpin.contacts.condition.currency">
-                <source>poolalpin.contacts.condition.currency</source>
-                <target>Currency</target>
-            </trans-unit>
-            <trans-unit id="643c99ff2964652633a5ca2178d22243" resname="poolalpin.contacts.condition.unit">
-                <source>poolalpin.contacts.condition.unit</source>
-                <target>Unit</target>
-            </trans-unit>
-            <trans-unit id="643c99ff2964652633a5ca2178d22244" resname="poolalpin.contacts.condition.quantity">
-                <source>poolalpin.contacts.condition.quantity</source>
-                <target>Quantity</target>
+            <trans-unit id="643c99ff2964652633a5ca2169f22236" resname="labels.success.media-upload-desc">
+                <source>labels.success.media-upload-desc</source>
+                <target>Media successfully uploaded.</target>
             </trans-unit>
             <trans-unit id="643d99ff2964652633a5ca2169f22237" resname="content-navigation.contacts.activities">
                 <source>content-navigation.contacts.activities</source>
@@ -1585,50 +1465,6 @@
             <trans-unit id="643d99fa2964652633a5ca2169f22242" resname="dropdown.no-selection">
                 <source>labels.success.category-delete-desc</source>
                 <target>No selection</target>
-            </trans-unit>
-            <trans-unit id="643d99fa2964652633a5ca2169f22243" resname="poolalpin.contact.condition.discount">
-                <source>poolalpin.contact.condition.discount</source>
-                <target>Service fee discount</target>
-            </trans-unit>
-            <trans-unit id="643d99fa2964652633a5ca2169f22244" resname="poolalpin.contact.condition.quantity-base">
-                <source>poolalpin.contact.condition.quantity-base</source>
-                <target>Service fee base</target>
-            </trans-unit>
-            <trans-unit id="643d99fa2964652633a5ca2169f22245" resname="poolalpin.customer-internal">
-                <source>poolalpin.customer-internal</source>
-                <target>Member</target>
-            </trans-unit>
-            <trans-unit id="643d99fa2964652633a5ca2169f22246" resname="poolalpin.contact.notes">
-                <source>poolalpin.contact.notes</source>
-                <target>Notes</target>
-            </trans-unit>
-            <trans-unit id="643d99fa2964652633a5ca2169f22247" resname="poolalpin.contact.noticeInquiry">
-                <source>poolalpin.contact.noticeInquiry</source>
-                <target>Inquiry</target>
-            </trans-unit>
-            <trans-unit id="643d99fa2964652633a5ca2169f22248" resname="poolalpin.contact.noticeOrder">
-                <source>poolalpin.contact.noticeOrder</source>
-                <target>Order</target>
-            </trans-unit>
-            <trans-unit id="643d99fa2964652633a5ca2169f22249" resname="poolalpin.contact.noticeCorporation">
-                <source>poolalpin.contact.noticeCorporation</source>
-                <target>Corporation</target>
-            </trans-unit>
-            <trans-unit id="643d99fa2964652633a5ca2169f22250" resname="poolalpin.contact.noticeDelivery">
-                <source>poolalpin.contact.noticeDelivery</source>
-                <target>Delivery</target>
-            </trans-unit>
-            <trans-unit id="643d99fa2964652633a5ca2169f22251" resname="poolalpin.contact.noticeConditions">
-                <source>poolalpin.contact.noticeConditions</source>
-                <target>Conditions</target>
-            </trans-unit>
-            <trans-unit id="643d99fa2964652633a5ca2169f22252" resname="poolalpin.contact.service-fee.add.label">
-                <source>poolalpin.contact.service-fee.add.label</source>
-                <target>Add service fee</target>
-            </trans-unit>
-            <trans-unit id="643d99fa2964652633a5ca2169f22253" resname="poolalpin.contact.service-fee.label">
-                <source>poolalpin.contact.service-fee.label</source>
-                <target>Service fee</target>
             </trans-unit>
             <trans-unit id="343d99ff2f64652633a5ca2169f22254" resname="content-navigation.contents.seo">
                 <source>content-navigation.contents.seo</source>
@@ -1757,10 +1593,6 @@
             <trans-unit id="a50af522ac181350142c0b4720e29a2f" resname="sulu.content.seo.keywords-left">
                 <source>sulu.content.seo.keywords-left</source>
                 <target>keywords left</target>
-            </trans-unit>
-            <trans-unit id="a50af522ac181350142c0b4720e29a3f" resname="poolalpin.contacts.condition.categorySelection">
-                <source>poolalpin.contacts.condition.categorySelection</source>
-                <target>Categoryselection</target>
             </trans-unit>
             <trans-unit id="a50af522a1231350142c0b4720e29a3f" resname="public.no-title">
                 <source>public.no-title</source>
