@@ -1050,7 +1050,6 @@ class ContentMapper implements ContentMapperInterface
         $webspace = $this->webspaceManager->findWebspaceByKey($webspaceKey);
         $localizations = $webspace->getAllLocalizations();
 
-
         // prepare utility
         $session = $this->getSession();
 
@@ -1078,7 +1077,6 @@ class ContentMapper implements ContentMapperInterface
 
             // load new phpcr and content node
             $node = $session->getNode($destPath);
-            $content = $this->loadByNode($node, $languageCode, $webspaceKey);
         }
 
         foreach ($localizations as $locale) {
