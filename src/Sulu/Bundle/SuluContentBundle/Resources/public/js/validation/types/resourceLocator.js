@@ -37,7 +37,7 @@ define([
 
                     var val = this.getValue(),
                         part = App.dom.data($el, 'part');
-                    
+
                     return part.length > 0 && val !== '/';
                 }
             };
