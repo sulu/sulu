@@ -11,8 +11,9 @@ define([
     'sulucontact/model/contact',
     'sulucontact/model/activity',
     'sulucontact/model/title',
-    'sulucontact/model/position'
-], function(Contact, Activity, Title, Position) {
+    'sulucontact/model/position',
+    'sulucategory/model/category'
+], function(Contact, Activity, Title, Position, Category) {
 
     'use strict';
 
@@ -219,6 +220,13 @@ define([
         save: function(data) {
             this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
             this.contact.set(data);
+
+            this.contact.get('categories').reset();
+            this.sandbox.util.foreach(data.categories,function(id){
+                var category = Category.findOrCreate({id: id});
+                this.contact.get('categories').add(category);
+            }.bind(this));
+
             this.contact.save(null, {
                 // on success save contacts id
                 success: function(response) {

@@ -242,13 +242,15 @@
     </div>
 
     {% block tags %}
-        <div class="form-horizontal changeListener">
-            <h2 class="divider"><%= translate('tag.tags.title') %></h2>
-
-            <div class="form-group">
-                <label></label>
-
-                <div id="tags"></div>
+        <div class="grid">
+            <div class="grid-row small">
+                <h2 class="divider"><%= translate('contact.contacts.assignment') %></h2>
+            </div>
+            <div class="grid-row form-horizontal changeListener">
+                <div class="form-group">
+                    <label><%= translate('tag.tags.title') %></label>
+                    <div id="tags"></div>
+                </div>
             </div>
         </div>
     {% endblock %}
