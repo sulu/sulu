@@ -28558,6 +28558,22 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         },
 
         /**
+         * triggered when children were collapsed
+         * @event husky.datagrid.table.children.collapsed
+         */
+        CHILDREN_COLLAPSED = function() {
+            return this.datagrid.createEventName.call(this.datagrid, 'children.collapsed');
+        },
+
+        /**
+         * triggered when children were expanded
+         * @event husky.datagrid.table.children.expanded
+         */
+        CHILDREN_EXPANDED = function() {
+            return this.datagrid.createEventName.call(this.datagrid, 'children.expanded');
+        },
+
+        /**
          * calculates the width of a text by creating a tablehead element and measure its width
          * @param text
          * @param classArray
@@ -29877,8 +29893,10 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
 
             if (this.sandbox.dom.is($children, ':visible')) {
                 this.hideChildren($parent, parentId);
+                this.sandbox.emit(CHILDREN_COLLAPSED.call(this));
             } else {
                 this.showChildren($parent, parentId);
+                this.sandbox.emit(CHILDREN_EXPANDED.call(this));
             }
         },
 
@@ -30035,6 +30053,15 @@ define('husky_components/datagrid/decorators/thumbnail-view',[],function() {
                 '   <div class="fa-' + constants.downloadIcon + ' ' + constants.downloadClass + '"></div>',
                 '</div>'
             ].join('')
+        },
+
+        /**
+         * triggered when a when the download icon gets clicked
+         * @event husky.datagrid.download-clicked
+         * @param {Number|String} the id of the data-record
+         */
+        DOWNLOAD_CLICKED = function() {
+            return this.datagrid.createEventName.call(this.datagrid, 'download-clicked');
         };
 
     return {
@@ -30258,8 +30285,7 @@ define('husky_components/datagrid/decorators/thumbnail-view',[],function() {
          * @param id {Number|String} the id of the item
          */
         downloadHandler: function(id) {
-            // not yet implemented
-            this.sandbox.logger.warn('Download handler not yet implemented!', id);
+            this.sandbox.emit(DOWNLOAD_CLICKED.call(this), id);
         },
 
         /**
@@ -36197,14 +36223,14 @@ define('__component__$select@husky',[], function() {
             row: function() {
                 return[
                     '<div class="grid-row type-row" data-id="">',
-                    '   <div class="grid-col-8 pull-left"><input class="form-element" type="text" value=""/></div>',
+                    '   <div class="grid-col-10 pull-left"><input class="form-element" type="text" value=""/></div>',
                     '   <div class="grid-col-2 pull-right"><div class="remove-row btn gray-dark fit only-icon pull-right"><div class="fa-minus-circle"></div></div></div>',
                     '</div>'].join('');
             },
             addOverlayRow: function(valueField, item) {
                 return [
                     '<div class="grid-row type-row" data-id="', item.id ,'">',
-                    '    <div class="grid-col-8 pull-left"><input class="form-element" type="text" value="', item[valueField],'"/></div>',
+                    '    <div class="grid-col-10 pull-left"><input class="form-element" type="text" value="', item[valueField],'"/></div>',
                     '    <div class="grid-col-2 pull-right"><div class="remove-row btn gray-dark fit only-icon pull-right"><div class="fa-minus-circle"></div></div></div>',
                     '</div>'
                 ].join('');

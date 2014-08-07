@@ -24,7 +24,8 @@ define(function() {
             noTopSpaceClass: 'no-top-space',
             shrinkIcon: 'fa-chevron-left',
             expandIcon: 'fa-chevron-right',
-            noTransitionsClass: 'no-transitions'
+            noTransitionsClass: 'no-transitions',
+            versionHistoryUrl: 'https://github.com/sulu-cmf/sulu-standard/releases'
         },
 
         templates = {
@@ -269,6 +270,10 @@ define(function() {
                 if (!!this.sandbox.mvc.history.fragment && this.sandbox.mvc.history.fragment.length > 0) {
                     this.selectNavigationItem(this.sandbox.mvc.history.fragment);
                 }
+            }.bind(this));
+
+            this.sandbox.on('husky.navigation.version-history.clicked', function() {
+                window.open(constants.versionHistoryUrl,'_blank');
             }.bind(this));
 
             // change user locale
