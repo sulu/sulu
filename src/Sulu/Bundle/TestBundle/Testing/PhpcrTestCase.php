@@ -35,6 +35,7 @@ use Sulu\Component\PHPCR\NodeTypes\Path\PathNodeType;
 use Sulu\Component\PHPCR\PathCleanup;
 use Sulu\Component\PHPCR\SessionManager\SessionManager;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
+use Sulu\Component\Webspace\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
@@ -184,6 +185,7 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
                 $this->eventDispatcher,
                 $this->localizationFinder,
                 $cleaner,
+                $this->webspaceManager,
                 $this->language,
                 $this->defaultTemplate,
                 $this->languageNamespace,
@@ -237,7 +239,11 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
     protected function prepareLocalizationFinder()
     {
         if ($this->localizationFinder === null) {
-            $this->localizationFinder = new ParentChildAnyFinder($this->webspaceManager, $this->languageNamespace, $this->internalPrefix);
+            $this->localizationFinder = new ParentChildAnyFinder(
+                $this->webspaceManager,
+                $this->languageNamespace,
+                $this->internalPrefix
+            );
         }
     }
 
