@@ -109,6 +109,9 @@ define(function () {
             // open edit overlay on datagrid click
             this.sandbox.on('husky.datagrid.item.click', this.editMedia.bind(this));
 
+            // download media
+            this.sandbox.on('husky.datagrid.download-clicked', this.download.bind(this));
+
             // unlock the dropzone pop-up if the media-edit overlay was closed
             this.sandbox.on('sulu.media-edit.closed', function () {
                 this.sandbox.emit('husky.dropzone.' + this.options.instanceName + '.unlock-popup');
@@ -141,6 +144,14 @@ define(function () {
             if (update === true) {
                 this.sandbox.emit('husky.datagrid.records.change', media);
             }
+        },
+
+        /**
+         * Downloads a media for a given id
+         * @param id
+         */
+        download: function(id) {
+            this.sandbox.emit('sulu.media.collections.download-media', id);
         },
 
         /**

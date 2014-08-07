@@ -174,6 +174,14 @@ define([
                 return createEventName.call(this, 'collection-list');
             },
 
+            /**
+             * listens on and downloads a single media
+             * @event sulu.media.collections.download-media
+             */
+                DOWNLOAD_MEDIA = function () {
+                return createEventName.call(this, 'download-media');
+            },
+
             /** returns normalized event names */
                 createEventName = function (postFix) {
                 return namespace + postFix;
@@ -295,6 +303,9 @@ define([
                 // reload multiple media
                 this.sandbox.on(RELOAD_MEDIA.call(this), this.reloadMedia.bind(this));
 
+                // reload multiple media
+                this.sandbox.on(DOWNLOAD_MEDIA.call(this), this.downloadMedia.bind(this));
+
                 // navigate to collection edit
                 this.sandbox.on(NAVIGATE_COLLECTION_EDIT.call(this), function (collectionId, tab) {
                     // default tab is files
@@ -306,6 +317,29 @@ define([
                 this.sandbox.on(NAVIGATE_COLLECTION_LIST.call(this), function () {
                     this.sandbox.emit('sulu.router.navigate', 'media/collections', true, true);
                 }.bind(this));
+            },
+
+            /**
+             * Downloads a single media
+             * @param mediaId {Number|String} the id of the media
+             */
+            downloadMedia: function(mediaId) {
+                var media;
+                // if media exists there is no need to fetch the media again - the local one is up to date
+                if (!this.medias.get(mediaId)) {
+                    media = this.getMediaModel(mediaId);
+                    media.fetch({
+                        success: function (media) {
+                            this.sandbox.dom.window.location.href = media.toJSON().url;
+                        }.bind(this),
+                        error: function () {
+                            this.sandbox.logger.log('Error while fetching a single media');
+                        }.bind(this)
+                    });
+                } else {
+                    media = this.getMediaModel(mediaId);
+                    this.sandbox.dom.window.location.href = media.toJSON().url;
+                }
             },
 
             /**

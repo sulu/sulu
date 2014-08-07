@@ -13,12 +13,12 @@
  * @class MediaSelection
  * @constructor
  */
-define(['sulumedia/collection/collections'], function (Collections) {
+define(['sulumedia/collection/collections', 'sulumedia/model/collection'], function (Collections, Collection) {
 
     'use strict';
 
     var defaults = {
-            visibleItems: 999,
+            visibleItems: 6,
             instanceName: null,
             url: '',
             idsParameter: 'ids',
@@ -30,6 +30,7 @@ define(['sulumedia/collection/collections'], function (Collections) {
             resultKey: 'media',
             positionSelectedClass: 'selected',
             hidePositionElement: false,
+
             translations: {
                 noMediaSelected: 'media-selection.nomedia-selected',
                 addImages: 'media-selection.add-images',
@@ -40,7 +41,9 @@ define(['sulumedia/collection/collections'], function (Collections) {
                 upload: 'media-selection.upload-new',
                 collection: 'media-selection.upload-to-collection',
                 createNewCollection: 'media-selection.create-new-collection',
-                newCollection: 'media-selection.new-collection'
+                newCollection: 'media-selection.new-collection',
+                viewall: 'public.view-all',
+                viewless: 'public.view-less'
             }
         },
 
@@ -185,9 +188,11 @@ define(['sulumedia/collection/collections'], function (Collections) {
         render = function () {
             // init collection
             this.collections = new Collections();
+            this.newCollection = new Collection();
             this.collectionArray = null;
             this.newCollectionId = null;
             this.gridGroupDeprecated = false;
+            this.viewAll = false;
 
             this.options.ids = {
                 container: 'media-selection-' + this.options.instanceName + '-container',
@@ -348,7 +353,7 @@ define(['sulumedia/collection/collections'], function (Collections) {
         changeUploadCollection = function (collectionId) {
             this.uploadCollection = collectionId;
             this.sandbox.emit(
-                'husky.dropzone.media-selection-media-selection.change-url',
+                'husky.dropzone.media-selection-'+ this.options.instanceName +'.change-url',
                 '/admin/api/media?collection%5Bid%5D=' + collectionId);
         },
 
@@ -462,14 +467,21 @@ define(['sulumedia/collection/collections'], function (Collections) {
             if (this.uploadCollection === 'new') {
                 // only create one "new" collection. If a "new" collection exists take it
                 if (!this.newCollectionId) {
-                    this.sandbox.emit('sulu.media.collections.save-collection',
-                        {title: this.sandbox.translate(this.options.translations.newCollection)},
-                        function (collection) {
+                    this.newCollection.set({
+                        title: getNewCollectionTitle.call(this)
+                    });
+                    this.newCollection.save(null, {
+                        success: function (collection) {
+                            collection = collection.toJSON();
                             this.newCollectionId = collection.id;
                             changeUploadCollection.call(this, collection.id);
                             this.collectionArray.push(collection);
                             def.resolve();
-                        }.bind(this));
+                        }.bind(this),
+                        error: function () {
+                            this.sandbox.logger.log('Error while saving collection');
+                        }.bind(this)
+                    });
                 } else {
                     this.uploadCollection = this.newCollectionId;
                     changeUploadCollection.call(this, this.uploadCollection);
@@ -479,6 +491,25 @@ define(['sulumedia/collection/collections'], function (Collections) {
                 def.resolve();
             }
             return def.promise();
+        },
+
+        /**
+         * Generates the new colleciton title. Looks how many collecitons with
+         * the same name already exists and adds a ([how many are existing]) to the collection
+         * @returns {string} the generated collection title
+         */
+        getNewCollectionTitle = function() {
+            var translation = this.sandbox.translate(this.options.translations.newCollection),
+                counter = 0;
+            this.sandbox.util.foreach(this.collectionArray, function(collection) {
+                if (collection.title.indexOf(translation) !== -1) {
+                    counter++;
+                }
+            }.bind(this));
+            if (counter > 0) {
+                translation = translation + ' (' + counter + ')';
+            }
+            return translation;
         },
 
         /**
@@ -504,6 +535,18 @@ define(['sulumedia/collection/collections'], function (Collections) {
 
             // click on remove icons
             this.sandbox.dom.on(getId.call(this, 'content'), 'click', removeHandler.bind(this), 'li .remove');
+
+            // view all
+            this.sandbox.dom.on(this.$el, 'click', function() {
+                this.viewAll = true;
+                renderContent.call(this)
+            }.bind(this), '.view-all');
+
+            // view less
+            this.sandbox.dom.on(this.$el, 'click', function() {
+                this.viewAll = false;
+                renderContent.call(this)
+            }.bind(this), '.view-less');
         },
 
         /**
@@ -516,7 +559,7 @@ define(['sulumedia/collection/collections'], function (Collections) {
             this.sandbox.dom.remove($item);
             removeItemWithId.call(this, dataId);
             this.data.ids.splice(this.data.ids.indexOf(dataId), 1);
-            this.itemsVisible = this.options.visibleItems;
+            this.itemsVisible--;
             detachFooter.call(this);
             if (this.items.length === 0) {
                 renderStartContent.call(this);
@@ -546,6 +589,12 @@ define(['sulumedia/collection/collections'], function (Collections) {
          * renders the content decides whether the footer is rendered or not
          */
         renderContent = function () {
+            if (this.viewAll === true) {
+                this.itemsVisible = this.items.length;
+            } else {
+                this.itemsVisible = (this.items.length < this.options.visibleItems) ? this.items.length : this.options.visibleItems;
+            }
+
             if (this.items.length !== 0) {
                 var ul = this.sandbox.dom.createElement('<ul class="items-list"/>'),
                     i = -1,
@@ -570,8 +619,6 @@ define(['sulumedia/collection/collections'], function (Collections) {
          * renders the footer and calls a method to bind the events for itself
          */
         renderFooter = function () {
-            this.itemsVisible = (this.items.length < this.itemsVisible) ? this.items.length : this.itemsVisible;
-
             if (this.$footer === null || this.$footer === undefined) {
                 this.$footer = this.sandbox.dom.createElement('<div class="footer"/>');
             }
@@ -582,6 +629,18 @@ define(['sulumedia/collection/collections'], function (Collections) {
                 '<strong>' + this.items.length + ' </strong>', this.sandbox.translate(this.options.translations.visible),
                 '</span>'
             ].join(''));
+
+            if (this.itemsVisible < this.items.length) {
+                this.sandbox.dom.append(
+                    this.sandbox.dom.find('span', this.$footer),
+                    '<strong class="view-all pointer"> ('+ this.sandbox.translate(this.options.translations.viewall) +')</strong>'
+                );
+            } else if (this.itemsVisible > this.options.visibleItems) {
+                this.sandbox.dom.append(
+                    this.sandbox.dom.find('span', this.$footer),
+                    '<strong class="view-less pointer"> ('+ this.sandbox.translate(this.options.translations.viewless) +')</strong>'
+                );
+            }
 
             this.sandbox.dom.append(this.$container, this.$footer);
         },
