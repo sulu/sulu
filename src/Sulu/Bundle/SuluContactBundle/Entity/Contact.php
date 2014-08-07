@@ -196,6 +196,11 @@ class Contact extends ApiEntity
     private $contactAddresses;
 
     /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $categories;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -1174,5 +1179,38 @@ class Contact extends ApiEntity
             }
         }
         return null;
+    }
+
+    /**
+     * Add categories
+     *
+     * @param \Sulu\Bundle\CategoryBundle\Entity\Category $categories
+     * @return Contact
+     */
+    public function addCategorie(\Sulu\Bundle\CategoryBundle\Entity\Category $categories)
+    {
+        $this->categories[] = $categories;
+    
+        return $this;
+    }
+
+    /**
+     * Remove categories
+     *
+     * @param \Sulu\Bundle\CategoryBundle\Entity\Category $categories
+     */
+    public function removeCategorie(\Sulu\Bundle\CategoryBundle\Entity\Category $categories)
+    {
+        $this->categories->removeElement($categories);
+    }
+
+    /**
+     * Get categories
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getCategories()
+    {
+        return $this->categories;
     }
 }
