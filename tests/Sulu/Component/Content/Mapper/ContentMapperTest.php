@@ -1988,6 +1988,47 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals('de', $result->getType()->getValue());
     }
 
+    public function prepareLoadShadowData()
+    {
+        $data = array(
+            array(
+                'name ' => 'hello',
+                'shadow' => false,
+                'language' => 'de',
+                'shadow_base_language' => null,
+            ),
+            array(
+                'name ' => 'hello',
+                'shadow' => true,
+                'language' => 'de_at',
+                'is_shadow' => true,
+                'shadow_base_language' => 'de',
+            ),
+        );
+
+        foreach ($data as $datum) {
+            $result[$datum['name']] = $this->mapper->save(
+                array('name' => $datum['name'], 'url' => '/' . $datum['name']),
+                'overview',
+                'default',
+                $datum['language'],
+                1,
+                true,
+                $result['base']->getUuid(),
+                null,
+                null,
+                $datum['is_shadow'],
+                $datum['shadow_base_language']
+            );
+        }
+    }
+
+
+    public function testLoadShadow()
+    {
+        // I AM HERE
+    }
+
     public function testTranslatedResourceLocator()
     {
         $data = array(

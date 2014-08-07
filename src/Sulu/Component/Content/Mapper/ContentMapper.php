@@ -384,7 +384,7 @@ class ContentMapper implements ContentMapperInterface
         $structure->setChanger($node->getPropertyValue($this->properties->getName('changer')));
         $structure->setCreated($node->getPropertyValue($this->properties->getName('created')));
         $structure->setChanged($node->getPropertyValue($this->properties->getName('changed')));
-        $structure->setIsShadow($node->getPropertyValue($this->properties->getNAme('shadow-on')));
+        $structure->setIsShadow($node->getPropertyValueWithDefault($this->properties->getNAme('shadow-on'), false));
         $structure->setShadowBaseLanguage($node->getPropertyValueWithDefault($this->properties->getName('shadow-base'), null));
 
         $structure->setNavContexts(
@@ -885,7 +885,7 @@ class ContentMapper implements ContentMapperInterface
         NodeInterface $contentNode,
         $localization,
         $webspaceKey,
-        $excludeGhost = true,
+        $excludeGhostAndShadow = true,
         $loadGhostContent = false
     ) {
         if ($this->stopwatch) {
@@ -901,7 +901,15 @@ class ContentMapper implements ContentMapperInterface
             $availableLocalization = $localization;
         }
 
-        if ($excludeGhost && $availableLocalization != $localization) {
+        if (true === $contentNode->getPropertyValueWithDefault($this->properties->getName('shadow-on'), false)) {
+            $shadowLocalization = $contentNode->getPropertyValueWithDefault($this->properties->getName('shadow-base'), false);
+
+            if ($shadowLocalization) {
+                $availableLocalization = $shadowLocalization;
+            }
+        }
+
+        if ($excludeGhostAndShadow && $availableLocalization != $localization) {
             return null;
         }
 
