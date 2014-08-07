@@ -172,7 +172,9 @@ class ContentMapper implements ContentMapperInterface
                 'template',
                 'published',
                 'nodeType',
-                'navContexts'
+                'navContexts',
+                'shadow-on',
+                'shadow-base'
             ),
             $this->languageNamespace,
             $this->internalPrefix
@@ -191,7 +193,10 @@ class ContentMapper implements ContentMapperInterface
         $partialUpdate = true,
         $uuid = null,
         $parentUuid = null,
-        $state = null
+        $state = null,
+        $showInNavigation = null,
+        $isShadow = null,
+        $shadowBaseLanguage = null
     ) {
         // create translated properties
         $this->properties->setLanguage($languageCode);
@@ -252,10 +257,17 @@ class ContentMapper implements ContentMapperInterface
                 }
             }
         }
-        $node->setProperty($this->properties->getName('template'), $templateKey);
+
+        if ($isShadow) {
+            $this->validateShadow($node, $languageCode, $shadowBaseLanguage);
+        }
 
         $node->setProperty($this->properties->getName('changer'), $userId);
         $node->setProperty($this->properties->getName('changed'), $dateTime);
+        $node->setProperty($this->properties->getName('template'), $templateKey);
+        $node->setProperty($this->properties->getName('shadow-on'), $isShadow);
+        $node->setProperty($this->properties->getName('shadow-base'), $shadowBaseLanguage);
+
 
         if (isset($data['nodeType'])) {
             $node->setProperty($this->properties->getName('nodeType'), $data['nodeType']);
@@ -372,6 +384,8 @@ class ContentMapper implements ContentMapperInterface
         $structure->setChanger($node->getPropertyValue($this->properties->getName('changer')));
         $structure->setCreated($node->getPropertyValue($this->properties->getName('created')));
         $structure->setChanged($node->getPropertyValue($this->properties->getName('changed')));
+        $structure->setIsShadow($node->getPropertyValue($this->properties->getNAme('shadow-on')));
+        $structure->setShadowBaseLanguage($node->getPropertyValueWithDefault($this->properties->getName('shadow-base'), null));
 
         $structure->setNavContexts(
             $node->getPropertyValueWithDefault($this->properties->getName('navContexts'), array())
@@ -395,6 +409,47 @@ class ContentMapper implements ContentMapperInterface
         $this->eventDispatcher->dispatch(ContentEvents::NODE_SAVE, $event);
 
         return $structure;
+    }
+
+    protected function validateShadow(NodeInterface $node, $language, $shadowBaseLanguage)
+    {
+        if ($language == $shadowBaseLanguage) {
+            throw new \RuntimeException(sprintf(
+                'Cannot make node in "%s" a shadow of itself. This is a circular reference.', $language
+            ));
+        }
+
+        $nodeLanguages = $this->properties->getLanguagesForNode($node);
+        $shadowBaseLanguages = array();
+
+        foreach ($nodeLanguages as $nodeLanguage) {
+            if ($nodeLanguage == $language) {
+                continue;
+            }
+
+            $propertyMap = clone $this->properties;
+            $propertyMap->setLanguage($nodeLanguage);
+
+            $shadowOn = $node->getPropertyValueWithDefault($propertyMap->getName('shadow-on'), null);
+
+            if ($shadowOn) {
+                $nodeShadowBaseLanguage = $node->getPropertyValueWithDefault($propertyMap->getName('shadow-base'), null);
+
+                if (null !== $nodeShadowBaseLanguage) {
+                    $shadowBaseLanguages[$nodeShadowBaseLanguage] = $nodeLanguage;
+                }
+            }
+        }
+
+        if (array_key_exists($language, $shadowBaseLanguages)) {
+            throw new \RuntimeException(sprintf(
+                'Detected circular shadow reference. You have attempted to set a shadow language "%s" ' . 
+                'to "%s", but this node is already shadowed by "%s"',
+                $language,
+                $shadowBaseLanguage,
+                $shadowBaseLanguages[$language]
+            ));
+        }
     }
 
     /**
@@ -1356,5 +1411,13 @@ class ContentMapper implements ContentMapperInterface
         }
 
         return StructureInterface::STATE_PUBLISHED;
+    }
+
+    public function setNodeShadowStatus($isShadow, $language, $shadowBaseLanguage)
+    {
+        $this->properties->setLanguage($languageCode);
+
+        $node->setProperty($this->properties->getName('shadow'), $language);
+        $node->setProperty($this->properties->getName('shadow-on'), $isShadow);
     }
 }

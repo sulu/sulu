@@ -191,6 +191,19 @@ abstract class Structure implements StructureInterface
     private $internalLinkContent;
 
     /**
+     * content node is a shadow for another content
+     * @var boolean
+     */
+    private $isShadow;
+
+    /**
+     * when shadow is enabled, this node is a shadow for
+     * this language
+     * @var string
+     */
+    private $shadowBaseLanguage = '';
+
+    /**
      * @param $key string
      * @param $view string
      * @param $controller string
@@ -692,6 +705,42 @@ abstract class Structure implements StructureInterface
     public function setHasTranslation($hasTranslation)
     {
         $this->hasTranslation = $hasTranslation;
+    }
+
+    /**
+     * set if this structure should act like a shadow
+     * @return boolean
+     */
+    public function getIsShadow() 
+    {
+        return $this->isShadow;
+    }
+
+    /**
+     * set if this node should act like a shadow
+     * @param boolean
+     */
+    public function setIsShadow($isShadow)
+    {
+        $this->isShadow = $isShadow;
+    }
+
+    /**
+     * return the shadow base language
+     * @return string
+     */
+    public function getShadowBaseLanguage() 
+    {
+        return $this->shadowBaseLanguage;
+    }
+
+    /**
+     * set the shadow base language
+     * @param string $shadowBaseLanguage
+     */
+    public function setShadowBaseLanguage($shadowBaseLanguage)
+    {
+        $this->shadowBaseLanguage = $shadowBaseLanguage;
     }
 
     /**

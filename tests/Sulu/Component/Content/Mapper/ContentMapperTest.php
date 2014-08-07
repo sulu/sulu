@@ -314,6 +314,130 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals(1, $content->getPropertyValue($this->languageNamespace . ':de-changer'));
     }
 
+    public function provideSaveShadow()
+    {
+        return array(
+            array(
+                array(
+                    'is_shadow' => true, 
+                    'language' => 'de',
+                    'shadow_base_language' => 'fr'
+                ),
+                null,
+                array()
+            ),
+            array(
+                array(
+                    'is_shadow' => true,
+                    'language' => 'de',
+                    'shadow_base_language' =>'de'
+                ),
+                null,
+                array(
+                    'exception' => 'shadow of itself',
+                )
+            ),
+            array(
+                array(
+                    'is_shadow' => true,
+                    'language' => 'de_at',
+                    'shadow_base_language' => 'de'
+                ),
+                array(
+                    'is_shadow' => true,
+                    'language' => 'de',
+                    'shadow_base_language' => 'de_at'
+                ),
+                array(
+                    'exception' => 'circular shadow reference'
+                ),
+            ),
+            array(
+                array(
+                    'is_shadow' => true,
+                    'language' => 'de_at',
+                    'shadow_base_language' => 'de'
+                ),
+                array(
+                    'is_shadow' => true,
+                    'language' => 'en_us',
+                    'shadow_base_language' => 'de_at'
+                ),
+                array(
+                ),
+            ),
+            array(
+                array(
+                    'is_shadow' => true,
+                    'language' => 'de_at',
+                    'shadow_base_language' => 'en_us'
+                ),
+                array(
+                    'is_shadow' => true,
+                    'language' => 'en_us',
+                    'shadow_base_language' => 'de_at'
+                ),
+                array(
+                    'exception' => 'circular shadow reference'
+                ),
+            ),
+        );
+    }
+
+    /**
+     * @dataProvider provideSaveShadow
+     */
+    public function testSaveShadow(
+        $node1,
+        $node2,
+        $expectations
+    )
+    {
+        $data = array(
+            'name' => 'Testname',
+            'tags' => array(
+                'tag1',
+                'tag2'
+            ),
+            'url' => '/news/test',
+            'article' => 'default'
+        );
+
+        if (isset($expectations['exception'])) {
+            $this->setExpectedException('\RuntimeException', $expectations['exception']);
+        }
+
+        $nodes = array($node1);
+        if ($node2) {
+            $nodes[] = $node2;
+        }
+
+        $structures = array();
+        foreach ($nodes as $i => $node) {
+            $structures[$i] = $this->mapper->save(
+                $data, 
+                'overview',
+                'default',
+                $node['language'],
+                1,
+                true,
+                isset($structures[0]) ? $structures[0]->getUUid() : null,
+                null,
+                null,
+                null,
+                $node['is_shadow'],
+                $node['shadow_base_language']
+            );
+        }
+
+        if (isset($nodes[0]['is_shadow'])) {
+            $this->assertTrue($structures[0]->getIsShadow());
+            $this->assertEquals($nodes[0]['shadow_base_language'], $structures[0]->getShadowBaseLanguage());
+        } else {
+            $this->assertFalse($structures[0]->getIsShadow());
+        }
+    }
+
     public function testLoad()
     {
         $data = array(
@@ -927,7 +1051,6 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals(1, $content->getPropertyValue($this->languageNamespace . ':de-creator'));
         $this->assertEquals(1, $content->getPropertyValue($this->languageNamespace . ':de-changer'));
 
-        // old resource locator is not a route (has property sulu:content), it is a history (has property sulu:route)
         $oldRoute = $root->getNode('cmf/default/routes/de/news/test');
         $this->assertTrue($oldRoute->hasProperty('sulu:content'));
         $this->assertTrue($oldRoute->hasProperty('sulu:history'));
