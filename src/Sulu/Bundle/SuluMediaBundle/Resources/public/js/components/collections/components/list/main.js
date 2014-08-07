@@ -131,7 +131,7 @@ define(function () {
                     options: {
                         el: this.$find(constants.toolbarSelector),
                         instanceName: this.options.instanceName,
-                        template: 'defaultNoSettings',
+                        template: 'onlyAdd',
                         inHeader: true
                     }
                 }

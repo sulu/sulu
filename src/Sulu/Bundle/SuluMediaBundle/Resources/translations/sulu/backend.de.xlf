@@ -90,6 +90,14 @@
                 <source>media-selection.upload-new</source>
                 <target>Neu hochladen</target>
             </trans-unit>
+            <trans-unit id="c50af528fc121350142c0b4720e29a8a" resname="media-selection.add-images">
+                <source>media-selection.add-images</source>
+                <target>Bilder hinzufügen</target>
+            </trans-unit>
+            <trans-unit id="243d99ff2f64652633a5ca2169f22254" resname="media-selection.nomedia-selected">
+                <source>media-selection.nomedia-selected</source>
+                <target>Keine Medien ausgewählt</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

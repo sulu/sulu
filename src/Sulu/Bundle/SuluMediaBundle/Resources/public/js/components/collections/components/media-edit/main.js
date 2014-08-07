@@ -30,7 +30,9 @@ define(function () {
             multipleEditFormSelector: '#media-multiple-edit',
             dropzoneSelector: '#file-version-change',
             multipleEditDescSelector: '.media-description',
+            multipleEditTagsSelector: '.media-tags',
             descriptionCheckboxSelector: '#show-descriptions',
+            tagsCheckboxSelector: '#show-tags',
             singleEditClass: 'single-edit',
             multiEditClass: 'multi-edit'
         },
@@ -136,12 +138,27 @@ define(function () {
                 this.medias, {locale: locale},
                 function(medias) {
                     this.medias = medias;
-                    var descriptionVisible = this.sandbox.dom.is(constants.multipleEditFormSelector + ' .media-description', ':visible');
+                    var descriptionVisible = this.sandbox.dom.is(
+                        constants.multipleEditFormSelector + ' ' + constants.multipleEditDescSelector, ':visible'
+                    ),
+                        tagsVisible = this.sandbox.dom.is(
+                            constants.multipleEditFormSelector + ' ' + constants.multipleEditTagsSelector, ':visible'
+                        );
+
+                    this.sandbox.stop(constants.multipleEditFormSelector + ' *');
                     this.sandbox.form.setData(constants.multipleEditFormSelector, {
                         records: this.medias
                     }).then(function() {
+                            this.sandbox.start(constants.multipleEditFormSelector);
                             if (descriptionVisible === true) {
-                                this.sandbox.dom.show(constants.multipleEditFormSelector + ' .media-description');
+                                this.sandbox.dom.show(
+                                    constants.multipleEditFormSelector + ' ' + constants.multipleEditDescSelector
+                                );
+                            }
+                            if (tagsVisible) {
+                                this.sandbox.dom.show(
+                                    constants.multipleEditFormSelector + ' ' + constants.multipleEditTagsSelector
+                                );
                             }
                         }.bind(this));
                 }.bind(this)
@@ -270,6 +287,7 @@ define(function () {
                     this.sandbox.form.setData(constants.multipleEditFormSelector, {
                         records: this.medias
                     }).then(function () {
+                            this.sandbox.start(constants.multipleEditFormSelector);
                             this.sandbox.emit('husky.overlay.media-multiple-edit.set-position');
                         }.bind(this));
                 }.bind(this));
@@ -289,6 +307,12 @@ define(function () {
                 'change',
                 this.toggleDescriptions.bind(this)
             );
+            // toggle all tag-components on click on related checkbox
+            this.sandbox.dom.on(
+                this.sandbox.dom.find(constants.tagsCheckboxSelector, this.$multiple),
+                'change',
+                this.toggleTags.bind(this)
+            );
         },
 
         /**
@@ -300,6 +324,19 @@ define(function () {
                 this.sandbox.dom.show(this.sandbox.dom.find(constants.multipleEditDescSelector, this.$multiple));
             } else {
                 this.sandbox.dom.hide(this.sandbox.dom.find(constants.multipleEditDescSelector, this.$multiple));
+            }
+            this.sandbox.emit('husky.overlay.media-multiple-edit.set-position');
+        },
+
+        /**
+         * Toggles the tag-components in the multiple-edit element
+         */
+        toggleTags: function() {
+            var checked = this.sandbox.dom.is(this.sandbox.dom.find(constants.tagsCheckboxSelector, this.$multiple), ':checked');
+            if (checked === true) {
+                this.sandbox.dom.show(this.sandbox.dom.find(constants.multipleEditTagsSelector, this.$multiple));
+            } else {
+                this.sandbox.dom.hide(this.sandbox.dom.find(constants.multipleEditTagsSelector, this.$multiple));
             }
             this.sandbox.emit('husky.overlay.media-multiple-edit.set-position');
         },
@@ -357,7 +394,9 @@ define(function () {
         changeMultipleModel: function () {
             if (this.sandbox.form.validate(constants.multipleEditFormSelector)) {
                 var data = this.sandbox.form.getData(constants.multipleEditFormSelector);
-                this.medias = this.sandbox.util.extend(false, [], this.medias, data.records);
+                this.sandbox.util.foreach(this.medias, function(singleMedia, index) {
+                    this.medias[index] = this.sandbox.util.extend(false, {}, singleMedia, data.records[index]);
+                }.bind(this));
                 this.sandbox.emit('sulu.media.collections.save-media', this.medias, this.savedCallback.bind(this));
                 this.medias = null;
                 return true;
