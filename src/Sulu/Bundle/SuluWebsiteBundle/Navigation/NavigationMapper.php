@@ -33,19 +33,19 @@ class NavigationMapper implements NavigationMapperInterface
     /**
      * {@inheritdoc}
      */
-    public function getNavigation($parent, $webspace, $language, $depth = 1)
+    public function getNavigation($parent, $webspace, $language, $depth = 1, $context = null)
     {
         $contents = $this->contentMapper->loadByParent($parent, $webspace, $language, $depth, false, true, true);
 
-        return $this->generateNavigation($contents, $webspace, $language);
+        return $this->generateNavigation($contents, $webspace, $language, $context);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getMainNavigation($webspace, $language, $depth = 1)
+    public function getMainNavigation($webspace, $language, $depth = 1, $context = null)
     {
-        return $this->getNavigation(null, $webspace, $language, $depth);
+        return $this->getNavigation(null, $webspace, $language, $depth, $context);
     }
 
     /**
@@ -68,9 +68,10 @@ class NavigationMapper implements NavigationMapperInterface
      * @param StructureInterface[] $contents
      * @param string $webspace
      * @param string $language
+     * @param string $context
      * @return NavigationItem[]
      */
-    private function generateNavigation($contents, $webspace, $language)
+    private function generateNavigation($contents, $webspace, $language, $context = null)
     {
         $result = array();
 
@@ -80,10 +81,7 @@ class NavigationMapper implements NavigationMapperInterface
                 $children = $this->generateNavigation($content->getChildren(), $webspace, $language);
             }
 
-            if (
-                $content->getPublishedState() && $content->getNavigation() !== false &&
-                $content->hasTag('sulu.rlp')
-            ) {
+            if ($this->inNavigation($content, $context)) {
                 $url = $content->getResourceLocator();
                 $title = $content->getNodeName();
 
@@ -94,5 +92,32 @@ class NavigationMapper implements NavigationMapperInterface
         }
 
         return $result;
+    }
+
+    /**
+     * checks if content should be displayed
+     * @param StructureInterface $content
+     * @param string|null $context
+     * @return bool
+     */
+    public function inNavigation(StructureInterface $content, $context = null)
+    {
+        $contexts = $content->getNavContexts();
+
+        // if no navigation context is chosen
+        if ($contexts === false) {
+            return false;
+        }
+
+        if ($context === null) {
+            // all contexts
+            return true;
+        } elseif (in_array($context, $contexts)) {
+            // content has context
+            return true;
+        }
+
+        // do not show
+        return false;
     }
 }

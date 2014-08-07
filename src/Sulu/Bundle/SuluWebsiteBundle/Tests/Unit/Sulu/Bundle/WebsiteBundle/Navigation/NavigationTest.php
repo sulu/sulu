@@ -89,27 +89,33 @@ class NavigationTest extends PhpcrTestCase
         $data = array(
             'news' => array(
                 'name' => 'News',
-                'rl' => '/news'
+                'rl' => '/news',
+                'navContexts' => array('main')
             ),
             'products' => array(
                 'name' => 'Products',
-                'rl' => '/products'
+                'rl' => '/products',
+                'navContexts' => array('main')
             ),
             'news/news-1' => array(
                 'name' => 'News-1',
-                'rl' => '/news/news-1'
+                'rl' => '/news/news-1',
+                'navContexts' => array('main')
             ),
             'news/news-2' => array(
                 'name' => 'News-2',
-                'rl' => '/news/news-2'
+                'rl' => '/news/news-2',
+                'navContexts' => array('main')
             ),
             'products/products-1' => array(
                 'name' => 'Products-1',
-                'rl' => '/products/products-1'
+                'rl' => '/products/products-1',
+                'navContexts' => array('main')
             ),
             'products/products-2' => array(
                 'name' => 'Products-2',
-                'rl' => '/products/products-2'
+                'rl' => '/products/products-2',
+                'navContexts' => array('main')
             )
         );
 
@@ -122,8 +128,7 @@ class NavigationTest extends PhpcrTestCase
             true,
             null,
             null,
-            StructureInterface::STATE_PUBLISHED,
-            'main'
+            StructureInterface::STATE_PUBLISHED
         );
         $data['news/news-1'] = $this->mapper->save(
             $data['news/news-1'],
@@ -134,8 +139,7 @@ class NavigationTest extends PhpcrTestCase
             true,
             null,
             $data['news']->getUuid(),
-            StructureInterface::STATE_PUBLISHED,
-            'main'
+            StructureInterface::STATE_PUBLISHED
         );
         $data['news/news-2'] = $this->mapper->save(
             $data['news/news-2'],
@@ -146,8 +150,7 @@ class NavigationTest extends PhpcrTestCase
             true,
             null,
             $data['news']->getUuid(),
-            StructureInterface::STATE_PUBLISHED,
-            'main'
+            StructureInterface::STATE_PUBLISHED
         );
 
         $data['products'] = $this->mapper->save(
@@ -159,8 +162,7 @@ class NavigationTest extends PhpcrTestCase
             true,
             null,
             null,
-            StructureInterface::STATE_PUBLISHED,
-            true
+            StructureInterface::STATE_PUBLISHED
         );
         $data['products/products-1'] = $this->mapper->save(
             $data['products/products-1'],
@@ -171,8 +173,7 @@ class NavigationTest extends PhpcrTestCase
             true,
             null,
             $data['products']->getUuid(),
-            StructureInterface::STATE_PUBLISHED,
-            'main'
+            StructureInterface::STATE_PUBLISHED
         );
         $data['products/products-2'] = $this->mapper->save(
             $data['products/products-2'],
@@ -183,8 +184,7 @@ class NavigationTest extends PhpcrTestCase
             true,
             null,
             $data['products']->getUuid(),
-            StructureInterface::STATE_PUBLISHED,
-            'main'
+            StructureInterface::STATE_PUBLISHED
         );
 
         return $data;
