@@ -216,7 +216,7 @@ define([
 
                 setValue: function(value) {
                     // server returns an object for single block (min: 1, max: 1)
-                    if (typeof value === 'object') {
+                    if (typeof value === 'object' && !this.sandbox.dom.isArray(value)) {
                         value = [value];
                     }
 
