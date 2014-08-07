@@ -1325,6 +1325,23 @@ class AccountControllerTest extends DatabaseTestCase
         $this->assertEquals('204', $client->getResponse()->getStatusCode());
     }
 
+    public function testAccountAddresses()
+    {
+
+        $client = $this->createTestClient();
+
+        $client->request('GET', '/api/accounts/1/addresses');
+        $this->assertEquals('200', $client->getResponse()->getStatusCode());
+        $response =  $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(1, $response->total);
+
+        $address = $response[0];
+        $this->assertEquals('Musterstraße', $address->street);
+        $this->assertEquals('1', $address->number);
+
+    }
+
     public function testDeleteByIdAndNotDeleteContacts()
     {
 
