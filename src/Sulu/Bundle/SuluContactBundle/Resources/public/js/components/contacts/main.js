@@ -101,14 +101,22 @@ define([
         processAjaxForDocuments: function(mediaIds, contactId, type){
 
             var requests=[],
-                medias=[];
+                medias=[],
+                url;
 
             if(mediaIds.length > 0) {
                 this.sandbox.util.each(mediaIds, function(index, id) {
+
+                    if(type === 'DELETE') {
+                        url = '/admin/api/contacts/' + contactId + '/medias/' + id;
+                    } else if(type === 'POST') {
+                        url = '/admin/api/contacts/' + contactId + '/medias';
+                    }
+
                     requests.push(
                         this.sandbox.util.ajax({
-                            url: '/admin/api/contacts/' + contactId + '/medias/' + id,
-                            data: id,
+                            url: url,
+                            data: {mediaId: id},
                             type: type
                         }).fail(function() {
                                 this.sandbox.logger.error("Error while saving documents!");
