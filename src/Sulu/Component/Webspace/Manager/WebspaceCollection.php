@@ -80,6 +80,7 @@ class WebspaceCollection implements \IteratorAggregate
     /**
      * Returns the portal informations for the given environment
      * @param $environment string The environment to deliver
+     * @throws \InvalidArgumentException
      * @return PortalInformation[]
      */
     public function getPortalInformations($environment)
@@ -336,7 +337,7 @@ class WebspaceCollection implements \IteratorAggregate
 
     /**
      * Returns all the portals of this collection
-     * @return array|Portal[]
+     * @return Portal[]
      */
     public function getPortals()
     {

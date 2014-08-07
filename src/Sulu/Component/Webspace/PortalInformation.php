@@ -77,6 +77,7 @@ class PortalInformation
     }
 
     /**
+     * Sets the localization for this PortalInformation
      * @param \Sulu\Component\Webspace\Localization $localization
      */
     public function setLocalization($localization)
@@ -85,6 +86,7 @@ class PortalInformation
     }
 
     /**
+     * Returns the localization for this PortalInformation
      * @return \Sulu\Component\Webspace\Localization
      */
     public function getLocalization()
@@ -93,6 +95,7 @@ class PortalInformation
     }
 
     /**
+     * Sets the portal for this PortalInformation
      * @param \Sulu\Component\Webspace\Portal $portal
      */
     public function setPortal($portal)
@@ -101,6 +104,7 @@ class PortalInformation
     }
 
     /**
+     * Returns the portal for this PortalInformation
      * @return \Sulu\Component\Webspace\Portal
      */
     public function getPortal()
@@ -109,6 +113,7 @@ class PortalInformation
     }
 
     /**
+     * Sets the redirect for the PortalInformation
      * @param string $redirect
      */
     public function setRedirect($redirect)
@@ -117,6 +122,7 @@ class PortalInformation
     }
 
     /**
+     * Returns the redirect for the PortalInformation
      * @return string
      */
     public function getRedirect()
@@ -125,6 +131,7 @@ class PortalInformation
     }
 
     /**
+     * Sets the segment for the PortalInformation
      * @param \Sulu\Component\Webspace\Segment $segment
      */
     public function setSegment($segment)
@@ -133,6 +140,7 @@ class PortalInformation
     }
 
     /**
+     * Returns the segment for the PortalInformation
      * @return \Sulu\Component\Webspace\Segment
      */
     public function getSegment()
@@ -141,6 +149,7 @@ class PortalInformation
     }
 
     /**
+     * Sets the match type of this PortalInformation
      * @param int $type
      */
     public function setType($type)
@@ -149,6 +158,7 @@ class PortalInformation
     }
 
     /**
+     * Returns the match type of this PortalInformation
      * @return int
      */
     public function getType()
@@ -157,6 +167,7 @@ class PortalInformation
     }
 
     /**
+     * Sets the URL of this Portalinformation
      * @param string $url
      */
     public function setUrl($url)
@@ -165,6 +176,7 @@ class PortalInformation
     }
 
     /**
+     * Returns the URL of this Portalinformation
      * @return string
      */
     public function getUrl()
@@ -173,6 +185,25 @@ class PortalInformation
     }
 
     /**
+     * Returns the host including the domain for the PortalInformation
+     * @return string
+     */
+    public function getHost()
+    {
+        return substr($this->url, 0, $this->getHostLength());
+    }
+
+    /**
+     * Returns the prefix (the url without the host) for this PortalInformation
+     * @return string
+     */
+    public function getPrefix()
+    {
+        return substr($this->url, $this->getHostLength());
+    }
+
+    /**
+     * Sets the webspace for this PortalInformation
      * @param \Sulu\Component\Webspace\Webspace $webspace
      */
     public function setWebspace($webspace)
@@ -181,10 +212,23 @@ class PortalInformation
     }
 
     /**
+     * Returns the webspace for this PortalInformation
      * @return \Sulu\Component\Webspace\Webspace
      */
     public function getWebspace()
     {
         return $this->webspace;
+    }
+
+    /**
+     * Calculate the length of the host part of the URL
+     * @return int
+     */
+    private function getHostLength()
+    {
+        $hostLength = strpos($this->url, '/');
+        $hostLength = ($hostLength === false) ? strlen($this->url) : $hostLength;
+
+        return $hostLength;
     }
 }

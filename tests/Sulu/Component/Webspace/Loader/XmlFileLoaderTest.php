@@ -60,22 +60,24 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(2, count($webspace->getPortals()[0]->getEnvironments()));
 
-        $this->assertEquals('prod', $webspace->getPortals()[0]->getEnvironments()[0]->getType());
-        $this->assertEquals(2, count($webspace->getPortals()[0]->getEnvironments()[0]->getUrls()));
-        $this->assertEquals('sulu.at', $webspace->getPortals()[0]->getEnvironments()[0]->getUrls()[0]->getUrl());
-        $this->assertEquals('de', $webspace->getPortals()[0]->getEnvironments()[0]->getUrls()[0]->getLanguage());
-        $this->assertEquals(null, $webspace->getPortals()[0]->getEnvironments()[0]->getUrls()[0]->getSegment());
-        $this->assertEquals('at', $webspace->getPortals()[0]->getEnvironments()[0]->getUrls()[0]->getCountry());
-        $this->assertEquals(null, $webspace->getPortals()[0]->getEnvironments()[0]->getUrls()[0]->getRedirect());
-        $this->assertEquals('www.sulu.at', $webspace->getPortals()[0]->getEnvironments()[0]->getUrls()[1]->getUrl());
-        $this->assertEquals(null, $webspace->getPortals()[0]->getEnvironments()[0]->getUrls()[1]->getLanguage());
-        $this->assertEquals(null, $webspace->getPortals()[0]->getEnvironments()[0]->getUrls()[1]->getSegment());
-        $this->assertEquals(null, $webspace->getPortals()[0]->getEnvironments()[0]->getUrls()[1]->getCountry());
-        $this->assertEquals('sulu.at', $webspace->getPortals()[0]->getEnvironments()[0]->getUrls()[1]->getRedirect());
+        $environmentProd = $webspace->getPortals()[0]->getEnvironment('prod');
+        $this->assertEquals('prod', $environmentProd->getType());
+        $this->assertEquals(2, count($environmentProd->getUrls()));
+        $this->assertEquals('sulu.at', $environmentProd->getUrls()[0]->getUrl());
+        $this->assertEquals('de', $environmentProd->getUrls()[0]->getLanguage());
+        $this->assertEquals(null, $environmentProd->getUrls()[0]->getSegment());
+        $this->assertEquals('at', $environmentProd->getUrls()[0]->getCountry());
+        $this->assertEquals(null, $environmentProd->getUrls()[0]->getRedirect());
+        $this->assertEquals('www.sulu.at', $environmentProd->getUrls()[1]->getUrl());
+        $this->assertEquals(null, $environmentProd->getUrls()[1]->getLanguage());
+        $this->assertEquals(null, $environmentProd->getUrls()[1]->getSegment());
+        $this->assertEquals(null, $environmentProd->getUrls()[1]->getCountry());
+        $this->assertEquals('sulu.at', $environmentProd->getUrls()[1]->getRedirect());
 
-        $this->assertEquals('dev', $webspace->getPortals()[0]->getEnvironments()[1]->getType());
-        $this->assertEquals(1, count($webspace->getPortals()[0]->getEnvironments()[1]->getUrls()));
-        $this->assertEquals('sulu.lo', $webspace->getPortals()[0]->getEnvironments()[1]->getUrls()[0]->getUrl());
+        $environmentDev = $webspace->getPortals()[0]->getEnvironment('dev');
+        $this->assertEquals('dev', $environmentDev->getType());
+        $this->assertEquals(1, count($environmentDev->getUrls()));
+        $this->assertEquals('sulu.lo', $environmentDev->getUrls()[0]->getUrl());
 
         $webspace = $this->loader->load(
             __DIR__ . '/../../../../Resources/DataFixtures/Webspace/valid/massiveart.xml'
@@ -136,18 +138,20 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(2, count($webspace->getPortals()[0]->getEnvironments()));
 
-        $this->assertEquals('prod', $webspace->getPortals()[0]->getEnvironments()[0]->getType());
-        $this->assertEquals(1, count($webspace->getPortals()[0]->getEnvironments()[0]->getUrls()));
+        $environmentProd = $webspace->getPortals()[0]->getEnvironment('prod');
+        $this->assertEquals('prod', $environmentProd->getType());
+        $this->assertCount(1, $environmentProd->getUrls());
         $this->assertEquals(
             '{language}.massiveart.{country}/{segment}',
-            $webspace->getPortals()[0]->getEnvironments()[0]->getUrls()[0]->getUrl()
+            $environmentProd->getUrls()[0]->getUrl()
         );
 
-        $this->assertEquals('dev', $webspace->getPortals()[0]->getEnvironments()[1]->getType());
-        $this->assertEquals(1, count($webspace->getPortals()[0]->getEnvironments()[1]->getUrls()));
+        $environmentDev = $webspace->getPortals()[0]->getEnvironment('dev');
+        $this->assertEquals('dev', $environmentDev->getType());
+        $this->assertCount(1, $environmentDev->getUrls());
         $this->assertEquals(
             'massiveart.lo/{localization}/{segment}',
-            $webspace->getPortals()[0]->getEnvironments()[1]->getUrls()[0]->getUrl()
+            $environmentDev->getUrls()[0]->getUrl()
         );
 
         $this->assertEquals('Massive Art CA', $webspace->getPortals()[1]->getName());
@@ -165,31 +169,33 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(2, count($webspace->getPortals()[1]->getEnvironments()));
 
-        $this->assertEquals('prod', $webspace->getPortals()[1]->getEnvironments()[0]->getType());
-        $this->assertEquals(2, count($webspace->getPortals()[1]->getEnvironments()[0]->getUrls()));
+        $environmentProd = $webspace->getPortals()[1]->getEnvironment('prod');
+        $this->assertEquals('prod', $environmentProd->getType());
+        $this->assertCount(2, $environmentProd->getUrls());
         $this->assertEquals(
             '{language}.massiveart.{country}/{segment}',
-            $webspace->getPortals()[1]->getEnvironments()[0]->getUrls()[0]->getUrl()
+            $environmentProd->getUrls()[0]->getUrl()
         );
-        $this->assertEquals(null, $webspace->getPortals()[1]->getEnvironments()[0]->getUrls()[0]->getCountry());
-        $this->assertEquals(null, $webspace->getPortals()[1]->getEnvironments()[0]->getUrls()[0]->getLanguage());
-        $this->assertEquals(null, $webspace->getPortals()[1]->getEnvironments()[0]->getUrls()[0]->getSegment());
-        $this->assertEquals(null, $webspace->getPortals()[1]->getEnvironments()[0]->getUrls()[0]->getRedirect());
+        $this->assertEquals(null, $environmentProd->getUrls()[0]->getCountry());
+        $this->assertEquals(null, $environmentProd->getUrls()[0]->getLanguage());
+        $this->assertEquals(null, $environmentProd->getUrls()[0]->getSegment());
+        $this->assertEquals(null, $environmentProd->getUrls()[0]->getRedirect());
 
         $this->assertEquals(
             'www.massiveart.com',
-            $webspace->getPortals()[1]->getEnvironments()[0]->getUrls()[1]->getUrl()
+            $environmentProd->getUrls()[1]->getUrl()
         );
-        $this->assertEquals('ca', $webspace->getPortals()[1]->getEnvironments()[0]->getUrls()[1]->getCountry());
-        $this->assertEquals('en', $webspace->getPortals()[1]->getEnvironments()[0]->getUrls()[1]->getLanguage());
-        $this->assertEquals('s', $webspace->getPortals()[1]->getEnvironments()[0]->getUrls()[1]->getSegment());
-        $this->assertEquals(null, $webspace->getPortals()[1]->getEnvironments()[0]->getUrls()[1]->getRedirect());
+        $this->assertEquals('ca', $environmentProd->getUrls()[1]->getCountry());
+        $this->assertEquals('en', $environmentProd->getUrls()[1]->getLanguage());
+        $this->assertEquals('s', $environmentProd->getUrls()[1]->getSegment());
+        $this->assertEquals(null, $environmentProd->getUrls()[1]->getRedirect());
 
-        $this->assertEquals('dev', $webspace->getPortals()[1]->getEnvironments()[1]->getType());
-        $this->assertEquals(1, count($webspace->getPortals()[1]->getEnvironments()[1]->getUrls()));
+        $environmentDev = $webspace->getPortals()[1]->getEnvironment('dev');
+        $this->assertEquals('dev', $environmentDev->getType());
+        $this->assertCount(1, $environmentDev->getUrls());
         $this->assertEquals(
             'massiveart.lo/{localization}/{segment}',
-            $webspace->getPortals()[1]->getEnvironments()[1]->getUrls()[0]->getUrl()
+            $environmentDev->getUrls()[0]->getUrl()
         );
     }
 
@@ -243,20 +249,22 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('de_at', $webspace->getPortals()[0]->getDefaultLocalization()->getLocalization());
 
-        $this->assertEquals(2, count($webspace->getPortals()[0]->getEnvironments()));
+        $this->assertCount(2, $webspace->getPortals()[0]->getEnvironments());
 
-        $this->assertEquals('prod', $webspace->getPortals()[0]->getEnvironments()[0]->getType());
-        $this->assertEquals(1, count($webspace->getPortals()[0]->getEnvironments()[0]->getUrls()));
+        $environmentProd = $webspace->getPortals()[0]->getEnvironment('prod');
+        $this->assertEquals('prod', $environmentProd->getType());
+        $this->assertCount(1, $environmentProd->getUrls());
         $this->assertEquals(
             'sulu-without.at',
-            $webspace->getPortals()[0]->getEnvironments()[0]->getUrls()[0]->getUrl()
+            $environmentProd->getUrls()[0]->getUrl()
         );
 
-        $this->assertEquals('dev', $webspace->getPortals()[0]->getEnvironments()[1]->getType());
-        $this->assertEquals(1, count($webspace->getPortals()[0]->getEnvironments()[1]->getUrls()));
+        $environmentDev = $webspace->getPortals()[0]->getEnvironment('dev');
+        $this->assertEquals('dev', $environmentDev->getType());
+        $this->assertCount(1, $environmentDev->getUrls());
         $this->assertEquals(
             'sulu-without.lo',
-            $webspace->getPortals()[0]->getEnvironments()[1]->getUrls()[0]->getUrl()
+            $environmentDev->getUrls()[0]->getUrl()
         );
     }
 
@@ -348,7 +356,7 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($localizations[0]->getShadow());
         $this->assertNull($localizations[0]->getParent());
 
-        $prodUrl = $webspace->getPortals()[0]->getEnvironments()[0]->getUrls()[0];
+        $prodUrl = $webspace->getPortals()[0]->getEnvironment('prod')->getUrls()[0];
 
         $this->assertEquals('sulu-single-language.at', $prodUrl->getUrl());
         $this->assertEquals('en', $prodUrl->getLanguage());
@@ -356,7 +364,7 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($prodUrl->getRedirect());
         $this->assertNull($prodUrl->getSegment());
 
-        $devUrl = $webspace->getPortals()[0]->getEnvironments()[1]->getUrls()[0];
+        $devUrl = $webspace->getPortals()[0]->getEnvironment('dev')->getUrls()[0];
 
         $this->assertEquals('sulu-single-language.lo', $devUrl->getUrl());
         $this->assertEquals('en', $devUrl->getLanguage());
