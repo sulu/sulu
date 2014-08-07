@@ -38,11 +38,11 @@ class ContactMediaController extends AbstractMediaController
      * Adds a new media to the account
      *
      * @param $id
-     * @param $slug
+     * @param \Symfony\Component\HttpFoundation\Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function postAction($id, $slug)
+    public function postAction($id, Request $request)
     {
-        return $this->addMediaToEntity(self::$entityName, $id, $slug);
+        return $this->addMediaToEntity(self::$entityName, $id, $request->get('mediaId', ''));
     }
 } 
