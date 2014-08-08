@@ -37,11 +37,11 @@ class SuluMediaExtension extends Extension
         $container->setParameter('sulu_media.collection.previews.format', '150x100');
         $container->setParameter('sulu_media.media.max_file_size', '16MB');
         $container->setParameter('sulu_media.media.blocked_file_types', array('file/exe'));
-        $container->setParameter('sulu_media.media.storage.local.path', '%kernel.root_dir%/../../uploads/media');
+        $container->setParameter('sulu_media.media.storage.local.path', '%kernel.root_dir%/../uploads/media');
         $container->setParameter('sulu_media.media.storage.local.segments', '10');
         $container->setParameter('sulu_media.image.command.prefix', 'image.converter.prefix.');
         $container->setParameter('sulu_media.format_cache.save_image', 'true');
-        $container->setParameter('sulu_media.format_cache.path', '%kernel.root_dir%/../../web/uploads/media');
+        $container->setParameter('sulu_media.format_cache.path', '%kernel.root_dir%/../web/uploads/media');
         $container->setParameter('sulu_media.format_cache.segments', '10');
         $container->setParameter('ghost_script.path', '/usr/local/bin/gs');
         $container->setParameter('sulu_media.format_manager.extensions', array(
