@@ -338,10 +338,6 @@
                 <source>sulu.list-toolbar.export</source>
                 <target>Export</target>
             </trans-unit>
-            <trans-unit id="a945ccdbf95d2852ab6390cea24ebb6f" resname="content.contents.title">
-                <source>content.contents.title</source>
-                <target>Content</target>
-            </trans-unit>
             <trans-unit id="305f571ce8dc8b08470285f8a990899a" resname="navigation.tools">
                 <source>navigation.tools</source>
                 <target>Tools</target>
@@ -494,94 +490,6 @@
                 <source>public.title</source>
                 <target>Title</target>
             </trans-unit>
-            <trans-unit id="92762f7528ee1cbcd85bf435fd03c846" resname="smart-content.nocontent-found">
-                <source>smart-content.nocontent-found</source>
-                <target>No content found</target>
-            </trans-unit>
-            <trans-unit id="eabf67921221f58698ecdb840eceb15f" resname="smart-content.nocontent-selected">
-                <source>smart-content.nocontent-selected</source>
-                <target>No content selected</target>
-            </trans-unit>
-            <trans-unit id="7ed9c6dfa56487c35fa173d0a750d1e8" resname="smart-content.visible">
-                <source>smart-content.visible</source>
-                <target>visible</target>
-            </trans-unit>
-            <trans-unit id="3dbb6bd1426dd22f15726e31904a77dd" resname="smart-content.of">
-                <source>smart-content.of</source>
-                <target>of</target>
-            </trans-unit>
-            <trans-unit id="f85e55126a0ec3ab6617b52fc033bc18" resname="smart-content.configure-smart-content">
-                <source>smart-content.configure-smart-content</source>
-                <target>Configure smart content</target>
-            </trans-unit>
-            <trans-unit id="7a9bd49b2b4443383bff6eb67dd0afb6" resname="smart-content.data-source">
-                <source>smart-content.data-source</source>
-                <target>Data source</target>
-            </trans-unit>
-            <trans-unit id="66f18ec54ed3b6a089ee3712167c4e87" resname="smart-content.include-sub-folders">
-                <source>smart-content.include-sub-folders</source>
-                <target>Include Sub folders</target>
-            </trans-unit>
-            <trans-unit id="4cf5babee84aa0eef15db3ce11648b35" resname="smart-content.filter-by-category">
-                <source>smart-content.filter-by-category</source>
-                <target>Filter by category</target>
-            </trans-unit>
-            <trans-unit id="ea58ee4521c5fe65055dc05092ea8d08" resname="smart-content.filter-by-tags">
-                <source>smart-content.filter-by-tags</source>
-                <target>Filter by tags</target>
-            </trans-unit>
-            <trans-unit id="7e3c491707f805797c98a366cf0c28e2" resname="smart-content.sort-by">
-                <source>smart-content.sort-by</source>
-                <target>Sort by</target>
-            </trans-unit>
-            <trans-unit id="831eaac1fa8a279d10e452f59e716b35" resname="smart-content.no-sorting">
-                <source>smart-content.no-sorting</source>
-                <target>No sorting</target>
-            </trans-unit>
-            <trans-unit id="fc27db8368ee8e93b0432c6f929eb22c" resname="smart-content.ascending">
-                <source>smart-content.ascending</source>
-                <target>Ascending</target>
-            </trans-unit>
-            <trans-unit id="71c74b6461ba3ba4613e1ac306a55f82" resname="smart-content.descending">
-                <source>smart-content.descending</source>
-                <target>Descending</target>
-            </trans-unit>
-            <trans-unit id="6574850a4e95ff29395d3078b5e4ea74" resname="smart-content.present-as">
-                <source>smart-content.present-as</source>
-                <target>Present as</target>
-            </trans-unit>
-            <trans-unit id="a9097de27632b967cec91eb705ac82ad" resname="smart-content.limit-result-to">
-                <source>smart-content.limit-result-to</source>
-                <target>Limit result to</target>
-            </trans-unit>
-            <trans-unit id="48c38a0436a34817dcc6a358d39f9262" resname="smart-content.no-category">
-                <source>smart-content.no-category</source>
-                <target>No category</target>
-            </trans-unit>
-            <trans-unit id="f033dcd178a34ec4932e49f1dfeea02f" resname="smart-content.choose-present-as">
-                <source>smart-content.choose-present-as</source>
-                <target>Choose..</target>
-            </trans-unit>
-            <trans-unit id="1dbb7db699bba74e52807fbbccbb91d7" resname="smart-content.choose-data-source">
-                <source>smart-content.choose-data-source</source>
-                <target>Choose..</target>
-            </trans-unit>
-            <trans-unit id="5ff9374232125b7f296a3e4cd9dc0bfe" resname="smart-content.from">
-                <source>smart-content.from</source>
-                <target>From</target>
-            </trans-unit>
-            <trans-unit id="475db242975e3fbfd85d008cede565bc" resname="smart-content.sub-folders-inclusive">
-                <source>smart-content.sub-folders-inclusive</source>
-                <target>incl. sub folders</target>
-            </trans-unit>
-            <trans-unit id="30092dd4c161f141539f1802e8da02a8" resname="smart-content.view-all">
-                <source>smart-content.view-all</source>
-                <target>view all</target>
-            </trans-unit>
-            <trans-unit id="cc88fcd370c8ff1d96f0b9f99adb8316" resname="smart-content.view-less">
-                <source>smart-content.view-less</source>
-                <target>view less</target>
-            </trans-unit>
             <trans-unit id="574466b8b3f0b6830dc2e83f5a8c4726" resname="tag.tags.title">
                 <source>tag.tags.title</source>
                 <target>Tags</target>
@@ -613,22 +521,6 @@
             <trans-unit id="f387813a5748c1a5ca6f6394439f6d69" resname="template.complex">
                 <source>template.complex</source>
                 <target>Complex</target>
-            </trans-unit>
-            <trans-unit id="ad64f69edc5ce6dae6033001f5d01b6e" resname="content.template.dialog.titile">
-                <source>content.template.dialog.titile</source>
-                <target>Change Template</target>
-            </trans-unit>
-            <trans-unit id="f6fca7ef129af3eac26919260b73ebf5" resname="content.template.dialog.content">
-                <source>content.template.dialog.content</source>
-                <target>You have unchanged Data.&lt;br/&gt;Do you want to leave this site?</target>
-            </trans-unit>
-            <trans-unit id="19931932279c1626435d623b80e5439d" resname="content.template.dialog.submit-button">
-                <source>content.template.dialog.submit-button</source>
-                <target>Yes</target>
-            </trans-unit>
-            <trans-unit id="12e2b110f256ebb55f9c550d4d146ab6" resname="content.template.dialog.cancel-button">
-                <source>content.template.dialog.cancel-button</source>
-                <target>Cancel</target>
             </trans-unit>
             <trans-unit id="9b9f05a3f23cb61902773ac06161f04d" resname="public.published">
                 <source>public.published</source>
@@ -790,22 +682,6 @@
                 <source>contact.accounts.type</source>
                 <target>Type</target>
             </trans-unit>
-            <trans-unit id="18fe4f5f2d5a25f1a9b5360e0bd18bfa" resname="content.delete.dialog.title">
-                <source>content.delete.dialog.title</source>
-                <target>Delete Node</target>
-            </trans-unit>
-            <trans-unit id="0c64601205aa73314446c02e5a3dd4c8" resname="content.delete.dialog.content">
-                <source>content.delete.dialog.content</source>
-                <target>Do you realy want to delete the selected node?</target>
-            </trans-unit>
-            <trans-unit id="18ffe800b505f7d878907c67d7fb1be4" resname="content.delete.dialog.cancel">
-                <source>content.delete.dialog.cancel</source>
-                <target>Don't do it</target>
-            </trans-unit>
-            <trans-unit id="4688b62de10bced4621f963565894a4f" resname="content.delete.dialog.submit">
-                <source>content.delete.dialog.submit</source>
-                <target>Do it, I understand</target>
-            </trans-unit>
             <trans-unit id="d2d787cf3136eff4a01713ab1fb3580b" resname="public.add-fields">
                 <source>public.add-fields</source>
                 <target>Add new fields</target>
@@ -849,14 +725,6 @@
             <trans-unit id="f03b39fa050b422d85db9d84cd54fee3" resname="navigation.webspaces.index-page">
                 <source>navigation.webspaces.index-page</source>
                 <target>Homepage</target>
-            </trans-unit>
-            <trans-unit id="e8a77e532dfb3d0614824b7349d7b680" resname="content.contents.show-ghost-pages">
-                <source>content.contents.show-ghost-pages</source>
-                <target>Show ghosts and shadow pages</target>
-            </trans-unit>
-            <trans-unit id="9d6ff6ec28392e6c52d795266f34743e" resname="content.preview.resolutions">
-                <source>content.preview.resolutions</source>
-                <target>Resolutions</target>
             </trans-unit>
             <trans-unit id="069f3fbf0731ab7dbc2d8627334aad5f" resname="url.home">
                 <source>url.home</source>
@@ -923,10 +791,6 @@
             <trans-unit id="3d44400ee5b215b4b16913d68868140f" resname="sulu.type.title_only">
                 <source>sulu.type.title_only</source>
                 <target>Title</target>
-            </trans-unit>
-            <trans-unit id="fd7f7507a45f470925dd0e3257b20da2" resname="sulu.content.add-type">
-                <source>sulu.content.add-type</source>
-                <target>Add Block</target>
             </trans-unit>
             <trans-unit id="73f08bc1e1576fe835885fccd00abaeb" resname="contacts.accounts.manage.categories.title">
                 <source>contacts.accounts.manage.categories.title</source>
@@ -1187,22 +1051,6 @@
             <trans-unit id="90a3264459ba0f52ef7a4d3c0298d50" resname="public.description">
                 <source>public.description</source>
                 <target>Description</target>
-            </trans-unit>
-            <trans-unit id="90aa264459ba0f52ef7a4d3c0298d5f" resname="smart-content.data-source.label">
-                <source>smart-content.data-source.label</source>
-                <target>Data source</target>
-            </trans-unit>
-            <trans-unit id="90a3272459ba0f52ef7a4d2c0298d5c" resname="smart-content.data-source.button">
-                <source>smart-content.data-source.button</source>
-                <target>Choose source</target>
-            </trans-unit>
-            <trans-unit id="90a3272459ba0f52ef7a4d320298d5c" resname="smart-content.choose-data-source">
-                <source>smart-content.choose-data-source</source>
-                <target>Choose data source</target>
-            </trans-unit>
-            <trans-unit id="90a3276459ba0f52ef7a4d320298d5d" resname="smart-content.choose-data-source.cancel">
-                <source>smart-content.choose-data-source.cancel</source>
-                <target>Back</target>
             </trans-unit>
             <trans-unit id="642c992f1929c9e633a5ce2178d22192" resname="contact.contacts.isPoolAlpinEmployee">
                 <source>contact.contacts.isPoolAlpinEmployee</source>
@@ -1470,49 +1318,9 @@
                 <source>content-navigation.contents.excerpt</source>
                 <target>Excerpt</target>
             </trans-unit>
-            <trans-unit id="443d99ff2f64652633a5ca2169f22254" resname="sulu.content.seo.title">
-                <source>sulu.content.seo.title</source>
-                <target>Title</target>
-            </trans-unit>
-            <trans-unit id="441d99ff2f64652633a5ca2169f22254" resname="sulu.content.seo.description">
-                <source>sulu.content.seo.description</source>
-                <target>Description</target>
-            </trans-unit>
-            <trans-unit id="442d99ff2f64652633a5ca2169f22254" resname="sulu.content.seo.keywords">
-                <source>sulu.content.seo.keywords</source>
-                <target>Keywords</target>
-            </trans-unit>
-            <trans-unit id="445d99ff2f64652633a5ca2169f22254" resname="sulu.content.seo.canonical">
-                <source>sulu.content.seo.canonical</source>
-                <target>Canonical URL (Canonical Tag)</target>
-            </trans-unit>
-            <trans-unit id="445d99ff2f64652633a5ca2169f22256" resname="sulu.content.seo.robots">
-                <source>sulu.content.seo.robots</source>
-                <target>Robots settings (robots.txt)</target>
-            </trans-unit>
-            <trans-unit id="445d99ff2f64652633a5ca2169f2225c" resname="sulu.content.seo.robots.no-index">
-                <source>sulu.content.seo.robots.no-index</source>
-                <target>no-index (page will not be indexed by search engines)</target>
-            </trans-unit>
-            <trans-unit id="445d99ff2f64652633a5ca2169f22252" resname="sulu.content.seo.robots.no-follow">
-                <source>sulu.content.seo.robots.no-follow</source>
-                <target>no-follow (links on this page will not be followed by the search engine)</target>
-            </trans-unit>
             <trans-unit id="642c992f1929c9e456a5ce2178d22192" resname="contact.contacts.main-contact">
                 <source>contact.contacts.main-contact</source>
                 <target>Main contact</target>
-            </trans-unit>
-            <trans-unit id="142cd92f1c29c9e456a5ce2178d22192" resname="sulu.content.excerpt.title">
-                <source>sulu.content.excerpt.title</source>
-                <target>Title</target>
-            </trans-unit>
-            <trans-unit id="142cd92f1c29c9e456a5ce2178d22196" resname="sulu.content.excerpt.description">
-                <source>sulu.content.excerpt.description</source>
-                <target>Description</target>
-            </trans-unit>
-            <trans-unit id="142cd92f1c29c9e456a5ce2178d22197" resname="sulu.content.excerpt.images">
-                <source>sulu.content.excerpt.images</source>
-                <target>Images</target>
             </trans-unit>
             <trans-unit id="142cd92f1c29c9e456a5ce2178d22198" resname="sulu.preview.auto">
                 <source>sulu.preview.auto</source>
@@ -1565,22 +1373,6 @@
             <trans-unit id="c50af521ac181350142c0b4720e29a2f" resname="internal-links.nolinks-selected">
                 <source>internal-links.nolinks-selected</source>
                 <target>No internal links selected</target>
-            </trans-unit>
-            <trans-unit id="c50af522ac181350142c0b4720e29a2f" resname="sulu.content.seo.descriptions.note">
-                <source>sulu.content.seo.descriptions.note</source>
-                <target>The meta description is limited to 155 characters.</target>
-            </trans-unit>
-            <trans-unit id="e50af522ac181350142c0b4720e29a2f" resname="sulu.content.seo.characters-left">
-                <source>sulu.content.seo.characters-left</source>
-                <target>characters left</target>
-            </trans-unit>
-            <trans-unit id="b50af522ac181350142c0b4720e29a2f" resname="sulu.content.seo.keywords.note">
-                <source>sulu.content.seo.keywords.note</source>
-                <target>Please use a max. of 5 keywords, dependend from the content of the page, seperated by commas.</target>
-            </trans-unit>
-            <trans-unit id="a50af522ac181350142c0b4720e29a2f" resname="sulu.content.seo.keywords-left">
-                <source>sulu.content.seo.keywords-left</source>
-                <target>keywords left</target>
             </trans-unit>
             <trans-unit id="a50af522a1231350142c0b4720e29a3f" resname="public.no-title">
                 <source>public.no-title</source>
