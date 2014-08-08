@@ -509,6 +509,10 @@ class NodeController extends RestController implements ClassResourceInterface
                     // call repository method
                     $data = $repository->copyNode($uuid, $destination, $webspace, $language, $userId);
                     break;
+                case 'order':
+                    // call repository method
+                    $data = $repository->orderBefore($uuid, $destination, $webspace, $language, $userId);
+                    break;
                 default:
                     throw new RestException('Unrecognized action: ' . $action);
             }

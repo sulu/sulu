@@ -249,6 +249,9 @@ define([
             // move selected content
             this.sandbox.on('sulu.content.contents.copy', this.copy, this);
 
+            // order selected content
+            this.sandbox.on('sulu.content.contents.order', this.order, this);
+
             // get resource locator
             this.sandbox.once('sulu.content.contents.get-rl', function(title, callback) {
                 this.getResourceLocator(title, this.template, callback);
@@ -290,6 +293,24 @@ define([
         copy: function(id, parentId, successCallback, errorCallback) {
             var url = [
                 '/admin/api/nodes/', id, '?webspace=', this.options.webspace, '&language=' , this.options.language , '&action=copy&destination=', parentId
+            ].join('');
+
+            this.sandbox.util.save(url, 'POST', {})
+                .then(function(data) {
+                    if (!!successCallback && typeof successCallback === 'function') {
+                        successCallback(data);
+                    }
+                }.bind(this))
+                .fail(function(jqXHR, textStatus, error) {
+                    if (!!errorCallback && typeof errorCallback === 'function') {
+                        errorCallback(error);
+                    }
+                }.bind(this));
+        },
+
+        order: function(id, parentId, successCallback, errorCallback) {
+            var url = [
+                '/admin/api/nodes/', id, '?webspace=', this.options.webspace, '&language=' , this.options.language , '&action=order&destination=', parentId
             ].join('');
 
             this.sandbox.util.save(url, 'POST', {})
