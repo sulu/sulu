@@ -34,5 +34,20 @@
          </span>
         </div>
     {% endif %}
+
+    {% if data.termsOfDelivery is not empty %}
+        <div class="grid-row m-bottom-30">
+            <h5 class="label"><%=translate('contact.termsOfDelivery')%></h5>
+            <span class="grey">{{ data.termsOfDelivery }}</span>
+        </div>
+    {% endif %}
+
+    {% if data.termsOfPayment is not empty %}
+        <div class="grid-row m-bottom-30">
+            <h5 class="label"><%=translate('contact.termsOfPayment')%></h5>
+            <span class="grey">{{ data.termsOfPayment }}</span>
+        </div>
+    {% endif %}
+
 {% endif %}
 
