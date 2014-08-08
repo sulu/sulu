@@ -48,8 +48,10 @@ class ContactRepository extends EntityRepository
             ->leftJoin('phones.phoneType', 'phoneType')
             ->leftJoin('u.tags', 'tags')
             ->leftJoin('u.urls', 'urls')
+            ->leftJoin('urls.urlType', 'urlType')
             ->leftJoin('u.title', 'title')
             ->leftJoin('accountContacts.position', 'position')
+            ->leftJoin('u.medias', 'medias')
             ->leftJoin('u.categories', 'categories')
             ->addSelect('position')
             ->addSelect('title')
@@ -71,6 +73,8 @@ class ContactRepository extends EntityRepository
             ->addSelect('country')
             ->addSelect('addressType')
             ->addSelect('notes')
+            ->addSelect('urlType')
+            ->addSelect('medias')
             ->addSelect('categories')
             ->where('u.id=:id');
 
