@@ -1061,21 +1061,18 @@ class ContentMapper implements ContentMapperInterface
         $session = $this->getSession();
 
         // load from phpcr
-        $nodes = $session->getNodesByIdentifier(array($uuid, $beforeUuid));
+        /** @var NodeInterface $beforeTargetNode */
+        /** @var NodeInterface $subjectNode */
+        list($beforeTargetNode, $subjectNode) = $session->getNodesByIdentifier(array($uuid, $beforeUuid));
 
-        /** @var NodeInterface $nodeUp */
-        $nodeUp = $nodes->current();
-        $nodes->next();
-        /** @var NodeInterface $nodeDown */
-        $nodeDown = $nodes->current();
-        $parent = $nodeUp->getParent();
+        $parent = $beforeTargetNode->getParent();
 
         // reorder
-        $parent->orderBefore($nodeUp->getName(), $nodeDown->getName());
+        $parent->orderBefore($beforeTargetNode->getName(), $subjectNode->getName());
 
         // set changer of node in specific language
-        $this->setChanger($nodeUp, $userId, $languageCode);
-        $this->setChanger($nodeDown, $userId, $languageCode);
+        $this->setChanger($beforeTargetNode, $userId, $languageCode);
+        $this->setChanger($subjectNode, $userId, $languageCode);
 
         // save session
         $session->save();
