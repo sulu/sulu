@@ -49,7 +49,7 @@ class Configuration implements ConfigurationInterface
         $rootNode->arrayNode('webspace')
             ->children()
                 ->scalarNode('config_dir')
-                    ->defaultValue('%kernel.root_dir%/../Resources/webspaces')
+                    ->defaultValue('%kernel.root_dir%/Resources/webspaces')
                 ->end()
                 ->arrayNode('request_analyzer')
                     ->addDefaultsIfNotSet()
