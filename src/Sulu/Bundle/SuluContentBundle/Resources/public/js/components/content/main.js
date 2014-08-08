@@ -774,7 +774,8 @@ define([
                 };
             } else {
                 var sidebar = {
-                    width: 'max'
+                    width: 'max',
+                    cssClasses: 'dark-border'
                 };
                 if (!this.options.preview) {
                     sidebar = false;
