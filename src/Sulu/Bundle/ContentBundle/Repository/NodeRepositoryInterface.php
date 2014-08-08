@@ -186,4 +186,15 @@ interface NodeRepositoryInterface
      * @return array
      */
     public function copyNode($uuid, $destinationUuid, $webspaceKey, $languageCode, $userId);
+
+    /**
+     * order given node before another
+     * @param string $uuid
+     * @param string $beforeUuid
+     * @param string $webspaceKey
+     * @param string $languageCode
+     * @param integer $userId
+     * @return array
+     */
+    public function orderBefore($uuid, $beforeUuid, $webspaceKey, $languageCode, $userId);
 }

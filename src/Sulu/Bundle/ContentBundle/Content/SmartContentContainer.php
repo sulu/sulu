@@ -111,7 +111,7 @@ class SmartContentContainer implements \Serializable
     {
         $config = $this->config;
         // TODO Remove when multi sorting is possible in javascript component
-        if (isset($config['sortBy']) && sizeof($config['sortBy']) > 0) {
+        if (isset($config['sortBy']) && is_array($config['sortBy']) && sizeof($config['sortBy']) > 0) {
             $config['sortBy'] = $config['sortBy'][0];
         }
         return $config;

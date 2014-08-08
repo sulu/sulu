@@ -674,6 +674,155 @@ class NodeRepositoryTest extends PhpcrTestCase
         $this->assertEquals('www.google.at', $secondLayerNodes['_embedded']['nodes'][0]['external_link']);
     }
 
+    /**
+     * @return StructureInterface[]
+     */
+    private function prepareOrderBeforeData()
+    {
+        $data = array(
+            array(
+                'title' => 'Test1',
+                'url' => '/news/test1'
+            ),
+            array(
+                'title' => 'Test2',
+                'url' => '/news/test2'
+            ),
+            array(
+                'title' => 'Test3',
+                'url' => '/news/test3'
+            ),
+            array(
+                'title' => 'Test4',
+                'url' => '/news/test4'
+            ),
+        );
+
+        foreach ($data as &$element) {
+            $element = $this->mapper->save(
+                $element,
+                'overview',
+                'default',
+                'en',
+                1,
+                true,
+                null,
+                null,
+                StructureInterface::STATE_PUBLISHED
+            );
+        }
+
+        return $data;
+    }
+
+    public function testOrderBefore()
+    {
+        $data = $this->prepareOrderBeforeData();
+
+        $result = $this->nodeRepository->orderBefore($data[3]->getUuid(), $data[0]->getUuid(), 'default', 'en', 2);
+        $this->assertEquals('Test4', $result['title']);
+        $this->assertEquals('/test4', $result['path']);
+        $this->assertEquals('/news/test4', $result['url']);
+        $this->assertEquals(2, $result['changer']);
+
+        $result = $this->nodeRepository->orderBefore($data[2]->getUuid(), $data[3]->getUuid(), 'default', 'en', 2);
+        $this->assertEquals('Test3', $result['title']);
+        $this->assertEquals('/test3', $result['path']);
+        $this->assertEquals('/news/test3', $result['url']);
+        $this->assertEquals(2, $result['changer']);
+
+        $test = $this->nodeRepository->getNodes(null, 'default', 'en');
+        $this->assertEquals(4, sizeof($test['_embedded']['nodes']));
+        $nodes = $test['_embedded']['nodes'];
+
+        $this->assertEquals('Test3', $nodes[0]['title']);
+        $this->assertEquals('Test4', $nodes[1]['title']);
+        $this->assertEquals('Test1', $nodes[2]['title']);
+        $this->assertEquals('Test2', $nodes[3]['title']);
+    }
+
+    public function testOrderBeforeNonExistingSource()
+    {
+        $data = $this->prepareOrderBeforeData();
+        $this->setExpectedException('Sulu\Component\Rest\Exception\RestException');
+
+        $this->nodeRepository->orderBefore('123-123-123', $data[0]->getUuid(), 'default', 'en', 2);
+    }
+
+    public function testOrderBeforeNonExistingDestination()
+    {
+        $data = $this->prepareOrderBeforeData();
+        $this->setExpectedException('Sulu\Component\Rest\Exception\RestException');
+
+        $this->nodeRepository->orderBefore($data[0]->getUuid(), '123-123-123', 'default', 'en', 2);
+    }
+
+    public function testOrderBeforeInExternalLink()
+    {
+        $data = $this->prepareOrderBeforeData();
+
+        $newData = array(
+            'title' => 'Test4',
+            'external_link' => 'www.google.at',
+            'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK
+        );
+
+        $data[3] = $this->mapper->save(
+            $newData,
+            'external-link',
+            'default',
+            'en',
+            1,
+            true,
+            $data[3]->getUuid(),
+            null,
+            StructureInterface::STATE_PUBLISHED
+        );
+
+        $newData = array(
+            'title' => 'Test3',
+            'internal_link' => $data[0]->getUuid(),
+            'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK
+        );
+
+        $data[2] = $this->mapper->save(
+            $newData,
+            'internal-link',
+            'default',
+            'en',
+            1,
+            true,
+            $data[2]->getUuid(),
+            null,
+            StructureInterface::STATE_PUBLISHED
+        );
+
+        $result = $this->nodeRepository->orderBefore($data[3]->getUuid(), $data[0]->getUuid(), 'default', 'en', 2);
+        $this->assertEquals('Test4', $result['title']);
+        $this->assertEquals('/test4', $result['path']);
+        $this->assertEquals('www.google.at', $result['external_link']);
+        $this->assertEquals(2, $result['changer']);
+
+        $result = $this->nodeRepository->orderBefore($data[2]->getUuid(), $data[3]->getUuid(), 'default', 'en', 2);
+        $this->assertEquals('Test3', $result['title']);
+        $this->assertEquals('/test3', $result['path']);
+        $this->assertEquals($data[0]->getUuid(), $result['internal_link']);
+        $this->assertEquals(2, $result['changer']);
+
+        $test = $this->nodeRepository->getNodes(null, 'default', 'en');
+        $this->assertEquals(4, sizeof($test['_embedded']['nodes']));
+        $nodes = $test['_embedded']['nodes'];
+
+        $this->assertEquals('Test3', $nodes[0]['title']);
+        $this->assertFalse($nodes[0]['hasSub']);
+        $this->assertEquals('Test4', $nodes[1]['title']);
+        $this->assertFalse($nodes[0]['hasSub']);
+        $this->assertEquals('Test1', $nodes[2]['title']);
+        $this->assertFalse($nodes[0]['hasSub']);
+        $this->assertEquals('Test2', $nodes[3]['title']);
+        $this->assertFalse($nodes[0]['hasSub']);
+    }
+
     protected function setUp()
     {
         $this->prepareMapper();
