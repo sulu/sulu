@@ -313,7 +313,7 @@ define(function() {
          */
         toggleShrinkColumn: function() {
             var $column = this.sandbox.dom.find(constants.columnSelector);
-            this.sandbox.dom.removeClass(this.$el, constants.noTransitionsClass);
+            this.sandbox.dom.removeClass($column, constants.noTransitionsClass);
             if (this.sandbox.dom.hasClass($column, constants.smallFixedClass)) {
                 // expand
                 this.sandbox.emit('husky.navigation.show');
@@ -330,7 +330,6 @@ define(function() {
         },
 
         /**
-         /**
          * changes the spacing of the content
          * @event sulu.app.change-spacing
          * @param {Boolean} leftSpacing false for no spacing left
@@ -338,7 +337,8 @@ define(function() {
          * @param {Boolean} topSpacing false for no spacing top
          */
         changeSpacing: function(leftSpacing, rightSpacing, topSpacing) {
-            this.sandbox.dom.addClass(this.$el, constants.noTransitionsClass);
+            var $column = this.sandbox.dom.find(constants.columnSelector);
+            this.sandbox.dom.addClass($column, constants.noTransitionsClass);
             // left space
             if (leftSpacing === false) {
                 this.sandbox.dom.addClass(this.$el, constants.noLeftSpaceClass);
@@ -366,7 +366,8 @@ define(function() {
          * @param width {String} the new type of width to apply to the content. 'fixed' or 'max'
          */
         changeWidth: function(width) {
-            this.sandbox.dom.removeClass(this.$el, constants.noTransitionsClass);
+            var $column = this.sandbox.dom.find(constants.columnSelector);
+            this.sandbox.dom.removeClass($column, constants.noTransitionsClass);
             if (width === 'fixed') {
                 this.changeToFixedWidth(false);
             } else if (width === 'max') {
