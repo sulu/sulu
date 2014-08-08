@@ -324,3 +324,39 @@
 .resource-locator-history .date {
   text-align: center;
 }
+
+/* line 1, ../scss/modules/order-table.scss */
+.order-table {
+  list-style-type: none;
+  padding: 0 40px 0 30px;
+}
+/* line 5, ../scss/modules/order-table.scss */
+.order-table::after {
+  display: table;
+  content: "";
+  clear: both;
+}
+/* line 11, ../scss/modules/order-table.scss */
+.order-table li::after {
+  clear: both;
+}
+/* line 16, ../scss/modules/order-table.scss */
+.order-table .node-name,
+.order-table .options-select {
+  display: block;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ddd;
+}
+/* line 23, ../scss/modules/order-table.scss */
+.order-table .node-name {
+  text-align: left;
+  float: left;
+  width: 95%;
+}
+/* line 29, ../scss/modules/order-table.scss */
+.order-table .options-select {
+  float: right;
+  width: 5%;
+  text-align: center;
+}
