@@ -121,6 +121,9 @@ class AccountInfo implements WidgetInterface
         $data['email'] = $account->getMainEmail();
         $data['url'] = $account->getMainUrl();
 
+        $data['termsOfPayment'] = $account->getTermsOfPayment()->getTerms();
+        $data['termsOfDelivery'] = $account->getTermsOfDelivery()->getTerms();
+
         return $data;
     }
 }
