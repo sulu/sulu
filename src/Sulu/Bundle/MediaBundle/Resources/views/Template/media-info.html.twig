@@ -12,6 +12,18 @@
                       data-mapper-property="description"></textarea>
         </div>
         <div class="grid-row">
+            <label for="media-info-<%= media.id %>"><%= translate('public.tags') %></label>
+            <div id="media-tags"
+                 data-mapper-property="tags"
+                 data-type="tagList"
+                 data-form="true"
+                 data-aura-component="auto-complete-list@husky"
+                 data-aura-instance-name="media-info-<%= media.id %>"
+                 data-aura-remote-url="/admin/api/tags?flat=true&sortBy=name"
+                 data-aura-get-parameter="search">
+            </div>
+        </div>
+        <div class="grid-row">
             <div id="file-version-change"></div>
         </div>
     </div>

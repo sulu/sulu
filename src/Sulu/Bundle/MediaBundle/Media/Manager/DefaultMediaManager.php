@@ -34,7 +34,7 @@ use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Sulu\Bundle\MediaBundle\Entity\Media as MediaEntity;
 use Sulu\Bundle\MediaBundle\Api\Media;
-use DateTime;
+use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 
 /**
  * @package Sulu\Bundle\MediaBundle\Media\Manager
@@ -105,6 +105,11 @@ class DefaultMediaManager implements MediaManagerInterface
     private $mediaTypes;
 
     /**
+     * @var TagManagerInterface
+     */
+    private $tagManager;
+
+    /**
      * @var DoctrineFieldDescriptor[]
      */
     private $fieldDescriptors = array();
@@ -122,6 +127,7 @@ class DefaultMediaManager implements MediaManagerInterface
      * @param StorageInterface $storage
      * @param FileValidatorInterface $validator
      * @param FormatManagerInterface $formatManager
+     * @param TagManagerInterface $tagManager
      * @param string $downloadPath
      * @param string $maxFileSize
      * @param array $blockedMimeTypes
@@ -135,6 +141,7 @@ class DefaultMediaManager implements MediaManagerInterface
         StorageInterface $storage,
         FileValidatorInterface $validator,
         FormatManagerInterface $formatManager,
+        TagmanagerInterface $tagManager,
         $downloadPath,
         $maxFileSize,
         $blockedMimeTypes,
@@ -152,6 +159,7 @@ class DefaultMediaManager implements MediaManagerInterface
         $this->maxFileSize = $maxFileSize;
         $this->blockedMimeTypes = $blockedMimeTypes;
         $this->mediaTypes = $mediaTypes;
+        $this->tagManager = $tagManager;
 
         $this->initializeFieldDescriptors();
     }
@@ -343,7 +351,7 @@ class DefaultMediaManager implements MediaManagerInterface
         if (!$mediaEntity) {
             throw new MediaNotFoundException('Media with the ID ' . $id . ' was not found.');
         }
-        return $this->addFormatsAndUrl(new Media($mediaEntity, $locale));
+        return $this->addFormatsAndUrl(new Media($mediaEntity, $locale, null, $this->tagManager));
     }
 
     /**
@@ -354,7 +362,7 @@ class DefaultMediaManager implements MediaManagerInterface
         $media = array();
         $mediaEntities = $this->mediaRepository->findMedia($filter, $limit);
         foreach ($mediaEntities as $mediaEntity) {
-            $media[] = $this->addFormatsAndUrl(new Media($mediaEntity, $locale));
+            $media[] = $this->addFormatsAndUrl(new Media($mediaEntity, $locale, null, $this->tagManager));
         }
         return $media;
     }
@@ -404,7 +412,7 @@ class DefaultMediaManager implements MediaManagerInterface
          */
         $file = $files[0]; // currently a media can only have one file
 
-        $file->setChanged(new Datetime());
+        $file->setChanged(new \Datetime());
         $file->setChanger($user);
 
         $version = $file->getVersion();
@@ -445,8 +453,8 @@ class DefaultMediaManager implements MediaManagerInterface
             $data['version'] = $version;
 
             $fileVersion = clone($currentFileVersion);
-            $fileVersion->setChanged(new Datetime());
-            $fileVersion->setCreated(new Datetime());
+            $fileVersion->setChanged(new \Datetime());
+            $fileVersion->setCreated(new \Datetime());
             $fileVersion->setChanger($user);
             $fileVersion->setCreator($user);
             $fileVersion->setDownloadCounter(0);
@@ -468,11 +476,12 @@ class DefaultMediaManager implements MediaManagerInterface
             $data['storageOptions'] = null;
         }
 
-        $media = new Media($mediaEntity, $data['locale']);
+        $media = new Media($mediaEntity, $data['locale'], null, $this->tagManager);
 
         $media = $this->setDataToMedia(
             $media,
-            $data
+            $data,
+            $user
         );
 
         $mediaEntity = $media->getEntity();
@@ -531,11 +540,12 @@ class DefaultMediaManager implements MediaManagerInterface
         $file->addFileVersion($fileVersion);
         $mediaEntity->addFile($file);
 
-        $media = new Media($mediaEntity, $data['locale']);
+        $media = new Media($mediaEntity, $data['locale'], null, $this->tagManager);
 
         $media = $this->setDataToMedia(
             $media,
-            $data
+            $data,
+            $user
         );
 
         $mediaEntity = $media->getEntity();
@@ -566,12 +576,13 @@ class DefaultMediaManager implements MediaManagerInterface
      * Data can be set over by array
      * @param $media
      * @param $data
+     * @param $user
      * @return Media
      */
-    protected function setDataToMedia(Media $media, $data)
+    protected function setDataToMedia(Media $media, $data, $user)
     {
         foreach ($data as $attribute => $value) {
-            if ($value) {
+            if ($value || ($attribute === 'tags' && $value !== null)) {
                 switch ($attribute) {
                     case 'size':
                         $media->setSize($value);
@@ -604,7 +615,7 @@ class DefaultMediaManager implements MediaManagerInterface
                         $media->setContentLanguages($value);
                         break;
                     case 'tags':
-                        $media->setTags($value); // todo
+                        $media->setTags($value, $user->getId());
                         break;
                     case 'properties':
                         $media->setProperties($value);
