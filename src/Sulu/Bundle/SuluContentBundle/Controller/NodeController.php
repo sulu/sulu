@@ -417,6 +417,11 @@ class NodeController extends RestController implements ClassResourceInterface
         $template = $this->getRequestParameter($request, 'template', true);
         $navigation = $this->getRequestParameter($request, 'navigation');
         $parent = $this->getRequestParameter($request, 'parent');
+        $state = $this->getRequestParameter($request, 'state');
+        if ($state !== null) {
+            $state = intval($state);
+        }
+
         $data = $request->request->all();
 
         if ($navigation === '0') {
@@ -434,7 +439,7 @@ class NodeController extends RestController implements ClassResourceInterface
             $this->getUser()->getId(),
             null, // uuid
             $parent,
-            null, // state
+            $state,
             $navigation
         );
 
