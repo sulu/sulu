@@ -1,8 +1,7 @@
-$white: #fff;
-$backgroundColor: #f1f1f1;
-$blue: #52B6CA;
-$black: #000;
-$grey: #999;
+@import '../js/vendor/husky/scss/variables';
+
+$backgroundColor: $baseBackgroundColor;
+$grey: $grayLight;
 
 // Effects
 
