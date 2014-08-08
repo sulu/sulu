@@ -40,6 +40,7 @@
     },
     "require-dev": {
         "symfony/symfony": "2.5.*",
+        "sensio/framework-extra-bundle":  "~3.0",
         "doctrine/doctrine-bundle": "1.2.*",
         "symfony/monolog-bundle": "2.4.*",
         "phpunit/phpunit": "3.7.*",

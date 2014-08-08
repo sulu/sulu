@@ -137,6 +137,11 @@ define([], function() {
 
                 this.sandbox.emit('husky.overlay.single-internal-link.' + this.options.instanceName + '.close');
             }.bind(this));
+
+            // adjust position of overlay after column-navigation has initialized
+            this.sandbox.on('husky.column-navigation.'+ this.options.instanceName +'.initialized', function() {
+                this.sandbox.emit('husky.overlay.single-internal-link.' + this.options.instanceName + '.set-position');
+            }.bind(this));
         },
 
         initOverlay = function() {
