@@ -11,7 +11,7 @@
   position: relative;
   overflow: hidden;
   min-width: $contentMinWidth;
-  @include single-transition(width, $shrinkAnimationDuration);
+  @include transition(width $shrinkAnimationDuration);
 
   .page {
     height: 100%;
@@ -43,13 +43,15 @@
       padding-right: 0;
     }
 
-    &.no-transitions {
-      @include transition(none);
-    }
-
-
     &.no-top-space {
       padding-top: 0;
+    }
+  }
+
+  &.no-transitions {
+    @include transition(none);
+    #content {
+      @include transition(none);
     }
   }
 
