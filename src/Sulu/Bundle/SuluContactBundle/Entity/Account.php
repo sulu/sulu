@@ -224,6 +224,11 @@ class Account extends ApiEntity
     private $accountAddresses;
 
     /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $medias;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -636,14 +641,14 @@ class Account extends ApiEntity
     public function setType($type)
     {
         $this->type = $type;
-    
+
         return $this;
     }
 
     /**
      * Get type
      *
-     * @return integer 
+     * @return integer
      */
     public function getType()
     {
@@ -661,7 +666,7 @@ class Account extends ApiEntity
     public function addFax(\Sulu\Bundle\ContactBundle\Entity\Fax $faxes)
     {
         $this->faxes[] = $faxes;
-    
+
         return $this;
     }
 
@@ -678,7 +683,7 @@ class Account extends ApiEntity
     /**
      * Get faxes
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getFaxes()
     {
@@ -694,14 +699,14 @@ class Account extends ApiEntity
     public function setCorporation($corporation)
     {
         $this->corporation = $corporation;
-    
+
         return $this;
     }
 
     /**
      * Get corporation
      *
-     * @return string 
+     * @return string
      */
     public function getCorporation()
     {
@@ -717,14 +722,14 @@ class Account extends ApiEntity
     public function setDisabled($disabled)
     {
         $this->disabled = $disabled;
-    
+
         return $this;
     }
 
     /**
      * Get disabled
      *
-     * @return integer 
+     * @return integer
      */
     public function getDisabled()
     {
@@ -740,14 +745,14 @@ class Account extends ApiEntity
     public function setUid($uid)
     {
         $this->uid = $uid;
-    
+
         return $this;
     }
 
     /**
      * Get uid
      *
-     * @return string 
+     * @return string
      */
     public function getUid()
     {
@@ -763,7 +768,7 @@ class Account extends ApiEntity
     public function addFaxe(\Sulu\Bundle\ContactBundle\Entity\Fax $faxes)
     {
         $this->faxes[] = $faxes;
-    
+
         return $this;
     }
 
@@ -803,14 +808,14 @@ class Account extends ApiEntity
     public function setRegisterNumber($registerNumber)
     {
         $this->registerNumber = $registerNumber;
-    
+
         return $this;
     }
 
     /**
      * Get registerNumber
      *
-     * @return string 
+     * @return string
      */
     public function getRegisterNumber()
     {
@@ -826,14 +831,14 @@ class Account extends ApiEntity
     public function addBankAccount(\Sulu\Bundle\ContactBundle\Entity\BankAccount $bankAccounts)
     {
         $this->bankAccounts[] = $bankAccounts;
-    
+
         return $this;
     }
 
     /**
      * Get accountCategory
      *
-     * @return \Sulu\Bundle\ContactBundle\Entity\AccountCategory 
+     * @return \Sulu\Bundle\ContactBundle\Entity\AccountCategory
      */
     public function getAccountCategory()
     {
@@ -853,7 +858,7 @@ class Account extends ApiEntity
     /**
      * Get bankAccounts
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getBankAccounts()
     {
@@ -869,7 +874,7 @@ class Account extends ApiEntity
     public function addTag(\Sulu\Bundle\TagBundle\Entity\Tag $tags)
     {
         $this->tags[] = $tags;
-    
+
         return $this;
     }
 
@@ -886,7 +891,7 @@ class Account extends ApiEntity
     /**
      * Get tags
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getTags()
     {
@@ -917,7 +922,7 @@ class Account extends ApiEntity
     public function addAccountContact(\Sulu\Bundle\ContactBundle\Entity\AccountContact $accountContacts)
     {
         $this->accountContacts[] = $accountContacts;
-    
+
         return $this;
     }
 
@@ -934,7 +939,7 @@ class Account extends ApiEntity
     /**
      * Get accountContacts
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getAccountContacts()
     {
@@ -950,14 +955,14 @@ class Account extends ApiEntity
     public function setPlaceOfJurisdiction($placeOfJurisdiction)
     {
         $this->placeOfJurisdiction = $placeOfJurisdiction;
-    
+
         return $this;
     }
 
     /**
      * Get placeOfJurisdiction
      *
-     * @return string 
+     * @return string
      */
     public function getPlaceOfJurisdiction()
     {
@@ -973,14 +978,14 @@ class Account extends ApiEntity
     public function setTermsOfPayment(\Sulu\Bundle\ContactBundle\Entity\TermsOfPayment $termsOfPayment = null)
     {
         $this->termsOfPayment = $termsOfPayment;
-    
+
         return $this;
     }
 
     /**
      * Get termsOfPayment
      *
-     * @return \Sulu\Bundle\ContactBundle\Entity\TermsOfPayment 
+     * @return \Sulu\Bundle\ContactBundle\Entity\TermsOfPayment
      */
     public function getTermsOfPayment()
     {
@@ -996,14 +1001,14 @@ class Account extends ApiEntity
     public function setTermsOfDelivery(\Sulu\Bundle\ContactBundle\Entity\TermsOfDelivery $termsOfDelivery = null)
     {
         $this->termsOfDelivery = $termsOfDelivery;
-    
+
         return $this;
     }
 
     /**
      * Get termsOfDelivery
      *
-     * @return \Sulu\Bundle\ContactBundle\Entity\TermsOfDelivery 
+     * @return \Sulu\Bundle\ContactBundle\Entity\TermsOfDelivery
      */
     public function getTermsOfDelivery()
     {
@@ -1019,14 +1024,14 @@ class Account extends ApiEntity
     public function setNumber($number)
     {
         $this->number = $number;
-    
+
         return $this;
     }
 
     /**
      * Get number
      *
-     * @return string 
+     * @return string
      */
     public function getNumber()
     {
@@ -1042,14 +1047,14 @@ class Account extends ApiEntity
     public function setExternalId($externalId)
     {
         $this->externalId = $externalId;
-    
+
         return $this;
     }
 
     /**
      * Get externalId
      *
-     * @return string 
+     * @return string
      */
     public function getExternalId()
     {
@@ -1076,14 +1081,14 @@ class Account extends ApiEntity
     public function setMainContact(\Sulu\Bundle\ContactBundle\Entity\Contact $mainContact = null)
     {
         $this->mainContact = $mainContact;
-    
+
         return $this;
     }
 
     /**
      * Get responsiblePerson
      *
-     * @return \Sulu\Bundle\ContactBundle\Entity\Contact 
+     * @return \Sulu\Bundle\ContactBundle\Entity\Contact
      */
     public function getResponsiblePerson()
     {
@@ -1104,7 +1109,7 @@ class Account extends ApiEntity
     /**
      * Get mainContact
      *
-     * @return \Sulu\Bundle\ContactBundle\Entity\Contact 
+     * @return \Sulu\Bundle\ContactBundle\Entity\Contact
      */
     public function getMainContact()
     {
@@ -1120,14 +1125,14 @@ class Account extends ApiEntity
     public function setMainEmail($mainEmail)
     {
         $this->mainEmail = $mainEmail;
-    
+
         return $this;
     }
 
     /**
      * Get mainEmail
      *
-     * @return string 
+     * @return string
      */
     public function getMainEmail()
     {
@@ -1143,14 +1148,14 @@ class Account extends ApiEntity
     public function setMainPhone($mainPhone)
     {
         $this->mainPhone = $mainPhone;
-    
+
         return $this;
     }
 
     /**
      * Get mainPhone
      *
-     * @return string 
+     * @return string
      */
     public function getMainPhone()
     {
@@ -1182,7 +1187,7 @@ class Account extends ApiEntity
     /**
      * Get activities
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getActivities()
     {
@@ -1192,7 +1197,7 @@ class Account extends ApiEntity
     /**
      * Get mainFax
      *
-     * @return string 
+     * @return string
      */
     public function getMainFax()
     {
@@ -1208,14 +1213,14 @@ class Account extends ApiEntity
     public function setMainUrl($mainUrl)
     {
         $this->mainUrl = $mainUrl;
-    
+
         return $this;
     }
 
     /**
      * Get mainUrl
      *
-     * @return string 
+     * @return string
      */
     public function getMainUrl()
     {
@@ -1231,7 +1236,7 @@ class Account extends ApiEntity
     public function addAccountAddresse(\Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddresses)
     {
         $this->accountAddresses[] = $accountAddresses;
-    
+
         return $this;
     }
 
@@ -1248,7 +1253,7 @@ class Account extends ApiEntity
     /**
      * Get accountAddresses
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getAccountAddresses()
     {
@@ -1311,5 +1316,38 @@ class Account extends ApiEntity
             }
         }
         return $contacts;
+    }
+
+    /**
+     * Add medias
+     *
+     * @param \Sulu\Bundle\MediaBundle\Entity\Media $medias
+     * @return Account
+     */
+    public function addMedia(\Sulu\Bundle\MediaBundle\Entity\Media $medias)
+    {
+        $this->medias[] = $medias;
+
+        return $this;
+    }
+
+    /**
+     * Remove medias
+     *
+     * @param \Sulu\Bundle\MediaBundle\Entity\Media $medias
+     */
+    public function removeMedia(\Sulu\Bundle\MediaBundle\Entity\Media $medias)
+    {
+        $this->medias->removeElement($medias);
+    }
+
+    /**
+     * Get medias
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getMedias()
+    {
+        return $this->medias;
     }
 }

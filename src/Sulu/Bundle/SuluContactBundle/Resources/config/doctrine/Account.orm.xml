@@ -101,6 +101,20 @@
             </join-columns>
         </many-to-one>
 
+        <many-to-many field="medias" target-entity="Sulu\Bundle\MediaBundle\Entity\Media">
+            <join-table name="co_account_medias">
+                <join-columns>
+                    <join-column name="idAccounts" referenced-column-name="id"/>
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="idMedias" referenced-column-name="id"/>
+                </inverse-join-columns>
+            </join-table>
+            <order-by>
+                <order-by-field name="id" direction="ASC"/>
+            </order-by>
+        </many-to-many>
+
         <many-to-many field="urls" target-entity="Sulu\Bundle\ContactBundle\Entity\Url" inversed-by="accounts">
             <join-table name="co_account_urls">
                 <join-columns>
