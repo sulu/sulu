@@ -5662,12 +5662,9 @@ fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset
   font-size: 23px;
   vertical-align: text-top;
   display: block;
-  padding: 15px 0 10px 20px;
-  margin-right: 40px;
-  white-space: nowrap;
-  overflow: hidden;
+  padding: 15px 40px 10px 20px;
 }
-/* line 110, ../scss/modules/overlay.scss */
+/* line 107, ../scss/modules/overlay.scss */
 .overlay-header .close-button {
   position: absolute;
   top: 0px;
@@ -5678,25 +5675,25 @@ fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset
   line-height: 12px;
   padding: 8px;
 }
-/* line 121, ../scss/modules/overlay.scss */
+/* line 118, ../scss/modules/overlay.scss */
 .overlay-header .tabs {
   display: inline-block;
 }
-/* line 125, ../scss/modules/overlay.scss */
+/* line 122, ../scss/modules/overlay.scss */
 .overlay-header .language-changer {
   width: 80px;
   position: absolute;
   bottom: 10px;
   right: 20px;
 }
-/* line 132, ../scss/modules/overlay.scss */
+/* line 129, ../scss/modules/overlay.scss */
 .overlay-header.small-header {
   background: transparent;
   min-height: 0;
   height: 25px;
 }
 
-/* line 139, ../scss/modules/overlay.scss */
+/* line 136, ../scss/modules/overlay.scss */
 .overlay-footer {
   padding: 10px;
   border-top: 1px solid #cccccc;
@@ -5709,58 +5706,58 @@ fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset
   content: ' ';
   display: block;
 }
-/* line 146, ../scss/modules/overlay.scss */
+/* line 143, ../scss/modules/overlay.scss */
 .overlay-footer .btn {
   display: inline-block;
   min-width: 70px;
   margin: 0 auto;
   padding: 0;
 }
-/* line 152, ../scss/modules/overlay.scss */
+/* line 149, ../scss/modules/overlay.scss */
 .overlay-footer .btn.tick {
   width: 70px;
   line-height: 28px;
 }
-/* line 157, ../scss/modules/overlay.scss */
+/* line 154, ../scss/modules/overlay.scss */
 .overlay-footer .btn.left {
   float: left;
   margin-right: 20px;
   margin-right: 0;
 }
-/* line 162, ../scss/modules/overlay.scss */
+/* line 159, ../scss/modules/overlay.scss */
 .overlay-footer .btn.right {
   float: right;
   margin-left: 20px;
   margin-right: 0;
 }
-/* line 169, ../scss/modules/overlay.scss */
+/* line 166, ../scss/modules/overlay.scss */
 .overlay-footer.center .btn {
   margin: 0 auto;
 }
-/* line 173, ../scss/modules/overlay.scss */
+/* line 170, ../scss/modules/overlay.scss */
 .overlay-footer.left .btn {
   float: left;
   margin-right: 20px;
 }
-/* line 178, ../scss/modules/overlay.scss */
+/* line 175, ../scss/modules/overlay.scss */
 .overlay-footer.right .btn {
   float: right;
   margin-left: 20px;
 }
 
-/* line 184, ../scss/modules/overlay.scss */
+/* line 181, ../scss/modules/overlay.scss */
 .overlay-content {
   padding-left: 0;
   margin: 0 20px 10px 20px;
 }
-/* line 188, ../scss/modules/overlay.scss */
+/* line 185, ../scss/modules/overlay.scss */
 .overlay-content .message {
   padding: 20px 0 25px 0;
   font-size: 16px;
   color: #999999;
 }
 
-/* line 195, ../scss/modules/overlay.scss */
+/* line 192, ../scss/modules/overlay.scss */
 .husky-overlay-backdrop {
   width: 100%;
   height: 100%;
@@ -8690,10 +8687,8 @@ a.btn-black, a.btn-highlight {
   border-radius: 0;
   position: static;
   margin: 0;
-  display: block;
-  margin-bottom: -5px;
 }
-/* line 52, ../scss/modules/auto-complete-list.scss */
+/* line 50, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list .husky-auto-complete input[type="text"] {
   margin: 7px 10px 7px 0 !important;
   padding: 0;
@@ -8703,10 +8698,9 @@ a.btn-black, a.btn-highlight {
   outline: 0;
   border-radius: 0;
   height: auto;
-  float: left;
 }
 
-/* line 66, ../scss/modules/auto-complete-list.scss */
+/* line 63, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list-selection {
   display: inline-block;
   margin: 4px 5px 4px 0;
@@ -8716,9 +8710,8 @@ a.btn-black, a.btn-highlight {
   color: #000;
   font-size: 12px;
   line-height: 20px;
-  float: left;
 }
-/* line 77, ../scss/modules/auto-complete-list.scss */
+/* line 73, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list-selection .tm-tag-remove {
   padding-left: 8px;
   cursor: pointer;
@@ -8726,12 +8719,12 @@ a.btn-black, a.btn-highlight {
   color: #262626;
   font-size: 14px;
 }
-/* line 79, ../scss/modules/auto-complete-list.scss */
+/* line 75, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list-selection .tm-tag-remove::before {
   content: "\f00d";
 }
 
-/* line 90, ../scss/modules/auto-complete-list.scss */
+/* line 86, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list-suggestions {
   bottom: 0;
   left: 0;
@@ -8741,7 +8734,7 @@ a.btn-black, a.btn-highlight {
   -moz-box-shadow: rgba(0, 0, 0, 0.06) 2px 2px 0px 0px;
   box-shadow: rgba(0, 0, 0, 0.06) 2px 2px 0px 0px;
 }
-/* line 97, ../scss/modules/auto-complete-list.scss */
+/* line 93, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list-suggestions h5 {
   margin: 0;
   padding: 5px 8px;
@@ -8749,12 +8742,12 @@ a.btn-black, a.btn-highlight {
   color: #999999;
   font-size: 12px;
 }
-/* line 105, ../scss/modules/auto-complete-list.scss */
+/* line 101, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list-suggestions ul {
   padding: 8px 8px 15px;
   margin: 0;
 }
-/* line 110, ../scss/modules/auto-complete-list.scss */
+/* line 106, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list-suggestions li {
   display: inline-block;
   margin-right: 5px;
@@ -8765,7 +8758,7 @@ a.btn-black, a.btn-highlight {
   font-size: 12px;
   cursor: pointer;
 }
-/* line 121, ../scss/modules/auto-complete-list.scss */
+/* line 117, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list-suggestions .deactivated {
   cursor: auto;
   color: #999999;
@@ -9263,16 +9256,15 @@ a.btn-black, a.btn-highlight {
   line-height: 30px;
   padding-left: 20px;
   font-size: 12px;
-  z-index: 15000;
 }
-/* line 16, ../scss/modules/label.scss */
+/* line 15, ../scss/modules/label.scss */
 .husky-label-error strong,
 .husky-label-warning strong,
 .husky-label-success strong {
   font-weight: bold;
   padding-right: 3px;
 }
-/* line 20, ../scss/modules/label.scss */
+/* line 19, ../scss/modules/label.scss */
 .husky-label-error .close,
 .husky-label-warning .close,
 .husky-label-success .close {
@@ -9286,17 +9278,17 @@ a.btn-black, a.btn-highlight {
   font-size: 15px;
 }
 
-/* line 32, ../scss/modules/label.scss */
+/* line 31, ../scss/modules/label.scss */
 .husky-label-error {
   background: #ea524e;
 }
 
-/* line 36, ../scss/modules/label.scss */
+/* line 35, ../scss/modules/label.scss */
 .husky-label-warning {
   background: #f2d212;
 }
 
-/* line 40, ../scss/modules/label.scss */
+/* line 39, ../scss/modules/label.scss */
 .husky-label-success {
   background: #5dc774;
 }
