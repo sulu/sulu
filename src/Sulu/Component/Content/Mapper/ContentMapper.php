@@ -268,7 +268,6 @@ class ContentMapper implements ContentMapperInterface
         $node->setProperty($this->properties->getName('shadow-on'), $isShadow);
         $node->setProperty($this->properties->getName('shadow-base'), $shadowBaseLanguage);
 
-
         if (isset($data['nodeType'])) {
             $node->setProperty($this->properties->getName('nodeType'), $data['nodeType']);
         }
@@ -315,6 +314,8 @@ class ContentMapper implements ContentMapperInterface
                         null
                     );
                 }
+            } elseif ($isShadow) {
+                // nothing
             } elseif ($property->getMandatory()) {
                 $type = $this->getContentType($property->getContentTypeName());
                 $type->read($node, $property, $webspaceKey, $languageCode, null);

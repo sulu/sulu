@@ -959,6 +959,8 @@ abstract class Structure implements StructureInterface
                 'globalState' => $this->getGlobalState(),
                 'publishedState' => $this->getPublishedState(),
                 'navContexts' => $this->getNavContexts(),
+                'shadowOn' => $this->getIsShadow(),
+                'shadowBaseLanguage' => $this->getShadowBaseLanguage(),
                 'template' => $this->getKey(),
                 'hasSub' => $this->hasChildren,
                 'creator' => $this->creator,
