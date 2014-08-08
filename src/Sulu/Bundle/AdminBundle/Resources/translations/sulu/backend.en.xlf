@@ -496,11 +496,11 @@
             </trans-unit>
             <trans-unit id="5f5ac49151e05def2320eb2b8f72dc56" resname="toolbar.state-publish">
                 <source>toolbar.state-publish</source>
-                <target>Publish</target>
+                <target>Published</target>
             </trans-unit>
             <trans-unit id="fec4ff95aaa266783001a9aa4f4f8ef7" resname="toolbar.state-unpublish">
                 <source>toolbar.state-unpublish</source>
-                <target>Unpublish</target>
+                <target>Unpublished</target>
             </trans-unit>
             <trans-unit id="c964185c0ace3c5ab313933e33bd5e4b" resname="toolbar.state-test">
                 <source>toolbar.state-test</source>
