@@ -407,6 +407,11 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertEquals(1, $response->creator);
         $this->assertEquals(1, $response->creator);
 
+        $this->assertEquals(2, sizeof((array)$response->extensions));
+
+        $this->assertEquals(6, sizeof((array)$response->extensions->seo));
+        $this->assertEquals(3, sizeof((array)$response->extensions->excerpt));
+
         $client->request('GET', '/api/nodes?depth=1&webspace=sulu_io&language=en');
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());

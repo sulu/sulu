@@ -53,6 +53,8 @@ class ExcerptStructureExtension extends StructureExtension
 
         $value = isset($data['images']) ? $data['images'] : array();
         $node->setProperty($this->getPropertyName('images'), json_encode($value));
+
+        $this->load($node, $webspaceKey, $languageCode);
     }
 
     /**
