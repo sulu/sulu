@@ -24,6 +24,7 @@ use Sulu\Bundle\CategoryBundle\Entity\Category;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
+use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\ListRestHelperInterface;
 use Sulu\Component\Rest\RestController;
 use Sulu\Component\Rest\RestHelperInterface;
@@ -38,6 +39,7 @@ abstract class AbstractContactController extends RestController implements Class
 {
 
     protected static $positionEntityName = 'SuluContactBundle:Position';
+    protected static $mediaEntityName = 'SuluMediaBundle:Media';
 
     /**
      * @return AbstractContactManager

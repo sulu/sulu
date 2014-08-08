@@ -198,6 +198,11 @@ class Contact extends ApiEntity
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
+    private $medias;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
     private $categories;
 
     /**
@@ -1182,7 +1187,17 @@ class Contact extends ApiEntity
     }
 
     /**
-     * Add categories
+     * Add medias
+     *
+     * @param \Sulu\Bundle\MediaBundle\Entity\Media $medias
+     * @return Contact
+     */
+    public function addMedia(\Sulu\Bundle\MediaBundle\Entity\Media $medias)
+    {
+        $this->medias[] = $medias;
+    }
+
+    /** Add categories
      *
      * @param \Sulu\Bundle\CategoryBundle\Entity\Category $categories
      * @return Contact
@@ -1190,8 +1205,27 @@ class Contact extends ApiEntity
     public function addCategorie(\Sulu\Bundle\CategoryBundle\Entity\Category $categories)
     {
         $this->categories[] = $categories;
-    
         return $this;
+    }
+
+    /**
+     * Remove medias
+     *
+     * @param \Sulu\Bundle\MediaBundle\Entity\Media $medias
+     */
+    public function removeMedia(\Sulu\Bundle\MediaBundle\Entity\Media $medias)
+    {
+        $this->medias->removeElement($medias);
+    }
+
+    /**
+     * Get medias
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getMedias()
+    {
+        return $this->medias;
     }
 
     /**
