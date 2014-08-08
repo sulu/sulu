@@ -215,9 +215,9 @@ define([
                 this.sandbox.util.each(mediaIds, function(index, id) {
 
                     if(type === 'DELETE') {
-                        url = '/admin/api/contacts/' + accountId + '/medias/' + id;
+                        url = '/admin/api/accounts/' + accountId + '/medias/' + id;
                     } else if(type === 'POST') {
-                        url = '/admin/api/contacts/' + accountId + '/medias';
+                        url = '/admin/api/accounts/' + accountId + '/medias';
                     }
 
                     requests.push(
