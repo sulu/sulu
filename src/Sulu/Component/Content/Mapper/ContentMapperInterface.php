@@ -219,4 +219,16 @@ interface ContentMapperInterface
      * @return StructureInterface
      */
     public function copy($uuid, $destParentUuid, $userId, $webspaceKey, $languageCode);
+
+    /**
+     * order node with uuid before the node with beforeUuid
+     * !IMPORTANT! both nodes should have the same parent
+     * @param string $uuid
+     * @param string $beforeUuid
+     * @param integer $userId
+     * @param string $webspaceKey
+     * @param string $languageCode
+     * @return StructureInterface
+     */
+    public function orderBefore($uuid, $beforeUuid, $userId, $webspaceKey, $languageCode);
 }
