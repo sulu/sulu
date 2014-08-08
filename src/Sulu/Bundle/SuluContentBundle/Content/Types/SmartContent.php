@@ -88,7 +88,7 @@ class SmartContent extends ComplexContentType
             $segmentKey,
             $preview
         );
-        $smartContent->setConfig($data === null ? array() : $data);
+        $smartContent->setConfig($data === null || !is_array($data) ? array() : $data);
         $property->setValue($smartContent);
     }
 
