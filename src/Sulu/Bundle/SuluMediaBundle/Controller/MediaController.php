@@ -249,7 +249,7 @@ class MediaController extends RestController implements ClassResourceInterface
             'size' => $request->get('size'),
             'contentLanguages' => $request->get('contentLanguages', array()),
             'publishLanguages' => $request->get('publishLanguages', array()),
-            'tags' => $request->get('tags', array()),
+            'tags' => $request->get('tags'),
             'formats' => $request->get('formats', array()),
             'url' => $request->get('url'),
             'name' => $request->get('name'),
