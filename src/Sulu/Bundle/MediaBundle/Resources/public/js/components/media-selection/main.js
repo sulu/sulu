@@ -466,7 +466,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                         data: data,
                         preSelectedElements: [preselected]
                     }
-                },
+                }
             ]);
         },
 
@@ -540,6 +540,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                     counter++;
                 }
             }.bind(this));
+
             if (counter > 0) {
                 translation = translation + ' (' + counter + ')';
             }
