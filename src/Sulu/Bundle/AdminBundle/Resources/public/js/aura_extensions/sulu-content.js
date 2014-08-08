@@ -128,6 +128,7 @@ define([], function() {
          *          },
          *          sidebar: {
          *              width: 'max',
+         *              darkBorder: true,
          *              url: '/admin/widget-groups/my-widget-group'
          *          }
          *      }
