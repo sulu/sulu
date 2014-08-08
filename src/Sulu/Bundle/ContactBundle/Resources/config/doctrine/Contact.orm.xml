@@ -57,10 +57,10 @@
         <many-to-many field="medias" target-entity="Sulu\Bundle\MediaBundle\Entity\Media">
             <join-table name="co_contact_medias">
                 <join-columns>
-                    <join-column name="idMedias" referenced-column-name="id"/>
+                    <join-column name="idContacts" referenced-column-name="id"/>
                 </join-columns>
                 <inverse-join-columns>
-                    <join-column name="idCategories" referenced-column-name="id"/>
+                    <join-column name="idMedias" referenced-column-name="id"/>
                 </inverse-join-columns>
             </join-table>
             <order-by>
