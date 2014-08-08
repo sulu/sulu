@@ -3,12 +3,11 @@
 .sulu-content-preview {
   width: 100%;
   height: 100%;
-  border-left: 1px solid #666;
   text-align: center;
   white-space: nowrap;
   overflow: auto;
 }
-/* line 9, ../scss/modules/preview.scss */
+/* line 8, ../scss/modules/preview.scss */
 .sulu-content-preview::before {
   content: '';
   display: inline-block;
@@ -16,48 +15,48 @@
   vertical-align: middle;
   margin-right: -0.25em;
 }
-/* line 17, ../scss/modules/preview.scss */
+/* line 16, ../scss/modules/preview.scss */
 .sulu-content-preview .wrapper {
   display: inline-block;
   vertical-align: middle;
   white-space: normal;
   overflow: hidden;
 }
-/* line 24, ../scss/modules/preview.scss */
+/* line 23, ../scss/modules/preview.scss */
 .sulu-content-preview iframe {
   border: 0;
   width: 100%;
   height: 100%;
 }
-/* line 31, ../scss/modules/preview.scss */
+/* line 30, ../scss/modules/preview.scss */
 .sulu-content-preview.auto .wrapper {
   width: 100%;
   height: 100%;
 }
-/* line 35, ../scss/modules/preview.scss */
+/* line 34, ../scss/modules/preview.scss */
 .sulu-content-preview.auto .viewport {
   width: 100%;
   height: 100%;
 }
-/* line 40, ../scss/modules/preview.scss */
+/* line 39, ../scss/modules/preview.scss */
 .sulu-content-preview.desktop {
   background: #999999;
 }
-/* line 42, ../scss/modules/preview.scss */
+/* line 41, ../scss/modules/preview.scss */
 .sulu-content-preview.desktop .wrapper {
   width: 100%;
   height: 100%;
 }
-/* line 46, ../scss/modules/preview.scss */
+/* line 45, ../scss/modules/preview.scss */
 .sulu-content-preview.desktop .viewport {
   width: 1024px;
   height: 100%;
 }
-/* line 51, ../scss/modules/preview.scss */
+/* line 50, ../scss/modules/preview.scss */
 .sulu-content-preview.smartphone {
   background: #999999;
 }
-/* line 53, ../scss/modules/preview.scss */
+/* line 52, ../scss/modules/preview.scss */
 .sulu-content-preview.smartphone .wrapper {
   width: 378px;
   height: 794px;
@@ -68,16 +67,16 @@
   padding-top: 115px;
   padding-left: 30px;
 }
-/* line 63, ../scss/modules/preview.scss */
+/* line 62, ../scss/modules/preview.scss */
 .sulu-content-preview.smartphone .viewport {
   width: 320px;
   height: 568px;
 }
-/* line 68, ../scss/modules/preview.scss */
+/* line 67, ../scss/modules/preview.scss */
 .sulu-content-preview.tablet {
   background: #999999;
 }
-/* line 70, ../scss/modules/preview.scss */
+/* line 69, ../scss/modules/preview.scss */
 .sulu-content-preview.tablet .wrapper {
   width: 836px;
   height: 1282px;
@@ -88,13 +87,13 @@
   padding-top: 122px;
   padding-left: 30px;
 }
-/* line 80, ../scss/modules/preview.scss */
+/* line 79, ../scss/modules/preview.scss */
 .sulu-content-preview.tablet .viewport {
   width: 768px;
   height: 1024px;
 }
 
-/* line 87, ../scss/modules/preview.scss */
+/* line 86, ../scss/modules/preview.scss */
 .sulu-preview-toolbar {
   position: fixed;
   top: 0;
@@ -104,13 +103,13 @@
   color: #fff;
   font-weight: 100;
 }
-/* line 96, ../scss/modules/preview.scss */
+/* line 95, ../scss/modules/preview.scss */
 .sulu-preview-toolbar .right {
   background: #21272E;
   height: 100%;
   border-radius: 0 0 0 3px;
 }
-/* line 101, ../scss/modules/preview.scss */
+/* line 100, ../scss/modules/preview.scss */
 .sulu-preview-toolbar .right .new-window {
   width: 30px;
   overflow: hidden;
@@ -121,28 +120,28 @@
   padding-left: 2px;
   line-height: 24px;
 }
-/* line 112, ../scss/modules/preview.scss */
+/* line 111, ../scss/modules/preview.scss */
 .sulu-preview-toolbar .right .resolutions {
   border-right: 1px solid #fff;
   min-width: 125px;
 }
-/* line 115, ../scss/modules/preview.scss */
+/* line 114, ../scss/modules/preview.scss */
 .sulu-preview-toolbar .right .resolutions .drop-down-trigger {
   color: #fff;
   padding: 5px 10px;
 }
-/* line 120, ../scss/modules/preview.scss */
+/* line 119, ../scss/modules/preview.scss */
 .sulu-preview-toolbar .right .resolutions .dropdown-toggle {
   display: inline-block;
 }
-/* line 122, ../scss/modules/preview.scss */
+/* line 121, ../scss/modules/preview.scss */
 .sulu-preview-toolbar .right .resolutions .dropdown-toggle::after {
   top: -1px;
   margin-left: 5px;
   margint-right: 0;
   border-top: 6px solid #fff;
 }
-/* line 130, ../scss/modules/preview.scss */
+/* line 129, ../scss/modules/preview.scss */
 .sulu-preview-toolbar .right .resolutions .dropdown-menu {
   background: #21272E;
   color: #fff;
@@ -152,7 +151,7 @@
   border: 0;
   width: 100%;
 }
-/* line 142, ../scss/modules/preview.scss */
+/* line 141, ../scss/modules/preview.scss */
 .sulu-preview-toolbar .left {
   float: left;
   width: 30px;
@@ -167,11 +166,11 @@
 }
 
 @media only screen and (max-width: 780px) {
-  /* line 159, ../scss/modules/preview.scss */
+  /* line 158, ../scss/modules/preview.scss */
   .sulu-preview-toolbar .resolutions {
     display: none;
   }
-  /* line 162, ../scss/modules/preview.scss */
+  /* line 161, ../scss/modules/preview.scss */
   .sulu-preview-toolbar .new-window {
     border-radius: 0 0 0 2px;
   }

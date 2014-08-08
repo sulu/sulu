@@ -20,8 +20,9 @@
             <argument type="service" id="sulu.content.structure_manager"/>
             <argument type="service" id="sulu.content.type_manager"/>
             <argument type="service" id="controller_resolver"/>
+            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+            <argument type="service" id="liip_theme.active_theme"/>
             <argument>%sulu_content.preview.lifetime%</argument>
-            <argument>%sulu_content.preview.template-namespace%</argument>
         </service>
         <service id="sulu_content.preview.message_component" class="%sulu_content.preview.message_component.class%">
             <argument type="service" id="sulu_content.preview"/>

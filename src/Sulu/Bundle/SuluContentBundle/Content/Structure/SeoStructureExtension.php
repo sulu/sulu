@@ -57,6 +57,8 @@ class SeoStructureExtension extends StructureExtension
         $this->saveProperty($node, $data, 'canonicalUrl');
         $this->saveProperty($node, $data, 'noIndex', false);
         $this->saveProperty($node, $data, 'noFollow', false);
+
+        $this->load($node, $webspaceKey, $languageCode);
     }
 
     /**
