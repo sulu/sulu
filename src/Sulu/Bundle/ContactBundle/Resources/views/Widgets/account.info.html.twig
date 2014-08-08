@@ -35,14 +35,14 @@
         </div>
     {% endif %}
 
-    {% if data.termsOfDelivery is not empty %}
+    {% if data.termsOfDelivery is defined and data.termsOfDelivery is not null %}
         <div class="grid-row m-bottom-30">
             <h5 class="label"><%=translate('contact.termsOfDelivery')%></h5>
             <span class="grey">{{ data.termsOfDelivery }}</span>
         </div>
     {% endif %}
 
-    {% if data.termsOfPayment is not empty %}
+    {% if data.termsOfPayment is defined and data.termsOfPayment is not null %}
         <div class="grid-row m-bottom-30">
             <h5 class="label"><%=translate('contact.termsOfPayment')%></h5>
             <span class="grey">{{ data.termsOfPayment }}</span>
