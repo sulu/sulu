@@ -253,14 +253,6 @@ class ContentMapperTest extends PhpcrTestCase
         }
     }
 
-    public function tearDown()
-    {
-        if (isset($this->session)) {
-            NodeHelper::purgeWorkspace($this->session);
-            $this->session->save();
-        }
-    }
-
     public function testSave()
     {
         $data = array(
@@ -1992,41 +1984,74 @@ class ContentMapperTest extends PhpcrTestCase
     {
         $data = array(
             array(
-                'name ' => 'hello',
+                'name' => 'hello',
+                'article' => 'German',
                 'shadow' => false,
                 'language' => 'de',
+                'is_shadow' => false,
                 'shadow_base_language' => null,
             ),
             array(
-                'name ' => 'hello',
+                'name' => 'hello',
+                'article' => 'Austrian',
                 'shadow' => true,
                 'language' => 'de_at',
                 'is_shadow' => true,
                 'shadow_base_language' => 'de',
             ),
+            array(
+                'name' => 'random',
+                'article' => 'Auslander',
+                'shadow' => true,
+                'language' => 'de_at',
+                'is_shadow' => false,
+                'shadow_base_language' => 'de',
+            ),
         );
 
+        $result = array();
         foreach ($data as $datum) {
-            $result[$datum['name']] = $this->mapper->save(
-                array('name' => $datum['name'], 'url' => '/' . $datum['name']),
+            $result[$datum['name']][$datum['language']] = $this->mapper->save(
+                array(
+                    'name' => $datum['name'],
+                    'url' => '/' . $datum['name'],
+                    'article' => $datum['article'],
+                ),
                 'overview',
                 'default',
                 $datum['language'],
                 1,
                 true,
-                $result['base']->getUuid(),
+                isset($result[$datum['name']]['de']) ? $result[$datum['name']]['de']->getUuid() : null,
+                null,
                 null,
                 null,
                 $datum['is_shadow'],
                 $datum['shadow_base_language']
             );
         }
+
+        return $result;
     }
 
 
     public function testLoadShadow()
     {
-        // I AM HERE
+        $result = $this->prepareLoadShadowData();
+
+        $uuid = $result['hello']['de']->getUuid();
+
+        $structure = $this->mapper->load($uuid, 'default', 'de');
+        $this->assertFalse($structure->getIsShadow());
+        $this->assertEquals('German', $structure->getProperty('article')->getValue());
+
+        $structure = $this->mapper->load($uuid, 'default', 'de_at', false);
+        $this->assertTrue($structure->getIsShadow());
+        $this->assertEquals('de', $structure->getShadowBaseLanguage());
+        $this->assertEquals('de_at', $structure->getLanguageCode());
+
+        // this is a shadow, so it should be "German" not "Austrian"
+        $this->assertEquals('German', $structure->getProperty('article')->getValue());
     }
 
     public function testTranslatedResourceLocator()

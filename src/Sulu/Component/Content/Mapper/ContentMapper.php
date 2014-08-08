@@ -888,9 +888,13 @@ class ContentMapper implements ContentMapperInterface
         $excludeGhostAndShadow = true,
         $loadGhostContent = false
     ) {
+        // first set the language to the given language
+        $this->properties->setLanguage($localization);
+
         if ($this->stopwatch) {
             $this->stopwatch->start('contentManager.loadByNode');
         }
+
         if ($loadGhostContent) {
             $availableLocalization = $this->localizationFinder->getAvailableLocalization(
                 $contentNode,
@@ -901,7 +905,9 @@ class ContentMapper implements ContentMapperInterface
             $availableLocalization = $localization;
         }
 
-        if (true === $contentNode->getPropertyValueWithDefault($this->properties->getName('shadow-on'), false)) {
+        $shadowOn = $contentNode->getPropertyValueWithDefault($this->properties->getName('shadow-on'), false);
+        $shadowBaseLanguage = $contentNode->getPropertyValueWithDefault($this->properties->getName('shadow-base'), null);
+        if (true === $shadowOn) {
             $shadowLocalization = $contentNode->getPropertyValueWithDefault($this->properties->getName('shadow-base'), false);
 
             if ($shadowLocalization) {
@@ -913,8 +919,10 @@ class ContentMapper implements ContentMapperInterface
             return null;
         }
 
-        // create translated properties
-        $this->properties->setLanguage($availableLocalization);
+        // now switch the language to the available localization
+        if ($availableLocalization != $localization) {
+            $this->properties->setLanguage($availableLocalization);
+        }
 
         $templateKey = $contentNode->getPropertyValueWithDefault(
             $this->properties->getName('template'),
@@ -930,6 +938,8 @@ class ContentMapper implements ContentMapperInterface
 
         $structure->setHasTranslation($contentNode->hasProperty($this->properties->getName('template')));
 
+        $structure->setIsShadow($shadowOn);
+        $structure->setShadowBaseLanguage($shadowBaseLanguage);
         $structure->setUuid($contentNode->getPropertyValue('jcr:uuid'));
         $structure->setPath(str_replace($this->getContentNode($webspaceKey)->getPath(), '', $contentNode->getPath()));
         $structure->setNodeType($contentNode->getPropertyValueWithDefault($this->properties->getName('nodeType'), Structure::NODE_TYPE_CONTENT));
