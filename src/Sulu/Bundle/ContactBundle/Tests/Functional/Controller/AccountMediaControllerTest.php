@@ -44,7 +44,7 @@ use Sulu\Bundle\ContactBundle\Entity\ActivityPriority;
 use Sulu\Bundle\ContactBundle\Entity\ActivityStatus;
 use Sulu\Bundle\ContactBundle\Entity\ActivityType;
 
-class AccountControllerTest extends DatabaseTestCase
+class AccountMediaControllerTest extends DatabaseTestCase
 {
     /**
      * @var array
