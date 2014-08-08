@@ -147,6 +147,26 @@ define(function () {
         },
 
         /**
+         * triggered after a datagrid emits a clicked event
+         *
+         * @event sulu.grid-group.[INSTANCE_NAME].record-selected
+         * @param id {Number|String} id of the record
+         */
+        RECORD_SELECTED = function() {
+            return createEventName.call(this, 'record-selected');
+        },
+
+        /**
+         * triggered after a datagrid emits a clicked event
+         *
+         * @event sulu.grid-group.[INSTANCE_NAME].record-deselected
+         * @param id {Number|String} id of the record
+         */
+        RECORD_DESELECTED = function() {
+            return createEventName.call(this, 'record-deselected');
+        },
+
+        /**
          * triggered after a grid got opened or closed
          *
          * @event sulu.grid-group.[INSTANCE_NAME].height-changed
@@ -506,10 +526,12 @@ define(function () {
                 this.sandbox.on('husky.datagrid.' + instanceName + '.item.deselect', function (id) {
                     var index = this.selected.indexOf(id);
                     this.selected.splice(index, 1);
+                    this.sandbox.emit(RECORD_DESELECTED.call(this), id);
                 }.bind(this));
                 // item selected
                 this.sandbox.on('husky.datagrid.' + instanceName + '.item.select', function (id) {
                     this.selected.push(id);
+                    this.sandbox.emit(RECORD_SELECTED.call(this), id);
                 }.bind(this));
             }
         },
