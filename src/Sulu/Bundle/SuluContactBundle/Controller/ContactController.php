@@ -699,7 +699,7 @@ class ContactController extends AbstractContactController
                 }
 
                 $formOfAddress = $request->get('formOfAddress');
-                if (!is_null($formOfAddress) && array_key_exists('id', $formOfAddress)) {
+                if (!is_null($formOfAddress) && is_array($formOfAddress) && array_key_exists('id', $formOfAddress)) {
                     $contact->setFormOfAddress($formOfAddress['id']);
                 }
 

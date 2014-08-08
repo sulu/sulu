@@ -29,3 +29,7 @@ account_list:
 account_financials:
     pattern: /template/account/financials.html
     defaults: { _controller: SuluContactBundle:Template:accountFinancials }
+
+basic_documents:
+    pattern: /template/basic/documents.html
+    defaults: { _controller: SuluContactBundle:Template:basicDocuments }

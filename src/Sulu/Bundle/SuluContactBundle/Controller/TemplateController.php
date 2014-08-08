@@ -57,6 +57,15 @@ class TemplateController extends RestController
     }
 
     /**
+     * Returns the template for account- and contact-documents
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function basicDocumentsAction()
+    {
+        return $this->render('SuluContactBundle:Template:basic.documents.html.twig');
+    }
+
+    /**
      * Returns the financials form for accounts
      * @return \Symfony\Component\HttpFoundation\Response
      */

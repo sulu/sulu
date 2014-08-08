@@ -29,3 +29,13 @@ sulu_contact.termsofdelivers:
 sulu_contact.activities:
     type: rest
     resource: Sulu\Bundle\ContactBundle\Controller\ActivityController
+
+sulu_contact.account_medias:
+    type: rest
+    parent: sulu_contact.accounts
+    resource: Sulu\Bundle\ContactBundle\Controller\AccountMediaController
+
+sulu_contact.contact_medias:
+    type: rest
+    parent: sulu_contact.contacts
+    resource: Sulu\Bundle\ContactBundle\Controller\ContactMediaController
