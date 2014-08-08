@@ -36,6 +36,7 @@ use Sulu\Component\Content\StructureType;
 use Sulu\Component\Content\Types\ResourceLocatorInterface;
 use Sulu\Component\PHPCR\PathCleanupInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
 
@@ -105,6 +106,11 @@ class ContentMapper implements ContentMapperInterface
     private $cleaner;
 
     /**
+     * @var WebspaceManagerInterface
+     */
+    private $webspaceManager;
+
+    /**
      * excepted states
      * @var array
      */
@@ -125,6 +131,7 @@ class ContentMapper implements ContentMapperInterface
         EventDispatcherInterface $eventDispatcher,
         LocalizationFinderInterface $localizationFinder,
         PathCleanupInterface $cleaner,
+        WebspaceManagerInterface $webspaceManager,
         $defaultLanguage,
         $defaultTemplate,
         $languageNamespace,
@@ -141,6 +148,7 @@ class ContentMapper implements ContentMapperInterface
         $this->languageNamespace = $languageNamespace;
         $this->internalPrefix = $internalPrefix;
         $this->cleaner = $cleaner;
+        $this->webspaceManager = $webspaceManager;
 
         // optional
         $this->stopwatch = $stopwatch;
@@ -1058,17 +1066,21 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * copies (deleteSource = false) or move (deleteSource = true) the src (uuid) node to dest (parentUuid) node
+     * copies (move = false) or move (move = true) the src (uuid) node to dest (parentUuid) node
      * @param string $uuid
      * @param string $destParentUuid
      * @param integer $userId
      * @param string $webspaceKey
      * @param string $languageCode
-     * @param bool $deleteSource
+     * @param bool $move
      * @return StructureInterface
      */
-    private function copyOrMove($uuid, $destParentUuid, $userId, $webspaceKey, $languageCode, $deleteSource = true)
+    private function copyOrMove($uuid, $destParentUuid, $userId, $webspaceKey, $languageCode, $move = true)
     {
+        // find localizations
+        $webspace = $this->webspaceManager->findWebspaceByKey($webspaceKey);
+        $localizations = $webspace->getAllLocalizations();
+
         // prepare utility
         $session = $this->getSession();
 
@@ -1077,23 +1089,16 @@ class ContentMapper implements ContentMapperInterface
         $parentNode = $session->getNodeByIdentifier($destParentUuid);
 
         // prepare content node
-        $content = $this->loadByNode($node, $languageCode, $webspaceKey);
+        $content = $this->loadByNode($node, $languageCode, $webspaceKey, false, true);
         $nodeName = $content->getPropertyValueByTagName('sulu.node.name');
         $nodeName = $this->cleaner->cleanup($nodeName, $languageCode);
         $nodeName = $this->getUniquePath($nodeName, $parentNode);
-
-        // prepare parent content node
-        $parentContent = $this->loadByNode($parentNode, $languageCode, $webspaceKey);
-        $parentResourceLocator = '/';
-        if ($parentContent->hasTag('sulu.rlp')) {
-            $parentResourceLocator = $parentContent->getPropertyValueByTagName('sulu.rlp');
-        }
 
         // prepare pathes
         $path = $node->getPath();
         $destPath = $parentNode->getPath() . '/' . $nodeName;
 
-        if ($deleteSource) {
+        if ($move) {
             // move node
             $session->move($path, $destPath);
         } else {
@@ -1103,19 +1108,36 @@ class ContentMapper implements ContentMapperInterface
 
             // load new phpcr and content node
             $node = $session->getNode($destPath);
-            $content = $this->loadByNode($node, $languageCode, $webspaceKey);
         }
 
-        // correct resource locator
-        if ($content->hasTag('sulu.rlp') && $content->getNodeType() === Structure::NODE_TYPE_CONTENT) {
-            $this->adaptResourceLocator(
-                $content,
-                $node,
-                $parentResourceLocator,
-                $deleteSource,
-                $webspaceKey,
-                $languageCode
-            );
+        foreach ($localizations as $locale) {
+            $content = $this->loadByNode($node, $locale->getLocalization(), $webspaceKey, false, true);
+
+            // prepare parent content node
+            $parentContent = $this->loadByNode($parentNode, $locale->getLocalization(), $webspaceKey, false, true);
+            $parentResourceLocator = '/';
+            if ($parentContent->hasTag('sulu.rlp')) {
+                $parentResourceLocator = $parentContent->getPropertyValueByTagName('sulu.rlp');
+            }
+            // correct resource locator
+            if (
+                $content->getType() === null && $content->hasTag('sulu.rlp') &&
+                $content->getNodeType() === Structure::NODE_TYPE_CONTENT
+            ) {
+                $this->adaptResourceLocator(
+                    $content,
+                    $node,
+                    $parentResourceLocator,
+                    $move,
+                    $webspaceKey,
+                    $locale->getLocalization()
+                );
+
+                // set changer of node
+                $this->properties->setLanguage($languageCode);
+                $node->setProperty($this->properties->getName('changer'), $userId);
+                $node->setProperty($this->properties->getName('changed'), new DateTime());
+            }
         }
 
         // set changer of node in specific language
@@ -1138,7 +1160,7 @@ class ContentMapper implements ContentMapperInterface
      * @param StructureInterface $content
      * @param NodeInterface $node
      * @param string $parentResourceLocator
-     * @param boolean $deleteSource
+     * @param boolean $move
      * @param string $webspaceKey
      * @param string $languageCode
      */
@@ -1146,7 +1168,7 @@ class ContentMapper implements ContentMapperInterface
         StructureInterface $content,
         NodeInterface $node,
         $parentResourceLocator,
-        $deleteSource,
+        $move,
         $webspaceKey,
         $languageCode
     ) {
@@ -1171,7 +1193,7 @@ class ContentMapper implements ContentMapperInterface
         );
 
         // move resourcelocator
-        if ($deleteSource) {
+        if ($move) {
             $strategy->move($srcResourceLocator, $destResourceLocator, $webspaceKey, $languageCode);
         } else {
             $strategy->save($node, $destResourceLocator, $webspaceKey, $languageCode);

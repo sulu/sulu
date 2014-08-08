@@ -10,6 +10,8 @@
 
 namespace Sulu\Component\Webspace;
 
+use Sulu\Component\Webspace\Exception\EnvironmentNotFoundException;
+
 /**
  * Container for a portal configuration
  * @package Sulu\Component\Portal
@@ -159,16 +161,20 @@ class Portal
      */
     public function addEnvironment($environment)
     {
-        $this->environments[] = $environment;
+        $this->environments[$environment->getType()] = $environment;
     }
 
     /**
      * Sets the environments for this portal
      * @param \Sulu\Component\Webspace\Environment[] $environments
      */
-    public function setEnvironments($environments)
+    public function setEnvironments(array $environments)
     {
-        $this->environments = $environments;
+        $this->environments = array();
+
+        foreach ($environments as $environment) {
+            $this->addEnvironment($environment);
+        }
     }
 
     /**
@@ -178,6 +184,21 @@ class Portal
     public function getEnvironments()
     {
         return $this->environments;
+    }
+
+    /**
+     * Returns the environment with the given type, and throws an exception if the environment does not exist
+     * @param string $type
+     * @throws Exception\EnvironmentNotFoundException
+     * @return \Sulu\Component\Webspace\Environment
+     */
+    public function getEnvironment($type)
+    {
+        if (!isset($this->environments[$type])) {
+            throw new EnvironmentNotFoundException($this, $type);
+        }
+
+        return $this->environments[$type];
     }
 
     /**
