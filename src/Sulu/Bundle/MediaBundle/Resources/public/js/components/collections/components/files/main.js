@@ -12,14 +12,8 @@ define(function () {
     'use strict';
 
     var defaults = {
-            activeTab: null,
             data: {},
             instanceName: 'collection'
-        },
-
-        tabs = {
-            FILES: 'files',
-            SETTINGS: 'settings'
         },
 
         listViews = {
@@ -44,7 +38,6 @@ define(function () {
             dropzoneSelector: '.dropzone-container',
             toolbarSelector: '.list-toolbar-container',
             datagridSelector: '.datagrid-container',
-            settingsFormId: 'collection-settings',
             listViewStorageKey: 'collectionEditListView'
         };
 
@@ -59,8 +52,7 @@ define(function () {
         },
 
         templates: [
-            '/admin/media/template/collection/files',
-            '/admin/media/template/collection/settings'
+            '/admin/media/template/collection/files'
         ],
 
         /**
@@ -69,7 +61,6 @@ define(function () {
         initialize: function () {
             // extend defaults with options
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
-            this.saved = true;
 
             this.listView = this.sandbox.sulu.getUserSetting(constants.listViewStorageKey) || 'thumbnailSmall';
 
@@ -100,42 +91,37 @@ define(function () {
             }.bind(this));
 
             // load collections list if back icon is clicked
-            this.sandbox.on('sulu.header.back', function() {
+            this.sandbox.on('sulu.header.back', function () {
                 this.sandbox.emit('sulu.media.collections.list');
             }.bind(this));
 
             // if files got uploaded to the server add them to the datagrid
-            this.sandbox.on('husky.dropzone.'+ this.options.instanceName +'.files-added', function(files) {
+            this.sandbox.on('husky.dropzone.' + this.options.instanceName + '.files-added', function (files) {
                 this.sandbox.emit('sulu.labels.success.show', 'labels.success.media-upload-desc', 'labels.success');
                 this.addFilesToDatagrid(files);
             }.bind(this));
 
             // open data-source folder-overlay
-            this.sandbox.on('sulu.list-toolbar.add', function() {
-                this.sandbox.emit('husky.dropzone.'+ this.options.instanceName +'.open-data-source');
+            this.sandbox.on('sulu.list-toolbar.add', function () {
+                this.sandbox.emit('husky.dropzone.' + this.options.instanceName + '.open-data-source');
             }.bind(this));
 
-           // open edit overlay on datagrid click
+            // open edit overlay on datagrid click
             this.sandbox.on('husky.datagrid.item.click', this.editMedia.bind(this));
 
+            // download media
+            this.sandbox.on('husky.datagrid.download-clicked', this.download.bind(this));
+
             // unlock the dropzone pop-up if the media-edit overlay was closed
-            this.sandbox.on('sulu.media-edit.closed', function() {
-                this.sandbox.emit('husky.dropzone.'+ this.options.instanceName +'.unlock-popup');
+            this.sandbox.on('sulu.media-edit.closed', function () {
+                this.sandbox.emit('husky.dropzone.' + this.options.instanceName + '.unlock-popup');
             }.bind(this));
 
             // update datagrid if media-edit is finished
-            this.sandbox.on('sulu.media.collections.save-media', function(media) {
-                this.sandbox.emit('husky.datagrid.records.change', media);
-            }.bind(this));
+            this.sandbox.on('sulu.media.collections.save-media', this.updateGrid.bind(this));
 
             // delete a media
             this.sandbox.on('sulu.list-toolbar.delete', this.deleteMedia.bind(this));
-
-            // save button clicked
-            this.sandbox.on('sulu.header.toolbar.save', this.saveSettings.bind(this));
-
-            // delete the collection
-            this.sandbox.on('sulu.header.toolbar.delete', this.deleteCollection.bind(this));
 
             // toggle edit button
             this.sandbox.on('husky.datagrid.number.selections', this.toggleEditButton.bind(this));
@@ -145,42 +131,45 @@ define(function () {
         },
 
         /**
+         * Updates the grid
+         * @param media {Object|Array} a media object or an array of media objects
+         */
+        updateGrid: function(media) {
+            var update = false;
+            if (!!media.locale && media.locale === this.options.locale) {
+                update = true;
+            } else if (media.length > 0 && media[0].locale === this.options.locale) {
+                update = true;
+            }
+            if (update === true) {
+                this.sandbox.emit('husky.datagrid.records.change', media);
+            }
+        },
+
+        /**
+         * Downloads a media for a given id
+         * @param id
+         */
+        download: function(id) {
+            this.sandbox.emit('sulu.media.collections.download-media', id);
+        },
+
+        /**
          * Deletes all selected medias
          */
-        deleteMedia: function() {
-            this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
-                this.sandbox.emit('sulu.media.collections.delete-media', ids, function(mediaId) {
+        deleteMedia: function () {
+            this.sandbox.emit('husky.datagrid.items.get-selected', function (ids) {
+                this.sandbox.emit('sulu.media.collections.delete-media', ids, function (mediaId) {
                     this.sandbox.emit('husky.datagrid.record.remove', mediaId);
                 }.bind(this));
             }.bind(this));
         },
 
         /**
-         * Deletes the current collection
-         */
-        deleteCollection: function() {
-            this.sandbox.emit('sulu.media.collections.delete-collection', this.options.data.id, function() {
-                this.sandbox.sulu.unlockDeleteSuccessLabel();
-                this.sandbox.emit('sulu.media.collections.collection-list');
-            }.bind(this));
-        },
-
-        /**
-         * Renders the component
+         * Renderes the files tab
          */
         render: function () {
             this.setHeaderInfos();
-            if (this.options.activeTab === tabs.FILES) {
-                this.renderFiles();
-            } else if (this.options.activeTab === tabs.SETTINGS)  {
-                this.renderSettings();
-            }
-        },
-
-        /**
-         * Renderes the files tab
-         */
-        renderFiles: function() {
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/media/template/collection/files'));
             this.startDropzone();
             this.startDatagrid();
@@ -190,55 +179,22 @@ define(function () {
          * Edits all selected medias
          * @param additionalMedia {Number|String} id of a media which should, besides the selected ones, also be edited (e.g. if it was clicked)
          */
-        editMedia: function(additionalMedia) {
+        editMedia: function (additionalMedia) {
             // show a loading icon
             this.sandbox.emit('sulu.header.toolbar.item.loading', 'edit');
             // stop loading icon if editing of the media has started
-            this.sandbox.once('sulu.media-edit.edit', function() {
+            this.sandbox.once('sulu.media-edit.edit', function () {
                 this.sandbox.emit('sulu.header.toolbar.item.enable', 'edit', false);
             }.bind(this));
 
-            this.sandbox.emit('husky.datagrid.items.get-selected', function(selected) {
-                this.sandbox.emit('husky.dropzone.'+ this.options.instanceName +'.lock-popup');
+            this.sandbox.emit('husky.datagrid.items.get-selected', function (selected) {
+                this.sandbox.emit('husky.dropzone.' + this.options.instanceName + '.lock-popup');
                 // add additional media to the edit-list, but only if its not already contained
                 if (!!additionalMedia && selected.indexOf(additionalMedia) === -1) {
                     selected.push(additionalMedia);
                 }
                 this.sandbox.emit('sulu.media.collections.edit-media', selected);
             }.bind(this));
-        },
-
-        /**
-         * Renderes the files tab
-         */
-        renderSettings: function() {
-            this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/media/template/collection/settings'));
-            this.sandbox.start('#' + constants.settingsFormId);
-            this.sandbox.form.create('#' + constants.settingsFormId);
-            this.sandbox.form.setData('#' + constants.settingsFormId, this.options.data).then(function() {
-                this.startSettingsToolbar();
-                this.bindSettingsDomEvents();
-            }.bind(this));
-        },
-
-        /**
-         * Binds dom events concerning the settings tab
-         */
-        bindSettingsDomEvents: function() {
-            // activate save-button on key input
-            this.sandbox.dom.on('#' + constants.settingsFormId, 'change keyup', function() {
-                if (this.saved === true) {
-                    this.sandbox.emit('sulu.header.toolbar.state.change', 'edit', false);
-                    this.saved = false;
-                }
-            }.bind(this));
-        },
-
-        /**
-         * Starts the Toolbar for the settings-tab
-         */
-        startSettingsToolbar: function() {
-            this.sandbox.emit('sulu.header.set-toolbar', {template: 'default'});
         },
 
         /**
@@ -270,29 +226,6 @@ define(function () {
                     }
                 }
             ]);
-        },
-
-        /**
-         * Saves the settings-tab
-         */
-        saveSettings: function() {
-            if (this.sandbox.form.validate('#' + constants.settingsFormId)) {
-                var data = this.sandbox.form.getData('#' + constants.settingsFormId);
-                this.options.data = this.sandbox.util.extend(true, {}, this.options.data, data);
-                this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
-                this.sandbox.once('sulu.media.collections.collection-changed', this.savedCallback.bind(this));
-                this.sandbox.emit('sulu.media.collections.save-collection', this.options.data);
-            }
-        },
-
-        /**
-         * Method which gets called after the save-process has finished
-         */
-        savedCallback: function() {
-            this.setHeaderInfos();
-            this.sandbox.emit('sulu.header.toolbar.state.change', 'edit', true, true);
-            this.saved = true;
-            this.sandbox.emit('sulu.labels.success.show', 'labels.success.collection-save-desc', 'labels.success');
         },
 
         /**
@@ -328,7 +261,7 @@ define(function () {
          * Enables or dsiables the edit button
          * @param selectedElements {Number} number of selected elements
          */
-        toggleEditButton: function(selectedElements) {
+        toggleEditButton: function (selectedElements) {
             var enable = selectedElements > 0;
             this.sandbox.emit('sulu.list-toolbar.' + this.options.instanceName + '.edit.state-change', enable);
         },
@@ -337,7 +270,7 @@ define(function () {
          * Takes an array of files and adds them to the datagrid
          * @param files {Array} array of files
          */
-        addFilesToDatagrid: function(files) {
+        addFilesToDatagrid: function (files) {
             for (var i = -1, length = files.length; ++i < length;) {
                 files[i].selected = true;
             }
@@ -347,7 +280,7 @@ define(function () {
         /**
          * Scrolls the whole form the the bottom
          */
-        scrollToBottom: function() {
+        scrollToBottom: function () {
             this.sandbox.dom.scrollAnimate(this.sandbox.dom.height(this.sandbox.dom.$document), 'body');
         }
     };

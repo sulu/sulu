@@ -451,6 +451,14 @@ class FileVersion
     }
 
     /**
+     * Remove all tags
+     */
+    public function removeTags()
+    {
+        $this->tags->clear();
+    }
+
+    /**
      * Get tags
      *
      * @return \Doctrine\Common\Collections\Collection 

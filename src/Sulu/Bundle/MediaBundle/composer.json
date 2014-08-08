@@ -24,6 +24,7 @@
         "imagine/imagine": "~0.6.1",
         "liip/theme-bundle": "@dev",
 
+	"sulu/category-bundle": "@dev",
         "sulu/security-bundle": "@dev",
         "sulu/contact-bundle": "@dev",
         "willdurand/hateoas-bundle": "0.3.*"
