@@ -18,6 +18,22 @@
                 <source>public.key</source>
                 <target>Diese Liste ist leer</target>
             </trans-unit>
+            <trans-unit id="a10bd71863ade53bc0e1bd8822e865fc" resname="public.tags">
+                <source>public.tags</source>
+                <target>Tags</target>
+            </trans-unit>
+            <trans-unit id="a10bd71863ade53bc0e1bd8822e865d5" resname="public.show-tags">
+                <source>public.show-tags</source>
+                <target>Show tags</target>
+            </trans-unit>
+            <trans-unit id="a10bd71863adc53bc0e1bd8822e865d5" resname="public.view-all">
+                <source>public.view-all</source>
+                <target>view all</target>
+            </trans-unit>
+            <trans-unit id="a10bd71863adc53bc0e1bd8822e865f5" resname="public.view-less">
+                <source>public.view-less</source>
+                <target>view less</target>
+            </trans-unit>
             <trans-unit id="a10bd71863ade53bc0e1bd8822e8bdbc" resname="header.add">
                 <source>header.add</source>
                 <target>Hinzufügen</target>
@@ -972,18 +988,6 @@
                 <source>contact.accounts.delete.contacts-checkbox</source>
                 <target>Alle &lt;%= number %&gt; zugehörigen Kontakte löschen.</target>
             </trans-unit>
-            <trans-unit id="95f5d305ecefcbf58dcdd387ba6bce6c" resname="navigation.media">
-                <source>navigation.media</source>
-                <target>Medien</target>
-            </trans-unit>
-            <trans-unit id="3fd1f800bd2ecfb6af0abf749b716788" resname="navigation.media.collections">
-                <source>navigation.media.collections</source>
-                <target>Kollektionen</target>
-            </trans-unit>
-            <trans-unit id="2ed2e1bec2480b32fd6f8022a857c080" resname="media.collections.title">
-                <source>media.collections.title</source>
-                <target>Kollektionen</target>
-            </trans-unit>
             <trans-unit id="03d0a7c832c6c581e97fcf01aea8a30b" resname="public.open-all">
                 <source>public.open-all</source>
                 <target>Alle öffnen</target>
@@ -999,10 +1003,6 @@
             <trans-unit id="6c01dbc259d279576ab8d385c110e66c" resname="public.elements">
                 <source>public.elements</source>
                 <target>Elemente</target>
-            </trans-unit>
-            <trans-unit id="ed961112240c7d99faeacb57a28aa6f6" resname="content-navigation.media.files">
-                <source>content-navigation.media.files</source>
-                <target>Dateien</target>
             </trans-unit>
             <trans-unit id="5ce49fa74807f040dd27e417751cb9e1" resname="sulu.upload.dropzone-title">
                 <source>sulu.upload.dropzone-title</source>
@@ -1108,22 +1108,6 @@
                 <source>contact.accounts.correspondence</source>
                 <target>Korrespondenz per</target>
             </trans-unit>
-            <trans-unit id="2f58801f9b542aed46820bf42ee5cd53" resname="media.media.description">
-                <source>media.media.description</source>
-                <target>Beschreibung</target>
-            </trans-unit>
-            <trans-unit id="3c8f1c7c02abd468cc0794e987e2b2cf" resname="media.media.size">
-                <source>media.media.size</source>
-                <target>Dateigröße</target>
-            </trans-unit>
-            <trans-unit id="6f5e8f5b65fd4e7ae7ec509e742cc85f" resname="media.media.thumbnails">
-                <source>media.media.thumbnails</source>
-                <target>Vorschaubild</target>
-            </trans-unit>
-            <trans-unit id="6f2c89027621ffebd6cfbe33bdf16455" resname="sulu.media.new-collection">
-                <source>sulu.media.new-collection</source>
-                <target>Neue Kollektion</target>
-            </trans-unit>
             <trans-unit id="f22404eb2d33ceaf238eefc31a71d124" resname="contact.contacts.salutation">
                 <source>contact.contacts.salutation</source>
                 <target>Grußformel</target>
@@ -1143,10 +1127,6 @@
             <trans-unit id="cb106dadb34469a52f67b087c579f37a" resname="contact.contacts.formOfAddress.female">
                 <source>contact.contacts.formOfAddress.female</source>
                 <target>Frau</target>
-            </trans-unit>
-            <trans-unit id="71491ef900232b8755bf0842292e1ff4" resname="sulu.media.add-collection">
-                <source>sulu.media.add-collection</source>
-                <target>Neue Kollektion hinzufügen</target>
             </trans-unit>
             <trans-unit id="68f3cef76066b2a5ee8da26341eb373b" resname="public.color">
                 <source>public.color</source>
@@ -1202,10 +1182,6 @@
                 <source>public.edit-entries</source>
                 <target>Einträge editieren</target>
             </trans-unit>
-            <trans-unit id="90a2264459ba0f52ef7a4d3c0298d50" resname="content-navigation.media.settings">
-                <source>content-navigation.media.settings</source>
-                <target>Einstellungen</target>
-            </trans-unit>
             <trans-unit id="90a2264419ba0f52ef7a4d3c0298d50" resname="public.info">
                 <source>public.info</source>
                 <target>Info</target>
@@ -1213,18 +1189,6 @@
             <trans-unit id="90a3264459ba0f52ef7a4d3c0298d50" resname="public.description">
                 <source>public.description</source>
                 <target>Beschreibung</target>
-            </trans-unit>
-            <trans-unit id="90a3264459ba0f52ef7a4d3c0298d5d" resname="media.collection.title">
-                <source>media.collection.title</source>
-                <target>Kollektionstitel</target>
-            </trans-unit>
-            <trans-unit id="90a3264459ba0f52ef7a4d3c0298d5f" resname="labels.success.collection-save-desc">
-                <source>labels.success.collection-save-desc</source>
-                <target>Kollektion erfolgreich gespeichert</target>
-            </trans-unit>
-            <trans-unit id="90a3272459ba0f52ef7a4d3c0298d5f" resname="labels.success.collection-deleted-desc">
-                <source>labels.success.collection-deleted-desc</source>
-                <target>Kollektion erfolgreich gelöscht</target>
             </trans-unit>
             <trans-unit id="90aa264459ba0f52ef7a4d3c0298d5f" resname="smart-content.data-source.label">
                 <source>smart-content.data-source.label</source>
@@ -1301,17 +1265,9 @@
                 <source>sulu.upload.small-dropzone-title</source>
                 <target>Klicken oder neue Version hierher ziehen</target>
             </trans-unit>
-            <trans-unit id="642c992f1929652633a5ce2178d2219f" resname="sulu.media.multiple-edit.title">
-                <source>sulu.media.multiple-edit.title</source>
-                <target>Medien bearbeiten</target>
-            </trans-unit>
             <trans-unit id="643c992f1929652633a5ca2178d2219f" resname="public.show-descriptions">
                 <source>public.show-descriptions</source>
                 <target>Beschreibungen anzeigen</target>
-            </trans-unit>
-            <trans-unit id="643c99ff1964652633a5ca2178d2219f" resname="labels.success.media-save-desc">
-                <source>labels.success.media-save-desc</source>
-                <target>Medien erfolgreich gespeichert</target>
             </trans-unit>
             <trans-unit id="243c99ff1964652633a5ca2178d2219f" resname="template.example">
                 <source>template.example</source>
@@ -1384,10 +1340,6 @@
             <trans-unit id="643c99ff2964652633a5ca2178d22199" resname="contact.accounts.termsOfPayment.select">
                 <source>contact.accounts.termsOfPayment.select</source>
                 <target>Bitte wählen ...</target>
-            </trans-unit>
-            <trans-unit id="643c99ff2964652633a5ca2169f22236" resname="labels.success.media-upload-desc">
-                <source>labels.success.media-upload-desc</source>
-                <target>Medien erfolgreich hochgeladen.</target>
             </trans-unit>
             <trans-unit id="643d99ff2964652633a5ca2169f22237" resname="content-navigation.contacts.activities">
                 <source>content-navigation.contacts.activities</source>
@@ -1517,10 +1469,6 @@
                 <source>content-navigation.contents.excerpt</source>
                 <target>Auszug</target>
             </trans-unit>
-            <trans-unit id="243d99ff2f64652633a5ca2169f22254" resname="media-selection.nomedia-selected">
-                <source>media-selection.nomedia-selected</source>
-                <target>Keine Medien ausgewählt</target>
-            </trans-unit>
             <trans-unit id="443d99ff2f64652633a5ca2169f22254" resname="sulu.content.seo.title">
                 <source>sulu.content.seo.title</source>
                 <target>Titel</target>
@@ -1597,10 +1545,6 @@
                 <source>select.add-item</source>
                 <target>Neuer Eintrag</target>
             </trans-unit>
-            <trans-unit id="c50af528fc121350142c0b4720e29a8a" resname="media-selection.add-images">
-                <source>media-selection.add-images</source>
-                <target>Bilder hinzufügen</target>
-            </trans-unit>
             <trans-unit id="c50af528fc121350142c0b4720e29a8c" resname="public.choose">
                 <source>public.choose</source>
                 <target>Auswählen</target>
@@ -1612,10 +1556,6 @@
             <trans-unit id="c58af528fc121350142c0b4720e29a8a" resname="public.of">
                 <source>public.of</source>
                 <target>von</target>
-            </trans-unit>
-            <trans-unit id="c50af521ac121350142c0b4720e29a8a" resname="media-selection.collections">
-                <source>media-selection.collections</source>
-                <target>Kollektionen</target>
             </trans-unit>
             <trans-unit id="c50af521ac121350142c0b4720e29a2f" resname="internal-links.add">
                 <source>internal-links.add</source>
@@ -1639,7 +1579,7 @@
             </trans-unit>
             <trans-unit id="a50af522ac181350142c0b4720e29a2f" resname="sulu.content.seo.keywords-left">
                 <source>sulu.content.seo.keywords-left</source>
-                <target></target>
+                <target>Keywords übrig.</target>
             </trans-unit>
             <trans-unit id="a50af522a1231350142c0b4720e29a3f" resname="public.no-title">
                 <source>public.no-title</source>
