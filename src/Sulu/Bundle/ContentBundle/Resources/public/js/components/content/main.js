@@ -714,19 +714,19 @@ define([
                                     'type': 'select',
                                     items: [
                                         {
-                                            'id': 1,
-                                            'title': this.sandbox.translate('toolbar.state-test'),
-                                            'icon': 'husky-test',
-                                            'callback': function() {
-                                                this.sandbox.emit('sulu.dropdown.state.item-clicked', 1);
-                                            }.bind(this)
-                                        },
-                                        {
                                             'id': 2,
                                             'title': this.sandbox.translate('toolbar.state-publish'),
                                             'icon': 'husky-publish',
                                             'callback': function() {
                                                 this.sandbox.emit('sulu.dropdown.state.item-clicked', 2);
+                                            }.bind(this)
+                                        },
+                                        {
+                                            'id': 1,
+                                            'title': this.sandbox.translate('toolbar.state-test'),
+                                            'icon': 'husky-test',
+                                            'callback': function() {
+                                                this.sandbox.emit('sulu.dropdown.state.item-clicked', 1);
                                             }.bind(this)
                                         }
                                     ]
