@@ -69,6 +69,14 @@ define(['sulumedia/collection/collections'], function(Collections) {
         },
 
         /**
+         * raised when selected element has been removed
+         * @event sulu.media-selection.selection-removed
+         */
+        SELECTION_REMOVED = function() {
+            return createEventName.call(this, 'selection-removed');
+        },
+
+        /**
          * raised before data is requested with AJAX
          * @event sulu.media-selection.data-request
          */
@@ -82,6 +90,24 @@ define(['sulumedia/collection/collections'], function(Collections) {
          */
         DATA_RETRIEVED = function() {
             return createEventName.call(this, 'data-retrieved');
+        },
+
+        /**
+         * raised when data has returned from the ajax request
+         * @event sulu.media-selection.record-selected
+         * @param id {Number|String} id of the record
+         */
+        RECORD_SELECTED = function(){
+            return createEventName.call(this, 'record-selected');
+        },
+
+        /**
+         * raised when data has returned from the ajax request
+         * @event sulu.media-selection.record-deselected
+         * @param id {Number|String} id of the record
+         */
+        RECORD_DESELECTED = function(){
+            return createEventName.call(this, 'record-deselected');
         },
 
         /**
@@ -274,7 +300,7 @@ define(['sulumedia/collection/collections'], function(Collections) {
                                     data: collections.toJSON(),
                                     el: this.sandbox.dom.find(getId.call(this, 'gridGroup')),
                                     instanceName: this.options.instanceName,
-                                    gridUrl: '/admin/api/media?'+(this.options.types != '' ? 'types='+this.options.types+'&' : '')+'collection=',
+                                    gridUrl: '/admin/api/media?'+(this.options.types !== '' ? 'types='+this.options.types+'&' : '')+'collection=',
                                     preselected: this.data.ids,
                                     resultKey: this.options.resultKey,
                                     dataGridOptions: {
@@ -330,6 +356,14 @@ define(['sulumedia/collection/collections'], function(Collections) {
             this.sandbox.on('sulu.grid-group.'+ this.options.instanceName +'.initialized', function() {
                 this.sandbox.emit('husky.overlay.media-selection.' + this.options.instanceName + '.add' +'.set-position');
             }.bind(this));
+
+            this.sandbox.on('sulu.grid-group.' + this.options.instanceName + '.record-selected', function(id){
+                this.sandbox.emit(RECORD_SELECTED.call(this), id);
+            }.bind(this));
+
+            this.sandbox.on('sulu.grid-group.' + this.options.instanceName + '.record-deselected', function(id){
+                this.sandbox.emit(RECORD_DESELECTED.call(this), id);
+            }.bind(this));
         },
 
         /**
@@ -362,6 +396,7 @@ define(['sulumedia/collection/collections'], function(Collections) {
             }
 
             this.sandbox.emit(DATA_CHANGED.call(this), this.data, this.$el);
+            this.sandbox.emit(RECORD_DESELECTED.call(this), dataId);
         },
 
         /**
@@ -573,7 +608,7 @@ define(['sulumedia/collection/collections'], function(Collections) {
             this.sandbox.dom.removeClass(
                 this.sandbox.dom.find('.' + this.options.positionSelectedClass, getId.call(this, 'displayOption')),
                 this.options.positionSelectedClass
-            )
+            );
 
             // select clicked on
             this.sandbox.dom.addClass(event.currentTarget, this.options.positionSelectedClass);
