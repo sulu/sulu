@@ -12,6 +12,7 @@ namespace Sulu\Bundle\ContentBundle\Tests\Unit\Preview;
 
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\Cache;
+use Liip\ThemeBundle\ActiveTheme;
 use ReflectionMethod;
 use Sulu\Bundle\ContentBundle\Preview\Preview;
 use Sulu\Bundle\ContentBundle\Preview\PreviewInterface;
@@ -21,6 +22,10 @@ use Sulu\Component\Content\Property;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\Types\TextArea;
 use Sulu\Component\Content\Types\TextLine;
+use Sulu\Component\Webspace\Localization;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Sulu\Component\Webspace\Theme;
+use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Templating\EngineInterface;
 
@@ -36,6 +41,11 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
      */
     private $cache;
 
+    /**
+     * @var WebspaceManagerInterface
+     */
+    private $webspaceManager;
+
     protected function setUp()
     {
         $mapper = $this->prepareMapperMock();
@@ -45,7 +55,59 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
         $controllerResolver = $this->prepareControllerResolver();
         $this->cache = new ArrayCache();
 
-        $this->preview = new Preview($templating, $this->cache, $mapper, $structureManager, $contentTypeManager, $controllerResolver, 3600);
+        $activeTheme = new ActiveTheme('test', array('test'));
+
+        $this->prepareWebspaceManager();
+
+        $this->preview = new Preview(
+            $templating,
+            $this->cache,
+            $mapper,
+            $structureManager,
+            $contentTypeManager,
+            $controllerResolver,
+            $this->webspaceManager,
+            $activeTheme,
+            3600
+        );
+    }
+
+    protected function prepareWebspaceManager()
+    {
+        if ($this->webspaceManager === null) {
+            $webspace = new Webspace();
+            $en = new Localization();
+            $en->setLanguage('en');
+            $en_us = new Localization();
+            $en_us->setLanguage('en');
+            $en_us->setCountry('us');
+            $en_us->setParent($en);
+            $en->addChild($en_us);
+
+            $de = new Localization();
+            $de->setLanguage('de');
+            $de_at = new Localization();
+            $de_at->setLanguage('de');
+            $de_at->setCountry('at');
+            $de_at->setParent($de);
+            $de->addChild($de_at);
+
+            $theme = new Theme();
+            $theme->setKey('test');
+            $webspace->setTheme($theme);
+
+            $es = new Localization();
+            $es->setLanguage('es');
+
+            $webspace->addLocalization($en);
+            $webspace->addLocalization($de);
+            $webspace->addLocalization($es);
+
+            $this->webspaceManager = $this->getMock('Sulu\Component\Webspace\Manager\WebspaceManagerInterface');
+            $this->webspaceManager->expects($this->any())
+                ->method('findWebspaceByKey')
+                ->will($this->returnValue($webspace));
+        }
     }
 
     public function prepareContentTypeManager()

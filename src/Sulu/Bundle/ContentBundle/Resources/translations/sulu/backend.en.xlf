@@ -60,7 +60,7 @@
             </trans-unit>
             <trans-unit id="f1234df37123123ed4a73a4123dfdf00B" resname="content.contents.settings.order">
                 <source>content.contents.settings.order</source>
-                <target>Node move</target>
+                <target>Order node</target>
             </trans-unit>
             <trans-unit id="f1234df37123123ed4a73a4123dfdf00C" resname="content.contents.settings.order.title">
                 <source>content.contents.settings.order.title</source>

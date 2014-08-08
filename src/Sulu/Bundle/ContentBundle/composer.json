@@ -20,7 +20,10 @@
         "sulu/security-bundle": "dev-develop",
         "sulu/website-bundle": "dev-develop",
         "sulu/tag-bundle": "dev-develop",
-        "liip/theme-bundle": "@dev",
+
+	"sulu/category-bundle": "@dev",
+	"sulu/media-bundle": "@dev",
+	"liip/theme-bundle": "@dev",
 
         "jackalope/jackalope-jackrabbit": "1.1.*",
 
