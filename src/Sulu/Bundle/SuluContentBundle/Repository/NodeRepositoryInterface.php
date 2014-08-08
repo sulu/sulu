@@ -164,4 +164,26 @@ interface NodeRepositoryInterface
      * @return array
      */
     public function saveExtensionData($uuid, $data, $extensionName, $webspaceKey, $languageCode, $userId);
+
+    /**
+     * move node and returns new data
+     * @param string $uuid
+     * @param string $destinationUuid
+     * @param string $webspaceKey
+     * @param string $languageCode
+     * @param string $userId
+     * @return array
+     */
+    public function moveNode($uuid, $destinationUuid, $webspaceKey, $languageCode, $userId);
+
+    /**
+     * copy node and returns new data
+     * @param string $uuid
+     * @param string $destinationUuid
+     * @param string $webspaceKey
+     * @param string $languageCode
+     * @param string $userId
+     * @return array
+     */
+    public function copyNode($uuid, $destinationUuid, $webspaceKey, $languageCode, $userId);
 }

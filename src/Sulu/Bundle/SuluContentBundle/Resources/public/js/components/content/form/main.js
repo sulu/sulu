@@ -119,7 +119,11 @@ define(['app-config'], function(AppConfig) {
 
                 function() {
                     // cancel callback
-                    return false;
+                    this.sandbox.emit('sulu.header.toolbar.item.enable', 'template', false);
+
+                    if (!!this.template) {
+                        this.sandbox.emit('sulu.header.toolbar.item.change', 'template', this.template);
+                    }
                 }.bind(this),
 
                 function() {
