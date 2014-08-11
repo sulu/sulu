@@ -1042,7 +1042,7 @@ class ContentMapper implements ContentMapperInterface
         // load from phpcr
         /** @var NodeInterface $beforeTargetNode */
         /** @var NodeInterface $subjectNode */
-        list($beforeTargetNode, $subjectNode) = $session->getNodesByIdentifier(array($uuid, $beforeUuid));
+        list($beforeTargetNode, $subjectNode) = iterator_to_array($session->getNodesByIdentifier(array($uuid, $beforeUuid)), false);
 
         $parent = $beforeTargetNode->getParent();
 
