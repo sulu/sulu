@@ -58,7 +58,7 @@ class ImportTest extends DatabaseTestCase
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
-        self::$fixturePath = __DIR__ . '/../../Resources/Resources/DataFixtures/Files/';
+        self::$fixturePath = __DIR__ . '/../../app/Resources/DataFixtures/Files/';
     }
 
     public function setUp()
@@ -195,7 +195,17 @@ class ImportTest extends DatabaseTestCase
             self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage'),
             self::$em->getClassMetadata('Sulu\Bundle\CategoryBundle\Entity\Category'),
             self::$em->getClassMetadata('Sulu\Bundle\CategoryBundle\Entity\CategoryMeta'),
-            self::$em->getClassMetadata('Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation')
+            self::$em->getClassMetadata('Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation'),
+            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\Collection'),
+            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\CollectionType'),
+            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\CollectionMeta'),
+            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\Media'),
+            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\MediaType'),
+            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\File'),
+            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersion'),
+            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersionMeta'),
+            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage'),
+            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage')
         );
 
         self::$tool->createSchema(self::$entities);
