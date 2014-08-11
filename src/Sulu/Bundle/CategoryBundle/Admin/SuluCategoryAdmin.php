@@ -23,7 +23,7 @@ class SuluCategoryAdmin extends Admin
         $section = new NavigationItem('');
 
         $settings = new NavigationItem('navigation.settings');
-        $settings->setIcon('settings');
+        $settings->setIcon('cog');
 
         $categories = new NavigationItem('navigation.settings.categories', $settings);
         $categories->setAction('settings/categories');
