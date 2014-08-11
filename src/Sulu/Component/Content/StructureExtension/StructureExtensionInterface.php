@@ -33,7 +33,6 @@ interface StructureExtensionInterface
      * @param mixed $data
      * @param string $webspaceKey
      * @param string $languageCode
-     * @return
      */
     public function save(NodeInterface $node, $data, $webspaceKey, $languageCode);
 
@@ -42,6 +41,7 @@ interface StructureExtensionInterface
      * @param NodeInterface $node
      * @param string $webspaceKey
      * @param string $languageCode
+     * @return mixed data of extension
      */
     public function load(NodeInterface $node, $webspaceKey, $languageCode);
 
@@ -50,11 +50,5 @@ interface StructureExtensionInterface
      * @return string
      */
     public function getName();
-
-    /**
-     * returns data of extension
-     * @return array
-     */
-    public function getData();
 
 }

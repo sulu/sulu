@@ -21,6 +21,7 @@ use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\ContentTypeManager;
 use Sulu\Component\Content\ContentEvents;
 use Sulu\Component\Content\Event\ContentNodeEvent;
+use Sulu\Component\Content\Exception\ExtensionNotFoundException;
 use Sulu\Component\Content\Exception\InvalidNavigationContextExtension;
 use Sulu\Component\Content\Exception\MandatoryPropertyException;
 use Sulu\Component\Content\Exception\StateNotFoundException;
@@ -352,14 +353,20 @@ class ContentMapper implements ContentMapperInterface
         $session->save();
 
         // save data of extensions
-        foreach ($structure->getExtensions() as $extension) {
+        $ext = array();
+        foreach ($this->structureManager->getExtensions($structure->getKey()) as $extension) {
             $extension->setLanguageCode($languageCode, $this->languageNamespace, $this->internalPrefix);
-            if (isset($data['extensions']) && isset($data['extensions'][$extension->getName()])) {
-                $extension->save($node, $data['extensions'][$extension->getName()], $webspaceKey, $languageCode);
-            } else {
-                $extension->load($node, $webspaceKey, $languageCode);
+            if (isset($data['ext']) && isset($data['ext'][$extension->getName()])) {
+                $extension->save(
+                    $node,
+                    $data['ext'][$extension->getName()],
+                    $webspaceKey,
+                    $languageCode
+                );
             }
+            $ext[$extension->getName()] = $extension->load($node, $webspaceKey, $languageCode);
         }
+        $structure->setExt($ext);
 
         $session->save();
 
@@ -440,7 +447,9 @@ class ContentMapper implements ContentMapperInterface
         }
 
         // check if extension exists
-        $structure->getExtension($extensionName);
+        if (false === $this->structureManager->hasExtension($structure->getKey(), $extensionName)) {
+            throw new ExtensionNotFoundException($structure, $extensionName);
+        }
 
         // set changer / changed
         $dateTime = new \DateTime();
@@ -448,7 +457,13 @@ class ContentMapper implements ContentMapperInterface
         $node->setProperty($this->properties->getName('changed'), $dateTime);
 
         // save data of extensions
-        $structure->getExtension($extensionName)->save($node, $data, $webspaceKey, $languageCode);
+        $extension = $this->structureManager->getExtension($structure->getKey(), $extensionName);
+        $extension->save($node, $data, $webspaceKey, $languageCode);
+        $ext[$extension->getName()] = $extension->load($node, $webspaceKey, $languageCode);
+
+        $ext = array_merge($structure->getExt(), $ext);
+        $structure->setExt($ext);
+
         $session->save();
 
         // throw an content.node.save event
@@ -918,10 +933,12 @@ class ContentMapper implements ContentMapperInterface
         }
 
         // load data of extensions
-        foreach ($structure->getExtensions() as $extension) {
+        $data = array();
+        foreach ($this->structureManager->getExtensions($structure->getKey()) as $extension) {
             $extension->setLanguageCode($localization, $this->languageNamespace, $this->internalPrefix);
-            $extension->load($contentNode, $webspaceKey, $availableLocalization);
+            $data[$extension->getName()] = $extension->load($contentNode, $webspaceKey, $availableLocalization);
         }
+        $structure->setExt($data);
 
         $this->loadInternalLinkDependencies(
             $structure,
