@@ -407,10 +407,10 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertEquals(1, $response->creator);
         $this->assertEquals(1, $response->creator);
 
-        $this->assertEquals(2, sizeof((array)$response->extensions));
+        $this->assertEquals(2, sizeof((array)$response->ext));
 
-        $this->assertEquals(6, sizeof((array)$response->extensions->seo));
-        $this->assertEquals(5, sizeof((array)$response->extensions->excerpt));
+        $this->assertEquals(6, sizeof((array)$response->ext->seo));
+        $this->assertEquals(5, sizeof((array)$response->ext->excerpt));
 
         $client->request('GET', '/api/nodes?depth=1&webspace=sulu_io&language=en');
 
@@ -1014,8 +1014,8 @@ class NodeControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent(), true);
 
         // remove extension unececary for this test
-        unset($data[0]['extensions']);
-        unset($response['extensions']);
+        unset($data[0]['ext']);
+        unset($response['ext']);
 
         $this->assertEquals($data[0], $response);
     }

@@ -37,7 +37,7 @@ define([], function() {
         submit: function() {
             this.sandbox.logger.log('save Model');
             if (this.sandbox.form.validate(this.formId)) {
-                this.data.extensions.excerpt =  this.sandbox.form.getData(this.formId);
+                this.data.ext.excerpt =  this.sandbox.form.getData(this.formId);
                 this.sandbox.emit('sulu.content.contents.save', this.data);
             }
         },
@@ -67,7 +67,7 @@ define([], function() {
         },
 
         initData: function(data) {
-            return data.extensions.excerpt;
+            return data.ext.excerpt;
         },
 
         createForm: function(data) {

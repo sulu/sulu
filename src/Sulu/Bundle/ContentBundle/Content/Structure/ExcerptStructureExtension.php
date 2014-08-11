@@ -101,7 +101,6 @@ class ExcerptStructureExtension extends StructureExtension
                 );
             }
         }
-        $this->load($node, $webspaceKey, $languageCode);
     }
 
     /**
@@ -109,18 +108,20 @@ class ExcerptStructureExtension extends StructureExtension
      */
     public function load(NodeInterface $node, $webspaceKey, $languageCode)
     {
-        $this->data = array();
+        $data = array();
         foreach ($this->excerptStructure->getProperties() as $property) {
             $contentType = $this->contentTypeManager->get($property->getContentTypeName());
             $contentType->read(
                 $node,
-                new TranslatedProperty($property, $languageCode, $this->languageNamespace),
+                new TranslatedProperty($property, $languageCode . '-' . $this->additionalPrefix, $this->languageNamespace),
                 $webspaceKey,
                 $languageCode,
                 null // segmentkey
             );
-            $this->data[$property->getName()] = $property->getValue();
+            $data[$property->getName()] = $property->getValue();
         }
+
+        return $data;
     }
 
     /**
