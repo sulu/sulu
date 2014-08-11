@@ -17,7 +17,7 @@
         {% include 'SuluContactBundle:Widgets:Partials/emailUrl.partial.html.twig' with {'email': data.email, 'url': data.url} only %}
     {% endif %}
 
-    {% if data.contacts is defined %}
+    {% if data.company is defined %}
         <div class="grid-row m-bottom-30">
             <h5 class="label"><%=translate('public.company')%></h5>
             <h4 class="m-top-0 m-bottom-0">{{ data.company.name }}</h4>
@@ -34,5 +34,20 @@
          </span>
         </div>
     {% endif %}
+
+    {% if data.termsOfDelivery is defined and data.termsOfDelivery is not null %}
+        <div class="grid-row m-bottom-30">
+            <h5 class="label"><%=translate('contact.termsOfDelivery')%></h5>
+            <span class="grey">{{ data.termsOfDelivery }}</span>
+        </div>
+    {% endif %}
+
+    {% if data.termsOfPayment is defined and data.termsOfPayment is not null %}
+        <div class="grid-row m-bottom-30">
+            <h5 class="label"><%=translate('contact.termsOfPayment')%></h5>
+            <span class="grey">{{ data.termsOfPayment }}</span>
+        </div>
+    {% endif %}
+
 {% endif %}
 

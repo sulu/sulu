@@ -82,6 +82,7 @@ class AccountRepository extends EntityRepository
                 ->leftJoin('account.termsOfPayment', 'termsOfPayment')
                 ->leftJoin('account.responsiblePerson', 'responsiblePerson')
                 ->leftJoin('account.mainContact', 'mainContact')
+                ->leftJoin('account.medias', 'medias')
                 ->addSelect('mainContact')
                 ->addSelect('partial tags.{id, name}')
                 ->addSelect('bankAccounts')
@@ -103,8 +104,8 @@ class AccountRepository extends EntityRepository
                 ->addSelect('termsOfDelivery')
                 ->addSelect('termsOfPayment')
                 ->addSelect('responsiblePerson')
+                ->addSelect('medias')
                 ->where('account.id = :accountId');
-
 
             if ($contacts === true) {
                 $qb->leftJoin('account.accountContacts', 'accountContacts')

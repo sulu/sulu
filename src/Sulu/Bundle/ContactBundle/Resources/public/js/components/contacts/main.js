@@ -11,8 +11,9 @@ define([
     'sulucontact/model/contact',
     'sulucontact/model/activity',
     'sulucontact/model/title',
-    'sulucontact/model/position'
-], function(Contact, Activity, Title, Position) {
+    'sulucontact/model/position',
+    'sulucategory/model/category'
+], function(Contact, Activity, Title, Position, Category) {
 
     'use strict';
 
@@ -28,6 +29,8 @@ define([
                 this.renderForm();
             } else if (this.options.display === 'activities') {
                 this.renderActivities();
+            }  else if (this.options.display === 'documents') {
+                this.renderComponent('', this.options.display, 'documents-form', {type: 'contact'});
             } else {
                 throw 'display type wrong';
             }
@@ -84,6 +87,55 @@ define([
             this.initializeDropDownListender(
                 'position-select',
                 'api/contact/positions');
+
+            // handling documents
+            this.sandbox.on('sulu.contacts.contacts.medias.save', this.saveDocuments.bind(this));
+        },
+
+        saveDocuments: function(contactId, newMediaIds, removedMediaIds) {
+            this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
+
+            this.processAjaxForDocuments(newMediaIds, contactId, 'POST');
+            this.processAjaxForDocuments(removedMediaIds, contactId, 'DELETE');
+        },
+
+        processAjaxForDocuments: function(mediaIds, contactId, type){
+
+            var requests=[],
+                medias=[],
+                url;
+
+            if(mediaIds.length > 0) {
+                this.sandbox.util.each(mediaIds, function(index, id) {
+
+                    if(type === 'DELETE') {
+                        url = '/admin/api/contacts/' + contactId + '/medias/' + id;
+                    } else if(type === 'POST') {
+                        url = '/admin/api/contacts/' + contactId + '/medias';
+                    }
+
+                    requests.push(
+                        this.sandbox.util.ajax({
+                            url: url,
+                            data: {mediaId: id},
+                            type: type
+                        }).fail(function() {
+                                this.sandbox.logger.error("Error while saving documents!");
+                        }.bind(this))
+                    );
+                    medias.push(id);
+                }.bind(this));
+
+                this.sandbox.util.when.apply(null, requests).then(function() {
+                    if(type === 'DELETE') {
+                        this.sandbox.logger.warn(medias);
+                        this.sandbox.emit('sulu.contacts.accounts.medias.removed', medias);
+                    } else if(type === 'POST') {
+                        this.sandbox.logger.warn(medias);
+                        this.sandbox.emit('sulu.contacts.accounts.medias.saved', medias);
+                    }
+                }.bind(this));
+            }
         },
 
         /**
@@ -219,6 +271,13 @@ define([
         save: function(data) {
             this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
             this.contact.set(data);
+
+            this.contact.get('categories').reset();
+            this.sandbox.util.foreach(data.categories,function(id){
+                var category = Category.findOrCreate({id: id});
+                this.contact.get('categories').add(category);
+            }.bind(this));
+
             this.contact.save(null, {
                 // on success save contacts id
                 success: function(response) {
@@ -302,7 +361,6 @@ define([
         },
 
         renderActivities: function() {
-
             var $list;
 
             // load data and show form
@@ -334,6 +392,46 @@ define([
             } else {
                 this.sandbox.logger.error("activities are not available for unsaved contacts!");
             }
+        },
+
+        /**
+         * Adds a container with the given id and starts a component with the given name in it
+         * @param path path to component
+         * @param componentName
+         * @param containerId
+         * @param params additional params
+         * @returns {*}
+         */
+        renderComponent: function(path, componentName, containerId, params) {
+            var $form = this.sandbox.dom.createElement('<div id="' + containerId + '"/>'),
+                dfd = this.sandbox.data.deferred();
+
+            this.html($form);
+
+            if (!!this.options.id) {
+                this.contact = new Contact({id: this.options.id});
+                this.contact.fetch({
+                    success: function(model) {
+                        this.contact = model;
+                        this.sandbox.start([
+                            {
+                                name: path + componentName + '@sulucontact',
+                                options: {
+                                    el: $form,
+                                    data: model.toJSON(),
+                                    params: !!params ? params : {}
+                                }
+                            }
+                        ]);
+                        dfd.resolve();
+                    }.bind(this),
+                    error: function() {
+                        this.sandbox.logger.log("error while fetching contact");
+                        dfd.reject();
+                    }.bind(this)
+                });
+            }
+            return dfd.promise();
         },
 
         /**

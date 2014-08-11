@@ -20,9 +20,11 @@ use Sulu\Bundle\ContactBundle\Entity\Phone;
 use Sulu\Bundle\ContactBundle\Entity\Url;
 use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\BankAccount;
+use Sulu\Bundle\CategoryBundle\Entity\Category;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
+use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\ListRestHelperInterface;
 use Sulu\Component\Rest\RestController;
 use Sulu\Component\Rest\RestHelperInterface;
@@ -37,6 +39,7 @@ abstract class AbstractContactController extends RestController implements Class
 {
 
     protected static $positionEntityName = 'SuluContactBundle:Position';
+    protected static $mediaEntityName = 'SuluMediaBundle:Media';
 
     /**
      * @return AbstractContactManager
@@ -226,7 +229,6 @@ abstract class AbstractContactController extends RestController implements Class
         return $success;
     }
 
-
     /**
      * Process all urls of request
      * @param $contact The contact on which is processed
@@ -257,6 +259,57 @@ abstract class AbstractContactController extends RestController implements Class
         $this->getContactManager()->setMainUrl($contact);
 
         return $result;
+    }
+
+    /**
+     * Process all categories of request
+     * @param $contact - the contact which is processed
+     * @param $categories
+     * @return bool True if the processing was successful, otherwise false
+     */
+    protected function processCategories($contact, $categories)
+    {
+        $get = function($category) {
+            return $category->getId();
+        };
+
+        $delete = function ($category) use ($contact) {
+            return $contact->removeCategorie($category);
+        };
+
+        $add = function ($category) use ($contact) {
+            return $this->addCategories($contact, $category);
+        };
+
+        $result = $this->getRestHelper()->processSubEntities($contact->getCategories(), $categories, $get, $add, null, $delete);
+
+        return $result;
+    }
+
+    /**
+     * Adds a new category to the given contact
+     * @param $contact
+     * @param $data
+     * @return bool
+     * @throws EntityNotFoundException
+     * @throws EntityIdAlreadySetException
+     */
+    protected function addCategories($contact, $data)
+    {
+        $success = true;
+        $categoryEntity = 'SuluCategoryBundle:Category';
+
+        $category = $this->getDoctrine()
+            ->getRepository($categoryEntity)
+            ->find($data['id']);
+
+        if (!$category) {
+            throw new EntityNotFoundException($categoryEntity, $data['id']);
+        } else {
+           $contact->addCategorie($category);
+        }
+
+        return $success;
     }
 
     /**
