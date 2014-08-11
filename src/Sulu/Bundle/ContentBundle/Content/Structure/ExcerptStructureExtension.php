@@ -69,6 +69,7 @@ class ExcerptStructureExtension extends StructureExtension
     {
         $this->excerptStructure = $structureManager->getStructure(self::EXCERPT_EXTENSION_NAME);
         $this->contentTypeManager = $contentTypeManager;
+        $this->structureManager = $structureManager;
 
         /** @var PropertyInterface $property */
         foreach ($this->excerptStructure->getProperties() as $property) {
