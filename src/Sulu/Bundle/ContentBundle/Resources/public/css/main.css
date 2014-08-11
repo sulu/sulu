@@ -1,466 +1,68 @@
-/*----------------------------------------*/
-/* line 1, ../scss/modules/preview.scss */
-.sulu-content-preview {
-  width: 100%;
-  height: 100%;
-  text-align: center;
-  white-space: nowrap;
-  overflow: auto;
-}
-/* line 8, ../scss/modules/preview.scss */
-.sulu-content-preview::before {
-  content: '';
-  display: inline-block;
-  height: 100%;
-  vertical-align: middle;
-  margin-right: -0.25em;
-}
-/* line 16, ../scss/modules/preview.scss */
-.sulu-content-preview .wrapper {
-  display: inline-block;
-  vertical-align: middle;
-  white-space: normal;
-  overflow: hidden;
-}
-/* line 23, ../scss/modules/preview.scss */
-.sulu-content-preview iframe {
-  border: 0;
-  width: 100%;
-  height: 100%;
-}
-/* line 30, ../scss/modules/preview.scss */
-.sulu-content-preview.auto .wrapper {
-  width: 100%;
-  height: 100%;
-}
-/* line 34, ../scss/modules/preview.scss */
-.sulu-content-preview.auto .viewport {
-  width: 100%;
-  height: 100%;
-}
-/* line 39, ../scss/modules/preview.scss */
-.sulu-content-preview.desktop {
-  background: #999999;
-}
-/* line 41, ../scss/modules/preview.scss */
-.sulu-content-preview.desktop .wrapper {
-  width: 100%;
-  height: 100%;
-}
-/* line 45, ../scss/modules/preview.scss */
-.sulu-content-preview.desktop .viewport {
-  width: 1024px;
-  height: 100%;
-}
-/* line 50, ../scss/modules/preview.scss */
-.sulu-content-preview.smartphone {
-  background: #999999;
-}
-/* line 52, ../scss/modules/preview.scss */
-.sulu-content-preview.smartphone .wrapper {
-  width: 378px;
-  height: 794px;
-  background-image: url("../img/smartphone_portrait.png");
-  background-size: 378px;
-  background-repeat: no-repeat;
-  background-position: 0 0;
-  padding-top: 115px;
-  padding-left: 30px;
-}
-/* line 62, ../scss/modules/preview.scss */
-.sulu-content-preview.smartphone .viewport {
-  width: 320px;
-  height: 568px;
-}
-/* line 67, ../scss/modules/preview.scss */
-.sulu-content-preview.tablet {
-  background: #999999;
-}
-/* line 69, ../scss/modules/preview.scss */
-.sulu-content-preview.tablet .wrapper {
-  width: 836px;
-  height: 1282px;
-  background-image: url("../img/tablet_portrait.png");
-  background-size: 836px;
-  background-repeat: no-repeat;
-  background-position: 0 0;
-  padding-top: 122px;
-  padding-left: 30px;
-}
-/* line 79, ../scss/modules/preview.scss */
-.sulu-content-preview.tablet .viewport {
-  width: 768px;
-  height: 1024px;
-}
+/*
+Syntax error: Undefined variable: "$smallFontSize".
+        on line 29 of /home/daniel/www/sulu-cmf/sulu-standard/vendor/sulu/content-bundle/Sulu/Bundle/ContentBundle/Resources/public/scss/modules/smart-content.scss
+        from line 6 of /home/daniel/www/sulu-cmf/sulu-standard/vendor/sulu/content-bundle/Sulu/Bundle/ContentBundle/Resources/public/scss/main.scss
 
-/* line 86, ../scss/modules/preview.scss */
-.sulu-preview-toolbar {
-  position: fixed;
-  top: 0;
-  right: 0;
-  z-index: 101;
-  height: 30px;
-  color: #fff;
-  font-weight: 100;
-}
-/* line 95, ../scss/modules/preview.scss */
-.sulu-preview-toolbar .right {
-  background: #21272E;
-  height: 100%;
-  border-radius: 0 0 0 3px;
-}
-/* line 100, ../scss/modules/preview.scss */
-.sulu-preview-toolbar .right .new-window {
-  width: 30px;
-  overflow: hidden;
-  text-align: center;
-  padding-top: 5px;
-  height: 30px;
-  font-size: 18px;
-  padding-left: 2px;
-  line-height: 24px;
-}
-/* line 111, ../scss/modules/preview.scss */
-.sulu-preview-toolbar .right .resolutions {
-  border-right: 1px solid #fff;
-  min-width: 125px;
-}
-/* line 114, ../scss/modules/preview.scss */
-.sulu-preview-toolbar .right .resolutions .drop-down-trigger {
-  color: #fff;
-  padding: 5px 10px;
-}
-/* line 119, ../scss/modules/preview.scss */
-.sulu-preview-toolbar .right .resolutions .dropdown-toggle {
-  display: inline-block;
-}
-/* line 121, ../scss/modules/preview.scss */
-.sulu-preview-toolbar .right .resolutions .dropdown-toggle::after {
-  top: -1px;
-  margin-left: 5px;
-  margint-right: 0;
-  border-top: 6px solid #fff;
-}
-/* line 129, ../scss/modules/preview.scss */
-.sulu-preview-toolbar .right .resolutions .dropdown-menu {
-  background: #21272E;
-  color: #fff;
-  z-index: 105;
-  top: 35px;
-  left: -5px;
-  border: 0;
-  width: 100%;
-}
-/* line 141, ../scss/modules/preview.scss */
-.sulu-preview-toolbar .left {
-  float: left;
-  width: 30px;
-  height: 30px;
-  overflow: hidden;
-  background: #21272E;
-  text-align: center;
-  line-height: 28px;
-  border-radius: 0 0 0 2px;
-  font-size: 20px;
-  line-height: 32px;
-}
-
-@media only screen and (max-width: 780px) {
-  /* line 158, ../scss/modules/preview.scss */
-  .sulu-preview-toolbar .resolutions {
-    display: none;
-  }
-  /* line 161, ../scss/modules/preview.scss */
-  .sulu-preview-toolbar .new-window {
-    border-radius: 0 0 0 2px;
-  }
-}
-/* line 1, ../scss/modules/general.scss */
-#language-selector {
-  width: 95px;
-}
-
-/* line 5, ../scss/modules/general.scss */
-.sortable-placeholder {
-  margin-bottom: 20px;
-}
-
-/* smart content extension for internal links */
-/* line 11, ../scss/modules/general.scss */
-.smart-header .add {
-  display: block;
-  position: absolute;
-  top: 10px;
-  left: 20px;
-  font-size: 16px;
-  line-height: 15px;
-  color: white;
-  background-color: #52b6ca;
-  padding: 5px 10px;
-  border: 0px solid #ccc;
-  border-radius: 2px;
-}
-
-/* line 29, ../scss/modules/general.scss */
-.internal-links-overlay .overlay-header,
-.single-internal-overlay .overlay-header,
-.overlay-container .overlay-header {
-  margin-bottom: 1px;
-}
-/* line 32, ../scss/modules/general.scss */
-.internal-links-overlay .overlay-content,
-.single-internal-overlay .overlay-content,
-.overlay-container .overlay-content {
-  margin: 0px;
-}
-/* line 36, ../scss/modules/general.scss */
-.internal-links-overlay .overlay-footer,
-.single-internal-overlay .overlay-footer,
-.overlay-container .overlay-footer {
-  margin: 0px;
-}
-
-/* smart content for column view */
-/* line 42, ../scss/modules/general.scss */
-.column-navigation-wrapper {
-  overflow: inherit;
-}
-
-/* line 1, ../scss/modules/seo.scss */
-.seo-excerpt {
-  background: #fff;
-  width: 440px;
-  position: relative;
-  margin: 0 auto;
-  padding: 10px;
-  margin-bottom: 20px;
-}
-/* line 8, ../scss/modules/seo.scss */
-.seo-excerpt .title {
-  color: #1111BD;
-  font-size: 16px;
-}
-/* line 12, ../scss/modules/seo.scss */
-.seo-excerpt .url {
-  color: #307F3A;
-  font-size: 12px;
-  line-height: 15px;
-}
-/* line 17, ../scss/modules/seo.scss */
-.seo-excerpt .description {
-  font-size: 14px;
-  color: #000;
-  line-height: 16px;
-}
-
-/* line 2, ../scss/modules/resource-locator.scss */
-.resource-locator input {
-  width: 200px;
-}
-/* line 5, ../scss/modules/resource-locator.scss */
-.resource-locator .show {
-  padding-left: 5px;
-}
-/* line 8, ../scss/modules/resource-locator.scss */
-.resource-locator .show .icon {
-  font-size: 14px;
-  padding-right: 2px;
-}
-/* line 13, ../scss/modules/resource-locator.scss */
-.resource-locator .loader {
-  display: inline-block;
-  margin-bottom: -3px;
-  margin-left: 5px;
-}
-
-/* line 20, ../scss/modules/resource-locator.scss */
-.resource-locator-history {
-  list-style-type: none;
-  padding: 0 40px 0 30px;
-}
-/* line 24, ../scss/modules/resource-locator.scss */
-.resource-locator-history::after {
-  display: table;
-  content: "";
-  clear: both;
-}
-/* line 30, ../scss/modules/resource-locator.scss */
-.resource-locator-history li::after {
-  clear: both;
-}
-/* line 37, ../scss/modules/resource-locator.scss */
-.resource-locator-history .url,
-.resource-locator-history .date,
-.resource-locator-history .options-restore,
-.resource-locator-history .options-delete {
-  display: block;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #ddd;
-}
-/* line 45, ../scss/modules/resource-locator.scss */
-.resource-locator-history .url,
-.resource-locator-history .date {
-  float: left;
-  width: 45%;
-}
-/* line 50, ../scss/modules/resource-locator.scss */
-.resource-locator-history .options-restore {
-  float: left;
-  width: 5%;
-  text-align: center;
-}
-/* line 56, ../scss/modules/resource-locator.scss */
-.resource-locator-history .options-delete {
-  float: right;
-  width: 5%;
-  text-align: center;
-}
-/* line 62, ../scss/modules/resource-locator.scss */
-.resource-locator-history .url {
-  text-align: left;
-}
-/* line 65, ../scss/modules/resource-locator.scss */
-.resource-locator-history .date {
-  text-align: center;
-}
-
-/* line 7, ../scss/modules/smart-content.scss */
-.smart-content-overlay .column-navigation-slide .overlay-header {
-  margin-bottom: 1px;
-}
-/* line 10, ../scss/modules/smart-content.scss */
-.smart-content-overlay .column-navigation-slide .overlay-content {
-  margin: 0px;
-}
-/* line 14, ../scss/modules/smart-content.scss */
-.smart-content-overlay .column-navigation-slide .overlay-footer {
-  margin: 0px;
-}
-/* line 19, ../scss/modules/smart-content.scss */
-.smart-content-overlay .overlay-header {
-  margin-bottom: 15px;
-}
-/* line 22, ../scss/modules/smart-content.scss */
-.smart-content-overlay .overlay-footer {
-  margin-top: 5px;
-}
-
-/* line 27, ../scss/modules/smart-content.scss */
-.smart-overlay-content {
-  height: 100%;
-  font-size: 12px;
-}
-/* line 31, ../scss/modules/smart-content.scss */
-.smart-overlay-content .form-element {
-  margin: 0;
-}
-/* line 34, ../scss/modules/smart-content.scss */
-.smart-overlay-content .desc {
-  font-size: 14px;
-  color: #999999;
-  padding-bottom: 5px;
-  display: block;
-}
-/* line 40, ../scss/modules/smart-content.scss */
-.smart-overlay-content .item, .smart-overlay-content .item-half {
-  margin-bottom: 25px;
-  min-height: 55px;
-}
-/* line 44, ../scss/modules/smart-content.scss */
-.smart-overlay-content label {
-  color: black;
-  font-size: 12px;
-}
-/* line 48, ../scss/modules/smart-content.scss */
-.smart-overlay-content .sublabel {
-  font-size: 10px;
-  color: #999999;
-}
-/* line 52, ../scss/modules/smart-content.scss */
-.smart-overlay-content .item-half {
-  float: left;
-  width: 270px;
-}
-/* line 56, ../scss/modules/smart-content.scss */
-.smart-overlay-content .item {
-  padding-right: 20px;
-}
-/* line 59, ../scss/modules/smart-content.scss */
-.smart-overlay-content .left {
-  margin-right: 20px;
-}
-/* line 62, ../scss/modules/smart-content.scss */
-.smart-overlay-content .full {
-  padding-right: 0;
-}
-/* line 65, ../scss/modules/smart-content.scss */
-.smart-overlay-content .check {
-  margin-top: 30px;
-}
-/* line 67, ../scss/modules/smart-content.scss */
-.smart-overlay-content .check .description {
-  padding-left: 5px;
-}
-/* line 70, ../scss/modules/smart-content.scss */
-.smart-overlay-content .check.disabled {
-  display: none;
-}
-/* line 74, ../scss/modules/smart-content.scss */
-.smart-overlay-content .sortMethod {
-  margin-top: 25px;
-}
-/* line 78, ../scss/modules/smart-content.scss */
-.smart-overlay-content input.limit-to,
-.smart-overlay-content input.data-source {
-  padding-left: 10px;
-  border-radius: 0;
-}
-/* line 82, ../scss/modules/smart-content.scss */
-.smart-overlay-content .tags.disabled {
-  display: none;
-}
-/* line 85, ../scss/modules/smart-content.scss */
-.smart-overlay-content .tag-list {
-  border-radius: 3px 3px 0 0;
-}
-/* line 87, ../scss/modules/smart-content.scss */
-.smart-overlay-content .tag-list input {
-  margin: 7px 0 0 0;
-}
-
-/* line 1, ../scss/modules/order-table.scss */
-.order-table {
-  list-style-type: none;
-  padding: 0 40px 0 30px;
-}
-/* line 5, ../scss/modules/order-table.scss */
-.order-table::after {
-  display: table;
-  content: "";
-  clear: both;
-}
-/* line 11, ../scss/modules/order-table.scss */
-.order-table li::after {
-  clear: both;
-}
-/* line 16, ../scss/modules/order-table.scss */
-.order-table .node-name,
-.order-table .options-select {
-  display: block;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #ddd;
-}
-/* line 23, ../scss/modules/order-table.scss */
-.order-table .node-name {
-  text-align: left;
-  float: left;
-  width: 95%;
-}
-/* line 29, ../scss/modules/order-table.scss */
-.order-table .options-select {
-  float: right;
-  width: 5%;
-  text-align: center;
-}
+Backtrace:
+/home/daniel/www/sulu-cmf/sulu-standard/vendor/sulu/content-bundle/Sulu/Bundle/ContentBundle/Resources/public/scss/modules/smart-content.scss:29
+/home/daniel/www/sulu-cmf/sulu-standard/vendor/sulu/content-bundle/Sulu/Bundle/ContentBundle/Resources/public/scss/main.scss:6
+/home/daniel/.gem/ruby/2.1.0/gems/sass-3.2.19/lib/sass/script/variable.rb:49:in `_perform'
+/home/daniel/.gem/ruby/2.1.0/gems/sass-3.2.19/lib/sass/script/node.rb:40:in `perform'
+/home/daniel/.gem/ruby/2.1.0/gems/sass-3.2.19/lib/sass/tree/visitors/perform.rb:298:in `visit_prop'
+/home/daniel/.gem/ruby/2.1.0/gems/sass-3.2.19/lib/sass/tree/visitors/base.rb:37:in `visit'
+/home/daniel/.gem/ruby/2.1.0/gems/sass-3.2.19/lib/sass/tree/visitors/perform.rb:100:in `visit'
+/home/daniel/.gem/ruby/2.1.0/gems/sass-3.2.19/lib/sass/tree/visitors/base.rb:53:in `block in visit_children'
+/home/daniel/.gem/ruby/2.1.0/gems/sass-3.2.19/lib/sass/tree/visitors/base.rb:53:in `map'
+/home/daniel/.gem/ruby/2.1.0/gems/sass-3.2.19/lib/sass/tree/visitors/base.rb:53:in `visit_children'
+/home/daniel/.gem/ruby/2.1.0/gems/sass-3.2.19/lib/sass/tree/visitors/perform.rb:109:in `block in visit_children'
+/home/daniel/.gem/ruby/2.1.0/gems/sass-3.2.19/lib/sass/tree/visitors/perform.rb:121:in `with_environment'
+/home/daniel/.gem/ruby/2.1.0/gems/sass-3.2.19/lib/sass/tree/visitors/perform.rb:108:in `visit_children'
+/home/daniel/.gem/ruby/2.1.0/gems/sass-3.2.19/lib/sass/tree/visitors/base.rb:37:in `block in visit'
+/home/daniel/.gem/ruby/2.1.0/gems/sass-3.2.19/lib/sass/tree/visitors/perform.rb:320:in `visit_rule'
+/home/daniel/.gem/ruby/2.1.0/gems/sass-3.2.19/lib/sass/tree/visitors/base.rb:37:in `visit'
+/home/daniel/.gem/ruby/2.1.0/gems/sass-3.2.19/lib/sass/tree/visitors/perform.rb:100:in `visit'
+/home/daniel/.gem/ruby/2.1.0/gems/sass-3.2.19/lib/sass/tree/visitors/perform.rb:227:in `block in visit_import'
+/home/daniel/.gem/ruby/2.1.0/gems/sass-3.2.19/lib/sass/tree/visitors/perform.rb:227:in `map'
+/home/daniel/.gem/ruby/2.1.0/gems/sass-3.2.19/lib/sass/tree/visitors/perform.rb:227:in `visit_import'
+/home/daniel/.gem/ruby/2.1.0/gems/sass-3.2.19/lib/sass/tree/visitors/base.rb:37:in `visit'
+/home/daniel/.gem/ruby/2.1.0/gems/sass-3.2.19/lib/sass/tree/visitors/perform.rb:100:in `visit'
+/home/daniel/.gem/ruby/2.1.0/gems/sass-3.2.19/lib/sass/tree/visitors/base.rb:53:in `block in visit_children'
+/home/daniel/.gem/ruby/2.1.0/gems/sass-3.2.19/lib/sass/tree/visitors/base.rb:53:in `map'
+/home/daniel/.gem/ruby/2.1.0/gems/sass-3.2.19/lib/sass/tree/visitors/base.rb:53:in `visit_children'
+/home/daniel/.gem/ruby/2.1.0/gems/sass-3.2.19/lib/sass/tree/visitors/perform.rb:109:in `block in visit_children'
+/home/daniel/.gem/ruby/2.1.0/gems/sass-3.2.19/lib/sass/tree/visitors/perform.rb:121:in `with_environment'
+/home/daniel/.gem/ruby/2.1.0/gems/sass-3.2.19/lib/sass/tree/visitors/perform.rb:108:in `visit_children'
+/home/daniel/.gem/ruby/2.1.0/gems/sass-3.2.19/lib/sass/tree/visitors/base.rb:37:in `block in visit'
+/home/daniel/.gem/ruby/2.1.0/gems/sass-3.2.19/lib/sass/tree/visitors/perform.rb:128:in `visit_root'
+/home/daniel/.gem/ruby/2.1.0/gems/sass-3.2.19/lib/sass/tree/visitors/base.rb:37:in `visit'
+/home/daniel/.gem/ruby/2.1.0/gems/sass-3.2.19/lib/sass/tree/visitors/perform.rb:100:in `visit'
+/home/daniel/.gem/ruby/2.1.0/gems/sass-3.2.19/lib/sass/tree/visitors/perform.rb:7:in `visit'
+/home/daniel/.gem/ruby/2.1.0/gems/sass-3.2.19/lib/sass/tree/root_node.rb:20:in `render'
+/home/daniel/.gem/ruby/2.1.0/gems/sass-3.2.19/lib/sass/engine.rb:315:in `_render'
+/home/daniel/.gem/ruby/2.1.0/gems/sass-3.2.19/lib/sass/engine.rb:262:in `render'
+/home/daniel/.gem/ruby/2.1.0/gems/compass-0.12.6/lib/compass/compiler.rb:139:in `block (2 levels) in compile'
+/home/daniel/.gem/ruby/2.1.0/gems/compass-0.12.6/lib/compass/compiler.rb:126:in `timed'
+/home/daniel/.gem/ruby/2.1.0/gems/compass-0.12.6/lib/compass/compiler.rb:138:in `block in compile'
+/home/daniel/.gem/ruby/2.1.0/gems/compass-0.12.6/lib/compass/logger.rb:45:in `red'
+/home/daniel/.gem/ruby/2.1.0/gems/compass-0.12.6/lib/compass/compiler.rb:137:in `compile'
+/home/daniel/.gem/ruby/2.1.0/gems/compass-0.12.6/lib/compass/compiler.rb:118:in `compile_if_required'
+/home/daniel/.gem/ruby/2.1.0/gems/compass-0.12.6/lib/compass/compiler.rb:103:in `block (2 levels) in run'
+/home/daniel/.gem/ruby/2.1.0/gems/compass-0.12.6/lib/compass/compiler.rb:101:in `each'
+/home/daniel/.gem/ruby/2.1.0/gems/compass-0.12.6/lib/compass/compiler.rb:101:in `block in run'
+/home/daniel/.gem/ruby/2.1.0/gems/compass-0.12.6/lib/compass/compiler.rb:126:in `timed'
+/home/daniel/.gem/ruby/2.1.0/gems/compass-0.12.6/lib/compass/compiler.rb:100:in `run'
+/home/daniel/.gem/ruby/2.1.0/gems/compass-0.12.6/lib/compass/commands/update_project.rb:45:in `perform'
+/home/daniel/.gem/ruby/2.1.0/gems/compass-0.12.6/lib/compass/commands/base.rb:18:in `execute'
+/home/daniel/.gem/ruby/2.1.0/gems/compass-0.12.6/lib/compass/commands/project_base.rb:19:in `execute'
+/home/daniel/.gem/ruby/2.1.0/gems/compass-0.12.6/lib/compass/exec/sub_command_ui.rb:43:in `perform!'
+/home/daniel/.gem/ruby/2.1.0/gems/compass-0.12.6/lib/compass/exec/sub_command_ui.rb:15:in `run!'
+/home/daniel/.gem/ruby/2.1.0/gems/compass-0.12.6/bin/compass:30:in `block in <top (required)>'
+/home/daniel/.gem/ruby/2.1.0/gems/compass-0.12.6/bin/compass:44:in `call'
+/home/daniel/.gem/ruby/2.1.0/gems/compass-0.12.6/bin/compass:44:in `<top (required)>'
+/home/daniel/.gem/ruby/2.1.0/bin/compass:23:in `load'
+/home/daniel/.gem/ruby/2.1.0/bin/compass:23:in `<main>'
+*/
+body:before {
+  white-space: pre;
+  font-family: monospace;
+  content: "Syntax error: Undefined variable: \"$smallFontSize\".\A         on line 29 of /home/daniel/www/sulu-cmf/sulu-standard/vendor/sulu/content-bundle/Sulu/Bundle/ContentBundle/Resources/public/scss/modules/smart-content.scss\A         from line 6 of /home/daniel/www/sulu-cmf/sulu-standard/vendor/sulu/content-bundle/Sulu/Bundle/ContentBundle/Resources/public/scss/main.scss"; }

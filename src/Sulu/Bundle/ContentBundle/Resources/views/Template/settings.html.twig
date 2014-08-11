@@ -13,7 +13,7 @@
         </div>
     </div>
 
-    <div class="grid-row section m-top-40" id="show-in-navigation-container">
+    <div class="grid-row section m-top-40">
         <h2 class="divider m-bottom-20" title="Content Section">
             <%=translate('sulu.content.form.settings.type')%>
         </h2>
@@ -48,6 +48,29 @@
                     </div>
                     <span class="clickable"><%=translate('sulu.content.form.settings.type.external-link')%></span>
                 </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid-row section">
+        <h2 class="divider m-bottom-20" title="Content Section">
+            <%=translate('sulu.content.form.settings.shadow_page')%>
+        </h2>
+
+        <div class="grid">
+            <div class="grid-row">
+                <label for="content-node-type">
+                    <div class="custom-checkbox">
+                        <input id="shadow_on_checkbox" class="trigger-save-button form-element" type="checkbox"/>
+                        <span class="icon"></span>
+                    </div>
+                    <span class="clickable"><%=translate('sulu.content.form.settings.shadow.enable')%></span>
+                </label>
+                <label for="content-node-type">
+                    <span class="clickable"><%=translate('sulu.content.form.settings.shadow.base_language')%></span>
+                </label>
+                <div id="shadow_base_language_select" data-languages='{{ languages|json_encode }}'>
+                </div>
             </div>
         </div>
     </div>
