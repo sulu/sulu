@@ -241,6 +241,7 @@ class ActivityControllerTest extends DatabaseTestCase
             self::$em->getClassMetadata('Sulu\Bundle\CategoryBundle\Entity\Category'),
             self::$em->getClassMetadata('Sulu\Bundle\CategoryBundle\Entity\CategoryMeta'),
             self::$em->getClassMetadata('Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation'),
+
         );
 
         self::$tool->dropSchema(self::$entities);
