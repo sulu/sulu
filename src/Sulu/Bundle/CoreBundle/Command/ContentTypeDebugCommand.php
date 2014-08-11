@@ -43,7 +43,6 @@ class ContentTypeDebugCommand extends ContainerAwareCommand
 
         foreach ($contentTypeManager->getAll() as $alias => $service) {
             $table->addRow(array($alias, $service['id']));
-            $output->writeln($alias);
         }
         $table->render($output);
    }
