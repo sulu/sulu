@@ -49,6 +49,8 @@
 
         <!-- structure extension -->
         <service id="sulu_content.extension.excerpt" class="%sulu_content.extension.excerpt.class%">
+            <argument type="service" id="sulu.content.structure_manager"/>
+            <argument type="service" id="sulu.content.type_manager"/>
             <tag name="sulu.structure.extension"/>
         </service>
 

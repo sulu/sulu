@@ -38,8 +38,11 @@ sulu_core:
         templates:
              paths:
                  app:
-                     path: %kernel.root_dir%/../Resources/templates
+                     path: %kernel.root_dir%/Resources/templates
                      internal: false
+                 bundle:
+                     path: %kernel.root_dir%/../../Content/templates
+                     internal: true
     webspace:
         request_analyzer:
             enabled: false

@@ -410,7 +410,7 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertEquals(2, sizeof((array)$response->extensions));
 
         $this->assertEquals(6, sizeof((array)$response->extensions->seo));
-        $this->assertEquals(3, sizeof((array)$response->extensions->excerpt));
+        $this->assertEquals(5, sizeof((array)$response->extensions->excerpt));
 
         $client->request('GET', '/api/nodes?depth=1&webspace=sulu_io&language=en');
 
@@ -1209,9 +1209,9 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertArrayHasKey('id', $data);
         $this->assertEquals('test1', $data['title']);
         $this->assertEquals('/test1', $data['path']);
-        $this->assertEquals(2, $data['nodeState']);
-        $this->assertEquals(2, $data['globalState']);
-        $this->assertTrue($data['publishedState']);
+        $this->assertEquals(1, $data['nodeState']);
+        $this->assertEquals(1, $data['globalState']);
+        $this->assertFalse($data['publishedState']);
         $this->assertEquals(array('main', 'footer'), $data['navContexts']);
         $this->assertFalse($data['hasSub']);
         $this->assertEquals(0, sizeof($data['_embedded']['nodes']));
@@ -1229,9 +1229,9 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertArrayHasKey('id', $items[0]);
         $this->assertEquals('test1', $items[0]['title']);
         $this->assertEquals('/test1', $items[0]['path']);
-        $this->assertEquals(2, $items[0]['nodeState']);
-        $this->assertEquals(2, $items[0]['globalState']);
-        $this->assertTrue($items[0]['publishedState']);
+        $this->assertEquals(1, $items[0]['nodeState']);
+        $this->assertEquals(1, $items[0]['globalState']);
+        $this->assertFalse($items[0]['publishedState']);
         $this->assertEquals(array('main', 'footer'), $items[0]['navContexts']);
         $this->assertFalse($items[0]['hasSub']);
         $this->assertEquals(0, sizeof($items[0]['_embedded']['nodes']));
