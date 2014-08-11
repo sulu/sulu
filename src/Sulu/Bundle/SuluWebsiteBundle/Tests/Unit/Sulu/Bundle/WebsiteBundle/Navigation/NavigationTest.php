@@ -278,6 +278,48 @@ class NavigationTest extends PhpcrTestCase
         $this->assertEquals('/news/news-2', $main[1]->getUrl());
     }
 
+    public function testMainNavigationFlat()
+    {
+        $result = $this->navigation->getMainNavigation('default', 'en', 1, true);
+        $this->assertEquals(2, sizeof($result));
+        $this->assertEquals('News', $result[0]->getTitle());
+        $this->assertEquals('Products', $result[1]->getTitle());
+
+        $result = $this->navigation->getMainNavigation('default', 'en', 2, true);
+        $this->assertEquals(6, sizeof($result));
+        $this->assertEquals('News', $result[0]->getTitle());
+        $this->assertEquals('News-1', $result[1]->getTitle());
+        $this->assertEquals('News-2', $result[2]->getTitle());
+        $this->assertEquals('Products', $result[3]->getTitle());
+        $this->assertEquals('Products-1', $result[4]->getTitle());
+        $this->assertEquals('Products-2', $result[5]->getTitle());
+    }
+
+    public function testNavigationFlat()
+    {
+        $data['news'] = $this->mapper->save(
+            array(
+                'name' => 'SubNews',
+                'rl' => '/asdf',
+                'navContexts' => array('footer')
+            ),
+            'simple',
+            'default',
+            'en',
+            1,
+            true,
+            null,
+            $this->data['news/news-1']->getUuid(),
+            StructureInterface::STATE_PUBLISHED
+        );
+
+        $result = $this->navigation->getMainNavigation($this->data['news']->getUuid(), 'default', 'en', 2, true);
+        $this->assertEquals(3, sizeof($result));
+        $this->assertEquals('News-1', $result[0]->getTitle());
+        $this->assertEquals('SubNews', $result[1]->getTitle());
+        $this->assertEquals('News-2', $result[2]->getTitle());
+    }
+
     public function testBreadcrumb()
     {
         $breadcrumb = $this->navigation->getBreadcrumb($this->data['news/news-2']->getUuid(), 'default', 'en', 1);
@@ -321,7 +363,7 @@ class NavigationTest extends PhpcrTestCase
     public function testNavContexts()
     {
         // context footer (only news and one sub page news-1)
-        $result = $this->navigation->getMainNavigation('default', 'en', 2, 'footer');
+        $result = $this->navigation->getMainNavigation('default', 'en', 2, false, 'footer');
 
         $this->assertEquals(1, sizeof($result));
         $layer1 = $result[0];
@@ -333,7 +375,7 @@ class NavigationTest extends PhpcrTestCase
         $this->assertEquals('News-1', $layer2->getTitle());
 
         // context main (only products and two sub pages
-        $result = $this->navigation->getMainNavigation('default', 'en', 2, 'main');
+        $result = $this->navigation->getMainNavigation('default', 'en', 2, false, 'main');
 
         $this->assertEquals(1, sizeof($result));
         $layer1 = $result[0];
