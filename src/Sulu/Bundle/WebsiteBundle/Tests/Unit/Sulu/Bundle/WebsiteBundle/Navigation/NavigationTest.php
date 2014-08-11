@@ -387,4 +387,41 @@ class NavigationTest extends PhpcrTestCase
         $this->assertEquals('Products-1', $layer2[0]->getTitle());
         $this->assertEquals('Products-2', $layer2[1]->getTitle());
     }
+
+    public function testNavContextsFlat()
+    {
+        // context footer (only news and one sub page news-1)
+        $result = $this->navigation->getMainNavigation('default', 'en', 2, true, 'footer');
+
+        $this->assertEquals(3, sizeof($result));
+
+        // check children
+        $this->assertNull($result[0]->getChildren());
+        $this->assertNull($result[1]->getChildren());
+        $this->assertNull($result[2]->getChildren());
+
+        // check title
+        $this->assertEquals('News', $result[0]->getTitle());
+        $this->assertEquals('News-1', $result[1]->getTitle());
+        $this->assertEquals('Products-1', $result[2]->getTitle());
+
+        // context main (only products and two sub pages
+        $result = $this->navigation->getMainNavigation('default', 'en', 2, true, 'main');
+
+        $this->assertEquals(5, sizeof($result));
+
+        // check children
+        $this->assertNull($result[0]->getChildren());
+        $this->assertNull($result[1]->getChildren());
+        $this->assertNull($result[2]->getChildren());
+        $this->assertNull($result[3]->getChildren());
+        $this->assertNull($result[4]->getChildren());
+
+        // check title
+        $this->assertEquals('News-1', $result[0]->getTitle());
+        $this->assertEquals('News-2', $result[1]->getTitle());
+        $this->assertEquals('Products', $result[2]->getTitle());
+        $this->assertEquals('Products-1', $result[3]->getTitle());
+        $this->assertEquals('Products-2', $result[4]->getTitle());
+    }
 }
