@@ -27,7 +27,7 @@ class SuluVersionPass implements CompilerPassInterface
     {
         $container->setParameter(
             'sulu.version',
-            $this->getVersionFromComposerJson(realpath($container->getParameter('kernel.root_dir') . '/../..'))
+            $this->getVersionFromComposerJson(realpath($container->getParameter('kernel.root_dir') . '/..'))
         );
     }
 
