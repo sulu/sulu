@@ -14,8 +14,7 @@ use FOS\RestBundle\Routing\ClassResourceInterface;
 use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Bundle\ContactBundle\Contact\AbstractContactManager;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
-use Sulu\Bundle\MediaBundle\Api\Media;
-use Sulu\Bundle\MediaBundle\Entity\Media as ApiMedia;
+use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
@@ -62,7 +61,7 @@ abstract class AbstractMediaController extends RestController
 
             $entity->addMedia($media);
             $em->flush();
-            $view = $this->view(new ApiMedia($media), 200);
+            $view = $this->view($media, 200);
 
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);

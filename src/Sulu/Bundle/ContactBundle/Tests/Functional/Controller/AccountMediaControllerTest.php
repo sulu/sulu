@@ -44,7 +44,7 @@ use Sulu\Bundle\ContactBundle\Entity\ActivityPriority;
 use Sulu\Bundle\ContactBundle\Entity\ActivityStatus;
 use Sulu\Bundle\ContactBundle\Entity\ActivityType;
 
-class AccountControllerTest extends DatabaseTestCase
+class AccountMediaControllerTest extends DatabaseTestCase
 {
     /**
      * @var array
@@ -148,6 +148,8 @@ class AccountControllerTest extends DatabaseTestCase
         $note->setValue('Note');
         self::$account->addNote($note);
 
+        $this->setUpMediaEntities();
+
         self::$em->persist(self::$account);
         self::$em->persist($urlType);
         self::$em->persist($url);
@@ -169,7 +171,6 @@ class AccountControllerTest extends DatabaseTestCase
         $accountCategory->setCategory("Test");
         self::$em->persist($accountCategory);
 
-        $this->setUpMediaEntities();
         self::$em->flush();
     }
 
@@ -223,7 +224,10 @@ class AccountControllerTest extends DatabaseTestCase
             self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersion'),
             self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersionMeta'),
             self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage')
+            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage'),
+            self::$em->getClassMetadata('Sulu\Bundle\CategoryBundle\Entity\Category'),
+            self::$em->getClassMetadata('Sulu\Bundle\CategoryBundle\Entity\CategoryMeta'),
+            self::$em->getClassMetadata('Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation'),
         );
 
         self::$tool->dropSchema(self::$entities);
@@ -239,26 +243,6 @@ class AccountControllerTest extends DatabaseTestCase
                 'PHP_AUTH_PW' => 'test',
             )
         );
-    }
-
-    public function testAccountMediaPatch(){
-        $client = $this->createTestClient();
-        $client->request(
-            'PATCH',
-            '/api/accounts/1',
-            array(
-                'medias' => array(
-                    0 => array(
-                        'id' => 1
-                    )
-                )
-            )
-        );
-
-        $response = json_decode($client->getResponse()->getContent());
-//        $this->assertNotNull($response->medias);
-//        $this->assertEquals(1, count($response->medias));
-//        $this->assertEquals(1, $response->medias[0]->id);
     }
 
     public function setUpMediaEntities()
@@ -284,6 +268,13 @@ class AccountControllerTest extends DatabaseTestCase
         $media->setChanged(new DateTime());
         $media->setType($imageType);
 
+        $media2 = new Media();
+        $media2->setCreated(new DateTime());
+        $media2->setChanged(new DateTime());
+        $media2->setType($imageType);
+
+        self::$account->addMedia($media2);
+
         // create file
         $file = new File();
         $file->setVersion(1);
@@ -291,13 +282,22 @@ class AccountControllerTest extends DatabaseTestCase
         $file->setChanged(new DateTime());
         $file->setMedia($media);
 
+        $file2 = new File();
+        $file2->setVersion(1);
+        $file2->setCreated(new DateTime());
+        $file2->setChanged(new DateTime());
+        $file2->setMedia($media2);
+
         $collection = new Collection();
         $this->setUpCollection($collection);
 
         $media->setCollection($collection);
+        $media2->setCollection($collection);
         self::$em->persist($media);
+        self::$em->persist($media2);
         self::$em->persist($collection);
         self::$em->persist($file);
+        self::$em->persist($file2);
         self::$em->persist($videoType);
         self::$em->persist($imageType);
         self::$em->persist($audioType);
@@ -347,4 +347,109 @@ class AccountControllerTest extends DatabaseTestCase
         self::$em->persist($collectionMeta2);
     }
 
+    public function testAccountMediaPost(){
+        $client = $this->createTestClient();
+
+        $client->request(
+            'GET',
+            '/api/accounts/1'
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(1, count($response->medias));
+
+        $client->request(
+            'POST',
+            '/api/accounts/1/medias',
+            array(
+                'mediaId' => 1
+            )
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(1, $response->id);
+
+        $client->request(
+            'GET',
+            '/api/accounts/1'
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(2, count($response->medias));
+
+        if($response->medias[0]->id == 1) {
+            $this->assertEquals(1, $response->medias[0]->id);
+            $this->assertEquals(2, $response->medias[1]->id);
+        } else {
+            $this->assertEquals(1, $response->medias[1]->id);
+            $this->assertEquals(2, $response->medias[0]->id);
+        }
+    }
+
+    public function testAccountMediaPostNotExistingMedia(){
+        $client = $this->createTestClient();
+
+        $client->request(
+            'GET',
+            '/api/accounts/1'
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(1, count($response->medias));
+
+        $client->request(
+            'POST',
+            '/api/accounts/1/medias',
+            array(
+                'mediaId' => 99
+            )
+        );
+
+        $this->assertEquals(404, $client->getResponse()->getStatusCode());
+
+        $client->request(
+            'GET',
+            '/api/accounts/1'
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(1, count($response->medias));
+    }
+
+    public function testAccountMediaDelete(){
+        $client = $this->createTestClient();
+
+        $client->request(
+            'DELETE',
+            '/api/accounts/1/medias/2'
+        );
+
+        $this->assertEquals('204', $client->getResponse()->getStatusCode());
+
+        $client->request(
+            'GET',
+            '/api/accounts/1'
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(0, count($response->medias));
+    }
+
+    public function testAccountMediaDeleteNotExistingRelation(){
+        $client = $this->createTestClient();
+        $client->request(
+            'DELETE',
+            '/api/accounts/1/medias/99'
+        );
+
+        $this->assertEquals('404', $client->getResponse()->getStatusCode());
+
+        $client->request(
+            'GET',
+            '/api/accounts/1'
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(1, count($response->medias));
+    }
 }
