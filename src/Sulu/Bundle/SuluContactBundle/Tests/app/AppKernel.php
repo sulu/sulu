@@ -18,13 +18,16 @@ class AppKernel extends Kernel
             new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
             new Symfony\Bundle\SecurityBundle\SecurityBundle(),
             new Bazinga\Bundle\HateoasBundle\BazingaHateoasBundle(),
+            new \Liip\ThemeBundle\LiipThemeBundle(),
 
             // Sulu
             new \Sulu\Bundle\AdminBundle\SuluAdminBundle(),
             new \Sulu\Bundle\CoreBundle\SuluCoreBundle(),
+            new \Sulu\Bundle\MediaBundle\SuluMediaBundle(),
             new \Sulu\Bundle\ContactBundle\SuluContactBundle(),
             new \Sulu\Bundle\TestBundle\SuluTestBundle(),
             new \Sulu\Bundle\TagBundle\SuluTagBundle(),
+            new \Sulu\Bundle\CategoryBundle\SuluCategoryBundle(),
 
             new \Doctrine\Bundle\PHPCRBundle\DoctrinePHPCRBundle()
         );

@@ -28,11 +28,20 @@ use Sulu\Bundle\ContactBundle\Entity\Note;
 use Sulu\Bundle\ContactBundle\Entity\Phone;
 use Sulu\Bundle\ContactBundle\Entity\PhoneType;
 use Sulu\Bundle\ContactBundle\Entity\AccountCategory;
+use Sulu\Bundle\MediaBundle\Entity\Collection;
+use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
+use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\TestBundle\Testing\DatabaseTestCase;
 use Sulu\Bundle\ContactBundle\Entity\Activity;
 use Sulu\Bundle\ContactBundle\Entity\ActivityPriority;
 use Sulu\Bundle\ContactBundle\Entity\ActivityStatus;
 use Sulu\Bundle\ContactBundle\Entity\ActivityType;
+use Sulu\Bundle\MediaBundle\Entity\Media;
+use Sulu\Bundle\MediaBundle\Entity\MediaType;
+use Sulu\Bundle\MediaBundle\Entity\File;
+use Sulu\Bundle\CategoryBundle\Entity\Category;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryMeta;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation;
 
 class ContactControllerTest extends DatabaseTestCase
 {
@@ -160,6 +169,54 @@ class ContactControllerTest extends DatabaseTestCase
         self::$em->persist($address);
         self::$em->persist($note);
 
+        /* First Category
+        -------------------------------------*/
+        $category = new Category();
+        $category->setCreated(new \DateTime());
+        $category->setChanged(new \DateTime());
+        $category->setKey('first-category-key');
+
+        // name for first category
+        $categoryTrans = new CategoryTranslation();
+        $categoryTrans->setLocale('en');
+        $categoryTrans->setTranslation('First Category');
+        $categoryTrans->setCategory($category);
+        $category->addTranslation($categoryTrans);
+
+        // meta for first category
+        $categoryMeta = new CategoryMeta();
+        $categoryMeta->setLocale('en');
+        $categoryMeta->setKey('description');
+        $categoryMeta->setValue('Description of Category');
+        $categoryMeta->setCategory($category);
+        $category->addMeta($categoryMeta);
+
+        self::$em->persist($category);
+
+        /* Second Category
+        -------------------------------------*/
+        $category2 = new Category();
+        $category2->setCreated(new \DateTime());
+        $category2->setChanged(new \DateTime());
+        $category2->setKey('second-category-key');
+
+        // name for second category
+        $categoryTrans2 = new CategoryTranslation();
+        $categoryTrans2->setLocale('de');
+        $categoryTrans2->setTranslation('Second Category');
+        $categoryTrans2->setCategory($category2);
+        $category2->addTranslation($categoryTrans2);
+
+        // meta for second category
+        $categoryMeta2 = new CategoryMeta();
+        $categoryMeta2->setLocale('de');
+        $categoryMeta2->setKey('description');
+        $categoryMeta2->setValue('Description of second Category');
+        $categoryMeta2->setCategory($category2);
+        $category2->addMeta($categoryMeta2);
+
+        self::$em->persist($category2);
+
         self::$em->flush();
 
         $this->contactTitle = $title;
@@ -208,6 +265,19 @@ class ContactControllerTest extends DatabaseTestCase
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AccountCategory'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\TermsOfPayment'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\TermsOfDelivery'),
+            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\Collection'),
+            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\CollectionType'),
+            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\CollectionMeta'),
+            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\Media'),
+            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\MediaType'),
+            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\File'),
+            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersion'),
+            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersionMeta'),
+            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage'),
+            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage'),
+            self::$em->getClassMetadata('Sulu\Bundle\CategoryBundle\Entity\Category'),
+            self::$em->getClassMetadata('Sulu\Bundle\CategoryBundle\Entity\CategoryMeta'),
+            self::$em->getClassMetadata('Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation')
         );
 
         self::$tool->dropSchema(self::$entities);
@@ -834,6 +904,14 @@ class ContactControllerTest extends DatabaseTestCase
                 'salutation' => 'Sehr geehrter John',
                 'formOfAddress' => array(
                     'id' => 0
+                ),
+                'categories' => array(
+                    array(
+                        'id' => 1
+                    ),
+                    array(
+                        'id' => 2
+                    )
                 )
             )
         );
@@ -869,6 +947,7 @@ class ContactControllerTest extends DatabaseTestCase
         $this->assertEquals(0, $response->formOfAddress);
         $this->assertEquals('Sehr geehrter John', $response->salutation);
         $this->assertEquals(0, $response->disabled);
+        $this->assertEquals(2, count($response->categories));
 
         $client->request('GET', '/api/contacts/' . $response->id);
         $response = json_decode($client->getResponse()->getContent());
