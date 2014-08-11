@@ -37,14 +37,28 @@ define(['app-config'], function(AppConfig) {
             changeNothing: true
         },
 
-        templates: ['/admin/content/template/content/settings'],
-
         initialize: function() {
             this.sandbox.emit('husky.toolbar.header.item.disable', 'template', false);
-
             this.load();
 
             this.bindCustomEvents();
+        },
+
+        startComponents: function () {
+            var languages = this.sandbox.dom.data('#shadow_base_language_select', 'languages');
+            this.sandbox.start([
+                {
+                    name: 'select@husky',
+                    options: {
+                        el: '#shadow_base_language_select',
+                        instanceName: 'settings',
+                        multipleSelect: false,
+                        defaultLabel: '',
+                        data: languages,
+                        preSelectedElements: [ this.data.shadowBaseLanguage ]
+                    }
+                }
+            ]);
         },
 
         bindCustomEvents: function() {
@@ -67,6 +81,11 @@ define(['app-config'], function(AppConfig) {
             // hear for changing navigation contexts
             this.sandbox.on('husky.select.nav-contexts.selected.item', changedEvent.bind(this));
             this.sandbox.on('husky.select.nav-contexts.deselected.item', changedEvent.bind(this));
+
+            this.sandbox.on('husky.select.settings.selected.item', function () {
+                this.sandbox.emit('sulu.content.changed');
+                this.sandbox.emit('sulu.content.contents.set-header-bar', false);
+            }.bind(this));
         },
 
         load: function() {
@@ -78,10 +97,15 @@ define(['app-config'], function(AppConfig) {
 
         render: function(data) {
             this.data = data;
-            this.html(this.renderTemplate('/admin/content/template/content/settings'));
 
-            this.setData(data);
-            this.listenForChange();
+            require(['text!/admin/content/template/content/settings.html?webspaceKey=' + this.options.webspace], function (template) {
+                this.sandbox.dom.html(this.$el, this.sandbox.util.template(template, {
+                    translate: this.sandbox.translate
+                }));
+                this.setData(this.data);
+                this.listenForChange();
+                this.startComponents();
+            }.bind(this));
         },
 
         setData: function(data) {
@@ -103,6 +127,10 @@ define(['app-config'], function(AppConfig) {
 
                 $('#nav-contexts').trigger('data-changed');
             }.bind(this));
+
+            if (data.shadowOn) {
+                this.sandbox.dom.attr('#shadow_on_checkbox', 'checked', true);
+            }
         },
 
         listenForChange: function() {
@@ -122,9 +150,11 @@ define(['app-config'], function(AppConfig) {
 
             data.navContexts = this.sandbox.dom.data('#nav-contexts', 'selection');
             data.nodeType = parseInt(this.sandbox.dom.val('input[name="nodeType"]:checked'));
+            data.shadowOn = this.sandbox.dom.prop('#shadow_on_checkbox', 'checked');
+            data.shadowBaseLanguage = this.sandbox.dom.data('#shadow_base_language_select', 'selectionValues')[0];
 
             this.data = this.sandbox.util.extend(true, {}, this.data, data);
-            this.sandbox.emit('sulu.content.contents.save', this.data, (data.nodeType === TYPE_INTERNAL ? 'internal-link' : data.nodeType === TYPE_EXTERNAL ? 'external-link' : AppConfig.getSection('sulu-content')['defaultTemplate']));
+            this.sandbox.emit('sulu.content.contents.save', this.data, (data.nodeType === TYPE_INTERNAL ? 'internal-link' : data.nodeType === TYPE_EXTERNAL ? 'external-link' : AppConfig.getSection('sulu-content').defaultTemplate));
         }
     };
 });

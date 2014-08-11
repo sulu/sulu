@@ -23,6 +23,13 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class TemplateController extends Controller
 {
+    protected function getWebspaceManager()
+    {
+        /** @var WebspaceManagerInterface $webspaceManager */
+        $webspaceManager = $this->get('sulu_core.webspace.webspace_manager');
+
+        return $webspaceManager;
+    }
     /**
      * returns all structures in system
      * @param \Symfony\Component\HttpFoundation\Request $request
@@ -170,9 +177,7 @@ class TemplateController extends Controller
      */
     public function getLanguagesAction($webspaceKey)
     {
-        /** @var WebspaceManagerInterface $webspaceManager */
-        $webspaceManager = $this->get('sulu_core.webspace.webspace_manager');
-        $webspace = $webspaceManager->findWebspaceByKey($webspaceKey);
+        $webspace = $this->getWebspaceManager()->findWebspaceByKey($webspaceKey);
         $localizations = array();
 
         $i = 0;
@@ -196,8 +201,11 @@ class TemplateController extends Controller
      * renders template fpr settings
      * @return Response
      */
-    public function settingsAction()
+    public function settingsAction(Request $request)
     {
+        $webspaceKey = $request->get('webspaceKey');
+        $webspace = $this->getWebspaceManager()->findWebspaceByKey($webspaceKey);
+
         $navContexts = array();
         foreach ($this->container->getParameter('sulu.content.nav_contexts') as $context) {
             $navContexts[] = array(
@@ -206,9 +214,16 @@ class TemplateController extends Controller
             );
         }
 
+        $languages = array();
+        foreach ($webspace->getAllLocalizations() as $localization) {
+            $languages[] = $localization->getLocalization();
+        }
+
         return $this->render(
-            'SuluContentBundle:Template:settings.html.twig',
-            array('navContexts' => $navContexts)
+            'SuluContentBundle:Template:settings.html.twig', array(
+                'navContexts' => $navContexts,
+                'languages' => $languages,
+            )
         );
     }
 
