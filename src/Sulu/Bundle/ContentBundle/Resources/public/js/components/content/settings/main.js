@@ -58,6 +58,15 @@ define(['app-config'], function(AppConfig) {
                 // FIXME better solution?
                 window.location.reload();
             }, this);
+
+            // set header bar unsaved
+            var changedEvent = function() {
+                 this.sandbox.emit('sulu.content.contents.set-header-bar', false);
+            }.bind(this);
+
+            // hear for changing navigation contexts
+            this.sandbox.on('husky.select.nav-contexts.selected.item', changedEvent.bind(this));
+            this.sandbox.on('husky.select.nav-contexts.deselected.item', changedEvent.bind(this));
         },
 
         load: function() {
