@@ -33,19 +33,19 @@ class NavigationMapper implements NavigationMapperInterface
     /**
      * {@inheritdoc}
      */
-    public function getNavigation($parent, $webspace, $language, $depth = 1, $context = null, $flat = false)
+    public function getNavigation($parent, $webspace, $language, $depth = 1, $flat = false, $context = null)
     {
         $contents = $this->contentMapper->loadByParent($parent, $webspace, $language, $depth, false, true, true);
 
-        return $this->generateNavigation($contents, $webspace, $language, $context);
+        return $this->generateNavigation($contents, $webspace, $language, $flat, $context);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getMainNavigation($webspace, $language, $depth = 1, $context = null, $flat = false)
+    public function getMainNavigation($webspace, $language, $depth = 1, $flat = false, $context = null)
     {
-        return $this->getNavigation(null, $webspace, $language, $depth, $context);
+        return $this->getNavigation(null, $webspace, $language, $depth, $flat, $context);
     }
 
     /**
@@ -68,10 +68,11 @@ class NavigationMapper implements NavigationMapperInterface
      * @param StructureInterface[] $contents
      * @param string $webspace
      * @param string $language
+     * @param bool $flat
      * @param string $context
      * @return NavigationItem[]
      */
-    private function generateNavigation($contents, $webspace, $language, $context = null)
+    private function generateNavigation($contents, $webspace, $language, $flat = false, $context = null)
     {
         $result = array();
 
@@ -79,7 +80,13 @@ class NavigationMapper implements NavigationMapperInterface
             if ($this->inNavigation($content, $context)) {
                 $children = array();
                 if (is_array($content->getChildren()) && sizeof($content->getChildren()) > 0) {
-                    $children = $this->generateNavigation($content->getChildren(), $webspace, $language, $context);
+                    $children = $this->generateNavigation(
+                        $content->getChildren(),
+                        $webspace,
+                        $language,
+                        $flat,
+                        $context
+                    );
                 }
 
                 $url = $content->getResourceLocator();
