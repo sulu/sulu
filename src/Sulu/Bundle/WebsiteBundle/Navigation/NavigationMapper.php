@@ -65,40 +65,60 @@ class NavigationMapper implements NavigationMapperInterface
     }
 
     /**
-     * @param StructureInterface[] $contents
-     * @param string $webspace
-     * @param string $language
-     * @param bool $flat
-     * @param string $context
-     * @return NavigationItem[]
+     * generate navigation items for given contents
      */
     private function generateNavigation($contents, $webspace, $language, $flat = false, $context = null)
     {
         $result = array();
 
+        /** @var StructureInterface $content */
         foreach ($contents as $content) {
             if ($this->inNavigation($content, $context)) {
-                $children = array();
-                if (is_array($content->getChildren()) && sizeof($content->getChildren()) > 0) {
-                    $children = $this->generateNavigation(
-                        $content->getChildren(),
-                        $webspace,
-                        $language,
-                        $flat,
-                        $context
-                    );
-                }
-
                 $url = $content->getResourceLocator();
                 $title = $content->getNodeName();
+                $children = $this->generateChildNavigation($content, $webspace, $language, $flat, $context);
 
-                $result[] = new NavigationItem(
-                    $content, $title, $url, $children, $content->getUuid(), $content->getNodeType()
-                );
+                if (false === $flat) {
+                    $result[] = new NavigationItem(
+                        $content, $title, $url, $children, $content->getUuid(), $content->getNodeType()
+                    );
+                } else {
+                    $result[] = new NavigationItem(
+                        $content, $title, $url, null, $content->getUuid(), $content->getNodeType()
+                    );
+                    $result = array_merge($result, $children);
+                }
+            } elseif (true === $flat) {
+                $children = $this->generateChildNavigation($content, $webspace, $language, $flat, $context);
+                $result = array_merge($result, $children);
             }
         }
 
         return $result;
+    }
+
+    /**
+     * generate child navigation of given content
+     */
+    private function generateChildNavigation(
+        StructureInterface $content,
+        $webspace,
+        $language,
+        $flat = false,
+        $context = null
+    ) {
+        $children = array();
+        if (is_array($content->getChildren()) && sizeof($content->getChildren()) > 0) {
+            $children = $this->generateNavigation(
+                $content->getChildren(),
+                $webspace,
+                $language,
+                $flat,
+                $context
+            );
+        }
+
+        return $children;
     }
 
     /**

@@ -313,7 +313,7 @@ class NavigationTest extends PhpcrTestCase
             StructureInterface::STATE_PUBLISHED
         );
 
-        $result = $this->navigation->getMainNavigation($this->data['news']->getUuid(), 'default', 'en', 2, true);
+        $result = $this->navigation->getNavigation($this->data['news']->getUuid(), 'default', 'en', 2, true);
         $this->assertEquals(3, sizeof($result));
         $this->assertEquals('News-1', $result[0]->getTitle());
         $this->assertEquals('SubNews', $result[1]->getTitle());
