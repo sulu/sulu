@@ -387,6 +387,9 @@ class ContentMapper implements ContentMapperInterface
         $structure->setChanged($node->getPropertyValue($this->properties->getName('changed')));
         $structure->setIsShadow($node->getPropertyValueWithDefault($this->properties->getNAme('shadow-on'), false));
         $structure->setShadowBaseLanguage($node->getPropertyValueWithDefault($this->properties->getName('shadow-base'), null));
+        $structure->setEnabledShadowLanguages(
+            $this->getEnabledShadowLanguages($node)
+        );
 
         $structure->setNavContexts(
             $node->getPropertyValueWithDefault($this->properties->getName('navContexts'), array())
@@ -420,14 +423,27 @@ class ContentMapper implements ContentMapperInterface
             ));
         }
 
+        $shadowBaseLanguages = $this->getEnabledShadowLanguages($node);
+
+        if (array_key_exists($language, $shadowBaseLanguages)) {
+            if ($shadowBaseLanguages[$language] !== $language) {
+                throw new \RuntimeException(sprintf(
+                    'Detected circular shadow reference. You have attempted to set a shadow language "%s" ' . 
+                    'to "%s", but this node is already shadowed by "%s"',
+                    $language,
+                    $shadowBaseLanguage,
+                    $shadowBaseLanguages[$language]
+                ));
+            }
+        }
+    }
+
+    protected function getEnabledShadowLanguages(NodeInterface $node)
+    {
         $nodeLanguages = $this->properties->getLanguagesForNode($node);
         $shadowBaseLanguages = array();
 
         foreach ($nodeLanguages as $nodeLanguage) {
-            if ($nodeLanguage == $language) {
-                continue;
-            }
-
             $propertyMap = clone $this->properties;
             $propertyMap->setLanguage($nodeLanguage);
 
@@ -442,15 +458,7 @@ class ContentMapper implements ContentMapperInterface
             }
         }
 
-        if (array_key_exists($language, $shadowBaseLanguages)) {
-            throw new \RuntimeException(sprintf(
-                'Detected circular shadow reference. You have attempted to set a shadow language "%s" ' . 
-                'to "%s", but this node is already shadowed by "%s"',
-                $language,
-                $shadowBaseLanguage,
-                $shadowBaseLanguages[$language]
-            ));
-        }
+        return $shadowBaseLanguages;
     }
 
     /**
@@ -698,7 +706,7 @@ class ContentMapper implements ContentMapperInterface
         $session = $this->getSession();
         $contentNode = $session->getNodeByIdentifier($uuid);
 
-        $result = $this->loadByNode($contentNode, $languageCode, $webspaceKey, false, $loadGhostContent);
+        $result = $this->loadByNode($contentNode, $languageCode, $webspaceKey, false, $loadGhostContent, false);
 
         if ($this->stopwatch) {
             $this->stopwatch->stop('contentManager.load');
@@ -736,7 +744,7 @@ class ContentMapper implements ContentMapperInterface
         );
         $contentNode = $session->getNodeByIdentifier($uuid);
 
-        return $this->loadByNode($contentNode, $languageCode, $webspaceKey);
+        return $this->loadByNode($contentNode, $languageCode, $webspaceKey, true, false, false);
     }
 
     /**
@@ -886,8 +894,9 @@ class ContentMapper implements ContentMapperInterface
         NodeInterface $contentNode,
         $localization,
         $webspaceKey,
-        $excludeGhostAndShadow = true,
-        $loadGhostContent = false
+        $excludeGhost = true,
+        $loadGhostContent = false,
+        $excludeShadow = true
     ) {
         // first set the language to the given language
         $this->properties->setLanguage($localization);
@@ -907,16 +916,16 @@ class ContentMapper implements ContentMapperInterface
         }
 
         $shadowOn = $contentNode->getPropertyValueWithDefault($this->properties->getName('shadow-on'), false);
-        $shadowBaseLanguage = $contentNode->getPropertyValueWithDefault($this->properties->getName('shadow-base'), null);
+        $shadowBaseLanguage = null;
         if (true === $shadowOn) {
-            $shadowLocalization = $contentNode->getPropertyValueWithDefault($this->properties->getName('shadow-base'), false);
+            $shadowBaseLanguage = $contentNode->getPropertyValueWithDefault($this->properties->getName('shadow-base'), false);
 
-            if ($shadowLocalization) {
-                $availableLocalization = $shadowLocalization;
+            if ($shadowBaseLanguage) {
+                $availableLocalization = $shadowBaseLanguage;
             }
         }
 
-        if ($excludeGhostAndShadow && $availableLocalization != $localization) {
+        if (($excludeGhost && $excludeShadow) && $availableLocalization != $localization) {
             return null;
         }
 
@@ -934,7 +943,11 @@ class ContentMapper implements ContentMapperInterface
 
         // set structure to ghost, if the available localization does not match the requested one
         if ($availableLocalization != $localization) {
-            $structure->setType(StructureType::getGhost($availableLocalization));
+            if ($shadowBaseLanguage) {
+                $structure->setType(StructureType::getShadow($availableLocalization));
+            } else {
+                $structure->setType(StructureType::getGhost($availableLocalization));
+            }
         }
 
         $structure->setHasTranslation($contentNode->hasProperty($this->properties->getName('template')));
@@ -970,6 +983,9 @@ class ContentMapper implements ContentMapperInterface
         );
         $structure->setPublished(
             $contentNode->getPropertyValueWithDefault($this->properties->getName('published'), null)
+        );
+        $structure->setEnabledShadowLanguages(
+            $this->getEnabledShadowLanguages($contentNode)
         );
 
         // go through every property in the template

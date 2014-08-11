@@ -204,6 +204,13 @@ abstract class Structure implements StructureInterface
     private $shadowBaseLanguage = '';
 
     /**
+     * the shadows which are activated on this node. Note this is
+     * not stored in the phpcr node, it is determined by the content mapper.
+     * @var array
+     */
+    private $enabledShadowLanguages = array();
+
+    /**
      * @param $key string
      * @param $view string
      * @param $controller string
@@ -959,6 +966,7 @@ abstract class Structure implements StructureInterface
                 'globalState' => $this->getGlobalState(),
                 'publishedState' => $this->getPublishedState(),
                 'navContexts' => $this->getNavContexts(),
+                'enabledShadowLanguages' => $this->getEnabledShadowLanguages(),
                 'shadowOn' => $this->getIsShadow(),
                 'shadowBaseLanguage' => $this->getShadowBaseLanguage(),
                 'template' => $this->getKey(),
@@ -1025,4 +1033,23 @@ abstract class Structure implements StructureInterface
         return $this->toArray();
     }
 
+    /**
+     * return available shadow languages on this structure
+     * (determined at runtime)
+     * @return array
+     */
+    public function getEnabledShadowLanguages() 
+    {
+        return $this->enabledShadowLanguages;
+    }
+
+    /**
+     * set the available enabled shadow languages
+     * @param array
+     */
+    public function setEnabledShadowLanguages($enabledShadowLanguages)
+    {
+        $this->enabledShadowLanguages = $enabledShadowLanguages;
+    }
+    
 }

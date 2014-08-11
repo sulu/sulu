@@ -2052,6 +2052,7 @@ class ContentMapperTest extends PhpcrTestCase
 
         // this is a shadow, so it should be "German" not "Austrian"
         $this->assertEquals('German', $structure->getProperty('article')->getValue());
+        $this->assertEquals(array('de' => 'de_at'), $structure->getEnabledShadowLanguages());
     }
 
     public function testTranslatedResourceLocator()
