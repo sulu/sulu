@@ -90,7 +90,7 @@ class NavigationTest extends PhpcrTestCase
             'news' => array(
                 'name' => 'News',
                 'rl' => '/news',
-                'navContexts' => array('main')
+                'navContexts' => array('footer')
             ),
             'products' => array(
                 'name' => 'Products',
@@ -100,7 +100,7 @@ class NavigationTest extends PhpcrTestCase
             'news/news-1' => array(
                 'name' => 'News-1',
                 'rl' => '/news/news-1',
-                'navContexts' => array('main')
+                'navContexts' => array('main', 'footer')
             ),
             'news/news-2' => array(
                 'name' => 'News-2',
@@ -110,7 +110,7 @@ class NavigationTest extends PhpcrTestCase
             'products/products-1' => array(
                 'name' => 'Products-1',
                 'rl' => '/products/products-1',
-                'navContexts' => array('main')
+                'navContexts' => array('main', 'footer')
             ),
             'products/products-2' => array(
                 'name' => 'Products-2',
@@ -316,5 +316,33 @@ class NavigationTest extends PhpcrTestCase
         $this->assertEquals('News-2', $main[1]->getTitle());
         $this->assertInstanceOf('Sulu\Component\Content\StructureInterface', $main[1]->getContent());
         $this->assertEquals('/news/news-2', $main[1]->getUrl());
+    }
+
+    public function testNavContexts()
+    {
+        // context footer (only news and one sub page news-1)
+        $result = $this->navigation->getMainNavigation('default', 'en', 2, 'footer');
+
+        $this->assertEquals(1, sizeof($result));
+        $layer1 = $result[0];
+
+        $this->assertEquals(1, sizeof($layer1->getChildren()));
+        $layer2 = $layer1->getChildren()[0];
+
+        $this->assertEquals('News', $layer1->getTitle());
+        $this->assertEquals('News-1', $layer2->getTitle());
+
+        // context main (only products and two sub pages
+        $result = $this->navigation->getMainNavigation('default', 'en', 2, 'main');
+
+        $this->assertEquals(1, sizeof($result));
+        $layer1 = $result[0];
+
+        $this->assertEquals(2, sizeof($layer1->getChildren()));
+        $layer2 = $layer1->getChildren();
+
+        $this->assertEquals('Products', $layer1->getTitle());
+        $this->assertEquals('Products-1', $layer2[0]->getTitle());
+        $this->assertEquals('Products-2', $layer2[1]->getTitle());
     }
 }

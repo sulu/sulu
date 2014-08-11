@@ -33,7 +33,7 @@ class NavigationMapper implements NavigationMapperInterface
     /**
      * {@inheritdoc}
      */
-    public function getNavigation($parent, $webspace, $language, $depth = 1, $context = null)
+    public function getNavigation($parent, $webspace, $language, $depth = 1, $context = null, $flat = false)
     {
         $contents = $this->contentMapper->loadByParent($parent, $webspace, $language, $depth, false, true, true);
 
@@ -43,7 +43,7 @@ class NavigationMapper implements NavigationMapperInterface
     /**
      * {@inheritdoc}
      */
-    public function getMainNavigation($webspace, $language, $depth = 1, $context = null)
+    public function getMainNavigation($webspace, $language, $depth = 1, $context = null, $flat = false)
     {
         return $this->getNavigation(null, $webspace, $language, $depth, $context);
     }
@@ -76,12 +76,12 @@ class NavigationMapper implements NavigationMapperInterface
         $result = array();
 
         foreach ($contents as $content) {
-            $children = array();
-            if (is_array($content->getChildren()) && sizeof($content->getChildren()) > 0) {
-                $children = $this->generateNavigation($content->getChildren(), $webspace, $language);
-            }
-
             if ($this->inNavigation($content, $context)) {
+                $children = array();
+                if (is_array($content->getChildren()) && sizeof($content->getChildren()) > 0) {
+                    $children = $this->generateNavigation($content->getChildren(), $webspace, $language, $context);
+                }
+
                 $url = $content->getResourceLocator();
                 $title = $content->getNodeName();
 
