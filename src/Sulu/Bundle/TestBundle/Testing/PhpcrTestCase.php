@@ -190,7 +190,7 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
                 $this->defaultTemplate,
                 $this->languageNamespace,
                 $this->internalPrefix,
-                array('main','footer')
+                array('main', 'footer')
             );
 
             $resourceLocator = new ResourceLocator(
@@ -264,10 +264,37 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
     {
         if ($this->structureManager === null) {
             $this->structureManager = $this->getMock('\Sulu\Component\Content\StructureManagerInterface');
+
             $this->structureManager->expects($this->any())
                 ->method('getStructure')
                 ->will($this->returnCallback(array($this, 'structureCallback')));
+
+            $this->structureManager->expects($this->any())
+                ->method('getExtensions')
+                ->will($this->returnCallback(array($this, 'getExtensionsCallback')));
+
+            $this->structureManager->expects($this->any())
+                ->method('getExtension')
+                ->will($this->returnCallback(array($this, 'getExtensionCallback')));
         }
+    }
+
+    /**
+     * default get extension callback returns a empty array
+     * @return array
+     */
+    public function getExtensionsCallback()
+    {
+        return array();
+    }
+
+    /**
+     * default get extension callback returns null
+     * @return array
+     */
+    public function getExtensionCallback()
+    {
+        return null;
     }
 
     /**
