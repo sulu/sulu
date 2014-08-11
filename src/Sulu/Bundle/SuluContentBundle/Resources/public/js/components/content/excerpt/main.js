@@ -18,13 +18,11 @@ define([], function() {
             changeNothing: true
         },
 
-        templates: ['/admin/content/template/content/excerpt'],
-
         initialize: function() {
             this.sandbox.emit('sulu.app.ui.reset', { navigation: 'small', content: 'auto'});
             this.sandbox.emit('husky.toolbar.header.item.disable', 'template', false);
 
-            this.formId = '#excerpt-form';
+            this.formId = '#content-form';
             this.load();
             this.bindCustomEvents();
         },
@@ -53,11 +51,19 @@ define([], function() {
 
         render: function(data) {
             this.data = data;
-            this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/content/template/content/excerpt'));
+            require(['text!/admin/content/template/form/excerpt.html?webspace=' + this.options.webspace + '&language=' + this.options.language], function(template) {
+                var context = {
+                        translate: this.sandbox.translate,
+                        options: this.options
+                    },
+                    tpl = this.sandbox.util.template(template, context);
 
-            this.dfdListenForChange = this.sandbox.data.deferred();
-            this.createForm(this.initData(data));
-            this.listenForChange();
+                this.sandbox.dom.html(this.$el, tpl);
+
+                this.dfdListenForChange = this.sandbox.data.deferred();
+                this.createForm(this.initData(data));
+                this.listenForChange();
+            }.bind(this));
         },
 
         initData: function(data) {
