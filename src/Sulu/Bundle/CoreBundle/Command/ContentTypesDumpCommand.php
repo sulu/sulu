@@ -19,15 +19,15 @@ use Symfony\Component\Console\Output\OutputInterface;
  * Dumps all content types to console
  * @package Sulu\Bundle\CoreBundle\Command
  */
-class ContentTypeDebugCommand extends ContainerAwareCommand
+class ContentTypesDumpCommand extends ContainerAwareCommand
 {
     /**
      * {@inheritdoc}
      */
     protected function configure()
     {
-        $this->setName('sulu:content:debug')
-            ->setDescription('Dumps all ContentType´s in system');
+        $this->setName('sulu:content:types:dump')
+            ->setDescription('Dumps all ContentTypes registered in the system');
     }
 
     /**
@@ -46,5 +46,4 @@ class ContentTypeDebugCommand extends ContainerAwareCommand
         }
         $table->render($output);
    }
-
-} 
+}
