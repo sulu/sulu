@@ -79,15 +79,16 @@ abstract class WebsiteController extends Controller
         return $template->renderBlock($block, $attributes);
     }
 
-    protected function getMainNavigation(StructureInterface $structure, $depth = 1)
+    protected function getMainNavigation(StructureInterface $structure, $depth = 1, $context = null)
     {
         /** @var NavigationMapperInterface $navigation */
         $navigation = $this->get('sulu_website.navigation_mapper');
 
-        return $navigation->getMainNavigation(
+        return $navigation->getRootNavigation(
             $structure->getWebspaceKey(),
             $structure->getLanguageCode(),
-            $depth
+            $depth,
+            $context
         );
     }
 } 
