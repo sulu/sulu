@@ -47,6 +47,12 @@ define(['app-config'], function(AppConfig) {
         startComponents: function () {
             var languages = this.sandbox.dom.data('#shadow_base_language_select', 'languages');
             var shadowsForSelect = [];
+            var existingShadowForCurrentLanguage = null;
+
+            if (this.data.enabledShadowLanguages[this.options.language] !== undefined) {
+                existingShadowForCurrentLanguage = this.data.enabledShadowLanguages[this.options.language];
+            }
+
 
             // if there are no languages for whatever reason, show
             // an empty, disabled selection (otherwise the select is broken)
@@ -58,13 +64,15 @@ define(['app-config'], function(AppConfig) {
                     disabled: true
                 });
             } else {
-                this.sandbox.util.each(languages, function (i, language) {
-                    if (language == this.options.language) {
+                this.sandbox.util.each(this.data.concreteLanguages, function (i, language) {
+                    if (this.options.language === language) {
                         return;
                     }
 
-                    var disabled = this.data.enabledShadowLanguages[language] !== undefined;
-
+                    var disabled = false;
+                    if (existingShadowForCurrentLanguage === language) {
+                        disabled = true;
+                    }
                     shadowsForSelect.push({
                         id: language,
                         name: language,
@@ -123,9 +131,6 @@ define(['app-config'], function(AppConfig) {
             }.bind(this));
         },
 
-        bindTemplateEvents: function() {
-        },
-
         _updateTabVisibilityForShadowCheckbox: function () {
             var checkboxEl = this.sandbox.dom.find('#shadow_on_checkbox')[0];
             var action = checkboxEl.checked ? 'hide' : 'show';
@@ -135,7 +140,7 @@ define(['app-config'], function(AppConfig) {
             }.bind(this));
 
             this.sandbox.util.each(['show-in-navigation-container', 'settings-content-form-container'], function (i, formGroupId) {
-                if (action == 'hide') {
+                if (action === 'hide') {
                     this.sandbox.dom.find('#' + formGroupId).hide();
                 } else {
                     this.sandbox.dom.find('#' + formGroupId).show();

@@ -286,6 +286,18 @@
                 <source>sulu.content.form.settings.no-nav-contexts</source>
                 <target>No navigation contexts chosen ...</target>
             </trans-unit>
+            <trans-unit id="aaaaaaf371239fbed4a73a4123dfdf008" resname="sulu.content.form.settings.shadow_page">
+                <source>sulu.content.form.settings.shadow_page</source>
+                <target>Shadow Page</target>
+            </trans-unit>
+            <trans-unit id="aaaaaaf371239fbed4a73a4123dfdf009" resname="sulu.content.form.settings.shadow.enable">
+                <source>sulu.content.form.settings.shadow.enable</source>
+                <target>Enable Shadow</target>
+            </trans-unit>
+            <trans-unit id="aaaa4df371239fbed4a73a4123dfdf010" resname="sulu.content.form.settings.shadow.base_language">
+                <source>sulu.content.form.settings.shadow.base_language</source>
+                <target>Shadow Base Language</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
