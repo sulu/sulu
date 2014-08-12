@@ -16,8 +16,15 @@ use Sulu\Component\Content\StructureInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Basic class to render Website from phpcr content
+ * @package Sulu\Bundle\WebsiteBundle\Controller
+ */
 abstract class WebsiteController extends Controller
 {
+    /**
+     * Returns a rendered structure
+     */
     protected function renderStructure(
         StructureInterface $structure,
         $attributes = array(),
@@ -56,6 +63,9 @@ abstract class WebsiteController extends Controller
         return $response;
     }
 
+    /**
+     * Returns rendered error response
+     */
     protected function renderError($template, $parameters, $code = 404)
     {
         $content = $this->renderView(
@@ -71,23 +81,14 @@ abstract class WebsiteController extends Controller
         return $response;
     }
 
+    /**
+     * Returns rendered part of template specified by block
+     */
     protected function renderBlock($template, $block, $attributes = array())
     {
         $twig = $this->get('twig');
         $template = $twig->loadTemplate($template);
 
         return $template->renderBlock($block, $attributes);
-    }
-
-    protected function getMainNavigation(StructureInterface $structure, $depth = 1)
-    {
-        /** @var NavigationMapperInterface $navigation */
-        $navigation = $this->get('sulu_website.navigation_mapper');
-
-        return $navigation->getMainNavigation(
-            $structure->getWebspaceKey(),
-            $structure->getLanguageCode(),
-            $depth
-        );
     }
 } 

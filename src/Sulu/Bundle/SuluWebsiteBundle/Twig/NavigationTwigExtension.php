@@ -43,6 +43,7 @@ class NavigationTwigExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
+            new \Twig_SimpleFunction('root_navigation', array($this, 'rootNavigationFunction')),
             new \Twig_SimpleFunction('navigation', array($this, 'navigationFunction')),
             new \Twig_SimpleFunction('breadcrumb', array($this, 'breadcrumbFunction'))
         );
@@ -52,11 +53,41 @@ class NavigationTwigExtension extends \Twig_Extension
      * Returns navigation for content node at given level or (if level null) sub-navigation of page
      * @param StructureInterface $content
      * @param int $depth depth of navigation returned
-     * @param integer|null $level
+     * @param bool $flat
+     * @param string $context
      * @return NavigationItem[]
      */
-    public function navigationFunction(StructureInterface $content, $depth = 1, $level = null)
-    {
+    public function rootNavigationFunction(
+        StructureInterface $content,
+        $depth = 1,
+        $flat = false,
+        $context = null
+    ) {
+        return $this->navigationMapper->getRootNavigation(
+            $content->getWebspaceKey(),
+            $content->getLanguageCode(),
+            $depth,
+            $flat,
+            $context
+        );
+    }
+
+    /**
+     * Returns navigation for content node at given level or (if level null) sub-navigation of page
+     * @param StructureInterface $content
+     * @param int $depth depth of navigation returned
+     * @param integer|null $level
+     * @param bool $flat
+     * @param string $context
+     * @return NavigationItem[]
+     */
+    public function navigationFunction(
+        StructureInterface $content,
+        $depth = 1,
+        $level = null,
+        $flat = false,
+        $context = null
+    ) {
         $uuid = $content->getUuid();
         if ($level !== null) {
             $breadcrumb = $this->contentMapper->loadBreadcrumb(
@@ -73,7 +104,14 @@ class NavigationTwigExtension extends \Twig_Extension
             $uuid = $breadcrumb[$level]->getUuid();
         }
 
-        return $this->navigationMapper->getNavigation($uuid, $content->getWebspaceKey(), $content->getLanguageCode(), $depth);
+        return $this->navigationMapper->getNavigation(
+            $uuid,
+            $content->getWebspaceKey(),
+            $content->getLanguageCode(),
+            $depth,
+            $flat,
+            $context
+        );
     }
 
     /**
