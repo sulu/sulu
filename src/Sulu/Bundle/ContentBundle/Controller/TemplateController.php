@@ -226,5 +226,4 @@ class TemplateController extends Controller
             )
         );
     }
-
 }

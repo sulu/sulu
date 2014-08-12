@@ -67,7 +67,7 @@ module.exports = function (grunt) {
                 tasks: ['publish']
             },
             scripts: {
-                files: ['Resources/public/js/{,*/}*.js'],
+                files: ['Resources/public/js/**/*.js'],
                 tasks: ['publish']
             }
         },
@@ -165,7 +165,6 @@ module.exports = function (grunt) {
     ]);
 
     grunt.registerTask('build', [
-        'uglify',
         'replace:build',
         'publish'
     ]);
