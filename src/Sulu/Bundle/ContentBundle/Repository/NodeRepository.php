@@ -55,8 +55,7 @@ class NodeRepository implements NodeRepositoryInterface
         SessionManagerInterface $sessionManager,
         UserManagerInterface $userManager,
         WebspaceManagerInterface $webspaceManager
-    )
-    {
+    ) {
         $this->mapper = $mapper;
         $this->sessionManager = $sessionManager;
         $this->userManager = $userManager;
@@ -101,8 +100,7 @@ class NodeRepository implements NodeRepositoryInterface
         $complete = true,
         $excludeGhosts = false,
         $extension = null
-    )
-    {
+    ) {
         $result = $structure->toArray($complete);
 
         // add node name
@@ -140,8 +138,7 @@ class NodeRepository implements NodeRepositoryInterface
         $breadcrumb = false,
         $complete = true,
         $loadGhostContent = false
-    )
-    {
+    ) {
         $structure = $this->getMapper()->load($uuid, $webspaceKey, $languageCode, $loadGhostContent);
 
         $result = $this->prepareNode($structure, $webspaceKey, $languageCode, 1, $complete);
@@ -201,8 +198,7 @@ class NodeRepository implements NodeRepositoryInterface
         $flat = true,
         $complete = true,
         $excludeGhosts = false
-    )
-    {
+    ) {
         $nodes = $this->getMapper()->loadByParent(
             $parent,
             $webspaceKey,
@@ -215,7 +211,13 @@ class NodeRepository implements NodeRepositoryInterface
 
         $parentNode = $this->getParentNode($parent, $webspaceKey, $languageCode);
         $result = $this->prepareNode($parentNode, $webspaceKey, $languageCode, 1, $complete, $excludeGhosts);
-        $result['_embedded']['nodes'] = $this->prepareNodesTree($nodes, $webspaceKey, $languageCode, $complete, $excludeGhosts);
+        $result['_embedded']['nodes'] = $this->prepareNodesTree(
+            $nodes,
+            $webspaceKey,
+            $languageCode,
+            $complete,
+            $excludeGhosts
+        );
         $result['total'] = sizeof($result['_embedded']['nodes']);
 
         return $result;
@@ -228,8 +230,7 @@ class NodeRepository implements NodeRepositoryInterface
         $ids,
         $webspaceKey,
         $languageCode
-    )
-    {
+    ) {
         $result = array();
         $idString = '';
 
@@ -259,8 +260,7 @@ class NodeRepository implements NodeRepositoryInterface
         $languageCode,
         $depth = 1,
         $excludeGhosts = false
-    )
-    {
+    ) {
         $webspace = $this->webspaceManager->getWebspaceCollection()->getWebspace($webspaceKey);
 
         if ($depth > 0) {
@@ -383,10 +383,8 @@ class NodeRepository implements NodeRepositoryInterface
         $userId,
         $uuid = null,
         $parentUuid = null,
-        $state = null,
-        $showInNavigation = null
-    )
-    {
+        $state = null
+    ) {
         $node = $this->getMapper()->save(
             $data,
             $templateKey,
@@ -396,8 +394,7 @@ class NodeRepository implements NodeRepositoryInterface
             true,
             $uuid,
             $parentUuid,
-            $state,
-            $showInNavigation
+            $state
         );
 
         return $this->prepareNode($node, $webspaceKey, $languageCode);
@@ -412,8 +409,7 @@ class NodeRepository implements NodeRepositoryInterface
         $languageCode,
         $excludeGhosts = false,
         $appendWebspaceNode = false
-    )
-    {
+    ) {
         $nodes = $this->getMapper()->loadTreeByUuid($uuid, $languageCode, $webspaceKey, $excludeGhosts, true);
 
         if ($appendWebspaceNode) {

@@ -1,15 +1,19 @@
 <form id="settings-form" class="grid">
-    <div class="grid-row form-group" id="show-in-navigation-container">
-        <label for="show-in-navigation">
-            <div class="custom-checkbox">
-                <input id="show-in-navigation" class="trigger-save-button form-element" type="checkbox"/>
-                <span class="icon"></span>
-            </div>
-            <span class="clickable"><%=translate('sulu.content.form.settings.show-in-navigation')%></span>
-        </label>
+    <div class="grid-row" id="show-in-navigation-container">
+        <div class="grid-col-6 form-group">
+            <label><%=translate('sulu.content.form.settings.nav-contexts')%></label>
+
+            <div id="nav-contexts"
+                 data-aura-component="select@husky"
+                 data-aura-instance-name="nav-contexts"
+                 data-aura-multiple-select="true"
+                 data-aura-data='{{ navContexts|json_encode }}'
+                 data-aura-default-label="<%=translate('sulu.content.form.settings.no-nav-contexts')%>"
+                 data-aura-checked-all-label="<%=translate('sulu.content.form.settings.all-nav-contexts')%>"></div>
+        </div>
     </div>
 
-    <div class="grid-row section" id="show-in-navigation-container">
+    <div class="grid-row section m-top-40" id="show-in-navigation-container">
         <h2 class="divider m-bottom-20" title="Content Section">
             <%=translate('sulu.content.form.settings.type')%>
         </h2>
@@ -18,7 +22,8 @@
             <div class="grid-row">
                 <label for="content-node-type">
                     <div class="custom-radio">
-                        <input name="nodeType" id="content-node-type" type="radio" class="trigger-save-button form-element" value="1">
+                        <input name="nodeType" id="content-node-type" type="radio"
+                               class="trigger-save-button form-element" value="1">
                         <span class="icon"></span>
                     </div>
                     <span class="clickable"><%=translate('sulu.content.form.settings.type.content')%></span>
@@ -27,7 +32,8 @@
             <div class="grid-row">
                 <label for="internal-link-node-type">
                     <div class="custom-radio">
-                        <input name="nodeType" id="internal-link-node-type" type="radio" class="trigger-save-button form-element" value="2">
+                        <input name="nodeType" id="internal-link-node-type" type="radio"
+                               class="trigger-save-button form-element" value="2">
                         <span class="icon"></span>
                     </div>
                     <span class="clickable"><%=translate('sulu.content.form.settings.type.internal-link')%></span>
@@ -36,7 +42,8 @@
             <div class="grid-row">
                 <label for="external-link-node-type">
                     <div class="custom-radio">
-                        <input name="nodeType" id="external-link-node-type" type="radio" class="trigger-save-button form-element" value="4">
+                        <input name="nodeType" id="external-link-node-type" type="radio"
+                               class="trigger-save-button form-element" value="4">
                         <span class="icon"></span>
                     </div>
                     <span class="clickable"><%=translate('sulu.content.form.settings.type.external-link')%></span>

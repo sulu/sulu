@@ -40,7 +40,6 @@ define(['app-config'], function(AppConfig) {
         templates: ['/admin/content/template/content/settings'],
 
         initialize: function() {
-            this.sandbox.emit('sulu.app.ui.reset', { navigation: 'small', content: 'auto'});
             this.sandbox.emit('husky.toolbar.header.item.disable', 'template', false);
 
             this.load();
@@ -59,6 +58,15 @@ define(['app-config'], function(AppConfig) {
                 // FIXME better solution?
                 window.location.reload();
             }, this);
+
+            // set header bar unsaved
+            var changedEvent = function() {
+                 this.sandbox.emit('sulu.content.contents.set-header-bar', false);
+            }.bind(this);
+
+            // hear for changing navigation contexts
+            this.sandbox.on('husky.select.nav-contexts.selected.item', changedEvent.bind(this));
+            this.sandbox.on('husky.select.nav-contexts.deselected.item', changedEvent.bind(this));
         },
 
         load: function() {
@@ -70,7 +78,7 @@ define(['app-config'], function(AppConfig) {
 
         render: function(data) {
             this.data = data;
-            this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/content/template/content/settings'));
+            this.html(this.renderTemplate('/admin/content/template/content/settings'));
 
             this.setData(data);
             this.listenForChange();
@@ -87,7 +95,14 @@ define(['app-config'], function(AppConfig) {
                 this.sandbox.dom.attr('#external-link-node-type', 'checked', true);
             }
 
-            this.sandbox.dom.attr('#show-in-navigation', 'checked', data.navigation);
+
+            // updated after init
+            this.sandbox.on('husky.select.nav-contexts.initialize', function() {
+                this.sandbox.dom.data('#nav-contexts', 'selection', data.navContexts);
+                this.sandbox.dom.data('#nav-contexts', 'selectionValues', data.navContexts);
+
+                $('#nav-contexts').trigger('data-changed');
+            }.bind(this));
         },
 
         listenForChange: function() {
@@ -105,7 +120,7 @@ define(['app-config'], function(AppConfig) {
 
             var data = {};
 
-            data.navigation = this.sandbox.dom.prop('#show-in-navigation', 'checked');
+            data.navContexts = this.sandbox.dom.data('#nav-contexts', 'selection');
             data.nodeType = parseInt(this.sandbox.dom.val('input[name="nodeType"]:checked'));
 
             this.data = this.sandbox.util.extend(true, {}, this.data, data);
