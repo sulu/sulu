@@ -381,7 +381,7 @@ class ContentMapper implements ContentMapperInterface
         $structure->setChanged($node->getPropertyValue($this->properties->getName('changed')));
 
         $structure->setNavContexts(
-            $node->getPropertyValueWithDefault($this->properties->getName('navContexts'), false)
+            $node->getPropertyValueWithDefault($this->properties->getName('navContexts'), array())
         );
         $structure->setGlobalState(
             $this->getInheritedState($node, $this->properties->getName('state'), $webspaceKey)
@@ -676,7 +676,7 @@ class ContentMapper implements ContentMapperInterface
         $startPage = $this->load($uuid, $webspaceKey, $languageCode);
         $startPage->setNodeState(StructureInterface::STATE_PUBLISHED);
         $startPage->setGlobalState(StructureInterface::STATE_PUBLISHED);
-        $startPage->setNavContexts(true);
+        $startPage->setNavContexts(array());
 
         return $startPage;
     }
@@ -904,7 +904,7 @@ class ContentMapper implements ContentMapperInterface
             )
         );
         $structure->setNavContexts(
-            $contentNode->getPropertyValueWithDefault($this->properties->getName('navContexts'), false)
+            $contentNode->getPropertyValueWithDefault($this->properties->getName('navContexts'), array())
         );
         $structure->setGlobalState(
             $this->getInheritedState($contentNode, $this->properties->getName('state'), $webspaceKey)

@@ -253,7 +253,7 @@ interface StructureInterface extends \JsonSerializable
     public function getNavContexts();
 
     /**
-     * @param boolean $navContexts
+     * @param string[] $navContexts
      */
     public function setNavContexts($navContexts);
 
