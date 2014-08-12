@@ -29,7 +29,6 @@ interface ContentMapperInterface
      * @param string $uuid uuid of node if exists
      * @param string $parentUuid uuid of parent node
      * @param int $state state of node
-     * @param string $showInNavigation
      *
      * @return StructureInterface
      */
@@ -42,8 +41,7 @@ interface ContentMapperInterface
         $partialUpdate = true,
         $uuid = null,
         $parentUuid = null,
-        $state = null,
-        $showInNavigation = null
+        $state = null
     );
 
     /**

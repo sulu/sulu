@@ -21,6 +21,7 @@ use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\ContentTypeManager;
 use Sulu\Component\Content\ContentEvents;
 use Sulu\Component\Content\Event\ContentNodeEvent;
+use Sulu\Component\Content\Exception\InvalidNavigationContextExtension;
 use Sulu\Component\Content\Exception\MandatoryPropertyException;
 use Sulu\Component\Content\Exception\StateNotFoundException;
 use Sulu\Component\Content\Exception\TranslatedNodeNotFoundException;
@@ -124,6 +125,11 @@ class ContentMapper implements ContentMapperInterface
      */
     private $properties;
 
+    /**
+     * @var string[]
+     */
+    private $navContexts;
+
     public function __construct(
         ContentTypeManager $contentTypeManager,
         StructureManagerInterface $structureManager,
@@ -136,6 +142,7 @@ class ContentMapper implements ContentMapperInterface
         $defaultTemplate,
         $languageNamespace,
         $internalPrefix,
+        $navContexts,
         $stopwatch = null
     ) {
         $this->contentTypeManager = $contentTypeManager;
@@ -148,6 +155,7 @@ class ContentMapper implements ContentMapperInterface
         $this->languageNamespace = $languageNamespace;
         $this->internalPrefix = $internalPrefix;
         $this->cleaner = $cleaner;
+        $this->navContexts = $navContexts;
         $this->webspaceManager = $webspaceManager;
 
         // optional
@@ -162,9 +170,9 @@ class ContentMapper implements ContentMapperInterface
                 'creator',
                 'state',
                 'template',
-                'navigation',
                 'published',
-                'nodeType'
+                'nodeType',
+                'navContexts'
             ),
             $this->languageNamespace,
             $this->internalPrefix
@@ -183,8 +191,7 @@ class ContentMapper implements ContentMapperInterface
         $partialUpdate = true,
         $uuid = null,
         $parentUuid = null,
-        $state = null,
-        $showInNavigation = null
+        $state = null
     ) {
         // create translated properties
         $this->properties->setLanguage($languageCode);
@@ -209,15 +216,12 @@ class ContentMapper implements ContentMapperInterface
             $this->languageNamespace
         );
 
-        $newTranslatedNode = function (NodeInterface $node) use ($userId, $dateTime, &$state, &$showInNavigation) {
+        $newTranslatedNode = function (NodeInterface $node) use ($userId, $dateTime, &$state) {
             $node->setProperty($this->properties->getName('creator'), $userId);
             $node->setProperty($this->properties->getName('created'), $dateTime);
 
             if (!isset($state)) {
                 $state = StructureInterface::STATE_TEST;
-            }
-            if (!isset($showInNavigation)) {
-                $showInNavigation = false;
             }
         };
 
@@ -268,8 +272,8 @@ class ContentMapper implements ContentMapperInterface
                 $this->properties->getName('published')
             );
         }
-        if (isset($showInNavigation)) {
-            $node->setProperty($this->properties->getName('navigation'), $showInNavigation);
+        if (isset($data['navContexts']) && $data['navContexts'] !== false && $this->validateNavContexts($data['navContexts'])) {
+            $node->setProperty($this->properties->getName('navContexts'), $data['navContexts']);
         }
 
         $postSave = array();
@@ -369,8 +373,8 @@ class ContentMapper implements ContentMapperInterface
         $structure->setCreated($node->getPropertyValue($this->properties->getName('created')));
         $structure->setChanged($node->getPropertyValue($this->properties->getName('changed')));
 
-        $structure->setNavigation(
-            $node->getPropertyValueWithDefault($this->properties->getName('navigation'), false)
+        $structure->setNavContexts(
+            $node->getPropertyValueWithDefault($this->properties->getName('navContexts'), array())
         );
         $structure->setGlobalState(
             $this->getInheritedState($node, $this->properties->getName('state'), $webspaceKey)
@@ -391,6 +395,23 @@ class ContentMapper implements ContentMapperInterface
         $this->eventDispatcher->dispatch(ContentEvents::NODE_SAVE, $event);
 
         return $structure;
+    }
+
+    /**
+     * validates navigation contexts
+     * @param string[] $navContexts
+     * @throws \Sulu\Component\Content\Exception\InvalidNavigationContextExtension
+     * @return boolean
+     */
+    private function validateNavContexts($navContexts)
+    {
+        foreach ($navContexts as $context) {
+            if (!in_array($context, $this->navContexts)) {
+                throw new InvalidNavigationContextExtension($navContexts, $this->navContexts);
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -640,7 +661,7 @@ class ContentMapper implements ContentMapperInterface
         $startPage = $this->load($uuid, $webspaceKey, $languageCode);
         $startPage->setNodeState(StructureInterface::STATE_PUBLISHED);
         $startPage->setGlobalState(StructureInterface::STATE_PUBLISHED);
-        $startPage->setNavigation(true);
+        $startPage->setNavContexts(array());
 
         return $startPage;
     }
@@ -867,8 +888,8 @@ class ContentMapper implements ContentMapperInterface
                 StructureInterface::STATE_TEST
             )
         );
-        $structure->setNavigation(
-            $contentNode->getPropertyValueWithDefault($this->properties->getName('navigation'), false)
+        $structure->setNavContexts(
+            $contentNode->getPropertyValueWithDefault($this->properties->getName('navContexts'), array())
         );
         $structure->setGlobalState(
             $this->getInheritedState($contentNode, $this->properties->getName('state'), $webspaceKey)

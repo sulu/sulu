@@ -45,11 +45,11 @@ class TemplateReader implements LoaderInterface
         'changed',
         'creator',
         'created',
-        'navigation',
         'published',
         'state',
         'internal',
-        'nodeType'
+        'nodeType',
+        'navContexts'
     );
 
     /**

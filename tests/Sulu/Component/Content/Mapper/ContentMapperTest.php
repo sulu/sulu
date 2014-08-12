@@ -280,7 +280,19 @@ class ContentMapperTest extends PhpcrTestCase
                 $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeEvent')
             );
 
-        $this->mapper->save($data, 'overview', 'default', 'de', 1);
+        $result = $this->mapper->save($data, 'overview', 'default', 'de', 1);
+
+        $this->assertEquals('Testname', $result->getPropertyValue('name'));
+        $this->assertEquals(
+            array(
+                'tag1',
+                'tag2'
+            ),
+            $result->getPropertyValue('tags')
+        );
+        $this->assertEquals('/news/test', $result->getPropertyValue('url'));
+        $this->assertEquals('default', $result->getPropertyValue('article'));
+        $this->assertEmpty($result->getNavContexts());
 
         $root = $this->session->getRootNode();
         $route = $root->getNode('cmf/default/routes/de/news/test');
@@ -295,7 +307,9 @@ class ContentMapperTest extends PhpcrTestCase
             StructureInterface::STATE_TEST,
             $content->getPropertyValue($this->languageNamespace . ':de-state')
         );
-        $this->assertEquals(false, $content->getPropertyValue($this->languageNamespace . ':de-navigation'));
+
+        // no navigationContext saved
+        $this->assertEquals(false, $content->hasProperty($this->languageNamespace . ':de-navContexts'));
         $this->assertEquals(1, $content->getPropertyValue($this->languageNamespace . ':de-creator'));
         $this->assertEquals(1, $content->getPropertyValue($this->languageNamespace . ':de-changer'));
     }
@@ -333,7 +347,7 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals('/news/test', $content->url);
         $this->assertEquals(array('tag1', 'tag2'), $content->tags);
         $this->assertEquals(StructureInterface::STATE_TEST, $content->getNodeState());
-        $this->assertEquals(false, $content->getNavigation());
+        $this->assertEmpty($content->getNavContexts());
         $this->assertEquals(1, $content->creator);
         $this->assertEquals(1, $content->changer);
     }
@@ -1485,8 +1499,9 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals(StructureInterface::STATE_TEST, $x4->getNodeState());
     }
 
-    public function testShowInNavigation()
+    public function testNavigationContext()
     {
+        $navContexts = array('main', 'footer');
         $data = array(
             'name' => 'Testname',
             'tags' => array(
@@ -1494,7 +1509,8 @@ class ContentMapperTest extends PhpcrTestCase
                 'tag2'
             ),
             'url' => '/news/test',
-            'article' => 'default'
+            'article' => 'default',
+            'navContexts' => $navContexts
         );
 
         $this->eventDispatcher->expects($this->exactly(4))
@@ -1504,16 +1520,16 @@ class ContentMapperTest extends PhpcrTestCase
                 $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeEvent')
             );
 
-        $result = $this->mapper->save($data, 'overview', 'default', 'de', 1, true, null, null, null, true);
+        $result = $this->mapper->save($data, 'overview', 'default', 'de', 1);
         $content = $this->mapper->load($result->getUuid(), 'default', 'de');
 
         $root = $this->session->getRootNode();
         $route = $root->getNode('cmf/default/routes/de/news/test');
         $node = $route->getPropertyValue('sulu:content');
 
-        $this->assertTrue($node->getPropertyValue($this->languageNamespace . ':de-navigation'));
-        $this->assertTrue($result->getNavigation());
-        $this->assertTrue($content->getNavigation());
+        $this->assertEquals($navContexts, $node->getPropertyValue($this->languageNamespace . ':de-navContexts'));
+        $this->assertEquals($navContexts, $result->getNavContexts());
+        $this->assertEquals($navContexts, $content->getNavContexts());
 
         $result = $this->mapper->save(
             $data,
@@ -1528,13 +1544,13 @@ class ContentMapperTest extends PhpcrTestCase
             false
         );
         $content = $this->mapper->load($result->getUuid(), 'default', 'de');
-        $this->assertFalse($result->getNavigation());
-        $this->assertFalse($content->getNavigation());
+        $this->assertEquals($navContexts, $result->getNavContexts());
+        $this->assertEquals($navContexts, $content->getNavContexts());
 
         $result = $this->mapper->save($data, 'overview', 'default', 'de', 1, true, $result->getUuid());
         $content = $this->mapper->load($result->getUuid(), 'default', 'de');
-        $this->assertFalse($result->getNavigation());
-        $this->assertFalse($content->getNavigation());
+        $this->assertEquals($navContexts, $result->getNavContexts());
+        $this->assertEquals($navContexts, $content->getNavContexts());
 
         $result = $this->mapper->save(
             $data,
@@ -1549,8 +1565,8 @@ class ContentMapperTest extends PhpcrTestCase
             true
         );
         $content = $this->mapper->load($result->getUuid(), 'default', 'de');
-        $this->assertTrue($result->getNavigation());
-        $this->assertTrue($content->getNavigation());
+        $this->assertEquals($navContexts, $result->getNavContexts());
+        $this->assertEquals($navContexts, $content->getNavContexts());
     }
 
     public function testLoadBySql2()
