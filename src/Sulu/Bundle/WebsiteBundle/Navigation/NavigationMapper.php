@@ -131,16 +131,8 @@ class NavigationMapper implements NavigationMapperInterface
     {
         $contexts = $content->getNavContexts();
 
-        // if no navigation context is chosen
-        if ($contexts === false) {
-            return false;
-        }
-
-        if ($context === null) {
-            // all contexts
-            return true;
-        } elseif (in_array($context, $contexts)) {
-            // content has context
+        if (is_array($contexts) && ($context === null || in_array($context, $contexts))) {
+            // all contexts or content has context
             return true;
         }
 
