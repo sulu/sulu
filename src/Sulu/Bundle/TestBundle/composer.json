@@ -13,7 +13,9 @@
     ],
     "require": {
         "php": ">=5.4",
-        "sulu/sulu": "dev-develop"
+        "sulu/sulu": "dev-develop",
+
+        "friendsofsymfony/http-cache": "@dev"
     },
     "require-dev": {
         "symfony/symfony": "2.5.*",
