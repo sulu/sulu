@@ -29,4 +29,10 @@ interface ContentTypeManagerInterface
      * @return bool
      */
     public function has($contentTypeName);
+
+    /**
+     * returns all content types
+     * @return ContentTypeInterface[]
+     */
+    public function getAll();
 } 
