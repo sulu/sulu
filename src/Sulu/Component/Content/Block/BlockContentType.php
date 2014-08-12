@@ -185,6 +185,8 @@ class BlockContentType extends ComplexContentType
                 $data = array($data);
             }
 
+            $data = array_filter($data);
+
             $len = count($data);
 
             // init properties
