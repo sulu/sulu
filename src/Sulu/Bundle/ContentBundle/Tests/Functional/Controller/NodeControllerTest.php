@@ -158,7 +158,8 @@ class NodeControllerTest extends DatabaseTestCase
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Role'),
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Permission'),
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\SecurityType'),
-            self::$em->getClassMetadata('Sulu\Bundle\TagBundle\Entity\Tag')
+            self::$em->getClassMetadata('Sulu\Bundle\TagBundle\Entity\Tag'),
+            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entit\Media')
         );
 
         self::$tool->dropSchema(self::$entities);
@@ -850,7 +851,7 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertEquals(2, $items[0]['nodeState']);
         $this->assertEquals(2, $items[0]['globalState']);
         $this->assertTrue($items[0]['publishedState']);
-        $this->assertEquals(false, $items[0]['navContexts']);
+        $this->assertEmpty($items[0]['navContexts']);
         $this->assertFalse($items[0]['hasSub']);
         $this->assertEquals(0, sizeof($items[0]['_embedded']['nodes']));
         $this->assertArrayHasKey('_links', $items[0]);
@@ -862,7 +863,7 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertEquals(2, $items[1]['nodeState']);
         $this->assertEquals(2, $items[1]['globalState']);
         $this->assertTrue($items[1]['publishedState']);
-        $this->assertEquals(false, $items[1]['navContexts']);
+        $this->assertEmpty($items[1]['navContexts']);
         $this->assertTrue($items[1]['hasSub']);
         $this->assertEquals(0, sizeof($items[1]['_embedded']['nodes']));
         $this->assertArrayHasKey('_links', $items[1]);
