@@ -50,5 +50,4 @@ interface StructureExtensionInterface
      * @return string
      */
     public function getName();
-
 }
