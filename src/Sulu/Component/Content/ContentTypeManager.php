@@ -71,4 +71,17 @@ class ContentTypeManager extends ContainerAware implements ContentTypeManagerInt
     {
         return isset($this->aliasServiceIdMap[$alias]);
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getAll()
+    {
+        $result = array();
+        foreach ($this->aliasServiceIdMap as $alias => $id) {
+            $result[$alias] = array('instance' => $this->get($alias), 'id' => $id);
+        }
+
+        return $result;
+    }
 }

@@ -11,9 +11,7 @@
 namespace Sulu\Component\Content;
 
 use DateTime;
-use Sulu\Component\Content\Exception\ExtensionNotFoundException;
 use Sulu\Component\Content\Section\SectionPropertyInterface;
-use Sulu\Component\Content\StructureExtension\StructureExtensionInterface;
 use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
 
 /**
@@ -168,9 +166,9 @@ abstract class Structure implements StructureInterface
     private $tags = array();
 
     /**
-     * @var StructureExtensionInterface[]
+     * @var array
      */
-    private $extensions = array();
+    private $ext = array();
 
     /**
      * type of node
@@ -266,40 +264,17 @@ abstract class Structure implements StructureInterface
     /**
      * {@inheritdoc}
      */
-    public function addExtension(StructureExtensionInterface $extension)
+    public function getExt()
     {
-        $this->extensions[$extension->getName()] = $extension;
+        return $this->ext;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getExtensions()
+    public function setExt($data)
     {
-        return $this->extensions;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getExtension($name)
-    {
-        if (isset($this->extensions[$name])) {
-            return $this->extensions[$name];
-        } else {
-            throw new ExtensionNotFoundException($this, $name);
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setExtensions($extensions)
-    {
-        $this->extensions = array();
-        foreach ($extensions as $extension) {
-            $this->extensions[$extension->getName()] = clone($extension);
-        }
+        $this->ext = $data;
     }
 
     /**
@@ -924,9 +899,7 @@ abstract class Structure implements StructureInterface
 
             $this->appendProperties($this->getProperties(), $result);
 
-            foreach ($this->getExtensions() as $extension) {
-                $result['extensions'][$extension->getName()] = $extension->getData();
-            }
+            $result['ext'] = $this->ext;
 
             return $result;
         } else {

@@ -306,27 +306,15 @@ interface StructureInterface extends \JsonSerializable
     public function hasTag($tag);
 
     /**
-     * @param StructureExtensionInterface $extension
-     */
-    public function addExtension(StructureExtensionInterface $extension);
-
-    /**
      * @return StructureExtensionInterface[]
      */
-    public function getExtensions();
+    public function getExt();
 
     /**
-     * return extension with given name
-     * @param string $name
-     * @return StructureExtensionInterface
+     * @param $data
+     * @return array
      */
-    public function getExtension($name);
-
-    /**
-     * @param $extensions
-     * @return mixed
-     */
-    public function setExtensions($extensions);
+    public function setExt($data);
 
     /**
      * @return int
