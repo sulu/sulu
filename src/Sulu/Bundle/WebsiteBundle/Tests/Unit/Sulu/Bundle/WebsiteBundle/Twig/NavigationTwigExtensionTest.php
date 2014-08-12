@@ -53,9 +53,42 @@ class NavigationTwigExtensionTest extends ProphecyTestCase
         $this->structure->getWebspaceKey()->willReturn('default');
         $this->structure->getLanguageCode()->willReturn('en');
 
-        $this->navigationMapper->getNavigation('123-123-123', 'default', 'en', 1)->willReturn(true);
+        $this->navigationMapper->getNavigation('123-123-123', 'default', 'en', 1, false, null)->willReturn(true);
 
         $this->assertTrue($this->extension->navigationFunction($this->structure->reveal(), 1));
+    }
+
+    public function testNavigationFunctionFlatContext()
+    {
+        $this->structure->getUuid()->willReturn('123-123-123');
+        $this->structure->getWebspaceKey()->willReturn('default');
+        $this->structure->getLanguageCode()->willReturn('en');
+
+        $this->navigationMapper->getNavigation('123-123-123', 'default', 'en', 1, true, 'test')->willReturn(true);
+
+        $this->assertTrue($this->extension->navigationFunction($this->structure->reveal(), 1,null, true, 'test'));
+    }
+
+    public function testMainNavigationFunction()
+    {
+        $this->structure->getUuid()->willReturn('123-123-123');
+        $this->structure->getWebspaceKey()->willReturn('default');
+        $this->structure->getLanguageCode()->willReturn('en');
+
+        $this->navigationMapper->getRootNavigation('default', 'en', 1, false, null)->willReturn(true);
+
+        $this->assertTrue($this->extension->rootNavigationFunction($this->structure->reveal(), 1));
+    }
+
+    public function testMainNavigationFunctionFlatContext()
+    {
+        $this->structure->getUuid()->willReturn('123-123-123');
+        $this->structure->getWebspaceKey()->willReturn('default');
+        $this->structure->getLanguageCode()->willReturn('en');
+
+        $this->navigationMapper->getRootNavigation('default', 'en', 1, true, 'test')->willReturn(true);
+
+        $this->assertTrue($this->extension->rootNavigationFunction($this->structure->reveal(), 1,true, 'test'));
     }
 
     public function testNavigationFunctionLevel()
@@ -69,9 +102,9 @@ class NavigationTwigExtensionTest extends ProphecyTestCase
 
         $this->contentMapper->loadBreadcrumb('123-123-123', 'en', 'default')->willReturn(array(null, null, $structure2, null, null));
         // not ok
-        $this->navigationMapper->getNavigation('123-123-123', 'default', 'en', 1)->willReturn(false);
+        $this->navigationMapper->getNavigation('123-123-123', 'default', 'en', 1, false, null)->willReturn(false);
         // is ok
-        $this->navigationMapper->getNavigation('321-321-321', 'default', 'en', 1)->willReturn(true);
+        $this->navigationMapper->getNavigation('321-321-321', 'default', 'en', 1, false, null)->willReturn(true);
 
         $this->assertTrue($this->extension->navigationFunction($this->structure->reveal(), 1, 2));
     }

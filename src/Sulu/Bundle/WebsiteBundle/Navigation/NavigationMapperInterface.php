@@ -22,19 +22,22 @@ interface NavigationMapperInterface
      * @param $webspace
      * @param $language
      * @param int $depth
+     * @param bool $flat
+     * @param string|null $context
      * @return NavigationItem[]
      */
-    public function getNavigation($parent, $webspace, $language, $depth = 1);
+    public function getNavigation($parent, $webspace, $language, $depth = 1, $flat = false, $context = null);
 
     /**
      * returns navigation from root
-     * @param int $depth
      * @param string $webspace
      * @param string $language
      * @param int $depth
+     * @param bool $flat
+     * @param string|null $context
      * @return NavigationItem[]
      */
-    public function getMainNavigation($webspace, $language, $depth = 1);
+    public function getRootNavigation($webspace, $language, $depth = 1, $flat = false, $context = null);
 
     /**
      * returns a breadcrumb navigation for given content-uuid
