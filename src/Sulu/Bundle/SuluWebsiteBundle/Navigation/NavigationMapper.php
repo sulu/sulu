@@ -43,7 +43,7 @@ class NavigationMapper implements NavigationMapperInterface
     /**
      * {@inheritdoc}
      */
-    public function getMainNavigation($webspace, $language, $depth = 1, $flat = false, $context = null)
+    public function getRootNavigation($webspace, $language, $depth = 1, $flat = false, $context = null)
     {
         return $this->getNavigation(null, $webspace, $language, $depth, $flat, $context);
     }

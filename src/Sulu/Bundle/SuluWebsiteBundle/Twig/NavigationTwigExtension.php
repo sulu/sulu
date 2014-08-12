@@ -43,7 +43,7 @@ class NavigationTwigExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            new \Twig_SimpleFunction('main_navigation', array($this, 'mainNavigationFunction')),
+            new \Twig_SimpleFunction('root_navigation', array($this, 'rootNavigationFunction')),
             new \Twig_SimpleFunction('navigation', array($this, 'navigationFunction')),
             new \Twig_SimpleFunction('breadcrumb', array($this, 'breadcrumbFunction'))
         );
@@ -57,13 +57,13 @@ class NavigationTwigExtension extends \Twig_Extension
      * @param string $context
      * @return NavigationItem[]
      */
-    public function mainNavigationFunction(
+    public function rootNavigationFunction(
         StructureInterface $content,
         $depth = 1,
         $flat = false,
         $context = null
     ) {
-        return $this->navigationMapper->getMainNavigation(
+        return $this->navigationMapper->getRootNavigation(
             $content->getWebspaceKey(),
             $content->getLanguageCode(),
             $depth,

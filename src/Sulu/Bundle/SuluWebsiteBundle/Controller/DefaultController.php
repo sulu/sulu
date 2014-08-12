@@ -33,9 +33,7 @@ class DefaultController extends WebsiteController
     {
         $response = $this->renderStructure(
             $structure,
-            array(
-                'navigation' => $this->getMainNavigation($structure)
-            ),
+            array(),
             $preview,
             $partial
         );

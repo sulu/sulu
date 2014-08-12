@@ -233,7 +233,7 @@ class NavigationTest extends PhpcrTestCase
 
     public function testMainNavigation()
     {
-        $main = $this->navigation->getMainNavigation('default', 'en', 2);
+        $main = $this->navigation->getRootNavigation('default', 'en', 2);
         $this->assertEquals(2, sizeof($main));
         $this->assertEquals(2, sizeof($main[0]->getChildren()));
         $this->assertEquals(2, sizeof($main[1]->getChildren()));
@@ -245,12 +245,12 @@ class NavigationTest extends PhpcrTestCase
         $this->assertEquals('/products/products-1', $main[1]->getChildren()[0]->getUrl());
         $this->assertEquals('/products/products-2', $main[1]->getChildren()[1]->getUrl());
 
-        $main = $this->navigation->getMainNavigation('default', 'en', 1);
+        $main = $this->navigation->getRootNavigation('default', 'en', 1);
         $this->assertEquals(2, sizeof($main));
         $this->assertEquals(0, sizeof($main[0]->getChildren()));
         $this->assertEquals(0, sizeof($main[1]->getChildren()));
 
-        $main = $this->navigation->getMainNavigation('default', 'en', null);
+        $main = $this->navigation->getRootNavigation('default', 'en', null);
         $this->assertEquals(2, sizeof($main));
         $this->assertEquals(2, sizeof($main[0]->getChildren()));
         $this->assertEquals(2, sizeof($main[1]->getChildren()));
@@ -280,12 +280,12 @@ class NavigationTest extends PhpcrTestCase
 
     public function testMainNavigationFlat()
     {
-        $result = $this->navigation->getMainNavigation('default', 'en', 1, true);
+        $result = $this->navigation->getRootNavigation('default', 'en', 1, true);
         $this->assertEquals(2, sizeof($result));
         $this->assertEquals('News', $result[0]->getTitle());
         $this->assertEquals('Products', $result[1]->getTitle());
 
-        $result = $this->navigation->getMainNavigation('default', 'en', 2, true);
+        $result = $this->navigation->getRootNavigation('default', 'en', 2, true);
         $this->assertEquals(6, sizeof($result));
         $this->assertEquals('News', $result[0]->getTitle());
         $this->assertEquals('News-1', $result[1]->getTitle());
@@ -363,7 +363,7 @@ class NavigationTest extends PhpcrTestCase
     public function testNavContexts()
     {
         // context footer (only news and one sub page news-1)
-        $result = $this->navigation->getMainNavigation('default', 'en', 2, false, 'footer');
+        $result = $this->navigation->getRootNavigation('default', 'en', 2, false, 'footer');
 
         $this->assertEquals(1, sizeof($result));
         $layer1 = $result[0];
@@ -375,7 +375,7 @@ class NavigationTest extends PhpcrTestCase
         $this->assertEquals('News-1', $layer2->getTitle());
 
         // context main (only products and two sub pages
-        $result = $this->navigation->getMainNavigation('default', 'en', 2, false, 'main');
+        $result = $this->navigation->getRootNavigation('default', 'en', 2, false, 'main');
 
         $this->assertEquals(1, sizeof($result));
         $layer1 = $result[0];
@@ -391,7 +391,7 @@ class NavigationTest extends PhpcrTestCase
     public function testNavContextsFlat()
     {
         // context footer (only news and one sub page news-1)
-        $result = $this->navigation->getMainNavigation('default', 'en', 2, true, 'footer');
+        $result = $this->navigation->getRootNavigation('default', 'en', 2, true, 'footer');
 
         $this->assertEquals(3, sizeof($result));
 
@@ -406,7 +406,7 @@ class NavigationTest extends PhpcrTestCase
         $this->assertEquals('Products-1', $result[2]->getTitle());
 
         // context main (only products and two sub pages
-        $result = $this->navigation->getMainNavigation('default', 'en', 2, true, 'main');
+        $result = $this->navigation->getRootNavigation('default', 'en', 2, true, 'main');
 
         $this->assertEquals(5, sizeof($result));
 
