@@ -64,6 +64,12 @@ class NavigationTwigExtension extends \Twig_Extension
                 $content->getLanguageCode(),
                 $content->getWebspaceKey()
             );
+
+            // return empty array if level does not exists
+            if(!isset($breadcrumb[$level])){
+                return array();
+            }
+
             $uuid = $breadcrumb[$level]->getUuid();
         }
 
