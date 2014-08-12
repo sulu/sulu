@@ -570,6 +570,14 @@ class ContactControllerTest extends DatabaseTestCase
                 'salutation' => 'Sehr geehrte Frau Dr Mustermann',
                 'formOfAddress' => array(
                     'id' => 0
+                ),
+                'categories' => array(
+                    array(
+                        'id' => 1
+                    ),
+                    array(
+                        'id' => 2
+                    )
                 )
             )
         );
@@ -607,6 +615,8 @@ class ContactControllerTest extends DatabaseTestCase
         $this->assertEquals('Sehr geehrte Frau Dr Mustermann', $response->salutation);
         $this->assertEquals(0, $response->disabled);
 
+        $this->assertEquals(2, count($response->categories));
+
         $client->request('GET', '/api/contacts/' . $response->id);
         $response = json_decode($client->getResponse()->getContent());
 
@@ -639,6 +649,8 @@ class ContactControllerTest extends DatabaseTestCase
         $this->assertEquals(0, $response->formOfAddress);
         $this->assertEquals('Sehr geehrte Frau Dr Mustermann', $response->salutation);
         $this->assertEquals(0, $response->disabled);
+
+        $this->assertEquals(2, count($response->categories));
     }
 
     public function testPostWithoutAdditionalData()
@@ -947,6 +959,7 @@ class ContactControllerTest extends DatabaseTestCase
         $this->assertEquals(0, $response->formOfAddress);
         $this->assertEquals('Sehr geehrter John', $response->salutation);
         $this->assertEquals(0, $response->disabled);
+
         $this->assertEquals(2, count($response->categories));
 
         $client->request('GET', '/api/contacts/' . $response->id);
@@ -981,6 +994,8 @@ class ContactControllerTest extends DatabaseTestCase
         $this->assertEquals(0, $response->formOfAddress);
         $this->assertEquals('Sehr geehrter John', $response->salutation);
         $this->assertEquals(0, $response->disabled);
+
+        $this->assertEquals(2, count($response->categories));
     }
 
     public function testPutDeleteAndAddWithoutId()

@@ -538,6 +538,7 @@ class ContactController extends AbstractContactController
 
             // add urls, phones, emails, tags, bankAccounts, notes, addresses,..
             $this->addNewContactRelations($contact, $request);
+            $this->processCategories($contact, $request->get('categories', array()));
 
             $em->persist($contact);
             $em->flush();
