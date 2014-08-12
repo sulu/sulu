@@ -1,4 +1,3 @@
-
 /** vim: et:ts=4:sw=4:sts=4
  * @license RequireJS 2.1.9 Copyright (c) 2010-2012, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
@@ -17397,7 +17396,7 @@ define('form/mapper',[
                     if (!!data) {
                         dfd.then(function() {
                             that.setData.call(this, data, $newFields);
-                        });
+                        }.bind(this));
                     }
 
                     // push element to global array
@@ -47042,3 +47041,4 @@ define('husky_extensions/util',[],function() {
         }
     };
 });
+
