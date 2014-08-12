@@ -46,6 +46,41 @@ define(['app-config'], function(AppConfig) {
 
         startComponents: function () {
             var languages = this.sandbox.dom.data('#shadow_base_language_select', 'languages');
+            var shadowsForSelect = [];
+
+            // if there are no languages for whatever reason, show
+            // an empty, disabled selection (otherwise the select is broken)
+            // note that this is an edge case
+            if (languages.length === 0) {
+                shadowsForSelect.push({
+                    id: '',
+                    name: 'no languages',
+                    disabled: true
+                });
+            } else {
+                this.sandbox.util.each(languages, function (i, language) {
+                    if (language == this.options.language) {
+                        return;
+                    }
+
+                    var disabled = this.data.enabledShadowLanguages[language] !== undefined;
+
+                    shadowsForSelect.push({
+                        id: language,
+                        name: language,
+                        disabled: disabled
+                    });
+                }.bind(this));
+            }
+
+            var selectedLanguage = this.data.shadowBaseLanguage;
+
+            if (shadowsForSelect[selectedLanguage] === undefined) {
+                if (shadowsForSelect.length > 0) {
+                    selectedLanguage = shadowsForSelect[0].id;
+                }
+            }
+
             this.sandbox.start([
                 {
                     name: 'select@husky',
@@ -54,8 +89,8 @@ define(['app-config'], function(AppConfig) {
                         instanceName: 'settings',
                         multipleSelect: false,
                         defaultLabel: '',
-                        data: languages,
-                        preSelectedElements: [ this.data.shadowBaseLanguage ]
+                        data: shadowsForSelect,
+                        preSelectedElements: [ selectedLanguage ]
                     }
                 }
             ]);
@@ -88,6 +123,26 @@ define(['app-config'], function(AppConfig) {
             }.bind(this));
         },
 
+        bindTemplateEvents: function() {
+        },
+
+        _updateTabVisibilityForShadowCheckbox: function () {
+            var checkboxEl = this.sandbox.dom.find('#shadow_on_checkbox')[0];
+            var action = checkboxEl.checked ? 'hide' : 'show';
+
+            this.sandbox.util.each(['content', 'excerpt', 'seo'], function (i, tabName) {
+                this.sandbox.emit('husky.tabs.header.item.' + action, 'tab-' + tabName);
+            }.bind(this));
+
+            this.sandbox.util.each(['show-in-navigation-container', 'settings-content-form-container'], function (i, formGroupId) {
+                if (action == 'hide') {
+                    this.sandbox.dom.find('#' + formGroupId).hide();
+                } else {
+                    this.sandbox.dom.find('#' + formGroupId).show();
+                }
+            }.bind(this));
+        },
+
         load: function() {
             // get content data
             this.sandbox.emit('sulu.content.contents.get-data', function(data) {
@@ -105,6 +160,12 @@ define(['app-config'], function(AppConfig) {
                 this.setData(this.data);
                 this.listenForChange();
                 this.startComponents();
+
+                this.sandbox.dom.on('#shadow_on_checkbox', 'click', function () {
+                    this._updateTabVisibilityForShadowCheckbox();
+                }.bind(this));
+
+                this._updateTabVisibilityForShadowCheckbox();
             }.bind(this));
         },
 
@@ -118,7 +179,6 @@ define(['app-config'], function(AppConfig) {
             } else if (type === TYPE_EXTERNAL) {
                 this.sandbox.dom.attr('#external-link-node-type', 'checked', true);
             }
-
 
             // updated after init
             this.sandbox.on('husky.select.nav-contexts.initialize', function() {

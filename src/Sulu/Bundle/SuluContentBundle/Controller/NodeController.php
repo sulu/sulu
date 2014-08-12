@@ -417,7 +417,7 @@ class NodeController extends RestController implements ClassResourceInterface
         $template = $this->getRequestParameter($request, 'template', true);
         $navigation = $this->getRequestParameter($request, 'navigation');
         $isShadow = $this->getRequestParameter($request, 'isShadow', false);
-        $shadowBaseLanguage = $this->getShadowBaseLanguage($request);
+        $shadowBaseLanguage = $this->getRequestParameter($request, 'shadowBaseLanguage', null);
         $parent = $this->getRequestParameter($request, 'parent');
         $state = $this->getRequestParameter($request, 'state');
         if ($state !== null) {
