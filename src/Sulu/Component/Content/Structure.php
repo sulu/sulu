@@ -679,7 +679,7 @@ abstract class Structure implements StructureInterface
     }
 
     /**
-     * @param boolean $navContexts
+     * @param string[] $navContexts
      */
     public function setNavContexts($navContexts)
     {

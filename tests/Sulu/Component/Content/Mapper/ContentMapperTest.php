@@ -292,7 +292,7 @@ class ContentMapperTest extends PhpcrTestCase
         );
         $this->assertEquals('/news/test', $result->getPropertyValue('url'));
         $this->assertEquals('default', $result->getPropertyValue('article'));
-        $this->assertFalse($result->getNavContexts());
+        $this->assertEmpty($result->getNavContexts());
 
         $root = $this->session->getRootNode();
         $route = $root->getNode('cmf/default/routes/de/news/test');
@@ -347,7 +347,7 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals('/news/test', $content->url);
         $this->assertEquals(array('tag1', 'tag2'), $content->tags);
         $this->assertEquals(StructureInterface::STATE_TEST, $content->getNodeState());
-        $this->assertEquals(false, $content->getNavContexts());
+        $this->assertEmpty($content->getNavContexts());
         $this->assertEquals(1, $content->creator);
         $this->assertEquals(1, $content->changer);
     }
