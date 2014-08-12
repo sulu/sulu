@@ -240,6 +240,7 @@ class ContentMapper implements ContentMapperInterface
             $node->addMixin('sulu:content');
         } else {
             $node = $session->getNodeByIdentifier($uuid);
+
             if (!$node->hasProperty($this->properties->getName('template'))) {
                 $newTranslatedNode($node);
             } else {
@@ -420,23 +421,20 @@ class ContentMapper implements ContentMapperInterface
     {
         if ($language == $shadowBaseLanguage) {
             throw new \RuntimeException(sprintf(
-                'Cannot make node in "%s" a shadow of itself. This is a circular reference.', $language
+                'Attempting to make language "%s" a shadow of itself! ("%s")',
+                $language, $shadowBaseLanguage
             ));
         }
 
-        $shadowBaseLanguages = $this->getEnabledShadowLanguages($node);
+        $concreteLanguages = $this->getConcreteLanguages($node);
 
-        if (array_key_exists($language, $shadowBaseLanguages)) {
-            if ($shadowBaseLanguages[$language] !== $language) {
-                throw new \RuntimeException(sprintf(
-                    'Detected circular shadow reference. You have attempted to set a shadow language "%s" ' . 
-                    'to "%s", but this node is already shadowed by "%s"',
-                    $language,
-                    $shadowBaseLanguage,
-                    $shadowBaseLanguages[$language]
-                ));
-            }
+        if (!in_array($shadowBaseLanguage, $concreteLanguages)) {
+            throw new \RuntimeException(sprintf(
+                'Attempting to make language "%s" a shadow of a non-concrete language "%s". Concrete languages are "%s"',
+                $language, $shadowBaseLanguage, implode(', ', $concreteLanguages)
+            ));
         }
+
     }
 
     protected function getEnabledShadowLanguages(NodeInterface $node)

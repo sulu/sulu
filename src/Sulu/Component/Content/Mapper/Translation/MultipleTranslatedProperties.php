@@ -86,7 +86,7 @@ class MultipleTranslatedProperties
     {
         $languages = array();
         foreach ($node->getProperties() as $property) {
-            preg_match('/^' . $this->languageNamespace . ':(.*?)-/', $property->getName(), $matches);
+            preg_match('/^' . $this->languageNamespace . ':(.*?)-template/', $property->getName(), $matches);
 
             if ($matches) {
                 $languages[$matches[1]] = $matches[1];

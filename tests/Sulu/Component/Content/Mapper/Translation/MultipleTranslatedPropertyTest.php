@@ -22,19 +22,23 @@ class MultipleTranslatedPropertyTest extends \PHPUnit_Framework_TestCase
         $this->property2 = $this->getMockBuilder('Jackalope\Property')->disableOriginalConstructor()->getMock();
         $this->property3 = $this->getMockBuilder('Jackalope\Property')->disableOriginalConstructor()->getMock();
         $this->property4 = $this->getMockBuilder('Jackalope\Property')->disableOriginalConstructor()->getMock();
+        $this->property5 = $this->getMockBuilder('Jackalope\Property')->disableOriginalConstructor()->getMock();
 
         $this->property1->expects($this->any())
             ->method('getName')
-            ->will($this->returnValue('i18n:fr-foobar'));
+            ->will($this->returnValue('i18n:fr-template'));
         $this->property2->expects($this->any())
             ->method('getName')
             ->will($this->returnValue('bas:barfoo'));
         $this->property3->expects($this->any())
             ->method('getName')
-            ->will($this->returnValue('i18n:de-barfoo'));
+            ->will($this->returnValue('i18n:it-barfoo'));
         $this->property4->expects($this->any())
             ->method('getName')
-            ->will($this->returnValue('i18n:de-foobaa'));
+            ->will($this->returnValue('i18n:de-template'));
+        $this->property5->expects($this->any())
+            ->method('getName')
+            ->will($this->returnValue('i18n:de-bbbaaaa'));
 
         $this->node->expects($this->any())
             ->method('getProperties')
@@ -49,6 +53,8 @@ class MultipleTranslatedPropertyTest extends \PHPUnit_Framework_TestCase
     public function testGetLanguages()
     {
         $languages = $this->properties->getLanguagesForNode($this->node);
+
+        // languages are only counted if they are on the "template" property
         $this->assertEquals(array('fr', 'de'), $languages);
     }
 }

@@ -311,7 +311,7 @@ class ContentMapperTest extends PhpcrTestCase
         return array(
             array(
                 array(
-                    'is_shadow' => true, 
+                    'is_shadow' => false, 
                     'language' => 'de',
                     'shadow_base_language' => 'fr'
                 ),
@@ -331,22 +331,22 @@ class ContentMapperTest extends PhpcrTestCase
             ),
             array(
                 array(
-                    'is_shadow' => true,
-                    'language' => 'de_at',
-                    'shadow_base_language' => 'de'
+                    'is_shadow' => false,
+                    'language' => 'de',
+                    'shadow_base_language' => null,
                 ),
                 array(
                     'is_shadow' => true,
-                    'language' => 'de',
+                    'language' => 'en',
                     'shadow_base_language' => 'de_at'
                 ),
                 array(
-                    'exception' => 'circular shadow reference'
+                    'exception' => 'Attempting to make language "en" a shadow of a non-concrete language "de_at". Concrete languages are "de"'
                 ),
             ),
             array(
                 array(
-                    'is_shadow' => true,
+                    'is_shadow' => false,
                     'language' => 'de_at',
                     'shadow_base_language' => 'de'
                 ),
@@ -360,7 +360,7 @@ class ContentMapperTest extends PhpcrTestCase
             ),
             array(
                 array(
-                    'is_shadow' => true,
+                    'is_shadow' => false,
                     'language' => 'de_at',
                     'shadow_base_language' => 'en_us'
                 ),
@@ -369,9 +369,7 @@ class ContentMapperTest extends PhpcrTestCase
                     'language' => 'en_us',
                     'shadow_base_language' => 'de_at'
                 ),
-                array(
-                    'exception' => 'circular shadow reference'
-                ),
+                array()
             ),
         );
     }
@@ -422,7 +420,7 @@ class ContentMapperTest extends PhpcrTestCase
             );
         }
 
-        if (isset($nodes[0]['is_shadow'])) {
+        if (isset($nodes[0]['is_shadow']) && $nodes[0]['is_shadow'] === true) {
             $this->assertTrue($structures[0]->getIsShadow());
             $this->assertEquals($nodes[0]['shadow_base_language'], $structures[0]->getShadowBaseLanguage());
         } else {

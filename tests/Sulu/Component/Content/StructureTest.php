@@ -244,9 +244,9 @@ class StructureTest extends \PHPUnit_Framework_TestCase
     public function testLanguageGettersAndSetters()
     {
         $data = array('foo', 'bar');
-        $this->structure->setEnabeldLanguages($data);
-        $this->assertEquals($data, $this->structure->getEnabeldLanguages());
-        $this->structure->setEnabeldShadowLanguages($data);
-        $this->assertEquals($data, $this->structure->getEnabeldShadowLanguages());
+        $this->structure->setConcreteLanguages($data);
+        $this->assertEquals($data, $this->structure->getConcreteLanguages());
+        $this->structure->setEnabledShadowLanguages($data);
+        $this->assertEquals($data, $this->structure->getEnabledShadowLanguages());
     }
 }
