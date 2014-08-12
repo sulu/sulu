@@ -57,8 +57,6 @@ class SeoStructureExtension extends StructureExtension
         $this->saveProperty($node, $data, 'canonicalUrl');
         $this->saveProperty($node, $data, 'noIndex', false);
         $this->saveProperty($node, $data, 'noFollow', false);
-
-        $this->load($node, $webspaceKey, $languageCode);
     }
 
     /**
@@ -66,7 +64,7 @@ class SeoStructureExtension extends StructureExtension
      */
     public function load(NodeInterface $node, $webspaceKey, $languageCode)
     {
-        $this->data = array(
+        return array(
             'title' => $this->loadProperty($node, 'title'),
             'description' => $this->loadProperty($node, 'description'),
             'keywords' => $this->loadProperty($node, 'keywords'),
