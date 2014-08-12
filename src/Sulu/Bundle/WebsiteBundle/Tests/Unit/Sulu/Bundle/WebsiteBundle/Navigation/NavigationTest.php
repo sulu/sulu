@@ -323,9 +323,15 @@ class NavigationTest extends PhpcrTestCase
     public function testBreadcrumb()
     {
         $breadcrumb = $this->navigation->getBreadcrumb($this->data['news/news-2']->getUuid(), 'default', 'en', 1);
-        $this->assertEquals(2, sizeof($breadcrumb));
-        $this->assertEquals('News', $breadcrumb[0]->getTitle());
-        $this->assertEquals('News-2', $breadcrumb[1]->getTitle());
+        $this->assertEquals(3, sizeof($breadcrumb));
+
+        // startpage has no title
+        $this->assertEquals('', $breadcrumb[0]->getTitle());
+        $this->assertEquals('/', $breadcrumb[0]->getUrl());
+        $this->assertEquals('News', $breadcrumb[1]->getTitle());
+        $this->assertEquals('/news', $breadcrumb[1]->getUrl());
+        $this->assertEquals('News-2', $breadcrumb[2]->getTitle());
+        $this->assertEquals('/news/news-2', $breadcrumb[2]->getUrl());
     }
 
     public function testNavigationNoRlp()

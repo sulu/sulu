@@ -75,9 +75,9 @@ class NavigationTwigExtensionTest extends ProphecyTestCase
         $this->structure->getWebspaceKey()->willReturn('default');
         $this->structure->getLanguageCode()->willReturn('en');
 
-        $this->navigationMapper->getMainNavigation('default', 'en', 1, false, null)->willReturn(true);
+        $this->navigationMapper->getRootNavigation('default', 'en', 1, false, null)->willReturn(true);
 
-        $this->assertTrue($this->extension->mainNavigationFunction($this->structure->reveal(), 1));
+        $this->assertTrue($this->extension->rootNavigationFunction($this->structure->reveal(), 1));
     }
 
     public function testMainNavigationFunctionFlatContext()
@@ -86,9 +86,9 @@ class NavigationTwigExtensionTest extends ProphecyTestCase
         $this->structure->getWebspaceKey()->willReturn('default');
         $this->structure->getLanguageCode()->willReturn('en');
 
-        $this->navigationMapper->getMainNavigation('default', 'en', 1, true, 'test')->willReturn(true);
+        $this->navigationMapper->getRootNavigation('default', 'en', 1, true, 'test')->willReturn(true);
 
-        $this->assertTrue($this->extension->mainNavigationFunction($this->structure->reveal(), 1,true, 'test'));
+        $this->assertTrue($this->extension->rootNavigationFunction($this->structure->reveal(), 1,true, 'test'));
     }
 
     public function testNavigationFunctionLevel()
