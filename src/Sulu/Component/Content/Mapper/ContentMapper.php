@@ -387,9 +387,10 @@ class ContentMapper implements ContentMapperInterface
         $structure->setChanged($node->getPropertyValue($this->properties->getName('changed')));
         $structure->setIsShadow($node->getPropertyValueWithDefault($this->properties->getNAme('shadow-on'), false));
         $structure->setShadowBaseLanguage($node->getPropertyValueWithDefault($this->properties->getName('shadow-base'), null));
-        $structure->setEnabledShadowLanguages(
-            $this->getEnabledShadowLanguages($node)
+        $structure->setEnabeldShadowLanguages(
+            $this->getEnabeldShadowLanguages($node)
         );
+        $structure->setEnabeldLanguages($this->properties->getLanguagesForNode($node));
 
         $structure->setNavContexts(
             $node->getPropertyValueWithDefault($this->properties->getName('navContexts'), array())
@@ -423,7 +424,7 @@ class ContentMapper implements ContentMapperInterface
             ));
         }
 
-        $shadowBaseLanguages = $this->getEnabledShadowLanguages($node);
+        $shadowBaseLanguages = $this->getEnabeldShadowLanguages($node);
 
         if (array_key_exists($language, $shadowBaseLanguages)) {
             if ($shadowBaseLanguages[$language] !== $language) {
@@ -438,7 +439,7 @@ class ContentMapper implements ContentMapperInterface
         }
     }
 
-    protected function getEnabledShadowLanguages(NodeInterface $node)
+    protected function getEnabeldShadowLanguages(NodeInterface $node)
     {
         $nodeLanguages = $this->properties->getLanguagesForNode($node);
         $shadowBaseLanguages = array();
@@ -459,6 +460,10 @@ class ContentMapper implements ContentMapperInterface
         }
 
         return $shadowBaseLanguages;
+    }
+
+    protected function getEnabeldLanguagees(NodeInterface $node)
+    {
     }
 
     /**
@@ -984,8 +989,11 @@ class ContentMapper implements ContentMapperInterface
         $structure->setPublished(
             $contentNode->getPropertyValueWithDefault($this->properties->getName('published'), null)
         );
-        $structure->setEnabledShadowLanguages(
-            $this->getEnabledShadowLanguages($contentNode)
+        $structure->setEnabeldShadowLanguages(
+            $this->getEnabeldShadowLanguages($contentNode)
+        );
+        $structure->setEnabeldLanguages(
+            $this->properties->getLanguagesForNode($contentNode)
         );
 
         // go through every property in the template

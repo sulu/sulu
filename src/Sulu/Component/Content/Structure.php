@@ -211,6 +211,11 @@ abstract class Structure implements StructureInterface
     private $enabledShadowLanguages = array();
 
     /**
+     * @var array
+     */
+    private $enabledLanguages = array();
+
+    /**
      * @param $key string
      * @param $view string
      * @param $controller string
@@ -966,7 +971,8 @@ abstract class Structure implements StructureInterface
                 'globalState' => $this->getGlobalState(),
                 'publishedState' => $this->getPublishedState(),
                 'navContexts' => $this->getNavContexts(),
-                'enabledShadowLanguages' => $this->getEnabledShadowLanguages(),
+                'enabledShadowLanguages' => $this->getEnabeldShadowLanguages(),
+                'enabledLanguages' => $this->getEnabeldLanguages(),
                 'shadowOn' => $this->getIsShadow(),
                 'shadowBaseLanguage' => $this->getShadowBaseLanguage(),
                 'template' => $this->getKey(),
@@ -1038,7 +1044,7 @@ abstract class Structure implements StructureInterface
      * (determined at runtime)
      * @return array
      */
-    public function getEnabledShadowLanguages() 
+    public function getEnabeldShadowLanguages() 
     {
         return $this->enabledShadowLanguages;
     }
@@ -1047,9 +1053,18 @@ abstract class Structure implements StructureInterface
      * set the available enabled shadow languages
      * @param array
      */
-    public function setEnabledShadowLanguages($enabledShadowLanguages)
+    public function setEnabeldShadowLanguages($enabledShadowLanguages)
     {
         $this->enabledShadowLanguages = $enabledShadowLanguages;
     }
+
+    public function getEnabeldLanguages() 
+    {
+        return $this->enabledLanguages;
+    }
     
+    public function setEnabeldLanguages($enabledLanguages)
+    {
+        $this->enabledLanguages = $enabledLanguages;
+    }
 }
