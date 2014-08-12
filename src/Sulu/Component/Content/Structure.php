@@ -209,7 +209,7 @@ abstract class Structure implements StructureInterface
         $this->published = null;
 
         // default hide in navigation
-        $this->navContexts = false;
+        $this->navContexts = array();
 
         // default content node-type
         $this->nodeType = self::NODE_TYPE_CONTENT;
@@ -679,7 +679,7 @@ abstract class Structure implements StructureInterface
     }
 
     /**
-     * @param boolean $navContexts
+     * @param string[] $navContexts
      */
     public function setNavContexts($navContexts)
     {
