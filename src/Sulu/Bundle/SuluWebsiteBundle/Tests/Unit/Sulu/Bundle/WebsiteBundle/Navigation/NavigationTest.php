@@ -72,6 +72,8 @@ class NavigationTest extends PhpcrTestCase
             return $this->getStructureMock();
         } elseif ($structureKey == 'simple') {
             return $this->getStructureMock();
+        } elseif ($structureKey == 'overview') {
+            return $this->getStructureMock();
         } elseif ($structureKey == 'norlp') {
             return $this->getStructureMock(false);
         }
@@ -274,6 +276,14 @@ class NavigationTest extends PhpcrTestCase
         $this->assertEquals('News-2', $main[1]->getTitle());
         $this->assertInstanceOf('Sulu\Component\Content\StructureInterface', $main[1]->getContent());
         $this->assertEquals('/news/news-2', $main[1]->getUrl());
+    }
+
+    public function testBreadcrumb()
+    {
+        $breadcrumb = $this->navigation->getBreadcrumb($this->data['news/news-2']->getUuid(), 'default', 'en', 1);
+        $this->assertEquals(2, sizeof($breadcrumb));
+        $this->assertEquals('News', $breadcrumb[0]->getTitle());
+        $this->assertEquals('News-2', $breadcrumb[1]->getTitle());
     }
 
     public function testNavigationNoRlp()
