@@ -134,6 +134,39 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function getExtensions($key)
+    {
+        $extensions = isset($this->extensions['all']) ? $this->extensions['all'] : array();
+        if (isset($this->extensions[$key])) {
+            $extensions = array_merge($extensions, $this->extensions[$key]);
+        }
+
+        return $extensions;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasExtension($key, $name)
+    {
+        $extensions = $this->getExtensions($key);
+
+        return array_key_exists($name, $extensions);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getExtension($key, $name)
+    {
+        $extensions = $this->getExtensions($key);
+
+        return $extensions[$name];
+    }
+
+    /**
      * returns structure for given template key and file
      * @param string $key
      * @param string $templateConfig
@@ -187,13 +220,6 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
         /** @var StructureInterface $structure */
         $structure = new $class();
         $structure->setInternal($templateConfig['internal']);
-
-        $extensions = isset($this->extensions['all']) ? $this->extensions['all'] : array();
-        if (isset($this->extensions[$key])) {
-            $extensions = array_merge($extensions, $this->extensions[$key]);
-        }
-
-        $structure->setExtensions($extensions);
 
         return $structure;
     }
