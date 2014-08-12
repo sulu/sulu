@@ -213,7 +213,7 @@ abstract class Structure implements StructureInterface
     /**
      * @var array
      */
-    private $enabledLanguages = array();
+    private $concreteLanguages = array();
 
     /**
      * @param $key string
@@ -971,8 +971,8 @@ abstract class Structure implements StructureInterface
                 'globalState' => $this->getGlobalState(),
                 'publishedState' => $this->getPublishedState(),
                 'navContexts' => $this->getNavContexts(),
-                'enabledShadowLanguages' => $this->getEnabeldShadowLanguages(),
-                'enabledLanguages' => $this->getEnabeldLanguages(),
+                'enabledShadowLanguages' => $this->getEnabledShadowLanguages(),
+                'concreteLanguages' => $this->getConcreteLanguages(),
                 'shadowOn' => $this->getIsShadow(),
                 'shadowBaseLanguage' => $this->getShadowBaseLanguage(),
                 'template' => $this->getKey(),
@@ -1044,7 +1044,7 @@ abstract class Structure implements StructureInterface
      * (determined at runtime)
      * @return array
      */
-    public function getEnabeldShadowLanguages() 
+    public function getEnabledShadowLanguages() 
     {
         return $this->enabledShadowLanguages;
     }
@@ -1053,18 +1053,18 @@ abstract class Structure implements StructureInterface
      * set the available enabled shadow languages
      * @param array
      */
-    public function setEnabeldShadowLanguages($enabledShadowLanguages)
+    public function setEnabledShadowLanguages($enabledShadowLanguages)
     {
         $this->enabledShadowLanguages = $enabledShadowLanguages;
     }
 
-    public function getEnabeldLanguages() 
+    public function getConcreteLanguages() 
     {
-        return $this->enabledLanguages;
+        return $this->concreteLanguages;
     }
     
-    public function setEnabeldLanguages($enabledLanguages)
+    public function setConcreteLanguages($concreteLanguages)
     {
-        $this->enabledLanguages = $enabledLanguages;
+        $this->concreteLanguages = $concreteLanguages;
     }
 }
