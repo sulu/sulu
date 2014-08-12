@@ -38,7 +38,7 @@ sulu_core:
         templates:
              paths:
                  app:
-                     path: %kernel.root_dir%/../Resources/templates
+                     path: %kernel.root_dir%/Resources/templates
                      internal: false
     webspace:
         request_analyzer:
