@@ -855,10 +855,16 @@ abstract class Structure implements StructureInterface
      */
     public function __get($property)
     {
+        // alias ext for extension
+        if ($property === 'ext') {
+            return $this->getExtensions();
+        }
+
+        // for direct property access
         if (method_exists($this, 'get' . ucfirst($property))) {
             return $this->{'get' . ucfirst($property)}();
         } else {
-            return $this->getProperty($property)->getValue();
+            return $this->getPropertyValue($property);
         }
     }
 

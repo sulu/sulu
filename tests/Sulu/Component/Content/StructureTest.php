@@ -11,6 +11,8 @@
 namespace Sulu\Component\Content;
 
 use DateTime;
+use PHPCR\NodeInterface;
+use Sulu\Component\Content\StructureExtension\StructureExtension;
 use Symfony\Component\Config\Definition\Exception\Exception;
 
 class StructureTest extends \PHPUnit_Framework_TestCase
@@ -240,4 +242,53 @@ class StructureTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('\Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException');
         $this->structure->getPropertyByTagName('test-tag', true);
     }
+
+    public function testGetExtension()
+    {
+        $ext1 = new TestExtension('test1', 'test1');
+        $ext2 = new TestExtension('test2', 'test2');
+
+        $this->structure->addExtension($ext1);
+        $this->structure->addExtension($ext2);
+
+        $this->assertEquals(array('test1' => $ext1, 'test2' => $ext2), $this->structure->getExtensions());
+        // for twig alias
+        $this->assertEquals(array('test1' => $ext1, 'test2' => $ext2), $this->structure->ext);
+    }
 }
+
+class TestExtension extends StructureExtension
+{
+    protected $properties = array(
+        'a',
+        'b'
+    );
+
+    function __construct($name, $additionalPrefix = null)
+    {
+        $this->name = $name;
+        $this->additionalPrefix = $additionalPrefix;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function save(NodeInterface $node, $data, $webspaceKey, $languageCode)
+    {
+        $this->data = $data;
+        $node->setProperty($this->getPropertyName('a'), $data['a']);
+        $node->setProperty($this->getPropertyName('b'), $data['b']);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function load(NodeInterface $node, $webspaceKey, $languageCode)
+    {
+        $this->data = array(
+            'a' => $node->getPropertyValueWithDefault($this->getPropertyName('a'), ''),
+            'b' => $node->getPropertyValueWithDefault($this->getPropertyName('b'), '')
+        );
+    }
+}
+
