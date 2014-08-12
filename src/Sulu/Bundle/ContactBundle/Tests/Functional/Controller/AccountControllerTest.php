@@ -114,6 +114,7 @@ class AccountControllerTest extends DatabaseTestCase
         $address->setCity('Musterstadt');
         $address->setState('Musterland');
         $address->setCountry($country);
+        $address->setAddition('');
         $address->setAddressType($addressType);
         $address->setBillingAddress(true);
         $address->setPrimaryAddress(true);
@@ -1344,6 +1345,30 @@ class AccountControllerTest extends DatabaseTestCase
 
         $client->request('DELETE', '/api/accounts/1');
         $this->assertEquals('204', $client->getResponse()->getStatusCode());
+    }
+
+    public function testAccountAddresses()
+    {
+
+        $client = $this->createTestClient();
+
+        $client->request('GET', '/api/accounts/1/addresses');
+        $this->assertEquals('200', $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent());
+
+        $address = $response->_embedded->addresses[0];
+        $this->assertEquals('Musterstraße', $address->street);
+        $this->assertEquals('1', $address->number);
+
+        $client->request('GET', '/api/accounts/1/addresses?flat=true');
+        $this->assertEquals('200', $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(1, $response->total);
+
+        $address = $response->_embedded->addresses[0];
+        $this->assertEquals('Musterstraße 1 , 0000, Musterstadt, Musterland, Musterland, 4711', $address->address);
+        $this->assertEquals('1', $address->id);
     }
 
     public function testDeleteByIdAndNotDeleteContacts()
