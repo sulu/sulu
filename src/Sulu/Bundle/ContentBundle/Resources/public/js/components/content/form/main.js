@@ -27,6 +27,10 @@ define(['app-config'], function(AppConfig) {
         opened: false,
         template: '',
 
+        // ajax vars
+        ajaxInitited: false,
+
+        // content change detection
         saved: true,
         contentChanged: false,
         animateTemplateDropdown: false,
@@ -533,11 +537,14 @@ define(['app-config'], function(AppConfig) {
         },
 
         initAjax: function() {
-            this.sandbox.dom.on(this.formId, 'focusout', this.updateEvent.bind(this), '.preview-update');
+            if(!this.ajaxInitited) {
+                this.sandbox.dom.on(this.formId, 'focusout', this.updateEvent.bind(this), '.preview-update');
 
-            var data = this.sandbox.form.getData(this.formId);
+                var data = this.sandbox.form.getData(this.formId);
 
-            this.updateAjax(data);
+                this.updateAjax(data);
+                this.ajaxInitited = true;
+            }
         },
 
         initWs: function() {
