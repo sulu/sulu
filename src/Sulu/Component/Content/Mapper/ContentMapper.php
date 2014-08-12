@@ -462,8 +462,13 @@ class ContentMapper implements ContentMapperInterface
         return $shadowBaseLanguages;
     }
 
-    protected function getEnabeldLanguagees(NodeInterface $node)
+    protected function getEnabeldConcreteLanguages(NodeInterface $node)
     {
+        $enabledLanguages = $this->properties->getLanguagesForNode($node);
+        $enabledShadowLanguages = $this->getEnabeldShadowLanguages($node);
+        $concreteTranslations = array_diff($enabledLanguages, array_values($enabledShadowLanguages));
+
+        return $concreteTranslations;
     }
 
     /**
@@ -993,7 +998,7 @@ class ContentMapper implements ContentMapperInterface
             $this->getEnabeldShadowLanguages($contentNode)
         );
         $structure->setEnabeldLanguages(
-            $this->properties->getLanguagesForNode($contentNode)
+            $this->getEnabeldConcreteLanguages($contentNode)
         );
 
         // go through every property in the template
