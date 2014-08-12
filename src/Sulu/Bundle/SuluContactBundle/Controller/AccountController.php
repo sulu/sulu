@@ -62,6 +62,7 @@ class AccountController extends AbstractContactController
     protected static $faxEntityName = 'SuluContactBundle:Fax';
     protected static $addressEntityName = 'SuluContactBundle:Address';
     protected static $accountAddressEntityName = 'SuluContactBundle:AccountAddress';
+    protected static $countryEntityName = 'SuluContactBundle:Country';
 
     /**
      * {@inheritdoc}
@@ -74,12 +75,14 @@ class AccountController extends AbstractContactController
      */
     protected $fieldDescriptors;
     protected $accountContactFieldDescriptors;
+    protected $accountAddressesFieldDescriptors;
 
     // TODO: move the field descriptors to a manager
     public function __construct()
     {
         $this->fieldDescriptors = array();
         $this->initAccountContactFieldDescriptors();
+        $this->initAccountAddressesFieldDescriptors();
 
         $this->fieldDescriptors['number'] = new DoctrineFieldDescriptor(
             'number',
@@ -320,7 +323,7 @@ class AccountController extends AbstractContactController
 
         $view = $this->responseGetById(
             $id,
-            function ($id) use ($includes) {
+            function ($id) use ($includes){
                 return $this->getDoctrine()
                     ->getRepository(self::$entityName)
                     ->findAccountById($id, in_array('contacts', $includes));
@@ -361,8 +364,8 @@ class AccountController extends AbstractContactController
             // FIXME could be removed when field descriptor with expression is implemented and used
             $values = $listBuilder->execute();
 
-            foreach($values as &$value){
-                if($account->getMainContact() != null && $value['id'] === $account->getMainContact()->getId()){
+            foreach ($values as &$value) {
+                if ($account->getMainContact() != null && $value['id'] === $account->getMainContact()->getId()) {
                     $value['isMainContact'] = true;
                 } else {
                     $value['isMainContact'] = false;
@@ -382,6 +385,49 @@ class AccountController extends AbstractContactController
         } else {
             $contacts = $this->getDoctrine()->getRepository(self::$contactEntityName)->findByAccountId($id);
             $list = new CollectionRepresentation($contacts, self::$contactEntityKey);
+        }
+        $view = $this->view($list, 200);
+        return $this->handleView($view);
+    }
+
+    /**
+     * lists all addresses of an account
+     * optional parameter 'flat' calls listAction
+     * @param $id
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function getAddressesAction($id, Request $request)
+    {
+        if ($request->get('flat') == 'true') {
+
+            /** @var RestHelperInterface $restHelper */
+            $restHelper = $this->getRestHelper();
+
+            /** @var DoctrineListBuilderFactory $factory */
+            $factory = $this->get('sulu_core.doctrine_list_builder_factory');
+
+            $listBuilder = $factory->create(self::$entityName);
+
+            $restHelper->initializeListBuilder($listBuilder, $this->accountAddressesFieldDescriptors);
+
+            $listBuilder->where($this->fieldDescriptors['id'], $id);
+
+            $values = $listBuilder->execute();
+
+            $list = new ListRepresentation(
+                $values,
+                'addresses',
+                'get_account_addresses',
+                array_merge(array('id' => $id), $request->query->all()),
+                $listBuilder->getCurrentPage(),
+                $listBuilder->getLimit(),
+                $listBuilder->count()
+            );
+
+        } else {
+            $addresses = $this->getDoctrine()->getRepository(self::$addressEntityName)->findByAccountId($id);
+            $list = new CollectionRepresentation($addresses, 'addresses');
         }
         $view = $this->view($list, 200);
         return $this->handleView($view);
@@ -449,7 +495,7 @@ class AccountController extends AbstractContactController
                 'isMainContact' => $isMainContact
             );
 
-            if($position){
+            if ($position) {
                 $contactArray['position'] = $position->getPosition();
             }
 
@@ -489,7 +535,7 @@ class AccountController extends AbstractContactController
             $account = $accountContact->getAccount();
 
             // remove main contact when relation with main was removed
-            if($account->getMainContact() && strval($account->getMainContact()->getId()) === $contactId){
+            if ($account->getMainContact() && strval($account->getMainContact()->getId()) === $contactId) {
                 $account->setMainContact(null);
             }
 
@@ -842,7 +888,7 @@ class AccountController extends AbstractContactController
      */
     public function deleteAction($id, Request $request)
     {
-        $delete = function ($id) use ($request) {
+        $delete = function ($id) use ($request){
             /* @var Account $account */
             $account = $this->getDoctrine()
                 ->getRepository(self::$entityName)
@@ -1214,6 +1260,128 @@ class AccountController extends AbstractContactController
             false,
             true,
             'radio'
+        );
+    }
+
+    /**
+     * Inits the account contact descriptors
+     */
+    protected function initAccountAddressesFieldDescriptors()
+    {
+        $this->accountAddressesFieldDescriptors = array();
+
+        $addressJoin = array(
+            self::$accountAddressEntityName => new DoctrineJoinDescriptor(
+                    self::$accountAddressEntityName,
+                    self::$entityName . '.accountAddresses'
+                ),
+            self::$addressEntityName => new DoctrineJoinDescriptor(
+                    self::$addressEntityName,
+                    self::$accountAddressEntityName . '.address'
+                )
+        );
+        $countryJoin = array(
+            self::$countryEntityName => new DoctrineJoinDescriptor(
+                    self::$countryEntityName,
+                    self::$addressEntityName . '.country'
+                ),
+            self::$accountAddressEntityName => new DoctrineJoinDescriptor(
+                    self::$accountAddressEntityName,
+                    self::$entityName . '.accountAddresses'
+                ),
+            self::$addressEntityName => new DoctrineJoinDescriptor(
+                    self::$addressEntityName,
+                    self::$accountAddressEntityName . '.address'
+                )
+        );
+
+        $this->accountAddressesFieldDescriptors['id'] = new DoctrineFieldDescriptor(
+            'id',
+            'id',
+            self::$addressEntityName,
+            'contact.contacts.address',
+            $addressJoin,
+            false,
+            false,
+            '',
+            '',
+            '',
+            false
+        );
+
+        $this->accountAddressesFieldDescriptors['address'] = new DoctrineConcatenationFieldDescriptor(
+            array(
+                new DoctrineConcatenationFieldDescriptor(
+                    array(
+                        new DoctrineFieldDescriptor(
+                            'street',
+                            'address',
+                            self::$addressEntityName,
+                            '',
+                            $addressJoin
+                        ),
+                        new DoctrineFieldDescriptor(
+                            'number',
+                            'address',
+                            self::$addressEntityName,
+                            '',
+                            $addressJoin
+                        ),
+                        new DoctrineFieldDescriptor(
+                            'addition',
+                            'address',
+                            self::$addressEntityName,
+                            '',
+                            $addressJoin
+                        ),
+                    ),
+                    'street',
+                    ' '
+                ),
+                new DoctrineFieldDescriptor(
+                    'zip',
+                    'address',
+                    self::$addressEntityName,
+                    '',
+                    $addressJoin
+                ),
+                new DoctrineFieldDescriptor(
+                    'city',
+                    'address',
+                    self::$addressEntityName,
+                    '',
+                    $addressJoin
+                ),
+                new DoctrineFieldDescriptor(
+                    'state',
+                    'address',
+                    self::$addressEntityName,
+                    '',
+                    $addressJoin
+                ),
+                new DoctrineFieldDescriptor(
+                    'name',
+                    'address',
+                    self::$countryEntityName,
+                    '',
+                    $countryJoin
+                ),
+                new DoctrineFieldDescriptor(
+                    'postboxNumber',
+                    'address',
+                    self::$addressEntityName,
+                    '',
+                    $addressJoin
+                ),
+            ),
+            'address',
+            'public.address',
+            ', ',
+            false,
+            true,
+            '',
+            '',
+            '300px'
         );
     }
 
