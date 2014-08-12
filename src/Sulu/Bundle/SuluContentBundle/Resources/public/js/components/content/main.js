@@ -477,6 +477,10 @@ define([
                     this.sandbox.emit('sulu.app.toggle-shrinker', false);
                 }
 
+                if (this.data.shadowOn === true) {
+                    this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language + '/edit:' + data.id + '/settings');
+                }
+
                 this.setHeaderBar(true);
             }.bind(this));
         },
