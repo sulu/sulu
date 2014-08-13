@@ -1458,12 +1458,4 @@ class ContentMapper implements ContentMapperInterface
 
         return StructureInterface::STATE_PUBLISHED;
     }
-
-    public function setNodeShadowStatus($isShadow, $language, $shadowBaseLanguage)
-    {
-        $this->properties->setLanguage($languageCode);
-
-        $node->setProperty($this->properties->getName('shadow'), $language);
-        $node->setProperty($this->properties->getName('shadow-on'), $isShadow);
-    }
 }
