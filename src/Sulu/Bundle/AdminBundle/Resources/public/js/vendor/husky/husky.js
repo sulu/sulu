@@ -17397,7 +17397,7 @@ define('form/mapper',[
                     if (!!data) {
                         dfd.then(function() {
                             that.setData.call(this, data, $newFields);
-                        });
+                        }.bind(this));
                     }
 
                     // push element to global array
@@ -36209,6 +36209,7 @@ define('__component__$select@husky',[], function() {
         },
 
         constants = {
+            selectClass: 'husky-select',
             labelClass: 'husky-select-label',
             listClass: 'husky-select-list',
             dropdownContainerClass: 'husky-select-dropdown-container',
@@ -36454,6 +36455,9 @@ define('__component__$select@husky',[], function() {
         },
 
         render: function() {
+
+            // add husky-select class to component
+            this.sandbox.dom.addClass(constants.selectClass);
 
             var $originalElement = this.sandbox.dom.$(this.options.el),
                 button = this.sandbox.dom.createElement(
@@ -37134,7 +37138,7 @@ define('__component__$select@husky',[], function() {
             } else {
                 this.triggerSelect(key);
             }
-            this.sandbox.dom.trigger('changed');
+            this.sandbox.dom.trigger('change');
         },
 
         // triggers select callback or emits event
