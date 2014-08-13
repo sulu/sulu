@@ -285,6 +285,7 @@
             <trans-unit id="aaaaaaa37123123ed4a7343623dfdf012" resname="sulu.content.form.settings.no-nav-contexts">
                 <source>sulu.content.form.settings.no-nav-contexts</source>
                 <target>Keinen Navigations Kontexte ausgewählt ...</target>
+            </trans-unit>
             <trans-unit id="aaaaaaa371239fbed4a73a4123dfdf008" resname="sulu.content.form.settings.shadow_page">
                 <source>sulu.content.form.settings.shadow_page</source>
                 <target>Shadow Page</target>
