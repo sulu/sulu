@@ -44,10 +44,11 @@ define(['app-config'], function(AppConfig) {
             this.bindCustomEvents();
         },
 
-        startComponents: function () {
-            var languages = this.sandbox.dom.data('#shadow_base_language_select', 'languages');
-            var shadowsForSelect = [];
-            var existingShadowForCurrentLanguage = null;
+        startComponents: function() {
+            var languages = this.sandbox.dom.data('#shadow_base_language_select', 'languages'),
+                shadowsForSelect = [],
+                existingShadowForCurrentLanguage = null,
+                selectedLanguage = null;
 
             if (this.data.enabledShadowLanguages[this.options.language] !== undefined) {
                 existingShadowForCurrentLanguage = this.data.enabledShadowLanguages[this.options.language];
@@ -64,7 +65,7 @@ define(['app-config'], function(AppConfig) {
                     disabled: true
                 });
             } else {
-                this.sandbox.util.each(this.data.concreteLanguages, function (i, language) {
+                this.sandbox.util.each(this.data.concreteLanguages, function(i, language) {
                     if (this.options.language === language) {
                         return;
                     }
@@ -81,7 +82,7 @@ define(['app-config'], function(AppConfig) {
                 }.bind(this));
             }
 
-            var selectedLanguage = this.data.shadowBaseLanguage;
+            selectedLanguage = this.data.shadowBaseLanguage;
 
             if (shadowsForSelect[selectedLanguage] === undefined) {
                 if (shadowsForSelect.length > 0) {
@@ -118,28 +119,28 @@ define(['app-config'], function(AppConfig) {
 
             // set header bar unsaved
             var changedEvent = function() {
-                 this.sandbox.emit('sulu.content.contents.set-header-bar', false);
+                this.sandbox.emit('sulu.content.contents.set-header-bar', false);
             }.bind(this);
 
             // hear for changing navigation contexts
             this.sandbox.on('husky.select.nav-contexts.selected.item', changedEvent.bind(this));
             this.sandbox.on('husky.select.nav-contexts.deselected.item', changedEvent.bind(this));
 
-            this.sandbox.on('husky.select.settings.selected.item', function () {
+            this.sandbox.on('husky.select.settings.selected.item', function() {
                 this.sandbox.emit('sulu.content.changed');
                 this.sandbox.emit('sulu.content.contents.set-header-bar', false);
             }.bind(this));
         },
 
-        _updateTabVisibilityForShadowCheckbox: function () {
-            var checkboxEl = this.sandbox.dom.find('#shadow_on_checkbox')[0];
-            var action = checkboxEl.checked ? 'hide' : 'show';
+        updateTabVisibilityForShadowCheckbox: function() {
+            var checkboxEl = this.sandbox.dom.find('#shadow_on_checkbox')[0],
+                action = checkboxEl.checked ? 'hide' : 'show';
 
-            this.sandbox.util.each(['content', 'excerpt', 'seo'], function (i, tabName) {
+            this.sandbox.util.each(['content', 'excerpt', 'seo'], function(i, tabName) {
                 this.sandbox.emit('husky.tabs.header.item.' + action, 'tab-' + tabName);
             }.bind(this));
 
-            this.sandbox.util.each(['show-in-navigation-container', 'settings-content-form-container'], function (i, formGroupId) {
+            this.sandbox.util.each(['show-in-navigation-container', 'settings-content-form-container'], function(i, formGroupId) {
                 if (action === 'hide') {
                     this.sandbox.dom.find('#' + formGroupId).hide();
                 } else {
@@ -158,7 +159,7 @@ define(['app-config'], function(AppConfig) {
         render: function(data) {
             this.data = data;
 
-            require(['text!/admin/content/template/content/settings.html?webspaceKey=' + this.options.webspace], function (template) {
+            require(['text!/admin/content/template/content/settings.html?webspaceKey=' + this.options.webspace], function(template) {
                 this.sandbox.dom.html(this.$el, this.sandbox.util.template(template, {
                     translate: this.sandbox.translate
                 }));
@@ -166,11 +167,11 @@ define(['app-config'], function(AppConfig) {
                 this.listenForChange();
                 this.startComponents();
 
-                this.sandbox.dom.on('#shadow_on_checkbox', 'click', function () {
-                    this._updateTabVisibilityForShadowCheckbox();
+                this.sandbox.dom.on('#shadow_on_checkbox', 'click', function() {
+                    this.updateTabVisibilityForShadowCheckbox();
                 }.bind(this));
 
-                this._updateTabVisibilityForShadowCheckbox();
+                this.updateTabVisibilityForShadowCheckbox();
             }.bind(this));
         },
 
