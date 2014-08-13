@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Unit\Content\Types;
 
+use JMS\Serializer\Serializer;
 use Sulu\Bundle\ContentBundle\Content\SmartContentContainer;
 use Sulu\Bundle\ContentBundle\Content\Types\SmartContent;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepository;
@@ -37,6 +38,11 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
      */
     private $tagManager;
 
+    /**
+     * @var Serializer
+     */
+    private $serializer;
+
     public function setUp()
     {
         $this->nodeRepository = $this->getMockForAbstractClass(
@@ -56,12 +62,12 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
             array('resolveTagIds', 'resolveTagNames')
         );
 
-        $serializer = $this->getMock('JMS\Serializer\Serializer', array(), array(), '', false);
+        $this->serializer = $this->getMock('JMS\Serializer\Serializer', array(), array(), '', false);
 
         $this->smartContent = new SmartContent(
             $this->nodeRepository,
             $this->tagManager,
-            $serializer,
+            $this->serializer,
             'SuluContentBundle:Template:content-types/smart_content.html.twig'
         );
 
@@ -202,7 +208,7 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
 
     public function testRead()
     {
-        $smartContentContainer = new SmartContentContainer($this->nodeRepository, $this->tagManager, 'test', 'en', 's');
+        $smartContentContainer = new SmartContentContainer($this->nodeRepository, $this->tagManager, $this->serializer, 'test', 'en', 's');
         $smartContentContainer->setConfig(
             array(
                 'tags' => array('Tag1', 'Tag2'),
