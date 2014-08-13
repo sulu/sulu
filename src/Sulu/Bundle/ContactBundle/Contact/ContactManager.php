@@ -10,8 +10,13 @@
 
 namespace Sulu\Bundle\ContactBundle\Contact;
 
-use Sulu\Bundle\ContactBundle\Entity\ContactAddress;
-use Sulu\Bundle\ContactBundle\Entity\Address;
+use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityNotFoundException;
+use Sulu\Bundle\ContactBundle\Api\Contact;
+use Sulu\Bundle\ContactBundle\Entity\ContactAddress as ContactAddressEntity;
+use Sulu\Bundle\ContactBundle\Entity\Address as AddressEntity;
+use Sulu\Bundle\ContactBundle\Entity\ContactAddress as ContactAddressEntity;
+use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 
 /**
  * This Manager handles Contact functionality
@@ -21,21 +26,30 @@ use Sulu\Bundle\ContactBundle\Entity\Address;
  */
 class ContactManager extends AbstractContactManager
 {
+    protected $contactEntity = 'SuluContactBundle:Contact';
+    protected $tagManager;
+
+    function __construct(ObjectManager $em, TagmanagerInterface $tagManager)
+    {
+        parent::__construct($em);
+        $this->tagManager = $tagManager;
+    }
+
     /**
      * adds an address to the entity
      *
      * @param Contact $contact The entity to add the address to
-     * @param Address $address The address to be added
+     * @param AddressEntity $address The address to be added
      * @param Bool $isMain Defines if the address is the main Address of the contact
-     * @return ContactAddress
+     * @return ContactAddressEntity
      * @throws \Exception
      */
-    public function addAddress($contact, Address $address, $isMain)
+    public function addAddress($contact, AddressEntity $address, $isMain)
     {
         if (!$contact || !$address) {
             throw new \Exception('Contact and Address cannot be null');
         }
-        $contactAddress = new ContactAddress();
+        $contactAddress = new ContactAddressEntity();
         $contactAddress->setContact($contact);
         $contactAddress->setAddress($address);
         if ($isMain) {
@@ -52,8 +66,8 @@ class ContactManager extends AbstractContactManager
     /**
      * removes the address relation from a contact and also deletes the address if it has no more relations
      *
-     * @param $contact
-     * @param $contactAddress
+     * @param ContactEntity $contact
+     * @param ContactAddressEntity $contactAddress
      * @return mixed|void
      * @throws \Exception
      */
@@ -64,6 +78,7 @@ class ContactManager extends AbstractContactManager
         }
 
         // reload address to get all data (including relational data)
+        /** @var AddressEntity $address */
         $address = $contactAddress->getAddress();
         $address = $this->em->getRepository(
             'SuluContactBundle:Address'
@@ -97,5 +112,36 @@ class ContactManager extends AbstractContactManager
     public function getAddressRelations($entity)
     {
         return $entity->getContactAddresses();
+    }
+
+    /**
+     * @param $id
+     * @param $locale
+     * @throws \Doctrine\ORM\EntityNotFoundException
+     * @return mixed
+     */
+    protected function getById($id, $locale)
+    {
+        $contact = $this->em->getRepository($this->contactEntity)->findAccountById($id);
+        if(!$contact){
+            throw new EntityNotFoundException($this->contactEntity, $id);
+        }
+        return new Contact($contact, $locale, $this->tagManager);
+    }
+
+    /**
+     * Returns all api entities
+     *
+     * @param $locale
+     * @return mixed
+     */
+    protected function getAll($locale)
+    {
+        $contacts = [];
+        $contactsEntities = $this->em->getRepository($this->contactEntity)->findAll();
+        foreach($contactsEntities as $contact){
+            $contacts[] = new Contact($contact, $locale, $this->tagManager);
+        }
+        return $contacts;
     }
 }
