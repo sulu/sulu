@@ -53,7 +53,7 @@ require(['husky', 'app-config'], function(Husky, AppConfig) {
     var language = AppConfig.getUser().locale,
         app;
 
-    require(['text!/admin/bundles', 'text!/js/translations/sulu.' + language + '.json'], function(text, messagesText) {
+    require(['text!/admin/bundles', 'text!/admin-translations/sulu.' + language + '.json'], function(text, messagesText) {
         var bundles = JSON.parse(text),
             messages = JSON.parse(messagesText);
 
