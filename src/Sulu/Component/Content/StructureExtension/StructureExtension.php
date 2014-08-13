@@ -32,12 +32,6 @@ abstract class StructureExtension implements StructureExtensionInterface
     protected $additionalPrefix;
 
     /**
-     * data of extension
-     * @var mixed
-     */
-    protected $data;
-
-    /**
      * name of extension
      * @var string
      */
@@ -76,15 +70,6 @@ abstract class StructureExtension implements StructureExtensionInterface
             $this->properties, $languageNamespace, implode('-', $namespaces)
         );
         $this->translatedProperties->setLanguage($languageCode);
-    }
-
-    /**
-     * returns data of extension
-     * @return array
-     */
-    public function getData()
-    {
-        return $this->data;
     }
 
     /**
