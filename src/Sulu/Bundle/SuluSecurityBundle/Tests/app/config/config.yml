@@ -87,3 +87,8 @@ sulu_core:
         ~
     content:
         ~
+
+liip_theme:
+    themes: ["default"]
+    active_theme: "default"
+    load_controllers: false
