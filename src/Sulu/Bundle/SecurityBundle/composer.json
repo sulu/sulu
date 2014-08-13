@@ -24,6 +24,7 @@
         "sulu/admin-bundle": "dev-develop",
         "sulu/contact-bundle": "dev-develop",
 
+        "liip/theme-bundle": "@dev",
         "sulu/media-bundle": "@dev",
         "sulu/category-bundle": "@dev",
         "sulu/tag-bundle": "@dev"

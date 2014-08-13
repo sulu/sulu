@@ -26,7 +26,10 @@ class AppKernel extends Kernel
             new \Sulu\Bundle\ContactBundle\SuluContactBundle(),
             new \Sulu\Bundle\TestBundle\SuluTestBundle(),
             new \Sulu\Bundle\TagBundle\SuluTagBundle(),
+            new \Sulu\Bundle\MediaBundle\SuluMediaBundle(),
+            new \Sulu\Bundle\CategoryBundle\SuluCategoryBundle(),
 
+            new \Liip\ThemeBundle\LiipThemeBundle(),
             new \Doctrine\Bundle\PHPCRBundle\DoctrinePHPCRBundle()
         );
 
