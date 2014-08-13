@@ -56,9 +56,12 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
             array('resolveTagIds', 'resolveTagNames')
         );
 
+        $serializer = $this->getMock('JMS\Serializer\Serializer', array(), array(), '', false);
+
         $this->smartContent = new SmartContent(
             $this->nodeRepository,
             $this->tagManager,
+            $serializer,
             'SuluContentBundle:Template:content-types/smart_content.html.twig'
         );
 
