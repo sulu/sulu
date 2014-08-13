@@ -48,7 +48,7 @@ define(['app-config'], function(AppConfig) {
             var languages = this.sandbox.dom.data('#shadow_base_language_select', 'languages'),
                 shadowsForSelect = [],
                 existingShadowForCurrentLanguage = null,
-                selectedLanguage = null;
+                selectedLanguage;
 
             if (this.data.enabledShadowLanguages[this.options.language] !== undefined) {
                 existingShadowForCurrentLanguage = this.data.enabledShadowLanguages[this.options.language];
@@ -90,6 +90,17 @@ define(['app-config'], function(AppConfig) {
                 }
             }
 
+            // show at least a message
+            if (shadowsForSelect.length === 0) {
+                shadowsForSelect = [
+                    {
+                        id: -1,
+                        name: this.sandbox.translate('sulu.content.form.settings.shadow.no_base_language'),
+                        disabled: true
+                    }
+                ];
+            }
+
             this.sandbox.start([
                 {
                     name: 'select@husky',
@@ -97,7 +108,7 @@ define(['app-config'], function(AppConfig) {
                         el: '#shadow_base_language_select',
                         instanceName: 'settings',
                         multipleSelect: false,
-                        defaultLabel: '',
+                        defaultLabel: this.sandbox.translate('sulu.content.form.settings.shadow.select_base_language'),
                         data: shadowsForSelect,
                         preSelectedElements: [ selectedLanguage ]
                     }
@@ -212,12 +223,16 @@ define(['app-config'], function(AppConfig) {
         submit: function() {
             this.sandbox.logger.log('save Model');
 
-            var data = {};
+            var data = {},
+                baseLanguages = this.sandbox.dom.data('#shadow_base_language_select', 'selectionValues');
 
             data.navContexts = this.sandbox.dom.data('#nav-contexts', 'selection');
             data.nodeType = parseInt(this.sandbox.dom.val('input[name="nodeType"]:checked'));
             data.shadowOn = this.sandbox.dom.prop('#shadow_on_checkbox', 'checked');
-            data.shadowBaseLanguage = this.sandbox.dom.data('#shadow_base_language_select', 'selectionValues')[0];
+
+            if (!!baseLanguages && baseLanguages.length > 0) {
+                data.shadowBaseLanguage = baseLanguages[0];
+            }
 
             this.data = this.sandbox.util.extend(true, {}, this.data, data);
             this.sandbox.emit('sulu.content.contents.save', this.data, (data.nodeType === TYPE_INTERNAL ? 'internal-link' : data.nodeType === TYPE_EXTERNAL ? 'external-link' : AppConfig.getSection('sulu-content').defaultTemplate));
