@@ -149,8 +149,8 @@ class MediaControllerTest extends DatabaseTestCase
         $fileVersion->setSize(1124214);
         $fileVersion->setDownloadCounter(2);
         $fileVersion->setStorageOptions('{"segment":"1","fileName":"photo.jpeg"}');
-        mkdir(__DIR__ . '/../../uploads/media/1', 0777, true);
-        copy($this->getImagePath(), __DIR__ . '/../../uploads/media/1/photo.jpeg');
+        mkdir(__DIR__ . '/../uploads/media/1', 0777, true);
+        copy($this->getImagePath(), __DIR__ . '/../uploads/media/1/photo.jpeg');
 
         // create meta
         $fileVersionMeta = new FileVersionMeta();
@@ -779,6 +779,6 @@ class MediaControllerTest extends DatabaseTestCase
      */
     private function getImagePath()
     {
-        return __DIR__ . '/../../Resources/Resources/images/photo.jpeg';
+        return __DIR__ . '/../Resources/Resources/images/photo.jpeg';
     }
 }
