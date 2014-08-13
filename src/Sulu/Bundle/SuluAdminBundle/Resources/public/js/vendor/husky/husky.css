@@ -5811,6 +5811,16 @@ fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset
   margin-bottom: -1px;
 }
 
+/* line 48, ../scss/modules/custom-icons.scss */
+.fa-shadow-node:before {
+  content: "\f064";
+}
+
+/* line 49, ../scss/modules/custom-icons.scss */
+.fa-internal-link:before {
+  content: "\f0c1";
+}
+
 /* line 8, ../scss/modules/core.scss */
 * {
   -webkit-box-sizing: border-box;
