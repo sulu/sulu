@@ -1,5 +1,5 @@
-/Tests/Resources/app/cache/*
-/Tests/Resources/app/logs/*
+/Tests/app/cache/*
+/Tests/app/logs/*
 /node_modules/
 /vendor/
 /composer.phar
