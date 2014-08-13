@@ -67,7 +67,7 @@ class ExportCommand extends ContainerAwareCommand
                 null,
                 InputOption::VALUE_OPTIONAL,
                 'Sets the path to which the file should be exported',
-                'web/admin-translations'
+                'web/admin/translations'
             )
             ->addOption(
                 'filename',
