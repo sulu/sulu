@@ -24,6 +24,8 @@
         "sulu/admin-bundle": "dev-develop",
         "sulu/contact-bundle": "dev-develop",
 
+        "sulu/media-bundle": "@dev",
+        "sulu/category-bundle": "@dev",
         "sulu/tag-bundle": "@dev"
     },
     "require-dev": {
