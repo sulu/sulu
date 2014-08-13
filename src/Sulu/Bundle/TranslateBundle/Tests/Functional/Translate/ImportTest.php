@@ -30,7 +30,7 @@ class ImportTest extends DatabaseTestCase
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
-        self::$fixturePath = __DIR__ . '/../../Resources/DataFixtures/Files';
+        self::$fixturePath = __DIR__ . '/../../app/Resources/DataFixtures/Files';
     }
 
     public function setUp()
