@@ -11,7 +11,7 @@
     <cacheLifetime>1</cacheLifetime>
 
     <properties>
-        <property name="title" type="text_line" mandatory="true">
+        <property name="title" type="text_line">
             <meta>
                 <title lang="de">Titel</title>
                 <title lang="en">Title</title>
