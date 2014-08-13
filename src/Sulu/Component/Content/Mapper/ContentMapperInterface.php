@@ -29,6 +29,8 @@ interface ContentMapperInterface
      * @param string $uuid uuid of node if exists
      * @param string $parentUuid uuid of parent node
      * @param int $state state of node
+     * @param null $isShadow
+     * @param null $shadowBaseLanguage
      *
      * @return StructureInterface
      */
@@ -41,7 +43,9 @@ interface ContentMapperInterface
         $partialUpdate = true,
         $uuid = null,
         $parentUuid = null,
-        $state = null
+        $state = null,
+        $isShadow = null,
+        $shadowBaseLanguage = null
     );
 
     /**

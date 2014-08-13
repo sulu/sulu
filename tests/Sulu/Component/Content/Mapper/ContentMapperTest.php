@@ -303,14 +303,6 @@ class ContentMapperTest extends PhpcrTestCase
         }
     }
 
-    public function tearDown()
-    {
-        if (isset($this->session)) {
-            NodeHelper::purgeWorkspace($this->session);
-            $this->session->save();
-        }
-    }
-
     public function testSave()
     {
         $data = array(
@@ -362,6 +354,127 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals(false, $content->hasProperty($this->languageNamespace . ':de-navContexts'));
         $this->assertEquals(1, $content->getPropertyValue($this->languageNamespace . ':de-creator'));
         $this->assertEquals(1, $content->getPropertyValue($this->languageNamespace . ':de-changer'));
+    }
+
+    public function provideSaveShadow()
+    {
+        return array(
+            array(
+                array(
+                    'is_shadow' => false, 
+                    'language' => 'de',
+                    'shadow_base_language' => 'fr'
+                ),
+                null,
+                array()
+            ),
+            array(
+                array(
+                    'is_shadow' => true,
+                    'language' => 'de',
+                    'shadow_base_language' =>'de'
+                ),
+                null,
+                array(
+                    'exception' => 'shadow of itself',
+                )
+            ),
+            array(
+                array(
+                    'is_shadow' => false,
+                    'language' => 'de',
+                    'shadow_base_language' => null,
+                ),
+                array(
+                    'is_shadow' => true,
+                    'language' => 'en',
+                    'shadow_base_language' => 'de_at'
+                ),
+                array(
+                    'exception' => 'Attempting to make language "en" a shadow of a non-concrete language "de_at". Concrete languages are "de"'
+                ),
+            ),
+            array(
+                array(
+                    'is_shadow' => false,
+                    'language' => 'de_at',
+                    'shadow_base_language' => 'de'
+                ),
+                array(
+                    'is_shadow' => true,
+                    'language' => 'en_us',
+                    'shadow_base_language' => 'de_at'
+                ),
+                array(
+                ),
+            ),
+            array(
+                array(
+                    'is_shadow' => false,
+                    'language' => 'de_at',
+                    'shadow_base_language' => 'en_us'
+                ),
+                array(
+                    'is_shadow' => true,
+                    'language' => 'en_us',
+                    'shadow_base_language' => 'de_at'
+                ),
+                array()
+            ),
+        );
+    }
+
+    /**
+     * @dataProvider provideSaveShadow
+     */
+    public function testSaveShadow(
+        $node1,
+        $node2,
+        $expectations
+    )
+    {
+        $data = array(
+            'name' => 'Testname',
+            'tags' => array(
+                'tag1',
+                'tag2'
+            ),
+            'url' => '/news/test',
+            'article' => 'default'
+        );
+
+        if (isset($expectations['exception'])) {
+            $this->setExpectedException('\RuntimeException', $expectations['exception']);
+        }
+
+        $nodes = array($node1);
+        if ($node2) {
+            $nodes[] = $node2;
+        }
+
+        $structures = array();
+        foreach ($nodes as $i => $node) {
+            $structures[$i] = $this->mapper->save(
+                $data, 
+                'overview',
+                'default',
+                $node['language'],
+                1,
+                true,
+                isset($structures[0]) ? $structures[0]->getUUid() : null,
+                null,
+                null,
+                $node['is_shadow'],
+                $node['shadow_base_language']
+            );
+        }
+
+        if (isset($nodes[0]['is_shadow']) && $nodes[0]['is_shadow'] === true) {
+            $this->assertTrue($structures[0]->getIsShadow());
+            $this->assertEquals($nodes[0]['shadow_base_language'], $structures[0]->getShadowBaseLanguage());
+        } else {
+            $this->assertFalse($structures[0]->getIsShadow());
+        }
     }
 
     public function testLoad()
@@ -975,7 +1088,6 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals(1, $content->getPropertyValue($this->languageNamespace . ':de-creator'));
         $this->assertEquals(1, $content->getPropertyValue($this->languageNamespace . ':de-changer'));
 
-        // old resource locator is not a route (has property sulu:content), it is a history (has property sulu:route)
         $oldRoute = $root->getNode('cmf/default/routes/de/news/test');
         $this->assertTrue($oldRoute->hasProperty('sulu:content'));
         $this->assertTrue($oldRoute->hasProperty('sulu:history'));
@@ -1605,10 +1717,7 @@ class ContentMapperTest extends PhpcrTestCase
             'de',
             1,
             true,
-            $result->getUuid(),
-            null,
-            null,
-            true
+            $result->getUuid()
         );
         $content = $this->mapper->load($result->getUuid(), 'default', 'de');
         $this->assertEquals($navContexts, $result->getNavContexts());
@@ -1909,6 +2018,83 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals('Team-DE', $result->getPropertyValue('name'));
         $this->assertEquals('ghost', $result->getType()->getName());
         $this->assertEquals('de', $result->getType()->getValue());
+    }
+
+    public function prepareLoadShadowData()
+    {
+        $data = array(
+            array(
+                'name' => 'hello',
+                'article' => 'German',
+                'shadow' => false,
+                'language' => 'de',
+                'is_shadow' => false,
+                'shadow_base_language' => null,
+            ),
+            array(
+                'name' => 'hello',
+                'article' => 'Austrian',
+                'shadow' => true,
+                'language' => 'de_at',
+                'is_shadow' => true,
+                'shadow_base_language' => 'de',
+            ),
+            array(
+                'name' => 'random',
+                'article' => 'Auslander',
+                'shadow' => true,
+                'language' => 'de_at',
+                'is_shadow' => false,
+                'shadow_base_language' => 'de',
+            ),
+        );
+
+        $result = array();
+        foreach ($data as $dataItem) {
+            $result[$dataItem['name']][$dataItem['language']] = $this->mapper->save(
+                array(
+                    'name' => $dataItem['name'],
+                    'url' => '/' . $dataItem['name'],
+                    'article' => $dataItem['article'],
+                ),
+                'overview',
+                'default',
+                $dataItem['language'],
+                1,
+                true,
+                isset($result[$dataItem['name']]['de']) ? $result[$dataItem['name']]['de']->getUuid() : null,
+                null,
+                null,
+                $dataItem['is_shadow'],
+                $dataItem['shadow_base_language']
+            );
+        }
+
+        return $result;
+    }
+
+
+    public function testLoadShadow()
+    {
+        $result = $this->prepareLoadShadowData();
+
+        $uuid = $result['hello']['de']->getUuid();
+
+        $structure = $this->mapper->load($uuid, 'default', 'de');
+        $this->assertFalse($structure->getIsShadow());
+        $this->assertEquals('German', $structure->getProperty('article')->getValue());
+
+        $structure = $this->mapper->load($uuid, 'default', 'de_at', false);
+        $this->assertTrue($structure->getIsShadow());
+        $this->assertEquals('de', $structure->getShadowBaseLanguage());
+        $this->assertEquals('de_at', $structure->getLanguageCode());
+
+        // this is a shadow, so it should be "German" not "Austrian"
+        $this->assertEquals('German', $structure->getProperty('article')->getValue());
+        $this->assertEquals(array('de' => 'de_at'), $structure->getEnabledShadowLanguages());
+
+        // the node has only one concrete language
+        $this->assertEquals(array('de'), $structure->getConcreteLanguages());
     }
 
     public function testTranslatedResourceLocator()

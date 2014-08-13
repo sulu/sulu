@@ -240,4 +240,13 @@ class StructureTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('\Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException');
         $this->structure->getPropertyByTagName('test-tag', true);
     }
+
+    public function testLanguageGettersAndSetters()
+    {
+        $data = array('foo', 'bar');
+        $this->structure->setConcreteLanguages($data);
+        $this->assertEquals($data, $this->structure->getConcreteLanguages());
+        $this->structure->setEnabledShadowLanguages($data);
+        $this->assertEquals($data, $this->structure->getEnabledShadowLanguages());
+    }
 }
