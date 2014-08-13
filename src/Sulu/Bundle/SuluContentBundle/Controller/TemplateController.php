@@ -30,6 +30,7 @@ class TemplateController extends Controller
 
         return $webspaceManager;
     }
+
     /**
      * returns all structures in system
      * @param \Symfony\Component\HttpFoundation\Request $request
