@@ -23,6 +23,11 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class TemplateController extends Controller
 {
+    /**
+     * Return the webspace manager
+     *
+     * @return WebspaceManagerInterface
+     */
     protected function getWebspaceManager()
     {
         /** @var WebspaceManagerInterface $webspaceManager */
