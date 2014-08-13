@@ -12,8 +12,7 @@ namespace Sulu\Bundle\ContactBundle\Controller;
 
 use Sulu\Bundle\AdminBundle\Admin\ContentNavigation;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Response;
-
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Class NavigationController
@@ -35,7 +34,7 @@ class NavigationController extends Controller
             $contentNavigation = $this->get(self::SERVICE_NAME);
         }
 
-        return new Response(json_encode($contentNavigation->toArray('contact')));
+        return new JsonResponse($contentNavigation->toArray('contact'));
     }
 
     /**
@@ -49,6 +48,6 @@ class NavigationController extends Controller
             $contentNavigation = $this->get(self::SERVICE_NAME);
         }
 
-        return new Response(json_encode($contentNavigation->toArray('account')));
+        return new JsonResponse($contentNavigation->toArray('account'));
     }
 }
