@@ -67,14 +67,8 @@ class ExcerptStructureExtension extends StructureExtension
 
     function __construct(StructureManagerInterface $structureManager, ContentTypeManagerInterface $contentTypeManager)
     {
-        $this->excerptStructure = $structureManager->getStructure(self::EXCERPT_EXTENSION_NAME);
         $this->contentTypeManager = $contentTypeManager;
         $this->structureManager = $structureManager;
-
-        /** @var PropertyInterface $property */
-        foreach ($this->excerptStructure->getProperties() as $property) {
-            $this->properties[] = $property->getName();
-        }
     }
 
     /**
@@ -129,7 +123,28 @@ class ExcerptStructureExtension extends StructureExtension
      */
     public function setLanguageCode($languageCode, $languageNamespace, $namespace)
     {
+        // lazy load excerpt structure to avoid redeclaration of classes
+        // should be done before parent::setLanguageCode because it uses the $thi<->properties
+        // which will be set in initExcerptStructure
+        if ($this->excerptStructure === null) {
+            $this->excerptStructure = $this->initExcerptStructure();
+        }
+
         parent::setLanguageCode($languageCode, $languageNamespace, $namespace);
         $this->languageNamespace = $languageNamespace;
+    }
+
+    /**
+     * initiates structure and properties
+     */
+    private function initExcerptStructure()
+    {
+        $excerptStructure = $this->structureManager->getStructure(self::EXCERPT_EXTENSION_NAME);
+        /** @var PropertyInterface $property */
+        foreach ($excerptStructure->getProperties() as $property) {
+            $this->properties[] = $property->getName();
+        }
+
+        return $excerptStructure;
     }
 }
