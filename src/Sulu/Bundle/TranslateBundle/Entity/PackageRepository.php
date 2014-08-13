@@ -52,17 +52,12 @@ class PackageRepository extends EntityRepository
         try {
             $qb = $this->createQueryBuilder('package')
                 ->leftJoin('package.catalogues', 'catalogues')
-                ->addSelect('catalogues')
                 ->leftJoin('package.codes', 'codes')
-                ->addSelect('codes')
                 ->leftJoin('catalogues.translations', 'translations')
-                ->addSelect('translations')
                 ->leftJoin('translations.code', 'code')
-                ->addSelect('code')
                 ->where('package.name=:packageName');
 
             $query = $qb->getQuery();
-            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
             $query->setParameter('packageName', $name);
 
             return $query->getSingleResult();

@@ -25,6 +25,8 @@ use Symfony\Component\Translation\Loader\XliffFileLoader;
 use Symfony\Component\Translation\Exception\InvalidResourceException;
 use Symfony\Component\Translation\Exception\NotFoundResourceException;
 use Symfony\Component\Translation\Loader\LoaderInterface;
+use Symfony\Component\Console\Helper\ProgressHelper;
+use Symfony\Component\Console\Output\NullOutput;
 
 
 /**
@@ -109,6 +111,7 @@ class Import
     {
         $this->em = $em;
         $this->kernel = $kernel;
+        $this->output = new NullOutput();
     }
 
     /**
@@ -343,7 +346,7 @@ class Import
      */
     private function importBundle($bundle, $path, $backend, $frontend)
     {
-        $this->communicate('Import translations from ' . $bundle->getName() . ' ...');
+        $this->output->writeln('<info>Bundle:</info> ' . $bundle->getName());
 
         // get correct loader according to format
         /** @var LoaderInterface $loader */
@@ -367,6 +370,8 @@ class Import
                 $package, $loader,
                 $path, $this->frontendDomain . '.' . $this->locale . $extension, false, true);
         }
+
+        $this->output->writeln('');
     }
 
     /**
@@ -448,7 +453,7 @@ class Import
     private function importFile($package, $loader, $path, $filename, $backend = true, $frontend = false, $throw = false)
     {
         try {
-            $this->communicate('<comment>- begin importing: ' . $filename . '</comment>');
+            $this->output->writeln($filename);
 
             $filePath = ($path) ? $path . '/' . $filename : $filename;
             $file = $loader->load($filePath, $this->locale);
@@ -478,8 +483,13 @@ class Import
                 $this->em->persist($catalogue);
             }
 
+            $allMessages = $file->all()['messages'];
+
+            $progress = new ProgressHelper();
+            $progress->start($this->output, count($allMessages));
+
             // loop through all translation units in the file
-            foreach ($file->all()['messages'] as $key => $message) {
+            foreach ($allMessages as $key => $message) {
                 // Check if code is already existing in current catalogue
                 if (!$newCatalogue && ($translate = $catalogue->findTranslation($key))) {
                     // Update the old translate
@@ -493,6 +503,8 @@ class Import
                         $code->setCode($key);
                         $code->setBackend($backend);
                         $code->setFrontend($frontend);
+                        $this->em->persist($code);
+                        $this->em->flush();
                     }
 
                     // Create new translate
@@ -501,16 +513,12 @@ class Import
                     $translate->setValue($message);
                     $translate->setCatalogue($catalogue);
 
-                    $this->em->persist($code);
-                    // flush is necessary to generate the id of the code
-                    $this->em->flush();
                     $this->em->persist($translate);
                 }
-                $this->communicate('.', true);
+                $progress->advance();
             }
             $this->em->flush();
-            $this->communicate(' ');
-            $this->communicate('<info>- successfully imported: ' . $filename . '</info>');
+            $progress->finish();
 
         } catch (\InvalidArgumentException $e) {
             if ($e instanceof NotFoundResourceException) {
@@ -519,22 +527,6 @@ class Import
                 }
             } else {
                 throw $e;
-            }
-        }
-    }
-
-    /**
-     * Outputs a value
-     * @param $value
-     * @param bool $inline
-     */
-    private function communicate($value, $inline = false)
-    {
-        if ($this->output) {
-            if ($inline === true) {
-                $this->output->write($value);
-            } else {
-                $this->output->writeln($value);
             }
         }
     }

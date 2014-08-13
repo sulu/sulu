@@ -3,6 +3,7 @@ parameters:
     sulu_translate.import.class: Sulu\Bundle\TranslateBundle\Translate\Import
     sulu_translate.export.class: Sulu\Bundle\TranslateBundle\Translate\Export
     sulu_translate.admin.content_navigation.class: Sulu\Bundle\TranslateBundle\Admin\SuluTranslateContentNavigation
+    sulu.translate.build.builder.translation.class: Sulu\Bundle\TranslateBundle\Build\TranslationBuilder
 
 services:
     sulu_translate.admin:
@@ -18,3 +19,7 @@ services:
         arguments: ["@doctrine.orm.entity_manager"]
     sulu_translate.admin.content_navigation:
         class: %sulu_translate.admin.content_navigation.class%
+
+    sulu.translate.build.builder.translation: 
+        class: %sulu.translate.build.builder.translation.class%
+        tags: [ { name: massive_build.builder } ]
