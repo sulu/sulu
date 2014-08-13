@@ -254,7 +254,11 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
     public function testReadPreview()
     {
 
-        $smartContentContainerPreview = new SmartContentContainer($this->nodeRepository, $this->tagManager, 'test', 'en', 's', true);
+        $smartContentContainerPreview = new SmartContentContainer(
+            $this->nodeRepository,
+            $this->tagManager,
+            $this->serializer, 'test', 'en', 's', true
+        );
         $smartContentContainerPreview->setConfig(
             array(
                 'tags' => array('Tag1', 'Tag2'),
