@@ -66,10 +66,14 @@
                     </div>
                     <span class="clickable"><%=translate('sulu.content.form.settings.shadow.enable')%></span>
                 </label>
-                <label for="content-node-type">
-                    <span class="clickable"><%=translate('sulu.content.form.settings.shadow.base_language')%></span>
-                </label>
-                <div id="shadow_base_language_select" data-languages='{{ languages|json_encode }}'>
+            </div>
+            <div class="grid-row">
+                <div class="grid-col-6 form-group">
+                    <label for="content-node-type">
+                        <span class="clickable"><%=translate('sulu.content.form.settings.shadow.base_language')%></span>
+                    </label>
+
+                    <div id="shadow_base_language_select" data-languages='{{ languages|json_encode }}'></div>
                 </div>
             </div>
         </div>
