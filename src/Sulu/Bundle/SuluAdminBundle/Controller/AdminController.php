@@ -39,10 +39,10 @@ class AdminController extends Controller
                 }
 
                 // render template
-                if ($this->get('kernel')->getEnvironment() === 'prod') {
-                    $template = 'SuluAdminBundle:Admin:index.html.dist.twig';
-                } else {
+                if ($this->get('kernel')->getEnvironment() === 'dev') {
                     $template = 'SuluAdminBundle:Admin:index.html.twig';
+                } else {
+                    $template = 'SuluAdminBundle:Admin:index.html.dist.twig';
                 }
 
                 return $this->render(
