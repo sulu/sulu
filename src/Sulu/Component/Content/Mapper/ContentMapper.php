@@ -423,6 +423,16 @@ class ContentMapper implements ContentMapperInterface
         return $structure;
     }
 
+    /**
+     * Validate a shadow language mapping.
+     *
+     * If a node of $language is set to shadow language $shadowBaseLanguage then
+     * it must not shadow either itself or a language which is not concrete.
+     *
+     * @param NodeInterface $node
+     * @param string $language
+     * @param string $shadowBaseLanguage
+     */
     protected function validateShadow(NodeInterface $node, $language, $shadowBaseLanguage)
     {
         if ($language == $shadowBaseLanguage) {
@@ -443,6 +453,13 @@ class ContentMapper implements ContentMapperInterface
 
     }
 
+    /**
+     * Return the enabled shadow languages on the given node
+     *
+     * @param NodeInterface $node
+     *
+     * @return array
+     */
     protected function getEnabledShadowLanguages(NodeInterface $node)
     {
         $nodeLanguages = $this->properties->getLanguagesForNode($node);
@@ -466,6 +483,14 @@ class ContentMapper implements ContentMapperInterface
         return $shadowBaseLanguages;
     }
 
+    /**
+     * Return the "concrete" languages in a node - i.e. all languages
+     * excluding shadow languages.
+     *
+     * @param NodeInterface $node
+     *
+     * @return array
+     */
     protected function getConcreteLanguages(NodeInterface $node)
     {
         $enabledLanguages = $this->properties->getLanguagesForNode($node);
