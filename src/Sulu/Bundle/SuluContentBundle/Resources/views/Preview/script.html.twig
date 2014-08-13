@@ -94,8 +94,14 @@
                 interval: {{ interval }},
                 url: '{{ ajaxUrl }}',
 
+                // activate only once
+                activated: false,
+
                 init: function() {
-                    setTimeout(this.request.bind(this), this.interval);
+                    if (!this.activated) {
+                        setTimeout(this.request.bind(this), this.interval);
+                        this.activated = true;
+                    }
                 },
 
                 getHttp: function(type, url, callback) {
@@ -137,10 +143,10 @@
 
                         debug(result);
                         handleChanges(result);
-                    }
 
-                    // start next request in a interval
-                    setTimeout(this.request.bind(this), this.interval);
+                        // start next request in a interval
+                        setTimeout(this.request.bind(this), this.interval);
+                    }
                 }
             },
             handleChanges = function(changes) {
