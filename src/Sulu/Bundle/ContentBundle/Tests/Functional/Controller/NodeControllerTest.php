@@ -159,7 +159,8 @@ class NodeControllerTest extends DatabaseTestCase
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Permission'),
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\SecurityType'),
             self::$em->getClassMetadata('Sulu\Bundle\TagBundle\Entity\Tag'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\Media')
+            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\Media'),
+            self::$em->getClassMetadata('Sulu\Bundle\CategoryBundle\Entity\Category'),
         );
 
         self::$tool->dropSchema(self::$entities);
