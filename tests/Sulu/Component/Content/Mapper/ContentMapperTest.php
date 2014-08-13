@@ -464,7 +464,6 @@ class ContentMapperTest extends PhpcrTestCase
                 isset($structures[0]) ? $structures[0]->getUUid() : null,
                 null,
                 null,
-                null,
                 $node['is_shadow'],
                 $node['shadow_base_language']
             );
@@ -1718,10 +1717,7 @@ class ContentMapperTest extends PhpcrTestCase
             'de',
             1,
             true,
-            $result->getUuid(),
-            null,
-            null,
-            true
+            $result->getUuid()
         );
         $content = $this->mapper->load($result->getUuid(), 'default', 'de');
         $this->assertEquals($navContexts, $result->getNavContexts());
@@ -2054,24 +2050,23 @@ class ContentMapperTest extends PhpcrTestCase
         );
 
         $result = array();
-        foreach ($data as $datum) {
-            $result[$datum['name']][$datum['language']] = $this->mapper->save(
+        foreach ($data as $dataItem) {
+            $result[$dataItem['name']][$dataItem['language']] = $this->mapper->save(
                 array(
-                    'name' => $datum['name'],
-                    'url' => '/' . $datum['name'],
-                    'article' => $datum['article'],
+                    'name' => $dataItem['name'],
+                    'url' => '/' . $dataItem['name'],
+                    'article' => $dataItem['article'],
                 ),
                 'overview',
                 'default',
-                $datum['language'],
+                $dataItem['language'],
                 1,
                 true,
-                isset($result[$datum['name']]['de']) ? $result[$datum['name']]['de']->getUuid() : null,
+                isset($result[$dataItem['name']]['de']) ? $result[$dataItem['name']]['de']->getUuid() : null,
                 null,
                 null,
-                null,
-                $datum['is_shadow'],
-                $datum['shadow_base_language']
+                $dataItem['is_shadow'],
+                $dataItem['shadow_base_language']
             );
         }
 

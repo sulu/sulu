@@ -646,8 +646,7 @@ class ContentMapper implements ContentMapperInterface
             $partialUpdate,
             $uuid,
             null,
-            StructureInterface::STATE_PUBLISHED,
-            true
+            StructureInterface::STATE_PUBLISHED
         );
     }
 
