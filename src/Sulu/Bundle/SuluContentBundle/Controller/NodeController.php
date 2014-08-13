@@ -340,10 +340,16 @@ class NodeController extends RestController implements ClassResourceInterface
         $language = $this->getLanguage($request);
         $webspace = $this->getWebspace($request);
         $template = $this->getRequestParameter($request, 'template', true);
+
+        $isShadow = $this->getRequestParameter($request, 'shadowOn', false);
+        $shadowBaseLanguage = $this->getRequestParameter($request, 'shadowBaseLanguage', null);
+
         $state = $this->getRequestParameter($request, 'state');
+
         if ($state !== null) {
             $state = intval($state);
         }
+
         $data = $request->request->all();
 
         $result = $this->getRepository()->saveNode(
@@ -354,7 +360,9 @@ class NodeController extends RestController implements ClassResourceInterface
             $this->getUser()->getId(),
             $uuid,
             null, // parentUuid
-            $state
+            $state,
+            $isShadow,
+            $shadowBaseLanguage
         );
 
         return $this->handleView(
@@ -408,6 +416,8 @@ class NodeController extends RestController implements ClassResourceInterface
         $webspace = $this->getWebspace($request);
         $template = $this->getRequestParameter($request, 'template', true);
         $navigation = $this->getRequestParameter($request, 'navigation');
+        $isShadow = $this->getRequestParameter($request, 'isShadow', false);
+        $shadowBaseLanguage = $this->getRequestParameter($request, 'shadowBaseLanguage', null);
         $parent = $this->getRequestParameter($request, 'parent');
         $state = $this->getRequestParameter($request, 'state');
         if ($state !== null) {
@@ -432,7 +442,8 @@ class NodeController extends RestController implements ClassResourceInterface
             null, // uuid
             $parent,
             $state,
-            $navigation
+            $isShadow,
+            $shadowBaseLanguage
         );
 
         return $this->handleView(
