@@ -10,16 +10,12 @@
 
 namespace Sulu\Bundle\AdminBundle\Tests\Admin;
 
-use Sulu\Bundle\AdminBundle\Admin\Admin;
-use Sulu\Bundle\AdminBundle\Admin\AdminPool;
-use Sulu\Bundle\AdminBundle\Admin\ContentNavigation;
-use Sulu\Bundle\AdminBundle\Navigation\Navigation;
+use Sulu\Bundle\AdminBundle\Navigation\ContentNavigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 use Symfony\Component\Console\Command\Command;
 
 class ContentNavigationTest extends \PHPUnit_Framework_TestCase
 {
-
     /**
      * @var ContentNavigation
      */
@@ -38,7 +34,7 @@ class ContentNavigationTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->contentNavigation1 = $this->getMockForAbstractClass(
-            'Sulu\Bundle\AdminBundle\Admin\ContentNavigation',
+            'Sulu\Bundle\AdminBundle\Navigation\ContentNavigation',
             array(),
             '',
             true,

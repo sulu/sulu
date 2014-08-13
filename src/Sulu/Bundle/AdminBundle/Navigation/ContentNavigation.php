@@ -8,21 +8,25 @@
 * with this source code in the file LICENSE.
 */
 
-namespace Sulu\Bundle\AdminBundle\Admin;
+namespace Sulu\Bundle\AdminBundle\Navigation;
 
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationInterface;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 
 /**
- *
+ * This class ontains the content navigation represented as tabs in the forms from the admin
  * @package Sulu\Bundle\AdminBundle\Admin
  */
 abstract class ContentNavigation
 {
     protected $id;
+
     protected $name;
+
     protected $header;
+
     protected $displayOption;
+
     protected $navigation;
 
     public function __construct($displayOption = null)
@@ -111,7 +115,7 @@ abstract class ContentNavigation
     }
 
     /**
-     * @param mixed $id
+     * @param string $id
      */
     public function setId($id)
     {
@@ -119,7 +123,7 @@ abstract class ContentNavigation
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getId()
     {
@@ -141,9 +145,4 @@ abstract class ContentNavigation
     {
         return $this->name;
     }
-
-
-
-
-
 }
