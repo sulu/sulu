@@ -160,7 +160,7 @@ define(['app-config'], function(AppConfig) {
             this.data = data;
 
             require(['text!/admin/content/template/content/settings.html?webspaceKey=' + this.options.webspace], function(template) {
-                this.sandbox.dom.html(this.$el, this.sandbox.util.template(template, {
+                this.html(this.sandbox.util.template(template, {
                     translate: this.sandbox.translate
                 }));
                 this.setData(this.data);
