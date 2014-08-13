@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Content;
 
+use JMS\Serializer\Serializer;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use JMS\Serializer\Annotation\Exclude;
@@ -59,7 +60,13 @@ class MediaSelectionContainer implements \Serializable
      */
     private $mediaManager;
 
-    function __construct($config, $displayOption, $ids, $locale, $types, $mediaManager)
+    /**
+     * @Exclude
+     * @var Serializer
+     */
+    private $serializer;
+
+    function __construct($config, $displayOption, $ids, $locale, $types, $mediaManager, $serializer)
     {
         $this->config = $config;
         $this->displayOption = $displayOption;
@@ -67,6 +74,7 @@ class MediaSelectionContainer implements \Serializable
         $this->locale = $locale;
         $this->types = $types;
         $this->mediaManager = $mediaManager;
+        $this->serializer = $serializer;
     }
 
     /**
@@ -155,9 +163,15 @@ class MediaSelectionContainer implements \Serializable
      */
     public function serialize()
     {
+        if ($this->serializer) {
+            $data = $this->serializer->serialize($this->getData(), 'json');
+        } else {
+            $data = json_encode($this->getData());
+        }
+
         return serialize(
             array(
-                'data' => $this->getData(),
+                'data' => $data,
                 'config' => $this->getConfig(),
                 'ids' => $this->getIds(),
                 'types' => $this->getTypes(),
@@ -172,7 +186,7 @@ class MediaSelectionContainer implements \Serializable
     public function unserialize($serialized)
     {
         $values = unserialize($serialized);
-        $this->data = $values['data'];
+        $this->data = json_decode($values['data'], true);
         $this->config = $values['config'];
         $this->ids = $values['ids'];
         $this->types = $values['types'];
