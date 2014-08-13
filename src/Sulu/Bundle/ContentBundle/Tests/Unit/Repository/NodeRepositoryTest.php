@@ -21,6 +21,7 @@ use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyTag;
 use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\StructureExtension\StructureExtension;
+use Sulu\Component\Content\StructureExtension\StructureExtensionInterface;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\Types\ResourceLocator;
 use Sulu\Component\Webspace\Localization;
@@ -51,6 +52,11 @@ class NodeRepositoryTest extends PhpcrTestCase
      * @var Webspace
      */
     private $webspace;
+
+    /**
+     * @var StructureExtensionInterface[]
+     */
+    private $extensions;
 
     private function prepareGetTestData()
     {
@@ -825,6 +831,7 @@ class NodeRepositoryTest extends PhpcrTestCase
 
     protected function setUp()
     {
+        $this->extensions = array(new TestExtension('test1', 'test1'));
         $this->prepareMapper();
         $this->prepareNodeRepository();
     }
@@ -1005,14 +1012,22 @@ class NodeRepositoryTest extends PhpcrTestCase
         return $structureMock;
     }
 
+    public function getExtensionsCallback()
+    {
+        return $this->extensions;
+    }
+
+    public function getExtensionCallback()
+    {
+        return $this->extensions[0];
+    }
+
     public function getStructureMock($type = 1)
     {
         $structureMock = $this->getMockForAbstractClass(
             '\Sulu\Component\Content\Structure',
             array('overview', 'asdf', 'asdf', 2400)
         );
-
-        $structureMock->setExtensions(array(new TestExtension('test1', 'test1')));
 
         $method = new ReflectionMethod(
             get_class($structureMock), 'addChild'
@@ -1093,7 +1108,6 @@ class TestExtension extends StructureExtension
      */
     public function save(NodeInterface $node, $data, $webspaceKey, $languageCode)
     {
-        $this->data = $data;
         $node->setProperty($this->getPropertyName('a'), $data['a']);
         $node->setProperty($this->getPropertyName('b'), $data['b']);
     }
@@ -1103,7 +1117,7 @@ class TestExtension extends StructureExtension
      */
     public function load(NodeInterface $node, $webspaceKey, $languageCode)
     {
-        $this->data = array(
+        return array(
             'a' => $node->getPropertyValueWithDefault($this->getPropertyName('a'), ''),
             'b' => $node->getPropertyValueWithDefault($this->getPropertyName('b'), '')
         );

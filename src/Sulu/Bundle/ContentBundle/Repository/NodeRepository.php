@@ -465,8 +465,8 @@ class NodeRepository implements NodeRepositoryInterface
         $structure = $this->getMapper()->load($uuid, $webspaceKey, $languageCode);
 
         // extract extension
-        $extension = $structure->getExtension($extensionName);
-        $data = $extension->getData();
+        $extensionData = $structure->getExt();
+        $data = $extensionData[$extensionName];
 
         // add uuid and path
         $data['id'] = $structure->getUuid();
@@ -497,8 +497,8 @@ class NodeRepository implements NodeRepositoryInterface
         );
 
         // extract extension
-        $extension = $structure->getExtension($extensionName);
-        $data = $extension->getData();
+        $extensionData = $structure->getExt();
+        $data = $extensionData[$extensionName];
 
         // add uuid and path
         $data['id'] = $structure->getUuid();

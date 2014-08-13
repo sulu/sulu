@@ -177,7 +177,7 @@ class SeoStructureExtensionTest extends PHPUnit_Framework_TestCase
             );
 
         $this->extension->setLanguageCode('de', 'i18n', null);
-        $this->extension->load($this->nodeMock, 'default', 'de');
+        $result = $this->extension->load($this->nodeMock, 'default', 'de');
 
         $this->assertEquals(
             array(
@@ -188,7 +188,7 @@ class SeoStructureExtensionTest extends PHPUnit_Framework_TestCase
                 'noIndex' => false,
                 'noFollow' => false
             ),
-            $this->extension->getData()
+            $result
         );
     }
 }
