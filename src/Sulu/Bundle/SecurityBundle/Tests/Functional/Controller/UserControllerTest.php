@@ -181,6 +181,10 @@ class UserControllerTest extends DatabaseTestCase
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Permission'),
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\SecurityType'),
 
+            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\Media'),
+
+            self::$em->getClassMetadata('Sulu\Bundle\CategoryBundle\Entity\Category'),
+
             self::$em->getClassMetadata('Sulu\Bundle\TagBundle\Entity\Tag')
         );
 
