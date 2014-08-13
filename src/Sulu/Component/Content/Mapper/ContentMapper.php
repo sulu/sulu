@@ -195,7 +195,6 @@ class ContentMapper implements ContentMapperInterface
         $uuid = null,
         $parentUuid = null,
         $state = null,
-        $showInNavigation = null,
         $isShadow = null,
         $shadowBaseLanguage = null
     ) {
