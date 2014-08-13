@@ -28,6 +28,7 @@ class SuluContentContentNavigation extends ContentNavigation
     private function getSeo()
     {
         $seo = new NavigationItem('content-navigation.contents.seo');
+        $seo->setId('tab-seo');
         $seo->setAction('seo');
         $seo->setContentType('content');
         $seo->setContentComponent('content/seo@sulucontent');
@@ -39,6 +40,7 @@ class SuluContentContentNavigation extends ContentNavigation
     private function getExcerpt()
     {
         $excerpt = new NavigationItem('content-navigation.contents.excerpt');
+        $excerpt->setId('tab-excerpt');
         $excerpt->setAction('excerpt');
         $excerpt->setContentType('content');
         $excerpt->setContentComponent('content/excerpt@sulucontent');
@@ -50,6 +52,7 @@ class SuluContentContentNavigation extends ContentNavigation
     private function getSettings()
     {
         $settings = new NavigationItem('content-navigation.contents.settings');
+        $settings->setId('tab-settings');
         $settings->setAction('settings');
         $settings->setContentType('content');
         $settings->setContentComponent('content/settings@sulucontent');
@@ -61,6 +64,7 @@ class SuluContentContentNavigation extends ContentNavigation
     private function getContent()
     {
         $content = new NavigationItem('content-navigation.contents.content');
+        $content->setId('tab-content');
         $content->setAction('content');
         $content->setContentType('content');
         $content->setContentComponent('content/form@sulucontent');
@@ -71,6 +75,7 @@ class SuluContentContentNavigation extends ContentNavigation
     private function getExternalLink()
     {
         $tab = new NavigationItem('content-navigation.contents.external-link');
+        $tab->setId('tab-external-link');
         $tab->setAction('content');
         $tab->setContentType('content');
         $tab->setContentComponent('content/external@sulucontent');
@@ -81,6 +86,7 @@ class SuluContentContentNavigation extends ContentNavigation
     private function getInternalLink()
     {
         $tab = new NavigationItem('content-navigation.contents.internal-link');
+        $tab->setId('tab-internal-link');
         $tab->setAction('content');
         $tab->setContentType('content');
         $tab->setContentComponent('content/internal@sulucontent');

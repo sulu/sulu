@@ -383,8 +383,11 @@ class NodeRepository implements NodeRepositoryInterface
         $userId,
         $uuid = null,
         $parentUuid = null,
-        $state = null
-    ) {
+        $state = null,
+        $isShadow = false,
+        $shadowBaseLanguage = null
+    )
+    {
         $node = $this->getMapper()->save(
             $data,
             $templateKey,
@@ -394,7 +397,9 @@ class NodeRepository implements NodeRepositoryInterface
             true,
             $uuid,
             $parentUuid,
-            $state
+            $state,
+            $isShadow,
+            $shadowBaseLanguage
         );
 
         return $this->prepareNode($node, $webspaceKey, $languageCode);
