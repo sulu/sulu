@@ -10,35 +10,33 @@
 
 namespace Sulu\Bundle\TranslateBundle\Admin;
 
-use Sulu\Bundle\AdminBundle\Admin\ContentNavigation;
-use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
+use Sulu\Bundle\AdminBundle\Navigation\ContentNavigation;
+use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationItem;
 
 class SuluTranslateContentNavigation extends ContentNavigation
 {
-
     public function __construct()
     {
         parent::__construct();
 
         $this->setName('Package');
 
-        $details = new NavigationItem('Details');
+        $details = new ContentNavigationItem('Details');
         $details->setAction('details');
-        $details->setContentType('package');
-        $details->setContentComponent('packages@sulutranslate');
-        $details->setContentComponentOptions(array('display' => 'details'));
-        $details->setContentDisplay(array('edit'));
+        $details->setGroups(array('package'));
+        $details->setComponent('packages@sulutranslate');
+        $details->setComponentOptions(array('display' => 'details'));
+        $details->setDisplay(array('edit'));
 
         $this->addNavigationItem($details);
 
 
-        $settings = new NavigationItem('Settings');
+        $settings = new ContentNavigationItem('Settings');
         $settings->setAction('settings');
-        $settings->setContentType('package');
-        $settings->setContentComponent('packages@sulutranslate');
-        $settings->setContentComponentOptions(array('display' => 'settings'));
+        $settings->setGroups(array('package'));
+        $settings->setComponent('packages@sulutranslate');
+        $settings->setComponentOptions(array('display' => 'settings'));
 
         $this->addNavigationItem($settings);
-
     }
 }
