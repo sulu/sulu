@@ -123,6 +123,9 @@ class ExcerptStructureExtension extends StructureExtension
      */
     public function setLanguageCode($languageCode, $languageNamespace, $namespace)
     {
+        // lazy load excerpt structure to avoid redeclaration of classes
+        // should be done before parent::setLanguageCode because it uses the $thi<->properties
+        // which will be set in initExcerptStructure
         if ($this->excerptStructure === null) {
             $this->excerptStructure = $this->initExcerptStructure();
         }
