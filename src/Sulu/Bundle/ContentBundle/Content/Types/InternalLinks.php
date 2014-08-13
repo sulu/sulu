@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\ContentBundle\Content\Types;
 
+use JMS\Serializer\Serializer;
 use PHPCR\NodeInterface;
 use Sulu\Bundle\ContentBundle\Content\InternalLinksContainer;
 use Sulu\Component\Content\ComplexContentType;
@@ -33,9 +34,15 @@ class InternalLinks extends ComplexContentType
      */
     private $template;
 
-    function __construct(ContentMapperInterface $contentMapper, $template)
+    /**
+     * @var \JMS\Serializer\Serializer
+     */
+    private $serializer;
+
+    function __construct(ContentMapperInterface $contentMapper, Serializer $serializer, $template)
     {
         $this->contentMapper = $contentMapper;
+        $this->serializer = $serializer;
         $this->template = $template;
     }
 
@@ -87,6 +94,7 @@ class InternalLinks extends ComplexContentType
         $container = new InternalLinksContainer(
             isset($data['ids']) ? $data['ids'] : array(),
             $this->contentMapper,
+            $this->serializer,
             $webspaceKey,
             $languageCode
         );
