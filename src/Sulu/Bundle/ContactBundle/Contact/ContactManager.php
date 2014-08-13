@@ -15,7 +15,6 @@ use Doctrine\ORM\EntityNotFoundException;
 use Sulu\Bundle\ContactBundle\Api\Contact;
 use Sulu\Bundle\ContactBundle\Entity\ContactAddress as ContactAddressEntity;
 use Sulu\Bundle\ContactBundle\Entity\Address as AddressEntity;
-use Sulu\Bundle\ContactBundle\Entity\ContactAddress as ContactAddressEntity;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 
 /**
@@ -120,28 +119,12 @@ class ContactManager extends AbstractContactManager
      * @throws \Doctrine\ORM\EntityNotFoundException
      * @return mixed
      */
-    protected function getById($id, $locale)
+    public function getById($id, $locale)
     {
         $contact = $this->em->getRepository($this->contactEntity)->findAccountById($id);
         if(!$contact){
             throw new EntityNotFoundException($this->contactEntity, $id);
         }
         return new Contact($contact, $locale, $this->tagManager);
-    }
-
-    /**
-     * Returns all api entities
-     *
-     * @param $locale
-     * @return mixed
-     */
-    protected function getAll($locale)
-    {
-        $contacts = [];
-        $contactsEntities = $this->em->getRepository($this->contactEntity)->findAll();
-        foreach($contactsEntities as $contact){
-            $contacts[] = new Contact($contact, $locale, $this->tagManager);
-        }
-        return $contacts;
     }
 }

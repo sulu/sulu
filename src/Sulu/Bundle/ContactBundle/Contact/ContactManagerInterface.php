@@ -61,4 +61,13 @@ interface ContactManagerInterface
     public function setMainFax($entity);
     public function setMainUrl($entity);
     public function setMainPhone($entity);
+
+    /**
+     * Returns an api entity
+     * @param $id
+     * @param $locale
+     * @return mixed
+     */
+    public function getById($id, $locale);
+
 }

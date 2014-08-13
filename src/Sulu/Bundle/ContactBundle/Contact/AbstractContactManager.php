@@ -34,21 +34,6 @@ abstract class AbstractContactManager implements ContactManagerInterface
     }
 
     /**
-     * Returns an api entity
-     * @param $id
-     * @param $locale
-     * @return mixed
-     */
-    abstract protected function getById($id, $locale);
-
-    /**
-     * Returns all api entities
-     * @param $locale
-     * @return mixed
-     */
-    abstract protected function getAll($locale);
-
-    /**
      * unsets main of all elements of an ArrayCollection | PersistanceCollection
      * @param $arrayCollection
      * @return boolean returns true if a element was unset

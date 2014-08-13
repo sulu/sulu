@@ -12,6 +12,8 @@ namespace Sulu\Bundle\ContactBundle\Contact;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Sulu\Bundle\ContactBundle\Api\Account;
+use Sulu\Bundle\ContactBundle\Api\Contact;
+use Sulu\Bundle\ContactBundle\Api\Contact as ContactEntity;
 use Sulu\Bundle\ContactBundle\Entity\Account as AccountEntity;
 use Sulu\Bundle\ContactBundle\Entity\AccountAddress as AccountAddressEntity;
 use Sulu\Bundle\ContactBundle\Entity\Address as AddressEntity;
@@ -28,6 +30,8 @@ class AccountManager extends AbstractContactManager
 {
 
     protected $accountEntity = 'SuluContactBundle:Account';
+    protected $contactEntity = 'SuluContactBundle:Contact';
+    protected $addressEntity = 'SuluContactBundle:Address';
     protected $tagManager;
 
     function __construct(ObjectManager $em, TagmanagerInterface $tagManager)
@@ -112,37 +116,96 @@ class AccountManager extends AbstractContactManager
      */
     public function getAddressRelations($entity)
     {
-
         return $entity->getAccountAddresses();
     }
 
     /**
+     * Gets account by id
      * @param $id
      * @param $locale
      * @throws EntityNotFoundException
      * @return mixed
      */
-    protected function getById($id, $locale)
+    public function getById($id, $locale)
     {
         $account = $this->em->getRepository($this->accountEntity)->findAccountById($id);
-        if(!$account){
+        if (!$account) {
             throw new EntityNotFoundException($this->accountEntity, $id);
         }
+
         return new Account($account, $locale, $this->tagManager);
     }
 
     /**
-     * Returns all api entities
-     *
+     * Gets account by id - can include relations
+     * @param $id
      * @param $locale
-     * @return mixed
+     * @param $includes
+     * @return Account
+     * @throws EntityNotFoundException
      */
-    protected function getAll($locale)
+    public function getByIdAndInclude($id, $locale, $includes)
     {
-        $accounts = [];
-        $contactsEntities = $this->em->getRepository($this->accountEntity)->findAll();
-        foreach($contactsEntities as $contact){
-            $accounts[] = new Account($contact, $locale, $this->tagManager);
+        $account = $this->em
+            ->getRepository($this->accountEntity)
+            ->findAccountById($id, in_array('contacts', $includes));
+
+        if (!$account) {
+            throw new EntityNotFoundException($this->accountEntity, $id);
         }
-        return $accounts;
-    }}
+        $acc = new Account($account, $locale, $this->tagManager);
+        return $acc;
+    }
+
+    /**
+     * Returns contacts by account id
+     *
+     * @param $id
+     * @param $locale
+     * @return array
+     */
+    public function findContactByAccountId($id, $locale){
+        $contactsEntities = $this->em->getRepository($this->contactEntity)->findByAccountId($id, null, false);
+        $contacts = [];
+        if ($contactsEntities) {
+            foreach ($contactsEntities as $contact) {
+                $contacts[] = new Contact($contact, $locale, $this->tagManager);
+            }
+            return $contacts;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Returns all accounts
+     * @param $locale
+     * @return null
+     */
+    public function findAll($locale){
+        $accountEntities = $this->em->getRepository($this->accountEntity)->findAll();
+        $accounts = [];
+        if ($accountEntities) {
+            foreach ($accountEntities as $account) {
+                $accounts[] = new Account($account, $locale, $this->tagManager);
+            }
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Returns an api entity for an doctrine entity
+     * @param $account
+     * @param $locale
+     * @return null|Account
+     */
+    public function getAccount($account, $locale)
+    {
+        if ($account) {
+            return new Account($account, $locale, $this->tagManager);
+        } else {
+            return null;
+        }
+    }
+}

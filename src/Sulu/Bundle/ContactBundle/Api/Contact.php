@@ -28,12 +28,17 @@ use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Rest\ApiWrapper;
 use Sulu\Bundle\ContactBundle\Entity\Contact as ContactEntity;
 use Sulu\Component\Security\UserInterface;
+use Hateoas\Configuration\Annotation\Relation;
+use JMS\Serializer\Annotation\VirtualProperty;
+use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation\ExclusionPolicy;
 
 /**
  * The UrlType class which will be exported to the API
  *
  * @package Sulu\Bundle\ContactBundle\Api
  * @Relation("self", href="expr('/api/admin/contacts/' ~ object.getId())")
+ * @ExclusionPolicy("all")
  */
 class Contact extends ApiWrapper
 {
@@ -44,15 +49,27 @@ class Contact extends ApiWrapper
     protected $tagManager;
 
     /**
-     * @param ContactEntity $account
+     * @param ContactEntity $contact
      * @param string $locale The locale of this product
      * @param $tagManager
      */
-    public function __construct(ContactEntity $account, $locale, $tagManager)
+    public function __construct(ContactEntity $contact, $locale, TagManagerInterface $tagManager)
     {
-        $this->entity = $account;
+        $this->entity = $contact;
         $this->locale = $locale;
         $this->tagManager = $tagManager;
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer
+     * @VirtualProperty
+     * @SerializedName("id")
+     */
+    public function getId()
+    {
+        return $this->entity->getId();
     }
 
     /**
@@ -173,11 +190,7 @@ class Contact extends ApiWrapper
      */
     public function setPosition($position)
     {
-        $mainAccountContact = $this->entity->getMainAccountContact();
-        if ($mainAccountContact) {
-            $mainAccountContact->setPosition($position);
-            $this->entity->setPosition($position);
-        }
+        $this->entity->setPosition($position);
 
         return $this;
     }
@@ -201,12 +214,7 @@ class Contact extends ApiWrapper
      */
     public function getPosition()
     {
-        $mainAccountContact = $this->entity->getMainAccountContact();
-        if ($mainAccountContact) {
-            return $mainAccountContact->getPosition();
-        }
-
-        return null;
+        return $this->entity->getPosition();
     }
 
     /**
@@ -256,7 +264,7 @@ class Contact extends ApiWrapper
      */
     public function getCreated()
     {
-        return $this->getCreated();
+        return $this->entity->getCreated();
     }
 
     /**
@@ -277,23 +285,11 @@ class Contact extends ApiWrapper
      *
      * @return \DateTime
      * @VirtualProperty
-     * @SerializedName("")
+     * @SerializedName("changed")
      */
     public function getChanged()
     {
-        return $this->getChanged();
-    }
-
-    /**
-     * Get id
-     *
-     * @return integer
-     * @VirtualProperty
-     * @SerializedName("id")
-     */
-    public function getId()
-    {
-        return $this->getId();
+        return $this->entity->getChanged();
     }
 
     /**
@@ -332,8 +328,10 @@ class Contact extends ApiWrapper
     public function getLocales()
     {
         $entities = [];
-        foreach ($this->entity->getLocales() as $locale) {
-            $entities[] = $locale;
+        if ($this->entity->getLocales()) {
+            foreach ($this->entity->getLocales() as $locale) {
+                $entities[] = $locale;
+            }
         }
 
         return $entities;
@@ -372,8 +370,10 @@ class Contact extends ApiWrapper
     public function getActivities()
     {
         $entities = [];
-        foreach ($this->entity->getActivities() as $activity) {
-            $entities[] = $activity;
+        if ($this->entity->getActivities()) {
+            foreach ($this->entity->getActivities() as $activity) {
+                $entities[] = $activity;
+            }
         }
 
         return $entities;
@@ -393,19 +393,6 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Get changer
-     *
-     * @return UserInterface
-     * @VirtualProperty
-     * @SerializedName("changer")
-     */
-    public function getChanger()
-    {
-        // TODO use api entity
-        return $this->entity->getChanger()->getId();
-    }
-
-    /**
      * Set creator
      *
      * @param UserInterface $creator
@@ -416,19 +403,6 @@ class Contact extends ApiWrapper
         $this->entity->setCreator($creator);
 
         return $this;
-    }
-
-    /**
-     * Get creator
-     *
-     * @return UserInterface
-     * @VirtualProperty
-     * @SerializedName("ceator")
-     */
-    public function getCreator()
-    {
-        // TODO use api entity
-        return $this->entity->getCreator()->getId();
     }
 
     /**
@@ -467,8 +441,10 @@ class Contact extends ApiWrapper
     public function getNotes()
     {
         $entities = [];
-        foreach ($this->entity->getNotes() as $note) {
-            $entities[] = $note;
+        if ($this->entity->getNotes()) {
+            foreach ($this->entity->getNotes() as $note) {
+                $entities[] = $note;
+            }
         }
 
         return $entities;
@@ -507,8 +483,10 @@ class Contact extends ApiWrapper
     public function getEmails()
     {
         $entities = [];
-        foreach ($this->entity->getEmails() as $email) {
-            $entities[] = $email;
+        if ($this->entity->getEmails()) {
+            foreach ($this->entity->getEmails() as $email) {
+                $entities[] = $email;
+            }
         }
 
         return $entities;
@@ -547,8 +525,10 @@ class Contact extends ApiWrapper
     public function getPhones()
     {
         $entities = [];
-        foreach ($this->entity->getPhones() as $phone) {
-            $entities[] = $phone;
+        if ($this->entity->getPhones()) {
+            foreach ($this->entity->getPhones() as $phone) {
+                $entities[] = $phone;
+            }
         }
 
         return $entities;
@@ -602,8 +582,10 @@ class Contact extends ApiWrapper
     public function getFaxes()
     {
         $entities = [];
-        foreach ($this->entity->getFaxes() as $fax) {
-            $entities[] = $fax;
+        if ($this->entity->getFaxes()) {
+            foreach ($this->entity->getFaxes() as $fax) {
+                $entities[] = $fax;
+            }
         }
 
         return $entities;
@@ -642,8 +624,10 @@ class Contact extends ApiWrapper
     public function getUrls()
     {
         $entities = [];
-        foreach ($this->entity->getUrls() as $entity) {
-            $entities[] = $entity;
+        if ($this->entity->getUrls()) {
+            foreach ($this->entity->getUrls() as $entity) {
+                $entities[] = $entity;
+            }
         }
 
         return $entities;
@@ -780,8 +764,13 @@ class Contact extends ApiWrapper
     public function getTags()
     {
         $entities = [];
-        foreach ($this->entity->getTags() as $entity) {
-            $entities[] = $entity;
+        if ($this->entity->getTags()) {
+            foreach ($this->entity->getTags() as $entity) {
+                $entities[] = array(
+                    'id' => $entity->getId(),
+                    'name' => $entity->getName()
+                );
+            }
         }
 
         return $entities;
@@ -840,8 +829,10 @@ class Contact extends ApiWrapper
     public function getAccountContacts()
     {
         $entities = [];
-        foreach ($this->entity->getAccountContacts() as $entity) {
-            $entities[] = $entity;
+        if ($this->entity->getAccountContacts()) {
+            foreach ($this->entity->getAccountContacts() as $entity) {
+                $entities[] = $entity;
+            }
         }
 
         return $entities;
@@ -905,11 +896,10 @@ class Contact extends ApiWrapper
      */
     public function getMainAccount()
     {
-        $mainAccountContact = $this->entity->getMainAccountContact();
-        if (!is_null($mainAccountContact)) {
-            return new Account($mainAccountContact->getAccount(), $this->locale, $this->tagManager);
+        $mainAccount = $this->entity->getMainAccount();
+        if (!is_null($mainAccount)) {
+            return new Account($mainAccount, $this->locale, $this->tagManager);
         }
-
         return null;
     }
 
@@ -983,7 +973,7 @@ class Contact extends ApiWrapper
      */
     public function getMainPhone()
     {
-        return $this->entity->mainPhone;
+        return $this->entity->getMainPhone();
     }
 
     /**
@@ -1053,10 +1043,13 @@ class Contact extends ApiWrapper
      * Remove contactAddresses
      *
      * @param ContactAddressEntity $contactAddresses
+     * @return $this
      */
     public function removeContactAddresse(ContactAddressEntity $contactAddresses)
     {
         $this->entity->removeContactAddresse($contactAddresses);
+
+        return $this;
     }
 
     /**
@@ -1069,8 +1062,10 @@ class Contact extends ApiWrapper
     public function getContactAddresses()
     {
         $entities = [];
-        foreach ($this->entity->getContactAddresses() as $entity) {
-            $entities[] = $entity;
+        if ($this->entity->getContactAddresses()) {
+            foreach ($this->entity->getContactAddresses() as $entity) {
+                $entities[] = $entity;
+            }
         }
 
         return $entities;
@@ -1085,8 +1080,6 @@ class Contact extends ApiWrapper
     public function addAssignedActivitie(ActivityEntity $assignedActivities)
     {
         $this->entity->addAssignedActivitie($assignedActivities);
-
-        return $this;
     }
 
     /**
@@ -1109,8 +1102,10 @@ class Contact extends ApiWrapper
     public function getAssignedActivities()
     {
         $entities = [];
-        foreach ($this->entity->getAssignedActivities() as $entity) {
-            $entities[] = $entity;
+        if ($this->entity->getAssignedActivities()) {
+            foreach ($this->entity->getAssignedActivities() as $entity) {
+                $entities[] = $entity;
+            }
         }
 
         return $entities;
@@ -1182,8 +1177,10 @@ class Contact extends ApiWrapper
     public function getMedias()
     {
         $entities = [];
-        foreach ($this->entity->getMedias() as $media) {
-            $entities[] = new Media($media, $this->locale, $this->tagManager);
+        if ($this->entity->getMedias()) {
+            foreach ($this->entity->getMedias() as $media) {
+                $entities[] = new Media($media, $this->locale, null, $this->tagManager);
+            }
         }
 
         return $entities;
@@ -1209,8 +1206,10 @@ class Contact extends ApiWrapper
     public function getCategories()
     {
         $entities = [];
-        foreach ($this->entity->getCategories() as $category) {
-            $entities[] = new Category($category, $this->locale);
+        if ($this->entity->getCategories()) {
+            foreach ($this->entity->getCategories() as $category) {
+                $entities[] = new Category($category, $this->locale);
+            }
         }
 
         return $entities;
