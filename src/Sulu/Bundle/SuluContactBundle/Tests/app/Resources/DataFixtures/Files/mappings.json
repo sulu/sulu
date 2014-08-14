@@ -1,0 +1,41 @@
+{
+    "options" : {
+        "streetNumberSplit" : "true",
+        "importIds": "true"
+    },
+    "accountTypes" : {
+        "0" : "",
+        "1" : "lea",
+        "2" : "cus",
+        "3" : "sup"
+    },
+    "countries":
+    {
+        "DE" : "D",
+        "AT" : "A"
+    },
+    "ids": {
+       "account_id" : "id"
+    },
+    "columns":
+    {
+        "email1" : "e-mail",
+        "account_name" : "name",
+        "account_type" : "type",
+        "account_corporation" : "division",
+        "account_disabled" : "disabled",
+        "account_parent" : "parent",
+        "account_uid" : "uid",
+        "url1" : "web",
+        "country" : "country",
+        "zip" : "plz",
+        "street" : "street",
+        "city" : "city",
+        "phone1" : "phone1",
+        "phone2" : "phone2",
+        "phone_isdn" : "isdn",
+        "phone_mobile" : "mobile",
+        "fax1" : "fax",
+        "note1" : "note"
+    }
+}

@@ -1,0 +1,125 @@
+parameters:
+    sulu_contact.admin.class: Sulu\Bundle\ContactBundle\Admin\SuluContactAdmin
+    sulu_contact.admin.content_navigation.class: Sulu\Bundle\ContactBundle\Admin\SuluContactContentNavigation
+    sulu_contact.js_config.class: Sulu\Bundle\AdminBundle\Admin\JsConfig
+    sulu_contact.import.class: Sulu\Bundle\ContactBundle\Import\Import
+    sulu_contact.account_listener.class: Sulu\Bundle\ContactBundle\EventListener\AccountListener
+
+    sulu_contact.contact_manager.class: Sulu\Bundle\ContactBundle\Contact\ContactManager
+    sulu_contact.account_manager.class: Sulu\Bundle\ContactBundle\Contact\AccountManager
+    sulu_contact.twig.class: Sulu\Bundle\ContactBundle\Twig\ContactTwigExtension
+    sulu_contact.twig.cache.class: Doctrine\Common\Cache\ArrayCache
+    sulu_contact.user_repository.class: Sulu\Bundle\SecurityBundle\Entity\UserRepository
+    sulu_contact.user_repository.entity: 'SuluSecurityBundle:User'
+
+    sulu_contact.contact.widgets.account_info.class: Sulu\Bundle\ContactBundle\Widgets\AccountInfo
+    sulu_contact.contact.widgets.account_main_contact.class: Sulu\Bundle\ContactBundle\Widgets\MainContact
+
+    sulu_contact.contact.widgets.contact_info.class: Sulu\Bundle\ContactBundle\Widgets\ContactInfo
+    sulu_contact.contact.widgets.contact_main_account.class: Sulu\Bundle\ContactBundle\Widgets\MainAccount
+
+    sulu_contact.contact.widgets.table.class: Sulu\Bundle\ContactBundle\Widgets\Table
+    sulu_contact.contact.widgets.toolbar.class: Sulu\Bundle\ContactBundle\Widgets\Toolbar
+
+
+services:
+    sulu_contact.admin:
+        class: %sulu_contact.admin.class%
+        arguments: [%sulu_admin.name%]
+        tags:
+        - { name: sulu.admin }
+    sulu_contact.admin.content_navigation:
+        class: %sulu_contact.admin.content_navigation.class%
+
+    sulu_contact.import:
+        class: %sulu_contact.import.class%
+        arguments:
+          - @doctrine.orm.entity_manager
+          - @sulu_contact.account_manager
+          - @sulu_contact.contact_manager
+          - %sulu_contact.defaults%
+          - %sulu_contact.account_types%
+          - %sulu_contact.form_of_address%
+
+    sulu_contact.js_config:
+        class: %sulu_contact.js_config.class%
+        arguments:
+          - 'sulu-contact'
+          - accountTypes: %sulu_contact.account_types%
+        tags:
+        - { name: sulu.js_config }
+
+    sulu_contact.account_listener:
+        class: %sulu_contact.account_listener.class%
+        tags:
+          - { name: doctrine.event_listener, event: postPersist }
+
+    sulu_contact.account_manager:
+        class: %sulu_contact.account_manager.class%
+        arguments:
+          - @doctrine.orm.entity_manager
+
+    sulu_contact.contact_manager:
+        class: %sulu_contact.contact_manager.class%
+        arguments:
+            - @doctrine.orm.entity_manager
+
+
+    sulu_contact.contact.widgets.main_account:
+         class: %sulu_contact.contact.widgets.contact_main_account.class%
+         tags:
+             - {name: sulu.widget, alias: sulu-contact-main-account}
+         arguments:
+             - @doctrine.orm.entity_manager
+ 
+    sulu_contact.contact.widgets.account_info:
+         class: %sulu_contact.contact.widgets.account_info.class%
+         tags:
+             - {name: sulu.widget, alias: sulu-contact-account-info}
+         arguments:
+             - @doctrine.orm.entity_manager
+ 
+    sulu_contact.contact.widgets.contact_info:
+         class: %sulu_contact.contact.widgets.contact_info.class%
+         tags:
+             - {name: sulu.widget, alias: sulu-contact-contact-info}
+         arguments:
+             - @doctrine.orm.entity_manager
+
+    sulu_contact.contact.widgets.main_contact:
+         class: %sulu_contact.contact.widgets.account_main_contact.class%
+         tags:
+             - {name: sulu.widget, alias: sulu-contact-main-contact}
+         arguments:
+             - @doctrine.orm.entity_manager
+ 
+    sulu_contact.contact.widgets.table:
+         class: %sulu_contact.contact.widgets.table.class%
+         tags:
+             - {name: sulu.widget, alias: sulu-contact-table}
+ 
+    sulu_contact.contact.widgets.toolbar:
+         class: %sulu_contact.contact.widgets.toolbar.class%
+         tags:
+             - {name: sulu.widget, alias: sulu-contact-toolbar}
+         class: %sulu_contact.contact_manager.class%
+         arguments:
+             - @doctrine.orm.entity_manager
+
+    sulu_contact.user_repository:
+        class: %sulu_contact.user_repository.class%
+        factory_service: doctrine
+        factory_method: getRepository
+        arguments:
+            - %sulu_contact.user_repository.entity%
+
+    sulu_contact.twig.cache:
+        class: %sulu_contact.twig.cache.class%
+
+    sulu_contact.twig:
+        class: %sulu_contact.twig.class%
+        arguments:
+            - @sulu_contact.twig.cache
+            - @sulu_contact.user_repository
+        tags:
+            - { name: twig.extension }

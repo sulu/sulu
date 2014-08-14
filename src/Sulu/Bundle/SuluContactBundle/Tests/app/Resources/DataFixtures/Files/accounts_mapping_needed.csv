@@ -1,0 +1,3 @@
+type;id;name;division;street;country;plz;city;phone1;phone2;uid;disabled;note;fax;isdn;e-mail;web;parent;
+sup;1;Test Company 1;Office;Street 1;A;6850;Dornbirn;+43 (123) 456-0;+43 (123) 456-78;ATU 1234 5678;0;just a simple note;+43 (123) 456-78;+43 (123) 456-1;test@test.com;www.test.com;;
+cus;2;Child Customer;;Street 2;D;88131;Lindau;+43 (123) 789;;DEU 5678 1234;0;;+43 (123) 456-98;;test@company.com;www.company.com;1;
