@@ -834,7 +834,7 @@ class Contact extends ApiWrapper
      *
      * @VirtualProperty
      * @SerializedName("mainAccount")
-     * @Groups({"fullContact", "partialContact"})
+     * @Groups({"fullContact"})
      */
     public function getMainAccount()
     {
@@ -847,7 +847,7 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * returns main account
+     * returns main addresses
      *
      * @VirtualProperty
      * @SerializedName("addresses")

@@ -44,6 +44,7 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineConcatenati
 
 /**
  * Makes accounts available through a REST API
+ *
  * @package Sulu\Bundle\ContactBundle\Controller
  */
 class AccountController extends AbstractContactController
@@ -97,6 +98,7 @@ class AccountController extends AbstractContactController
 
     /**
      * returns all fields that can be used by list
+     *
      * @return mixed
      */
     public function fieldsAction()
@@ -107,6 +109,7 @@ class AccountController extends AbstractContactController
 
     /**
      * Shows a single account with the given id
+     *
      * @param $id
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
@@ -125,7 +128,9 @@ class AccountController extends AbstractContactController
                 }
             );
 
-            $view->setSerializationContext(SerializationContext::create()->setGroups(array('fullAccount', 'partialContact')));
+            $view->setSerializationContext(
+                SerializationContext::create()->setGroups(array('fullAccount', 'partialContact', 'partialMedia'))
+            );
 
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
@@ -137,6 +142,7 @@ class AccountController extends AbstractContactController
     /**
      * lists all contacts of an account
      * optional parameter 'flat' calls listAction
+     *
      * @param $id
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
@@ -190,12 +196,14 @@ class AccountController extends AbstractContactController
             $list = new CollectionRepresentation($contacts, self::$contactEntityKey);
         }
         $view = $this->view($list, 200);
+
         return $this->handleView($view);
     }
 
     /**
      * lists all addresses of an account
      * optional parameter 'flat' calls listAction
+     *
      * @param $id
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
@@ -233,6 +241,7 @@ class AccountController extends AbstractContactController
             $list = new CollectionRepresentation($addresses, 'addresses');
         }
         $view = $this->view($list, 200);
+
         return $this->handleView($view);
     }
 
@@ -316,6 +325,7 @@ class AccountController extends AbstractContactController
 
     /**
      * Deleted account contact
+     *
      * @param $accountId
      * @param $contactId
      * @return \Symfony\Component\HttpFoundation\Response
@@ -351,12 +361,14 @@ class AccountController extends AbstractContactController
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
         }
+
         return $this->handleView($view);
     }
 
     /**
      * lists all accounts
      * optional parameter 'flat' calls listAction
+     *
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -397,11 +409,13 @@ class AccountController extends AbstractContactController
         }
 
         $view = $this->view($list, 200);
+
         return $this->handleView($view);
     }
 
     /**
      * Creates a new account
+     *
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -459,7 +473,9 @@ class AccountController extends AbstractContactController
             $locale = $this->getUser()->getLocale();
             $acc = $accountManager->getAccount($account, $locale);
             $view = $this->view($acc, 200);
-            $view->setSerializationContext(SerializationContext::create()->setGroups(array('fullAccount', 'smallContact')));
+            $view->setSerializationContext(
+                SerializationContext::create()->setGroups(array('fullAccount', 'partialContact', 'partialMedia'))
+            );
 
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
@@ -486,6 +502,7 @@ class AccountController extends AbstractContactController
 
     /**
      * Edits the existing contact with the given id
+     *
      * @param integer $id The id of the contact to update
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
@@ -551,7 +568,9 @@ class AccountController extends AbstractContactController
                 $acc = $accountManager->getAccount($account, $locale);
 
                 $view = $this->view($acc, 200);
-                $view->setSerializationContext(SerializationContext::create()->setGroups(array('fullAccount', 'partialContact')));
+                $view->setSerializationContext(
+                    SerializationContext::create()->setGroups(array('fullAccount', 'partialContact', 'partialMedia'))
+                );
             }
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
@@ -564,6 +583,7 @@ class AccountController extends AbstractContactController
 
     /**
      * set parent to account
+     *
      * @param array $parentData
      * @param AccountEntity $account
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
@@ -585,6 +605,7 @@ class AccountController extends AbstractContactController
 
     /**
      * set category to account
+     *
      * @param array $categoryData
      * @param AccountEntity $account
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
@@ -605,6 +626,7 @@ class AccountController extends AbstractContactController
 
     /**
      * partial update of account infos
+     *
      * @param $id
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
@@ -659,7 +681,9 @@ class AccountController extends AbstractContactController
                 $acc = $accountManager->getAccount($account, $locale);
 
                 $view = $this->view($acc, 200);
-                $view->setSerializationContext(SerializationContext::create()->setGroups(array('fullAccount', 'partialContact')));
+                $view->setSerializationContext(
+                    SerializationContext::create()->setGroups(array('fullAccount', 'partialContact', 'partialMedia'))
+                );
             }
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
@@ -672,6 +696,7 @@ class AccountController extends AbstractContactController
 
     /**
      * Processes terms of delivery and terms of payment for an account
+     *
      * @param Request $request
      * @param AccountEntity $account
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
@@ -706,13 +731,14 @@ class AccountController extends AbstractContactController
 
     /**
      * Delete an account with the given id
+     *
      * @param $id
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function deleteAction($id, Request $request)
     {
-        $delete = function ($id) use ($request){
+        $delete = function ($id) use ($request) {
             /* @var AccountEntity $account */
             $account = $this->getDoctrine()
                 ->getRepository(self::$entityName)
@@ -757,6 +783,7 @@ class AccountController extends AbstractContactController
 
     /**
      * returns delete info for multiple ids
+     *
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -794,6 +821,7 @@ class AccountController extends AbstractContactController
     /**
      * Returns information about data which will be also deleted:
      * 3 contacts, total number of contacts, and if deleting is allowed (as 0 or 1)
+     *
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -866,6 +894,7 @@ class AccountController extends AbstractContactController
     /**
      * Converts an account to a different account type
      * @Post("/accounts/{id}")
+     *
      * @param $id
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
@@ -902,7 +931,11 @@ class AccountController extends AbstractContactController
                     $acc = $accountManager->getAccount($accountEntity, $locale);
 
                     $view = $this->view($acc, 200);
-                    $view->setSerializationContext(SerializationContext::create()->setGroups(array('fullAccount', 'smallContact')));
+                    $view->setSerializationContext(
+                        SerializationContext::create()->setGroups(
+                            array('fullAccount', 'partialContact', 'partialMedia')
+                        )
+                    );
 
                     break;
                 default:
@@ -920,6 +953,7 @@ class AccountController extends AbstractContactController
 
     /**
      * Converts an account to another account type when allowed
+     *
      * @param $account
      * @param $type string representation
      * @throws RestException
@@ -943,6 +977,7 @@ class AccountController extends AbstractContactController
 
     /**
      * Checks whether transition from one type to another is allowed
+     *
      * @param $transitionsForType
      * @param $newAccountType
      * @param $types
@@ -955,11 +990,13 @@ class AccountController extends AbstractContactController
                 return true;
             }
         }
+
         return false;
     }
 
     /**
      * Returns valid transitions for a specific accoun type
+     *
      * @param $config
      * @param $types
      * @param $accountTypeName
@@ -979,6 +1016,7 @@ class AccountController extends AbstractContactController
 
     /**
      * Gets the account types and their numeric representation
+     *
      * @param $config
      * @return array
      */
@@ -988,6 +1026,7 @@ class AccountController extends AbstractContactController
         foreach ($config as $confType) {
             $types[$confType['name']] = $confType['id'];
         }
+
         return $types;
     }
 
@@ -1216,8 +1255,8 @@ class AccountController extends AbstractContactController
         );
     }
 
-
-    private function initFieldDescriptors(){
+    private function initFieldDescriptors()
+    {
 
         $this->fieldDescriptors = array();
         $this->fieldDescriptors['number'] = new DoctrineFieldDescriptor(
