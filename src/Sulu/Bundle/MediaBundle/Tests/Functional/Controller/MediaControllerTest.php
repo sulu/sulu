@@ -41,6 +41,7 @@ class MediaControllerTest extends DatabaseTestCase
     public function setUp()
     {
         $this->setUpSchema();
+        $this->cleanImage();
         $this->setUpMedia(self::$media);
     }
 
@@ -779,6 +780,6 @@ class MediaControllerTest extends DatabaseTestCase
      */
     private function getImagePath()
     {
-        return __DIR__ . '/../../Resources/Resources/images/photo.jpeg';
+        return __DIR__ . '/../../app/Resources/images/photo.jpeg';
     }
 }
