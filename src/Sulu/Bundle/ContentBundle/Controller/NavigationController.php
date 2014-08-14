@@ -14,7 +14,6 @@ use Sulu\Bundle\AdminBundle\Admin\ContentNavigation;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * handles navigation for this bundle
@@ -40,10 +39,10 @@ class NavigationController extends Controller
 
             $contentNavigation->generate($uuid !== 'index', $type);
 
-            return new Response(json_encode($contentNavigation->toArray('content')));
+            return new JsonResponse($contentNavigation->toArray('content'));
         } else {
             // return empty navigation
-            return new Response(json_encode(array()));
+            return new JsonResponse(array());
         }
     }
 }
