@@ -4,7 +4,7 @@
     "description": "The bundle responsible for content management in Sulu",
     "license": "MIT",
     "keywords": ["content", "cmf"],
-    "version": "0.5.4",
+    "version": "dev-develop",
     "authors": [
         {
             "name": "Sulu Community",
@@ -14,12 +14,15 @@
     "require": {
         "php": ">=5.4",
 
-        "sulu/sulu": "0.5.*",
-        "sulu/admin-bundle": "0.5.*",
-        "sulu/contact-bundle": "0.5.*",
-        "sulu/security-bundle": "0.5.*",
-        "sulu/website-bundle": "0.5.*",
-        "sulu/tag-bundle": "0.5.*",
+        "sulu/sulu": "dev-develop",
+        "sulu/admin-bundle": "dev-develop",
+        "sulu/contact-bundle": "dev-develop",
+        "sulu/security-bundle": "dev-develop",
+        "sulu/website-bundle": "dev-develop",
+        "sulu/tag-bundle": "dev-develop",
+
+	    "sulu/category-bundle": "@dev",
+        "sulu/media-bundle": "@dev",
         "liip/theme-bundle": "@dev",
 
         "jackalope/jackalope-jackrabbit": "1.1.*",
@@ -40,10 +43,11 @@
     },
     "require-dev": {
         "symfony/symfony": "2.5.*",
+        "sensio/framework-extra-bundle":  "~3.0",
         "doctrine/doctrine-bundle": "1.2.*",
         "symfony/monolog-bundle": "2.4.*",
         "phpunit/phpunit": "3.7.*",
-        "sulu/test-bundle": "0.5.*"
+        "sulu/test-bundle": "dev-develop"
     },
     "autoload": {
         "psr-0": {

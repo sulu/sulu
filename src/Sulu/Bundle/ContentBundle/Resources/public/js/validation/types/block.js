@@ -85,7 +85,7 @@ define([
                                 }.bind(this),
                                 noItemsCallback: function() {
                                     this.addChild(this.types[0].data, {}, true);
-                                }
+                                }.bind(this)
                             }
                         }
                     ]);

@@ -10,10 +10,13 @@
 
 namespace Sulu\Bundle\ContentBundle\Repository;
 
+use Doctrine\ODM\PHPCR\PHPCRException;
+use PHPCR\RepositoryException;
 use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
+use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
 /**
@@ -52,8 +55,7 @@ class NodeRepository implements NodeRepositoryInterface
         SessionManagerInterface $sessionManager,
         UserManagerInterface $userManager,
         WebspaceManagerInterface $webspaceManager
-    )
-    {
+    ) {
         $this->mapper = $mapper;
         $this->sessionManager = $sessionManager;
         $this->userManager = $userManager;
@@ -98,8 +100,7 @@ class NodeRepository implements NodeRepositoryInterface
         $complete = true,
         $excludeGhosts = false,
         $extension = null
-    )
-    {
+    ) {
         $result = $structure->toArray($complete);
 
         // add node name
@@ -137,8 +138,7 @@ class NodeRepository implements NodeRepositoryInterface
         $breadcrumb = false,
         $complete = true,
         $loadGhostContent = false
-    )
-    {
+    ) {
         $structure = $this->getMapper()->load($uuid, $webspaceKey, $languageCode, $loadGhostContent);
 
         $result = $this->prepareNode($structure, $webspaceKey, $languageCode, 1, $complete);
@@ -198,8 +198,7 @@ class NodeRepository implements NodeRepositoryInterface
         $flat = true,
         $complete = true,
         $excludeGhosts = false
-    )
-    {
+    ) {
         $nodes = $this->getMapper()->loadByParent(
             $parent,
             $webspaceKey,
@@ -212,7 +211,13 @@ class NodeRepository implements NodeRepositoryInterface
 
         $parentNode = $this->getParentNode($parent, $webspaceKey, $languageCode);
         $result = $this->prepareNode($parentNode, $webspaceKey, $languageCode, 1, $complete, $excludeGhosts);
-        $result['_embedded']['nodes'] = $this->prepareNodesTree($nodes, $webspaceKey, $languageCode, $complete, $excludeGhosts);
+        $result['_embedded']['nodes'] = $this->prepareNodesTree(
+            $nodes,
+            $webspaceKey,
+            $languageCode,
+            $complete,
+            $excludeGhosts
+        );
         $result['total'] = sizeof($result['_embedded']['nodes']);
 
         return $result;
@@ -225,8 +230,7 @@ class NodeRepository implements NodeRepositoryInterface
         $ids,
         $webspaceKey,
         $languageCode
-    )
-    {
+    ) {
         $result = array();
         $idString = '';
 
@@ -256,8 +260,7 @@ class NodeRepository implements NodeRepositoryInterface
         $languageCode,
         $depth = 1,
         $excludeGhosts = false
-    )
-    {
+    ) {
         $webspace = $this->webspaceManager->getWebspaceCollection()->getWebspace($webspaceKey);
 
         if ($depth > 0) {
@@ -308,7 +311,7 @@ class NodeRepository implements NodeRepositoryInterface
     {
         // build sql2 query
         $queryBuilder = new FilterNodesQueryBuilder($filterConfig, $this->sessionManager, $this->webspaceManager);
-        $sql2 = $queryBuilder->build($languageCode, $preview);
+        $sql2 = $queryBuilder->build($languageCode);
 
         // execute query and return results
         $nodes = $this->getMapper()->loadBySql2($sql2, $languageCode, $webspaceKey, $queryBuilder->getLimit());
@@ -381,7 +384,8 @@ class NodeRepository implements NodeRepositoryInterface
         $uuid = null,
         $parentUuid = null,
         $state = null,
-        $showInNavigation = null
+        $isShadow = false,
+        $shadowBaseLanguage = null
     )
     {
         $node = $this->getMapper()->save(
@@ -394,7 +398,8 @@ class NodeRepository implements NodeRepositoryInterface
             $uuid,
             $parentUuid,
             $state,
-            $showInNavigation
+            $isShadow,
+            $shadowBaseLanguage
         );
 
         return $this->prepareNode($node, $webspaceKey, $languageCode);
@@ -409,8 +414,7 @@ class NodeRepository implements NodeRepositoryInterface
         $languageCode,
         $excludeGhosts = false,
         $appendWebspaceNode = false
-    )
-    {
+    ) {
         $nodes = $this->getMapper()->loadTreeByUuid($uuid, $languageCode, $webspaceKey, $excludeGhosts, true);
 
         if ($appendWebspaceNode) {
@@ -423,13 +427,15 @@ class NodeRepository implements NodeRepositoryInterface
                             'path' => '/',
                             'title' => $webspace->getName(),
                             'hasSub' => true,
-                            '_embedded' => $this->prepareNodesTree(
-                                    $nodes,
-                                    $webspaceKey,
-                                    $languageCode,
-                                    false,
-                                    $excludeGhosts
-                                ),
+                            '_embedded' => array(
+                                'nodes' => $this->prepareNodesTree(
+                                        $nodes,
+                                        $webspaceKey,
+                                        $languageCode,
+                                        false,
+                                        $excludeGhosts
+                                    )
+                            ),
                             '_links' => array(
                                 'children' => $this->apiBasePath . '?depth=1&webspace=' . $webspaceKey .
                                     '&language=' . $languageCode . ($excludeGhosts === true ? '&exclude-ghosts=true' : '')
@@ -464,8 +470,8 @@ class NodeRepository implements NodeRepositoryInterface
         $structure = $this->getMapper()->load($uuid, $webspaceKey, $languageCode);
 
         // extract extension
-        $extension = $structure->getExtension($extensionName);
-        $data = $extension->getData();
+        $extensionData = $structure->getExt();
+        $data = $extensionData[$extensionName];
 
         // add uuid and path
         $data['id'] = $structure->getUuid();
@@ -496,8 +502,8 @@ class NodeRepository implements NodeRepositoryInterface
         );
 
         // extract extension
-        $extension = $structure->getExtension($extensionName);
-        $data = $extension->getData();
+        $extensionData = $structure->getExt();
+        $data = $extensionData[$extensionName];
 
         // add uuid and path
         $data['id'] = $structure->getUuid();
@@ -511,5 +517,56 @@ class NodeRepository implements NodeRepositoryInterface
         );
 
         return $data;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function moveNode($uuid, $destinationUuid, $webspaceKey, $languageCode, $userId)
+    {
+        try {
+            // call mapper function
+            $structure = $this->getMapper()->move($uuid, $destinationUuid, $userId, $webspaceKey, $languageCode);
+        } catch (PHPCRException $ex) {
+            throw new RestException($ex->getMessage(), 1, $ex);
+        } catch (RepositoryException $ex) {
+            throw new RestException($ex->getMessage(), 1, $ex);
+        }
+
+        return $this->prepareNode($structure, $webspaceKey, $languageCode);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function copyNode($uuid, $destinationUuid, $webspaceKey, $languageCode, $userId)
+    {
+        try {
+            // call mapper function
+            $structure = $this->getMapper()->copy($uuid, $destinationUuid, $userId, $webspaceKey, $languageCode);
+        } catch (PHPCRException $ex) {
+            throw new RestException($ex->getMessage(), 1, $ex);
+        } catch (RepositoryException $ex) {
+            throw new RestException($ex->getMessage(), 1, $ex);
+        }
+
+        return $this->prepareNode($structure, $webspaceKey, $languageCode);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function orderBefore($uuid, $beforeUuid, $webspaceKey, $languageCode, $userId)
+    {
+        try {
+            // call mapper function
+            $structure = $this->getMapper()->orderBefore($uuid, $beforeUuid, $userId, $webspaceKey, $languageCode);
+        } catch (PHPCRException $ex) {
+            throw new RestException($ex->getMessage(), 1, $ex);
+        } catch (RepositoryException $ex) {
+            throw new RestException($ex->getMessage(), 1, $ex);
+        }
+
+        return $this->prepareNode($structure, $webspaceKey, $languageCode);
     }
 }

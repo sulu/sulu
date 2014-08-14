@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\ContentBundle\Content\Types;
 
+use JMS\Serializer\Serializer;
 use PHPCR\NodeInterface;
 use Sulu\Bundle\ContentBundle\Content\SmartContentContainer;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
@@ -37,10 +38,21 @@ class SmartContent extends ComplexContentType
      */
     private $template;
 
-    function __construct(NodeRepositoryInterface $nodeRepository, TagManagerInterface $tagManager, $template)
+    /**
+     * @var \JMS\Serializer\Serializer
+     */
+    private $serializer;
+
+    function __construct(
+        NodeRepositoryInterface $nodeRepository,
+        TagManagerInterface $tagManager,
+        Serializer $serializer,
+        $template
+    )
     {
         $this->nodeRepository = $nodeRepository;
         $this->tagManager = $tagManager;
+        $this->serializer = $serializer;
         $this->template = $template;
     }
 
@@ -83,12 +95,13 @@ class SmartContent extends ComplexContentType
         $smartContent = new SmartContentContainer(
             $this->nodeRepository,
             $this->tagManager,
+            $this->serializer,
             $webspaceKey,
             $languageCode,
             $segmentKey,
             $preview
         );
-        $smartContent->setConfig($data === null ? array() : $data);
+        $smartContent->setConfig($data === null || !is_array($data) ? array() : $data);
         $property->setValue($smartContent);
     }
 

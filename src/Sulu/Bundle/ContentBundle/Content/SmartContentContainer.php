@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\ContentBundle\Content;
 
+use JMS\Serializer\Serializer;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Content\StructureInterface;
@@ -67,8 +68,15 @@ class SmartContentContainer implements \Serializable
     private $preview;
 
     /**
+     * @var \JMS\Serializer\Serializer
+     * @Exclude
+     */
+    private $serializer;
+
+    /**
      * @param NodeRepositoryInterface $nodeRepository
      * @param TagManagerInterface $tagManager
+     * @param \JMS\Serializer\Serializer $serializer
      * @param string $webspaceKey
      * @param string $languageCode
      * @param string $segmentKey
@@ -77,6 +85,7 @@ class SmartContentContainer implements \Serializable
     public function __construct(
         NodeRepositoryInterface $nodeRepository,
         TagManagerInterface $tagManager,
+        Serializer $serializer,
         $webspaceKey,
         $languageCode,
         $segmentKey,
@@ -88,6 +97,7 @@ class SmartContentContainer implements \Serializable
         $this->webspaceKey = $webspaceKey;
         $this->languageCode = $languageCode;
         $this->preview = $preview;
+        $this->serializer = $serializer;
     }
 
     /**
@@ -111,7 +121,7 @@ class SmartContentContainer implements \Serializable
     {
         $config = $this->config;
         // TODO Remove when multi sorting is possible in javascript component
-        if (isset($config['sortBy'])) {
+        if (isset($config['sortBy']) && is_array($config['sortBy']) && sizeof($config['sortBy']) > 0) {
             $config['sortBy'] = $config['sortBy'][0];
         }
         return $config;
@@ -183,9 +193,15 @@ class SmartContentContainer implements \Serializable
      */
     public function serialize()
     {
-        return json_encode(
+        if ($this->serializer) {
+            $data = $this->serializer->serialize($this->getData(), 'json');
+        } else {
+            $data = json_encode($this->getData());
+        }
+
+        return serialize(
             array(
-                'data'   => $this->getData(),
+                'data'   => $data,
                 'config' => $this->getConfig()
             )
         );
@@ -202,7 +218,7 @@ class SmartContentContainer implements \Serializable
      */
     public function unserialize($serialized)
     {
-        $values = json_decode($serialized, true);
+        $values = unserialize($serialized);
         $this->data = $values['data'];
         $this->config = $values['config'];
     }

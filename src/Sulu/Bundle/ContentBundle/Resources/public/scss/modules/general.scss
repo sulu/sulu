@@ -23,7 +23,9 @@
     }
 }
 
-.internal-links-overlay {
+.internal-links-overlay,
+.single-internal-overlay,
+.overlay-container {
     .overlay-header {
         margin-bottom: 1px;
     }
@@ -34,4 +36,9 @@
     .overlay-footer {
         margin: 0px;
     }
+}
+
+/* smart content for column view */
+.column-navigation-wrapper {
+    overflow: inherit;
 }

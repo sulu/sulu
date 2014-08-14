@@ -3,12 +3,11 @@
 .sulu-content-preview {
   width: 100%;
   height: 100%;
-  border-left: 1px solid #666;
   text-align: center;
   white-space: nowrap;
   overflow: auto;
 }
-/* line 9, ../scss/modules/preview.scss */
+/* line 8, ../scss/modules/preview.scss */
 .sulu-content-preview::before {
   content: '';
   display: inline-block;
@@ -16,48 +15,48 @@
   vertical-align: middle;
   margin-right: -0.25em;
 }
-/* line 17, ../scss/modules/preview.scss */
+/* line 16, ../scss/modules/preview.scss */
 .sulu-content-preview .wrapper {
   display: inline-block;
   vertical-align: middle;
   white-space: normal;
   overflow: hidden;
 }
-/* line 24, ../scss/modules/preview.scss */
+/* line 23, ../scss/modules/preview.scss */
 .sulu-content-preview iframe {
   border: 0;
   width: 100%;
   height: 100%;
 }
-/* line 31, ../scss/modules/preview.scss */
+/* line 30, ../scss/modules/preview.scss */
 .sulu-content-preview.auto .wrapper {
   width: 100%;
   height: 100%;
 }
-/* line 35, ../scss/modules/preview.scss */
+/* line 34, ../scss/modules/preview.scss */
 .sulu-content-preview.auto .viewport {
   width: 100%;
   height: 100%;
 }
-/* line 40, ../scss/modules/preview.scss */
+/* line 39, ../scss/modules/preview.scss */
 .sulu-content-preview.desktop {
   background: #999999;
 }
-/* line 42, ../scss/modules/preview.scss */
+/* line 41, ../scss/modules/preview.scss */
 .sulu-content-preview.desktop .wrapper {
   width: 100%;
   height: 100%;
 }
-/* line 46, ../scss/modules/preview.scss */
+/* line 45, ../scss/modules/preview.scss */
 .sulu-content-preview.desktop .viewport {
   width: 1024px;
   height: 100%;
 }
-/* line 51, ../scss/modules/preview.scss */
+/* line 50, ../scss/modules/preview.scss */
 .sulu-content-preview.smartphone {
   background: #999999;
 }
-/* line 53, ../scss/modules/preview.scss */
+/* line 52, ../scss/modules/preview.scss */
 .sulu-content-preview.smartphone .wrapper {
   width: 378px;
   height: 794px;
@@ -68,16 +67,16 @@
   padding-top: 115px;
   padding-left: 30px;
 }
-/* line 63, ../scss/modules/preview.scss */
+/* line 62, ../scss/modules/preview.scss */
 .sulu-content-preview.smartphone .viewport {
   width: 320px;
   height: 568px;
 }
-/* line 68, ../scss/modules/preview.scss */
+/* line 67, ../scss/modules/preview.scss */
 .sulu-content-preview.tablet {
   background: #999999;
 }
-/* line 70, ../scss/modules/preview.scss */
+/* line 69, ../scss/modules/preview.scss */
 .sulu-content-preview.tablet .wrapper {
   width: 836px;
   height: 1282px;
@@ -88,13 +87,13 @@
   padding-top: 122px;
   padding-left: 30px;
 }
-/* line 80, ../scss/modules/preview.scss */
+/* line 79, ../scss/modules/preview.scss */
 .sulu-content-preview.tablet .viewport {
   width: 768px;
   height: 1024px;
 }
 
-/* line 87, ../scss/modules/preview.scss */
+/* line 86, ../scss/modules/preview.scss */
 .sulu-preview-toolbar {
   position: fixed;
   top: 0;
@@ -104,13 +103,13 @@
   color: #fff;
   font-weight: 100;
 }
-/* line 96, ../scss/modules/preview.scss */
+/* line 95, ../scss/modules/preview.scss */
 .sulu-preview-toolbar .right {
   background: #21272E;
   height: 100%;
   border-radius: 0 0 0 3px;
 }
-/* line 101, ../scss/modules/preview.scss */
+/* line 100, ../scss/modules/preview.scss */
 .sulu-preview-toolbar .right .new-window {
   width: 30px;
   overflow: hidden;
@@ -121,28 +120,28 @@
   padding-left: 2px;
   line-height: 24px;
 }
-/* line 112, ../scss/modules/preview.scss */
+/* line 111, ../scss/modules/preview.scss */
 .sulu-preview-toolbar .right .resolutions {
   border-right: 1px solid #fff;
   min-width: 125px;
 }
-/* line 115, ../scss/modules/preview.scss */
+/* line 114, ../scss/modules/preview.scss */
 .sulu-preview-toolbar .right .resolutions .drop-down-trigger {
   color: #fff;
   padding: 5px 10px;
 }
-/* line 120, ../scss/modules/preview.scss */
+/* line 119, ../scss/modules/preview.scss */
 .sulu-preview-toolbar .right .resolutions .dropdown-toggle {
   display: inline-block;
 }
-/* line 122, ../scss/modules/preview.scss */
+/* line 121, ../scss/modules/preview.scss */
 .sulu-preview-toolbar .right .resolutions .dropdown-toggle::after {
   top: -1px;
   margin-left: 5px;
   margint-right: 0;
   border-top: 6px solid #fff;
 }
-/* line 130, ../scss/modules/preview.scss */
+/* line 129, ../scss/modules/preview.scss */
 .sulu-preview-toolbar .right .resolutions .dropdown-menu {
   background: #21272E;
   color: #fff;
@@ -152,7 +151,7 @@
   border: 0;
   width: 100%;
 }
-/* line 142, ../scss/modules/preview.scss */
+/* line 141, ../scss/modules/preview.scss */
 .sulu-preview-toolbar .left {
   float: left;
   width: 30px;
@@ -167,11 +166,11 @@
 }
 
 @media only screen and (max-width: 780px) {
-  /* line 159, ../scss/modules/preview.scss */
+  /* line 158, ../scss/modules/preview.scss */
   .sulu-preview-toolbar .resolutions {
     display: none;
   }
-  /* line 162, ../scss/modules/preview.scss */
+  /* line 161, ../scss/modules/preview.scss */
   .sulu-preview-toolbar .new-window {
     border-radius: 0 0 0 2px;
   }
@@ -202,17 +201,29 @@
   border-radius: 2px;
 }
 
-/* line 27, ../scss/modules/general.scss */
-.internal-links-overlay .overlay-header {
+/* line 29, ../scss/modules/general.scss */
+.internal-links-overlay .overlay-header,
+.single-internal-overlay .overlay-header,
+.overlay-container .overlay-header {
   margin-bottom: 1px;
 }
-/* line 30, ../scss/modules/general.scss */
-.internal-links-overlay .overlay-content {
+/* line 32, ../scss/modules/general.scss */
+.internal-links-overlay .overlay-content,
+.single-internal-overlay .overlay-content,
+.overlay-container .overlay-content {
   margin: 0px;
 }
-/* line 34, ../scss/modules/general.scss */
-.internal-links-overlay .overlay-footer {
+/* line 36, ../scss/modules/general.scss */
+.internal-links-overlay .overlay-footer,
+.single-internal-overlay .overlay-footer,
+.overlay-container .overlay-footer {
   margin: 0px;
+}
+
+/* smart content for column view */
+/* line 42, ../scss/modules/general.scss */
+.column-navigation-wrapper {
+  overflow: inherit;
 }
 
 /* line 1, ../scss/modules/seo.scss */
@@ -311,5 +322,145 @@
 }
 /* line 65, ../scss/modules/resource-locator.scss */
 .resource-locator-history .date {
+  text-align: center;
+}
+
+/* line 7, ../scss/modules/smart-content.scss */
+.smart-content-overlay .column-navigation-slide .overlay-header {
+  margin-bottom: 1px;
+}
+/* line 10, ../scss/modules/smart-content.scss */
+.smart-content-overlay .column-navigation-slide .overlay-content {
+  margin: 0px;
+}
+/* line 14, ../scss/modules/smart-content.scss */
+.smart-content-overlay .column-navigation-slide .overlay-footer {
+  margin: 0px;
+}
+/* line 19, ../scss/modules/smart-content.scss */
+.smart-content-overlay .overlay-header {
+  margin-bottom: 15px;
+}
+/* line 22, ../scss/modules/smart-content.scss */
+.smart-content-overlay .overlay-footer {
+  margin-top: 5px;
+}
+
+/* line 27, ../scss/modules/smart-content.scss */
+.smart-overlay-content {
+  height: 100%;
+  font-size: 12px;
+}
+/* line 31, ../scss/modules/smart-content.scss */
+.smart-overlay-content .form-element {
+  margin: 0;
+}
+/* line 34, ../scss/modules/smart-content.scss */
+.smart-overlay-content .desc {
+  font-size: 14px;
+  color: #999999;
+  padding-bottom: 5px;
+  display: block;
+}
+/* line 40, ../scss/modules/smart-content.scss */
+.smart-overlay-content .item, .smart-overlay-content .item-half {
+  margin-bottom: 25px;
+  min-height: 55px;
+}
+/* line 44, ../scss/modules/smart-content.scss */
+.smart-overlay-content label {
+  color: black;
+  font-size: 12px;
+}
+/* line 48, ../scss/modules/smart-content.scss */
+.smart-overlay-content .sublabel {
+  font-size: 10px;
+  color: #999999;
+}
+/* line 52, ../scss/modules/smart-content.scss */
+.smart-overlay-content .item-half {
+  float: left;
+  width: 270px;
+}
+/* line 56, ../scss/modules/smart-content.scss */
+.smart-overlay-content .item {
+  padding-right: 20px;
+}
+/* line 59, ../scss/modules/smart-content.scss */
+.smart-overlay-content .left {
+  margin-right: 20px;
+}
+/* line 62, ../scss/modules/smart-content.scss */
+.smart-overlay-content .full {
+  padding-right: 0;
+}
+/* line 65, ../scss/modules/smart-content.scss */
+.smart-overlay-content .check {
+  margin-top: 30px;
+}
+/* line 67, ../scss/modules/smart-content.scss */
+.smart-overlay-content .check .description {
+  padding-left: 5px;
+}
+/* line 70, ../scss/modules/smart-content.scss */
+.smart-overlay-content .check.disabled {
+  display: none;
+}
+/* line 74, ../scss/modules/smart-content.scss */
+.smart-overlay-content .sortMethod {
+  margin-top: 25px;
+}
+/* line 78, ../scss/modules/smart-content.scss */
+.smart-overlay-content input.limit-to,
+.smart-overlay-content input.data-source {
+  padding-left: 10px;
+  border-radius: 0;
+}
+/* line 82, ../scss/modules/smart-content.scss */
+.smart-overlay-content .tags.disabled {
+  display: none;
+}
+/* line 85, ../scss/modules/smart-content.scss */
+.smart-overlay-content .tag-list {
+  border-radius: 3px 3px 0 0;
+}
+/* line 87, ../scss/modules/smart-content.scss */
+.smart-overlay-content .tag-list input {
+  margin: 7px 0 0 0;
+}
+
+/* line 1, ../scss/modules/order-table.scss */
+.order-table {
+  list-style-type: none;
+  padding: 0 40px 0 30px;
+}
+/* line 5, ../scss/modules/order-table.scss */
+.order-table::after {
+  display: table;
+  content: "";
+  clear: both;
+}
+/* line 11, ../scss/modules/order-table.scss */
+.order-table li::after {
+  clear: both;
+}
+/* line 16, ../scss/modules/order-table.scss */
+.order-table .node-name,
+.order-table .options-select {
+  display: block;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ddd;
+}
+/* line 23, ../scss/modules/order-table.scss */
+.order-table .node-name {
+  text-align: left;
+  float: left;
+  width: 95%;
+}
+/* line 29, ../scss/modules/order-table.scss */
+.order-table .options-select {
+  float: right;
+  width: 5%;
   text-align: center;
 }

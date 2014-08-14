@@ -24,26 +24,47 @@ use Symfony\Component\HttpFoundation\Response;
 class TemplateController extends Controller
 {
     /**
+     * Return the webspace manager
+     *
+     * @return WebspaceManagerInterface
+     */
+    protected function getWebspaceManager()
+    {
+        /** @var WebspaceManagerInterface $webspaceManager */
+        $webspaceManager = $this->get('sulu_core.webspace.webspace_manager');
+
+        return $webspaceManager;
+    }
+
+    /**
      * returns all structures in system
+     * @param \Symfony\Component\HttpFoundation\Request $request
      * @return JsonResponse
      */
-    public function getAction()
+    public function getAction(Request $request)
     {
+        $internal = $request->get('internal', false);
+
         /** @var StructureManagerInterface $structureManager */
         $structureManager = $this->get('sulu.content.structure_manager');
         $structures = $structureManager->getStructures();
 
         $templates = array();
-        foreach($structures as $structure){
-            $templates[] = array(
-                'template' =>$structure->getKey()
-            );
+        foreach ($structures as $structure) {
+            if (!$structure->getInternal() || $internal !== false) {
+                $templates[] = array(
+                    'internal' => $structure->getInternal(),
+                    'template' => $structure->getKey()
+
+                );
+            }
         }
 
         $data = array(
             '_embedded' => $templates,
-            'total' => sizeof($templates),
+            'total' => sizeof($templates)
         );
+
         return new JsonResponse($data);
     }
 
@@ -145,11 +166,14 @@ class TemplateController extends Controller
             );
         }
 
-        return $this->render('SuluContentBundle:Template:column.html.twig', array(
+        return $this->render(
+            'SuluContentBundle:Template:column.html.twig',
+            array(
                 'localizations' => $localizations,
                 'currentLocalization' => $currentLocalization,
                 'webspace' => $webspace
-            ));
+            )
+        );
     }
 
     /**
@@ -159,9 +183,7 @@ class TemplateController extends Controller
      */
     public function getLanguagesAction($webspaceKey)
     {
-        /** @var WebspaceManagerInterface $webspaceManager */
-        $webspaceManager = $this->get('sulu_core.webspace.webspace_manager');
-        $webspace = $webspaceManager->findWebspaceByKey($webspaceKey);
+        $webspace = $this->getWebspaceManager()->findWebspaceByKey($webspaceKey);
         $localizations = array();
 
         $i = 0;
@@ -177,6 +199,7 @@ class TemplateController extends Controller
             '_embedded' => $localizations,
             'total' => sizeof($localizations),
         );
+
         return new JsonResponse($data);
     }
 
@@ -184,9 +207,29 @@ class TemplateController extends Controller
      * renders template fpr settings
      * @return Response
      */
-    public function settingsAction()
+    public function settingsAction(Request $request)
     {
-        return $this->render('SuluContentBundle:Template:settings.html.twig');
-    }
+        $webspaceKey = $request->get('webspaceKey');
+        $webspace = $this->getWebspaceManager()->findWebspaceByKey($webspaceKey);
 
+        $navContexts = array();
+        foreach ($this->container->getParameter('sulu.content.nav_contexts') as $context) {
+            $navContexts[] = array(
+                'name' => $context,
+                'id' => $context
+            );
+        }
+
+        $languages = array();
+        foreach ($webspace->getAllLocalizations() as $localization) {
+            $languages[] = $localization->getLocalization();
+        }
+
+        return $this->render(
+            'SuluContentBundle:Template:settings.html.twig', array(
+                'navContexts' => $navContexts,
+                'languages' => $languages,
+            )
+        );
+    }
 }

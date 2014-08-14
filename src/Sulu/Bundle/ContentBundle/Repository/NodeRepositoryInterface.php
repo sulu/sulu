@@ -91,9 +91,8 @@ interface NodeRepositoryInterface
      * @param string $languageCode
      * @param integer $userId
      * @param string $uuid
-     * @param null $state
      * @param string $parentUuid
-     * @param boolean $showInNavigation
+     * @param null $state
      * @return array
      */
     public function saveNode(
@@ -104,8 +103,7 @@ interface NodeRepositoryInterface
         $userId,
         $uuid = null,
         $parentUuid = null,
-        $state = null,
-        $showInNavigation = null
+        $state = null
     );
 
     /**
@@ -164,4 +162,37 @@ interface NodeRepositoryInterface
      * @return array
      */
     public function saveExtensionData($uuid, $data, $extensionName, $webspaceKey, $languageCode, $userId);
+
+    /**
+     * move node and returns new data
+     * @param string $uuid
+     * @param string $destinationUuid
+     * @param string $webspaceKey
+     * @param string $languageCode
+     * @param string $userId
+     * @return array
+     */
+    public function moveNode($uuid, $destinationUuid, $webspaceKey, $languageCode, $userId);
+
+    /**
+     * copy node and returns new data
+     * @param string $uuid
+     * @param string $destinationUuid
+     * @param string $webspaceKey
+     * @param string $languageCode
+     * @param string $userId
+     * @return array
+     */
+    public function copyNode($uuid, $destinationUuid, $webspaceKey, $languageCode, $userId);
+
+    /**
+     * order given node before another
+     * @param string $uuid
+     * @param string $beforeUuid
+     * @param string $webspaceKey
+     * @param string $languageCode
+     * @param integer $userId
+     * @return array
+     */
+    public function orderBefore($uuid, $beforeUuid, $webspaceKey, $languageCode, $userId);
 }

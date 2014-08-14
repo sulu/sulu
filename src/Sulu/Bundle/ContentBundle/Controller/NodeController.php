@@ -10,19 +10,18 @@
 
 namespace Sulu\Bundle\ContentBundle\Controller;
 
-use Doctrine\ODM\PHPCR\PHPCRException;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use PHPCR\ItemNotFoundException;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
-use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\InvalidArgumentException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use FOS\RestBundle\Controller\Annotations\Post;
+
 
 /**
  * handles content nodes
@@ -341,17 +340,16 @@ class NodeController extends RestController implements ClassResourceInterface
         $language = $this->getLanguage($request);
         $webspace = $this->getWebspace($request);
         $template = $this->getRequestParameter($request, 'template', true);
-        $navigation = $this->getRequestParameter($request, 'navigation');
-        if ($navigation === false || $navigation === '0') {
-            $navigation = false;
-        } else {
-            // default navigation
-            $navigation = 'main';
-        }
+
+        $isShadow = $this->getRequestParameter($request, 'shadowOn', false);
+        $shadowBaseLanguage = $this->getRequestParameter($request, 'shadowBaseLanguage', null);
+
         $state = $this->getRequestParameter($request, 'state');
+
         if ($state !== null) {
             $state = intval($state);
         }
+
         $data = $request->request->all();
 
         $result = $this->getRepository()->saveNode(
@@ -363,7 +361,8 @@ class NodeController extends RestController implements ClassResourceInterface
             $uuid,
             null, // parentUuid
             $state,
-            $navigation
+            $isShadow,
+            $shadowBaseLanguage
         );
 
         return $this->handleView(
@@ -417,7 +416,14 @@ class NodeController extends RestController implements ClassResourceInterface
         $webspace = $this->getWebspace($request);
         $template = $this->getRequestParameter($request, 'template', true);
         $navigation = $this->getRequestParameter($request, 'navigation');
+        $isShadow = $this->getRequestParameter($request, 'isShadow', false);
+        $shadowBaseLanguage = $this->getRequestParameter($request, 'shadowBaseLanguage', null);
         $parent = $this->getRequestParameter($request, 'parent');
+        $state = $this->getRequestParameter($request, 'state');
+        if ($state !== null) {
+            $state = intval($state);
+        }
+
         $data = $request->request->all();
 
         if ($navigation === '0') {
@@ -435,8 +441,9 @@ class NodeController extends RestController implements ClassResourceInterface
             $this->getUser()->getId(),
             null, // uuid
             $parent,
-            null, // state
-            $navigation
+            $state,
+            $isShadow,
+            $shadowBaseLanguage
         );
 
         return $this->handleView(
@@ -465,6 +472,59 @@ class NodeController extends RestController implements ClassResourceInterface
                 }
             }
         );
+
+        return $this->handleView($view);
+    }
+
+    /**
+     * trigger a action for given node specified over get-action parameter
+     * - move: moves a node
+     *   + destination: specifies the destination node
+     * - copy: copy a node
+     *   + destination: specifies the destination node
+     *
+     * @Post("/nodes/{uuid}")
+     * @param string $uuid
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function postTriggerAction($uuid, Request $request)
+    {
+        // extract parameter
+        $language = $this->getLanguage($request);
+        $webspace = $this->getWebspace($request);
+        $action = $this->getRequestParameter($request, 'action', true);
+        $destination = $this->getRequestParameter($request, 'destination', true);
+        $userId = $this->getUser()->getId();
+
+        // prepare vars
+        $repository = $this->getRepository();
+        $view = null;
+        $data = null;
+
+        try {
+            switch ($action) {
+                case 'move':
+                    // call repository method
+                    $data = $repository->moveNode($uuid, $destination, $webspace, $language, $userId);
+                    break;
+                case 'copy':
+                    // call repository method
+                    $data = $repository->copyNode($uuid, $destination, $webspace, $language, $userId);
+                    break;
+                case 'order':
+                    // call repository method
+                    $data = $repository->orderBefore($uuid, $destination, $webspace, $language, $userId);
+                    break;
+                default:
+                    throw new RestException('Unrecognized action: ' . $action);
+            }
+
+            // prepare view
+            $view = $this->view($data, 200);
+        } catch (RestException $exc) {
+            $view = $this->view($exc->toArray(), 400);
+        }
 
         return $this->handleView($view);
     }

@@ -17,5 +17,8 @@ TEMP_*/
 /bin/jackrabbit/*
 
 # test cache
-/Tests/Resources/app/admin/cache/*
-/Tests/Resources/app/admin/logs/*
+/Tests/app/cache/*
+/Tests/app/logs/*
+
+# custom phpunit xml
+phpunit.xml

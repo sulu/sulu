@@ -15,6 +15,12 @@ define([
 
     var CONTENT_LANGUAGE = 'contentLanguage',
 
+        /**
+         * node type constant for content
+         * @type {number}
+         */
+        TYPE_CONTENT = 1,
+
         constants = {
             resolutionDropdownData: [
                 {id: 1, name: 'sulu.preview.auto', cssClass: 'auto'},
@@ -58,8 +64,6 @@ define([
             this.$preview = null;
             this.contentChanged = false;
 
-            this.headerInitialized = this.sandbox.data.deferred();
-
             if (this.options.display === 'column') {
                 this.renderColumn();
             } else {
@@ -85,7 +89,6 @@ define([
 
         loadData: function() {
             this.content = new Content({id: this.options.id});
-            this.loadDataDeferred = this.sandbox.data.deferred();
 
             if (this.options.id !== undefined) {
                 this.content.fullFetch(
@@ -179,10 +182,12 @@ define([
             // set default template
             this.sandbox.on('sulu.content.contents.default-template', function(name) {
                 this.template = name;
-                this.sandbox.emit('sulu.header.toolbar.item.change', 'template', name);
-                if (this.hiddenTemplate) {
-                    this.hiddenTemplate = false;
-                    this.sandbox.emit('sulu.header.toolbar.item.show', 'template', name);
+                if (this.data.nodeType !== TYPE_CONTENT) {
+                    this.sandbox.emit('sulu.header.toolbar.item.change', 'template', name);
+                    if (this.hiddenTemplate) {
+                        this.hiddenTemplate = false;
+                        this.sandbox.emit('sulu.header.toolbar.item.show', 'template', name);
+                    }
                 }
             }, this);
 
@@ -219,8 +224,8 @@ define([
             }, this);
 
             // save the current package
-            this.sandbox.on('sulu.content.contents.save', function(data) {
-                this.save(data);
+            this.sandbox.on('sulu.content.contents.save', function(data, template) {
+                this.save(data, template);
             }, this);
 
             // wait for navigation events
@@ -237,6 +242,15 @@ define([
             this.sandbox.on('sulu.content.contents.delete', function(ids) {
                 this.delContents(ids);
             }, this);
+
+            // move selected content
+            this.sandbox.on('sulu.content.contents.move', this.move, this);
+
+            // move selected content
+            this.sandbox.on('sulu.content.contents.copy', this.copy, this);
+
+            // order selected content
+            this.sandbox.on('sulu.content.contents.order', this.order, this);
 
             // get resource locator
             this.sandbox.once('sulu.content.contents.get-rl', function(title, callback) {
@@ -258,11 +272,65 @@ define([
                 });
         },
 
+        move: function(id, parentId, successCallback, errorCallback) {
+            var url = [
+                '/admin/api/nodes/', id, '?webspace=', this.options.webspace, '&language=' , this.options.language , '&action=move&destination=', parentId
+            ].join('');
+
+            this.sandbox.util.save(url, 'POST', {})
+                .then(function(data) {
+                    if (!!successCallback && typeof successCallback === 'function') {
+                        successCallback(data);
+                    }
+                }.bind(this))
+                .fail(function(jqXHR, textStatus, error) {
+                    if (!!errorCallback && typeof errorCallback === 'function') {
+                        errorCallback(error);
+                    }
+                }.bind(this));
+        },
+
+        copy: function(id, parentId, successCallback, errorCallback) {
+            var url = [
+                '/admin/api/nodes/', id, '?webspace=', this.options.webspace, '&language=' , this.options.language , '&action=copy&destination=', parentId
+            ].join('');
+
+            this.sandbox.util.save(url, 'POST', {})
+                .then(function(data) {
+                    if (!!successCallback && typeof successCallback === 'function') {
+                        successCallback(data);
+                    }
+                }.bind(this))
+                .fail(function(jqXHR, textStatus, error) {
+                    if (!!errorCallback && typeof errorCallback === 'function') {
+                        errorCallback(error);
+                    }
+                }.bind(this));
+        },
+
+        order: function(id, parentId, successCallback, errorCallback) {
+            var url = [
+                '/admin/api/nodes/', id, '?webspace=', this.options.webspace, '&language=' , this.options.language , '&action=order&destination=', parentId
+            ].join('');
+
+            this.sandbox.util.save(url, 'POST', {})
+                .then(function(data) {
+                    if (!!successCallback && typeof successCallback === 'function') {
+                        successCallback(data);
+                    }
+                }.bind(this))
+                .fail(function(jqXHR, textStatus, error) {
+                    if (!!errorCallback && typeof errorCallback === 'function') {
+                        errorCallback(error);
+                    }
+                }.bind(this));
+        },
+
         del: function(id) {
             this.showConfirmSingleDeleteDialog(function(wasConfirmed) {
                 if (wasConfirmed) {
                     this.sandbox.emit('sulu.header.toolbar.item.loading', 'options-button');
-                    if (id !== this.content.get('id')) {
+                    if (!this.content || id !== this.content.get('id')) {
                         var content = new Content({id: id});
                         content.fullDestroy(this.options.webspace, this.options.language, {
                             processData: true,
@@ -353,7 +421,7 @@ define([
             });
         },
 
-        save: function(data) {
+        save: function(data, template) {
             this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
 
             if (!!this.content) {
@@ -364,8 +432,7 @@ define([
             if (!!this.options.id) {
                 this.content.set({id: this.options.id});
             }
-
-            this.content.fullSave(this.template, this.options.webspace, this.options.language, this.options.parent, this.state, null, {
+            this.content.fullSave(template || this.template, this.options.webspace, this.options.language, this.options.parent, this.state, null, {
                 // on success save contents id
                 success: function(response) {
                     var model = response.toJSON();
@@ -403,8 +470,15 @@ define([
                 this.setTemplate(data);
                 this.setState(data);
 
-                if (!!this.options.preview) {
+                if (!!this.options.preview && this.data.nodeType === TYPE_CONTENT) {
                     this.renderPreview(data);
+                } else {
+                    this.sandbox.emit('sulu.sidebar.hide');
+                    this.sandbox.emit('sulu.app.toggle-shrinker', false);
+                }
+
+                if (this.data.shadowOn === true) {
+                    this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language + '/edit:' + data.id + '/settings');
                 }
 
                 this.setHeaderBar(true);
@@ -527,7 +601,7 @@ define([
         setTemplate: function(data) {
             this.template = data.template;
 
-            if (this.template !== '' && this.template !== undefined && this.template !== null) {
+            if (this.data.nodeType === TYPE_CONTENT && this.template !== '' && this.template !== undefined && this.template !== null) {
                 this.sandbox.emit('sulu.header.toolbar.item.change', 'template', this.template);
                 this.sandbox.emit('sulu.header.toolbar.item.show', 'template');
             }
@@ -608,11 +682,15 @@ define([
         },
 
         header: function() {
+            // because it is called first
+            this.headerInitialized = this.sandbox.data.deferred();
+            this.loadDataDeferred = this.sandbox.data.deferred();
+
             this.sandbox.once('sulu.header.initialized', function() {
                 this.headerInitialized.resolve();
             }.bind(this));
 
-            var noBack = (this.options.id === 'index');
+            var noBack = (this.options.id === 'index'), def;
 
             if (this.options.display === 'column') {
                 this.fullSize = {
@@ -635,70 +713,77 @@ define([
                     }
                 };
             } else {
-                return {
-                    noBack: noBack,
+                def = this.sandbox.data.deferred();
+                this.loadDataDeferred.then(function() {
+                    var url = '/admin/content/navigation/content' + (!!this.data.id ? '?type=' + this.data.nodeType + '&id=' + this.data.id : ''),
+                        x = {
+                        noBack: noBack,
 
-                    tabs: {
-                        url: '/admin/content/navigation/content'
-                    },
-
-                    toolbar: {
-                        parentTemplate: 'default',
-
-                        languageChanger: {
-                            url: '/admin/content/languages/' + this.options.webspace,
-                            preSelected: this.options.language
+                        tabs: {
+                            url: url
                         },
 
-                        template: [
-                            {
-                                'id': 'state',
-                                'group': 'left',
-                                'position': 100,
-                                'type': 'select',
-                                items: [
-                                    {
-                                        'id': 1,
-                                        'title': this.sandbox.translate('toolbar.state-test'),
-                                        'icon': 'husky-test',
-                                        'callback': function() {
-                                            this.sandbox.emit('sulu.dropdown.state.item-clicked', 1);
-                                        }.bind(this)
-                                    },
-                                    {
-                                        'id': 2,
-                                        'title': this.sandbox.translate('toolbar.state-publish'),
-                                        'icon': 'husky-publish',
-                                        'callback': function() {
-                                            this.sandbox.emit('sulu.dropdown.state.item-clicked', 2);
+                        toolbar: {
+                            parentTemplate: 'default',
+
+                            languageChanger: {
+                                url: '/admin/content/languages/' + this.options.webspace,
+                                preSelected: this.options.language
+                            },
+
+                            template: [
+                                {
+                                    'id': 'state',
+                                    'group': 'left',
+                                    'position': 100,
+                                    'type': 'select',
+                                    items: [
+                                        {
+                                            'id': 2,
+                                            'title': this.sandbox.translate('toolbar.state-publish'),
+                                            'icon': 'husky-publish',
+                                            'callback': function() {
+                                                this.sandbox.emit('sulu.dropdown.state.item-clicked', 2);
+                                            }.bind(this)
+                                        },
+                                        {
+                                            'id': 1,
+                                            'title': this.sandbox.translate('toolbar.state-test'),
+                                            'icon': 'husky-test',
+                                            'callback': function() {
+                                                this.sandbox.emit('sulu.dropdown.state.item-clicked', 1);
+                                            }.bind(this)
+                                        }
+                                    ]
+                                },
+                                {
+                                    id: 'template',
+                                    icon: 'pencil',
+                                    iconSize: 'large',
+                                    group: 'left',
+                                    position: 10,
+                                    type: 'select',
+                                    title: '',
+                                    hidden: false,
+                                    itemsOption: {
+                                        url: '/admin/content/template',
+                                        titleAttribute: 'template',
+                                        idAttribute: 'template',
+                                        translate: true,
+                                        languageNamespace: 'template.',
+                                        callback: function(item) {
+                                            this.template = item.template;
+                                            this.sandbox.emit('sulu.dropdown.template.item-clicked', item);
                                         }.bind(this)
                                     }
-                                ]
-                            },
-                            {
-                                id: 'template',
-                                icon: 'pencil',
-                                iconSize: 'large',
-                                group: 'left',
-                                position: 10,
-                                type: 'select',
-                                title: '',
-                                hidden: false,
-                                itemsOption: {
-                                    url: '/admin/content/template',
-                                    titleAttribute: 'template',
-                                    idAttribute: 'template',
-                                    translate: true,
-                                    languageNamespace: 'template.',
-                                    callback: function(item) {
-                                        this.template = item.template;
-                                        this.sandbox.emit('sulu.dropdown.template.item-clicked', item);
-                                    }.bind(this)
                                 }
-                            }
-                        ]
-                    }
-                };
+                            ]
+                        }
+                    };
+                    def.resolveWith(this, [x]);
+                }.bind(this));
+
+                return def;
             }
         },
 
@@ -714,7 +799,8 @@ define([
                 };
             } else {
                 var sidebar = {
-                    width: 'max'
+                    width: 'max',
+                    cssClasses: 'dark-border'
                 };
                 if (!this.options.preview) {
                     sidebar = false;
