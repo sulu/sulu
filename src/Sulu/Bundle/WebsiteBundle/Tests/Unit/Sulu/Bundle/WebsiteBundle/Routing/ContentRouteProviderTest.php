@@ -17,7 +17,7 @@ use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Theme;
 use Sulu\Component\Webspace\Webspace;
 
-class PortalRouteProviderTest extends \PHPUnit_Framework_TestCase
+class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
 {
     public function testStateTest()
     {
@@ -42,17 +42,14 @@ class PortalRouteProviderTest extends \PHPUnit_Framework_TestCase
         $contentMapper = $this->getContentMapperMock($structure);
         $contentMapper->expects($this->any())->method('loadByResourceLocator')->will($this->returnValue($structure));
 
-        $portalRouteProvider = new PortalRouteProvider($contentMapper, $requestAnalyzer, $activeTheme);
+        $portalRouteProvider = new ContentRouteProvider($contentMapper, $requestAnalyzer, $activeTheme);
 
         $request = $this->getRequestMock($path);
 
         // Test the route provider
         $routes = $portalRouteProvider->getRouteCollectionForRequest($request);
 
-        $this->assertCount(1, $routes);
-        $route = $routes->getIterator()->current();
-        $this->assertEquals('SuluWebsiteBundle:Default:error404', $route->getDefaults()['_controller']);
-        $this->assertEquals('/', $route->getDefaults()['path']);
+        $this->assertCount(0, $routes);
     }
 
     public function testGetCollectionForRequest()
@@ -78,7 +75,7 @@ class PortalRouteProviderTest extends \PHPUnit_Framework_TestCase
         $contentMapper = $this->getContentMapperMock($structure);
         $contentMapper->expects($this->any())->method('loadByResourceLocator')->will($this->returnValue($structure));
 
-        $portalRouteProvider = new PortalRouteProvider($contentMapper, $requestAnalyzer, $activeTheme);
+        $portalRouteProvider = new ContentRouteProvider($contentMapper, $requestAnalyzer, $activeTheme);
 
         $request = $this->getRequestMock($path);
 
@@ -112,17 +109,14 @@ class PortalRouteProviderTest extends \PHPUnit_Framework_TestCase
         $contentMapper = $this->getContentMapperMock($structure);
         $contentMapper->expects($this->any())->method('loadByResourceLocator')->will($this->returnValue($structure));
 
-        $portalRouteProvider = new PortalRouteProvider($contentMapper, $requestAnalyzer, $activeTheme);
+        $portalRouteProvider = new ContentRouteProvider($contentMapper, $requestAnalyzer, $activeTheme);
 
         $request = $this->getRequestMock($path);
 
         // Test the route provider
         $routes = $portalRouteProvider->getRouteCollectionForRequest($request);
 
-        $this->assertCount(1, $routes);
-        $route = $routes->getIterator()->current();
-        $this->assertEquals('SuluWebsiteBundle:Default:error404', $route->getDefaults()['_controller']);
-        $this->assertEquals('/', $route->getDefaults()['path']);
+        $this->assertCount(0, $routes);
     }
 
     public function testGetCollectionForSingleLanguageRequestSlashOnly()
@@ -148,7 +142,7 @@ class PortalRouteProviderTest extends \PHPUnit_Framework_TestCase
         $contentMapper = $this->getContentMapperMock($structure);
         $contentMapper->expects($this->any())->method('loadByResourceLocator')->will($this->returnValue($structure));
 
-        $portalRouteProvider = new PortalRouteProvider($contentMapper, $requestAnalyzer, $activeTheme);
+        $portalRouteProvider = new ContentRouteProvider($contentMapper, $requestAnalyzer, $activeTheme);
 
         $request = $this->getRequestMock($path);
 
@@ -188,7 +182,7 @@ class PortalRouteProviderTest extends \PHPUnit_Framework_TestCase
         $contentMapper = $this->getContentMapperMock($structure);
         $contentMapper->expects($this->any())->method('loadByResourceLocator')->will($this->returnValue(null));
 
-        $portalRouteProvider = new PortalRouteProvider($contentMapper, $requestAnalyzer, $activeTheme);
+        $portalRouteProvider = new ContentRouteProvider($contentMapper, $requestAnalyzer, $activeTheme);
 
         $request = $this->getRequestMock($path);
 
@@ -227,17 +221,14 @@ class PortalRouteProviderTest extends \PHPUnit_Framework_TestCase
             $this->throwException(new ResourceLocatorNotFoundException())
         );
 
-        $portalRouteProvider = new PortalRouteProvider($contentMapper, $requestAnalyzer, $activeTheme);
+        $portalRouteProvider = new ContentRouteProvider($contentMapper, $requestAnalyzer, $activeTheme);
 
         $request = $this->getRequestMock($path);
 
         // Test the route provider
         $routes = $portalRouteProvider->getRouteCollectionForRequest($request);
 
-        $this->assertCount(1, $routes);
-        $route = $routes->getIterator()->current();
-        $this->assertEquals('SuluWebsiteBundle:Default:error404', $route->getDefaults()['_controller']);
-        $this->assertEquals('/', $route->getDefaults()['path']);
+        $this->assertCount(0, $routes);
     }
 
     public function testGetCollectionForRedirect()
@@ -269,7 +260,7 @@ class PortalRouteProviderTest extends \PHPUnit_Framework_TestCase
         $contentMapper = $this->getContentMapperMock($structure);
         $contentMapper->expects($this->any())->method('loadByResourceLocator')->will($this->returnValue(null));
 
-        $portalRouteProvider = new PortalRouteProvider($contentMapper, $requestAnalyzer, $activeTheme);
+        $portalRouteProvider = new ContentRouteProvider($contentMapper, $requestAnalyzer, $activeTheme);
 
         $request = $this->getRequestMock($path);
 

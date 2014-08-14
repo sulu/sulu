@@ -11,7 +11,9 @@
 namespace Sulu\Bundle\WebsiteBundle\Navigation;
 
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
+use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 
 /**
  * {@inheritdoc}
@@ -29,58 +31,112 @@ class NavigationMapper implements NavigationMapperInterface
     }
 
     /**
-     * returns navigation for given parent
-     * @param string $parent uuid of parent node
-     * @param $webspace
-     * @param $language
-     * @param int $depth
-     * @param boolean $preview
-     * @return NavigationItem[]
+     * {@inheritdoc}
      */
-    public function getNavigation($parent, $webspace, $language, $depth = 1, $preview = false)
+    public function getNavigation($parent, $webspace, $language, $depth = 1, $flat = false, $context = null)
     {
         $contents = $this->contentMapper->loadByParent($parent, $webspace, $language, $depth, false, true, true);
 
-        return $this->generateNavigation($contents, $preview);
+        return $this->generateNavigation($contents, $webspace, $language, $flat, $context);
     }
 
     /**
-     * returns navigation from root
-     * @param int $depth
-     * @param string $webspace
-     * @param string $language
-     * @param int $depth
-     * @param boolean $preview
-     * @return NavigationItem[]
+     * {@inheritdoc}
      */
-    public function getMainNavigation($webspace, $language, $depth = 1, $preview = false)
+    public function getRootNavigation($webspace, $language, $depth = 1, $flat = false, $context = null)
     {
-        return $this->getNavigation(null, $webspace, $language, $depth, $preview);
+        return $this->getNavigation(null, $webspace, $language, $depth, $flat, $context);
     }
 
     /**
-     * @param StructureInterface[] $contents
-     * @param boolean $preview
-     * @return NavigationItem[]
+     * {@inheritdoc}
      */
-    private function generateNavigation($contents, $preview)
+    public function getBreadcrumb($uuid, $webspace, $language)
+    {
+        $breadcrumbItems = $this->contentMapper->loadBreadcrumb($uuid, $language, $webspace);
+
+        $result = array();
+        foreach ($breadcrumbItems as $item) {
+            $result[] = $this->contentMapper->load($item->getUuid(), $webspace, $language);
+        }
+        $result[] = $this->contentMapper->load($uuid, $webspace, $language);
+
+        return $this->generateNavigation($result, $webspace, $language);
+    }
+
+    /**
+     * generate navigation items for given contents
+     */
+    private function generateNavigation($contents, $webspace, $language, $flat = false, $context = null)
     {
         $result = array();
 
+        /** @var StructureInterface $content */
         foreach ($contents as $content) {
-            $children = array();
-            if (is_array($content->getChildren()) && sizeof($content->getChildren()) > 0) {
-                $children = $this->generateNavigation($content->getChildren(), $preview);
-            }
-            if (($preview || ($content->getPublishedState() && $content->getNavigation() !== false))) {
-                $url = $content->getPropertyByTagName('sulu.rlp')->getValue();
-                $title = $content->getPropertyByTagName('sulu.node.name')->getValue();
-                $result[] = new NavigationItem(
-                    $content, $title, $url, $children, $content->getUuid()
-                );
+            if ($this->inNavigation($content, $context)) {
+                $url = $content->getResourceLocator();
+                $title = $content->getNodeName();
+                $children = $this->generateChildNavigation($content, $webspace, $language, $flat, $context);
+
+                if (false === $flat) {
+                    $result[] = new NavigationItem(
+                        $content, $title, $url, $children, $content->getUuid(), $content->getNodeType()
+                    );
+                } else {
+                    $result[] = new NavigationItem(
+                        $content, $title, $url, null, $content->getUuid(), $content->getNodeType()
+                    );
+                    $result = array_merge($result, $children);
+                }
+            } elseif (true === $flat) {
+                $children = $this->generateChildNavigation($content, $webspace, $language, $flat, $context);
+                $result = array_merge($result, $children);
             }
         }
 
         return $result;
+    }
+
+    /**
+     * generate child navigation of given content
+     */
+    private function generateChildNavigation(
+        StructureInterface $content,
+        $webspace,
+        $language,
+        $flat = false,
+        $context = null
+    ) {
+        $children = array();
+        if (is_array($content->getChildren()) && sizeof($content->getChildren()) > 0) {
+            $children = $this->generateNavigation(
+                $content->getChildren(),
+                $webspace,
+                $language,
+                $flat,
+                $context
+            );
+        }
+
+        return $children;
+    }
+
+    /**
+     * checks if content should be displayed
+     * @param StructureInterface $content
+     * @param string|null $context
+     * @return bool
+     */
+    public function inNavigation(StructureInterface $content, $context = null)
+    {
+        $contexts = $content->getNavContexts();
+
+        if (is_array($contexts) && ($context === null || in_array($context, $contexts))) {
+            // all contexts or content has context
+            return true;
+        }
+
+        // do not show
+        return false;
     }
 }

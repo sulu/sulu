@@ -33,25 +33,12 @@ class DefaultController extends WebsiteController
     {
         $response = $this->renderStructure(
             $structure,
-            array(
-                'navigation' => $this->getMainNavigation($structure, null, $preview)
-            ),
+            array(),
             $preview,
             $partial
         );
 
         return $response;
-    }
-
-    public function error404Action(Request $request)
-    {
-        return $this->renderError(
-            'ClientWebsiteBundle:views:error404.html.twig',
-            array(
-                'path'       => $request->get('path'),
-                'navigation' => array()
-            )
-        );
     }
 
     public function redirectAction(Request $request)
