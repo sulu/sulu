@@ -74,6 +74,7 @@
             <argument type="service" id="sulu_media.storage" />
             <argument type="service" id="sulu_media.file_validator" />
             <argument type="service" id="sulu_media.format_manager" />
+            <argument type="service" id="sulu_tag.tag_manager" />
             <argument type="expression">service('router').getRouteCollection().get('sulu_media.website.media.download').getPath()</argument>
             <argument>%sulu_media.media.max_file_size%</argument>
             <argument>%sulu_media.media.blocked_file_types%</argument>
@@ -92,6 +93,7 @@
 
         <service id="sulu_media.type.media_selection" class="%sulu_media.media_selection.class%">
             <argument type="service" id="sulu_media.media_manager"/>
+            <argument type="service" id="serializer"/>
             <argument type="string">SuluMediaBundle:Template:content-types/media-selection.html.twig</argument>
             <tag name="sulu.content.type" alias="media_selection"/>
         </service>

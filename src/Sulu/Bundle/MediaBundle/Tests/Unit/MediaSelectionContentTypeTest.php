@@ -11,9 +11,9 @@
 namespace Sulu\Bundle\MediaBundle\Tests\Unit\Content\Types;
 
 //FIXME remove on update to phpunit 3.8, caused by https://github.com/sebastianbergmann/phpunit/issues/604
+use JMS\Serializer\Serializer;
 use PHPUnit_Framework_TestCase;
 use Sulu\Bundle\MediaBundle\Content\MediaSelectionContainer;
-use Sulu\Bundle\MediaBundle\Media\RestObject\RestObjectHelper;
 
 interface NodeInterface extends \PHPCR\NodeInterface, \Iterator
 {
@@ -31,12 +31,18 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
      */
     private $mediaManager;
 
+    /**
+     * @var Serializer
+     */
+    private $serializer ;
+
     protected function setUp()
     {
-        $this->mediaManager = $this->getMock('\Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface');
+        $this->mediaManager = $this->getMock('\Sulu\Bundle\MeediaBundle\Media\Manager\MediaManagerInterface');
+        $this->serializer = $this->getMock('JMS\Serializer\Serializer', array(), array(), '', false);
 
         $this->mediaSelection = new \Sulu\Bundle\MediaBundle\Content\Types\MediaSelectionContentType(
-            $this->mediaManager, 'SuluMediaBundle:Template:image-selection.html.twig'
+            $this->mediaManager, $this->serializer, 'SuluMediaBundle:Template:image-selection.html.twig'
         );
     }
 
@@ -64,7 +70,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
             true,
             true,
             true,
-            array('getValue')
+            array('getValue', 'getParams')
         );
 
         $property->expects($this->any())->method('getName')->will($this->returnValue('property'));
@@ -75,6 +81,13 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
                     'ids' => array(1, 2, 3, 4),
                     'displayOption' => 'right',
                     'config' => array('conf1' => 1, 'conf2' => 2)
+                )
+            )
+        );
+
+        $property->expects($this->any())->method('getParams')->will(
+            $this->returnValue(
+                array(
                 )
             )
         );
@@ -112,7 +125,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
             true,
             true,
             true,
-            array('getValue')
+            array('getValue', 'getParams')
         );
 
         $property->expects($this->any())->method('getName')->will($this->returnValue('property'));
@@ -124,6 +137,13 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
                     'displayOption' => 'right',
                     'config' => array('conf1' => 1, 'conf2' => 2),
                     'data' => array('data1', 'data2')
+                )
+            )
+        );
+
+        $property->expects($this->any())->method('getParams')->will(
+            $this->returnValue(
+                array(
                 )
             )
         );
@@ -149,7 +169,9 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
             'right',
             array(1, 2, 3, 4),
             'en',
-            $this->mediaManager
+            null,
+            $this->mediaManager,
+            $this->serializer
         );
 
         $node = $this->getMockForAbstractClass(
@@ -169,7 +191,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
             true,
             true,
             true,
-            array('setValue')
+            array('setValue', 'getParams')
         );
 
         $node->expects($this->any())->method('getPropertyValueWithDefault')->will(
@@ -186,7 +208,14 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
 
         $property->expects($this->any())->method('getName')->will($this->returnValue('property'));
 
-        $property->expects($this->exactly(1))->method('setValue')->with($container);
+        $property->expects($this->any())->method('setValue')->with($container)->will($this->returnValue(null));
+
+        $property->expects($this->any())->method('getParams')->will(
+            $this->returnValue(
+                array(
+                )
+            )
+        );
 
         $this->mediaSelection->read($node, $property, 'test', 'en', 's');
     }
@@ -198,7 +227,9 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
             'right',
             array(1, 2, 3, 4),
             'en',
-            $this->mediaManager
+            null,
+            $this->mediaManager,
+            $this->serializer
         );
 
         $node = $this->getMockForAbstractClass(
@@ -218,7 +249,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
             true,
             true,
             true,
-            array('setValue')
+            array('setValue', 'getParams')
         );
 
         $node->expects($this->any())->method('getPropertyValueWithDefault')->will(
@@ -235,7 +266,14 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
 
         $property->expects($this->any())->method('getName')->will($this->returnValue('property'));
 
-        $property->expects($this->exactly(1))->method('setValue')->with($container);
+        $property->expects($this->any())->method('setValue')->with($container)->will($this->returnValue(null));
+
+        $property->expects($this->any())->method('getParams')->will(
+            $this->returnValue(
+                array(
+                )
+            )
+        );
 
         $this->mediaSelection->readForPreview(
             array(
@@ -250,4 +288,259 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
         );
     }
 
+    public function testReadWithType()
+    {
+        $container = new MediaSelectionContainer(
+            array('conf1' => 1, 'conf2' => 2),
+            'right',
+            array(1, 2, 3, 4),
+            'en',
+            'document',
+            $this->mediaManager,
+            $this->serializer
+        );
+
+        $node = $this->getMockForAbstractClass(
+            'Sulu\Bundle\MediaBundle\Tests\Unit\Content\Types\NodeInterface',
+            array(),
+            '',
+            true,
+            true,
+            true,
+            array('getPropertyValueWithDefault')
+        );
+
+        $property = $this->getMockForAbstractClass(
+            'Sulu\Component\Content\PropertyInterface',
+            array(),
+            '',
+            true,
+            true,
+            true,
+            array('setValue', 'getParams')
+        );
+
+        $node->expects($this->any())->method('getPropertyValueWithDefault')->will(
+            $this->returnValueMap(
+                array(
+                    array(
+                        'property',
+                        '{}',
+                        '{"config":{"conf1": 1, "conf2": 2}, "displayOption": "right", "ids": [1,2,3,4]}'
+                    )
+                )
+            )
+        );
+
+        $property->expects($this->any())->method('getName')->will($this->returnValue('property'));
+
+        $property->expects($this->any())->method('setValue')->with($container)->will($this->returnValue(null));
+
+        $property->expects($this->any())->method('getParams')->will(
+            $this->returnValue(
+                array(
+                    'types' => 'document'
+                )
+            )
+        );
+
+        $this->mediaSelection->read($node, $property, 'test', 'en', 's');
+    }
+
+    public function testReadPreviewWithType()
+    {
+        $container = new MediaSelectionContainer(
+            array('conf1' => 1, 'conf2' => 2),
+            'right',
+            array(1, 2, 3, 4),
+            'en',
+            'document',
+            $this->mediaManager,
+            $this->serializer
+        );
+
+        $node = $this->getMockForAbstractClass(
+            'Sulu\Bundle\MediaBundle\Tests\Unit\Content\Types\NodeInterface',
+            array(),
+            '',
+            true,
+            true,
+            true,
+            array('getPropertyValueWithDefault')
+        );
+
+        $property = $this->getMockForAbstractClass(
+            'Sulu\Component\Content\PropertyInterface',
+            array(),
+            '',
+            true,
+            true,
+            true,
+            array('setValue', 'getParams')
+        );
+
+        $node->expects($this->any())->method('getPropertyValueWithDefault')->will(
+            $this->returnValueMap(
+                array(
+                    array(
+                        'property',
+                        '{}',
+                        '{"config":{"conf1": 1, "conf2": 2}, "displayOption": "right", "ids": [1,2,3,4]}'
+                    )
+                )
+            )
+        );
+
+        $property->expects($this->any())->method('getName')->will($this->returnValue('property'));
+
+        $property->expects($this->any())->method('setValue')->with($container)->will($this->returnValue(null));
+
+        $property->expects($this->any())->method('getParams')->will(
+            $this->returnValue(
+                array(
+                    'types' => 'document'
+                )
+            )
+        );
+
+        $this->mediaSelection->readForPreview(
+            array(
+                'config' => array('conf1' => 1, 'conf2' => 2),
+                'displayOption' => 'right',
+                'ids' => array(1, 2, 3, 4)
+            ),
+            $property,
+            'test',
+            'en',
+            's'
+        );
+    }
+
+    public function testReadWithMultipleTypes()
+    {
+        $container = new MediaSelectionContainer(
+            array('conf1' => 1, 'conf2' => 2),
+            'right',
+            array(1, 2, 3, 4),
+            'en',
+            'document,image',
+            $this->mediaManager,
+            $this->serializer
+        );
+
+        $node = $this->getMockForAbstractClass(
+            'Sulu\Bundle\MediaBundle\Tests\Unit\Content\Types\NodeInterface',
+            array(),
+            '',
+            true,
+            true,
+            true,
+            array('getPropertyValueWithDefault')
+        );
+
+        $property = $this->getMockForAbstractClass(
+            'Sulu\Component\Content\PropertyInterface',
+            array(),
+            '',
+            true,
+            true,
+            true,
+            array('setValue', 'getParams')
+        );
+
+        $node->expects($this->any())->method('getPropertyValueWithDefault')->will(
+            $this->returnValueMap(
+                array(
+                    array(
+                        'property',
+                        '{}',
+                        '{"config":{"conf1": 1, "conf2": 2}, "displayOption": "right", "ids": [1,2,3,4]}'
+                    )
+                )
+            )
+        );
+
+        $property->expects($this->any())->method('getName')->will($this->returnValue('property'));
+
+        $property->expects($this->any())->method('setValue')->with($container)->will($this->returnValue(null));
+
+        $property->expects($this->any())->method('getParams')->will(
+            $this->returnValue(
+                array(
+                    'types' => 'document,image'
+                )
+            )
+        );
+
+        $this->mediaSelection->read($node, $property, 'test', 'en', 's');
+    }
+
+    public function testReadPreviewMultipleTypes()
+    {
+        $container = new MediaSelectionContainer(
+            array('conf1' => 1, 'conf2' => 2),
+            'right',
+            array(1, 2, 3, 4),
+            'en',
+            'document,image',
+            $this->mediaManager,
+            $this->serializer
+        );
+
+        $node = $this->getMockForAbstractClass(
+            'Sulu\Bundle\MediaBundle\Tests\Unit\Content\Types\NodeInterface',
+            array(),
+            '',
+            true,
+            true,
+            true,
+            array('getPropertyValueWithDefault')
+        );
+
+        $property = $this->getMockForAbstractClass(
+            'Sulu\Component\Content\PropertyInterface',
+            array(),
+            '',
+            true,
+            true,
+            true,
+            array('setValue', 'getParams')
+        );
+
+        $node->expects($this->any())->method('getPropertyValueWithDefault')->will(
+            $this->returnValueMap(
+                array(
+                    array(
+                        'property',
+                        '{}',
+                        '{"config":{"conf1": 1, "conf2": 2}, "displayOption": "right", "ids": [1,2,3,4]}'
+                    )
+                )
+            )
+        );
+
+        $property->expects($this->any())->method('getName')->will($this->returnValue('property'));
+
+        $property->expects($this->any())->method('setValue')->with($container)->will($this->returnValue(null));
+
+        $property->expects($this->any())->method('getParams')->will(
+            $this->returnValue(
+                array(
+                    'types' => 'document,image'
+                )
+            )
+        );
+
+        $this->mediaSelection->readForPreview(
+            array(
+                'config' => array('conf1' => 1, 'conf2' => 2),
+                'displayOption' => 'right',
+                'ids' => array(1, 2, 3, 4)
+            ),
+            $property,
+            'test',
+            'en',
+            's'
+        );
+    }
 }

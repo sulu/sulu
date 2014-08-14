@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Content\Types;
 
+use JMS\Serializer\Serializer;
 use PHPCR\NodeInterface;
 use Sulu\Bundle\MediaBundle\Content\MediaSelectionContainer;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
@@ -31,10 +32,35 @@ class MediaSelectionContentType extends ComplexContentType
      */
     private $template;
 
-    function __construct($mediaManager, $template)
+    /**
+     * @var Serializer
+     */
+    private $serializer;
+
+    function __construct($mediaManager, $serializer, $template)
     {
         $this->mediaManager = $mediaManager;
+        $this->serializer = $serializer;
         $this->template = $template;
+    }
+
+    /**
+     * @return array
+     */
+    public function getDefaultParams()
+    {
+        return array(
+            'types' => null
+        );
+    }
+
+    /**
+     * @param $params
+     * @return array
+     */
+    public function getParams($params)
+    {
+        return array_merge($this->getDefaultParams(), $params);
     }
 
     /**
@@ -84,12 +110,16 @@ class MediaSelectionContentType extends ComplexContentType
         if ($data instanceof MediaSelectionContainer) {
             $container = $data;
         } else {
+            $params = $this->getParams($property->getParams());
+            $types = $params['types'];
             $container = new MediaSelectionContainer(
                 isset($data['config']) ?  $data['config'] : array(),
                 isset($data['displayOption']) ? $data['displayOption'] : '',
                 isset($data['ids']) ? $data['ids'] : array(),
                 $languageCode,
-                $this->mediaManager
+                $types,
+                $this->mediaManager,
+                $this->serializer
             );
         }
 

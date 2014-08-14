@@ -82,9 +82,15 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
     /**
      * {@inheritdoc}
      */
-    public function findMedia($collection = null, $ids = null, $limit = null)
+    public function findMedia($filter = array(), $limit = null)
     {
         try {
+            list($collection, $ids, $types) = array(
+                isset($filter['collection']) ? $filter['collection'] : null,
+                isset($filter['ids']) ? $filter['ids'] : null,
+                isset($filter['types']) ? $filter['types'] : null,
+            );
+
             $qb = $this->createQueryBuilder('media')
                 ->leftJoin('media.type', 'type')
                 ->leftJoin('media.collection', 'collection')
@@ -115,11 +121,15 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
                 ->addSelect('changerContact')*/;
 
             if ($ids !== null) {
-                $qb->where('media.id IN (:mediaIds)');
+                $qb->andWhere('media.id IN (:mediaIds)');
             }
 
             if ($collection !== null) {
-                $qb->where('collection.id = :collection');
+                $qb->andWhere('collection.id = :collection');
+            }
+
+            if ($types !== null) {
+                $qb->andWhere('type.name IN (:types)');
             }
 
             if ($limit !== null) {
@@ -133,6 +143,9 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
             }
             if ($ids !== null) {
                 $query->setParameter('mediaIds', $ids);
+            }
+            if ($types !== null) {
+                $query->setParameter('types', $types);
             }
 
             return new Paginator($query, $fetchJoin = true);

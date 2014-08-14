@@ -37,11 +37,11 @@ class SuluMediaExtension extends Extension
         $container->setParameter('sulu_media.collection.previews.format', '150x100');
         $container->setParameter('sulu_media.media.max_file_size', '16MB');
         $container->setParameter('sulu_media.media.blocked_file_types', array('file/exe'));
-        $container->setParameter('sulu_media.media.storage.local.path', '%kernel.root_dir%/../../uploads/media');
+        $container->setParameter('sulu_media.media.storage.local.path', '%kernel.root_dir%/../uploads/media');
         $container->setParameter('sulu_media.media.storage.local.segments', '10');
         $container->setParameter('sulu_media.image.command.prefix', 'image.converter.prefix.');
         $container->setParameter('sulu_media.format_cache.save_image', 'true');
-        $container->setParameter('sulu_media.format_cache.path', '%kernel.root_dir%/../../web/uploads/media');
+        $container->setParameter('sulu_media.format_cache.path', '%kernel.root_dir%/../web/uploads/media');
         $container->setParameter('sulu_media.format_cache.segments', '10');
         $container->setParameter('ghost_script.path', '/usr/local/bin/gs');
         $container->setParameter('sulu_media.format_manager.extensions', array(
@@ -96,22 +96,22 @@ class SuluMediaExtension extends Extension
             array(
                 'id' => 1,
                 'type' => 'default',
-                'extensions' => array('*')
+                'mimeTypes' => array('*')
             ),
             array(
                 'id' => 2,
                 'type' => 'image',
-                'extensions' => array('jpg', 'jpeg', 'png', 'gif', 'svg')
+                'mimeTypes' => array('image/jpg', 'image/jpeg', 'image/png', 'image/gif', 'image/svg+xml', 'image/vnd.adobe.photoshop')
             ),
             array(
                 'id' => 3,
                 'type' => 'video',
-                'extensions' => array('mp4')
+                'mimeTypes' => array('video/mp4')
             ),
             array(
                 'id' => 4,
                 'type' => 'audio',
-                'extensions' => array('mp3')
+                'mimeTypes' => array('audio/mpeg')
             )
         ));
 
