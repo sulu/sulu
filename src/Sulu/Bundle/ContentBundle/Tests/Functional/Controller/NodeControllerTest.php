@@ -159,7 +159,9 @@ class NodeControllerTest extends DatabaseTestCase
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Permission'),
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\SecurityType'),
             self::$em->getClassMetadata('Sulu\Bundle\TagBundle\Entity\Tag'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\Media')
+            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\Media'),
+            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\Collection'),
+            self::$em->getClassMetadata('Sulu\Bundle\CategoryBundle\Entity\Category'),
         );
 
         self::$tool->dropSchema(self::$entities);
@@ -355,7 +357,7 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent(), true);
 
-        $this->assertEquals(22, sizeof($response));
+        $this->assertEquals(25, sizeof($response));
         $this->assertEquals($data[0]['title'], $response['title']);
         $this->assertEquals($data[0]['path'], $response['path']);
         $this->assertEquals($data[0]['tags'], $response['tags']);
@@ -1206,7 +1208,7 @@ class NodeControllerTest extends DatabaseTestCase
         $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en', $data);
         $data = json_decode($client->getResponse()->getContent(), true);
 
-        $this->assertEquals(22, sizeof($data));
+        $this->assertEquals(25, sizeof($data));
         $this->assertArrayHasKey('id', $data);
         $this->assertEquals('test1', $data['title']);
         $this->assertEquals('/test1', $data['path']);

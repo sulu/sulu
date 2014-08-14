@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\ContentBundle\Content;
 
+use JMS\Serializer\Serializer;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\StructureInterface;
 use JMS\Serializer\Annotation\Exclude;
@@ -52,9 +53,16 @@ class InternalLinksContainer implements \Serializable
      */
     private $data;
 
+    /**
+     * @Exclude
+     * @var Serializer
+     */
+    private $serializer;
+
     public function __construct(
         $ids,
         ContentMapperInterface $contentMapper,
+        $serializer,
         $webspaceKey,
         $languageCode
     ) {
@@ -62,6 +70,7 @@ class InternalLinksContainer implements \Serializable
         $this->contentMapper = $contentMapper;
         $this->webspaceKey = $webspaceKey;
         $this->languageCode = $languageCode;
+        $this->serializer = $serializer;
     }
 
     /**
@@ -121,9 +130,15 @@ class InternalLinksContainer implements \Serializable
      */
     public function serialize()
     {
-        return json_encode(
+        if ($this->serializer) {
+            $data = $this->serializer->serialize($this->getData(), 'json');
+        } else {
+            $data = json_encode($this->getData());
+        }
+
+        return serialize(
             array(
-                'data' => $this->getData()
+                'data' => $data
             )
         );
     }
@@ -139,7 +154,7 @@ class InternalLinksContainer implements \Serializable
      */
     public function unserialize($serialized)
     {
-        $values = json_decode($serialized, true);
-        $this->data = $values['data'];
+        $values = unserialize($serialized);
+        $this->data = json_decode($values['data'], true);
     }
 }
