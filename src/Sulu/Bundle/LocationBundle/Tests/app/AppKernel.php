@@ -17,6 +17,7 @@ class AppKernel extends Kernel
             new JMS\SerializerBundle\JMSSerializerBundle(),
             new FOS\RestBundle\FOSRestBundle(),
             new Doctrine\Bundle\PHPCRBundle\DoctrinePHPCRBundle(),
+            new \Liip\ThemeBundle\LiipThemeBundle(),
 
             // Sulu
             new \Sulu\Bundle\CoreBundle\SuluCoreBundle(),
@@ -26,6 +27,8 @@ class AppKernel extends Kernel
             new \Sulu\Bundle\TestBundle\SuluTestBundle(),
             new \Sulu\Bundle\SecurityBundle\SuluSecurityBundle(),
             new \Sulu\Bundle\TagBundle\SuluTagBundle(),
+            new \Sulu\Bundle\MediaBundle\SuluMediaBundle(),
+            new \Sulu\Bundle\CategoryBundle\SuluCategoryBundle(),
         );
 
         return $bundles;

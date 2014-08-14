@@ -23,23 +23,27 @@
         "guzzle/http": "3.*",
         "guzzle/plugin-mock": "*",
         "guzzle/plugin-log": "*"
-
-
     },
     "require-dev": {
         "sulu/content-bundle": "dev-develop",
-        "cboden/ratchet": "dev-master",
+
         "sulu/website-bundle": "dev-develop",
         "sulu/security-bundle": "dev-develop",
         "sulu/contact-bundle": "dev-develop",
         "sulu/tag-bundle": "dev-develop",
+
+        "sulu/category-bundle": "@dev",
+        "sulu/media-bundle": "@dev",
+        "liip/theme-bundle": "@dev",
+
         "symfony/symfony": "2.5.*",
         "sensio/framework-extra-bundle": "~3.0",
         "symfony/monolog-bundle": "2.4.*",
         "doctrine/doctrine-bundle": "1.2.*",
         "phpunit/phpunit": "4.1.*",
         "sulu/test-bundle": "dev-develop",
-        "guzzle/plugin-mock": "*"
+        "guzzle/plugin-mock": "*",
+        "cboden/ratchet": "@dev"
     },
     "autoload": {
         "psr-0": {

@@ -1,5 +1,5 @@
-/Tests/Resources/app/cache/*
-/Tests/Resources/app/logs/*
+/Tests/app/cache/*
+/Tests/app/logs/*
 /node_modules/
 /bower_components/
 /vendor/
@@ -11,3 +11,6 @@
 # IDEs
 .idea/*
 *.iml
+
+# phpunit
+phpunit.xml
