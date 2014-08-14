@@ -1,0 +1,61 @@
+<div class="grid-col-{{ property.colspan != "" ? property.colspan : '12' }} floating m-top-20">
+    <div class="grid">
+        <div class="sortable grid-row"
+             id="{{ id|raw }}"
+             data-form="true"
+             data-type="block"
+             data-type-config='[{% for type in property.types %}{"data": "{{ type.name }}", "title": "{{ type.getTitle(languageCode) }}", "tpl": "{{ type.name }}-{{ id|raw }}-tpl"}{{ loop.last==false?',':'' }}{% endfor %}]'
+             data-type-min="{{ property.minOccurs }}"
+             data-type-max="{{ property.maxOccurs }}"
+             data-type-default="{{ property.defaultTypeName }}"
+             data-mapper-property="{{ property.name }}"
+             data-mapper-full-class="full"
+             data-mapper-empty-class="empty">
+            {% for type in property.types %}
+                <script id="{{ type.name }}-{{ id|raw }}-tpl" type="text/template">
+                    <div class="text-block {{ type.name }}-element {{ property.name }}-element grid-col-12 floating"
+                         data-mapper-property-tpl="{{ type.name }}">
+                        <input type="hidden" data-mapper-property="type" value="{{ type.name }}"/>
+
+                        <div class="head">
+                            <label class="move">
+                                {{ property.getTitle(languageCode) }} ({{ type.getTitle(languageCode) }})
+                            </label>
+
+                            <div data-mapper-remove="{{ property.name }}"
+                                 class="fa-times options-remove mapper-remove-{{ type.name }}"></div>
+
+                            <div class="options-change" id="change<~=index~>">
+                        <span data-mapper-change-type="{{ property.name }}"
+                              class="fa-gear drop-down-trigger"></span>
+                                <span class="dropdown-toggle drop-down-trigger"></span>
+                            </div>
+                        </div>
+
+                        <div class="container grid">
+                            <div class="block block-{{ property.name }} grid-row">
+                                {% for child in type.childProperties %}
+
+                                    {# get Type for property #}
+                                    {% set type = getType(child.contentTypeName) %}
+                                    {# get params for property #}
+                                    {% set params = getParams(child) %}
+
+                                    {% if child is multiple %}
+                                        {% include 'SuluContentBundle:Template:macros/multiple.html.twig' with {'property': child, 'params': params, 'type': type, 'id': id ~ '-' ~ child.name ~ '<~=index~>', 'webspaceKey': webspaceKey, 'languageCode': languageCode} only %}
+                                    {% else %}
+                                        {% include 'SuluContentBundle:Template:macros/single.html.twig' with {'property': child, 'params': params, 'type': type, 'id': id ~ '-' ~ child.name ~ '<~=index~>', 'webspaceKey': webspaceKey, 'languageCode': languageCode} only %}
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </script>
+            {% endfor %}
+        </div>
+
+        <div class="text-block-footer" id="{{ id|raw }}-add" style="width: 200px">
+
+        </div>
+    </div>
+</div>

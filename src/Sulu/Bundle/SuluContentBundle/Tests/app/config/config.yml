@@ -1,0 +1,57 @@
+imports:
+    - { resource: security.yml }
+
+framework:
+    secret: secret
+    router: { resource: "%kernel.root_dir%/config/routing.yml" }
+    templating: { engines: ['twig'] }
+    test: ~
+    session:
+        storage_id: session.storage.mock_file
+    profiler:
+        enabled: false
+
+fos_rest:
+    routing_loader:
+        default_format: json
+
+monolog:
+    handlers:
+        main:
+            type:         fingers_crossed
+            action_level: error
+            handler:      nested
+        nested:
+            type:  stream
+            path:  %kernel.logs_dir%/%kernel.environment%.log
+            level: debug
+
+sulu_core:
+    phpcr:
+        backend:
+            type: jackrabbit
+            url: http://localhost:8080/server/
+        workspace: test
+        username: admin
+        password: admin
+    content:
+        templates:
+             paths:
+                 app:
+                     path: %kernel.root_dir%/Resources/templates
+                     internal: false
+                 bundle:
+                     path: %kernel.root_dir%/../../Content/templates
+                     internal: true
+    webspace:
+        request_analyzer:
+            enabled: false
+
+sulu_admin:
+    name: SULU 2.0
+
+
+liip_theme:
+    themes: ["default"]
+    active_theme: "default"
+    load_controllers: false

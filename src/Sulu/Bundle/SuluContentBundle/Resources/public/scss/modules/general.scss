@@ -1,0 +1,44 @@
+#language-selector {
+  width: 95px;
+}
+
+.sortable-placeholder {
+    margin-bottom: 20px;
+}
+
+/* smart content extension for internal links */
+.smart-header {
+    .add {
+        display: block;
+        position: absolute;
+        top: 10px;
+        left: 20px;
+        font-size: 16px;
+        line-height: 15px;
+        color: white;
+        background-color: #52b6ca;
+        padding: 5px 10px;
+        border: 0px solid #ccc;
+        border-radius: 2px;
+    }
+}
+
+.internal-links-overlay,
+.single-internal-overlay,
+.overlay-container {
+    .overlay-header {
+        margin-bottom: 1px;
+    }
+    .overlay-content {
+        margin: 0px;
+    }
+
+    .overlay-footer {
+        margin: 0px;
+    }
+}
+
+/* smart content for column view */
+.column-navigation-wrapper {
+    overflow: inherit;
+}
