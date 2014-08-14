@@ -21,41 +21,50 @@ class ContentNavigationItem
     const DISPLAY_EDIT = 'edit';
 
     /**
+     * The id of the navigation item
      * @var string
      */
     private $id;
 
     /**
+     * The name of the navigation item
      * @var string
      */
     private $name;
 
     /**
+     * The action to execute
      * @var string
      */
     private $action;
 
     /**
+     * An array of groups, which contain this navigation item.
+     * This is used for filtering the items for the navigation.
      * @var array
      */
     private $groups;
 
     /**
+     * The name of the component to start
      * @var string
      */
     private $component;
 
     /**
+     * An array of options, which will be passed to the corresponding component
      * @var array
      */
     private $componentOptions;
 
     /**
+     * Defines in which state the navigation item will be displayed (basically new, edit)
      * @var array
      */
     private $display;
 
     /**
+     * Defines if the navigation item is disabled
      * @var boolean
      */
     private $disabled;

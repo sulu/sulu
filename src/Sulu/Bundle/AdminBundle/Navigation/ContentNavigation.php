@@ -14,7 +14,7 @@ use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationInterface;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 
 /**
- * This class ontains the content navigation represented as tabs in the forms from the admin
+ * This class contains the content navigation represented as tabs in the forms from the admin
  * @package Sulu\Bundle\AdminBundle\Admin
  */
 abstract class ContentNavigation
