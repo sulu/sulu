@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="permissions" type="collection">
+            <parameter key="view">64</parameter>
+            <parameter key="add">32</parameter>
+            <parameter key="edit">16</parameter>
+            <parameter key="delete">8</parameter>
+            <parameter key="archive">4</parameter>
+            <parameter key="live">2</parameter>
+            <parameter key="security">1</parameter>
+        </parameter>
+
+        <parameter key="sulu_security.admin.class">Sulu\Bundle\SecurityBundle\Admin\SuluSecurityAdmin</parameter>
+        <parameter key="sulu_security.mask_converter.class">Sulu\Bundle\SecurityBundle\Permission\MaskConverter</parameter>
+        <parameter key="sulu_security.salt_generator.class">Sulu\Bundle\SecurityBundle\Permission\SaltGenerator</parameter>
+        <parameter key="sulu_security.admin.content_navigation.class">Sulu\Bundle\SecurityBundle\Admin\SuluSecurityContentNavigation</parameter>
+        <parameter key="sulu_security.admin.roles_navigation.class">Sulu\Bundle\SecurityBundle\Admin\SuluSecurityRolesContentNavigation</parameter>
+        <parameter key="sulu_security.permission_voter.class">Sulu\Bundle\SecurityBundle\Permission\PermissionVoter</parameter>
+        <parameter key="sulu_security.user_repository.class">Sulu\Bundle\SecurityBundle\Entity\UserRepository</parameter>
+        <parameter key="sulu_security.user_repository_factory.class">Sulu\Bundle\SecurityBundle\Factory\UserRepositoryFactory</parameter>
+    </parameters>
+
+    <services>
+        <service id="sulu_security.admin" class="%sulu_security.admin.class%">
+            <argument>%sulu_admin.name%</argument>
+            <tag name="sulu.admin"/>
+        </service>
+
+        <service id="sulu_security.mask_converter" class="%sulu_security.mask_converter.class%">
+            <argument>%permissions%</argument>
+        </service>
+
+        <service id="sulu_security.salt_generator" class="%sulu_security.salt_generator.class%">
+        </service>
+
+        <service id="sulu_security.content_navigation" class="%sulu_security.admin.content_navigation.class%">
+            <tag name="sulu.contact.admin.content_navigation"/>
+        </service>
+
+        <service id="sulu_security.admin.roles_navigation" class="%sulu_security.admin.roles_navigation.class%">
+        </service>
+
+        <service id="sulu_security.content_navigation" class="%sulu_security.admin.content_navigation.class%">
+            <tag name="sulu.contact.admin.content_navigation"/>
+        </service>
+
+        <service id="sulu_security.permission_voter" class="%sulu_security.permission_voter.class%" public="false">
+            <argument>%permissions%</argument>
+            <tag name="security.voter"/>
+        </service>
+
+        <service id="sulu_security.user_repository_factory" class="%sulu_security.user_repository_factory.class%">
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument>%sulu_security.system%</argument>
+            <argument type="service" on-invalid="ignore" id="sulu_core.webspace.request_analyzer"/>
+        </service>
+
+        <service id="sulu_security.user_repository" class="%sulu_security.user_repository.class%"
+                 factory-service="sulu_security.user_repository_factory" factory-method="getRepository">
+        </service>
+    </services>
+</container>
