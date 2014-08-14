@@ -1,0 +1,1 @@
+require.config({paths:{suluwebsite:"../../suluwebsite/dist"}}),define({name:"SuluWebsiteBundle",initialize:function(a){"use strict";a.sandbox;a.components.addSource("suluwebsite","/bundles/suluwebsite/dist/components")}});

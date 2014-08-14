@@ -1,0 +1,19 @@
+language: php
+
+php:
+  - 5.5
+  - 5.4
+
+env:
+  - DB=mysql
+
+before_script:
+  - composer self-update
+  - composer install
+  - ./bin/jackrabbit.sh
+  - if [[ "$DB" == "mysql" ]]; then mysql -e "CREATE DATABASE sulu_test;"; fi
+  - if [[ "$DB" == "pgsql" ]]; then psql -c "CREATE DATABASE sulu_test;" -U postgres; fi
+  - php bin/jackrabbit.php
+
+
+script: phpunit --coverage-text
