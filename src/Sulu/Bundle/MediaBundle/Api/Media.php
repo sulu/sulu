@@ -28,6 +28,7 @@ use JMS\Serializer\Annotation\ExclusionPolicy;
 use Sulu\Component\Rest\ApiWrapper;
 use Sulu\Component\Security\UserInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
+use JMS\Serializer\Annotation\Groups;
 
 /**
  * Class Media
@@ -84,6 +85,7 @@ class Media extends ApiWrapper
      * @VirtualProperty
      * @SerializedName("id")
      * @return int
+     * @Groups({"partialMedia"})
      */
     public function getId()
     {
