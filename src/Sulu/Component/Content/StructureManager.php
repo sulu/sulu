@@ -10,7 +10,6 @@
 
 namespace Sulu\Component\Content;
 
-
 use Psr\Log\LoggerInterface;
 use Sulu\Component\Content\StructureExtension\StructureExtensionInterface;
 use Sulu\Component\Content\Template\Dumper\PHPTemplateDumper;
@@ -81,59 +80,7 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
      */
     public function getStructure($key)
     {
-        $class = ucfirst($key) . $this->options['cache_class_suffix'];
-        $cache = new ConfigCache(
-            $this->options['cache_dir'] . '/' . $class . '.php',
-            $this->options['debug']
-        );
-
-        if (!$cache->isFresh()) {
-            $path = $this->options['template_dir'] . '/' . $key . '.xml';
-
-            try {
-                $result = $this->loader->load($path);
-                $resources[] = new FileResource($path);
-                $cache->write(
-                    $this->dumper->dump(
-                        $result,
-                        array(
-                            'cache_class' => $class,
-                            'base_class' => $this->options['base_class']
-                        )
-                    ),
-                    $resources
-                );
-            } catch (\InvalidArgumentException $iae) {
-                $this->logger->warning(
-                    'The file "' . $path . '" does not match the schema and was skipped'
-                );
-                throw new TemplateNotFoundException($path, $key);
-            } catch (InvalidXmlException $iude) {
-                $this->logger->warning(
-                    'The file "' . $path . '" defined some invalid properties and was skipped'
-                );
-                throw new TemplateNotFoundException($path, $key);
-            } catch (\Twig_Error $twige) {
-                $this->logger->warning(
-                    'The file "' . $path . '" content cant be rendered with the template'
-                );
-                throw new TemplateNotFoundException($path, $key);
-            }
-        }
-
-        require_once $cache;
-
-        /** @var StructureInterface $structure */
-        $structure = new $class();
-
-        $extensions = isset($this->extensions['all']) ? $this->extensions['all'] : array();
-        if (isset($this->extensions[$key])) {
-            $extensions = array_merge($extensions, $this->extensions[$key]);
-        }
-
-        $structure->setExtensions($extensions);
-
-        return $structure;
+        return $this->getStructureByFile($key, $this->getTemplate($key));
     }
 
     /**
@@ -143,7 +90,7 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
     public function setOptions($options)
     {
         $this->options = array(
-            'template_dir' => null,
+            'template_dir' => array(),
             'cache_dir' => null,
             'debug' => false,
             'cache_class_suffix' => 'StructureCache',
@@ -160,17 +107,17 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
     public function getStructures()
     {
         $result = array();
-        $files = glob($this->options['template_dir'].'/*.xml', GLOB_BRACE);
-        foreach($files as $file) {
-            $key = str_replace($this->options['template_dir'], '', $file);
-            $key = str_replace('/', '', $key);
-            $key = str_replace('.xml', '', $key);
+        foreach ($this->getTemplates() as $file) {
+            $fileInfo = pathinfo($file['path']);
+            $key = $fileInfo['filename'];
+
             try {
                 $result[] = $this->getStructure($key);
             } catch (TemplateNotFoundException $ex) {
                 $this->logger->warning($ex->getMessage());
             }
         }
+
         return $result;
     }
 
@@ -184,5 +131,136 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
         }
 
         $this->extensions[$template][] = $extension;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getExtensions($key)
+    {
+        $extensions = isset($this->extensions['all']) ? $this->extensions['all'] : array();
+        if (isset($this->extensions[$key])) {
+            $extensions = array_merge($extensions, $this->extensions[$key]);
+        }
+
+        return $extensions;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasExtension($key, $name)
+    {
+        $extensions = $this->getExtensions($key);
+
+        return array_key_exists($name, $extensions);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getExtension($key, $name)
+    {
+        $extensions = $this->getExtensions($key);
+
+        return $extensions[$name];
+    }
+
+    /**
+     * returns structure for given template key and file
+     * @param string $key
+     * @param string $templateConfig
+     * @return StructureInterface
+     * @throws Template\Exception\TemplateNotFoundException
+     */
+    private function getStructureByFile($key, $templateConfig)
+    {
+        $fileName = $templateConfig['path'];
+
+        $class = str_replace('-', '_', ucfirst($key)) . $this->options['cache_class_suffix'];
+        $cache = new ConfigCache(
+            $this->options['cache_dir'] . '/' . $class . '.php',
+            $this->options['debug']
+        );
+
+        if (!$cache->isFresh()) {
+            try {
+                $result = $this->loader->load($fileName);
+                $resources[] = new FileResource($fileName);
+                $cache->write(
+                    $this->dumper->dump(
+                        $result,
+                        array(
+                            'cache_class' => $class,
+                            'base_class' => $this->options['base_class']
+                        )
+                    ),
+                    $resources
+                );
+            } catch (\InvalidArgumentException $iae) {
+                $this->logger->warning(
+                    'The file "' . $fileName . '" does not match the schema and was skipped'
+                );
+                throw new TemplateNotFoundException($fileName, $key);
+            } catch (InvalidXmlException $iude) {
+                $this->logger->warning(
+                    'The file "' . $fileName . '" defined some invalid properties and was skipped'
+                );
+                throw new TemplateNotFoundException($fileName, $key);
+            } catch (\Twig_Error $twige) {
+                $this->logger->warning(
+                    'The file "' . $fileName . '" content cant be rendered with the template'
+                );
+                throw new TemplateNotFoundException($fileName, $key);
+            }
+        }
+
+        require_once $cache;
+
+        /** @var StructureInterface $structure */
+        $structure = new $class();
+        $structure->setInternal($templateConfig['internal']);
+
+        return $structure;
+    }
+
+    /**
+     * returns path to template
+     * @param $key
+     * @return bool|string
+     */
+    private function getTemplate($key)
+    {
+        foreach ($this->options['template_dir'] as $templateDir) {
+            $path = $templateDir['path'] . '/' . $key . '.xml';
+
+            if (file_exists($path)) {
+                return array(
+                    'path' => $path,
+                    'internal' => $templateDir['internal']
+                );
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * returns a list of existing templates
+     * @return string[]
+     */
+    private function getTemplates()
+    {
+        $result = array();
+        foreach ($this->options['template_dir'] as $templateDir) {
+            foreach (glob($templateDir['path'] . '/*.xml', GLOB_BRACE) as $path) {
+                $result[] = array(
+                    'path' => $path,
+                    'internal' => $templateDir['internal']
+                );
+            }
+        }
+
+        return $result;
     }
 }

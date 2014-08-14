@@ -10,11 +10,17 @@
 
 namespace Sulu\Component\HttpCache\ProxyClient;
 
-use FOS\HttpCache\Exception\MissingHostException;
+use FOS\HttpCache\Exception\ExceptionCollection;
+use FOS\HttpCache\Exception\InvalidUrlException;
+use FOS\HttpCache\Exception\ProxyResponseException;
+use FOS\HttpCache\Exception\ProxyUnreachableException;
 use FOS\HttpCache\ProxyClient\ProxyClientInterface;
 use FOS\HttpCache\ProxyClient\Invalidation\PurgeInterface;
 use Guzzle\Http\Client;
 use Guzzle\Http\ClientInterface;
+use Guzzle\Http\Exception\CurlException;
+use Guzzle\Http\Exception\MultiTransferException;
+use Guzzle\Http\Exception\RequestException;
 use Guzzle\Http\Message\RequestInterface;
 
 /**
@@ -54,7 +60,7 @@ class Symfony implements ProxyClientInterface, PurgeInterface
     /**
      * {@inheritdoc}
      */
-    public function purge($url)
+    public function purge($url, array $headers = array())
     {
         $this->queueRequest(self::HTTP_METHOD_PURGE, $url);
 

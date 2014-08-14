@@ -29,7 +29,8 @@ interface ContentMapperInterface
      * @param string $uuid uuid of node if exists
      * @param string $parentUuid uuid of parent node
      * @param int $state state of node
-     * @param string $showInNavigation
+     * @param null $isShadow
+     * @param null $shadowBaseLanguage
      *
      * @return StructureInterface
      */
@@ -43,7 +44,8 @@ interface ContentMapperInterface
         $uuid = null,
         $parentUuid = null,
         $state = null,
-        $showInNavigation = null
+        $isShadow = null,
+        $shadowBaseLanguage = null
     );
 
     /**
@@ -197,4 +199,38 @@ interface ContentMapperInterface
      * @param string $webspaceKey Key of webspace
      */
     public function delete($uuid, $webspaceKey);
+
+    /**
+     * moves given node to a new parent node
+     * @param string $uuid
+     * @param string $destParentUuid
+     * @param integer $userId
+     * @param string $webspaceKey
+     * @param string $languageCode
+     * @return StructureInterface
+     */
+    public function move($uuid, $destParentUuid, $userId, $webspaceKey, $languageCode);
+
+    /**
+     * copies given node to a new parent node
+     * @param string $uuid
+     * @param string $destParentUuid
+     * @param integer $userId
+     * @param string $webspaceKey
+     * @param string $languageCode
+     * @return StructureInterface
+     */
+    public function copy($uuid, $destParentUuid, $userId, $webspaceKey, $languageCode);
+
+    /**
+     * order node with uuid before the node with beforeUuid
+     * !IMPORTANT! both nodes should have the same parent
+     * @param string $uuid
+     * @param string $beforeUuid
+     * @param integer $userId
+     * @param string $webspaceKey
+     * @param string $languageCode
+     * @return StructureInterface
+     */
+    public function orderBefore($uuid, $beforeUuid, $userId, $webspaceKey, $languageCode);
 }

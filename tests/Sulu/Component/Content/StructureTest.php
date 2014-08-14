@@ -51,7 +51,7 @@ class StructureTest extends \PHPUnit_Framework_TestCase
         $this->structure->setGlobalState(1);
         $this->structure->setNodeState(2);
         $this->structure->setPublished(new DateTime('2014-03-16'));
-        $this->structure->setNavigation(true);
+        $this->structure->setNavContexts(true);
         $this->structure->setHasTranslation(true);
 
     }
@@ -89,7 +89,7 @@ class StructureTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(2, $structureArray['nodeState']);
         $this->assertEquals(1, $structureArray['globalState']);
         $this->assertEquals(true, $structureArray['publishedState']);
-        $this->assertEquals(true, $structureArray['navigation']);
+        $this->assertEquals(true, $structureArray['navContexts']);
         $this->assertEquals(false, $structureArray['hasSub']);
         $this->assertEquals(new DateTime('2014-03-17'), $structureArray['created']);
         $this->assertEquals(new DateTime('2014-03-18'), $structureArray['changed']);
@@ -102,7 +102,7 @@ class StructureTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(2, $structureArray['nodeState']);
         $this->assertEquals(1, $structureArray['globalState']);
-        $this->assertEquals(true, $structureArray['navigation']);
+        $this->assertEquals(true, $structureArray['navContexts']);
         $this->assertEquals(false, $structureArray['hasSub']);
         $this->assertEquals('ghost', $structureArray['type']['name']);
         $this->assertEquals('en_us', $structureArray['type']['value']);
@@ -239,5 +239,14 @@ class StructureTest extends \PHPUnit_Framework_TestCase
 
         $this->setExpectedException('\Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException');
         $this->structure->getPropertyByTagName('test-tag', true);
+    }
+
+    public function testLanguageGettersAndSetters()
+    {
+        $data = array('foo', 'bar');
+        $this->structure->setConcreteLanguages($data);
+        $this->assertEquals($data, $this->structure->getConcreteLanguages());
+        $this->structure->setEnabledShadowLanguages($data);
+        $this->assertEquals($data, $this->structure->getEnabledShadowLanguages());
     }
 }

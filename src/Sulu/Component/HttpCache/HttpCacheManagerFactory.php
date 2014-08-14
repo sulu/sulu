@@ -35,7 +35,8 @@ class HttpCacheManagerFactory
     protected $logger;
 
     /**
-     * @param $logger
+     * @param WebspaceManagerInterface $webspaceManager
+     * @param null $logger
      */
     public function __construct(WebspaceManagerInterface $webspaceManager, $logger = null)
     {

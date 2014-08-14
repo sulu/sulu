@@ -11,9 +11,7 @@
 namespace Sulu\Component\Content;
 
 use DateTime;
-use Sulu\Component\Content\Exception\ExtensionNotFoundException;
 use Sulu\Component\Content\Section\SectionPropertyInterface;
-use Sulu\Component\Content\StructureExtension\StructureExtensionInterface;
 use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
 
 /**
@@ -22,6 +20,21 @@ use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
  */
 abstract class Structure implements StructureInterface
 {
+    /**
+     * indicates that the node is a content node
+     */
+    const NODE_TYPE_CONTENT = 1;
+
+    /**
+     * indicates that the node links to an internal resource
+     */
+    const NODE_TYPE_INTERNAL_LINK = 2;
+
+    /**
+     * indicates that the node links to an external resource
+     */
+    const NODE_TYPE_EXTERNAL_LINK = 4;
+
     /**
      * webspaceKey of node
      * @var string
@@ -131,10 +144,10 @@ abstract class Structure implements StructureInterface
     private $published;
 
     /**
-     * should be shown in navigation or not
-     * @var boolean
+     * defines in which navigation context assigned
+     * @var string[]
      */
-    private $navigation;
+    private $navContexts;
 
     /**
      * structure translation is valid
@@ -153,9 +166,52 @@ abstract class Structure implements StructureInterface
     private $tags = array();
 
     /**
-     * @var StructureExtensionInterface[]
+     * @var array
      */
-    private $extensions = array();
+    private $ext = array();
+
+    /**
+     * type of node
+     * @var integer
+     */
+    private $nodeType;
+
+    /**
+     * indicates internal structure
+     * @var boolean
+     */
+    private $internal;
+
+    /**
+     * content node that holds the internal link
+     * @var StructureInterface
+     */
+    private $internalLinkContent;
+
+    /**
+     * content node is a shadow for another content
+     * @var boolean
+     */
+    private $isShadow;
+
+    /**
+     * when shadow is enabled, this node is a shadow for
+     * this language
+     * @var string
+     */
+    private $shadowBaseLanguage = '';
+
+    /**
+     * the shadows which are activated on this node. Note this is
+     * not stored in the phpcr node, it is determined by the content mapper.
+     * @var array
+     */
+    private $enabledShadowLanguages = array();
+
+    /**
+     * @var array
+     */
+    private $concreteLanguages = array();
 
     /**
      * @param $key string
@@ -174,8 +230,12 @@ abstract class Structure implements StructureInterface
         // default state is test
         $this->nodeState = StructureInterface::STATE_TEST;
         $this->published = null;
+
         // default hide in navigation
-        $this->navigation = false;
+        $this->navContexts = array();
+
+        // default content node-type
+        $this->nodeType = self::NODE_TYPE_CONTENT;
     }
 
     /**
@@ -229,40 +289,17 @@ abstract class Structure implements StructureInterface
     /**
      * {@inheritdoc}
      */
-    public function addExtension(StructureExtensionInterface $extension)
+    public function getExt()
     {
-        $this->extensions[$extension->getName()] = $extension;
+        return $this->ext;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getExtensions()
+    public function setExt($data)
     {
-        return $this->extensions;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getExtension($name)
-    {
-        if (isset($this->extensions[$name])) {
-            return $this->extensions[$name];
-        } else {
-            throw new ExtensionNotFoundException($this, $name);
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setExtensions($extensions)
-    {
-        $this->extensions = array();
-        foreach ($extensions as $extension) {
-            $this->extensions[$extension->getName()] = clone($extension);
-        }
+        $this->ext = $data;
     }
 
     /**
@@ -634,19 +671,19 @@ abstract class Structure implements StructureInterface
 
     /**
      * returns true if this node is shown in navigation
-     * @return boolean
+     * @return string[]
      */
-    public function getNavigation()
+    public function getNavContexts()
     {
-        return $this->navigation;
+        return $this->navContexts;
     }
 
     /**
-     * @param boolean $showInNavigation
+     * @param string[] $navContexts
      */
-    public function setNavigation($showInNavigation)
+    public function setNavContexts($navContexts)
     {
-        $this->navigation = $showInNavigation;
+        $this->navContexts = $navContexts;
     }
 
     /**
@@ -655,6 +692,42 @@ abstract class Structure implements StructureInterface
     public function setHasTranslation($hasTranslation)
     {
         $this->hasTranslation = $hasTranslation;
+    }
+
+    /**
+     * set if this structure should act like a shadow
+     * @return boolean
+     */
+    public function getIsShadow() 
+    {
+        return $this->isShadow;
+    }
+
+    /**
+     * set if this node should act like a shadow
+     * @param boolean
+     */
+    public function setIsShadow($isShadow)
+    {
+        $this->isShadow = $isShadow;
+    }
+
+    /**
+     * return the shadow base language
+     * @return string
+     */
+    public function getShadowBaseLanguage() 
+    {
+        return $this->shadowBaseLanguage;
+    }
+
+    /**
+     * set the shadow base language
+     * @param string $shadowBaseLanguage
+     */
+    public function setShadowBaseLanguage($shadowBaseLanguage)
+    {
+        $this->shadowBaseLanguage = $shadowBaseLanguage;
     }
 
     /**
@@ -716,6 +789,101 @@ abstract class Structure implements StructureInterface
     }
 
     /**
+     * @return int
+     */
+    public function getNodeType()
+    {
+        return $this->nodeType;
+    }
+
+    /**
+     * @param int $nodeType
+     */
+    public function setNodeType($nodeType)
+    {
+        $this->nodeType = $nodeType;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getInternal()
+    {
+        return $this->internal;
+    }
+
+    /**
+     * @param boolean $internal
+     */
+    public function setInternal($internal)
+    {
+        $this->internal = $internal;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getResourceLocator()
+    {
+        if (
+            $this->getNodeType() === Structure::NODE_TYPE_INTERNAL_LINK &&
+            $this->getInternalLinkContent() !== null &&
+            $this->getInternalLinkContent()->hasTag('sulu.rlp')
+        ) {
+            return $this->getInternalLinkContent()->getPropertyValueByTagName('sulu.rlp');
+        } elseif ($this->getNodeType() === Structure::NODE_TYPE_EXTERNAL_LINK) {
+            // FIXME URL schema
+            return 'http://' . $this->getPropertyByTagName('sulu.rlp')->getValue();
+        } elseif ($this->hasTag('sulu.rlp')) {
+            return $this->getPropertyValueByTagName('sulu.rlp');
+        }
+
+        return null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getNodeName()
+    {
+        if (
+            $this->getNodeType() === Structure::NODE_TYPE_INTERNAL_LINK &&
+            $this->getInternalLinkContent() !== null &&
+            $this->getInternalLinkContent()->hasTag('sulu.node.name')
+        ) {
+            return $this->internalLinkContent->getPropertyValueByTagName('sulu.node.name');
+        } elseif ($this->hasTag('sulu.node.name')) {
+            return $this->getPropertyValueByTagName('sulu.node.name');
+        }
+
+        return null;
+    }
+
+    /**
+     * @return StructureInterface
+     */
+    public function getInternalLinkContent()
+    {
+        return $this->internalLinkContent;
+    }
+
+    /**
+     * @param StructureInterface $internalLinkContent
+     */
+    public function setInternalLinkContent($internalLinkContent)
+    {
+        $this->internalLinkContent = $internalLinkContent;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasTag($tag)
+    {
+        return array_key_exists($tag, $this->tags);
+    }
+
+    /**
      * magic getter
      * @param $property string name of property
      * @return mixed
@@ -771,11 +939,17 @@ abstract class Structure implements StructureInterface
             $result = array(
                 'id' => $this->uuid,
                 'path' => $this->path,
+                'nodeType' => $this->nodeType,
+                'internal' => $this->internal,
                 'nodeState' => $this->getNodeState(),
                 'published' => $this->getPublished(),
                 'globalState' => $this->getGlobalState(),
                 'publishedState' => $this->getPublishedState(),
-                'navigation' => $this->getNavigation(),
+                'navContexts' => $this->getNavContexts(),
+                'enabledShadowLanguages' => $this->getEnabledShadowLanguages(),
+                'concreteLanguages' => $this->getConcreteLanguages(),
+                'shadowOn' => $this->getIsShadow(),
+                'shadowBaseLanguage' => $this->getShadowBaseLanguage(),
                 'template' => $this->getKey(),
                 'hasSub' => $this->hasChildren,
                 'creator' => $this->creator,
@@ -790,19 +964,19 @@ abstract class Structure implements StructureInterface
 
             $this->appendProperties($this->getProperties(), $result);
 
-            foreach ($this->getExtensions() as $extension) {
-                $result['extensions'][$extension->getName()] = $extension->getData();
-            }
+            $result['ext'] = $this->ext;
 
             return $result;
         } else {
             $result = array(
                 'id' => $this->uuid,
                 'path' => $this->path,
+                'nodeType' => $this->nodeType,
+                'internal' => $this->internal,
                 'nodeState' => $this->getNodeState(),
                 'globalState' => $this->getGlobalState(),
                 'publishedState' => $this->getPublishedState(),
-                'navigation' => $this->getNavigation(),
+                'navContexts' => $this->getNavContexts(),
                 'hasSub' => $this->hasChildren,
                 'title' => $this->getPropertyValue('title')
             );
@@ -838,4 +1012,32 @@ abstract class Structure implements StructureInterface
         return $this->toArray();
     }
 
+    /**
+     * return available shadow languages on this structure
+     * (determined at runtime)
+     * @return array
+     */
+    public function getEnabledShadowLanguages() 
+    {
+        return $this->enabledShadowLanguages;
+    }
+
+    /**
+     * set the available enabled shadow languages
+     * @param array
+     */
+    public function setEnabledShadowLanguages($enabledShadowLanguages)
+    {
+        $this->enabledShadowLanguages = $enabledShadowLanguages;
+    }
+
+    public function getConcreteLanguages() 
+    {
+        return $this->concreteLanguages;
+    }
+    
+    public function setConcreteLanguages($concreteLanguages)
+    {
+        $this->concreteLanguages = $concreteLanguages;
+    }
 }

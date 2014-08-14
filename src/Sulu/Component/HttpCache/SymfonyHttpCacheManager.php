@@ -38,7 +38,8 @@ class SymfonyHttpCacheManager implements HttpCacheManagerInterface
     protected $cacheInvalidator;
 
     /**
-     * @param $logger
+     * @param WebspaceManagerInterface $webspaceManager
+     * @param null $logger
      */
     public function __construct(WebspaceManagerInterface $webspaceManager, $logger = null)
     {
@@ -70,7 +71,7 @@ class SymfonyHttpCacheManager implements HttpCacheManagerInterface
 
     private function invalidatePath($url)
     {
-        $this->logger->debug('Invalidate path: ' . $url);
+        $this->logger->info('Invalidate path: ' . $url);
         $this->getCacheInvalidator()->invalidatePath($url);
     }
 

@@ -36,10 +36,12 @@
             <argument type="service" id="event_dispatcher"/>
             <argument type="service" id="sulu.content.localization_finder"/>
             <argument type="service" id="sulu.content.path_cleaner"/>
+            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument>%sulu.content.language.default%</argument>
             <argument>%sulu.content.template.default%</argument>
             <argument>%sulu.content.language.namespace%</argument>
             <argument>%sulu.content.internal_prefix%</argument>
+            <argument>%sulu.content.nav_contexts%</argument>
             <argument type="service" id="debug.stopwatch" on-invalid="null"/>
         </service>
 
@@ -66,7 +68,7 @@
             <argument type="service" id="sulu.content.structure_manager.dumper"/>
             <argument type="service" id="logger"/>
             <argument type="collection">
-                <argument key="template_dir">%sulu.content.template.default_path%</argument>
+                <argument key="template_dir">%sulu.content.template.paths%</argument>
                 <argument key="cache_dir">%kernel.cache_dir%</argument>
                 <argument key="debug">%kernel.debug%</argument>
             </argument>

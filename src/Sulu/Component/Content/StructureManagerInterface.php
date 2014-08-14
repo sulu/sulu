@@ -36,4 +36,27 @@ interface StructureManagerInterface extends ContainerAwareInterface
      * @param string $template default is all templates
      */
     public function addExtension(StructureExtensionInterface $extension, $template = 'all');
+
+    /**
+     * Returns extensions for structure
+     * @param string $key
+     * @return StructureExtensionInterface[]
+     */
+    public function getExtensions($key);
+
+    /**
+     * Indicates that the structure has a extension
+     * @param string $key
+     * @param string $name
+     * @return boolean
+     */
+    public function hasExtension($key, $name);
+
+    /**
+     * Returns a extension
+     * @param string $key
+     * @param string $name
+     * @return StructureExtensionInterface
+     */
+    public function getExtension($key, $name);
 }

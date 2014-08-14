@@ -9,6 +9,9 @@
 .idea/*
 *.iml
 
+# PHPunit
+phpunit.xml
+
 # Jackrabbit
 /bin/jackrabbit-standalone*
 /bin/jackrabbit/*

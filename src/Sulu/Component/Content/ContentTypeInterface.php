@@ -115,4 +115,10 @@ interface ContentTypeInterface
      * @return array
      */
     public function getDefaultParams();
+
+    /**
+     * returns default value of content type
+     * @return mixed
+     */
+    public function getDefaultValue();
 }

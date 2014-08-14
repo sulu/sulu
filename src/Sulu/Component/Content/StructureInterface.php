@@ -248,14 +248,14 @@ interface StructureInterface extends \JsonSerializable
 
     /**
      * returns true if this node is shown in navigation
-     * @return boolean
+     * @return string[]
      */
-    public function getNavigation();
+    public function getNavContexts();
 
     /**
-     * @param boolean $showInNavigation
+     * @param string[] $navContexts
      */
-    public function setNavigation($showInNavigation);
+    public function setNavContexts($navContexts);
 
     /**
      * @param boolean $hasTranslation
@@ -299,25 +299,64 @@ interface StructureInterface extends \JsonSerializable
     public function getPropertyValueByTagName($tagName);
 
     /**
-     * @param StructureExtensionInterface $extension
+     * indicates tag exists
+     * @param string $tag
+     * @return bool
      */
-    public function addExtension(StructureExtensionInterface $extension);
+    public function hasTag($tag);
 
     /**
      * @return StructureExtensionInterface[]
      */
-    public function getExtensions();
+    public function getExt();
 
     /**
-     * return extension with given name
-     * @param string $name
-     * @return StructureExtensionInterface
+     * @param $data
+     * @return array
      */
-    public function getExtension($name);
+    public function setExt($data);
 
     /**
-     * @param $extensions
-     * @return mixed
+     * @return int
      */
-    public function setExtensions($extensions);
+    public function getNodeType();
+
+    /**
+     * @param int $nodeType
+     */
+    public function setNodeType($nodeType);
+
+    /**
+     * @return boolean
+     */
+    public function getInternal();
+
+    /**
+     * @param boolean $internal
+     */
+    public function setInternal($internal);
+
+    /**
+     * returns resourcelocator addicted to the type
+     * @return string
+     */
+    public function getResourceLocator();
+
+    /**
+     * returns node name addicted to the type
+     * @return string
+     */
+    public function getNodeName();
+
+    /**
+     * returns content node that holds the internal link
+     * @return StructureInterface
+     */
+    public function getInternalLinkContent();
+
+    /**
+     * set content node that holds the internal link
+     * @param StructureInterface $internalLinkContent
+     */
+    public function setInternalLinkContent($internalLinkContent);
 }

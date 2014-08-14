@@ -12,6 +12,7 @@ namespace Sulu\Component\Content\Types;
 
 use PHPCR\NodeInterface;
 use Sulu\Component\Content\ContentTypeInterface;
+use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
 
 /**
  * interface for resource locator information
@@ -77,4 +78,9 @@ interface ResourceLocatorInterface extends ContentTypeInterface
      * @param string $segmentKey
      */
     public function restoreByPath($path, $webspaceKey, $languageCode, $segmentKey = null);
+
+    /**
+     * @return RlpStrategyInterface
+     */
+    public function getStrategy();
 }

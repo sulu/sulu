@@ -30,6 +30,16 @@ class StructureType
     }
 
     /**
+     * creates a new ghost type
+     * @param string $localization
+     * @return StructureType
+     */
+    public static function getShadow($localization)
+    {
+        return new StructureType('shadow', $localization);
+    }
+
+    /**
      * @var string
      */
     private $name;

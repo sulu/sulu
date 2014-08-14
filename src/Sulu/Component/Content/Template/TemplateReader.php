@@ -13,7 +13,6 @@ namespace Sulu\Component\Content\Template;
 use Exception;
 use Sulu\Exception\FeatureNotImplementedException;
 use Sulu\Component\Content\Template\Exception\InvalidXmlException;
-use Sulu\Component\Content\Template\Exception\InvalidArgumentException;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\Config\Util\XmlUtils;
@@ -45,23 +44,12 @@ class TemplateReader implements LoaderInterface
         'changed',
         'creator',
         'created',
-        'navigation',
         'published',
-        'state'
+        'state',
+        'internal',
+        'nodeType',
+        'navContexts'
     );
-
-    /**
-     * running variable for required tags
-     * at begin deep copy of requiredTags, each tag found will be removed
-     * @var array
-     */
-    private $runningRequiredTags;
-
-    /**
-     * all tag found tags during a run
-     * @var array
-     */
-    private $runningTags;
 
     /**
      * {@inheritdoc}
@@ -366,7 +354,17 @@ class TemplateReader implements LoaderInterface
     private function getValueFromXPath($path, \DOMXPath $xpath, \DomNode $context = null, $default = null)
     {
         try {
-            return $xpath->query($path, $context)->item(0)->nodeValue;
+            $result = $xpath->query($path, $context);
+            if ($result->length === 0) {
+                return $default;
+            }
+
+            $item = $result->item(0);
+            if ($item === null) {
+                return $default;
+            }
+
+            return $item->nodeValue;
         } catch (Exception $ex) {
             return $default;
         }

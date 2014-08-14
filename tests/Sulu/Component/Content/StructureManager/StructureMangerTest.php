@@ -80,7 +80,12 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
             $this->dumper,
             $this->logger,
             array(
-                'template_dir' => __DIR__ . '/../../../../Resources/DataFixtures/Template',
+                'template_dir' => array(
+                    array(
+                        'path' => __DIR__ . '/../../../../Resources/DataFixtures/Template',
+                        'internal' => false
+                    )
+                ),
                 'cache_dir' => $cacheDir
             ));
     }
@@ -548,17 +553,14 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->structureManager->addExtension(new TestExtension('test1', 'test1'));
         $this->structureManager->addExtension(new TestExtension('test2', 'test2'), 'template');
 
-        $template = $this->structureManager->getStructure('template');
-        $templateSection = $this->structureManager->getStructure('template_sections');
+        $this->assertEquals(2, sizeof($this->structureManager->getExtensions('template')));
+        $this->assertEquals(1, sizeof($this->structureManager->getExtensions('template_sections')));
 
-        $this->assertEquals(2, sizeof($template->getExtensions()));
-        $this->assertEquals(1, sizeof($templateSection->getExtensions()));
-
-        $extensions = array_values($template->getExtensions());
+        $extensions = array_values($this->structureManager->getExtensions('template'));
         $this->assertEquals('test1', $extensions[0]->getName());
         $this->assertEquals('test2', $extensions[1]->getName());
 
-        $extensions = array_values($templateSection->getExtensions());
+        $extensions = array_values($this->structureManager->getExtensions('template_sections'));
         $this->assertEquals('test1', $extensions[0]->getName());
     }
 }

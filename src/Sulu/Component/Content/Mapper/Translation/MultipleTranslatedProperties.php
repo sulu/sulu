@@ -13,6 +13,8 @@ namespace Sulu\Component\Content\Mapper\Translation;
 
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyInterface;
+use Sulu\Component\Content\Exception\NoSuchPropertyException;
+use PHPCR\NodeInterface;
 
 /**
  * enables to translate multiple properties
@@ -49,6 +51,10 @@ class MultipleTranslatedProperties
         }
     }
 
+    /**
+     * set language of translated property names
+     * @param string $languageKey
+     */
     public function setLanguage($languageKey)
     {
         $this->translatedProperties = array();
@@ -61,12 +67,32 @@ class MultipleTranslatedProperties
         }
     }
 
+    /**
+     * returns translated property name
+     * @param string $key
+     * @throws \Sulu\Component\Content\Exception\NoSuchPropertyException
+     * @return string
+     */
     public function getName($key)
     {
         if (isset($this->translatedProperties[$key])) {
             return $this->translatedProperties[$key]->getName();
         } else {
-            return false;
+            throw new NoSuchPropertyException($key);
         }
+    }
+
+    public function getLanguagesForNode(NodeInterface $node)
+    {
+        $languages = array();
+        foreach ($node->getProperties() as $property) {
+            preg_match('/^' . $this->languageNamespace . ':(.*?)-template/', $property->getName(), $matches);
+
+            if ($matches) {
+                $languages[$matches[1]] = $matches[1];
+            }
+        }
+
+        return array_values($languages);
     }
 }

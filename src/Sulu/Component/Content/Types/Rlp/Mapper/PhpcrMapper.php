@@ -238,6 +238,7 @@ class PhpcrMapper extends RlpMapper
     {
         $resourceLocator = ltrim($resourceLocator, '/');
 
+
         $routes = $this->getRoutes($webspaceKey, $languageCode, $segmentKey);
         if (!$routes->hasNode($resourceLocator) && $resourceLocator !== '') {
             throw new ResourceLocatorNotFoundException();
