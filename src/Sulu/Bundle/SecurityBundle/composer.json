@@ -24,9 +24,10 @@
         "sulu/admin-bundle": "dev-develop",
         "sulu/contact-bundle": "dev-develop",
 
-        "sulu/tag-bundle": "@dev",
+        "liip/theme-bundle": "@dev",
         "sulu/media-bundle": "@dev",
-        "sulu/category-bundle": "@dev"
+        "sulu/category-bundle": "@dev",
+        "sulu/tag-bundle": "@dev"
     },
     "require-dev": {
         "sensio/framework-extra-bundle":  "~3.0",
