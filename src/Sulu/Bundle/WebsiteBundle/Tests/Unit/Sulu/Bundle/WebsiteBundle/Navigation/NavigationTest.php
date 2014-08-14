@@ -346,8 +346,7 @@ class NavigationTest extends PhpcrTestCase
             true,
             null,
             null,
-            StructureInterface::STATE_PUBLISHED,
-            'main'
+            StructureInterface::STATE_PUBLISHED
         );
 
         $main = $this->navigation->getNavigation($this->data['news']->getUuid(), 'default', 'en', 1);
