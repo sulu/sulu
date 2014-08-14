@@ -4,7 +4,7 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
-
+use JMS\Serializer\Annotation\Groups;
 /**
  * Position
  */
@@ -12,11 +12,13 @@ class Position implements JsonSerializable
 {
     /**
      * @var string
+     * @Groups({"fullContact", "partialContact"})
      */
     private $position;
 
     /**
      * @var integer
+     * @Groups({"fullContact", "partialContact"})
      */
     private $id;
 

@@ -88,6 +88,7 @@ class ContactAddress extends ApiWrapper
      * Get main
      *
      * @return boolean
+     * @VirtualProperty
      * @SerializedName("main")
      */
     public function getMain()
@@ -112,6 +113,7 @@ class ContactAddress extends ApiWrapper
      * Get address
      *
      * @return AddressEntity
+     * @VirtualProperty
      * @SerializedName("address")
      */
     public function getAddress()

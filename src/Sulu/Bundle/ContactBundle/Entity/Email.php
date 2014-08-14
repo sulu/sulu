@@ -10,9 +10,8 @@
 
 namespace Sulu\Bundle\ContactBundle\Entity;
 use JMS\Serializer\Annotation\Exclude;
-
-
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Groups;
 
 /**
  * Email
@@ -21,16 +20,19 @@ class Email
 {
     /**
      * @var string
+     * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      */
     private $email;
 
     /**
      * @var integer
+     * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      */
     private $id;
 
     /**
      * @var \Sulu\Bundle\ContactBundle\Entity\EmailType
+     * @Groups({"fullAccount", "fullContact"})
      */
     private $emailType;
 

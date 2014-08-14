@@ -13,8 +13,6 @@ namespace Sulu\Bundle\ContactBundle\Api;
 use Sulu\Bundle\CategoryBundle\Api\Category;
 use Sulu\Bundle\CategoryBundle\Entity\Category as CategoryEntity;
 use Sulu\Bundle\ContactBundle\Entity\Account as AccountEntity;
-use Sulu\Bundle\ContactBundle\Api\Account;
-use Sulu\Bundle\ContactBundle\Api\Contact;
 use Sulu\Bundle\ContactBundle\Entity\AccountContact as AccountContactEntity;
 use Sulu\Bundle\ContactBundle\Entity\Activity as ActivityEntity;
 use Sulu\Bundle\ContactBundle\Entity\ContactAddress as ContactAddressEntity;
@@ -35,6 +33,7 @@ use Hateoas\Configuration\Annotation\Relation;
 use JMS\Serializer\Annotation\VirtualProperty;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Groups;
 
 /**
  * The UrlType class which will be exported to the API
@@ -79,7 +78,9 @@ class AccountContact extends ApiWrapper
      * Get main
      *
      * @return boolean
+     * @VirtualProperty
      * @SerializedName("main")
+     * @Groups({"fullAccount"})
      */
     public function getMain()
     {
@@ -90,7 +91,9 @@ class AccountContact extends ApiWrapper
      * Get id
      *
      * @return integer
+     * @VirtualProperty
      * @SerializedName("id")
+     * @Groups({"fullAccount"})
      */
     public function getId()
     {
@@ -114,7 +117,9 @@ class AccountContact extends ApiWrapper
      * Get contact
      *
      * @return ContactEntity
+     * @VirtualProperty
      * @SerializedName("contact")
+     * @Groups({"fullAccount"})
      */
     public function getContact()
     {
@@ -142,7 +147,9 @@ class AccountContact extends ApiWrapper
      * Get account
      *
      * @return Account
+     * @VirtualProperty
      * @SerializedName("account")
+     * @Groups({"fullAccount"})
      */
     public function getAccount()
     {
@@ -170,7 +177,9 @@ class AccountContact extends ApiWrapper
      * Get position
      *
      * @return string
+     * @VirtualProperty
      * @SerializedName("position")
+     * @Groups({"fullAccount"})
      */
     public function getPosition()
     {

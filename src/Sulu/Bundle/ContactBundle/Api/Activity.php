@@ -95,6 +95,7 @@ class Activity extends ApiWrapper
      * Get subject
      *
      * @return string
+     * @VirtualProperty
      * @SerializedName("subject")
      */
     public function getSubject()
@@ -119,6 +120,7 @@ class Activity extends ApiWrapper
      * Get note
      *
      * @return string
+     * @VirtualProperty
      * @SerializedName("note")
      */
     public function getNote()
@@ -143,6 +145,7 @@ class Activity extends ApiWrapper
      * Get dueDate
      *
      * @return \DateTime
+     * @VirtualProperty
      * @SerializedName("dueDate")
      */
     public function getDueDate()
@@ -167,6 +170,7 @@ class Activity extends ApiWrapper
      * Get startDate
      *
      * @return \DateTime
+     * @VirtualProperty
      * @SerializedName("startDate")
      */
     public function getStartDate()
@@ -191,6 +195,7 @@ class Activity extends ApiWrapper
      * Get created
      *
      * @return \DateTime
+     * @VirtualProperty
      * @SerializedName("created")
      */
     public function getCreated()
@@ -215,6 +220,7 @@ class Activity extends ApiWrapper
      * Get changed
      *
      * @return \DateTime
+     * @VirtualProperty
      * @SerializedName("changed")
      */
     public function getChanged()
@@ -239,6 +245,7 @@ class Activity extends ApiWrapper
      * Get activityStatus
      *
      * @return ActivityStatusEntity
+     * @VirtualProperty
      * @SerializedName("activityStatus")
      */
     public function getActivityStatus()
@@ -263,6 +270,7 @@ class Activity extends ApiWrapper
      * Get activityPriority
      *
      * @return ActivityPriorityEntity
+     * @VirtualProperty
      * @SerializedName("activityPriority")
      */
     public function getActivityPriority()
@@ -287,6 +295,7 @@ class Activity extends ApiWrapper
      * Get activityType
      *
      * @return ActivityTypeEntity
+     * @VirtualProperty
      * @SerializedName("activityType")
      */
     public function getActivityType()
@@ -311,6 +320,7 @@ class Activity extends ApiWrapper
      * Get contact
      *
      * @return ContactEntity
+     * @VirtualProperty
      * @SerializedName("contact")
      */
     public function getContact()
@@ -337,6 +347,7 @@ class Activity extends ApiWrapper
      * Get account
      *
      * @return AccountEntity
+     * @VirtualProperty
      * @SerializedName("account")
      */
     public function getAccount()
@@ -362,6 +373,7 @@ class Activity extends ApiWrapper
      * Get assignedContact
      *
      * @return ContactEntity
+     * @VirtualProperty
      * @SerializedName("assignedContact")
      */
     public function getAssignedContact()

@@ -65,6 +65,7 @@ class ContactAddress extends ApiWrapper
      * @return int
      * @VirtualProperty
      * @SerializedName("id")
+     * @Groups({"fullAccount"})
      */
     public function getId()
     {
@@ -88,7 +89,9 @@ class ContactAddress extends ApiWrapper
      * Get main
      *
      * @return boolean
+     * @VirtualProperty
      * @SerializedName("main")
+     * @Groups({"fullAccount"})
      */
     public function getMain()
     {
@@ -112,11 +115,13 @@ class ContactAddress extends ApiWrapper
      * Get address
      *
      * @return AddressEntity
+     * @VirtualProperty
      * @SerializedName("address")
+     * @Groups({"fullAccount"})
      */
     public function getAddress()
     {
         $adr =  $this->entity->getAddress();
-        return new Address($adr);
+        return new AddressEntity($adr);
     }
 }

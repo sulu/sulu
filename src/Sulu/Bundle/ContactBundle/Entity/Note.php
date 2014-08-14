@@ -12,7 +12,7 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Exclude;
-
+use JMS\Serializer\Annotation\Groups;
 /**
  * Note
  */
@@ -20,11 +20,13 @@ class Note
 {
     /**
      * @var string
+     * @Groups({"fullAccount", "fullContact"})
      */
     private $value;
 
     /**
      * @var integer
+     * @Groups({"fullAccount", "fullContact"})
      */
     private $id;
 

@@ -12,7 +12,7 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Exclude;
-
+use JMS\Serializer\Annotation\Groups;
 /**
  * Country
  */
@@ -20,16 +20,19 @@ class Country implements \JsonSerializable
 {
     /**
      * @var string
+     * @Groups({"fullAccount", "partialAccount"})
      */
     private $name;
 
     /**
      * @var string
+     * @Groups({"fullAccount", "partialAccount"})
      */
     private $code;
 
     /**
      * @var integer
+     * @Groups({"fullAccount", "partialAccount"})
      */
     private $id;
 

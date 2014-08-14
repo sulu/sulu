@@ -12,7 +12,7 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Exclude;
-
+use JMS\Serializer\Annotation\Groups;
 /**
  * Url
  */
@@ -20,16 +20,19 @@ class Url
 {
     /**
      * @var string
+     * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      */
     private $url;
 
     /**
      * @var integer
+     * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      */
     private $id;
 
     /**
      * @var \Sulu\Bundle\ContactBundle\Entity\UrlType
+     * @Groups({"fullAccount", "fullContact"})
      */
     private $urlType;
 

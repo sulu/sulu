@@ -125,6 +125,8 @@ class AccountController extends AbstractContactController
                 }
             );
 
+            $view->setSerializationContext(SerializationContext::create()->setGroups(array('fullAccount', 'partialContact')));
+
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
         }
@@ -456,8 +458,9 @@ class AccountController extends AbstractContactController
             $accountManager = $this->getContactManager();
             $locale = $this->getUser()->getLocale();
             $acc = $accountManager->getAccount($account, $locale);
-
             $view = $this->view($acc, 200);
+            $view->setSerializationContext(SerializationContext::create()->setGroups(array('fullAccount', 'smallContact')));
+
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
         } catch (RestException $re) {
@@ -548,6 +551,7 @@ class AccountController extends AbstractContactController
                 $acc = $accountManager->getAccount($account, $locale);
 
                 $view = $this->view($acc, 200);
+                $view->setSerializationContext(SerializationContext::create()->setGroups(array('fullAccount', 'partialContact')));
             }
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
@@ -655,6 +659,7 @@ class AccountController extends AbstractContactController
                 $acc = $accountManager->getAccount($account, $locale);
 
                 $view = $this->view($acc, 200);
+                $view->setSerializationContext(SerializationContext::create()->setGroups(array('fullAccount', 'partialContact')));
             }
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
@@ -897,7 +902,7 @@ class AccountController extends AbstractContactController
                     $acc = $accountManager->getAccount($accountEntity, $locale);
 
                     $view = $this->view($acc, 200);
-                    $view->setSerializationContext(SerializationContext::create()->enableMaxDepthChecks());
+                    $view->setSerializationContext(SerializationContext::create()->setGroups(array('fullAccount', 'smallContact')));
 
                     break;
                 default:

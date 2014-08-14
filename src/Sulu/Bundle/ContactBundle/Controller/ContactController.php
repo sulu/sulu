@@ -14,6 +14,7 @@ use DateTime;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Put;
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use JMS\Serializer\SerializationContext;
 use Sluggable\Fixture\Position;
 use Sulu\Bundle\ContactBundle\Contact\AbstractContactManager;
 use Sulu\Bundle\ContactBundle\Entity\Account;
@@ -451,14 +452,23 @@ class ContactController extends AbstractContactController
      */
     public function getAction($id)
     {
-        $view = $this->responseGetById(
-            $id,
-            function ($id) {
-                return $this->getDoctrine()
-                    ->getRepository(self::$entityName)
-                    ->findById($id);
-            }
-        );
+        $contactManager = $this->getContactManager();
+        $locale = $this->getUser()->getLocale();
+
+        try {
+            $view = $this->responseGetById(
+                $id,
+                function ($id) use ($contactManager, $locale) {
+                    return $contactManager->getById($id, $locale);
+                }
+            );
+
+            $view->setSerializationContext(
+                SerializationContext::create()->setGroups(array('fullContact', 'partialAccount'))
+            );
+        } catch (EntityNotFoundException $enfe) {
+            $view = $this->view($enfe->toArray(), 404);
+        }
 
         return $this->handleView($view);
     }

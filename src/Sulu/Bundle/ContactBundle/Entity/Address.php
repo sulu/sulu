@@ -13,6 +13,7 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
+use JMS\Serializer\Annotation\Groups;
 
 /**
  * Address
@@ -22,90 +23,105 @@ class Address
 {
     /**
      * @var string
+     * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      * @Expose
      */
     private $street;
 
     /**
      * @var string
+     * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      * @Expose
      */
     private $number;
 
     /**
      * @var string
+     * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      * @Expose
      */
     private $addition;
 
     /**
      * @var string
+     * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      * @Expose
      */
     private $zip;
 
     /**
      * @var string
+     * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      * @Expose
      */
     private $city;
 
     /**
      * @var string
+     * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      * @Expose
      */
     private $state;
 
     /**
      * @var integer
+     * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      * @Expose
      */
     private $id;
 
     /**
      * @var \Sulu\Bundle\ContactBundle\Entity\AddressType
+     * @Groups({"fullAccount", "fullContact"})
      * @Expose
      */
     private $addressType;
 
     /**
      * @var \Sulu\Bundle\ContactBundle\Entity\Country
+     * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      * @Expose
      */
     private $country;
 
     /**
      * @var boolean
+     * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      * @Expose
      */
     private $primaryAddress;
 
     /**
      * @var boolean
+     * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      * @Expose
      */
     private $deliveryAddress;
 
     /**
      * @var boolean
+     * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      * @Expose
      */
     private $billingAddress;
 
     /**
      * @var string
+     * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      * @Expose
      */
     private $postboxNumber;
 
     /**
      * @var string
+     * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      * @Expose
      */
     private $postboxPostcode;
 
     /**
      * @var string
+     * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      * @Expose
      */
     private $postboxCity;

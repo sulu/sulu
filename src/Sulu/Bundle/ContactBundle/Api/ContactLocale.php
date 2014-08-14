@@ -90,6 +90,7 @@ class ContactLocale extends ApiWrapper
      * Get locale
      *
      * @return string
+     * @VirtualProperty
      * @SerializedName("locale")
      */
     public function getLocale()

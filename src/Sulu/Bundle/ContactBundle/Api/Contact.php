@@ -32,6 +32,7 @@ use Hateoas\Configuration\Annotation\Relation;
 use JMS\Serializer\Annotation\VirtualProperty;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Groups;
 
 /**
  * The UrlType class which will be exported to the API
@@ -66,6 +67,7 @@ class Contact extends ApiWrapper
      * @return integer
      * @VirtualProperty
      * @SerializedName("id")
+     * @Groups({"fullContact","partialContact"})
      */
     public function getId()
     {
@@ -91,6 +93,7 @@ class Contact extends ApiWrapper
      * @return string
      * @VirtualProperty
      * @SerializedName("firstName")
+     * @Groups({"fullContact","partialContact"})
      */
     public function getFirstName()
     {
@@ -102,6 +105,7 @@ class Contact extends ApiWrapper
      *
      * @param string $middleName
      * @return Contact
+     * @Groups({"fullContact","partialContact"})
      */
     public function setMiddleName($middleName)
     {
@@ -116,6 +120,7 @@ class Contact extends ApiWrapper
      * @return string
      * @VirtualProperty
      * @SerializedName("middleName")
+     * @Groups({"fullContact","partialContact"})
      */
     public function getMiddleName()
     {
@@ -141,6 +146,7 @@ class Contact extends ApiWrapper
      * @return string
      * @VirtualProperty
      * @SerializedName("lastName")
+     * @Groups({"fullContact","partialContact"})
      */
     public function getLastName()
     {
@@ -151,6 +157,7 @@ class Contact extends ApiWrapper
      * @VirtualProperty
      * @SerializedName("fullName")
      * @return string
+     * @Groups({"fullContact","partialContact"})
      */
     public function getFullName()
     {
@@ -176,6 +183,7 @@ class Contact extends ApiWrapper
      * @return string
      * @VirtualProperty
      * @SerializedName("title")
+     * @Groups({"fullContact", "partialContact"})
      */
     public function getTitle()
     {
@@ -211,6 +219,7 @@ class Contact extends ApiWrapper
      * @return string
      * @VirtualProperty
      * @SerializedName("position")
+     * @Groups({"fullContact","partialContact"})
      */
     public function getPosition()
     {
@@ -236,6 +245,7 @@ class Contact extends ApiWrapper
      * @return \DateTime
      * @VirtualProperty
      * @SerializedName("birthday")
+     * @Groups({"fullContact"})
      */
     public function getBirthday()
     {
@@ -261,6 +271,7 @@ class Contact extends ApiWrapper
      * @return \DateTime
      * @VirtualProperty
      * @SerializedName("created")
+     * @Groups({"fullContact"})
      */
     public function getCreated()
     {
@@ -286,6 +297,7 @@ class Contact extends ApiWrapper
      * @return \DateTime
      * @VirtualProperty
      * @SerializedName("changed")
+     * @Groups({"fullContact"})
      */
     public function getChanged()
     {
@@ -324,6 +336,7 @@ class Contact extends ApiWrapper
      * @return array
      * @VirtualProperty
      * @SerializedName("locales")
+     * @Groups({"fullContact"})
      */
     public function getLocales()
     {
@@ -395,6 +408,7 @@ class Contact extends ApiWrapper
      * @return array
      * @VirtualProperty
      * @SerializedName("notes")
+     * @Groups({"fullContact"})
      */
     public function getNotes()
     {
@@ -437,6 +451,7 @@ class Contact extends ApiWrapper
      * @return array
      * @VirtualProperty
      * @SerializedName("emails")
+     * @Groups({"fullContact"})
      */
     public function getEmails()
     {
@@ -479,6 +494,7 @@ class Contact extends ApiWrapper
      * @return array
      * @VirtualProperty
      * @SerializedName("phones")
+     * @Groups({"fullContact"})
      */
     public function getPhones()
     {
@@ -536,6 +552,7 @@ class Contact extends ApiWrapper
      * @return array
      * @VirtualProperty
      * @SerializedName("faxes")
+     * @Groups({"fullContact"})
      */
     public function getFaxes()
     {
@@ -578,6 +595,7 @@ class Contact extends ApiWrapper
      * @return array
      * @VirtualProperty
      * @SerializedName("urls")
+     * @Groups({"fullContact"})
      */
     public function getUrls()
     {
@@ -646,6 +664,7 @@ class Contact extends ApiWrapper
      * @return integer
      * @VirtualProperty
      * @SerializedName("formOfAddress")
+     * @Groups({"fullContact"})
      */
     public function getFormOfAddress()
     {
@@ -671,6 +690,7 @@ class Contact extends ApiWrapper
      * @return string
      * @VirtualProperty
      * @SerializedName("salutation")
+     * @Groups({"fullContact"})
      */
     public function getSalutation()
     {
@@ -696,6 +716,7 @@ class Contact extends ApiWrapper
      * @return integer
      * @VirtualProperty
      * @SerializedName("disabled")
+     * @Groups({"fullContact","partialContact"})
      */
     public function getDisabled()
     {
@@ -718,6 +739,7 @@ class Contact extends ApiWrapper
      * @return array
      * @VirtualProperty
      * @SerializedName("tags")
+     * @Groups({"fullContact"})
      */
     public function getTags()
     {
@@ -740,6 +762,7 @@ class Contact extends ApiWrapper
      * @return array
      * @VirtualProperty
      * @SerializedName("tagNameArray")
+     * @Groups({"fullContact"})
      */
     public function getTagNameArray()
     {
@@ -773,6 +796,7 @@ class Contact extends ApiWrapper
      * @return boolean
      * @VirtualProperty
      * @SerializedName("newsletter")
+     * @Groups({"fullContact"})
      */
     public function getNewsletter()
     {
@@ -798,6 +822,7 @@ class Contact extends ApiWrapper
      * @return string
      * @VirtualProperty
      * @SerializedName("gender")
+     * @Groups({"fullContact"})
      */
     public function getGender()
     {
@@ -809,6 +834,7 @@ class Contact extends ApiWrapper
      *
      * @VirtualProperty
      * @SerializedName("mainAccount")
+     * @Groups({"fullContact", "partialContact"})
      */
     public function getMainAccount()
     {
@@ -816,6 +842,7 @@ class Contact extends ApiWrapper
         if (!is_null($mainAccount)) {
             return new Account($mainAccount, $this->locale, $this->tagManager);
         }
+
         return null;
     }
 
@@ -824,6 +851,7 @@ class Contact extends ApiWrapper
      *
      * @VirtualProperty
      * @SerializedName("addresses")
+     * @Groups({"fullContact"})
      */
     public function getAddresses()
     {
@@ -861,6 +889,7 @@ class Contact extends ApiWrapper
      * @return string
      * @VirtualProperty
      * @SerializedName("mainEmail")
+     * @Groups({"fullContact","partialContact"})
      */
     public function getMainEmail()
     {
@@ -886,6 +915,7 @@ class Contact extends ApiWrapper
      * @return string
      * @VirtualProperty
      * @SerializedName("mainPhone")
+     * @Groups({"fullContact","partialContact"})
      */
     public function getMainPhone()
     {
@@ -911,6 +941,7 @@ class Contact extends ApiWrapper
      * @return string
      * @VirtualProperty
      * @SerializedName("mainFax")
+     * @Groups({"fullContact","partialContact"})
      */
     public function getMainFax()
     {
@@ -936,6 +967,7 @@ class Contact extends ApiWrapper
      * @return string
      * @VirtualProperty
      * @SerializedName("mainUrl")
+     * @Groups({"fullContact","partialContact"})
      */
     public function getMainUrl()
     {
@@ -969,13 +1001,14 @@ class Contact extends ApiWrapper
      * @return array
      * @VirtualProperty
      * @SerializedName("assignedActivities")
+     * @Groups({"fullContact"})
      */
     public function getAssignedActivities()
     {
         $entities = [];
         if ($this->entity->getAssignedActivities()) {
             foreach ($this->entity->getAssignedActivities() as $entity) {
-                $entities[] = new Activity($entity,$this->locale,$this->tagManager);
+                $entities[] = new Activity($entity, $this->locale, $this->tagManager);
             }
         }
 
@@ -988,6 +1021,7 @@ class Contact extends ApiWrapper
      * @return mixed
      * @VirtualProperty
      * @SerializedName("mainAddress")
+     * @Groups({"fullContact","partialContact"})
      */
     public function getMainAddress()
     {
@@ -1044,6 +1078,7 @@ class Contact extends ApiWrapper
      * @return Media[]
      * @VirtualProperty
      * @SerializedName("medias")
+     * @Groups({"fullContact"})
      */
     public function getMedias()
     {
@@ -1073,6 +1108,7 @@ class Contact extends ApiWrapper
      * @return Category[]
      * @VirtualProperty
      * @SerializedName("categories")
+     * @Groups({"fullContact"})
      */
     public function getCategories()
     {

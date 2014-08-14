@@ -3,6 +3,7 @@
 namespace Sulu\Bundle\ContactBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Groups;
 
 /**
  * TermsOfPayment
@@ -11,11 +12,13 @@ class TermsOfPayment
 {
     /**
      * @var string
+     * @Groups({"fullAccount"})
      */
     private $terms;
 
     /**
      * @var integer
+     * @Groups({"fullAccount"})
      */
     private $id;
 

@@ -71,6 +71,7 @@ class Account extends ApiWrapper
      * @return int
      * @VirtualProperty
      * @SerializedName("id")
+     * @Groups({"fullAccount", "partialAccount"})
      */
     public function getId()
     {
@@ -83,6 +84,7 @@ class Account extends ApiWrapper
      * @return integer
      * @VirtualProperty
      * @SerializedName("lft")
+     * @Groups({"fullAccount", "partialAccount"})
      */
     public function getLft()
     {
@@ -121,6 +123,7 @@ class Account extends ApiWrapper
      * @return integer
      * @VirtualProperty
      * @SerializedName("rgt")
+     * @Groups({"fullAccount", "partialAccount"})
      */
     public function getRgt()
     {
@@ -146,6 +149,7 @@ class Account extends ApiWrapper
      * @return integer
      * @VirtualProperty
      * @SerializedName("depth")
+     * @Groups({"fullAccount", "partialAccount"})
      */
     public function getDepth()
     {
@@ -171,6 +175,7 @@ class Account extends ApiWrapper
      * @return string
      * @VirtualProperty
      * @SerializedName("name")
+     * @Groups({"fullAccount", "partialAccount"})
      */
     public function getName()
     {
@@ -196,6 +201,7 @@ class Account extends ApiWrapper
      * @return \DateTime
      * @VirtualProperty
      * @SerializedName("created")
+     * @Groups({"fullAccount"})
      */
     public function getCreated()
     {
@@ -221,6 +227,7 @@ class Account extends ApiWrapper
      * @return \DateTime
      * @VirtualProperty
      * @SerializedName("changed")
+     * @Groups({"fullAccount"})
      */
     public function getChanged()
     {
@@ -246,10 +253,16 @@ class Account extends ApiWrapper
      * @return AccountEntity
      * @VirtualProperty
      * @SerializedName("parent")
+     * @Groups({"fullAccount"})
      */
     public function getParent()
     {
-        return $this->entity->getParent();
+
+        $account = $this->entity->getParent();
+        if($account) {
+            return new Account($account, $this->locale, $this->tagManager);
+        }
+        return null;
     }
 
     /**
@@ -281,6 +294,7 @@ class Account extends ApiWrapper
      * @return UrlEntity[]
      * @VirtualProperty
      * @SerializedName("urls")
+     * @Groups({"fullAccount"})
      */
     public function getUrls()
     {
@@ -323,6 +337,7 @@ class Account extends ApiWrapper
      * @return PhoneEntity[]
      * @VirtualProperty
      * @SerializedName("phones")
+     * @Groups({"fullAccount"})
      */
     public function getPhones()
     {
@@ -365,6 +380,7 @@ class Account extends ApiWrapper
      * @return EmailEntity[]
      * @VirtualProperty
      * @SerializedName("emails")
+     * @Groups({"fullAccount"})
      */
     public function getEmails()
     {
@@ -407,6 +423,7 @@ class Account extends ApiWrapper
      * @return NoteEntity[]
      * @VirtualProperty
      * @SerializedName("notes")
+     * @Groups({"fullAccount"})
      */
     public function getNotes()
     {
@@ -439,6 +456,7 @@ class Account extends ApiWrapper
      * @return integer
      * @VirtualProperty
      * @SerializedName("type")
+     * @Groups({"fullAccount"})
      */
     public function getType()
     {
@@ -474,6 +492,7 @@ class Account extends ApiWrapper
      * @return FaxEntity[]
      * @VirtualProperty
      * @SerializedName("faxes")
+     * @Groups({"fullAccount"})
      */
     public function getFaxes()
     {
@@ -506,6 +525,7 @@ class Account extends ApiWrapper
      * @return string
      * @VirtualProperty
      * @SerializedName("corporation")
+     * @Groups({"fullAccount", "partialAccount"})
      */
     public function getCorporation()
     {
@@ -531,6 +551,7 @@ class Account extends ApiWrapper
      * @return integer
      * @VirtualProperty
      * @SerializedName("disabled")
+     * @Groups({"fullAccount", "partialAccount"})
      */
     public function getDisabled()
     {
@@ -556,6 +577,7 @@ class Account extends ApiWrapper
      * @return string
      * @VirtualProperty
      * @SerializedName("uid")
+     * @Groups({"fullAccount"})
      */
     public function getUid()
     {
@@ -618,6 +640,7 @@ class Account extends ApiWrapper
      * @return string
      * @VirtualProperty
      * @SerializedName("registerNumber")
+     * @Groups({"fullAccount"})
      */
     public function getRegisterNumber()
     {
@@ -643,6 +666,7 @@ class Account extends ApiWrapper
      * @return AccountCategoryEntity
      * @VirtualProperty
      * @SerializedName("accountCategory")
+     * @Groups({"fullAccount"})
      */
     public function getAccountCategory()
     {
@@ -665,6 +689,7 @@ class Account extends ApiWrapper
      * @return BankAccountEntity[]
      * @VirtualProperty
      * @SerializedName("bankAccounts")
+     * @Groups({"fullAccount"})
      */
     public function getBankAccounts()
     {
@@ -708,6 +733,7 @@ class Account extends ApiWrapper
      * @return TagEntity[]
      * @VirtualProperty
      * @SerializedName("tags")
+     * @Groups({"fullAccount"})
      */
     public function getTags()
     {
@@ -731,6 +757,7 @@ class Account extends ApiWrapper
      * @return array
      * @VirtualProperty
      * @SerializedName("tagNameArray")
+     * @Groups({"fullAccount"})
      */
     public function getTagNameArray()
     {
@@ -774,6 +801,7 @@ class Account extends ApiWrapper
      * @return AccountContact[]
      * @VirtualProperty
      * @SerializedName("accountContacts")
+     * @Groups({"fullAccount"})
      */
     public function getAccountContacts()
     {
@@ -806,6 +834,7 @@ class Account extends ApiWrapper
      * @return string
      * @VirtualProperty
      * @SerializedName("placeOfJurisdiction")
+     * @Groups({"fullAccount"})
      */
     public function getPlaceOfJurisdiction()
     {
@@ -831,6 +860,7 @@ class Account extends ApiWrapper
      * @return TermsOfPaymentEntity
      * @VirtualProperty
      * @SerializedName("termsOfPayment")
+     * @Groups({"fullAccount"})
      */
     public function getTermsOfPayment()
     {
@@ -856,6 +886,7 @@ class Account extends ApiWrapper
      * @return TermsOfDeliveryEntity
      * @VirtualProperty
      * @SerializedName("termsOfDelivery")
+     * @Groups({"fullAccount"})
      */
     public function getTermsOfDelivery()
     {
@@ -881,6 +912,7 @@ class Account extends ApiWrapper
      * @return string
      * @VirtualProperty
      * @SerializedName("number")
+     * @Groups({"fullAccount"})
      */
     public function getNumber()
     {
@@ -906,6 +938,7 @@ class Account extends ApiWrapper
      * @return string
      * @VirtualProperty
      * @SerializedName("externalId")
+     * @Groups({"fullAccount"})
      */
     public function getExternalId()
     {
@@ -944,6 +977,7 @@ class Account extends ApiWrapper
      * @return Account
      * @VirtualProperty
      * @SerializedName("responsiblePerson")
+     * @Groups({"fullAccount"})
      */
     public function getResponsiblePerson()
     {
@@ -958,6 +992,7 @@ class Account extends ApiWrapper
      * @return Account
      * @VirtualProperty
      * @SerializedName("mainContact")
+     * @Groups({"fullAccount"})
      */
     public function getMainContact()
     {
@@ -985,6 +1020,7 @@ class Account extends ApiWrapper
      * @return string
      * @VirtualProperty
      * @SerializedName("mainEmail")
+     * @Groups({"fullAccount", "partialAccount"})
      */
     public function getMainEmail()
     {
@@ -1010,6 +1046,7 @@ class Account extends ApiWrapper
      * @return string
      * @VirtualProperty
      * @SerializedName("mainPhone")
+     * @Groups({"fullAccount", "partialAccount"})
      */
     public function getMainPhone()
     {
@@ -1035,6 +1072,7 @@ class Account extends ApiWrapper
      * @return string
      * @VirtualProperty
      * @SerializedName("mainFax")
+     * @Groups({"fullAccount", "partialAccount"})
      */
     public function getMainFax()
     {
@@ -1060,6 +1098,7 @@ class Account extends ApiWrapper
      * @return string
      * @VirtualProperty
      * @SerializedName("mainUrl")
+     * @Groups({"fullAccount", "partialAccount"})
      */
     public function getMainUrl()
     {
@@ -1113,6 +1152,7 @@ class Account extends ApiWrapper
      *
      * @VirtualProperty
      * @SerializedName("addresses")
+     * @Groups({"fullAccount"})
      */
     public function getAddresses()
     {
@@ -1137,6 +1177,7 @@ class Account extends ApiWrapper
      * @return mixed
      * @VirtualProperty
      * @SerializedName("mainAddress")
+     * @Groups({"fullAccount", "partialAccount"})
      */
     public function getMainAddress()
     {
@@ -1160,6 +1201,7 @@ class Account extends ApiWrapper
      * @return Contact[]
      * @VirtualProperty
      * @SerializedName("contacts")
+     * @Groups({"fullAccount"})
      */
     public function getContacts()
     {
@@ -1205,6 +1247,7 @@ class Account extends ApiWrapper
      * @return Media[]
      * @VirtualProperty
      * @SerializedName("medias")
+     * @Groups({"fullAccount"})
      */
     public function getMedias()
     {
