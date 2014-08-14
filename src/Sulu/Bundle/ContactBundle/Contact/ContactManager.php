@@ -127,4 +127,19 @@ class ContactManager extends AbstractContactManager
         }
         return new Contact($contact, $locale, $this->tagManager);
     }
+
+    /**
+     * Returns an api entity for an doctrine entity
+     * @param $contact
+     * @param $locale
+     * @return null|Contact
+     */
+    public function getContact($contact, $locale)
+    {
+        if ($contact) {
+            return new Contact($contact, $locale, $this->tagManager);
+        } else {
+            return null;
+        }
+    }
 }

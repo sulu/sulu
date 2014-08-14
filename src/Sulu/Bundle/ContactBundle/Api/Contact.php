@@ -833,10 +833,10 @@ class Contact extends ApiWrapper
      * returns main account
      *
      * @VirtualProperty
-     * @SerializedName("mainAccount")
+     * @SerializedName("account")
      * @Groups({"fullContact"})
      */
-    public function getMainAccount()
+    public function getAccount()
     {
         $mainAccount = $this->entity->getMainAccount();
         if (!is_null($mainAccount)) {

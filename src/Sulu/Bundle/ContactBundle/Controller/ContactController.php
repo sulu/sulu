@@ -464,7 +464,9 @@ class ContactController extends AbstractContactController
             );
 
             $view->setSerializationContext(
-                SerializationContext::create()->setGroups(array('fullContact', 'partialAccount'))
+                SerializationContext::create()->setGroups(
+                    array('fullContact', 'partialAccount', 'partialTag', 'partialMedia', 'partialCategory')
+                )
             );
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
@@ -553,7 +555,14 @@ class ContactController extends AbstractContactController
             $em->persist($contact);
             $em->flush();
 
-            $view = $this->view($contact, 200);
+            $apiContact = $this->getContactManager()->getContact($contact, $this->getUser()->getLocale());
+            $view = $this->view($apiContact, 200);
+            $view->setSerializationContext(
+                SerializationContext::create()->setGroups(
+                    array('fullContact', 'partialAccount', 'partialTag', 'partialMedia', 'partialCategory')
+                )
+            );
+
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
         } catch (RestException $re) {
@@ -731,7 +740,14 @@ class ContactController extends AbstractContactController
 
                 $em->flush();
 
-                $view = $this->view($contact, 200);
+                $apiContact = $this->getContactManager()->getContact($contact, $this->getUser()->getLocale());
+                $view = $this->view($apiContact, 200);
+                $view->setSerializationContext(
+                    SerializationContext::create()->setGroups(
+                        array('fullContact', 'partialAccount', 'partialTag', 'partialMedia', 'partialCategory')
+                    )
+                );
+
             }
         } catch (EntityNotFoundException $exc) {
             $view = $this->view($exc->toArray(), 404);

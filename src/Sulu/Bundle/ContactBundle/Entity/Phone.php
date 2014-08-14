@@ -32,7 +32,7 @@ class Phone
 
     /**
      * @var \Sulu\Bundle\ContactBundle\Entity\PhoneType
-     * @Groups({"fullAccount", "partialContact"})
+     * @Groups({"fullAccount", "fullContact"})
      */
     private $phoneType;
 
