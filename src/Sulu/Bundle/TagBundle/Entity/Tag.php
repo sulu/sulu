@@ -14,6 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 use JMS\Serializer\Annotation\VirtualProperty;
 use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation\Groups;
 
 /**
  * Tag
@@ -22,21 +23,25 @@ class Tag extends ApiEntity
 {
     /**
      * @var string
+     * @Groups({"partialTag"})
      */
     private $name;
 
     /**
      * @var integer
+     * @Groups({"partialTag"})
      */
     private $id;
 
     /**
      * @var \DateTime
+     * @Groups({"partialTag"})
      */
     private $created;
 
     /**
      * @var \DateTime
+     * @Groups({"partialTag"})
      */
     private $changed;
 
