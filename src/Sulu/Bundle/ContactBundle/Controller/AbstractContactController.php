@@ -12,16 +12,17 @@ namespace Sulu\Bundle\ContactBundle\Controller;
 
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\ContactBundle\Contact\AbstractContactManager;
-use Sulu\Bundle\ContactBundle\Entity\Contact;
-use Sulu\Bundle\ContactBundle\Entity\Email;
-use Sulu\Bundle\ContactBundle\Entity\Note;
-use Sulu\Bundle\ContactBundle\Entity\Fax;
-use Sulu\Bundle\ContactBundle\Entity\Phone;
-use Sulu\Bundle\ContactBundle\Entity\Url;
-use Sulu\Bundle\ContactBundle\Entity\Address;
-use Sulu\Bundle\ContactBundle\Entity\BankAccount;
-use Sulu\Bundle\CategoryBundle\Entity\Category;
-use Sulu\Bundle\TagBundle\Entity\Tag;
+use Sulu\Bundle\ContactBundle\Entity\Contact as ContactEntity;
+use Sulu\Bundle\ContactBundle\Entity\Email as EmailEntity;
+use Sulu\Bundle\ContactBundle\Entity\Note as NoteEntity;
+use Sulu\Bundle\ContactBundle\Entity\Fax as FaxEntity;
+use Sulu\Bundle\ContactBundle\Entity\Phone as PhoneEntity;
+use Sulu\Bundle\ContactBundle\Entity\Url as UrlEntity;
+use Sulu\Bundle\ContactBundle\Entity\UrlType as UrlTypeEntity;
+use Sulu\Bundle\ContactBundle\Entity\Address as AddressEntity;
+use Sulu\Bundle\ContactBundle\Entity\BankAccount as BankAccountEntity;
+use Sulu\Bundle\CategoryBundle\Entity\Category as CategoryEntity;
+use Sulu\Bundle\TagBundle\Entity\Tag as TagEntity;
 use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
@@ -66,7 +67,7 @@ abstract class AbstractContactController extends RestController implements Class
 
     /**
      * adds new relations
-     * @param $contact
+     * @param ContactEntity $contact
      * @param Request $request
      */
     protected function addNewContactRelations($contact, Request $request)
@@ -146,7 +147,7 @@ abstract class AbstractContactController extends RestController implements Class
     protected function processEmails($contact, $emails)
     {
         $get = function($email) {
-            /** @var Email $email */
+            /** @var EmailEntity $email */
             return $email->getId();
         };
 
@@ -205,12 +206,12 @@ abstract class AbstractContactController extends RestController implements Class
 
     /**
      * Updates the given email address
-     * @param Email $email The email object to update
+     * @param EmailEntity $email The email object to update
      * @param array $entry The entry with the new data
      * @return bool True if successful, otherwise false
      * @throws EntityNotFoundException
      */
-    protected function updateEmail(Email $email, $entry)
+    protected function updateEmail(EmailEntity $email, $entry)
     {
         $success = true;
         $emailTypeEntity = 'SuluContactBundle:EmailType';
@@ -313,17 +314,17 @@ abstract class AbstractContactController extends RestController implements Class
     }
 
     /**
-     * @param Url $url
+     * @param UrlEntity $url
      * @param $entry
      * @return bool
      * @throws EntityNotFoundException
      */
-    protected function updateUrl(Url $url, $entry)
+    protected function updateUrl(UrlEntity $url, $entry)
     {
         $success = true;
         $urlTypeEntity = 'SuluContactBundle:UrlType';
 
-        /** @var UrlType $urlType */
+        /** @var UrlTypeEntity $urlType */
         $urlType = $this->getDoctrine()
             ->getRepository($urlTypeEntity)
             ->find($entry['urlType']['id']);
@@ -440,12 +441,12 @@ abstract class AbstractContactController extends RestController implements Class
 
     /**
      * Updates the given phone
-     * @param Phone $phone The phone object to update
+     * @param PhoneEntity $phone The phone object to update
      * @param $entry The entry with the new data
      * @return bool True if successful, otherwise false
      * @throws EntityNotFoundException
      */
-    protected function updatePhone(Phone $phone, $entry)
+    protected function updatePhone(PhoneEntity $phone, $entry)
     {
         $success = true;
         $phoneTypeEntity = 'SuluContactBundle:PhoneType';
@@ -528,12 +529,12 @@ abstract class AbstractContactController extends RestController implements Class
     }
 
     /**
-     * @param Fax $fax
+     * @param FaxEntity $fax
      * @param $entry
      * @return bool
      * @throws EntityNotFoundException
      */
-    protected function updateFax(Fax $fax, $entry)
+    protected function updateFax(FaxEntity $fax, $entry)
     {
         $success = true;
         $faxTypeEntity = 'SuluContactBundle:FaxType';
@@ -625,13 +626,13 @@ abstract class AbstractContactController extends RestController implements Class
 
     /**
      * Updates the given address
-     * @param Address $address The phone object to update
+     * @param AddressEntity $address The phone object to update
      * @param mixed $entry The entry with the new data
      * @param Bool $isMain returns if address should be set to main
      * @return bool True if successful, otherwise false
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      */
-    protected function updateAddress(Address $address, $entry, &$isMain = null)
+    protected function updateAddress(AddressEntity $address, $entry, &$isMain = null)
     {
         $success = true;
         $addressTypeEntity = 'SuluContactBundle:AddressType';
@@ -759,11 +760,11 @@ abstract class AbstractContactController extends RestController implements Class
 
     /**
      * Updates the given note
-     * @param Note $note
+     * @param NoteEntity $note
      * @param array $entry The entry with the new data
      * @return bool True if successful, otherwise false
      */
-    protected function updateNote(Note $note, $entry)
+    protected function updateNote(NoteEntity $note, $entry)
     {
         $success = true;
 
@@ -881,11 +882,11 @@ abstract class AbstractContactController extends RestController implements Class
 
     /**
      * Updates the given note
-     * @param BankAccount $entity The phone object to update
+     * @param BankAccountEntity $entity The phone object to update
      * @param string $data The entry with the new data
      * @return bool True if successful, otherwise false
      */
-    protected function updateBankAccount(BankAccount $entity, $data)
+    protected function updateBankAccount(BankAccountEntity $entity, $data)
     {
         $success = true;
 

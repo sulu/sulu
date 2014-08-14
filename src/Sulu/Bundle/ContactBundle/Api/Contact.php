@@ -819,24 +819,24 @@ class Contact extends ApiWrapper
         $this->entity->removeAccountContact($accountContacts);
     }
 
-    /**
-     * Get accountContacts
-     *
-     * @return array
-     * @VirtualProperty
-     * @SerializedName("accountContacts")
-     */
-    public function getAccountContacts()
-    {
-        $entities = [];
-        if ($this->entity->getAccountContacts()) {
-            foreach ($this->entity->getAccountContacts() as $entity) {
-                $entities[] = $entity;
-            }
-        }
-
-        return $entities;
-    }
+//    /**
+//     * Get accountContacts
+//     *
+//     * @return array
+//     * @VirtualProperty
+//     * @SerializedName("accountContacts")
+//     */
+//    public function getAccountContacts()
+//    {
+//        $entities = [];
+//        if ($this->entity->getAccountContacts()) {
+//            foreach ($this->entity->getAccountContacts() as $entity) {
+//                $entities[] = new AccountContact($entity, $this->locale, $this->tagManager);
+//            }
+//        }
+//
+//        return $entities;
+//    }
 
     /**
      * Set newsletter

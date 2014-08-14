@@ -3,6 +3,9 @@
 namespace Sulu\Bundle\ContactBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Exclude;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
 
 /**
  * AccountContact
@@ -11,24 +14,33 @@ class AccountContact
 {
     /**
      * @var boolean
+     *
      */
     private $main;
 
     /**
      * @var integer
+     *
      */
     private $id;
 
     /**
      * @var \Sulu\Bundle\ContactBundle\Entity\Contact
+     *
      */
     private $contact;
 
     /**
      * @var \Sulu\Bundle\ContactBundle\Entity\Account
+     *
      */
     private $account;
 
+    /**
+     * @var string
+     *
+     */
+    private $position;
 
     /**
      * Set main
@@ -108,11 +120,6 @@ class AccountContact
     {
         return $this->account;
     }
-    /**
-     * @var string
-     */
-    private $position;
-
 
     /**
      * Set position

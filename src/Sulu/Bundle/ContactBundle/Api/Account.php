@@ -833,20 +833,20 @@ class Account extends ApiWrapper
     /**
      * Get accountContacts
      *
-     * @return Account[]
+     * @return AccountContact[]
      * @VirtualProperty
      * @SerializedName("accountContacts")
      */
     public function getAccountContacts()
     {
-        $contacts = [];
+        $accountContacts = [];
         if ($this->entity->getAccountContacts()) {
-            foreach ($this->entity->getAccountContacts() as $contact) {
-                $contacts[] = new Contact($contact, $this->locale, $this->tagManager);
+            foreach ($this->entity->getAccountContacts() as $AccountContact) {
+                $accountContacts[] = new AccountContact($AccountContact, $this->locale, $this->tagManager);
             }
         }
 
-        return $contacts;
+        return $accountContacts;
     }
 
     /**

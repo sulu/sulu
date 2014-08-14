@@ -18,14 +18,14 @@ use FOS\RestBundle\Controller\Annotations\Post;
 use Sulu\Bundle\ContactBundle\Contact\AbstractContactManager;
 use Sulu\Bundle\ContactBundle\Contact\AccountManager;
 use Sulu\Bundle\ContactBundle\Contact\ContactManager;
-use Sulu\Bundle\ContactBundle\Entity\AccountContact;
-use Sulu\Bundle\ContactBundle\Entity\Position;
-use Sulu\Bundle\ContactBundle\Entity\Address;
-use Sulu\Bundle\ContactBundle\Entity\Contact;
+use Sulu\Bundle\ContactBundle\Entity\AccountContact as AccountContactEntity;
+use Sulu\Bundle\ContactBundle\Entity\Position as PositionEntity;
+use Sulu\Bundle\ContactBundle\Entity\Address as AddressEntity;
+use Sulu\Bundle\ContactBundle\Entity\Contact as ContactEntity;
 use Sulu\Bundle\ContactBundle\Entity\Account as AccountEntity;
 use Sulu\Bundle\ContactBundle\Api\Account;
-use Sulu\Bundle\ContactBundle\Entity\TermsOfDelivery;
-use Sulu\Bundle\ContactBundle\Entity\TermsOfPayment;
+use Sulu\Bundle\ContactBundle\Entity\TermsOfDelivery as TermsOfDeliverEntity;
+use Sulu\Bundle\ContactBundle\Entity\TermsOfPayment as TermsOfPaymentEntity;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
@@ -35,7 +35,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\RestHelperInterface;
-use Sulu\Component\Rest\ListBuilder\DoctrineListBuilderFactory;
+use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -116,12 +116,17 @@ class AccountController extends AbstractContactController
         $accountManager = $this->getContactManager();
         $locale = $this->getUser()->getLocale();
 
-        $view = $this->responseGetById(
-            $id,
-            function ($id) use ($includes, $accountManager, $locale){
-                return $accountManager->getByIdAndInclude($id, $locale, $includes);
-            }
-        );
+        try {
+            $view = $this->responseGetById(
+                $id,
+                function ($id) use ($includes, $accountManager, $locale) {
+                    return $accountManager->getByIdAndInclude($id, $locale, $includes);
+                }
+            );
+
+        } catch (EntityNotFoundException $enfe) {
+            $view = $this->view($enfe->toArray(), 404);
+        }
 
         return $this->handleView($view);
     }
@@ -137,7 +142,7 @@ class AccountController extends AbstractContactController
     {
         if ($request->get('flat') == 'true') {
 
-            /* @var Account $account */
+            /* @var AccountEntity $account */
             $account = $this->getDoctrine()
                 ->getRepository(self::$entityName)
                 ->find($id);
@@ -239,7 +244,7 @@ class AccountController extends AbstractContactController
     {
         try {
             // get account
-            /** @var Account $account */
+            /** @var AccountEntity $account */
             $account = $this->getDoctrine()
                 ->getRepository(self::$entityName)
                 ->find($accountId);
@@ -317,7 +322,7 @@ class AccountController extends AbstractContactController
     {
         try {
             // check if relation exists
-            /** @var AccountContact $accountContact */
+            /** @var AccountContactEntity $accountContact */
             $accountContact = $this->getDoctrine()
                 ->getRepository(self::$accountContactEntityName)
                 ->findByForeignIds($accountId, $contactId);
@@ -461,11 +466,11 @@ class AccountController extends AbstractContactController
         return $this->handleView($view);
     }
 
-    private function setResponsiblePerson(ObjectManager $em, Account $account, $responsiblePerson)
+    private function setResponsiblePerson(ObjectManager $em, AccountEntity $account, $responsiblePerson)
     {
         if (!!$responsiblePerson) {
             $id = $responsiblePerson['id'];
-            /* @var Contact $contact */
+            /* @var ContactEntity $contact */
             $contact = $em->getRepository(self::$contactEntityName)->find($id);
 
             if (!$contact) {
@@ -485,7 +490,7 @@ class AccountController extends AbstractContactController
     public function putAction($id, Request $request)
     {
         try {
-            /** @var Account $account */
+            /** @var AccountEntity $account */
             $account = $this->getDoctrine()
                 ->getRepository(self::$entityName)
                 ->findAccountById($id);
@@ -555,10 +560,10 @@ class AccountController extends AbstractContactController
     /**
      * set parent to account
      * @param array $parentData
-     * @param Account $account
+     * @param AccountEntity $account
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      */
-    private function setParent($parentData, Account $account)
+    private function setParent($parentData, AccountEntity $account)
     {
         if ($parentData != null && isset($parentData['id']) && $parentData['id'] != 'null' && $parentData['id'] != '') {
             $parent = $this->getDoctrine()
@@ -576,14 +581,14 @@ class AccountController extends AbstractContactController
     /**
      * set category to account
      * @param array $categoryData
-     * @param Account $account
+     * @param AccountEntity $account
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      */
-    public function setCategory($categoryData, Account $account)
+    public function setCategory($categoryData, AccountEntity $account)
     {
         $categoryId = $categoryData['id'];
         if (!is_null($categoryId) && !empty($categoryId)) {
-            /** @var @var AccountCategory $category */
+            /** @var @var AccountCategoryEntity $category */
             $category = $this->getDoctrine()->getRepository(self::$accountCategoryEntityName)->find($categoryId);
             if (!is_null($category)) {
                 $account->setAccountCategory($category);
@@ -604,7 +609,7 @@ class AccountController extends AbstractContactController
         $em = $this->getDoctrine()->getManager();
 
         try {
-            /** @var Account $account */
+            /** @var AccountEntity $account */
             $account = $em->getRepository(self::$entityName)
                 ->findAccountById($id);
 
@@ -662,10 +667,10 @@ class AccountController extends AbstractContactController
     /**
      * Processes terms of delivery and terms of payment for an account
      * @param Request $request
-     * @param Account $account
+     * @param AccountEntity $account
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      */
-    protected function processTerms(Request $request, Account $account)
+    protected function processTerms(Request $request, AccountEntity $account)
     {
         if (!is_null($request->get('termsOfPayment'))) {
             $id = $request->get('termsOfPayment')['id'];
@@ -702,7 +707,7 @@ class AccountController extends AbstractContactController
     public function deleteAction($id, Request $request)
     {
         $delete = function ($id) use ($request){
-            /* @var Account $account */
+            /* @var AccountEntity $account */
             $account = $this->getDoctrine()
                 ->getRepository(self::$entityName)
                 ->findAccountByIdAndDelete($id);
@@ -719,7 +724,7 @@ class AccountController extends AbstractContactController
             $em = $this->getDoctrine()->getManager();
 
             $addresses = $account->getAddresses();
-            /** @var Address $address */
+            /** @var AddressEntity $address */
             foreach ($addresses as $address) {
                 if (!$address->hasRelations()) {
                     $em->remove($address);
@@ -759,7 +764,7 @@ class AccountController extends AbstractContactController
         $numChildren = 0;
 
         foreach ($ids as $id) {
-            /** @var Account $account */
+            /** @var AccountEntity $account */
             $account = $this->getDoctrine()
                 ->getRepository(self::$entityName)
                 ->countDistinctAccountChildrenAndContacts($id);
@@ -791,7 +796,7 @@ class AccountController extends AbstractContactController
         $response = array();
         $response['contacts'] = array();
 
-        /** @var Account $account */
+        /** @var AccountEntity $account */
         $account = $this->getDoctrine()
             ->getRepository(self::$entityName)
             ->findChildrenAndContacts($id);
@@ -814,7 +819,7 @@ class AccountController extends AbstractContactController
             }
 
             foreach ($slicedContacts as $contact) {
-                /** @var Contact $contact */
+                /** @var ContactEntity $contact */
                 $response['contacts'][] = array(
                     'id' => $contact->getId(),
                     'firstName' => $contact->getFirstName(),
@@ -833,7 +838,7 @@ class AccountController extends AbstractContactController
                 // if account has a subcompany do not allow to delete
                 $slicedChildren = $account->getChildren()->slice(0, 3);
 
-                /* @var Account $sc */
+                /* @var AccountEntity $sc */
                 foreach ($slicedChildren as $sc) {
                     $child = array();
                     $child['id'] = $sc->getId();
@@ -911,7 +916,7 @@ class AccountController extends AbstractContactController
      * @param $type string representation
      * @throws RestException
      */
-    protected function convertToType(Account $account, $type)
+    protected function convertToType(AccountEntity $account, $type)
     {
         $config = $this->container->getParameter('sulu_contact.account_types');
         $types = $this->getAccountTypes($config);
