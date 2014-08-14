@@ -7,7 +7,7 @@ doctrine:
         driver:   pdo_pgsql
         host:     localhost
         dbname:   sulu_test
-        user:     postgres
+        user:     Michael
         password:
         charset:  UTF8
     orm:

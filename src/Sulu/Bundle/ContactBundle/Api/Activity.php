@@ -72,6 +72,7 @@ class Activity extends ApiWrapper
      * @return int
      * @VirtualProperty
      * @SerializedName("id")
+     * @Groups({"fullActivity"})
      */
     public function getId()
     {
@@ -97,6 +98,7 @@ class Activity extends ApiWrapper
      * @return string
      * @VirtualProperty
      * @SerializedName("subject")
+     * @Groups({"fullActivity"})
      */
     public function getSubject()
     {
@@ -122,6 +124,7 @@ class Activity extends ApiWrapper
      * @return string
      * @VirtualProperty
      * @SerializedName("note")
+     * @Groups({"fullActivity"})
      */
     public function getNote()
     {
@@ -147,6 +150,7 @@ class Activity extends ApiWrapper
      * @return \DateTime
      * @VirtualProperty
      * @SerializedName("dueDate")
+     * @Groups({"fullActivity"})
      */
     public function getDueDate()
     {
@@ -172,6 +176,7 @@ class Activity extends ApiWrapper
      * @return \DateTime
      * @VirtualProperty
      * @SerializedName("startDate")
+     * @Groups({"fullActivity"})
      */
     public function getStartDate()
     {
@@ -197,6 +202,7 @@ class Activity extends ApiWrapper
      * @return \DateTime
      * @VirtualProperty
      * @SerializedName("created")
+     * @Groups({"fullActivity"})
      */
     public function getCreated()
     {
@@ -222,6 +228,7 @@ class Activity extends ApiWrapper
      * @return \DateTime
      * @VirtualProperty
      * @SerializedName("changed")
+     * @Groups({"fullActivity"})
      */
     public function getChanged()
     {
@@ -247,6 +254,7 @@ class Activity extends ApiWrapper
      * @return ActivityStatusEntity
      * @VirtualProperty
      * @SerializedName("activityStatus")
+     * @Groups({"fullActivity"})
      */
     public function getActivityStatus()
     {
@@ -272,6 +280,7 @@ class Activity extends ApiWrapper
      * @return ActivityPriorityEntity
      * @VirtualProperty
      * @SerializedName("activityPriority")
+     * @Groups({"fullActivity"})
      */
     public function getActivityPriority()
     {
@@ -297,6 +306,7 @@ class Activity extends ApiWrapper
      * @return ActivityTypeEntity
      * @VirtualProperty
      * @SerializedName("activityType")
+     * @Groups({"fullActivity"})
      */
     public function getActivityType()
     {
@@ -322,12 +332,17 @@ class Activity extends ApiWrapper
      * @return ContactEntity
      * @VirtualProperty
      * @SerializedName("contact")
+     * @Groups({"fullActivity"})
      */
     public function getContact()
     {
 
         $contact = $this->entity->getContact();
-        return new Contact($contact, $this->locale, $this->tagManager);
+        if ($contact) {
+            return new Contact($contact, $this->locale, $this->tagManager);
+        }
+
+        return null;
     }
 
     /**
@@ -349,11 +364,16 @@ class Activity extends ApiWrapper
      * @return AccountEntity
      * @VirtualProperty
      * @SerializedName("account")
+     * @Groups({"fullActivity"})
      */
     public function getAccount()
     {
         $account = $this->entity->getAccount();
-        return new Account($account, $this->locale, $this->tagManager);
+        if ($account) {
+            return new Account($account, $this->locale, $this->tagManager);
+        }
+
+        return null;
     }
 
     /**
@@ -375,10 +395,15 @@ class Activity extends ApiWrapper
      * @return ContactEntity
      * @VirtualProperty
      * @SerializedName("assignedContact")
+     * @Groups({"fullActivity"})
      */
     public function getAssignedContact()
     {
         $contact = $this->entity->getAssignedContact();
-        return new Contact($contact, $this->locale, $this->tagManager);
+        if ($contact) {
+            return new Contact($contact, $this->locale, $this->tagManager);
+        }
+
+        return null;
     }
 }

@@ -12,7 +12,9 @@ namespace Sulu\Bundle\ContactBundle\Controller;
 
 use Doctrine\ORM\EntityManager;
 use FOS\RestBundle\Routing\ClassResourceInterface;
-use Sulu\Bundle\ContactBundle\Entity\Activity;
+use JMS\Serializer\SerializationContext;
+use Sulu\Bundle\ContactBundle\Entity\Activity as ActivityEntity;
+use Sulu\Bundle\ContactBundle\Api\Activity;
 use Sulu\Bundle\ContactBundle\Entity\ActivityStatus;
 use Sulu\Bundle\ContactBundle\Entity\ActivityPriority;
 use Sulu\Bundle\ContactBundle\Entity\ActivityType;
@@ -396,7 +398,17 @@ class ActivityController extends RestController implements ClassResourceInterfac
             $em->persist($activity);
             $em->flush();
 
-            $view = $this->view($activity, 200);
+            $view = $this->view(
+                new Activity(
+                    $activity,
+                    $this->getUser()->getLocale(),
+                    $this->get('sulu_tag.tag_manager')
+                ),
+                200);
+
+            $view->setSerializationContext(
+                SerializationContext::create()->setGroups(array('partialAccount', 'partialContact', 'fullActivity'))
+            );
 
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
@@ -433,7 +445,7 @@ class ActivityController extends RestController implements ClassResourceInterfac
     {
         try {
             $em = $this->getDoctrine()->getManager();
-            $activity = new Activity();
+            $activity = new ActivityEntity();
 
             $this->processActivityData($activity, $request);
 
@@ -443,7 +455,17 @@ class ActivityController extends RestController implements ClassResourceInterfac
             $em->persist($activity);
             $em->flush();
 
-            $view = $this->view($activity, 200);
+            $view = $this->view(
+                new Activity(
+                    $activity,
+                    $this->getUser()->getLocale(),
+                    $this->get('sulu_tag.tag_manager')
+                ),
+                200);
+
+            $view->setSerializationContext(
+                SerializationContext::create()->setGroups(array('partialAccount', 'partialContact', 'fullActivity'))
+            );
 
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
@@ -455,11 +477,11 @@ class ActivityController extends RestController implements ClassResourceInterfac
 
     /**
      * Processes the data for an activity from an request
-     * @param Activity $activity
+     * @param ActivityEntity $activity
      * @param Request $request
      * @throws RestException
      */
-    protected function processActivityData(Activity $activity, Request $request)
+    protected function processActivityData(ActivityEntity $activity, Request $request)
     {
         $this->processRequiredData($activity, $request);
 
@@ -551,7 +573,7 @@ class ActivityController extends RestController implements ClassResourceInterfac
      * @param $request
      * @throws \Sulu\Component\Rest\Exception\RestException
      */
-    private function processRequiredData(Activity $activity, Request $request)
+    private function processRequiredData(ActivityEntity $activity, Request $request)
     {
         $subject = $request->get('subject');
         $dueDate = $request->get('dueDate');

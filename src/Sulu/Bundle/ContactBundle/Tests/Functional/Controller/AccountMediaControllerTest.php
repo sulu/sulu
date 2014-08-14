@@ -32,6 +32,7 @@ use Sulu\Bundle\ContactBundle\Entity\Fax;
 use Sulu\Bundle\ContactBundle\Entity\FaxType;
 use Sulu\Bundle\ContactBundle\Entity\Url;
 use Sulu\Bundle\ContactBundle\Entity\UrlType;
+use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
@@ -282,11 +283,38 @@ class AccountMediaControllerTest extends DatabaseTestCase
         $file->setChanged(new DateTime());
         $file->setMedia($media);
 
+
         $file2 = new File();
         $file2->setVersion(1);
         $file2->setCreated(new DateTime());
         $file2->setChanged(new DateTime());
         $file2->setMedia($media2);
+
+        // create file version
+        $fileVersion = new FileVersion();
+        $fileVersion->setVersion(1);
+        $fileVersion->setCreated(new DateTime());
+        $fileVersion->setChanged(new DateTime());
+        $fileVersion->setName('photo.jpeg');
+        $fileVersion->setMimeType('image/jpg');
+        $fileVersion->setFile($file);
+        $fileVersion->setSize(1124214);
+        $fileVersion->setDownloadCounter(2);
+        $fileVersion->setStorageOptions('{"segment":"1","fileName":"photo.jpeg"}');
+        $file->addFileVersion($fileVersion);
+
+        // create file version
+        $fileVersion = new FileVersion();
+        $fileVersion->setVersion(1);
+        $fileVersion->setCreated(new DateTime());
+        $fileVersion->setChanged(new DateTime());
+        $fileVersion->setName('photo.jpeg');
+        $fileVersion->setMimeType('image/jpg');
+        $fileVersion->setFile($file2);
+        $fileVersion->setSize(1124214);
+        $fileVersion->setDownloadCounter(2);
+        $fileVersion->setStorageOptions('{"segment":"1","fileName":"photo.jpeg"}');
+        $file2->addFileVersion($fileVersion);
 
         $collection = new Collection();
         $this->setUpCollection($collection);

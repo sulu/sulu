@@ -6,6 +6,8 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Exclude;
 use JsonSerializable;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
+use JMS\Serializer\Annotation\Groups;
+
 /**
  * ActivityPriority
  */
@@ -13,11 +15,13 @@ class ActivityPriority extends ApiEntity implements JsonSerializable
 {
     /**
      * @var string
+     * @Groups({"fullActivity"})
      */
     private $name;
 
     /**
      * @var integer
+     * @Groups({"fullActivity"})
      */
     private $id;
 
@@ -51,7 +55,7 @@ class ActivityPriority extends ApiEntity implements JsonSerializable
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -61,7 +65,7 @@ class ActivityPriority extends ApiEntity implements JsonSerializable
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {

@@ -61,7 +61,16 @@ abstract class AbstractMediaController extends RestController
 
             $entity->addMedia($media);
             $em->flush();
-            $view = $this->view($media, 200);
+
+            $view = $this->view(
+                new \Sulu\Bundle\MediaBundle\Api\Media(
+                    $media,
+                    $this->getUser()->getLocale(),
+                    null,
+                    $this->get('sulu_tag.tag_manager')
+                ),
+                200
+            );
 
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
