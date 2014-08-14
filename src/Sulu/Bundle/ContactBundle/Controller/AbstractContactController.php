@@ -194,7 +194,7 @@ abstract class AbstractContactController extends RestController implements Class
         } elseif (!$emailType) {
             throw new EntityNotFoundException($emailTypeEntity, $emailData['emailType']['id']);
         } else {
-            $email = new Email();
+            $email = new EmailEntity();
             $email->setEmail($emailData['email']);
             $email->setEmailType($emailType);
             $em->persist($email);
@@ -363,7 +363,7 @@ abstract class AbstractContactController extends RestController implements Class
         } elseif (!$urlType) {
             throw new EntityNotFoundException($urlTypeEntity, $data['urlType']['id']);
         } else {
-            $url = new Url();
+            $url = new UrlEntity();
             $url->setUrl($data['url']);
             $url->setUrlType($urlType);
             $em->persist($url);
@@ -429,7 +429,7 @@ abstract class AbstractContactController extends RestController implements Class
         } elseif (!$phoneType) {
             throw new EntityNotFoundException($phoneTypeEntity, $phoneData['phoneType']['id']);
         } else {
-            $phone = new Phone();
+            $phone = new PhoneEntity();
             $phone->setPhone($phoneData['phone']);
             $phone->setPhoneType($phoneType);
             $em->persist($phone);
@@ -520,7 +520,7 @@ abstract class AbstractContactController extends RestController implements Class
         } elseif (!$faxType) {
             throw new EntityNotFoundException($faxTypeEntity, $faxData['faxType']['id']);
         } else {
-            $fax = new Fax();
+            $fax = new FaxEntity();
             $fax->setFax($faxData['fax']);
             $fax->setFaxType($faxType);
             $em->persist($fax);
@@ -557,7 +557,7 @@ abstract class AbstractContactController extends RestController implements Class
      * Creates an address based on the data passed
      * @param $addressData
      * @param $isMain returns if address is main address
-     * @return Address
+     * @return AddressEntity
      * @throws \Sulu\Component\Rest\Exception\EntityIdAlreadySetException
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      */
@@ -583,7 +583,7 @@ abstract class AbstractContactController extends RestController implements Class
         } elseif (!$addressType) {
             throw new EntityNotFoundException($addressTypeEntity, $addressData['addressType']['id']);
         } else {
-            $address = new Address();
+            $address = new AddressEntity();
             $address->setStreet($addressData['street']);
             $address->setNumber($addressData['number']);
             $address->setZip($addressData['zip']);
@@ -707,7 +707,8 @@ abstract class AbstractContactController extends RestController implements Class
 
     /**
      * Process all notes from request
-     * @param $contact The contact on which is worked
+     *
+     * @param ContactEntity $contact The contact on which is worked
      * @param $notes
      * @return bool True if the processing was successful, otherwise false
      */
@@ -718,7 +719,8 @@ abstract class AbstractContactController extends RestController implements Class
         };
 
         $delete = function ($note) use ($contact) {
-            return $contact->removeNote($note);
+            $contact->removeNote($note);
+            return true;
         };
 
         $update = function ($note, $matchedEntry) {
@@ -748,7 +750,7 @@ abstract class AbstractContactController extends RestController implements Class
         if (isset($noteData['id'])) {
             throw new EntityIdAlreadySetException($noteEntity, $noteData['id']);
         } else {
-            $note = new Note();
+            $note = new NoteEntity();
             $note->setValue($noteData['value']);
 
             $em->persist($note);
@@ -867,7 +869,7 @@ abstract class AbstractContactController extends RestController implements Class
         if (isset($data['id'])) {
             throw new EntityIdAlreadySetException($entityName, $data['id']);
         } else {
-            $entity = new BankAccount();
+            $entity = new BankAccountEntity();
             $entity->setBankName($data['bankName']);
             $entity->setBic($data['bic']);
             $entity->setIban($data['iban']);
@@ -943,7 +945,7 @@ abstract class AbstractContactController extends RestController implements Class
     /**
      * Get a position object
      * @param $id The position id
-     * @return Position|null
+     * @return mixed
      */
     protected function getPosition($id)
     {

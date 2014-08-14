@@ -13,6 +13,7 @@ namespace Sulu\Bundle\ContactBundle\Api;
 use Sulu\Bundle\ContactBundle\Entity\Account as AccountEntity;
 use Doctrine\Entity;
 use Sulu\Bundle\ContactBundle\Entity\AccountAddress as AccountAddressEntity;
+use Sulu\Bundle\ContactBundle\Entity\AccountAddress;
 use Sulu\Bundle\ContactBundle\Entity\AccountCategory as AccountCategoryEntity;
 use Sulu\Bundle\ContactBundle\Entity\AccountContact as AccountContactEntity;
 use Sulu\Bundle\ContactBundle\Entity\Activity as ActivityEntity;
@@ -36,6 +37,7 @@ use Hateoas\Configuration\Annotation\Relation;
 use JMS\Serializer\Annotation\VirtualProperty;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Groups;
 
 /**
  * The UrlType class which will be exported to the API
@@ -223,32 +225,6 @@ class Account extends ApiWrapper
     public function getChanged()
     {
         return $this->entity->getChanged();
-    }
-
-    /**
-     * Set changer
-     *
-     * @param UserInterface $changer
-     * @return Account
-     */
-    public function setChanger(UserInterface $changer = null)
-    {
-        $this->entity->setChanger($changer);
-
-        return $this;
-    }
-
-    /**
-     * Set creator
-     *
-     * @param UserInterface $creator
-     * @return Account
-     */
-    public function setCreator(UserInterface $creator = null)
-    {
-        $this->entity->setCreator($creator);
-
-        return $this;
     }
 
     /**
@@ -442,48 +418,6 @@ class Account extends ApiWrapper
         }
 
         return $notes;
-    }
-
-    /**
-     * Add children
-     *
-     * @param AccountEntity $children
-     * @return Account
-     */
-    public function addChildren(AccountEntity $children)
-    {
-        $this->entity->addChildren($children);
-
-        return $this;
-    }
-
-    /**
-     * Remove children
-     *
-     * @param AccountEntity $children
-     */
-    public function removeChildren(AccountEntity $children)
-    {
-        $this->entity->removeChildren($children);
-    }
-
-    /**
-     * Get children
-     *
-     * @return Account[]
-     * @VirtualProperty
-     * @SerializedName("children")
-     */
-    public function getChildren()
-    {
-        $children = [];
-        if ($this->entity->getChildren()) {
-            foreach ($this->entity->getChildren() as $child) {
-                $children[] = new Account($child, $this->locale, $this->tagManager);
-            }
-        }
-
-        return $children;
     }
 
     /**
@@ -738,7 +672,7 @@ class Account extends ApiWrapper
         if ($this->entity->getBankAccounts()) {
             foreach ($this->entity->getBankAccounts() as $bankAccount) {
                 /** @var BankAccountEntity $bankAccount */
-                $bankAccounts[] = $bankAccount;
+                $bankAccounts[] = new BankAccount($bankAccount);
             }
         }
 
@@ -780,7 +714,11 @@ class Account extends ApiWrapper
         $tags = array();
         if ($this->entity->getTags()) {
             foreach ($this->entity->getTags() as $tag) {
-                $tags[] = $tag;
+                /** @var TagEntity $tag */
+                $tags[] = array(
+                    'id' => $tag,
+                    'name' => $tag->getName()
+                ) ;
             }
         }
 
@@ -1015,19 +953,6 @@ class Account extends ApiWrapper
     }
 
     /**
-     * Add activities
-     *
-     * @param ActivityEntity $activities
-     * @return $this
-     */
-    public function addActivitie(ActivityEntity $activities)
-    {
-        $this->entity->addActivitie($activities);
-
-        return $this;
-    }
-
-    /**
      * Get mainContact
      *
      * @return Account
@@ -1105,35 +1030,6 @@ class Account extends ApiWrapper
     }
 
     /**
-     * Remove activities
-     *
-     * @param ActivityEntity $activitie
-     */
-    public function removeActivitie(ActivityEntity $activitie)
-    {
-        $this->entity->removeActivitie($activitie);
-    }
-
-    /**
-     * Get activities
-     *
-     * @return ActivityEntity[]
-     * @VirtualProperty
-     * @SerializedName("activities")
-     */
-    public function getActivities()
-    {
-        $activities = [];
-        if ($this->entity->getActivities()) {
-            foreach ($this->entity->getActivities() as $activity) {
-                $activities[] = $activity;
-            }
-        }
-
-        return $activities;
-    }
-
-    /**
      * Get mainFax
      *
      * @return string
@@ -1205,7 +1101,7 @@ class Account extends ApiWrapper
         $accountAddresses = [];
         if ($this->entity->getAccountAddresses()) {
             foreach ($this->entity->getAccountAddresses() as $adr) {
-                $accountAddress[] = $adr;
+                $accountAddress[] = new AccountAddress($adr);
             }
         }
 

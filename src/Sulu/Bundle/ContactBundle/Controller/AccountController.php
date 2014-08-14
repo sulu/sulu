@@ -15,6 +15,7 @@ use Doctrine\ORM\EntityManager;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Put;
 use FOS\RestBundle\Controller\Annotations\Post;
+use JMS\Serializer\SerializationContext;
 use Sulu\Bundle\ContactBundle\Contact\AbstractContactManager;
 use Sulu\Bundle\ContactBundle\Contact\AccountManager;
 use Sulu\Bundle\ContactBundle\Contact\ContactManager;
@@ -896,6 +897,8 @@ class AccountController extends AbstractContactController
                     $acc = $accountManager->getAccount($accountEntity, $locale);
 
                     $view = $this->view($acc, 200);
+                    $view->setSerializationContext(SerializationContext::create()->enableMaxDepthChecks());
+
                     break;
                 default:
                     throw new RestException("Unrecognized action: " . $action);

@@ -111,6 +111,16 @@ class Address
     private $postboxCity;
 
     /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $contactAddresses;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $accountAddresses;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -450,17 +460,6 @@ class Address
     {
         return $this->postboxCity;
     }
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $contactAddresses;
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $accountAddresses;
-
 
     /**
      * Add contactAddresses

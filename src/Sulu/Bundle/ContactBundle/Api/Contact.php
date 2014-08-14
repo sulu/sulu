@@ -330,49 +330,7 @@ class Contact extends ApiWrapper
         $entities = [];
         if ($this->entity->getLocales()) {
             foreach ($this->entity->getLocales() as $locale) {
-                $entities[] = $locale;
-            }
-        }
-
-        return $entities;
-    }
-
-    /**
-     * Add activities
-     *
-     * @param ActivityEntity $activities
-     * @return Contact
-     */
-    public function addActivitie(ActivityEntity $activities)
-    {
-        $this->entity->addActivitie($activities);
-
-        return $this;
-    }
-
-    /**
-     * Remove activities
-     *
-     * @param ActivityEntity $activities
-     */
-    public function removeActivitie(ActivityEntity $activities)
-    {
-        $this->entity->removeActivitie($activities);
-    }
-
-    /**
-     * Get activities
-     *
-     * @return array
-     * @VirtualProperty
-     * @SerializedName("activities")
-     */
-    public function getActivities()
-    {
-        $entities = [];
-        if ($this->entity->getActivities()) {
-            foreach ($this->entity->getActivities() as $activity) {
-                $entities[] = $activity;
+                $entities[] = new ContactLocale($locale);
             }
         }
 
@@ -797,48 +755,6 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Add accountContacts
-     *
-     * @param AccountContactEntity $accountContacts
-     * @return Contact
-     */
-    public function addAccountContact(AccountContactEntity $accountContacts)
-    {
-        $this->entity->addAccountContact($accountContacts);
-
-        return $this;
-    }
-
-    /**
-     * Remove accountContacts
-     *
-     * @param AccountContactEntity $accountContacts
-     */
-    public function removeAccountContact(AccountContactEntity $accountContacts)
-    {
-        $this->entity->removeAccountContact($accountContacts);
-    }
-
-//    /**
-//     * Get accountContacts
-//     *
-//     * @return array
-//     * @VirtualProperty
-//     * @SerializedName("accountContacts")
-//     */
-//    public function getAccountContacts()
-//    {
-//        $entities = [];
-//        if ($this->entity->getAccountContacts()) {
-//            foreach ($this->entity->getAccountContacts() as $entity) {
-//                $entities[] = new AccountContact($entity, $this->locale, $this->tagManager);
-//            }
-//        }
-//
-//        return $entities;
-//    }
-
-    /**
      * Set newsletter
      *
      * @param boolean $newsletter
@@ -1027,51 +943,6 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Add contactAddresses
-     *
-     * @param ContactAddressEntity $contactAddresses
-     * @return Contact
-     */
-    public function addContactAddresse(ContactAddressEntity $contactAddresses)
-    {
-        $this->entity->addContactAddresse($contactAddresses);
-
-        return $this;
-    }
-
-    /**
-     * Remove contactAddresses
-     *
-     * @param ContactAddressEntity $contactAddresses
-     * @return $this
-     */
-    public function removeContactAddresse(ContactAddressEntity $contactAddresses)
-    {
-        $this->entity->removeContactAddresse($contactAddresses);
-
-        return $this;
-    }
-
-    /**
-     * Get contactAddresses
-     *
-     * @return array
-     * @VirtualProperty
-     * @SerializedName("contactAddresses")
-     */
-    public function getContactAddresses()
-    {
-        $entities = [];
-        if ($this->entity->getContactAddresses()) {
-            foreach ($this->entity->getContactAddresses() as $entity) {
-                $entities[] = $entity;
-            }
-        }
-
-        return $entities;
-    }
-
-    /**
      * Add assignedActivities
      *
      * @param ActivityEntity $assignedActivities
@@ -1104,7 +975,7 @@ class Contact extends ApiWrapper
         $entities = [];
         if ($this->entity->getAssignedActivities()) {
             foreach ($this->entity->getAssignedActivities() as $entity) {
-                $entities[] = $entity;
+                $entities[] = new Activity($entity,$this->locale,$this->tagManager);
             }
         }
 
