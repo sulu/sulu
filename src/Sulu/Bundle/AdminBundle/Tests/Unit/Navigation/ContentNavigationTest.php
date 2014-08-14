@@ -45,6 +45,11 @@ class ContentNavigationTest extends \PHPUnit_Framework_TestCase
         $details->setAction('details');
         $this->contentNavigation1->addNavigationItem($details);
 
+        $other = new ContentNavigationItem('Other');
+        $other->setGroups(array('test'));
+        $other->setAction('other');
+        $this->contentNavigation1->addNavigationItem($other);
+
         $this->contentNavigation2 = $this->getMockForAbstractClass(
             'Sulu\Bundle\AdminBundle\Navigation\ContentNavigationInterface',
             array(),

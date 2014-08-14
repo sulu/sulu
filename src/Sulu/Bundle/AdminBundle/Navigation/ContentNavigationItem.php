@@ -10,11 +10,20 @@
 
 namespace Sulu\Bundle\AdminBundle\Navigation;
 
+/**
+ * Represents an item in an content navigation, which is usually displayed with a form in the user interface
+ * @package Sulu\Bundle\AdminBundle\Navigation
+ */
 class ContentNavigationItem
 {
     const DISPLAY_NEW = 'new';
 
     const DISPLAY_EDIT = 'edit';
+
+    /**
+     * @var string
+     */
+    private $id;
 
     /**
      * @var string
@@ -47,12 +56,33 @@ class ContentNavigationItem
     private $display;
 
     /**
+     * @var boolean
+     */
+    private $disabled;
+
+    /**
      * @param $name
      */
     function __construct($name)
     {
         $this->name = $name;
         $this->display = array(static::DISPLAY_NEW, static::DISPLAY_EDIT);
+    }
+
+    /**
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param string $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
     }
 
     /**
@@ -152,12 +182,29 @@ class ContentNavigationItem
     }
 
     /**
+     * @return boolean
+     */
+    public function getDisabled()
+    {
+        return $this->disabled;
+    }
+
+    /**
+     * @param boolean $disabled
+     */
+    public function setDisabled($disabled)
+    {
+        $this->disabled = $disabled;
+    }
+
+    /**
      * Returns an array representation of the content navigation item
      * @return array
      */
     public function toArray()
     {
         $array = array(
+            'id' => ($this->getId() != null) ? $this->getId() : uniqid(),
             'title' => $this->getName(),
             'action' => $this->getAction(),
             'display' => $this->getDisplay(),

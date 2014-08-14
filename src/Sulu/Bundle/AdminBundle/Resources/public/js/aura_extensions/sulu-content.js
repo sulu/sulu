@@ -313,10 +313,8 @@ define([], function() {
             // if a url for the tabs is set load the data first, else start the header with no tabs
             if (!!header.tabs && !!header.tabs.url) {
                 this.sandbox.util.load(header.tabs.url).then(function(data) {
-                    var contentNavigation = JSON.parse(data);
-
                     // start header with tabs data passed
-                    parseContentTabs.call(this, contentNavigation, this.options.id, initializeHeader.bind(this));
+                    parseContentTabs.call(this, data, this.options.id, initializeHeader.bind(this));
                 }.bind(this));
             } else {
                 initializeHeader.call(this, null);
