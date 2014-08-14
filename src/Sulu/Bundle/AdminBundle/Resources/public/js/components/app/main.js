@@ -24,7 +24,8 @@ define(function() {
             noTopSpaceClass: 'no-top-space',
             shrinkIcon: 'fa-chevron-left',
             expandIcon: 'fa-chevron-right',
-            noTransitionsClass: 'no-transitions'
+            noTransitionsClass: 'no-transitions',
+            versionHistoryUrl: 'https://github.com/sulu-cmf/sulu-standard/releases'
         },
 
         templates = {
@@ -137,7 +138,7 @@ define(function() {
             this.sandbox.util._.each(this.sandbox.mvc.routes, function(route) {
                 router.route(route.route, function() {
                     this.sandbox.mvc.Store.reset();
-                    this.beforeNavigateCleanup();
+                    this.beforeNavigateCleanup(route);
                     route.callback.apply(this, arguments);
                 }.bind(this));
             }.bind(this));
@@ -202,12 +203,9 @@ define(function() {
 
             // only route if route has changed
             if (this.currentRoute !== route) {
-                this.currentRoute = route;
-
                 if (noLoader !== true && this.currentRoute !== route && this.currentRoute !== null) {
                     // todo: start loader
                 }
-
                 // navigate
                 router.navigate(route, {trigger: trigger});
                 this.sandbox.dom.scrollTop(this.sandbox.dom.$window, 0);
@@ -216,8 +214,10 @@ define(function() {
 
         /**
          * Cleans things up before navigating
+         * @param {String} route
          */
-        beforeNavigateCleanup: function() {
+        beforeNavigateCleanup: function(route) {
+            this.currentRoute = route;
             this.sandbox.dom.remove('.sulu-header-background');
 
             // FIXME App.stop is used in global context; possibly there is a better solution
@@ -272,6 +272,10 @@ define(function() {
                 }
             }.bind(this));
 
+            this.sandbox.on('husky.navigation.version-history.clicked', function() {
+                window.open(constants.versionHistoryUrl,'_blank');
+            }.bind(this));
+
             // change user locale
             this.sandbox.on('husky.navigation.user-locale.changed', this.changeUserLocale.bind(this));
 
@@ -309,7 +313,7 @@ define(function() {
          */
         toggleShrinkColumn: function() {
             var $column = this.sandbox.dom.find(constants.columnSelector);
-            this.sandbox.dom.removeClass(this.$el, constants.noTransitionsClass);
+            this.sandbox.dom.removeClass($column, constants.noTransitionsClass);
             if (this.sandbox.dom.hasClass($column, constants.smallFixedClass)) {
                 // expand
                 this.sandbox.emit('husky.navigation.show');
@@ -326,7 +330,6 @@ define(function() {
         },
 
         /**
-         /**
          * changes the spacing of the content
          * @event sulu.app.change-spacing
          * @param {Boolean} leftSpacing false for no spacing left
@@ -334,7 +337,8 @@ define(function() {
          * @param {Boolean} topSpacing false for no spacing top
          */
         changeSpacing: function(leftSpacing, rightSpacing, topSpacing) {
-            this.sandbox.dom.addClass(this.$el, constants.noTransitionsClass);
+            var $column = this.sandbox.dom.find(constants.columnSelector);
+            this.sandbox.dom.addClass($column, constants.noTransitionsClass);
             // left space
             if (leftSpacing === false) {
                 this.sandbox.dom.addClass(this.$el, constants.noLeftSpaceClass);
@@ -362,7 +366,8 @@ define(function() {
          * @param width {String} the new type of width to apply to the content. 'fixed' or 'max'
          */
         changeWidth: function(width) {
-            this.sandbox.dom.removeClass(this.$el, constants.noTransitionsClass);
+            var $column = this.sandbox.dom.find(constants.columnSelector);
+            this.sandbox.dom.removeClass($column, constants.noTransitionsClass);
             if (width === 'fixed') {
                 this.changeToFixedWidth(false);
             } else if (width === 'max') {

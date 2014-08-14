@@ -21,6 +21,8 @@
         <link rel="stylesheet" type="text/css" href="/bundles/sulucontact/css/main.min.css"/>
         <link rel="stylesheet" type="text/css" href="/bundles/sulucontent/css/main.min.css"/>
         <link rel="stylesheet" type="text/css" href="/bundles/sulumedia/css/main.css"/>
+        <link rel="stylesheet" type="text/css" href="/bundles/sululocation/css/main.css"/>
+        <link rel="stylesheet" type="text/css" href="/bundles/sululocation/js/vendor/leaflet/leaflet.css"/>
     </head>
     <body>
         <div id="main">
@@ -30,7 +32,7 @@
                 {% endif %}
                  data-aura-user-name="{{ user.fullname }}"
                  data-aura-system-name="{{ name }}"
-                 data-aura-system-version="0.5.3"
+                 data-aura-system-version="{{ suluVersion }}"
                  data-aura-user-locales='["en", "de"]'
                  data-aura-user-locale="{{ user.locale }}"
                  data-aura-logout-route="{{ user.logout }}"
