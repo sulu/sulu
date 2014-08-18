@@ -8,6 +8,7 @@ use JMS\Serializer\Annotation\VirtualProperty;
 use JMS\Serializer\Annotation\SerializedName;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryMeta;
+use JMS\Serializer\Annotation\Groups;
 
 class Category extends ApiEntityWrapper
 {
@@ -23,6 +24,7 @@ class Category extends ApiEntityWrapper
      * @VirtualProperty
      * @SerializedName("id")
      * @return array
+     * @Groups({"fullCategory","partialCategory"})
      */
     public function getId()
     {
@@ -34,6 +36,7 @@ class Category extends ApiEntityWrapper
      * @VirtualProperty
      * @SerializedName("key")
      * @return string
+     * @Groups({"fullCategory","partialCategory"})
      */
     public function getKey()
     {
@@ -45,6 +48,7 @@ class Category extends ApiEntityWrapper
      * @VirtualProperty
      * @SerializedName("name")
      * @return string
+     * @Groups({"fullCategory","partialCategory"})
      */
     public function getName()
     {
@@ -64,6 +68,7 @@ class Category extends ApiEntityWrapper
      * @VirtualProperty
      * @SerializedName("meta")
      * @return array
+     * @Groups({"fullCategory"})
      */
     public function getMeta()
     {
@@ -117,6 +122,7 @@ class Category extends ApiEntityWrapper
      * @VirtualProperty
      * @SerializedName("created")
      * @return string
+     * @Groups({"fullCategory"})
      */
     public function getCreated()
     {
@@ -128,6 +134,7 @@ class Category extends ApiEntityWrapper
      * @VirtualProperty
      * @SerializedName("created")
      * @return string
+     * @Groups({"fullCategory"})
      */
     public function getChanged()
     {
@@ -139,6 +146,7 @@ class Category extends ApiEntityWrapper
      * @VirtualProperty
      * @SerializedName("parent")
      * @return null|number
+     * @Groups({"fullCategory"})
      */
     public function getParent()
     {
@@ -155,6 +163,7 @@ class Category extends ApiEntityWrapper
      * @VirtualProperty
      * @SerializedName("children")
      * @return number
+     * @Groups({"fullCategory"})
      */
     public function getChildren() {
         return $this->getEntity()->getChildren()->count();
