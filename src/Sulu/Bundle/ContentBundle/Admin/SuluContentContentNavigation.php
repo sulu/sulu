@@ -79,6 +79,7 @@ class SuluContentContentNavigation extends ContentNavigation
         $tab->setAction('content');
         $tab->setContentType('content');
         $tab->setContentComponent('content/external@sulucontent');
+        $tab->setContentDisplay(array('edit'));
 
         return $tab;
     }
@@ -90,6 +91,7 @@ class SuluContentContentNavigation extends ContentNavigation
         $tab->setAction('content');
         $tab->setContentType('content');
         $tab->setContentComponent('content/internal@sulucontent');
+        $tab->setContentDisplay(array('edit'));
 
         return $tab;
     }
@@ -97,9 +99,8 @@ class SuluContentContentNavigation extends ContentNavigation
     /**
      * generate content navigation
      * @param $showSettings
-     * @param $type
      */
-    public function generate($showSettings, $type)
+    public function generate($showSettings)
     {
         $this->addNavigationItem($this->getInternalLink());
         $this->addNavigationItem($this->getExternalLink());

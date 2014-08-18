@@ -122,12 +122,6 @@ define(['app-config'], function(AppConfig) {
                 this.submit();
             }, this);
 
-            // content saved
-            this.sandbox.on('sulu.content.contents.saved', function() {
-                // FIXME better solution?
-                window.location.reload();
-            }, this);
-
             // set header bar unsaved
             var changedEvent = function() {
                 this.sandbox.emit('sulu.content.contents.set-header-bar', false);
