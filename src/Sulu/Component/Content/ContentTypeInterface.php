@@ -143,13 +143,6 @@ interface ContentTypeInterface
     public function getDefaultValue();
 
     /**
-     * Return the name of this structure property
-     *
-     * @return string
-     */
-    public function getName();
-
-    /**
      * Prepare data for the view
      *
      * @param PropertyInterface $property

@@ -57,4 +57,12 @@ abstract class ComplexContentType implements ContentTypeInterface
     {
         return null;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getViewData(PropertyInterface $property)
+    {
+        return array();
+    }
 }
