@@ -21,6 +21,18 @@ define([
          */
         TYPE_CONTENT = 1,
 
+        /**
+         * node type constant for internal
+         * @type {number}
+         */
+        TYPE_INTERNAL = 2,
+
+        /**
+         * node type constant for external
+         * @type {number}
+         */
+        TYPE_EXTERNAL = 4,
+
         constants = {
             resolutionDropdownData: [
                 {id: 1, name: 'sulu.preview.auto', cssClass: 'auto'},
@@ -213,6 +225,13 @@ define([
             // change the preview style if the resolution dropdown gets changed
             this.sandbox.on('husky.dropdown.resolutionsDropdown.item.click', this.changePreviewStyle.bind(this));
 
+            // change visibility for tabs
+            this.sandbox.on('sulu.header.initialized', function() {
+                if (!!this.data.id) {
+                    this.updateTypeTabsVisibility();
+                }
+            }.bind(this));
+
             // bind model data events
             this.bindModelEvents();
         },
@@ -262,6 +281,21 @@ define([
                 this.sandbox.emit('sulu.app.ui.reset', { navigation: 'auto', content: 'auto'});
                 this.sandbox.emit('sulu.router.navigate', 'content/contents/' + (!webspace ? this.options.webspace : webspace) + '/' + (!language ? this.options.language : language));
             }, this);
+        },
+
+        updateTypeTabsVisibility: function() {
+            var tabs = [];
+            if (this.data.nodeType === TYPE_CONTENT) {
+                tabs = ['internal-link', 'external-link'];
+            } else if (this.data.nodeType === TYPE_INTERNAL) {
+                tabs = ['internal-link', 'content'];
+            } else if (this.data.nodeType === TYPE_EXTERNAL) {
+                tabs = ['content', 'external-link'];
+            }
+
+            this.sandbox.util.each(tabs, function(i, tabName) {
+                this.sandbox.emit('husky.tabs.header.item.hide', 'tab-' + tabName);
+            }.bind(this));
         },
 
         getResourceLocator: function(parts, template, callback) {
@@ -693,11 +727,6 @@ define([
             var noBack = (this.options.id === 'index'), def;
 
             if (this.options.display === 'column') {
-                this.fullSize = {
-                    width: true,
-                    height: true
-                };
-
                 return {
                     title: this.options.webspace.replace(/_/g, '.'),
                     noBack: true,

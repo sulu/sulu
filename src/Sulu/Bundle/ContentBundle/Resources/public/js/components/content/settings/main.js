@@ -224,7 +224,8 @@ define(['app-config'], function(AppConfig) {
             this.sandbox.logger.log('save Model');
 
             var data = {},
-                baseLanguages = this.sandbox.dom.data('#shadow_base_language_select', 'selectionValues');
+                baseLanguages = this.sandbox.dom.data('#shadow_base_language_select', 'selectionValues'),
+                template = this.data.template;
 
             data.navContexts = this.sandbox.dom.data('#nav-contexts', 'selection');
             data.nodeType = parseInt(this.sandbox.dom.val('input[name="nodeType"]:checked'));
@@ -234,8 +235,19 @@ define(['app-config'], function(AppConfig) {
                 data.shadowBaseLanguage = baseLanguages[0];
             }
 
+            if (data.nodeType === TYPE_INTERNAL) {
+                // type changed to internal link
+                template = 'internal-link';
+            } else if (data.nodeType === TYPE_EXTERNAL) {
+                // type changed to external link
+                template = 'external-link';
+            } else if (data.nodeType === TYPE_CONTENT && this.data.nodeType !== TYPE_CONTENT) {
+                // type changed to content and was before non content
+                template = AppConfig.getSection('sulu-content').defaultTemplate;
+            }
+
             this.data = this.sandbox.util.extend(true, {}, this.data, data);
-            this.sandbox.emit('sulu.content.contents.save', this.data, (data.nodeType === TYPE_INTERNAL ? 'internal-link' : data.nodeType === TYPE_EXTERNAL ? 'external-link' : AppConfig.getSection('sulu-content').defaultTemplate));
+            this.sandbox.emit('sulu.content.contents.save', this.data, template);
         }
     };
 });
