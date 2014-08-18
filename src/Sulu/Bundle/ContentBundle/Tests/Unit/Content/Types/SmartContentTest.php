@@ -15,6 +15,8 @@ use Sulu\Bundle\ContentBundle\Content\SmartContentContainer;
 use Sulu\Bundle\ContentBundle\Content\Types\SmartContent;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepository;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 //FIXME remove on update to phpunit 3.8, caused by https://github.com/sebastianbergmann/phpunit/issues/604
 interface NodeInterface extends \PHPCR\NodeInterface, \Iterator
@@ -65,6 +67,7 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
         $this->smartContent = new SmartContent(
             $this->nodeRepository,
             $this->tagManager,
+            $this->requestStack,
             'SuluContentBundle:Template:content-types/smart_content.html.twig'
         );
 
@@ -301,5 +304,70 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
             'en',
             's'
         );
+    }
+
+    public function provideGetViewData()
+    {
+        return array(
+            array(
+                array(
+                    '_page' => 5,
+                ),
+                array(
+                    'nb_items' => 1000,
+                    'expected_page' => 5
+                ),
+            ),
+            array(
+                array(
+                ),
+                array(
+                    'nb_items' => 1000,
+                    'expected_page' => 1
+                ),
+            )
+        );
+    }
+
+    /**
+     * @dataProvider provideGetViewData
+     */
+    public function testGetViewData($requestParams, $options)
+    {
+        $property = $this->getMockForAbstractClass(
+            'Sulu\Component\Content\PropertyInterface',
+            array(),
+            '',
+            true,
+            true,
+            true,
+            array('setValue')
+        );
+
+        $items = array();
+        for ($i = 0; $i <= $options['nb_items']; $i++) {
+            $items[] = 'foo';
+        }
+
+        $smartContentContainer = $this->getMockBuilder('Sulu\Bundle\ContentBundle\Content\SmartContentContainer')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $smartContentContainer->expects($this->once())
+            ->method('getData')
+            ->will($this->returnValue($items));
+
+        $property->expects($this->exactly(1))->method('getValue')
+            ->will($this->returnValue($smartContentContainer));
+
+        $this->request->query->replace($requestParams);
+
+        $property->expects($this->exactly(1))->method('getParams')->will($this->returnValue(array()));
+
+        $data = $this->smartContent->getViewData($property);
+        $this->assertInstanceOf('Pagerfanta\Pagerfanta', $data['pager']);
+
+        $pager = $data['pager'];
+        $this->assertEquals(25, $pager->getMaxPerPage());
+        $this->assertEquals($options['expected_page'], $pager->getCurrentPage());
     }
 }

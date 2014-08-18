@@ -321,11 +321,11 @@ class NodeRepository implements NodeRepositoryInterface
             $result = $this->prepareNode($parentNode, $webspaceKey, $languageCode, 1, false);
             $result['_embedded']['nodes'] = $this->prepareNodesTree($nodes, $webspaceKey, $languageCode, false);
             $result['total'] = sizeof($result['_embedded']['nodes']);
-
-            return $result;
         } else {
-            return $nodes;
+            $result = $nodes;
         }
+
+        return $result;
     }
 
     /**

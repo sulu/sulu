@@ -17,6 +17,11 @@ use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\PropertyInterface;
+use Symfony\Component\HttpFoundation\Request;
+
+use Pagerfanta\Pagerfanta;
+use Pagerfanta\Adapter\ArrayAdapter;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * ContentType for TextEditor
@@ -38,14 +43,21 @@ class SmartContent extends ComplexContentType
      */
     private $template;
 
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
+
     function __construct(
         NodeRepositoryInterface $nodeRepository,
         TagManagerInterface $tagManager,
+        RequestStack $requestStack,
         $template
     ) {
         $this->nodeRepository = $nodeRepository;
         $this->tagManager = $tagManager;
         $this->template = $template;
+        $this->requestStack = $requestStack;
     }
 
     /**
@@ -152,5 +164,41 @@ class SmartContent extends ComplexContentType
     public function remove(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
         // TODO: Implement remove() method.
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getDefaultParams()
+    {
+        $params = parent::getDefaultParams();
+        $params['max_per_page'] = 25;
+        $params['page_parameter'] = '_page';
+
+        return $params;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getViewData(PropertyInterface $property)
+    {
+        $params = array_merge(
+            $this->getDefaultParams(),
+            $property->getParams()
+        );
+
+        $smartContent = $property->getValue();
+        $data = (array) $smartContent->getData();
+        $currentPage = $this->requestStack->getCurrentRequest()->get($params['page_parameter'], 1);
+
+        $adapter = new ArrayAdapter($data);
+        $pager = new Pagerfanta($adapter);
+        $pager->setMaxPerPage($params['max_per_page']);
+        $pager->setCurrentPage($currentPage);
+
+        return array(
+            'pager' => $pager
+        );
     }
 }
