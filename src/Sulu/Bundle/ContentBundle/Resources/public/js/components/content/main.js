@@ -100,7 +100,9 @@ define([
         },
 
         loadData: function() {
-            this.content = new Content({id: this.options.id});
+            if (!this.content) {
+                this.content = new Content({id: this.options.id});
+            }
 
             if (this.options.id !== undefined) {
                 this.content.fullFetch(
@@ -155,7 +157,7 @@ define([
                 if (this.options.display !== 'column') {
                     this.sandbox.emit('sulu.content.contents.load', this.options.id, this.options.webspace, item.localization);
                 } else {
-                   this.sandbox.emit('sulu.content.contents.list', this.options.webspace, item.localization);
+                    this.sandbox.emit('sulu.content.contents.list', this.options.webspace, item.localization);
                 }
             }, this);
 
@@ -225,13 +227,6 @@ define([
             // change the preview style if the resolution dropdown gets changed
             this.sandbox.on('husky.dropdown.resolutionsDropdown.item.click', this.changePreviewStyle.bind(this));
 
-            // change visibility for tabs
-            this.sandbox.on('sulu.header.initialized', function() {
-                if (this.options.display !== 'column' && !!this.data) {
-                    this.updateTypeTabsVisibility(!this.data.id);
-                }
-            }.bind(this));
-
             // bind model data events
             this.bindModelEvents();
         },
@@ -243,8 +238,10 @@ define([
             }, this);
 
             // save the current package
-            this.sandbox.on('sulu.content.contents.save', function(data, template) {
-                this.save(data, template);
+            this.sandbox.on('sulu.content.contents.save', function(data) {
+                this.save(data).then(function() {
+                    this.loadData();
+                }.bind(this));
             }, this);
 
             // wait for navigation events
@@ -281,21 +278,6 @@ define([
                 this.sandbox.emit('sulu.app.ui.reset', { navigation: 'auto', content: 'auto'});
                 this.sandbox.emit('sulu.router.navigate', 'content/contents/' + (!webspace ? this.options.webspace : webspace) + '/' + (!language ? this.options.language : language));
             }, this);
-        },
-
-        updateTypeTabsVisibility: function(emptyData) {
-            var tabs = [];
-            if (emptyData || this.data.nodeType === TYPE_CONTENT) {
-                tabs = ['internal-link', 'external-link'];
-            } else if (this.data.nodeType === TYPE_INTERNAL) {
-                tabs = ['internal-link', 'content'];
-            } else if (this.data.nodeType === TYPE_EXTERNAL) {
-                tabs = ['content', 'external-link'];
-            }
-
-            this.sandbox.util.each(tabs, function(i, tabName) {
-                this.sandbox.emit('husky.tabs.header.item.hide', 'tab-' + tabName);
-            }.bind(this));
         },
 
         getResourceLocator: function(parts, template, callback) {
@@ -455,8 +437,10 @@ define([
             });
         },
 
-        save: function(data, template) {
+        save: function(data) {
             this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
+
+            var def = this.sandbox.data.deferred();
 
             if (!!this.content) {
                 this.content.set(data);
@@ -466,7 +450,7 @@ define([
             if (!!this.options.id) {
                 this.content.set({id: this.options.id});
             }
-            this.content.fullSave(template || this.template, this.options.webspace, this.options.language, this.options.parent, this.state, null, {
+            this.content.fullSave(this.template, this.options.webspace, this.options.language, this.options.parent, this.state, null, {
                 // on success save contents id
                 success: function(response) {
                     var model = response.toJSON();
@@ -476,12 +460,15 @@ define([
                         this.sandbox.sulu.viewStates.justSaved = true;
                         this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language + '/edit:' + model.id + '/content');
                     }
+                    def.resolve();
                 }.bind(this),
                 error: function() {
                     this.sandbox.logger.log("error while saving profile");
                     this.sandbox.emit('sulu.content.contents.save-error');
                 }.bind(this)
             });
+
+            return def;
         },
 
         load: function(id, webspace, language) {
@@ -505,13 +492,23 @@ define([
                 this.setState(data);
 
                 if (!!this.options.preview && this.data.nodeType === TYPE_CONTENT) {
+                    this.sandbox.emit('husky.tabs.header.item.show', 'tab-content');
                     this.renderPreview(data);
                 } else {
                     this.sandbox.emit('sulu.sidebar.hide');
                     this.sandbox.emit('sulu.app.toggle-shrinker', false);
                 }
 
-                if (this.data.shadowOn === true) {
+                // disable content tab
+                if (this.data.shadowOn === true || this.data.nodeType !== TYPE_CONTENT) {
+                    this.sandbox.emit('husky.tabs.header.item.hide', 'tab-content');
+                }
+
+                // route to settings
+                if (
+                    (this.options.content !== 'settings' && this.data.shadowOn === true) ||
+                    (this.options.content === 'content' && this.data.nodeType !== TYPE_CONTENT)
+                    ) {
                     this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language + '/edit:' + data.id + '/settings');
                 }
 
@@ -524,6 +521,8 @@ define([
          * @param data
          */
         renderPreview: function(data) {
+            this.sandbox.emit('sulu.app.toggle-shrinker', true);
+            this.sandbox.emit('sulu.sidebar.change-width', 'max');
             if (this.$preview === null) {
                 this.previewUrl = this.sandbox.util.template(templates.previewUrl)({
                     url: '/admin/content/preview/',
@@ -633,7 +632,7 @@ define([
          * @param {Object} data
          */
         setTemplate: function(data) {
-            this.template = data.template;
+            this.template = data.originTemplate;
 
             if (this.data.nodeType === TYPE_CONTENT && this.template !== '' && this.template !== undefined && this.template !== null) {
                 this.sandbox.emit('sulu.header.toolbar.item.change', 'template', this.template);
