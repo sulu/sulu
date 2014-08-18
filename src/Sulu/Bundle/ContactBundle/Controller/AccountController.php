@@ -129,9 +129,10 @@ class AccountController extends AbstractContactController
             );
 
             $view->setSerializationContext(
-                SerializationContext::create()->setGroups(array('fullAccount', 'partialContact', 'partialMedia', 'partialTag'))
+                SerializationContext::create()->setGroups(
+                    array('fullAccount', 'partialContact', 'partialMedia', 'partialTag')
+                )
             );
-
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
         }
@@ -1475,5 +1476,4 @@ class AccountController extends AbstractContactController
             true
         );
     }
-
 }

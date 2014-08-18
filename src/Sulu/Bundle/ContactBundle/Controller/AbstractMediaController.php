@@ -71,7 +71,6 @@ abstract class AbstractMediaController extends RestController
                 ),
                 200
             );
-
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
         } catch (RestException $exc) {

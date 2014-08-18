@@ -283,7 +283,6 @@ class AccountMediaControllerTest extends DatabaseTestCase
         $file->setChanged(new DateTime());
         $file->setMedia($media);
 
-
         $file2 = new File();
         $file2->setVersion(1);
         $file2->setCreated(new DateTime());

@@ -35,7 +35,7 @@ use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Groups;
 
 /**
- * The UrlType class which will be exported to the API
+ * The Contact class which will be exported to the API
  *
  * @package Sulu\Bundle\ContactBundle\Api
  * @Relation("self", href="expr('/api/admin/contacts/' ~ object.getId())")
@@ -340,7 +340,7 @@ class Contact extends ApiWrapper
      */
     public function getLocales()
     {
-        $entities = [];
+        $entities = array();
         if ($this->entity->getLocales()) {
             foreach ($this->entity->getLocales() as $locale) {
                 $entities[] = new ContactLocale($locale);
@@ -412,7 +412,7 @@ class Contact extends ApiWrapper
      */
     public function getNotes()
     {
-        $entities = [];
+        $entities = array();
         if ($this->entity->getNotes()) {
             foreach ($this->entity->getNotes() as $note) {
                 $entities[] = $note;
@@ -455,7 +455,7 @@ class Contact extends ApiWrapper
      */
     public function getEmails()
     {
-        $entities = [];
+        $entities = array();
         if ($this->entity->getEmails()) {
             foreach ($this->entity->getEmails() as $email) {
                 $entities[] = $email;
@@ -498,7 +498,7 @@ class Contact extends ApiWrapper
      */
     public function getPhones()
     {
-        $entities = [];
+        $entities = array();
         if ($this->entity->getPhones()) {
             foreach ($this->entity->getPhones() as $phone) {
                 $entities[] = $phone;
@@ -556,7 +556,7 @@ class Contact extends ApiWrapper
      */
     public function getFaxes()
     {
-        $entities = [];
+        $entities = array();
         if ($this->entity->getFaxes()) {
             foreach ($this->entity->getFaxes() as $fax) {
                 $entities[] = $fax;
@@ -599,7 +599,7 @@ class Contact extends ApiWrapper
      */
     public function getUrls()
     {
-        $entities = [];
+        $entities = array();
         if ($this->entity->getUrls()) {
             foreach ($this->entity->getUrls() as $entity) {
                 $entities[] = $entity;
@@ -743,7 +743,7 @@ class Contact extends ApiWrapper
      */
     public function getTags()
     {
-        $entities = [];
+        $entities = array();
         if ($this->entity->getTags()) {
             foreach ($this->entity->getTags() as $entity) {
                 $entities[] = array(
@@ -1005,7 +1005,7 @@ class Contact extends ApiWrapper
      */
     public function getAssignedActivities()
     {
-        $entities = [];
+        $entities = array();
         if ($this->entity->getAssignedActivities()) {
             foreach ($this->entity->getAssignedActivities() as $entity) {
                 $entities[] = new Activity($entity, $this->locale, $this->tagManager);
@@ -1082,7 +1082,7 @@ class Contact extends ApiWrapper
      */
     public function getMedias()
     {
-        $entities = [];
+        $entities = array();
         if ($this->entity->getMedias()) {
             foreach ($this->entity->getMedias() as $media) {
                 $entities[] = new Media($media, $this->locale, null, $this->tagManager);
@@ -1112,7 +1112,7 @@ class Contact extends ApiWrapper
      */
     public function getCategories()
     {
-        $entities = [];
+        $entities = array();
         if ($this->entity->getCategories()) {
             foreach ($this->entity->getCategories() as $category) {
                 $entities[] = new Category($category, $this->locale);

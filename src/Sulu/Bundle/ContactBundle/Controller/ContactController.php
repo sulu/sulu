@@ -562,7 +562,6 @@ class ContactController extends AbstractContactController
                     array('fullContact', 'partialAccount', 'partialTag', 'partialMedia', 'partialCategory')
                 )
             );
-
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
         } catch (RestException $re) {

@@ -69,5 +69,4 @@ interface ContactManagerInterface
      * @return mixed
      */
     public function getById($id, $locale);
-
 }

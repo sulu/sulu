@@ -40,7 +40,7 @@ use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Groups;
 
 /**
- * The UrlType class which will be exported to the API
+ * The Account class which will be exported to the API
  *
  * @package Sulu\Bundle\ContactBundle\Api
  * @Relation("self", href="expr('/api/admin/accounts/' ~ object.getId())")
@@ -79,19 +79,6 @@ class Account extends ApiWrapper
     }
 
     /**
-     * Get lft
-     *
-     * @return integer
-     * @VirtualProperty
-     * @SerializedName("lft")
-     * @Groups({"fullAccount", "partialAccount"})
-     */
-    public function getLft()
-    {
-        return $this->entity->getLft();
-    }
-
-    /**
      * Set lft
      *
      * @param integer $lft
@@ -115,19 +102,6 @@ class Account extends ApiWrapper
         $this->entity->setRgt($rgt);
 
         return $this;
-    }
-
-    /**
-     * Get rgt
-     *
-     * @return integer
-     * @VirtualProperty
-     * @SerializedName("rgt")
-     * @Groups({"fullAccount", "partialAccount"})
-     */
-    public function getRgt()
-    {
-        return $this->entity->getRgt();
     }
 
     /**
@@ -259,9 +233,10 @@ class Account extends ApiWrapper
     {
 
         $account = $this->entity->getParent();
-        if($account) {
+        if ($account) {
             return new Account($account, $this->locale, $this->tagManager);
         }
+
         return null;
     }
 
@@ -298,7 +273,7 @@ class Account extends ApiWrapper
      */
     public function getUrls()
     {
-        $urls = [];
+        $urls = array();
         if ($this->entity->getUrls()) {
             foreach ($this->entity->getUrls() as $url) {
                 $urls[] = $url;
@@ -341,7 +316,7 @@ class Account extends ApiWrapper
      */
     public function getPhones()
     {
-        $phones = [];
+        $phones = array();
         if ($this->entity->getPhones()) {
             foreach ($this->entity->getPhones() as $phone) {
                 $phones[] = $phone;
@@ -384,7 +359,7 @@ class Account extends ApiWrapper
      */
     public function getEmails()
     {
-        $emails = [];
+        $emails = array();
         if ($this->entity->getEmails()) {
             foreach ($this->entity->getEmails() as $email) {
                 $emails[] = $email;
@@ -427,7 +402,7 @@ class Account extends ApiWrapper
      */
     public function getNotes()
     {
-        $notes = [];
+        $notes = array();
         if ($this->entity->getNotes()) {
             foreach ($this->entity->getNotes() as $note) {
                 $notes[] = $note;
@@ -496,7 +471,7 @@ class Account extends ApiWrapper
      */
     public function getFaxes()
     {
-        $faxes = [];
+        $faxes = array();
         if ($this->entity->getFaxes()) {
             foreach ($this->entity->getFaxes() as $fax) {
                 $faxes[] = $fax;
@@ -693,7 +668,7 @@ class Account extends ApiWrapper
      */
     public function getBankAccounts()
     {
-        $bankAccounts = [];
+        $bankAccounts = array();
         if ($this->entity->getBankAccounts()) {
             foreach ($this->entity->getBankAccounts() as $bankAccount) {
                 /** @var BankAccountEntity $bankAccount */
@@ -744,7 +719,7 @@ class Account extends ApiWrapper
                 $tags[] = array(
                     'id' => $tag,
                     'name' => $tag->getName()
-                ) ;
+                );
             }
         }
 
@@ -805,7 +780,7 @@ class Account extends ApiWrapper
      */
     public function getAccountContacts()
     {
-        $accountContacts = [];
+        $accountContacts = array();
         if ($this->entity->getAccountContacts()) {
             foreach ($this->entity->getAccountContacts() as $AccountContact) {
                 $accountContacts[] = new AccountContact($AccountContact, $this->locale, $this->tagManager);
@@ -1137,7 +1112,7 @@ class Account extends ApiWrapper
      */
     public function getAccountAddresses()
     {
-        $accountAddresses = [];
+        $accountAddresses = array();
         if ($this->entity->getAccountAddresses()) {
             foreach ($this->entity->getAccountAddresses() as $adr) {
                 $accountAddress[] = new AccountAddress($adr);
@@ -1206,7 +1181,7 @@ class Account extends ApiWrapper
     public function getContacts()
     {
         $accountContacts = $this->entity->getAccountContacts();
-        $contacts = [];
+        $contacts = array();
 
         if (!is_null($accountContacts)) {
             /** @var AccountContactEntity $accountContact */
@@ -1251,7 +1226,7 @@ class Account extends ApiWrapper
      */
     public function getMedias()
     {
-        $medias = [];
+        $medias = array();
         if ($this->entity->getMedias()) {
             foreach ($this->entity->getMedias() as $media) {
                 $medias[] = new Media($media, $this->locale, null, $this->tagManager);

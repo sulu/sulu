@@ -14,31 +14,26 @@ class AccountContact
 {
     /**
      * @var boolean
-     *
      */
     private $main;
 
     /**
      * @var integer
-     *
      */
     private $id;
 
     /**
      * @var \Sulu\Bundle\ContactBundle\Entity\Contact
-     *
      */
     private $contact;
 
     /**
      * @var \Sulu\Bundle\ContactBundle\Entity\Account
-     *
      */
     private $account;
 
     /**
      * @var string
-     *
      */
     private $position;
 

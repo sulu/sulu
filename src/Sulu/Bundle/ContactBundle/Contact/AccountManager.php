@@ -28,7 +28,6 @@ use Sulu\Component\Rest\Exception\EntityNotFoundException;
  */
 class AccountManager extends AbstractContactManager
 {
-
     protected $accountEntity = 'SuluContactBundle:Account';
     protected $contactEntity = 'SuluContactBundle:Contact';
     protected $addressEntity = 'SuluContactBundle:Address';

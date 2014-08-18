@@ -42,7 +42,7 @@ use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Groups;
 
 /**
- * The UrlType class which will be exported to the API
+ * The Activity class which will be exported to the API
  *
  * @package Sulu\Bundle\ContactBundle\Api
  * @ExclusionPolicy("all")
