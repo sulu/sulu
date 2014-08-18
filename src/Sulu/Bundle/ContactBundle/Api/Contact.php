@@ -743,38 +743,7 @@ class Contact extends ApiWrapper
      */
     public function getTags()
     {
-        $entities = array();
-        if ($this->entity->getTags()) {
-            foreach ($this->entity->getTags() as $entity) {
-                $entities[] = array(
-                    'id' => $entity->getId(),
-                    'name' => $entity->getName()
-                );
-            }
-        }
-
-        return $entities;
-    }
-
-    /**
-     * parses tags to array containing tag names
-     *
-     * @return array
-     * @VirtualProperty
-     * @SerializedName("tagNameArray")
-     * @Groups({"fullContact"})
-     */
-    public function getTagNameArray()
-    {
-        $tags = array();
-        if (!is_null($this->entity->getTags())) {
-            /** @var TagEntity $tag */
-            foreach ($this->entity->getTags() as $tag) {
-                $tags[] = $tag->getName();
-            }
-        }
-
-        return $tags;
+        return $this->entity->getTagNameArray();
     }
 
     /**
