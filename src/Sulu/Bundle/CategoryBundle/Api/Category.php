@@ -53,14 +53,19 @@ class Category extends ApiEntityWrapper
     public function getName()
     {
         $translations = $this->entity->getTranslations();
-        $name = $translations[0]->getTranslation();
-        foreach ($translations as $translation) {
-            if ($translation->getLocale() === $this->locale) {
-                $name = $translation->getTranslation();
-                break;
+        if (!is_null($translations)) {
+            $name = $translations[0]->getTranslation();
+            foreach ($translations as $translation) {
+                if ($translation->getLocale() === $this->locale) {
+                    $name = $translation->getTranslation();
+                    break;
+                }
             }
+
+            return $name;
         }
-        return $name;
+
+        return '';
     }
 
     /**
