@@ -25,17 +25,17 @@ class TagControllerTest extends DatabaseTestCase
     {
         $this->setUpSchema();
 
-        $tag = new Tag();
-        $tag->setName('tag1');
-        $tag->setCreated(new \DateTime());
-        $tag->setChanged(new \DateTime());
-        self::$em->persist($tag);
+        $tag1 = new Tag();
+        $tag1->setName('tag1');
+        $tag1->setCreated(new \DateTime());
+        $tag1->setChanged(new \DateTime());
+        self::$em->persist($tag1);
 
-        $tag = new Tag();
-        $tag->setName('tag2');
-        $tag->setCreated(new \DateTime());
-        $tag->setChanged(new \DateTime());
-        self::$em->persist($tag);
+        $tag2 = new Tag();
+        $tag2->setName('tag2');
+        $tag2->setCreated(new \DateTime());
+        $tag2->setChanged(new \DateTime());
+        self::$em->persist($tag2);
 
         self::$em->flush();
     }
