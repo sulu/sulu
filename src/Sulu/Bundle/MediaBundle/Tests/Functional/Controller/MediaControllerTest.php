@@ -779,6 +779,6 @@ class MediaControllerTest extends DatabaseTestCase
      */
     private function getImagePath()
     {
-        return __DIR__ . '/../../Resources/Resources/images/photo.jpeg';
+        return __DIR__ . '/../../app/Resources/images/photo.jpeg';
     }
 }
