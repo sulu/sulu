@@ -21,18 +21,6 @@ define([
          */
         TYPE_CONTENT = 1,
 
-        /**
-         * node type constant for internal
-         * @type {number}
-         */
-        TYPE_INTERNAL = 2,
-
-        /**
-         * node type constant for external
-         * @type {number}
-         */
-        TYPE_EXTERNAL = 4,
-
         constants = {
             resolutionDropdownData: [
                 {id: 1, name: 'sulu.preview.auto', cssClass: 'auto'},
@@ -499,17 +487,19 @@ define([
                     this.sandbox.emit('sulu.app.toggle-shrinker', false);
                 }
 
-                // disable content tab
-                if (this.data.shadowOn === true || this.data.nodeType !== TYPE_CONTENT) {
-                    this.sandbox.emit('husky.tabs.header.item.hide', 'tab-content');
-                }
+                if (!!this.options.id) {
+                    // disable content tab
+                    if (this.data.shadowOn === true || this.data.nodeType !== TYPE_CONTENT) {
+                        this.sandbox.emit('husky.tabs.header.item.hide', 'tab-content');
+                    }
 
-                // route to settings
-                if (
-                    (this.options.content !== 'settings' && this.data.shadowOn === true) ||
-                    (this.options.content === 'content' && this.data.nodeType !== TYPE_CONTENT)
-                    ) {
-                    this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language + '/edit:' + data.id + '/settings');
+                    // route to settings
+                    if (
+                        (this.options.content !== 'settings' && this.data.shadowOn === true) ||
+                        (this.options.content === 'content' && this.data.nodeType !== TYPE_CONTENT)
+                        ) {
+                        this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language + '/edit:' + data.id + '/settings');
+                    }
                 }
 
                 this.setHeaderBar(true);

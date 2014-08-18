@@ -137,6 +137,24 @@ define(['app-config'], function(AppConfig) {
             }.bind(this));
         },
 
+        bindDomEvents: function() {
+            this.sandbox.dom.on('#content-type-container', 'change', function(e) {
+                var $checkbox = this.sandbox.dom.$(e.currentTarget),
+                    $form = this.sandbox.dom.find('.sub-form', $checkbox.parent().parent().parent()),
+                    type = this.sandbox.dom.val($checkbox);
+
+                this.sandbox.dom.hide('#content-type-container .sub-form');
+                this.sandbox.dom.show($form);
+
+                if (parseInt(type) === TYPE_CONTENT) {
+                    this.sandbox.dom.show('#shadow-container');
+                } else {
+                    this.sandbox.dom.hide('#shadow-container');
+                    this.sandbox.emit('husky.tabs.header.item.hide', 'tab-content');
+                }
+            }.bind(this), '.content-type');
+        },
+
         updateTabVisibilityForShadowCheckbox: function() {
             var checkboxEl = this.sandbox.dom.find('#shadow_on_checkbox')[0],
                 action = checkboxEl.checked ? 'hide' : 'show';
@@ -164,13 +182,15 @@ define(['app-config'], function(AppConfig) {
         render: function(data) {
             this.data = data;
 
-            require(['text!/admin/content/template/content/settings.html?webspaceKey=' + this.options.webspace], function(template) {
-                this.html(this.sandbox.util.template(template, {
+            require(['text!/admin/content/template/content/settings.html?webspaceKey=' + this.options.webspace + '&languageCode=' + this.options.language], function(template) {
+                this.sandbox.dom.html(this.$el, this.sandbox.util.template(template, {
                     translate: this.sandbox.translate
                 }));
+                this.bindDomEvents();
                 this.setData(this.data);
                 this.listenForChange();
                 this.startComponents();
+                this.sandbox.start(this.$el, {reset: true});
 
                 this.sandbox.dom.on('#shadow_on_checkbox', 'click', function() {
                     this.updateTabVisibilityForShadowCheckbox();
@@ -184,11 +204,22 @@ define(['app-config'], function(AppConfig) {
             var type = parseInt(data.nodeType);
 
             if (type === TYPE_CONTENT) {
-                this.sandbox.dom.attr('#content-node-type', 'checked', true);
+                this.sandbox.dom.attr('#content-node-type', 'checked', true).trigger('change');
             } else if (type === TYPE_INTERNAL) {
-                this.sandbox.dom.attr('#internal-link-node-type', 'checked', true);
+                this.sandbox.dom.attr('#internal-link-node-type', 'checked', true).trigger('change');
             } else if (type === TYPE_EXTERNAL) {
-                this.sandbox.dom.attr('#external-link-node-type', 'checked', true);
+                this.sandbox.dom.attr('#external-link-node-type', 'checked', true).trigger('change');
+            }
+
+            if (!!data.title) {
+                this.sandbox.dom.val('#internal-title', data.title);
+                this.sandbox.dom.val('#external-title', data.title);
+            }
+            if (!!data.internal_link) {
+                this.sandbox.dom.data('#internal-link', 'singleInternalLink', data.internal_link);
+            }
+            if (!!data.external) {
+                this.sandbox.dom.data('#external', 'value', data.external);
             }
 
             // updated after init
@@ -208,6 +239,10 @@ define(['app-config'], function(AppConfig) {
             this.sandbox.dom.on(this.$el, 'keyup change', function() {
                 this.setHeaderBar(false);
             }.bind(this), '.trigger-save-button');
+
+            this.sandbox.on('sulu.single-internal-link.internal-link.data-changed', function() {
+                this.setHeaderBar(false);
+            }.bind(this));
         },
 
         setHeaderBar: function(saved) {
@@ -223,6 +258,14 @@ define(['app-config'], function(AppConfig) {
             data.navContexts = this.sandbox.dom.data('#nav-contexts', 'selection');
             data.nodeType = parseInt(this.sandbox.dom.val('input[name="nodeType"]:checked'));
             data.shadowOn = this.sandbox.dom.prop('#shadow_on_checkbox', 'checked');
+
+            if (data.nodeType === TYPE_INTERNAL) {
+                data.title = this.sandbox.dom.val('#internal-title');
+                data.internal_link = this.sandbox.dom.data('#internal-link', 'singleInternalLink');
+            } else if (data.nodeType === TYPE_EXTERNAL) {
+                data.title = this.sandbox.dom.val('#internal-title');
+                data.external = this.sandbox.dom.val(this.sandbox.dom.find('input', '#external'));
+            }
 
             if (!!baseLanguages && baseLanguages.length > 0) {
                 data.shadowBaseLanguage = baseLanguages[0];
