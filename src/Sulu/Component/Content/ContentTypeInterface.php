@@ -11,6 +11,7 @@
 namespace Sulu\Component\Content;
 
 use PHPCR\NodeInterface;
+use Sulu\Component\Content\PropertyInterface;
 
 /**
  * Content type definition
@@ -140,4 +141,18 @@ interface ContentTypeInterface
      * @return mixed
      */
     public function getDefaultValue();
+
+    /**
+     * Return the name of this structure property
+     *
+     * @return string
+     */
+    public function getName();
+
+    /**
+     * Prepare data for the view
+     *
+     * @param PropertyInterface $property
+     */
+    public function getViewData(PropertyInterface $property);
 }
