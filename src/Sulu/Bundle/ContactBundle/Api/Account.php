@@ -231,7 +231,6 @@ class Account extends ApiWrapper
      */
     public function getParent()
     {
-
         $account = $this->entity->getParent();
         if ($account) {
             return new Account($account, $this->locale, $this->tagManager);

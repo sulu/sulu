@@ -54,9 +54,9 @@ class ContactAddress extends ApiWrapper
 {
     /**
      */
-    public function __construct(ContactAddressEntity $adr)
+    public function __construct(ContactAddressEntity $address)
     {
-        $this->entity = $adr;
+        $this->entity = $address;
     }
 
     /**

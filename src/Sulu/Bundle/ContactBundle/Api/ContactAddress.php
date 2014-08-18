@@ -120,6 +120,6 @@ class ContactAddress extends ApiWrapper
     {
         $adr = $this->entity->getAddress();
 
-        return new Address($adr);
+        return new AddressEntity($adr);
     }
 }

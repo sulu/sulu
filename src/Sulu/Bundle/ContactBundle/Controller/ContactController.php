@@ -42,6 +42,7 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineConcatenati
 
 /**
  * Makes contacts available through a REST API
+ *
  * @package Sulu\Bundle\ContactBundle\Controller
  */
 class ContactController extends AbstractContactController
@@ -324,6 +325,7 @@ class ContactController extends AbstractContactController
 
     /**
      * returns all fields that can be used by list
+     *
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -340,6 +342,7 @@ class ContactController extends AbstractContactController
     /**
      * lists all contacts
      * optional parameter 'flat' calls listAction
+     *
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -375,11 +378,13 @@ class ContactController extends AbstractContactController
             $list = new CollectionRepresentation($contacts, self::$entityKey);
         }
         $view = $this->view($list, 200);
+
         return $this->handleView($view);
     }
 
     /**
      * Deletes a Contact with the given ID from database
+     *
      * @param int $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -447,6 +452,7 @@ class ContactController extends AbstractContactController
 
     /**
      * Shows the contact with the given Id
+     *
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -477,6 +483,7 @@ class ContactController extends AbstractContactController
 
     /**
      * Creates a new contact
+     *
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -573,6 +580,7 @@ class ContactController extends AbstractContactController
 
     /**
      * returns the main account-contact relation or creates a new one
+     *
      * @param Contact $contact
      * @param Account $account
      * @param $position
@@ -586,11 +594,13 @@ class ContactController extends AbstractContactController
         } else {
             $accountContact->setPosition($position);
         }
+
         return $accountContact;
     }
 
     /**
      * returns the main account-contact relation
+     *
      * @param Contact $contact
      * @return AccountContact|bool
      */
@@ -602,11 +612,13 @@ class ContactController extends AbstractContactController
                 return $accountContact;
             }
         }
+
         return false;
     }
 
     /**
      * creates a new main Account Contacts relation
+     *
      * @param Contact $contact
      * @param Account $account
      * @param $position
@@ -621,6 +633,7 @@ class ContactController extends AbstractContactController
         $this->getDoctrine()->getManager()->persist($accountContact);
         $contact->addAccountContact($accountContact);
         $accountContact->setPosition($position);
+
         return $accountContact;
     }
 
@@ -628,10 +641,12 @@ class ContactController extends AbstractContactController
      * @param $contact
      * @param $titleId
      */
-    private function setTitleOnContact($contact, $titleId) {
+    private function setTitleOnContact($contact, $titleId)
+    {
         if ($titleId && is_numeric($titleId)) {
             $title = $this->getDoctrine()->getRepository(
-                self::$titleEntityName)->find($titleId);
+                self::$titleEntityName
+            )->find($titleId);
             if ($title) {
                 $contact->setTitle($title);
             }
@@ -746,7 +761,6 @@ class ContactController extends AbstractContactController
                         array('fullContact', 'partialAccount', 'partialTag', 'partialMedia', 'partialCategory')
                     )
                 );
-
             }
         } catch (EntityNotFoundException $exc) {
             $view = $this->view($exc->toArray(), 404);
