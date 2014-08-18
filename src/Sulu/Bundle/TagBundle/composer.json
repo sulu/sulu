@@ -21,7 +21,11 @@
         "sulu/contact-bundle": "dev-develop",
         "sulu/admin-bundle": "dev-develop",
         "sulu/security-bundle": "dev-develop",
-        "willdurand/hateoas-bundle": "0.3.*"
+        "willdurand/hateoas-bundle": "0.3.*",
+
+        "sulu/category-bundle": "@dev",
+        "sulu/media-bundle": "@dev",
+        "liip/theme-bundle": "@dev"
     },
     "require-dev": {
         "sensio/framework-extra-bundle":  "~3.0",
