@@ -54,6 +54,12 @@ abstract class Structure implements StructureInterface
     private $key;
 
     /**
+     * real template from database
+     * @var string
+     */
+    private $originTemplate;
+
+    /**
      * template to render content
      * @var string
      */
@@ -343,6 +349,22 @@ abstract class Structure implements StructureInterface
     public function getKey()
     {
         return $this->key;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOriginTemplate()
+    {
+        return $this->originTemplate;
+    }
+
+    /**
+     * @param string $originTemplate
+     */
+    public function setOriginTemplate($originTemplate)
+    {
+        $this->originTemplate = $originTemplate;
     }
 
     /**
@@ -951,6 +973,7 @@ abstract class Structure implements StructureInterface
                 'shadowOn' => $this->getIsShadow(),
                 'shadowBaseLanguage' => $this->getShadowBaseLanguage(),
                 'template' => $this->getKey(),
+                'originTemplate' => $this->getOriginTemplate(),
                 'hasSub' => $this->hasChildren,
                 'creator' => $this->creator,
                 'changer' => $this->changer,

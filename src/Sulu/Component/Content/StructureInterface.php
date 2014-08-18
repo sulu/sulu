@@ -139,6 +139,16 @@ interface StructureInterface extends \JsonSerializable
     public function getCacheLifeTime();
 
     /**
+     * @return string
+     */
+    public function getOriginTemplate();
+
+    /**
+     * @param string $originTemplate
+     */
+    public function setOriginTemplate($originTemplate);
+
+    /**
      * returns a property instance with given name
      * @param $name string name of property
      * @return PropertyInterface
