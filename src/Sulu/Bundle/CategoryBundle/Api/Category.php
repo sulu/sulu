@@ -78,16 +78,22 @@ class Category extends ApiEntityWrapper
     public function getMeta()
     {
         $arrReturn = [];
-        foreach ($this->entity->getMeta() as $meta) {
-            if (!$meta->getLocale() || $meta->getLocale() === $this->locale) {
-                array_push($arrReturn, [
-                    'id' => $meta->getId(),
-                    'key' => $meta->getKey(),
-                    'value' => $meta->getValue(),
-                ]);
+        if (!is_null($this->entity->getMeta())) {
+            foreach ($this->entity->getMeta() as $meta) {
+                if (!$meta->getLocale() || $meta->getLocale() === $this->locale) {
+                    array_push(
+                        $arrReturn,
+                        [
+                            'id' => $meta->getId(),
+                            'key' => $meta->getKey(),
+                            'value' => $meta->getValue(),
+                        ]
+                    );
+                }
             }
+            return $arrReturn;
         }
-        return $arrReturn;
+        return null;
     }
 
     /**
@@ -171,7 +177,10 @@ class Category extends ApiEntityWrapper
      * @Groups({"fullCategory"})
      */
     public function getChildren() {
-        return $this->getEntity()->getChildren()->count();
+        if($this->getEntity()->getChildren()) {
+            return $this->getEntity()->getChildren()->count();
+        }
+        return 0;
     }
 
     /**
