@@ -711,39 +711,7 @@ class Account extends ApiWrapper
      */
     public function getTags()
     {
-        $tags = array();
-        if ($this->entity->getTags()) {
-            foreach ($this->entity->getTags() as $tag) {
-                /** @var TagEntity $tag */
-                $tags[] = array(
-                    'id' => $tag,
-                    'name' => $tag->getName()
-                );
-            }
-        }
-
-        return $tags;
-    }
-
-    /**
-     * parses tags to array containing tag names
-     *
-     * @return array
-     * @VirtualProperty
-     * @SerializedName("tagNameArray")
-     * @Groups({"fullAccount"})
-     */
-    public function getTagNameArray()
-    {
-        $tags = array();
-        if ($this->entity->getTags()) {
-            foreach ($this->entity->getTags() as $tag) {
-                /** @var TagEntity $tag */
-                $tags[] = $tag->getName();
-            }
-        }
-
-        return $tags;
+        return $this->entity->getTagNameArray();
     }
 
     /**

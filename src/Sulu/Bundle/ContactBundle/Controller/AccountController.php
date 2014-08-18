@@ -25,7 +25,7 @@ use Sulu\Bundle\ContactBundle\Entity\Address as AddressEntity;
 use Sulu\Bundle\ContactBundle\Entity\Contact as ContactEntity;
 use Sulu\Bundle\ContactBundle\Entity\Account as AccountEntity;
 use Sulu\Bundle\ContactBundle\Api\Account;
-use Sulu\Bundle\ContactBundle\Entity\TermsOfDelivery as TermsOfDeliverEntity;
+use Sulu\Bundle\ContactBundle\Entity\TermsOfDelivery as TermsOfDeliveryEntity;
 use Sulu\Bundle\ContactBundle\Entity\TermsOfPayment as TermsOfPaymentEntity;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
@@ -282,7 +282,7 @@ class AccountController extends AbstractContactController
             }
 
             // create relation
-            $accountContact = new AccountContact();
+            $accountContact = new AccountContactEntity();
             // if contact has no main relation - set as main
             $accountContact->setMain($contact->getAccountContacts()->isEmpty());
             $accountContact->setAccount($account);
@@ -706,7 +706,7 @@ class AccountController extends AbstractContactController
     {
         if (!is_null($request->get('termsOfPayment'))) {
             $id = $request->get('termsOfPayment')['id'];
-            /** @var TermsOfPayment $termsOfPayment */
+            /** @var TermsOfPaymentEntity $termsOfPayment */
             $termsOfPayment = $this->getDoctrine()
                 ->getRepository(self::$termsOfPaymentEntityName)
                 ->find($id);
@@ -719,7 +719,7 @@ class AccountController extends AbstractContactController
 
         if (!is_null($request->get('termsOfDelivery'))) {
             $id = $request->get('termsOfDelivery')['id'];
-            /** @var TermsOfDelivery $termsOfDelivery */
+            /** @var TermsOfDeliveryEntity $termsOfDelivery */
             $termsOfDelivery = $this->getDoctrine()
                 ->getRepository(self::$termsOfDeliveryEntityName)
                 ->find($id);
@@ -843,7 +843,7 @@ class AccountController extends AbstractContactController
             $numContacts = 0;
             if (!is_null($accountContacts)) {
                 foreach ($accountContacts as $accountContact) {
-                    /** @var AccountContact $accountContact */
+                    /** @var AccountContactEntity $accountContact */
                     $contactId = $accountContact->getContact()->getId();
                     if (!array_key_exists($contactId, $slicedContacts)) {
                         if ($numContacts++ < 3) {

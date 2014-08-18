@@ -43,7 +43,6 @@ use JMS\Serializer\Annotation\Groups;
  */
 class AccountContact extends ApiWrapper
 {
-
     /**
      * @var TagManagerInterface
      */
@@ -124,6 +123,7 @@ class AccountContact extends ApiWrapper
     public function getContact()
     {
         $contact = $this->entity->getContact();
+
         return array(
             'id' => $contact->getId(),
             'fullName' => $contact->getFullName()
@@ -154,6 +154,7 @@ class AccountContact extends ApiWrapper
     public function getAccount()
     {
         $account = $this->entity->getAccount();
+
         return array(
             'id' => $account->getId(),
             'name' => $account->getName()
