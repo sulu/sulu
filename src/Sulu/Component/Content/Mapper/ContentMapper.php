@@ -1058,7 +1058,7 @@ class ContentMapper implements ContentMapperInterface
             $contentNode->getPropertyValueWithDefault($this->properties->getName('published'), null)
         );
         $structure->setOriginTemplate(
-            $contentNode->getPropertyValueWithDefault($this->properties->getName('template'), $this->defaultLanguage)
+            $contentNode->getPropertyValueWithDefault($this->properties->getName('template'), $this->defaultTemplate)
         );
         $structure->setEnabledShadowLanguages(
             $this->getEnabledShadowLanguages($contentNode)
