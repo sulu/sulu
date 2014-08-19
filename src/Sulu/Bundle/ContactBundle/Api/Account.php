@@ -854,7 +854,7 @@ class Account extends ApiWrapper
      * @return string
      * @VirtualProperty
      * @SerializedName("number")
-     * @Groups({"fullAccount"})
+     * @Groups({"fullAccount", "partialAccount"})
      */
     public function getNumber()
     {
