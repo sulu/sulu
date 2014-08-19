@@ -8,6 +8,7 @@ use JMS\Serializer\Annotation\VirtualProperty;
 use JMS\Serializer\Annotation\SerializedName;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryMeta;
+use JMS\Serializer\Annotation\Groups;
 
 class Category extends ApiEntityWrapper
 {
@@ -23,6 +24,7 @@ class Category extends ApiEntityWrapper
      * @VirtualProperty
      * @SerializedName("id")
      * @return array
+     * @Groups({"fullCategory","partialCategory"})
      */
     public function getId()
     {
@@ -34,6 +36,7 @@ class Category extends ApiEntityWrapper
      * @VirtualProperty
      * @SerializedName("key")
      * @return string
+     * @Groups({"fullCategory","partialCategory"})
      */
     public function getKey()
     {
@@ -45,18 +48,24 @@ class Category extends ApiEntityWrapper
      * @VirtualProperty
      * @SerializedName("name")
      * @return string
+     * @Groups({"fullCategory","partialCategory"})
      */
     public function getName()
     {
         $translations = $this->entity->getTranslations();
-        $name = $translations[0]->getTranslation();
-        foreach ($translations as $translation) {
-            if ($translation->getLocale() === $this->locale) {
-                $name = $translation->getTranslation();
-                break;
+        if (!is_null($translations)) {
+            $name = $translations[0]->getTranslation();
+            foreach ($translations as $translation) {
+                if ($translation->getLocale() === $this->locale) {
+                    $name = $translation->getTranslation();
+                    break;
+                }
             }
+
+            return $name;
         }
-        return $name;
+
+        return '';
     }
 
     /**
@@ -64,20 +73,27 @@ class Category extends ApiEntityWrapper
      * @VirtualProperty
      * @SerializedName("meta")
      * @return array
+     * @Groups({"fullCategory"})
      */
     public function getMeta()
     {
         $arrReturn = [];
-        foreach ($this->entity->getMeta() as $meta) {
-            if (!$meta->getLocale() || $meta->getLocale() === $this->locale) {
-                array_push($arrReturn, [
-                    'id' => $meta->getId(),
-                    'key' => $meta->getKey(),
-                    'value' => $meta->getValue(),
-                ]);
+        if (!is_null($this->entity->getMeta())) {
+            foreach ($this->entity->getMeta() as $meta) {
+                if (!$meta->getLocale() || $meta->getLocale() === $this->locale) {
+                    array_push(
+                        $arrReturn,
+                        [
+                            'id' => $meta->getId(),
+                            'key' => $meta->getKey(),
+                            'value' => $meta->getValue(),
+                        ]
+                    );
+                }
             }
+            return $arrReturn;
         }
-        return $arrReturn;
+        return null;
     }
 
     /**
@@ -117,6 +133,7 @@ class Category extends ApiEntityWrapper
      * @VirtualProperty
      * @SerializedName("created")
      * @return string
+     * @Groups({"fullCategory"})
      */
     public function getCreated()
     {
@@ -128,6 +145,7 @@ class Category extends ApiEntityWrapper
      * @VirtualProperty
      * @SerializedName("created")
      * @return string
+     * @Groups({"fullCategory"})
      */
     public function getChanged()
     {
@@ -139,6 +157,7 @@ class Category extends ApiEntityWrapper
      * @VirtualProperty
      * @SerializedName("parent")
      * @return null|number
+     * @Groups({"fullCategory"})
      */
     public function getParent()
     {
@@ -155,9 +174,13 @@ class Category extends ApiEntityWrapper
      * @VirtualProperty
      * @SerializedName("children")
      * @return number
+     * @Groups({"fullCategory"})
      */
     public function getChildren() {
-        return $this->getEntity()->getChildren()->count();
+        if($this->getEntity()->getChildren()) {
+            return $this->getEntity()->getChildren()->count();
+        }
+        return 0;
     }
 
     /**
