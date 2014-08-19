@@ -19,6 +19,13 @@
             <tag name="sulu.node.name"/>
         </property>
 
+        <property name="more" type="text_line">
+            <meta>
+                <title lang="de">Text für weiterführenden Link</title>
+                <title lang="en">Text for more link</title>
+            </meta>
+        </property>
+
         <property name="description" type="text_editor">
             <meta>
                 <title lang="de">Beschreibung</title>
@@ -37,6 +44,13 @@
             <meta>
                 <title lang="de">Tags</title>
                 <title lang="en">Tags</title>
+            </meta>
+        </property>
+
+        <property name="icon" type="media_selection">
+            <meta>
+                <title lang="de">Icon</title>
+                <title lang="en">Icon</title>
             </meta>
         </property>
 

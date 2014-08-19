@@ -205,11 +205,13 @@ class TemplateController extends Controller
 
     /**
      * renders template fpr settings
+     * @param \Symfony\Component\HttpFoundation\Request $request
      * @return Response
      */
     public function settingsAction(Request $request)
     {
         $webspaceKey = $request->get('webspaceKey');
+        $languageCode = $request->get('languageCode');
         $webspace = $this->getWebspaceManager()->findWebspaceByKey($webspaceKey);
 
         $navContexts = array();
@@ -226,7 +228,10 @@ class TemplateController extends Controller
         }
 
         return $this->render(
-            'SuluContentBundle:Template:settings.html.twig', array(
+            'SuluContentBundle:Template:settings.html.twig',
+            array(
+                'languageCode' => $languageCode,
+                'webspaceKey' => $webspaceKey,
                 'navContexts' => $navContexts,
                 'languages' => $languages,
             )

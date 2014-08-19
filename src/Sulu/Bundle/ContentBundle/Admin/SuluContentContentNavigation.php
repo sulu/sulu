@@ -72,42 +72,13 @@ class SuluContentContentNavigation extends ContentNavigation
         return $content;
     }
 
-    private function getExternalLink()
-    {
-        $tab = new NavigationItem('content-navigation.contents.external-link');
-        $tab->setId('tab-external-link');
-        $tab->setAction('content');
-        $tab->setContentType('content');
-        $tab->setContentComponent('content/external@sulucontent');
-
-        return $tab;
-    }
-
-    private function getInternalLink()
-    {
-        $tab = new NavigationItem('content-navigation.contents.internal-link');
-        $tab->setId('tab-internal-link');
-        $tab->setAction('content');
-        $tab->setContentType('content');
-        $tab->setContentComponent('content/internal@sulucontent');
-
-        return $tab;
-    }
-
     /**
      * generate content navigation
      * @param $showSettings
-     * @param $type
      */
-    public function generate($showSettings, $type)
+    public function generate($showSettings)
     {
-        if ($type === Structure::NODE_TYPE_INTERNAL_LINK) {
-            $this->addNavigationItem($this->getInternalLink());
-        } else if ($type === Structure::NODE_TYPE_EXTERNAL_LINK) {
-            $this->addNavigationItem($this->getExternalLink());
-        } else {
-            $this->addNavigationItem($this->getContent());
-        }
+        $this->addNavigationItem($this->getContent());
 
         $this->addNavigationItem($this->getSeo());
         $this->addNavigationItem($this->getExcerpt());
