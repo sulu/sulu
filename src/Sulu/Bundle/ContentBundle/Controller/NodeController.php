@@ -383,7 +383,7 @@ class NodeController extends RestController implements ClassResourceInterface
         $data = $request->request->all();
 
         try {
-            if ($data['url'] != '/') {
+            if (isset($data['url']) && $data['url'] != '/') {
                 throw new InvalidArgumentException('Content', 'url', 'url of index page can not be changed');
             }
 
