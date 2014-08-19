@@ -142,7 +142,7 @@ define([], function() {
                                 instanceName: this.autoCompleteInstanceName,
                                 getParameter: 'search',
                                 itemsKey: 'tags',
-                                remoteUrl: '/admin/api/tags?flat=true&sortBy=name',
+                                remoteUrl: '/admin/api/tags?flat=true&sortBy=name&searchFields=name',
                                 completeIcon: 'tag',
                                 noNewTags: true
                             }
