@@ -461,7 +461,10 @@ define([
 
         load: function(item, webspace, language) {
             var action = 'content';
-            if (!!item.nodeType && item.nodeType !== TYPE_CONTENT) {
+            if (
+                (!!item.nodeType && item.nodeType !== TYPE_CONTENT) ||
+                (!!item.type && !!item.type.name && item.type.name === 'shadow')
+                ) {
                 action = 'settings';
             }
 
