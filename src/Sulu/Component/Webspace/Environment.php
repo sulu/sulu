@@ -68,4 +68,19 @@ class Environment
     {
         return $this->urls;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function toArray($depth = null)
+    {
+        $res = array();
+        $res['type'] = $this->getType();
+
+        foreach ($this->getUrls() as $url) {
+            $res['urls'][] = $url->toArray();
+        }
+
+        return $res;
+    }
 }

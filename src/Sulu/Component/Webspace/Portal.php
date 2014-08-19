@@ -216,4 +216,27 @@ class Portal
     {
         return $this->webspace;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function toArray($depth = null)
+    {
+        $res = array();
+        $res['name'] = $this->getName();
+        $res['key'] = $this->getKey();
+        $res['resourceLocator']['strategy'] = $this->getResourceLocatorStrategy();
+
+        $res['localizations'] = array();
+
+        foreach ($this->getLocalizations() as $localization) {
+            $res['localizations'][] = $localization->toArray();
+        }
+
+        foreach ($this->getEnvironments() as $environment) {
+            $res['environments'][] = $environment->toArray();
+        }
+
+        return $res;
+    }
 }

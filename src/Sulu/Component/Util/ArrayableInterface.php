@@ -24,4 +24,3 @@ interface ArrayableInterface
      */
     public function toArray($depth = null);
 }
-
