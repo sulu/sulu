@@ -147,9 +147,10 @@ class BlockContentType extends ComplexContentType
 
             // init properties
             $lengthProperty = new Property('length', '', 'text_line');
+            $lengthBlockProperty = new BlockPropertyWrapper($lengthProperty, $property);
             $contentType = $this->contentTypeManager->get($lengthProperty->getContentTypeName());
 
-            return $contentType->hasValue($node, $lengthProperty, $webspaceKey, $languageCode, $segmentKey);
+            return $contentType->hasValue($node, $lengthBlockProperty, $webspaceKey, $languageCode, $segmentKey);
         }
 
         return false;
