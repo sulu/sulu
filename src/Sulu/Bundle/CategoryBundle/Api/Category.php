@@ -53,7 +53,7 @@ class Category extends ApiEntityWrapper
     public function getName()
     {
         $translations = $this->entity->getTranslations();
-        if (!is_null($translations)) {
+        if (!empty($translation)) {
             $name = $translations[0]->getTranslation();
             foreach ($translations as $translation) {
                 if ($translation->getLocale() === $this->locale) {
@@ -65,7 +65,7 @@ class Category extends ApiEntityWrapper
             return $name;
         }
 
-        return '';
+        return null;
     }
 
     /**
@@ -78,7 +78,7 @@ class Category extends ApiEntityWrapper
     public function getMeta()
     {
         $arrReturn = [];
-        if (!is_null($this->entity->getMeta())) {
+        if ($this->entity->getMeta() !== null) {
             foreach ($this->entity->getMeta() as $meta) {
                 if (!$meta->getLocale() || $meta->getLocale() === $this->locale) {
                     array_push(
