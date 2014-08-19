@@ -78,7 +78,7 @@ class Category extends ApiEntityWrapper
     public function getMeta()
     {
         $arrReturn = [];
-        if (!is_null($this->entity->getMeta())) {
+        if ($this->entity->getMeta() !== null) {
             foreach ($this->entity->getMeta() as $meta) {
                 if (!$meta->getLocale() || $meta->getLocale() === $this->locale) {
                     array_push(
