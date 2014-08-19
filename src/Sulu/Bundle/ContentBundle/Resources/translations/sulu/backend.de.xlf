@@ -318,8 +318,8 @@
                 <source>sulu.content.form.settings.type.external-link.title</source>
                 <target>Titel</target>
             </trans-unit>
-            <trans-unit id="abaaaaa371239fbed4a73a4123dfdf013" resname="sulu.content.form.settings.type.external-link.title">
-                <source>sulu.content.form.settings.type.external-link.title</source>
+            <trans-unit id="abaaaaa371239fbed4a73a4123dfdf013" resname="sulu.content.form.settings.type.external-link.url">
+                <source>sulu.content.form.settings.type.external-link.url</source>
                 <target>URL</target>
             </trans-unit>
         </body>
