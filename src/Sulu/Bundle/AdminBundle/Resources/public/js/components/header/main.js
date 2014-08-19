@@ -139,6 +139,14 @@ define([], function () {
         },
 
         /**
+         * listens on changes of the header
+         * @event sulu.header.[INSTANCE_NAME].change
+         */
+        CHANGE = function () {
+            return createEventName.call(this, 'change');
+        },
+
+        /**
          * listens on and sets the breadcrumb
          *
          * @event sulu.header.[INSTANCE_NAME].set-breadcrumb
@@ -448,33 +456,8 @@ define([], function () {
          * Initializes the component
          */
         initialize: function () {
-            // initialize deferreds
-            var toolbarDef, tabsDef;
-
-            // merge defaults
-            this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
-
-            // set default callback when no callback is provided
-            if (!this.options.changeStateCallback) {
-                this.options.changeStateCallback = getChangeToolbarStateCallback('default');
-            }
-
-            this.$inner = null;
-            this.$tabs = null;
-            this.toolbarInstanceName = null;
-
-            this.render();
-
-            toolbarDef = this.startToolbar();
-            tabsDef = this.startTabs();
-
-            // bind events
             this.bindCustomEvents();
             this.bindDomEvents();
-
-            this.sandbox.data.when(toolbarDef, tabsDef).then(function () {
-                this.sandbox.emit(INITIALIZED.call(this));
-            }.bind(this));
         },
 
         /**
@@ -544,7 +527,9 @@ define([], function () {
         startTabs: function () {
             var def = this.sandbox.data.deferred();
 
-            if (this.options.tabsData !== null || !!this.options.tabsOptions.data) {
+            if (!this.options.tabsOptions) {
+                def.resolve();
+            } else if (this.options.tabsData !== null || !!this.options.tabsOptions.data) {
                 this.sandbox.dom.addClass(this.$el, constants.hasTabsClass);
                 this.sandbox.dom.addClass('.sulu-header-background', constants.hasTabsClass);
                 this.$tabs = this.sandbox.dom.createElement('<div class="' + constants.tabsClass + '"></div>');
@@ -718,6 +703,8 @@ define([], function () {
             // set content to the bottom-content-container
             this.sandbox.on(SET_BOTTOM_CONTENT.call(this), this.insertBottomContent.bind(this));
 
+            this.sandbox.on(CHANGE.call(this), this.change.bind(this));
+
             this.bindAbstractToolbarEvents();
             this.bindAbstractTabsEvents();
         },
@@ -843,6 +830,36 @@ define([], function () {
                     }
                 ]);
             }
+        },
+
+        /**
+         * changes the entire header
+         * @param options {object} The new options
+         */
+        change: function (options) {
+            // initialize deferreds
+            var toolbarDef, tabsDef;
+
+            // merge new options with old ones
+            this.options = this.sandbox.util.extend(true, {}, defaults, options);
+
+            // set default callback when no callback is provided
+            if (!this.options.changeStateCallback) {
+                this.options.changeStateCallback = getChangeToolbarStateCallback('default');
+            }
+
+            this.$inner = null;
+            this.$tabs = null;
+            this.toolbarInstanceName = null;
+
+            this.render();
+
+            toolbarDef = this.startToolbar();
+            tabsDef = this.startTabs();
+
+            this.sandbox.data.when(toolbarDef, tabsDef).then(function () {
+                this.sandbox.emit(INITIALIZED.call(this));
+            }.bind(this));
         },
 
         /**
