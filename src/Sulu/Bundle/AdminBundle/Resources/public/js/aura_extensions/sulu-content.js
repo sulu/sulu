@@ -265,7 +265,6 @@ define([], function() {
              * @private
              */
             initializeHeader = function(tabsData) {
-
                 // set the variables for the header-component-options properties
                 breadcrumb = (!!header.breadcrumb) ? header.breadcrumb : null;
                 toolbarDisabled = (typeof header.toolbar === 'undefined') ? true : false;
