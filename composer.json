@@ -4,7 +4,7 @@
     "description": "Symfony bundle that provides basic core functionality",
     "license": "MIT",
     "keywords": ["core", "sulu"],
-    "version": "dev-develop",
+    "version": "0.6.0",
     "authors": [
         {
             "name": "Sulu Community",
@@ -26,7 +26,7 @@
     "require-dev": {
         "symfony/symfony": "2.5.*",
         "phpunit/phpunit": "4.0.*",
-        "sulu/test-bundle": "dev-develop",
+        "sulu/test-bundle": "0.6.*",
         "jackalope/jackalope-doctrine-dbal": "1.1.*"
     },
     "autoload": {

@@ -49,6 +49,17 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
         $property->setValue($value);
     }
 
+    public function hasValue(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
+    {
+        try {
+            $this->getResourceLocator($node, $webspaceKey, $languageCode, $segmentKey);
+
+            return true;
+        } catch (ResourceLocatorNotFoundException $ex) {
+            return false;
+        }
+    }
+
     /**
      * {@inheritdoc}
      */
