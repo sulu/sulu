@@ -9,6 +9,11 @@
     <controller>SuluContentBundle:Default:index</controller>
     <cacheLifetime>2400</cacheLifetime>
 
+    <meta>
+        <title lang="de">Das ist das Template 1</title>
+        <title lang="en">That´s the template 1</title>
+    </meta>
+
     <properties>
         <property name="title" type="text_line" mandatory="true">
             <meta>
