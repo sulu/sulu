@@ -5,6 +5,8 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Exclude;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
+use JMS\Serializer\Annotation\Groups;
+
 /**
  * ActivityType
  */
@@ -12,11 +14,13 @@ class ActivityType extends ApiEntity implements \JsonSerializable
 {
     /**
      * @var string
+     * @Groups({"fullActivity"})
      */
     private $name;
 
     /**
      * @var integer
+     * @Groups({"fullActivity"})
      */
     private $id;
 

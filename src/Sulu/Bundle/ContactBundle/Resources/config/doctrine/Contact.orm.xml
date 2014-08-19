@@ -114,7 +114,7 @@
                     <join-column name="idContacts" referenced-column-name="id"/>
                 </join-columns>
                 <inverse-join-columns>
-                    <join-column name="idAEmails" referenced-column-name="id"/>
+                    <join-column name="idEmails" referenced-column-name="id"/>
                 </inverse-join-columns>
             </join-table>
             <order-by>

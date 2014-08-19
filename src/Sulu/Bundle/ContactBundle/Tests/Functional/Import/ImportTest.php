@@ -118,8 +118,8 @@ class ImportTest extends DatabaseTestCase
 
         // TODO: use fixtures
         $this->import = new Import(self::$em,
-            new AccountManager(self::$em),
-            new ContactManager(self::$em),
+            new AccountManager(self::$em, $this->createClient()->getContainer()->get('sulu_tag.tag_manager')),
+            new ContactManager(self::$em, $this->createClient()->getContainer()->get('sulu_tag.tag_manager')),
             array(
                 'emailType' => 1,
                 'phoneType' => 1,

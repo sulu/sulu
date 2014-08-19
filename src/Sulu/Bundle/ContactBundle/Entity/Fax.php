@@ -2,8 +2,10 @@
 
 namespace Sulu\Bundle\ContactBundle\Entity;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Exclude;
+use JMS\Serializer\Annotation\Groups;
 
 /**
  * Fax
@@ -12,27 +14,30 @@ class Fax
 {
     /**
      * @var string
+     * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      */
     private $fax;
 
     /**
      * @var integer
+     * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      */
     private $id;
 
     /**
-     * @var \Sulu\Bundle\ContactBundle\Entity\FaxType
+     * @var FaxType
+     * @Groups({"fullAccount", "fullContact"})
      */
     private $faxType;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      * @Exclude
      */
     private $contacts;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      * @Exclude
      */
     private $accounts;
@@ -82,10 +87,10 @@ class Fax
     /**
      * Set faxType
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\FaxType $faxType
+     * @param FaxType $faxType
      * @return Fax
      */
-    public function setFaxType(\Sulu\Bundle\ContactBundle\Entity\FaxType $faxType)
+    public function setFaxType(FaxType $faxType)
     {
         $this->faxType = $faxType;
 
@@ -95,7 +100,7 @@ class Fax
     /**
      * Get faxType
      *
-     * @return \Sulu\Bundle\ContactBundle\Entity\FaxType
+     * @return FaxType
      */
     public function getFaxType()
     {
@@ -128,7 +133,7 @@ class Fax
     /**
      * Get contacts
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getContacts()
     {
@@ -161,7 +166,7 @@ class Fax
     /**
      * Get accounts
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getAccounts()
     {

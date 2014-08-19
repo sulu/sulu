@@ -10,8 +10,15 @@
 
 namespace Sulu\Bundle\ContactBundle\Contact;
 
-use Sulu\Bundle\ContactBundle\Entity\AccountAddress;
-use Sulu\Bundle\ContactBundle\Entity\Address;
+use Doctrine\Common\Persistence\ObjectManager;
+use Sulu\Bundle\ContactBundle\Api\Account;
+use Sulu\Bundle\ContactBundle\Api\Contact;
+use Sulu\Bundle\ContactBundle\Api\Contact as ContactEntity;
+use Sulu\Bundle\ContactBundle\Entity\Account as AccountEntity;
+use Sulu\Bundle\ContactBundle\Entity\AccountAddress as AccountAddressEntity;
+use Sulu\Bundle\ContactBundle\Entity\Address as AddressEntity;
+use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
+use Sulu\Component\Rest\Exception\EntityNotFoundException;
 
 /**
  * This Manager handles Account functionality
@@ -21,21 +28,32 @@ use Sulu\Bundle\ContactBundle\Entity\Address;
  */
 class AccountManager extends AbstractContactManager
 {
+    protected $accountEntity = 'SuluContactBundle:Account';
+    protected $contactEntity = 'SuluContactBundle:Contact';
+    protected $addressEntity = 'SuluContactBundle:Address';
+    protected $tagManager;
+
+    function __construct(ObjectManager $em, TagmanagerInterface $tagManager)
+    {
+        parent::__construct($em);
+        $this->tagManager = $tagManager;
+    }
+
     /**
      * adds an address to the entity
      *
      * @param Account $account The entity to add the address to
-     * @param Address $address The address to be added
+     * @param AddressEntity $address The address to be added
      * @param Bool $isMain Defines if the address is the main Address of the contact
-     * @return AccountAddress
+     * @return AccountAddressEntity
      * @throws \Exception
      */
-    public function addAddress($account, Address $address, $isMain = false)
+    public function addAddress($account, AddressEntity $address, $isMain = false)
     {
         if (!$account || !$address) {
             throw new \Exception('Account and Address cannot be null');
         }
-        $accountAddress = new AccountAddress();
+        $accountAddress = new AccountAddressEntity();
         $accountAddress->setAccount($account);
         $accountAddress->setAddress($address);
         if ($isMain) {
@@ -52,8 +70,8 @@ class AccountManager extends AbstractContactManager
     /**
      * removes the address relation from a contact and also deletes the address if it has no more relations
      *
-     * @param $account
-     * @param $accountAddress
+     * @param AccountEntity $account
+     * @param AccountAddressEntity $accountAddress
      * @return mixed|void
      * @throws \Exception
      */
@@ -64,6 +82,7 @@ class AccountManager extends AbstractContactManager
         }
 
         // reload address to get all data (including relational data)
+        /** @var AddressEntity $address */
         $address = $accountAddress->getAddress();
         $address = $this->em->getRepository(
             'SuluContactBundle:Address'
@@ -97,5 +116,95 @@ class AccountManager extends AbstractContactManager
     public function getAddressRelations($entity)
     {
         return $entity->getAccountAddresses();
+    }
+
+    /**
+     * Gets account by id
+     * @param $id
+     * @param $locale
+     * @throws EntityNotFoundException
+     * @return mixed
+     */
+    public function getById($id, $locale)
+    {
+        $account = $this->em->getRepository($this->accountEntity)->findAccountById($id);
+        if (!$account) {
+            throw new EntityNotFoundException($this->accountEntity, $id);
+        }
+
+        return new Account($account, $locale, $this->tagManager);
+    }
+
+    /**
+     * Gets account by id - can include relations
+     * @param $id
+     * @param $locale
+     * @param $includes
+     * @return Account
+     * @throws EntityNotFoundException
+     */
+    public function getByIdAndInclude($id, $locale, $includes)
+    {
+        $account = $this->em
+            ->getRepository($this->accountEntity)
+            ->findAccountById($id, in_array('contacts', $includes));
+
+        if (!$account) {
+            throw new EntityNotFoundException($this->accountEntity, $id);
+        }
+        $acc = new Account($account, $locale, $this->tagManager);
+        return $acc;
+    }
+
+    /**
+     * Returns contacts by account id
+     *
+     * @param $id
+     * @param $locale
+     * @return array
+     */
+    public function findContactByAccountId($id, $locale){
+        $contactsEntities = $this->em->getRepository($this->contactEntity)->findByAccountId($id, null, false);
+        $contacts = [];
+        if ($contactsEntities) {
+            foreach ($contactsEntities as $contact) {
+                $contacts[] = new Contact($contact, $locale, $this->tagManager);
+            }
+            return $contacts;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Returns all accounts
+     * @param $locale
+     * @return null
+     */
+    public function findAll($locale){
+        $accountEntities = $this->em->getRepository($this->accountEntity)->findAll();
+        $accounts = [];
+        if ($accountEntities) {
+            foreach ($accountEntities as $account) {
+                $accounts[] = new Account($account, $locale, $this->tagManager);
+            }
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Returns an api entity for an doctrine entity
+     * @param $account
+     * @param $locale
+     * @return null|Account
+     */
+    public function getAccount($account, $locale)
+    {
+        if ($account) {
+            return new Account($account, $locale, $this->tagManager);
+        } else {
+            return null;
+        }
     }
 }

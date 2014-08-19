@@ -3,7 +3,7 @@
 namespace Sulu\Bundle\ContactBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-
+use JMS\Serializer\Annotation\Exclude;
 /**
  * ContactAddress
  */
@@ -26,6 +26,7 @@ class ContactAddress
 
     /**
      * @var \Sulu\Bundle\ContactBundle\Entity\Contact
+     * @Exclude
      */
     private $contact;
 

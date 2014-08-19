@@ -3,6 +3,7 @@
 namespace Sulu\Bundle\ContactBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Groups;
 
 /**
  * AccountCategory
@@ -11,11 +12,13 @@ class AccountCategory
 {
     /**
      * @var string
+     * @Groups({"fullAccount"})
      */
     private $category;
 
     /**
      * @var integer
+     * @Groups({"fullAccount"})
      */
     private $id;
 

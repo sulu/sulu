@@ -12,7 +12,7 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Exclude;
-
+use JMS\Serializer\Annotation\Groups;
 /**
  * PhoneType
  */
@@ -20,11 +20,13 @@ class PhoneType implements \JsonSerializable
 {
     /**
      * @var string
+     * @Groups({"fullAccount", "fullContact"})
      */
     private $name;
 
     /**
      * @var integer
+     * @Groups({"fullAccount", "fullContact"})
      */
     private $id;
 

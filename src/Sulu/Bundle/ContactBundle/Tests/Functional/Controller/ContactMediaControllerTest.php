@@ -31,6 +31,7 @@ use Sulu\Bundle\ContactBundle\Entity\AccountCategory;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
+use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\TestBundle\Testing\DatabaseTestCase;
 use Sulu\Bundle\ContactBundle\Entity\Activity;
 use Sulu\Bundle\ContactBundle\Entity\ActivityPriority;
@@ -290,6 +291,32 @@ class ContactMediaControllerTest extends DatabaseTestCase
         $file2->setCreated(new DateTime());
         $file2->setChanged(new DateTime());
         $file2->setMedia($media2);
+
+        // create file version
+        $fileVersion = new FileVersion();
+        $fileVersion->setVersion(1);
+        $fileVersion->setCreated(new DateTime());
+        $fileVersion->setChanged(new DateTime());
+        $fileVersion->setName('photo.jpeg');
+        $fileVersion->setMimeType('image/jpg');
+        $fileVersion->setFile($file);
+        $fileVersion->setSize(1124214);
+        $fileVersion->setDownloadCounter(2);
+        $fileVersion->setStorageOptions('{"segment":"1","fileName":"photo.jpeg"}');
+        $file->addFileVersion($fileVersion);
+
+        // create file version
+        $fileVersion = new FileVersion();
+        $fileVersion->setVersion(1);
+        $fileVersion->setCreated(new DateTime());
+        $fileVersion->setChanged(new DateTime());
+        $fileVersion->setName('photo.jpeg');
+        $fileVersion->setMimeType('image/jpg');
+        $fileVersion->setFile($file2);
+        $fileVersion->setSize(1124214);
+        $fileVersion->setDownloadCounter(2);
+        $fileVersion->setStorageOptions('{"segment":"1","fileName":"photo.jpeg"}');
+        $file2->addFileVersion($fileVersion);
 
         $collection = new Collection();
         $this->setUpCollection($collection);

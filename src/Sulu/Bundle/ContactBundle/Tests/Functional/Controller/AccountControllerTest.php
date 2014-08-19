@@ -425,8 +425,6 @@ class AccountControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('ExampleCompany', $response->name);
-        $this->assertEquals(2, $response->lft);
-        $this->assertEquals(3, $response->rgt);
         $this->assertEquals(1, $response->depth);
         $this->assertEquals(self::$account->getId(), $response->parent->id);
         $this->assertEquals('erika.mustermann@muster.at', $response->emails[0]->email);
@@ -454,8 +452,6 @@ class AccountControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('ExampleCompany', $response->name);
-        $this->assertEquals(2, $response->lft);
-        $this->assertEquals(3, $response->rgt);
         $this->assertEquals(1, $response->depth);
         $this->assertEquals(self::$account->getId(), $response->parent->id);
         $this->assertEquals('erika.mustermann@muster.at', $response->emails[0]->email);
@@ -586,8 +582,6 @@ class AccountControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('ExampleCompany', $response->name);
-        $this->assertEquals(2, $response->lft);
-        $this->assertEquals(3, $response->rgt);
         $this->assertEquals(1, $response->depth);
         $this->assertEquals(self::$account->getId(), $response->parent->id);
         $this->assertEquals('erika.mustermann@muster.at', $response->emails[0]->email);
@@ -616,8 +610,6 @@ class AccountControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('ExampleCompany', $response->name);
-        $this->assertEquals(2, $response->lft);
-        $this->assertEquals(3, $response->rgt);
         $this->assertEquals(1, $response->depth);
         $this->assertEquals(self::$account->getId(), $response->parent->id);
         $this->assertEquals('erika.mustermann@muster.at', $response->emails[0]->email);

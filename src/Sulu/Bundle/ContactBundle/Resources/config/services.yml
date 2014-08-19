@@ -58,12 +58,13 @@ services:
         class: %sulu_contact.account_manager.class%
         arguments:
           - @doctrine.orm.entity_manager
+          - @sulu_tag.tag_manager
 
     sulu_contact.contact_manager:
         class: %sulu_contact.contact_manager.class%
         arguments:
             - @doctrine.orm.entity_manager
-
+            - @sulu_tag.tag_manager
 
     sulu_contact.contact.widgets.main_account:
          class: %sulu_contact.contact.widgets.contact_main_account.class%

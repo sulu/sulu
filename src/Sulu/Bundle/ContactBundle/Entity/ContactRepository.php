@@ -210,18 +210,20 @@ class ContactRepository extends EntityRepository
         }
 
         $query = $qb->getQuery();
+        $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
 
         return $query->getArrayResult();
     }
 
-
     /**
      * Searches for contacts with a specific account and the ability to exclude a certain contacts
+     *
      * @param $accountId
      * @param null $excludeContactId
+     * @param bool $arrayResult
      * @return array
      */
-    public function findByAccountId($accountId, $excludeContactId = null)
+    public function findByAccountId($accountId, $excludeContactId = null, $arrayResult = true)
     {
         $qb = $this->createQueryBuilder('c')
             ->join('c.accountContacts', 'accountContacts', 'WITH', 'accountContacts.main = true')
@@ -234,8 +236,13 @@ class ContactRepository extends EntityRepository
         }
 
         $query = $qb->getQuery();
+        $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
 
-        return $query->getArrayResult();
+        if($arrayResult) {
+            return $query->getArrayResult();
+        } else {
+            return $query->getResult();
+        }
     }
 
     /**
