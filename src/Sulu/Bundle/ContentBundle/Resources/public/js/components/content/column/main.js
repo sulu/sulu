@@ -94,7 +94,7 @@ define(function() {
             }, this);
 
             this.sandbox.on('husky.column-navigation.node.edit', function(item) {
-                this.sandbox.emit('sulu.content.contents.load', item.id);
+                this.sandbox.emit('sulu.content.contents.load', item);
             }, this);
 
             this.sandbox.on('husky.column-navigation.node.selected', function(item) {

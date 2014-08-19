@@ -163,6 +163,10 @@ define(['app-config'], function(AppConfig) {
                 this.sandbox.emit('husky.tabs.header.item.' + action, 'tab-' + tabName);
             }.bind(this));
 
+            if (action === 'hide') {
+                this.sandbox.emit('husky.tabs.header.item.' + action, 'tab-content');
+            }
+
             this.sandbox.util.each(['show-in-navigation-container', 'settings-content-form-container'], function(i, formGroupId) {
                 if (action === 'hide') {
                     this.sandbox.dom.find('#' + formGroupId).hide();

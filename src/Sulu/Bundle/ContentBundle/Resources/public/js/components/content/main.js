@@ -143,7 +143,7 @@ define([
             this.sandbox.on('sulu.header.toolbar.language-changed', function(item) {
                 this.sandbox.sulu.saveUserSetting(CONTENT_LANGUAGE, item.localization);
                 if (this.options.display !== 'column') {
-                    this.sandbox.emit('sulu.content.contents.load', this.options.id, this.options.webspace, item.localization);
+                    this.sandbox.emit('sulu.content.contents.load', this.content.toJSON(), this.options.webspace, item.localization);
                 } else {
                     this.sandbox.emit('sulu.content.contents.list', this.options.webspace, item.localization);
                 }
@@ -233,8 +233,8 @@ define([
             }, this);
 
             // wait for navigation events
-            this.sandbox.on('sulu.content.contents.load', function(id, webspace, language) {
-                this.load(id, webspace, language);
+            this.sandbox.on('sulu.content.contents.load', function(item, webspace, language) {
+                this.load(item, webspace, language);
             }, this);
 
             // add new content
@@ -459,8 +459,13 @@ define([
             return def;
         },
 
-        load: function(id, webspace, language) {
-            this.sandbox.emit('sulu.router.navigate', 'content/contents/' + (!webspace ? this.options.webspace : webspace) + '/' + (!language ? this.options.language : language) + '/edit:' + id + '/content');
+        load: function(item, webspace, language) {
+            var action = 'content';
+            if (!!item.nodeType && item.nodeType !== TYPE_CONTENT) {
+                action = 'settings';
+            }
+
+            this.sandbox.emit('sulu.router.navigate', 'content/contents/' + (!webspace ? this.options.webspace : webspace) + '/' + (!language ? this.options.language : language) + '/edit:' + item.id + '/' + action);
         },
 
         add: function(parent) {
