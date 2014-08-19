@@ -201,7 +201,19 @@ class ContentMapper implements ContentMapperInterface
         // create translated properties
         $this->properties->setLanguage($languageCode);
 
-        $structure = $this->getStructure($templateKey);
+        // set default node-type
+        if (!isset($data['nodeType'])) {
+            $data['nodeType'] = Structure::NODE_TYPE_CONTENT;
+        }
+
+        if ($data['nodeType'] === Structure::NODE_TYPE_EXTERNAL_LINK) {
+            $structure = $this->getStructure('external-link');
+        } elseif ($data['nodeType'] === Structure::NODE_TYPE_INTERNAL_LINK) {
+            $structure = $this->getStructure('internal-link');
+        } else {
+            $structure = $this->getStructure($templateKey);
+        }
+
         $session = $this->getSession();
 
         if ($parentUuid !== null) {
@@ -319,9 +331,9 @@ class ContentMapper implements ContentMapperInterface
                 // nothing
             } elseif ($property->getMandatory()) {
                 $type = $this->getContentType($property->getContentTypeName());
-                $type->read($node, $property, $webspaceKey, $languageCode, null);
+                $translatedProperty = new TranslatedProperty($property, $languageCode, $this->languageNamespace);
 
-                if ($property->getValue() === $type->getDefaultValue()) {
+                if (false === $type->hasValue($node, $translatedProperty, $webspaceKey, $languageCode, null)) {
                     throw new MandatoryPropertyException($templateKey, $property);
                 }
             } elseif (!$partialUpdate) {
@@ -408,6 +420,9 @@ class ContentMapper implements ContentMapperInterface
         $structure->setPublished(
             $node->getPropertyValueWithDefault($this->properties->getName('published'), null)
         );
+        $structure->setOriginTemplate(
+            $node->getPropertyValueWithDefault($this->properties->getName('template'), $this->defaultLanguage)
+        );
 
         // load dependencies for internal links
         $this->loadInternalLinkDependencies(
@@ -432,6 +447,7 @@ class ContentMapper implements ContentMapperInterface
      * @param NodeInterface $node
      * @param string $language
      * @param string $shadowBaseLanguage
+     * @throws \RuntimeException
      */
     protected function validateShadow(NodeInterface $node, $language, $shadowBaseLanguage)
     {
@@ -980,10 +996,21 @@ class ContentMapper implements ContentMapperInterface
             $this->properties->setLanguage($availableLocalization);
         }
 
-        $templateKey = $contentNode->getPropertyValueWithDefault(
-            $this->properties->getName('template'),
-            $this->defaultTemplate
+        $nodeType = $contentNode->getPropertyValueWithDefault(
+            $this->properties->getName('nodeType'),
+            Structure::NODE_TYPE_CONTENT
         );
+
+        if ($nodeType === Structure::NODE_TYPE_EXTERNAL_LINK) {
+            $templateKey = 'external-link';
+        } elseif ($nodeType === Structure::NODE_TYPE_INTERNAL_LINK) {
+            $templateKey = 'internal-link';
+        } else {
+            $templateKey = $contentNode->getPropertyValueWithDefault(
+                $this->properties->getName('template'),
+                $this->defaultTemplate
+            );
+        }
 
         $structure = $this->getStructure($templateKey);
 
@@ -1029,6 +1056,9 @@ class ContentMapper implements ContentMapperInterface
         );
         $structure->setPublished(
             $contentNode->getPropertyValueWithDefault($this->properties->getName('published'), null)
+        );
+        $structure->setOriginTemplate(
+            $contentNode->getPropertyValueWithDefault($this->properties->getName('template'), $this->defaultTemplate)
         );
         $structure->setEnabledShadowLanguages(
             $this->getEnabledShadowLanguages($contentNode)

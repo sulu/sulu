@@ -64,9 +64,9 @@ class ContentMapperTest extends PhpcrTestCase
             return $this->getStructureMock(5);
         } elseif ($structureKey == 'extension') {
             return $this->getStructureMock(6);
-        } elseif ($structureKey == 'internal') {
+        } elseif ($structureKey == 'internal-link') {
             return $this->getStructureMock(7, false);
-        } elseif ($structureKey == 'external') {
+        } elseif ($structureKey == 'external-link') {
             return $this->getStructureMock(8, false);
         }
 
@@ -2870,7 +2870,7 @@ class ContentMapperTest extends PhpcrTestCase
             'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK,
             'internal' => $structure1->getUuid()
         );
-        $structure2 = $this->mapper->save($data2, 'internal', 'default', 'en', 1);
+        $structure2 = $this->mapper->save($data2, 'internal-link', 'default', 'en', 1);
 
         $this->assertEquals(Structure::NODE_TYPE_INTERNAL_LINK, $structure2->getNodeType());
         $this->assertEquals($structure1->getUuid(), $structure2->getInternalLinkContent()->getUuid());
@@ -2883,7 +2883,7 @@ class ContentMapperTest extends PhpcrTestCase
             'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK,
             'external' => 'www.google.at'
         );
-        $structure3 = $this->mapper->save($data3, 'external', 'default', 'en', 1);
+        $structure3 = $this->mapper->save($data3, 'external-link', 'default', 'en', 1);
 
         $this->assertEquals(Structure::NODE_TYPE_EXTERNAL_LINK, $structure3->getNodeType());
 
@@ -3083,6 +3083,77 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals('/page-2/subpage', $result[0]->getPath());
         $this->assertEquals('/page-2/sub', $result[1]->getPath());
         $this->assertEquals('/page-2/sub-1', $result[2]->getPath());
+    }
+
+    public function testNewExternalLink()
+    {
+        $data = array(
+            'name' => 'Page-1',
+            'external' => 'www.google.at',
+            'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK
+        );
+
+        $saveResult = $this->mapper->save($data, 'overview', 'default', 'de', 1);
+        $loadResult = $this->mapper->load($saveResult->getUuid(), 'default', 'de');
+
+        // check save result
+        $this->assertEquals('Page-1', $saveResult->name);
+        $this->assertEquals('Page-1', $saveResult->getNodeName());
+        $this->assertEquals('www.google.at', $saveResult->external);
+        $this->assertEquals('http://www.google.at', $saveResult->getResourceLocator());
+
+        // check load result
+        $this->assertEquals('Page-1', $loadResult->name);
+        $this->assertEquals('Page-1', $loadResult->getNodeName());
+        $this->assertEquals('www.google.at', $loadResult->external);
+        $this->assertEquals('http://www.google.at', $loadResult->getResourceLocator());
+    }
+
+    public function testChangeToExternalLink()
+    {
+        // prepare a page
+        $data = array(
+            'name' => 'Page-1',
+            'url' => '/page-1'
+        );
+        $result = $this->mapper->save($data, 'overview', 'default', 'de', 1);
+
+        // turn it into a external link
+        $data = array(
+            'name' => 'External',
+            'external' => 'www.google.at',
+            'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK
+        );
+        $saveResult = $this->mapper->save($data, 'overview', 'default', 'de', 1, true, $result->getUuid());
+        $loadResult = $this->mapper->load($saveResult->getUuid(), 'default', 'de');
+
+        // check save result
+        $this->assertEquals('External', $saveResult->name);
+        $this->assertEquals('External', $saveResult->getNodeName());
+        $this->assertEquals('www.google.at', $saveResult->external);
+        $this->assertEquals('http://www.google.at', $saveResult->getResourceLocator());
+        $this->assertEquals('overview', $saveResult->getOriginTemplate());
+
+        // check load result
+        $this->assertEquals('External', $loadResult->name);
+        $this->assertEquals('External', $loadResult->getNodeName());
+        $this->assertEquals('www.google.at', $loadResult->external);
+        $this->assertEquals('http://www.google.at', $loadResult->getResourceLocator());
+        $this->assertEquals('overview', $loadResult->getOriginTemplate());
+
+        // back to content type
+        $data = array(
+            'name' => 'Page-1',
+            'nodeType' => Structure::NODE_TYPE_CONTENT
+        );
+        $saveResult = $this->mapper->save($data, 'overview', 'default', 'de', 1, true, $result->getUuid());
+        $loadResult = $this->mapper->load($saveResult->getUuid(), 'default', 'de');
+
+        // check load result
+        $this->assertEquals('Page-1', $loadResult->name);
+        $this->assertEquals('Page-1', $loadResult->getNodeName());
+        $this->assertEquals('/page-1', $loadResult->url);
+        $this->assertEquals('/page-1', $loadResult->getResourceLocator());
     }
 }
 

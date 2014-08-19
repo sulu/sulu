@@ -48,6 +48,25 @@ interface ContentTypeInterface
     );
 
     /**
+     * Checks availability of a value
+     *
+     * @param NodeInterface $node
+     * @param PropertyInterface $property
+     * @param $webspaceKey
+     * @param $languageCode
+     * @param $segmentKey
+     *
+     * @return mixed
+     */
+    public function hasValue(
+        NodeInterface $node,
+        PropertyInterface $property,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey
+    );
+
+    /**
      * Sets the value of the Sulu property with the given data
      *
      * @param mixed $data

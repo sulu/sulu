@@ -54,6 +54,12 @@ abstract class Structure implements StructureInterface
     private $key;
 
     /**
+     * real template from database
+     * @var string
+     */
+    private $originTemplate;
+
+    /**
      * template to render content
      * @var string
      */
@@ -343,6 +349,22 @@ abstract class Structure implements StructureInterface
     public function getKey()
     {
         return $this->key;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOriginTemplate()
+    {
+        return $this->originTemplate;
+    }
+
+    /**
+     * @param string $originTemplate
+     */
+    public function setOriginTemplate($originTemplate)
+    {
+        $this->originTemplate = $originTemplate;
     }
 
     /**
@@ -951,6 +973,7 @@ abstract class Structure implements StructureInterface
                 'shadowOn' => $this->getIsShadow(),
                 'shadowBaseLanguage' => $this->getShadowBaseLanguage(),
                 'template' => $this->getKey(),
+                'originTemplate' => $this->getOriginTemplate(),
                 'hasSub' => $this->hasChildren,
                 'creator' => $this->creator,
                 'changer' => $this->changer,
@@ -960,6 +983,12 @@ abstract class Structure implements StructureInterface
 
             if ($this->type !== null) {
                 $result['type'] = $this->getType()->toArray();
+            }
+
+            if ($this->nodeType === self::NODE_TYPE_INTERNAL_LINK) {
+                $result['linked'] = 'internal';
+            } elseif ($this->nodeType === self::NODE_TYPE_EXTERNAL_LINK) {
+                $result['linked'] = 'external';
             }
 
             $this->appendProperties($this->getProperties(), $result);
@@ -982,6 +1011,12 @@ abstract class Structure implements StructureInterface
             );
             if ($this->type !== null) {
                 $result['type'] = $this->getType()->toArray();
+            }
+
+            if ($this->nodeType === self::NODE_TYPE_INTERNAL_LINK) {
+                $result['linked'] = 'internal';
+            } elseif ($this->nodeType === self::NODE_TYPE_EXTERNAL_LINK) {
+                $result['linked'] = 'external';
             }
 
             return $result;
