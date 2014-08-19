@@ -915,7 +915,7 @@ abstract class Structure implements StructureInterface
     /**
      * {@inheritdoc}
      */
-    public function getTitle($languageCode)
+    public function getLocalizedTitle($languageCode)
     {
         return $this->metaData->get('title', $languageCode, ucfirst($this->key));
     }

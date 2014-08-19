@@ -375,5 +375,5 @@ interface StructureInterface extends \JsonSerializable
      * @param string $languageCode
      * @return string
      */
-    public function getTitle($languageCode);
+    public function getLocalizedTitle($languageCode);
 }
