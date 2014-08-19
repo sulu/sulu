@@ -175,6 +175,11 @@
     border-radius: 0 0 0 2px;
   }
 }
+/* line 167, ../scss/modules/preview.scss */
+.hidden .sulu-preview-toolbar {
+  display: none;
+}
+
 /* line 1, ../scss/modules/general.scss */
 #language-selector {
   width: 95px;
