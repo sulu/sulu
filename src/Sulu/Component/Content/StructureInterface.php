@@ -369,4 +369,11 @@ interface StructureInterface extends \JsonSerializable
      * @param StructureInterface $internalLinkContent
      */
     public function setInternalLinkContent($internalLinkContent);
+
+    /**
+     * returns title of property
+     * @param string $languageCode
+     * @return string
+     */
+    public function getLocalizedTitle($languageCode);
 }
