@@ -331,9 +331,9 @@ class ContentMapper implements ContentMapperInterface
                 // nothing
             } elseif ($property->getMandatory()) {
                 $type = $this->getContentType($property->getContentTypeName());
-                $type->read($node, $property, $webspaceKey, $languageCode, null);
+                $translatedProperty = new TranslatedProperty($property, $languageCode, $this->languageNamespace);
 
-                if ($property->getValue() === $type->getDefaultValue()) {
+                if (false === $type->hasValue($node, $translatedProperty, $webspaceKey, $languageCode, null)) {
                     throw new MandatoryPropertyException($templateKey, $property);
                 }
             } elseif (!$partialUpdate) {
