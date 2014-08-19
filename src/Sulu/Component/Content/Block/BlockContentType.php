@@ -129,6 +129,34 @@ class BlockContentType extends ComplexContentType
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function hasValue(
+        NodeInterface $node,
+        PropertyInterface $property,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey
+    ) {
+        if ($property->getIsBlock()) {
+            /** @var BlockPropertyInterface $blockProperty */
+            $blockProperty = $property;
+            while (!($blockProperty instanceof BlockPropertyInterface)) {
+                $blockProperty = $blockProperty->getProperty();
+            }
+
+            // init properties
+            $lengthProperty = new Property('length', '', 'text_line');
+            $lengthBlockProperty = new BlockPropertyWrapper($lengthProperty, $property);
+            $contentType = $this->contentTypeManager->get($lengthProperty->getContentTypeName());
+
+            return $contentType->hasValue($node, $lengthBlockProperty, $webspaceKey, $languageCode, $segmentKey);
+        }
+
+        return false;
+    }
+
+    /**
      * sets the value of the property with the data given
      * @param mixed $data
      * @param PropertyInterface $property
