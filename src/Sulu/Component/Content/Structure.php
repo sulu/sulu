@@ -985,6 +985,12 @@ abstract class Structure implements StructureInterface
                 $result['type'] = $this->getType()->toArray();
             }
 
+            if ($this->nodeType === self::NODE_TYPE_INTERNAL_LINK) {
+                $result['linked'] = 'internal';
+            } elseif ($this->nodeType === self::NODE_TYPE_EXTERNAL_LINK) {
+                $result['linked'] = 'external';
+            }
+
             $this->appendProperties($this->getProperties(), $result);
 
             $result['ext'] = $this->ext;
@@ -1005,6 +1011,12 @@ abstract class Structure implements StructureInterface
             );
             if ($this->type !== null) {
                 $result['type'] = $this->getType()->toArray();
+            }
+
+            if ($this->nodeType === self::NODE_TYPE_INTERNAL_LINK) {
+                $result['linked'] = 'internal';
+            } elseif ($this->nodeType === self::NODE_TYPE_EXTERNAL_LINK) {
+                $result['linked'] = 'external';
             }
 
             return $result;
