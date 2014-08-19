@@ -484,6 +484,12 @@ define([
                 this.setTemplate(data);
                 this.setState(data);
 
+                // disable remove for homepage
+                if (this.options.id === 'index') {
+                    this.sandbox.emit('husky.toolbar.header.item.disable', 'options-button', false);
+                }
+
+
                 if (!!this.options.preview && this.data.nodeType === TYPE_CONTENT && !this.data.shadowOn) {
                     this.sandbox.emit('husky.tabs.header.item.show', 'tab-content');
                     this.renderPreview(data);
