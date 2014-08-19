@@ -1315,7 +1315,7 @@
             </trans-unit>
             <trans-unit id="143d99ff2f64652633a5ca2169f22254" resname="content-navigation.contents.excerpt">
                 <source>content-navigation.contents.excerpt</source>
-                <target>Auszug</target>
+                <target>Auszug &amp; Kategorien</target>
             </trans-unit>
             <trans-unit id="642c992f1929c9e456a5ce2178d22192" resname="contact.contacts.main-contact">
                 <source>contact.contacts.main-contact</source>
