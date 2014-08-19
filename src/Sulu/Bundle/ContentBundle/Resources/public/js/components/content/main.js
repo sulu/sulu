@@ -461,7 +461,10 @@ define([
 
         load: function(item, webspace, language) {
             var action = 'content';
-            if (!!item.nodeType && item.nodeType !== TYPE_CONTENT) {
+            if (
+                (!!item.nodeType && item.nodeType !== TYPE_CONTENT) ||
+                (!!item.type && !!item.type.name && item.type.name === 'shadow')
+                ) {
                 action = 'settings';
             }
 
@@ -483,6 +486,12 @@ define([
                 this.setBreadcrumb(data);
                 this.setTemplate(data);
                 this.setState(data);
+
+                // disable remove for homepage
+                if (this.options.id === 'index') {
+                    this.sandbox.emit('husky.toolbar.header.item.disable', 'options-button', false);
+                }
+
 
                 if (!!this.options.preview && this.data.nodeType === TYPE_CONTENT && !this.data.shadowOn) {
                     this.sandbox.emit('husky.tabs.header.item.show', 'tab-content');

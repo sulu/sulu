@@ -150,7 +150,6 @@ define(['app-config'], function(AppConfig) {
                     this.sandbox.dom.show('#shadow-container');
                 } else {
                     this.sandbox.dom.hide('#shadow-container');
-                    this.sandbox.emit('husky.tabs.header.item.hide', 'tab-content');
                 }
             }.bind(this), '.content-type');
         },
