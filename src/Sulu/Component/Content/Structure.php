@@ -220,18 +220,25 @@ abstract class Structure implements StructureInterface
     private $concreteLanguages = array();
 
     /**
+     * @var Metadata
+     */
+    private $metaData;
+
+    /**
      * @param $key string
      * @param $view string
      * @param $controller string
      * @param int $cacheLifeTime
+     * @param array $metaData
      * @return \Sulu\Component\Content\Structure
      */
-    public function __construct($key, $view, $controller, $cacheLifeTime = 604800)
+    public function __construct($key, $view, $controller, $cacheLifeTime = 604800, $metaData = array())
     {
         $this->key = $key;
         $this->view = $view;
         $this->controller = $controller;
         $this->cacheLifeTime = $cacheLifeTime;
+        $this->metaData = new Metadata($metaData);
 
         // default state is test
         $this->nodeState = StructureInterface::STATE_TEST;
@@ -903,6 +910,14 @@ abstract class Structure implements StructureInterface
     public function hasTag($tag)
     {
         return array_key_exists($tag, $this->tags);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getTitle($languageCode)
+    {
+        return $this->metaData->get('title', $languageCode, ucfirst($this->key));
     }
 
     /**

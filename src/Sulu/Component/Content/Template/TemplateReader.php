@@ -96,6 +96,7 @@ class TemplateReader implements LoaderInterface
             'view' => $this->getValueFromXPath('/x:template/x:view', $xpath),
             'controller' => $this->getValueFromXPath('/x:template/x:controller', $xpath),
             'cacheLifetime' => $this->getValueFromXPath('/x:template/x:cacheLifetime', $xpath),
+            'meta' => $this->loadMeta('/x:template/x:meta/x:*', $xpath)
         );
 
         $result = array_filter($result);
@@ -304,7 +305,7 @@ class TemplateReader implements LoaderInterface
         return $result;
     }
 
-    private function loadMeta($path, \DOMXPath $xpath, \DOMNode $context)
+    private function loadMeta($path, \DOMXPath $xpath, \DOMNode $context = null)
     {
         $result = array();
 
