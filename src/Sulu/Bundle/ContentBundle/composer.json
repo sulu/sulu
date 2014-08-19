@@ -21,7 +21,7 @@
         "sulu/website-bundle": "dev-develop",
         "sulu/tag-bundle": "dev-develop",
 
-	"sulu/category-bundle": "dev-develop",
+	    "sulu/category-bundle": "dev-develop",
         "sulu/media-bundle": "dev-develop",
         "liip/theme-bundle": "@dev",
 

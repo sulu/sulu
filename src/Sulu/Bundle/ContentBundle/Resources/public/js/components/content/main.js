@@ -801,8 +801,7 @@ define([
                                             url: '/admin/content/template',
                                             titleAttribute: 'template',
                                             idAttribute: 'template',
-                                            translate: true,
-                                            languageNamespace: 'template.',
+                                            translate: false,
                                             callback: function(item) {
                                                 this.template = item.template;
                                                 this.sandbox.emit('sulu.dropdown.template.item-clicked', item);
