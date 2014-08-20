@@ -38,21 +38,13 @@ class SmartContent extends ComplexContentType
      */
     private $template;
 
-    /**
-     * @var \JMS\Serializer\Serializer
-     */
-    private $serializer;
-
     function __construct(
         NodeRepositoryInterface $nodeRepository,
         TagManagerInterface $tagManager,
-        Serializer $serializer,
         $template
-    )
-    {
+    ) {
         $this->nodeRepository = $nodeRepository;
         $this->tagManager = $tagManager;
-        $this->serializer = $serializer;
         $this->template = $template;
     }
 
@@ -90,12 +82,10 @@ class SmartContent extends ComplexContentType
         $languageCode,
         $segmentKey,
         $preview = false
-    )
-    {
+    ) {
         $smartContent = new SmartContentContainer(
             $this->nodeRepository,
             $this->tagManager,
-            $this->serializer,
             $webspaceKey,
             $languageCode,
             $segmentKey,
@@ -137,8 +127,7 @@ class SmartContent extends ComplexContentType
         $webspaceKey,
         $languageCode,
         $segmentKey
-    )
-    {
+    ) {
         $value = $property->getValue();
 
         if (!empty($value['tags'])) {

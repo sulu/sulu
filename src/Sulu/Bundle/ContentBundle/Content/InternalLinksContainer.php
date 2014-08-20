@@ -53,16 +53,9 @@ class InternalLinksContainer implements \Serializable
      */
     private $data;
 
-    /**
-     * @Exclude
-     * @var Serializer
-     */
-    private $serializer;
-
     public function __construct(
         $ids,
         ContentMapperInterface $contentMapper,
-        $serializer,
         $webspaceKey,
         $languageCode
     ) {
@@ -70,7 +63,6 @@ class InternalLinksContainer implements \Serializable
         $this->contentMapper = $contentMapper;
         $this->webspaceKey = $webspaceKey;
         $this->languageCode = $languageCode;
-        $this->serializer = $serializer;
     }
 
     /**
@@ -130,15 +122,14 @@ class InternalLinksContainer implements \Serializable
      */
     public function serialize()
     {
-        if ($this->serializer) {
-            $data = $this->serializer->serialize($this->getData(), 'json');
-        } else {
-            $data = json_encode($this->getData());
+        $result = array();
+        foreach ($this->getData() as $item) {
+            $result[] = $item->toArray();
         }
 
         return serialize(
             array(
-                'data' => $data
+                'data' => $result
             )
         );
     }
