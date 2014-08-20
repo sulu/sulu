@@ -466,12 +466,10 @@ define([], function () {
          * Initializes the component
          */
         initialize: function () {
+            this.html(this.sandbox.util.template(templates.skeleton)());
+
             this.bindCustomEvents();
             this.bindDomEvents();
-
-            this.html(this.sandbox.util.template(templates.skeleton)({
-                headline: this.options.heading
-            }));
         },
 
         /**
@@ -588,7 +586,7 @@ define([], function () {
          * @param {deferred} def
          */
         startTabsComponent: function (def) {
-            if (!!this.options.tabsData) {
+            if (!!this.options.tabsData || !!this.options.tabsOptions.data) {
                 this.sandbox.stop(this.$find('.' + constants.tabsClass));
                 var $container = this.sandbox.dom.createElement('<div/>'),
                     options = {
