@@ -1484,50 +1484,19 @@ class ContentMapper implements ContentMapperInterface
 
     /**
      * calculates publish state of node
+     * @deprecated deprecated since version 0.6.3 -> to be removed with version 0.7.0
      */
     private function getInheritedState(NodeInterface $contentNode, $statePropertyName, $webspaceKey)
     {
-        // index page is default PUBLISHED
         $contentRootNode = $this->getContentNode($webspaceKey);
-        if ($contentNode->getName() === $contentRootNode->getPath()) {
+        if ($contentNode->getPath() === $contentRootNode->getPath()) {
             return StructureInterface::STATE_PUBLISHED;
         }
 
         // if test then return it
-        if ($contentNode->getPropertyValueWithDefault(
+        return $contentNode->getPropertyValueWithDefault(
                 $statePropertyName,
                 StructureInterface::STATE_TEST
-            ) === StructureInterface::STATE_TEST
-        ) {
-            return StructureInterface::STATE_TEST;
-        }
-
-        $session = $this->getSession();
-        $workspace = $session->getWorkspace();
-        $queryManager = $workspace->getQueryManager();
-
-        $sql = 'SELECT *
-                FROM  [sulu:content] as parent INNER JOIN [sulu:content] as child
-                    ON ISDESCENDANTNODE(child, parent)
-                WHERE child.[jcr:uuid]="' . $contentNode->getIdentifier() . '"';
-
-        $query = $queryManager->createQuery($sql, 'JCR-SQL2');
-        $result = $query->execute();
-
-        /** @var \PHPCR\NodeInterface $node */
-        foreach ($result->getNodes() as $node) {
-            // exclude /cmf/sulu_io/contents
-            if (
-                $node->getPath() !== $contentRootNode->getPath() &&
-                $node->getPropertyValueWithDefault(
-                    $statePropertyName,
-                    StructureInterface::STATE_TEST
-                ) === StructureInterface::STATE_TEST
-            ) {
-                return StructureInterface::STATE_TEST;
-            }
-        }
-
-        return StructureInterface::STATE_PUBLISHED;
+        );
     }
 }
