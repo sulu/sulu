@@ -458,6 +458,10 @@ define([], function () {
         initialize: function () {
             this.bindCustomEvents();
             this.bindDomEvents();
+
+            this.html(this.sandbox.util.template(templates.skeleton)({
+                headline: this.options.heading
+            }));
         },
 
         /**
@@ -466,10 +470,6 @@ define([], function () {
         render: function () {
             // add component-class
             this.sandbox.dom.addClass(this.$el, constants.componentClass);
-
-            this.html(this.sandbox.util.template(templates.skeleton)({
-                headline: this.options.heading
-            }));
 
             this.$inner = this.$find(constants.innerSelector);
 
@@ -557,31 +557,33 @@ define([], function () {
          * @param {deferred} def
          */
         startTabsComponent: function (def) {
-            this.sandbox.stop(this.$find('.' + constants.tabsClass));
-            var $container = this.sandbox.dom.createElement('<div/>'),
-                options = {
-                    el: $container,
-                    data: this.options.tabsData,
-                    instanceName: 'header' + this.options.instanceName,
-                    forceReload: false,
-                    forceSelect: true
-                };
+            if (!!this.options.tabsData) {
+                this.sandbox.stop(this.$find('.' + constants.tabsClass));
+                var $container = this.sandbox.dom.createElement('<div/>'),
+                    options = {
+                        el: $container,
+                        data: this.options.tabsData,
+                        instanceName: 'header' + this.options.instanceName,
+                        forceReload: false,
+                        forceSelect: true
+                    };
 
-            // wait for initialized
-            this.sandbox.on('husky.tabs.header.initialized', function () {
-                def.resolve();
-            }.bind(this));
+                // wait for initialized
+                this.sandbox.on('husky.tabs.header.initialized', function () {
+                    def.resolve();
+                }.bind(this));
 
-            this.sandbox.dom.html(this.$find('.' + constants.tabsClass), $container);
-            // merge default tabs-options with passed ones
-            options = this.sandbox.util.extend(true, {}, options, this.options.tabsOptions);
+                this.sandbox.dom.html(this.$find('.' + constants.tabsClass), $container);
+                // merge default tabs-options with passed ones
+                options = this.sandbox.util.extend(true, {}, options, this.options.tabsOptions);
 
-            this.sandbox.start([
-                {
-                    name: 'tabs@husky',
-                    options: options
-                }
-            ]);
+                this.sandbox.start([
+                    {
+                        name: 'tabs@husky',
+                        options: options
+                    }
+                ]);
+            }
         },
 
         /**
