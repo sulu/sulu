@@ -131,6 +131,15 @@ define([], function () {
         },
 
         /**
+         * listens on and hides the header
+         *
+         * @event sulu.header.[INSTANCE_NAME].hide
+         */
+        HIDE = function () {
+            return createEventName.call(this, 'hide');
+        },
+
+        /**
          * emitted when the back-icon gets clicked
          *
          * @event sulu.header.[INSTANCE_NAME].back
@@ -552,8 +561,7 @@ define([], function () {
             if (!this.options.tabsOptions) {
                 def.resolve();
             } else if (this.options.tabsData !== null || !!this.options.tabsOptions.data) {
-                this.sandbox.dom.addClass(this.$el, constants.hasTabsClass);
-                this.sandbox.dom.addClass(constants.headerBackgroundSelector, constants.hasTabsClass);
+                this.removeTabsComponent();
                 this.$tabs = this.sandbox.dom.createElement('<div class="' + constants.tabsClass + '"></div>');
                 this.sandbox.dom.append(this.$el, this.$tabs);
 
@@ -590,6 +598,9 @@ define([], function () {
                         forceReload: false,
                         forceSelect: true
                     };
+
+                this.sandbox.dom.addClass(this.$el, constants.hasTabsClass);
+                this.sandbox.dom.addClass(constants.headerBackgroundSelector, constants.hasTabsClass);
 
                 // wait for initialized
                 this.sandbox.on('husky.tabs.header.initialized', function () {
@@ -740,6 +751,8 @@ define([], function () {
             this.sandbox.on(SET_BOTTOM_CONTENT.call(this), this.insertBottomContent.bind(this));
 
             this.sandbox.on(CHANGE.call(this), this.change.bind(this));
+
+            this.sandbox.on(HIDE.call(this), this.hide.bind(this));
 
             this.bindAbstractToolbarEvents();
             this.bindAbstractTabsEvents();
@@ -895,6 +908,7 @@ define([], function () {
 
             this.sandbox.data.when(toolbarDef, tabsDef).then(function () {
                 this.sandbox.emit(INITIALIZED.call(this));
+                this.show();
             }.bind(this));
         },
 
@@ -925,6 +939,22 @@ define([], function () {
             var $bottomContainer = this.$find('.' + constants.bottomContentClass);
             this.sandbox.stop($bottomContainer);
             this.sandbox.dom.html($bottomContainer, content);
+        },
+
+        /**
+         * Hides the header
+         */
+        hide: function () {
+            this.sandbox.dom.hide(this.$el);
+            this.sandbox.dom.hide(constants.headerBackgroundSelector);
+        },
+
+        /**
+         * Shows the header
+         */
+        show: function () {
+            this.sandbox.dom.show(this.$el);
+            this.sandbox.dom.show(constants.headerBackgroundSelector);
         }
     };
 });
