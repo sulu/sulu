@@ -3,7 +3,7 @@
     "type": "library",
     "description": "Symfony bundle that provides administration functionality",
     "license": "MIT",
-    "version": "0.6.1",
+    "version": "0.6.2",
     "keywords": ["admin", "cmf", "symfony"],
     "authors": [
         {
