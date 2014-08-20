@@ -680,6 +680,8 @@ class ContentMapper implements ContentMapperInterface
     ) {
         if ($uuid != null) {
             $root = $this->getSession()->getNodeByIdentifier($uuid);
+            // set depth hint specific
+            $root = $this->getSession()->getNode($root->getPath(), $depth+1);
         } else {
             $root = $this->getContentNode($webspaceKey);
         }
