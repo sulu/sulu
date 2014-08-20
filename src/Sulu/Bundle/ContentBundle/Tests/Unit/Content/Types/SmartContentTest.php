@@ -62,12 +62,9 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
             array('resolveTagIds', 'resolveTagNames')
         );
 
-        $this->serializer = $this->getMock('JMS\Serializer\Serializer', array(), array(), '', false);
-
         $this->smartContent = new SmartContent(
             $this->nodeRepository,
             $this->tagManager,
-            $this->serializer,
             'SuluContentBundle:Template:content-types/smart_content.html.twig'
         );
 
@@ -208,7 +205,7 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
 
     public function testRead()
     {
-        $smartContentContainer = new SmartContentContainer($this->nodeRepository, $this->tagManager, $this->serializer, 'test', 'en', 's');
+        $smartContentContainer = new SmartContentContainer($this->nodeRepository, $this->tagManager, 'test', 'en', 's');
         $smartContentContainer->setConfig(
             array(
                 'tags' => array('Tag1', 'Tag2'),
@@ -256,8 +253,7 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
 
         $smartContentContainerPreview = new SmartContentContainer(
             $this->nodeRepository,
-            $this->tagManager,
-            $this->serializer, 'test', 'en', 's', true
+            $this->tagManager, 'test', 'en', 's', true
         );
         $smartContentContainerPreview->setConfig(
             array(
