@@ -799,7 +799,7 @@ define([
                                         hidden: false,
                                         itemsOption: {
                                             url: '/admin/content/template',
-                                            titleAttribute: 'template',
+                                            titleAttribute: 'title',
                                             idAttribute: 'template',
                                             translate: false,
                                             callback: function(item) {
