@@ -36457,7 +36457,7 @@ define('__component__$select@husky',[], function() {
         render: function() {
 
             // add husky-select class to component
-            this.sandbox.dom.addClass(constants.selectClass);
+            this.sandbox.dom.addClass(this.$el, constants.selectClass);
 
             var $originalElement = this.sandbox.dom.$(this.options.el),
                 button = this.sandbox.dom.createElement(
