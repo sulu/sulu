@@ -218,7 +218,6 @@ define(function() {
          */
         beforeNavigateCleanup: function(route) {
             this.currentRoute = route;
-            this.sandbox.dom.remove('.sulu-header-background');
 
             // FIXME App.stop is used in global context; possibly there is a better solution
             // and the stop method will be called
