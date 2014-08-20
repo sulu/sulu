@@ -212,6 +212,7 @@ interface StructureInterface extends \JsonSerializable
 
     /**
      * @param int $globalState
+     * @deprecated deprecated since version 0.6.3 -> to be removed with version 0.7.0
      */
     public function setGlobalState($globalState);
 
