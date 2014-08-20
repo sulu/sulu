@@ -101,7 +101,7 @@ define([], function () {
                     '<div class="' + constants.headlineClass + '">',
                     '<span class="fa-' + constants.backIcon + ' ' + constants.backClass + '"></span>',
                     '<span class="' + constants.titleColorClass + '"></span>',
-                '<h1 class="bright"><%= headline %></h1>',
+                '<h1 class="bright"></h1>',
                 '</div>',
                 '<div class="bottom-row">',
                     '<div class="' + constants.bottomContentClass + '"></div>',
@@ -472,7 +472,12 @@ define([], function () {
             // add component-class
             this.sandbox.dom.addClass(this.$el, constants.componentClass);
 
-            this.$inner = this.$find(constants.innerSelector);
+            // clean old values
+            this.clean();
+
+            if (this.options.heading !== null) {
+                this.setTitle(this.options.heading);
+            }
 
             // render breadcrumb if set
             if (this.options.breadcrumb !== null) {
@@ -487,16 +492,21 @@ define([], function () {
             // hide back if configured
             if (this.options.noBack === true) {
                 this.sandbox.dom.hide(this.$find('.' + constants.backClass));
+            } else {
+                this.sandbox.dom.show(this.$find('.' + constants.backClass));
             }
-
-            // clean old values
-            this.clean();
         },
 
+        /**
+         * Cleans all the values from the header
+         */
         clean: function () {
             this.cleanBottomContent();
         },
 
+        /**
+         * Cleans the value from the bottom content
+         */
         cleanBottomContent: function () {
             this.sandbox.dom.html('.' + constants.bottomContentClass, '');
         },
