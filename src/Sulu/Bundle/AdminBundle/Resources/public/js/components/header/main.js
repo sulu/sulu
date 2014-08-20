@@ -64,6 +64,7 @@ define([], function () {
 
         constants = {
             componentClass: 'sulu-header',
+            headerBackgroundSelector: '.sulu-header-background',
             hasTabsClass: 'has-tabs',
             titleColorClass: 'title-color',
             titleColorSetClass: 'color-set',
@@ -487,6 +488,17 @@ define([], function () {
             if (this.options.noBack === true) {
                 this.sandbox.dom.hide(this.$find('.' + constants.backClass));
             }
+
+            // clean old values
+            this.clean();
+        },
+
+        clean: function () {
+            this.cleanBottomContent();
+        },
+
+        cleanBottomContent: function () {
+            this.sandbox.dom.html('.' + constants.bottomContentClass, '');
         },
 
         /**
@@ -531,7 +543,7 @@ define([], function () {
                 def.resolve();
             } else if (this.options.tabsData !== null || !!this.options.tabsOptions.data) {
                 this.sandbox.dom.addClass(this.$el, constants.hasTabsClass);
-                this.sandbox.dom.addClass('.sulu-header-background', constants.hasTabsClass);
+                this.sandbox.dom.addClass(constants.headerBackgroundSelector, constants.hasTabsClass);
                 this.$tabs = this.sandbox.dom.createElement('<div class="' + constants.tabsClass + '"></div>');
                 this.sandbox.dom.append(this.$el, this.$tabs);
 
@@ -546,6 +558,7 @@ define([], function () {
                     this.startTabsComponent(def);
                 }
             } else {
+                this.removeTabsComponent();
                 def.resolve();
             }
 
@@ -584,6 +597,17 @@ define([], function () {
                     }
                 ]);
             }
+        },
+
+        /**
+         * Removes the tabs components
+         */
+        removeTabsComponent: function () {
+            var $tabs = this.$find('.' + constants.tabsClass);
+            this.sandbox.stop($tabs);
+            this.sandbox.dom.remove($tabs);
+            this.sandbox.dom.removeClass(constants.headerBackgroundSelector, constants.hasTabsClass);
+            this.sandbox.dom.removeClass(this.$el, constants.hasTabsClass);
         },
 
         /**

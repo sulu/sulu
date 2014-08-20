@@ -281,7 +281,7 @@ define([], function () {
                     titleColor: (!!header.titleColor) ? header.titleColor : null
                 };
 
-                if (!header.tabs) {
+                if (header.tabs === false) {
                     options.tabsOptions = false;
                 }
 
