@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="sulu_search.metadata.driver.xml.class">Sulu\Bundle\SearchBundle\Search\Metadata\Driver\XmlDriver</parameter>
+        <parameter key="sulu_search.metadata.driver.annotation.class">Symfony\Cmf\Bundle\TreeUiBundle\Tree\Metadata\Driver\AnnotationDriver</parameter>
+        <parameter key="sulu_search.metadata.driver.chain.class">Metadata\Driver\DriverChain</parameter>
+        <parameter key="sulu_search.metadata.file_locator.class">Metadata\Driver\FileLocator</parameter>
+        <parameter key="sulu_search.metadata.factory.class">Metadata\MetadataFactory</parameter>
+    </parameters>
+
+    <services>
+        <!-- Factory -->
+        <service 
+            id="sulu_search.metadata.factory"
+            class="%sulu_search.metadata.factory.class%"
+            >
+            <argument 
+                type="service" 
+                id="sulu_search.metadata.driver.chain"
+                />
+        </service>
+
+        <!-- File Locator !-->
+        <service
+            id="sulu_search.metadata.file_locator"
+            class="%sulu_search.metadata.file_locator.class%"
+            >
+            <argument type="collection"/>
+        </service>
+
+        <!-- Chain Driver !-->
+        <service
+            id="sulu_search.metadata.driver.chain"
+            class="%sulu_search.metadata.driver.chain.class%"
+            >
+            <argument type="collection">
+                <argument type="service" id="sulu_search.metadata.driver.xml"/>
+                <!-- <argument type="service" id="sulu_search.metadata.driver.annotation"/> -->
+            </argument>
+        </service>
+
+        <!-- Annotations Driver
+        <service
+            id="sulu_search.metadata.driver.annotation"
+            class=""
+            >
+            <argument type="service" id="annotations.reader"/>
+            <argument type="collection"/>
+        </service>
+        -->
+
+        <!-- XML Driver !-->
+        <service
+            id="sulu_search.metadata.driver.xml"
+            class="%sulu_search.metadata.driver.xml.class%"
+            >
+            <argument type="service" id="sulu_search.metadata.file_locator"/>
+        </service>
+    </services>
+</container>

@@ -1,0 +1,18 @@
+language: php
+
+php:
+  - 5.4
+
+env:
+  - SYMFONY_VERSION=2.4.*
+
+before_script:
+  - composer require symfony/symfony:${SYMFONY_VERSION}
+#  - vendor/symfony-cmf/testing/bin/travis/phpcr_odm_doctrine_dbal.sh
+
+script: phpunit --coverage-text
+
+matrix:
+  allow_failures:
+    - env: SYMFONY_VERSION=dev-master
+
