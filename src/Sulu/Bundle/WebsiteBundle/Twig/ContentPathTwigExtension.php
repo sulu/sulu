@@ -56,16 +56,18 @@ class ContentPathTwigExtension extends \Twig_Extension
      */
     public function contentPathFunction($item)
     {
+        $internal = false;
         if ($item instanceof NavigationItem) {
             $rl = $item->getUrl();
         } elseif ($item instanceof StructureInterface) {
             $rl = $item->getResourceLocator();
+            $internal = $item->getNodeType() !== Structure::NODE_TYPE_EXTERNAL_LINK;
         } elseif (isset($item['url'])) {
             $rl = $item['url'];
         } else {
             $rl = '/';
         }
-        if ($this->requestAnalyzer !== null && $item->getNodeType() !== Structure::NODE_TYPE_EXTERNAL_LINK) {
+        if ($this->requestAnalyzer !== null && $item !== null && $internal) {
             return $this->requestAnalyzer->getCurrentResourceLocatorPrefix() . $rl;
         } else {
             return $rl;
