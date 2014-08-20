@@ -170,6 +170,7 @@ class Preview implements PreviewInterface
         $newContent->setLanguageCode($languageCode);
 
         $this->copyProperties($newContent, $content, $webspaceKey, $languageCode);
+        $newContent->setExt($content->getExt());
 
         return $newContent;
     }

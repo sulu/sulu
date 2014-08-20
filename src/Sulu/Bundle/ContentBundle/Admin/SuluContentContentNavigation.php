@@ -96,17 +96,10 @@ class SuluContentContentNavigation extends ContentNavigation
     /**
      * generate content navigation
      * @param $showSettings
-     * @param $type
      */
-    public function generate($showSettings, $type)
+    public function generate($showSettings)
     {
-        if ($type === Structure::NODE_TYPE_INTERNAL_LINK) {
-            $this->addNavigationItem($this->getInternalLink());
-        } else if ($type === Structure::NODE_TYPE_EXTERNAL_LINK) {
-            $this->addNavigationItem($this->getExternalLink());
-        } else {
-            $this->addNavigationItem($this->getContent());
-        }
+        $this->addNavigationItem($this->getContent());
 
         $this->addNavigationItem($this->getSeo());
         $this->addNavigationItem($this->getExcerpt());

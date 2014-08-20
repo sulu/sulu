@@ -32,7 +32,7 @@ define([
 
         templates = {
             preview: [
-                '<div class="sulu-content-preview '+ constants.resolutionDropdownData[0].cssClass +'">',
+                    '<div class="sulu-content-preview ' + constants.resolutionDropdownData[0].cssClass + '">',
                 '   <div class="wrapper">',
                 '       <div class="viewport">',
                 '           <iframe src="<%= url %>"></iframe>',
@@ -88,7 +88,9 @@ define([
         },
 
         loadData: function() {
-            this.content = new Content({id: this.options.id});
+            if (!this.content) {
+                this.content = new Content({id: this.options.id});
+            }
 
             if (this.options.id !== undefined) {
                 this.content.fullFetch(
@@ -141,9 +143,9 @@ define([
             this.sandbox.on('sulu.header.toolbar.language-changed', function(item) {
                 this.sandbox.sulu.saveUserSetting(CONTENT_LANGUAGE, item.localization);
                 if (this.options.display !== 'column') {
-                    this.sandbox.emit('sulu.content.contents.load', this.options.id, this.options.webspace, item.localization);
+                    this.sandbox.emit('sulu.content.contents.load', this.content.toJSON(), this.options.webspace, item.localization);
                 } else {
-                   this.sandbox.emit('sulu.content.contents.list', this.options.webspace, item.localization);
+                    this.sandbox.emit('sulu.content.contents.list', this.options.webspace, item.localization);
                 }
             }, this);
 
@@ -224,13 +226,15 @@ define([
             }, this);
 
             // save the current package
-            this.sandbox.on('sulu.content.contents.save', function(data, template) {
-                this.save(data, template);
+            this.sandbox.on('sulu.content.contents.save', function(data) {
+                this.save(data).then(function() {
+                    this.loadData();
+                }.bind(this));
             }, this);
 
             // wait for navigation events
-            this.sandbox.on('sulu.content.contents.load', function(id, webspace, language) {
-                this.load(id, webspace, language);
+            this.sandbox.on('sulu.content.contents.load', function(item, webspace, language) {
+                this.load(item, webspace, language);
             }, this);
 
             // add new content
@@ -421,8 +425,10 @@ define([
             });
         },
 
-        save: function(data, template) {
+        save: function(data) {
             this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
+
+            var def = this.sandbox.data.deferred();
 
             if (!!this.content) {
                 this.content.set(data);
@@ -432,7 +438,7 @@ define([
             if (!!this.options.id) {
                 this.content.set({id: this.options.id});
             }
-            this.content.fullSave(template || this.template, this.options.webspace, this.options.language, this.options.parent, this.state, null, {
+            this.content.fullSave(this.template, this.options.webspace, this.options.language, this.options.parent, this.state, null, {
                 // on success save contents id
                 success: function(response) {
                     var model = response.toJSON();
@@ -442,16 +448,27 @@ define([
                         this.sandbox.sulu.viewStates.justSaved = true;
                         this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language + '/edit:' + model.id + '/content');
                     }
+                    def.resolve();
                 }.bind(this),
                 error: function() {
                     this.sandbox.logger.log("error while saving profile");
                     this.sandbox.emit('sulu.content.contents.save-error');
                 }.bind(this)
             });
+
+            return def;
         },
 
-        load: function(id, webspace, language) {
-            this.sandbox.emit('sulu.router.navigate', 'content/contents/' + (!webspace ? this.options.webspace : webspace) + '/' + (!language ? this.options.language : language) + '/edit:' + id + '/content');
+        load: function(item, webspace, language) {
+            var action = 'content';
+            if (
+                (!!item.nodeType && item.nodeType !== TYPE_CONTENT) ||
+                (!!item.type && !!item.type.name && item.type.name === 'shadow')
+                ) {
+                action = 'settings';
+            }
+
+            this.sandbox.emit('sulu.router.navigate', 'content/contents/' + (!webspace ? this.options.webspace : webspace) + '/' + (!language ? this.options.language : language) + '/edit:' + item.id + '/' + action);
         },
 
         add: function(parent) {
@@ -470,15 +487,33 @@ define([
                 this.setTemplate(data);
                 this.setState(data);
 
-                if (!!this.options.preview && this.data.nodeType === TYPE_CONTENT) {
+                // disable remove for homepage
+                if (this.options.id === 'index') {
+                    this.sandbox.emit('husky.toolbar.header.item.disable', 'options-button', false);
+                }
+
+
+                if (!!this.options.preview && this.data.nodeType === TYPE_CONTENT && !this.data.shadowOn) {
+                    this.sandbox.emit('husky.tabs.header.item.show', 'tab-content');
                     this.renderPreview(data);
                 } else {
                     this.sandbox.emit('sulu.sidebar.hide');
                     this.sandbox.emit('sulu.app.toggle-shrinker', false);
                 }
 
-                if (this.data.shadowOn === true) {
-                    this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language + '/edit:' + data.id + '/settings');
+                if (!!this.options.id) {
+                    // disable content tab
+                    if (this.data.shadowOn === true || this.data.nodeType !== TYPE_CONTENT) {
+                        this.sandbox.emit('husky.tabs.header.item.hide', 'tab-content');
+                    }
+
+                    // route to settings
+                    if (
+                        (this.options.content !== 'settings' && this.data.shadowOn === true) ||
+                        (this.options.content === 'content' && this.data.nodeType !== TYPE_CONTENT)
+                        ) {
+                        this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language + '/edit:' + data.id + '/settings');
+                    }
                 }
 
                 this.setHeaderBar(true);
@@ -490,6 +525,8 @@ define([
          * @param data
          */
         renderPreview: function(data) {
+            this.sandbox.emit('sulu.app.toggle-shrinker', true);
+            this.sandbox.emit('sulu.sidebar.change-width', 'max');
             if (this.$preview === null) {
                 this.previewUrl = this.sandbox.util.template(templates.previewUrl)({
                     url: '/admin/content/preview/',
@@ -599,7 +636,7 @@ define([
          * @param {Object} data
          */
         setTemplate: function(data) {
-            this.template = data.template;
+            this.template = data.originTemplate;
 
             if (this.data.nodeType === TYPE_CONTENT && this.template !== '' && this.template !== undefined && this.template !== null) {
                 this.sandbox.emit('sulu.header.toolbar.item.change', 'template', this.template);
@@ -693,11 +730,6 @@ define([
             var noBack = (this.options.id === 'index'), def;
 
             if (this.options.display === 'column') {
-                this.fullSize = {
-                    width: true,
-                    height: true
-                };
-
                 return {
                     title: this.options.webspace.replace(/_/g, '.'),
                     noBack: true,
@@ -715,71 +747,70 @@ define([
             } else {
                 def = this.sandbox.data.deferred();
                 this.loadDataDeferred.then(function() {
-                    var url = '/admin/content/navigation/content' + (!!this.data.id ? '?type=' + this.data.nodeType + '&id=' + this.data.id : ''),
+                    var url = '/admin/content/navigation/content' + (!!this.data.id ? '?id=' + this.data.id : ''),
                         x = {
-                        noBack: noBack,
+                            noBack: noBack,
 
-                        tabs: {
-                            url: url
-                        },
-
-                        toolbar: {
-                            parentTemplate: 'default',
-
-                            languageChanger: {
-                                url: '/admin/content/languages/' + this.options.webspace,
-                                preSelected: this.options.language
+                            tabs: {
+                                url: url
                             },
 
-                            template: [
-                                {
-                                    'id': 'state',
-                                    'group': 'left',
-                                    'position': 100,
-                                    'type': 'select',
-                                    items: [
-                                        {
-                                            'id': 2,
-                                            'title': this.sandbox.translate('toolbar.state-publish'),
-                                            'icon': 'husky-publish',
-                                            'callback': function() {
-                                                this.sandbox.emit('sulu.dropdown.state.item-clicked', 2);
-                                            }.bind(this)
-                                        },
-                                        {
-                                            'id': 1,
-                                            'title': this.sandbox.translate('toolbar.state-test'),
-                                            'icon': 'husky-test',
-                                            'callback': function() {
-                                                this.sandbox.emit('sulu.dropdown.state.item-clicked', 1);
+                            toolbar: {
+                                parentTemplate: 'default',
+
+                                languageChanger: {
+                                    url: '/admin/content/languages/' + this.options.webspace,
+                                    preSelected: this.options.language
+                                },
+
+                                template: [
+                                    {
+                                        'id': 'state',
+                                        'group': 'left',
+                                        'position': 100,
+                                        'type': 'select',
+                                        items: [
+                                            {
+                                                'id': 2,
+                                                'title': this.sandbox.translate('toolbar.state-publish'),
+                                                'icon': 'husky-publish',
+                                                'callback': function() {
+                                                    this.sandbox.emit('sulu.dropdown.state.item-clicked', 2);
+                                                }.bind(this)
+                                            },
+                                            {
+                                                'id': 1,
+                                                'title': this.sandbox.translate('toolbar.state-test'),
+                                                'icon': 'husky-test',
+                                                'callback': function() {
+                                                    this.sandbox.emit('sulu.dropdown.state.item-clicked', 1);
+                                                }.bind(this)
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        id: 'template',
+                                        icon: 'pencil',
+                                        iconSize: 'large',
+                                        group: 'left',
+                                        position: 10,
+                                        type: 'select',
+                                        title: '',
+                                        hidden: false,
+                                        itemsOption: {
+                                            url: '/admin/content/template',
+                                            titleAttribute: 'template',
+                                            idAttribute: 'template',
+                                            translate: false,
+                                            callback: function(item) {
+                                                this.template = item.template;
+                                                this.sandbox.emit('sulu.dropdown.template.item-clicked', item);
                                             }.bind(this)
                                         }
-                                    ]
-                                },
-                                {
-                                    id: 'template',
-                                    icon: 'pencil',
-                                    iconSize: 'large',
-                                    group: 'left',
-                                    position: 10,
-                                    type: 'select',
-                                    title: '',
-                                    hidden: false,
-                                    itemsOption: {
-                                        url: '/admin/content/template',
-                                        titleAttribute: 'template',
-                                        idAttribute: 'template',
-                                        translate: true,
-                                        languageNamespace: 'template.',
-                                        callback: function(item) {
-                                            this.template = item.template;
-                                            this.sandbox.emit('sulu.dropdown.template.item-clicked', item);
-                                        }.bind(this)
                                     }
-                                }
-                            ]
-                        }
-                    };
+                                ]
+                            }
+                        };
                     def.resolveWith(this, [x]);
                 }.bind(this));
 
