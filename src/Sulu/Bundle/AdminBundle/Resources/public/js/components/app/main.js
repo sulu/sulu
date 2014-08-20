@@ -221,6 +221,7 @@ define(function() {
 
             // FIXME App.stop is used in global context; possibly there is a better solution
             // and the stop method will be called
+            App.stop('#sulu-content-container');
             App.stop('#content > *');
             App.stop('#preview > *');
         },
