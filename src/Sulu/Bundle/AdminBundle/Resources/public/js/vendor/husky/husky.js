@@ -37962,7 +37962,7 @@ define('__component__$column-navigation@husky',[], function () {
         },
 
         bindDOMEvents: function () {
-            this.sandbox.dom.on(this.$el, 'click', this.itemSelected.bind(this), 'li');
+            this.sandbox.dom.on(this.$el, 'click', this.itemSelected.bind(this), 'li:not(.selected)');
 
             this.sandbox.dom.on(this.$el, 'mouseenter', this.itemMouseEnter.bind(this), '.column-navigation li');
             this.sandbox.dom.on(this.$el, 'mouseleave', this.itemMouseLeave.bind(this), '.column-navigation li');
