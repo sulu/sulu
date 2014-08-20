@@ -1,3 +1,4 @@
+
 /** vim: et:ts=4:sw=4:sts=4
  * @license RequireJS 2.1.9 Copyright (c) 2010-2012, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
@@ -37961,7 +37962,7 @@ define('__component__$column-navigation@husky',[], function () {
         },
 
         bindDOMEvents: function () {
-            this.sandbox.dom.on(this.$el, 'click', this.itemSelected.bind(this), 'li');
+            this.sandbox.dom.on(this.$el, 'click', this.itemSelected.bind(this), 'li:not(.selected)');
 
             this.sandbox.dom.on(this.$el, 'mouseenter', this.itemMouseEnter.bind(this), '.column-navigation li');
             this.sandbox.dom.on(this.$el, 'mouseleave', this.itemMouseLeave.bind(this), '.column-navigation li');
@@ -47045,4 +47046,3 @@ define('husky_extensions/util',[],function() {
         }
     };
 });
-
