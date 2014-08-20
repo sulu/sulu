@@ -146,6 +146,6 @@ class InternalLinksContainer implements \Serializable
     public function unserialize($serialized)
     {
         $values = unserialize($serialized);
-        $this->data = json_decode($values['data'], true);
+        $this->data = $values['data'];
     }
 }
