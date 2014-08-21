@@ -124,7 +124,11 @@ class InternalLinksContainer implements \Serializable
     {
         $result = array();
         foreach ($this->getData() as $item) {
-            $result[] = $item->toArray();
+            if ($item instanceof StructureInterface) {
+                $result[] = $item->toArray();
+            } else {
+                $result[] = $item;
+            }
         }
 
         return serialize(
