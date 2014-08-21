@@ -182,7 +182,7 @@ class DoctrineListBuilder extends AbstractListBuilder
      * @param array $whereValues
      * @param string $comparator
      */
-    private function setWheres(array $whereFields, array $whereValues, $comparator = self::WHERE_COMPARATOR_EQUAL)
+    protected function setWheres(array $whereFields, array $whereValues, $comparator = self::WHERE_COMPARATOR_EQUAL)
     {
         $whereParts = array();
         foreach ($whereFields as $whereField) {
