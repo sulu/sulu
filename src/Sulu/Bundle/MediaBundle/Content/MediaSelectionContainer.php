@@ -10,7 +10,6 @@
 
 namespace Sulu\Bundle\MediaBundle\Content;
 
-use JMS\Serializer\Serializer;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use JMS\Serializer\Annotation\Exclude;
@@ -59,12 +58,6 @@ class MediaSelectionContainer implements \Serializable
      * @var MediaManagerInterface
      */
     private $mediaManager;
-
-    /**
-     * @Exclude
-     * @var Serializer
-     */
-    private $serializer;
 
     function __construct($config, $displayOption, $ids, $locale, $types, $mediaManager)
     {
@@ -164,7 +157,11 @@ class MediaSelectionContainer implements \Serializable
     {
         $result = array();
         foreach ($this->getData() as $data) {
-            $result[] = $data->toArray();
+            if ($data instanceof Media) {
+                $result[] = $data->toArray();
+            } else {
+                $result[] = $data;
+            }
         }
 
         return serialize(
