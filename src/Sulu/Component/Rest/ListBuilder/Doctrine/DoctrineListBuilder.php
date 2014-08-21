@@ -48,7 +48,7 @@ class DoctrineListBuilder extends AbstractListBuilder
     protected $sortField;
 
     /**
-     * @var QueryBuilder
+     * @var \Doctrine\ORM\QueryBuilder
      */
     protected $queryBuilder;
 
