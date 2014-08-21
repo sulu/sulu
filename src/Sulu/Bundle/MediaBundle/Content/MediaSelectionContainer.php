@@ -10,7 +10,6 @@
 
 namespace Sulu\Bundle\MediaBundle\Content;
 
-use JMS\Serializer\Serializer;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use JMS\Serializer\Annotation\Exclude;
@@ -60,13 +59,7 @@ class MediaSelectionContainer implements \Serializable
      */
     private $mediaManager;
 
-    /**
-     * @Exclude
-     * @var Serializer
-     */
-    private $serializer;
-
-    function __construct($config, $displayOption, $ids, $locale, $types, $mediaManager, $serializer)
+    function __construct($config, $displayOption, $ids, $locale, $types, $mediaManager)
     {
         $this->config = $config;
         $this->displayOption = $displayOption;
@@ -74,7 +67,6 @@ class MediaSelectionContainer implements \Serializable
         $this->locale = $locale;
         $this->types = $types;
         $this->mediaManager = $mediaManager;
-        $this->serializer = $serializer;
     }
 
     /**
@@ -163,15 +155,18 @@ class MediaSelectionContainer implements \Serializable
      */
     public function serialize()
     {
-        if ($this->serializer) {
-            $data = $this->serializer->serialize($this->getData(), 'json');
-        } else {
-            $data = json_encode($this->getData());
+        $result = array();
+        foreach ($this->getData() as $data) {
+            if ($data instanceof Media) {
+                $result[] = $data->toArray();
+            } else {
+                $result[] = $data;
+            }
         }
 
         return serialize(
             array(
-                'data' => $data,
+                'data' => $result,
                 'config' => $this->getConfig(),
                 'ids' => $this->getIds(),
                 'types' => $this->getTypes(),
@@ -186,7 +181,7 @@ class MediaSelectionContainer implements \Serializable
     public function unserialize($serialized)
     {
         $values = unserialize($serialized);
-        $this->data = json_decode($values['data'], true);
+        $this->data = $values['data'];
         $this->config = $values['config'];
         $this->ids = $values['ids'];
         $this->types = $values['types'];
