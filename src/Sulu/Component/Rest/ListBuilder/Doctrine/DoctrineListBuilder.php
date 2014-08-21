@@ -155,12 +155,12 @@ class DoctrineListBuilder extends AbstractListBuilder
 
         // set where
         if (!empty($this->whereFields)) {
-            $this->setWheres($this->whereFields, $this->whereValues, self::WHERE_COMPARATOR_EQUAL);
+            $this->addWheres($this->whereFields, $this->whereValues, self::WHERE_COMPARATOR_EQUAL);
         }
 
         // set where not
         if (!empty($this->whereNotFields)) {
-            $this->setWheres($this->whereNotFields, $this->whereNotValues, self::WHERE_COMPARATOR_UNEQUAL);
+            $this->addWheres($this->whereNotFields, $this->whereNotValues, self::WHERE_COMPARATOR_UNEQUAL);
         }
 
         if ($this->search != null) {
@@ -182,7 +182,7 @@ class DoctrineListBuilder extends AbstractListBuilder
      * @param array $whereValues
      * @param string $comparator
      */
-    protected function setWheres(array $whereFields, array $whereValues, $comparator = self::WHERE_COMPARATOR_EQUAL)
+    protected function addWheres(array $whereFields, array $whereValues, $comparator = self::WHERE_COMPARATOR_EQUAL)
     {
         $whereParts = array();
         foreach ($whereFields as $whereField) {
