@@ -4,7 +4,7 @@
     "description": "The sulu bundle for managing media",
     "license": "MIT",
     "keywords": ["media", "asset", "crm"],
-    "version": "0.3.0",
+    "version": "0.3.1",
     "authors": [
         {
             "name": "Sulu Community",
