@@ -13,6 +13,8 @@ class SearchManagerTest extends ProphecyTestCase
         $this->adapter = $this->prophesize('Sulu\Bundle\SearchBundle\Search\AdapterInterface');
         $this->metadataFactory = $this->prophesize('Metadata\MetadataFactory');
         $this->metadata = $this->prophesize('Sulu\Bundle\SearchBundle\Search\Metadata\IndexMetadata');
+        $this->classHierachyMetadata = $this->prophesize('Metadata\ClassHierarchyMetadata');
+        $this->classHierachyMetadata->getOutsideClassMetadata()->willReturn($this->metadata);
         $this->searchManager = new SearchManager($this->adapter->reveal(), $this->metadataFactory->reveal());
 
         $this->product = new \Sulu\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product();
@@ -43,7 +45,8 @@ class SearchManagerTest extends ProphecyTestCase
     {
         $this->metadataFactory
             ->getMetadataForClass('Sulu\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product')
-            ->willReturn($this->metadata);
+            ->willReturn($this->classHierachyMetadata);
+        $this->metadata->getIdField()->willReturn('id');
         $this->metadata->getFieldMapping()->willReturn(array(
             'title' => array(
                 'type' => 'string',

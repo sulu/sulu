@@ -10,7 +10,7 @@ use Sulu\Bundle\SearchBundle\Search\QueryHit;
 
 class ZendLuceneAdapter implements AdapterInterface
 {
-    const ID_FIELDNAME = '_id';
+    const ID_FIELDNAME = '__id';
 
     protected $basePath;
 
@@ -48,7 +48,7 @@ class ZendLuceneAdapter implements AdapterInterface
             }
         }
 
-        $luceneDocument->addField(Lucene\Document\Field::Text(self::ID_FIELDNAME, $document->getId()));
+        $luceneDocument->addField(Lucene\Document\Field::Keyword(self::ID_FIELDNAME, $document->getId()));
 
         $index->addDocument($luceneDocument);
     }
@@ -58,7 +58,7 @@ class ZendLuceneAdapter implements AdapterInterface
         $hits = $index->find(self::ID_FIELDNAME . ':' . $document->getId());
 
         foreach ($hits as $hit) {
-            $index->remove($hit->id);
+            $index->delete($hit->id);
         }
     }
 

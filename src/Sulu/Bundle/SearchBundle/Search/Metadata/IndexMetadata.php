@@ -7,8 +7,8 @@ use Metadata\ClassMetadata;
 class IndexMetadata extends ClassMetadata
 {
     protected $indexName;
-
     protected $fieldMapping = array();
+    protected $idField;
 
     public function getIndexName() 
     {
@@ -34,4 +34,15 @@ class IndexMetadata extends ClassMetadata
     {
         $this->fieldMapping[$name] = $mapping;
     }
+
+    public function getIdField() 
+    {
+        return $this->idField;
+    }
+    
+    public function setIdField($idField)
+    {
+        $this->idField = $idField;
+    }
+    
 }

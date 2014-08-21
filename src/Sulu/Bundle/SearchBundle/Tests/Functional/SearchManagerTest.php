@@ -12,16 +12,21 @@ class SearchManagerTest extends BaseTestCase
         $nbResults = 10;
         $searchManager = $this->getContainer()->get('sulu_search.search_manager');
 
-        for ($i = 0; $i <= $nbResults; $i++) {
-            $product = new Product();
-            $product->setTitle('Hello this is a product '.$i);
-            $product->setBody('To be or not to be, that is the question');
+        // ensure that we do not create new documents for existing IDs
+        for ($i = 1; $i <= 2; $i++) {
 
-            $searchManager->index($product);
+            for ($i = 1; $i <= $nbResults; $i++) {
+                $product = new Product();
+                $product->setId($i);
+                $product->setTitle('Hello this is a product '.$i);
+                $product->setBody('To be or not to be, that is the question');
+
+                $searchManager->index($product);
+            }
+
+            $res = $searchManager->search('Hello*', 'product');
+
+            $this->assertCount($nbResults, $res);
         }
-
-        $res = $searchManager->search('Hello*', 'product');
-
-        $this->assertCount($nbResults, $res);
     }
 }

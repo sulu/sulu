@@ -8,7 +8,7 @@ env:
 
 before_script:
   - composer require symfony/symfony:${SYMFONY_VERSION}
-#  - vendor/symfony-cmf/testing/bin/travis/phpcr_odm_doctrine_dbal.sh
+  - vendor/symfony-cmf/testing/bin/travis/phpcr_odm_doctrine_dbal.sh
 
 script: phpunit --coverage-text
 

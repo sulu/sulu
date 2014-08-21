@@ -52,10 +52,12 @@ class SearchManager
         $metadata = $this->getMetadata($object);
 
         $indexName = $metadata->getIndexName();
+        $idField = $metadata->getIdField();
         $fields = $metadata->getFieldMapping();
 
         $document = new Document();
         $accessor = PropertyAccess::createPropertyAccessor();
+        $document->setId($accessor->getValue($object, $idField));
 
         foreach ($fields as $fieldName => $fieldMapping) {
             $document->addField(Field::create($fieldName, $accessor->getValue($object, $fieldName), $fieldMapping['type']));

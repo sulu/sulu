@@ -17,7 +17,6 @@ class Document
         $this->id = $id;
     }
     
-
     public function addField(Field $field)
     {
         $this->fields[] = $field;

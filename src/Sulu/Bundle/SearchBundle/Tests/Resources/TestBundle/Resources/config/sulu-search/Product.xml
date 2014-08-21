@@ -2,6 +2,7 @@
 
     <mapping class="Sulu\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product">
         <indexName>product</indexName>
+        <idField name="id"/>
         <fields>
             <field name="title" type="string" />
             <field name="body" type="string" />
