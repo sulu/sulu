@@ -47,10 +47,6 @@ class DoctrineListBuilder extends AbstractListBuilder
      */
     protected $sortField;
 
-    /**
-     * @var AbstractDoctrineFieldDescriptor[]
-     */
-    protected $whereFields = array();
 
     public function __construct(EntityManager $em, $entityName)
     {
@@ -116,6 +112,10 @@ class DoctrineListBuilder extends AbstractListBuilder
             $joins = array_merge($joins, $whereField->getJoins());
         }
 
+        foreach ($this->whereNotFields as $whereNotField) {
+            $joins = array_merge($joins, $whereNotField->getJoins());
+        }
+
         return $joins;
     }
 
@@ -155,6 +155,15 @@ class DoctrineListBuilder extends AbstractListBuilder
                 $qb->setParameter($whereField->getName(), $this->whereValues[$whereField->getName()]);
             }
             $qb->andWhere('(' . implode(' AND ', $whereParts) . ')');
+        }
+
+        if (!empty($this->whereNotFields)) {
+            $whereNotParts = array();
+            foreach ($this->whereNotFields as $whereNotField) {
+                $whereNotParts[] = $whereNotField->getSelect() . ' != :' . $whereNotField->getName();
+                $qb->setParameter($whereNotField->getName(), $this->whereNotValues[$whereNotField->getName()]);
+            }
+            $qb->andWhere('(' . implode(' AND ', $whereNotParts) . ')');
         }
 
         if ($this->search != null) {

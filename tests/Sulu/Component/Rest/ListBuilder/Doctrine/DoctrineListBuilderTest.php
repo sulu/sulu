@@ -263,6 +263,36 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
         $this->doctrineListBuilder->execute();
     }
 
+    public function testSetWhereNot()
+    {
+        $fieldDescriptors = array(
+            'title_id' => new DoctrineFieldDescriptor('id', 'title_id', self::$entityName),
+            'desc_id' => new DoctrineFieldDescriptor('id', 'desc_id', self::$entityName)
+        );
+
+        $filter = array(
+            'title_id' => 3,
+            'desc_id' => 1,
+        );
+
+        foreach ($filter as $key => $value) {
+            $this->doctrineListBuilder->addField($fieldDescriptors[$key]);
+            $this->doctrineListBuilder->whereNot($fieldDescriptors[$key], $value);
+        }
+
+        $this->assertCount(2, PHPUnit_Framework_Assert::readAttribute($this->doctrineListBuilder, 'whereNotValues'));
+        $whereNotValues = PHPUnit_Framework_Assert::readAttribute($this->doctrineListBuilder, 'whereNotValues');
+        $this->assertEquals(3, $whereNotValues['title_id']);
+        $this->assertEquals(1, $whereNotValues['desc_id']);
+
+        $this->assertCount(2, PHPUnit_Framework_Assert::readAttribute($this->doctrineListBuilder, 'whereNotFields'));
+        $whereNotFields = PHPUnit_Framework_Assert::readAttribute($this->doctrineListBuilder, 'whereNotFields');
+        $this->assertEquals($fieldDescriptors['title_id'], $whereNotFields['title_id']);
+        $this->assertEquals($fieldDescriptors['desc_id'], $whereNotFields['desc_id']);
+
+        $this->doctrineListBuilder->execute();
+    }
+
     public function testJoinMethods()
     {
         $fieldDescriptors = array(
