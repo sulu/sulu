@@ -9,19 +9,24 @@
         }
     ],
     "require": {
+        "jms/metadata": "~1.5",
+        "symfony/property-access": "~2.4"
     },
     "require-dev": {
         "zendframework/zend-stdlib": "2.3.1 as 2.0.0rc5",
         "zendframework/zendsearch": "2.*",
         "symfony-cmf/testing": "dev-master",
-        "jms/metadata": "~1.5",
-        "symfony/filesystem": "~2.4"
+        "symfony/filesystem": "~2.4",
+        "phpspec/prophecy-phpunit": "~1.0"
+    },
+    "suggest": {
+        "zendframework/zendsearch": "To use the PHP based Zend Search library (based on Lucene)",
+        "zendframework/zend-stdlib": "Needed (as in require dev) in addition to zendsearch"
     },
     "autoload": {
         "psr-4": {
             "Sulu\\Bundle\\SearchBundle\\": ""
         }
     },
-    "minimum-stability": "dev",
-    "require": {}
+    "minimum-stability": "dev"
 }

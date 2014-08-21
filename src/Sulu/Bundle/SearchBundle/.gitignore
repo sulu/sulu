@@ -1,4 +1,5 @@
 Tests/Resources/app/cache
 Tests/Resources/app/logs
+Tests/Resources/app/data
 composer.lock
 vendor

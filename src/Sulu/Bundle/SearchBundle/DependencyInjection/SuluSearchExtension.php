@@ -27,13 +27,27 @@ class SuluSearchExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container)
     {
-        //$configuration = new Configuration();
-        //$config = $this->processConfiguration($configuration, $configs);
-
-        $bundles = $container->getParameter('kernel.bundles');
+        $configuration = new Configuration();
+        $config = $this->processConfiguration($configuration, $configs);
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $this->loadSearch($config, $loader, $container);
+        $this->loadMetadata($config, $loader, $container);
+    }
+
+    protected function loadSearch($config, $loader, $container)
+    {
+        $container->setAlias('sulu_search.adapter', $config['adapter_id']);
+        $container->setParameter('sulu_search.adapter.zend_lucene.basepath', $config['adapters']['zend_lucene']['basepath']);
+
+        $loader->load('search.xml');
+    }
+
+    protected function loadMetadata($config, $loader, $container)
+    {
         $loader->load('metadata.xml');
+
+        $bundles = $container->getParameter('kernel.bundles');
 
         $metadataPaths = array();
         foreach ($bundles as $bundle) {

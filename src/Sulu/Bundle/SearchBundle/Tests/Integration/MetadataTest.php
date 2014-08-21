@@ -11,7 +11,7 @@ class MetadataTest extends BaseTestCase
         $this->metadataFactory = $this->getContainer()->get('sulu_search.metadata.factory');
     }
 
-    public function testMetadtaFactory()
+    public function testMetadataFactory()
     {
         $metadata = $this->metadataFactory->getMetadataForClass('Sulu\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product');
         $metadata = $metadata->getOutsideClassMetadata();
