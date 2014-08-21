@@ -148,22 +148,14 @@ class DoctrineListBuilder extends AbstractListBuilder
             }
         }
 
+        // set where
         if (!empty($this->whereFields)) {
-            $whereParts = array();
-            foreach ($this->whereFields as $whereField) {
-                $whereParts[] = $whereField->getSelect() . ' = :' . $whereField->getName();
-                $qb->setParameter($whereField->getName(), $this->whereValues[$whereField->getName()]);
-            }
-            $qb->andWhere('(' . implode(' AND ', $whereParts) . ')');
+            $this->setWheres($this->whereFields, $this->whereValues, $qb, self::WHERE_COMPARATOR_EQUAL);
         }
 
+        // set where not
         if (!empty($this->whereNotFields)) {
-            $whereNotParts = array();
-            foreach ($this->whereNotFields as $whereNotField) {
-                $whereNotParts[] = $whereNotField->getSelect() . ' != :' . $whereNotField->getName();
-                $qb->setParameter($whereNotField->getName(), $this->whereNotValues[$whereNotField->getName()]);
-            }
-            $qb->andWhere('(' . implode(' AND ', $whereNotParts) . ')');
+            $this->setWheres($this->whereNotFields, $this->whereNotValues, $qb, self::WHERE_COMPARATOR_UNEQUAL);
         }
 
         if ($this->search != null) {
@@ -177,5 +169,22 @@ class DoctrineListBuilder extends AbstractListBuilder
         }
 
         return $qb;
+    }
+
+    /**
+     * sets where statement
+     * @param array $whereFields
+     * @param array $whereValues
+     * @param QueryBuilder $queryBuilder
+     * @param string $comparator
+     */
+    private function setWheres(array $whereFields, array $whereValues, QueryBuilder $queryBuilder, $comparator = self::WHERE_COMPARATOR_EQUAL)
+    {
+        $whereParts = array();
+        foreach ($whereFields as $whereField) {
+            $whereParts[] = $whereField->getSelect() . ' ' . $comparator . ' :' . $whereField->getName();
+            $queryBuilder->setParameter($whereField->getName(), $whereValues[$whereField->getName()]);
+        }
+        $queryBuilder->andWhere('(' . implode(' AND ', $whereParts) . ')');
     }
 }
