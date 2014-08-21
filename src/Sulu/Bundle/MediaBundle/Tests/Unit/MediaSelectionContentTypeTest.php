@@ -10,11 +10,10 @@
 
 namespace Sulu\Bundle\MediaBundle\Tests\Unit\Content\Types;
 
-//FIXME remove on update to phpunit 3.8, caused by https://github.com/sebastianbergmann/phpunit/issues/604
-use JMS\Serializer\Serializer;
 use PHPUnit_Framework_TestCase;
 use Sulu\Bundle\MediaBundle\Content\MediaSelectionContainer;
 
+//FIXME remove on update to phpunit 3.8, caused by https://github.com/sebastianbergmann/phpunit/issues/604
 interface NodeInterface extends \PHPCR\NodeInterface, \Iterator
 {
 }
@@ -31,18 +30,12 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
      */
     private $mediaManager;
 
-    /**
-     * @var Serializer
-     */
-    private $serializer ;
-
     protected function setUp()
     {
         $this->mediaManager = $this->getMock('\Sulu\Bundle\MeediaBundle\Media\Manager\MediaManagerInterface');
-        $this->serializer = $this->getMock('JMS\Serializer\Serializer', array(), array(), '', false);
 
         $this->mediaSelection = new \Sulu\Bundle\MediaBundle\Content\Types\MediaSelectionContentType(
-            $this->mediaManager, $this->serializer, 'SuluMediaBundle:Template:image-selection.html.twig'
+            $this->mediaManager,'SuluMediaBundle:Template:image-selection.html.twig'
         );
     }
 
@@ -170,8 +163,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
             array(1, 2, 3, 4),
             'en',
             null,
-            $this->mediaManager,
-            $this->serializer
+            $this->mediaManager
         );
 
         $node = $this->getMockForAbstractClass(
@@ -228,8 +220,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
             array(1, 2, 3, 4),
             'en',
             null,
-            $this->mediaManager,
-            $this->serializer
+            $this->mediaManager
         );
 
         $node = $this->getMockForAbstractClass(
@@ -296,8 +287,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
             array(1, 2, 3, 4),
             'en',
             'document',
-            $this->mediaManager,
-            $this->serializer
+            $this->mediaManager
         );
 
         $node = $this->getMockForAbstractClass(
@@ -355,8 +345,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
             array(1, 2, 3, 4),
             'en',
             'document',
-            $this->mediaManager,
-            $this->serializer
+            $this->mediaManager
         );
 
         $node = $this->getMockForAbstractClass(
@@ -424,8 +413,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
             array(1, 2, 3, 4),
             'en',
             'document,image',
-            $this->mediaManager,
-            $this->serializer
+            $this->mediaManager
         );
 
         $node = $this->getMockForAbstractClass(
@@ -483,8 +471,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
             array(1, 2, 3, 4),
             'en',
             'document,image',
-            $this->mediaManager,
-            $this->serializer
+            $this->mediaManager
         );
 
         $node = $this->getMockForAbstractClass(

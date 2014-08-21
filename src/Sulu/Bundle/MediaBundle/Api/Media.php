@@ -605,6 +605,35 @@ class Media extends ApiWrapper
     }
 
     /**
+     * Returns array representation of media
+     * @return array
+     */
+    public function toArray()
+    {
+        return array(
+            'id' => $this->getId(),
+            'locale' => $this->getLocale(),
+            'collection' => $this->getCollection(),
+            'size' => $this->getSize(),
+            'mimeType' => $this->getMimeType(),
+            'title' => $this->getTitle(),
+            'description' => $this->getDescription(),
+            'version' => $this->getVersion(),
+            'name' => $this->getName(),
+            'storageOptions' => $this->getStorageOptions(),
+            'publishLanguages' => $this->getPublishLanguages(),
+            'tags' => $this->getTags(),
+            'thumbnails' => $this->getThumbnails(),
+            'url' => $this->getUrl(),
+            'changed' => $this->getChanged(),
+            'changer' => $this->getChanger(),
+            'created' => $this->getCreated(),
+            'creator' => $this->getCreator(),
+            'downloadCounter' => $this->getDownloadCounter()
+        );
+    }
+
+    /**
      * @return FileVersion
      * @throws \Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException
      */

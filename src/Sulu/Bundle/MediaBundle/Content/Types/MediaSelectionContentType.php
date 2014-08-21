@@ -10,7 +10,6 @@
 
 namespace Sulu\Bundle\MediaBundle\Content\Types;
 
-use JMS\Serializer\Serializer;
 use PHPCR\NodeInterface;
 use Sulu\Bundle\MediaBundle\Content\MediaSelectionContainer;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
@@ -32,15 +31,9 @@ class MediaSelectionContentType extends ComplexContentType
      */
     private $template;
 
-    /**
-     * @var Serializer
-     */
-    private $serializer;
-
-    function __construct($mediaManager, $serializer, $template)
+    function __construct($mediaManager, $template)
     {
         $this->mediaManager = $mediaManager;
-        $this->serializer = $serializer;
         $this->template = $template;
     }
 
@@ -118,8 +111,7 @@ class MediaSelectionContentType extends ComplexContentType
                 isset($data['ids']) ? $data['ids'] : array(),
                 $languageCode,
                 $types,
-                $this->mediaManager,
-                $this->serializer
+                $this->mediaManager
             );
         }
 
