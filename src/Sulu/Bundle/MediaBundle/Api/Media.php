@@ -619,19 +619,16 @@ class Media extends ApiWrapper
             'title' => $this->getTitle(),
             'description' => $this->getDescription(),
             'version' => $this->getVersion(),
-            'versions' => $this->getVersions(),
             'name' => $this->getName(),
             'storageOptions' => $this->getStorageOptions(),
             'publishLanguages' => $this->getPublishLanguages(),
             'tags' => $this->getTags(),
             'thumbnails' => $this->getThumbnails(),
-            'formats' => $this->getFormats(),
             'url' => $this->getUrl(),
             'changed' => $this->getChanged(),
             'changer' => $this->getChanger(),
             'created' => $this->getCreated(),
             'creator' => $this->getCreator(),
-            'properties' => $this->getProperties(),
             'downloadCounter' => $this->getDownloadCounter()
         );
     }
