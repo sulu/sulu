@@ -16,6 +16,10 @@ namespace Sulu\Component\Rest\ListBuilder;
  */
 interface ListBuilderInterface
 {
+    const WHERE_COMPARATOR_EQUAL = '=';
+
+    const WHERE_COMPARATOR_UNEQUAL = '!=';
+
     const SORTORDER_ASC = 'ASC';
 
     const SORTORDER_DESC = 'DESC';

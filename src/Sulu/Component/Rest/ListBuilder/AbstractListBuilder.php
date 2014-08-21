@@ -12,13 +12,6 @@ namespace Sulu\Component\Rest\ListBuilder;
 
 abstract class AbstractListBuilder implements ListBuilderInterface
 {
-
-    /**
-     * comparator for where conditions
-     */
-    const WHERE_COMPARATOR_EQUAL = '=';
-    const WHERE_COMPARATOR_UNEQUAL = '!=';
-
     /**
      * The field descriptors for the current list
      * @var AbstractFieldDescriptor[]
