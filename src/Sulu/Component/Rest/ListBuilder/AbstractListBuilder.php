@@ -14,7 +14,7 @@ abstract class AbstractListBuilder implements ListBuilderInterface
 {
 
     /**
-     * conditions for
+     * comparator for where conditions
      */
     const WHERE_COMPARATOR_EQUAL = '=';
     const WHERE_COMPARATOR_UNEQUAL = '!=';
