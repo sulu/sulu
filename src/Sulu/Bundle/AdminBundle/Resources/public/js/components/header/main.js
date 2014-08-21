@@ -96,15 +96,15 @@ define([], function () {
         templates = {
             skeleton: [
                 '<div class="inner">',
-                    '<div class="' + constants.infoClass + '"></div>',
-                    '<div class="' + constants.headlineClass + '">',
-                    '<span class="fa-' + constants.backIcon + ' ' + constants.backClass + '"></span>',
-                    '<span class="' + constants.titleColorClass + '"></span>',
+                '   <div class="' + constants.infoClass + '"></div>',
+                '   <div class="' + constants.headlineClass + '">',
+                '   <span class="fa-' + constants.backIcon + ' ' + constants.backClass + '"></span>',
+                '   <span class="' + constants.titleColorClass + '"></span>',
                 '<h1 class="bright"><%= headline %></h1>',
                 '</div>',
                 '<div class="bottom-row">',
-                    '<div class="' + constants.bottomContentClass + '"></div>',
-                    '<div class="' + constants.toolbarClass + '"></div>',
+                '   <div class="' + constants.bottomContentClass + '"></div>',
+                '   <div class="' + constants.toolbarClass + '"></div>',
                 '</div>',
                 '</div>'
             ].join(''),
