@@ -4,7 +4,7 @@
     "description": "The sulu bundle for managing media",
     "license": "MIT",
     "keywords": ["media", "asset", "crm"],
-    "version": "0.3.0",
+    "version": "dev-develop",
     "authors": [
         {
             "name": "Sulu Community",
@@ -18,13 +18,13 @@
         "friendsofsymfony/http-cache": "@dev",
         "jms/serializer-bundle": "@dev",
         "stof/doctrine-extensions-bundle": "1.1.*@dev",
-        "sulu/sulu": "0.6.*",
-        "sulu/admin-bundle": "0.6.*",
-        "sulu/tag-bundle": "0.6.*",
+        "sulu/sulu": "dev-develop",
+        "sulu/admin-bundle": "dev-develop",
+        "sulu/tag-bundle": "dev-develop",
         "imagine/imagine": "~0.6.1",
         "liip/theme-bundle": "@dev",
 
-	    "sulu/category-bundle": "@dev",
+        "sulu/category-bundle": "@dev",
         "sulu/security-bundle": "@dev",
         "sulu/contact-bundle": "@dev",
         "willdurand/hateoas-bundle": "0.3.*"
@@ -35,7 +35,7 @@
         "doctrine/doctrine-bundle": "1.2.*",
         "symfony/monolog-bundle": "2.4.*",
         "phpunit/phpunit": "4.0.*",
-        "sulu/test-bundle": "0.6.*"
+        "sulu/test-bundle": "dev-develop"
     },
     "autoload": {
         "psr-0": {
