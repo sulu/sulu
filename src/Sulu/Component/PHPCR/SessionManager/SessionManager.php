@@ -10,7 +10,6 @@
 
 namespace Sulu\Component\PHPCR\SessionManager;
 
-
 use PHPCR\CredentialsInterface;
 use PHPCR\NodeInterface;
 use PHPCR\RepositoryFactoryInterface;
@@ -38,8 +37,7 @@ class SessionManager implements SessionManagerInterface
     }
 
     /**
-     * returns a valid session to interact with a phpcr database
-     * @return SessionInterface
+     * {@inheritdoc}
      */
     public function getSession()
     {
@@ -47,11 +45,7 @@ class SessionManager implements SessionManagerInterface
     }
 
     /**
-     * returns the route node for given webspace
-     * @param string $webspaceKey
-     * @param string $languageCode
-     * @param string $segment
-     * @return NodeInterface
+     * {@inheritdoc}
      */
     public function getRouteNode($webspaceKey, $languageCode, $segment = null)
     {
@@ -69,9 +63,7 @@ class SessionManager implements SessionManagerInterface
     }
 
     /**
-     * returns the content node for given webspace
-     * @param string $webspaceKey
-     * @return NodeInterface
+     * {@inheritdoc}
      */
     public function getContentNode($webspaceKey)
     {
@@ -82,10 +74,7 @@ class SessionManager implements SessionManagerInterface
     }
 
     /**
-     * returns the temp node for given webspace
-     * @param string $webspaceKey
-     * @param string $alias for normal the user id but it could be everything
-     * @return \PHPCR\NodeInterface
+     * {@inheritdoc}
      */
     public function getTempNode($webspaceKey, $alias)
     {
