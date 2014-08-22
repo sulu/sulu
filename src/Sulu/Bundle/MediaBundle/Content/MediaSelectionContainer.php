@@ -12,13 +12,14 @@ namespace Sulu\Bundle\MediaBundle\Content;
 
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\MediaBundle\Api\Media;
+use Sulu\Component\Util\ArrayableInterface;
 use JMS\Serializer\Annotation\Exclude;
 
 /**
  * Container for Image selection, holds config for image selection and lazy loads images matches the ids
  * @package Sulu\Bundle\MediaBundle\Content
  */
-class MediaSelectionContainer implements \Serializable
+class MediaSelectionContainer implements \Serializable, ArrayableInterface
 {
     /**
      * @var string[]
@@ -186,5 +187,18 @@ class MediaSelectionContainer implements \Serializable
         $this->ids = $values['ids'];
         $this->types = $values['types'];
         $this->displayOption = $values['displayOption'];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function toArray($depth = null)
+    {
+        return array(
+            'config' => $this->getConfig(),
+            'ids' => $this->getIds(),
+            'types' => $this->getTypes(),
+            'displayOption' => $this->getDisplayOption()
+        );
     }
 }
