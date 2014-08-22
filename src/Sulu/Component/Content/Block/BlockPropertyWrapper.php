@@ -250,4 +250,12 @@ class BlockPropertyWrapper implements PropertyInterface
     {
         return $this->property->getPlaceholder($languageCode);
     }
+
+    /**
+     * {@inheritdoc
+     */
+    public function toArray($depth = null)
+    {
+        return $this->property->toArray($depth);
+    }
 }

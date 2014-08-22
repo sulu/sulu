@@ -12,6 +12,7 @@ namespace Sulu\Component\Content;
 
 use DateTime;
 use Sulu\Component\Content\Section\SectionPropertyInterface;
+use Sulu\Component\Util\ArrayableInterface;
 use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
 
 /**
@@ -1008,7 +1009,7 @@ abstract class Structure implements StructureInterface
 
             $this->appendProperties($this->getProperties(), $result);
 
-            $result['ext'] = $this->ext;
+            $result['ext'] = $this->extToArray();
 
             return $result;
         } else {
@@ -1038,6 +1039,20 @@ abstract class Structure implements StructureInterface
         }
     }
 
+    private function extToArray()
+    {
+        $result = array();
+        foreach ($this->ext as $key => $value) {
+            if ($value instanceof ArrayableInterface) {
+                $result[$key] = $value->toArray();
+            } else {
+                $result[$key] = $value;
+            }
+        }
+
+        return $result;
+    }
+
     private function appendProperties($properties, &$array)
     {
         /** @var PropertyInterface $property */
@@ -1045,7 +1060,7 @@ abstract class Structure implements StructureInterface
             if ($property instanceof SectionPropertyInterface) {
                 $this->appendProperties($property->getChildProperties(), $array);
             } else {
-                $array[$property->getName()] = $property->getValue();
+                $array[$property->getName()] = $property->toArray();
             }
         }
     }
