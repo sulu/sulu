@@ -29,20 +29,21 @@ interface PreviewInterface
      * stops a preview
      * @param int $userId
      * @param string $contentUuid
-     * @param string $templateKey
-     * @param string $languageCode
+     * @param string $webspaceKey
+     * @param string $locale
+     * @return
      */
-    public function stop($userId, $contentUuid, $templateKey, $languageCode);
+    public function stop($userId, $contentUuid, $webspaceKey, $locale);
 
     /**
      * returns if a preview started for user and content
      * @param int $userId
      * @param string $contentUuid
-     * @param string $templateKey
-     * @param string $languageCode
+     * @param string $webspaceKey
+     * @param string $locale
      * @return bool
      */
-    public function started($userId, $contentUuid, $templateKey, $languageCode);
+    public function started($userId, $contentUuid, $webspaceKey, $locale);
 
     /**
      * saves changes for given user and content
@@ -61,13 +62,12 @@ interface PreviewInterface
      * returns pending changes for given user and content
      * @param $userId
      * @param string $contentUuid
-     * @param string $templateKey
+     * @param string $webspaceKey
      * @param string $languageCode
      * @throws PreviewNotFoundException
      * @return array
      */
-    public function getChanges($userId, $contentUuid, $templateKey, $languageCode);
-
+    public function getChanges($userId, $contentUuid, $webspaceKey, $languageCode);
 
     /**
      * renders a content for given user
@@ -75,10 +75,10 @@ interface PreviewInterface
      * @param string $contentUuid
      * @param string $templateKey
      * @param string $languageCode
+     * @param $webspaceKey
      * @param bool $partial
      * @param string|null $property
-     * @throws PreviewNotFoundException
      * @return string
      */
-    public function render($userId, $contentUuid, $templateKey, $languageCode, $partial = false, $property = null);
+    public function render($userId, $contentUuid, $templateKey, $languageCode, $webspaceKey, $partial = false, $property = null);
 } 

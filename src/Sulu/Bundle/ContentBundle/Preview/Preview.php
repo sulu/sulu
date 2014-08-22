@@ -39,9 +39,14 @@ class Preview implements PreviewInterface
     private $templating;
 
     /**
-     * @var Cache
+     * @var PreviewCacheProviderInterface
      */
     private $cache;
+
+    /**
+     * @var Cache
+     */
+    private $changesCache;
 
     /**
      * @var ContentMapperInterface
@@ -75,7 +80,8 @@ class Preview implements PreviewInterface
 
     public function __construct(
         EngineInterface $templating,
-        Cache $cache,
+        PreviewCacheProviderInterface $cache,
+        Cache $changesCache,
         ContentMapperInterface $mapper,
         StructureManagerInterface $structureManager,
         ContentTypeManagerInterface $contentTypeManager,
@@ -86,6 +92,7 @@ class Preview implements PreviewInterface
     ) {
         $this->templating = $templating;
         $this->cache = $cache;
+        $this->changesCache = $changesCache;
         $this->mapper = $mapper;
         $this->structureManager = $structureManager;
         $this->contentTypeManager = $contentTypeManager;
@@ -104,7 +111,7 @@ class Preview implements PreviewInterface
         if ($content->getKey() !== $templateKey) {
             $content = $this->updateTemplate($content, $templateKey, $webspaceKey, $languageCode);
         }
-        $this->addStructure($userId, $contentUuid, $content, $templateKey, $languageCode);
+        $this->addStructure($contentUuid, $content, $webspaceKey, $languageCode);
 
         return $content;
     }
@@ -112,17 +119,17 @@ class Preview implements PreviewInterface
     /**
      * {@inheritdoc}
      */
-    public function stop($userId, $contentUuid, $templateKey, $languageCode)
+    public function stop($userId, $contentUuid, $webspaceKey, $locale)
     {
-        $this->deleteStructure($userId, $contentUuid, $templateKey, $languageCode);
+        $this->deleteStructure($userId, $contentUuid, $webspaceKey, $locale);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function started($userId, $contentUuid, $templateKey, $languageCode)
+    public function started($userId, $contentUuid, $webspaceKey, $locale)
     {
-        return $this->cache->contains($this->getCacheKey($userId, $contentUuid, $templateKey, $languageCode));
+        return $this->cache->contains($contentUuid, $webspaceKey, $locale);
     }
 
     /**
@@ -131,11 +138,11 @@ class Preview implements PreviewInterface
     public function update($userId, $contentUuid, $webspaceKey, $templateKey, $languageCode, $property, $data)
     {
         /** @var StructureInterface $content */
-        $content = $this->loadStructure($userId, $contentUuid, $templateKey, $languageCode);
+        $content = $this->loadStructure($contentUuid, $webspaceKey, $languageCode);
 
         if ($content != false) {
             $this->setValue($content, $property, $data, $webspaceKey, $languageCode);
-            $this->addStructure($userId, $contentUuid, $content, $templateKey, $languageCode);
+            $this->addStructure($contentUuid, $content, $webspaceKey, $languageCode);
 
             if (false !== ($sequence = $this->getSequence($content, $property))) {
                 // length of property path is important to render
@@ -144,9 +151,9 @@ class Preview implements PreviewInterface
                     array_slice($sequence['sequence'], 0, (-1) * sizeof($sequence['propertyPath']))
                 );
             }
-            $changes = $this->render($userId, $contentUuid, $templateKey, $languageCode, true, $property);
+            $changes = $this->render($userId, $contentUuid, $templateKey, $languageCode, $webspaceKey, true, $property);
             if ($changes !== false) {
-                $this->addChanges($userId, $contentUuid, $property, $changes, $templateKey, $languageCode);
+                $this->addChanges($userId, $property, $changes);
             }
 
             return $content;
@@ -206,10 +213,10 @@ class Preview implements PreviewInterface
     /**
      * {@inheritdoc}
      */
-    public function getChanges($userId, $contentUuid, $templateKey, $languageCode)
+    public function getChanges($userId, $contentUuid, $webspaceKey, $languageCode)
     {
-        if ($this->started($userId, $contentUuid, $templateKey, $languageCode)) {
-            $result = $this->readChanges($userId, $contentUuid, $templateKey, $languageCode);
+        if ($this->started($userId, $contentUuid, $webspaceKey, $languageCode)) {
+            $result = $this->readChanges($userId);
 
             return $result !== false ? $result : array();
         } else {
@@ -220,10 +227,18 @@ class Preview implements PreviewInterface
     /**
      * {@inheritdoc}
      */
-    public function render($userId, $contentUuid, $templateKey, $languageCode, $partial = false, $property = null)
+    public function render(
+        $userId,
+        $contentUuid,
+        $templateKey,
+        $languageCode,
+        $webspaceKey,
+        $partial = false,
+        $property = null
+    )
     {
         /** @var StructureInterface $content */
-        $content = $this->loadStructure($userId, $contentUuid, $templateKey, $languageCode);
+        $content = $this->loadStructure($contentUuid, $webspaceKey, $languageCode);
 
         if ($content != false) {
             // set active theme
@@ -375,59 +390,27 @@ class Preview implements PreviewInterface
 
     /**
      * saves data in cache
-     * @param int $userId
-     * @param string $contentUuid
-     * @param StructureInterface $data
-     * @param string $templateKey
-     * @param string $languageCode
-     * @return bool
      */
-    private function addStructure($userId, $contentUuid, $data, $templateKey, $languageCode)
+    private function addStructure($contentUuid, $data, $webspaceKey, $languageCode)
     {
-        $cacheId = $this->getCacheKey($userId, $contentUuid, $templateKey, $languageCode);
-        $structureCacheId = $this->getCacheKey($userId, $contentUuid, $templateKey, $languageCode, 'structure');
-
-        return $this->cache->save($cacheId, $data, $this->lifeTime) &&
-        $this->cache->save($structureCacheId, $data->getKey(), $this->lifeTime);
+        return $this->cache->save($contentUuid, $data, $webspaceKey, $languageCode);
     }
 
     /**
      * returns cache value
-     * @param int $userId
-     * @param string $contentUuid
-     * @param string $templateKey
-     * @param string $languageCode
-     * @return bool|mixed
      */
-    private function loadStructure($userId, $contentUuid, $templateKey, $languageCode)
+    private function loadStructure($contentUuid, $webspaceKey, $languageCode)
     {
-        // preload structure class
-        $structureCacheId = $this->getCacheKey($userId, $contentUuid, $templateKey, $languageCode, 'structure');
-        $structureKey = $this->cache->fetch($structureCacheId);
-        $this->structureManager->getStructure($structureKey);
-
-        $id = $this->getCacheKey($userId, $contentUuid, $templateKey, $languageCode);
-
-        if ($this->cache->contains($id)) {
-            return $this->cache->fetch($id);
-        }
-
-        return false;
+        return $this->cache->fetch($contentUuid, $webspaceKey, $languageCode);
     }
 
     /**
      * saves changes for given user and content
-     * @param string $userId
-     * @param string $contentUuid
-     * @param string $property
-     * @param string $content
-     * @param string $templateKey
-     * @param string $languageCode
      */
-    private function addChanges($userId, $contentUuid, $property, $content, $templateKey, $languageCode)
+    private function addChanges($userId, $property, $content)
     {
-        $id = $this->getCacheKey($userId, $contentUuid, $templateKey, $languageCode, 'changes');
-        $changes = $this->cache->fetch($id);
+        $id = $this->getCacheKey($userId, 'changes');
+        $changes = $this->changesCache->fetch($id);
 
         if (!$changes) {
             $changes = array();
@@ -437,36 +420,19 @@ class Preview implements PreviewInterface
 
         $changes[$property] = array('property' => $property, 'content' => $content);
 
-        $this->cache->save($id, $changes, $this->lifeTime);
-    }
-
-    /**
-     * adds a reload event to changes
-     * @param $userId
-     * @param $contentUuid
-     * @param $templateKey
-     * @param $languageCode
-     */
-    private function addReload($userId, $contentUuid, $templateKey, $languageCode)
-    {
-        $this->addChanges($userId, $contentUuid, $templateKey, $languageCode, 'reload', true);
+        $this->changesCache->save($id, $changes, $this->lifeTime);
     }
 
     /**
      * return changes for given user and content
-     * @param $userId
-     * @param $contentUuid
-     * @param $templateKey
-     * @param $languageCode
-     * @return array
      */
-    private function readChanges($userId, $contentUuid, $templateKey, $languageCode)
+    private function readChanges($userId)
     {
-        $id = $this->getCacheKey($userId, $contentUuid, $templateKey, $languageCode, 'changes');
-        if ($this->cache->contains($id)) {
-            $changes = $this->cache->fetch($id);
+        $id = $this->getCacheKey($userId,'changes');
+        if ($this->changesCache->contains($id)) {
+            $changes = $this->changesCache->fetch($id);
             // clean array if changes are read
-            $this->cache->save($id, array(), $this->lifeTime);
+            $this->changesCache->save($id, array(), $this->lifeTime);
 
             return $changes;
         }
@@ -475,27 +441,17 @@ class Preview implements PreviewInterface
     }
 
     /**
-     * delete cache entry
-     * @param int $userId
-     * @param string $contentUuid
-     * @param $templateKey
-     * @param $languageCode
-     * @return bool
+     * delete cache entries
      */
-    private function deleteStructure($userId, $contentUuid, $templateKey, $languageCode)
+    private function deleteStructure($userId, $contentUuid, $webspaceKey, $locale)
     {
-        $cacheId = $this->getCacheKey($userId, $contentUuid, $templateKey, $languageCode);
-        $structureCacheId = $this->getCacheKey($userId, $contentUuid, $templateKey, $languageCode, 'structure');
-        $changesCacheId = $this->getCacheKey($userId, $contentUuid, $templateKey, $languageCode, 'changes');
+        $changesCacheId = $this->getCacheKey($userId, $contentUuid, 'changes');
 
-        if ($this->cache->contains($cacheId)) {
-            return $this->cache->delete($cacheId);
+        if ($this->cache->contains($contentUuid, $webspaceKey, $locale)) {
+            return $this->cache->delete($contentUuid, $webspaceKey);
         }
-        if ($this->cache->contains($structureCacheId)) {
-            return $this->cache->delete($structureCacheId);
-        }
-        if ($this->cache->contains($changesCacheId)) {
-            return $this->cache->delete($changesCacheId);
+        if ($this->changesCache->contains($changesCacheId)) {
+            return $this->changesCache->delete($changesCacheId);
         }
 
         return true;
@@ -503,21 +459,12 @@ class Preview implements PreviewInterface
 
     /**
      * returns cache key
-     * @param int $userId
-     * @param string $contentUuid
-     * @param string $templateKey
-     * @param string $languageCode
-     * @param bool $subKey
-     * @return string
      */
-    private function getCacheKey($userId, $contentUuid, $templateKey, $languageCode, $subKey = false)
+    private function getCacheKey($userId, $subKey = false)
     {
         return sprintf(
-            'U%s:C%s:T%s:L%s%s',
+            'U%s-%s',
             $userId,
-            $contentUuid,
-            $templateKey,
-            $languageCode,
             ($subKey != false ? ':' . $subKey : '')
         );
     }

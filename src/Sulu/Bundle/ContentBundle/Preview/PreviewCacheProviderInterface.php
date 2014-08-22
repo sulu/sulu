@@ -31,10 +31,11 @@ interface PreviewCacheProviderInterface
      *
      * @param string $id The cache id of the entry to check for.
      * @param string $webspaceKey The key of webspace.
+     * @param string $locale The current locale.
      *
      * @return boolean TRUE if a cache entry exists for the given cache id, FALSE otherwise.
      */
-    function contains($id, $webspaceKey);
+    function contains($id, $webspaceKey, $locale);
 
     /**
      * Puts data into the cache.

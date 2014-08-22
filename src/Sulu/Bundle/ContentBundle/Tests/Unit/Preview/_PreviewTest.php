@@ -15,14 +15,10 @@ use Doctrine\Common\Cache\Cache;
 use Liip\ThemeBundle\ActiveTheme;
 use ReflectionMethod;
 use Sulu\Bundle\ContentBundle\Preview\Preview;
-use Sulu\Bundle\ContentBundle\Preview\PreviewCacheProvider;
-use Sulu\Bundle\ContentBundle\Preview\PreviewCacheProviderInterface;
 use Sulu\Bundle\ContentBundle\Preview\PreviewInterface;
-use Sulu\Bundle\TestBundle\Testing\PhpcrTestCase;
 use Sulu\Component\Content\Block\BlockProperty;
 use Sulu\Component\Content\Block\BlockPropertyType;
 use Sulu\Component\Content\Property;
-use Sulu\Component\Content\PropertyTag;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\Types\TextArea;
 use Sulu\Component\Content\Types\TextLine;
@@ -33,7 +29,7 @@ use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Templating\EngineInterface;
 
-class PreviewTest extends PhpcrTestCase
+class PreviewTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var PreviewInterface
@@ -43,32 +39,32 @@ class PreviewTest extends PhpcrTestCase
     /**
      * @var Cache
      */
-    private $changesCache;
+    private $cache;
 
     /**
-     * @var PreviewCacheProviderInterface
+     * @var WebspaceManagerInterface
      */
-    private $previewCache;
+    private $webspaceManager;
 
     protected function setUp()
     {
+        $mapper = $this->prepareMapperMock();
         $templating = $this->prepareTemplatingMock();
+        $structureManager=$this->prepareStructureManagerMock();
+        $contentTypeManager = $this->prepareContentTypeManager();
         $controllerResolver = $this->prepareControllerResolver();
-        $this->changesCache = new ArrayCache();
-
-        $this->prepareWebspaceManager();
-        $this->prepareMapper();
+        $this->cache = new ArrayCache();
 
         $activeTheme = new ActiveTheme('test', array('test'));
-        $this->previewCache = new PreviewCacheProvider($this->mapper, $this->securityContext, $this->sessionManager);
+
+        $this->prepareWebspaceManager();
 
         $this->preview = new Preview(
             $templating,
-            $this->previewCache,
-            $this->changesCache,
-            $this->mapper,
-            $this->structureManager,
-            $this->contentTypeManager,
+            $this->cache,
+            $mapper,
+            $structureManager,
+            $contentTypeManager,
             $controllerResolver,
             $this->webspaceManager,
             $activeTheme,
@@ -114,6 +110,24 @@ class PreviewTest extends PhpcrTestCase
         }
     }
 
+    public function prepareContentTypeManager()
+    {
+        $container = $this->getMock('Sulu\Component\Content\ContentTypeManagerInterface');
+
+        $container->expects($this->any())
+            ->method('get')
+            ->will(
+                $this->returnValueMap(
+                    array(
+                        array('text_line', new TextLine('')),
+                        array('text_area', new TextArea(''))
+                    )
+                )
+            );
+
+        return $container;
+    }
+
     public function prepareControllerResolver()
     {
         $controller = $this->getMock('\Sulu\Bundle\WebsiteBundle\Controller\WebsiteController', array('indexAction'));
@@ -129,6 +143,16 @@ class PreviewTest extends PhpcrTestCase
         return $resolver;
     }
 
+    public function prepareStructureManagerMock()
+    {
+        $structureManagerMock = $this->getMock('\Sulu\Component\Content\StructureManagerInterface');
+        $structureManagerMock->expects($this->any())
+            ->method('getStructure')
+            ->will($this->returnValue($this->prepareStructureMock()));
+
+        return $structureManagerMock;
+    }
+
     public function prepareTemplatingMock()
     {
         $templating = $this->getMock('\Symfony\Component\Templating\EngineInterface');
@@ -139,9 +163,15 @@ class PreviewTest extends PhpcrTestCase
         return $templating;
     }
 
-    public function structureCallback()
+    public function prepareMapperMock()
     {
-        return $this->prepareStructureMock();
+        $structure = $this->prepareStructureMock();
+        $mapper = $this->getMock('\Sulu\Component\Content\Mapper\ContentMapperInterface');
+        $mapper->expects($this->any())
+            ->method('load')
+            ->will($this->returnValue($structure));
+
+        return $mapper;
     }
 
     public function prepareStructureMock()
@@ -162,32 +192,14 @@ class PreviewTest extends PhpcrTestCase
         $method->invokeArgs(
             $structureMock,
             array(
-                new Property(
-                    'title',
-                    'title',
-                    'text_line',
-                    false,
-                    true,
-                    1,
-                    1,
-                    array(),
-                    array(new PropertyTag('sulu.node.name', 1))
-                )
+                new Property('title', 'title', 'text_line')
             )
         );
 
         $method->invokeArgs(
             $structureMock,
             array(
-                new Property(
-                    'url', 'url', 'resource_locator',
-                    false,
-                    true,
-                    1,
-                    1,
-                    array(),
-                    array(new PropertyTag('sulu.rlp', 1))
-                )
+                new Property('url', 'url', 'resource_locator')
             )
         );
 
@@ -208,6 +220,23 @@ class PreviewTest extends PhpcrTestCase
         $type1->addChild($prop);
 
         $block->addType($type1);
+        $block->setValue(
+            array(
+                array(
+                    'type' => 'type1',
+                    'title'=>'Block-Title-1',
+                    'article' => array('Block-Article-1-1', 'Block-Article-1-2')
+                ),
+                array(
+                    'type' => 'type1',
+                    'title'=>'Block-Title-2',
+                    'article' => array('Block-Article-2-1', 'Block-Article-2-2')
+                )
+            )
+        );
+
+
+
 
         $method->invokeArgs(
             $structureMock,
@@ -220,49 +249,6 @@ class PreviewTest extends PhpcrTestCase
         $structureMock->getProperty('article')->setValue('Lorem Ipsum dolorem apsum');
 
         return $structureMock;
-    }
-
-    /**
-     * @return StructureInterface[]
-     */
-    private function prepareData()
-    {
-        $data = array(
-            array(
-                'title' => 'Test1',
-                'url' => '/test-1',
-                'article' => 'Lorem Ipsum dolorem apsum',
-                'block' => array(
-                    array(
-                        'type' => 'type1',
-                        'title' => 'Block-Title-1',
-                        'article' => array('Block-Article-1-1', 'Block-Article-1-2')
-                    ),
-                    array(
-                        'type' => 'type1',
-                        'title' => 'Block-Title-2',
-                        'article' => array('Block-Article-2-1', 'Block-Article-2-2')
-                    )
-                )
-            ),
-            array(
-                'title' => 'Test2',
-                'url' => '/test-2',
-                'article' => 'asdfasdf',
-                'block' => array(
-                    array(
-                        'type' => 'type1',
-                        'title' => 'Block-Title-2',
-                        'article' => array('Block-Article-2-1', 'Block-Article-2-2')
-                    )
-                )
-            )
-        );
-
-        $data[0] = $this->mapper->save($data[0], 'overview', 'default', 'en', 1);
-        $data[1] = $this->mapper->save($data[1], 'overview', 'default', 'en', 1);
-
-        return $data;
     }
 
     public function renderCallback()
@@ -279,6 +265,7 @@ class PreviewTest extends PhpcrTestCase
     public function indexCallback(StructureInterface $structure, $preview = false, $partial = false)
     {
         return new Response($this->render($structure->title, $structure->article, $structure->block, $partial));
+
     }
 
     public function render($title, $article, $block, $partial = false)
@@ -310,60 +297,57 @@ class PreviewTest extends PhpcrTestCase
         return sprintf($template, $title, $title, $article);
     }
 
+    protected function tearDown()
+    {
+        parent::tearDown();
+    }
+
     public function testStartPreview()
     {
-        $data = $this->prepareData();
-
-        $content = $this->preview->start(1, $data[0]->getUuid(), 'default', 'overview', 'en');
+        $content = $this->preview->start(1, '123-123-123', 'default', 'overview', 'en');
         // check result
-        $this->assertEquals('Test1', $content->title);
+        $this->assertEquals('Title', $content->title);
         $this->assertEquals('Lorem Ipsum dolorem apsum', $content->article);
 
         // check cache
-        $node = $this->sessionManager->getTempNode('default', 1)->getNode('preview');
-        $this->assertNotNull($node);
-        $this->assertEquals('Test1', $node->getPropertyValue('i18n:en-title'));
-        $this->assertEquals('Lorem Ipsum dolorem apsum', $node->getPropertyValue('i18n:en-article'));
+        $this->assertTrue($this->cache->contains('U1:C123-123-123:Toverview:Len'));
+        $content = $this->cache->fetch('U1:C123-123-123:Toverview:Len');
+        $this->assertEquals('Title', $content->title);
+        $this->assertEquals('Lorem Ipsum dolorem apsum', $content->article);
     }
 
     public function testStopPreview()
     {
-        $data = $this->prepareData();
+        $this->preview->start(1, '123-123-123', 'default', 'overview', 'en');
+        $this->assertTrue($this->cache->contains('U1:C123-123-123:Toverview:Len'));
 
-        $this->preview->start(1, $data[0]->getUuid(), 'default', 'overview', 'en');
-        $this->assertTrue($this->previewCache->contains($data[0]->getUuid(), 'default', 'en'));
-
-        $this->preview->stop(1, $data[0]->getUuid(), 'default', 'en');
-        $this->assertFalse($this->previewCache->contains($data[0]->getUuid(), 'default', 'en'));
+        $this->preview->stop(1, '123-123-123', 'overview', 'en');
+        $this->assertFalse($this->cache->contains('U1:C123-123-123:Toverview:Len'));
     }
 
     public function testUpdate()
     {
-        $data = $this->prepareData();
-
-        $this->preview->start(1, $data[0]->getUuid(), 'default', 'overview', 'en', 'default', 'en');
-        $this->preview->update(1, $data[0]->getUuid(), 'default', 'overview', 'en', 'title', 'aaaa');
-        $content = $this->preview->getChanges(1, $data[0]->getUuid(), 'default', 'en');
+        $this->preview->start(1, '123-123-123', 'sulu_io', 'overview', 'en', 'default', 'en');
+        $this->preview->update(1, '123-123-123', 'sulu_io', 'overview', 'en', 'title', 'aaaa');
+        $content = $this->preview->getChanges(1, '123-123-123', 'overview', 'en');
 
         // check result
         $this->assertEquals(['aaaa', 'PREF: aaaa'], $content['title']['content']);
 
         // check cache
-        $this->assertTrue($this->previewCache->contains($data[0]->getUuid(), 'default', 'en'));
-        $content = $this->previewCache->fetch($data[0]->getUuid(), 'default', 'en');
+        $this->assertTrue($this->cache->contains('U1:C123-123-123:Toverview:Len'));
+        $content = $this->cache->fetch('U1:C123-123-123:Toverview:Len');
         $this->assertEquals('aaaa', $content->title);
         $this->assertEquals('Lorem Ipsum dolorem apsum', $content->article);
     }
 
     public function testUpdateSequence()
     {
-        $data = $this->prepareData();
-
-        $this->preview->start(1, $data[0]->getUuid(), 'default', 'overview', 'en');
+        $this->preview->start(1, '123-123-123', 'sulu_io', 'overview', 'en');
         $this->preview->update(
             1,
-            $data[0]->getUuid(),
-            'default',
+            '123-123-123',
+            'sulu_io',
             'overview',
             'en',
             'block,0,article,0',
@@ -371,37 +355,16 @@ class PreviewTest extends PhpcrTestCase
         );
         $this->preview->update(
             1,
-            $data[0]->getUuid(),
-            'default',
+            '123-123-123',
+            'sulu_io',
             'overview',
             'en',
             'block,0,article,1',
             'New-Block-Article-1-2'
         );
-        $this->preview->update(
-            1,
-            $data[0]->getUuid(),
-            'default',
-            'overview',
-            'en',
-            'block,0,title',
-            'New-Block-Title-1'
-        );
-        $this->preview->update(
-            1,
-            $data[0]->getUuid(),
-            'default',
-            'overview',
-            'en',
-            'block,1,title',
-            'New-Block-Title-2'
-        );
-        $changes = $this->preview->getChanges(
-            1,
-            $data[0]->getUuid(),
-            'default',
-            'en'
-        );
+        $this->preview->update(1, '123-123-123', 'sulu_io', 'overview', 'en', 'block,0,title', 'New-Block-Title-1');
+        $this->preview->update(1, '123-123-123', 'sulu_io', 'overview', 'en', 'block,1,title', 'New-Block-Title-2');
+        $changes = $this->preview->getChanges(1, '123-123-123', 'overview', 'en');
 
         // check result
         $this->assertEquals(['New-Block-Article-1-1', 'New-Block-Article-1-2'], $changes['block,0,article']['content']);
@@ -426,8 +389,8 @@ class PreviewTest extends PhpcrTestCase
         );
 
         // check cache
-        $this->assertTrue($this->previewCache->contains($data[0]->getUuid(), 'default', 'en'));
-        $content = $this->previewCache->fetch($data[0]->getUuid(), 'default', 'en');
+        $this->assertTrue($this->cache->contains('U1:C123-123-123:Toverview:Len'));
+        $content = $this->cache->fetch('U1:C123-123-123:Toverview:Len');
         $this->assertEquals(
             array(
                 array(
@@ -453,19 +416,16 @@ class PreviewTest extends PhpcrTestCase
 
     public function testRender()
     {
-        $data = $this->prepareData();
-
-        $this->preview->start(1, $data[0]->getUuid(), 'default', 'overview', 'en');
+        $this->preview->start(1, '123-123-123', 'sulu_io', 'overview', 'en');
         $response = $this->preview->render(
             1,
-            $data[0]->getUuid(),
+            '123-123-123',
             'overview',
-            'en',
-            'default'
+            'en'
         );
 
         $expected = $this->render(
-            'Test1',
+            'Title',
             'Lorem Ipsum dolorem apsum',
             array(
                 array(
@@ -489,17 +449,15 @@ class PreviewTest extends PhpcrTestCase
 
     public function testRealScenario()
     {
-        $data = $this->prepareData();
-
         // start preview from FORM
-        $content = $this->preview->start(1, $data[0]->getUuid(), 'default', 'overview', 'en');
-        $this->assertEquals('Test1', $content->title);
+        $content = $this->preview->start(1, '123-123-123', 'sulu_io', 'overview', 'en');
+        $this->assertEquals('Title', $content->title);
         $this->assertEquals('Lorem Ipsum dolorem apsum', $content->article);
 
         // render PREVIEW
-        $response = $this->preview->render(1, $data[0]->getUuid(), 'overview', 'en', 'default');
+        $response = $this->preview->render(1, '123-123-123', 'overview', 'en');
         $expected = $this->render(
-            'Test1',
+            'Title',
             'Lorem Ipsum dolorem apsum',
             array(
                 array(
@@ -521,16 +479,16 @@ class PreviewTest extends PhpcrTestCase
         $this->assertEquals($expected, $response);
 
         // change a property in FORM
-        $content = $this->preview->update(1, $data[0]->getUuid(), 'default', 'overview', 'en', 'title', 'New Title');
+        $content = $this->preview->update(1, '123-123-123', 'sulu_io', 'overview', 'en', 'title', 'New Title');
         $this->assertEquals('New Title', $content->title);
         $this->assertEquals('Lorem Ipsum dolorem apsum', $content->article);
 
-        $content = $this->preview->update(1, $data[0]->getUuid(), 'default', 'overview', 'en', 'article', 'asdf');
+        $content = $this->preview->update(1, '123-123-123', 'sulu_io', 'overview', 'en', 'article', 'asdf');
         $this->assertEquals('New Title', $content->title);
         $this->assertEquals('asdf', $content->article);
 
         // update PREVIEW
-        $changes = $this->preview->getChanges(1, $data[0]->getUuid(), 'default','en');
+        $changes = $this->preview->getChanges(1, '123-123-123', 'overview', 'en');
         $this->assertEquals(2, sizeof($changes));
         $this->assertEquals(['New Title', 'PREF: New Title'], $changes['title']['content']);
         $this->assertEquals('title', $changes['title']['property']);
@@ -538,11 +496,11 @@ class PreviewTest extends PhpcrTestCase
         $this->assertEquals('article', $changes['article']['property']);
 
         // update PREVIEW
-        $changes = $this->preview->getChanges(1, $data[0]->getUuid(), 'default', 'en');
+        $changes = $this->preview->getChanges(1, '123-123-123', 'overview', 'en');
         $this->assertEquals(0, sizeof($changes));
 
         // rerender PREVIEW
-        $response = $this->preview->render(1, $data[0]->getUuid(), 'overview', 'en', 'default');
+        $response = $this->preview->render(1, '123-123-123', 'overview', 'en');
         $expected = $this->render(
             'New Title',
             'asdf',

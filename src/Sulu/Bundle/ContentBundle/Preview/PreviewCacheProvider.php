@@ -66,11 +66,15 @@ class PreviewCacheProvider implements PreviewCacheProviderInterface
     /**
      * {@inheritdoc}
      */
-    function contains($id, $webspaceKey)
+    function contains($id, $webspaceKey, $locale)
     {
         $tempNode = $this->getPreviewTempNode($webspaceKey);
 
-        return ($tempNode !== null && $tempNode->getPropertyValue($this->prefix . '-page') === $id);
+        return (
+            $tempNode !== null && $tempNode->getPropertyValue($this->prefix . '-page') === $id &&
+            $tempNode->getPropertyValue($this->prefix . '-page') === $id &&
+            $tempNode->getPropertyValue($this->prefix . '-language') === $locale
+        );
     }
 
     /**
@@ -86,11 +90,14 @@ class PreviewCacheProvider implements PreviewCacheProviderInterface
                 $tempNode = $this->clonePreviewTempNodeFrom($id, $webspaceKey);
             }
 
-            // remove resourcelocators before save temporary content
-            $rlpProperties = $data->getPropertiesByTagName('sulu.rlp');
             $dataArray = $data->toArray();
-            foreach ($rlpProperties as $property) {
-                unset($dataArray[$property->getName()]);
+
+            // remove resourcelocators before save temporary content
+            if ($data->hasTag('sulu.rlp')) {
+                $rlpProperties = $data->getPropertiesByTagName('sulu.rlp');
+                foreach ($rlpProperties as $property) {
+                    unset($dataArray[$property->getName()]);
+                }
             }
 
             $this->contentMapper->save(
@@ -104,6 +111,7 @@ class PreviewCacheProvider implements PreviewCacheProviderInterface
             );
 
             $tempNode->setProperty($this->prefix . '-page', $id);
+            $tempNode->setProperty($this->prefix . '-language', $locale);
 
             return true;
         }

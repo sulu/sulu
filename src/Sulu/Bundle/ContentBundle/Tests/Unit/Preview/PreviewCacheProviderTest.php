@@ -132,6 +132,51 @@ class PreviewCacheProviderTest extends PhpcrTestCase
         $this->assertEquals('overview', $node->getPropertyValue('i18n:en-template'));
     }
 
+    public function testSaveExists()
+    {
+        $data = $this->prepareData();
+        $this->cache->save($data[0]->getUuid(), $data[0], 'default', 'en');
+
+        $result = $this->cache->save($data[0]->getUuid(), $data[0], 'default', 'en');
+        $this->assertTrue($result);
+
+        $session = $this->sessionManager->getSession();
+        $node = $session->getNode('/cmf/default/temp/1/preview');
+
+        $this->assertEquals('Testtitle', $node->getPropertyValue('i18n:en-title'));
+        $this->assertEquals('overview', $node->getPropertyValue('i18n:en-template'));
+    }
+
+    public function testSaveAnotherLanguage()
+    {
+        $data = $this->prepareData();
+        $this->cache->save($data[0]->getUuid(), $data[0], 'default', 'de');
+
+        $result = $this->cache->save($data[0]->getUuid(), $data[0], 'default', 'en');
+        $this->assertTrue($result);
+
+        $session = $this->sessionManager->getSession();
+        $node = $session->getNode('/cmf/default/temp/1/preview');
+
+        $this->assertEquals('Testtitle', $node->getPropertyValue('i18n:en-title'));
+        $this->assertEquals('overview', $node->getPropertyValue('i18n:en-template'));
+    }
+
+    public function testSaveAnotherExists()
+    {
+        $data = $this->prepareData();
+        $this->cache->save($data[1]->getUuid(), $data[1], 'default', 'en');
+
+        $result = $this->cache->save($data[0]->getUuid(), $data[0], 'default', 'en');
+        $this->assertTrue($result);
+
+        $session = $this->sessionManager->getSession();
+        $node = $session->getNode('/cmf/default/temp/1/preview');
+
+        $this->assertEquals('Testtitle', $node->getPropertyValue('i18n:en-title'));
+        $this->assertEquals('overview', $node->getPropertyValue('i18n:en-template'));
+    }
+
     public function testLoad()
     {
         $data = $this->prepareData();
@@ -147,6 +192,15 @@ class PreviewCacheProviderTest extends PhpcrTestCase
         $data = $this->prepareData();
 
         $result = $this->cache->fetch($data[0]->getUuid(), 'default', 'en');
+        $this->assertFalse($result);
+    }
+
+    public function testLoadAnotherLanguage()
+    {
+        $data = $this->prepareData();
+        $this->cache->save($data[0]->getUuid(), $data[0], 'default', 'de');
+
+        $result = $this->cache->contains($data[0]->getUuid(), 'default', 'en');
         $this->assertFalse($result);
     }
 
@@ -171,6 +225,15 @@ class PreviewCacheProviderTest extends PhpcrTestCase
     public function testContainsNotExists()
     {
         $data = $this->prepareData();
+
+        $result = $this->cache->contains($data[0]->getUuid(), 'default', 'en');
+        $this->assertFalse($result);
+    }
+
+    public function testContainsAnotherLanguage()
+    {
+        $data = $this->prepareData();
+        $this->cache->save($data[0]->getUuid(), $data[0], 'default', 'de');
 
         $result = $this->cache->contains($data[0]->getUuid(), 'default', 'en');
         $this->assertFalse($result);
