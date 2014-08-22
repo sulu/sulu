@@ -10,6 +10,8 @@
 
 namespace Sulu\Component\Content;
 
+use Sulu\Component\Util\ArrayableInterface;
+
 /**
  * Property of Structure generated from Structure Manager to map a template
  */
@@ -343,5 +345,17 @@ class Property implements PropertyInterface, \JsonSerializable
         $clone->setValue($this->getValue());
 
         return $clone;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function toArray($depth = null)
+    {
+        if ($this->getValue() instanceof ArrayableInterface) {
+            return $this->getValue()->toArray($depth);
+        } else {
+            return $this->getValue();
+        }
     }
 }
