@@ -31,7 +31,7 @@ class StructureViewResolver
     {
         $data = array();
 
-        foreach ($structure->getProperties() as $property) {
+        foreach ($structure->getProperties(true) as $property) {
             $contentType = $this->contentTypeManager->get($property->getContentTypeName());
             $data[$property->getName()] = $contentType->getViewData($property);
         }
