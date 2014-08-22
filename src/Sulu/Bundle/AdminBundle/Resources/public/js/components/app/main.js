@@ -196,13 +196,21 @@ define(function() {
          * @param route {String} the route to navigate to
          * @param trigger {Boolean} if trigger is true it will be actually navigated to the route. Otherwise only the borswer-url will be updated
          * @param noLoader {Boolean} if false no loader will be instantiated
+         * @param forceReload {Boolean} force page to reload
          */
-        navigate: function(route, trigger, noLoader) {
+        navigate: function(route, trigger, noLoader, forceReload) {
             // if trigger is not define make it always true to actually route to
             trigger = (typeof trigger !== 'undefined') ? trigger : true;
 
+            var isSameRoute = this.currentRoute !== route;
+            forceReload = forceReload === true ? true : false;
+
+            if (isSameRoute && forceReload) {
+                this.sandbox.mvc.history.fragment = null;
+                isSameRoute = false;
+            }
             // only route if route has changed
-            if (this.currentRoute !== route) {
+            if (!isSameRoute) {
                 if (noLoader !== true && this.currentRoute !== route && this.currentRoute !== null) {
                     // todo: start loader
                 }
