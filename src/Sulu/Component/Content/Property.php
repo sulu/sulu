@@ -82,6 +82,11 @@ class Property implements PropertyInterface, \JsonSerializable
      */
     private $value;
 
+    /**
+     * @var boolean
+     */
+    private $indexed = false;
+
     function __construct(
         $name,
         $metaData,
@@ -288,6 +293,16 @@ class Property implements PropertyInterface, \JsonSerializable
     public function getMetadata()
     {
         return $this->metadata;
+    }
+
+    public function getIndexed() 
+    {
+        return $this->indexed;
+    }
+    
+    public function setIndexed($indexed)
+    {
+        $this->indexed = $indexed;
     }
 
     /**
