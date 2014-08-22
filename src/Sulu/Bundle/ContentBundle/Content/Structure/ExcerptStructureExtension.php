@@ -115,7 +115,7 @@ class ExcerptStructureExtension extends StructureExtension
             $data[$property->getName()] = $property->getValue();
         }
 
-        return $data;
+        return new ExcerptValueContainer($data);
     }
 
     /**

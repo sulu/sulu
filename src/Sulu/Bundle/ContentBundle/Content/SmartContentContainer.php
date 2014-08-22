@@ -15,12 +15,13 @@ use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Content\StructureInterface;
 use JMS\Serializer\Annotation\Exclude;
+use Sulu\Component\Util\ArrayableInterface;
 
 /**
  * Container for SmartContent, holds the config for a smart content, and lazy loads the structures meeting its criteria
  * @package Sulu\Bundle\ContentBundle\Content
  */
-class SmartContentContainer implements \Serializable
+class SmartContentContainer implements \Serializable, ArrayableInterface
 {
     /**
      * The node repository, which is needed for lazy loading the smart content data
@@ -215,5 +216,13 @@ class SmartContentContainer implements \Serializable
         $values = unserialize($serialized);
         $this->data = $values['data'];
         $this->config = $values['config'];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function toArray($depth = null)
+    {
+        return $this->getConfig();
     }
 }

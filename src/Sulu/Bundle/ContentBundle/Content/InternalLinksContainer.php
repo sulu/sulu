@@ -14,12 +14,13 @@ use JMS\Serializer\Serializer;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\StructureInterface;
 use JMS\Serializer\Annotation\Exclude;
+use Sulu\Component\Util\ArrayableInterface;
 
 /**
  * Container for InternalLinks, holds the config for a internal links, and lazy loads the structures
  * @package Sulu\Bundle\ContentBundle\Content
  */
-class InternalLinksContainer implements \Serializable
+class InternalLinksContainer implements \Serializable, ArrayableInterface
 {
     /**
      * The node repository, which is needed for lazy loading
@@ -151,5 +152,13 @@ class InternalLinksContainer implements \Serializable
     {
         $values = unserialize($serialized);
         $this->data = $values['data'];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function toArray($depth = null)
+    {
+        return $this->ids;
     }
 }
