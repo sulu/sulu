@@ -84,7 +84,7 @@ class PreviewMessageComponent implements MessageComponentInterface
         $webspaceKey = $msg['webspaceKey'];
 
         // if preview is started
-        if (!$this->preview->started($user, $content, $templateKey, $languageCode)) {
+        if (!$this->preview->started($user, $content, $webspaceKey, $languageCode)) {
             // TODO workspace, language
             $this->preview->start($user, $content, $webspaceKey, $templateKey, $languageCode);
         }
@@ -179,7 +179,7 @@ class PreviewMessageComponent implements MessageComponentInterface
                 $changes = $this->preview->getChanges(
                     $user,
                     $content,
-                    $templateKey,
+                    $webspaceKey,
                     $languageCode
                 );
 

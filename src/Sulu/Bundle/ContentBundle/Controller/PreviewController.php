@@ -81,11 +81,11 @@ class PreviewController extends Controller
             $contentUuid = $startPage->getUuid();
         }
 
-        if (!$preview->started($uid, $contentUuid, $templateKey, $languageCode)) {
+        if (!$preview->started($uid, $contentUuid, $webspaceKey, $languageCode)) {
             $preview->start($uid, $contentUuid, $webspaceKey, $templateKey, $languageCode);
         }
 
-        $content = $preview->render($uid, $contentUuid, $templateKey, $languageCode);
+        $content = $preview->render($uid, $contentUuid, $templateKey, $languageCode, $webspaceKey);
 
         $script = $this->render(
             'SuluContentBundle:Preview:script.html.twig',
@@ -152,7 +152,7 @@ class PreviewController extends Controller
         $languageCode = $this->getLanguageCode($request);
         $templateKey = $this->getTemplateKey($request);
 
-        if (!$preview->started($uid, $contentUuid, $templateKey, $languageCode)) {
+        if (!$preview->started($uid, $contentUuid, $webspaceKey, $languageCode)) {
             $preview->start($uid, $contentUuid, $webspaceKey, $templateKey, $languageCode);
         }
 
@@ -176,10 +176,10 @@ class PreviewController extends Controller
     public function changesAction(Request $request, $contentUuid)
     {
         $uid = $this->getUserId();
+        $webspaceKey = $this->getWebspaceKey($request);
         $languageCode = $this->getLanguageCode($request);
-        $templateKey = $this->getTemplateKey($request);
 
-        $changes = $this->getPreview()->getChanges($uid, $contentUuid, $templateKey, $languageCode);
+        $changes = $this->getPreview()->getChanges($uid, $contentUuid, $webspaceKey, $languageCode);
 
         return new JsonResponse($changes);
     }

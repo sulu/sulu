@@ -71,9 +71,9 @@ class PreviewCacheProvider implements PreviewCacheProviderInterface
         $tempNode = $this->getPreviewTempNode($webspaceKey);
 
         return (
-            $tempNode !== null && $tempNode->getPropertyValue($this->prefix . '-page') === $id &&
-            $tempNode->getPropertyValue($this->prefix . '-page') === $id &&
-            $tempNode->getPropertyValue($this->prefix . '-language') === $locale
+            $tempNode !== null &&
+            $tempNode->getPropertyValueWithDefault($this->prefix . '-page', '') === $id &&
+            $tempNode->getPropertyValueWithDefault($this->prefix . '-language', '') === $locale
         );
     }
 

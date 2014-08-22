@@ -17,6 +17,7 @@ use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\PropertyInterface;
+use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 /**
  * ContentType for TextEditor
@@ -130,14 +131,17 @@ class SmartContent extends ComplexContentType
     ) {
         $value = $property->getValue();
 
-        if (!empty($value['tags'])) {
-            $value['tags'] = $this->tagManager->resolveTagNames($value['tags']);
-        }
+        $accessor = new PropertyAccessor();
 
         // if whole smart-content container is pushed
         if (isset($value['config'])) {
             $value = $value['config'];
         }
+
+        if (!empty($value['tags'])) {
+            $value['tags'] = $this->tagManager->resolveTagNames($value['tags']);
+        }
+
         $node->setProperty($property->getName(), json_encode($value));
     }
 
