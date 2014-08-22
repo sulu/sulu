@@ -202,22 +202,18 @@ define(function() {
             // if trigger is not define make it always true to actually route to
             trigger = (typeof trigger !== 'undefined') ? trigger : true;
 
-            var isSameRoute = this.currentRoute !== route;
             forceReload = forceReload === true ? true : false;
 
-            if (isSameRoute && forceReload) {
+            if (forceReload) {
                 this.sandbox.mvc.history.fragment = null;
-                isSameRoute = false;
             }
             // only route if route has changed
-            if (!isSameRoute) {
-                if (noLoader !== true && this.currentRoute !== route && this.currentRoute !== null) {
-                    // todo: start loader
-                }
-                // navigate
-                router.navigate(route, {trigger: trigger});
-                this.sandbox.dom.scrollTop(this.sandbox.dom.$window, 0);
+            if (noLoader !== true && this.currentRoute !== route && this.currentRoute !== null) {
+                // todo: start loader
             }
+            // navigate
+            router.navigate(route, {trigger: trigger});
+            this.sandbox.dom.scrollTop(this.sandbox.dom.$window, 0);
         },
 
         /**
