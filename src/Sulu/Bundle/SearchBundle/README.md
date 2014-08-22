@@ -4,22 +4,81 @@ SuluSearchBundle
 [![](https://travis-ci.org/sulu-cmf/SuluSearchBundle.png)](https://travis-ci.org/sulu-cmf/SuluSearchBundle)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/sulu-cmf/SuluSearchBundle/badges/quality-score.png?s=ae0673b210ff6dd252a80fbb822e8ac789d24f73)](https://scrutinizer-ci.com/g/sulu-cmf/SuluSearchBundle/)
 
-This bundle is part of the [Sulu Search Management Framework](https://github.com/sulu-cmf/sulu-standard) (CMF) and licensed under the [MIT License](https://github.com/sulu-cmf/SuluSearchBundle/blob/develop/LICENSE).
+This bundle is part of the [Sulu Content Management
+Framework](https://github.com/sulu-cmf/sulu-standard) and licensed under
+the [MIT
+License](https://github.com/sulu-cmf/SuluSearchBundle/blob/develop/LICENSE).
 
-The SuluSearchBundle builds on other sulu-cmf bundles. It provides a solution to create/modify search nodes in sulu. It uses the SearchMapper functionality from [sulu-lib](https://github.com/sulu-cmf/sulu).
+The SuluSearchBundle extends the
+[MassiveSearchBundle](https://github.com/massiveart/MassiveSearchBundle) to
+provide a metadata driver for Sulu Structure classes. This enables Sulu
+content to be indexed.
 
-## Documentation
+## Usage
 
-See [Resources/docs/index.rst](https://github.com/sulu-cmf/SuluSearchBundle/Resources/docs/index.rst)
+This bundle integrates the [MassiveSearchBundle](https://github.com/massiveart/MassiveSearchBundle) into
+Sulu. For general usage informsation refer to the documentation for that bundle.
 
-## Features
+### Mapping structure documents
 
-* Support for Google and OSM + anything if you create a provider class for it.
-* Map display and geosearch are decoupled from eachother
+You can map search indexes on structure documents in the structure template:
+
+````xml
+<?xml version="1.0" ?>
+
+<template xmlns="http://schemas.sulu.io/template/template"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/template-1.0.xsd">
+
+    <!-- ... -->
+
+    <index name="my_index_name" />
+
+
+    <properties>
+        <property name="title" type="text_line" mandatory="true">
+            <!-- ... -->
+
+            <indexField />
+            
+            <!-- ... -->
+        </property>
+    </properties>
+</template>
+```
+
+Note:
+
+- We will index this document into the `my_index_name` index.
+- The property named `title` will be indexed.
+
+### Indexing Structure documents
+
+You index structure documents as you would any other object with the
+MassiveSearchBundle:
+
+````php
+
+// we get a structure from somewhere..
+$yourStructure = $magicalStructureService->getStructure();
+
+$searchManager = $container->get('massive_search.search_manager');
+$searchManager->index($yourStructure);
+````
+
+### Searching 
+
+Likewise, searching is exactly the same as with the massive search bundle:
+
+````php
+
+// we get a structure from somewhere..
+$searchManager = $container->get('massive_search.search_manager');
+$searchManager->search('This is a search string', 'my_index_name);
+````
 
 ## Requirements
 
 * Symfony: 2.3.*
-* Sulu: dev-master
 * See the require section of [composer.json](https://github.com/sulu-cmf/SuluSearchBundle/blob/develop/composer.json)
 
