@@ -78,7 +78,7 @@ class SessionManager implements SessionManagerInterface
      */
     public function getTempNode($webspaceKey, $alias)
     {
-        $tempPath = $this->nodeNames['base'] . '/' . $webspaceKey . '/' . $this->nodeNames['temp'] . '';
+        $tempPath = '/' . $this->nodeNames['base'] . '/' . $webspaceKey . '/' . $this->nodeNames['temp'] . '';
         $tempNode = $this->getSession()->getNode($tempPath, 2);
 
         // create the node on the fly
