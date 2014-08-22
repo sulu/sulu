@@ -80,4 +80,23 @@ class SessionManager implements SessionManagerInterface
 
         return $root->getNode($path);
     }
+
+    /**
+     * returns the temp node for given webspace
+     * @param string $webspaceKey
+     * @param string $alias for normal the user id but it could be everything
+     * @return \PHPCR\NodeInterface
+     */
+    public function getTempNode($webspaceKey, $alias)
+    {
+        $tempPath = $this->nodeNames['base'] . '/' . $webspaceKey . '/' . $this->nodeNames['temp'] . '';
+        $tempNode = $this->getSession()->getNode($tempPath, 2);
+
+        // create the node on the fly
+        if (!$tempNode->hasNode($alias)) {
+            $tempNode->addNode($alias);
+        }
+
+        return $tempNode->getNode($alias);
+    }
 }
