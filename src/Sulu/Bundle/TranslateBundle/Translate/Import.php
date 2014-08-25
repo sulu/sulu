@@ -447,8 +447,9 @@ class Import
      * @param bool $backend True to make the file available in the backend
      * @param bool $frontend True to make the file available in the frontend
      * @param bool $throw If true the methods throws exception if the a file cannot be found
-     * @throws NotFoundResourceException
-     * @throws InvalidResourceException
+     * @throws \Exception
+     * @throws \InvalidArgumentException
+     * @throws \Symfony\Component\Translation\Exception\NotFoundResourceException
      */
     private function importFile($package, $loader, $path, $filename, $backend = true, $frontend = false, $throw = false)
     {
@@ -481,6 +482,7 @@ class Import
                 $package->addCatalogue($catalogue);
                 $catalogue->setLocale($this->locale);
                 $this->em->persist($catalogue);
+                $this->em->flush();
             }
 
             $allMessages = $file->all()['messages'];

@@ -35,7 +35,7 @@ class ExportTest extends DatabaseTestCase
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
-        self::$fixturePath = __DIR__ . '/../../Resources/DataFixtures/Files';
+        self::$fixturePath = __DIR__ . '/../../DataFixtures/Files';
     }
 
     public function setUp()
