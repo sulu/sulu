@@ -39,15 +39,20 @@ sulu_content.template.settings:
     defaults: { _controller: SuluContentBundle:Template:settings }
 
 # Preview
+sulu_content.preview.start:
+    pattern: /preview/{contentUuid}/start
+    methods: GET
+    defaults: { _controller: SuluContentBundle:Preview:start }
+
+sulu_content.preview.render:
+    pattern: /preview/{contentUuid}/render
+    methods: GET
+    defaults: { _controller: SuluContentBundle:Preview:render }
+
 sulu_content.preview.changes:
     pattern: /preview/{contentUuid}.json
     methods: GET
     defaults: { _controller: SuluContentBundle:Preview:changes }
-
-sulu_content.preview.render:
-    pattern: /preview/{contentUuid}
-    methods: GET
-    defaults: { _controller: SuluContentBundle:Preview:render }
 
 sulu_content.preview.update:
     pattern: /preview/{contentUuid}
