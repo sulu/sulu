@@ -35,6 +35,10 @@ sulu_core:
         username: admin
         password: admin
     content:
-        ~
+        templates:
+             paths:
+                 app:
+                     path: %kernel.root_dir%/Resources/templates
+                     internal: false
     webspace:
         ~
