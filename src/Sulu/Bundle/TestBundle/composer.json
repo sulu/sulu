@@ -15,15 +15,15 @@
         "php": ">=5.4",
         "sulu/sulu": "dev-develop",
 
-        "friendsofsymfony/http-cache": "@dev"
+        "friendsofsymfony/http-cache": "@dev",
+        "phpspec/prophecy-phpunit": "~1.0"
     },
     "require-dev": {
         "symfony/symfony": "2.5.*",
         "doctrine/doctrine-bundle": "1.2.*",
         "symfony/monolog-bundle": "2.4.*",
         "phpunit/phpunit": "3.7.*",
-        "friendsofsymfony/rest-bundle": "@dev",
-        "phpspec/prophecy-phpunit": "~1.0"
+        "friendsofsymfony/rest-bundle": "@dev"
     },
     "autoload": {
         "psr-0": {
