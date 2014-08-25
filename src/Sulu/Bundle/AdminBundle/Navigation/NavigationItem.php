@@ -72,28 +72,10 @@ class NavigationItem implements \Iterator
     protected $hasSettings;
 
     /**
-     * The type of the content
-     * @var string
-     */
-    protected $contentType;
-
-    /**
      * Describes how the navigation item should be shown in husky
      * @var string
      */
     protected $displayOption;
-
-    /**
-     * Set which component to call when content navigation item gets clicked
-     * @var string
-     */
-    protected $contentComponent;
-
-    /**
-     * Options array of the contentComponent
-     * @var array
-     */
-    protected $contentComponentOptions;
 
     /**
      * Defines if item is disabled
@@ -104,20 +86,14 @@ class NavigationItem implements \Iterator
     /**
      * @param string $name The name of the item
      * @param NavigationItem $parent The parent of the item
-     * @param array $contentDisplay if null -> default is array('new', 'edit')
      */
-    function __construct($name, $parent = null, array $contentDisplay = null)
+    function __construct($name, $parent = null)
     {
         $this->name = $name;
         $this->disabled = false;
 
         if ($parent != null) {
             $parent->addChild($this);
-        }
-        if ($contentDisplay != null) {
-            $this->contentDisplay = $contentDisplay;
-        } else {
-            $this->contentDisplay = array('new', 'edit');
         }
     }
 
@@ -290,70 +266,6 @@ class NavigationItem implements \Iterator
     }
 
     /**
-     * @param array $contentDisplay
-     */
-    public function setContentDisplay($contentDisplay)
-    {
-        $this->contentDisplay = $contentDisplay;
-    }
-
-    /**
-     * @return array
-     */
-    public function getContentDisplay()
-    {
-        return $this->contentDisplay;
-    }
-
-    /**
-     * @param string $contentType
-     */
-    public function setContentType($contentType)
-    {
-        $this->contentType = $contentType;
-    }
-
-    /**
-     * @return string
-     */
-    public function getContentType()
-    {
-        return $this->contentType;
-    }
-
-    /**
-     * @param string $contentComponent
-     */
-    public function setContentComponent($contentComponent)
-    {
-        $this->contentComponent = $contentComponent;
-    }
-
-    /**
-     * @return string
-     */
-    public function getContentComponent()
-    {
-        return $this->contentComponent;
-    }
-
-    /**
-     * @param array $contentComponentOptions
-     */
-    public function setContentComponentOptions($contentComponentOptions)
-    {
-        $this->contentComponentOptions = $contentComponentOptions;
-    }
-
-    /**
-     * @return array
-     */
-    public function getContentComponentOptions()
-    {
-        return $this->contentComponentOptions;
-    }
-
-    /**
      * @param boolean $disabled
      */
     public function setDisabled($disabled)
@@ -382,8 +294,6 @@ class NavigationItem implements \Iterator
         $new->setHeaderTitle($this->getHeaderTitle());
         $new->setId($this->getId());
         $new->setHasSettings($this->getHasSettings());
-        $new->setContentDisplay($this->getContentDisplay());
-        $new->setContentType($this->getContentType());
         $new->setPosition($this->getPosition());
 
         return $new;
@@ -534,14 +444,6 @@ class NavigationItem implements \Iterator
             'disabled' => $this->getDisabled(),
             'id' => ($this->getId() != null) ? $this->getId() : uniqid(), //FIXME don't use uniqid()
         );
-
-        // content specific options
-        if (!!$this->getContentType()) {
-            $array['contentType'] = $this->getContentType();
-            $array['contentDisplay'] = $this->getContentDisplay();
-            $array['contentComponent'] = $this->getContentComponent();
-            $array['contentComponentOptions'] = $this->getContentComponentOptions();
-        }
 
         if ($this->getHeaderIcon() != null || $this->getHeaderTitle() != null) {
             $array['header'] = array(

@@ -42,8 +42,8 @@ define([], function () {
                 // check action
                 this.sandbox.util.foreach(navigation.items, function (content) {
                     // check DisplayMode (new or edit) and show menu item or don't
-                    hasNew = content.contentDisplay.indexOf('new') >= 0;
-                    hasEdit = content.contentDisplay.indexOf('edit') >= 0;
+                    hasNew = content.display.indexOf('new') >= 0;
+                    hasEdit = content.display.indexOf('edit') >= 0;
                     if ((!id && hasNew) || (id && hasEdit)) {
                         content.action = parseActionUrl.call(this, content.action, url, id);
                         if (content.action === url) {
@@ -264,7 +264,6 @@ define([], function () {
              * @private
              */
             initializeHeader = function (tabsData) {
-
                 // set the variables for the header-component-options properties
                 breadcrumb = (!!header.breadcrumb) ? header.breadcrumb : null;
                 toolbarDisabled = (typeof header.toolbar === 'undefined') ? true : false;
@@ -312,10 +311,8 @@ define([], function () {
             // if a url for the tabs is set load the data first, else start the header with no tabs
             if (!!header.tabs && !!header.tabs.url) {
                 this.sandbox.util.load(header.tabs.url).then(function (data) {
-                    var contentNavigation = JSON.parse(data);
-
                     // start header with tabs data passed
-                    parseContentTabs.call(this, contentNavigation, this.options.id, initializeHeader.bind(this));
+                    parseContentTabs.call(this, data, this.options.id, initializeHeader.bind(this));
                 }.bind(this));
             } else {
                 initializeHeader.call(this, null);
