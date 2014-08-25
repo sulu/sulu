@@ -19,11 +19,10 @@ interface PreviewInterface
      * @param int $userId
      * @param string $contentUuid
      * @param string $webspaceKey
-     * @param string $templateKey
-     * @param string $languageCode
+     * @param string $locale
      * @return StructureInterface
      */
-    public function start($userId, $contentUuid, $webspaceKey, $templateKey, $languageCode);
+    public function start($userId, $contentUuid, $webspaceKey, $locale);
 
     /**
      * stops a preview
@@ -46,44 +45,55 @@ interface PreviewInterface
     public function started($userId, $contentUuid, $webspaceKey, $locale);
 
     /**
+     * update properties in changes array
+     * @param integer $userId
+     * @param string $contentUuid
+     * @param string $webspaceKey
+     * @param string $locale
+     * @param array $changes
+     * @return array
+     */
+    public function updateProperties($userId, $contentUuid, $webspaceKey, $locale, $changes);
+
+    /**
      * saves changes for given user and content
      * @param int $userId
      * @param string $contentUuid
      * @param string $webspaceKey
-     * @param string $languageCode
+     * @param string $locale
      * @param string $property propertyName which was changed
      * @param mixed $data new data
-     * @param string $templateKey template key
      * @return \Sulu\Component\Content\StructureInterface
      */
-    public function update($userId, $contentUuid, $webspaceKey, $templateKey, $languageCode, $property, $data);
-
-    /**
-     * {@inheritdoc}
-     */
-    public function updateTemplate($userId, $contentUuid, $templateKey, $webspaceKey, $languageCode);
+    public function update($userId, $contentUuid, $webspaceKey, $locale, $property, $data);
 
     /**
      * returns pending changes for given user and content
      * @param $userId
      * @param string $contentUuid
      * @param string $webspaceKey
-     * @param string $languageCode
+     * @param string $locale
      * @throws PreviewNotFoundException
      * @return array
      */
-    public function getChanges($userId, $contentUuid, $webspaceKey, $languageCode);
+    public function getChanges($userId, $contentUuid, $webspaceKey, $locale);
 
     /**
      * renders a content for given user
      * @param int $userId
      * @param string $contentUuid
-     * @param string $templateKey
-     * @param string $languageCode
-     * @param $webspaceKey
+     * @param string $webspaceKey
+     * @param string $locale
      * @param bool $partial
      * @param string|null $property
      * @return string
      */
-    public function render($userId, $contentUuid, $templateKey, $languageCode, $webspaceKey, $partial = false, $property = null);
+    public function render(
+        $userId,
+        $contentUuid,
+        $webspaceKey,
+        $locale,
+        $partial = false,
+        $property = null
+    );
 } 

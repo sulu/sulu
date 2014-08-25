@@ -14,10 +14,13 @@ use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\Cache;
 use Liip\ThemeBundle\ActiveTheme;
 use ReflectionMethod;
+use Sulu\Bundle\ContentBundle\Preview\PhpcrCacheProvider;
 use Sulu\Bundle\ContentBundle\Preview\Preview;
 use Sulu\Bundle\ContentBundle\Preview\PreviewCacheProvider;
 use Sulu\Bundle\ContentBundle\Preview\PreviewCacheProviderInterface;
 use Sulu\Bundle\ContentBundle\Preview\PreviewInterface;
+use Sulu\Bundle\ContentBundle\Preview\PreviewRenderer;
+use Sulu\Bundle\ContentBundle\Preview\RdfaCrawler;
 use Sulu\Bundle\TestBundle\Testing\PhpcrTestCase;
 use Sulu\Component\Content\Block\BlockProperty;
 use Sulu\Component\Content\Block\BlockPropertyType;
@@ -50,30 +53,35 @@ class PreviewTest extends PhpcrTestCase
      */
     private $previewCache;
 
+    /**
+     * @var ActiveTheme
+     */
+    private $activeTheme;
+
+    /**
+     * @var PreviewRenderer
+     */
+    private $renderer;
+
+    /**
+     * @var RdfaCrawler
+     */
+    private $crawler;
+
     protected function setUp()
     {
-        $templating = $this->prepareTemplatingMock();
         $controllerResolver = $this->prepareControllerResolver();
         $this->changesCache = new ArrayCache();
 
         $this->prepareWebspaceManager();
         $this->prepareMapper();
 
-        $activeTheme = new ActiveTheme('test', array('test'));
-        $this->previewCache = new PreviewCacheProvider($this->mapper, $this->securityContext, $this->sessionManager);
+        $this->activeTheme = new ActiveTheme('test', array('test'));
+        $this->previewCache = new PhpcrCacheProvider($this->mapper, $this->sessionManager);
+        $this->renderer = new PreviewRenderer($this->activeTheme, $controllerResolver, $this->webspaceManager);
+        $this->crawler = new RdfaCrawler();
 
-        $this->preview = new Preview(
-            $templating,
-            $this->previewCache,
-            $this->changesCache,
-            $this->mapper,
-            $this->structureManager,
-            $this->contentTypeManager,
-            $controllerResolver,
-            $this->webspaceManager,
-            $activeTheme,
-            3600
-        );
+        $this->preview = new Preview($this->contentTypeManager, $this->previewCache, $this->renderer, $this->crawler);
     }
 
     protected function prepareWebspaceManager()
@@ -127,16 +135,6 @@ class PreviewTest extends PhpcrTestCase
             ->will($this->returnValue(array($controller, 'indexAction')));
 
         return $resolver;
-    }
-
-    public function prepareTemplatingMock()
-    {
-        $templating = $this->getMock('\Symfony\Component\Templating\EngineInterface');
-        $templating->expects($this->any())
-            ->method('render')
-            ->will($this->returnCallback(array($this, 'renderCallback')));
-
-        return $templating;
     }
 
     public function structureCallback()
@@ -268,17 +266,23 @@ class PreviewTest extends PhpcrTestCase
     public function renderCallback()
     {
         $args = func_get_args();
-        $template = $args[0];
         /** @var StructureInterface $content */
         $content = $args[1]['content'];
 
-        $result = $this->render($content->title, $content->article, $content->block);
+        $result = $this->render($content->getPropertyValue('title'), $content->getPropertyValue('article'), $content->getPropertyValue('block'));
         return $result;
     }
 
     public function indexCallback(StructureInterface $structure, $preview = false, $partial = false)
     {
-        return new Response($this->render($structure->title, $structure->article, $structure->block, $partial));
+        return new Response(
+            $this->render(
+                $structure->getPropertyValue('title'),
+                $structure->getPropertyValue('article'),
+                $structure->getPropertyValue('block'),
+                $partial
+            )
+        );
     }
 
     public function render($title, $article, $block, $partial = false)
@@ -314,10 +318,10 @@ class PreviewTest extends PhpcrTestCase
     {
         $data = $this->prepareData();
 
-        $content = $this->preview->start(1, $data[0]->getUuid(), 'default', 'overview', 'en');
+        $content = $this->preview->start(1, $data[0]->getUuid(), 'default', 'en');
         // check result
-        $this->assertEquals('Test1', $content->title);
-        $this->assertEquals('Lorem Ipsum dolorem apsum', $content->article);
+        $this->assertEquals('Test1', $content->getPropertyValue('title'));
+        $this->assertEquals('Lorem Ipsum dolorem apsum', $content->getPropertyValue('article'));
 
         // check cache
         $node = $this->sessionManager->getTempNode('default', 1)->getNode('preview');
@@ -330,41 +334,40 @@ class PreviewTest extends PhpcrTestCase
     {
         $data = $this->prepareData();
 
-        $this->preview->start(1, $data[0]->getUuid(), 'default', 'overview', 'en');
-        $this->assertTrue($this->previewCache->contains($data[0]->getUuid(), 'default', 'en'));
+        $this->preview->start(1, $data[0]->getUuid(), 'default', 'en');
+        $this->assertTrue($this->previewCache->contains(1, $data[0]->getUuid(), 'default', 'en'));
 
         $this->preview->stop(1, $data[0]->getUuid(), 'default', 'en');
-        $this->assertFalse($this->previewCache->contains($data[0]->getUuid(), 'default', 'en'));
+        $this->assertFalse($this->previewCache->contains(1, $data[0]->getUuid(), 'default', 'en'));
     }
 
     public function testUpdate()
     {
         $data = $this->prepareData();
 
-        $this->preview->start(1, $data[0]->getUuid(), 'default', 'overview', 'en', 'default', 'en');
-        $this->preview->update(1, $data[0]->getUuid(), 'default', 'overview', 'en', 'title', 'aaaa');
+        $this->preview->start(1, $data[0]->getUuid(), 'default', 'en');
+        $this->preview->update(1, $data[0]->getUuid(), 'default', 'en', 'title', 'aaaa');
         $content = $this->preview->getChanges(1, $data[0]->getUuid(), 'default', 'en');
 
         // check result
-        $this->assertEquals(['aaaa', 'PREF: aaaa'], $content['title']['content']);
+        $this->assertEquals(['aaaa', 'PREF: aaaa'], $content['title']);
 
         // check cache
-        $this->assertTrue($this->previewCache->contains($data[0]->getUuid(), 'default', 'en'));
-        $content = $this->previewCache->fetch($data[0]->getUuid(), 'default', 'en');
-        $this->assertEquals('aaaa', $content->title);
-        $this->assertEquals('Lorem Ipsum dolorem apsum', $content->article);
+        $this->assertTrue($this->previewCache->contains(1, $data[0]->getUuid(), 'default', 'en'));
+        $content = $this->previewCache->fetchStructure(1, 'default', 'en');
+        $this->assertEquals('aaaa', $content->getPropertyValue('title'));
+        $this->assertEquals('Lorem Ipsum dolorem apsum', $content->getPropertyValue('article'));
     }
 
     public function testUpdateSequence()
     {
         $data = $this->prepareData();
 
-        $this->preview->start(1, $data[0]->getUuid(), 'default', 'overview', 'en');
+        $this->preview->start(1, $data[0]->getUuid(), 'default', 'en');
         $this->preview->update(
             1,
             $data[0]->getUuid(),
             'default',
-            'overview',
             'en',
             'block,0,article,0',
             'New-Block-Article-1-1'
@@ -373,7 +376,6 @@ class PreviewTest extends PhpcrTestCase
             1,
             $data[0]->getUuid(),
             'default',
-            'overview',
             'en',
             'block,0,article,1',
             'New-Block-Article-1-2'
@@ -382,7 +384,6 @@ class PreviewTest extends PhpcrTestCase
             1,
             $data[0]->getUuid(),
             'default',
-            'overview',
             'en',
             'block,0,title',
             'New-Block-Title-1'
@@ -391,7 +392,6 @@ class PreviewTest extends PhpcrTestCase
             1,
             $data[0]->getUuid(),
             'default',
-            'overview',
             'en',
             'block,1,title',
             'New-Block-Title-2'
@@ -404,30 +404,30 @@ class PreviewTest extends PhpcrTestCase
         );
 
         // check result
-        $this->assertEquals(['New-Block-Article-1-1', 'New-Block-Article-1-2'], $changes['block,0,article']['content']);
+        $this->assertEquals(['New-Block-Article-1-1', 'New-Block-Article-1-2'], $changes['block,0,article']);
 
-        $this->assertEquals(1, sizeof($changes['block,0']['content']));
+        $this->assertEquals(1, sizeof($changes['block,0']));
         $this->assertEquals(
             "<h1 property=\"title\">New-Block-Title-1</h1>\n" .
             "<ul>\n" .
             "<li property=\"article\">New-Block-Article-1-1</li>\n" .
             "<li property=\"article\">New-Block-Article-1-2</li>\n" .
             "</ul>",
-            $changes['block,0']['content'][0]
+            $changes['block,0'][0]
         );
-        $this->assertEquals(1, sizeof($changes['block,1']['content']));
+        $this->assertEquals(1, sizeof($changes['block,1']));
         $this->assertEquals(
             "<h1 property=\"title\">New-Block-Title-2</h1>\n" .
             "<ul>\n" .
             "<li property=\"article\">Block-Article-2-1</li>\n" .
             "<li property=\"article\">Block-Article-2-2</li>\n" .
             "</ul>",
-            $changes['block,1']['content'][0]
+            $changes['block,1'][0]
         );
 
         // check cache
-        $this->assertTrue($this->previewCache->contains($data[0]->getUuid(), 'default', 'en'));
-        $content = $this->previewCache->fetch($data[0]->getUuid(), 'default', 'en');
+        $this->assertTrue($this->previewCache->contains(1, $data[0]->getUuid(), 'default', 'en'));
+        $content = $this->previewCache->fetchStructure(1, 'default', 'en');
         $this->assertEquals(
             array(
                 array(
@@ -447,7 +447,7 @@ class PreviewTest extends PhpcrTestCase
                     )
                 )
             ),
-            $content->block
+            $content->getPropertyValue('block')
         );
     }
 
@@ -455,13 +455,12 @@ class PreviewTest extends PhpcrTestCase
     {
         $data = $this->prepareData();
 
-        $this->preview->start(1, $data[0]->getUuid(), 'default', 'overview', 'en');
+        $this->preview->start(1, $data[0]->getUuid(), 'default', 'en');
         $response = $this->preview->render(
             1,
             $data[0]->getUuid(),
-            'overview',
-            'en',
-            'default'
+            'default',
+            'en'
         );
 
         $expected = $this->render(
@@ -492,12 +491,12 @@ class PreviewTest extends PhpcrTestCase
         $data = $this->prepareData();
 
         // start preview from FORM
-        $content = $this->preview->start(1, $data[0]->getUuid(), 'default', 'overview', 'en');
-        $this->assertEquals('Test1', $content->title);
-        $this->assertEquals('Lorem Ipsum dolorem apsum', $content->article);
+        $content = $this->preview->start(1, $data[0]->getUuid(), 'default', 'en');
+        $this->assertEquals('Test1', $content->getPropertyValue('title'));
+        $this->assertEquals('Lorem Ipsum dolorem apsum', $content->getPropertyValue('article'));
 
         // render PREVIEW
-        $response = $this->preview->render(1, $data[0]->getUuid(), 'overview', 'en', 'default');
+        $response = $this->preview->render(1, $data[0]->getUuid(), 'default', 'en');
         $expected = $this->render(
             'Test1',
             'Lorem Ipsum dolorem apsum',
@@ -521,28 +520,26 @@ class PreviewTest extends PhpcrTestCase
         $this->assertEquals($expected, $response);
 
         // change a property in FORM
-        $content = $this->preview->update(1, $data[0]->getUuid(), 'default', 'overview', 'en', 'title', 'New Title');
-        $this->assertEquals('New Title', $content->title);
-        $this->assertEquals('Lorem Ipsum dolorem apsum', $content->article);
+        $content = $this->preview->update(1, $data[0]->getUuid(), 'default', 'en', 'title', 'New Title');
+        $this->assertEquals('New Title', $content->getPropertyValue('title'));
+        $this->assertEquals('Lorem Ipsum dolorem apsum', $content->getPropertyValue('article'));
 
-        $content = $this->preview->update(1, $data[0]->getUuid(), 'default', 'overview', 'en', 'article', 'asdf');
-        $this->assertEquals('New Title', $content->title);
-        $this->assertEquals('asdf', $content->article);
+        $content = $this->preview->update(1, $data[0]->getUuid(), 'default', 'en', 'article', 'asdf');
+        $this->assertEquals('New Title', $content->getPropertyValue('title'));
+        $this->assertEquals('asdf', $content->getPropertyValue('article'));
 
         // update PREVIEW
         $changes = $this->preview->getChanges(1, $data[0]->getUuid(), 'default','en');
         $this->assertEquals(2, sizeof($changes));
-        $this->assertEquals(['New Title', 'PREF: New Title'], $changes['title']['content']);
-        $this->assertEquals('title', $changes['title']['property']);
-        $this->assertEquals(['asdf'], $changes['article']['content']);
-        $this->assertEquals('article', $changes['article']['property']);
+        $this->assertEquals(['New Title', 'PREF: New Title'], $changes['title']);
+        $this->assertEquals(['asdf'], $changes['article']);
 
         // update PREVIEW
         $changes = $this->preview->getChanges(1, $data[0]->getUuid(), 'default', 'en');
         $this->assertEquals(0, sizeof($changes));
 
         // rerender PREVIEW
-        $response = $this->preview->render(1, $data[0]->getUuid(), 'overview', 'en', 'default');
+        $response = $this->preview->render(1, $data[0]->getUuid(), 'default', 'en');
         $expected = $this->render(
             'New Title',
             'asdf',
