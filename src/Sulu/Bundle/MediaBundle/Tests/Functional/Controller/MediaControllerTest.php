@@ -41,6 +41,7 @@ class MediaControllerTest extends DatabaseTestCase
     public function setUp()
     {
         $this->setUpSchema();
+        $this->cleanImage();
         $this->setUpMedia(self::$media);
     }
 

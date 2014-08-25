@@ -10,30 +10,29 @@
 
 namespace Sulu\Bundle\MediaBundle\Admin;
 
-use Sulu\Bundle\AdminBundle\Admin\ContentNavigation;
-use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
+use Sulu\Bundle\AdminBundle\Navigation\ContentNavigation;
+use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationItem;
 
 class SuluMediaContentNavigation extends ContentNavigation
 {
-
     public function __construct()
     {
         parent::__construct();
 
         $this->setName('Collection');
 
-        $files = new NavigationItem('content-navigation.media.files');
+        $files = new ContentNavigationItem('content-navigation.media.files');
         $files->setAction('files');
-        $files->setContentType('collection');
-        $files->setContentComponent('collections@sulumedia');
-        $files->setContentComponentOptions(array('display'=>'files'));
+        $files->setGroups(array('collection'));
+        $files->setComponent('collections@sulumedia');
+        $files->setComponentOptions(array('display'=>'files'));
         $this->addNavigationItem($files);
 
-        $settings = new NavigationItem('content-navigation.media.settings');
+        $settings = new ContentNavigationItem('content-navigation.media.settings');
         $settings->setAction('settings');
-        $settings->setContentType('collection');
-        $settings->setContentComponent('collections@sulumedia');
-        $settings->setContentComponentOptions(array('display'=>'settings'));
+        $settings->setGroups(array('collection'));
+        $settings->setComponent('collections@sulumedia');
+        $settings->setComponentOptions(array('display'=>'settings'));
         $this->addNavigationItem($settings);
     }
 }
