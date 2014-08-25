@@ -94,6 +94,7 @@ define(function() {
             }, this);
 
             this.sandbox.on('husky.column-navigation.node.edit', function(item) {
+                this.setLastSelected(item.id);
                 this.sandbox.emit('sulu.content.contents.load', item);
             }, this);
 

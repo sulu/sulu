@@ -54,8 +54,8 @@ class TemplateController extends Controller
             if (!$structure->getInternal() || $internal !== false) {
                 $templates[] = array(
                     'internal' => $structure->getInternal(),
-                    'template' => $structure->getLocalizedTitle($this->getUser()->getLocale())
-
+                    'template' => $structure->getKey(),
+                    'title' => $structure->getLocalizedTitle($this->getUser()->getLocale())
                 );
             }
         }
