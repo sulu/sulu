@@ -34,14 +34,6 @@ define(['app-config'], function(AppConfig) {
         },
 
         bindCustomEvents: function() {
-            // FIXME set preview params
-            /*
-            this.sandbox.on('sulu.preview.set-params', function(url, port) {
-                this.wsUrl = url;
-                this.wsPort = port;
-            }, this);
-            */
-
             // change template
             this.sandbox.on('sulu.dropdown.template.item-clicked', function(item) {
                 this.animateTemplateDropdown = true;
@@ -149,10 +141,6 @@ define(['app-config'], function(AppConfig) {
                 this.data = this.sandbox.util.extend({}, tmp, this.data);
             }
 
-            // FIXME this.writeStartMessage();
-            //if (!!item) {
-                // FIXME this.sandbox.emit('sulu.content.preview.change-url', {template: item.template});
-            //}
             //only update the tabs-content if the content tab is selected
             url = this.getTemplateUrl(item);
 
@@ -177,7 +165,7 @@ define(['app-config'], function(AppConfig) {
             this.propertyConfiguration = {};
             this.createForm(data).then(function() {
                 this.bindDomEvents();
-                // FIXME this.updatePreviewOnly();
+                this.sandbox.emit('sulu.preview.update-only');
 
                 this.changeTemplateDropdownHandler();
             }.bind(this));
@@ -274,7 +262,7 @@ define(['app-config'], function(AppConfig) {
                     var changes = this.sandbox.form.getData(this.formId),
                         propertyName = this.sandbox.dom.data(event.currentTarget, 'mapperProperty');
 
-                    // FIXME this.updatePreview(propertyName, changes[propertyName]);
+                    this.sandbox.emit('sulu.preview.update-property', propertyName, changes[propertyName]);
                 }.bind(this));
             }
         },
@@ -284,7 +272,7 @@ define(['app-config'], function(AppConfig) {
                 // TODO removed elements remove from config
                 var changes = this.sandbox.form.getData(this.formId);
                 this.initSortableBlock();
-                this.updatePreview(propertyName, changes[propertyName]);
+                this.sandbox.emit('sulu.preview.update-property', propertyName, changes[propertyName]);
                 this.setHeaderBar(false);
             }.bind(this));
 
@@ -300,8 +288,10 @@ define(['app-config'], function(AppConfig) {
 
                 // update changes
                 var changes = this.sandbox.form.getData(this.formId);
+                this.sandbox.emit('sulu.preview.update-property', propertyName, changes[propertyName]);
+
+                // reinit sorting
                 this.initSortableBlock();
-                // FIXME this.updatePreview(propertyName, changes[propertyName]);
             }.bind(this));
         },
 

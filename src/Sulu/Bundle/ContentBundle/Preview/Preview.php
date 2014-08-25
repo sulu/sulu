@@ -92,7 +92,6 @@ class Preview implements PreviewInterface
                     $userId,
                     $contentUuid,
                     $webspaceKey,
-                    $webspaceKey,
                     $locale,
                     $property,
                     $data

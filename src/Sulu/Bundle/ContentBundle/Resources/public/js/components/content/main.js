@@ -9,7 +9,7 @@
 
 define([
     'sulucontent/model/content',
-    'sulucontent/components/content/preview'
+    'sulucontent/components/content/preview/main'
 ], function(Content, Preview) {
 
     'use strict';
@@ -496,7 +496,11 @@ define([
 
                 if (!!this.options.preview && this.data.nodeType === TYPE_CONTENT && !this.data.shadowOn) {
                     this.sandbox.emit('husky.tabs.header.item.show', 'tab-content');
-                    this.renderPreview(data);
+                    this.sandbox.on('sulu.preview.initiated', function() {
+                        this.renderPreview(data);
+                    }.bind(this));
+
+                    Preview.initialize(this.sandbox, this.options, this.data, this.$el);
                 } else {
                     this.sandbox.emit('sulu.sidebar.hide');
                     this.sandbox.emit('sulu.app.toggle-shrinker', false);

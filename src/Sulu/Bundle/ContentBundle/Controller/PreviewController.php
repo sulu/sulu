@@ -176,7 +176,7 @@ class PreviewController extends Controller
 
         // get changes from request
         $changes = $request->get('changes', false);
-       $result = $preview->updateProperties($uid, $contentUuid, $webspaceKey, $locale, $changes);
+        $result = $preview->updateProperties($uid, $contentUuid, $webspaceKey, $locale, $changes);
 
         return new JsonResponse($result->toArray());
     }

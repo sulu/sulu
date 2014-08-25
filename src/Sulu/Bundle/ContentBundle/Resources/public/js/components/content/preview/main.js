@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define('app-config', function(AppConfig) {
+define(['app-config'], function(AppConfig) {
 
     'use strict';
 
@@ -15,17 +15,17 @@ define('app-config', function(AppConfig) {
             initiated: false,
 
             init: function() {
+                var def = this.sandbox.data.deferred();
                 if (!ajax.initiated) {
-                    this.sandbox.dom.on(this.formId, 'focusout', updateEvent.bind(this), '.preview-update');
+                    this.sandbox.dom.on(this.$el, 'focusout', updateEvent.bind(this), '.preview-update');
 
-                    var data = this.sandbox.form.getData(this.formId);
-
-                    ajax.update(data);
+                    ajax.start.call(this, def);
                     ajax.initiated = true;
                 }
+                return def;
             },
 
-            update: function(changes) {
+            update: function(data) {
                 var updateUrl = '/admin/content/preview/' + this.data.id + '/update?&webspace=' + this.options.webspace + '&language=' + this.options.language;
 
                 this.sandbox.util.ajax({
@@ -33,7 +33,20 @@ define('app-config', function(AppConfig) {
                     type: 'POST',
 
                     data: {
-                        changes: changes
+                        changes: data
+                    }
+                });
+            },
+
+            start: function(def) {
+                var updateUrl = '/admin/content/preview/' + this.data.id + '/start?&webspace=' + this.options.webspace + '&language=' + this.options.language;
+
+                this.sandbox.util.ajax({
+                    url: updateUrl,
+                    type: 'GET',
+
+                    success: function() {
+                        def.resolve();
                     }
                 });
             }
@@ -59,10 +72,14 @@ define('app-config', function(AppConfig) {
             },
 
             init: function() {
-                var url = this.wsUrl + ':' + this.wsPort;
+                var configSection = AppConfig.getSection('sulu-content'),
+                    url = configSection.wsUrl + ':' + configSection.wsPort,
+                    def = this.sandbox.data.deferred();
+
                 this.sandbox.logger.log('Connect to url: ' + url);
-                this.ws = new WebSocket(url);
-                this.ws.onopen = function() {
+                ws.socket = new WebSocket(url);
+
+                ws.socket.onopen = function() {
                     this.sandbox.logger.log('Connection established!');
                     this.opened = true;
 
@@ -70,32 +87,40 @@ define('app-config', function(AppConfig) {
 
                     // write start message
                     this.writeStartMessage();
+
+                    def.resolve();
                 }.bind(this);
 
-                this.ws.onclose = function() {
+                ws.socket.onclose = function() {
                     if (!this.opened) {
                         // no connection can be opened use fallback (safari)
-                        this.ws = 'ajax';
-                        ajax.init();
+                        this.method = 'ajax';
+                        ajax.init.call(this).then(function() {
+                            def.resolve();
+                        }.bind(this));
                     }
                 }.bind(this);
 
-                this.ws.onmessage = function(e) {
+                ws.socket.onmessage = function(e) {
                     var data = JSON.parse(e.data);
                     this.sandbox.logger.log('Message:', data);
                 }.bind(this);
 
-                this.ws.onerror = function(e) {
+                ws.socket.onerror = function(e) {
                     this.sandbox.logger.warn(e);
 
                     // no connection can be opened use fallback
-                    this.ws = 'ajax';
-                    ajax.init();
+                    this.method = 'ajax';
+                    ajax.init.call(this).then(function() {
+                        def.resolve();
+                    }.bind(this));
                 }.bind(this);
+
+                return def;
             },
 
             writeStartMessage: function() {
-                if (this.ws !== null) {
+                if (this.method === 'ws') {
                     // send start command
                     var message = {
                         command: 'start',
@@ -106,12 +131,12 @@ define('app-config', function(AppConfig) {
                         languageCode: this.options.language,
                         params: {}
                     };
-                    this.ws.send(JSON.stringify(message));
+                    ws.socket.send(JSON.stringify(message));
                 }
             },
 
             updateWs: function(changes) {
-                if (this.ws === 'ws' && this.ws.readyState === this.ws.OPEN) {
+                if (this.method === 'ws' && ws.socket.readyState === ws.socket.OPEN) {
                     var message = {
                         command: 'update',
                         content: this.data.id,
@@ -121,7 +146,7 @@ define('app-config', function(AppConfig) {
                         languageCode: this.options.language,
                         params: {changes: changes}
                     };
-                    this.ws.send(JSON.stringify(message));
+                    ws.socket.send(JSON.stringify(message));
                 }
             }
         },
@@ -130,10 +155,15 @@ define('app-config', function(AppConfig) {
          * initialize preview with ajax or websocket
          */
         init = function() {
+            var def;
+            if (!!this.initiated) {
+                return;
+            }
+
             if (ws.detection()) {
-                ws.init();
+                def = ws.init.call(this);
             } else {
-                ajax.init();
+                def = ajax.init.call(this);
             }
             this.initiated = true;
 
@@ -145,6 +175,8 @@ define('app-config', function(AppConfig) {
                     }
                 }
             }, this);
+
+            return def.promise();
         },
 
         update = function(property, value) {
@@ -157,14 +189,14 @@ define('app-config', function(AppConfig) {
                 }
 
                 if (this.method === 'ws') {
-                    ajax.updateWs.call(this, changes);
+                    ws.update.call(this, changes);
                 } else {
                     ajax.update.call(this, changes);
                 }
             }
         },
 
-        updatePreviewOnly = function() {
+        updateOnly = function() {
             if (!!this.initiated) {
                 var changes = {};
 
@@ -181,25 +213,47 @@ define('app-config', function(AppConfig) {
          * @param {Object} e
          */
         updateEvent = function(e) {
-            if (!!this.data.id && !!this.previewInitiated) {
+            if (!!this.data.id && !!this.initiated) {
                 var $element = $(e.currentTarget),
                     element = this.sandbox.dom.data($element, 'element');
 
-                this.updatePreview(this.getSequence($element), element.getValue());
+                update.call(this, this.getSequence($element), element.getValue());
             }
+        },
+
+        bindCustomEvents = function() {
+            this.sandbox.on('sulu.preview.update-property', function(property, value) {
+                update.call(this, property, value);
+            }.bind(this));
+
+            this.sandbox.on('sulu.preview.update-only', function() {
+                updateOnly.call(this);
+            }.bind(this));
         };
 
     return {
         sandbox: null,
+        options: null,
+        data: null,
+        $el: null,
 
         initiated: false,
-
+        opened: false,
         method: 'ws',
 
-        initialize: function(sandbox) {
-            this.sandbox = sandbox;
+        formId: '#content-form',
 
-            init.call(this);
+        initialize: function(sandbox, options, data, $el) {
+            this.sandbox = sandbox;
+            this.options = options;
+            this.data = data;
+            this.$el = $el;
+
+            init.call(this).then(function() {
+                bindCustomEvents.call(this);
+
+                this.sandbox.emit('sulu.preview.initiated');
+            }.bind(this));
         },
 
         getSequence: function($element) {

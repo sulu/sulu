@@ -156,9 +156,9 @@
                     for (var propertyName in changes) {
                         if (changes.hasOwnProperty(propertyName)) {
                             if (-1 !== propertyName.indexOf(',')) {
-                                handleSequence(propertyName, changes[propertyName].content);
+                                handleSequence(propertyName, changes[propertyName]);
                             } else {
-                                handleSingle(propertyName, changes[propertyName].content);
+                                handleSingle(propertyName, changes[propertyName]);
                             }
                         }
                     }
