@@ -1,1 +1,0 @@
-<?php return unserialize('a:1:{i:0;O:34:"JMS\\Serializer\\Annotation\\Accessor":2:{s:6:"getter";s:8:"getLinks";s:6:"setter";N;}}');

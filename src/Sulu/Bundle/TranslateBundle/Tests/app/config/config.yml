@@ -40,4 +40,5 @@ sulu_core:
                  app:
                      path: %kernel.root_dir%/Resources/templates
                      internal: false
-    webspace: ~
+    webspace:
+        ~
