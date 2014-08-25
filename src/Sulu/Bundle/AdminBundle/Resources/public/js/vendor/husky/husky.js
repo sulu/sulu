@@ -29503,11 +29503,13 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             this.sandbox.dom.stopPropagation(event);
             var recordId = this.sandbox.dom.data(event.currentTarget, 'id');
             this.emitRowClickedEvent(event);
-            if (this.options.highlightSelected === true) {
-                this.uniqueHighlightRecord(recordId);
-            }
-            if (!!this.table.rows[recordId].numberChildren > 0) {
-                this.toggleChildren(recordId);
+            if (!!this.table.rows[recordId]) {
+                if (this.options.highlightSelected === true) {
+                    this.uniqueHighlightRecord(recordId);
+                }
+                if (!!this.table.rows[recordId].numberChildren > 0) {
+                    this.toggleChildren(recordId);
+                }
             }
         },
 
@@ -29572,13 +29574,11 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * @param id {Number|String} the id of the record to highlight
          */
         uniqueHighlightRecord: function (id) {
-            if (!!this.table.rows[id]) {
-                this.sandbox.dom.removeClass(
-                    this.sandbox.dom.find('.' + constants.rowClass + '.' + constants.selectedRowClass, this.table.$body),
-                    constants.selectedRowClass
-                );
-                this.sandbox.dom.addClass(this.table.rows[id].$el, constants.selectedRowClass);
-            }
+            this.sandbox.dom.removeClass(
+                this.sandbox.dom.find('.' + constants.rowClass + '.' + constants.selectedRowClass, this.table.$body),
+                constants.selectedRowClass
+            );
+            this.sandbox.dom.addClass(this.table.rows[id].$el, constants.selectedRowClass);
         },
 
         /**
