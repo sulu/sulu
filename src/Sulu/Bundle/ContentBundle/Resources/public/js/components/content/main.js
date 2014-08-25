@@ -8,8 +8,9 @@
  */
 
 define([
-    'sulucontent/model/content'
-], function(Content) {
+    'sulucontent/model/content',
+    'sulucontent/components/content/preview'
+], function(Content, Preview) {
 
     'use strict';
 
@@ -51,7 +52,7 @@ define([
                 '   </div>',
                 '</div>'
             ].join(''),
-            previewUrl: '<%= url %><%= uuid %>?webspace=<%= webspace %>&language=<%= language %>&template=<%= template %>'
+            previewUrl: '<%= url %><%= uuid %>/render?webspace=<%= webspace %>&language=<%= language %>'
         };
 
     return {
@@ -528,14 +529,13 @@ define([
             this.sandbox.emit('sulu.app.toggle-shrinker', true);
             this.sandbox.emit('sulu.sidebar.change-width', 'max');
             if (this.$preview === null) {
-                this.previewUrl = this.sandbox.util.template(templates.previewUrl)({
+                this.previewUrl = this.sandbox.util.template(templates.previewUrl, {
                     url: '/admin/content/preview/',
                     webspace: this.options.webspace,
                     language: this.options.language,
-                    uuid: data.id,
-                    template: data.template
+                    uuid: data.id
                 });
-                this.$preview = this.sandbox.dom.createElement(this.sandbox.util.template(templates.preview)({
+                this.$preview = this.sandbox.dom.createElement(this.sandbox.util.template(templates.preview, {
                     resolution: this.sandbox.translate('content.preview.resolutions'),
                     url: this.previewUrl
                 }));

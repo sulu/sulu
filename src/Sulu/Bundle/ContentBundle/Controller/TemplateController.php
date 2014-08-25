@@ -92,10 +92,6 @@ class TemplateController extends Controller
             'SuluContentBundle:Template:content.html.twig',
             array(
                 'template' => $template,
-                'wsUrl' => 'ws://' . $request->getHttpHost(),
-                'wsPort' => $this->container->getParameter('sulu_content.preview.websocket.port'),
-                'templateKey' => $key,
-                'fireEvent' => $fireEvent,
                 'webspaceKey' => $webspace,
                 'languageCode' => $language
             )
