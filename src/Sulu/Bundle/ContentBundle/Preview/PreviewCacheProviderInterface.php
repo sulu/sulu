@@ -12,50 +12,84 @@ namespace Sulu\Bundle\ContentBundle\Preview;
 
 use Sulu\Component\Content\StructureInterface;
 
+/**
+ * provides a interface to cache preview data
+ * @package Sulu\Bundle\ContentBundle\Preview
+ */
 interface PreviewCacheProviderInterface
 {
+    /**
+     * returns TRUE if cache contains the content for user
+     * @param integer $userId
+     * @param string $contentUuid
+     * @param string $webspaceKey
+     * @param string $locale
+     * @return boolean
+     */
+    public function contains($userId, $contentUuid, $webspaceKey, $locale);
 
     /**
-     * Fetches an entry from the cache.
-     *
-     * @param string $id The id of the cache entry to fetch.
-     * @param string $webspaceKey The key of webspace.
-     * @param string $locale locale to load temporary data.
-     *
-     * @return mixed The cached data or FALSE, if no cache entry exists for the given id.
+     * deletes cache for given user
+     * @param integer $userId
+     * @param string $webspaceKey
+     * @return boolean
      */
-    function fetch($id, $webspaceKey, $locale);
+    public function delete($userId, $webspaceKey);
 
     /**
-     * Tests if an entry exists in the cache.
-     *
-     * @param string $id The cache id of the entry to check for.
-     * @param string $webspaceKey The key of webspace.
-     * @param string $locale The current locale.
-     *
-     * @return boolean TRUE if a cache entry exists for the given cache id, FALSE otherwise.
+     * clones original node and prepare cache node
+     * @param integer $userId
+     * @param string $contentUuid
+     * @param string $webspaceKey
+     * @param string $locale
+     * @return StructureInterface
      */
-    function contains($id, $webspaceKey, $locale);
+    public function warmUp($userId, $contentUuid, $webspaceKey, $locale);
 
     /**
-     * Puts data into the cache.
-     *
-     * @param string $id The cache id.
-     * @param mixed $data The cache entry/data.
-     * @param string $webspaceKey The key of webspace.
-     * @param string $locale The locale to save data.
-     *
-     * @return boolean TRUE if the entry was successfully stored in the cache, FALSE otherwise.
+     * returns cached structure
+     * @param integer $userId
+     * @param string $webspaceKey
+     * @param string $locale
+     * @return boolean|StructureInterface
      */
-    function save($id, $data, $webspaceKey, $locale);
+    public function fetchStructure($userId, $webspaceKey, $locale);
 
     /**
-     * Deletes a cache entry.
-     *
-     * @param string $id The cache id.
-     * @param string $webspaceKey The key of webspace.
-     *
-     * @return boolean TRUE if the cache entry was successfully deleted, FALSE otherwise.
+     * saves given structure in cache
+     * @param StructureInterface $content
+     * @param integer $userId
+     * @param string string $contentUuid
+     * @param string string $webspaceKey
+     * @param string string $locale
+     * @return StructureInterface
      */
-    function delete($id, $webspaceKey);
+    public function saveStructure(StructureInterface $content, $userId, $contentUuid, $webspaceKey, $locale);
+
+    /**
+     * returns cached changes
+     * @param integer $userId
+     * @param string $webspaceKey
+     * @param boolean $remove if TRUE remove changes after read (singleton)
+     * @return array
+     */
+    public function fetchChanges($userId, $webspaceKey, $remove = true);
+
+    /**
+     * save changes in cache
+     * @param array $changes
+     * @param integer $userId
+     * @param string $webspaceKey
+     * @return array
+     */
+    public function saveChanges($changes, $userId, $webspaceKey);
+
+    /**
+     * appends changes to existing changes in cache and returns new array
+     * @param array $changes
+     * @param integer $userId
+     * @param string $webspaceKey
+     * @return array
+     */
+    public function appendChanges($changes, $userId, $webspaceKey);
 }
