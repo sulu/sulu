@@ -346,7 +346,7 @@ class PreviewTest extends PhpcrTestCase
         $data = $this->prepareData();
 
         $this->preview->start(1, $data[0]->getUuid(), 'default', 'en');
-        $this->preview->update(1, $data[0]->getUuid(), 'default', 'en', 'title', 'aaaa');
+        $this->preview->updateProperty(1, $data[0]->getUuid(), 'default', 'en', 'title', 'aaaa');
         $content = $this->preview->getChanges(1, $data[0]->getUuid(), 'default', 'en');
 
         // check result
@@ -364,7 +364,7 @@ class PreviewTest extends PhpcrTestCase
         $data = $this->prepareData();
 
         $this->preview->start(1, $data[0]->getUuid(), 'default', 'en');
-        $this->preview->update(
+        $this->preview->updateProperty(
             1,
             $data[0]->getUuid(),
             'default',
@@ -372,7 +372,7 @@ class PreviewTest extends PhpcrTestCase
             'block,0,article,0',
             'New-Block-Article-1-1'
         );
-        $this->preview->update(
+        $this->preview->updateProperty(
             1,
             $data[0]->getUuid(),
             'default',
@@ -380,7 +380,7 @@ class PreviewTest extends PhpcrTestCase
             'block,0,article,1',
             'New-Block-Article-1-2'
         );
-        $this->preview->update(
+        $this->preview->updateProperty(
             1,
             $data[0]->getUuid(),
             'default',
@@ -388,7 +388,7 @@ class PreviewTest extends PhpcrTestCase
             'block,0,title',
             'New-Block-Title-1'
         );
-        $this->preview->update(
+        $this->preview->updateProperty(
             1,
             $data[0]->getUuid(),
             'default',
@@ -520,11 +520,11 @@ class PreviewTest extends PhpcrTestCase
         $this->assertEquals($expected, $response);
 
         // change a property in FORM
-        $content = $this->preview->update(1, $data[0]->getUuid(), 'default', 'en', 'title', 'New Title');
+        $content = $this->preview->updateProperty(1, $data[0]->getUuid(), 'default', 'en', 'title', 'New Title');
         $this->assertEquals('New Title', $content->getPropertyValue('title'));
         $this->assertEquals('Lorem Ipsum dolorem apsum', $content->getPropertyValue('article'));
 
-        $content = $this->preview->update(1, $data[0]->getUuid(), 'default', 'en', 'article', 'asdf');
+        $content = $this->preview->updateProperty(1, $data[0]->getUuid(), 'default', 'en', 'article', 'asdf');
         $this->assertEquals('New Title', $content->getPropertyValue('title'));
         $this->assertEquals('asdf', $content->getPropertyValue('article'));
 

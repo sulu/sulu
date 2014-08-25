@@ -88,7 +88,7 @@ class Preview implements PreviewInterface
     {
         if (is_array($changes) && sizeof($changes) > 0) {
             foreach ($changes as $property => $data) {
-                $content = $this->updateProperty(
+                $content = $this->update(
                     $userId,
                     $contentUuid,
                     $webspaceKey,
@@ -108,9 +108,9 @@ class Preview implements PreviewInterface
     /**
      * {@inheritdoc}
      */
-    public function update($userId, $contentUuid, $webspaceKey, $locale, $property, $data)
+    public function updateProperty($userId, $contentUuid, $webspaceKey, $locale, $property, $data)
     {
-        $content = $this->updateProperty($userId, $contentUuid, $webspaceKey, $locale, $property, $data);
+        $content = $this->update($userId, $contentUuid, $webspaceKey, $locale, $property, $data);
         $this->previewCache->saveStructure($content, $userId, $contentUuid, $webspaceKey, $locale);
 
         return $content;
@@ -119,7 +119,7 @@ class Preview implements PreviewInterface
     /**
      * updates one property without saving structure
      */
-    private function updateProperty($userId, $contentUuid, $webspaceKey, $locale, $property, $data)
+    private function update($userId, $contentUuid, $webspaceKey, $locale, $property, $data)
     {
         /** @var StructureInterface $content */
         $content = $this->previewCache->fetchStructure($userId, $webspaceKey, $locale);

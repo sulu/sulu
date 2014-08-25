@@ -148,7 +148,7 @@ class PreviewMessageComponent implements MessageComponentInterface
 
             foreach ($params['changes'] as $property => $data) {
                 // update property
-                $this->preview->update(
+                $this->preview->updateProperty(
                     $user,
                     $content,
                     $webspaceKey,

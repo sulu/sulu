@@ -49,12 +49,12 @@ sulu_content.preview.render:
     methods: GET
     defaults: { _controller: SuluContentBundle:Preview:render }
 
-sulu_content.preview.changes:
-    pattern: /preview/{contentUuid}.json
-    methods: GET
-    defaults: { _controller: SuluContentBundle:Preview:changes }
-
 sulu_content.preview.update:
-    pattern: /preview/{contentUuid}
+    pattern: /preview/{contentUuid}/update
     methods: POST
     defaults: { _controller: SuluContentBundle:Preview:update }
+
+sulu_content.preview.changes:
+    pattern: /preview/{contentUuid}/changes
+    methods: GET
+    defaults: { _controller: SuluContentBundle:Preview:changes }

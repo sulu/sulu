@@ -51,7 +51,7 @@ interface PreviewInterface
      * @param string $webspaceKey
      * @param string $locale
      * @param array $changes
-     * @return array
+     * @return StructureInterface
      */
     public function updateProperties($userId, $contentUuid, $webspaceKey, $locale, $changes);
 
@@ -65,7 +65,7 @@ interface PreviewInterface
      * @param mixed $data new data
      * @return \Sulu\Component\Content\StructureInterface
      */
-    public function update($userId, $contentUuid, $webspaceKey, $locale, $property, $data);
+    public function updateProperty($userId, $contentUuid, $webspaceKey, $locale, $property, $data);
 
     /**
      * returns pending changes for given user and content
