@@ -3,7 +3,7 @@
     "type": "sulu-bundle",
     "description": "Test Bundle for the Sulu CMF",
     "license": "MIT",
-    "version": "0.6.0",
+    "version": "0.6.1",
     "keywords": ["sulu", "test"],
     "authors": [
         {
