@@ -1,0 +1,1 @@
+<?php return unserialize('a:1:{i:0;O:41:"Doctrine\\ODM\\PHPCR\\Mapping\\Annotations\\Id":3:{s:2:"id";b:1;s:4:"type";s:6:"string";s:8:"strategy";s:6:"parent";}}');
