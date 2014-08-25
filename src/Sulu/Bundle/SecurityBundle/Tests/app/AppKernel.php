@@ -18,6 +18,8 @@ class AppKernel extends Kernel
             new Symfony\Bundle\SecurityBundle\SecurityBundle(),
             new \Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
             new Bazinga\Bundle\HateoasBundle\BazingaHateoasBundle(),
+            new Liip\ThemeBundle\LiipThemeBundle(),
+            new \Doctrine\Bundle\PHPCRBundle\DoctrinePHPCRBundle(),
 
             // Sulu
             new \Sulu\Bundle\CoreBundle\SuluCoreBundle(),
@@ -28,9 +30,6 @@ class AppKernel extends Kernel
             new \Sulu\Bundle\TagBundle\SuluTagBundle(),
             new \Sulu\Bundle\MediaBundle\SuluMediaBundle(),
             new \Sulu\Bundle\CategoryBundle\SuluCategoryBundle(),
-
-            new \Liip\ThemeBundle\LiipThemeBundle(),
-            new \Doctrine\Bundle\PHPCRBundle\DoctrinePHPCRBundle()
         );
 
         return $bundles;

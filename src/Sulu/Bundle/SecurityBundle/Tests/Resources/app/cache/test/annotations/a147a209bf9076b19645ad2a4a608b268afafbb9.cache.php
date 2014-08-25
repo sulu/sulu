@@ -1,0 +1,1 @@
+<?php return unserialize('a:3:{i:0;O:41:"JMS\\Serializer\\Annotation\\ExclusionPolicy":1:{s:6:"policy";s:3:"ALL";}i:1;O:33:"JMS\\Serializer\\Annotation\\XmlRoot":2:{s:4:"name";s:10:"collection";s:9:"namespace";N;}i:2;O:49:"Hateoas\\Configuration\\Annotation\\RelationProvider":1:{s:4:"name";s:12:"getRelations";}}');

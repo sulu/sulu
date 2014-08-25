@@ -2,12 +2,11 @@
 
 namespace Sulu\Bundle\SecurityBundle\Admin;
 
-use Sulu\Bundle\AdminBundle\Admin\ContentNavigation;
-use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
+use Sulu\Bundle\AdminBundle\Navigation\ContentNavigation;
+use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationItem;
 
 class SuluSecurityRolesContentNavigation extends ContentNavigation
 {
-
     public function __construct()
     {
         parent::__construct();
@@ -16,11 +15,11 @@ class SuluSecurityRolesContentNavigation extends ContentNavigation
         $this->setName('Roles');
 
         // define content-tabs
-        $details = new NavigationItem('content-navigation.security.details');
+        $details = new ContentNavigationItem('content-navigation.security.details');
         $details->setAction('details');
-        $details->setContentType('roles');
-        $details->setContentComponent('roles@sulusecurity');
-        $details->setContentComponentOptions(array('display'=>'form'));
+        $details->setGroups(array('roles'));
+        $details->setComponent('roles@sulusecurity');
+        $details->setComponentOptions(array('display'=>'form'));
 
         $this->addNavigationItem($details);
     }

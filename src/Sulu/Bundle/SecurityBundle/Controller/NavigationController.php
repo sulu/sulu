@@ -12,7 +12,7 @@ namespace Sulu\Bundle\SecurityBundle\Controller;
 
 use Sulu\Bundle\AdminBundle\Admin\ContentNavigation;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Class NavigationController
@@ -35,6 +35,6 @@ class NavigationController extends Controller
             $contentNavigation = $this->get(static::SERVICE_NAME);
         }
 
-        return new Response(json_encode($contentNavigation->toArray('roles')));
+        return new JsonResponse(json_encode($contentNavigation->toArray('roles')));
     }
 }
