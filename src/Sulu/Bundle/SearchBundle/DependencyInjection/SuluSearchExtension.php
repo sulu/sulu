@@ -32,5 +32,6 @@ class SuluSearchExtension extends Extension
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('metadata.xml');
+        $loader->load('content.xml');
     }
 }

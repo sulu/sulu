@@ -10,11 +10,13 @@ class AppKernel extends TestKernel
         $this->requireBundleSets(array(
             'default',
             'doctrine_orm',
+            'phpcr_odm',
         ));
 
         $this->addBundles(array(
             new \Massive\Bundle\SearchBundle\MassiveSearchBundle(),
             new \Sulu\Bundle\SearchBundle\SuluSearchBundle(),
+            new \Sulu\Bundle\CoreBundle\SuluCoreBundle(),
         ));
     }
 
