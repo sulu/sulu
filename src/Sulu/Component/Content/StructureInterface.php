@@ -139,6 +139,16 @@ interface StructureInterface extends \JsonSerializable
     public function getCacheLifeTime();
 
     /**
+     * @return string
+     */
+    public function getOriginTemplate();
+
+    /**
+     * @param string $originTemplate
+     */
+    public function setOriginTemplate($originTemplate);
+
+    /**
      * returns a property instance with given name
      * @param $name string name of property
      * @return PropertyInterface
@@ -202,6 +212,7 @@ interface StructureInterface extends \JsonSerializable
 
     /**
      * @param int $globalState
+     * @deprecated deprecated since version 0.6.3 -> to be removed with version 0.7.0
      */
     public function setGlobalState($globalState);
 
@@ -359,4 +370,11 @@ interface StructureInterface extends \JsonSerializable
      * @param StructureInterface $internalLinkContent
      */
     public function setInternalLinkContent($internalLinkContent);
+
+    /**
+     * returns title of property
+     * @param string $languageCode
+     * @return string
+     */
+    public function getLocalizedTitle($languageCode);
 }

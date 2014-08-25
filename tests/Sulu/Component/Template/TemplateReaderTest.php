@@ -23,6 +23,12 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
             'view' => 'page.html.twig',
             'controller' => 'SuluContentBundle:Default:index',
             'cacheLifetime' => '2400',
+            'meta' => array(
+                'title' => array(
+                    'de' => 'Das ist das Template 1',
+                    'en' => 'That´s the template 1'
+                )
+            ),
             'properties' => array(
                 'title' => array(
                     'name' => 'title',

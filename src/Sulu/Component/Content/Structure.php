@@ -54,6 +54,12 @@ abstract class Structure implements StructureInterface
     private $key;
 
     /**
+     * real template from database
+     * @var string
+     */
+    private $originTemplate;
+
+    /**
      * template to render content
      * @var string
      */
@@ -214,18 +220,25 @@ abstract class Structure implements StructureInterface
     private $concreteLanguages = array();
 
     /**
+     * @var Metadata
+     */
+    private $metaData;
+
+    /**
      * @param $key string
      * @param $view string
      * @param $controller string
      * @param int $cacheLifeTime
+     * @param array $metaData
      * @return \Sulu\Component\Content\Structure
      */
-    public function __construct($key, $view, $controller, $cacheLifeTime = 604800)
+    public function __construct($key, $view, $controller, $cacheLifeTime = 604800, $metaData = array())
     {
         $this->key = $key;
         $this->view = $view;
         $this->controller = $controller;
         $this->cacheLifeTime = $cacheLifeTime;
+        $this->metaData = new Metadata($metaData);
 
         // default state is test
         $this->nodeState = StructureInterface::STATE_TEST;
@@ -343,6 +356,22 @@ abstract class Structure implements StructureInterface
     public function getKey()
     {
         return $this->key;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOriginTemplate()
+    {
+        return $this->originTemplate;
+    }
+
+    /**
+     * @param string $originTemplate
+     */
+    public function setOriginTemplate($originTemplate)
+    {
+        $this->originTemplate = $originTemplate;
     }
 
     /**
@@ -884,6 +913,14 @@ abstract class Structure implements StructureInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function getLocalizedTitle($languageCode)
+    {
+        return $this->metaData->get('title', $languageCode, ucfirst($this->key));
+    }
+
+    /**
      * magic getter
      * @param $property string name of property
      * @return mixed
@@ -951,6 +988,7 @@ abstract class Structure implements StructureInterface
                 'shadowOn' => $this->getIsShadow(),
                 'shadowBaseLanguage' => $this->getShadowBaseLanguage(),
                 'template' => $this->getKey(),
+                'originTemplate' => $this->getOriginTemplate(),
                 'hasSub' => $this->hasChildren,
                 'creator' => $this->creator,
                 'changer' => $this->changer,
@@ -960,6 +998,12 @@ abstract class Structure implements StructureInterface
 
             if ($this->type !== null) {
                 $result['type'] = $this->getType()->toArray();
+            }
+
+            if ($this->nodeType === self::NODE_TYPE_INTERNAL_LINK) {
+                $result['linked'] = 'internal';
+            } elseif ($this->nodeType === self::NODE_TYPE_EXTERNAL_LINK) {
+                $result['linked'] = 'external';
             }
 
             $this->appendProperties($this->getProperties(), $result);
@@ -982,6 +1026,12 @@ abstract class Structure implements StructureInterface
             );
             if ($this->type !== null) {
                 $result['type'] = $this->getType()->toArray();
+            }
+
+            if ($this->nodeType === self::NODE_TYPE_INTERNAL_LINK) {
+                $result['linked'] = 'internal';
+            } elseif ($this->nodeType === self::NODE_TYPE_EXTERNAL_LINK) {
+                $result['linked'] = 'external';
             }
 
             return $result;

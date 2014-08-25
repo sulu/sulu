@@ -201,7 +201,19 @@ class ContentMapper implements ContentMapperInterface
         // create translated properties
         $this->properties->setLanguage($languageCode);
 
-        $structure = $this->getStructure($templateKey);
+        // set default node-type
+        if (!isset($data['nodeType'])) {
+            $data['nodeType'] = Structure::NODE_TYPE_CONTENT;
+        }
+
+        if ($data['nodeType'] === Structure::NODE_TYPE_EXTERNAL_LINK) {
+            $structure = $this->getStructure('external-link');
+        } elseif ($data['nodeType'] === Structure::NODE_TYPE_INTERNAL_LINK) {
+            $structure = $this->getStructure('internal-link');
+        } else {
+            $structure = $this->getStructure($templateKey);
+        }
+
         $session = $this->getSession();
 
         if ($parentUuid !== null) {
@@ -319,9 +331,9 @@ class ContentMapper implements ContentMapperInterface
                 // nothing
             } elseif ($property->getMandatory()) {
                 $type = $this->getContentType($property->getContentTypeName());
-                $type->read($node, $property, $webspaceKey, $languageCode, null);
+                $translatedProperty = new TranslatedProperty($property, $languageCode, $this->languageNamespace);
 
-                if ($property->getValue() === $type->getDefaultValue()) {
+                if (false === $type->hasValue($node, $translatedProperty, $webspaceKey, $languageCode, null)) {
                     throw new MandatoryPropertyException($templateKey, $property);
                 }
             } elseif (!$partialUpdate) {
@@ -408,6 +420,9 @@ class ContentMapper implements ContentMapperInterface
         $structure->setPublished(
             $node->getPropertyValueWithDefault($this->properties->getName('published'), null)
         );
+        $structure->setOriginTemplate(
+            $node->getPropertyValueWithDefault($this->properties->getName('template'), $this->defaultLanguage)
+        );
 
         // load dependencies for internal links
         $this->loadInternalLinkDependencies(
@@ -432,6 +447,7 @@ class ContentMapper implements ContentMapperInterface
      * @param NodeInterface $node
      * @param string $language
      * @param string $shadowBaseLanguage
+     * @throws \RuntimeException
      */
     protected function validateShadow(NodeInterface $node, $language, $shadowBaseLanguage)
     {
@@ -664,6 +680,8 @@ class ContentMapper implements ContentMapperInterface
     ) {
         if ($uuid != null) {
             $root = $this->getSession()->getNodeByIdentifier($uuid);
+            // set depth hint specific
+            $root = $this->getSession()->getNode($root->getPath(), $depth+1);
         } else {
             $root = $this->getContentNode($webspaceKey);
         }
@@ -980,10 +998,21 @@ class ContentMapper implements ContentMapperInterface
             $this->properties->setLanguage($availableLocalization);
         }
 
-        $templateKey = $contentNode->getPropertyValueWithDefault(
-            $this->properties->getName('template'),
-            $this->defaultTemplate
+        $nodeType = $contentNode->getPropertyValueWithDefault(
+            $this->properties->getName('nodeType'),
+            Structure::NODE_TYPE_CONTENT
         );
+
+        if ($nodeType === Structure::NODE_TYPE_EXTERNAL_LINK) {
+            $templateKey = 'external-link';
+        } elseif ($nodeType === Structure::NODE_TYPE_INTERNAL_LINK) {
+            $templateKey = 'internal-link';
+        } else {
+            $templateKey = $contentNode->getPropertyValueWithDefault(
+                $this->properties->getName('template'),
+                $this->defaultTemplate
+            );
+        }
 
         $structure = $this->getStructure($templateKey);
 
@@ -1029,6 +1058,9 @@ class ContentMapper implements ContentMapperInterface
         );
         $structure->setPublished(
             $contentNode->getPropertyValueWithDefault($this->properties->getName('published'), null)
+        );
+        $structure->setOriginTemplate(
+            $contentNode->getPropertyValueWithDefault($this->properties->getName('template'), $this->defaultTemplate)
         );
         $structure->setEnabledShadowLanguages(
             $this->getEnabledShadowLanguages($contentNode)
@@ -1452,50 +1484,19 @@ class ContentMapper implements ContentMapperInterface
 
     /**
      * calculates publish state of node
+     * @deprecated deprecated since version 0.6.3 -> to be removed with version 0.7.0
      */
     private function getInheritedState(NodeInterface $contentNode, $statePropertyName, $webspaceKey)
     {
-        // index page is default PUBLISHED
         $contentRootNode = $this->getContentNode($webspaceKey);
-        if ($contentNode->getName() === $contentRootNode->getPath()) {
+        if ($contentNode->getPath() === $contentRootNode->getPath()) {
             return StructureInterface::STATE_PUBLISHED;
         }
 
         // if test then return it
-        if ($contentNode->getPropertyValueWithDefault(
+        return $contentNode->getPropertyValueWithDefault(
                 $statePropertyName,
                 StructureInterface::STATE_TEST
-            ) === StructureInterface::STATE_TEST
-        ) {
-            return StructureInterface::STATE_TEST;
-        }
-
-        $session = $this->getSession();
-        $workspace = $session->getWorkspace();
-        $queryManager = $workspace->getQueryManager();
-
-        $sql = 'SELECT *
-                FROM  [sulu:content] as parent INNER JOIN [sulu:content] as child
-                    ON ISDESCENDANTNODE(child, parent)
-                WHERE child.[jcr:uuid]="' . $contentNode->getIdentifier() . '"';
-
-        $query = $queryManager->createQuery($sql, 'JCR-SQL2');
-        $result = $query->execute();
-
-        /** @var \PHPCR\NodeInterface $node */
-        foreach ($result->getNodes() as $node) {
-            // exclude /cmf/sulu_io/contents
-            if (
-                $node->getPath() !== $contentRootNode->getPath() &&
-                $node->getPropertyValueWithDefault(
-                    $statePropertyName,
-                    StructureInterface::STATE_TEST
-                ) === StructureInterface::STATE_TEST
-            ) {
-                return StructureInterface::STATE_TEST;
-            }
-        }
-
-        return StructureInterface::STATE_PUBLISHED;
+        );
     }
 }

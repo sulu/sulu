@@ -64,9 +64,9 @@ class ContentMapperTest extends PhpcrTestCase
             return $this->getStructureMock(5);
         } elseif ($structureKey == 'extension') {
             return $this->getStructureMock(6);
-        } elseif ($structureKey == 'internal') {
+        } elseif ($structureKey == 'internal-link') {
             return $this->getStructureMock(7, false);
-        } elseif ($structureKey == 'external') {
+        } elseif ($structureKey == 'external-link') {
             return $this->getStructureMock(8, false);
         }
 
@@ -1565,98 +1565,6 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertFalse($data4->getPublishedState());
     }
 
-    public function testStateInheritance()
-    {
-        $data = array(
-            array(
-                'name' => 't1'
-            ),
-            array(
-                'name' => 't1-t1'
-            ),
-            array(
-                'name' => 't1-t1-t1'
-            ),
-            array(
-                'name' => 't1-t2'
-            )
-        );
-
-        $this->eventDispatcher->expects($this->exactly(7))
-            ->method('dispatch')
-            ->with(
-                $this->equalTo(ContentEvents::NODE_SAVE),
-                $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeEvent')
-            );
-
-        $d1 = $this->mapper->save($data[0], 'overview', 'default', 'de', 1);
-        $d2 = $this->mapper->save($data[1], 'overview', 'default', 'de', 1, true, null, $d1->getUuid());
-        $d3 = $this->mapper->save($data[2], 'overview', 'default', 'de', 1, true, null, $d2->getUuid());
-        $d4 = $this->mapper->save($data[3], 'overview', 'default', 'de', 1, true, null, $d1->getUuid());
-
-        // default TEST
-        $x1 = $this->mapper->load($d1->getUuid(), 'default', 'de');
-        $this->assertEquals(StructureInterface::STATE_TEST, $x1->getGlobalState());
-        $this->assertEquals(StructureInterface::STATE_TEST, $x1->getNodeState());
-        $x2 = $this->mapper->load($d2->getUuid(), 'default', 'de');
-        $this->assertEquals(StructureInterface::STATE_TEST, $x2->getGlobalState());
-        $this->assertEquals(StructureInterface::STATE_TEST, $x2->getNodeState());
-        $x3 = $this->mapper->load($d3->getUuid(), 'default', 'de');
-        $this->assertEquals(StructureInterface::STATE_TEST, $x3->getGlobalState());
-        $this->assertEquals(StructureInterface::STATE_TEST, $x3->getNodeState());
-        $x4 = $this->mapper->load($d4->getUuid(), 'default', 'de');
-        $this->assertEquals(StructureInterface::STATE_TEST, $x4->getGlobalState());
-        $this->assertEquals(StructureInterface::STATE_TEST, $x4->getNodeState());
-
-        // t1-t1-t1 to PUBLISHED (t1-t1-t1 TEST -> because t1-t1 is TEST -> inheritance)
-        $d3 = $this->mapper->save($data[2], 'overview', 'default', 'de', 1, true, $d3->getUuid(), null, 2);
-
-        $x1 = $this->mapper->load($d1->getUuid(), 'default', 'de');
-        $this->assertEquals(StructureInterface::STATE_TEST, $x1->getGlobalState());
-        $this->assertEquals(StructureInterface::STATE_TEST, $x1->getNodeState());
-        $x2 = $this->mapper->load($d2->getUuid(), 'default', 'de');
-        $this->assertEquals(StructureInterface::STATE_TEST, $x2->getGlobalState());
-        $this->assertEquals(StructureInterface::STATE_TEST, $x2->getNodeState());
-        $x3 = $this->mapper->load($d3->getUuid(), 'default', 'de');
-        $this->assertEquals(StructureInterface::STATE_TEST, $x3->getGlobalState());
-        $this->assertEquals(StructureInterface::STATE_PUBLISHED, $x3->getNodeState());
-        $x4 = $this->mapper->load($d4->getUuid(), 'default', 'de');
-        $this->assertEquals(StructureInterface::STATE_TEST, $x4->getGlobalState());
-        $this->assertEquals(StructureInterface::STATE_TEST, $x4->getNodeState());
-
-        // t1-t1 to PUBLISHED (t1-t1-t1 PUBLISHED -> because t1-t1 is PUBLISHED -> inheritance)
-        $d2 = $this->mapper->save($data[1], 'overview', 'default', 'de', 1, true, $d2->getUuid(), null, 2);
-
-        $x1 = $this->mapper->load($d1->getUuid(), 'default', 'de');
-        $this->assertEquals(StructureInterface::STATE_TEST, $x1->getGlobalState());
-        $this->assertEquals(StructureInterface::STATE_TEST, $x1->getNodeState());
-        $x2 = $this->mapper->load($d2->getUuid(), 'default', 'de');
-        $this->assertEquals(StructureInterface::STATE_TEST, $x2->getGlobalState());
-        $this->assertEquals(StructureInterface::STATE_PUBLISHED, $x2->getNodeState());
-        $x3 = $this->mapper->load($d3->getUuid(), 'default', 'de');
-        $this->assertEquals(StructureInterface::STATE_TEST, $x3->getGlobalState());
-        $this->assertEquals(StructureInterface::STATE_PUBLISHED, $x3->getNodeState());
-        $x4 = $this->mapper->load($d4->getUuid(), 'default', 'de');
-        $this->assertEquals(StructureInterface::STATE_TEST, $x4->getGlobalState());
-        $this->assertEquals(StructureInterface::STATE_TEST, $x4->getNodeState());
-
-        // t1 to PUBLISHED
-        $d1 = $this->mapper->save($data[0], 'overview', 'default', 'de', 1, true, $d1->getUuid(), null, 2);
-
-        $x1 = $this->mapper->load($d1->getUuid(), 'default', 'de');
-        $this->assertEquals(StructureInterface::STATE_PUBLISHED, $x1->getGlobalState());
-        $this->assertEquals(StructureInterface::STATE_PUBLISHED, $x1->getNodeState());
-        $x2 = $this->mapper->load($d2->getUuid(), 'default', 'de');
-        $this->assertEquals(StructureInterface::STATE_PUBLISHED, $x2->getGlobalState());
-        $this->assertEquals(StructureInterface::STATE_PUBLISHED, $x2->getNodeState());
-        $x3 = $this->mapper->load($d3->getUuid(), 'default', 'de');
-        $this->assertEquals(StructureInterface::STATE_PUBLISHED, $x3->getGlobalState());
-        $this->assertEquals(StructureInterface::STATE_PUBLISHED, $x3->getNodeState());
-        $x4 = $this->mapper->load($d4->getUuid(), 'default', 'de');
-        $this->assertEquals(StructureInterface::STATE_TEST, $x4->getGlobalState());
-        $this->assertEquals(StructureInterface::STATE_TEST, $x4->getNodeState());
-    }
-
     public function testNavigationContext()
     {
         $navContexts = array('main', 'footer');
@@ -2870,7 +2778,7 @@ class ContentMapperTest extends PhpcrTestCase
             'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK,
             'internal' => $structure1->getUuid()
         );
-        $structure2 = $this->mapper->save($data2, 'internal', 'default', 'en', 1);
+        $structure2 = $this->mapper->save($data2, 'internal-link', 'default', 'en', 1);
 
         $this->assertEquals(Structure::NODE_TYPE_INTERNAL_LINK, $structure2->getNodeType());
         $this->assertEquals($structure1->getUuid(), $structure2->getInternalLinkContent()->getUuid());
@@ -2883,7 +2791,7 @@ class ContentMapperTest extends PhpcrTestCase
             'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK,
             'external' => 'www.google.at'
         );
-        $structure3 = $this->mapper->save($data3, 'external', 'default', 'en', 1);
+        $structure3 = $this->mapper->save($data3, 'external-link', 'default', 'en', 1);
 
         $this->assertEquals(Structure::NODE_TYPE_EXTERNAL_LINK, $structure3->getNodeType());
 
@@ -3083,6 +2991,77 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals('/page-2/subpage', $result[0]->getPath());
         $this->assertEquals('/page-2/sub', $result[1]->getPath());
         $this->assertEquals('/page-2/sub-1', $result[2]->getPath());
+    }
+
+    public function testNewExternalLink()
+    {
+        $data = array(
+            'name' => 'Page-1',
+            'external' => 'www.google.at',
+            'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK
+        );
+
+        $saveResult = $this->mapper->save($data, 'overview', 'default', 'de', 1);
+        $loadResult = $this->mapper->load($saveResult->getUuid(), 'default', 'de');
+
+        // check save result
+        $this->assertEquals('Page-1', $saveResult->name);
+        $this->assertEquals('Page-1', $saveResult->getNodeName());
+        $this->assertEquals('www.google.at', $saveResult->external);
+        $this->assertEquals('http://www.google.at', $saveResult->getResourceLocator());
+
+        // check load result
+        $this->assertEquals('Page-1', $loadResult->name);
+        $this->assertEquals('Page-1', $loadResult->getNodeName());
+        $this->assertEquals('www.google.at', $loadResult->external);
+        $this->assertEquals('http://www.google.at', $loadResult->getResourceLocator());
+    }
+
+    public function testChangeToExternalLink()
+    {
+        // prepare a page
+        $data = array(
+            'name' => 'Page-1',
+            'url' => '/page-1'
+        );
+        $result = $this->mapper->save($data, 'overview', 'default', 'de', 1);
+
+        // turn it into a external link
+        $data = array(
+            'name' => 'External',
+            'external' => 'www.google.at',
+            'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK
+        );
+        $saveResult = $this->mapper->save($data, 'overview', 'default', 'de', 1, true, $result->getUuid());
+        $loadResult = $this->mapper->load($saveResult->getUuid(), 'default', 'de');
+
+        // check save result
+        $this->assertEquals('External', $saveResult->name);
+        $this->assertEquals('External', $saveResult->getNodeName());
+        $this->assertEquals('www.google.at', $saveResult->external);
+        $this->assertEquals('http://www.google.at', $saveResult->getResourceLocator());
+        $this->assertEquals('overview', $saveResult->getOriginTemplate());
+
+        // check load result
+        $this->assertEquals('External', $loadResult->name);
+        $this->assertEquals('External', $loadResult->getNodeName());
+        $this->assertEquals('www.google.at', $loadResult->external);
+        $this->assertEquals('http://www.google.at', $loadResult->getResourceLocator());
+        $this->assertEquals('overview', $loadResult->getOriginTemplate());
+
+        // back to content type
+        $data = array(
+            'name' => 'Page-1',
+            'nodeType' => Structure::NODE_TYPE_CONTENT
+        );
+        $saveResult = $this->mapper->save($data, 'overview', 'default', 'de', 1, true, $result->getUuid());
+        $loadResult = $this->mapper->load($saveResult->getUuid(), 'default', 'de');
+
+        // check load result
+        $this->assertEquals('Page-1', $loadResult->name);
+        $this->assertEquals('Page-1', $loadResult->getNodeName());
+        $this->assertEquals('/page-1', $loadResult->url);
+        $this->assertEquals('/page-1', $loadResult->getResourceLocator());
     }
 }
 

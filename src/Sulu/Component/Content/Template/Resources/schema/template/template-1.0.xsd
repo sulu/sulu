@@ -14,6 +14,14 @@
             <xs:element type="xs:string" name="controller" minOccurs="1" maxOccurs="1"/>
             <xs:element type="xs:integer" name="cacheLifetime" minOccurs="1" maxOccurs="1"/>
             <xs:element type="rootPropertiesType" name="properties" minOccurs="1" maxOccurs="1"/>
+
+            <xs:element name="meta">
+                <xs:complexType>
+                    <xs:choice maxOccurs="unbounded">
+                        <xs:element type="langType" name="title"/>
+                    </xs:choice>
+                </xs:complexType>
+            </xs:element>
         </xs:choice>
     </xs:complexType>
 

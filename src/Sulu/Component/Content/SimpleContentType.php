@@ -70,6 +70,14 @@ abstract class SimpleContentType implements ContentTypeInterface
     /**
      * {@inheritdoc}
      */
+    public function hasValue(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
+    {
+        return $node->hasProperty($property->getName());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function write(
         NodeInterface $node,
         PropertyInterface $property,
@@ -142,5 +150,13 @@ abstract class SimpleContentType implements ContentTypeInterface
     public function getDefaultValue()
     {
         return $this->defaultValue;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getViewData(PropertyInterface $property)
+    {
+        return array();
     }
 }

@@ -100,7 +100,7 @@ class RequestAnalyzer implements RequestAnalyzerInterface
      */
     public function analyze(Request $request)
     {
-        $url = $request->getHost() . $request->getRequestUri();
+        $url = $request->getHost() . $request->getPathInfo();
         $portalInformation = $this->webspaceManager->findPortalInformationByUrl(
             $url,
             $this->environment
@@ -122,10 +122,7 @@ class RequestAnalyzer implements RequestAnalyzerInterface
                 $request->setLocale($portalInformation->getLocalization()->getLocalization());
                 // get the path and set it on the request
                 $this->setCurrentResourceLocator(
-                    substr(
-                        $request->getHost() . $request->getRequestUri(),
-                        strlen($portalInformation->getUrl())
-                    )
+                    $this->getResourceLocatorFromRequest($portalInformation, $request)
                 );
 
                 // get the resource locator prefix and set it
@@ -297,5 +294,15 @@ class RequestAnalyzer implements RequestAnalyzerInterface
     protected function setCurrentResourceLocatorPrefix($resourceLocatorPrefix)
     {
         $this->resourceLocatorPrefix = $resourceLocatorPrefix;
+    }
+
+    private function getResourceLocatorFromRequest($portalInformation, $request)
+    {
+        $res = substr(
+            $request->getHost() . $request->getPathInfo(),
+            strlen($portalInformation->getUrl())
+        );
+
+        return $res;
     }
 }

@@ -11,6 +11,7 @@
 namespace Sulu\Component\Content;
 
 use PHPCR\NodeInterface;
+use Sulu\Component\Content\PropertyInterface;
 
 /**
  * Content type definition
@@ -40,6 +41,25 @@ interface ContentTypeInterface
      * @return mixed
      */
     public function read(
+        NodeInterface $node,
+        PropertyInterface $property,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey
+    );
+
+    /**
+     * Checks availability of a value
+     *
+     * @param NodeInterface $node
+     * @param PropertyInterface $property
+     * @param $webspaceKey
+     * @param $languageCode
+     * @param $segmentKey
+     *
+     * @return mixed
+     */
+    public function hasValue(
         NodeInterface $node,
         PropertyInterface $property,
         $webspaceKey,
@@ -121,4 +141,11 @@ interface ContentTypeInterface
      * @return mixed
      */
     public function getDefaultValue();
+
+    /**
+     * Prepare data for the view
+     *
+     * @param PropertyInterface $property
+     */
+    public function getViewData(PropertyInterface $property);
 }

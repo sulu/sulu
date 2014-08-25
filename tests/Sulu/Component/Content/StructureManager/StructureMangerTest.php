@@ -92,11 +92,11 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
 
     public function tearDown()
     {
-        /*foreach ($this->cacheFiles as $cacheFile) {
+        foreach ($this->cacheFiles as $cacheFile) {
             if (is_file($cacheFile)) {
                 unlink($cacheFile);
             }
-        }*/
+        }
     }
 
     public function testGetStructure()
@@ -106,6 +106,10 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
 
         // should implement interface
         $this->assertInstanceOf('\Sulu\Component\Content\StructureInterface', $structure);
+
+        // check metadata
+        $this->assertEquals('Das ist das Template 1', $structure->getLocalizedTitle('de'));
+        $this->assertEquals('That´s the template 1', $structure->getLocalizedTitle('en'));
 
         // check properties
         $this->assertEquals('template', $structure->getKey());

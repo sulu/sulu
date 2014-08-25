@@ -197,21 +197,21 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
                     ),
                     $resources
                 );
-            } catch (\InvalidArgumentException $iae) {
+            } catch (\InvalidArgumentException $e) {
                 $this->logger->warning(
                     'The file "' . $fileName . '" does not match the schema and was skipped'
                 );
-                throw new TemplateNotFoundException($fileName, $key);
-            } catch (InvalidXmlException $iude) {
+                throw new TemplateNotFoundException($fileName, $key, $e);
+            } catch (InvalidXmlException $e) {
                 $this->logger->warning(
                     'The file "' . $fileName . '" defined some invalid properties and was skipped'
                 );
-                throw new TemplateNotFoundException($fileName, $key);
-            } catch (\Twig_Error $twige) {
+                throw new TemplateNotFoundException($fileName, $key, $e);
+            } catch (\Twig_Error $e) {
                 $this->logger->warning(
                     'The file "' . $fileName . '" content cant be rendered with the template'
                 );
-                throw new TemplateNotFoundException($fileName, $key);
+                throw new TemplateNotFoundException($fileName, $e);
             }
         }
 
@@ -231,6 +231,8 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
      */
     private function getTemplate($key)
     {
+        $triedDirs = array();
+
         foreach ($this->options['template_dir'] as $templateDir) {
             $path = $templateDir['path'] . '/' . $key . '.xml';
 
@@ -240,9 +242,14 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
                     'internal' => $templateDir['internal']
                 );
             }
+
+            $triedDirs[] = $templateDir['path'];
         }
 
-        return false;
+        throw new \InvalidArgumentException(sprintf(
+            'Could not find a template named "%s.xml" in the following directories: %s',
+            $key, implode(', ', $triedDirs)
+        ));
     }
 
     /**

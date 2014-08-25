@@ -10,6 +10,8 @@
 
 namespace Sulu\Component\Content;
 
+use PHPCR\NodeInterface;
+
 /**
  * base class of complex content types
  */
@@ -38,8 +40,29 @@ abstract class ComplexContentType implements ContentTypeInterface
     /**
      * {@inheritdoc}
      */
+    public function hasValue(
+        NodeInterface $node,
+        PropertyInterface $property,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey
+    ) {
+        return $node->hasProperty($property->getName());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getDefaultValue()
     {
         return null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getViewData(PropertyInterface $property)
+    {
+        return array();
     }
 }
