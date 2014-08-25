@@ -29572,11 +29572,13 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * @param id {Number|String} the id of the record to highlight
          */
         uniqueHighlightRecord: function (id) {
-            this.sandbox.dom.removeClass(
-                this.sandbox.dom.find('.' + constants.rowClass + '.' + constants.selectedRowClass, this.table.$body),
-                constants.selectedRowClass
-            );
-            this.sandbox.dom.addClass(this.table.rows[id].$el, constants.selectedRowClass);
+            if (!!this.table.rows[id]) {
+                this.sandbox.dom.removeClass(
+                    this.sandbox.dom.find('.' + constants.rowClass + '.' + constants.selectedRowClass, this.table.$body),
+                    constants.selectedRowClass
+                );
+                this.sandbox.dom.addClass(this.table.rows[id].$el, constants.selectedRowClass);
+            }
         },
 
         /**
@@ -30822,14 +30824,14 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                  */
                 radio: function(content, index, columnName) {
                     var checked = (!content) ? false : true;
-                    return this.sandbox.util.template(templates.radio, {checked: checked, radioId: index, columnName: columnName});
+                    return this.sandbox.util.template(templates.radio, {checked: checked, columnName: columnName});
                 }
             },
 
             templates = {
                 radio: [
                     '<div class="custom-radio custom-filter">',
-                    '   <input name="radio-<%= columnName %>-<%= radioId %>" class="" type="radio" class="form-element" <% if (checked) { print("checked")} %>/>',
+                    '   <input name="radio-<%= columnName %>" type="radio" class="form-element" <% if (checked) { print("checked")} %>/>',
                     '   <span class="icon"></span>',
                     '</div>'
                 ].join('')
@@ -31826,7 +31828,7 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
              * @returns {number}
              */
             getRemainingViewHeight: function() {
-                var height = this.sandbox.dom.height(this.sandbox.dom.window) - this.sandbox.dom.offset(this.$el).top;
+                var height = this.sandbox.dom.height(this.sandbox.dom.window) - this.sandbox.dom.offset(this.$element).top;
                 if (!!this.paginations[this.paginationId] && !!this.paginations[this.paginationId].getHeight) {
                     height -= this.paginations[this.paginationId].getHeight();
                 }
