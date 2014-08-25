@@ -48,9 +48,10 @@ class DoctrineListBuilder extends AbstractListBuilder
     protected $sortField;
 
     /**
-     * @var AbstractDoctrineFieldDescriptor[]
+     * @var \Doctrine\ORM\QueryBuilder
      */
-    protected $whereFields = array();
+    protected $queryBuilder;
+
 
     public function __construct(EntityManager $em, $entityName)
     {
@@ -64,10 +65,10 @@ class DoctrineListBuilder extends AbstractListBuilder
     public function count()
     {
         $entityId = $this->entityName . '.id';
-        $qb = $this->createQueryBuilder()
+        $this->queryBuilder = $this->createQueryBuilder()
             ->select('count(' . $entityId . ')');
 
-        return $qb->getQuery()->getSingleScalarResult();
+        return $this->queryBuilder->getQuery()->getSingleScalarResult();
     }
 
     /**
@@ -75,21 +76,21 @@ class DoctrineListBuilder extends AbstractListBuilder
      */
     public function execute()
     {
-        $qb = $this->createQueryBuilder();
+        $this->queryBuilder = $this->createQueryBuilder();
 
         foreach ($this->fields as $field) {
-            $qb->addSelect($field->getSelect() . ' AS ' . $field->getName());
+            $this->queryBuilder->addSelect($field->getSelect() . ' AS ' . $field->getName());
         }
 
         if ($this->limit != null) {
-            $qb->setMaxResults($this->limit)->setFirstResult($this->limit * ($this->page - 1));
+            $this->queryBuilder->setMaxResults($this->limit)->setFirstResult($this->limit * ($this->page - 1));
         }
 
         if ($this->sortField != null) {
-            $qb->orderBy($this->sortField->getName(), $this->sortOrder);
+            $this->queryBuilder->orderBy($this->sortField->getName(), $this->sortOrder);
         }
 
-        return $qb->getQuery()->getArrayResult();
+        return $this->queryBuilder->getQuery()->getArrayResult();
     }
 
     /**
@@ -116,6 +117,10 @@ class DoctrineListBuilder extends AbstractListBuilder
             $joins = array_merge($joins, $whereField->getJoins());
         }
 
+        foreach ($this->whereNotFields as $whereNotField) {
+            $joins = array_merge($joins, $whereNotField->getJoins());
+        }
+
         return $joins;
     }
 
@@ -124,13 +129,13 @@ class DoctrineListBuilder extends AbstractListBuilder
      */
     private function createQueryBuilder()
     {
-        $qb = $this->em->createQueryBuilder()
+        $this->queryBuilder = $this->em->createQueryBuilder()
             ->from($this->entityName, $this->entityName);
 
         foreach ($this->getJoins() as $entity => $join) {
             switch ($join->getJoinMethod()) {
                 case DoctrineJoinDescriptor::JOIN_METHOD_LEFT:
-                    $qb->leftJoin(
+                    $this->queryBuilder->leftJoin(
                         $join->getJoin(),
                         $entity,
                         $join->getJoinConditionMethod(),
@@ -138,7 +143,7 @@ class DoctrineListBuilder extends AbstractListBuilder
                     );
                     break;
                 case DoctrineJoinDescriptor::JOIN_METHOD_INNER:
-                    $qb->innerJoin(
+                    $this->queryBuilder->innerJoin(
                         $join->getJoin(),
                         $entity,
                         $join->getJoinConditionMethod(),
@@ -148,13 +153,14 @@ class DoctrineListBuilder extends AbstractListBuilder
             }
         }
 
+        // set where
         if (!empty($this->whereFields)) {
-            $whereParts = array();
-            foreach ($this->whereFields as $whereField) {
-                $whereParts[] = $whereField->getSelect() . ' = :' . $whereField->getName();
-                $qb->setParameter($whereField->getName(), $this->whereValues[$whereField->getName()]);
-            }
-            $qb->andWhere('(' . implode(' AND ', $whereParts) . ')');
+            $this->addWheres($this->whereFields, $this->whereValues, self::WHERE_COMPARATOR_EQUAL);
+        }
+
+        // set where not
+        if (!empty($this->whereNotFields)) {
+            $this->addWheres($this->whereNotFields, $this->whereNotValues, self::WHERE_COMPARATOR_UNEQUAL);
         }
 
         if ($this->search != null) {
@@ -163,10 +169,26 @@ class DoctrineListBuilder extends AbstractListBuilder
                 $searchParts[] = $searchField->getSelect() . ' LIKE :search';
             }
 
-            $qb->andWhere('(' . implode(' OR ', $searchParts) . ')');
-            $qb->setParameter('search', '%' . $this->search . '%');
+            $this->queryBuilder->andWhere('(' . implode(' OR ', $searchParts) . ')');
+            $this->queryBuilder->setParameter('search', '%' . $this->search . '%');
         }
 
-        return $qb;
+        return $this->queryBuilder;
+    }
+
+    /**
+     * sets where statement
+     * @param array $whereFields
+     * @param array $whereValues
+     * @param string $comparator
+     */
+    protected function addWheres(array $whereFields, array $whereValues, $comparator = self::WHERE_COMPARATOR_EQUAL)
+    {
+        $whereParts = array();
+        foreach ($whereFields as $whereField) {
+            $whereParts[] = $whereField->getSelect() . ' ' . $comparator . ' :' . $whereField->getName();
+            $this->queryBuilder->setParameter($whereField->getName(), $whereValues[$whereField->getName()]);
+        }
+        $this->queryBuilder->andWhere('(' . implode(' AND ', $whereParts) . ')');
     }
 }
