@@ -100,7 +100,7 @@ class RequestAnalyzer implements RequestAnalyzerInterface
      */
     public function analyze(Request $request)
     {
-        $url = $request->getHost() . $request->getRequestUri();
+        $url = $request->getHost() . $request->getPathInfo();
         $portalInformation = $this->webspaceManager->findPortalInformationByUrl(
             $url,
             $this->environment
