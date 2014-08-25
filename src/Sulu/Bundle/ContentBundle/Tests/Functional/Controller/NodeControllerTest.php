@@ -4,6 +4,7 @@ namespace Sulu\Bundle\ContentBundle\Tests\Controller;
 
 use PHPCR\NodeInterface;
 use PHPCR\SimpleCredentials;
+use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Component\PHPCR\NodeTypes\Base\SuluNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Content\ContentNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Path\PathNodeType;
@@ -91,6 +92,31 @@ class NodeControllerTest extends DatabaseTestCase
         self::$em->persist($permission1);
         self::$em->flush();
 
+        $tag1 = new Tag();
+        $tag1->setChanged(new DateTime());
+        $tag1->setCreated(new DateTime());
+        $tag1->setName('tag1');
+        self::$em->persist($tag1);
+
+        $tag2 = new Tag();
+        $tag2->setChanged(new DateTime());
+        $tag2->setCreated(new DateTime());
+        $tag2->setName('tag2');
+        self::$em->persist($tag2);
+
+        $tag3 = new Tag();
+        $tag3->setChanged(new DateTime());
+        $tag3->setCreated(new DateTime());
+        $tag3->setName('tag3');
+        self::$em->persist($tag3);
+
+        $tag4 = new Tag();
+        $tag4->setChanged(new DateTime());
+        $tag4->setCreated(new DateTime());
+        $tag4->setName('tag4');
+        self::$em->persist($tag4);
+        self::$em->flush();
+
         $this->prepareSession();
 
         NodeHelper::purgeWorkspace($this->session);
@@ -159,7 +185,6 @@ class NodeControllerTest extends DatabaseTestCase
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Permission'),
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\SecurityType'),
             self::$em->getClassMetadata('Sulu\Bundle\TagBundle\Entity\Tag'),
-
             self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\Collection'),
             self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\CollectionType'),
             self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\CollectionMeta'),
@@ -170,7 +195,6 @@ class NodeControllerTest extends DatabaseTestCase
             self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersionMeta'),
             self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage'),
             self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage'),
-
             self::$em->getClassMetadata('Sulu\Bundle\CategoryBundle\Entity\Category')
         );
 
@@ -345,7 +369,7 @@ class NodeControllerTest extends DatabaseTestCase
 
         for ($i = 0; $i < count($data); $i++) {
             $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en', $data[$i]);
-            $data[$i] = (array) json_decode($client->getResponse()->getContent(), true);
+            $data[$i] = (array)json_decode($client->getResponse()->getContent(), true);
         }
 
         return $data;
@@ -408,7 +432,11 @@ class NodeControllerTest extends DatabaseTestCase
         $data[0]['tags'] = array('new tag');
         $data[0]['article'] = 'thats a new article';
 
-        $client->request('PUT', '/api/nodes/' . $data[0]['id'] . '?template=default&webspace=sulu_io&language=en', $data[0]);
+        $client->request(
+            'PUT',
+            '/api/nodes/' . $data[0]['id'] . '?template=default&webspace=sulu_io&language=en',
+            $data[0]
+        );
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
@@ -442,45 +470,65 @@ class NodeControllerTest extends DatabaseTestCase
         $data = array(
             array(
                 'title' => 'test1',
-                'tags' => array(
-                    'tag1',
-                ),
                 'url' => '/test1',
-                'article' => 'Test'
+                'article' => 'Test',
+                'ext' => array(
+                    'excerpt' => array(
+                        'tags' => array(
+                            'tag1'
+                        )
+                    )
+                )
             ),
             array(
                 'title' => 'test2',
-                'tags' => array(
-                    'tag2'
-                ),
                 'url' => '/test2',
-                'article' => 'Test'
+                'article' => 'Test',
+                'ext' => array(
+                    'excerpt' => array(
+                        'tags' => array(
+                            'tag2'
+                        )
+                    )
+                )
             ),
             array(
                 'title' => 'test3',
-                'tags' => array(
-                    'tag1',
-                    'tag2'
-                ),
                 'url' => '/test3',
-                'article' => 'Test'
+                'article' => 'Test',
+                'ext' => array(
+                    'excerpt' => array(
+                        'tags' => array(
+                            'tag1',
+                            'tag2'
+                        )
+                    )
+                )
             ),
             array(
                 'title' => 'test4',
-                'tags' => array(
-                    'tag1',
-                ),
                 'url' => '/test4',
-                'article' => 'Test'
+                'article' => 'Test',
+                'ext' => array(
+                    'excerpt' => array(
+                        'tags' => array(
+                            'tag1'
+                        )
+                    )
+                )
             ),
             array(
                 'title' => 'test5',
-                'tags' => array(
-                    'tag1',
-                    'tag2'
-                ),
                 'url' => '/test5',
-                'article' => 'Test'
+                'article' => 'Test',
+                'ext' => array(
+                    'excerpt' => array(
+                        'tags' => array(
+                            'tag1',
+                            'tag2'
+                        )
+                    )
+                )
             )
         );
 
@@ -492,26 +540,58 @@ class NodeControllerTest extends DatabaseTestCase
             )
         );
         $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en', $data[0]);
-        $data[0] = (array) json_decode($client->getResponse()->getContent(), true);
+        $data[0] = (array)json_decode($client->getResponse()->getContent(), true);
         $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en', $data[1]);
-        $data[1] = (array) json_decode($client->getResponse()->getContent(), true);
-        $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en&parent='.$data[1]['id'], $data[2]);
-        $data[2] = (array) json_decode($client->getResponse()->getContent(), true);
-        $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en&parent='.$data[1]['id'], $data[3]);
-        $data[3] = (array) json_decode($client->getResponse()->getContent(), true);
-        $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en&parent='.$data[3]['id'], $data[4]);
-        $data[4] = (array) json_decode($client->getResponse()->getContent(), true);
+        $data[1] = (array)json_decode($client->getResponse()->getContent(), true);
+        $client->request(
+            'POST',
+            '/api/nodes?template=default&webspace=sulu_io&language=en&parent=' . $data[1]['id'],
+            $data[2]
+        );
+        $data[2] = (array)json_decode($client->getResponse()->getContent(), true);
+        $client->request(
+            'POST',
+            '/api/nodes?template=default&webspace=sulu_io&language=en&parent=' . $data[1]['id'],
+            $data[3]
+        );
+        $data[3] = (array)json_decode($client->getResponse()->getContent(), true);
+        $client->request(
+            'POST',
+            '/api/nodes?template=default&webspace=sulu_io&language=en&parent=' . $data[3]['id'],
+            $data[4]
+        );
+        $data[4] = (array)json_decode($client->getResponse()->getContent(), true);
 
-        $client->request('PUT', '/api/nodes/' . $data[0]['id'] . '?state=2&template=default&webspace=sulu_io&language=en', $data[0]);
-        $data[0] = (array) json_decode($client->getResponse()->getContent(), true);
-        $client->request('PUT', '/api/nodes/' . $data[1]['id'] . '?state=2&template=default&webspace=sulu_io&language=en', $data[1]);
-        $data[1] = (array) json_decode($client->getResponse()->getContent(), true);
-        $client->request('PUT', '/api/nodes/' . $data[2]['id'] . '?state=2&template=default&webspace=sulu_io&language=en', $data[2]);
-        $data[2] = (array) json_decode($client->getResponse()->getContent(), true);
-        $client->request('PUT', '/api/nodes/' . $data[3]['id'] . '?state=2&template=default&webspace=sulu_io&language=en', $data[3]);
-        $data[3] = (array) json_decode($client->getResponse()->getContent(), true);
-        $client->request('PUT', '/api/nodes/' . $data[4]['id'] . '?state=2&template=default&webspace=sulu_io&language=en', $data[4]);
-        $data[4] = (array) json_decode($client->getResponse()->getContent(), true);
+        $client->request(
+            'PUT',
+            '/api/nodes/' . $data[0]['id'] . '?state=2&template=default&webspace=sulu_io&language=en',
+            $data[0]
+        );
+        $data[0] = (array)json_decode($client->getResponse()->getContent(), true);
+        $client->request(
+            'PUT',
+            '/api/nodes/' . $data[1]['id'] . '?state=2&template=default&webspace=sulu_io&language=en',
+            $data[1]
+        );
+        $data[1] = (array)json_decode($client->getResponse()->getContent(), true);
+        $client->request(
+            'PUT',
+            '/api/nodes/' . $data[2]['id'] . '?state=2&template=default&webspace=sulu_io&language=en',
+            $data[2]
+        );
+        $data[2] = (array)json_decode($client->getResponse()->getContent(), true);
+        $client->request(
+            'PUT',
+            '/api/nodes/' . $data[3]['id'] . '?state=2&template=default&webspace=sulu_io&language=en',
+            $data[3]
+        );
+        $data[3] = (array)json_decode($client->getResponse()->getContent(), true);
+        $client->request(
+            'PUT',
+            '/api/nodes/' . $data[4]['id'] . '?state=2&template=default&webspace=sulu_io&language=en',
+            $data[4]
+        );
+        $data[4] = (array)json_decode($client->getResponse()->getContent(), true);
 
         return $data;
     }
@@ -926,7 +1006,10 @@ class NodeControllerTest extends DatabaseTestCase
         );
         $client->request('PUT', '/api/nodes/' . $uuid . '?template=default&webspace=sulu_io&language=en', $data);
 
-        $client->request('GET', '/api/nodes/' . $uuid . '/resourcelocators?template=default&webspace=sulu_io&language=en');
+        $client->request(
+            'GET',
+            '/api/nodes/' . $uuid . '/resourcelocators?template=default&webspace=sulu_io&language=en'
+        );
         $response = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertEquals('/a2', $response['_embedded']['resourcelocators'][0]['resourceLocator']);
