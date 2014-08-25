@@ -5751,17 +5751,18 @@ fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset
 
 /* line 184, ../scss/modules/overlay.scss */
 .overlay-content {
+  overflow: auto;
   padding-left: 0;
   margin: 0 20px 10px 20px;
 }
-/* line 188, ../scss/modules/overlay.scss */
+/* line 189, ../scss/modules/overlay.scss */
 .overlay-content .message {
   padding: 20px 0 25px 0;
   font-size: 16px;
   color: #999999;
 }
 
-/* line 195, ../scss/modules/overlay.scss */
+/* line 196, ../scss/modules/overlay.scss */
 .husky-overlay-backdrop {
   width: 100%;
   height: 100%;
