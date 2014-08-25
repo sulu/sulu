@@ -64,7 +64,7 @@ class StructureViewResolverTest extends ProphecyTestCase
         }
         $this->contentTypeManager->get('type_1')->willReturn($this->contentType);
 
-        $this->structure->getProperties()->willReturn($properties);
+        $this->structure->getProperties(true)->willReturn($properties);
 
         $res = $this->resolver->resolve($this->structure->reveal());
 
