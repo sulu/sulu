@@ -35,6 +35,7 @@ use Sulu\Component\PHPCR\NodeTypes\Path\PathNodeType;
 use Sulu\Component\PHPCR\PathCleanup;
 use Sulu\Component\PHPCR\SessionManager\SessionManager;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
+use Sulu\Component\Webspace\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
@@ -184,10 +185,12 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
                 $this->eventDispatcher,
                 $this->localizationFinder,
                 $cleaner,
+                $this->webspaceManager,
                 $this->language,
                 $this->defaultTemplate,
                 $this->languageNamespace,
-                $this->internalPrefix
+                $this->internalPrefix,
+                array('main', 'footer')
             );
 
             $resourceLocator = new ResourceLocator(
@@ -236,7 +239,11 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
     protected function prepareLocalizationFinder()
     {
         if ($this->localizationFinder === null) {
-            $this->localizationFinder = new ParentChildAnyFinder($this->webspaceManager, $this->languageNamespace, $this->internalPrefix);
+            $this->localizationFinder = new ParentChildAnyFinder(
+                $this->webspaceManager,
+                $this->languageNamespace,
+                $this->internalPrefix
+            );
         }
     }
 
@@ -257,10 +264,37 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
     {
         if ($this->structureManager === null) {
             $this->structureManager = $this->getMock('\Sulu\Component\Content\StructureManagerInterface');
+
             $this->structureManager->expects($this->any())
                 ->method('getStructure')
                 ->will($this->returnCallback(array($this, 'structureCallback')));
+
+            $this->structureManager->expects($this->any())
+                ->method('getExtensions')
+                ->will($this->returnCallback(array($this, 'getExtensionsCallback')));
+
+            $this->structureManager->expects($this->any())
+                ->method('getExtension')
+                ->will($this->returnCallback(array($this, 'getExtensionCallback')));
         }
+    }
+
+    /**
+     * default get extension callback returns a empty array
+     * @return array
+     */
+    public function getExtensionsCallback()
+    {
+        return array();
+    }
+
+    /**
+     * default get extension callback returns null
+     * @return array
+     */
+    public function getExtensionCallback()
+    {
+        return null;
     }
 
     /**
