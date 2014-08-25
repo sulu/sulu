@@ -59,6 +59,11 @@ interface PreviewInterface
     public function update($userId, $contentUuid, $webspaceKey, $templateKey, $languageCode, $property, $data);
 
     /**
+     * {@inheritdoc}
+     */
+    public function updateTemplate($userId, $contentUuid, $templateKey, $webspaceKey, $languageCode);
+
+    /**
      * returns pending changes for given user and content
      * @param $userId
      * @param string $contentUuid

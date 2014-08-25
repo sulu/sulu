@@ -110,8 +110,15 @@ class PreviewCacheProvider implements PreviewCacheProviderInterface
                 $tempNode->getIdentifier()
             );
 
+            // FIXME reset name
+            if ($tempNode->getName() !== $this->prefix) {
+                $tempNode->rename($this->prefix);
+            }
+
             $tempNode->setProperty($this->prefix . '-page', $id);
             $tempNode->setProperty($this->prefix . '-language', $locale);
+
+            $this->sessionManager->getSession()->save();
 
             return true;
         }

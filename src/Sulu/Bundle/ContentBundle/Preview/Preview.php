@@ -163,23 +163,34 @@ class Preview implements PreviewInterface
     }
 
     /**
-     * @param StructureInterface $content
-     * @param $template
-     * @param $webspaceKey
-     * @param $languageCode
-     * @return StructureInterface
+     * {@inheritdoc}
      */
-    private function updateTemplate(StructureInterface $content, $template, $webspaceKey, $languageCode)
+    public function updateTemplate($userId, $contentUuid, $templateKey, $webspaceKey, $languageCode)
     {
-        /** @var StructureInterface $newContent */
-        $newContent = $this->structureManager->getStructure($template);
-        $newContent->setWebspaceKey($webspaceKey);
-        $newContent->setLanguageCode($languageCode);
+        /** @var StructureInterface $content */
+        $content = $this->loadStructure($contentUuid, $webspaceKey, $languageCode);
 
-        $this->copyProperties($newContent, $content, $webspaceKey, $languageCode);
-        $newContent->setExt($content->getExt());
+        if ($content->getKey() !== $templateKey) {
+            /** @var StructureInterface $newContent */
+            $newContent = $this->structureManager->getStructure($templateKey);
+            $newContent->setWebspaceKey($webspaceKey);
+            $newContent->setLanguageCode($languageCode);
 
-        return $newContent;
+            $this->copyProperties($newContent, $content, $webspaceKey, $languageCode);
+            $newContent->setExt($content->getExt());
+
+            $this->addReload($userId);
+
+            $this->addStructure($contentUuid, $newContent, $webspaceKey, $languageCode);
+        }
+    }
+
+    /**
+     * adds a reload event to changes
+     */
+    private function addReload($userId)
+    {
+        $this->addChanges($userId, 'reload', true);
     }
 
     /**

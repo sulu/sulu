@@ -156,6 +156,8 @@ class PreviewController extends Controller
             $preview->start($uid, $contentUuid, $webspaceKey, $templateKey, $languageCode);
         }
 
+        $preview->updateTemplate($uid, $contentUuid, $templateKey, $webspaceKey, $languageCode);
+
         // get changes from request
         $changes = $request->get('changes', false);
         if (!!$changes) {
