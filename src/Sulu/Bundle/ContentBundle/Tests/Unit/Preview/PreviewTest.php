@@ -10,13 +10,10 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Unit\Preview;
 
-use Doctrine\Common\Cache\ArrayCache;
-use Doctrine\Common\Cache\Cache;
 use Liip\ThemeBundle\ActiveTheme;
 use ReflectionMethod;
 use Sulu\Bundle\ContentBundle\Preview\PhpcrCacheProvider;
 use Sulu\Bundle\ContentBundle\Preview\Preview;
-use Sulu\Bundle\ContentBundle\Preview\PreviewCacheProvider;
 use Sulu\Bundle\ContentBundle\Preview\PreviewCacheProviderInterface;
 use Sulu\Bundle\ContentBundle\Preview\PreviewInterface;
 use Sulu\Bundle\ContentBundle\Preview\PreviewRenderer;
@@ -27,14 +24,11 @@ use Sulu\Component\Content\Block\BlockPropertyType;
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyTag;
 use Sulu\Component\Content\StructureInterface;
-use Sulu\Component\Content\Types\TextArea;
-use Sulu\Component\Content\Types\TextLine;
 use Sulu\Component\Webspace\Localization;
-use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Theme;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Templating\EngineInterface;
+use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
 
 class PreviewTest extends PhpcrTestCase
 {
@@ -42,11 +36,6 @@ class PreviewTest extends PhpcrTestCase
      * @var PreviewInterface
      */
     private $preview;
-
-    /**
-     * @var Cache
-     */
-    private $changesCache;
 
     /**
      * @var PreviewCacheProviderInterface
@@ -68,17 +57,21 @@ class PreviewTest extends PhpcrTestCase
      */
     private $crawler;
 
+    /**
+     * @var ControllerResolverInterface
+     */
+    private $resolver;
+
     protected function setUp()
     {
-        $controllerResolver = $this->prepareControllerResolver();
-        $this->changesCache = new ArrayCache();
+        $this->prepareControllerResolver();
 
         $this->prepareWebspaceManager();
         $this->prepareMapper();
 
         $this->activeTheme = new ActiveTheme('test', array('test'));
         $this->previewCache = new PhpcrCacheProvider($this->mapper, $this->sessionManager);
-        $this->renderer = new PreviewRenderer($this->activeTheme, $controllerResolver, $this->webspaceManager);
+        $this->renderer = new PreviewRenderer($this->activeTheme, $this->resolver, $this->webspaceManager);
         $this->crawler = new RdfaCrawler();
 
         $this->preview = new Preview($this->contentTypeManager, $this->previewCache, $this->renderer, $this->crawler);
@@ -129,12 +122,10 @@ class PreviewTest extends PhpcrTestCase
             ->method('indexAction')
             ->will($this->returnCallback(array($this, 'indexCallback')));
 
-        $resolver = $this->getMock('\Symfony\Component\HttpKernel\Controller\ControllerResolverInterface');
-        $resolver->expects($this->any())
+        $this->resolver = $this->getMock('\Symfony\Component\HttpKernel\Controller\ControllerResolverInterface');
+        $this->resolver->expects($this->any())
             ->method('getController')
             ->will($this->returnValue(array($controller, 'indexAction')));
-
-        return $resolver;
     }
 
     public function structureCallback()

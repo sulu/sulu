@@ -77,23 +77,18 @@ class PreviewMessageComponent implements MessageComponentInterface
 
     private function start(ConnectionInterface $from, $msg, $user)
     {
-        $content = $msg['content'];
+        $contentUuid = $msg['content'];
         $type = strtolower($msg['type']);
-        $templateKey = $msg['templateKey'];
-        $languageCode = $msg['languageCode'];
+        $locale = $msg['languageCode'];
         $webspaceKey = $msg['webspaceKey'];
 
-        // if preview is started
-        if (!$this->preview->started($user, $content, $webspaceKey, $languageCode)) {
-            // TODO workspace, language
-            $this->preview->start($user, $content, $webspaceKey, $templateKey, $languageCode);
-        }
+        $this->preview->start($user, $contentUuid, $webspaceKey, $locale);
 
         // generate unique cache id
-        $id = $user . '-' . $content;
+        $id = $user . '-' . $contentUuid;
         if (!array_key_exists($id, $this->content)) {
             $this->content[$id] = array(
-                'content' => $content,
+                'content' => $contentUuid,
                 'user' => $user
             );
         }
@@ -110,7 +105,7 @@ class PreviewMessageComponent implements MessageComponentInterface
                 json_encode(
                     array(
                         'command' => 'start',
-                        'content' => $content,
+                        'content' => $contentUuid,
                         'type' => $type,
                         'params' => array('msg' => 'OK', 'other' => true)
                     )
@@ -123,7 +118,7 @@ class PreviewMessageComponent implements MessageComponentInterface
             json_encode(
                 array(
                     'command' => 'start',
-                    'content' => $content,
+                    'content' => $contentUuid,
                     'type' => $type,
                     'params' => array('msg' => 'OK', 'other' => $other)
                 )
@@ -141,8 +136,6 @@ class PreviewMessageComponent implements MessageComponentInterface
         // if params correct
         // FIXME implement error handling
         if ($type == 'form' && isset($params['changes'])) {
-
-            $templateKey = $msg['templateKey'];
             $languageCode = $msg['languageCode'];
             $webspaceKey = $msg['webspaceKey'];
 
@@ -152,7 +145,6 @@ class PreviewMessageComponent implements MessageComponentInterface
                     $user,
                     $content,
                     $webspaceKey,
-                    $templateKey,
                     $languageCode,
                     $property,
                     $data

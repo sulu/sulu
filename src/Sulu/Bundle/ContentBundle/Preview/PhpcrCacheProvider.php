@@ -77,6 +77,7 @@ class PhpcrCacheProvider implements PreviewCacheProviderInterface
         $contentArray = $this->getContentArray($content);
 
         $cacheNode = $this->getPreviewCacheNode($userId, $webspaceKey, true);
+        $this->contentMapper->setNoRenamingFlag(true);
         $result = $this->contentMapper->save(
             $contentArray,
             $content->getKey(),
@@ -86,6 +87,7 @@ class PhpcrCacheProvider implements PreviewCacheProviderInterface
             true,
             $cacheNode->getIdentifier()
         );
+        $this->contentMapper->setNoRenamingFlag(false);
 
         $cacheNode->setProperty($this->getContentPropertyName(), $content->getUuid());
         $cacheNode->setProperty($this->getLocalePropertyName(), $locale);
