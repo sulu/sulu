@@ -64,7 +64,7 @@ class StructureTest extends \PHPUnit_Framework_TestCase
         $this->titleProperty->expects($this->any())->method('getName')->will(
             $this->returnValue('title')
         );
-        $this->titleProperty->expects($this->any())->method('getValue')->will(
+        $this->titleProperty->expects($this->any())->method('toArray')->will(
             $this->returnValue('titlevalue')
         );
 
@@ -74,7 +74,7 @@ class StructureTest extends \PHPUnit_Framework_TestCase
         $this->testProperty->expects($this->any())->method('getName')->will(
             $this->returnValue('test')
         );
-        $this->testProperty->expects($this->any())->method('getValue')->will(
+        $this->testProperty->expects($this->any())->method('toArray')->will(
             $this->returnValue('testvalue')
         );
 

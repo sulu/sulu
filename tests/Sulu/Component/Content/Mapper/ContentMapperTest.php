@@ -3063,6 +3063,59 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals('/page-1', $loadResult->url);
         $this->assertEquals('/page-1', $loadResult->getResourceLocator());
     }
+
+    public function testIgnoreMandatoryFlag()
+    {
+        $data = array(
+            'name' => 'News'
+        );
+
+        $this->mapper->setIgnoreMandatoryFlag(true)->save($data, 'external-link', 'default', 'en', 1);
+        $this->mapper->setIgnoreMandatoryFlag(false);
+
+        $data = array('name' => 'Google', 'external' => 'www.google.at');
+        $this->mapper->setIgnoreMandatoryFlag(true)->save($data, 'external-link', 'default', 'en', 1);
+    }
+
+    public function testNoRenamingFlag()
+    {
+        $data = array(
+            'name' => 'News',
+            'external' => 'www.news.world'
+        );
+
+        $page = $this->mapper->save($data, 'external-link', 'default', 'de', 1);
+        $this->assertTrue($this->sessionManager->getSession()->nodeExists('/cmf/default/contents/news'));
+
+        $data = array('name' => 'Google', 'external' => 'www.google.at');
+        $this->mapper->setNoRenamingFlag(true)->save(
+            $data,
+            'external-link',
+            'default',
+            'de',
+            1,
+            true,
+            $page->getUuid()
+        );
+
+        $this->assertTrue($this->sessionManager->getSession()->nodeExists('/cmf/default/contents/news'));
+        $this->assertFalse($this->sessionManager->getSession()->nodeExists('/cmf/default/contents/google'));
+
+        $data = array('name' => 'Test', 'external' => 'www.test.at');
+        $this->mapper->setNoRenamingFlag(false)->save(
+            $data,
+            'external-link',
+            'default',
+            'de',
+            1,
+            true,
+            $page->getUuid()
+        );
+
+        $this->assertFalse($this->sessionManager->getSession()->nodeExists('/cmf/default/contents/news'));
+        $this->assertFalse($this->sessionManager->getSession()->nodeExists('/cmf/default/contents/google'));
+        $this->assertTrue($this->sessionManager->getSession()->nodeExists('/cmf/default/contents/test'));
+    }
 }
 
 class TestExtension extends StructureExtension

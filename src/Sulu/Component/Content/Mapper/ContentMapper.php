@@ -131,6 +131,16 @@ class ContentMapper implements ContentMapperInterface
      */
     private $navContexts;
 
+    /**
+     * @var boolean
+     */
+    private $ignoreMandatoryFlag = false;
+
+    /**
+     * @var boolean
+     */
+    private $noRenamingFlag = false;
+
     public function __construct(
         ContentTypeManager $contentTypeManager,
         StructureManagerInterface $structureManager,
@@ -223,15 +233,13 @@ class ContentMapper implements ContentMapperInterface
         }
 
         $nodeNameProperty = $structure->getPropertyByTagName('sulu.node.name');
-        $path = $this->cleaner->cleanUp($data[$nodeNameProperty->getName()], $languageCode);
-
-        $dateTime = new \DateTime();
-
         $translatedNodeNameProperty = new TranslatedProperty(
             $nodeNameProperty,
             $languageCode,
             $this->languageNamespace
         );
+
+        $dateTime = new \DateTime();
 
         $newTranslatedNode = function (NodeInterface $node) use ($userId, $dateTime, &$state) {
             $node->setProperty($this->properties->getName('creator'), $userId);
@@ -245,6 +253,7 @@ class ContentMapper implements ContentMapperInterface
         /** @var NodeInterface $node */
         if ($uuid === null) {
             // create a new node
+            $path = $this->cleaner->cleanUp($data[$nodeNameProperty->getName()], $languageCode);
             $path = $this->getUniquePath($path, $root);
             $node = $root->addNode($path);
             $newTranslatedNode($node);
@@ -263,7 +272,8 @@ class ContentMapper implements ContentMapperInterface
                         $translatedNodeNameProperty->getName()
                     ) !== $data[$nodeNameProperty->getName()];
 
-                if ($hasSameLanguage && $hasSamePath && $hasDifferentTitle) {
+                if (!$this->noRenamingFlag && $hasSameLanguage && $hasSamePath && $hasDifferentTitle) {
+                    $path = $this->cleaner->cleanUp($data[$nodeNameProperty->getName()], $languageCode);
                     $path = $this->getUniquePath($path, $node->getParent());
                     $node->rename($path);
                     // FIXME refresh session here
@@ -329,7 +339,7 @@ class ContentMapper implements ContentMapperInterface
                 }
             } elseif ($isShadow) {
                 // nothing
-            } elseif ($property->getMandatory()) {
+            } elseif (!$this->ignoreMandatoryFlag && $property->getMandatory()) {
                 $type = $this->getContentType($property->getContentTypeName());
                 $translatedProperty = new TranslatedProperty($property, $languageCode, $this->languageNamespace);
 
@@ -1254,6 +1264,30 @@ class ContentMapper implements ContentMapperInterface
         $session->refresh(false);
 
         return $this->load($uuid, $webspaceKey, $languageCode);
+    }
+
+    /**
+     * TRUE dont rename pages on save
+     * @param boolean $noRenamingFlag
+     * @return $this
+     */
+    public function setNoRenamingFlag($noRenamingFlag)
+    {
+        $this->noRenamingFlag = $noRenamingFlag;
+
+        return $this;
+    }
+
+    /**
+     * TRUE ignores mandatory in save
+     * @param bool $ignoreMandatoryFlag
+     * @return $this
+     */
+    public function setIgnoreMandatoryFlag($ignoreMandatoryFlag)
+    {
+        $this->ignoreMandatoryFlag = $ignoreMandatoryFlag;
+
+        return $this;
     }
 
     /**

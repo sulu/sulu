@@ -1023,7 +1023,7 @@ abstract class Structure implements StructureInterface
                 'publishedState' => $this->getPublishedState(),
                 'navContexts' => $this->getNavContexts(),
                 'hasSub' => $this->hasChildren,
-                'title' => $this->getPropertyValue('title')
+                'title' => $this->getProperty('title')->toArray()
             );
             if ($this->type !== null) {
                 $result['type'] = $this->getType()->toArray();
