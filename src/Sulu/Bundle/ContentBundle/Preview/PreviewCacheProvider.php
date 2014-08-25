@@ -100,6 +100,8 @@ class PreviewCacheProvider implements PreviewCacheProviderInterface
                 }
             }
 
+            $this->contentMapper->setIgnoreMandatoryFlag(true);
+            $this->contentMapper->setNoRenamingFlag(true);
             $this->contentMapper->save(
                 $dataArray,
                 $data->getKey(),
@@ -109,6 +111,8 @@ class PreviewCacheProvider implements PreviewCacheProviderInterface
                 true,
                 $tempNode->getIdentifier()
             );
+            $this->contentMapper->setIgnoreMandatoryFlag(false);
+            $this->contentMapper->setNoRenamingFlag(false);
 
             // FIXME reset name
             if ($tempNode->getName() !== $this->prefix) {
