@@ -7,7 +7,7 @@ doctrine:
         host:     localhost
         dbname:   sulu_test
         user:     root
-        password: root
+        password:
         charset:  UTF8
     orm:
         auto_generate_proxy_classes: %kernel.debug%
