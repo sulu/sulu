@@ -907,7 +907,6 @@ class NodeControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals($data[4]['title'], $response->title);
-        $this->assertEquals($data[4]['tags'], $response->tags);
         $this->assertEquals($data[4]['url'], $response->url);
         $this->assertEquals($data[4]['article'], $response->article);
 
@@ -1111,7 +1110,9 @@ class NodeControllerTest extends DatabaseTestCase
 
         // remove extension unececary for this test
         unset($data[0]['ext']);
+        unset($data[0]['tags']);
         unset($response['ext']);
+        unset($response['tags']);
 
         $this->assertEquals($data[0], $response);
     }
