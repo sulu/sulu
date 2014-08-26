@@ -86,9 +86,8 @@ class PreviewController extends Controller
 
         $webspaceKey = $this->getWebspaceKey($request);
         $locale = $this->getLanguageCode($request);
-        $data = $this->getRequestParameter($request, 'data');
 
-        $preview->stop($uid, $contentUuid, $webspaceKey, $locale, $data);
+        $preview->stop($uid, $contentUuid, $webspaceKey, $locale);
 
         return new JsonResponse();
     }
