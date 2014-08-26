@@ -284,8 +284,12 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
                 );
 
                 // update changes
-                var changes = this.sandbox.form.getData(this.formId);
-                this.sandbox.emit('sulu.preview.update-property', propertyName, changes[propertyName]);
+                try {
+                    var changes = this.sandbox.form.getData(this.formId);
+                    this.sandbox.emit('sulu.preview.update-property', propertyName, changes[propertyName]);
+                } catch (ex) {
+                    // ignore exceptions
+                }
 
                 // reinit sorting
                 this.initSortableBlock();
