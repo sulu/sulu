@@ -119,6 +119,11 @@ define(['app-config'], function(AppConfig) {
                 ws.socket.onmessage = function(e) {
                     var data = JSON.parse(e.data);
                     this.sandbox.logger.log('Message:', data);
+
+                    if (data.command === 'start' && data.message === 'OK' && !!this.def) {
+                        this.def.resolve();
+                        this.def = null;
+                    }
                 }.bind(this);
 
                 ws.socket.onerror = function(e) {
@@ -151,6 +156,7 @@ define(['app-config'], function(AppConfig) {
 
             start: function(def, template) {
                 if (this.method === 'ws') {
+                    this.def = def;
                     // send start command
                     var message = {
                         command: 'start',
@@ -163,7 +169,6 @@ define(['app-config'], function(AppConfig) {
                         template: template
                     };
                     ws.socket.send(JSON.stringify(message));
-                    def.resolve();
                 }
             },
 
