@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define(function() {
+define(['sulucontent/components/content/preview/main'], function(Preview) {
 
     'use strict';
 
@@ -373,7 +373,7 @@ define(function() {
             this.getDomElementsForTagName('sulu.rlp.part', function(property) {
                 var value = property.$el.data('element').getValue();
                 if (value !== '') {
-                    parts[this.getSequence(property.$el)] = value;
+                    parts[Preview.getSequence(property.$el)] = value;
                 } else {
                     complete = false;
                 }

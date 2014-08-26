@@ -76,13 +76,6 @@ class TemplateController extends Controller
      */
     public function contentAction(Request $request, $key = null)
     {
-        $fireEvent = false;
-        $templateIndex = null;
-        if ($key === null) {
-            $key = $this->container->getParameter('sulu.content.template.default');
-            $fireEvent = true;
-        }
-
         $webspace = $request->get('webspace');
         $language = $request->get('language');
 

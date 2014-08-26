@@ -43,16 +43,6 @@ class PreviewController extends Controller
     }
 
     /**
-     * returns language code from request
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @return string
-     */
-    private function getTemplateKey(Request $request)
-    {
-        return $this->getRequestParameter($request, 'template', true);
-    }
-
-    /**
      * returns webspace key from request
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @return string
@@ -80,6 +70,26 @@ class PreviewController extends Controller
         $result = $preview->start($uid, $contentUuid, $webspaceKey, $locale, $data);
 
         return new JsonResponse($result->toArray());
+    }
+
+    /**
+     * stops a preview
+     * @param Request $request
+     * @param string $contentUuid
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function stopAction(Request $request, $contentUuid)
+    {
+        $uid = $this->getUserId();
+        $preview = $this->getPreview();
+
+        $webspaceKey = $this->getWebspaceKey($request);
+        $locale = $this->getLanguageCode($request);
+        $data = $this->getRequestParameter($request, 'data');
+
+        $preview->stop($uid, $contentUuid, $webspaceKey, $locale, $data);
+
+        return new JsonResponse($result);
     }
 
     /**

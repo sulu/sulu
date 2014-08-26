@@ -44,6 +44,11 @@ sulu_content.preview.start:
     methods: [GET,POST]
     defaults: { _controller: SuluContentBundle:Preview:start }
 
+sulu_content.preview.stop:
+    pattern: /preview/{contentUuid}/stop
+    methods: [GET,POST]
+    defaults: { _controller: SuluContentBundle:Preview:stop }
+
 sulu_content.preview.render:
     pattern: /preview/{contentUuid}/render
     methods: GET

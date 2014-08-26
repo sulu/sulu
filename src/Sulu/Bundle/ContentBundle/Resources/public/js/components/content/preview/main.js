@@ -185,7 +185,7 @@ define(['app-config'], function(AppConfig) {
         /**
          * initialize preview with ajax or websocket
          */
-        init = function() {
+        start = function() {
             var def;
             if (!!this.initiated) {
                 return;
@@ -208,6 +208,18 @@ define(['app-config'], function(AppConfig) {
             }, this);
 
             return def.promise();
+        },
+
+        stop = function() {
+            var def = this.sandbox.data.deferred();
+            if (!!this.initiated) {
+                if (this.method === 'ws') {
+                    ws.stop.call(this, def);
+                } else {
+                    ajax.stop.call(this, def);
+                }
+            }
+            return def;
         },
 
         update = function(property, value) {
@@ -280,10 +292,22 @@ define(['app-config'], function(AppConfig) {
             this.data = data;
             this.$el = $el;
 
-            init.call(this).then(function() {
+            start.call(this).then(function() {
                 bindCustomEvents.call(this);
 
                 this.sandbox.emit('sulu.preview.initiated');
+            }.bind(this));
+        },
+
+        restart: function(data) {
+            stop.call(this).then(function() {
+                this.data = data;
+
+                this.initiated = false;
+                this.opened = false;
+                this.method = 'ws';
+
+                start.call(this);
             }.bind(this));
         },
 
