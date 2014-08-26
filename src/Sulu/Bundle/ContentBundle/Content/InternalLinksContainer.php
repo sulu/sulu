@@ -14,12 +14,13 @@ use JMS\Serializer\Serializer;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\StructureInterface;
 use JMS\Serializer\Annotation\Exclude;
+use Sulu\Component\Util\ArrayableInterface;
 
 /**
  * Container for InternalLinks, holds the config for a internal links, and lazy loads the structures
  * @package Sulu\Bundle\ContentBundle\Content
  */
-class InternalLinksContainer implements \Serializable
+class InternalLinksContainer implements ArrayableInterface
 {
     /**
      * The node repository, which is needed for lazy loading
@@ -115,41 +116,10 @@ class InternalLinksContainer implements \Serializable
     }
 
     /**
-     * (PHP 5 &gt;= 5.1.0)<br/>
-     * String representation of object
-     * @link http://php.net/manual/en/serializable.serialize.php
-     * @return string the string representation of the object or null
+     * {@inheritdoc}
      */
-    public function serialize()
+    public function toArray($depth = null)
     {
-        $result = array();
-        foreach ($this->getData() as $item) {
-            if ($item instanceof StructureInterface) {
-                $result[] = $item->toArray();
-            } else {
-                $result[] = $item;
-            }
-        }
-
-        return serialize(
-            array(
-                'data' => $result
-            )
-        );
-    }
-
-    /**
-     * (PHP 5 &gt;= 5.1.0)<br/>
-     * Constructs the object
-     * @link http://php.net/manual/en/serializable.unserialize.php
-     * @param string $serialized <p>
-     * The string representation of the object.
-     * </p>
-     * @return void
-     */
-    public function unserialize($serialized)
-    {
-        $values = unserialize($serialized);
-        $this->data = $values['data'];
+        return $this->ids;
     }
 }

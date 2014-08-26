@@ -119,6 +119,8 @@ class PreviewControllerTest extends DatabaseTestCase
         $content->setProperty('i18n:en-changed', new \DateTime());
         $content->addMixin('sulu:content');
 
+        $webspace->addNode('temp');
+
         $this->session->save();
     }
 
@@ -228,7 +230,8 @@ class PreviewControllerTest extends DatabaseTestCase
         $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en', $data);
         $response = json_decode($client->getResponse()->getContent());
 
-        $client->request('GET', '/content/preview/' . $response->id . '?template=default&webspace=sulu_io&language=en');
+        $client->request('GET', '/content/preview/' . $response->id . '/start?webspace=sulu_io&language=en');
+        $client->request('GET', '/content/preview/' . $response->id . '/render?webspace=sulu_io&language=en');
         $response = $client->getResponse()->getContent();
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
@@ -258,7 +261,8 @@ class PreviewControllerTest extends DatabaseTestCase
         $client->request('POST', '/api/nodes?template=html5&webspace=sulu_io&language=en', $data);
         $response = json_decode($client->getResponse()->getContent());
 
-        $client->request('GET', '/content/preview/' . $response->id . '?template=html5&webspace=sulu_io&language=en');
+        $client->request('GET', '/content/preview/' . $response->id . '/start?webspace=sulu_io&language=en');
+        $client->request('GET', '/content/preview/' . $response->id . '/render?webspace=sulu_io&language=en');
         $response = $client->getResponse()->getContent();
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
@@ -290,10 +294,8 @@ class PreviewControllerTest extends DatabaseTestCase
         $client->request('POST', '/api/nodes?template=invalidhtml&webspace=sulu_io&language=en', $data);
         $response = json_decode($client->getResponse()->getContent());
 
-        $client->request(
-            'GET',
-            '/content/preview/' . $response->id . '?template=invalidhtml&webspace=sulu_io&language=en'
-        );
+        $client->request('GET', '/content/preview/' . $response->id . '/start?webspace=sulu_io&language=en');
+        $client->request('GET', '/content/preview/' . $response->id . '/render?webspace=sulu_io&language=en');
         $response = $client->getResponse()->getContent();
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());

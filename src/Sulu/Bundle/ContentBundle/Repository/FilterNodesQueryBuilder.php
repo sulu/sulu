@@ -108,9 +108,12 @@ class FilterNodesQueryBuilder
     private function buildOrderClauses($languageCode)
     {
         $sql2Order = array();
-        foreach ($this->getConfig('sortBy', array()) as $sortColumn) {
-            // TODO implement more generic
-            $sql2Order[] = 'c.[i18n:' . $languageCode . '-' . $sortColumn . ']';
+        $sortBy = $this->getConfig('sortBy', array());
+        if (!empty($sortBy) && is_array($sortBy)) {
+            foreach ($this->getConfig('sortBy', array()) as $sortColumn) {
+                // TODO implement more generic
+                $sql2Order[] = 'c.[i18n:' . $languageCode . '-' . $sortColumn . ']';
+            }
         }
 
         return $sql2Order;
@@ -144,7 +147,8 @@ class FilterNodesQueryBuilder
     private function getDatasource()
     {
         $dataSource = $this->getConfig('dataSource');
-        $sqlFunction = $this->getConfig('includeSubFolders', false) ? 'ISDESCENDANTNODE' : 'ISCHILDNODE';
+        $includeSubFolders = $this->getConfig('includeSubFolders', false);
+        $sqlFunction = $includeSubFolders !== false && $includeSubFolders !== "false" ? 'ISDESCENDANTNODE' : 'ISCHILDNODE';
 
         if ($this->webspaceManager->findWebspaceByKey($dataSource) !== null) {
             $node = $this->sessionManager->getContentNode($dataSource);

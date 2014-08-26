@@ -207,7 +207,7 @@ define([
 
                     for (i = 0; i < len; i++) {
                         item = value[i] || {};
-                        this.addChild(item.type || this.options.default, item).then(function() {
+                        this.addChild(item.type || this.options.default, item, true).then(function() {
                             resolve();
                         });
                     }

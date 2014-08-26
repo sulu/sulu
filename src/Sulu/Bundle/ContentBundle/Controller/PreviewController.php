@@ -12,6 +12,7 @@ namespace Sulu\Bundle\ContentBundle\Controller;
 
 use DOMDocument;
 use Sulu\Bundle\ContentBundle\Preview\PreviewInterface;
+use Sulu\Bundle\ContentBundle\Preview\PreviewNotFoundException;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -24,7 +25,9 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class PreviewController extends Controller
 {
-
+    /**
+     * id of preview service
+     */
     const PREVIEW_ID = 'sulu_content.preview';
 
     use RequestParametersTrait;
@@ -40,16 +43,6 @@ class PreviewController extends Controller
     }
 
     /**
-     * returns language code from request
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @return string
-     */
-    private function getTemplateKey(Request $request)
-    {
-        return $this->getRequestParameter($request, 'template', true);
-    }
-
-    /**
      * returns webspace key from request
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @return string
@@ -57,6 +50,46 @@ class PreviewController extends Controller
     private function getWebspaceKey(Request $request)
     {
         return $this->getRequestParameter($request, 'webspace', true);
+    }
+
+    /**
+     * starts a preview
+     * @param Request $request
+     * @param string $contentUuid
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function startAction(Request $request, $contentUuid)
+    {
+        $uid = $this->getUserId();
+        $preview = $this->getPreview();
+
+        $webspaceKey = $this->getWebspaceKey($request);
+        $locale = $this->getLanguageCode($request);
+        $data = $this->getRequestParameter($request, 'data');
+        $template = $this->getRequestParameter($request, 'template');
+
+        $result = $preview->start($uid, $contentUuid, $webspaceKey, $locale, $data, $template);
+
+        return new JsonResponse($result->toArray());
+    }
+
+    /**
+     * stops a preview
+     * @param Request $request
+     * @param string $contentUuid
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function stopAction(Request $request, $contentUuid)
+    {
+        $uid = $this->getUserId();
+        $preview = $this->getPreview();
+
+        $webspaceKey = $this->getWebspaceKey($request);
+        $locale = $this->getLanguageCode($request);
+
+        $preview->stop($uid, $contentUuid, $webspaceKey, $locale);
+
+        return new JsonResponse();
     }
 
     /**
@@ -71,21 +104,20 @@ class PreviewController extends Controller
         $preview = $this->getPreview();
 
         $webspaceKey = $this->getWebspaceKey($request);
-        $languageCode = $this->getLanguageCode($request);
-        $templateKey = $this->getTemplateKey($request);
+        $locale = $this->getLanguageCode($request);
 
         if ($contentUuid === 'index') {
             /** @var ContentMapperInterface $contentMapper */
             $contentMapper = $this->get('sulu.content.mapper');
-            $startPage = $contentMapper->loadStartPage($webspaceKey, $languageCode);
+            $startPage = $contentMapper->loadStartPage($webspaceKey, $locale);
             $contentUuid = $startPage->getUuid();
         }
 
-        if (!$preview->started($uid, $contentUuid, $templateKey, $languageCode)) {
-            $preview->start($uid, $contentUuid, $webspaceKey, $templateKey, $languageCode);
+        try {
+            $content = $preview->render($uid, $contentUuid, $webspaceKey, $locale);
+        } catch (PreviewNotFoundException $ex) {
+            return new JsonResponse($ex->toArray(), 404);
         }
-
-        $content = $preview->render($uid, $contentUuid, $templateKey, $languageCode);
 
         $script = $this->render(
             'SuluContentBundle:Preview:script.html.twig',
@@ -97,8 +129,7 @@ class PreviewController extends Controller
                         array(
                             'contentUuid' => $contentUuid,
                             'webspace' => $webspaceKey,
-                            'template' => $templateKey,
-                            'language' => $languageCode
+                            'language' => $locale
                         )
                     ),
                 'wsUrl' => 'ws://' . $request->getHttpHost(),
@@ -106,8 +137,7 @@ class PreviewController extends Controller
                 'interval' => $this->container->getParameter('sulu_content.preview.fallback.interval'),
                 'contentUuid' => $contentUuid,
                 'webspaceKey' => $webspaceKey,
-                'templateKey' => $templateKey,
-                'languageCode' => $languageCode
+                'languageCode' => $locale
             )
         );
 
@@ -149,22 +179,17 @@ class PreviewController extends Controller
         $uid = $this->getUserId();
 
         $webspaceKey = $this->getWebspaceKey($request);
-        $languageCode = $this->getLanguageCode($request);
-        $templateKey = $this->getTemplateKey($request);
+        $locale = $this->getLanguageCode($request);
 
-        if (!$preview->started($uid, $contentUuid, $templateKey, $languageCode)) {
-            $preview->start($uid, $contentUuid, $webspaceKey, $templateKey, $languageCode);
+        if (!$preview->started($uid, $contentUuid, $webspaceKey, $locale)) {
+            $preview->start($uid, $contentUuid, $webspaceKey, $locale);
         }
 
         // get changes from request
         $changes = $request->get('changes', false);
-        if (!!$changes) {
-            foreach ($changes as $property => $content) {
-                $preview->update($uid, $contentUuid, $webspaceKey, $templateKey, $languageCode, $property, $content);
-            }
-        }
+        $result = $preview->updateProperties($uid, $contentUuid, $webspaceKey, $locale, $changes);
 
-        return new JsonResponse();
+        return new JsonResponse($result->toArray());
     }
 
     /**
@@ -175,11 +200,13 @@ class PreviewController extends Controller
      */
     public function changesAction(Request $request, $contentUuid)
     {
+        $preview = $this->getPreview();
         $uid = $this->getUserId();
-        $languageCode = $this->getLanguageCode($request);
-        $templateKey = $this->getTemplateKey($request);
 
-        $changes = $this->getPreview()->getChanges($uid, $contentUuid, $templateKey, $languageCode);
+        $webspaceKey = $this->getWebspaceKey($request);
+        $locale = $this->getLanguageCode($request);
+
+        $changes = $preview->getChanges($uid, $contentUuid, $webspaceKey, $locale);
 
         return new JsonResponse($changes);
     }

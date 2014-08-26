@@ -16,6 +16,7 @@ use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\Mapper\ContentMapper;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\PropertyInterface;
+use Sulu\Component\Util\ArrayableInterface;
 
 /**
  * content type for internal links selection
@@ -72,6 +73,10 @@ class InternalLinks extends ComplexContentType
         $languageCode,
         $segmentKey
     ) {
+        if ($data instanceof ArrayableInterface) {
+            $data = $data->toArray();
+        }
+
         $this->setData($data, $property, $webspaceKey, $languageCode);
     }
 
