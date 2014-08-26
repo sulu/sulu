@@ -10,7 +10,6 @@
 
 namespace Sulu\Component\PHPCR\SessionManager;
 
-
 use PHPCR\CredentialsInterface;
 use PHPCR\NodeInterface;
 use PHPCR\RepositoryFactoryInterface;
@@ -38,8 +37,7 @@ class SessionManager implements SessionManagerInterface
     }
 
     /**
-     * returns a valid session to interact with a phpcr database
-     * @return SessionInterface
+     * {@inheritdoc}
      */
     public function getSession()
     {
@@ -47,11 +45,7 @@ class SessionManager implements SessionManagerInterface
     }
 
     /**
-     * returns the route node for given webspace
-     * @param string $webspaceKey
-     * @param string $languageCode
-     * @param string $segment
-     * @return NodeInterface
+     * {@inheritdoc}
      */
     public function getRouteNode($webspaceKey, $languageCode, $segment = null)
     {
@@ -69,9 +63,7 @@ class SessionManager implements SessionManagerInterface
     }
 
     /**
-     * returns the content node for given webspace
-     * @param string $webspaceKey
-     * @return NodeInterface
+     * {@inheritdoc}
      */
     public function getContentNode($webspaceKey)
     {
@@ -79,5 +71,21 @@ class SessionManager implements SessionManagerInterface
         $root = $this->getSession()->getRootNode();
 
         return $root->getNode($path);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getTempNode($webspaceKey, $alias)
+    {
+        $tempPath = '/' . $this->nodeNames['base'] . '/' . $webspaceKey . '/' . $this->nodeNames['temp'] . '';
+        $tempNode = $this->getSession()->getNode($tempPath, 2);
+
+        // create the node on the fly
+        if (!$tempNode->hasNode($alias)) {
+            $tempNode->addNode($alias);
+        }
+
+        return $tempNode->getNode($alias);
     }
 }

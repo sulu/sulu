@@ -233,4 +233,18 @@ interface ContentMapperInterface
      * @return StructureInterface
      */
     public function orderBefore($uuid, $beforeUuid, $userId, $webspaceKey, $languageCode);
+
+    /**
+     * TRUE dont rename pages on save
+     * @param boolean $noRenamingFlag
+     * @return $this
+     */
+    public function setNoRenamingFlag($noRenamingFlag);
+
+    /**
+     * TRUE ignores mandatory in save
+     * @param bool $ignoreMandatoryFlag
+     * @return $this
+     */
+    public function setIgnoreMandatoryFlag($ignoreMandatoryFlag);
 }

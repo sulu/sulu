@@ -160,6 +160,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('sulu.content.node_names.base', $contentConfig['node_names']['base']);
         $container->setParameter('sulu.content.node_names.content', $contentConfig['node_names']['content']);
         $container->setParameter('sulu.content.node_names.route', $contentConfig['node_names']['route']);
+        $container->setParameter('sulu.content.node_names.temp', $contentConfig['node_names']['temp']);
 
         // Content Types
         $container->setParameter(

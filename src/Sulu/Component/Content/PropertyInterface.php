@@ -10,10 +10,12 @@
 
 namespace Sulu\Component\Content;
 
+use Sulu\Component\Util\ArrayableInterface;
+
 /**
  * Property definition and value
  */
-interface PropertyInterface
+interface PropertyInterface extends ArrayableInterface
 {
     /**
      * returns name of template

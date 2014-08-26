@@ -36,4 +36,12 @@ interface SessionManagerInterface
      * @return NodeInterface
      */
     public function getContentNode($webspaceKey);
+
+    /**
+     * returns the temp node for given webspace
+     * @param string $webspaceKey
+     * @param string $alias for normal the user id but it could be everything
+     * @return \PHPCR\NodeInterface
+     */
+    public function getTempNode($webspaceKey, $alias);
 }
