@@ -8,18 +8,12 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\AdminBundle\Tests\Admin;
+namespace Sulu\Bundle\AdminBundle\Navigation;
 
-use Sulu\Bundle\AdminBundle\Admin\Admin;
-use Sulu\Bundle\AdminBundle\Admin\AdminPool;
-use Sulu\Bundle\AdminBundle\Admin\ContentNavigation;
-use Sulu\Bundle\AdminBundle\Navigation\Navigation;
-use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 use Symfony\Component\Console\Command\Command;
 
 class ContentNavigationTest extends \PHPUnit_Framework_TestCase
 {
-
     /**
      * @var ContentNavigation
      */
@@ -38,7 +32,7 @@ class ContentNavigationTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->contentNavigation1 = $this->getMockForAbstractClass(
-            'Sulu\Bundle\AdminBundle\Admin\ContentNavigation',
+            'Sulu\Bundle\AdminBundle\Navigation\ContentNavigation',
             array(),
             '',
             true,
@@ -46,10 +40,15 @@ class ContentNavigationTest extends \PHPUnit_Framework_TestCase
             true
         );
 
-        $details = new NavigationItem('Details');
-        $details->setContentType('contact');
+        $details = new ContentNavigationItem('Details');
+        $details->setGroups(array('contact'));
         $details->setAction('details');
         $this->contentNavigation1->addNavigationItem($details);
+
+        $other = new ContentNavigationItem('Other');
+        $other->setGroups(array('test'));
+        $other->setAction('other');
+        $this->contentNavigation1->addNavigationItem($other);
 
         $this->contentNavigation2 = $this->getMockForAbstractClass(
             'Sulu\Bundle\AdminBundle\Navigation\ContentNavigationInterface',
@@ -60,8 +59,8 @@ class ContentNavigationTest extends \PHPUnit_Framework_TestCase
             true,
             array('getNavigationItems')
         );
-        $permissions = new NavigationItem('Permissions');
-        $permissions->setContentType('contact');
+        $permissions = new ContentNavigationItem('Permissions');
+        $permissions->setGroups(array('contact'));
         $permissions->setAction('permissions');
         $this->contentNavigation2
             ->expects($this->any())
@@ -79,10 +78,8 @@ class ContentNavigationTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('Details', $result['items'][0]['title']);
         $this->assertEquals('details', $result['items'][0]['action']);
-        $this->assertEquals('contact', $result['items'][0]['contentType']);
 
         $this->assertEquals('Permissions', $result['items'][1]['title']);
         $this->assertEquals('permissions', $result['items'][1]['action']);
-        $this->assertEquals('contact', $result['items'][1]['contentType']);
     }
 }

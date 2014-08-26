@@ -8,26 +8,33 @@
 * with this source code in the file LICENSE.
 */
 
-namespace Sulu\Bundle\AdminBundle\Admin;
+namespace Sulu\Bundle\AdminBundle\Navigation;
 
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationInterface;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 
 /**
- *
+ * This class contains the content navigation represented as tabs in the forms from the admin
  * @package Sulu\Bundle\AdminBundle\Admin
  */
 abstract class ContentNavigation
 {
     protected $id;
+
     protected $name;
+
     protected $header;
+
     protected $displayOption;
-    protected $navigation;
+
+    /**
+     * @var ContentNavigationItem[]
+     */
+    protected $navigationItems;
 
     public function __construct($displayOption = null)
     {
-        $this->navigation = array();
+        $this->navigationItems = array();
 
         // defaults
         if (is_null($displayOption)) {
@@ -35,44 +42,49 @@ abstract class ContentNavigation
         }
     }
 
-    public function addNavigationItem($navigationItem)
+    /**
+     * Adds a navigation item to the content navigation
+     * @param ContentNavigationItem $navigationItem
+     */
+    public function addNavigationItem(ContentNavigationItem $navigationItem)
     {
-        $this->navigation[] = $navigationItem;
+        $this->navigationItems[] = $navigationItem;
     }
 
 
     public function addNavigation(ContentNavigationInterface $navigation)
     {
-        $this->navigation = array_merge(
-            $this->navigation,
+        $this->navigationItems = array_merge(
+            $this->navigationItems,
             $navigation->getNavigationItems()
         );
     }
 
-    public function getNavigation()
+    /**
+     * Returns all the content navigation items
+     * @return ContentNavigationItem[]
+     */
+    public function getNavigationItems()
     {
-        return $this->navigation;
+        return $this->navigationItems;
     }
 
     public function toArray($contentType = null)
     {
-
         $navigationItems = array();
 
-        /** @var $navigationItem NavigationItem */
-        foreach ($this->navigation as $navigationItem) {
-            if (null === $contentType || $navigationItem->getContentType() == $contentType) {
+        foreach ($this->navigationItems as $navigationItem) {
+            if (null === $contentType || in_array($contentType, $navigationItem->getGroups())) {
                 $navigationItems[] = $navigationItem->toArray();
             }
         }
-
 
         $navigation = array(
             'id'            => ($this->getId() != null) ? $this->getId() : uniqid(), //FIXME don't use uniqid()
             'title'         => $this->getName(),
             'header'        => $this->getHeader(),
             'displayOption' => $this->getDisplayOption(),
-            'items'         =>    $navigationItems
+            'items'         => $navigationItems
         );
 
         return $navigation;
@@ -111,7 +123,7 @@ abstract class ContentNavigation
     }
 
     /**
-     * @param mixed $id
+     * @param string $id
      */
     public function setId($id)
     {
@@ -119,7 +131,7 @@ abstract class ContentNavigation
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getId()
     {
@@ -141,9 +153,4 @@ abstract class ContentNavigation
     {
         return $this->name;
     }
-
-
-
-
-
 }

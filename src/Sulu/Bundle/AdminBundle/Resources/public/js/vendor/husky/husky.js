@@ -30325,7 +30325,7 @@ define('husky_components/datagrid/decorators/group-view',[],function () {
  * @param {Function} [initialize] function which gets called once at the start of the view
  * @param {Function} [render] function to render data
  * @param {Function} [destroy] function to destroy the pagination and unbind events
- * @param {Function} [getHeight] funciton which returns the height of the pagination
+ * @param {Function} [getHeight] function which returns the height of the pagination
  */
 define('husky_components/datagrid/decorators/dropdown-pagination',[],function() {
 
@@ -30742,6 +30742,10 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                 paginations: {
                     dropdown: decoratorDropdownPagination
                 }
+            },
+
+            constants = {
+                viewSpacingBottom: 80
             },
 
             filters = {
@@ -31832,7 +31836,7 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                 if (!!this.paginations[this.paginationId] && !!this.paginations[this.paginationId].getHeight) {
                     height -= this.paginations[this.paginationId].getHeight();
                 }
-                height -= 80;
+                height -= constants.viewSpacingBottom;
                 return height;
             },
 
