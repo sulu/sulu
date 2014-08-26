@@ -73,9 +73,13 @@ class PhpcrCacheProvider implements PreviewCacheProviderInterface
      */
     public function warmUp($userId, $contentUuid, $webspaceKey, $locale)
     {
+        $this->delete($userId, $webspaceKey);
+
         $session = $this->sessionManager->getSession();
         $src = $session->getNodeByIdentifier($contentUuid);
-        $destParent = $node = $this->sessionManager->getTempNode($webspaceKey, $userId);
+        $destParent = $this->sessionManager->getTempNode($webspaceKey, $userId);
+
+        $session->save();
 
         $srcPath = $src->getPath();
         $destPath = $destParent->getPath() . '/' . $this->prefix;

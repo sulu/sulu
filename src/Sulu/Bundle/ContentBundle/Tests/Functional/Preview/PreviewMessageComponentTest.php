@@ -271,6 +271,7 @@ class PreviewMessageComponentTest extends PhpcrTestCase
             $content->getPropertyValue('article'),
             $content->getPropertyValue('block')
         );
+
         return $result;
     }
 
@@ -356,13 +357,13 @@ class PreviewMessageComponentTest extends PhpcrTestCase
         $clientForm = $this->prepareClient(
             function ($string) use (&$i) {
                 $data = json_decode($string);
-                $this->assertEquals($data->params->msg, 'OK');
+                $this->assertEquals($data->msg, 'OK');
 
                 $i++;
                 if ($i == 0) {
-                    $this->assertEquals($data->params->other, false);
+                    $this->assertEquals($data->other, false);
                 } else {
-                    $this->assertEquals($data->params->other, true);
+                    $this->assertEquals($data->other, true);
                 }
             },
             $this->exactly(2),
@@ -371,8 +372,8 @@ class PreviewMessageComponentTest extends PhpcrTestCase
         $clientPreview = $this->prepareClient(
             function ($string) {
                 $data = json_decode($string);
-                $this->assertEquals($data->params->msg, 'OK');
-                $this->assertEquals($data->params->other, true);
+                $this->assertEquals($data->msg, 'OK');
+                $this->assertEquals($data->other, true);
             },
             $this->once(),
             'preview'
@@ -387,8 +388,7 @@ class PreviewMessageComponentTest extends PhpcrTestCase
                     'languageCode' => 'de',
                     'webspaceKey' => 'default',
                     'type' => 'form',
-                    'user' => '1',
-                    'params' => array()
+                    'user' => '1'
                 )
             )
         );
@@ -402,8 +402,7 @@ class PreviewMessageComponentTest extends PhpcrTestCase
                     'languageCode' => 'de',
                     'webspaceKey' => 'default',
                     'type' => 'preview',
-                    'user' => '1',
-                    'params' => array()
+                    'user' => '1'
                 )
             )
         );
@@ -419,14 +418,14 @@ class PreviewMessageComponentTest extends PhpcrTestCase
                 $data = json_decode($string);
 
                 if ($i == 0 && $data->command == 'start') {
-                    $this->assertEquals($data->params->msg, 'OK');
-                    $this->assertEquals($data->params->other, false);
+                    $this->assertEquals($data->msg, 'OK');
+                    $this->assertEquals($data->other, false);
                     $i++;
                 } elseif ($i == 1 && $data->command == 'start') {
-                    $this->assertEquals($data->params->msg, 'OK');
-                    $this->assertEquals($data->params->other, true);
+                    $this->assertEquals($data->msg, 'OK');
+                    $this->assertEquals($data->other, true);
                 } elseif (($i == 2 || $i == 3) && $data->command == 'update') {
-                    $this->assertEquals($data->params->msg, 'OK');
+                    $this->assertEquals($data->msg, 'OK');
                 } else {
                     $this->assertTrue(false);
                 }
@@ -439,15 +438,15 @@ class PreviewMessageComponentTest extends PhpcrTestCase
                 $data = json_decode($string);
 
                 if ($i == 1 && $data->command == 'start') {
-                    $this->assertEquals($data->params->msg, 'OK');
-                    $this->assertEquals($data->params->other, true);
+                    $this->assertEquals($data->msg, 'OK');
+                    $this->assertEquals($data->other, true);
                     $i++;
                 } elseif ($i == 2 && $data->command == 'changes') {
-                    $this->assertEquals('asdf', $data->params->changes->title[0]);
-                    $this->assertEquals('PREF: asdf', $data->params->changes->title[1]);
+                    $this->assertEquals('asdf', $data->changes->title[0]);
+                    $this->assertEquals('PREF: asdf', $data->changes->title[1]);
                     $i++;
                 } elseif ($i == 3 && $data->command == 'changes') {
-                    $this->assertEquals('qwertz', $data->params->changes->article[0]);
+                    $this->assertEquals('qwertz', $data->changes->article[0]);
                 } else {
                     $this->assertTrue(false);
                 }
@@ -477,8 +476,7 @@ class PreviewMessageComponentTest extends PhpcrTestCase
                     'languageCode' => 'de',
                     'webspaceKey' => 'default',
                     'type' => 'form',
-                    'user' => '1',
-                    'params' => array()
+                    'user' => '1'
                 )
             )
         );
@@ -505,8 +503,7 @@ class PreviewMessageComponentTest extends PhpcrTestCase
                     'languageCode' => 'de',
                     'webspaceKey' => 'default',
                     'type' => 'preview',
-                    'user' => '1',
-                    'params' => array()
+                    'user' => '1'
                 )
             )
         );
@@ -521,8 +518,7 @@ class PreviewMessageComponentTest extends PhpcrTestCase
                     'languageCode' => 'de',
                     'webspaceKey' => 'default',
                     'type' => 'form',
-                    'user' => '1',
-                    'params' => array()
+                    'user' => '1'
                 )
             )
         );
@@ -537,8 +533,7 @@ class PreviewMessageComponentTest extends PhpcrTestCase
                     'languageCode' => 'de',
                     'webspaceKey' => 'default',
                     'type' => 'preview',
-                    'user' => '1',
-                    'params' => array()
+                    'user' => '1'
                 )
             )
         );
@@ -554,11 +549,10 @@ class PreviewMessageComponentTest extends PhpcrTestCase
                     'webspaceKey' => 'default',
                     'type' => 'form',
                     'user' => '1',
-                    'params' => array(
-                        'changes' => array(
-                            'title' => 'asdf'
-                        )
+                    'changes' => array(
+                        'title' => 'asdf'
                     )
+
                 )
             )
         );
@@ -574,10 +568,8 @@ class PreviewMessageComponentTest extends PhpcrTestCase
                     'webspaceKey' => 'default',
                     'type' => 'form',
                     'user' => '1',
-                    'params' => array(
-                        'changes' => array(
-                            'article' => 'qwertz'
-                        )
+                    'changes' => array(
+                        'article' => 'qwertz'
                     )
                 )
             )
