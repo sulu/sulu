@@ -52,7 +52,6 @@ class PreviewMessageComponent implements MessageComponentInterface
 
         if (isset($msg['command']) &&
             isset($msg['user']) &&
-            isset($msg['params']) &&
             isset($msg['content']) &&
             isset($msg['type']) &&
             in_array(
@@ -64,6 +63,9 @@ class PreviewMessageComponent implements MessageComponentInterface
             switch ($msg['command']) {
                 case 'start':
                     $this->start($from, $msg, $user);
+                    break;
+                case 'stop':
+                    $this->stop($from, $msg, $user);
                     break;
                 case 'update':
                     $this->update($from, $msg, $user);
@@ -82,7 +84,20 @@ class PreviewMessageComponent implements MessageComponentInterface
         $locale = $msg['languageCode'];
         $webspaceKey = $msg['webspaceKey'];
 
-        $this->preview->start($user, $contentUuid, $webspaceKey, $locale);
+        if (isset($msg['template'])) {
+            $template = $msg['template'];
+        } else {
+            $template = null;
+        }
+        if (isset($msg['data'])) {
+            $data = $msg['data'];
+        } else {
+            $data = null;
+        }
+
+        if ($type === 'form') {
+            $this->preview->start($user, $contentUuid, $webspaceKey, $locale, $data, $template);
+        }
 
         // generate unique cache id
         $id = $user . '-' . $contentUuid;
@@ -107,7 +122,8 @@ class PreviewMessageComponent implements MessageComponentInterface
                         'command' => 'start',
                         'content' => $contentUuid,
                         'type' => $type,
-                        'params' => array('msg' => 'OK', 'other' => true)
+                        'msg' => 'OK',
+                        'other' => true
                     )
                 )
             );
@@ -120,26 +136,35 @@ class PreviewMessageComponent implements MessageComponentInterface
                     'command' => 'start',
                     'content' => $contentUuid,
                     'type' => $type,
-                    'params' => array('msg' => 'OK', 'other' => $other)
+                    'msg' => 'OK',
+                    'other' => $other
                 )
             )
         );
+    }
+
+    private function stop(ConnectionInterface $from, $msg, $user)
+    {
+        $contentUuid = $msg['content'];
+        $locale = $msg['languageCode'];
+        $webspaceKey = $msg['webspaceKey'];
+
+        $this->preview->stop($user, $contentUuid, $webspaceKey, $locale);
     }
 
     private function update(ConnectionInterface $from, $msg, $user)
     {
         $content = $msg['content'];
         $type = strtolower($msg['type']);
-        $params = $msg['params'];
+        $changes = $msg['changes'];
         $id = $user . '-' . $content;
 
-        // if params correct
         // FIXME implement error handling
-        if ($type == 'form' && isset($params['changes'])) {
+        if ($type == 'form' && $changes !== null && is_array($changes)) {
             $languageCode = $msg['languageCode'];
             $webspaceKey = $msg['webspaceKey'];
 
-            foreach ($params['changes'] as $property => $data) {
+            foreach ($changes as $property => $data) {
                 // update property
                 $this->preview->updateProperty(
                     $user,
@@ -158,7 +183,7 @@ class PreviewMessageComponent implements MessageComponentInterface
                         'command' => 'update',
                         'content' => $content,
                         'type' => 'form',
-                        'params' => array('msg' => 'OK')
+                        'msg' => 'OK'
                     )
                 )
             );
@@ -184,9 +209,7 @@ class PreviewMessageComponent implements MessageComponentInterface
                             'command' => 'changes',
                             'content' => $content,
                             'type' => 'preview',
-                            'params' => array(
                                 'changes' => $changes
-                            )
                         )
                     );
                     $this->logger->debug("Changes send {$changes}");

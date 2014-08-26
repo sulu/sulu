@@ -49,8 +49,7 @@
                                 type: 'preview',
                                 user: {{ userId }},
                                 webspaceKey: '{{ webspaceKey }}',
-                                languageCode: '{{ languageCode }}',
-                                params: {}
+                                languageCode: '{{ languageCode }}'
                             };
                             this.conn.send(JSON.stringify(message));
                         }.bind(this);
@@ -60,7 +59,7 @@
                             var data = JSON.parse(e.data);
                             debug(data);
                             if (data.command === 'changes') {
-                                handleChanges(data.params.changes);
+                                handleChanges(data.changes);
                             }
                         }.bind(this);
 

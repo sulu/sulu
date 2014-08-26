@@ -81,7 +81,6 @@ class PhpcrCacheProvider implements PreviewCacheProviderInterface
         $destPath = $destParent->getPath() . '/' . $this->prefix;
         $session->getWorkspace()->copy($srcPath, $destPath);
 
-        $session->save();
         $session->refresh(true);
 
         $cacheNode = $this->getPreviewCacheNode($userId, $webspaceKey);

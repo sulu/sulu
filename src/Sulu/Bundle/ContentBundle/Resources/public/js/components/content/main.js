@@ -507,6 +507,7 @@ define([
                         } else {
                             // force reload
                             this.$preview = null;
+                            this.sandbox.dom.remove(this.$preview);
                             Preview.restart(data, this.template);
                         }
                     }.bind(this));
@@ -817,7 +818,6 @@ define([
                                             translate: false,
                                             callback: function(item) {
                                                 this.template = item.template;
-                                                this.sandbox.dom.remove(this.$preview);
                                                 this.sandbox.emit('sulu.dropdown.template.item-clicked', item);
                                             }.bind(this)
                                         }

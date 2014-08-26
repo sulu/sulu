@@ -98,10 +98,10 @@ define(['app-config'], function(AppConfig) {
                     this.sandbox.logger.log('Connection established!');
                     this.opened = true;
 
-                    this.sandbox.dom.on(this.formId, 'keyup change', this.updateEvent.bind(this), '.preview-update');
+                    this.sandbox.dom.on(this.formId, 'keyup change', updateEvent.bind(this), '.preview-update');
 
                     // write start message
-                    this.start(template);
+                    ws.start.call(this, def, template);
 
                     def.resolve();
                 }.bind(this);
@@ -143,13 +143,13 @@ define(['app-config'], function(AppConfig) {
                         user: AppConfig.getUser().id,
                         webspaceKey: this.options.webspace,
                         languageCode: this.options.language,
-                        params: {changes: changes}
+                        changes: changes
                     };
                     ws.socket.send(JSON.stringify(message));
                 }
             },
 
-            start: function(template) {
+            start: function(def, template) {
                 if (this.method === 'ws') {
                     // send start command
                     var message = {
@@ -159,13 +159,15 @@ define(['app-config'], function(AppConfig) {
                         user: AppConfig.getUser().id,
                         webspaceKey: this.options.webspace,
                         languageCode: this.options.language,
-                        params: {}
+                        data: this.data,
+                        template: template
                     };
                     ws.socket.send(JSON.stringify(message));
+                    def.resolve();
                 }
             },
 
-            stop: function() {
+            stop: function(def) {
                 if (this.method === 'ws') {
                     // send start command
                     var message = {
@@ -174,10 +176,10 @@ define(['app-config'], function(AppConfig) {
                         type: 'form',
                         user: AppConfig.getUser().id,
                         webspaceKey: this.options.webspace,
-                        languageCode: this.options.language,
-                        params: {}
+                        languageCode: this.options.language
                     };
                     ws.socket.send(JSON.stringify(message));
+                    def.resolve();
                 }
             }
         },
