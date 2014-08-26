@@ -22,7 +22,7 @@
         "doctrine/phpcr-bundle": "1.1.*",
         "doctrine/phpcr-odm": "1.1.*",
         "willdurand/hateoas-bundle": "0.3.*",
-        "massive/build-bundle": "~0.1"
+        "massive/build-bundle": "~0.1.0"
     },
     "require-dev": {
         "symfony/symfony": "2.5.*",
