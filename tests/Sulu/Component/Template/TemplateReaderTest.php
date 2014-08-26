@@ -29,9 +29,11 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'en' => 'That´s the template 1'
                 )
             ),
+            'indexName' => 'foo_index',
             'properties' => array(
                 'title' => array(
                     'name' => 'title',
+                    'indexField' => true,
                     'type' => 'text_line',
                     'minOccurs' => null,
                     'maxOccurs' => null,
@@ -67,6 +69,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                 ),
                 'url' => array(
                     'name' => 'url',
+                    'indexField' => false,
                     'type' => 'resource_locator',
                     'minOccurs' => null,
                     'maxOccurs' => null,
@@ -85,6 +88,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                 ),
                 'article' => array(
                     'name' => 'article',
+                    'indexField' => false,
                     'type' => 'text_area',
                     'minOccurs' => null,
                     'maxOccurs' => null,
@@ -103,6 +107,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                 ),
                 'pages' => array(
                     'name' => 'pages',
+                    'indexField' => false,
                     'type' => 'smart_content_selection',
                     'minOccurs' => null,
                     'maxOccurs' => null,
@@ -121,6 +126,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                 ),
                 'article_number' => array(
                     'name' => 'article_number',
+                    'indexField' => false,
                     'type' => 'text_line',
                     'minOccurs' => null,
                     'maxOccurs' => null,
@@ -134,6 +140,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                 ),
                 'images' => array(
                     'name' => 'images',
+                    'indexField' => false,
                     'type' => 'image_selection',
                     'minOccurs' => 0,
                     'maxOccurs' => 2,
@@ -239,6 +246,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                 ),
                 'url' => array(
                     'name' => 'url',
+                    'indexField' => false,
                     'type' => 'resource_locator',
                     'minOccurs' => null,
                     'maxOccurs' => null,

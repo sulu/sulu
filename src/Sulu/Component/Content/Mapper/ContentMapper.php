@@ -964,7 +964,7 @@ class ContentMapper implements ContentMapperInterface
     /**
      * {@inheritdoc}
      */
-    private function loadByNode(
+    public function loadByNode(
         NodeInterface $contentNode,
         $localization,
         $webspaceKey,

@@ -229,7 +229,7 @@ abstract class Structure implements StructureInterface
      * Name of index to use for search indexing
      * @var string
      */
-    private $searchIndex;
+    private $indexName;
 
     /**
      * @param $key string
@@ -954,7 +954,7 @@ abstract class Structure implements StructureInterface
         if (isset($this->properties[$property])) {
             return $this->getProperty($property)->setValue($value);
         } else {
-            throw new NoSuchPropertyException();
+            throw new NoSuchPropertyException($property);
         }
     }
 
