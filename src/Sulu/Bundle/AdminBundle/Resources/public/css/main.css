@@ -174,7 +174,7 @@ input, select {
   display: block;
 }
 
-@media only screen and (max-width: 1010px) {
+@media only screen and (max-width: 1110px) {
   /* line 130, ../scss/modules/layout.scss */
   .sidebar-column.fixed {
     width: 0;
