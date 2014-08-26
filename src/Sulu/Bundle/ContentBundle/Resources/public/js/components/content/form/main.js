@@ -165,8 +165,6 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
             this.propertyConfiguration = {};
             this.createForm(data).then(function() {
                 this.bindDomEvents();
-                // FIXME this.sandbox.emit('sulu.preview.update-only');
-
                 this.changeTemplateDropdownHandler();
             }.bind(this));
         },
