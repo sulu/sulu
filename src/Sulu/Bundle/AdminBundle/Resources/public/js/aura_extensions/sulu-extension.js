@@ -258,7 +258,8 @@
                             matchings: data,
                             viewOptions: {
                                 table: {
-                                    noItemsText: 'public.empty-list'
+                                    noItemsText: 'public.empty-list',
+                                    stickyHeader: true
                                 }
                             }
                         },
