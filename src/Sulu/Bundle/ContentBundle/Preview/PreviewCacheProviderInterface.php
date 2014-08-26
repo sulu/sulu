@@ -92,4 +92,14 @@ interface PreviewCacheProviderInterface
      * @return array
      */
     public function appendChanges($changes, $userId, $webspaceKey);
+
+    /**
+     * changes template of cached node
+     * @param string $template
+     * @param integer $userId
+     * @param string $contentUuid
+     * @param string $webspaceKey
+     * @param string $locale
+     */
+    public function updateTemplate($template, $userId, $contentUuid, $webspaceKey, $locale);
 }

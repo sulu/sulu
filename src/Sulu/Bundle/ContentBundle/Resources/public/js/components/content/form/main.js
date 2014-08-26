@@ -184,8 +184,12 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
                     this.initSortableBlock();
                     this.bindFormEvents();
 
-                    var data = this.sandbox.form.getData(this.formId);
-                    this.sandbox.emit('sulu.preview.initialize', data);
+                    // FIXME getData errors because type is not loaded ... after change template
+                    // need a fix in validation
+                    setTimeout(function() {
+                        var data = this.sandbox.form.getData(this.formId);
+                        this.sandbox.emit('sulu.preview.initialize', data);
+                    }.bind(this), 10);
 
                     dfd.resolve();
                 }.bind(this));

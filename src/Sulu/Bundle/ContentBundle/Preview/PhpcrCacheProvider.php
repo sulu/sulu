@@ -73,29 +73,25 @@ class PhpcrCacheProvider implements PreviewCacheProviderInterface
      */
     public function warmUp($userId, $contentUuid, $webspaceKey, $locale)
     {
-        $content = $this->contentMapper->load($contentUuid, $webspaceKey, $locale);
-        $contentArray = $this->getContentArray($content);
+        $session = $this->sessionManager->getSession();
+        $src = $session->getNodeByIdentifier($contentUuid);
+        $destParent = $node = $this->sessionManager->getTempNode($webspaceKey, $userId);
 
-        $cacheNode = $this->getPreviewCacheNode($userId, $webspaceKey, true);
-        $this->contentMapper->setNoRenamingFlag(true);
-        $result = $this->contentMapper->save(
-            $contentArray,
-            $content->getKey(),
-            $webspaceKey,
-            $locale,
-            $userId,
-            true,
-            $cacheNode->getIdentifier()
-        );
-        $this->contentMapper->setNoRenamingFlag(false);
+        $srcPath = $src->getPath();
+        $destPath = $destParent->getPath() . '/' . $this->prefix;
+        $session->getWorkspace()->copy($srcPath, $destPath);
 
-        $cacheNode->setProperty($this->getContentPropertyName(), $content->getUuid());
+        $session->save();
+        $session->refresh(true);
+
+        $cacheNode = $this->getPreviewCacheNode($userId, $webspaceKey);
+        $cacheNode->setProperty($this->getContentPropertyName(), $contentUuid);
         $cacheNode->setProperty($this->getLocalePropertyName(), $locale);
         $cacheNode->setProperty($this->getChangesPropertyName(), '{}');
 
-        $this->sessionManager->getSession()->save();
+        $session->save();
 
-        return $result;
+        return $this->fetchStructure($userId, $webspaceKey, $locale);
     }
 
     /**
@@ -141,6 +137,10 @@ class PhpcrCacheProvider implements PreviewCacheProviderInterface
     public function fetchChanges($userId, $webspaceKey, $remove = true)
     {
         $cacheNode = $this->getPreviewCacheNode($userId, $webspaceKey);
+        if ($cacheNode === false) {
+            return array();
+        }
+
         $changes = $cacheNode->getPropertyValueWithDefault($this->getChangesPropertyName(), array());
         if ($remove) {
             $this->saveChanges(array(), $userId, $webspaceKey);
@@ -160,6 +160,17 @@ class PhpcrCacheProvider implements PreviewCacheProviderInterface
         $this->sessionManager->getSession()->save();
 
         return $changes;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function updateTemplate($template, $userId, $contentUuid, $webspaceKey, $locale)
+    {
+        $cacheNode = $this->getPreviewCacheNode($userId, $webspaceKey);
+        $cacheNode->setProperty('i18n:' . $locale . '-template', $template);
+
+        $this->sessionManager->getSession()->save();
     }
 
     /**

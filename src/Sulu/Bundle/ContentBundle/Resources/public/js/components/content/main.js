@@ -505,7 +505,9 @@ define([
                         if (!Preview.initiated) {
                             Preview.initialize(this.sandbox, this.options, data, this.$el);
                         } else {
-                            // Preview.restart(data);
+                            // force reload
+                            this.$preview = null;
+                            Preview.restart(data, this.template);
                         }
                     }.bind(this));
                 } else {
@@ -815,6 +817,7 @@ define([
                                             translate: false,
                                             callback: function(item) {
                                                 this.template = item.template;
+                                                this.sandbox.dom.remove(this.$preview);
                                                 this.sandbox.emit('sulu.dropdown.template.item-clicked', item);
                                             }.bind(this)
                                         }

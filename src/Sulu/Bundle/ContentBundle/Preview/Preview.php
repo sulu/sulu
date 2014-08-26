@@ -54,7 +54,7 @@ class Preview implements PreviewInterface
     /**
      * {@inheritdoc}
      */
-    public function start($userId, $contentUuid, $webspaceKey, $locale, $data = null)
+    public function start($userId, $contentUuid, $webspaceKey, $locale, $data = null, $template = null)
     {
         if ($this->previewCache->contains($userId, $contentUuid, $webspaceKey, $locale)) {
             $this->previewCache->delete($userId, $webspaceKey);
@@ -63,6 +63,10 @@ class Preview implements PreviewInterface
         $result = $this->previewCache->warmUp($userId, $contentUuid, $webspaceKey, $locale);
 
         if ($data !== null) {
+            if ($template !== null) {
+                $this->previewCache->updateTemplate($template, $userId, $contentUuid, $webspaceKey, $locale);
+            }
+
             $result = $this->updateProperties($userId, $contentUuid, $webspaceKey, $locale, $data);
         }
 

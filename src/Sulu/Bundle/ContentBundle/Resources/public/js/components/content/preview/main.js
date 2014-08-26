@@ -14,12 +14,12 @@ define(['app-config'], function(AppConfig) {
     var ajax = {
             initiated: false,
 
-            init: function() {
+            init: function(template) {
                 var def = this.sandbox.data.deferred();
                 if (!ajax.initiated) {
                     this.sandbox.dom.on(this.$el, 'focusout', updateEvent.bind(this), '.preview-update');
 
-                    ajax.start.call(this, def);
+                    ajax.start.call(this, def, template);
                     ajax.initiated = true;
                 }
                 return def;
@@ -38,14 +38,14 @@ define(['app-config'], function(AppConfig) {
                 });
             },
 
-            start: function(def) {
+            start: function(def, template) {
                 var url = '/admin/content/preview/' + this.data.id + '/start?webspace=' + this.options.webspace + '&language=' + this.options.language;
 
                 this.sandbox.util.ajax({
                     url: url,
                     type: 'POST',
 
-                    data: {data: this.data},
+                    data: {data: this.data, template: template},
 
                     success: function() {
                         def.resolve();
@@ -86,7 +86,7 @@ define(['app-config'], function(AppConfig) {
                 return true;
             },
 
-            init: function() {
+            init: function(template) {
                 var configSection = AppConfig.getSection('sulu-content'),
                     url = configSection.wsUrl + ':' + configSection.wsPort,
                     def = this.sandbox.data.deferred();
@@ -101,7 +101,7 @@ define(['app-config'], function(AppConfig) {
                     this.sandbox.dom.on(this.formId, 'keyup change', this.updateEvent.bind(this), '.preview-update');
 
                     // write start message
-                    this.start();
+                    this.start(template);
 
                     def.resolve();
                 }.bind(this);
@@ -110,7 +110,7 @@ define(['app-config'], function(AppConfig) {
                     if (!this.opened) {
                         // no connection can be opened use fallback (safari)
                         this.method = 'ajax';
-                        ajax.init.call(this).then(function() {
+                        ajax.init.call(this, template).then(function() {
                             def.resolve();
                         }.bind(this));
                     }
@@ -126,7 +126,7 @@ define(['app-config'], function(AppConfig) {
 
                     // no connection can be opened use fallback
                     this.method = 'ajax';
-                    ajax.init.call(this).then(function() {
+                    ajax.init.call(this, template).then(function() {
                         def.resolve();
                     }.bind(this));
                 }.bind(this);
@@ -149,7 +149,7 @@ define(['app-config'], function(AppConfig) {
                 }
             },
 
-            start: function() {
+            start: function(template) {
                 if (this.method === 'ws') {
                     // send start command
                     var message = {
@@ -185,16 +185,16 @@ define(['app-config'], function(AppConfig) {
         /**
          * initialize preview with ajax or websocket
          */
-        start = function() {
+        start = function(template) {
             var def;
             if (!!this.initiated) {
                 return;
             }
 
             if (ws.detection()) {
-                def = ws.init.call(this);
+                def = ws.init.call(this, template);
             } else {
-                def = ajax.init.call(this);
+                def = ajax.init.call(this, template);
             }
             this.initiated = true;
 
@@ -227,8 +227,10 @@ define(['app-config'], function(AppConfig) {
                 var changes = {};
                 if (!!property && !!value) {
                     changes[property] = value;
-                } else {
+                } else if (this.sandbox.form.getObject(this.formId)) {
                     changes = this.sandbox.form.getData(this.formId);
+                } else {
+                    return;
                 }
 
                 if (this.method === 'ws') {
@@ -299,7 +301,7 @@ define(['app-config'], function(AppConfig) {
             }.bind(this));
         },
 
-        restart: function(data) {
+        restart: function(data, template) {
             stop.call(this).then(function() {
                 this.data = data;
 
@@ -307,7 +309,11 @@ define(['app-config'], function(AppConfig) {
                 this.opened = false;
                 this.method = 'ws';
 
-                start.call(this);
+                ajax.initiated = false;
+
+                start.call(this, template).then(function() {
+                    this.sandbox.emit('sulu.preview.initiated');
+                }.bind(this));
             }.bind(this));
         },
 
