@@ -319,9 +319,13 @@ define(['app-config'], function(AppConfig) {
             }.bind(this));
         },
 
-        getSequence: function($element) {
+        getSequence: function($element, sandbox) {
+            if (!!this.sandbox) {
+                sandbox = this.sandbox;
+            }
+
             $element = $($element);
-            var sequence = this.sandbox.dom.data($element, 'mapperProperty'),
+            var sequence = sandbox.dom.data($element, 'mapperProperty'),
                 $parents = $element.parents('*[data-mapper-property]'),
                 item = $element.parents('*[data-mapper-property-tpl]')[0],
                 parentProperty;
@@ -331,14 +335,14 @@ define(['app-config'], function(AppConfig) {
             }
 
             if ($parents.length > 0) {
-                parentProperty = this.sandbox.dom.data($parents[0], 'mapperProperty');
+                parentProperty = sandbox.dom.data($parents[0], 'mapperProperty');
                 if (typeof parentProperty !== 'string') {
-                    parentProperty = this.sandbox.dom.data($parents[0], 'mapperProperty')[0].data;
+                    parentProperty = sandbox.dom.data($parents[0], 'mapperProperty')[0].data;
                 }
                 sequence = [
                     parentProperty,
                     $(item).index(),
-                    this.sandbox.dom.data($element, 'mapperProperty')
+                    sandbox.dom.data($element, 'mapperProperty')
                 ];
             }
             return sequence;

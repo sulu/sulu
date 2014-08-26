@@ -379,7 +379,7 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
             this.getDomElementsForTagName('sulu.rlp.part', function(property) {
                 var value = property.$el.data('element').getValue();
                 if (value !== '') {
-                    parts[Preview.getSequence(property.$el)] = value;
+                    parts[Preview.getSequence(property.$el, this.sandbox)] = value;
                 } else {
                     complete = false;
                 }

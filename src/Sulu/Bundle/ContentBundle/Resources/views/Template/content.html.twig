@@ -20,3 +20,11 @@
         {% endif %}
     {% endfor %}
 </form>
+
+<script type="text/javascript">
+    (function() {
+        {% if fireEvent %}
+        App.emit('sulu.content.contents.default-template', '{{ templateKey }}');
+        {% endif %}
+    })();
+</script>

@@ -76,12 +76,16 @@ class TemplateController extends Controller
      */
     public function contentAction(Request $request, $key = null)
     {
+        $fireEvent = false;
+        $templateIndex = null;
+        if ($key === null) {
+            $key = $this->container->getParameter('sulu.content.template.default');
+            $fireEvent = true;
+        }
+
         $webspace = $request->get('webspace');
         $language = $request->get('language');
 
-        if ($key === null) {
-            $key = $this->container->getParameter('sulu.content.template.default');
-        }
 
         $template = $this->getTemplateStructure($key);
 
@@ -90,7 +94,9 @@ class TemplateController extends Controller
             array(
                 'template' => $template,
                 'webspaceKey' => $webspace,
-                'languageCode' => $language
+                'languageCode' => $language,
+                'templateKey' => $key,
+                'fireEvent' => $fireEvent
             )
         );
     }
