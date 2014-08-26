@@ -28,6 +28,6 @@ class SaveStructureTest extends BaseTestCase
         $document = $hit->getDocument();
 
         $this->assertEquals('About Us', $document->getTitle());
-        $this->assertEquals('about-us', $document->getUrl());
+        $this->assertEquals('/about-us', $document->getUrl());
     }
 }

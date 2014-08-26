@@ -1,9 +1,14 @@
 <?php
 
-namespace EventListener;
+namespace Sulu\Bundle\SearchBundle\EventListener;
 
 use Massive\Bundle\SearchBundle\Search\Event\HitEvent;
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 
+/**
+ * Listen to for new hits. If document instance of structure
+ * prefix the current resource locator prefix to the URL
+ */
 class HitListener
 {
     public function __construct(RequestAnalyzerInterface $requestAnalyzer)
@@ -11,8 +16,12 @@ class HitListener
         $this->requestAnalyzer = $requestAnalyzer;
     }
 
-    public function handleHit(HitEvent $event)
+    public function onHit(HitEvent $event)
     {
+        if (false === $event->getDocumentReflection()->isSubclassOf('Sulu\Component\Content\Structure')) {
+            return;
+        }
+
         $document = $event->getHit()->getDocument();
         $url = sprintf('%s/%s', $this->requestAnalyzer->getCurrentResourceLocatorPrefix(), $document->getUrl());
         $document->setUrl($url);

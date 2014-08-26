@@ -5,6 +5,7 @@
 {% for hit in hits %}
     <section>
         <h3><a href="{{ hit.document.url }}">{{ hit.document.title }}</a></h3>
+        <p><i>Class: {{ hit.document.class }}</i></p>
         <p>{{ hit.document.description }}</p>
     </section>
 {% endfor %}

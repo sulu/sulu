@@ -5,6 +5,7 @@
 
     <parameters>
         <parameter key="sulu_search.event_listener.node_save.class">Sulu\Bundle\SearchBundle\EventListener\NodeSaveListener</parameter>
+        <parameter key="sulu_search.event_listener.hit.class">Sulu\Bundle\SearchBundle\EventListener\HitListener</parameter>
     </parameters>
 
     <services>
@@ -12,6 +13,11 @@
         <service id="sulu_search.event_listener.node_save" class="%sulu_search.event_listener.node_save.class%">
             <argument type="service" id="massive_search.search_manager" />
             <tag name="kernel.event_listener" event="sulu.content.node.save" method="onNodeSave" />
+        </service>
+
+        <service id="sulu_search.event_listener.hit" class="%sulu_search.event_listener.hit.class%">
+            <argument type="service" id="sulu_core.webspace.request_analyzer" />
+            <tag name="kernel.event_listener" event="massive_search.hit" method="onHit" />
         </service>
 
     </services>
