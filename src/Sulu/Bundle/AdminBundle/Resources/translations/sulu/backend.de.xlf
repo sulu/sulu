@@ -742,9 +742,7 @@
             </trans-unit>
             <trans-unit id="d5f4a99d54bb05a92a781460534528d9" resname="sulu.overlay.unsaved-changes-confirm">
                 <source>sulu.overlay.unsaved-changes-confirm</source>
-                <target>Sie haben Änderungen die noch nicht gespeichert wurden.<br/>Wollen Sie wirklich fortfahren ohne zu
-                speichern?
-                </target>
+                <target><![CDATA[Sie haben Änderungen die noch nicht gespeichert wurden.<br/>Wollen Sie wirklich fortfahren ohne zu speichern?]]></target>
             </trans-unit>
             <trans-unit id="deb752167002b44bbc2030c7f1c8250b" resname="public.show-history">
                 <source>public.show-history</source>
