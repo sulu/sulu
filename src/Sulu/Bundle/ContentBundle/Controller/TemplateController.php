@@ -79,6 +79,10 @@ class TemplateController extends Controller
         $webspace = $request->get('webspace');
         $language = $request->get('language');
 
+        if ($key === null) {
+            $key = $this->container->getParameter('sulu.content.template.default');
+        }
+
         $template = $this->getTemplateStructure($key);
 
         return $this->render(
