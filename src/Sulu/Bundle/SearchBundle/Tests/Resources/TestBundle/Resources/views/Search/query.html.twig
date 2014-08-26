@@ -1,0 +1,14 @@
+<html>
+<body>
+<h1>Search Results</h1>
+<ul>
+{% for hit in hits %}
+    <li>{{ hit.id }}</li>
+    <li>{{ hit.document.title }}</li>
+    <li>{{ hit.document.description }}</li>
+    <li><a href="{{ path(hydrate_search_result(hit.document)) }}">Foo</a></li>
+    <li><a href="{{ 
+{% endfor %}
+</ul>
+</body>
+</html>

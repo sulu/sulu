@@ -24,6 +24,16 @@ class StructureDriver implements DriverInterface
         $meta->setIndexName('content');
         $meta->setIdField('uuid');
 
+        if ($instance->hasTag('sulu.rlp')) {
+            $prop = $instance->getPropertyByTagName('sulu.rlp');
+            $meta->setUrlField($prop->getName());
+        }
+
+        if ($instance->hasTag('sulu.node.name')) {
+            $prop = $instance->getPropertyByTagName('sulu.node.name');
+            $meta->setTitleField($prop->getName());
+        }
+
         foreach ($instance->getProperties(true) as $property) {
             if (true === $property->getIndexed()) {
                 $meta->addFieldMapping($property->getName(), array(

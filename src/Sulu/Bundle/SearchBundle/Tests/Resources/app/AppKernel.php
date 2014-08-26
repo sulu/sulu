@@ -17,6 +17,7 @@ class AppKernel extends TestKernel
             new \Massive\Bundle\SearchBundle\MassiveSearchBundle(),
             new \Sulu\Bundle\SearchBundle\SuluSearchBundle(),
             new \Sulu\Bundle\CoreBundle\SuluCoreBundle(),
+            new \Sulu\Bundle\SearchBundle\Tests\Resources\TestBundle\TestBundle(),
         ));
     }
 
