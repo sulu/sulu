@@ -15,6 +15,7 @@ use Sulu\Bundle\MediaBundle\Content\MediaSelectionContainer;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\PropertyInterface;
+use Sulu\Component\Util\ArrayableInterface;
 
 /**
  * content type for image selection
@@ -89,6 +90,9 @@ class MediaSelectionContentType extends ComplexContentType
         $languageCode,
         $segmentKey
     ) {
+        if ($data instanceof ArrayableInterface) {
+            $data = $data->toArray();
+        }
         $this->setData($data, $property, $languageCode);
     }
 
