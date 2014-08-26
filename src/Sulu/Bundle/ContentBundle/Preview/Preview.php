@@ -54,13 +54,19 @@ class Preview implements PreviewInterface
     /**
      * {@inheritdoc}
      */
-    public function start($userId, $contentUuid, $webspaceKey, $locale)
+    public function start($userId, $contentUuid, $webspaceKey, $locale, $data = null)
     {
         if ($this->previewCache->contains($userId, $contentUuid, $webspaceKey, $locale)) {
             $this->previewCache->delete($userId, $webspaceKey);
         }
 
-        return $this->previewCache->warmUp($userId, $contentUuid, $webspaceKey, $locale);
+        $result = $this->previewCache->warmUp($userId, $contentUuid, $webspaceKey, $locale);
+
+        if ($data !== null) {
+            $result = $this->updateProperties($userId, $contentUuid, $webspaceKey, $locale, $data);
+        }
+
+        return $result;
     }
 
     /**
@@ -86,15 +92,22 @@ class Preview implements PreviewInterface
      */
     public function updateProperties($userId, $contentUuid, $webspaceKey, $locale, $changes)
     {
+        /** @var StructureInterface $content */
+        $content = $this->previewCache->fetchStructure($userId, $webspaceKey, $locale);
+
+        if ($content === false) {
+            throw new PreviewNotFoundException($userId, $contentUuid);
+        }
+
         if (is_array($changes) && sizeof($changes) > 0) {
             foreach ($changes as $property => $data) {
-                $content = $this->update(
+                $this->update(
                     $userId,
-                    $contentUuid,
                     $webspaceKey,
                     $locale,
                     $property,
-                    $data
+                    $data,
+                    $content
                 );
             }
 
@@ -109,7 +122,14 @@ class Preview implements PreviewInterface
      */
     public function updateProperty($userId, $contentUuid, $webspaceKey, $locale, $property, $data)
     {
-        $content = $this->update($userId, $contentUuid, $webspaceKey, $locale, $property, $data);
+        /** @var StructureInterface $content */
+        $content = $this->previewCache->fetchStructure($userId, $webspaceKey, $locale);
+
+        if ($content === false) {
+            throw new PreviewNotFoundException($userId, $contentUuid);
+        }
+
+        $content = $this->update($userId, $webspaceKey, $locale, $property, $data, $content);
         $this->previewCache->saveStructure($content, $userId, $contentUuid, $webspaceKey, $locale);
 
         return $content;
@@ -118,32 +138,24 @@ class Preview implements PreviewInterface
     /**
      * updates one property without saving structure
      */
-    private function update($userId, $contentUuid, $webspaceKey, $locale, $property, $data)
+    private function update($userId, $webspaceKey, $locale, $property, $data, StructureInterface $content)
     {
-        /** @var StructureInterface $content */
-        $content = $this->previewCache->fetchStructure($userId, $webspaceKey, $locale);
+        $sequence = $this->setValue($content, $property, $data, $webspaceKey, $locale);
 
-        if ($content != false) {
-            $sequence = $this->setValue($content, $property, $data, $webspaceKey, $locale);
-            $this->previewCache->saveStructure($content, $userId, $contentUuid, $webspaceKey, $locale);
-
-            if (false !== $sequence) {
-                // length of property path is important to render
-                $property = implode(
-                    ',',
-                    array_slice($sequence['sequence'], 0, (-1) * sizeof($sequence['propertyPath']))
-                );
-            }
-
-            $changes = $this->render($userId, $contentUuid, $webspaceKey, $locale, true, $property);
-            if ($changes !== false) {
-                $this->previewCache->appendChanges(array($property => $changes), $userId, $webspaceKey);
-            }
-
-            return $content;
-        } else {
-            throw new PreviewNotFoundException($userId, $contentUuid);
+        if (false !== $sequence) {
+            // length of property path is important to render
+            $property = implode(
+                ',',
+                array_slice($sequence['sequence'], 0, (-1) * sizeof($sequence['propertyPath']))
+            );
         }
+
+        $changes = $this->renderStructure($content, true, $property);
+        if ($changes !== false) {
+            $this->previewCache->appendChanges(array($property => $changes), $userId, $webspaceKey);
+        }
+
+        return $content;
     }
 
     /**
@@ -171,6 +183,18 @@ class Preview implements PreviewInterface
 
         /** @var StructureInterface $content */
         $content = $this->previewCache->fetchStructure($userId, $webspaceKey, $locale);
+
+        return $this->renderStructure($content, $partial, $property);
+    }
+
+    /**
+     * render structure
+     */
+    private function renderStructure(
+        StructureInterface $content,
+        $partial = false,
+        $property = null
+    ) {
         $result = $this->renderer->render($content, $partial);
 
         // if partial render for property is called
@@ -197,6 +221,10 @@ class Preview implements PreviewInterface
             $value = $tmp;
             $instance = $sequence['property'];
         } else {
+            if (!$content->hasProperty($property)) {
+                return $sequence;
+            }
+
             $instance = $content->getProperty($property);
         }
 

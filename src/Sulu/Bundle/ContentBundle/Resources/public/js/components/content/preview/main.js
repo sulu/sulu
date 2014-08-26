@@ -26,7 +26,7 @@ define(['app-config'], function(AppConfig) {
             },
 
             update: function(data) {
-                var updateUrl = '/admin/content/preview/' + this.data.id + '/update?&webspace=' + this.options.webspace + '&language=' + this.options.language;
+                var updateUrl = '/admin/content/preview/' + this.data.id + '/update?webspace=' + this.options.webspace + '&language=' + this.options.language;
 
                 this.sandbox.util.ajax({
                     url: updateUrl,
@@ -39,10 +39,25 @@ define(['app-config'], function(AppConfig) {
             },
 
             start: function(def) {
-                var updateUrl = '/admin/content/preview/' + this.data.id + '/start?&webspace=' + this.options.webspace + '&language=' + this.options.language;
+                var url = '/admin/content/preview/' + this.data.id + '/start?webspace=' + this.options.webspace + '&language=' + this.options.language;
 
                 this.sandbox.util.ajax({
-                    url: updateUrl,
+                    url: url,
+                    type: 'POST',
+
+                    data: {data: this.data},
+
+                    success: function() {
+                        def.resolve();
+                    }
+                });
+            },
+
+            stop: function(def) {
+                var url = '/admin/content/preview/' + this.data.id + '/stop?webspace=' + this.options.webspace + '&language=' + this.options.language;
+
+                this.sandbox.util.ajax({
+                    url: url,
                     type: 'GET',
 
                     success: function() {
@@ -86,7 +101,7 @@ define(['app-config'], function(AppConfig) {
                     this.sandbox.dom.on(this.formId, 'keyup change', this.updateEvent.bind(this), '.preview-update');
 
                     // write start message
-                    this.writeStartMessage();
+                    this.start();
 
                     def.resolve();
                 }.bind(this);
@@ -119,7 +134,22 @@ define(['app-config'], function(AppConfig) {
                 return def;
             },
 
-            writeStartMessage: function() {
+            update: function(changes) {
+                if (this.method === 'ws' && ws.socket.readyState === ws.socket.OPEN) {
+                    var message = {
+                        command: 'update',
+                        content: this.data.id,
+                        type: 'form',
+                        user: AppConfig.getUser().id,
+                        webspaceKey: this.options.webspace,
+                        languageCode: this.options.language,
+                        params: {changes: changes}
+                    };
+                    ws.socket.send(JSON.stringify(message));
+                }
+            },
+
+            start: function() {
                 if (this.method === 'ws') {
                     // send start command
                     var message = {
@@ -135,16 +165,17 @@ define(['app-config'], function(AppConfig) {
                 }
             },
 
-            updateWs: function(changes) {
-                if (this.method === 'ws' && ws.socket.readyState === ws.socket.OPEN) {
+            stop: function() {
+                if (this.method === 'ws') {
+                    // send start command
                     var message = {
-                        command: 'update',
+                        command: 'stop',
                         content: this.data.id,
                         type: 'form',
                         user: AppConfig.getUser().id,
                         webspaceKey: this.options.webspace,
                         languageCode: this.options.language,
-                        params: {changes: changes}
+                        params: {}
                     };
                     ws.socket.send(JSON.stringify(message));
                 }

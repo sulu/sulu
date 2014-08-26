@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define(['app-config'], function(AppConfig) {
+define(function() {
 
     'use strict';
 
@@ -165,7 +165,7 @@ define(['app-config'], function(AppConfig) {
             this.propertyConfiguration = {};
             this.createForm(data).then(function() {
                 this.bindDomEvents();
-                this.sandbox.emit('sulu.preview.update-only');
+                // FIXME this.sandbox.emit('sulu.preview.update-only');
 
                 this.changeTemplateDropdownHandler();
             }.bind(this));
@@ -184,13 +184,8 @@ define(['app-config'], function(AppConfig) {
                     this.initSortableBlock();
                     this.bindFormEvents();
 
-                    /* FIXME
-                    if (!!this.options.preview) {
-                        this.initPreview();
-                        this.updatePreview();
-                        this.options.preview = false;
-                    }
-                    */
+                    var data = this.sandbox.form.getData(this.formId);
+                    this.sandbox.emit('sulu.preview.initialize', data);
 
                     dfd.resolve();
                 }.bind(this));

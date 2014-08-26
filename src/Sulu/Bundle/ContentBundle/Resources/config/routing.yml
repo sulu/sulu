@@ -41,7 +41,7 @@ sulu_content.template.settings:
 # Preview
 sulu_content.preview.start:
     pattern: /preview/{contentUuid}/start
-    methods: GET
+    methods: [GET,POST]
     defaults: { _controller: SuluContentBundle:Preview:start }
 
 sulu_content.preview.render:

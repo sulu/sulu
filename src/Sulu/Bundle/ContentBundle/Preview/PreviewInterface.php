@@ -20,9 +20,10 @@ interface PreviewInterface
      * @param string $contentUuid
      * @param string $webspaceKey
      * @param string $locale
+     * @param array $data changes which will be set after warmup
      * @return StructureInterface
      */
-    public function start($userId, $contentUuid, $webspaceKey, $locale);
+    public function start($userId, $contentUuid, $webspaceKey, $locale, $data = null);
 
     /**
      * stops a preview

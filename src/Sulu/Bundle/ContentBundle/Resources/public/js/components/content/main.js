@@ -500,7 +500,10 @@ define([
                         this.renderPreview(data);
                     }.bind(this));
 
-                    Preview.initialize(this.sandbox, this.options, this.data, this.$el);
+                    this.sandbox.on('sulu.preview.initialize', function(data) {
+                        data = this.sandbox.util.extend(true, {}, this.data, data);
+                        Preview.initialize(this.sandbox, this.options, data, this.$el);
+                    }.bind(this));
                 } else {
                     this.sandbox.emit('sulu.sidebar.hide');
                     this.sandbox.emit('sulu.app.toggle-shrinker', false);
