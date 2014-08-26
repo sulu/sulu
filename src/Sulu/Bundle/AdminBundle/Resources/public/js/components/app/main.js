@@ -379,6 +379,7 @@ define(function() {
             } else if (width === 'fixed-small') {
                 this.changeToFixedWidth(true);
             }
+            this.sandbox.dom.trigger(this.sandbox.dom.window, 'resize');
         },
 
         /**

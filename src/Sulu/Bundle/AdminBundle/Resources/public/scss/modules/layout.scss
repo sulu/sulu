@@ -126,7 +126,7 @@
 //
 
 // 1. Hides the sidebar if the minimum content width is reached
-@media only screen and (max-width: 50px + $contentMinWidth + $sidebarFixedWidth) {
+@media only screen and (max-width: 50px + $maxContentMinWidth + $sidebarFixedWidth) {
   .sidebar-column.fixed {
     width: 0;
     height: 0;
