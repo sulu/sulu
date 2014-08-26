@@ -3,11 +3,10 @@
 <h1>Search Results</h1>
 <ul>
 {% for hit in hits %}
-    <li>{{ hit.id }}</li>
-    <li>{{ hit.document.title }}</li>
-    <li>{{ hit.document.description }}</li>
-    <li><a href="{{ path(hydrate_search_result(hit.document)) }}">Foo</a></li>
-    <li><a href="{{ 
+    <section>
+        <h3><a href="{{ hit.document.url }}">{{ hit.document.title }}</a></h3>
+        <p>{{ hit.document.description }}</p>
+    </section>
 {% endfor %}
 </ul>
 </body>
