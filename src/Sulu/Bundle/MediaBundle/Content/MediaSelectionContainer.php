@@ -19,7 +19,7 @@ use JMS\Serializer\Annotation\Exclude;
  * Container for Image selection, holds config for image selection and lazy loads images matches the ids
  * @package Sulu\Bundle\MediaBundle\Content
  */
-class MediaSelectionContainer implements \Serializable, ArrayableInterface
+class MediaSelectionContainer implements ArrayableInterface
 {
     /**
      * @var string[]
@@ -149,44 +149,6 @@ class MediaSelectionContainer implements \Serializable, ArrayableInterface
     public function __isset($name)
     {
         return ($name == 'data' || $name == 'config' || $name == 'ids' || $name == 'displayOption' || $name == 'types');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function serialize()
-    {
-        $result = array();
-        foreach ($this->getData() as $data) {
-            if ($data instanceof Media) {
-                $result[] = $data->toArray();
-            } else {
-                $result[] = $data;
-            }
-        }
-
-        return serialize(
-            array(
-                'data' => $result,
-                'config' => $this->getConfig(),
-                'ids' => $this->getIds(),
-                'types' => $this->getTypes(),
-                'displayOption' => $this->getDisplayOption()
-            )
-        );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function unserialize($serialized)
-    {
-        $values = unserialize($serialized);
-        $this->data = $values['data'];
-        $this->config = $values['config'];
-        $this->ids = $values['ids'];
-        $this->types = $values['types'];
-        $this->displayOption = $values['displayOption'];
     }
 
     /**
