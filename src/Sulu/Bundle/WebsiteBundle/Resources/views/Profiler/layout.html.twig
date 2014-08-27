@@ -1,6 +1,5 @@
 {% extends 'WebProfilerBundle:Profiler:layout.html.twig' %}
 
-
 {% block toolbar %}
     {% set icon %}
 
@@ -81,8 +80,7 @@
             {{ _self.table_row('internal', collector.data('structure').internal ? 'yes' : 'no') }}
             {{ _self.table_row('nodeState', collector.data('structure').nodeState) }}
             {{ _self.table_row('published', collector.data('structure').published.format('Y-m-d H:i:s')) }}
-            {{ _self.table_row('globalState', collector.data('structure').globalState) }}
-            {{ _self.table_row('publishedState', collector.data('structure').publishedState) }}
+            {{ _self.table_row('nodeState', collector.data('structure').nodeState) }}
             {{ _self.table_row('navContexts', collector.data('structure').navContexts) }}
             {{ _self.table_row('enabledShadowLanguages', collector.data('structure').enabledShadowLanguages) }}
             {{ _self.table_row('concreteLanguages', collector.data('structure').concreteLanguages) }}
