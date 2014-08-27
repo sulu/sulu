@@ -275,6 +275,16 @@ define([], function () {
         },
 
         /**
+         * listens on and marks a subitem
+         *
+         * @event sulu.header.[INSTANCE_NAME].toolbar.item.mark
+         * @param {string} item The id of the subitem
+         */
+        TOOLBAR_ITEM_MARK = function () {
+            return createEventName.call(this, 'toolbar.item.mark');
+        },
+
+        /**
          * listens on and shows a button
          *
          * @event sulu.header.[INSTANCE_NAME].toolbar.item.show
@@ -748,6 +758,10 @@ define([], function () {
 
             this.sandbox.on(TOOLBAR_ITEM_ENABLE.call(this), function (id, highlight) {
                 this.sandbox.emit('husky.toolbar.' + this.toolbarInstanceName + '.item.enable', id, highlight);
+            }.bind(this));
+
+            this.sandbox.on(TOOLBAR_ITEM_MARK.call(this), function (id) {
+                this.sandbox.emit('husky.toolbar.' + this.toolbarInstanceName + '.item.mark', id);
             }.bind(this));
         },
 
