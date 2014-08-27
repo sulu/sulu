@@ -150,6 +150,12 @@ define([
                 }
             }, this);
 
+            this.sandbox.on('husky.tabs.header.item.select', function(item) {
+                if (item.id === 'tab-excerpt') {
+                    this.template = this.data.originTemplate;
+                }
+            }.bind(this));
+
             // change template
             this.sandbox.on('sulu.dropdown.template.item-clicked', function() {
                 this.setHeaderBar(false);
@@ -500,11 +506,11 @@ define([
                         this.renderPreview(data);
                     }.bind(this));
 
-                    this.sandbox.on('sulu.preview.initialize', function(data) {
+                    this.sandbox.on('sulu.preview.initialize', function(data, restart) {
                         data = this.sandbox.util.extend(true, {}, this.data, data);
                         if (!Preview.initiated) {
                             Preview.initialize(this.sandbox, this.options, data, this.$el);
-                        } else {
+                        } else if(!!restart) {
                             // force reload
                             this.$preview = null;
                             this.sandbox.dom.remove(this.$preview);

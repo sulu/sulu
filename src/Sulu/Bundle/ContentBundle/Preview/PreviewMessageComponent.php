@@ -97,6 +97,8 @@ class PreviewMessageComponent implements MessageComponentInterface
 
         if ($type === 'form') {
             $this->preview->start($user, $contentUuid, $webspaceKey, $locale, $data, $template);
+        } else if (!$this->preview->started($user, $contentUuid, $webspaceKey, $locale)) {
+            $this->preview->start($user, $contentUuid, $webspaceKey, $locale);
         }
 
         // generate unique cache id
@@ -209,7 +211,7 @@ class PreviewMessageComponent implements MessageComponentInterface
                             'command' => 'changes',
                             'content' => $content,
                             'type' => 'preview',
-                                'changes' => $changes
+                            'changes' => $changes
                         )
                     );
                     $this->logger->debug("Changes send {$changes}");

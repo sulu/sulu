@@ -205,15 +205,6 @@ define(['app-config'], function(AppConfig) {
             }
             this.initiated = true;
 
-            this.sandbox.on('sulu.preview.update', function($el, value, changeOnKey) {
-                if (!!this.data.id) {
-                    var property = this.getSequence($el);
-                    if (this.method === 'ws' || !changeOnKey) {
-                        update.call(this, property, value);
-                    }
-                }
-            }, this);
-
             return def.promise();
         },
 
@@ -281,6 +272,15 @@ define(['app-config'], function(AppConfig) {
             this.sandbox.on('sulu.preview.update-only', function() {
                 updateOnly.call(this);
             }.bind(this));
+
+            this.sandbox.on('sulu.preview.update', function($el, value, changeOnKey) {
+                if (!!this.data.id) {
+                    var property = this.getSequence($el);
+                    if (this.method === 'ws' || !changeOnKey) {
+                        update.call(this, property, value);
+                    }
+                }
+            }, this);
         };
 
     return {

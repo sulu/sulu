@@ -186,7 +186,7 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
                     // need a fix in validation
                     setTimeout(function() {
                         var data = this.sandbox.form.getData(this.formId);
-                        this.sandbox.emit('sulu.preview.initialize', data);
+                        this.sandbox.emit('sulu.preview.initialize', data, true);
                     }.bind(this), 10);
 
                     dfd.resolve();
