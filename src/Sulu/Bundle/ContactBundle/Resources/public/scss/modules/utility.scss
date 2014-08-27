@@ -93,6 +93,10 @@
     }
 }
 
+#categories .husky-datagrid .husky-table {
+    overflow: auto;
+    max-height: 350px;
+}
 
 .form-horizontal .form-group .checkbox-container-left {
     text-align: left;

@@ -97,7 +97,13 @@
   display: none;
 }
 
-/* line 97, ../scss/modules/utility.scss */
+/* line 96, ../scss/modules/utility.scss */
+#categories .husky-datagrid .husky-table {
+  overflow: auto;
+  max-height: 350px;
+}
+
+/* line 101, ../scss/modules/utility.scss */
 .form-horizontal .form-group .checkbox-container-left {
   text-align: left;
   width: 35px;
