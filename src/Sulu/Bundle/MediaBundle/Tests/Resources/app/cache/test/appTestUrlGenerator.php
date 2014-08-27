@@ -1,0 +1,53 @@
+<?php
+
+use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
+use Psr\Log\LoggerInterface;
+
+/**
+ * appTestUrlGenerator
+ *
+ * This class has been auto-generated
+ * by the Symfony Routing Component.
+ */
+class appTestUrlGenerator extends Symfony\Component\Routing\Generator\UrlGenerator
+{
+    private static $declaredRoutes = array(
+        'get_collection_fields' => array (  0 =>   array (    0 => '_format',  ),  1 =>   array (    '_controller' => 'Sulu\\Bundle\\MediaBundle\\Controller\\CollectionController::getFieldsAction',    '_format' => 'json',  ),  2 =>   array (    '_method' => 'GET',    '_format' => 'json|xml|html',  ),  3 =>   array (    0 =>     array (      0 => 'variable',      1 => '.',      2 => 'json|xml|html',      3 => '_format',    ),    1 =>     array (      0 => 'text',      1 => '/api/collection/fields',    ),  ),  4 =>   array (  ),  5 =>   array (  ),),
+        'put_collection_fields' => array (  0 =>   array (    0 => '_format',  ),  1 =>   array (    '_controller' => 'Sulu\\Bundle\\MediaBundle\\Controller\\CollectionController::putFieldsAction',    '_format' => 'json',  ),  2 =>   array (    '_method' => 'PUT',    '_format' => 'json|xml|html',  ),  3 =>   array (    0 =>     array (      0 => 'variable',      1 => '.',      2 => 'json|xml|html',      3 => '_format',    ),    1 =>     array (      0 => 'text',      1 => '/api/collection/fields',    ),  ),  4 =>   array (  ),  5 =>   array (  ),),
+        'get_collection' => array (  0 =>   array (    0 => 'id',    1 => '_format',  ),  1 =>   array (    '_controller' => 'Sulu\\Bundle\\MediaBundle\\Controller\\CollectionController::getAction',    '_format' => 'json',  ),  2 =>   array (    '_method' => 'GET',    '_format' => 'json|xml|html',  ),  3 =>   array (    0 =>     array (      0 => 'variable',      1 => '.',      2 => 'json|xml|html',      3 => '_format',    ),    1 =>     array (      0 => 'variable',      1 => '/',      2 => '[^/\\.]++',      3 => 'id',    ),    2 =>     array (      0 => 'text',      1 => '/api/collections',    ),  ),  4 =>   array (  ),  5 =>   array (  ),),
+        'get_collections' => array (  0 =>   array (    0 => '_format',  ),  1 =>   array (    '_controller' => 'Sulu\\Bundle\\MediaBundle\\Controller\\CollectionController::cgetAction',    '_format' => 'json',  ),  2 =>   array (    '_method' => 'GET',    '_format' => 'json|xml|html',  ),  3 =>   array (    0 =>     array (      0 => 'variable',      1 => '.',      2 => 'json|xml|html',      3 => '_format',    ),    1 =>     array (      0 => 'text',      1 => '/api/collections',    ),  ),  4 =>   array (  ),  5 =>   array (  ),),
+        'post_collection' => array (  0 =>   array (    0 => '_format',  ),  1 =>   array (    '_controller' => 'Sulu\\Bundle\\MediaBundle\\Controller\\CollectionController::postAction',    '_format' => 'json',  ),  2 =>   array (    '_method' => 'POST',    '_format' => 'json|xml|html',  ),  3 =>   array (    0 =>     array (      0 => 'variable',      1 => '.',      2 => 'json|xml|html',      3 => '_format',    ),    1 =>     array (      0 => 'text',      1 => '/api/collections',    ),  ),  4 =>   array (  ),  5 =>   array (  ),),
+        'put_collection' => array (  0 =>   array (    0 => 'id',    1 => '_format',  ),  1 =>   array (    '_controller' => 'Sulu\\Bundle\\MediaBundle\\Controller\\CollectionController::putAction',    '_format' => 'json',  ),  2 =>   array (    '_method' => 'PUT',    '_format' => 'json|xml|html',  ),  3 =>   array (    0 =>     array (      0 => 'variable',      1 => '.',      2 => 'json|xml|html',      3 => '_format',    ),    1 =>     array (      0 => 'variable',      1 => '/',      2 => '[^/\\.]++',      3 => 'id',    ),    2 =>     array (      0 => 'text',      1 => '/api/collections',    ),  ),  4 =>   array (  ),  5 =>   array (  ),),
+        'delete_collection' => array (  0 =>   array (    0 => 'id',    1 => '_format',  ),  1 =>   array (    '_controller' => 'Sulu\\Bundle\\MediaBundle\\Controller\\CollectionController::deleteAction',    '_format' => 'json',  ),  2 =>   array (    '_method' => 'DELETE',    '_format' => 'json|xml|html',  ),  3 =>   array (    0 =>     array (      0 => 'variable',      1 => '.',      2 => 'json|xml|html',      3 => '_format',    ),    1 =>     array (      0 => 'variable',      1 => '/',      2 => '[^/\\.]++',      3 => 'id',    ),    2 =>     array (      0 => 'text',      1 => '/api/collections',    ),  ),  4 =>   array (  ),  5 =>   array (  ),),
+        'cget_media' => array (  0 =>   array (    0 => '_format',  ),  1 =>   array (    '_controller' => 'Sulu\\Bundle\\MediaBundle\\Controller\\MediaController::cgetAction',    '_format' => 'json',  ),  2 =>   array (    '_method' => 'GET',    '_format' => 'json|xml|html',  ),  3 =>   array (    0 =>     array (      0 => 'variable',      1 => '.',      2 => 'json|xml|html',      3 => '_format',    ),    1 =>     array (      0 => 'text',      1 => '/api/media',    ),  ),  4 =>   array (  ),  5 =>   array (  ),),
+        'file_media_version_update' => array (  0 =>   array (    0 => 'id',    1 => '_format',  ),  1 =>   array (    '_controller' => 'Sulu\\Bundle\\MediaBundle\\Controller\\MediaController::fileVersionUpdateAction',    '_format' => 'json',  ),  2 =>   array (    '_method' => 'POST',    '_format' => 'json|xml|html',  ),  3 =>   array (    0 =>     array (      0 => 'variable',      1 => '.',      2 => 'json|xml|html',      3 => '_format',    ),    1 =>     array (      0 => 'variable',      1 => '/',      2 => '[^/\\.]++',      3 => 'id',    ),    2 =>     array (      0 => 'text',      1 => '/api/media',    ),  ),  4 =>   array (  ),  5 =>   array (  ),),
+        'get_media_fields' => array (  0 =>   array (    0 => '_format',  ),  1 =>   array (    '_controller' => 'Sulu\\Bundle\\MediaBundle\\Controller\\MediaController::getFieldsAction',    '_format' => 'json',  ),  2 =>   array (    '_method' => 'GET',    '_format' => 'json|xml|html',  ),  3 =>   array (    0 =>     array (      0 => 'variable',      1 => '.',      2 => 'json|xml|html',      3 => '_format',    ),    1 =>     array (      0 => 'text',      1 => '/api/media/fields',    ),  ),  4 =>   array (  ),  5 =>   array (  ),),
+        'get_media' => array (  0 =>   array (    0 => 'id',    1 => '_format',  ),  1 =>   array (    '_controller' => 'Sulu\\Bundle\\MediaBundle\\Controller\\MediaController::getAction',    '_format' => 'json',  ),  2 =>   array (    '_method' => 'GET',    '_format' => 'json|xml|html',  ),  3 =>   array (    0 =>     array (      0 => 'variable',      1 => '.',      2 => 'json|xml|html',      3 => '_format',    ),    1 =>     array (      0 => 'variable',      1 => '/',      2 => '[^/\\.]++',      3 => 'id',    ),    2 =>     array (      0 => 'text',      1 => '/api/media',    ),  ),  4 =>   array (  ),  5 =>   array (  ),),
+        'post_media' => array (  0 =>   array (    0 => '_format',  ),  1 =>   array (    '_controller' => 'Sulu\\Bundle\\MediaBundle\\Controller\\MediaController::postAction',    '_format' => 'json',  ),  2 =>   array (    '_method' => 'POST',    '_format' => 'json|xml|html',  ),  3 =>   array (    0 =>     array (      0 => 'variable',      1 => '.',      2 => 'json|xml|html',      3 => '_format',    ),    1 =>     array (      0 => 'text',      1 => '/api/media',    ),  ),  4 =>   array (  ),  5 =>   array (  ),),
+        'put_media' => array (  0 =>   array (    0 => 'id',    1 => '_format',  ),  1 =>   array (    '_controller' => 'Sulu\\Bundle\\MediaBundle\\Controller\\MediaController::putAction',    '_format' => 'json',  ),  2 =>   array (    '_method' => 'PUT',    '_format' => 'json|xml|html',  ),  3 =>   array (    0 =>     array (      0 => 'variable',      1 => '.',      2 => 'json|xml|html',      3 => '_format',    ),    1 =>     array (      0 => 'variable',      1 => '/',      2 => '[^/\\.]++',      3 => 'id',    ),    2 =>     array (      0 => 'text',      1 => '/api/media',    ),  ),  4 =>   array (  ),  5 =>   array (  ),),
+        'delete_media' => array (  0 =>   array (    0 => 'id',    1 => '_format',  ),  1 =>   array (    '_controller' => 'Sulu\\Bundle\\MediaBundle\\Controller\\MediaController::deleteAction',    '_format' => 'json',  ),  2 =>   array (    '_method' => 'DELETE',    '_format' => 'json|xml|html',  ),  3 =>   array (    0 =>     array (      0 => 'variable',      1 => '.',      2 => 'json|xml|html',      3 => '_format',    ),    1 =>     array (      0 => 'variable',      1 => '/',      2 => '[^/\\.]++',      3 => 'id',    ),    2 =>     array (      0 => 'text',      1 => '/api/media',    ),  ),  4 =>   array (  ),  5 =>   array (  ),),
+        'sulu_media.website.image.proxy' => array (  0 =>   array (    0 => 'slug',  ),  1 =>   array (    '_controller' => 'Sulu\\Bundle\\MediaBundle\\Controller\\MediaStreamController::getImageAction',  ),  2 =>   array (    'slug' => '.*',  ),  3 =>   array (    0 =>     array (      0 => 'variable',      1 => '/',      2 => '.*',      3 => 'slug',    ),    1 =>     array (      0 => 'text',      1 => '/uploads/media',    ),  ),  4 =>   array (  ),  5 =>   array (  ),),
+        'sulu_media.website.media.download' => array (  0 =>   array (    0 => 'id',    1 => 'slug',  ),  1 =>   array (    '_controller' => 'Sulu\\Bundle\\MediaBundle\\Controller\\MediaStreamController::downloadAction',  ),  2 =>   array (    'slug' => '.*',  ),  3 =>   array (    0 =>     array (      0 => 'variable',      1 => '/',      2 => '.*',      3 => 'slug',    ),    1 =>     array (      0 => 'text',      1 => '/download',    ),    2 =>     array (      0 => 'variable',      1 => '/',      2 => '[^/]++',      3 => 'id',    ),    3 =>     array (      0 => 'text',      1 => '/media',    ),  ),  4 =>   array (  ),  5 =>   array (  ),),
+    );
+
+    /**
+     * Constructor.
+     */
+    public function __construct(RequestContext $context, LoggerInterface $logger = null)
+    {
+        $this->context = $context;
+        $this->logger = $logger;
+    }
+
+    public function generate($name, $parameters = array(), $referenceType = self::ABSOLUTE_PATH)
+    {
+        if (!isset(self::$declaredRoutes[$name])) {
+            throw new RouteNotFoundException(sprintf('Unable to generate a URL for the named route "%s" as such route does not exist.', $name));
+        }
+
+        list($variables, $defaults, $requirements, $tokens, $hostTokens, $requiredSchemes) = self::$declaredRoutes[$name];
+
+        return $this->doGenerate($variables, $defaults, $requirements, $tokens, $parameters, $name, $referenceType, $hostTokens, $requiredSchemes);
+    }
+}
