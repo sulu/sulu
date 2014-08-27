@@ -295,7 +295,7 @@ define(['app-config'], function(AppConfig) {
 
         formId: '#content-form',
 
-        initialize: function(sandbox, data, $el) {
+        initialize: function(sandbox, options, $el) {
             this.sandbox = sandbox;
             this.options = options;
             this.$el = $el;
