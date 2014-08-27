@@ -301,7 +301,9 @@ define(['app-config'], function(AppConfig) {
             this.$el = $el;
         },
 
-        start: function() {
+        start: function(data, options) {
+            this.data = data;
+            this.options = options;
             start.call(this).then(function() {
                 bindCustomEvents.call(this);
 
@@ -309,7 +311,8 @@ define(['app-config'], function(AppConfig) {
             }.bind(this));
         },
 
-        restart: function(data, template) {
+        restart: function(data, options, template) {
+            this.options = options;
             stop.call(this).then(function() {
                 this.data = data;
 

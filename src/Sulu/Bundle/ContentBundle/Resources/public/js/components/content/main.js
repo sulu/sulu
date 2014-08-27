@@ -511,12 +511,12 @@ define([
                     this.sandbox.on('sulu.preview.initialize', function(data, restart) {
                         data = this.sandbox.util.extend(true, {}, this.data, data);
                         if (!Preview.initiated) {
-                            Preview.start(data);
+                            Preview.start(data, this.options);
                         } else if(!!restart) {
                             // force reload
                             this.$preview = null;
                             this.sandbox.dom.remove(this.$preview);
-                            Preview.restart(data, this.template);
+                            Preview.restart(data, this.options, this.template);
                         }
                     }.bind(this));
                 } else {
