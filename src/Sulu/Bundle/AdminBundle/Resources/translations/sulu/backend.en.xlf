@@ -740,6 +740,10 @@
                     and accept or decline.
                 </target>
             </trans-unit>
+            <trans-unit id="d5f4a99d54bb05a92a781460534528d9" resname="sulu.overlay.unsaved-changes-confirm">
+                <source>sulu.overlay.unsaved-changes-confirm</source>
+                <target><![CDATA[You have unsaved changes.<br/>Do you realy want to continue without saving?]]></target>
+            </trans-unit>
             <trans-unit id="deb752167002b44bbc2030c7f1c8250b" resname="public.show-history">
                 <source>public.show-history</source>
                 <target>Show history</target>
@@ -1316,7 +1320,7 @@
             </trans-unit>
             <trans-unit id="143d99ff2f64652633a5ca2169f22254" resname="content-navigation.contents.excerpt">
                 <source>content-navigation.contents.excerpt</source>
-                <target>Excerpt</target>
+                <target>Excerpt &amp; Categories</target>
             </trans-unit>
             <trans-unit id="642c992f1929c9e456a5ce2178d22192" resname="contact.contacts.main-contact">
                 <source>contact.contacts.main-contact</source>

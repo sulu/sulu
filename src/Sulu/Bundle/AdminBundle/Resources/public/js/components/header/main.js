@@ -104,8 +104,8 @@ define([], function () {
                 '<h1 class="bright"></h1>',
                 '</div>',
                 '<div class="bottom-row">',
-                    '<div class="' + constants.bottomContentClass + '"></div>',
-                    '<div class="' + constants.toolbarClass + '"></div>',
+                '   <div class="' + constants.bottomContentClass + '"></div>',
+                '   <div class="' + constants.toolbarClass + '"></div>',
                 '</div>',
                 '</div>'
             ].join(''),
@@ -290,6 +290,16 @@ define([], function () {
          */
         TOOLBAR_ITEM_CHANGE = function () {
             return createEventName.call(this, 'toolbar.item.change');
+        },
+
+        /**
+         * listens on and marks a subitem
+         *
+         * @event sulu.header.[INSTANCE_NAME].toolbar.item.mark
+         * @param {string} item The id of the subitem
+         */
+        TOOLBAR_ITEM_MARK = function () {
+            return createEventName.call(this, 'toolbar.item.mark');
         },
 
         /**
@@ -782,6 +792,10 @@ define([], function () {
 
             this.sandbox.on(TOOLBAR_ITEM_ENABLE.call(this), function (id, highlight) {
                 this.sandbox.emit('husky.toolbar.' + this.toolbarInstanceName + '.item.enable', id, highlight);
+            }.bind(this));
+
+            this.sandbox.on(TOOLBAR_ITEM_MARK.call(this), function (id) {
+                this.sandbox.emit('husky.toolbar.' + this.toolbarInstanceName + '.item.mark', id);
             }.bind(this));
         },
 

@@ -193,10 +193,10 @@ define([], function () {
                 this.sandbox.emit('sulu.sidebar.hide');
             }
 
+            this.sandbox.emit('sulu.sidebar.reset-classes');
+
             if (!!sidebar && !!sidebar.cssClasses) {
                 this.sandbox.emit('sulu.sidebar.add-classes', sidebar.cssClasses);
-            } else {
-                this.sandbox.emit('sulu.sidebar.reset-classes');
             }
         },
 

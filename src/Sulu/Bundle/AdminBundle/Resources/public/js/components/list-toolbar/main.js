@@ -122,20 +122,26 @@ define([], function () {
                     {
                         id: 'change',
                         icon: 'th-large',
+                        itemsOption: {
+                            markable: true
+                        },
                         items: [
                             {
+                                id: 'small-thumbnails',
                                 title: this.sandbox.translate('sulu.list-toolbar.small-thumbnails'),
                                 callback: function () {
                                     this.sandbox.emit('sulu.list-toolbar.change.thumbnail-small');
                                 }.bind(this)
                             },
                             {
+                                id: 'big-thumbnails',
                                 title: this.sandbox.translate('sulu.list-toolbar.big-thumbnails'),
                                 callback: function () {
                                     this.sandbox.emit('sulu.list-toolbar.change.thumbnail-large');
                                 }.bind(this)
                             },
                             {
+                                id: 'table',
                                 title: this.sandbox.translate('sulu.list-toolbar.table'),
                                 callback: function () {
                                     this.sandbox.emit('sulu.list-toolbar.change.table');

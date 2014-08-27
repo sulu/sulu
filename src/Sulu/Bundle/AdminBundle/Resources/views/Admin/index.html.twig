@@ -37,8 +37,8 @@
                  data-aura-user-locales='["en", "de"]'
                  data-aura-user-locale="{{ user.locale }}"
                  data-aura-logout-route="{{ user.logout }}"
-                 class="navigation-column"
-            ></div>
+                 class="navigation-column">
+            </div>
 
             <div class="content-column fixed">
                 <div class="sulu-header"
@@ -50,8 +50,8 @@
                     <main class="grid"
                           id="content"
                           data-aura-component="app@suluadmin"
-                          data-aura-user="{{ user| json_encode }}"
-                    ></main>
+                          data-aura-user="{{ user| json_encode }}">
+                    </main>
                 </div>
                 <div id="labels-container" data-aura-component="labels@suluadmin"></div>
             </div>
