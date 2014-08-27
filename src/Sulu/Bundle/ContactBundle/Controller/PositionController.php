@@ -72,7 +72,7 @@ class PositionController extends RestController implements ClassResourceInterfac
     public function cgetAction()
     {
         $list = new CollectionRepresentation(
-            $this->getDoctrine()->getRepository(self::$entityName)->findAll(),
+            $this->getDoctrine()->getRepository(self::$entityName)->findBy([], array('position' => 'ASC')),
             self::$entityKey
         );
 

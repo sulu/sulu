@@ -72,7 +72,7 @@ class AccountCategoryController extends RestController implements ClassResourceI
     public function cgetAction()
     {
         $list = new CollectionRepresentation(
-            $this->getDoctrine()->getRepository(self::$entityName)->findAll(),
+            $this->getDoctrine()->getRepository(self::$entityName)->findBy([], array('category' => 'ASC')),
             self::$entityKey
         );
 
