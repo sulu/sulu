@@ -38,14 +38,36 @@ class WidgetsHandler implements WidgetsHandlerInterface
      */
     protected $header;
 
-    function __construct(EngineInterface $templateEngine)
+    /**
+     * @var array
+     */
+    protected $widgetGroups;
+
+    function __construct(EngineInterface $templateEngine, $widgetGroups)
     {
         $this->templateEngine = $templateEngine;
+        $this->widgetGroups = $widgetGroups;
     }
 
     public function addWidget(WidgetInterface $widget, $alias)
     {
         $this->widgets[$alias] = array('instance' => $widget);
+    }
+
+    /**
+     * renders a widget group
+     * @param string $groupAlias
+     * @param array $parameters
+     * @return string
+     * @throws \InvalidArgumentException
+     */
+    public function renderWidgetGroup($groupAlias, $parameters = array())
+    {
+        if (array_key_exists($groupAlias, $this->widgetGroups)) {
+            return $this->render($this->widgetGroups[$groupAlias]['mappings'], $parameters);
+        } else {
+            throw new \InvalidArgumentException('There is no such widget-group: ' . $groupAlias);
+        }
     }
 
     /**

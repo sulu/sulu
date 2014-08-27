@@ -1,3 +1,4 @@
+
 /** vim: et:ts=4:sw=4:sts=4
  * @license RequireJS 2.1.9 Copyright (c) 2010-2012, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
@@ -38158,7 +38159,9 @@ define('__component__$ckeditor@husky',[], function() {
     var defaults = {
             initializedCallback: null,
             instanceName: null,
-            godMode: false
+            godMode: false,
+            tableEnabled: true,
+            linksEnabled: true
         },
 
         /**
@@ -38190,6 +38193,23 @@ define('__component__$ckeditor@husky',[], function() {
             getConfig = function() {
             var config = this.sandbox.util.extend(false, {}, this.options);
 
+            config.toolbar = [
+                { name: 'semantics', items: ['Format']},
+                { name: 'basicstyles', items: [ 'Superscript', 'Italic', 'Bold', 'Underline', 'Strike'] },
+                { name: 'blockstyles', items: [ 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'] },
+                { name: 'list', items: [ 'BulletedList'] }
+            ];
+
+            if (this.options.linksEnabled === true) {
+                config.toolbar.push({ name: 'links', items: [ 'Link', 'Unlink' ] });
+                config.linkShowTargetTab = false;
+            }
+            if (this.options.tableEnabled === true) {
+                config.toolbar.push({ name: 'insert', items: [ 'Table' ] });
+            }
+
+            config.toolbar.push({ name: 'code', items: [ 'Source'] });
+
             delete config.initializedCallback;
             delete config.baseUrl;
             delete config.el;
@@ -38200,6 +38220,8 @@ define('__component__$ckeditor@husky',[], function() {
             delete config.require;
             delete config.element;
             delete config.godMode;
+            delete config.linksEnabled;
+            delete config.tableEnabled;
 
             // allow img tags to have any class (*) and any attribute [*]
             config.extraAllowedContent = 'img(*)[src,width,height,title,alt]; a(*)[href,target,type,rel,name,title]';
@@ -38219,6 +38241,7 @@ return {
         var config = getConfig.call(this);
         this.editor = this.sandbox.ckeditor.init(this.$el, this.options.initializedCallback, config);
         this.data = this.editor.getData();
+        this.$overlay = null;
 
         this.bindChangeEvents();
 
@@ -41649,22 +41672,14 @@ define('__component__$input@husky',[], function () {
 
         var getConfig = function() {
             return {
-                toolbar: [
-                    { name: 'semantics', items: ['Format']},
-                    { name: 'basicstyles', items: [ 'Superscript', 'Italic', 'Bold', 'Underline', 'Strike'] },
-                    { name: 'blockstyles', items: [ 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'] },
-                    { name: 'list', items: [ 'BulletedList'] },
-                    { name: 'code', items: [ 'Source'] }
-                ],
-
                 format_tags: 'p;h1;h2;h3;h4;h5;h6',
                 height: '300px',
                 width: '100%',
                 defaultLanguage: 'en',
                 removeButtons: '',
-                removePlugins: 'elementspath,link,magicline',
+                removePlugins: 'elementspath,magicline',
                 removeDialogTabs: 'image:advanced;link:advanced',
-                extraPlugins: 'justify,format,sourcearea',
+                extraPlugins: 'justify,format,sourcearea,link,table',
                 resize_enabled: false,
                 uiColor: '#ffffff',
                 skin: 'husky'
@@ -46660,4 +46675,3 @@ define('husky_extensions/util',[],function() {
         }
     };
 });
-
