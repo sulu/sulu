@@ -1,14 +1,14 @@
 ﻿/**
- * @license Copyright (c) 2003-2013, CKSource - Frederico Knabben. All rights reserved.
+ * @license Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
 
-(function() {
+( function() {
 	CKEDITOR.plugins.add( 'panel', {
 		beforeInit: function( editor ) {
 			editor.ui.addHandler( CKEDITOR.UI_PANEL, CKEDITOR.ui.panel.handler );
 		}
-	});
+	} );
 
 	/**
 	 * Panel UI element.
@@ -34,7 +34,7 @@
 		CKEDITOR.tools.extend( this, {
 			className: '',
 			css: []
-		});
+		} );
 
 		this.id = CKEDITOR.tools.getNextId();
 		this.document = document;
@@ -100,10 +100,10 @@
 							doc = iframe.getFrameDocument();
 
 						// Make it scrollable on iOS. (#8308)
-						CKEDITOR.env.iOS && parentDiv.setStyles({
+						CKEDITOR.env.iOS && parentDiv.setStyles( {
 							'overflow': 'scroll',
 							'-webkit-overflow-scrolling': 'touch'
-						});
+						} );
 
 						var onLoad = CKEDITOR.tools.addFunction( CKEDITOR.tools.bind( function( ev ) {
 							this.isLoaded = true;
@@ -111,7 +111,7 @@
 								this.onLoad();
 						}, this ) );
 
-						doc.write( frameDocTpl.output( CKEDITOR.tools.extend({
+						doc.write( frameDocTpl.output( CKEDITOR.tools.extend( {
 							css: CKEDITOR.tools.buildStyleHtml( this.css ),
 							onload: 'window.parent.CKEDITOR.tools.callFunction(' + onLoad + ');'
 						}, data ) ) );
@@ -122,7 +122,7 @@
 						win.$.CKEDITOR = CKEDITOR;
 
 						// Arrow keys for scrolling is only preventable with 'keypress' event in Opera (#4534).
-						doc.on( 'key' + ( CKEDITOR.env.opera ? 'press' : 'down' ), function( evt ) {
+						doc.on( 'keydown', function( evt ) {
 							var keystroke = evt.data.getKeystroke(),
 								dir = this.document.getById( this.id ).getAttribute( 'dir' );
 
@@ -176,10 +176,10 @@
 					) + '}())' :
 					'';
 
-				data.frame = frameTpl.output({
+				data.frame = frameTpl.output( {
 					id: this.id + '_frame',
 					src: src
-				});
+				} );
 			}
 
 			var html = panelTpl.output( data );
@@ -221,9 +221,8 @@
 			// for FF. (#8864)
 			var holder = !this.forceIFrame || CKEDITOR.env.ie ? this._.holder : this.document.getById( this.id + '_frame' );
 
-			if ( current ) {
+			if ( current )
 				current.hide();
-			}
 
 			this._.currentBlock = block;
 
@@ -252,7 +251,7 @@
 	 *
 	 * @todo class and all methods
 	 */
-	CKEDITOR.ui.panel.block = CKEDITOR.tools.createClass({
+	CKEDITOR.ui.panel.block = CKEDITOR.tools.createClass( {
 		/**
 		 * Creates a block class instances.
 		 *
@@ -302,7 +301,7 @@
 
 				// Safari need focus on the iframe window first(#3389), but we need
 				// lock the blur to avoid hiding the panel.
-				if ( CKEDITOR.env.webkit || CKEDITOR.env.opera )
+				if ( CKEDITOR.env.webkit )
 					item.getDocument().getWindow().focus();
 				item.focus();
 
@@ -390,9 +389,9 @@
 				return true;
 			}
 		}
-	});
+	} );
 
-})();
+} )();
 
 /**
  * Fired when a panel is added to the document.
