@@ -151,8 +151,7 @@ class Preview implements PreviewInterface
         $data,
         StructureInterface $content,
         $ignoreError = false
-    )
-    {
+    ) {
         $sequence = $this->setValue($content, $property, $data, $webspaceKey, $locale);
 
         if (false !== $sequence) {
@@ -164,10 +163,10 @@ class Preview implements PreviewInterface
         }
 
         try {
-        $changes = $this->renderStructure($content, true, $property);
-        if ($changes !== false) {
-            $this->previewCache->appendChanges(array($property => $changes), $userId, $webspaceKey);
-        }
+            $changes = $this->renderStructure($content, true, $property);
+            if ($changes !== false) {
+                $this->previewCache->appendChanges(array($property => $changes), $userId, $webspaceKey);
+            }
         } catch (\Exception $ex) {
             if (!$ignoreError) {
                 throw $ex;
