@@ -50,6 +50,7 @@ class WebspacesInitCommand extends ContainerAwareCommand
         $base = $this->getContainer()->getParameter('sulu.content.node_names.base');
         $contents = $this->getContainer()->getParameter('sulu.content.node_names.content');
         $routes = $this->getContainer()->getParameter('sulu.content.node_names.route');
+        $temp = $this->getContainer()->getParameter('sulu.content.node_names.temp');
 
         // properties
         $this->properties = new MultipleTranslatedProperties(
@@ -84,19 +85,26 @@ class WebspacesInitCommand extends ContainerAwareCommand
         foreach ($webspaceManager->getWebspaceCollection() as $webspace) {
             $contentsPath = $base . '/' . $webspace->getKey() . '/' . $contents;
             $routesPath = $base . '/' . $webspace->getKey() . '/' . $routes;
+            $tempPath = $base . '/' . $webspace->getKey() . '/' . $temp;
 
             $output->writeln("  {$webspace->getName()}");
-            $output->writeln("    content: '/{$contentsPath}'");
 
-            // create basic nodes
+            // create content node
+            $output->writeln("    content: '/{$contentsPath}'");
             $content = $this->createRecursive($contentsPath, $root);
             $this->setBasicProperties($webspace, $content, $template, $userId);
             $content->addMixin('sulu:content');
             $session->save();
 
+            // create routes node
             $output->writeln("    routes:");
             $route = $this->createRecursive($routesPath, $root);
             $this->createLanguageRoutes($webspace, $route, $content, $output);
+            $session->save();
+
+            // create temp node
+            $output->writeln("    temp: '/{$contentsPath}'");
+            $this->createRecursive($tempPath, $root);
             $session->save();
         }
         $output->writeln('');
