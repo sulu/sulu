@@ -22,6 +22,7 @@
         <parameter key="sulu_security.permission_voter.class">Sulu\Bundle\SecurityBundle\Permission\PermissionVoter</parameter>
         <parameter key="sulu_security.user_repository.class">Sulu\Bundle\SecurityBundle\Entity\UserRepository</parameter>
         <parameter key="sulu_security.user_repository_factory.class">Sulu\Bundle\SecurityBundle\Factory\UserRepositoryFactory</parameter>
+        <parameter key="sulu_security.build.user.class">Sulu\Bundle\SecurityBundle\Build\UserBuilder</parameter>
     </parameters>
 
     <services>
@@ -61,6 +62,10 @@
 
         <service id="sulu_security.user_repository" class="%sulu_security.user_repository.class%"
                  factory-service="sulu_security.user_repository_factory" factory-method="getRepository">
+        </service>
+
+        <service id="sulu_security.build.user" class="%sulu_security.build.user.class%">
+            <tag name="massive_build.builder" />
         </service>
     </services>
 </container>
