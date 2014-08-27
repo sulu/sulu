@@ -34,7 +34,7 @@ class SuluSearchExtension extends Extension
         $loader->load('metadata.xml');
         $loader->load('content.xml');
 
-        if (\AbstractKernel::CONTEXT_WEBSITE == $container->getParameter('sulu.context')) {
+        if ($container->hasParameter('sulu.context') && 'website' == $container->getParameter('sulu.context')) {
             $loader->load('website.xml');
         }
     }
