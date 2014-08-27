@@ -65,6 +65,8 @@ define([
             this.$preview = null;
             this.contentChanged = false;
 
+            Preview.initialize(this.sandbox, this.options, this.$el);
+
             if (this.options.display === 'column') {
                 this.renderColumn();
             } else {
@@ -509,7 +511,7 @@ define([
                     this.sandbox.on('sulu.preview.initialize', function(data, restart) {
                         data = this.sandbox.util.extend(true, {}, this.data, data);
                         if (!Preview.initiated) {
-                            Preview.initialize(this.sandbox, this.options, data, this.$el);
+                            Preview.start(data);
                         } else if(!!restart) {
                             // force reload
                             this.$preview = null;

@@ -295,12 +295,13 @@ define(['app-config'], function(AppConfig) {
 
         formId: '#content-form',
 
-        initialize: function(sandbox, options, data, $el) {
+        initialize: function(sandbox, data, $el) {
             this.sandbox = sandbox;
             this.options = options;
-            this.data = data;
             this.$el = $el;
+        },
 
+        start: function() {
             start.call(this).then(function() {
                 bindCustomEvents.call(this);
 
