@@ -200,6 +200,8 @@ define(['app-config'], function(AppConfig) {
                 }.bind(this));
 
                 this.updateTabVisibilityForShadowCheckbox();
+
+                this.sandbox.emit('sulu.preview.initialize');
             }.bind(this));
         },
 

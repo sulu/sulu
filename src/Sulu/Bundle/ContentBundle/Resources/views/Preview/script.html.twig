@@ -48,10 +48,8 @@
                                 content: '{{ contentUuid }}',
                                 type: 'preview',
                                 user: {{ userId }},
-                                templateKey: '{{ templateKey }}',
                                 webspaceKey: '{{ webspaceKey }}',
-                                languageCode: '{{ languageCode }}',
-                                params: {}
+                                languageCode: '{{ languageCode }}'
                             };
                             this.conn.send(JSON.stringify(message));
                         }.bind(this);
@@ -61,7 +59,7 @@
                             var data = JSON.parse(e.data);
                             debug(data);
                             if (data.command === 'changes') {
-                                handleChanges(data.params.changes);
+                                handleChanges(data.changes);
                             }
                         }.bind(this);
 
@@ -157,9 +155,9 @@
                     for (var propertyName in changes) {
                         if (changes.hasOwnProperty(propertyName)) {
                             if (-1 !== propertyName.indexOf(',')) {
-                                handleSequence(propertyName, changes[propertyName].content);
+                                handleSequence(propertyName, changes[propertyName]);
                             } else {
-                                handleSingle(propertyName, changes[propertyName].content);
+                                handleSingle(propertyName, changes[propertyName]);
                             }
                         }
                     }

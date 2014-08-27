@@ -8,8 +8,9 @@
  */
 
 define([
-    'sulucontent/model/content'
-], function(Content) {
+    'sulucontent/model/content',
+    'sulucontent/components/content/preview/main'
+], function(Content, Preview) {
 
     'use strict';
 
@@ -51,7 +52,7 @@ define([
                 '   </div>',
                 '</div>'
             ].join(''),
-            previewUrl: '<%= url %><%= uuid %>?webspace=<%= webspace %>&language=<%= language %>&template=<%= template %>'
+            previewUrl: '<%= url %><%= uuid %>/render?webspace=<%= webspace %>&language=<%= language %>'
         };
 
     return {
@@ -148,6 +149,12 @@ define([
                     this.sandbox.emit('sulu.content.contents.list', this.options.webspace, item.localization);
                 }
             }, this);
+
+            this.sandbox.on('husky.tabs.header.item.select', function(item) {
+                if (item.id === 'tab-excerpt') {
+                    this.template = this.data.originTemplate;
+                }
+            }.bind(this));
 
             // change template
             this.sandbox.on('sulu.dropdown.template.item-clicked', function() {
@@ -495,7 +502,21 @@ define([
 
                 if (!!this.options.preview && this.data.nodeType === TYPE_CONTENT && !this.data.shadowOn) {
                     this.sandbox.emit('husky.tabs.header.item.show', 'tab-content');
-                    this.renderPreview(data);
+                    this.sandbox.on('sulu.preview.initiated', function() {
+                        this.renderPreview(data);
+                    }.bind(this));
+
+                    this.sandbox.on('sulu.preview.initialize', function(data, restart) {
+                        data = this.sandbox.util.extend(true, {}, this.data, data);
+                        if (!Preview.initiated) {
+                            Preview.initialize(this.sandbox, this.options, data, this.$el);
+                        } else if(!!restart) {
+                            // force reload
+                            this.$preview = null;
+                            this.sandbox.dom.remove(this.$preview);
+                            Preview.restart(data, this.template);
+                        }
+                    }.bind(this));
                 } else {
                     this.sandbox.emit('sulu.sidebar.hide');
                     this.sandbox.emit('sulu.app.toggle-shrinker', false);
@@ -528,14 +549,13 @@ define([
             this.sandbox.emit('sulu.app.toggle-shrinker', true);
             this.sandbox.emit('sulu.sidebar.change-width', 'max');
             if (this.$preview === null) {
-                this.previewUrl = this.sandbox.util.template(templates.previewUrl)({
+                this.previewUrl = this.sandbox.util.template(templates.previewUrl, {
                     url: '/admin/content/preview/',
                     webspace: this.options.webspace,
                     language: this.options.language,
-                    uuid: data.id,
-                    template: data.template
+                    uuid: data.id
                 });
-                this.$preview = this.sandbox.dom.createElement(this.sandbox.util.template(templates.preview)({
+                this.$preview = this.sandbox.dom.createElement(this.sandbox.util.template(templates.preview, {
                     resolution: this.sandbox.translate('content.preview.resolutions'),
                     url: this.previewUrl
                 }));

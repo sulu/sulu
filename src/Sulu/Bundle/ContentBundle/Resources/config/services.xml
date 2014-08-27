@@ -59,6 +59,8 @@
             <argument type="string">sulu-content</argument>
             <argument type="collection">
                 <argument key="defaultTemplate" type="string">%sulu.content.template.default%</argument>
+                <argument key="wsPort" type="string">%sulu_content.preview.websocket.port%</argument>
+                <argument key="wsUrl" type="string">%sulu_content.preview.websocket.url%</argument>
             </argument>
 
             <tag name="sulu.js_config"/>
