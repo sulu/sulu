@@ -42,7 +42,9 @@ class TextEditor extends SimpleContentType
     public function getDefaultParams()
     {
         return array(
-            'godMode' => false
+            'godMode' => false,
+            'tables' => true,
+            'links' => true
         );
     }
 }
