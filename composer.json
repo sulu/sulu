@@ -21,14 +21,16 @@
         "jackalope/jackalope-jackrabbit": "1.1.*",
         "doctrine/phpcr-bundle": "1.1.*",
         "doctrine/phpcr-odm": "1.1.*",
-        "willdurand/hateoas-bundle": "0.3.*",
-        "massive/build-bundle": "~0.1.0"
+        "willdurand/hateoas-bundle": "0.3.*"
     },
     "require-dev": {
         "symfony/symfony": "2.5.*",
         "phpunit/phpunit": "4.0.*",
         "sulu/test-bundle": "dev-develop",
         "jackalope/jackalope-doctrine-dbal": "1.1.*"
+    },
+    "suggest": {
+        "massive/build-bundle": "For initializing the Sulu environment"
     },
     "autoload": {
         "psr-0": {
