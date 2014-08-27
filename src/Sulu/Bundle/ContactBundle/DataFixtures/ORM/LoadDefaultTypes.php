@@ -44,11 +44,6 @@ class LoadDefaultTypes extends AbstractFixture implements OrderedFixtureInterfac
         $phoneType3->setName('phone.mobile');
         $manager->persist($phoneType3);
 
-        $phoneType4 = new PhoneType();
-        $phoneType4->setId(4);
-        $phoneType4->setName('phone.isdn');
-        $manager->persist($phoneType4);
-
         $emailType1 = new EmailType();
         $emailType1->setId(1);
 
