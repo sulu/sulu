@@ -73,7 +73,7 @@ define([], function () {
          * @param id
          * @returns {string}
          */
-            parseActionUrl = function (actionString, url, id) {
+        parseActionUrl = function (actionString, url, id) {
             // if first char is '/' use absolute url
             if (actionString.substr(0, 1) === '/') {
                 return actionString.substr(1, actionString.length);
@@ -90,7 +90,7 @@ define([], function () {
          * Handles the components which are marked with a view property
          * @param {boolean} view The property found
          */
-            handleViewMarked = function (view) {
+        handleViewMarked = function (view) {
             this.sandbox.emit('sulu.view.initialize', view);
         },
 
@@ -133,7 +133,7 @@ define([], function () {
          *          }
          *      }
          */
-            handleLayoutMarked = function (layout) {
+        handleLayoutMarked = function (layout) {
             if (typeof layout === 'function') {
                 layout = layout.call(this);
             }
@@ -149,7 +149,7 @@ define([], function () {
          * Handles the navigation part of the view object
          * @param navigation {Object|Boolean} the navigation config object or true for default behaviour
          */
-            handleLayoutNavigation = function (navigation) {
+        handleLayoutNavigation = function (navigation) {
             if (navigation.collapsed === true) {
                 this.sandbox.emit('husky.navigation.collapse', true);
             } else {
@@ -166,7 +166,7 @@ define([], function () {
          * Handles the content part of the view object
          * @param {Object|Boolean} [content] the content config object or true for default behaviour
          */
-            handleLayoutContent = function (content) {
+        handleLayoutContent = function (content) {
             var width = content.width,
                 leftSpace = !!content.leftSpace,
                 rightSpace = !!content.rightSpace,
@@ -180,7 +180,7 @@ define([], function () {
          * Handles the sidebar part of the view object
          * @param sidebar {Object|Boolean} the sidebar config object or true for default behaviour. If false sidebar gets hidden
          */
-            handleLayoutSidebar = function (sidebar) {
+        handleLayoutSidebar = function (sidebar) {
             if (!!sidebar && !!sidebar.url) {
                 this.sandbox.emit('sulu.sidebar.set-widget', sidebar.url);
             } else {
@@ -194,6 +194,7 @@ define([], function () {
             }
 
             this.sandbox.emit('sulu.sidebar.reset-classes');
+
             if (!!sidebar && !!sidebar.cssClasses) {
                 this.sandbox.emit('sulu.sidebar.add-classes', sidebar.cssClasses);
             }
@@ -234,7 +235,7 @@ define([], function () {
          *      }
          *
          */
-            handleHeaderMarked = function (header) {
+        handleHeaderMarked = function (header) {
             // if header is a function get the data from the return value of the function
             if (typeof header === 'function') {
                 header = header.call(this);
@@ -242,17 +243,15 @@ define([], function () {
 
             if (!!header.then) {
                 header.then(function (data) {
-                    startHeader.call(this, data);
+                    handleHeader.call(this, data);
                 }.bind(this));
             } else {
-                startHeader.call(this, header);
+                handleHeader.call(this, header);
             }
         },
 
-        startHeader = function (header) {
-            var $content, $header, $headerBg, initializeHeader,
-                breadcrumb, toolbarTemplate, toolbarParentTemplate, tabsOptions, toolbarOptions, tabsFullControl,
-                toolbarDisabled, toolbarLanguageChanger, noBack, titleColor;
+        handleHeader = function (header) {
+            var $content, changeHeader, options;
 
             // insert the content-container
             $content = this.sandbox.dom.createElement('<div id="sulu-content-container"/>');
@@ -263,64 +262,44 @@ define([], function () {
              * @param tabsData {array} Array of Data to pass on to the tabs component
              * @private
              */
-            initializeHeader = function (tabsData) {
+            changeHeader = function (tabsData) {
                 // set the variables for the header-component-options properties
-                breadcrumb = (!!header.breadcrumb) ? header.breadcrumb : null;
-                toolbarDisabled = (typeof header.toolbar === 'undefined') ? true : false;
-                toolbarTemplate = (!!header.toolbar && !!header.toolbar.template) ? header.toolbar.template : 'default';
-                toolbarParentTemplate = (!!header.toolbar && !!header.toolbar.parentTemplate) ? header.toolbar.parentTemplate : null;
-                tabsOptions = (!!header.tabs && !!header.tabs.options) ? header.tabs.options : {};
-                toolbarOptions = (!!header.toolbar && !!header.toolbar.options) ? header.toolbar.options : {},
-                    tabsFullControl = (!!header.tabs && typeof header.tabs.fullControl === 'boolean') ? header.tabs.fullControl : false;
-                toolbarLanguageChanger = (!!header.toolbar && !!header.toolbar.languageChanger) ? header.toolbar.languageChanger : true;
-                noBack = (typeof header.noBack !== 'undefined') ? header.noBack : false;
-                titleColor = (!!header.titleColor) ? header.titleColor : null;
+                options = {
+                    tabsData: tabsData,
+                    heading: this.sandbox.translate(header.title),
+                    breadcrumb: (!!header.breadcrumb) ? header.breadcrumb : null,
+                    toolbarTemplate: (!!header.toolbar && !!header.toolbar.template) ? header.toolbar.template : 'default',
+                    toolbarParentTemplate: (!!header.toolbar && !!header.toolbar.parentTemplate) ? header.toolbar.parentTemplate : null,
+                    contentComponentOptions: this.options,
+                    contentEl: $content,
+                    toolbarOptions: (!!header.toolbar && !!header.toolbar.options) ? header.toolbar.options : {},
+                    tabsOptions: (!!header.tabs && !!header.tabs.options) ? header.tabs.options : {},
+                    tabsFullControl: (!!header.tabs && typeof header.tabs.fullControl === 'boolean') ? header.tabs.fullControl : false,
+                    toolbarDisabled: (typeof header.toolbar === 'undefined'),
+                    toolbarLanguageChanger: (!!header.toolbar && !!header.toolbar.languageChanger) ? header.toolbar.languageChanger : true,
+                    noBack: (typeof header.noBack !== 'undefined') ? header.noBack : false,
+                    titleColor: (!!header.titleColor) ? header.titleColor : null
+                };
 
-                // insert the header-container
-                $header = this.sandbox.dom.createElement('<div id="sulu-header-container"/>');
-                this.sandbox.dom.prepend('.content-column', $header);
+                if (header.tabs === false) {
+                    options.tabsOptions = false;
+                }
 
-                // append header background container to body
-                $headerBg = this.sandbox.dom.createElement('<div class="sulu-header-background"/>');
-                this.sandbox.dom.prepend('body', $headerBg);
-
-                App.start([
-                    {
-                        name: 'header@suluadmin',
-                        options: {
-                            el: $header,
-                            tabsData: tabsData,
-                            heading: this.sandbox.translate(header.title),
-                            breadcrumb: breadcrumb,
-                            toolbarTemplate: toolbarTemplate,
-                            toolbarParentTemplate: toolbarParentTemplate,
-                            contentComponentOptions: this.options,
-                            contentEl: $content,
-                            toolbarOptions: toolbarOptions,
-                            tabsOptions: tabsOptions,
-                            tabsFullControl: tabsFullControl,
-                            toolbarDisabled: toolbarDisabled,
-                            toolbarLanguageChanger: toolbarLanguageChanger,
-                            noBack: noBack,
-                            titleColor: titleColor
-                        }
-                    }
-                ]);
-            };
+                this.sandbox.emit('sulu.header.change', options);
+            }.bind(this);
 
             // if a url for the tabs is set load the data first, else start the header with no tabs
             if (!!header.tabs && !!header.tabs.url) {
                 this.sandbox.util.load(header.tabs.url).then(function (data) {
                     // start header with tabs data passed
-                    parseContentTabs.call(this, data, this.options.id, initializeHeader.bind(this));
+                    parseContentTabs.call(this, data, this.options.id, changeHeader);
                 }.bind(this));
             } else {
-                initializeHeader.call(this, null);
+                changeHeader(null);
             }
         };
 
     return function (app) {
-
         /**
          * Gets executed every time BEFORE a component gets initialized
          * looks in the component for various properties and executes a handler

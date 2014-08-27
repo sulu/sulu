@@ -222,12 +222,13 @@ define(function() {
          */
         beforeNavigateCleanup: function(route) {
             this.currentRoute = route;
-            this.sandbox.dom.remove('.sulu-header-background');
+
+            // hide the header
+            App.emit('sulu.header.hide');
 
             // FIXME App.stop is used in global context; possibly there is a better solution
             // and the stop method will be called
             App.stop('#sulu-content-container');
-            App.stop('#sulu-header-container');
             App.stop('#content > *');
             App.stop('#preview > *');
         },

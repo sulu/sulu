@@ -64,6 +64,7 @@ define([], function () {
 
         constants = {
             componentClass: 'sulu-header',
+            headerBackgroundSelector: '.sulu-header-background',
             hasTabsClass: 'has-tabs',
             titleColorClass: 'title-color',
             titleColorSetClass: 'color-set',
@@ -96,11 +97,11 @@ define([], function () {
         templates = {
             skeleton: [
                 '<div class="inner">',
-                '   <div class="' + constants.infoClass + '"></div>',
-                '   <div class="' + constants.headlineClass + '">',
-                '   <span class="fa-' + constants.backIcon + ' ' + constants.backClass + '"></span>',
-                '   <span class="' + constants.titleColorClass + '"></span>',
-                '<h1 class="bright"><%= headline %></h1>',
+                    '<div class="' + constants.infoClass + '"></div>',
+                    '<div class="' + constants.headlineClass + '">',
+                    '<span class="fa-' + constants.backIcon + ' ' + constants.backClass + '"></span>',
+                    '<span class="' + constants.titleColorClass + '"></span>',
+                '<h1 class="bright"></h1>',
                 '</div>',
                 '<div class="bottom-row">',
                 '   <div class="' + constants.bottomContentClass + '"></div>',
@@ -130,12 +131,29 @@ define([], function () {
         },
 
         /**
+         * listens on and hides the header
+         *
+         * @event sulu.header.[INSTANCE_NAME].hide
+         */
+        HIDE = function () {
+            return createEventName.call(this, 'hide');
+        },
+
+        /**
          * emitted when the back-icon gets clicked
          *
          * @event sulu.header.[INSTANCE_NAME].back
          */
         BACK = function () {
             return createEventName.call(this, 'back');
+        },
+
+        /**
+         * listens on changes of the header
+         * @event sulu.header.[INSTANCE_NAME].change
+         */
+        CHANGE = function () {
+            return createEventName.call(this, 'change');
         },
 
         /**
@@ -458,33 +476,10 @@ define([], function () {
          * Initializes the component
          */
         initialize: function () {
-            // initialize deferreds
-            var toolbarDef, tabsDef;
+            this.html(this.sandbox.util.template(templates.skeleton)());
 
-            // merge defaults
-            this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
-
-            // set default callback when no callback is provided
-            if (!this.options.changeStateCallback) {
-                this.options.changeStateCallback = getChangeToolbarStateCallback('default');
-            }
-
-            this.$inner = null;
-            this.$tabs = null;
-            this.toolbarInstanceName = null;
-
-            this.render();
-
-            toolbarDef = this.startToolbar();
-            tabsDef = this.startTabs();
-
-            // bind events
             this.bindCustomEvents();
             this.bindDomEvents();
-
-            this.sandbox.data.when(toolbarDef, tabsDef).then(function () {
-                this.sandbox.emit(INITIALIZED.call(this));
-            }.bind(this));
         },
 
         /**
@@ -494,11 +489,12 @@ define([], function () {
             // add component-class
             this.sandbox.dom.addClass(this.$el, constants.componentClass);
 
-            this.html(this.sandbox.util.template(templates.skeleton)({
-                headline: this.options.heading
-            }));
+            // clean old values
+            this.clean();
 
-            this.$inner = this.$find(constants.innerSelector);
+            if (this.options.heading !== null) {
+                this.setTitle(this.options.heading);
+            }
 
             // render breadcrumb if set
             if (this.options.breadcrumb !== null) {
@@ -513,7 +509,23 @@ define([], function () {
             // hide back if configured
             if (this.options.noBack === true) {
                 this.sandbox.dom.hide(this.$find('.' + constants.backClass));
+            } else {
+                this.sandbox.dom.show(this.$find('.' + constants.backClass));
             }
+        },
+
+        /**
+         * Cleans all the values from the header
+         */
+        clean: function () {
+            this.cleanBottomContent();
+        },
+
+        /**
+         * Cleans the value from the bottom content
+         */
+        cleanBottomContent: function () {
+            this.sandbox.dom.html('.' + constants.bottomContentClass, '');
         },
 
         /**
@@ -554,9 +566,10 @@ define([], function () {
         startTabs: function () {
             var def = this.sandbox.data.deferred();
 
-            if (this.options.tabsData !== null || !!this.options.tabsOptions.data) {
-                this.sandbox.dom.addClass(this.$el, constants.hasTabsClass);
-                this.sandbox.dom.addClass('.sulu-header-background', constants.hasTabsClass);
+            if (!this.options.tabsOptions) {
+                def.resolve();
+            } else if (this.options.tabsData !== null || !!this.options.tabsOptions.data) {
+                this.removeTabsComponent();
                 this.$tabs = this.sandbox.dom.createElement('<div class="' + constants.tabsClass + '"></div>');
                 this.sandbox.dom.append(this.$el, this.$tabs);
 
@@ -571,6 +584,7 @@ define([], function () {
                     this.startTabsComponent(def);
                 }
             } else {
+                this.removeTabsComponent();
                 def.resolve();
             }
 
@@ -582,31 +596,47 @@ define([], function () {
          * @param {deferred} def
          */
         startTabsComponent: function (def) {
-            this.sandbox.stop(this.$find('.' + constants.tabsClass));
-            var $container = this.sandbox.dom.createElement('<div/>'),
-                options = {
-                    el: $container,
-                    data: this.options.tabsData,
-                    instanceName: 'header' + this.options.instanceName,
-                    forceReload: false,
-                    forceSelect: true
-                };
+            if (!!this.options.tabsData || !!this.options.tabsOptions.data) {
+                this.sandbox.stop(this.$find('.' + constants.tabsClass));
+                var $container = this.sandbox.dom.createElement('<div/>'),
+                    options = {
+                        el: $container,
+                        data: this.options.tabsData,
+                        instanceName: 'header' + this.options.instanceName,
+                        forceReload: false,
+                        forceSelect: true
+                    };
 
-            // wait for initialized
-            this.sandbox.on('husky.tabs.header.initialized', function () {
-                def.resolve();
-            }.bind(this));
+                this.sandbox.dom.addClass(this.$el, constants.hasTabsClass);
+                this.sandbox.dom.addClass(constants.headerBackgroundSelector, constants.hasTabsClass);
 
-            this.sandbox.dom.html(this.$find('.' + constants.tabsClass), $container);
-            // merge default tabs-options with passed ones
-            options = this.sandbox.util.extend(true, {}, options, this.options.tabsOptions);
+                // wait for initialized
+                this.sandbox.on('husky.tabs.header.initialized', function () {
+                    def.resolve();
+                }.bind(this));
 
-            this.sandbox.start([
-                {
-                    name: 'tabs@husky',
-                    options: options
-                }
-            ]);
+                this.sandbox.dom.html(this.$find('.' + constants.tabsClass), $container);
+                // merge default tabs-options with passed ones
+                options = this.sandbox.util.extend(true, {}, options, this.options.tabsOptions);
+
+                this.sandbox.start([
+                    {
+                        name: 'tabs@husky',
+                        options: options
+                    }
+                ]);
+            }
+        },
+
+        /**
+         * Removes the tabs components
+         */
+        removeTabsComponent: function () {
+            var $tabs = this.$find('.' + constants.tabsClass);
+            this.sandbox.stop($tabs);
+            this.sandbox.dom.remove($tabs);
+            this.sandbox.dom.removeClass(constants.headerBackgroundSelector, constants.hasTabsClass);
+            this.sandbox.dom.removeClass(this.$el, constants.hasTabsClass);
         },
 
         /**
@@ -727,6 +757,10 @@ define([], function () {
 
             // set content to the bottom-content-container
             this.sandbox.on(SET_BOTTOM_CONTENT.call(this), this.insertBottomContent.bind(this));
+
+            this.sandbox.on(CHANGE.call(this), this.change.bind(this));
+
+            this.sandbox.on(HIDE.call(this), this.hide.bind(this));
 
             this.bindAbstractToolbarEvents();
             this.bindAbstractTabsEvents();
@@ -860,6 +894,37 @@ define([], function () {
         },
 
         /**
+         * changes the entire header
+         * @param options {object} The new options
+         */
+        change: function (options) {
+            // initialize deferreds
+            var toolbarDef, tabsDef;
+
+            // merge new options with old ones
+            this.options = this.sandbox.util.extend(true, {}, defaults, options);
+
+            // set default callback when no callback is provided
+            if (!this.options.changeStateCallback) {
+                this.options.changeStateCallback = getChangeToolbarStateCallback('default');
+            }
+
+            this.$inner = null;
+            this.$tabs = null;
+            this.toolbarInstanceName = null;
+
+            this.render();
+
+            toolbarDef = this.startToolbar();
+            tabsDef = this.startTabs();
+
+            this.sandbox.data.when(toolbarDef, tabsDef).then(function () {
+                this.sandbox.emit(INITIALIZED.call(this));
+                this.show();
+            }.bind(this));
+        },
+
+        /**
          * Changes the title of the header
          * @param title {string} the new title
          */
@@ -886,6 +951,22 @@ define([], function () {
             var $bottomContainer = this.$find('.' + constants.bottomContentClass);
             this.sandbox.stop($bottomContainer);
             this.sandbox.dom.html($bottomContainer, content);
+        },
+
+        /**
+         * Hides the header
+         */
+        hide: function () {
+            this.sandbox.dom.hide(this.$el);
+            this.sandbox.dom.hide(constants.headerBackgroundSelector);
+        },
+
+        /**
+         * Shows the header
+         */
+        show: function () {
+            this.sandbox.dom.show(this.$el);
+            this.sandbox.dom.show(constants.headerBackgroundSelector);
         }
     };
 });
