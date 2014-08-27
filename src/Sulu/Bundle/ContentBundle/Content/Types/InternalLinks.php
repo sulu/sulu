@@ -111,6 +111,10 @@ class InternalLinks extends ComplexContentType
         $segmentKey
     ) {
         $value = $property->getValue();
+        if ($value instanceof ArrayableInterface) {
+            $value = $value->toArray();
+        }
+
 
         // if whole container is pushed
         if (isset($value['data'])) {
