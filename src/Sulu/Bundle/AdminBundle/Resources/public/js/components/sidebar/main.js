@@ -281,6 +281,7 @@ define([], function() {
                     this.sandbox.start($widget);
                 }.bind(this));
             } else {
+                this.showColumn();
                 this.widgets.push({
                     url: null,
                     $el: $element
@@ -310,6 +311,7 @@ define([], function() {
                     this.sandbox.start($widget);
                 }.bind(this));
             } else {
+                this.showColumn();
                 this.widgets.push({
                     url: null,
                     $el: $element
@@ -344,6 +346,7 @@ define([], function() {
                 }
             } else {
                 this.emptySidebar(false);
+                this.showColumn();
                 this.widgets.push({
                     url: null,
                     $el: $element
