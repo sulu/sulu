@@ -8,7 +8,7 @@
             </trans-unit>
             <trans-unit id="a50af522ac181350142c0b4720e29a4f" resname="contacts.sidebar.mainContact">
                 <source>contacts.sidebar.mainContact</source>
-                <target>Hauptkontakt</target>
+                <target>Hauptansprechpartner</target>
             </trans-unit>
             <trans-unit id="a50af522ac181350142c0b4720e29a5f" resname="public.company">
                 <source>public.company</source>
