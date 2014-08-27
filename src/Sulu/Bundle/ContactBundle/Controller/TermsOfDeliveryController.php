@@ -64,7 +64,7 @@ class TermsOfDeliveryController extends RestController implements ClassResourceI
      */
     public function cgetAction()
     {
-        $termsOfDelivery = $this->getDoctrine()->getRepository(self::$entityName)->findAll();
+        $termsOfDelivery = $this->getDoctrine()->getRepository(self::$entityName)->findBy([], array('terms' => 'ASC'));
         $list = new CollectionRepresentation($termsOfDelivery, self::$entityKey);
 
         $view = $this->view($list, 200);

@@ -68,7 +68,7 @@ class TermsOfPaymentController extends RestController implements ClassResourceIn
      */
     public function cgetAction()
     {
-        $termsOfPayment = $this->getDoctrine()->getRepository(self::$entityName)->findAll();
+        $termsOfPayment = $this->getDoctrine()->getRepository(self::$entityName)->findBy([], array('terms' => 'ASC'));
         $list = new CollectionRepresentation($termsOfPayment, self::$entityKey);
 
         $view = $this->view($list, 200);
