@@ -93,7 +93,7 @@ class ContentRouteProvider implements RouteProviderInterface
                     throw new ResourceLocatorNotFoundException();
                 } else {
                     $route = new Route(
-                        $request->getRequestUri(), array(
+                        $request->getPathInfo(), array(
                             '_controller' => $content->getController(),
                             'structure' => $content
                         )
