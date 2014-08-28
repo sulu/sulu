@@ -15,6 +15,7 @@ use Doctrine\ORM\NoResultException;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\SecurityBundle\Entity\UserGroup;
+use Sulu\Bundle\SecurityBundle\Security\Exception\MissingPasswordException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\UsernameNotUniqueException;
 use Sulu\Component\Rest\Exception\InvalidArgumentException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
@@ -113,7 +114,7 @@ class UserController extends RestController implements ClassResourceInterface
                     $this->encodePassword($user, $request->get('password'), $user->getSalt())
                 );
             } else {
-                throw new InvalidArgumentException(static::$entityName, 'password');
+                throw new MissingPasswordException();
             }
 
             $user->setLocale($request->get('locale'));
@@ -137,6 +138,8 @@ class UserController extends RestController implements ClassResourceInterface
 
             $view = $this->view($user, 200);
         } catch(UsernameNotUniqueException $exc) {
+                $view = $this->view($exc->toArray(), 400);
+        }catch (MissingPasswordException $exc) {
                 $view = $this->view($exc->toArray(), 400);
         } catch (RestException $re) {
             if (isset($user)) {
@@ -176,7 +179,10 @@ class UserController extends RestController implements ClassResourceInterface
                 throw new EntityNotFoundException(static::$entityName, $id);
             }
 
-            if(!$this->isUsernameUnique($request->get('username'))){
+            // check if username is already in database and the current user is not the user with this username
+            if(!$this->isUsernameUnique($request->get('username')) &&
+                $user->getUsername() != $request->get('username')
+            ) {
                 throw new UsernameNotUniqueException($request->get('username'));
             }
 
@@ -257,7 +263,11 @@ class UserController extends RestController implements ClassResourceInterface
                 throw new EntityNotFoundException(static::$entityName, $id);
             }
 
-            if(!$this->isUsernameUnique($request->get('username'))){
+            // check if username is already in database and the current user is not the user with this username
+            if(!!$request->get('username') &&
+                !$this->isUsernameUnique($request->get('username')) &&
+                $user->getUsername() != $request->get('username')
+            ) {
                 throw new UsernameNotUniqueException($request->get('username'));
             }
 

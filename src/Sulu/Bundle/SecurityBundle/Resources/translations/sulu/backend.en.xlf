@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+    <file source-language="en" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="a50af522ac181350142c0b4720e29a3f" resname="security.user.error.notUnique">
+                <source>security.user.error.notUnique</source>
+                <target>This username is already in use!</target>
+            </trans-unit>
+            <trans-unit id="a50af522ac181350142c0b4720e29a4f" resname="security.user.error.missingPassword">
+                <source>security.user.error.missingPassword</source>
+                <target></target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

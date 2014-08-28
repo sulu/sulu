@@ -10,21 +10,13 @@
 
 namespace Sulu\Bundle\SecurityBundle\Security\Exception;
 
-use Exception;
 
-class SecurityException extends Exception
+class MissingPasswordException extends SecurityException
 {
-    /**
-     * @var int
-     * @description this exception code is thrown when the username is not unique
-     */
-    const EXCEPTION_CODE_USERNAME_NOT_UNIQUE = 1001;
-
-    /**
-     * @var int
-     * @description this exception code is thrown when no password is provided in the post action of a user
-     */
-    const EXCEPTION_CODE_MISSING_PASSWORD = 1002;
+    public function __construct()
+    {
+        parent::__construct('security.user.error.missingPassword', self::EXCEPTION_CODE_MISSING_PASSWORD);
+    }
 
     public function toArray()
     {
@@ -33,4 +25,4 @@ class SecurityException extends Exception
             'message' => $this->message
         );
     }
-} 
+}

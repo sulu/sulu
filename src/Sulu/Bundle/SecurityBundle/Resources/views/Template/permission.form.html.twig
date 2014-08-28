@@ -3,7 +3,7 @@
         <div class="grid-row small">
             <div class="grid-col-6">
                 <div class="form-group">
-                    <label for="username"><%=translate('security.permission.username')%></label>
+                    <label for="username" class="required"><%=translate('security.permission.username')%></label>
                     <input name="username" id="username" type="text" class="form-element" value="<%= (!!user) ? user.username : '' %>" data-validation-required="true" data-validation-min-length="3"/>
                 </div>
             </div>

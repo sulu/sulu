@@ -470,6 +470,68 @@ class UserControllerTest extends DatabaseTestCase
         $this->assertEquals('en', $response->userGroups[1]->locales[0]);
     }
 
+    public function testPostNonUniqueName()
+    {
+        $client = static::createClient();
+
+        $client->request(
+            'POST',
+            '/api/users',
+            array(
+                'username' => 'admin',
+                'password' => 'verysecurepassword',
+                'locale' => 'en',
+                'contact' => array(
+                    'id' => 1
+                )
+            )
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(400, $client->getResponse()->getStatusCode());
+        $this->assertEquals('admin', $response->username);
+        $this->assertEquals(1001, $response->code);
+    }
+
+
+    public function testPutNonUniqueName()
+    {
+        $client = static::createClient();
+
+        $client->request(
+            'POST',
+            '/api/users',
+            array(
+                'username' => 'manager',
+                'password' => 'verysecurepassword',
+                'locale' => 'en',
+                'contact' => array(
+                    'id' => 1
+                )
+            )
+        );
+
+        $client->request(
+            'PUT',
+            '/api/users/2',
+            array(
+                'username' => 'admin',
+                'password' => 'verysecurepassword',
+                'locale' => 'en',
+                'contact' => array(
+                    'id' => 1
+                )
+            )
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(400, $client->getResponse()->getStatusCode());
+        $this->assertEquals('admin', $response->username);
+        $this->assertEquals(1001, $response->code);
+    }
+
     public function testPatch()
     {
         $client = static::createClient();
@@ -516,6 +578,38 @@ class UserControllerTest extends DatabaseTestCase
         $this->assertEquals('en', $response->locale);
         $this->assertEquals('newusername', $response->username);
         $this->assertEquals(1, $response->contact->id);
+    }
+
+    public function testPatchNonUniqueName()
+    {
+        $client = static::createClient();
+
+        $client->request(
+            'POST',
+            '/api/users',
+            array(
+                'username' => 'manager',
+                'password' => 'verysecurepassword',
+                'locale' => 'en',
+                'contact' => array(
+                    'id' => 1
+                )
+            )
+        );
+
+        $client->request(
+            'PATCH',
+            '/api/users/2',
+            array(
+                'username' => 'admin'
+            )
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(400, $client->getResponse()->getStatusCode());
+        $this->assertEquals('admin', $response->username);
+        $this->assertEquals(1001, $response->code);
     }
 
     public function testPutWithMissingArgument()
@@ -723,8 +817,44 @@ class UserControllerTest extends DatabaseTestCase
 
         $this->assertEquals(0, $response->code);
         $this->assertEquals('The "SuluSecurityBundle:User"-entity requires a "password"-argument', $response->message);
+    }
+
+    public function testPostWithEmptyPassword()
+    {
+        $client = static::createClient();
+
+        $client->request(
+            'POST',
+            '/api/users',
+            array(
+                'username' => 'manager',
+                'password' => '',
+                'locale' => 'en',
+                'contact' => array(
+                    'id' => 1
+                ),
+                'userRoles' => array(
+                    array(
+                        'role' => array(
+                            'id' => 1
+                        ),
+                        'locales' => array('de', 'en')
+                    ),
+                    array(
+                        'role' => array(
+                            'id' => 2
+                        ),
+                        'locales' => array('en')
+                    ),
+                )
+            )
+        );
 
 
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(1002, $response->code);
+        $this->assertEquals(400, $client->getResponse()->getStatusCode());
     }
 
     public function testPutWithoutPassword()
@@ -764,43 +894,6 @@ class UserControllerTest extends DatabaseTestCase
         $this->assertEquals(0, $response->code);
         $this->assertEquals('The "SuluSecurityBundle:User"-entity requires a "password"-argument', $response->message);
 
-    }
-
-    public function testPostWithEmptyPassword()
-    {
-        $client = static::createClient();
-
-        $client->request(
-            'POST',
-            '/api/users',
-            array(
-                'username' => 'manager',
-                'password' => '',
-                'locale' => 'en',
-                'contact' => array(
-                    'id' => 1
-                ),
-                'userRoles' => array(
-                    array(
-                        'role' => array(
-                            'id' => 1
-                        ),
-                        'locales' => array('de', 'en')
-                    ),
-                    array(
-                        'role' => array(
-                            'id' => 2
-                        ),
-                        'locales' => array('en')
-                    ),
-                )
-            )
-        );
-
-        $response = json_decode($client->getResponse()->getContent());
-
-        $this->assertEquals(400, $client->getResponse()->getStatusCode());
-        $this->assertEquals('The "SuluSecurityBundle:User"-entity requires a valid "password"-argument', $response->message);
     }
 
     public function testPutWithEmptyPassword()
