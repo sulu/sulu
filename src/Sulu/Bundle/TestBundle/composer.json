@@ -13,7 +13,7 @@
     ],
     "require": {
         "php": ">=5.4",
-        "sulu/sulu": "0.6.*",
+        "sulu/sulu": "dev-develop",
 
         "friendsofsymfony/http-cache": "@dev",
         "phpspec/prophecy-phpunit": "~1.0"
