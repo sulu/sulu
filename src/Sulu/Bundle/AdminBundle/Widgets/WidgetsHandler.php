@@ -59,14 +59,14 @@ class WidgetsHandler implements WidgetsHandlerInterface
      * @param string $groupAlias
      * @param array $parameters
      * @return string
-     * @throws \InvalidArgumentException
+     * @throws WidgetGroupNotFoundException
      */
     public function renderWidgetGroup($groupAlias, $parameters = array())
     {
         if (array_key_exists($groupAlias, $this->widgetGroups)) {
             return $this->render($this->widgetGroups[$groupAlias]['mappings'], $parameters);
         } else {
-            throw new \InvalidArgumentException('There is no such widget-group: ' . $groupAlias);
+            throw new WidgetGroupNotFoundException('Widget group not found', $groupAlias);
         }
     }
 

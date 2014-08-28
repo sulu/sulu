@@ -36,7 +36,16 @@ class WidgetsHandlerTest extends \PHPUnit_Framework_TestCase
     {
         $this->templateEngine = $this->getMock('\Symfony\Component\Templating\EngineInterface');
 
-        $this->widgetsHandler = new WidgetsHandler($this->templateEngine);
+        $this->widgetsHandler = new WidgetsHandler($this->templateEngine, array(
+            'test-group' => array(
+                'mappings' => array(
+                    'group-widget-1',
+                    'group-widget-1',
+                    'group-widget-3',
+                    'group-widget-2'
+                )
+            )
+        ));
     }
 
     /**
@@ -114,23 +123,100 @@ class WidgetsHandlerTest extends \PHPUnit_Framework_TestCase
                 'widgets' => array(
                     array(
                         'name' => 'widget2',
-                        'template' =>'SuluTestBundle:widget:widget2.html.twig',
+                        'template' => 'SuluTestBundle:widget:widget2.html.twig',
                         'data' => array(
                             'test' => 2
                         )
                     ),
                     array(
                         'name' => 'widget1',
-                        'template' =>'SuluTestBundle:widget:widget1.html.twig',
+                        'template' => 'SuluTestBundle:widget:widget1.html.twig',
                         'data' => array(
                             'test' => 1
                         )
                     ),
                     array(
                         'name' => 'widget3',
-                        'template' =>'SuluTestBundle:widget:widget3.html.twig',
+                        'template' => 'SuluTestBundle:widget:widget3.html.twig',
                         'data' => array(
                             'test' => 3
+                        )
+                    )
+                ),
+                'parameters' => array(
+                    'testParam' => 'super'
+                )
+            ),
+            $param
+        );
+    }
+
+    public function testRenderWidgetGroup()
+    {
+        $this->widgetsHandler->addWidget(
+            $this->getWidget('group-widget-1', 'SuluTestBundle:widget:widget1.html.twig', array('test' => '1')),
+            'group-widget-1'
+        );
+        $this->widgetsHandler->addWidget(
+            $this->getWidget('group-widget-3', 'SuluTestBundle:widget:widget3.html.twig', array('test' => '3')),
+            'group-widget-3'
+        );
+        $this->widgetsHandler->addWidget(
+            $this->getWidget('group-widget-2', 'SuluTestBundle:widget:widget2.html.twig', array('test' => '2')),
+            'group-widget-2'
+        );
+
+        $param = false;
+        $template = false;
+
+        $this->templateEngine
+            ->expects($this->any())
+            ->method('render')
+            ->will(
+                $this->returnCallback(
+                    function ($t, $p) use (&$template, &$param) {
+                        $param = $p;
+                        $template = $t;
+                        return true;
+                    }
+                )
+            );
+
+        $this->assertTrue(
+            $this->widgetsHandler->renderWidgetGroup('test-group', array('testParam' => 'super'))
+        );
+        $this->assertNotFalse($param);
+        $this->assertNotFalse($template);
+        $this->assertEquals('SuluAdminBundle:Widgets:widgets.html.twig', $template);
+        $this->assertEquals(
+            array(
+                'widgets' => array(
+                    array(
+                        'name' => 'group-widget-1',
+                        'template' => 'SuluTestBundle:widget:widget1.html.twig',
+                        'data' => array(
+                            'test' => 1
+                        )
+                    ),
+                    array(
+                        'name' => 'group-widget-1',
+                        'template' => 'SuluTestBundle:widget:widget1.html.twig',
+                        'data' => array(
+                            'test' => 1
+                        )
+                    ),
+                    array(
+                        'name' => 'group-widget-3',
+                        'template' => 'SuluTestBundle:widget:widget3.html.twig',
+                        'data' => array(
+                            'test' => 3
+                        )
+                    ),
+                    array(
+                        'name' => 'group-widget-2',
+                        'template' => 'SuluTestBundle:widget:widget2.html.twig',
+                        'data' => array(
+                            'test' => 2
                         )
                     )
                 ),

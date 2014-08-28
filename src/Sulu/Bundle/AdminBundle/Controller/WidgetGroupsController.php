@@ -27,12 +27,13 @@ class WidgetGroupsController extends Controller
 
     /**
      * renders a widget group
+     * @param String $groupAlias
      * @param Request $request
-     * @param $groupAlias
      * @return Response
      */
-    public function groupAction(Request $request, $groupAlias) {
+    public function groupAction($groupAlias, Request $request) {
         try {
+            $groupAlias = str_replace('-', '_', $groupAlias);
             return new Response(
                 $this->getWidgetsHandler()->renderWidgetGroup(
                     $groupAlias,

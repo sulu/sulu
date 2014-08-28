@@ -31,7 +31,15 @@ class Configuration implements ConfigurationInterface
             ->children()
                 ->scalarNode('name')->defaultValue('Sulu Admin')->end()
                 ->scalarNode('user_data_service')->defaultValue('sulu_security.user_manager')->end()
-                ->variableNode('widget_groups')->end()
+                ->arrayNode('widget_groups')
+                    ->prototype('array')
+                        ->children()
+                            ->arrayNode('mappings')
+                                ->prototype('scalar')->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
             ->end();
 
         return $treeBuilder;

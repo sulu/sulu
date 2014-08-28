@@ -10,16 +10,13 @@
 
 namespace Sulu\Bundle\AdminBundle\Widgets;
 
-use Exception;
+use Sulu\Bundle\AdminBundle\Widgets\WidgetException;
 
-class WidgetException extends Exception
+class WidgetGroupNotFoundException extends WidgetException
 {
-    protected $subject;
-
-    function __construct($message, $subject)
+    function __construct($message, $group)
     {
-        parent::__construct($message);
-        $this->subject = $subject;
+        parent::__construct($message, $group);
     }
 
     public function toArray()
@@ -27,7 +24,7 @@ class WidgetException extends Exception
         return array(
             'code' => $this->code,
             'message' => $this->message,
-            'widget' => $this->subject
+            'group' => $this->subject
         );
     }
 }
