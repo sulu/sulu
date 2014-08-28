@@ -10,6 +10,8 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Twig;
 
+use Sulu\Bundle\WebsiteBundle\Sitemap\SitemapGeneratorInterface;
+use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
 /**
@@ -24,9 +26,24 @@ class SitemapTwigExtension extends \Twig_Extension
     private $webspaceManager;
 
     /**
+     * @var SitemapGeneratorInterface
+     */
+    private $sitemapGenerator;
+
+    /**
      * @var string
      */
     private $environment;
+
+    function __construct(
+        SitemapGeneratorInterface $sitemapGenerator,
+        WebspaceManagerInterface $webspaceManager,
+        $environment
+    ) {
+        $this->environment = $environment;
+        $this->sitemapGenerator = $sitemapGenerator;
+        $this->webspaceManager = $webspaceManager;
+    }
 
     /**
      * {@inheritdoc}
@@ -42,6 +59,11 @@ class SitemapTwigExtension extends \Twig_Extension
     public function sitemapUrlFunction($url, $locale, $webspaceKey)
     {
         $portalUrls = $this->webspaceManager->findUrlsByResourceLocator($url, $this->environment, $locale, $webspaceKey);
+    }
+
+    public function sitemapFunction(StructureInterface $content)
+    {
+        return $this->sitemapGenerator->generate($content->getWebspaceKey(), $content->getLanguageCode());
     }
 
     /**

@@ -36,7 +36,7 @@ class SitemapController extends WebsiteController
             $this->renderView(
                 'SuluWebsiteBundle:Sitemap:sitemap.xml.twig',
                 array(
-                    'sitemap' => $sitemapGenerator->generateAllLocals($webspace->getKey())
+                    'sitemap' => $sitemapGenerator->generateAllLocals($webspace->getKey(), true)
                 )
             )
         );
