@@ -172,7 +172,8 @@ class SitemapGenerator implements SitemapGeneratorInterface
                 'path' => $path,
                 'changed' => $changed,
                 'title' => $title,
-                'url' => $url
+                'url' => $url,
+                'locale' => $locale
             );
         }
 

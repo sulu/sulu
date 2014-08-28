@@ -32,16 +32,16 @@ class SitemapController extends WebsiteController
         $sitemapGenerator = $this->get('sulu_website.sitemap');
         $webspace = $requestAnalyzer->getCurrentWebspace();
 
-        $response = new Response(
-            $this->renderView(
-                'SuluWebsiteBundle:Sitemap:sitemap.xml.twig',
-                array(
-                    'sitemap' => $sitemapGenerator->generateAllLocals($webspace->getKey(), true)
-                )
-            )
-        );
+        $response = new Response();
         $response->headers->set('Content-Type', 'text/xml');
 
-        return $response;
+        return $this->render(
+            'SuluWebsiteBundle:Sitemap:sitemap.xml.twig',
+            array(
+                'sitemap' => $sitemapGenerator->generateAllLocals($webspace->getKey(), true),
+                'webspaceKey' => $webspace->getKey()
+            ),
+            $response
+        );
     }
 }

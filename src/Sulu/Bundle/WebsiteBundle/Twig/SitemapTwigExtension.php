@@ -58,7 +58,9 @@ class SitemapTwigExtension extends \Twig_Extension
 
     public function sitemapUrlFunction($url, $locale, $webspaceKey)
     {
-        $portalUrls = $this->webspaceManager->findUrlsByResourceLocator($url, $this->environment, $locale, $webspaceKey);
+        //$portalUrls = $this->webspaceManager->findUrlsByResourceLocator($url, $this->environment, $locale, $webspaceKey);
+
+        return $url;
     }
 
     public function sitemapFunction(StructureInterface $content)
