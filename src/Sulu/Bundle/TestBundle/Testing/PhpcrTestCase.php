@@ -347,7 +347,8 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
                 array(
                     'base' => 'cmf',
                     'route' => 'routes',
-                    'content' => 'contents'
+                    'content' => 'contents',
+                    'temp' => 'temp'
                 )
             );
         }
@@ -465,6 +466,9 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
             $en_usPath->setProperty('sulu:content', $this->contents);
             $en_usPath->addMixin('sulu:path');
             $this->languageRoutes['en_us'] = $en_usPath;
+            $this->session->save();
+
+            $this->routes = $default->addNode('temp');
             $this->session->save();
         }
     }
