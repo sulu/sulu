@@ -44,7 +44,8 @@ class TextEditor extends SimpleContentType
         return array(
             'godMode' => false,
             'tables' => true,
-            'links' => true
+            'links' => true,
+            'pasteFromWord' => true
         );
     }
 }
