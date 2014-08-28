@@ -161,8 +161,43 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
                 'Unable to find an SuluSecurityBundle:User object identified by %s',
                 $username
             );
+
             throw new UsernameNotFoundException($message, 0, $nre);
         }
+    }
+
+    /**
+     * Finds a user for the given username.
+     *
+     * This method throws UsernameNotFoundException if the user is not found.
+     *
+     * @param string $username The username
+     * @return UserInterface
+     * @throws NoResultException if the user is not found
+     *
+     */
+    public function findUserByUsername($username)
+    {
+        $qb = $this->createQueryBuilder('user')
+            ->leftJoin('user.userRoles', 'userRoles')
+            ->leftJoin('userRoles.role', 'role')
+            ->leftJoin('role.permissions', 'permissions')
+            ->leftJoin('user.userGroups', 'userGroups')
+            ->leftJoin('userGroups.group', 'grp')
+            ->leftJoin('user.userSettings', 'settings')
+            ->addSelect('userRoles')
+            ->addSelect('role')
+            ->addSelect('userGroups')
+            ->addSelect('grp')
+            ->addSelect('settings')
+            ->addSelect('permissions')
+            ->where('user.username=:username');
+
+        $query = $qb->getQuery();
+        $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+        $query->setParameter('username', $username);
+
+        return $query->getSingleResult();
     }
 
     /**

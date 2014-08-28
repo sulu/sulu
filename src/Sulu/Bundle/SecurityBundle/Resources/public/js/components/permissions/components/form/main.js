@@ -248,6 +248,15 @@ define([], function() {
         },
 
         bindCustomEvents: function() {
+
+            this.sandbox.on('sulu.user.permissions.error', function(code){
+                if(code.toString() === '1001'){
+                    var $wrapper = this.sandbox.dom.parent(this.sandbox.dom.find('#username'));
+                    this.sandbox.dom.prependClass($wrapper, 'husky-validate-error');
+                    this.setHeaderBar(true);
+                }
+            }.bind(this));
+
             // delete contact
             this.sandbox.on('sulu.header.toolbar.delete', function() {
                 this.sandbox.emit('sulu.user.permissions.delete', this.contact.id);
