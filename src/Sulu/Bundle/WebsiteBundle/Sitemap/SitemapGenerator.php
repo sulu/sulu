@@ -327,16 +327,16 @@ class SitemapGenerator implements SitemapGeneratorInterface
             // Might be slow for really deep and large structures
             $parentArr = & $returnArr;
             foreach ($parts as $part) {
-                if (!isset($parentArr['children'][$part])) {
-                    $parentArr['children'][$part] = array();
-                } elseif (!is_array($parentArr['children'][$part])) {
-                    if ($baseval) {
-                        $parentArr['children'][$part] = array('__base_val' => $parentArr[$part]);
-                    } else {
-                        $parentArr['children'][$part] = array();
+                if (isset($parentArr['children'][$part])) {
+                    if (!is_array($parentArr['children'][$part])) {
+                        if ($baseval) {
+                            $parentArr['children'][$part] = array('__base_val' => $parentArr[$part]);
+                        } else {
+                            $parentArr['children'][$part] = array();
+                        }
                     }
+                    $parentArr = & $parentArr['children'][$part];
                 }
-                $parentArr = & $parentArr['children'][$part];
             }
 
             // Add the final part to the structure
