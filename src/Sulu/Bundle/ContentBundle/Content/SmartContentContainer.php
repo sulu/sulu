@@ -15,12 +15,13 @@ use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Content\StructureInterface;
 use JMS\Serializer\Annotation\Exclude;
+use Sulu\Component\Util\ArrayableInterface;
 
 /**
  * Container for SmartContent, holds the config for a smart content, and lazy loads the structures meeting its criteria
  * @package Sulu\Bundle\ContentBundle\Content
  */
-class SmartContentContainer implements \Serializable
+class SmartContentContainer implements ArrayableInterface
 {
     /**
      * The node repository, which is needed for lazy loading the smart content data
@@ -177,43 +178,10 @@ class SmartContentContainer implements \Serializable
     }
 
     /**
-     * (PHP 5 &gt;= 5.1.0)<br/>
-     * String representation of object
-     * @link http://php.net/manual/en/serializable.serialize.php
-     * @return string the string representation of the object or null
+     * {@inheritdoc}
      */
-    public function serialize()
+    public function toArray($depth = null)
     {
-        $result = array();
-        foreach ($this->getData() as $item) {
-            if ($item instanceof StructureInterface) {
-                $result[] = $item->toArray();
-            } else {
-                $result[] = $item;
-            }
-        }
-
-        return serialize(
-            array(
-                'data' => $result,
-                'config' => $this->getConfig()
-            )
-        );
-    }
-
-    /**
-     * (PHP 5 &gt;= 5.1.0)<br/>
-     * Constructs the object
-     * @link http://php.net/manual/en/serializable.unserialize.php
-     * @param string $serialized <p>
-     * The string representation of the object.
-     * </p>
-     * @return void
-     */
-    public function unserialize($serialized)
-    {
-        $values = unserialize($serialized);
-        $this->data = $values['data'];
-        $this->config = $values['config'];
+        return $this->getConfig();
     }
 }

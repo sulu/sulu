@@ -86,18 +86,17 @@ class TemplateController extends Controller
         $webspace = $request->get('webspace');
         $language = $request->get('language');
 
+
         $template = $this->getTemplateStructure($key);
 
         return $this->render(
             'SuluContentBundle:Template:content.html.twig',
             array(
                 'template' => $template,
-                'wsUrl' => 'ws://' . $request->getHttpHost(),
-                'wsPort' => $this->container->getParameter('sulu_content.preview.websocket.port'),
-                'templateKey' => $key,
-                'fireEvent' => $fireEvent,
                 'webspaceKey' => $webspace,
-                'languageCode' => $language
+                'languageCode' => $language,
+                'templateKey' => $key,
+                'fireEvent' => $fireEvent
             )
         );
     }

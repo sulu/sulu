@@ -23,7 +23,6 @@
 
 <script type="text/javascript">
     (function() {
-        App.emit('sulu.preview.set-params', '{{ wsUrl }}', '{{ wsPort }}');
         {% if fireEvent %}
         App.emit('sulu.content.contents.default-template', '{{ templateKey }}');
         {% endif %}

@@ -18,10 +18,10 @@ use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\PropertyInterface;
 use Symfony\Component\HttpFoundation\Request;
-
 use Pagerfanta\Pagerfanta;
 use Pagerfanta\Adapter\ArrayAdapter;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Sulu\Component\Util\ArrayableInterface;
 
 /**
  * ContentType for TextEditor
@@ -126,6 +126,10 @@ class SmartContent extends ComplexContentType
      */
     public function readForPreview($data, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
+        if ($data instanceof ArrayableInterface) {
+            $data = $data->toArray();
+        }
+
         $this->setData($data, $property, $webspaceKey, $languageCode, $segmentKey, true);
     }
 
@@ -142,14 +146,15 @@ class SmartContent extends ComplexContentType
     ) {
         $value = $property->getValue();
 
-        if (!empty($value['tags'])) {
-            $value['tags'] = $this->tagManager->resolveTagNames($value['tags']);
-        }
-
         // if whole smart-content container is pushed
         if (isset($value['config'])) {
             $value = $value['config'];
         }
+
+        if (!empty($value['tags'])) {
+            $value['tags'] = $this->tagManager->resolveTagNames($value['tags']);
+        }
+
         $node->setProperty($property->getName(), json_encode($value));
     }
 
