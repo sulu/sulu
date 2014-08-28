@@ -27,7 +27,7 @@ class WidgetParameterException extends WidgetException
         return array(
             'code' => $this->code,
             'message' => $this->message,
-            'widget' => $this->widget,
+            'widget' => $this->subject,
             'param' => $this->param
         );
     }

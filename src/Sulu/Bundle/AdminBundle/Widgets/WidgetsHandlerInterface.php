@@ -17,7 +17,7 @@ interface WidgetsHandlerInterface
 {
     /**
      * renders a widget group
-     * @param array $groupAlias
+     * @param string $groupAlias
      * @param array $parameters
      * @return string
      */
