@@ -35,6 +35,7 @@ use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManagerInterface;
 use Sulu\Component\Content\StructureType;
+use Sulu\Component\Content\Template\Exception\TemplateNotFoundException;
 use Sulu\Component\Content\Types\ResourceLocatorInterface;
 use Sulu\Component\PHPCR\PathCleanupInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
@@ -755,6 +756,8 @@ class ContentMapper implements ContentMapperInterface
                         $result->setChildren($children);
                     }
                 }
+            } catch (TemplateNotFoundException $ex) {
+                // ignore pages without valid template
             } catch (\Exception $ex) {
                 if (!$ignoreExceptions) {
                     throw $ex;
@@ -832,7 +835,11 @@ class ContentMapper implements ContentMapperInterface
         $result = $query->execute();
 
         foreach ($result->getNodes() as $node) {
-            $structures[] = $this->loadByNode($node, $languageCode, $webspaceKey);
+            try {
+                $structures[] = $this->loadByNode($node, $languageCode, $webspaceKey);
+            } catch (TemplateNotFoundException $ex) {
+                // ignore pages without valid template
+            }
         }
 
         return $structures;
@@ -920,15 +927,19 @@ class ContentMapper implements ContentMapperInterface
         $result = array();
         $childStructure = null;
         foreach ($node as $child) {
-            $structure = $this->loadByNode($child, $languageCode, $webspaceKey, $excludeGhost, $loadGhostContent);
-            if ($structure === null) {
-                continue;
-            }
+            try {
+                $structure = $this->loadByNode($child, $languageCode, $webspaceKey, $excludeGhost, $loadGhostContent);
+                if ($structure === null) {
+                    continue;
+                }
 
-            $result[] = $structure;
-            // search structure for child node
-            if ($childNode !== null && $childNode === $child) {
-                $childStructure = $structure;
+                $result[] = $structure;
+                // search structure for child node
+                if ($childNode !== null && $childNode === $child) {
+                    $childStructure = $structure;
+                }
+            } catch (TemplateNotFoundException $ex) {
+                // ignore pages without valid template
             }
         }
 
