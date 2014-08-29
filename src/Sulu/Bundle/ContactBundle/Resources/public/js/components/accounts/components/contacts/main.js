@@ -110,7 +110,7 @@ define([
                     name: 'overlay@husky',
                     options: {
                         el: $overlay,
-                        title: this.sandbox.translate('contact.accounts.add-contact'),
+                        title: this.sandbox.translate('contact.accounts.add-new-contact-to-account'),
                         openOnStart: true,
                         removeOnClose: true,
                         instanceName: 'new-contact',
@@ -157,7 +157,7 @@ define([
                     name: 'overlay@husky',
                     options: {
                         el: $overlay,
-                        title: this.sandbox.translate('contact.accounts.add-new-contact'),
+                        title: this.sandbox.translate('contact.accounts.add-contact'),
                         openOnStart: true,
                         removeOnClose: true,
                         instanceName: 'contact-relation',

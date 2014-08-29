@@ -214,7 +214,7 @@ define([
         /**
          * adds a new contact and assigns the current account to it
          */
-        addNewContact: function(data){
+        addNewContact: function(data) {
             var contact = new Contact(data);
             contact.set('emails', [ new Email({
                     email: data.email,
@@ -222,10 +222,6 @@ define([
                 })
             ]);
             contact.save(null, {
-                // on success save contacts id
-                success: function(response) {
-                    //
-                }.bind(this),
                 error: function() {
                     this.sandbox.logger.log("error while saving a new contact");
                 }.bind(this)
