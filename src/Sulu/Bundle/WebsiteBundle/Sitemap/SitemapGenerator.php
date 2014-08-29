@@ -13,6 +13,7 @@ namespace Sulu\Bundle\WebsiteBundle\Sitemap;
 use Jackalope\Query\Row;
 use PHPCR\Query\QueryInterface;
 use PHPCR\Query\QueryResultInterface;
+use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\StructureInterface;
@@ -114,10 +115,12 @@ class SitemapGenerator implements SitemapGeneratorInterface
 
             /** @var \Jackalope\Query\Row $row */
             foreach ($queryResult->getRows() as $row) {
-                if (false !== ($item = $this->rowToArray($row, $locale, $routesPath))) {
+                $item = $this->rowToArray($row, $locale, $webspaceKey, $routesPath);
+
+                if (false !== $item && !in_array($item, $result)) {
                     $result[] = $item;
                 }
-            }
+            };
         }
 
         return $result;
@@ -126,7 +129,7 @@ class SitemapGenerator implements SitemapGeneratorInterface
     /**
      * converts a query row to an array
      */
-    private function rowToArray(Row $row, $locale, $routesPath)
+    private function rowToArray(Row $row, $locale, $webspaceKey, $routesPath)
     {
         $uuid = $row->getValue('page.jcr:uuid');
 
@@ -147,24 +150,30 @@ class SitemapGenerator implements SitemapGeneratorInterface
             );
 
             $url = '';
-            if ($structure->hasTag('sulu.rlp')) {
-                $property = $structure->getPropertyByTagName('sulu.rlp');
+            // if homepage
+            if ($this->sessionManager->getContentNode($webspaceKey)->getPath() === $path) {
+                $url = '/';
+            } else {
+                if ($structure->hasTag('sulu.rlp')) {
+                    $property = $structure->getPropertyByTagName('sulu.rlp');
 
-                if ($property->getContentTypeName() !== 'resource_locator') {
-                    $url = $row->getValue(
-                        'page.' . $this->getTranslatedProperty(
-                            $structure->getPropertyByTagName('sulu.rlp'),
-                            $locale
-                        )->getName()
-                    );
+                    if ($property->getContentTypeName() !== 'resource_locator') {
+                        $url = $row->getValue(
+                            'page.' . $this->getTranslatedProperty(
+                                $structure->getPropertyByTagName('sulu.rlp'),
+                                $locale
+                            )->getName()
+                        );
+                    }
+                }
+
+                try {
+                    $routePath = $row->getPath('route');
+                    $url = str_replace($routesPath, '', $routePath);
+                } catch (\Exception $ex) {
                 }
             }
 
-            try {
-                $routePath = $row->getPath('route');
-                $url = str_replace($routesPath, '', $routePath);
-            } catch (\Exception $ex) {
-            }
 
             return array(
                 'uuid' => $uuid,
@@ -188,10 +197,10 @@ class SitemapGenerator implements SitemapGeneratorInterface
         $map = array();
         $contentsPath = $this->sessionManager->getContentNode($webspaceKey)->getPath();
         foreach ($data as $item) {
-            $map[str_replace($contentsPath, '', $item['path'])] = $item;
+            $map[str_replace($contentsPath, 'x', $item['path'])] = $item;
         }
 
-        return $this->explodeTree($map, '/')['children'];
+        return $this->explodeTree($map, '/')['children']['x'];
     }
 
     /**

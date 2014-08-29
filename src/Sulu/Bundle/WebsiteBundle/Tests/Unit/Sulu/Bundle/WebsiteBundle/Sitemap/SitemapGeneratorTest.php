@@ -51,6 +51,10 @@ class SitemapGeneratorTest extends PhpcrTestCase
             ->method('getStructures')
             ->will($this->returnCallback(array($this, 'structuresCallback')));
 
+        $this->contents->setProperty('i18n:en-state', Structure::STATE_PUBLISHED);
+        $this->contents->setProperty('i18n:en-nodeType', Structure::NODE_TYPE_CONTENT);
+        $this->session->save();
+
         $this->sitemapGenerator = new SitemapGenerator(
             $this->sessionManager,
             $this->structureManager,
@@ -301,72 +305,83 @@ class SitemapGeneratorTest extends PhpcrTestCase
     {
         $result = $this->sitemapGenerator->generateAllLocals('default', true);
 
-        $this->assertEquals(10, sizeof($result));
-        $this->assertEquals('News en', $result[0]['title']);
-        $this->assertEquals('News-1 en', $result[1]['title']);
-        $this->assertEquals('News-2 en', $result[2]['title']);
-        $this->assertEquals('Products-1 en', $result[3]['title']);
-        $this->assertEquals('Products-2 en', $result[4]['title']);
-        $this->assertEquals('News en_us', $result[5]['title']);
-        $this->assertEquals('News-1 en_us', $result[6]['title']);
-        $this->assertEquals('News-2 en_us', $result[7]['title']);
-        $this->assertEquals('Products-1 en_us', $result[8]['title']);
-        $this->assertEquals('Products-2 en_us', $result[9]['title']);
+        $this->assertEquals(11, sizeof($result));
+        $this->assertEquals('', $result[0]['title']);
+        $this->assertEquals('News en', $result[1]['title']);
+        $this->assertEquals('News-1 en', $result[2]['title']);
+        $this->assertEquals('News-2 en', $result[3]['title']);
+        $this->assertEquals('Products-1 en', $result[4]['title']);
+        $this->assertEquals('Products-2 en', $result[5]['title']);
+        $this->assertEquals('News en_us', $result[6]['title']);
+        $this->assertEquals('News-1 en_us', $result[7]['title']);
+        $this->assertEquals('News-2 en_us', $result[8]['title']);
+        $this->assertEquals('Products-1 en_us', $result[9]['title']);
+        $this->assertEquals('Products-2 en_us', $result[10]['title']);
 
-        $this->assertEquals('/news', $result[0]['url']);
-        $this->assertEquals('/news/news-1', $result[1]['url']);
-        $this->assertEquals('/news/news-2', $result[2]['url']);
-        $this->assertEquals($this->dataEN['products']->getUuid(), $result[3]['url']);
-        $this->assertEquals('www.asdf.at', $result[4]['url']);
-        $this->assertEquals('/news', $result[5]['url']);
-        $this->assertEquals('/news/news-1', $result[6]['url']);
-        $this->assertEquals('/news/news-2', $result[7]['url']);
-        $this->assertEquals($this->dataENUS['products']->getUuid(), $result[8]['url']);
-        $this->assertEquals('www.asdf.at', $result[9]['url']);
+        $this->assertEquals('/', $result[0]['url']);
+        $this->assertEquals('/news', $result[1]['url']);
+        $this->assertEquals('/news/news-1', $result[2]['url']);
+        $this->assertEquals('/news/news-2', $result[3]['url']);
+        $this->assertEquals($this->dataEN['products']->getUuid(), $result[4]['url']);
+        $this->assertEquals('www.asdf.at', $result[5]['url']);
+        $this->assertEquals('/news', $result[6]['url']);
+        $this->assertEquals('/news/news-1', $result[7]['url']);
+        $this->assertEquals('/news/news-2', $result[8]['url']);
+        $this->assertEquals($this->dataENUS['products']->getUuid(), $result[9]['url']);
+        $this->assertEquals('www.asdf.at', $result[10]['url']);
 
         $this->assertEquals(1, $result[0]['nodeType']);
         $this->assertEquals(1, $result[1]['nodeType']);
         $this->assertEquals(1, $result[2]['nodeType']);
-        $this->assertEquals(2, $result[3]['nodeType']);
-        $this->assertEquals(4, $result[4]['nodeType']);
-        $this->assertEquals(1, $result[5]['nodeType']);
+        $this->assertEquals(1, $result[3]['nodeType']);
+        $this->assertEquals(2, $result[4]['nodeType']);
+        $this->assertEquals(4, $result[5]['nodeType']);
         $this->assertEquals(1, $result[6]['nodeType']);
         $this->assertEquals(1, $result[7]['nodeType']);
-        $this->assertEquals(2, $result[8]['nodeType']);
-        $this->assertEquals(4, $result[9]['nodeType']);
+        $this->assertEquals(1, $result[8]['nodeType']);
+        $this->assertEquals(2, $result[9]['nodeType']);
+        $this->assertEquals(4, $result[10]['nodeType']);
     }
 
     public function testGenerateFlat()
     {
         $result = $this->sitemapGenerator->generate('default', 'en', true);
 
-        $this->assertEquals(5, sizeof($result));
-        $this->assertEquals('News en', $result[0]['title']);
-        $this->assertEquals('News-1 en', $result[1]['title']);
-        $this->assertEquals('News-2 en', $result[2]['title']);
-        $this->assertEquals('Products-1 en', $result[3]['title']);
-        $this->assertEquals('Products-2 en', $result[4]['title']);
+        $this->assertEquals(6, sizeof($result));
+        $this->assertEquals('', $result[0]['title']);
+        $this->assertEquals('News en', $result[1]['title']);
+        $this->assertEquals('News-1 en', $result[2]['title']);
+        $this->assertEquals('News-2 en', $result[3]['title']);
+        $this->assertEquals('Products-1 en', $result[4]['title']);
+        $this->assertEquals('Products-2 en', $result[5]['title']);
 
-        $this->assertEquals('/news', $result[0]['url']);
-        $this->assertEquals('/news/news-1', $result[1]['url']);
-        $this->assertEquals('/news/news-2', $result[2]['url']);
-        $this->assertEquals($this->dataEN['products']->getUuid(), $result[3]['url']);
-        $this->assertEquals('www.asdf.at', $result[4]['url']);
+        $this->assertEquals('/', $result[0]['url']);
+        $this->assertEquals('/news', $result[1]['url']);
+        $this->assertEquals('/news/news-1', $result[2]['url']);
+        $this->assertEquals('/news/news-2', $result[3]['url']);
+        $this->assertEquals($this->dataEN['products']->getUuid(), $result[4]['url']);
+        $this->assertEquals('www.asdf.at', $result[5]['url']);
 
         $this->assertEquals(1, $result[0]['nodeType']);
         $this->assertEquals(1, $result[1]['nodeType']);
         $this->assertEquals(1, $result[2]['nodeType']);
-        $this->assertEquals(2, $result[3]['nodeType']);
-        $this->assertEquals(4, $result[4]['nodeType']);
+        $this->assertEquals(1, $result[3]['nodeType']);
+        $this->assertEquals(2, $result[4]['nodeType']);
+        $this->assertEquals(4, $result[5]['nodeType']);
     }
 
     public function testGenerateTree()
     {
         $result = $this->sitemapGenerator->generate('default', 'en');
 
-        $layer1 = array_values($result);
+        $root = $result;
+        $this->assertEquals('', $root['title']);
+        $this->assertEquals('/', $root['url']);
+        $this->assertEquals(1, $root['nodeType']);
 
-        $this->assertEquals(3, sizeof($result));
+        $layer1 = array_values($root['children']);
+
+        $this->assertEquals(3, sizeof($layer1));
 
         $this->assertEquals('News en', $layer1[0]['title']);
         $this->assertEquals('/news', $layer1[0]['url']);

@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-    <!-- TODO homepage -->
 {% for site in sitemap %}
+{% set url = sitemap_url(site.url, webspaceKey, site.locale) %}
+{% if url != false %}
     <url>
-        <loc>{{ sitemap_url(site.url, webspaceKey, site.locale) }}</loc>
+        <loc>{{ url }}</loc>
         <lastmod>{{ site.changed|date("Y-m-d") }}</lastmod>
     </url>
+{% endif %}
 {% endfor %}
 </urlset>

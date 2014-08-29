@@ -74,9 +74,10 @@ class MinimumContentQueryBuilder
         $sql2 = sprintf(
             "SELECT route.*, page.*, %s
              FROM [nt:unstructured] AS page LEFT OUTER JOIN [nt:unstructured] AS route ON page.[jcr:uuid] = route.[sulu:content]
-             WHERE page.[jcr:mixinTypes] = 'sulu:content' AND (%s) AND ISDESCENDANTNODE(page, '/cmf/%s/contents')",
+             WHERE page.[jcr:mixinTypes] = 'sulu:content' AND (%s) AND (ISDESCENDANTNODE(page, '/cmf/%s/contents') OR ISSAMENODE(page, '/cmf/%s/contents'))",
             $select,
             $where,
+            $webspaceKey,
             $webspaceKey
         );
 
@@ -84,10 +85,7 @@ class MinimumContentQueryBuilder
     }
 
     /**
-     * Returns select statement
-     * @param string $locale
-     * @param StructureInterface[] $structures
-     * @return string
+     * Returns select statement with all url and title properties
      */
     private function buildSelectForStructures($locale, $structures)
     {
@@ -102,6 +100,9 @@ class MinimumContentQueryBuilder
         return $result;
     }
 
+    /**
+     * Returns select of a single structure with title and url selector
+     */
     private function buildSelectForStructure($locale, StructureInterface $structure, &$names)
     {
         $nodeNameProperty = $structure->getPropertyByTagName('sulu.node.name');
@@ -127,6 +128,9 @@ class MinimumContentQueryBuilder
 
     }
 
+    /**
+     * Returns single select statement
+     */
     private function buildSelector($name)
     {
         return sprintf("page.[%s]", $name);
