@@ -171,6 +171,7 @@ class SitemapGenerator implements SitemapGeneratorInterface
                     $routePath = $row->getPath('route');
                     $url = str_replace($routesPath, '', $routePath);
                 } catch (\Exception $ex) {
+                    // ignore exception because no route node
                 }
             }
 
