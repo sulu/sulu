@@ -188,22 +188,14 @@ class SmartContent extends ComplexContentType
      */
     public function getViewData(PropertyInterface $property)
     {
-        $params = array_merge(
-            $this->getDefaultParams(),
-            $property->getParams()
-        );
+        return $property->getValue()->getConfig();
+    }
 
-        $smartContent = $property->getValue();
-        $data = (array) $smartContent->getData();
-        $currentPage = $this->requestStack->getCurrentRequest()->get($params['page_parameter'], 1);
-
-        $adapter = new ArrayAdapter($data);
-        $pager = new Pagerfanta($adapter);
-        $pager->setMaxPerPage($params['max_per_page']);
-        $pager->setCurrentPage($currentPage);
-
-        return array(
-            'pager' => $pager
-        );
+    /**
+     * {@inheritDoc}
+     */
+    public function getContentData(PropertyInterface $property)
+    {
+        return $property->getValue()->getData();
     }
 }
