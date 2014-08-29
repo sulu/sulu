@@ -2984,7 +2984,7 @@ fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset
 }
 
 /* line 4, ../scss/fontsawesome/_core.scss */
-.fa, [class^="fa-"], .custom-checkbox input:checked + .icon::after, .custom-checkbox input.is-checked + .icon::after, .navigation-item-container .navigation-items li:hover:not(.navigation-subitems) a::before, .navigation-item-container .navigation-items li.is-selected a::before, .addButton, .pagination-wrapper.dropdowns .pagination .pagination-prev::after, .pagination-wrapper.dropdowns .pagination .pagination-next::after, .auto-complete-list-selection .tm-tag-remove, .husky-datagrid .table-container.overflow:after, .husky-matcher.overflow .wrapper:after, .text-block .head label::before {
+.fa, [class^="fa-"], .custom-checkbox input:checked + .icon::after, .custom-checkbox input.is-checked + .icon::after, .navigation-item-container .navigation-items li:hover:not(.navigation-subitems) a::before, .navigation-item-container .navigation-items li.is-selected a::before, .addButton, .pagination-wrapper.dropdowns .pagination .pagination-prev::after, .pagination-wrapper.dropdowns .pagination .pagination-next::after, .auto-complete-list-selection .tm-tag-remove, .husky-datagrid .table-container.overflow:after, .husky-matcher.overflow .wrapper:after, .sortable .text-block .head label::before {
   display: inline-block;
   font-family: FontAwesome;
   font-style: normal;
@@ -3070,11 +3070,11 @@ fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset
 }
 
 /* line 14, ../scss/fontsawesome/_bordered-pulled.scss */
-.fa.pull-left, .pull-left[class^="fa-"], .custom-checkbox input:checked + .pull-left.icon::after, .custom-checkbox input.is-checked + .pull-left.icon::after, .navigation-item-container .navigation-items li:hover:not(.navigation-subitems) a.pull-left::before, .navigation-item-container .navigation-items li.is-selected a.pull-left::before, .pull-left.addButton, .pagination-wrapper.dropdowns .pagination .pull-left.pagination-prev::after, .pagination-wrapper.dropdowns .pagination .pull-left.pagination-next::after, .auto-complete-list-selection .pull-left.tm-tag-remove, .husky-datagrid .pull-left.table-container.overflow:after, .husky-matcher.overflow .pull-left.wrapper:after, .text-block .head label.pull-left::before {
+.fa.pull-left, .pull-left[class^="fa-"], .custom-checkbox input:checked + .pull-left.icon::after, .custom-checkbox input.is-checked + .pull-left.icon::after, .navigation-item-container .navigation-items li:hover:not(.navigation-subitems) a.pull-left::before, .navigation-item-container .navigation-items li.is-selected a.pull-left::before, .pull-left.addButton, .pagination-wrapper.dropdowns .pagination .pull-left.pagination-prev::after, .pagination-wrapper.dropdowns .pagination .pull-left.pagination-next::after, .auto-complete-list-selection .pull-left.tm-tag-remove, .husky-datagrid .pull-left.table-container.overflow:after, .husky-matcher.overflow .pull-left.wrapper:after, .sortable .text-block .head label.pull-left::before {
   margin-right: .3em;
 }
 /* line 15, ../scss/fontsawesome/_bordered-pulled.scss */
-.fa.pull-right, .pull-right[class^="fa-"], .custom-checkbox input:checked + .pull-right.icon::after, .custom-checkbox input.is-checked + .pull-right.icon::after, .navigation-item-container .navigation-items li:hover:not(.navigation-subitems) a.pull-right::before, .navigation-item-container .navigation-items li.is-selected a.pull-right::before, .pull-right.addButton, .pagination-wrapper.dropdowns .pagination .pull-right.pagination-prev::after, .pagination-wrapper.dropdowns .pagination .pull-right.pagination-next::after, .auto-complete-list-selection .pull-right.tm-tag-remove, .husky-datagrid .pull-right.table-container.overflow:after, .husky-matcher.overflow .pull-right.wrapper:after, .text-block .head label.pull-right::before {
+.fa.pull-right, .pull-right[class^="fa-"], .custom-checkbox input:checked + .pull-right.icon::after, .custom-checkbox input.is-checked + .pull-right.icon::after, .navigation-item-container .navigation-items li:hover:not(.navigation-subitems) a.pull-right::before, .navigation-item-container .navigation-items li.is-selected a.pull-right::before, .pull-right.addButton, .pagination-wrapper.dropdowns .pagination .pull-right.pagination-prev::after, .pagination-wrapper.dropdowns .pagination .pull-right.pagination-next::after, .auto-complete-list-selection .pull-right.tm-tag-remove, .husky-datagrid .pull-right.table-container.overflow:after, .husky-matcher.overflow .pull-right.wrapper:after, .sortable .text-block .head label.pull-right::before {
   margin-left: .3em;
 }
 
@@ -9566,25 +9566,30 @@ a.btn-black, a.btn-highlight {
   left: 17px;
 }
 
-/* line 5, ../scss/modules/content-types.scss */
-.text-block {
-  margin-bottom: 20px;
-}
-/* line 10, ../scss/modules/content-types.scss */
-.text-block .head label {
-  float: left;
-  font-size: 16px;
-  margin-bottom: 10px;
+/* line 8, ../scss/modules/content-types.scss */
+.sortable .text-block .head label {
   cursor: move;
 }
-/* line 16, ../scss/modules/content-types.scss */
-.text-block .head label::before {
+/* line 11, ../scss/modules/content-types.scss */
+.sortable .text-block .head label::before {
   content: "\f142";
   cursor: move;
   padding-right: 5px;
   margin-left: -10px;
 }
-/* line 25, ../scss/modules/content-types.scss */
+
+/* line 23, ../scss/modules/content-types.scss */
+.text-block {
+  margin-bottom: 20px;
+}
+/* line 28, ../scss/modules/content-types.scss */
+.text-block .head label {
+  float: left;
+  font-size: 16px;
+  margin-bottom: 10px;
+  cursor: default;
+}
+/* line 35, ../scss/modules/content-types.scss */
 .text-block .head .options-change {
   float: left;
   cursor: pointer;
@@ -9592,11 +9597,11 @@ a.btn-black, a.btn-highlight {
   display: none;
   font-size: 16px;
 }
-/* line 31, ../scss/modules/content-types.scss */
+/* line 41, ../scss/modules/content-types.scss */
 .text-block .head .options-change .dropdown-toggle::after {
   margin-left: 0;
 }
-/* line 35, ../scss/modules/content-types.scss */
+/* line 45, ../scss/modules/content-types.scss */
 .text-block .head .options-remove {
   float: right;
   cursor: pointer;
@@ -9605,13 +9610,13 @@ a.btn-black, a.btn-highlight {
   display: none;
   font-size: 16px;
 }
-/* line 44, ../scss/modules/content-types.scss */
+/* line 54, ../scss/modules/content-types.scss */
 .text-block .head::after {
   content: "";
   display: block;
   clear: both;
 }
-/* line 50, ../scss/modules/content-types.scss */
+/* line 60, ../scss/modules/content-types.scss */
 .text-block .container {
   padding: 10px 20px 20px 20px;
   background: #dddddd;
@@ -9620,47 +9625,47 @@ a.btn-black, a.btn-highlight {
   -moz-box-shadow: rgba(0, 0, 0, 0.06) 2px 2px 0px 0px;
   box-shadow: rgba(0, 0, 0, 0.06) 2px 2px 0px 0px;
 }
-/* line 56, ../scss/modules/content-types.scss */
+/* line 66, ../scss/modules/content-types.scss */
 .text-block .container label {
   margin-bottom: 10px;
 }
-/* line 60, ../scss/modules/content-types.scss */
+/* line 70, ../scss/modules/content-types.scss */
 .text-block .container textarea {
   max-width: 100%;
   min-width: 100%;
   width: 100%;
 }
-/* line 68, ../scss/modules/content-types.scss */
+/* line 78, ../scss/modules/content-types.scss */
 .text-block:hover .head .options-remove, .text-block:hover .head .options-change {
   display: block;
 }
 
-/* line 76, ../scss/modules/content-types.scss */
+/* line 86, ../scss/modules/content-types.scss */
 .empty .text-block .head .options-remove {
   display: none;
 }
-/* line 79, ../scss/modules/content-types.scss */
+/* line 89, ../scss/modules/content-types.scss */
 .empty .text-block:hover .head .options-remove {
   display: none;
 }
 
-/* line 85, ../scss/modules/content-types.scss */
+/* line 95, ../scss/modules/content-types.scss */
 .text-block-footer {
   margin-bottom: 20px;
 }
-/* line 88, ../scss/modules/content-types.scss */
+/* line 98, ../scss/modules/content-types.scss */
 .text-block-footer .desc {
   font-size: 12px;
   color: #999999;
   padding-left: 10px;
 }
-/* line 93, ../scss/modules/content-types.scss */
+/* line 103, ../scss/modules/content-types.scss */
 .text-block-footer .btn.full {
   background-color: #cccccc;
   cursor: default;
 }
 
-/* line 103, ../scss/modules/content-types.scss */
+/* line 113, ../scss/modules/content-types.scss */
 .white-box {
   width: 100%;
   height: 100%;
@@ -9668,12 +9673,12 @@ a.btn-black, a.btn-highlight {
   border-radius: 0 0 3px 3px;
   border: 1px solid #cccccc;
 }
-/* line 110, ../scss/modules/content-types.scss */
+/* line 120, ../scss/modules/content-types.scss */
 .white-box .text {
   font-size: 12px;
   color: #999999;
 }
-/* line 115, ../scss/modules/content-types.scss */
+/* line 125, ../scss/modules/content-types.scss */
 .white-box .header {
   position: relative;
   top: 0px;
@@ -9691,7 +9696,7 @@ a.btn-black, a.btn-highlight {
   content: ' ';
   display: block;
 }
-/* line 127, ../scss/modules/content-types.scss */
+/* line 137, ../scss/modules/content-types.scss */
 .white-box .header .icon {
   display: block;
   font-size: 16px;
@@ -9704,29 +9709,29 @@ a.btn-black, a.btn-highlight {
   margin-top: 9px;
   padding-top: 1px;
 }
-/* line 139, ../scss/modules/content-types.scss */
+/* line 149, ../scss/modules/content-types.scss */
 .white-box .header .icon.action {
   background: #52b6ca;
   color: white;
 }
-/* line 143, ../scss/modules/content-types.scss */
+/* line 153, ../scss/modules/content-types.scss */
 .white-box .header .icon.border {
   border: 1px solid #cccccc;
   box-sizing: initial;
   height: 28px;
   line-height: 28px;
 }
-/* line 149, ../scss/modules/content-types.scss */
+/* line 159, ../scss/modules/content-types.scss */
 .white-box .header .icon.left {
   float: left;
   margin-right: 20px;
 }
-/* line 153, ../scss/modules/content-types.scss */
+/* line 163, ../scss/modules/content-types.scss */
 .white-box .header .icon.right {
   float: right;
   margin-left: 20px;
 }
-/* line 159, ../scss/modules/content-types.scss */
+/* line 169, ../scss/modules/content-types.scss */
 .white-box .header .position {
   width: 32px;
   height: 32px;
@@ -9735,22 +9740,22 @@ a.btn-black, a.btn-highlight {
   left: 50%;
   margin: -16px 0 0 -16px;
 }
-/* line 169, ../scss/modules/content-types.scss */
+/* line 179, ../scss/modules/content-types.scss */
 .white-box .content {
   position: relative;
   top: 0px;
   left: 0px;
 }
-/* line 174, ../scss/modules/content-types.scss */
+/* line 184, ../scss/modules/content-types.scss */
 .white-box .content .loader {
   padding: 50px 0;
 }
-/* line 177, ../scss/modules/content-types.scss */
+/* line 187, ../scss/modules/content-types.scss */
 .white-box .content .no-content {
   text-align: center;
   height: 210px;
 }
-/* line 181, ../scss/modules/content-types.scss */
+/* line 191, ../scss/modules/content-types.scss */
 .white-box .content .no-content .icon {
   display: block;
   position: absolute;
@@ -9762,50 +9767,50 @@ a.btn-black, a.btn-highlight {
   font-size: 125px;
   color: #efefef;
 }
-/* line 192, ../scss/modules/content-types.scss */
+/* line 202, ../scss/modules/content-types.scss */
 .white-box .content .no-content .text {
   padding-top: 160px;
   font-weight: bold;
   color: #e4e4e4;
   font-size: 24px;
 }
-/* line 199, ../scss/modules/content-types.scss */
+/* line 209, ../scss/modules/content-types.scss */
 .white-box .content .items-list {
   list-style-type: none;
   margin: 0;
   padding: 0 20px;
 }
-/* line 203, ../scss/modules/content-types.scss */
+/* line 213, ../scss/modules/content-types.scss */
 .white-box .content .items-list li {
   font-size: 14px;
   line-height: 50px;
   border-bottom: 1px solid #cccccc;
   position: relative;
 }
-/* line 208, ../scss/modules/content-types.scss */
+/* line 218, ../scss/modules/content-types.scss */
 .white-box .content .items-list li .icon {
   cursor: move;
   color: #999999;
   font-size: 15px;
   padding-right: 15px;
 }
-/* line 214, ../scss/modules/content-types.scss */
+/* line 224, ../scss/modules/content-types.scss */
 .white-box .content .items-list li img {
   vertical-align: middle;
   padding-top: 8px;
   padding-bottom: 8px;
   padding-right: 20px;
 }
-/* line 220, ../scss/modules/content-types.scss */
+/* line 230, ../scss/modules/content-types.scss */
 .white-box .content .items-list li .num {
   color: #999999;
   padding-right: 10px;
 }
-/* line 224, ../scss/modules/content-types.scss */
+/* line 234, ../scss/modules/content-types.scss */
 .white-box .content .items-list li .value {
   color: #999999;
 }
-/* line 227, ../scss/modules/content-types.scss */
+/* line 237, ../scss/modules/content-types.scss */
 .white-box .content .items-list li .remove {
   position: absolute;
   top: 50%;
@@ -9813,18 +9818,18 @@ a.btn-black, a.btn-highlight {
   margin-top: -8px;
   cursor: pointer;
 }
-/* line 234, ../scss/modules/content-types.scss */
+/* line 244, ../scss/modules/content-types.scss */
 .white-box .content .items-list li:last-child {
   border-width: 2px;
 }
-/* line 241, ../scss/modules/content-types.scss */
+/* line 251, ../scss/modules/content-types.scss */
 .white-box .footer {
   padding: 15px 20px 20px 20px;
   line-height: 14px;
   color: #999999;
   font-size: 12px;
 }
-/* line 246, ../scss/modules/content-types.scss */
+/* line 256, ../scss/modules/content-types.scss */
 .white-box .footer span {
   padding-right: 5px;
 }
