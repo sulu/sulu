@@ -74,6 +74,10 @@ class SuluContentExtension extends Extension
             'sulu.content.type.color.template',
             $config['types']['color']['template']
         );
+        $container->setParameter(
+            'sulu.content.type.checkbox.template',
+            $config['types']['checkbox']['template']
+        );
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');

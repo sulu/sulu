@@ -12,6 +12,7 @@
         <parameter key="sulu.content.type.date.class">Sulu\Bundle\ContentBundle\Content\Types\Date</parameter>
         <parameter key="sulu.content.type.time.class">Sulu\Bundle\ContentBundle\Content\Types\Time</parameter>
         <parameter key="sulu.content.type.color.class">Sulu\Bundle\ContentBundle\Content\Types\Color</parameter>
+        <parameter key="sulu.content.type.checkbox.class">Sulu\Bundle\ContentBundle\Content\Types\Checkbox</parameter>
     </parameters>
     <services>
         <!-- content-types -->
@@ -60,6 +61,10 @@
         <service id="sulu.content.type.color" class="%sulu.content.type.color.class%">
             <argument>%sulu.content.type.color.template%</argument>
             <tag name="sulu.content.type" alias="color"/>
+        </service>
+        <service id="sulu.content.type.checkbox" class="%sulu.content.type.checkbox.class%">
+            <argument>%sulu.content.type.checkbox.template%</argument>
+            <tag name="sulu.content.type" alias="checkbox"/>
         </service>
     </services>
 </container>
