@@ -33,7 +33,6 @@
                     <script type="text/template" id="address-tpl">
                         <div class="grid-col-12 floating m-top-0 address-component">
                             <~ var uid = _.uniqueId('address_'), first = true; ~>
-                            <~ var checkIfFirstField = function(field) { if (typeof field !== 'undefined' && !!field) { if(first) {first = false; return false;} else {return true;} } }~>
                             <~ var getAddressString=function(street,number,zip,city,country){var str=!!street?street:"",part=(zip+" "+city).trim();str+=!!str.length&&!!number?" "+number:number;str+=!!str.length&&!!part?", "+part:part;str+=!!str.length&&!!country?", "+country:country;return str}; ~>
                             <div class="form-group">
 
