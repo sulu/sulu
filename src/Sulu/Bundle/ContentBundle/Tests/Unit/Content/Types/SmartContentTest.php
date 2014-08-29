@@ -41,9 +41,9 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
     private $tagManager;
 
     /**
-     * @var Serializer
+     * @var RequestStack
      */
-    private $serializer;
+    private $requestStack;
 
     public function setUp()
     {
@@ -63,6 +63,8 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
             true,
             array('resolveTagIds', 'resolveTagNames')
         );
+
+        $this->requestStack = $this->getMockBuilder('Symfony\Component\HttpFoundation\RequestStack')->getMock();
 
         $this->smartContent = new SmartContent(
             $this->nodeRepository,
@@ -306,33 +308,7 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function provideGetViewData()
-    {
-        return array(
-            array(
-                array(
-                    '_page' => 5,
-                ),
-                array(
-                    'nb_items' => 1000,
-                    'expected_page' => 5
-                ),
-            ),
-            array(
-                array(
-                ),
-                array(
-                    'nb_items' => 1000,
-                    'expected_page' => 1
-                ),
-            )
-        );
-    }
-
-    /**
-     * @dataProvider provideGetViewData
-     */
-    public function testGetViewData($requestParams, $options)
+    public function testGetViewData()
     {
         $property = $this->getMockForAbstractClass(
             'Sulu\Component\Content\PropertyInterface',
@@ -341,33 +317,22 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
             true,
             true,
             true,
-            array('setValue')
+            array('getValue', 'getParams')
         );
 
-        $items = array();
-        for ($i = 0; $i <= $options['nb_items']; $i++) {
-            $items[] = 'foo';
-        }
+        $config = array('dataSource' => 'some-uuid');
 
         $smartContentContainer = $this->getMockBuilder('Sulu\Bundle\ContentBundle\Content\SmartContentContainer')
             ->disableOriginalConstructor()
             ->getMock();
-        $smartContentContainer->expects($this->once())
-            ->method('getData')
-            ->will($this->returnValue($items));
+
+        $smartContentContainer->expects($this->once())->method('getConfig')->will($this->returnValue($config));
 
         $property->expects($this->exactly(1))->method('getValue')
             ->will($this->returnValue($smartContentContainer));
 
-        $this->request->query->replace($requestParams);
+        $viewData = $this->smartContent->getViewData($property);
 
-        $property->expects($this->exactly(1))->method('getParams')->will($this->returnValue(array()));
-
-        $data = $this->smartContent->getViewData($property);
-        $this->assertInstanceOf('Pagerfanta\Pagerfanta', $data['pager']);
-
-        $pager = $data['pager'];
-        $this->assertEquals(25, $pager->getMaxPerPage());
-        $this->assertEquals($options['expected_page'], $pager->getCurrentPage());
+        $this->assertEquals($config, $viewData);
     }
 }
