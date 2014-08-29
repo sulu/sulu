@@ -15,9 +15,17 @@ class TemplateController extends RestController
      */
     public function contactListAction()
     {
-        return $this->render(
-            'SuluContactBundle:Template:contact.list.html.twig'
-        );
+        $data['form_of_address'] = [];
+        foreach ($this->container->getParameter('sulu_contact.form_of_address') as $el) {
+            $data['form_of_address'][] = $el;
+        }
+
+        $emailTypeEntity = 'SuluContactBundle:EmailType';
+        $data['email_types'] = $this->getDoctrine($emailTypeEntity)
+            ->getRepository($emailTypeEntity)
+            ->findAll();
+
+        return $this->render('SuluContactBundle:Template:contact.list.html.twig',$data);
     }
 
     /**

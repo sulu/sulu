@@ -9,15 +9,17 @@
 
 define([
     'mvc/relationalstore',
-    'text!sulucontact/components/accounts/components/contacts/contact-relation.form.html'
-], function(RelationalStore, ContactRelationForm) {
+    'text!sulucontact/components/accounts/components/contacts/contact-relation.form.html',
+    'text!sulucontact/components/accounts/components/contacts/contact.form.html'
+], function(RelationalStore, ContactRelationForm, ContactForm) {
 
     'use strict';
 
     var constants = {
             relationFormSelector: '#contact-relation-form',
             contactSelector: '#contact-field',
-            positionSelector: '#company-contact-position'
+            positionSelector: '#company-contact-position',
+            newContactFormSelector: '#contact-form'
         },
 
         companyPosition = null,
@@ -68,18 +70,78 @@ define([
                     this.sandbox.emit('husky.toolbar.contacts.item.disable', 'delete');
                 }
             }.bind(this));
+
+            // new contact related events
+            this.sandbox.on('sulu.contacts.accounts.set-form-of-address' , function(types){
+                this.formOfAddress = types;
+            }.bind(this));
+
+            this.sandbox.on('husky.overlay.new-contact.opened' , function(){
+                var $form = this.sandbox.dom.find(constants.newContactFormSelector, this.$el);
+                this.sandbox.start($form);
+                this.sandbox.form.create(constants.newContactFormSelector);
+            }.bind(this));
+        },
+
+        /**
+         * Creates an overlay to add a new contact
+         * @param data
+         */
+        createContactOverlay = function(data) {
+
+            var template, $overlay, $list;
+
+            // extend data by additional variables
+            data = this.sandbox.util.extend(true, {}, {
+                translate: this.sandbox.translate,
+                formOfAddress: this.formOfAddress
+            }, data);
+
+            template = this.sandbox.util.template(ContactForm, data);
+
+            // create container for overlay
+            $overlay = this.sandbox.dom.createElement('<div />');
+            $list = this.sandbox.dom.find('#people-list');
+            this.sandbox.dom.append($list, $overlay);
+
+            // create overlay with data
+            this.sandbox.start([
+                {
+                    name: 'overlay@husky',
+                    options: {
+                        el: $overlay,
+                        title: this.sandbox.translate('contact.accounts.add-contact'),
+                        openOnStart: true,
+                        removeOnClose: true,
+                        instanceName: 'new-contact',
+                        data: template,
+                        skin: 'wide',
+                        okCallback: addNewContact.bind(this)
+                    }
+                }
+            ]);
+        },
+
+        /**
+         * adds a new contact to when the form is valid
+         */
+        addNewContact = function(){
+            if (this.sandbox.form.validate(constants.newContactFormSelector)) {
+                var data = this.sandbox.form.getData(constants.newContactFormSelector);
+                data.account = this.options.data;
+                this.sandbox.emit('sulu.contacts.accounts.new.contact', data);
+                return true;
+            } else {
+                return false;
+            }
         },
 
         createRelationOverlay = function(data) {
             var template, $overlay, $list;
 
-            // reset company position
-            companyPosition = null;
-
             // extend data by additional variables
             data = this.sandbox.util.extend(true, {}, {
-                translate: this.sandbox.translate,
-                position: ''
+                translate: this.sandbox.translate
             }, data);
 
             template = this.sandbox.util.template(ContactRelationForm, data);
@@ -95,7 +157,7 @@ define([
                     name: 'overlay@husky',
                     options: {
                         el: $overlay,
-                        title: this.sandbox.translate('contact.accounts.add-contact'),
+                        title: this.sandbox.translate('contact.accounts.add-new-contact'),
                         openOnStart: true,
                         removeOnClose: true,
                         instanceName: 'contact-relation',
@@ -150,28 +212,6 @@ define([
             }.bind(this));
         },
 
-        // opens column options
-//        openColumnOptions = function() {
-//            var instanceName;
-//            this.sandbox.dom.append('body', '<div id="column-options-overlay" />');
-//            this.sandbox.start([
-//                {
-//                    name: 'column-options@husky',
-//                    options: {
-//                        el: '#column-options-overlay',
-//                        data: this.sandbox.sulu.getUserSetting(this.options.columnOptions.key),
-//                        hidden: false,
-//                        instanceName: this.options.instanceName,
-//                        trigger: '.toggle'
-//                    }
-//                }
-//            ]);
-//            instanceName = this.options.instanceName ? this.options.instanceName + '.' : '';
-//            this.sandbox.once('husky.column-options.' + instanceName + 'saved', function(data) {
-//                this.sandbox.sulu.saveUserSetting(this.options.columnOptions.key, data, this.options.columnOptions.url);
-//            }.bind(this));
-//        },
-
         // list-toolbar template
         listTemplate = function() {
             return [
@@ -179,19 +219,28 @@ define([
                     id: 'add',
                     icon: 'plus-circle',
                     class: 'highlight-white',
-                    title: 'add',
-                    position: 10,
-                    callback: createRelationOverlay.bind(this)
+                    position: 1,
+                    title: this.sandbox.translate('sulu.list-toolbar.add'),
+                    items: [
+                        {
+                            id: 'add-account-contact',
+                            title: this.sandbox.translate('contact.account.add-account-contact'),
+                            callback: createRelationOverlay.bind(this)
+                        },
+                        {
+                            id: 'add-new-contact-to-account',
+                            title: this.sandbox.translate('contact.accounts.add-new-contact-to-account'),
+                            callback: createContactOverlay.bind(this)
+                        }
+                    ],
+                    callback: function() {
+                        this.sandbox.emit('sulu.list-toolbar.add');
+                    }.bind(this)
                 },
                 {
                     id: 'settings',
                     icon: 'gear',
                     items: [
-//                      // TODO: currently column options are not needed for this list, but this can change in future
-//                        {
-//                            title: this.sandbox.translate('list-toolbar.column-options'),
-//                            callback: openColumnOptions.bind(this)
-//                        },
                         {
                             id: 'delete',
                             title: this.sandbox.translate('contact.accounts.contact-remove'),
@@ -226,12 +275,15 @@ define([
 
         initialize: function() {
 
+            this.formOfAddress = null;
             this.render();
             bindCustomEvents.call(this);
 
             if (!!this.options.data && !!this.options.data.id) {
                 this.initSidebar('/admin/widget-groups/account-detail?account=', this.options.data.id);
             }
+
+            this.sandbox.emit('sulu.contacts.accounts.contacts.initialized');
         },
 
         initSidebar: function(url, id) {
@@ -252,7 +304,7 @@ define([
                     el: this.$find('#list-toolbar-container'),
                     instanceName: 'contacts',
                     inHeader: true,
-                    template: listTemplate
+                    template: listTemplate.call(this)
                 },
                 {
                     el: this.sandbox.dom.find('#people-list', this.$el),
