@@ -84,7 +84,7 @@
             </trans-unit>
             <trans-unit id="f85e55126a0ec3ab6617b52fc033bc18" resname="smart-content.configure-smart-content">
                 <source>smart-content.configure-smart-content</source>
-                <target>Configure smart content</target>
+                <target>Configure {0}</target>
             </trans-unit>
             <trans-unit id="7a9bd49b2b4443383bff6eb67dd0afb6" resname="smart-content.data-source">
                 <source>smart-content.data-source</source>
