@@ -175,7 +175,7 @@ class SmartContent extends ComplexContentType
     {
         $params = parent::getDefaultParams();
         $params['max_per_page'] = 25;
-        $params['page_parameter'] = '_page';
+        $params['page_parameter'] = 'p';
 
         return $params;
     }
