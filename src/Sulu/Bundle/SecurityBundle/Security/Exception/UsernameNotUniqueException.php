@@ -12,7 +12,7 @@ namespace Sulu\Bundle\SecurityBundle\Security\Exception;
 
 /**
  * Class UsernameNotUniqueException
- *
+ * This exception is thrown when the username is not unique.
  * @package Sulu\Bundle\SecurityBundle\Security\Exception
  */
 class UsernameNotUniqueException extends SecurityException

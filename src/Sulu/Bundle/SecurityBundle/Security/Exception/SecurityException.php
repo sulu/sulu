@@ -14,7 +14,8 @@ use Exception;
 
 /**
  * Class SecurityException
- *
+ * This exception is a general security exception
+ * Exceptions related with the security bundle should inherit form this exception and use it's exception codes
  * @package Sulu\Bundle\SecurityBundle\Security\Exception
  */
 class SecurityException extends Exception

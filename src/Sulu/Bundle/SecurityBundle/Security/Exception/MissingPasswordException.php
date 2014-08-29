@@ -12,7 +12,7 @@ namespace Sulu\Bundle\SecurityBundle\Security\Exception;
 
 /**
  * Class MissingPasswordException
- *
+ * This exception is thrown when the password is mandatory but missing.
  * @package Sulu\Bundle\SecurityBundle\Security\Exception
  */
 class MissingPasswordException extends SecurityException
