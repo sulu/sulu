@@ -32,6 +32,11 @@ class SitemapController extends WebsiteController
         $sitemapGenerator = $this->get('sulu_website.sitemap');
         $webspace = $requestAnalyzer->getCurrentWebspace();
 
+        // remove empty first line
+        // FIXME empty line in website kernel
+        if (ob_get_length()) {
+            ob_end_clean();
+        }
         $response = new Response();
         $response->headers->set('Content-Type', 'text/xml');
 

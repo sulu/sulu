@@ -16,6 +16,7 @@ use PHPCR\Query\QueryResultInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\PropertyInterface;
+use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManagerInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
@@ -134,10 +135,15 @@ class SitemapGenerator implements SitemapGeneratorInterface
         $uuid = $row->getValue('page.jcr:uuid');
 
         $templateKey = $row->getValue('page.i18n:' . $locale . '-template');
+        $changed = $row->getValue('page.i18n:' . $locale . '-changed');
+        $nodeType = $row->getValue('page.i18n:' . $locale . '-nodeType');
         if ($templateKey !== '') {
-            $changed = $row->getValue('page.i18n:' . $locale . '-changed');
-            $nodeType = $row->getValue('page.i18n:' . $locale . '-nodeType');
             $path = $row->getPath('page');
+            if ($nodeType === Structure::NODE_TYPE_EXTERNAL_LINK) {
+                $templateKey = 'external-link';
+            }elseif ($nodeType === Structure::NODE_TYPE_INTERNAL_LINK) {
+                $templateKey = 'internal-link';
+            }
 
             /** @var StructureInterface $structure */
             $structure = $this->structureManager->getStructure($templateKey);

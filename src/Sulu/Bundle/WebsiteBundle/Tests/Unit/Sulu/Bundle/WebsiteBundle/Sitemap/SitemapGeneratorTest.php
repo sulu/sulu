@@ -98,7 +98,9 @@ class SitemapGeneratorTest extends PhpcrTestCase
             return $this->getStructureMock($structureKey, 'title');
         } elseif ($structureKey == 'overview') {
             return $this->getStructureMock($structureKey);
-        } elseif ($structureKey == 'external') {
+        } elseif ($structureKey == 'external-link') {
+            return $this->getStructureMock($structureKey, 'test', false);
+        } elseif ($structureKey == 'internal-link') {
             return $this->getStructureMock($structureKey, 'test', false);
         }
 
@@ -111,7 +113,8 @@ class SitemapGeneratorTest extends PhpcrTestCase
             $this->getStructureMock('default_template'),
             $this->getStructureMock('simple', 'title'),
             $this->getStructureMock('overview'),
-            $this->getStructureMock('external', 'test', false)
+            $this->getStructureMock('external-link', 'test', false),
+            $this->getStructureMock('internal-link', 'test', false)
         );
     }
 
@@ -209,7 +212,7 @@ class SitemapGeneratorTest extends PhpcrTestCase
         $data['products/products-1']['external_url'] = $data['products']->getUuid();
         $data['products/products-1'] = $this->mapper->save(
             $data['products/products-1'],
-            'external',
+            'overview',
             'default',
             $locale,
             1,
@@ -220,7 +223,7 @@ class SitemapGeneratorTest extends PhpcrTestCase
         );
         $data['products/products-2'] = $this->mapper->save(
             $data['products/products-2'],
-            'external',
+            'overview',
             'default',
             $locale,
             1,

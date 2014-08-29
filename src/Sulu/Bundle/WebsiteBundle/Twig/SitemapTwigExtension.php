@@ -78,7 +78,7 @@ class SitemapTwigExtension extends \Twig_Extension
             return false;
         }
 
-        return $portalUrls[0] . $url;
+        return rtrim($portalUrls[0] . $url, '/');
     }
 
     /**
