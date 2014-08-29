@@ -49,53 +49,51 @@ class NavigationTwigExtensionTest extends ProphecyTestCase
 
     public function testNavigationFunction()
     {
-        $this->structure->getUuid()->willReturn('123-123-123');
-        $this->structure->getWebspaceKey()->willReturn('default');
-        $this->structure->getLanguageCode()->willReturn('en');
+        $uuid = '123-123-123';
+        $webspaceKey = 'default';
+        $locale = 'en';
 
-        $this->navigationMapper->getNavigation('123-123-123', 'default', 'en', 1, false, null)->willReturn(true);
+        $this->navigationMapper->getNavigation($uuid, $webspaceKey, $locale, 1, false, null)->willReturn(true);
 
-        $this->assertTrue($this->extension->navigationFunction($this->structure->reveal(), 1));
+        $this->assertTrue($this->extension->navigationFunction($uuid, $webspaceKey, $locale));
     }
 
     public function testNavigationFunctionFlatContext()
     {
-        $this->structure->getUuid()->willReturn('123-123-123');
-        $this->structure->getWebspaceKey()->willReturn('default');
-        $this->structure->getLanguageCode()->willReturn('en');
+        $uuid = '123-123-123';
+        $webspaceKey = 'default';
+        $locale = 'en';
 
-        $this->navigationMapper->getNavigation('123-123-123', 'default', 'en', 1, true, 'test')->willReturn(true);
+        $this->navigationMapper->getNavigation($uuid, $webspaceKey, $locale, 1, true, 'test')->willReturn(true);
 
-        $this->assertTrue($this->extension->navigationFunction($this->structure->reveal(), 1,null, true, 'test'));
+        $this->assertTrue($this->extension->navigationFunction($uuid, $webspaceKey, $locale, 1, null, true, 'test'));
     }
 
     public function testMainNavigationFunction()
     {
-        $this->structure->getUuid()->willReturn('123-123-123');
-        $this->structure->getWebspaceKey()->willReturn('default');
-        $this->structure->getLanguageCode()->willReturn('en');
+        $webspaceKey = 'default';
+        $locale = 'en';
 
-        $this->navigationMapper->getRootNavigation('default', 'en', 1, false, null)->willReturn(true);
+        $this->navigationMapper->getRootNavigation($webspaceKey, $locale, 1, false, null)->willReturn(true);
 
-        $this->assertTrue($this->extension->rootNavigationFunction($this->structure->reveal(), 1));
+        $this->assertTrue($this->extension->rootNavigationFunction($webspaceKey, $locale, 1));
     }
 
     public function testMainNavigationFunctionFlatContext()
     {
-        $this->structure->getUuid()->willReturn('123-123-123');
-        $this->structure->getWebspaceKey()->willReturn('default');
-        $this->structure->getLanguageCode()->willReturn('en');
+        $webspaceKey = 'default';
+        $locale = 'en';
 
         $this->navigationMapper->getRootNavigation('default', 'en', 1, true, 'test')->willReturn(true);
 
-        $this->assertTrue($this->extension->rootNavigationFunction($this->structure->reveal(), 1,true, 'test'));
+        $this->assertTrue($this->extension->rootNavigationFunction($webspaceKey, $locale, 1,true, 'test'));
     }
 
     public function testNavigationFunctionLevel()
     {
-        $this->structure->getUuid()->willReturn('123-123-123');
-        $this->structure->getWebspaceKey()->willReturn('default');
-        $this->structure->getLanguageCode()->willReturn('en');
+        $uuid = '123-123-123';
+        $webspaceKey = 'default';
+        $locale = 'en';
 
         $structure2 = $this->prophesize('Sulu\Component\Content\StructureInterface');
         $structure2->getUuid()->willReturn('321-321-321');
@@ -106,18 +104,17 @@ class NavigationTwigExtensionTest extends ProphecyTestCase
         // is ok
         $this->navigationMapper->getNavigation('321-321-321', 'default', 'en', 1, false, null)->willReturn(true);
 
-        $this->assertTrue($this->extension->navigationFunction($this->structure->reveal(), 1, 2));
+        $this->assertTrue($this->extension->navigationFunction($uuid, $webspaceKey, $locale, 1, 2));
     }
 
     public function testBreadcrumb()
     {
-        $this->structure->getUuid()->willReturn('123-123-123');
-        $this->structure->getWebspaceKey()->willReturn('default');
-        $this->structure->getLanguageCode()->willReturn('en');
+        $uuid = '123-123-123';
+        $webspaceKey = 'default';
+        $locale = 'en';;
 
         $this->navigationMapper->getBreadcrumb('123-123-123', 'default', 'en')->willReturn(true);
 
-        $this->assertTrue($this->extension->breadcrumbFunction($this->structure->reveal()));
+        $this->assertTrue($this->extension->breadcrumbFunction($uuid, $webspaceKey, $locale));
     }
-
 }
