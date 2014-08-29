@@ -179,18 +179,6 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
     public function findUserByUsername($username)
     {
         $qb = $this->createQueryBuilder('user')
-            ->leftJoin('user.userRoles', 'userRoles')
-            ->leftJoin('userRoles.role', 'role')
-            ->leftJoin('role.permissions', 'permissions')
-            ->leftJoin('user.userGroups', 'userGroups')
-            ->leftJoin('userGroups.group', 'grp')
-            ->leftJoin('user.userSettings', 'settings')
-            ->addSelect('userRoles')
-            ->addSelect('role')
-            ->addSelect('userGroups')
-            ->addSelect('grp')
-            ->addSelect('settings')
-            ->addSelect('permissions')
             ->where('user.username=:username');
 
         $query = $qb->getQuery();

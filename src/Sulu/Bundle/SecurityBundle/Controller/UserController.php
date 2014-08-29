@@ -180,8 +180,8 @@ class UserController extends RestController implements ClassResourceInterface
             }
 
             // check if username is already in database and the current user is not the user with this username
-            if(!$this->isUsernameUnique($request->get('username')) &&
-                $user->getUsername() != $request->get('username')
+            if($user->getUsername() != $request->get('username') &&
+                !$this->isUsernameUnique($request->get('username'))
             ) {
                 throw new UsernameNotUniqueException($request->get('username'));
             }
@@ -233,7 +233,7 @@ class UserController extends RestController implements ClassResourceInterface
      */
     private function isUsernameUnique($username)
     {
-        if (!!$username) {
+        if ($username) {
             try {
                 $this->getDoctrine()
                     ->getRepository(static::$entityName)
@@ -264,9 +264,9 @@ class UserController extends RestController implements ClassResourceInterface
             }
 
             // check if username is already in database and the current user is not the user with this username
-            if(!!$request->get('username') &&
-                !$this->isUsernameUnique($request->get('username')) &&
-                $user->getUsername() != $request->get('username')
+            if($request->get('username') &&
+                $user->getUsername() != $request->get('username') &&
+                !$this->isUsernameUnique($request->get('username'))
             ) {
                 throw new UsernameNotUniqueException($request->get('username'));
             }

@@ -124,8 +124,7 @@ define([
                     this.sandbox.emit('sulu.user.permissions.saved', model.toJSON());
                 }.bind(this),
                 error: function(obj, resp) {
-
-                    if(!!resp && resp.responseJSON && !!resp.responseJSON.message){
+                    if (!!resp && !!resp.responseJSON && !!resp.responseJSON.message) {
                         this.sandbox.emit('sulu.labels.error.show',
                             resp.responseJSON.message,
                             'labels.error',
@@ -134,7 +133,6 @@ define([
                         this.sandbox.emit('sulu.user.permissions.error', resp.responseJSON.code);
                     }
                 }.bind(this)
-
             });
         },
 

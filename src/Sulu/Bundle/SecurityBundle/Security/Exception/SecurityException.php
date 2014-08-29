@@ -12,6 +12,11 @@ namespace Sulu\Bundle\SecurityBundle\Security\Exception;
 
 use Exception;
 
+/**
+ * Class SecurityException
+ *
+ * @package Sulu\Bundle\SecurityBundle\Security\Exception
+ */
 class SecurityException extends Exception
 {
     /**

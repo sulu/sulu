@@ -10,7 +10,11 @@
 
 namespace Sulu\Bundle\SecurityBundle\Security\Exception;
 
-
+/**
+ * Class MissingPasswordException
+ *
+ * @package Sulu\Bundle\SecurityBundle\Security\Exception
+ */
 class MissingPasswordException extends SecurityException
 {
     public function __construct()

@@ -10,11 +10,16 @@
 
 namespace Sulu\Bundle\SecurityBundle\Security\Exception;
 
-
+/**
+ * Class UsernameNotUniqueException
+ *
+ * @package Sulu\Bundle\SecurityBundle\Security\Exception
+ */
 class UsernameNotUniqueException extends SecurityException
 {
     /**
      * The username which is not unique
+     *
      * @var integer
      */
     private $username;
@@ -25,7 +30,8 @@ class UsernameNotUniqueException extends SecurityException
         $this->username = $username;
     }
 
-    public function getUsername(){
+    public function getUsername()
+    {
         return $this->username;
     }
 

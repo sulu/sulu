@@ -8,7 +8,7 @@
             </trans-unit>
             <trans-unit id="a50af522ac181350142c0b4720e29a4f" resname="security.user.error.missingPassword">
                 <source>security.user.error.missingPassword</source>
-                <target></target>
+                <target>To add a new user you need to define a password!</target>
             </trans-unit>
         </body>
     </file>
