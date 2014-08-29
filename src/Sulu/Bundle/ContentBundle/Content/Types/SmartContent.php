@@ -193,6 +193,17 @@ class SmartContent extends ComplexContentType
      */
     public function getContentData(PropertyInterface $property)
     {
-        return $property->getValue()->getData();
+        $params = array_merge(
+            $this->getDefaultParams(),
+            $property->getParams()
+        );
+
+        $data = $property->getValue()->getData();
+
+        $page = $this->requestStack->getCurrentRequest()->get($params['page_parameter'], 1);
+
+        $data = array_slice($data, ($page - 1) * $params['max_per_page'], $params['max_per_page']);
+
+        return $data;
     }
 }
