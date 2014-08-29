@@ -108,8 +108,20 @@ define([
                         this.form.removeFields($element);
                         $element.remove();
 
+                        this.checkSortable();
+
                         $(form.$el).trigger('form-remove', [this.propertyName]);
                         this.checkFullAndEmpty();
+                    }
+                },
+
+                checkSortable: function() {
+                    // check for dragable
+                    if (this.getChildren().length <= 1) {
+                        App.dom.removeClass(this.$el, 'sortable');
+                        App.dom.attr(App.dom.children(this.$el), 'draggable', false);
+                    } else if (!App.dom.hasClass(this.$el, 'sortable')) {
+                        App.dom.addClass(this.$el, 'sortable');
                     }
                 },
 
@@ -166,9 +178,12 @@ define([
                             App.dom.remove(App.dom.find('.drop-down-trigger', $template));
                         }
 
+                        // remove delete button
                         if (this.getMinOccurs() === this.getMaxOccurs()) {
                             App.dom.remove(App.dom.find('.options-remove', $template));
                         }
+
+                        this.checkSortable();
 
                         form.initFields($template).then(function() {
                             form.mapper.setData(data, $template).then(function() {
