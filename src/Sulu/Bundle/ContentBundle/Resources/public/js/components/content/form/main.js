@@ -273,19 +273,19 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
                 this.setHeaderBar(false);
             }.bind(this));
 
-            this.sandbox.dom.on(this.formId, 'form-add', function(e, propertyName, data) {
+            this.sandbox.dom.on(this.formId, 'form-add', function(e, propertyName, data, index) {
                 this.createConfiguration(e.currentTarget);
 
+                var $elements = this.sandbox.dom.children(this.$find('[data-mapper-property="' + propertyName + '"]')),
+                    $element = index !== undefined && $elements.length > index ? $elements[index] : this.sandbox.dom.last($elements),
+                    changes;
+
                 // start new subcomponents
-                this.sandbox.start(
-                    this.sandbox.dom.last(
-                        this.sandbox.dom.children(this.$find('[data-mapper-property="'+ propertyName +'"]'))
-                    )
-                );
+                this.sandbox.start($element);
 
                 // update changes
                 try {
-                    var changes = this.sandbox.form.getData(this.formId);
+                    changes = this.sandbox.form.getData(this.formId);
                     this.sandbox.emit('sulu.preview.update-property', propertyName, changes[propertyName]);
                 } catch (ex) {
                     // ignore exceptions
