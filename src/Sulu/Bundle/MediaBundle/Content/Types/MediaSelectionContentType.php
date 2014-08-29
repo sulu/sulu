@@ -164,4 +164,20 @@ class MediaSelectionContentType extends ComplexContentType
     {
         return $this->template;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getContentData(PropertyInterface $property)
+    {
+        return $property->getValue()->getData();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getViewData(PropertyInterface $property)
+    {
+        return $property->getValue()->toArray();
+    }
 }
