@@ -32,11 +32,11 @@ abstract class WebsiteController extends Controller
         $partial = false
     )
     {
-
+        $contentDataResolver = $this->get('sulu.content.structure_content_resolver');
         $viewDataResolver = $this->get('sulu.content.structure_view_resolver');
 
         $data = array_merge($attributes, array(
-            'content' => $structure,
+            'content' => $contentDataResolver->resolve($structure),
             'view' => $viewDataResolver->resolve($structure)
         ));
 
