@@ -3,9 +3,9 @@
 namespace Sulu\Component\Content;
 
 /**
- * Class that "resolves" the view data for a given structure.
+ * Class that "resolves" the content data for a given structure.
  */
-class StructureViewResolver
+class StructureContentResolver
 {
     protected $contentTypeManager;
 
@@ -31,7 +31,7 @@ class StructureViewResolver
 
         foreach ($structure->getProperties(true) as $property) {
             $contentType = $this->contentTypeManager->get($property->getContentTypeName());
-            $data[$property->getName()] = $contentType->getViewData($property);
+            $data[$property->getName()] = $contentType->getContentData($property);
         }
 
         return $data;
