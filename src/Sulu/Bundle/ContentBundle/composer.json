@@ -31,8 +31,6 @@
         "friendsofsymfony/rest-bundle": "@dev",
         "friendsofsymfony/http-cache": "@dev",
 
-        "pagerfanta/pagerfanta": "1.0.2",
-        
         "jms/serializer-bundle": "@dev",
 
         "cboden/ratchet": "dev-master",

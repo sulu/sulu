@@ -17,9 +17,6 @@ use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\PropertyInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Pagerfanta\Pagerfanta;
-use Pagerfanta\Adapter\ArrayAdapter;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Sulu\Component\Util\ArrayableInterface;
 
