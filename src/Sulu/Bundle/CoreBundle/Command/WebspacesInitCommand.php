@@ -103,7 +103,7 @@ class WebspacesInitCommand extends ContainerAwareCommand
             $session->save();
 
             // create temp node
-            $output->writeln("    temp: '/{$contentsPath}'");
+            $output->writeln("    temp: '/{$tempPath}'");
             $this->createRecursive($tempPath, $root);
             $session->save();
         }
@@ -120,15 +120,18 @@ class WebspacesInitCommand extends ContainerAwareCommand
     private function setBasicLocalizationProperties(Localization $localization, NodeInterface $node, $template, $userId)
     {
         $this->properties->setLanguage(str_replace('-', '_', $localization->getLocalization()));
-        $node->setProperty($this->properties->getName('template'), $template);
-        $node->setProperty($this->properties->getName('changer'), $userId);
-        $node->setProperty($this->properties->getName('changed'), new DateTime());
-        $node->setProperty($this->properties->getName('creator'), $userId);
-        $node->setProperty($this->properties->getName('created'), new DateTime());
 
-        $node->setProperty($this->properties->getName('navigation'), true);
-        $node->setProperty($this->properties->getName('state'), StructureInterface::STATE_PUBLISHED);
-        $node->setProperty($this->properties->getName('published'), new DateTime());
+        if (!$node->hasProperty($this->properties->getName('template'))) {
+            $node->setProperty($this->properties->getName('template'), $template);
+            $node->setProperty($this->properties->getName('changer'), $userId);
+            $node->setProperty($this->properties->getName('changed'), new DateTime());
+            $node->setProperty($this->properties->getName('creator'), $userId);
+            $node->setProperty($this->properties->getName('created'), new DateTime());
+
+            $node->setProperty($this->properties->getName('navigation'), true);
+            $node->setProperty($this->properties->getName('state'), StructureInterface::STATE_PUBLISHED);
+            $node->setProperty($this->properties->getName('published'), new DateTime());
+        }
 
         if (is_array($localization->getChildren()) && sizeof($localization->getChildren()) > 0) {
             foreach ($localization->getChildren() as $local) {
