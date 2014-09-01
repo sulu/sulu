@@ -24,6 +24,8 @@ use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Mapper\LocalizationFinder\LocalizationFinderInterface;
 use Sulu\Component\Content\Mapper\LocalizationFinder\ParentChildAnyFinder;
 use Sulu\Component\Content\StructureManagerInterface;
+use Sulu\Component\Content\Template\TemplateResolver;
+use Sulu\Component\Content\Template\TemplateResolverInterface;
 use Sulu\Component\Content\Types\ResourceLocator;
 use Sulu\Component\Content\Types\Rlp\Mapper\PhpcrMapper;
 use Sulu\Component\Content\Types\Rlp\Strategy\TreeStrategy;
@@ -124,6 +126,11 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
     protected $localizationFinder;
 
     /**
+     * @var TemplateResolverInterface
+     */
+    protected $templateResolver;
+
+    /**
      * The default language for the content mapper
      * @var string
      */
@@ -177,6 +184,8 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
             $this->prepareEventDispatcher();
             $this->prepareLocalizationFinder();
 
+            $this->templateResolver = new TemplateResolver();
+
             $cleaner = new PathCleanup();
             $this->mapper = new ContentMapper(
                 $this->contentTypeManager,
@@ -186,6 +195,7 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
                 $this->localizationFinder,
                 $cleaner,
                 $this->webspaceManager,
+                $this->templateResolver,
                 $this->language,
                 $this->defaultTemplate,
                 $this->languageNamespace,
