@@ -31,6 +31,7 @@
             <argument type="service" id="sulu.phpcr.session"/>
             <argument type="service" id="sulu.content.structure_manager"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+            <argument type="service" id="sulu.content.template_resolver"/>
             <argument>%sulu.content.language.namespace%</argument>
         </service>
 
