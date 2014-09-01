@@ -712,7 +712,7 @@ define([], function() {
                         skin: 'wide',
                         slides: [
                             {
-                                title: this.sandbox.translate(this.translations.configureSmartContent).replace('{0}', this.options.title),
+                                title: this.sandbox.translate(this.translations.configureSmartContent).replace('{title}', this.options.title),
                                 data: this.$overlayContent,
                                 okCallback: function() {
                                     this.itemsVisible = this.options.visibleItems;

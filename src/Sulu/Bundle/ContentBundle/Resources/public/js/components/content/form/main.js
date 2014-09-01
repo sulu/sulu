@@ -277,7 +277,7 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
                 this.createConfiguration(e.currentTarget);
 
                 var $elements = this.sandbox.dom.children(this.$find('[data-mapper-property="' + propertyName + '"]')),
-                    $element = index !== undefined && $elements.length > index ? $elements[index] : this.sandbox.dom.last($elements),
+                    $element = (index !== undefined && $elements.length > index) ? $elements[index] : this.sandbox.dom.last($elements),
                     changes;
 
                 // start new subcomponents
