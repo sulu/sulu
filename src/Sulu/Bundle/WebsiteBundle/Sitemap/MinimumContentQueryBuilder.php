@@ -49,8 +49,10 @@ class MinimumContentQueryBuilder
     {
         // init internal properties
         $translatedProperties = new MultipleTranslatedProperties(
-            array('template', 'changed', 'nodeType'), $this->languageNamespace
+            array('template', 'changed', 'nodeType'),
+            $this->languageNamespace
         );
+
         // init select / where
         $select = '';
         $where = '';
