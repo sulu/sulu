@@ -134,6 +134,9 @@ class MediaSelectionContentType extends ComplexContentType
         $segmentKey
     ) {
         $value = $property->getValue();
+        if ($value instanceof ArrayableInterface) {
+            $value = $value->toArray();
+        }
 
         // if whole smart-content container is pushed
         if (isset($value['data'])) {
