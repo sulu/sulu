@@ -130,7 +130,8 @@ define([], function() {
             hideTags: false,
             hideSortBy: false,
             hidePresentAs: false,
-            hideLimit: false
+            hideLimit: false,
+            title: 'Smart-Content'
         },
 
         sortMethods = {
@@ -711,7 +712,7 @@ define([], function() {
                         skin: 'wide',
                         slides: [
                             {
-                                title: this.sandbox.translate(this.translations.configureSmartContent),
+                                title: this.sandbox.translate(this.translations.configureSmartContent).replace('{title}', this.options.title),
                                 data: this.$overlayContent,
                                 okCallback: function() {
                                     this.itemsVisible = this.options.visibleItems;
@@ -892,7 +893,6 @@ define([], function() {
                     options: {
                         el: this.sandbox.dom.find('.' + constants.sortByDDClass, this.$overlayContent),
                         instanceName: this.options.instanceName + constants.sortByDDClass,
-//                        deselectLabel: 'No sorting',
                         value: 'name',
                         data: this.options.sortBy,
                         preSelectedElements: [this.options.preSelectedSortBy],
