@@ -14,6 +14,7 @@ use Sulu\Component\Webspace\Analyzer\Exception\UrlMatchNotFoundException;
 use Sulu\Component\Webspace\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Portal;
+use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Segment;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
@@ -120,10 +121,16 @@ class RequestAnalyzer implements RequestAnalyzerInterface
 
                 $this->setCurrentSegment($portalInformation->getSegment());
                 $request->setLocale($portalInformation->getLocalization()->getLocalization());
-                // get the path and set it on the request
-                $this->setCurrentResourceLocator(
-                    $this->getResourceLocatorFromRequest($portalInformation, $request)
+
+                list($resourceLocator, $format) = $this->getResourceLocatorFromRequest(
+                    $portalInformation,
+                    $request,
+                    'html'
                 );
+
+                // get the path and set it on the request
+                $this->setCurrentResourceLocator($resourceLocator);
+                $request->setRequestFormat($format);
 
                 // get the resource locator prefix and set it
                 $this->setCurrentResourceLocatorPrefix(
@@ -296,13 +303,33 @@ class RequestAnalyzer implements RequestAnalyzerInterface
         $this->resourceLocatorPrefix = $resourceLocatorPrefix;
     }
 
-    private function getResourceLocatorFromRequest($portalInformation, $request)
+    /**
+     * Retrurns resourcelocator and format of current request
+     */
+    private function getResourceLocatorFromRequest(
+        PortalInformation $portalInformation,
+        Request $request,
+        $defaultFormat
+    )
     {
-        $res = substr(
-            $request->getHost() . $request->getPathInfo(),
+        $path = $request->getPathInfo();
+
+        // extract file and extension info
+        $pathParts = explode('/', $path);
+        $fileInfo = explode('.', array_pop($pathParts));
+
+        $path = rtrim(implode('/', $pathParts), '/') . '/' . $fileInfo[0];
+        if (sizeof($fileInfo) > 1) {
+            $formatResult = $fileInfo[1];
+        } else {
+            $formatResult = $defaultFormat;
+        }
+
+        $resourceLocator = substr(
+            $request->getHost() . $path,
             strlen($portalInformation->getUrl())
         );
 
-        return $res;
+        return array($resourceLocator, $formatResult);
     }
 }
