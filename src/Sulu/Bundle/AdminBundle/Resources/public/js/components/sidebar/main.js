@@ -345,7 +345,7 @@ define([], function() {
                     }.bind(this));
                 }
             } else {
-                this.emptySidebar(false);
+                this.emptySidebar(true);
                 this.showColumn();
                 this.widgets.push({
                     url: null,
