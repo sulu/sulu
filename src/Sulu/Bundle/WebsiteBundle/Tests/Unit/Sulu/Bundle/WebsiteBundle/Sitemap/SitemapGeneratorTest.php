@@ -59,6 +59,7 @@ class SitemapGeneratorTest extends PhpcrTestCase
             $this->sessionManager,
             $this->structureManager,
             $this->webspaceManager,
+            $this->templateResolver,
             $this->languageNamespace
         );
     }

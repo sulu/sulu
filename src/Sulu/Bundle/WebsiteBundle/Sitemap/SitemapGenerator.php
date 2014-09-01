@@ -19,6 +19,7 @@ use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManagerInterface;
+use Sulu\Component\Content\Template\TemplateResolverInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
@@ -44,6 +45,11 @@ class SitemapGenerator implements SitemapGeneratorInterface
     private $structureManager;
 
     /**
+     * @var TemplateResolverInterface
+     */
+    private $templateResolver;
+
+    /**
      * @var string
      */
     private $languageNamespace;
@@ -52,12 +58,14 @@ class SitemapGenerator implements SitemapGeneratorInterface
         SessionManagerInterface $sessionManager,
         StructureManagerInterface $structureManager,
         WebspaceManagerInterface $webspaceManager,
+        TemplateResolverInterface $templateResolver,
         $languageNamespace
     ) {
         $this->languageNamespace = $languageNamespace;
         $this->sessionManager = $sessionManager;
         $this->structureManager = $structureManager;
         $this->webspaceManager = $webspaceManager;
+        $this->templateResolver = $templateResolver;
     }
 
     /**
@@ -139,11 +147,7 @@ class SitemapGenerator implements SitemapGeneratorInterface
         $nodeType = $row->getValue('page.i18n:' . $locale . '-nodeType');
         if ($templateKey !== '') {
             $path = $row->getPath('page');
-            if ($nodeType === Structure::NODE_TYPE_EXTERNAL_LINK) {
-                $templateKey = 'external-link';
-            }elseif ($nodeType === Structure::NODE_TYPE_INTERNAL_LINK) {
-                $templateKey = 'internal-link';
-            }
+            $templateKey = $this->templateResolver->resolve($nodeType, $templateKey);
 
             /** @var StructureInterface $structure */
             $structure = $this->structureManager->getStructure($templateKey);
