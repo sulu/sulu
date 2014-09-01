@@ -17,6 +17,10 @@ use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManagerInterface;
 
+/**
+ * Creates query for a minimum content pages (title and url)
+ * @package Sulu\Bundle\WebsiteBundle\Sitemap
+ */
 class MinimumContentQueryBuilder
 {
     /**
@@ -35,6 +39,12 @@ class MinimumContentQueryBuilder
         $this->structureManager = $structureManager;
     }
 
+    /**
+     * build query for given webspace and locales
+     * @param string $webspaceKey
+     * @param string $locales
+     * @return string
+     */
     public function build($webspaceKey, $locales)
     {
         // init internal properties
