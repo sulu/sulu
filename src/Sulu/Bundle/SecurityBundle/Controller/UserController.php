@@ -39,7 +39,6 @@ use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
  */
 class UserController extends RestController implements ClassResourceInterface
 {
-
     protected static $entityName = 'SuluSecurityBundle:User';
 
     protected static $entityKey = 'users';
@@ -98,7 +97,7 @@ class UserController extends RestController implements ClassResourceInterface
 
             $this->checkArguments($request);
 
-            if(!$this->isUsernameUnique($request->get('username'))){
+            if (!$this->isUsernameUnique($request->get('username'))) {
                 throw new UsernameNotUniqueException($request->get('username'));
             }
 
@@ -137,10 +136,10 @@ class UserController extends RestController implements ClassResourceInterface
             $em->flush();
 
             $view = $this->view($user, 200);
-        } catch(UsernameNotUniqueException $exc) {
-                $view = $this->view($exc->toArray(), 400);
-        }catch (MissingPasswordException $exc) {
-                $view = $this->view($exc->toArray(), 400);
+        } catch (UsernameNotUniqueException $exc) {
+            $view = $this->view($exc->toArray(), 400);
+        } catch (MissingPasswordException $exc) {
+            $view = $this->view($exc->toArray(), 400);
         } catch (RestException $re) {
             if (isset($user)) {
                 $em->remove($user);
@@ -180,7 +179,7 @@ class UserController extends RestController implements ClassResourceInterface
             }
 
             // check if username is already in database and the current user is not the user with this username
-            if($user->getUsername() != $request->get('username') &&
+            if ($user->getUsername() != $request->get('username') &&
                 !$this->isUsernameUnique($request->get('username'))
             ) {
                 throw new UsernameNotUniqueException($request->get('username'));
@@ -215,7 +214,7 @@ class UserController extends RestController implements ClassResourceInterface
             $view = $this->view($user, 200);
         } catch (EntityNotFoundException $exc) {
             $view = $this->view($exc->toArray(), 404);
-        } catch(UsernameNotUniqueException $exc) {
+        } catch (UsernameNotUniqueException $exc) {
             $view = $this->view($exc->toArray(), 400);
         } catch (RestException $exc) {
             $view = $this->view($exc->toArray(), 400);
@@ -242,6 +241,7 @@ class UserController extends RestController implements ClassResourceInterface
                 return true;
             }
         }
+
         return false;
     }
 
@@ -264,7 +264,7 @@ class UserController extends RestController implements ClassResourceInterface
             }
 
             // check if username is already in database and the current user is not the user with this username
-            if($request->get('username') &&
+            if ($request->get('username') &&
                 $user->getUsername() != $request->get('username') &&
                 !$this->isUsernameUnique($request->get('username'))
             ) {
@@ -309,7 +309,7 @@ class UserController extends RestController implements ClassResourceInterface
             $view = $this->view($user, 200);
         } catch (EntityNotFoundException $exc) {
             $view = $this->view($exc->toArray(), 404);
-        } catch(UsernameNotUniqueException $exc) {
+        } catch (UsernameNotUniqueException $exc) {
             $view = $this->view($exc->toArray(), 400);
         } catch (RestException $exc) {
             $view = $this->view($exc->toArray(), 400);

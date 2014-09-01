@@ -11,7 +11,6 @@
 namespace Sulu\Bundle\SecurityBundle\Security\Exception;
 
 /**
- * Class MissingPasswordException
  * This exception is thrown when the password is mandatory but missing.
  * @package Sulu\Bundle\SecurityBundle\Security\Exception
  */
@@ -19,7 +18,7 @@ class MissingPasswordException extends SecurityException
 {
     public function __construct()
     {
-        parent::__construct('security.user.error.missingPassword', self::EXCEPTION_CODE_MISSING_PASSWORD);
+        parent::__construct('security.user.error.missingPassword', 1002);
     }
 
     public function toArray()

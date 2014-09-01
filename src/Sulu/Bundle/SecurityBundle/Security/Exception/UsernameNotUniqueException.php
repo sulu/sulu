@@ -11,7 +11,6 @@
 namespace Sulu\Bundle\SecurityBundle\Security\Exception;
 
 /**
- * Class UsernameNotUniqueException
  * This exception is thrown when the username is not unique.
  * @package Sulu\Bundle\SecurityBundle\Security\Exception
  */
@@ -26,7 +25,7 @@ class UsernameNotUniqueException extends SecurityException
 
     public function __construct($username)
     {
-        parent::__construct('security.user.error.notUnique', self::EXCEPTION_CODE_USERNAME_NOT_UNIQUE);
+        parent::__construct('security.user.error.notUnique', 1001);
         $this->username = $username;
     }
 
