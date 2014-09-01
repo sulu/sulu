@@ -231,6 +231,13 @@
   overflow: inherit;
 }
 
+/* block add-button */
+/* line 48, ../scss/modules/general.scss */
+.text-block-footer.full .action .dropdown-label {
+  background-color: #cccccc;
+  cursor: default;
+}
+
 /* line 1, ../scss/modules/seo.scss */
 .seo-excerpt {
   background: #fff;

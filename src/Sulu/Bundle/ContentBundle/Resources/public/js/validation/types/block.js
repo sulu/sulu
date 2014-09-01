@@ -31,12 +31,17 @@ define([
                     }
 
                     this.id = this.$el.attr('id');
-                    this.$addButton = $('#' + this.id + '-add');
-                    this.propertyName = App.dom.data(this.$el, "mapperProperty");
+                    this.propertyName = App.dom.data(this.$el, 'mapperProperty');
 
                     this.types = selectData;
 
-                    this.initSelectComponent(selectData);
+                    this.$addButton = $('#' + this.id + '-add');
+                    if (this.getMinOccurs() !== this.getMaxOccurs()) {
+                        this.initSelectComponent(selectData);
+                    } else {
+                        App.dom.remove(this.$addButton);
+                    }
+
                     this.bindDomEvents();
 
                     this.setValue([]);
@@ -103,8 +108,20 @@ define([
                         this.form.removeFields($element);
                         $element.remove();
 
+                        this.checkSortable();
+
                         $(form.$el).trigger('form-remove', [this.propertyName]);
                         this.checkFullAndEmpty();
+                    }
+                },
+
+                checkSortable: function() {
+                    // check for dragable
+                    if (this.getChildren().length <= 1) {
+                        App.dom.removeClass(this.$el, 'sortable');
+                        App.dom.attr(App.dom.children(this.$el), 'draggable', false);
+                    } else if (!App.dom.hasClass(this.$el, 'sortable')) {
+                        App.dom.addClass(this.$el, 'sortable');
                     }
                 },
 
@@ -141,7 +158,7 @@ define([
                                     name: 'dropdown@husky',
                                     options: {
                                         el: '#change' + options.index,
-                                        trigger: '.drop-down-trigger',
+                                        trigger: App.dom.find('.drop-down-trigger', this.$el),
                                         setParentDropDown: true,
                                         instanceName: 'change' + options.index,
                                         alignment: 'left',
@@ -157,13 +174,22 @@ define([
                                     }
                                 }
                             ]);
+                        } else {
+                            App.dom.remove(App.dom.find('.drop-down-trigger', $template));
                         }
+
+                        // remove delete button
+                        if (this.getMinOccurs() === this.getMaxOccurs()) {
+                            App.dom.remove(App.dom.find('.options-remove', $template));
+                        }
+
+                        this.checkSortable();
 
                         form.initFields($template).then(function() {
                             form.mapper.setData(data, $template).then(function() {
                                 dfd.resolve();
                                 if (!!fireEvent) {
-                                    $(form.$el).trigger('form-add', [this.propertyName, data]);
+                                    $(form.$el).trigger('form-add', [this.propertyName, data, index]);
                                 }
                             }.bind(this));
                         }.bind(this));
