@@ -15,7 +15,9 @@ use PHPCR\SessionInterface;
 use Sulu\Component\Content\StructureManagerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
+use Symfony\Bridge\Monolog\Formatter\ConsoleFormatter;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Helper\TableHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -23,14 +25,14 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Dumps pages without valid templates
+ * Validates pages
  * @package Sulu\Bundle\CoreBundle\Command
  */
-class DumpInvalidPagesCommand extends ContainerAwareCommand
+class ValidatePagesCommand extends ContainerAwareCommand
 {
     protected function configure()
     {
-        $this->setName('sulu:content:dump:invalid-pages')
+        $this->setName('sulu:content:validate')
             ->addArgument('webspaceKey', InputArgument::REQUIRED, 'Which webspace to search')
             ->setDescription('Dumps pages without valid templates');
     }
@@ -52,11 +54,11 @@ class DumpInvalidPagesCommand extends ContainerAwareCommand
         $webspace = $webspaceManager->findWebspaceByKey($webspaceKey);
 
         $select = '';
-        $header = array('valid', 'path');
+        $headers = array();
         foreach ($webspace->getAllLocalizations() as $localization) {
             $select .= '[i18n:' . $localization->getLocalization() . '-template] as ' . $localization->getLocalization(
                 ) . ',';
-            $header[] = $localization->getLocalization();
+            $headers[] = $localization->getLocalization();
         }
         $select = rtrim($select, ',');
 
@@ -76,28 +78,50 @@ class DumpInvalidPagesCommand extends ContainerAwareCommand
         $query = $queryManager->createQuery($sql2, 'JCR-SQL2');
         $queryResult = $query->execute();
 
+        $completeHeader = array_merge(array('invalid', 'path'), $headers, array('description'));
+
         /** @var TableHelper $table */
         $table = $this->getHelper('table');
-        $table->setHeaders($header);
+        $table->setHeaders($completeHeader);
+        $result = 0;
+        $messages = array();
 
         /** @var Row $row */
         foreach ($queryResult as $row) {
             $tableRow = array(' ');
-            foreach ($header as $h) {
-                if ($h === 'path') {
-                    $tableRow[] = $row->getPath();
-                } elseif ($h !== 'valid') {
-                    $template = $row->getValue($h);
-                    $tableRow[] = $template;
-                    if ($template !== "" && !in_array($template, $structures)) {
-                        $tableRow[0] = 'X';
-                    }
+
+            $tableRow[] = $row->getPath();
+            $descriptions = array();
+
+            foreach ($headers as $header) {
+                $template = $row->getValue($header);
+                $tableRow[] = $template;
+                if ($template !== "" && !in_array($template, $structures)) {
+                    $tableRow[0] = 'X';
+                    $descriptions[] = sprintf('Language %s contains a not existing xml-template', $header);
+                    $result++;
                 }
             }
+
+            $messages = array_merge($messages, $descriptions);
+            $tableRow[] = implode(', ', $descriptions);
 
             $table->addRow($tableRow);
         }
         $table->render($output);
 
+        $style = new OutputFormatterStyle('red', null, array('bold', 'blink'));
+        $output->getFormatter()->setStyle('error', $style);
+
+        $style = new OutputFormatterStyle('green', null, array('bold', 'blink'));
+        $output->getFormatter()->setStyle('ok', $style);
+
+        $output->writeln('');
+
+        if ($result > 0) {
+            $output->writeln(sprintf("<error>%s Errors found: \r\n  - %s</error>", $result, implode("\r\n  - ", $messages)));
+        } else {
+            $output->writeln(sprintf("<ok>%s Errors found</ok>", $result));
+        }
     }
 }
