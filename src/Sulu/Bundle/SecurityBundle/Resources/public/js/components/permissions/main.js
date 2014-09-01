@@ -123,10 +123,16 @@ define([
                 success: function(model) {
                     this.sandbox.emit('sulu.user.permissions.saved', model.toJSON());
                 }.bind(this),
-                error: function() {
-                    this.sandbox.logger.log("error while saving profile");
+                error: function(obj, resp) {
+                    if (!!resp && !!resp.responseJSON && !!resp.responseJSON.message) {
+                        this.sandbox.emit('sulu.labels.error.show',
+                            resp.responseJSON.message,
+                            'labels.error',
+                            ''
+                        );
+                        this.sandbox.emit('sulu.user.permissions.error', resp.responseJSON.code);
+                    }
                 }.bind(this)
-
             });
         },
 

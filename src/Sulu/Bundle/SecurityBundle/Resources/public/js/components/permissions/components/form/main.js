@@ -248,6 +248,27 @@ define([], function() {
         },
 
         bindCustomEvents: function() {
+            this.sandbox.on('sulu.user.permissions.error', function(code) {
+                switch (code) {
+                    case 1001:
+                        var $wrapper = this.sandbox.dom.parent(this.sandbox.dom.find('#username'));
+                        this.sandbox.dom.prependClass($wrapper, 'husky-validate-error');
+                        this.setHeaderBar(true);
+                        break;
+                    case 1002:
+                        var $wrapperPasswordRepeat = this.sandbox.dom.parent(this.sandbox.dom.find('#passwordRepeat')),
+                            $wrapperPassword = this.sandbox.dom.parent(this.sandbox.dom.find('#password'));
+                        this.sandbox.dom.prependClass($wrapperPassword, 'husky-validate-error');
+                        this.sandbox.dom.prependClass($wrapperPasswordRepeat, 'husky-validate-error');
+
+                        this.setHeaderBar(true);
+                        break;
+                    default:
+                        this.sandbox.logger.warn('Unrecognized error code!', code);
+                        break;
+                }
+            }.bind(this));
+
             // delete contact
             this.sandbox.on('sulu.header.toolbar.delete', function() {
                 this.sandbox.emit('sulu.user.permissions.delete', this.contact.id);
