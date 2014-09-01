@@ -17,6 +17,10 @@ use Sulu\Component\Content\SimpleContentType;
  */
 class Checkbox extends SimpleContentType
 {
+    /**
+     * form template for content type
+     * @var string
+     */
     private $template;
 
     function __construct($template)
