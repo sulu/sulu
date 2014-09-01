@@ -10,9 +10,11 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Controller;
 
+use InvalidArgumentException;
 use Sulu\Bundle\WebsiteBundle\Navigation\NavigationMapper;
 use Sulu\Bundle\WebsiteBundle\Navigation\NavigationMapperInterface;
 use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Content\Template\Exception\TemplateNotFoundException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -32,43 +34,57 @@ abstract class WebsiteController extends Controller
         $partial = false
     )
     {
+        $request = $this->getRequest();
+        $viewTemplate = str_replace('{_format}', $request->getRequestFormat(), $structure->getView());
 
         $viewDataResolver = $this->get('sulu.content.structure_view_resolver');
 
-        $data = array_merge($attributes, array(
-            'content' => $structure,
-            'view' => $viewDataResolver->resolve($structure)
-        ));
+        $data = array_merge(
+            $attributes,
+            array(
+                'content' => $structure,
+                'view' => $viewDataResolver->resolve($structure)
+            )
+        );
 
-        // if partial render only content block else full page
-        if ($partial) {
-            $content = $this->renderBlock(
-                $structure->getView(),
-                'content',
-                $data
-            );
-        } else {
-            $content = parent::renderView(
-                $structure->getView(),
-                $data
-            );
+        try {
+            // if partial render only content block else full page
+            if ($partial) {
+                $content = $this->renderBlock(
+                    $viewTemplate,
+                    'content',
+                    $data
+                );
+            } else {
+                $content = parent::renderView(
+                    $viewTemplate,
+                    $data
+                );
+            }
+            // remove content of output
+            if (ob_get_length()) {
+                ob_clean();
+            }
+
+            $response = new Response();
+            $response->setContent($content);
+
+            // if not preview enable cache handling
+            if (!$preview) {
+                // mark the response as either public or private
+                $response->setPublic();
+                //$response->setPrivate();
+
+                // set the private or shared max age
+                //$response->setMaxAge($structure->getCacheLifeTime());
+                $response->setSharedMaxAge($structure->getCacheLifeTime());
+            }
+
+            return $response;
+        } catch (InvalidArgumentException $ex) {
+            // template not found
+            return new Response(null, 406);
         }
-
-        $response = new Response();
-        $response->setContent($content);
-
-        // if not preview enable cache handling
-        if (!$preview) {
-            // mark the response as either public or private
-            $response->setPublic();
-            //$response->setPrivate();
-
-            // set the private or shared max age
-            //$response->setMaxAge($structure->getCacheLifeTime());
-            $response->setSharedMaxAge($structure->getCacheLifeTime());
-        }
-
-        return $response;
     }
 
     /**
