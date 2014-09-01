@@ -24,12 +24,12 @@ class SitemapGeneratorTest extends PhpcrTestCase
     /**
      * @var StructureInterface[]
      */
-    private $dataEN;
+    private $dataEn;
 
     /**
      * @var StructureInterface[]
      */
-    private $dataENUS;
+    private $dataEnUs;
 
     /**
      * @var Webspace
@@ -44,8 +44,8 @@ class SitemapGeneratorTest extends PhpcrTestCase
     protected function setUp()
     {
         $this->prepareMapper();
-        $this->dataEN = $this->prepareTestData();
-        $this->dataENUS = $this->prepareTestData('en_us');
+        $this->dataEn = $this->prepareTestData();
+        $this->dataEnUs = $this->prepareTestData('en_us');
 
         $this->structureManager->expects($this->any())
             ->method('getStructures')
@@ -236,7 +236,7 @@ class SitemapGeneratorTest extends PhpcrTestCase
         return $data;
     }
 
-    private function getStructureMock($structureKey, $nodeName = 'name', $rlp = true)
+    private function getStructureMock($structureKey, $nodeName = 'name', $addResourceLocatorProperty = true)
     {
         $structureMock = $this->getMockForAbstractClass(
             '\Sulu\Component\Content\Structure',
@@ -265,7 +265,7 @@ class SitemapGeneratorTest extends PhpcrTestCase
             )
         );
 
-        if ($rlp) {
+        if ($addResourceLocatorProperty) {
             $method->invokeArgs(
                 $structureMock,
                 array(
@@ -325,12 +325,12 @@ class SitemapGeneratorTest extends PhpcrTestCase
         $this->assertEquals('/news', $result[1]['url']);
         $this->assertEquals('/news/news-1', $result[2]['url']);
         $this->assertEquals('/news/news-2', $result[3]['url']);
-        $this->assertEquals($this->dataEN['products']->getUuid(), $result[4]['url']);
+        $this->assertEquals($this->dataEn['products']->getUuid(), $result[4]['url']);
         $this->assertEquals('www.asdf.at', $result[5]['url']);
         $this->assertEquals('/news', $result[6]['url']);
         $this->assertEquals('/news/news-1', $result[7]['url']);
         $this->assertEquals('/news/news-2', $result[8]['url']);
-        $this->assertEquals($this->dataENUS['products']->getUuid(), $result[9]['url']);
+        $this->assertEquals($this->dataEnUs['products']->getUuid(), $result[9]['url']);
         $this->assertEquals('www.asdf.at', $result[10]['url']);
 
         $this->assertEquals(1, $result[0]['nodeType']);
@@ -362,7 +362,7 @@ class SitemapGeneratorTest extends PhpcrTestCase
         $this->assertEquals('/news', $result[1]['url']);
         $this->assertEquals('/news/news-1', $result[2]['url']);
         $this->assertEquals('/news/news-2', $result[3]['url']);
-        $this->assertEquals($this->dataEN['products']->getUuid(), $result[4]['url']);
+        $this->assertEquals($this->dataEn['products']->getUuid(), $result[4]['url']);
         $this->assertEquals('www.asdf.at', $result[5]['url']);
 
         $this->assertEquals(1, $result[0]['nodeType']);
@@ -392,7 +392,7 @@ class SitemapGeneratorTest extends PhpcrTestCase
 
         $this->assertEquals('Products-1 en', $layer1[1]['title']);
         $this->assertEquals(2, $layer1[1]['nodeType']);
-        $this->assertEquals($this->dataEN['products']->getUuid(), $layer1[1]['url']);
+        $this->assertEquals($this->dataEn['products']->getUuid(), $layer1[1]['url']);
 
         $this->assertEquals('Products-2 en', $layer1[2]['title']);
         $this->assertEquals('www.asdf.at', $layer1[2]['url']);

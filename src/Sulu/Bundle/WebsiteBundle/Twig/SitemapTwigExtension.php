@@ -83,12 +83,13 @@ class SitemapTwigExtension extends \Twig_Extension
 
     /**
      * Returns full sitemap of webspace and language from the content
-     * @param StructureInterface $content
+     * @param string $webspaceKey
+     * @param string $languageCode
      * @return array
      */
-    public function sitemapFunction(StructureInterface $content)
+    public function sitemapFunction($webspaceKey, $languageCode)
     {
-        return $this->sitemapGenerator->generate($content->getWebspaceKey(), $content->getLanguageCode());
+        return $this->sitemapGenerator->generate($webspaceKey, $languageCode);
     }
 
     /**
