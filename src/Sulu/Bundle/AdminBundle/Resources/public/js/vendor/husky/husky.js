@@ -38160,7 +38160,8 @@ define('__component__$ckeditor@husky',[], function() {
             instanceName: null,
             godMode: false,
             tableEnabled: true,
-            linksEnabled: true
+            linksEnabled: true,
+            pasteFromWord: true
         },
 
         /**
@@ -38198,6 +38199,10 @@ define('__component__$ckeditor@husky',[], function() {
                 { name: 'blockstyles', items: [ 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'] },
                 { name: 'list', items: [ 'BulletedList'] }
             ];
+
+            if (this.options.pasteFromWord === true) {
+                config.toolbar.push({ name: 'paste', items: [ 'PasteFromWord' ] });
+            }
 
             if (this.options.linksEnabled === true) {
                 config.toolbar.push({ name: 'links', items: [ 'Link', 'Unlink' ] });
@@ -41691,7 +41696,7 @@ define('__component__$input@husky',[], function () {
                 removeButtons: '',
                 removePlugins: 'elementspath,magicline',
                 removeDialogTabs: 'image:advanced;link:advanced',
-                extraPlugins: 'justify,format,sourcearea,link,table',
+                extraPlugins: 'justify,format,sourcearea,link,table,pastefromword',
                 resize_enabled: false,
                 uiColor: '#ffffff',
                 skin: 'husky'
