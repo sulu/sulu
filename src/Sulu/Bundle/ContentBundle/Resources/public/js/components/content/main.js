@@ -128,7 +128,8 @@ define([
             // getter for content data
             this.sandbox.on('sulu.content.contents.get-data', function(callback) {
                 this.loadDataDeferred.then(function() {
-                    callback(this.data);
+                    // deep copy of object
+                    callback(JSON.parse(JSON.stringify(this.data)));
                 }.bind(this));
             }.bind(this));
 
