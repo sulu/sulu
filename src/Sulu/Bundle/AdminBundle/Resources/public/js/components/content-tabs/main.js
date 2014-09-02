@@ -108,7 +108,6 @@ define([], function() {
             this.sandbox.mvc.Store.reset();
 
             // stop the current tab
-            App.stop('#' + constants.tabsComponentId + ' *');
             App.stop('#' + constants.tabsComponentId);
             
             // start the new tab-component

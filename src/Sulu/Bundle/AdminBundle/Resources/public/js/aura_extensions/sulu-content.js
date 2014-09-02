@@ -123,11 +123,13 @@ define([], function() {
          *          content: {
          *              width: 'fixed',
          *              topSpace: false,
-         *              leftSpace: false,   asdf
+         *              leftSpace: false,
          *              rightSpace: true
          *          },
          *          sidebar: {
-         *              width: 'max'
+         *              width: 'max',
+         *              darkBorder: true,
+         *              url: '/admin/widget-groups/my-widget-group'
          *          }
          *      }
          */
@@ -179,12 +181,22 @@ define([], function() {
          * @param sidebar {Object|Boolean} the sidebar config object or true for default behaviour. If false sidebar gets hidden
          */
         handleLayoutSidebar = function(sidebar) {
-            this.sandbox.emit('sulu.sidebar.empty');
+            if (!!sidebar && !!sidebar.url) {
+                this.sandbox.emit('sulu.sidebar.set-widget', sidebar.url);
+            } else {
+                this.sandbox.emit('sulu.sidebar.empty');
+            }
             if (!!sidebar) {
                 var width = sidebar.width || 'max';
                 this.sandbox.emit('sulu.sidebar.change-width', width);
             } else {
                 this.sandbox.emit('sulu.sidebar.hide');
+            }
+
+            if(!!sidebar && !!sidebar.cssClasses){
+                this.sandbox.emit('sulu.sidebar.add-classes', sidebar.cssClasses);
+            } else {
+                this.sandbox.emit('sulu.sidebar.reset-classes');
             }
         },
 
@@ -202,7 +214,7 @@ define([], function() {
          * @param {Array|String} [header.toolbar.template] array of toolbar items to pass to the header component, can also be a string representing a template (e.g. 'default')
          * @param {Array|String} [header.toolbar.parentTemplate] same as toolbar.template, gets merged with toolbar template
          * @param {Object} [header.toolbar.options] object with options for the toolbar component
-         * @param {Object|Boolean} [header.toolbar.languageChanger] Object with url and callback to pass to the header. If true system language changer will be rendered. Default is true
+         * @param {Object|Boolean} [header.toolbar.languageChanger] Object with url and callback to pass to the header. If true default language changer will be rendered. Default is true
          *
          * @param {String} [header.tabs.url] Url to fetch tabs related data from
          * @param {Boolean} [header.tabs.fullControl] If true the header just displayes the tabs, but doesn't start the content-component

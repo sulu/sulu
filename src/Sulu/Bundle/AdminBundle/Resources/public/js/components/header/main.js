@@ -23,7 +23,7 @@
  * @param {Object} [options.contentComponentOptions] options to forward to the content-component. Are further used for the content-tabs-component
  * @param {Object} [options.contentEl] element for the content-component
  * @param {Object} [options.toolbarOptions] options to pass to the toolbar-component
- * @param {Boolean|Object} [options.toolbarLanguageChanger] If true a system-language changer will be displayed. Can be an object to build a custom language changer
+ * @param {Boolean|Object} [options.toolbarLanguageChanger] If true a default-language changer will be displayed. Can be an object to build a custom language changer
  * @param {String} [options.toolbarLanguageChanger.url] url to fetch the dropdown-data from
  * @param {Function} [options.toolbarLanguageChanger.callback] callback to pass the clicked language-item to
  * @param {String} [options.toolbarLanguageChanger.preselected] id of the language selected at the beginning
@@ -93,12 +93,224 @@ define([], function() {
             }
         },
 
+        templates = {
+            skeleton: [
+                '<div class="inner">',
+                '<div class="'+ constants.infoClass +'"></div>',
+                '<div class="'+ constants.headlineClass +'">',
+                '<span class="fa-'+ constants.backIcon +' '+ constants.backClass +'"></span>',
+                '<span class="'+ constants.titleColorClass +'"></span>',
+                '<h1 class="bright"><%= headline %></h1>',
+                '</div>',
+                '<div class="bottom-row">',
+                '<div class="'+ constants.bottomContentClass +'"></div>',
+                '<div class="'+ constants.toolbarClass +'"></div>',
+                '</div>',
+                '</div>'
+            ].join(''),
+
+            breadcrumbItem: [
+                '<li<% if(inactive === true) { %> class="inactive"<% } %>>',
+                '<a data-sulu-navigate="true" data-sulu-event="<%= event %>" href="<%= link %>"><%= title %></a>',
+                '</li>'
+            ].join('\n')
+        },
+
+        createEventName = function(postfix) {
+            return 'sulu.header.' + ((!!this.options.instanceName) ? this.options.instanceName + '.' : '') + postfix;
+        },
+
+        /**
+         * trigger after initialization has finished
+         *
+         * @event sulu.header.[INSTANCE_NAME].initialized
+         */
+            INITIALIZED = function() {
+            return createEventName.call(this, 'initialized');
+        },
+
+        /**
+         * emitted when the back-icon gets clicked
+         *
+         * @event sulu.header.[INSTANCE_NAME].back
+         */
+            BACK = function() {
+            return createEventName.call(this, 'back');
+        },
+
+        /**
+         * listens on and sets the breadcrumb
+         *
+         * @event sulu.header.[INSTANCE_NAME].set-breadcrumb
+         * @param {array} breadcrumb Array of breadcrumb-objects with a title and link attribute
+         */
+            SET_BREADCRUMB = function() {
+            return createEventName.call(this, 'set-breadcrumb');
+        },
+
+        /**
+         * listens on and sets the title
+         *
+         * @event sulu.header.[INSTANCE_NAME].set-title
+         * @param {string} title to set
+         */
+            SET_TITLE = function() {
+            return createEventName.call(this, 'set-title');
+        },
+
+        /**
+         * listens on and sets a color-point in front of the title
+         *
+         * @event sulu.header.[INSTANCE_NAME].set-title-color
+         * @param {string} color to set
+         */
+            SET_TITLE_COLOR = function() {
+            return createEventName.call(this, 'set-title-color');
+        },
+
+        /**
+         * listens on and changes the state of the toolbar
+         *
+         * @event sulu.header.[INSTANCE_NAME].toolbar.state.change
+         * @param {string} type 'add' or 'edit'
+         * @param {boolean} saved If false toolbar gets set in dirty state
+         * @param {boolean} highlight True to change with highlight effect
+         */
+            TOOLBAR_STATE_CHANGE = function() {
+            return createEventName.call(this, 'toolbar.state.change');
+        },
+
+        /**
+         * listens on and passes the outer height of the components element to a callback
+         *
+         * @event sulu.header.[INSTANCE_NAME].get-height
+         * @param {function} callback to pass the outer-height to
+         */
+            GET_HEIGHT = function() {
+            return createEventName.call(this, 'get-height');
+        },
+
+        /**
+         * listens on and initializes a blank toolbar with given options
+         *
+         * @event sulu.header.[INSTANCE_NAME].set-toolbar
+         * @param {object} The options to pass to the toolbar-component
+         */
+            SET_TOOLBAR = function() {
+            return createEventName.call(this, 'set-toolbar');
+        },
+
+        /**
+         * listens on and sets a given html-object into a container on the bottom of the header
+         *
+         * @event sulu.header.[INSTANCE_NAME].set-bottom-content
+         * @param {object|string} the html-object/markup to insert
+         */
+            SET_BOTTOM_CONTENT = function() {
+            return createEventName.call(this, 'set-bottom-content');
+        },
+
+        /**
+         * emited if the language changer got changed
+         *
+         * @event sulu.header.[INSTANCE_NAME].language-changed
+         * @param {string} the language which got changed to
+         */
+        LANGUAGE_CHANGED = function() {
+            return createEventName.call(this, 'language-changed');
+        },
+
+        /*********************************************
+         *   Abstract events
+         ********************************************/
+
+        /**
+         * listens on activates tabs
+         *
+         * @event sulu.header.[INSTANCE_NAME].tabs.activate
+         */
+            TABS_ACTIVATE = function() {
+            return createEventName.call(this, 'tabs.activate');
+        },
+
+        /**
+         * listens on deactivates tabs
+         *
+         * @event sulu.header.[INSTANCE_NAME].tabs.activate
+         */
+            TABS_DEACTIVATE = function() {
+            return createEventName.call(this, 'tabs.deactivate');
+        },
+
+        /**
+         * listens on and sets a button
+         *
+         * @event sulu.header.[INSTANCE_NAME].toolbar.button.set
+         * @param {string} id The id of the button
+         * @param {object} object with a icon and title
+         */
+            TOOLBAR_BUTTON_SET = function() {
+            return createEventName.call(this, 'toolbar.button.set');
+        },
+
+        /**
+         * listens on and sets an item in loading state
+         *
+         * @event sulu.header.[INSTANCE_NAME].toolbar.item.loading
+         * @param {string} id The id of the item
+         */
+            TOOLBAR_ITEM_LOADING = function() {
+            return createEventName.call(this, 'toolbar.item.loading');
+        },
+
+        /**
+         * listens on and changes the item of a button
+         *
+         * @event sulu.header.[INSTANCE_NAME].toolbar.item.change
+         * @param {string} button The id of the button
+         * @param {string} item the id or the index of the dropdown-item
+         */
+            TOOLBAR_ITEM_CHANGE = function() {
+            return createEventName.call(this, 'toolbar.item.change');
+        },
+
+        /**
+         * listens on and shows a button
+         *
+         * @event sulu.header.[INSTANCE_NAME].toolbar.item.show
+         * @param {string} button The id of the button
+         */
+            TOOLBAR_ITEM_SHOW = function() {
+            return createEventName.call(this, 'toolbar.item.show');
+        },
+
+        /**
+         * listens on and enables a button
+         *
+         * @event sulu.header.[INSTANCE_NAME].toolbar.item.enable
+         * @param {string} button The id of the button
+         */
+            TOOLBAR_ITEM_ENABLE = function() {
+            return createEventName.call(this, 'toolbar.item.enable');
+        },
+
+        /**
+         * listens on and shows back icon
+         *
+         * @event sulu.header.[INSTANCE_NAME].toolbar.items.set
+         * @param id {string|number} id of the parent item
+         * @param items {array} array of items to set
+         */
+            TOOLBAR_ITEMS_SET = function() {
+            return createEventName.call(this, 'toolbar.items.set');
+        },
+
         /**
          * Predefined toolbar templates
          * each function must return a an array with items for the toolbar
-         * @type {{default: function, languageChanger: function, systemLanguageChanger: function}}
+         * @type {{default: function, languageChanger: function, defaultLanguageChanger: function}}
          */
-        toolbarTemplates = {
+            toolbarTemplates = {
             default: function() {
                 return[
                     {
@@ -131,6 +343,10 @@ define([], function() {
                 ];
             },
 
+            save: function() {
+                return [toolbarTemplates.default.call(this)[0]];
+            },
+
             languageChanger: function(url, callback) {
                 var button;
 
@@ -142,20 +358,20 @@ define([], function() {
                 }
 
                 button = this.sandbox.util.extend(true, {}, constants.languageChangerDefaults, {
-                            hidden: true,
-                            itemsOption: {
-                                url: url,
-                                titleAttribute: 'name',
-                                idAttribute: 'localization',
-                                translate: false,
-                                callback: callback
-                            }
+                    hidden: true,
+                    itemsOption: {
+                        url: url,
+                        titleAttribute: 'name',
+                        idAttribute: 'localization',
+                        translate: false,
+                        callback: callback
+                    }
                 });
 
                 return [button];
             },
 
-            systemLanguageChanger: function() {
+            defaultLanguageChanger: function() {
                 var button, items = [], i, length;
 
                 // generate dropdown-items
@@ -167,41 +383,18 @@ define([], function() {
                 }
 
                 button = this.sandbox.util.extend(true, {}, constants.languageChangerDefaults, {
-                    id: 'system-language',
-                    title: this.sandbox.sulu.user.locale,
+                    id: 'language',
+                    title: this.options.toolbarLanguageChanger.preSelected || this.sandbox.sulu.user.locale,
                     items: items,
                     itemsOption: {
                         callback: function(item) {
-                            this.sandbox.emit('sulu.app.change-user-locale', item.locale);
+                            this.sandbox.emit(LANGUAGE_CHANGED.call(this), item.locale);
                         }.bind(this)
                     }
                 });
 
                 return [button];
             }
-        },
-
-        templates = {
-            skeleton: [
-                '<div class="inner">',
-                    '<div class="'+ constants.infoClass +'"></div>',
-                    '<div class="'+ constants.headlineClass +'">',
-                        '<span class="fa-'+ constants.backIcon +' '+ constants.backClass +'"></span>',
-                        '<span class="'+ constants.titleColorClass +'"></span>',
-                        '<h1 class="bright"><%= headline %></h1>',
-                    '</div>',
-                    '<div class="bottom-row">',
-                        '<div class="'+ constants.bottomContentClass +'"></div>',
-                        '<div class="'+ constants.toolbarClass +'"></div>',
-                    '</div>',
-                '</div>'
-            ].join(''),
-
-            breadcrumbItem: [
-                '<li<% if(inactive === true) { %> class="inactive"<% } %>>',
-                    '<a data-sulu-navigate="true" data-sulu-event="<%= event %>" href="<%= link %>"><%= title %></a>',
-                '</li>'
-            ].join('\n')
         },
 
         changeStateCallbacks = {
@@ -219,7 +412,7 @@ define([], function() {
          * @param {Object|String} template Can be a JSON-string, String representing a function in toolbarTemplates or a valid array of objects
          * @returns {Object} a template usable by the toolbar-component
          */
-        getToolbarTemplate = function(template) {
+            getToolbarTemplate = function(template) {
             var templateObj = template;
             if (typeof template === 'string') {
                 try {
@@ -242,195 +435,15 @@ define([], function() {
          * @param {String} template String representing a function in changeStateCallbacks
          * @returns {Function} the matched function
          */
-        getChangeToolbarStateCallback = function(template) {
+            getChangeToolbarStateCallback = function(template) {
             if (!!changeStateCallbacks[template]) {
                 return changeStateCallbacks[template];
             } else {
                 this.sandbox.logger.log('no template found!');
             }
-        },
-
-        createEventName = function(postfix) {
-            return 'sulu.header.' + ((!!this.options.instanceName) ? this.options.instanceName + '.' : '') + postfix;
-        },
-
-        /**
-         * trigger after initialization has finished
-         *
-         * @event sulu.header.[INSTANCE_NAME].initialized
-         */
-        INITIALIZED = function() {
-            return createEventName.call(this, 'initialized');
-        },
-
-        /**
-         * emitted when the back-icon gets clicked
-         *
-         * @event sulu.header.[INSTANCE_NAME].back
-         */
-        BACK = function() {
-            return createEventName.call(this, 'back');
-        },
-
-        /**
-         * listens on and sets the breadcrumb
-         *
-         * @event sulu.header.[INSTANCE_NAME].set-breadcrumb
-         * @param {array} breadcrumb Array of breadcrumb-objects with a title and link attribute
-         */
-        SET_BREADCRUMB = function() {
-            return createEventName.call(this, 'set-breadcrumb');
-        },
-
-        /**
-         * listens on and sets the title
-         *
-         * @event sulu.header.[INSTANCE_NAME].set-title
-         * @param {string} title to set
-         */
-        SET_TITLE = function() {
-            return createEventName.call(this, 'set-title');
-        },
-
-        /**
-         * listens on and sets a color-point in front of the title
-         *
-         * @event sulu.header.[INSTANCE_NAME].set-title-color
-         * @param {string} color to set
-         */
-        SET_TITLE_COLOR = function() {
-            return createEventName.call(this, 'set-title-color');
-        },
-
-        /**
-         * listens on and changes the state of the toolbar
-         *
-         * @event sulu.header.[INSTANCE_NAME].toolbar.state.change
-         * @param {string} type 'add' or 'edit'
-         * @param {boolean} saved If false toolbar gets set in dirty state
-         * @param {boolean} highlight True to change with highlight effect
-         */
-        TOOLBAR_STATE_CHANGE = function() {
-            return createEventName.call(this, 'toolbar.state.change');
-        },
-
-        /**
-         * listens on and passes the outer height of the components element to a callback
-         *
-         * @event sulu.header.[INSTANCE_NAME].get-height
-         * @param {function} callback to pass the outer-height to
-         */
-         GET_HEIGHT = function() {
-            return createEventName.call(this, 'get-height');
-         },
-
-        /**
-         * listens on and initializes a blank toolbar with given options
-         *
-         * @event sulu.header.[INSTANCE_NAME].set-toolbar
-         * @param {object} The options to pass to the toolbar-component
-         */
-         SET_TOOLBAR = function() {
-            return createEventName.call(this, 'set-toolbar');
-         },
-
-        /**
-         * listens on and sets a given html-object into a container on the bottom of the header
-         *
-         * @event sulu.header.[INSTANCE_NAME].set-bottom-content
-         * @param {object|string} the html-object/markup to insert
-         */
-        SET_BOTTOM_CONTENT = function() {
-            return createEventName.call(this, 'set-bottom-content');
-        },
-
-        /*********************************************
-         *   Abstract events
-         ********************************************/
-
-        /**
-         * listens on activates tabs
-         *
-         * @event sulu.header.[INSTANCE_NAME].tabs.activate
-         */
-        TABS_ACTIVATE = function() {
-            return createEventName.call(this, 'tabs.activate');
-        },
-
-        /**
-         * listens on deactivates tabs
-         *
-         * @event sulu.header.[INSTANCE_NAME].tabs.activate
-         */
-        TABS_DEACTIVATE = function() {
-            return createEventName.call(this, 'tabs.deactivate');
-        },
-
-        /**
-         * listens on and sets a button
-         *
-         * @event sulu.header.[INSTANCE_NAME].toolbar.button.set
-         * @param {string} id The id of the button
-         * @param {object} object with a icon and title
-         */
-        TOOLBAR_BUTTON_SET = function() {
-            return createEventName.call(this, 'toolbar.button.set');
-        },
-
-        /**
-         * listens on and sets an item in loading state
-         *
-         * @event sulu.header.[INSTANCE_NAME].toolbar.item.loading
-         * @param {string} id The id of the item
-         */
-         TOOLBAR_ITEM_LOADING = function() {
-            return createEventName.call(this, 'toolbar.item.loading');
-        },
-
-        /**
-         * listens on and changes the item of a button
-         *
-         * @event sulu.header.[INSTANCE_NAME].toolbar.item.change
-         * @param {string} button The id of the button
-         * @param {string} item the id or the index of the dropdown-item
-         */
-        TOOLBAR_ITEM_CHANGE = function() {
-            return createEventName.call(this, 'toolbar.item.change');
-        },
-
-        /**
-         * listens on and shows a button
-         *
-         * @event sulu.header.[INSTANCE_NAME].toolbar.item.show
-         * @param {string} button The id of the button
-         */
-        TOOLBAR_ITEM_SHOW = function() {
-            return createEventName.call(this, 'toolbar.item.show');
-        },
-
-        /**
-         * listens on and enables a button
-         *
-         * @event sulu.header.[INSTANCE_NAME].toolbar.item.enable
-         * @param {string} button The id of the button
-         */
-        TOOLBAR_ITEM_ENABLE = function() {
-            return createEventName.call(this, 'toolbar.item.enable');
-        },
-
-        /**
-         * listens on and shows back icon
-         *
-         * @event sulu.header.[INSTANCE_NAME].toolbar.items.set
-         * @param id {string|number} id of the parent item
-         * @param items {array} array of items to set
-         */
-        TOOLBAR_ITEMS_SET = function() {
-            return createEventName.call(this, 'toolbar.items.set');
         };
 
     return {
-
         /**
          * Initializes the component
          */
@@ -519,8 +532,8 @@ define([], function() {
             if (!!this.options.toolbarLanguageChanger && !!this.options.toolbarLanguageChanger.url) {
                 languageChanger = toolbarTemplates.languageChanger.call(this,
                     this.options.toolbarLanguageChanger.url, this.options.toolbarLanguageChanger.callback);
-            } else if (this.options.toolbarLanguageChanger === true) {
-                languageChanger = toolbarTemplates.systemLanguageChanger.call(this);
+            } else if (!!this.options.toolbarLanguageChanger) {
+                languageChanger = toolbarTemplates.defaultLanguageChanger.call(this);
             }
             this.options.toolbarTemplate = this.options.toolbarTemplate.concat(languageChanger);
         },
@@ -587,22 +600,42 @@ define([], function() {
         },
 
         /**
+         * Sets a new toolbar into the header
+         * @param options {Object} just toolbar-options. Or options with template and parentTemplate
+         */
+        setToolbar: function(options) {
+            if (!options.template) {
+                this.options.toolbarTemplate = null;
+                this.options.toolbarParentTemplate = null;
+                this.options.toolbarOptions = options;
+            } else {
+                this.options.toolbarTemplate = options.template;
+                this.options.toolbarParentTemplate = (!!options.parentTemplate) ? options.parentTemplate : null;
+                this.options.toolbarOptions = (!!options.toolbarOptions) ? options.toolbarOptions : {};
+                this.options.toolbarLanguageChanger = (!!options.languageChanger) ? options.languageChanger : null;
+            }
+            this.options.toolbarDisabled = false;
+            this.startToolbar();
+        },
+
+        /**
          * Handles the starting of the toolbar
          */
         startToolbar: function() {
             var def = this.sandbox.data.deferred();
 
             if (this.options.toolbarDisabled !== true) {
-                // merge passed toolbar-options with defaults
-                var options = this.sandbox.util.extend(true, {}, constants.toolbarDefaults, this.options.toolbarOptions);
+                var options = this.options.toolbarOptions;
 
-                // build icon-template and parent-template and merge all in this.options.toolbarTemplate
-                this.buildToolbarTemplate(this.options.toolbarTemplate, this.options.toolbarParentTemplate);
+                if (this.options.toolbarTemplate !== null) {
+                    // build icon-template and parent-template and merge all in this.options.toolbarTemplate
+                    this.buildToolbarTemplate(this.options.toolbarTemplate, this.options.toolbarParentTemplate);
 
-                // add built toolbarTemplate to the toolbar-options
-                options = this.sandbox.util.extend(true, {}, options, {
-                    data: this.options.toolbarTemplate
-                });
+                    // add built toolbarTemplate to the toolbar-options
+                    options = this.sandbox.util.extend(true, {}, constants.toolbarDefaults, options, {
+                        data: this.options.toolbarTemplate
+                    });
+                }
 
                 // start toolbar component with built options
                 this.startToolbarComponent(options, def);
@@ -620,7 +653,7 @@ define([], function() {
          */
         startToolbarComponent: function(options, def) {
             var $container = this.sandbox.dom.createElement('<div />'),
-                // global default values
+            // global default values
                 componentOptions = {
                     el: $container,
                     skin: 'blueish',
@@ -632,16 +665,6 @@ define([], function() {
                 this.sandbox.on('husky.toolbar.header'+ this.options.instanceName +'.initialized', function() {
                     def.resolve();
                 }.bind(this));
-            }
-
-            // if passed template is a string get the corresponding default template
-            if (!!options.template && typeof options.template === 'string' && toolbarTemplates.hasOwnProperty(options.template)) {
-                options.data = toolbarTemplates[options.template];
-                if (typeof options.data === 'function') {
-                    options.data = options.data.call(this);
-                }
-                this.options.changeStateCallback = getChangeToolbarStateCallback.call(this, options.template);
-                this.options.parentChangeStateCallback = getChangeToolbarStateCallback.call(this, options.parentTemplate);
             }
 
             this.sandbox.stop(this.$find('.' + constants.toolbarClass));
@@ -690,7 +713,7 @@ define([], function() {
             }.bind(this));
 
             // set or reset a toolbar
-            this.sandbox.on(SET_TOOLBAR.call(this), this.startToolbarComponent.bind(this));
+            this.sandbox.on(SET_TOOLBAR.call(this), this.setToolbar.bind(this));
 
             // set content to the bottom-content-container
             this.sandbox.on(SET_BOTTOM_CONTENT.call(this), this.insertBottomContent.bind(this));
@@ -835,7 +858,7 @@ define([], function() {
         setTitleColor: function(color) {
             this.sandbox.dom.addClass(this.$find('.' + constants.titleColorClass), constants.titleColorSetClass);
             this.sandbox.dom.css(this.$find('.' + constants.titleColorClass), {
-               'background-color': color
+                'background-color': color
             });
         },
 
