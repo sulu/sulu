@@ -5,11 +5,25 @@
 
     <parameters>
         <parameter key="sulu.phpcr.session.class">Sulu\Component\PHPCR\SessionManager\SessionManager</parameter>
+        <parameter key="sulu.phpcr.wrapped_session.class"><!-- Injected in extension from configuration --></parameter>
+        <parameter key="sulu.phpcr.wrapper.class">Sulu\Component\PHPCR\Wrapper\Wrapper\SimpleWrapper</parameter>
     </parameters>
 
     <services>
-        <service id="sulu.phpcr.session" class="%sulu.phpcr.session.class%">
+        <service id="sulu.phpcr.wrapper" class="%sulu.phpcr.wrapper.class%"/>
+
+        <service 
+            id="sulu.phpcr.wrapped_session" 
+            class="%sulu.phpcr.wrapped_session.class%"
+            factory-service="sulu.phpcr.wrapper"
+            factory-method="wrap"
+            >
             <argument type="service" id="doctrine_phpcr.default_session"/>
+            <argument>PHPCR\SessionInterface</argument>
+        </service>
+
+        <service id="sulu.phpcr.session" class="%sulu.phpcr.session.class%">
+            <argument type="service" id="sulu.phpcr.wrapped_session"/>
             <argument type="collection">
                 <argument key="base">%sulu.content.node_names.base%</argument>
                 <argument key="content">%sulu.content.node_names.content%</argument>
