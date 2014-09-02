@@ -1014,6 +1014,7 @@ class ContentMapper implements ContentMapperInterface
 
         if ($this->stopwatch) {
             $this->stopwatch->start('contentManager.loadByNode');
+            $this->stopwatch->start('contentManager.loadByNode.available-localization');
         }
 
         if ($loadGhostContent) {
@@ -1024,6 +1025,11 @@ class ContentMapper implements ContentMapperInterface
             );
         } else {
             $availableLocalization = $localization;
+        }
+
+        if ($this->stopwatch) {
+            $this->stopwatch->stop('contentManager.loadByNode.available-localization');
+            $this->stopwatch->start('contentManager.loadByNode.mapping');
         }
 
         $shadowOn = $contentNode->getPropertyValueWithDefault($this->properties->getName('shadow-on'), false);
@@ -1163,6 +1169,7 @@ class ContentMapper implements ContentMapperInterface
         //$this->eventDispatcher->dispatch(ContentEvents::NODE_LOAD, $event);
 
         if ($this->stopwatch) {
+            $this->stopwatch->stop('contentManager.loadByNode.mapping');
             $this->stopwatch->stop('contentManager.loadByNode');
         }
 
