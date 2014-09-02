@@ -1273,6 +1273,8 @@ class ContentMapper implements ContentMapperInterface
             $this->stopwatch->stop('contentManager.loadBreadcrumb');
         }
 
+        ksort($result);
+
         return $result;
     }
 
