@@ -904,16 +904,16 @@ class NodeControllerTest extends DatabaseTestCase
         $client->request('GET', '/api/nodes/' . $data[4]['id'] . '?breadcrumb=true&webspace=sulu_io&language=en');
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($client->getResponse()->getContent(), true);
 
-        $this->assertEquals($data[4]['title'], $response->title);
-        $this->assertEquals($data[4]['url'], $response->url);
-        $this->assertEquals($data[4]['article'], $response->article);
+        $this->assertEquals($data[4]['title'], $response['title']);
+        $this->assertEquals($data[4]['url'], $response['url']);
+        $this->assertEquals($data[4]['article'], $response['article']);
 
-        $this->assertEquals(3, sizeof($response->breadcrumb));
-        $this->assertEquals('Start Page', $response->breadcrumb[0]->title);
-        $this->assertEquals('test2', $response->breadcrumb[1]->title);
-        $this->assertEquals('test4', $response->breadcrumb[2]->title);
+        $this->assertEquals(3, sizeof($response['breadcrumb']));
+        $this->assertEquals('Start Page', $response['breadcrumb'][0]['title']);
+        $this->assertEquals('test2', $response['breadcrumb'][1]['title']);
+        $this->assertEquals('test4', $response['breadcrumb'][2]['title']);
     }
 
     public function testSmallResponse()
