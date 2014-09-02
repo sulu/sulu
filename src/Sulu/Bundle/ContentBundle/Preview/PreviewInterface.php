@@ -53,19 +53,10 @@ interface PreviewInterface
      * @param string $webspaceKey
      * @param string $locale
      * @param array $changes
-     * @param bool $ignoreError
      * @param bool $render
      * @return StructureInterface
      */
-    public function updateProperties(
-        $userId,
-        $contentUuid,
-        $webspaceKey,
-        $locale,
-        $changes,
-        $ignoreError = false,
-        $render = false
-    );
+    public function updateProperties($userId, $contentUuid, $webspaceKey, $locale, $changes, $render = false);
 
     /**
      * saves changes for given user and content

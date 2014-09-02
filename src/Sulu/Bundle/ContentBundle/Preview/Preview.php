@@ -67,7 +67,7 @@ class Preview implements PreviewInterface
                 $this->previewCache->updateTemplate($template, $userId, $contentUuid, $webspaceKey, $locale);
             }
 
-            $result = $this->updateProperties($userId, $contentUuid, $webspaceKey, $locale, $data, true, false);
+            $result = $this->updateProperties($userId, $contentUuid, $webspaceKey, $locale, $data, false);
         }
 
         return $result;
@@ -100,10 +100,8 @@ class Preview implements PreviewInterface
         $webspaceKey,
         $locale,
         $changes,
-        $ignoreError = false,
         $render = false
-    )
-    {
+    ) {
         /** @var StructureInterface $content */
         $content = $this->previewCache->fetchStructure($userId, $webspaceKey, $locale);
 
@@ -120,7 +118,7 @@ class Preview implements PreviewInterface
                     $property,
                     $data,
                     $content,
-                    $ignoreError
+                    $render
                 );
             }
 
@@ -158,7 +156,6 @@ class Preview implements PreviewInterface
         $property,
         $data,
         StructureInterface $content,
-        $ignoreError = false,
         $render = true
     ) {
         $sequence = $this->setValue($content, $property, $data, $webspaceKey, $locale);
@@ -172,15 +169,9 @@ class Preview implements PreviewInterface
         }
 
         if ($render === true) {
-            try {
-                $changes = $this->renderStructure($content, true, $property);
-                if ($changes !== false) {
-                    $this->previewCache->appendChanges(array($property => $changes), $userId, $webspaceKey);
-                }
-            } catch (\Exception $ex) {
-                if (!$ignoreError) {
-                    throw $ex;
-                }
+            $changes = $this->renderStructure($content, true, $property);
+            if ($changes !== false) {
+                $this->previewCache->appendChanges(array($property => $changes), $userId, $webspaceKey);
             }
         }
 
