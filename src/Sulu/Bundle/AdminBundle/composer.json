@@ -3,11 +3,7 @@
     "type": "library",
     "description": "Symfony bundle that provides administration functionality",
     "license": "MIT",
-<<<<<<< HEAD
     "version": "dev-develop",
-=======
-    "version": "0.6.6",
->>>>>>> hotfix/husky
     "keywords": ["admin", "cmf", "symfony"],
     "authors": [
         {
