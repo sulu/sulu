@@ -2,6 +2,7 @@
 
 namespace Sulu\Bundle\SearchBundle\EventListener;
 
+use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use Sulu\Component\Content\Event\ContentNodeEvent;
 use Massive\Bundle\SearchBundle\Search\SearchManager;
 use Sulu\Component\Content\Structure;
@@ -12,7 +13,7 @@ use Sulu\Component\Content\Structure;
 class NodeSaveListener
 {
     /**
-     * @var SearchManager
+     * @var SearchManagerInterface
      */
     protected $searchManager;
 
@@ -26,7 +27,7 @@ class NodeSaveListener
      */
     protected $baseName;
 
-    public function __construct(SearchManager $searchManager, $baseName, $tempName)
+    public function __construct(SearchManagerInterface $searchManager, $baseName, $tempName)
     {
         $this->searchManager = $searchManager;
         $this->tempName = $tempName;

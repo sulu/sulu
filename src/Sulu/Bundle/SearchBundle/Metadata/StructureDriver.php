@@ -2,6 +2,7 @@
 
 namespace Sulu\Bundle\SearchBundle\Metadata;
 
+use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadataInterface;
 use Metadata\Driver\DriverInterface;
 use Metadata\Driver\AbstractFileDriver;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
@@ -16,7 +17,7 @@ class StructureDriver implements DriverInterface
     /**
      * loads metadata for a given class if its derived from StructureInterface
      * @param \ReflectionClass $class
-     * @return IndexMetadata|null
+     * @return IndexMetadataInterface|null
      */
     public function loadMetadataForClass(\ReflectionClass $class)
     {

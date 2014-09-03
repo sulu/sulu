@@ -4,16 +4,13 @@ namespace Sulu\Bundle\SearchBundle\Command;
 
 use Jackalope\Query\Row;
 use Jackalope\Session;
-use Massive\Bundle\SearchBundle\Search\SearchManager;
+use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Structure;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Helper\TableHelper;
 use Sulu\Component\Content\Mapper\Translation\MultipleTranslatedProperties;
 
 class ReindexCommand extends ContainerAwareCommand
@@ -38,7 +35,7 @@ EOT
         /** @var ContentMapperInterface $contentMapper */
         $contentMapper = $container->get('sulu.content.mapper');
 
-        /** @var SearchManager $searchManager */
+        /** @var SearchManagerInterface $searchManager */
         $searchManager = $container->get('massive_search.search_manager');
 
         /** @var WebspaceManagerInterface $webspaceManager */
