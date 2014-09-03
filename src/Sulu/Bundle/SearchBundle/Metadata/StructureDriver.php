@@ -5,6 +5,7 @@ namespace Sulu\Bundle\SearchBundle\Metadata;
 use Metadata\Driver\DriverInterface;
 use Metadata\Driver\AbstractFileDriver;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
+use Sulu\Component\Content\StructureInterface;
 
 /**
  * Provides a Metadata Driver for massive search-bundle
@@ -27,6 +28,7 @@ class StructureDriver implements DriverInterface
             return null;
         }
 
+        /** @var StructureInterface $instance */
         $instance = $class->newInstance();
         $meta = new IndexMetadata($class->name);
 
