@@ -2,6 +2,12 @@
 
 namespace Sulu\Bundle\SearchBundle\Command;
 
+use Jackalope\Query\Row;
+use Jackalope\Session;
+use Massive\Bundle\SearchBundle\Search\SearchManager;
+use Sulu\Component\Content\Mapper\ContentMapperInterface;
+use Sulu\Component\Content\Structure;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -16,8 +22,9 @@ class ReindexCommand extends ContainerAwareCommand
     {
         $this->setName('sulu:search:reindex-content');
         $this->setDescription('Reindex the content in the search index');
-        $this->setHelp(<<<EOT
-The %command.name_full% command will retindex all the sulu Structures in search index.
+        $this->setHelp(
+            <<<EOT
+            The %command.name_full% command will retindex all the sulu Structures in search index.
 EOT
         );
     }
@@ -25,10 +32,21 @@ EOT
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $container = $this->getContainer();
+        /** @var Session $session */
         $session = $container->get('sulu.phpcr.session')->getSession();
-        $webspacePrefix = $container->getParameter('sulu.content.node_names.base');
+
+        /** @var ContentMapperInterface $contentMapper */
         $contentMapper = $container->get('sulu.content.mapper');
+
+        /** @var SearchManager $searchManager */
         $searchManager = $container->get('massive_search.search_manager');
+
+        /** @var WebspaceManagerInterface $webspaceManager */
+        $webspaceManager = $container->get('sulu_core.webspace.webspace_manager');
+
+        // path parts
+        $webspacePrefix = $container->getParameter('sulu.content.node_names.base');
+        $tempName = $container->getParameter('sulu.content.node_names.temp');
 
         $sql2 = 'SELECT * FROM [nt:unstructured] AS a WHERE [jcr:mixinTypes] = "sulu:content"';
 
@@ -40,6 +58,7 @@ EOT
 
         $multiTranslatedProperties = new MultipleTranslatedProperties(array(), 'i18n', '');
 
+        /** @var Row $row */
         foreach ($res->getRows() as $row) {
             $node = $row->getNode('a');
 
@@ -49,16 +68,24 @@ EOT
             foreach ($locales as $locale) {
 
                 // Evil 2: Also should be encapsulated.
-                if (!preg_match('{/' . $webspacePrefix . '/(.*?)/.*$}', $row->getNode()->getPath(), $matches)) {
-                    $output->writeln(sprintf('<error>Could not determine webspace for </error>: %s', $node->getPath()));
+                if (!preg_match('{/' . $webspacePrefix . '/(.*?)/(.*?)(/.*)*$}', $node->getPath(), $matches)) {
+                    $output->writeln(
+                        sprintf('<error> - Could not determine webspace for </error>: %s', $node->getPath())
+                    );
                     continue;
                 }
                 $webspaceKey = $matches[1];
 
-                $output->writeln(' - <comment>Indexing structure (locale: ' . $locale . ')</comment>: ' . $node->getPath());
-                $structure = $contentMapper->loadByNode($row->getNode('a'), $locale, $webspaceKey);
+                if ($tempName !== $matches[2] && $webspaceManager->findWebspaceByKey($webspaceKey) !== null) {
+                    $output->writeln(
+                        ' - <comment>Indexing structure (locale: ' . $locale . ')</comment>: ' . $node->getPath()
+                    );
+                    $structure = $contentMapper->load($node->getIdentifier(), $webspaceKey, $locale);
 
-                $searchManager->index($structure);
+                    if ($structure->getNodeState() === Structure::STATE_PUBLISHED) {
+                        $searchManager->index($structure);
+                    }
+                }
             }
         }
     }

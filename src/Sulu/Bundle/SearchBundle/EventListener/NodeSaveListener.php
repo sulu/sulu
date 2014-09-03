@@ -4,22 +4,43 @@ namespace Sulu\Bundle\SearchBundle\EventListener;
 
 use Sulu\Component\Content\Event\ContentNodeEvent;
 use Massive\Bundle\SearchBundle\Search\SearchManager;
+use Sulu\Component\Content\Structure;
 
 /**
  * Listen to sulu node save event and index the structure
  */
 class NodeSaveListener
 {
+    /**
+     * @var SearchManager
+     */
     protected $searchManager;
 
-    public function __construct(SearchManager $searchManager)
+    /**
+     * @var string
+     */
+    protected $tempName;
+
+    /**
+     * @var string
+     */
+    protected $baseName;
+
+    public function __construct(SearchManager $searchManager, $baseName, $tempName)
     {
         $this->searchManager = $searchManager;
+        $this->tempName = $tempName;
+        $this->baseName = $baseName;
     }
 
     public function onNodeSave(ContentNodeEvent $event)
     {
         $structure = $event->getStructure();
-        $this->searchManager->index($structure);
+        preg_match('{/' . $this->baseName . '/(.*?)/(.*?)(/.*)*$}', $structure->getPath(), $matches);
+
+        // only if it is none temp node and it is published
+        if ($matches[2] !== $this->tempName && $structure->getNodeState() !== Structure::STATE_PUBLISHED) {
+            $this->searchManager->index($structure);
+        }
     }
 }

@@ -6,8 +6,17 @@ use Metadata\Driver\DriverInterface;
 use Metadata\Driver\AbstractFileDriver;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
 
+/**
+ * Provides a Metadata Driver for massive search-bundle
+ * @package Sulu\Bundle\SearchBundle\Metadata
+ */
 class StructureDriver implements DriverInterface
 {
+    /**
+     * loads metadata for a given class if its derived from StructureInterface
+     * @param \ReflectionClass $class
+     * @return IndexMetadata|null
+     */
     public function loadMetadataForClass(\ReflectionClass $class)
     {
         if (!$class->implementsInterface('Sulu\Component\Content\StructureInterface')) {
