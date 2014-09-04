@@ -52,20 +52,22 @@ class SymfonyHttpCacheManager implements HttpCacheManagerInterface
      */
     public function expire(StructureInterface $structure, $environment = 'prod')
     {
-        $urls = $this->webspaceManager->findUrlsByResourceLocator(
-            $structure->getPropertyValue('url'),
-            $environment,
-            $structure->getLanguageCode(),
-            $structure->getWebspaceKey()
-        );
+        if ($structure->hasTag('sulu.rlp') && $structure->getPropertyValueByTagName('sulu.rlp') !== null) {
+            $urls = $this->webspaceManager->findUrlsByResourceLocator(
+                $structure->getPropertyValueByTagName('sulu.rlp'),
+                $environment,
+                $structure->getLanguageCode(),
+                $structure->getWebspaceKey()
+            );
 
-        if (count($urls) > 0) {
+            if (count($urls) > 0) {
 
-            foreach ($urls as $url) {
-                $this->invalidatePath($url);
+                foreach ($urls as $url) {
+                    $this->invalidatePath($url);
+                }
+
+                $this->flush();
             }
-
-            $this->flush();
         }
     }
 

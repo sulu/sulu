@@ -83,7 +83,7 @@ new Property(
             '{{ property.type }}',
             {{ property.mandatory != null and property.mandatory ? 'true' : 'false' }},
             {{ property.multilingual is same as(false) ? 'false' : 'true' }},
-            {{ property.maxOccurs != null ? property.maxOccurs : 1 }},
+            {{ property.maxOccurs != null ? property.maxOccurs : 999 }},
             {{ property.minOccurs != null ? property.minOccurs : 1 }},
             array(
 {% for param in property.params %}
@@ -106,7 +106,7 @@ new BlockProperty(
             '{{ property['default-type'] }}',
             {{ property.mandatory != null and property.mandatory ? 'true' : 'false' }},
             {{ property.multilingual is same as(false) ? 'false' : 'true' }},
-            {{ property.maxOccurs != null ? property.maxOccurs : 1 }},
+            {{ property.maxOccurs != null ? property.maxOccurs : 999 }},
             {{ property.minOccurs != null ? property.minOccurs : 1 }},
             array(
 {% for param in property.params %}

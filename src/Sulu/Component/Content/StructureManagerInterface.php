@@ -21,7 +21,7 @@ interface StructureManagerInterface extends ContainerAwareInterface
     /**
      * returns a structure for given key
      * @param $key string
-     * @return mixed
+     * @return StructureInterface
      */
     public function getStructure($key);
 

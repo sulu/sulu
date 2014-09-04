@@ -141,7 +141,7 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('text_line', $property->getContentTypeName());
         $this->assertEquals(true, $property->isMandatory());
         $this->assertEquals(true, $property->isMultilingual());
-        $this->assertEquals(1, $property->getMaxOccurs());
+        $this->assertEquals(999, $property->getMaxOccurs());
         $this->assertEquals(1, $property->getMinOccurs());
         $this->assertEquals(null, $property->getValue());
         $this->assertEquals(
@@ -168,7 +168,7 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('resource_locator', $property->getContentTypeName());
         $this->assertEquals(true, $property->isMandatory());
         $this->assertEquals(true, $property->isMultilingual());
-        $this->assertEquals(1, $property->getMaxOccurs());
+        $this->assertEquals(999, $property->getMaxOccurs());
         $this->assertEquals(1, $property->getMinOccurs());
         $this->assertEquals(null, $property->getValue());
         $this->assertEquals(
@@ -189,7 +189,7 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('text_area', $property->getContentTypeName());
         $this->assertEquals(false, $property->isMandatory());
         $this->assertEquals(true, $property->isMultilingual());
-        $this->assertEquals(1, $property->getMaxOccurs());
+        $this->assertEquals(999, $property->getMaxOccurs());
         $this->assertEquals(1, $property->getMinOccurs());
         $this->assertEquals(null, $property->getValue());
         $this->assertEquals(
@@ -209,7 +209,7 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('smart_content_selection', $property->getContentTypeName());
         $this->assertEquals(false, $property->isMandatory());
         $this->assertEquals(true, $property->isMultilingual());
-        $this->assertEquals(1, $property->getMaxOccurs());
+        $this->assertEquals(999, $property->getMaxOccurs());
         $this->assertEquals(1, $property->getMinOccurs());
         $this->assertEquals(null, $property->getValue());
         $this->assertEquals(
@@ -271,7 +271,7 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('text_line', $property->getContentTypeName());
         $this->assertEquals(true, $property->isMandatory());
         $this->assertEquals(true, $property->isMultilingual());
-        $this->assertEquals(1, $property->getMaxOccurs());
+        $this->assertEquals(999, $property->getMaxOccurs());
         $this->assertEquals(1, $property->getMinOccurs());
         $this->assertEquals(null, $property->getValue());
         $this->assertEquals(
@@ -286,7 +286,7 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('resource_locator', $property->getContentTypeName());
         $this->assertEquals(true, $property->isMandatory());
         $this->assertEquals(true, $property->isMultilingual());
-        $this->assertEquals(1, $property->getMaxOccurs());
+        $this->assertEquals(999, $property->getMaxOccurs());
         $this->assertEquals(1, $property->getMinOccurs());
         $this->assertEquals(null, $property->getValue());
         $this->assertEquals(
@@ -301,7 +301,7 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('text_editor', $property->getContentTypeName());
         $this->assertEquals(true, $property->isMandatory());
         $this->assertEquals(true, $property->isMultilingual());
-        $this->assertEquals(1, $property->getMaxOccurs());
+        $this->assertEquals(999, $property->getMaxOccurs());
         $this->assertEquals(1, $property->getMinOccurs());
         $this->assertEquals(null, $property->getValue());
         $this->assertEquals(
@@ -316,7 +316,7 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('text_editor', $property->getContentTypeName());
         $this->assertEquals(true, $property->isMandatory());
         $this->assertEquals(true, $property->isMultilingual());
-        $this->assertEquals(1, $property->getMaxOccurs());
+        $this->assertEquals(999, $property->getMaxOccurs());
         $this->assertEquals(1, $property->getMinOccurs());
         $this->assertEquals(null, $property->getValue());
         $this->assertEquals(
@@ -351,7 +351,7 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('text_line', $title11->getContentTypeName());
         $this->assertEquals(true, $title11->isMandatory());
         $this->assertEquals(true, $title11->isMultilingual());
-        $this->assertEquals(1, $title11->getMaxOccurs());
+        $this->assertEquals(999, $title11->getMaxOccurs());
         $this->assertEquals(1, $title11->getMinOccurs());
         $this->assertEquals(null, $title11->getValue());
         $this->assertEquals(
@@ -364,7 +364,7 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('text_area', $article11->getContentTypeName());
         $this->assertEquals(true, $article11->isMandatory());
         $this->assertEquals(true, $article11->isMultilingual());
-        $this->assertEquals(1, $article11->getMaxOccurs());
+        $this->assertEquals(999, $article11->getMaxOccurs());
         $this->assertEquals(2, $article11->getMinOccurs());
         $this->assertEquals(null, $article11->getValue());
         $this->assertEquals(
@@ -375,7 +375,7 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $block11 = $properties[2];
         $this->assertEquals('block1.1', $block11->getName());
         $this->assertEquals(1, $block11->getMinOccurs());
-        $this->assertEquals(1, $block11->getMaxOccurs());
+        $this->assertEquals(999, $block11->getMaxOccurs());
         $this->assertEquals(false, $block11->isMandatory());
         $this->assertEquals('block', $block11->getContentTypeName());
 
@@ -388,7 +388,7 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $block111 = $properties[0];
         $this->assertEquals('block1.1.1', $block111->getName());
         $this->assertEquals(1, $block111->getMinOccurs());
-        $this->assertEquals(1, $block111->getMaxOccurs());
+        $this->assertEquals(999, $block111->getMaxOccurs());
         $this->assertEquals(false, $block111->isMandatory());
         $this->assertEquals('block', $block111->getContentTypeName());
 
@@ -403,7 +403,7 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('text_area', $article111->getContentTypeName());
         $this->assertEquals(true, $article111->isMandatory());
         $this->assertEquals(true, $article111->isMultilingual());
-        $this->assertEquals(1, $article111->getMaxOccurs());
+        $this->assertEquals(999, $article111->getMaxOccurs());
         $this->assertEquals(2, $article111->getMinOccurs());
         $this->assertEquals(null, $article111->getValue());
         $this->assertEquals(
@@ -416,7 +416,7 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('text_area', $article212->getContentTypeName());
         $this->assertEquals(true, $article212->isMandatory());
         $this->assertEquals(true, $article212->isMultilingual());
-        $this->assertEquals(1, $article212->getMaxOccurs());
+        $this->assertEquals(999, $article212->getMaxOccurs());
         $this->assertEquals(2, $article212->getMinOccurs());
         $this->assertEquals(null, $article212->getValue());
         $this->assertEquals(
@@ -427,7 +427,7 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $block113 = $subproperties111[2];
         $this->assertEquals('block1.1.3', $block113->getName());
         $this->assertEquals(1, $block113->getMinOccurs());
-        $this->assertEquals(1, $block113->getMaxOccurs());
+        $this->assertEquals(999, $block113->getMaxOccurs());
         $this->assertEquals(false, $block113->isMandatory());
         $this->assertEquals('block', $block113->getContentTypeName());
 
@@ -442,7 +442,7 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('text_area', $article1131->getContentTypeName());
         $this->assertEquals(true, $article1131->isMandatory());
         $this->assertEquals(true, $article1131->isMultilingual());
-        $this->assertEquals(1, $article1131->getMaxOccurs());
+        $this->assertEquals(999, $article1131->getMaxOccurs());
         $this->assertEquals(2, $article1131->getMinOccurs());
         $this->assertEquals(null, $article1131->getValue());
         $this->assertEquals(
@@ -453,7 +453,7 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $block112 = $properties[1];
         $this->assertEquals('block1.1.2', $block112->getName());
         $this->assertEquals(1, $block112->getMinOccurs());
-        $this->assertEquals(1, $block112->getMaxOccurs());
+        $this->assertEquals(999, $block112->getMaxOccurs());
         $this->assertEquals(false, $block112->isMandatory());
         $this->assertEquals('block', $block112->getContentTypeName());
 
@@ -468,7 +468,7 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('text_area', $article1121->getContentTypeName());
         $this->assertEquals(true, $article1121->isMandatory());
         $this->assertEquals(true , $article1121->isMultilingual());
-        $this->assertEquals(1, $article1121->getMaxOccurs());
+        $this->assertEquals(999, $article1121->getMaxOccurs());
         $this->assertEquals(2, $article1121->getMinOccurs());
         $this->assertEquals(null, $article1121->getValue());
         $this->assertEquals(
