@@ -17,11 +17,18 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\FlattenException;
 use Symfony\Component\HttpKernel\Log\DebugLoggerInterface;
 
+/**
+ * Custom exception controller
+ * @package Sulu\Bundle\WebsiteBundle\Controller
+ */
 class ExceptionController extends BaseExceptionController
 {
+    /**
+     * @var RequestAnalyzerInterface
+     */
     private $requestAnalyzer;
 
-    public function __construct(\Twig_Environment $twig, RequestAnalyzerInterface $requestAnalyzer, $debug)
+    public function __construct(\Twig_Environment $twig, $debug, RequestAnalyzerInterface $requestAnalyzer = null)
     {
         parent::__construct($twig, $debug);
 
