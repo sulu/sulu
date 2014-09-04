@@ -15,7 +15,6 @@ use Jackalope\Query\Row;
 use PHPCR\NodeInterface;
 use PHPCR\Query\QueryInterface;
 use PHPCR\SessionInterface;
-use PHPCR\Util\NodeHelper;
 use PHPCR\Util\PathHelper;
 use Sulu\Component\Content\BreadcrumbItem;
 use Sulu\Component\Content\ContentTypeInterface;
@@ -36,6 +35,7 @@ use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManagerInterface;
 use Sulu\Component\Content\StructureType;
+use Sulu\Component\Content\Template\TemplateResolverInterface;
 use Sulu\Component\Content\Template\Exception\TemplateNotFoundException;
 use Sulu\Component\Content\Types\ResourceLocatorInterface;
 use Sulu\Component\PHPCR\PathCleanupInterface;
@@ -115,6 +115,11 @@ class ContentMapper implements ContentMapperInterface
     private $webspaceManager;
 
     /**
+     * @var TemplateResolverInterface
+     */
+    private $templateResolver;
+
+    /**
      * excepted states
      * @var array
      */
@@ -151,6 +156,7 @@ class ContentMapper implements ContentMapperInterface
         LocalizationFinderInterface $localizationFinder,
         PathCleanupInterface $cleaner,
         WebspaceManagerInterface $webspaceManager,
+        TemplateResolverInterface $templateResolver,
         $defaultLanguage,
         $defaultTemplate,
         $languageNamespace,
@@ -170,6 +176,7 @@ class ContentMapper implements ContentMapperInterface
         $this->cleaner = $cleaner;
         $this->navContexts = $navContexts;
         $this->webspaceManager = $webspaceManager;
+        $this->templateResolver = $templateResolver;
 
         // optional
         $this->stopwatch = $stopwatch;
@@ -218,13 +225,8 @@ class ContentMapper implements ContentMapperInterface
             $data['nodeType'] = Structure::NODE_TYPE_CONTENT;
         }
 
-        if ($data['nodeType'] === Structure::NODE_TYPE_EXTERNAL_LINK) {
-            $structure = $this->getStructure('external-link');
-        } elseif ($data['nodeType'] === Structure::NODE_TYPE_INTERNAL_LINK) {
-            $structure = $this->getStructure('internal-link');
-        } else {
-            $structure = $this->getStructure($templateKey);
-        }
+        $resolvedTemplateKey = $this->templateResolver->resolve($data['nodeType'], $templateKey);
+        $structure = $this->getStructure($resolvedTemplateKey);
 
         $session = $this->getSession();
 
@@ -1059,16 +1061,11 @@ class ContentMapper implements ContentMapperInterface
             Structure::NODE_TYPE_CONTENT
         );
 
-        if ($nodeType === Structure::NODE_TYPE_EXTERNAL_LINK) {
-            $templateKey = 'external-link';
-        } elseif ($nodeType === Structure::NODE_TYPE_INTERNAL_LINK) {
-            $templateKey = 'internal-link';
-        } else {
-            $templateKey = $contentNode->getPropertyValueWithDefault(
-                $this->properties->getName('template'),
-                $this->defaultTemplate
-            );
-        }
+        $templateKey = $contentNode->getPropertyValueWithDefault(
+            $this->properties->getName('template'),
+            $this->defaultTemplate
+        );
+        $templateKey = $this->templateResolver->resolve($nodeType, $templateKey);
 
         $structure = $this->getStructure($templateKey);
 
