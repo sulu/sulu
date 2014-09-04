@@ -13,6 +13,7 @@ namespace Sulu\Bundle\WebsiteBundle\Sitemap;
 use Jackalope\Query\Row;
 use PHPCR\Query\QueryInterface;
 use PHPCR\Query\QueryResultInterface;
+use PHPCR\RepositoryException;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\PropertyInterface;
@@ -179,8 +180,12 @@ class SitemapGenerator implements SitemapGeneratorInterface
                 try {
                     $routePath = $row->getPath('route');
                     $url = str_replace($routesPath, '', $routePath);
-                } catch (\Exception $ex) {
-                    // ignore exception because no route node
+                } catch (RepositoryException $ex) {
+                    // ignore exception because no route node exists
+                    // could have several reasons:
+                    //  - external links has text-line as "rlp"
+                    //  - internal links has a "reference" on another node
+                    //  - no url exists
                 }
             }
 
