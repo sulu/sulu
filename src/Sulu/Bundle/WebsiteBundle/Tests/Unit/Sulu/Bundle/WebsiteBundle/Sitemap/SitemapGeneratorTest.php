@@ -66,26 +66,28 @@ class SitemapGeneratorTest extends PhpcrTestCase
 
     protected function prepareWebspaceManager()
     {
-        if ($this->webspaceManager === null) {
-            $this->webspace = new Webspace();
-            $this->webspace->setKey('default');
-
-            $local1 = new Localization();
-            $local1->setLanguage('en');
-
-            $local2 = new Localization();
-            $local2->setLanguage('en');
-            $local2->setCountry('us');
-
-            $this->webspace->setLocalizations(array($local1, $local2));
-            $this->webspace->setName('Default');
-
-            $this->webspaceManager = $this->getMock('Sulu\Component\Webspace\Manager\WebspaceManagerInterface');
-            $this->webspaceManager
-                ->expects($this->any())
-                ->method('findWebspaceByKey')
-                ->will($this->returnValue($this->webspace));
+        if ($this->webspaceManager !== null) {
+            return;
         }
+
+        $this->webspace = new Webspace();
+        $this->webspace->setKey('default');
+
+        $local1 = new Localization();
+        $local1->setLanguage('en');
+
+        $local2 = new Localization();
+        $local2->setLanguage('en');
+        $local2->setCountry('us');
+
+        $this->webspace->setLocalizations(array($local1, $local2));
+        $this->webspace->setName('Default');
+
+        $this->webspaceManager = $this->getMock('Sulu\Component\Webspace\Manager\WebspaceManagerInterface');
+        $this->webspaceManager
+            ->expects($this->any())
+            ->method('findWebspaceByKey')
+            ->will($this->returnValue($this->webspace));
     }
 
     public function structureCallback()
@@ -93,19 +95,20 @@ class SitemapGeneratorTest extends PhpcrTestCase
         $args = func_get_args();
         $structureKey = $args[0];
 
-        if ($structureKey == 'default_template') {
-            return $this->getStructureMock($structureKey);
-        } elseif ($structureKey == 'simple') {
-            return $this->getStructureMock($structureKey, 'title');
-        } elseif ($structureKey == 'overview') {
-            return $this->getStructureMock($structureKey);
-        } elseif ($structureKey == 'external-link') {
-            return $this->getStructureMock($structureKey, 'test', false);
-        } elseif ($structureKey == 'internal-link') {
-            return $this->getStructureMock($structureKey, 'test', false);
+        switch ($structureKey) {
+            case 'default_template':
+                return $this->getStructureMock($structureKey);
+            case 'simple':
+                return $this->getStructureMock($structureKey, 'title');
+            case 'overview':
+                return $this->getStructureMock($structureKey);
+            case 'external-link':
+                return $this->getStructureMock($structureKey, 'test', false);
+            case 'internal-link':
+                return $this->getStructureMock($structureKey, 'test', false);
+            default:
+                return null;
         }
-
-        return null;
     }
 
     public function structuresCallback()

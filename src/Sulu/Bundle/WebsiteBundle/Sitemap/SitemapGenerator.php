@@ -78,7 +78,7 @@ class SitemapGenerator implements SitemapGeneratorInterface
             $locales[] = $localizations->getLocalization();
         }
 
-        $builder = new MinimumContentQueryBuilder($this->structureManager, $this->languageNamespace);
+        $builder = new SitemapContentQueryBuilder($this->structureManager, $this->languageNamespace);
         $sql2 = $builder->build($webspaceKey, $locales);
 
         $query = $this->createSql2Query($sql2);
@@ -98,7 +98,7 @@ class SitemapGenerator implements SitemapGeneratorInterface
      */
     public function generate($webspaceKey, $locale, $flat = false)
     {
-        $builder = new MinimumContentQueryBuilder($this->structureManager, $this->languageNamespace);
+        $builder = new SitemapContentQueryBuilder($this->structureManager, $this->languageNamespace);
         $sql2 = $builder->build($webspaceKey, array($locale));
 
         $query = $this->createSql2Query($sql2);
@@ -185,7 +185,6 @@ class SitemapGenerator implements SitemapGeneratorInterface
                 }
             }
 
-
             return array(
                 'uuid' => $uuid,
                 'nodeType' => $nodeType,
@@ -208,10 +207,10 @@ class SitemapGenerator implements SitemapGeneratorInterface
         $map = array();
         $contentsPath = $this->sessionManager->getContentNode($webspaceKey)->getPath();
         foreach ($data as $item) {
-            $map[str_replace($contentsPath, 'x', $item['path'])] = $item;
+            $map[str_replace($contentsPath, 'root', $item['path'])] = $item;
         }
 
-        return $this->explodeTree($map, '/')['children']['x'];
+        return $this->explodeTree($map, '/')['children']['root'];
     }
 
     /**

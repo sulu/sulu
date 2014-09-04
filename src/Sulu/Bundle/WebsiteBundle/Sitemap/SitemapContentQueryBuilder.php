@@ -21,7 +21,7 @@ use Sulu\Component\Content\StructureManagerInterface;
  * Creates query for a minimum content pages (title and url)
  * @package Sulu\Bundle\WebsiteBundle\Sitemap
  */
-class MinimumContentQueryBuilder
+class SitemapContentQueryBuilder
 {
     /**
      * @var StructureManagerInterface
