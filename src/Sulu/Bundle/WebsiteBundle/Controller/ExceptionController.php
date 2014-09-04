@@ -53,24 +53,26 @@ class ExceptionController extends BaseExceptionController
                 ),
                 404
             );
+        } elseif ($exception->getStatusCode() < 500) {
+            $currentContent = $this->getAndCleanOutputBuffering($request->headers->get('X-Php-Ob-Level', -1));
+            $code = $exception->getStatusCode();
+
+            return new Response(
+                $this->twig->render(
+                    'ClientWebsiteBundle:views:error.html.twig',
+                    array(
+                        'status_code' => $code,
+                        'status_text' => isset(Response::$statusTexts[$code]) ? Response::$statusTexts[$code] : '',
+                        'exception' => $exception,
+                        'currentContent' => $currentContent,
+                        'webspaceKey' => $this->requestAnalyzer->getCurrentWebspace()->getKey(),
+                        'locale' => $this->requestAnalyzer->getCurrentLocalization()->getLocalization()
+                    )
+                ),
+                $exception->getStatusCode()
+            );
         }
 
-        $currentContent = $this->getAndCleanOutputBuffering($request->headers->get('X-Php-Ob-Level', -1));
-        $code = $exception->getStatusCode();
-
-        return new Response(
-            $this->twig->render(
-                'ClientWebsiteBundle:views:error.html.twig',
-                array(
-                    'status_code' => $code,
-                    'status_text' => isset(Response::$statusTexts[$code]) ? Response::$statusTexts[$code] : '',
-                    'exception' => $exception,
-                    'currentContent' => $currentContent,
-                    'webspaceKey' => $this->requestAnalyzer->getCurrentWebspace()->getKey(),
-                    'locale' => $this->requestAnalyzer->getCurrentLocalization()->getLocalization()
-                )
-            ),
-            $exception->getStatusCode()
-        );
+        return parent::showAction($request, $exception, $logger, $_format);
     }
 }
