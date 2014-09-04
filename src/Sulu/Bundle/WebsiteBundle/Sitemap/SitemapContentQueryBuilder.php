@@ -85,8 +85,11 @@ class SitemapContentQueryBuilder
         // build sql2 query string
         $sql2 = sprintf(
             "SELECT route.*, page.*, %s
-             FROM [nt:unstructured] AS page LEFT OUTER JOIN [nt:unstructured] AS route ON page.[jcr:uuid] = route.[sulu:content]
-             WHERE page.[jcr:mixinTypes] = 'sulu:content' AND (%s) AND (ISDESCENDANTNODE(page, '/cmf/%s/contents') OR ISSAMENODE(page, '/cmf/%s/contents'))",
+             FROM [nt:unstructured] AS page
+             LEFT OUTER JOIN [nt:unstructured] AS route ON page.[jcr:uuid] = route.[sulu:content]
+             WHERE page.[jcr:mixinTypes] = 'sulu:content'
+                AND (%s) AND (ISDESCENDANTNODE(page, '/cmf/%s/contents')
+                OR ISSAMENODE(page, '/cmf/%s/contents'))",
             $select,
             $where,
             $webspaceKey,
