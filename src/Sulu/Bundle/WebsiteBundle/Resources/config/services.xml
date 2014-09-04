@@ -51,6 +51,7 @@
 
         <service id="sulu_website.exception.controller" class="%sulu_website.exception.controller.class%">
             <argument type="service" id="twig" />
+            <argument type="service" id="sulu_core.webspace.request_analyzer" />
             <argument>%kernel.debug%</argument>
         </service>
     </services>

@@ -60,6 +60,11 @@ abstract class WebsiteController extends Controller
                 );
             }
 
+            // remove empty first line
+            if (ob_get_length()) {
+                ob_clean();
+            }
+
             $response = new Response();
             $response->setContent($content);
 
@@ -76,7 +81,8 @@ abstract class WebsiteController extends Controller
             return $response;
         } catch (InvalidArgumentException $ex) {
             // template not found
-            return new Response(null, 406);
+
+            throw new HttpException(406);
         }
     }
 
