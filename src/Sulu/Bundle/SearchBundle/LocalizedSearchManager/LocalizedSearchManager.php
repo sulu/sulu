@@ -51,6 +51,8 @@ class LocalizedSearchManager implements LocalizedSearchManagerInterface
      */
     public function search($string, $locale, $indexNames = null)
     {
+        $indexNames = (array)$indexNames;
+
         // append locale to index
         for ($i = 0, $len = sizeof($indexNames); $i < $len; $i++) {
             $indexNames[$i] .= '_' . $locale;
