@@ -59,6 +59,7 @@ class ContentPathTwigExtension extends \Twig_Extension
         $external = false;
         if ($item instanceof NavigationItem) {
             $rl = $item->getUrl();
+            $external = $item->getNodeType() === Structure::NODE_TYPE_EXTERNAL_LINK;
         } elseif ($item instanceof StructureInterface) {
             $rl = $item->getResourceLocator();
             $external = $item->getNodeType() === Structure::NODE_TYPE_EXTERNAL_LINK;
