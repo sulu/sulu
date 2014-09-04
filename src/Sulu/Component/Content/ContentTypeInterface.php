@@ -143,9 +143,18 @@ interface ContentTypeInterface
     public function getDefaultValue();
 
     /**
-     * Prepare data for the view
+     * Prepare view data (or metadata) for the template
      *
      * @param PropertyInterface $property
+     * @return array
      */
     public function getViewData(PropertyInterface $property);
+
+    /**
+     * Prepare content data for the template
+     *
+     * @param PropertyInterface $property
+     * @return array
+     */
+    public function getContentData(PropertyInterface $property);
 }

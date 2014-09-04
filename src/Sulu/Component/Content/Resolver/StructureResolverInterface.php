@@ -1,0 +1,27 @@
+<?php
+/*
+ * This file is part of the Sulu CMF.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+namespace Sulu\Component\Content\Resolver;
+
+use Sulu\Component\Content\StructureInterface;
+
+/**
+ * Resolves the structure to an array
+ * @package Sulu\Component\Content
+ */
+interface StructureResolverInterface
+{
+    /**
+     * This method receives a structure, and should return an array for the template
+     * @param StructureInterface $structure The structure to resolve
+     * @return array
+     */
+    public function resolve(StructureInterface $structure);
+} 
