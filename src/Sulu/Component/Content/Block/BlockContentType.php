@@ -175,7 +175,29 @@ class BlockContentType extends ComplexContentType
     )
     {
         if ($property->getIsBlock()) {
-            $property->setValue($data);
+            /** @var BlockPropertyInterface $blockProperty */
+            $blockProperty = $property;
+            while (!($blockProperty instanceof BlockPropertyInterface)) {
+                $blockProperty = $blockProperty->getProperty();
+            }
+
+            $len = sizeof($data);
+
+            for ($i = 0; $i < $len; $i++) {
+                /** @var PropertyInterface $subProperty */
+                foreach ($blockProperty->initProperties($i, $data[$i]['type']) as $key => $subProperty) {
+                    if ($key !== 'type') {
+                        $contentType = $this->contentTypeManager->get($subProperty->getContentTypeName());
+                        $contentType->readForPreview(
+                            $data[$i][$subProperty->getName()],
+                            $subProperty,
+                            $webspaceKey,
+                            $languageCode,
+                            $segmentKey
+                        );
+                    }
+                }
+            }
         } else {
             throw new UnexpectedPropertyType($property, $this);
         }
