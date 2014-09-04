@@ -76,7 +76,7 @@ class ContentPathTwigExtension extends \Twig_Extension
 
     /**
      * generates real root url
-     * @param $full
+     * @param boolean $full if TRUE the full url will be returned, if FALSE only the current prefix is returned
      * @return string
      */
     public function  contentRootPathFunction($full = false)

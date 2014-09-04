@@ -73,10 +73,9 @@ abstract class WebsiteController extends Controller
             if (!$preview) {
                 // mark the response as either public or private
                 $response->setPublic();
-                //$response->setPrivate();
 
                 // set the private or shared max age
-                //$response->setMaxAge($structure->getCacheLifeTime());
+                $response->setMaxAge($structure->getCacheLifeTime());
                 $response->setSharedMaxAge($structure->getCacheLifeTime());
             }
 
