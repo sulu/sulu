@@ -79,7 +79,7 @@ class ContentPathTwigExtension extends \Twig_Extension
      * @param boolean $full if TRUE the full url will be returned, if FALSE only the current prefix is returned
      * @return string
      */
-    public function  contentRootPathFunction($full = false)
+    public function contentRootPathFunction($full = false)
     {
         if ($this->requestAnalyzer !== null) {
             if ($full) {

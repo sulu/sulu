@@ -17,6 +17,7 @@ use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\Template\Exception\TemplateNotFoundException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
  * Basic class to render Website from phpcr content
@@ -84,24 +85,6 @@ abstract class WebsiteController extends Controller
             // template not found
             return new Response(null, 406);
         }
-    }
-
-    /**
-     * Returns rendered error response
-     */
-    protected function renderError($template, $parameters, $code = 404)
-    {
-        $content = $this->renderView(
-            $template,
-            $parameters
-        );
-
-        $response = new Response();
-        $response->setStatusCode($code);
-
-        $response->setContent($content);
-
-        return $response;
     }
 
     /**

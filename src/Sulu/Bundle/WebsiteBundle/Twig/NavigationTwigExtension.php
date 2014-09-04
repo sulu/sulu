@@ -97,7 +97,7 @@ class NavigationTwigExtension extends \Twig_Extension
             );
 
             // return empty array if level does not exists
-            if(!isset($breadcrumb[$level])){
+            if (!isset($breadcrumb[$level])) {
                 return array();
             }
 

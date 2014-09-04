@@ -10,7 +10,6 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Controller;
 
-
 use Symfony\Bundle\TwigBundle\Controller\ExceptionController as BaseExceptionController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,8 +29,7 @@ class ExceptionController extends BaseExceptionController
                 $this->twig->render(
                     'ClientWebsiteBundle:views:error404.html.twig',
                     array(
-                        'path' => $request->getPathInfo(),
-                        'navigation' => array()
+                        'path' => $request->getPathInfo()
                     )
                 ), 404
             );
