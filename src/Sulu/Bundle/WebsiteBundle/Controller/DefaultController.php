@@ -41,14 +41,27 @@ class DefaultController extends WebsiteController
         return $response;
     }
 
-    public function redirectAction(Request $request)
+    /**
+     * Creates a redirect for configured webspaces
+     */
+    public function redirectWebspaceAction(Request $request)
     {
         $url = rtrim(str_replace(
-            $request->get('url'),
-            $request->get('redirect'),
-            $request->getUri()
-        ), '/');
+                $request->get('url'),
+                $request->get('redirect'),
+                $request->getUri()
+            ),
+            '/'
+        );
 
         return new RedirectResponse($url, 301);
+    }
+
+    /**
+     * Creates a redirect for *.html to * (without html)
+     */
+    public function redirectFormatAction(Request $request)
+    {
+        return new RedirectResponse($request->get('url'), 301);
     }
 }
