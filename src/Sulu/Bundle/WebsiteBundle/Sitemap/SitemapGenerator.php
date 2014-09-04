@@ -149,7 +149,6 @@ class SitemapGenerator implements SitemapGeneratorInterface
             $path = $row->getPath('page');
             $templateKey = $this->templateResolver->resolve($nodeType, $templateKey);
 
-            /** @var StructureInterface $structure */
             $structure = $this->structureManager->getStructure($templateKey);
 
             $title = $row->getValue(
