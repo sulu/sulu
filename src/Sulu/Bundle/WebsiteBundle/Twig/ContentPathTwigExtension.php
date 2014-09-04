@@ -56,7 +56,7 @@ class ContentPathTwigExtension extends \Twig_Extension
      */
     public function contentPathFunction($url)
     {
-        if (strpos($url, '/') === 0) {
+        if (strpos($url, '/') === 0 && $this->requestAnalyzer) {
             return $this->requestAnalyzer->getCurrentResourceLocatorPrefix() . $url;
         } else {
             return $url;
