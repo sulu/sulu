@@ -98,4 +98,9 @@ class LocalizedMetadata implements IndexMetadataInterface
     {
         return $this->metadata->getDescriptionField();
     }
+
+    public function getName()
+    {
+        return $this->metadata->getName();
+    }
 }

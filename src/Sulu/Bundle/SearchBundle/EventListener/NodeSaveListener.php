@@ -41,7 +41,7 @@ class NodeSaveListener
 
         // only if it is none temp node and it is published
         if ($matches[2] !== $this->tempName && $structure->getNodeState() !== Structure::STATE_PUBLISHED) {
-            $this->searchManager->index($structure);
+            $this->searchManager->index($structure, $structure->getLanguageCode());
         }
     }
 }

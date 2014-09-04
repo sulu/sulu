@@ -5,6 +5,7 @@ namespace Sulu\Bundle\SearchBundle\Command;
 use Jackalope\Query\Row;
 use Jackalope\Session;
 use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
+use Sulu\Bundle\SearchBundle\LocalizedSearchManager\LocalizedSearchManagerInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Structure;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
@@ -35,8 +36,8 @@ EOT
         /** @var ContentMapperInterface $contentMapper */
         $contentMapper = $container->get('sulu.content.mapper');
 
-        /** @var SearchManagerInterface $searchManager */
-        $searchManager = $container->get('massive_search.search_manager');
+        /** @var LocalizedSearchManagerInterface $searchManager */
+        $searchManager = $container->get('sulu_search.localized_search_manager');
 
         /** @var WebspaceManagerInterface $webspaceManager */
         $webspaceManager = $container->get('sulu_core.webspace.webspace_manager');
@@ -80,7 +81,7 @@ EOT
                     $structure = $contentMapper->load($node->getIdentifier(), $webspaceKey, $locale);
 
                     if ($structure->getNodeState() === Structure::STATE_PUBLISHED) {
-                        $searchManager->index($structure);
+                        $searchManager->index($structure, $locale);
                     }
                 }
             }
