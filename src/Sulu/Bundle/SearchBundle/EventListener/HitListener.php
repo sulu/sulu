@@ -11,11 +11,20 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
  */
 class HitListener
 {
+    /**
+     * @var RequestAnalyzerInterface
+     */
+    private $requestAnalyzer;
+
     public function __construct(RequestAnalyzerInterface $requestAnalyzer)
     {
         $this->requestAnalyzer = $requestAnalyzer;
     }
 
+    /**
+     * Prefix url of document with current resourcelocator prefix
+     * @param HitEvent $event
+     */
     public function onHit(HitEvent $event)
     {
         if (false === $event->getDocumentReflection()->isSubclassOf('Sulu\Component\Content\Structure')) {

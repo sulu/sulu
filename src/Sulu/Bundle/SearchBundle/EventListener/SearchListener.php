@@ -20,6 +20,10 @@ class SearchListener
         $this->structureManager = $structureManager;
     }
 
+    /**
+     * Generate all Structures to be sure that all hits can be handled correctly
+     * @param SearchEvent $event
+     */
     public function onSearch(SearchEvent $event)
     {
         $this->structureManager->getStructures();

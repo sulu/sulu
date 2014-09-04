@@ -24,7 +24,7 @@
         <!-- search event to be sure that all structures are loaded (generated) -->
         <service id="sulu_search.event_listener.search" class="%sulu_search.event_listener.search.class%">
             <argument type="service" id="sulu.content.structure_manager" />
-            
+
             <tag name="kernel.event_listener" event="massive_search.search" method="onSearch" />
         </service>
     </services>
