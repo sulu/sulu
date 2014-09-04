@@ -15,6 +15,8 @@ use Sulu\Bundle\ContentBundle\Content\SmartContentContainer;
 use Sulu\Bundle\ContentBundle\Content\Types\SmartContent;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepository;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 //FIXME remove on update to phpunit 3.8, caused by https://github.com/sebastianbergmann/phpunit/issues/604
 interface NodeInterface extends \PHPCR\NodeInterface, \Iterator
@@ -39,9 +41,9 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
     private $tagManager;
 
     /**
-     * @var Serializer
+     * @var RequestStack
      */
-    private $serializer;
+    private $requestStack;
 
     public function setUp()
     {
@@ -62,9 +64,12 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
             array('resolveTagIds', 'resolveTagNames')
         );
 
+        $this->requestStack = $this->getMockBuilder('Symfony\Component\HttpFoundation\RequestStack')->getMock();
+
         $this->smartContent = new SmartContent(
             $this->nodeRepository,
             $this->tagManager,
+            $this->requestStack,
             'SuluContentBundle:Template:content-types/smart_content.html.twig'
         );
 
@@ -301,5 +306,33 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
             'en',
             's'
         );
+    }
+
+    public function testGetViewData()
+    {
+        $property = $this->getMockForAbstractClass(
+            'Sulu\Component\Content\PropertyInterface',
+            array(),
+            '',
+            true,
+            true,
+            true,
+            array('getValue', 'getParams')
+        );
+
+        $config = array('dataSource' => 'some-uuid');
+
+        $smartContentContainer = $this->getMockBuilder('Sulu\Bundle\ContentBundle\Content\SmartContentContainer')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $smartContentContainer->expects($this->once())->method('getConfig')->will($this->returnValue($config));
+
+        $property->expects($this->exactly(1))->method('getValue')
+            ->will($this->returnValue($smartContentContainer));
+
+        $viewData = $this->smartContent->getViewData($property);
+
+        $this->assertEquals($config, $viewData);
     }
 }

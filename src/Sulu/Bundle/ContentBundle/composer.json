@@ -30,7 +30,7 @@
         "doctrine/orm": ">=2.2.3,<2.4-dev",
         "friendsofsymfony/rest-bundle": "@dev",
         "friendsofsymfony/http-cache": "@dev",
-        
+
         "jms/serializer-bundle": "@dev",
 
         "cboden/ratchet": "dev-master",

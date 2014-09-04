@@ -18,6 +18,7 @@
         <service id="sulu.content.type.smart_content" class="%sulu.content.type.smart_content.class%">
             <argument type="service" id="sulu_content.node_repository"/>
             <argument type="service" id="sulu_tag.tag_manager"/>
+            <argument type="service" id="request_stack" />
             <argument>%sulu.content.type.smart_content.template%</argument>
             <tag name="sulu.content.type" alias="smart_content" />
         </service>

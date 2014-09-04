@@ -145,4 +145,12 @@ class InternalLinks extends ComplexContentType
     {
         return $this->template;
     }
-} 
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getContentData(PropertyInterface $property)
+    {
+        return $property->getValue()->getData();
+    }
+}
