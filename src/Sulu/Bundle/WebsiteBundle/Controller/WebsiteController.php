@@ -30,15 +30,13 @@ abstract class WebsiteController extends Controller
         $attributes = array(),
         $preview = false,
         $partial = false
-    )
-    {
+    ) {
+        $structureData = $this->get('sulu.content.structure_resolver')->resolve($structure);
 
-        $viewDataResolver = $this->get('sulu.content.structure_view_resolver');
-
-        $data = array_merge($attributes, array(
-            'content' => $structure,
-            'view' => $viewDataResolver->resolve($structure)
-        ));
+        $data = array_merge(
+            $attributes,
+            $structureData
+        );
 
         // if partial render only content block else full page
         if ($partial) {
