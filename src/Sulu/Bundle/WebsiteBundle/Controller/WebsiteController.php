@@ -38,14 +38,11 @@ abstract class WebsiteController extends Controller
         $request = $this->getRequest();
         $viewTemplate = str_replace('{_format}', $request->getRequestFormat(), $structure->getView());
 
-        $viewDataResolver = $this->get('sulu.content.structure_view_resolver');
+        $structureData = $this->get('sulu.content.structure_resolver')->resolve($structure);
 
         $data = array_merge(
             $attributes,
-            array(
-                'content' => $structure,
-                'view' => $viewDataResolver->resolve($structure)
-            )
+            $structureData
         );
 
         try {
@@ -61,10 +58,6 @@ abstract class WebsiteController extends Controller
                     $viewTemplate,
                     $data
                 );
-            }
-            // remove content of output
-            if (ob_get_length()) {
-                ob_clean();
             }
 
             $response = new Response();
@@ -87,6 +80,7 @@ abstract class WebsiteController extends Controller
         }
     }
 
+    /**
     /**
      * Returns rendered part of template specified by block
      */
