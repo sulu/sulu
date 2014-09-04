@@ -124,8 +124,7 @@ class RequestAnalyzer implements RequestAnalyzerInterface
 
                 list($resourceLocator, $format) = $this->getResourceLocatorFromRequest(
                     $portalInformation,
-                    $request,
-                    'html'
+                    $request
                 );
 
                 // get the path and set it on the request
@@ -309,7 +308,7 @@ class RequestAnalyzer implements RequestAnalyzerInterface
     private function getResourceLocatorFromRequest(
         PortalInformation $portalInformation,
         Request $request,
-        $defaultFormat
+        $defaultFormat = 'html'
     )
     {
         $path = $request->getPathInfo();
