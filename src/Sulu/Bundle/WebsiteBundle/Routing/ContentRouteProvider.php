@@ -90,7 +90,7 @@ class ContentRouteProvider implements RouteProviderInterface
             // redirect *.html to * (without url)
             $route = new Route(
                 $request->getRequestUri(), array(
-                    '_controller' => 'SuluWebsiteBundle:Default:redirectFormat',
+                    '_controller' => 'SuluWebsiteBundle:Default:redirect',
                     'url' => $url
                 )
             );

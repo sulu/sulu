@@ -60,7 +60,7 @@ class DefaultController extends WebsiteController
     /**
      * Creates a redirect for *.html to * (without html)
      */
-    public function redirectFormatAction(Request $request)
+    public function redirectAction(Request $request)
     {
         return new RedirectResponse($request->get('url'), 301);
     }

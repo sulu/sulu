@@ -43,7 +43,8 @@ class ExceptionController extends BaseExceptionController
                         'locale' => $this->requestAnalyzer->getCurrentLocalization()->getLocalization(),
                         'path' => $request->getPathInfo()
                     )
-                ), 404
+                ),
+                404
             );
         }
 
@@ -61,7 +62,8 @@ class ExceptionController extends BaseExceptionController
                     'webspaceKey' => $this->requestAnalyzer->getCurrentWebspace()->getKey(),
                     'locale' => $this->requestAnalyzer->getCurrentLocalization()->getLocalization()
                 )
-            ), $exception->getStatusCode()
+            ),
+            $exception->getStatusCode()
         );
     }
 }
