@@ -62,7 +62,7 @@ class ContentRouteProvider implements RouteProviderInterface
     {
         $collection = new RouteCollection();
 
-        $htmlPostfix = '.html';
+        $htmlExtension = '.html';
         $resourceLocator = $this->requestAnalyzer->getCurrentResourceLocator();
 
         if ($this->requestAnalyzer->getCurrentMatchType() == RequestAnalyzerInterface::MATCH_TYPE_REDIRECT
@@ -80,7 +80,7 @@ class ContentRouteProvider implements RouteProviderInterface
             $collection->add('redirect_' . uniqid(), $route);
         } elseif (
             $request->getRequestFormat() === 'html' &&
-            substr($request->getPathInfo(), -strlen($htmlPostfix)) === $htmlPostfix
+            substr($request->getPathInfo(), -strlen($htmlExtension)) === $htmlExtension
         ) {
             $url = rtrim(
                 $this->requestAnalyzer->getCurrentResourceLocatorPrefix() . ($resourceLocator ? $resourceLocator : '/'),
