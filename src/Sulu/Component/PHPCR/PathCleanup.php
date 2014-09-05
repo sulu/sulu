@@ -23,6 +23,7 @@ class PathCleanup implements PathCleanupInterface
         'default' => array(
             ' ' => '-',
             '+' => '-',
+            '.' => '-',
             'ä' => 'ae',
             'ö' => 'oe',
             'ü' => 'ue',

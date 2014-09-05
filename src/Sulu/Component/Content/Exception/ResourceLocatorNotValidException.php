@@ -14,5 +14,23 @@ use Exception;
 
 class ResourceLocatorNotValidException extends Exception
 {
+    /**
+     * @var string
+     */
+    private $resourceLocator;
 
+    function __construct($resourceLocator)
+    {
+        parent::__construct(sprintf("ResourceLocator '%s' is not valid", $resourceLocator));
+
+        $this->resourceLocator = $resourceLocator;
+    }
+
+    /**
+     * @return string
+     */
+    public function getResourceLocator()
+    {
+        return $this->resourceLocator;
+    }
 }
