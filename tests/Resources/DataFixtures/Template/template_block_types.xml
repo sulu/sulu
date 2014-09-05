@@ -4,7 +4,7 @@
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/template-1.0.xsd">
 
-    <key>complex</key>
+    <key>template_block_types</key>
 
     <view>ClientWebsiteBundle:Website:complex.html.twig</view>
     <controller>SuluWebsiteBundle:Default:index</controller>
