@@ -10,3 +10,6 @@
 # IDEs
 .idea/*
 *.iml
+
+# temp files
+TEMP_*.php
