@@ -32,7 +32,11 @@ class HitListener
         }
 
         $document = $event->getHit()->getDocument();
-        $url = sprintf('%s/%s', $this->requestAnalyzer->getCurrentResourceLocatorPrefix(), $document->getUrl());
+        $url = sprintf(
+            '%s/%s',
+            rtrim($this->requestAnalyzer->getCurrentResourceLocatorPrefix(), '/'),
+            ltrim($document->getUrl(), '/')
+        );
         $document->setUrl($url);
     }
 }
