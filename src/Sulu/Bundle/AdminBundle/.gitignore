@@ -8,3 +8,6 @@
 .idea/*
 *.iml
 *~
+
+#npm
+npm-debug.log
