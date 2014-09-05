@@ -263,6 +263,46 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
         $this->doctrineListBuilder->execute();
     }
 
+    public function testSetWhereWithNull()
+    {
+        $fieldDescriptors = array(
+            'title_id' => new DoctrineFieldDescriptor('id', 'title_id', self::$entityName),
+        );
+
+        $filter = array(
+            'title_id' => null
+        );
+
+        foreach ($filter as $key => $value) {
+            $this->doctrineListBuilder->addField($fieldDescriptors[$key]);
+            $this->doctrineListBuilder->where($fieldDescriptors[$key], $value);
+        }
+
+        $this->queryBuilder->expects($this->once())->method('andWhere')->with('(SuluCoreBundle:Example.id IS NULL)');
+
+        $this->doctrineListBuilder->execute();
+    }
+
+    public function testSetWhereWithNotNull()
+    {
+        $fieldDescriptors = array(
+            'title_id' => new DoctrineFieldDescriptor('id', 'title_id', self::$entityName),
+        );
+
+        $filter = array(
+            'title_id' => null
+        );
+
+        foreach ($filter as $key => $value) {
+            $this->doctrineListBuilder->addField($fieldDescriptors[$key]);
+            $this->doctrineListBuilder->whereNot($fieldDescriptors[$key], $value);
+        }
+
+        $this->queryBuilder->expects($this->once())->method('andWhere')->with('(SuluCoreBundle:Example.id IS NOT NULL)');
+
+        $this->doctrineListBuilder->execute();
+    }
+
     public function testSetWhereNot()
     {
         $fieldDescriptors = array(
