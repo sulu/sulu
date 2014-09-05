@@ -65,12 +65,17 @@ class ContentPathTwigExtension extends \Twig_Extension
 
     /**
      * generates real root url
+     * @param boolean $full if TRUE the full url will be returned, if FALSE only the current prefix is returned
      * @return string
      */
-    public function  contentRootPathFunction()
+    public function contentRootPathFunction($full = false)
     {
         if ($this->requestAnalyzer !== null) {
-            return $this->requestAnalyzer->getCurrentResourceLocatorPrefix();
+            if ($full) {
+                return $this->requestAnalyzer->getCurrentPortalUrl();
+            } else {
+                return $this->requestAnalyzer->getCurrentResourceLocatorPrefix();
+            }
         } else {
             return '/';
         }

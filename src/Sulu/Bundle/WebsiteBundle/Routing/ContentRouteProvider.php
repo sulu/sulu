@@ -16,6 +16,7 @@ use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Symfony\Cmf\Bundle\RoutingBundle\Model\RedirectRoute;
 use Symfony\Cmf\Component\Routing\RouteProviderInterface;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\Request;
@@ -61,15 +62,36 @@ class ContentRouteProvider implements RouteProviderInterface
     {
         $collection = new RouteCollection();
 
+        $htmlExtension = '.html';
+        $resourceLocator = $this->requestAnalyzer->getCurrentResourceLocator();
+
         if ($this->requestAnalyzer->getCurrentMatchType() == RequestAnalyzerInterface::MATCH_TYPE_REDIRECT
             || $this->requestAnalyzer->getCurrentMatchType() == RequestAnalyzerInterface::MATCH_TYPE_PARTIAL
         ) {
             // redirect by information from webspace config
             $route = new Route(
                 $request->getRequestUri(), array(
-                    '_controller' => 'SuluWebsiteBundle:Default:redirect',
+                    '_controller' => 'SuluWebsiteBundle:Default:redirectWebspace',
                     'url' => $this->requestAnalyzer->getCurrentPortalUrl(),
                     'redirect' => $this->requestAnalyzer->getCurrentRedirect()
+                )
+            );
+
+            $collection->add('redirect_' . uniqid(), $route);
+        } elseif (
+            $request->getRequestFormat() === 'html' &&
+            substr($request->getPathInfo(), -strlen($htmlExtension)) === $htmlExtension
+        ) {
+            $url = rtrim(
+                $this->requestAnalyzer->getCurrentResourceLocatorPrefix() . ($resourceLocator ? $resourceLocator : '/'),
+                '/'
+            );
+
+            // redirect *.html to * (without url)
+            $route = new Route(
+                $request->getRequestUri(), array(
+                    '_controller' => 'SuluWebsiteBundle:Default:redirect',
+                    'url' => $url
                 )
             );
 
@@ -81,7 +103,7 @@ class ContentRouteProvider implements RouteProviderInterface
 
             try {
                 $content = $this->contentMapper->loadByResourceLocator(
-                    $this->requestAnalyzer->getCurrentResourceLocator(),
+                    $resourceLocator,
                     $portal->getWebspace()->getKey(),
                     $language
                 );
