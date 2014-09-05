@@ -186,8 +186,20 @@ class DoctrineListBuilder extends AbstractListBuilder
     {
         $whereParts = array();
         foreach ($whereFields as $whereField) {
-            $whereParts[] = $whereField->getSelect() . ' ' . $comparator . ' :' . $whereField->getName();
-            $this->queryBuilder->setParameter($whereField->getName(), $whereValues[$whereField->getName()]);
+            $actualComparator = $comparator;
+            $value = $whereValues[$whereField->getName()];
+
+            if ($value === null) {
+                if ($comparator == self::WHERE_COMPARATOR_EQUAL) {
+                    $actualComparator = 'IS NULL';
+                } elseif ($comparator == self::WHERE_COMPARATOR_UNEQUAL) {
+                    $actualComparator = 'IS NOT NULL';
+                }
+                $whereParts[] = $whereField->getSelect() . ' ' . $actualComparator;
+            } else {
+                $whereParts[] = $whereField->getSelect() . ' ' . $actualComparator . ' :' . $whereField->getName();
+                $this->queryBuilder->setParameter($whereField->getName(), $value);
+            }
         }
         $this->queryBuilder->andWhere('(' . implode(' AND ', $whereParts) . ')');
     }
