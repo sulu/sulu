@@ -36,7 +36,7 @@ abstract class WebsiteController extends Controller
     )
     {
         $request = $this->getRequest();
-        $viewTemplate = str_replace('{_format}', $request->getRequestFormat(), $structure->getView());
+        $viewTemplate = $structure->getView() . '.' . $request->getRequestFormat() . '.twig';
 
         $structureData = $this->get('sulu.content.structure_resolver')->resolve($structure);
 
