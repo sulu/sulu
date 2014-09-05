@@ -97,6 +97,6 @@ class PathCleanup implements PathCleanupInterface
      */
     public function validate($path)
     {
-        return preg_match($this->pattern, $path) === 1;
+        return $path === '/' || preg_match($this->pattern, $path) === 1;
     }
 } 
