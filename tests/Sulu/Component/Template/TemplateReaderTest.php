@@ -33,12 +33,12 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
             'properties' => array(
                 'title' => array(
                     'name' => 'title',
-                    'indexField' => true,
                     'type' => 'text_line',
                     'minOccurs' => null,
                     'maxOccurs' => null,
                     'colspan' => null,
                     'cssClass' => null,
+                    'indexField' => true,
                     'mandatory' => true,
                     'multilingual' => true,
                     'tags' => array(
@@ -69,12 +69,12 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                 ),
                 'url' => array(
                     'name' => 'url',
-                    'indexField' => false,
                     'type' => 'resource_locator',
                     'minOccurs' => null,
                     'maxOccurs' => null,
                     'colspan' => null,
                     'cssClass' => null,
+                    'indexField' => false,
                     'mandatory' => true,
                     'multilingual' => true,
                     'tags' => array(
@@ -88,12 +88,12 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                 ),
                 'article' => array(
                     'name' => 'article',
-                    'indexField' => false,
                     'type' => 'text_area',
                     'minOccurs' => null,
                     'maxOccurs' => null,
                     'colspan' => null,
                     'cssClass' => null,
+                    'indexField' => false,
                     'mandatory' => false,
                     'multilingual' => true,
                     'tags' => array(
@@ -107,12 +107,12 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                 ),
                 'pages' => array(
                     'name' => 'pages',
-                    'indexField' => false,
                     'type' => 'smart_content_selection',
                     'minOccurs' => null,
                     'maxOccurs' => null,
                     'colspan' => null,
                     'cssClass' => null,
+                    'indexField' => false,
                     'mandatory' => false,
                     'multilingual' => true,
                     'tags' => array(
@@ -126,12 +126,12 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                 ),
                 'article_number' => array(
                     'name' => 'article_number',
-                    'indexField' => false,
                     'type' => 'text_line',
                     'minOccurs' => null,
                     'maxOccurs' => null,
                     'colspan' => null,
                     'cssClass' => null,
+                    'indexField' => false,
                     'mandatory' => false,
                     'multilingual' => false,
                     'tags' => array(),
@@ -140,12 +140,12 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                 ),
                 'images' => array(
                     'name' => 'images',
-                    'indexField' => false,
                     'type' => 'image_selection',
                     'minOccurs' => 0,
                     'maxOccurs' => 2,
                     'colspan' => null,
                     'cssClass' => null,
+                    'indexField' => false,
                     'mandatory' => false,
                     'multilingual' => true,
                     'tags' => array(),
@@ -229,6 +229,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'maxOccurs' => null,
                     'colspan' => null,
                     'cssClass' => null,
+                    'indexField' => false,
                     'mandatory' => true,
                     'multilingual' => true,
                     'tags' => array(
@@ -246,12 +247,12 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                 ),
                 'url' => array(
                     'name' => 'url',
-                    'indexField' => false,
                     'type' => 'resource_locator',
                     'minOccurs' => null,
                     'maxOccurs' => null,
                     'colspan' => null,
                     'cssClass' => null,
+                    'indexField' => false,
                     'mandatory' => true,
                     'multilingual' => true,
                     'tags' => array(
@@ -270,6 +271,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'maxOccurs' => null,
                     'colspan' => null,
                     'cssClass' => null,
+                    'indexField' => false,
                     'mandatory' => true,
                     'multilingual' => true,
                     'tags' => array(),
@@ -283,6 +285,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'maxOccurs' => '10',
                     'colspan' => null,
                     'cssClass' => null,
+                    'indexField' => false,
                     'mandatory' => true,
                     'type' => 'block',
                     'tags' => array(
@@ -309,6 +312,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                     'maxOccurs' => null,
                                     'colspan' => null,
                                     'cssClass' => null,
+                                    'indexField' => false,
                                     'mandatory' => true,
                                     'multilingual' => true,
                                     'tags' => array(),
@@ -324,6 +328,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                     'maxOccurs' => null,
                                     'colspan' => null,
                                     'cssClass' => null,
+                                    'indexField' => false,
                                     'tags' => array(),
                                     'params' => array(),
                                     'meta' => array()
@@ -335,6 +340,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                     'maxOccurs' => null,
                                     'colspan' => null,
                                     'cssClass' => null,
+                                    'indexField' => false,
                                     'mandatory' => false,
                                     'type' => 'block',
                                     'tags' => array(),
@@ -352,6 +358,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                                     'maxOccurs' => null,
                                                     'colspan' => null,
                                                     'cssClass' => null,
+                                                    'indexField' => false,
                                                     'mandatory' => false,
                                                     'type' => 'block',
                                                     'tags' => array(),
@@ -369,6 +376,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                                                     'maxOccurs' => null,
                                                                     'colspan' => null,
                                                                     'cssClass' => null,
+                                                                    'indexField' => false,
                                                                     'mandatory' => true,
                                                                     'multilingual' => true,
                                                                     'tags' => array(
@@ -387,6 +395,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                                                     'maxOccurs' => null,
                                                                     'colspan' => null,
                                                                     'cssClass' => null,
+                                                                    'indexField' => false,
                                                                     'mandatory' => true,
                                                                     'multilingual' => true,
                                                                     'tags' => array(),
@@ -400,6 +409,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                                                     'maxOccurs' => null,
                                                                     'colspan' => null,
                                                                     'cssClass' => null,
+                                                                    'indexField' => false,
                                                                     'mandatory' => false,
                                                                     'type' => 'block',
                                                                     'tags' => array(),
@@ -417,6 +427,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                                                                     'maxOccurs' => null,
                                                                                     'colspan' => null,
                                                                                     'cssClass' => null,
+                                                                                    'indexField' => false,
                                                                                     'mandatory' => true,
                                                                                     'multilingual' => true,
                                                                                     'tags' => array(),
@@ -455,6 +466,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                                                     'maxOccurs' => null,
                                                                     'colspan' => null,
                                                                     'cssClass' => null,
+                                                                    'indexField' => false,
                                                                     'mandatory' => true,
                                                                     'multilingual' => true,
                                                                     'tags' => array(),
@@ -480,6 +492,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'maxOccurs' => null,
                     'colspan' => null,
                     'cssClass' => null,
+                    'indexField' => false,
                     'mandatory' => true,
                     'multilingual' => true,
                     'tags' => array(),
@@ -494,8 +507,6 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
 
         $x = $this->arrayRecursiveDiff($result, $template);
         $this->assertEquals(0, sizeof($x));
-
-        $this->assertEquals($template, $result);
     }
 
     public function testDuplicatedPriority()
@@ -525,6 +536,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'maxOccurs' => null,
                     'colspan' => null,
                     'cssClass' => null,
+                    'indexField' => false,
                     'mandatory' => true,
                     'multilingual' => true,
                     'tags' => array(
@@ -547,6 +559,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'maxOccurs' => null,
                     'colspan' => null,
                     'cssClass' => null,
+                    'indexField' => false,
                     'mandatory' => true,
                     'multilingual' => true,
                     'tags' => array(
@@ -591,6 +604,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                     'maxOccurs' => null,
                                     'colspan' => null,
                                     'cssClass' => null,
+                                    'indexField' => false,
                                     'mandatory' => true,
                                     'multilingual' => true,
                                     'tags' => array(),
@@ -604,6 +618,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                     'maxOccurs' => null,
                                     'colspan' => null,
                                     'cssClass' => null,
+                                    'indexField' => false,
                                     'mandatory' => true,
                                     'multilingual' => true,
                                     'tags' => array(),
@@ -623,6 +638,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                     'maxOccurs' => null,
                                     'colspan' => null,
                                     'cssClass' => null,
+                                    'indexField' => false,
                                     'mandatory' => true,
                                     'multilingual' => true,
                                     'tags' => array(),
@@ -636,6 +652,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                     'maxOccurs' => null,
                                     'colspan' => null,
                                     'cssClass' => null,
+                                    'indexField' => false,
                                     'mandatory' => true,
                                     'multilingual' => true,
                                     'tags' => array(),
@@ -649,6 +666,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                     'maxOccurs' => null,
                                     'colspan' => null,
                                     'cssClass' => null,
+                                    'indexField' => false,
                                     'mandatory' => true,
                                     'multilingual' => true,
                                     'tags' => array(),
@@ -666,6 +684,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'maxOccurs' => null,
                     'colspan' => null,
                     'cssClass' => null,
+                    'indexField' => false,
                     'mandatory' => true,
                     'multilingual' => true,
                     'tags' => array(),
@@ -699,6 +718,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'maxOccurs' => null,
                     'colspan' => 6,
                     'cssClass' => null,
+                    'indexField' => false,
                     'mandatory' => true,
                     'multilingual' => true,
                     'tags' => array(
@@ -731,6 +751,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'name' => 'test',
                     'colspan' => null,
                     'cssClass' => 'test',
+                    'indexField' => false,
                     'type' => 'section',
                     'params' => array(),
                     'meta' => array(
@@ -751,6 +772,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                             'maxOccurs' => null,
                             'colspan' => 6,
                             'cssClass' => 'test',
+                            'indexField' => false,
                             'mandatory' => true,
                             'multilingual' => true,
                             'tags' => array(
@@ -771,6 +793,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                             'maxOccurs' => null,
                             'colspan' => 6,
                             'cssClass' => null,
+                            'indexField' => false,
                             'mandatory' => null,
                             'multilingual' => true,
                             'tags' => array(
@@ -791,6 +814,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                             'maxOccurs' => null,
                             'colspan' => null,
                             'cssClass' => null,
+                            'indexField' => false,
                             'mandatory' => null,
                             'type' => 'block',
                             'tags' => array(),
@@ -818,6 +842,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                             'maxOccurs' => null,
                                             'colspan' => null,
                                             'cssClass' => null,
+                                            'indexField' => false,
                                             'mandatory' => null,
                                             'multilingual' => true,
                                             'tags' => array(),
@@ -837,6 +862,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'maxOccurs' => null,
                     'colspan' => null,
                     'cssClass' => null,
+                    'indexField' => false,
                     'mandatory' => false,
                     'multilingual' => true,
                     'tags' => array(
@@ -855,6 +881,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'maxOccurs' => 2,
                     'colspan' => 6,
                     'cssClass' => null,
+                    'indexField' => false,
                     'mandatory' => false,
                     'multilingual' => true,
                     'tags' => array(),
@@ -878,8 +905,6 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
 
         $x = $this->arrayRecursiveDiff($result, $template);
         $this->assertEquals(0, sizeof($x));
-
-        $this->assertEquals($template, $result);
     }
 
     function testReservedName()
