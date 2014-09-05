@@ -23,13 +23,14 @@ class PathCleanup implements PathCleanupInterface
         'default' => array(
             ' ' => '-',
             '+' => '-',
+            '.' => '_',
             'ä' => 'ae',
             'ö' => 'oe',
             'ü' => 'ue',
             // because strtolower ignores Ä,Ö,Ü
             'Ä' => 'ae',
             'Ö' => 'oe',
-            'Ü' => 'ue'
+            'Ü' => 'ue',
             // TODO should be filled
         ),
         'de' => array(
