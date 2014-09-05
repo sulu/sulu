@@ -48,7 +48,7 @@ class DefaultControllerTest extends \PHPUnit_Framework_TestCase
     {
         $request = $this->getRequestMock('sulu-redirect.lo/', 'sulu-redirect.lo', 'sulu.lo');
 
-        $response = $this->defaultController->redirectAction($request);
+        $response = $this->defaultController->redirectWebspaceAction($request);
 
         $this->assertEquals('sulu.lo', $response->getTargetUrl());
     }
