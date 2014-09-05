@@ -38,7 +38,18 @@ class ListToTreeConverter
             $map[str_replace($contentsPath, 'root', $item['path'])] = $item;
         }
 
-        return $this->explodeTree($map, '/')['children']['root'];
+        $tree = $this->explodeTree($map, '/');
+        if (!array_key_exists('children', $tree)) {
+            return array();
+        }
+        $tree = $tree['children'];
+
+        // root node exists
+        if (array_key_exists('root', $tree)) {
+            return $tree['root'];
+        }
+
+        return $tree;
     }
 
     /**

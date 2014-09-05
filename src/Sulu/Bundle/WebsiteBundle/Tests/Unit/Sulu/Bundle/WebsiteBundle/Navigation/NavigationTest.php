@@ -12,6 +12,7 @@ namespace Sulu\Bundle\WebsiteBundle\Navigation;
 
 use ReflectionMethod;
 use Sulu\Bundle\TestBundle\Testing\PhpcrTestCase;
+use Sulu\Bundle\WebsiteBundle\ContentQuery\ContentQuery;
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyTag;
 use Sulu\Component\Content\StructureInterface;
@@ -40,7 +41,18 @@ class NavigationTest extends PhpcrTestCase
         $this->prepareMapper();
         $this->data = $this->prepareTestData();
 
-        $this->navigation = new NavigationMapper($this->mapper);
+        $this->structureManager->expects($this->any())
+            ->method('getStructures')
+            ->will($this->returnCallback(array($this, 'structuresCallback')));
+
+        $contentQuery = new ContentQuery(
+            $this->sessionManager,
+            $this->structureManager,
+            $this->templateResolver,
+            $this->languageNamespace
+        );
+
+        $this->navigation = new NavigationMapper($this->mapper, $contentQuery, new NavigationQueryBuilder($this->structureManager, $this->languageNamespace), $this->sessionManager);
     }
 
     protected function prepareWebspaceManager()
@@ -69,16 +81,29 @@ class NavigationTest extends PhpcrTestCase
         $structureKey = $args[0];
 
         if ($structureKey == 'default_template') {
-            return $this->getStructureMock();
+            return $this->getStructureMock($structureKey);
+        } elseif ($structureKey == 'excerpt') {
+            return $this->getStructureMock($structureKey);
         } elseif ($structureKey == 'simple') {
-            return $this->getStructureMock();
+            return $this->getStructureMock($structureKey);
         } elseif ($structureKey == 'overview') {
-            return $this->getStructureMock();
+            return $this->getStructureMock($structureKey);
         } elseif ($structureKey == 'norlp') {
-            return $this->getStructureMock(false);
+            return $this->getStructureMock($structureKey, false);
         }
 
         return null;
+    }
+
+    public function structuresCallback()
+    {
+        return array(
+            $this->getStructureMock('default_template'),
+            $this->getStructureMock('excerpt'),
+            $this->getStructureMock('simple'),
+            $this->getStructureMock('overview'),
+            $this->getStructureMock('norlp')
+        );
     }
 
     /**
@@ -190,11 +215,11 @@ class NavigationTest extends PhpcrTestCase
         return $data;
     }
 
-    private function getStructureMock($rlp = true)
+    private function getStructureMock($name, $rlp = true)
     {
         $structureMock = $this->getMockForAbstractClass(
             '\Sulu\Component\Content\Structure',
-            array('overview', 'asdf', 'asdf', 2400)
+            array($name, 'asdf', 'asdf', 2400)
         );
 
         $method = new ReflectionMethod(

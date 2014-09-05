@@ -12,6 +12,7 @@ namespace Sulu\Bundle\WebsiteBundle\Sitemap;
 
 use ReflectionMethod;
 use Sulu\Bundle\TestBundle\Testing\PhpcrTestCase;
+use Sulu\Bundle\WebsiteBundle\ContentQuery\ContentQuery;
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyTag;
 use Sulu\Component\Content\Structure;
@@ -55,12 +56,17 @@ class SitemapGeneratorTest extends PhpcrTestCase
         $this->contents->setProperty('i18n:en-nodeType', Structure::NODE_TYPE_CONTENT);
         $this->session->save();
 
-        $this->sitemapGenerator = new SitemapGenerator(
+        $contentQuery = new ContentQuery(
             $this->sessionManager,
             $this->structureManager,
-            $this->webspaceManager,
             $this->templateResolver,
             $this->languageNamespace
+        );
+
+        $this->sitemapGenerator = new SitemapGenerator(
+            $contentQuery,
+            $this->webspaceManager,
+            new SitemapContentQueryBuilder($this->structureManager, $this->languageNamespace)
         );
     }
 
@@ -98,6 +104,8 @@ class SitemapGeneratorTest extends PhpcrTestCase
         switch ($structureKey) {
             case 'default_template':
                 return $this->getStructureMock($structureKey);
+            case 'excerpt':
+                return $this->getStructureMock($structureKey);
             case 'simple':
                 return $this->getStructureMock($structureKey, 'title');
             case 'overview':
@@ -115,6 +123,7 @@ class SitemapGeneratorTest extends PhpcrTestCase
     {
         return array(
             $this->getStructureMock('default_template'),
+            $this->getStructureMock('excerpt'),
             $this->getStructureMock('simple', 'title'),
             $this->getStructureMock('overview'),
             $this->getStructureMock('external-link', 'test', false),

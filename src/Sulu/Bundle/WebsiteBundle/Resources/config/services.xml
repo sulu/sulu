@@ -25,6 +25,9 @@
         <!-- navigation mapper -->
         <service id="sulu_website.navigation_mapper" class="%sulu_website.navigation_mapper.class%">
             <argument type="service" id="sulu.content.mapper"/>
+            <argument type="service" id="sulu.phpcr.session"/>
+            <argument type="service" id="sulu.content.structure_manager"/>
+            <argument>%sulu.content.language.namespace%</argument>
         </service>
 
         <!-- sitemap generator -->

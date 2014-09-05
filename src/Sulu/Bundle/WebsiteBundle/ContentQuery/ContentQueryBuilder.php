@@ -121,14 +121,18 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
 
             if ($this->published) {
                 $where .= sprintf(
-                    "%spage.[%s] = %s ",
+                    "%s (page.[%s] = %s ",
                     $where !== '' ? 'OR ' : '',
                     $this->getPropertyName('state'),
                     Structure::STATE_PUBLISHED
                 );
             }
 
-            $where .= $this->buildWhere($webspaceKey, $locale);
+            $customWhere = $this->buildWhere($webspaceKey, $locale);
+            if ($customWhere !== null && $customWhere !== '') {
+                $where = $where . ($where !== '' ? ' AND ' : '') . $customWhere;
+            }
+            $where .= ')';
         }
 
         // build sql2 query string

@@ -10,10 +10,12 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Navigation;
 
+use Sulu\Bundle\WebsiteBundle\ContentQuery\ContentQueryBuilderInterface;
+use Sulu\Bundle\WebsiteBundle\ContentQuery\ContentQueryInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
-use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\StructureInterface;
-use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Sulu\Component\Content\StructureManagerInterface;
+use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 
 /**
  * {@inheritdoc}
@@ -25,27 +27,84 @@ class NavigationMapper implements NavigationMapperInterface
      */
     private $contentMapper;
 
-    function __construct(ContentMapperInterface $contentMapper)
+    /**
+     * @var ContentQueryInterface
+     */
+    private $contentQuery;
+
+    /**
+     * @var ContentQueryBuilderInterface
+     */
+    private $queryBuilder;
+
+    /**
+     * @var SessionManagerInterface
+     */
+    private $sessionManager;
+
+    function __construct(
+        ContentMapperInterface $contentMapper,
+        ContentQueryInterface $contentQuery,
+        ContentQueryBuilderInterface $queryBuilder,
+        SessionManagerInterface $sessionManager
+    )
     {
         $this->contentMapper = $contentMapper;
+        $this->contentQuery = $contentQuery;
+        $this->queryBuilder = $queryBuilder;
+        $this->sessionManager = $sessionManager;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getNavigation($parent, $webspace, $language, $depth = 1, $flat = false, $context = null)
+    public function getNavigation($parent, $webspaceKey, $locale, $depth = 1, $flat = false, $context = null)
     {
-        $contents = $this->contentMapper->loadByParent($parent, $webspace, $language, $depth, false, true, true);
+        if ($depth !== null) {
+            $contentDepth = $this->sessionManager->getContentNode($webspaceKey)->getDepth();
+            $depth += $contentDepth;
+        }
 
-        return $this->generateNavigation($contents, $webspace, $language, $flat, $context);
+        $this->queryBuilder->init(
+            array(
+                'depth' => $depth,
+                'context' => $context,
+                'parent' => $parent
+            )
+        );
+        $result = $this->contentQuery->execute($webspaceKey, array($locale), $this->queryBuilder, $flat);
+
+        return $this->convertArrayToNavigation($result);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getRootNavigation($webspace, $language, $depth = 1, $flat = false, $context = null)
+    public function getRootNavigation($webspaceKey, $locale, $depth = 1, $flat = false, $context = null)
     {
-        return $this->getNavigation(null, $webspace, $language, $depth, $flat, $context);
+        $this->queryBuilder->init(array('depth' => $depth, 'context' => $context));
+        $result = $this->contentQuery->execute($webspaceKey, array($locale), $this->queryBuilder, $flat);
+
+        return $this->convertArrayToNavigation($result);
+    }
+
+    private function convertArrayToNavigation($items)
+    {
+        $navigation = array();
+        foreach ($items as $item) {
+            $children = (isset($item['children']) ? $this->convertArrayToNavigation($item['children']) : array());
+
+            $navigation[] = new NavigationItem(
+                null,
+                $item['title'],
+                $item['url'],
+                $children,
+                $item['uuid'],
+                $item['nodeType']
+            );
+        }
+
+        return $navigation;
     }
 
     /**

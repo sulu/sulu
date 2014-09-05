@@ -48,7 +48,7 @@ class NavigationItem
      */
     private $nodeType;
 
-    function __construct(StructureInterface $content, $title, $url, $children = array(), $id = null, $nodeType = 1)
+    function __construct($content, $title, $url, $children = array(), $id = null, $nodeType = 1)
     {
         $this->content = $content;
         $this->title = $title;

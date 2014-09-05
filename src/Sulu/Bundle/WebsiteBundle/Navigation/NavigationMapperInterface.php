@@ -19,25 +19,25 @@ interface NavigationMapperInterface
     /**
      * returns navigation for given parent
      * @param string $parent uuid of parent node
-     * @param $webspace
-     * @param $language
+     * @param $webspaceKey
+     * @param $locale
      * @param int $depth
      * @param bool $flat
      * @param string|null $context
      * @return NavigationItem[]
      */
-    public function getNavigation($parent, $webspace, $language, $depth = 1, $flat = false, $context = null);
+    public function getNavigation($parent, $webspaceKey, $locale, $depth = 1, $flat = false, $context = null);
 
     /**
      * returns navigation from root
-     * @param string $webspace
-     * @param string $language
+     * @param string $webspaceKey
+     * @param string $locale
      * @param int $depth
      * @param bool $flat
      * @param string|null $context
      * @return NavigationItem[]
      */
-    public function getRootNavigation($webspace, $language, $depth = 1, $flat = false, $context = null);
+    public function getRootNavigation($webspaceKey, $locale, $depth = 1, $flat = false, $context = null);
 
     /**
      * returns a breadcrumb navigation for given content-uuid
