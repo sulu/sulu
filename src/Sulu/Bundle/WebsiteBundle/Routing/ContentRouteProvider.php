@@ -147,7 +147,8 @@ class ContentRouteProvider implements RouteProviderInterface
      */
     public function getRoutesByNames($names, $parameters = array())
     {
-        // TODO: Implement getRoutesByNames() method.
+        // TODO
+        return array();
     }
 
     /**

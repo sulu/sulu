@@ -31,12 +31,7 @@ abstract class WebsiteController extends Controller
         $preview = false,
         $partial = false
     ) {
-        $structureData = $this->get('sulu.content.structure_resolver')->resolve($structure);
-
-        $data = array_merge(
-            $attributes,
-            $structureData
-        );
+        $data = $this->getAttributes($attributes, $structure, $preview);
 
         // if partial render only content block else full page
         if ($partial) {
@@ -67,6 +62,36 @@ abstract class WebsiteController extends Controller
         }
 
         return $response;
+    }
+
+    /**
+     * Generates attributes
+     */
+    protected function getAttributes($attributes, StructureInterface $structure = null, $preview = false)
+    {
+        if ($structure !== null) {
+            $structureData = $this->get('sulu.content.structure_resolver')->resolve($structure);
+        } else {
+            $structureData = array();
+        }
+
+        if (!$preview) {
+            $requestAnalyzerData = $this
+                ->get('sulu_website.resolver.request_analyzer')
+                ->resolve(
+                    $this->get('sulu_core.webspace.request_analyzer')
+                );
+        } else {
+            $requestAnalyzerData = $this
+                ->get('sulu_website.resolver.request_analyzer')
+                ->resolveForPreview($structure->getWebspaceKey(), $structure->getLanguageCode());
+        }
+
+        return array_merge(
+            $attributes,
+            $structureData,
+            $requestAnalyzerData
+        );
     }
 
     /**

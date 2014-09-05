@@ -10,6 +10,7 @@
         <parameter key="sulu_website.twig.navigation.class">Sulu\Bundle\WebsiteBundle\Twig\NavigationTwigExtension</parameter>
         <parameter key="sulu_website.routing.portal_loader.class">Sulu\Bundle\WebsiteBundle\Routing\PortalLoader</parameter>
         <parameter key="sulu_website.exception.controller.class">Sulu\Bundle\WebsiteBundle\Controller\ExceptionController</parameter>
+        <parameter key="sulu_website.resolver.request_analyzer.class">Sulu\Bundle\WebsiteBundle\Resolver\RequestAnalyzerResolver</parameter>
     </parameters>
 
     <services>
@@ -52,6 +53,10 @@
         <service id="sulu_website.exception.controller" class="%sulu_website.exception.controller.class%">
             <argument type="service" id="twig" />
             <argument>%kernel.debug%</argument>
+        </service>
+
+        <service id="sulu_website.resolver.request_analyzer" class="%sulu_website.resolver.request_analyzer.class%">
+            <argument>%kernel.environment%</argument>
         </service>
     </services>
 </container>
