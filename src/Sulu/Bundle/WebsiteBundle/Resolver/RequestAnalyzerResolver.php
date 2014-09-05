@@ -28,6 +28,12 @@ class RequestAnalyzerResolver implements RequestAnalyzerResolverInterface
      */
     private $environment;
 
+    function __construct(WebspaceManagerInterface $webspaceManager, $environment)
+    {
+        $this->environment = $environment;
+        $this->webspaceManager = $webspaceManager;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -47,10 +53,13 @@ class RequestAnalyzerResolver implements RequestAnalyzerResolverInterface
      */
     public function resolveForPreview($webspaceKey, $locale)
     {
+        // take first portal url
+        $portalInformation = $this->webspaceManager->getPortalInformations($this->environment);
+        $portalUrl = array_keys($portalInformation)[0];
+
         return array(
             'request' => array(
-           //     'portalUrl' => $this->webspaceManager->getPortalInformations($this->env)[0]->,
-                'portalUrl' => '',
+                'portalUrl' => $portalUrl,
                 'resourceLocatorPrefix' => '',
                 'resourceLocator' => ''
             )
