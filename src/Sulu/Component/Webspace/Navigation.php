@@ -20,9 +20,16 @@ class Navigation
      */
     private $contexts = array();
 
+    /**
+     * @var string[]
+     */
+    private $keys = array();
+
     function __construct($contexts = array())
     {
-        $this->contexts = $contexts;
+        foreach($contexts as $context){
+            $this->addContext($context);
+        }
     }
 
     /**
@@ -31,6 +38,7 @@ class Navigation
     public function addContext(NavigationContext $context)
     {
         $this->contexts[] = $context;
+        $this->keys[] = $context->getKey();
     }
 
     /**
@@ -39,6 +47,14 @@ class Navigation
     public function getContexts()
     {
         return $this->contexts;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getContextKeys()
+    {
+        return $this->keys;
     }
 
     /**

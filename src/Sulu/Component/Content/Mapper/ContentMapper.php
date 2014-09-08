@@ -41,6 +41,7 @@ use Sulu\Component\Content\Types\ResourceLocatorInterface;
 use Sulu\Component\PHPCR\PathCleanupInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
 
@@ -134,11 +135,6 @@ class ContentMapper implements ContentMapperInterface
     private $properties;
 
     /**
-     * @var string[]
-     */
-    private $navContexts;
-
-    /**
      * @var boolean
      */
     private $ignoreMandatoryFlag = false;
@@ -161,7 +157,6 @@ class ContentMapper implements ContentMapperInterface
         $defaultTemplate,
         $languageNamespace,
         $internalPrefix,
-        $navContexts,
         $stopwatch = null
     ) {
         $this->contentTypeManager = $contentTypeManager;
@@ -174,7 +169,6 @@ class ContentMapper implements ContentMapperInterface
         $this->languageNamespace = $languageNamespace;
         $this->internalPrefix = $internalPrefix;
         $this->cleaner = $cleaner;
-        $this->navContexts = $navContexts;
         $this->webspaceManager = $webspaceManager;
         $this->templateResolver = $templateResolver;
 
@@ -312,7 +306,7 @@ class ContentMapper implements ContentMapperInterface
         }
 
         if (isset($data['navContexts']) && $data['navContexts'] !== false
-            && $this->validateNavContexts($data['navContexts'])
+            && $this->validateNavContexts($data['navContexts'], $this->webspaceManager->findWebspaceByKey($webspaceKey))
         ) {
             $node->setProperty($this->properties->getName('navContexts'), $data['navContexts']);
         }
@@ -550,14 +544,16 @@ class ContentMapper implements ContentMapperInterface
     /**
      * validates navigation contexts
      * @param string[] $navContexts
+     * @param \Sulu\Component\Webspace\Webspace $webspace
      * @throws \Sulu\Component\Content\Exception\InvalidNavigationContextExtension
      * @return boolean
      */
-    private function validateNavContexts($navContexts)
+    private function validateNavContexts($navContexts, Webspace $webspace)
     {
+        $webspaceContextKeys = $webspace->getNavigation()->getContextKeys();
         foreach ($navContexts as $context) {
-            if (!in_array($context, $this->navContexts)) {
-                throw new InvalidNavigationContextExtension($navContexts, $this->navContexts);
+            if (!in_array($context, $this->$webspaceContextKeys)) {
+                throw new InvalidNavigationContextExtension($navContexts, $webspaceContextKeys);
             }
         }
 

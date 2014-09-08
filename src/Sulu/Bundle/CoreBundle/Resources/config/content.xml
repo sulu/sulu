@@ -46,7 +46,6 @@
             <argument>%sulu.content.template.default%</argument>
             <argument>%sulu.content.language.namespace%</argument>
             <argument>%sulu.content.internal_prefix%</argument>
-            <argument>%sulu.content.nav_contexts%</argument>
             <argument type="service" id="debug.stopwatch" on-invalid="null"/>
         </service>
 
