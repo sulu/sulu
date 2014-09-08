@@ -226,7 +226,8 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
 
     /**
      * returns path to template
-     * @param $key
+     * @param string $key
+     * @throws \InvalidArgumentException
      * @return bool|string
      */
     private function getTemplate($key)
