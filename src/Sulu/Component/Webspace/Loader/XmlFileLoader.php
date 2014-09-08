@@ -19,6 +19,8 @@ use Sulu\Component\Webspace\Loader\Exception\InvalidUrlDefinitionException;
 use Sulu\Component\Webspace\Loader\Exception\WebspaceDefaultLocalizationNotFoundException;
 use Sulu\Component\Webspace\Loader\Exception\WebspaceDefaultSegmentNotFoundException;
 use Sulu\Component\Webspace\Localization;
+use Sulu\Component\Webspace\Navigation;
+use Sulu\Component\Webspace\NavigationContext;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Security;
 use Sulu\Component\Webspace\Segment;
@@ -90,6 +92,7 @@ class XmlFileLoader extends FileLoader
         $this->webspace->setName($this->xpath->query('/x:webspace/x:name')->item(0)->nodeValue);
         $this->webspace->setKey($this->xpath->query('/x:webspace/x:key')->item(0)->nodeValue);
         $this->webspace->setTheme($this->generateTheme());
+        $this->webspace->setNavigation($this->generateNavigation());
 
         // set security
         $this->generateSecurity();
@@ -337,6 +340,39 @@ class XmlFileLoader extends FileLoader
         }
 
         return $theme;
+    }
+
+    private function generateNavigation()
+    {
+        $contexts = array();
+
+        foreach ($this->xpath->query('/x:webspace/x:navigation/x:contexts/x:context') as $templateNode) {
+            /** @var \DOMNode $templateNode */
+            $contexts[] = new NavigationContext(
+                $templateNode->attributes->getNamedItem('key'),
+                $this->loadMeta('x:meta/x:*', $templateNode)
+            );
+        }
+
+        return new Navigation($contexts);
+    }
+
+    private function loadMeta($path, \DOMNode $context = null)
+    {
+        $result = array();
+
+        /** @var \DOMElement $node */
+        foreach ($this->xpath->query($path, $context) as $node) {
+            $attribute = $node->tagName;
+            $lang = $result = $this->xpath->query('@lang', $node)->item(0)->nodeValue;
+
+            if (!isset($result[$node->tagName])) {
+                $result[$attribute] = array();
+            }
+            $result[$attribute][$lang] = $node->textContent;
+        }
+
+        return $result;
     }
 
     /**

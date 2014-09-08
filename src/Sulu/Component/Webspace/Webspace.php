@@ -71,6 +71,12 @@ class Webspace
     private $security;
 
     /**
+     * Navigation for this webspace
+     * @var Navigation
+     */
+    private $navigation;
+
+    /**
      * Sets the key of the webspace
      * @param string $key
      */
@@ -300,5 +306,21 @@ class Webspace
     public function getSecurity()
     {
         return $this->security;
+    }
+
+    /**
+     * @return Navigation
+     */
+    public function getNavigation()
+    {
+        return $this->navigation;
+    }
+
+    /**
+     * @param Navigation $navigation
+     */
+    public function setNavigation($navigation)
+    {
+        $this->navigation = $navigation;
     }
 }
