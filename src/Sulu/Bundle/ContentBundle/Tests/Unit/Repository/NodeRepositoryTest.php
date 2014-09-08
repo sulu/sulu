@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Unit\Repository;
 
+use Monolog\Logger;
 use PHPCR\NodeInterface;
 use ReflectionMethod;
 use Sulu\Bundle\AdminBundle\UserManager\CurrentUserDataInterface;
@@ -874,7 +875,8 @@ class NodeRepositoryTest extends PhpcrTestCase
             $this->mapper,
             $this->sessionManager,
             $this->userManager,
-            $this->webspaceManager
+            $this->webspaceManager,
+            new Logger('xyz')
         );
     }
 
