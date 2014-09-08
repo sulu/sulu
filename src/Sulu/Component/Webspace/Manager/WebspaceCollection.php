@@ -152,6 +152,15 @@ class WebspaceCollection implements \IteratorAggregate
             $webspaceData['theme']['key'] = $webspace->getTheme()->getKey();
             $webspaceData['theme']['excludedTemplates'] = $webspace->getTheme()->getExcludedTemplates();
 
+            $webspaceData['navigation'] = array();
+            $webspaceData['navigation']['contexts'] = array();
+            foreach ($webspace->getNavigation()->getContexts() as $context) {
+                $webspaceData['navigation']['contexts'][] = array(
+                    'key' => $context->getKey(),
+                    'metadata' => $context->getMetadata()
+                );
+            }
+
             $webspaceData = $this->toArrayPortals($webspace, $webspaceData);
             $webspaces[] = $webspaceData;
         }

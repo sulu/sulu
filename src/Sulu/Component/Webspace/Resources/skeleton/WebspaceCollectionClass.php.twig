@@ -81,9 +81,9 @@ class {{ cache_class }} extends {{ base_class }}
 {% for excludedTemplate in webspace.theme.excludedTemplates %}        $theme->addExcludedTemplate('{{ excludedTemplate }}');
 {% endfor %}        $webspace->setTheme($theme);
 
-    // add navigation
-    $navigation = new Navigation();
-{% for context in webspace.navigation.contexts %}        $navigation->addContext(new NavigationContext('{{ context.key }}', {{ _self.renderArray(context.metadata) }});
+        // add navigation
+        $navigation = new Navigation();
+{% for context in webspace.navigation.contexts %}        $navigation->addContext(new NavigationContext('{{ context.key }}', {{ _self.renderArray(context.metadata) }}));
 {% endfor %}        $webspace->setNavigation($navigation);
 
 {% for portal in webspace.portals %}
