@@ -349,7 +349,7 @@ class XmlFileLoader extends FileLoader
         foreach ($this->xpath->query('/x:webspace/x:navigation/x:contexts/x:context') as $templateNode) {
             /** @var \DOMNode $templateNode */
             $contexts[] = new NavigationContext(
-                $templateNode->attributes->getNamedItem('key'),
+                $templateNode->attributes->getNamedItem('key')->nodeValue,
                 $this->loadMeta('x:meta/x:*', $templateNode)
             );
         }

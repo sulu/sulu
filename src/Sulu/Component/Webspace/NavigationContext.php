@@ -34,6 +34,14 @@ class NavigationContext
     }
 
     /**
+     * @return string
+     */
+    public function getKey()
+    {
+        return $this->key;
+    }
+
+    /**
      * @param $locale
      * @return null|string
      */
