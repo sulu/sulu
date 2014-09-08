@@ -35,6 +35,10 @@ class StructureResolver implements StructureResolverInterface
             'content' => array(),
             'extension' => $structure->getExt(),
             'uuid' => $structure->getUuid(),
+            'creator' => $structure->getCreator(),
+            'changer' => $structure->getChanger(),
+            'created' => $structure->getCreated(),
+            'changed' => $structure->getChanged(),
         );
 
         foreach ($structure->getProperties(true) as $property) {

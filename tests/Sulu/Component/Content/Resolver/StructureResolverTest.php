@@ -52,6 +52,10 @@ class StructureResolverTest extends ProphecyTestCase
         $structure->getExt()->willReturn('ext');
         $structure->getUuid()->willReturn('some-uuid');
         $structure->getProperties(true)->willReturn(array($property->reveal()));
+        $structure->getCreator()->willReturn(1);
+        $structure->getChanger()->willReturn(1);
+        $structure->getCreated()->willReturn('date');
+        $structure->getChanged()->willReturn('date');
 
         $expected = array(
             'webspaceKey' => 'WebspaceKey',
@@ -63,7 +67,11 @@ class StructureResolverTest extends ProphecyTestCase
             ),
             'content' => array(
                 'property' => 'content'
-            )
+            ),
+            'creator' => 1,
+            'changer' => 1,
+            'created' => 'date',
+            'changed' => 'date',
         );
 
         $this->assertEquals($expected, $this->structureResolver->resolve($structure->reveal()));
