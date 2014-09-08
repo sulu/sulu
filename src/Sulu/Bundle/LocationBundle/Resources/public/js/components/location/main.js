@@ -79,7 +79,7 @@ define([], function() {
                     '<div class="header"><span class="fa-gears <%= constants.configureButtonClass %> icon right border"></span></div>',
                     '<div class="content <%= constants.contentClass %>">',
                         '<div class="grid-row">',
-                            '<div class="grid-col-6 container">',
+                            '<div class="grid-col-6 ">',
                                 '<div id="<%= constants.mapElementId %>" class="content"></div>',
                             '</div>',
                             '<div class="grid-col-6 <%= constants.contentFieldContainerClass %>">',
@@ -89,7 +89,7 @@ define([], function() {
                 '</div>'
             ].join(''),
             contentFields: [
-                '<div class="container grid">',
+                '<div class="grid">',
                     '<div class="grid-row">',
                         '<div class="grid-col-3 text"><%= translate(translations.title) %>:</div>',
                         '<div class="grid-col-9"><%= data.title %></div>',
@@ -228,7 +228,7 @@ define([], function() {
         _template: function (name, params) {
             var tmpl = templates[name];
             var tmplParams = this.sandbox.util.extend(true, {}, {
-                constants: constants,
+                constants: this.constants,
                 translations: this.options.translations,
                 translate: this.sandbox.translate
             }, params);
@@ -238,6 +238,11 @@ define([], function() {
 
         initialize: function() {
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
+
+            this.constants = this.sandbox.util.extend(true, {}, constants);
+            this.constants.formId += '-' + this.options.instanceName;
+            this.constants.mapElementId += '-' + this.options.instanceName;
+            this.constants.overlayMapElementId += '-' + this.options.instanceName;
 
             this.configureMaps();
             this.loadData();
@@ -249,13 +254,13 @@ define([], function() {
         configureMaps: function () {
             this.maps = {
                 content: {
-                    elementId: constants.mapElementId,
+                    elementId: this.constants.mapElementId,
                     draggableMarker: false,
                     positionUpdateCallback: function () {},
                     zoomChangeCallback: function () {}
                 },
                 overlay: {
-                    elementId: constants.overlayMapElementId,
+                    elementId: this.constants.overlayMapElementId,
                     draggableMarker: true,
 
                     // update the coordinates when marker position changed
@@ -280,7 +285,7 @@ define([], function() {
         },
 
         getFormData: function () {
-            return this.sandbox.form.getData('#' + constants.formId);
+            return this.sandbox.form.getData('#' + this.constants.formId);
         },
 
         initializeFormContent: function () {
@@ -355,7 +360,7 @@ define([], function() {
         },
 
         updateCoordinates: function (long, lat, zoom) {
-            var form = $('#' + constants.formId);
+            var form = $('#' + this.constants.formId);
             if (long) {
                 this.sandbox.dom.find('.longitude', form).val(long);
             }
@@ -380,7 +385,7 @@ define([], function() {
          * Render the (read only) content, i.e. not the overlay.
          */
         renderContentFields: function () {
-            this.sandbox.dom.find('.' + constants.contentFieldContainerClass).empty().html(
+            this.sandbox.dom.find('.' + this.constants.contentFieldContainerClass, this.$el).html(
                 this._template('contentFields', {
                     data: this.data
                 })
@@ -413,7 +418,7 @@ define([], function() {
                 require(['map/' + mapProviderName], function (Map) {
                     var parentEl = this.sandbox.dom.find('#' + mapElementId);
                     parentEl.empty().append(
-                        this.sandbox.dom.createElement('<div id="' + mapInnerElementId + '" class="' + constants.mapElementClass + '"></div>')
+                        this.sandbox.dom.createElement('<div id="' + mapInnerElementId + '" class="' + this.constants.mapElementClass + '"></div>')
                     );
 
                     var map = new Map(mapInnerElementId, mapProviderConfig, resolvedOptions);
@@ -431,7 +436,7 @@ define([], function() {
                 {
                     name: 'auto-complete@husky',
                     options: {
-                        el: this.sandbox.dom.find('.' + constants.geolocatorSearchClass, this.$formContent),
+                        el: this.sandbox.dom.find('.' + this.constants.geolocatorSearchClass, this.$formContent),
                         instanceName: this.options.instanceName + '.geolocator.search',
                         getParameter: 'query',
                         suggestionImg: 'map-marker',
@@ -448,18 +453,18 @@ define([], function() {
          */
         createForm: function () {
             this.initializeFormContent();
-            this.sandbox.form.create('#' + constants.formId);
-            this.renderMap('overlay', this.data);                // update the coordinates when the marker is dragged
+            this.sandbox.form.create('#' + this.constants.formId);
+            this.renderMap('overlay', this.data); // update the coordinates when the marker is dragged
 
             this.sandbox.dom.find('.coordinate-fields input').on('change', function () {
-                var form = $('#' + constants.formId);
+                var form = $('#' + this.constants.formId);
                 this.formData.long = this.sandbox.dom.find('.longitude', form).val();
                 this.formData.lat = this.sandbox.dom.find('.latitude', form).val();
                 this.formData.zoom = this.sandbox.dom.find('.zoom', form).val();
                 this.updateLocation();
             }.bind(this));
             
-            this.sandbox.dom.find('.' + constants.mapProviderSelectClass).on('change', function (el) {
+            this.sandbox.dom.find('.' + this.constants.mapProviderSelectClass).on('change', function (el) {
                 this.formData.mapProvider = $(el.currentTarget).val();
                 this.renderMap('overlay', {
                     'long': this.formData.long,
@@ -482,7 +487,7 @@ define([], function() {
                 {
                     name: 'overlay@husky',
                     options: {
-                        triggerEl: '.' + constants.configureButtonClass,
+                        triggerEl: this.sandbox.dom.find('.' + this.constants.configureButtonClass, this.$el),
                         el: $element,
                         container: this.$el,
                         instanceName: 'location-content.' + this.options.instanceName,
