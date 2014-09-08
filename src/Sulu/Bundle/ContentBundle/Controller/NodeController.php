@@ -192,7 +192,7 @@ class NodeController extends RestController implements ClassResourceInterface
      * @param array $idString
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    private function getNodeyByIds(Request $request, $idString)
+    private function getNodesByIds(Request $request, $idString)
     {
         $language = $this->getLanguage($request);
         $webspace = $this->getWebspace($request);
@@ -234,7 +234,7 @@ class NodeController extends RestController implements ClassResourceInterface
         if ($tree === true) {
             return $this->getTreeForUuid($request, null);
         } elseif ($ids !== null) {
-            return $this->getNodeyByIds($request, $ids);
+            return $this->getNodesByIds($request, $ids);
         }
 
         $language = $this->getLanguage($request);

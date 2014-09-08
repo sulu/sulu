@@ -10,8 +10,8 @@
 
 namespace Sulu\Bundle\ContentBundle\Content;
 
-use JMS\Serializer\Serializer;
-use Sulu\Component\Content\Mapper\ContentMapperInterface;
+use Psr\Log\LoggerInterface;
+use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
 use Sulu\Component\Content\StructureInterface;
 use JMS\Serializer\Annotation\Exclude;
 use Sulu\Component\Util\ArrayableInterface;
@@ -25,9 +25,9 @@ class InternalLinksContainer implements ArrayableInterface
     /**
      * The node repository, which is needed for lazy loading
      * @Exclude
-     * @var ContentMapperInterface
+     * @var NodeRepositoryInterface
      */
-    private $contentMapper;
+    private $repository;
 
     /**
      * The key of the webspace
@@ -56,12 +56,12 @@ class InternalLinksContainer implements ArrayableInterface
 
     public function __construct(
         $ids,
-        ContentMapperInterface $contentMapper,
+        NodeRepositoryInterface $repository,
         $webspaceKey,
         $languageCode
     ) {
         $this->ids = $ids;
-        $this->contentMapper = $contentMapper;
+        $this->repository = $repository;
         $this->webspaceKey = $webspaceKey;
         $this->languageCode = $languageCode;
     }
@@ -84,15 +84,11 @@ class InternalLinksContainer implements ArrayableInterface
      */
     private function loadData()
     {
-        $result = array();
-
         if ($this->ids !== null) {
-            foreach ($this->ids as $id) {
-                $result[] = $this->contentMapper->load($id, $this->webspaceKey, $this->languageCode);
-            }
+            return $this->repository->getNodesByIds($this->ids, $this->webspaceKey, $this->languageCode);
+        } else {
+            return array();
         }
-
-        return $result;
     }
 
     /**
