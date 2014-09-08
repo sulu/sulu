@@ -11,10 +11,7 @@
 namespace Sulu\Bundle\WebsiteBundle\Controller;
 
 use InvalidArgumentException;
-use Sulu\Bundle\WebsiteBundle\Navigation\NavigationMapper;
-use Sulu\Bundle\WebsiteBundle\Navigation\NavigationMapperInterface;
 use Sulu\Component\Content\StructureInterface;
-use Sulu\Component\Content\Template\Exception\TemplateNotFoundException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -35,15 +32,12 @@ abstract class WebsiteController extends Controller
         $partial = false
     )
     {
+        // extract format twig file
         $request = $this->getRequest();
         $viewTemplate = $structure->getView() . '.' . $request->getRequestFormat() . '.twig';
 
-        $structureData = $this->get('sulu.content.structure_resolver')->resolve($structure);
-
-        $data = array_merge(
-            $attributes,
-            $structureData
-        );
+        // get attributes to render template
+        $data = $this->getAttributes($attributes, $structure, $preview);
 
         try {
             // if partial render only content block else full page
@@ -81,12 +75,40 @@ abstract class WebsiteController extends Controller
             return $response;
         } catch (InvalidArgumentException $ex) {
             // template not found
-
             throw new HttpException(406);
         }
     }
 
     /**
+     * Generates attributes
+     */
+    protected function getAttributes($attributes, StructureInterface $structure = null, $preview = false)
+    {
+        if ($structure !== null) {
+            $structureData = $this->get('sulu.content.structure_resolver')->resolve($structure);
+        } else {
+            $structureData = array();
+        }
+
+        if (!$preview) {
+            $requestAnalyzerData = $this
+                ->get('sulu_website.resolver.request_analyzer')
+                ->resolve(
+                    $this->get('sulu_core.webspace.request_analyzer')
+                );
+        } else {
+            $requestAnalyzerData = $this
+                ->get('sulu_website.resolver.request_analyzer')
+                ->resolveForPreview($structure->getWebspaceKey(), $structure->getLanguageCode());
+        }
+
+        return array_merge(
+            $attributes,
+            $structureData,
+            $requestAnalyzerData
+        );
+    }
+
     /**
      * Returns rendered part of template specified by block
      */
