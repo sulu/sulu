@@ -10,6 +10,8 @@
 
 namespace Sulu\Component\Webspace;
 
+use Sulu\Component\Content\StructureInterface;
+
 /**
  * Container for a webspace definition
  * @package Sulu\Component\Webspace
@@ -69,6 +71,12 @@ class Webspace
      * @var Security
      */
     private $security;
+
+    /**
+     * templates implemented in this webspace
+     * @var StructureInterface[]
+     */
+    private $templates;
 
     /**
      * Sets the key of the webspace
@@ -300,5 +308,23 @@ class Webspace
     public function getSecurity()
     {
         return $this->security;
+    }
+
+    /**
+     * Returns templates implemented in this webspace
+     * @return string[]
+     */
+    public function getTemplates()
+    {
+        return $this->templates;
+    }
+
+    /**
+     * Sets templates implemented in this webspace
+     * @param string[] $templates
+     */
+    public function setTemplates($templates)
+    {
+        $this->templates = $templates;
     }
 }
