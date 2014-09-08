@@ -246,7 +246,7 @@ class NodeRepository implements NodeRepositoryInterface
         if (!empty($ids)) {
             foreach ($ids as $id) {
                 try {
-                $result[] = $this->getNode($id, $webspaceKey, $languageCode);
+                    $result[] = $this->getNode($id, $webspaceKey, $languageCode);
                 } catch (ItemNotFoundException $ex) {
                     $this->logger->warning(
                         sprintf("%s in internal links not found. Exception: %s", $id, $ex->getMessage())
@@ -401,8 +401,7 @@ class NodeRepository implements NodeRepositoryInterface
         $state = null,
         $isShadow = false,
         $shadowBaseLanguage = null
-    )
-    {
+    ) {
         $node = $this->getMapper()->save(
             $data,
             $templateKey,

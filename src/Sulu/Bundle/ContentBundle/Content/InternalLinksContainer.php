@@ -85,7 +85,7 @@ class InternalLinksContainer implements ArrayableInterface
     private function loadData()
     {
         if ($this->ids !== null) {
-            return $this->repository->getNodesByIds($this->ids, $this->webspaceKey, $this->languageCode);
+            return $this->repository->getNodesByIds($this->ids, $this->webspaceKey, $this->languageCode)['_embedded']['nodes'];
         } else {
             return array();
         }
@@ -116,6 +116,6 @@ class InternalLinksContainer implements ArrayableInterface
      */
     public function toArray($depth = null)
     {
-        return $this->ids;
+        return array('ids' => $this->ids);
     }
 }
