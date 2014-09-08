@@ -73,6 +73,18 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     protected $whereNotValues = array();
 
     /**
+     * The fields which will be used for in-clauses
+     * @var array
+     */
+    protected $inFields = array();
+
+    /**
+     * The values for the in-clauses
+     * @var array
+     */
+    protected $inValues = array();
+
+    /**
      * The page the resulting query will be returning
      * @var integer
      */
@@ -177,5 +189,14 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     {
         $this->whereNotFields[$fieldDescriptor->getName()] = $fieldDescriptor;
         $this->whereNotValues[$fieldDescriptor->getName()] = $value;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function in(AbstractFieldDescriptor $fieldDescriptor, $values)
+    {
+        $this->inFields[$fieldDescriptor->getName()] = $fieldDescriptor;
+        $this->inValues[$fieldDescriptor->getName()] = $values;
     }
 }
