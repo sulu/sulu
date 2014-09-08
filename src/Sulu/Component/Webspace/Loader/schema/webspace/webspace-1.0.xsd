@@ -78,7 +78,7 @@
             </xs:element>
         </xs:sequence>
 
-        <xs:attribute name="key" type="xs:string"/>
+        <xs:attribute name="key" type="xs:string" use="required"/>
     </xs:complexType>
     <xs:complexType name="langType">
         <xs:simpleContent>

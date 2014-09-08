@@ -364,7 +364,7 @@ class XmlFileLoader extends FileLoader
         /** @var \DOMElement $node */
         foreach ($this->xpath->query($path, $context) as $node) {
             $attribute = $node->tagName;
-            $lang = $result = $this->xpath->query('@lang', $node)->item(0)->nodeValue;
+            $lang = $this->xpath->query('@lang', $node)->item(0)->nodeValue;
 
             if (!isset($result[$node->tagName])) {
                 $result[$attribute] = array();
