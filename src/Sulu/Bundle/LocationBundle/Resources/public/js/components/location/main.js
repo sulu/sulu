@@ -86,7 +86,7 @@ define([], function() {
                             '</div>',
                         '</div>',
                     '</div>',
-                '</div>',
+                '</div>'
             ].join(''),
             contentFields: [
                 '<div class="container grid">',
@@ -122,7 +122,7 @@ define([], function() {
                         '<div class="grid-col-3 text"><%= translate(translations.coordinates) %>:</div>',
                         '<div class="grid-col-9"><%= data.long %>, <%= data.lat %>, <%= data.zoom %></div>',
                     '</div>',
-                '</div>',
+                '</div>'
             ].join(''),
             overlay: [
                 '<div class="<%= constants.overlayClass %> grid">',
@@ -252,7 +252,7 @@ define([], function() {
                     elementId: constants.mapElementId,
                     draggableMarker: false,
                     positionUpdateCallback: function () {},
-                    zoomChangeCallback: function () {},
+                    zoomChangeCallback: function () {}
                 },
                 overlay: {
                     elementId: constants.overlayMapElementId,
@@ -280,8 +280,7 @@ define([], function() {
         },
 
         getFormData: function () {
-            var data = this.sandbox.form.getData('#' + constants.formId);
-            return data;
+            return this.sandbox.form.getData('#' + constants.formId);
         },
 
         initializeFormContent: function () {
@@ -392,7 +391,7 @@ define([], function() {
          * Render the map using the defined provider
          *
          * @param mapId {integer}
-         * @param locatoin {object}
+         * @param location {object}
          */
         renderMap: function (mapId, location) {
             var options = this.maps[mapId];
@@ -449,7 +448,6 @@ define([], function() {
          */
         createForm: function () {
             this.initializeFormContent();
-            var element = this.sandbox.dom.find('.' + constants.geolocatorSearchClass);
             this.sandbox.form.create('#' + constants.formId);
             this.renderMap('overlay', this.data);                // update the coordinates when the marker is dragged
 
@@ -462,8 +460,7 @@ define([], function() {
             }.bind(this));
             
             this.sandbox.dom.find('.' + constants.mapProviderSelectClass).on('change', function (el) {
-                var providerName = $(el.currentTarget).val();
-                this.formData.mapProvider = providerName;
+                this.formData.mapProvider = $(el.currentTarget).val();
                 this.renderMap('overlay', {
                     'long': this.formData.long,
                     'lat': this.formData.lat,
