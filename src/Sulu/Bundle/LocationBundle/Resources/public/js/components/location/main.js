@@ -91,35 +91,35 @@ define([], function() {
             contentFields: [
                 '<div class="container grid">',
                     '<div class="grid-row">',
-                        '<div class="grid-col-3 text"><%= translations.title %>:</div>',
+                        '<div class="grid-col-3 text"><%= translate(translations.title) %>:</div>',
                         '<div class="grid-col-9"><%= data.title %></div>',
                     '</div>',
                     '<div class="grid-row no-spacing">',
-                        '<div class="grid-col-3 text"><%= translations.street %></div>',
+                        '<div class="grid-col-3 text"><%= translate(translations.street) %></div>',
                         '<div class="grid-col-9"><%= data.street %></div>',
                     '</div>',
                     '<div class="grid-row no-spacing">',
 
-                        '<div class="grid-col-3 text"><%= translations.number %>:</div>',
+                        '<div class="grid-col-3 text"><%= translate(translations.number) %>:</div>',
                         '<div class="grid-col-9"><%= data.number %></div>',
                     '</div>',
 
                     '<div class="grid-row no-spacing">',
-                        '<div class="grid-col-3 text"><%= translations.code %>:</div>',
+                        '<div class="grid-col-3 text"><%= translate(translations.code) %>:</div>',
                         '<div class="grid-col-9"><%= data.code %></div>',
                     '</div>',
 
                     '<div class="grid-row no-spacing">',
-                        '<div class="grid-col-3 text"><%= translations.town %>:</div>',
+                        '<div class="grid-col-3 text"><%= translate(translations.town) %>:</div>',
                         '<div class="grid-col-9"><%= data.town %></div>',
                     '</div>',
 
                     '<div class="grid-row">',
-                        '<div class="grid-col-3 text"><%= translations.country %>:</div>',
+                        '<div class="grid-col-3 text"><%= translate(translations.country) %>:</div>',
                         '<div class="grid-col-9"><%= data.country %></div>',
                     '</div>',
                     '<div class="grid-row">',
-                        '<div class="grid-col-3 text"><%= translations.coordinates %>:</div>',
+                        '<div class="grid-col-3 text"><%= translate(translations.coordinates) %>:</div>',
                         '<div class="grid-col-9"><%= data.long %>, <%= data.lat %>, <%= data.zoom %></div>',
                     '</div>',
                 '</div>',
@@ -129,33 +129,33 @@ define([], function() {
                     '<form id="<%= constants.formId %>">',
                         '<div class="grid-row">',
                             '<div class="form-group grid-col-12">',
-                                '<label for="title"><%= translations.title %></label>',
-                                '<input class="form-element" type="text" placeholder="<%= translations.title %>" data-mapper-property="title" value="<%= data.title %>"/ >',
+                                '<label for="title"><%= translate(translations.title) %></label>',
+                                '<input class="form-element" type="text" placeholder="<%= translate(translations.title) %>" data-mapper-property="title" value="<%= data.title %>"/ >',
                             '</div>',
                         '</div>',
                         '<div class="grid-row">',
                             '<div class="form-group grid-col-6">',
-                                '<label for="street"><%= translations.street %></label>',
+                                '<label for="street"><%= translate(translations.street) %></label>',
                                 '<input class="form-element" type="text" data-mapper-property="street" value="<%= data.street %>"/ >',
                             '</div>',
                             '<div class="form-group grid-col-6">',
-                                '<label for="number"><%= translations.number %></label>',
+                                '<label for="number"><%= translate(translations.number) %></label>',
                                 '<input class="form-element" type="text" data-mapper-property="number" value="<%= data.number %>"/ >',
                             '</div>',
                         '</div>',
                         '<div class="grid-row">',
                             '<div class="form-group grid-col-6">',
-                                '<label for="code"><%= translations.code %></label>',
+                                '<label for="code"><%= translate(translations.code) %></label>',
                                 '<input class="form-element" type="text" data-mapper-property="code" value="<%= data.code %>"/ >',
                             '</div>',
                             '<div class="form-group grid-col-6">',
-                                '<label for="town"><%= translations.town %></label>',
+                                '<label for="town"><%= translate(translations.town) %></label>',
                                 '<input class="form-element" type="text" data-mapper-property="town" value="<%= data.town %>"/ >',
                             '</div>',
                         '</div>',
                         '<div class="grid-row">',
                             '<div class="form-group grid-col-6">',
-                                '<label for="country"><%= translations.country %></label>',
+                                '<label for="country"><%= translate(translations.country) %></label>',
                                 '<select class="form-element" name="country" data-mapper-property="country">',
                                     '<% _.each(countries, function (name, key) { %>',
                                         '<option <% if (key == data.country) { %>selected="selected" <% }; %>value="<%= key %>"><%= name %></option>',
@@ -163,7 +163,7 @@ define([], function() {
                                 '</select>',
                             '</div>',
                         '</div>',
-                        '<h2 class="divider"><%= translations.map %></h2>',
+                        '<h2 class="divider"><%= translate(translations.map) %></h2>',
                         '<div class="grid-row">',
                             '<div class="form-group grid-col-6">',
                                 '<label for="map_provider">Map Provider</label>',
@@ -176,13 +176,13 @@ define([], function() {
                         '</div>',
                         '<div class="grid-row">',
                             '<div class="form-group grid-col-12">',
-                                '<label for="title"><%= translations.search %></label>',
+                                '<label for="title"><%= translate(translations.search) %></label>',
                                 '<div class="<%= constants.geolocatorSearchClass %>" type="text" placeholder="<% translations.search %>" ></div>',
                             '</div>',
                         '</div>',
                         '<div class="grid-row no-spacing">',
                             '<div class="form-group grid-col-12">',
-                                '<label><%= translations.coordinates %></label>',
+                                '<label><%= translate(translations.coordinates) %></label>',
                             '</div>',
                         '</div>',
                         '<div class="grid-row coordinate-fields">',
@@ -229,7 +229,8 @@ define([], function() {
             var tmpl = templates[name];
             var tmplParams = this.sandbox.util.extend(true, {}, {
                 constants: constants,
-                translations: this.options.translations
+                translations: this.options.translations,
+                translate: this.sandbox.translate
             }, params);
 
             return this.sandbox.util.template(tmpl, tmplParams);
@@ -237,6 +238,7 @@ define([], function() {
 
         initialize: function() {
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
+
             this.configureMaps();
             this.loadData();
             this.createComponent();
