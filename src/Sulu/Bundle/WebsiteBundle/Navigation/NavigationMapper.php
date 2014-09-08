@@ -131,6 +131,11 @@ class NavigationMapper implements NavigationMapperInterface
     {
         $contexts = $content->getNavContexts();
 
+        if ($content->getNodeState() !== Structure::STATE_PUBLISHED) {
+            // if node state is not published do not show page
+            return false;
+        }
+
         if (is_array($contexts) && ($context === null || in_array($context, $contexts))) {
             // all contexts or content has context
             return true;
