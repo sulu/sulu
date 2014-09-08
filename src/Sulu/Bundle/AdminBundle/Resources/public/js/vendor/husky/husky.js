@@ -30960,7 +30960,6 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
 
                 this.matchings = [];
                 this.requestFields = [];
-                this.filterMatchings(this.options.matchings);
 
                 // make a copy of the decorators for each datagrid instance
                 // if you directly access the decorators variable the datagrid-context in the decorators will be overwritten
@@ -31000,7 +30999,6 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
              */
             getData: function() {
                 var url;
-
                 if (!!this.options.url) {
                     url = this.options.url;
 
@@ -31025,6 +31023,50 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                         this.paginations[this.paginationId].render(this.data, this.$element);
                     }
                 }
+            },
+
+            /**
+             * Checks if matchings/fields are given as url or array.
+             * If a url is given the appropriate fields are fetched.
+             *
+             * @param {Array} matchings array with matchings
+             */
+            evaluateMatchings: function() {
+                var matchings = this.options.matchings;
+                if (typeof(matchings) == 'string') {
+                    // Load matchings/fields from url
+                    this.loading();
+                    this.loadMatchings({
+                        url: matchings,
+                        success: function(response) {
+                            this.filterMatchings(response);
+                            this.getData();
+                        }.bind(this)
+                    });
+                } else {
+                    this.filterMatchings(matchings);
+                    this.getData();
+                }
+            },
+
+            /**
+             * Loads matchings via ajax
+             * @param params url
+             */
+            loadMatchings: function(params) {
+                this.sandbox.util.load(params.url)
+                    .then(function(response) {
+                        if (this.isLoading === true) {
+                            this.stopLoading();
+                        }
+                        this.destroy();
+                        if (!!params.success && typeof params.success === 'function') {
+                            params.success(response);
+                        }
+                    }.bind(this))
+                    .fail(function(status, error) {
+                        this.sandbox.logger.error(status, error);
+                    }.bind(this));
             },
 
             /**
@@ -31230,7 +31272,7 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                 this.bindDOMEvents();
                 this.getPaginationDecorator(this.paginationId);
                 this.getViewDecorator(this.viewId);
-                this.getData();
+                this.evaluateMatchings();
             },
 
             /**
