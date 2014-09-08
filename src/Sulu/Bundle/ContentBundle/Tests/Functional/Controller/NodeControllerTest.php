@@ -940,7 +940,6 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertEquals('test1', $items[0]['title']);
         $this->assertEquals('/test1', $items[0]['path']);
         $this->assertEquals(2, $items[0]['nodeState']);
-        $this->assertEquals(2, $items[0]['globalState']);
         $this->assertTrue($items[0]['publishedState']);
         $this->assertEmpty($items[0]['navContexts']);
         $this->assertFalse($items[0]['hasSub']);
@@ -952,7 +951,6 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertEquals('test2', $items[1]['title']);
         $this->assertEquals('/test2', $items[1]['path']);
         $this->assertEquals(2, $items[1]['nodeState']);
-        $this->assertEquals(2, $items[1]['globalState']);
         $this->assertTrue($items[1]['publishedState']);
         $this->assertEmpty($items[1]['navContexts']);
         $this->assertTrue($items[1]['hasSub']);
@@ -1307,7 +1305,6 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertEquals('test1', $data['title']);
         $this->assertEquals('/test1', $data['path']);
         $this->assertEquals(1, $data['nodeState']);
-        $this->assertEquals(1, $data['globalState']);
         $this->assertFalse($data['publishedState']);
         $this->assertEquals(array('main', 'footer'), $data['navContexts']);
         $this->assertFalse($data['hasSub']);
@@ -1327,7 +1324,6 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertEquals('test1', $items[0]['title']);
         $this->assertEquals('/test1', $items[0]['path']);
         $this->assertEquals(1, $items[0]['nodeState']);
-        $this->assertEquals(1, $items[0]['globalState']);
         $this->assertFalse($items[0]['publishedState']);
         $this->assertEquals(array('main', 'footer'), $items[0]['navContexts']);
         $this->assertFalse($items[0]['hasSub']);
