@@ -9,9 +9,12 @@
         <parameter key="sulu.content.mapper.class">Sulu\Component\Content\Mapper\ContentMapper</parameter>
 
         <parameter key="sulu.content.structure_manager.class">Sulu\Component\Content\StructureManager</parameter>
-        <parameter key="sulu.content.structure_manager.loader.class">Sulu\Component\Content\Template\TemplateReader</parameter>
-        <parameter key="sulu.content.structure_manager.dumper.class">Sulu\Component\Content\Template\Dumper\PHPTemplateDumper</parameter>
-        <parameter key="sulu.content.structure_manager.dumper.path">../Resources/Skeleton</parameter>
+
+        <parameter key="sulu.content.template_manager.class">Sulu\Component\Content\TemplateManager</parameter>
+        <parameter key="sulu.content.template_manager.loader.class">Sulu\Component\Content\Template\TemplateLoader</parameter>
+        <parameter key="sulu.content.template_manager.loader.class">Sulu\Component\Content\Template\TemplateReader</parameter>
+        <parameter key="sulu.content.template_manager.dumper.class">Sulu\Component\Content\Template\Dumper\PHPTemplateDumper</parameter>
+        <parameter key="sulu.content.template_manager.dumper.path">../Resources/Skeleton</parameter>
 
         <parameter key="sulu.content.type_manager.class">Sulu\Component\Content\ContentTypeManager</parameter>
         <parameter key="sulu.content.type.text_line.class">Sulu\Component\Content\Types\TextLine</parameter>
@@ -67,25 +70,28 @@
             <argument type="service" id="sulu.content.type_manager" />
         </service>
 
-        <!-- structure manager -->
-        <service id="sulu.content.structure_manager.loader" class="%sulu.content.structure_manager.loader.class%" public="false"/>
-        <service id="sulu.content.structure_manager.dumper" class="%sulu.content.structure_manager.dumper.class%" public="false">
-            <argument>%sulu.content.structure_manager.dumper.path%</argument>
+        <!-- template manager -->
+        <service id="sulu.content.template_manager.loader" class="%sulu.content.template_manager.loader.class%" public="false"/>
+        <service id="sulu.content.template_manager.dumper" class="%sulu.content.template_manager.dumper.class%" public="false">
+            <argument>%sulu.content.template_manager.dumper.path%</argument>
             <argument>%kernel.debug%</argument>
         </service>
-        <service id="sulu.content.structure_manager" class="%sulu.content.structure_manager.class%">
-            <argument type="service" id="sulu.content.structure_manager.loader"/>
-            <argument type="service" id="sulu.content.structure_manager.dumper"/>
+        <service id="sulu.content.template_manager" class="%sulu.content.template_manager.class%">
+            <argument type="service" id="sulu.content.template_manager.loader"/>
+            <argument type="service" id="sulu.content.template_manager.dumper"/>
             <argument type="service" id="logger"/>
+
             <argument type="collection">
                 <argument key="template_dir">%sulu.content.template.paths%</argument>
                 <argument key="cache_dir">%kernel.cache_dir%</argument>
                 <argument key="debug">%kernel.debug%</argument>
             </argument>
+        </service>
 
-            <call method="setContainer">
-                <argument type="service" id="service_container"/>
-            </call>
+        <!-- structure manager -->
+        <service id="sulu.content.structure_manager" class="%sulu.content.structure_manager.class%">
+            <argument id="sulu.content.template_manager"/>
+            <argument id="sulu_core.webspace.webspace_manager"/>
         </service>
 
         <!-- rlp mapper -->

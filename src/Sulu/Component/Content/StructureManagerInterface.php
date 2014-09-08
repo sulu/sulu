@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 /**
  * Interface of StructureManager
  */
-interface StructureManagerInterface extends ContainerAwareInterface
+interface StructureManagerInterface
 {
     /**
      * returns a structure for given key
@@ -26,6 +26,7 @@ interface StructureManagerInterface extends ContainerAwareInterface
     public function getStructure($key);
 
     /**
+     * returns all structures in the system
      * @return StructureInterface[]
      */
     public function getStructures();
