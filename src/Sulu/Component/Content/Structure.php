@@ -226,6 +226,12 @@ abstract class Structure implements StructureInterface
     private $metaData;
 
     /**
+     * Name of index to use for search indexing
+     * @var string
+     */
+    private $indexName;
+
+    /**
      * @param $key string
      * @param $view string
      * @param $controller string
@@ -948,7 +954,7 @@ abstract class Structure implements StructureInterface
         if (isset($this->properties[$property])) {
             return $this->getProperty($property)->setValue($value);
         } else {
-            throw new NoSuchPropertyException();
+            throw new NoSuchPropertyException($property);
         }
     }
 
@@ -1104,5 +1110,20 @@ abstract class Structure implements StructureInterface
     public function setConcreteLanguages($concreteLanguages)
     {
         $this->concreteLanguages = $concreteLanguages;
+    }
+
+    /**
+     * Name of index to use when indexing this structure in a search index.
+     *
+     * @param string
+     */
+    public function setIndexName($indexName)
+    {
+        $this->indexName = $indexName;
+    }
+
+    public function getIndexName()
+    {
+        return $this->indexName;
     }
 }
