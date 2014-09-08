@@ -552,7 +552,7 @@ class ContentMapper implements ContentMapperInterface
     {
         $webspaceContextKeys = $webspace->getNavigation()->getContextKeys();
         foreach ($navContexts as $context) {
-            if (!in_array($context, $this->$webspaceContextKeys)) {
+            if (!in_array($context, $webspaceContextKeys)) {
                 throw new InvalidNavigationContextExtension($navContexts, $webspaceContextKeys);
             }
         }

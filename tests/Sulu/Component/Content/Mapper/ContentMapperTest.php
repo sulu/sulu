@@ -28,6 +28,8 @@ use Sulu\Component\Content\StructureExtension\StructureExtension;
 use Sulu\Component\Content\StructureExtension\StructureExtensionInterface;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Webspace\Localization;
+use Sulu\Component\Webspace\Navigation;
+use Sulu\Component\Webspace\NavigationContext;
 use Sulu\Component\Webspace\Webspace;
 
 /**
@@ -295,6 +297,10 @@ class ContentMapperTest extends PhpcrTestCase
             $webspace->addLocalization($en);
             $webspace->addLocalization($de);
             $webspace->addLocalization($es);
+
+            $webspace->setNavigation(
+                new Navigation(array(new NavigationContext('main', array()), new NavigationContext('footer', array())))
+            );
 
             $this->webspaceManager = $this->getMock('Sulu\Component\Webspace\Manager\WebspaceManagerInterface');
             $this->webspaceManager->expects($this->any())
