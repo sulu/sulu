@@ -43,6 +43,21 @@ class DoctrineListBuilder extends AbstractListBuilder
     protected $searchFields = array();
 
     /**
+     * @var AbstractDoctrineFieldDescriptor[]
+     */
+    protected $whereFields = array();
+
+    /**
+     * @var AbstractDoctrineFieldDescriptor[]
+     */
+    protected $whereNotFields = array();
+
+    /**
+     * @var AbstractDoctrineFieldDescriptor[]
+     */
+    protected $inFields = array();
+
+    /**
      * @var AbstractDoctrineFieldDescriptor
      */
     protected $sortField;
@@ -121,6 +136,10 @@ class DoctrineListBuilder extends AbstractListBuilder
             $joins = array_merge($joins, $whereNotField->getJoins());
         }
 
+        foreach ($this->inFields as $inField) {
+            $joins = array_merge($joins, $inField->getJoins());
+        }
+
         return $joins;
     }
 
@@ -163,6 +182,11 @@ class DoctrineListBuilder extends AbstractListBuilder
             $this->addWheres($this->whereNotFields, $this->whereNotValues, self::WHERE_COMPARATOR_UNEQUAL);
         }
 
+        // set in
+        if (!empty($this->inFields)) {
+            $this->addIns($this->inFields, $this->inValues);
+        }
+
         if ($this->search != null) {
             $searchParts = array();
             foreach ($this->searchFields as $searchField) {
@@ -174,6 +198,22 @@ class DoctrineListBuilder extends AbstractListBuilder
         }
 
         return $this->queryBuilder;
+    }
+
+    /**
+     * adds where statements for in-clauses
+     * @param array $inFields
+     * @param array $inValues
+     */
+    protected function addIns(array $inFields, array $inValues)
+    {
+        $inParts = array();
+        foreach ($inFields as $inField) {
+            $inParts[] = $inField->getSelect() . ' IN (:' . $inField->getName() . ')';
+            $this->queryBuilder->setParameter($inField->getName(), $inValues[$inField->getName()]);
+        }
+
+        $this->queryBuilder->andWhere('(' . implode(' AND ', $inParts) . ')');
     }
 
     /**
@@ -195,6 +235,7 @@ class DoctrineListBuilder extends AbstractListBuilder
                 $this->queryBuilder->setParameter($whereField->getName(), $value);
             }
         }
+
         $this->queryBuilder->andWhere('(' . implode(' AND ', $whereParts) . ')');
     }
 
