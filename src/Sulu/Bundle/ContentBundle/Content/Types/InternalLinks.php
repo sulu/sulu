@@ -12,9 +12,8 @@ namespace Sulu\Bundle\ContentBundle\Content\Types;
 
 use PHPCR\NodeInterface;
 use Sulu\Bundle\ContentBundle\Content\InternalLinksContainer;
+use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
 use Sulu\Component\Content\ComplexContentType;
-use Sulu\Component\Content\Mapper\ContentMapper;
-use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Util\ArrayableInterface;
 
@@ -25,18 +24,18 @@ use Sulu\Component\Util\ArrayableInterface;
 class InternalLinks extends ComplexContentType
 {
     /**
-     * @var ContentMapperInterface
+     * @var NodeRepositoryInterface
      */
-    private $contentMapper;
+    private $repository;
 
     /**
      * @var string
      */
     private $template;
 
-    function __construct(ContentMapperInterface $contentMapper, $template)
+    function __construct(NodeRepositoryInterface $repository, $template)
     {
-        $this->contentMapper = $contentMapper;
+        $this->repository = $repository;
         $this->template = $template;
     }
 
@@ -91,7 +90,7 @@ class InternalLinks extends ComplexContentType
     {
         $container = new InternalLinksContainer(
             isset($data['ids']) ? $data['ids'] : array(),
-            $this->contentMapper,
+            $this->repository,
             $webspaceKey,
             $languageCode
         );
@@ -115,10 +114,20 @@ class InternalLinks extends ComplexContentType
             $value = $value->toArray();
         }
 
-
         // if whole container is pushed
         if (isset($value['data'])) {
             unset($value['data']);
+        }
+
+        if (isset($value['ids'])) {
+            // remove not existing ids
+            $session = $node->getSession();
+            $selectedNodes = $session->getNodesByIdentifier($value['ids']);
+            $ids = array();
+            foreach ($selectedNodes as $selectedNode) {
+                $ids[] = $selectedNode->getIdentifier();
+            }
+            $value['ids'] = $ids;
         }
 
         // set value to node
