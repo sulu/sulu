@@ -122,10 +122,10 @@ class InternalLinks extends ComplexContentType
         if (isset($value['ids'])) {
             // remove not existing ids
             $session = $node->getSession();
-            $nodes = $session->getNodesByIdentifier($value['ids']);
+            $selectedNodes = $session->getNodesByIdentifier($value['ids']);
             $ids = array();
-            foreach ($nodes as $node) {
-                $ids[]=$node->getIdentifier();
+            foreach ($selectedNodes as $selectedNode) {
+                $ids[] = $selectedNode->getIdentifier();
             }
             $value['ids'] = $ids;
         }

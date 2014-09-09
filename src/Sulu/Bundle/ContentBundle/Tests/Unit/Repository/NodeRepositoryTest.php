@@ -278,6 +278,28 @@ class NodeRepositoryTest extends PhpcrTestCase
         $this->assertEquals('/testtitle', $result['_embedded']['nodes'][0]['path']);
     }
 
+    public function testGetByIdsNotExisitingID()
+    {
+        $data = $this->prepareGetTestData();
+
+        $result = $this->nodeRepository->getNodesByIds(array(), 'default', 'en');
+        $this->assertEquals(0, sizeof($result['_embedded']['nodes']));
+        $this->assertEquals(0, $result['total']);
+
+        $result = $this->nodeRepository->getNodesByIds(
+            array(
+                $data->getUuid(),
+                '556ce63c-97a3-4a03-81a9-719bc01234e6'
+            ),
+            'default',
+            'en'
+        );
+        $this->assertEquals(1, sizeof($result['_embedded']['nodes']));
+        $this->assertEquals(1, $result['total']);
+        $this->assertEquals('Testtitle', $result['_embedded']['nodes'][0]['title']);
+        $this->assertEquals('/testtitle', $result['_embedded']['nodes'][0]['path']);
+    }
+
     public function testGetFilteredNodesInOrder()
     {
         $data = array(
