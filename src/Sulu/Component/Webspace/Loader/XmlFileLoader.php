@@ -346,11 +346,11 @@ class XmlFileLoader extends FileLoader
     {
         $contexts = array();
 
-        foreach ($this->xpath->query('/x:webspace/x:navigation/x:contexts/x:context') as $templateNode) {
-            /** @var \DOMNode $templateNode */
+        foreach ($this->xpath->query('/x:webspace/x:navigation/x:contexts/x:context') as $contextNode) {
+            /** @var \DOMNode $contextNode */
             $contexts[] = new NavigationContext(
-                $templateNode->attributes->getNamedItem('key')->nodeValue,
-                $this->loadMeta('x:meta/x:*', $templateNode)
+                $contextNode->attributes->getNamedItem('key')->nodeValue,
+                $this->loadMeta('x:meta/x:*', $contextNode)
             );
         }
 
