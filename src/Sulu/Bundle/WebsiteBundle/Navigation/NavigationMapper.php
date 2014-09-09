@@ -57,17 +57,28 @@ class NavigationMapper implements NavigationMapperInterface
 
         $result = array();
         foreach ($breadcrumbItems as $item) {
-            $result[] = $this->contentMapper->load($item->getUuid(), $webspace, $language);
+            if ($item->getDepth() === 0) {
+                $result[] = $this->contentMapper->loadStartPage($webspace, $language);
+            } else {
+                $result[] = $this->contentMapper->load($item->getUuid(), $webspace, $language);
+            }
         }
         $result[] = $this->contentMapper->load($uuid, $webspace, $language);
 
-        return $this->generateNavigation($result, $webspace, $language);
+        return $this->generateNavigation($result, $webspace, $language, false, null, true);
     }
 
     /**
      * generate navigation items for given contents
      */
-    private function generateNavigation($contents, $webspace, $language, $flat = false, $context = null)
+    private function generateNavigation(
+        $contents,
+        $webspace,
+        $language,
+        $flat = false,
+        $context = null,
+        $breakOnNotInNavigation = false
+    )
     {
         $result = array();
 
@@ -91,6 +102,8 @@ class NavigationMapper implements NavigationMapperInterface
             } elseif (true === $flat) {
                 $children = $this->generateChildNavigation($content, $webspace, $language, $flat, $context);
                 $result = array_merge($result, $children);
+            } elseif ($breakOnNotInNavigation) {
+                break;
             }
         }
 
