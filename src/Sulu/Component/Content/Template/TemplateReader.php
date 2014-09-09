@@ -83,7 +83,6 @@ class TemplateReader implements LoaderInterface
             );
         }
 
-
         return $result;
     }
 

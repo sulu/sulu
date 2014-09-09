@@ -30,7 +30,8 @@ class PathCleanup implements PathCleanupInterface
             // because strtolower ignores Ä,Ö,Ü
             'Ä' => 'ae',
             'Ö' => 'oe',
-            'Ü' => 'ue'
+            'Ü' => 'ue',
+            'ß' => 'ss',
             // TODO should be filled
         ),
         'de' => array(

@@ -263,6 +263,46 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
         $this->doctrineListBuilder->execute();
     }
 
+    public function testSetWhereWithNull()
+    {
+        $fieldDescriptors = array(
+            'title_id' => new DoctrineFieldDescriptor('id', 'title_id', self::$entityName),
+        );
+
+        $filter = array(
+            'title_id' => null
+        );
+
+        foreach ($filter as $key => $value) {
+            $this->doctrineListBuilder->addField($fieldDescriptors[$key]);
+            $this->doctrineListBuilder->where($fieldDescriptors[$key], $value);
+        }
+
+        $this->queryBuilder->expects($this->once())->method('andWhere')->with('(SuluCoreBundle:Example.id IS NULL)');
+
+        $this->doctrineListBuilder->execute();
+    }
+
+    public function testSetWhereWithNotNull()
+    {
+        $fieldDescriptors = array(
+            'title_id' => new DoctrineFieldDescriptor('id', 'title_id', self::$entityName),
+        );
+
+        $filter = array(
+            'title_id' => null
+        );
+
+        foreach ($filter as $key => $value) {
+            $this->doctrineListBuilder->addField($fieldDescriptors[$key]);
+            $this->doctrineListBuilder->whereNot($fieldDescriptors[$key], $value);
+        }
+
+        $this->queryBuilder->expects($this->once())->method('andWhere')->with('(SuluCoreBundle:Example.id IS NOT NULL)');
+
+        $this->doctrineListBuilder->execute();
+    }
+
     public function testSetWhereNot()
     {
         $fieldDescriptors = array(
@@ -289,6 +329,21 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
         $whereNotFields = PHPUnit_Framework_Assert::readAttribute($this->doctrineListBuilder, 'whereNotFields');
         $this->assertEquals($fieldDescriptors['title_id'], $whereNotFields['title_id']);
         $this->assertEquals($fieldDescriptors['desc_id'], $whereNotFields['desc_id']);
+
+        $this->doctrineListBuilder->execute();
+    }
+
+    public function testSetIn()
+    {
+        $fieldDescriptor = new DoctrineFieldDescriptor('id', 'title_id', self::$entityName);
+
+        $this->doctrineListBuilder->addField($fieldDescriptor);
+        $this->doctrineListBuilder->in($fieldDescriptor, array(1, 2));
+
+        $this->queryBuilder
+            ->expects($this->once())
+            ->method('andWhere')
+            ->with('(SuluCoreBundle:Example.id IN (:title_id))');
 
         $this->doctrineListBuilder->execute();
     }

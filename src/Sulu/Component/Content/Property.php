@@ -97,7 +97,8 @@ class Property implements PropertyInterface, \JsonSerializable
         $minOccurs = 1,
         $params = array(),
         $tags = array(),
-        $col = null
+        $col = null,
+        $indexed = false
     )
     {
         $this->contentTypeName = $contentTypeName;
@@ -110,6 +111,7 @@ class Property implements PropertyInterface, \JsonSerializable
         $this->params = $params;
         $this->tags =$tags;
         $this->col = $col;
+        $this->indexed = $indexed;
     }
 
     /**
