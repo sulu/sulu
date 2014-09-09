@@ -435,9 +435,6 @@ class ContentMapper implements ContentMapperInterface
         $structure->setNavContexts(
             $node->getPropertyValueWithDefault($this->properties->getName('navContexts'), array())
         );
-        $structure->setGlobalState(
-            $this->getInheritedState($node, $this->properties->getName('state'), $webspaceKey)
-        );
         $structure->setPublished(
             $node->getPropertyValueWithDefault($this->properties->getName('published'), null)
         );
@@ -825,7 +822,6 @@ class ContentMapper implements ContentMapperInterface
 
         $startPage = $this->load($uuid, $webspaceKey, $languageCode);
         $startPage->setNodeState(StructureInterface::STATE_PUBLISHED);
-        $startPage->setGlobalState(StructureInterface::STATE_PUBLISHED);
         $startPage->setNavContexts(array());
 
         if ($this->stopwatch) {
@@ -1110,9 +1106,6 @@ class ContentMapper implements ContentMapperInterface
         );
         $structure->setNavContexts(
             $contentNode->getPropertyValueWithDefault($this->properties->getName('navContexts'), array())
-        );
-        $structure->setGlobalState(
-            $this->getInheritedState($contentNode, $this->properties->getName('state'), $webspaceKey)
         );
         $structure->setPublished(
             $contentNode->getPropertyValueWithDefault($this->properties->getName('published'), null)
@@ -1587,23 +1580,5 @@ class ContentMapper implements ContentMapperInterface
         } else {
             return $name;
         }
-    }
-
-    /**
-     * calculates publish state of node
-     * @deprecated deprecated since version 0.6.3 -> to be removed with version 0.7.0
-     */
-    private function getInheritedState(NodeInterface $contentNode, $statePropertyName, $webspaceKey)
-    {
-        $contentRootNode = $this->getContentNode($webspaceKey);
-        if ($contentNode->getPath() === $contentRootNode->getPath()) {
-            return StructureInterface::STATE_PUBLISHED;
-        }
-
-        // if test then return it
-        return $contentNode->getPropertyValueWithDefault(
-            $statePropertyName,
-            StructureInterface::STATE_TEST
-        );
     }
 }

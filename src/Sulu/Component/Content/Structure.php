@@ -139,12 +139,6 @@ abstract class Structure implements StructureInterface
     private $nodeState;
 
     /**
-     * global state of node (with inheritance)
-     * @var int
-     */
-    private $globalState;
-
-    /**
      * first published
      * @var DateTime
      */
@@ -671,24 +665,6 @@ abstract class Structure implements StructureInterface
     }
 
     /**
-     * sets the global state of node (with inheritance)
-     * @param int $globalState
-     */
-    public function setGlobalState($globalState)
-    {
-        $this->globalState = $globalState;
-    }
-
-    /**
-     * returns global state of node (with inheritance)
-     * @return int
-     */
-    public function getGlobalState()
-    {
-        return $this->globalState;
-    }
-
-    /**
      * @param \DateTime $published
      */
     public function setPublished($published)
@@ -987,7 +963,6 @@ abstract class Structure implements StructureInterface
                 'internal' => $this->internal,
                 'nodeState' => $this->getNodeState(),
                 'published' => $this->getPublished(),
-                'globalState' => $this->getGlobalState(),
                 'publishedState' => $this->getPublishedState(),
                 'navContexts' => $this->getNavContexts(),
                 'enabledShadowLanguages' => $this->getEnabledShadowLanguages(),
@@ -1025,7 +1000,6 @@ abstract class Structure implements StructureInterface
                 'nodeType' => $this->nodeType,
                 'internal' => $this->internal,
                 'nodeState' => $this->getNodeState(),
-                'globalState' => $this->getGlobalState(),
                 'publishedState' => $this->getPublishedState(),
                 'navContexts' => $this->getNavContexts(),
                 'hasSub' => $this->hasChildren,

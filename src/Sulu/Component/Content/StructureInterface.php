@@ -211,18 +211,6 @@ interface StructureInterface extends \JsonSerializable
     public function getPublishedState();
 
     /**
-     * @param int $globalState
-     * @deprecated deprecated since version 0.6.3 -> to be removed with version 0.7.0
-     */
-    public function setGlobalState($globalState);
-
-    /**
-     * returns global state of node (with inheritance)
-     * @return int
-     */
-    public function getGlobalState();
-
-    /**
      * @param \DateTime $published
      */
     public function setPublished($published);

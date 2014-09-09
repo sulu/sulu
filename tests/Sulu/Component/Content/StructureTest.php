@@ -48,7 +48,6 @@ class StructureTest extends \PHPUnit_Framework_TestCase
         $this->structure->setType(StructureType::getGhost('en_us'));
         $this->structure->setChanged(new DateTime('2014-03-18'));
         $this->structure->setCreated(new DateTime('2014-03-17'));
-        $this->structure->setGlobalState(1);
         $this->structure->setNodeState(2);
         $this->structure->setPublished(new DateTime('2014-03-16'));
         $this->structure->setNavContexts(true);
@@ -87,7 +86,6 @@ class StructureTest extends \PHPUnit_Framework_TestCase
         $structureArray = $this->structure->toArray();
 
         $this->assertEquals(2, $structureArray['nodeState']);
-        $this->assertEquals(1, $structureArray['globalState']);
         $this->assertEquals(true, $structureArray['publishedState']);
         $this->assertEquals(true, $structureArray['navContexts']);
         $this->assertEquals(false, $structureArray['hasSub']);
@@ -101,7 +99,6 @@ class StructureTest extends \PHPUnit_Framework_TestCase
         $structureArray = $this->structure->toArray(false);
 
         $this->assertEquals(2, $structureArray['nodeState']);
-        $this->assertEquals(1, $structureArray['globalState']);
         $this->assertEquals(true, $structureArray['navContexts']);
         $this->assertEquals(false, $structureArray['hasSub']);
         $this->assertEquals('ghost', $structureArray['type']['name']);
