@@ -14,6 +14,7 @@ use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class SuluContentAdmin extends Admin

@@ -11,7 +11,9 @@
 namespace Sulu\Bundle\ContentBundle\Repository;
 
 use Doctrine\ODM\PHPCR\PHPCRException;
+use PHPCR\ItemNotFoundException;
 use PHPCR\RepositoryException;
+use Psr\Log\LoggerInterface;
 use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\StructureInterface;
@@ -50,16 +52,23 @@ class NodeRepository implements NodeRepositoryInterface
      */
     private $webspaceManager;
 
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
     function __construct(
         ContentMapperInterface $mapper,
         SessionManagerInterface $sessionManager,
         UserManagerInterface $userManager,
-        WebspaceManagerInterface $webspaceManager
+        WebspaceManagerInterface $webspaceManager,
+        LoggerInterface $logger
     ) {
         $this->mapper = $mapper;
         $this->sessionManager = $sessionManager;
         $this->userManager = $userManager;
         $this->webspaceManager = $webspaceManager;
+        $this->logger = $logger;
     }
 
     /**
@@ -236,7 +245,13 @@ class NodeRepository implements NodeRepositoryInterface
 
         if (!empty($ids)) {
             foreach ($ids as $id) {
-                $result[] = $this->getNode($id, $webspaceKey, $languageCode);
+                try {
+                    $result[] = $this->getNode($id, $webspaceKey, $languageCode);
+                } catch (ItemNotFoundException $ex) {
+                    $this->logger->warning(
+                        sprintf("%s in internal links not found. Exception: %s", $id, $ex->getMessage())
+                    );
+                }
             }
             $idString = implode(',', $ids);
         }
@@ -386,8 +401,7 @@ class NodeRepository implements NodeRepositoryInterface
         $state = null,
         $isShadow = false,
         $shadowBaseLanguage = null
-    )
-    {
+    ) {
         $node = $this->getMapper()->save(
             $data,
             $templateKey,

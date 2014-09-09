@@ -17,6 +17,8 @@ define([
     return function($el, options) {
         var defaults = {},
 
+            validator = /^(\/[a-zA-Z0-9-_]+)+$/,
+
             subType = {
                 setValue: function(value) {
                     App.dom.data($el, 'value', value).trigger('data-changed');
@@ -38,7 +40,7 @@ define([
                     var val = this.getValue(),
                         part = App.dom.data($el, 'part');
 
-                    return part.length > 0 && val !== '/';
+                    return part.length > 0 && val !== '/' && validator.exec(val);
                 }
             };
 

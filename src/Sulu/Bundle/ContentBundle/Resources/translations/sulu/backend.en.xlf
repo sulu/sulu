@@ -44,23 +44,23 @@
             </trans-unit>
             <trans-unit id="f1234df37123123ed4a73a4123dfdf007" resname="content.contents.settings.copy">
                 <source>content.contents.settings.copy</source>
-                <target>Copy node</target>
+                <target>Copy page</target>
             </trans-unit>
             <trans-unit id="f1234df37123123ed4a73a4123dfdf008" resname="content.contents.settings.copy.title">
                 <source>content.contents.settings.copy.title</source>
-                <target>Choose new parent after copy</target>
+                <target>Choose parent-page</target>
             </trans-unit>
             <trans-unit id="f1234df37123123ed4a73a4123dfdf009" resname="content.contents.settings.move">
                 <source>content.contents.settings.move</source>
-                <target>Move node</target>
+                <target>Move page</target>
             </trans-unit>
             <trans-unit id="f1234df37123123ed4a73a4123dfdf00A" resname="content.contents.settings.move.title">
                 <source>content.contents.settings.move.title</source>
-                <target>Choose new parent after move</target>
+                <target>Choose parent-page</target>
             </trans-unit>
             <trans-unit id="f1234df37123123ed4a73a4123dfdf00B" resname="content.contents.settings.order">
                 <source>content.contents.settings.order</source>
-                <target>Order node</target>
+                <target>Order pages</target>
             </trans-unit>
             <trans-unit id="f1234df37123123ed4a73a4123dfdf00C" resname="content.contents.settings.order.title">
                 <source>content.contents.settings.order.title</source>
@@ -92,7 +92,7 @@
             </trans-unit>
             <trans-unit id="66f18ec54ed3b6a089ee3712167c4e87" resname="smart-content.include-sub-folders">
                 <source>smart-content.include-sub-folders</source>
-                <target>Include Sub folders</target>
+                <target>Include sub-pages</target>
             </trans-unit>
             <trans-unit id="4cf5babee84aa0eef15db3ce11648b35" resname="smart-content.filter-by-category">
                 <source>smart-content.filter-by-category</source>

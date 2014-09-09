@@ -391,7 +391,7 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent(), true);
 
-        $this->assertEquals(26, sizeof($response));
+        $this->assertEquals(25, sizeof($response));
         $this->assertEquals($data[0]['title'], $response['title']);
         $this->assertEquals($data[0]['path'], $response['path']);
         $this->assertEquals($data[0]['tags'], $response['tags']);
@@ -935,24 +935,22 @@ class NodeControllerTest extends DatabaseTestCase
 
         $this->assertEquals(2, sizeof($items));
 
-        $this->assertEquals(13, sizeof($items[0]));
+        $this->assertEquals(12, sizeof($items[0]));
         $this->assertArrayHasKey('id', $items[0]);
         $this->assertEquals('test1', $items[0]['title']);
         $this->assertEquals('/test1', $items[0]['path']);
         $this->assertEquals(2, $items[0]['nodeState']);
-        $this->assertEquals(2, $items[0]['globalState']);
         $this->assertTrue($items[0]['publishedState']);
         $this->assertEmpty($items[0]['navContexts']);
         $this->assertFalse($items[0]['hasSub']);
         $this->assertEquals(0, sizeof($items[0]['_embedded']['nodes']));
         $this->assertArrayHasKey('_links', $items[0]);
 
-        $this->assertEquals(13, sizeof($items[1]));
+        $this->assertEquals(12, sizeof($items[1]));
         $this->assertArrayHasKey('id', $items[1]);
         $this->assertEquals('test2', $items[1]['title']);
         $this->assertEquals('/test2', $items[1]['path']);
         $this->assertEquals(2, $items[1]['nodeState']);
-        $this->assertEquals(2, $items[1]['globalState']);
         $this->assertTrue($items[1]['publishedState']);
         $this->assertEmpty($items[1]['navContexts']);
         $this->assertTrue($items[1]['hasSub']);
@@ -1302,12 +1300,11 @@ class NodeControllerTest extends DatabaseTestCase
         $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en', $data);
         $data = json_decode($client->getResponse()->getContent(), true);
 
-        $this->assertEquals(26, sizeof($data));
+        $this->assertEquals(25, sizeof($data));
         $this->assertArrayHasKey('id', $data);
         $this->assertEquals('test1', $data['title']);
         $this->assertEquals('/test1', $data['path']);
         $this->assertEquals(1, $data['nodeState']);
-        $this->assertEquals(1, $data['globalState']);
         $this->assertFalse($data['publishedState']);
         $this->assertEquals(array('main', 'footer'), $data['navContexts']);
         $this->assertFalse($data['hasSub']);
@@ -1322,12 +1319,11 @@ class NodeControllerTest extends DatabaseTestCase
 
         $this->assertEquals(1, sizeof($items));
 
-        $this->assertEquals(13, sizeof($items[0]));
+        $this->assertEquals(12, sizeof($items[0]));
         $this->assertArrayHasKey('id', $items[0]);
         $this->assertEquals('test1', $items[0]['title']);
         $this->assertEquals('/test1', $items[0]['path']);
         $this->assertEquals(1, $items[0]['nodeState']);
-        $this->assertEquals(1, $items[0]['globalState']);
         $this->assertFalse($items[0]['publishedState']);
         $this->assertEquals(array('main', 'footer'), $items[0]['navContexts']);
         $this->assertFalse($items[0]['hasSub']);
