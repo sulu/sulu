@@ -96,10 +96,12 @@ class TemplateReader implements LoaderInterface
             'view' => $this->getValueFromXPath('/x:template/x:view', $xpath),
             'controller' => $this->getValueFromXPath('/x:template/x:controller', $xpath),
             'cacheLifetime' => $this->getValueFromXPath('/x:template/x:cacheLifetime', $xpath),
-            'meta' => $this->loadMeta('/x:template/x:meta/x:*', $xpath)
+            'meta' => $this->loadMeta('/x:template/x:meta/x:*', $xpath),
+            'indexName' => $this->getValueFromXPath('/x:template/x:index/@name', $xpath),
         );
 
         $result = array_filter($result);
+
         if (sizeof($result) < 4) {
             throw new InvalidXmlException();
         }
@@ -148,6 +150,7 @@ class TemplateReader implements LoaderInterface
             );
         }
 
+        $result['indexField'] = $xpath->query('x:indexField', $node)->length ? true : false;
         $result['mandatory'] = $this->getBooleanValueFromXPath('@mandatory', $xpath, $node, false);
         $result['multilingual'] = $this->getBooleanValueFromXPath('@multilingual', $xpath, $node, true);
         $result['tags'] = $this->loadTags('x:tag', $requiredTags, $tags, $xpath, $node);

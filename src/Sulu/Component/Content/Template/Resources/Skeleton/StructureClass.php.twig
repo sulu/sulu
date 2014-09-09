@@ -23,6 +23,10 @@ class {{ cache_class }} extends {{ base_class }}
             {{ _self.renderArray(content.meta) }}
         );
 
+{% if content.indexName is defined %}
+        $this->setIndexName('{{ content.indexName }}');
+{% endif %}
+
 {% for property in content.properties %}
 {{ _self.buildProperty(property, '$this', 1) }}
 {% endfor %}
@@ -90,8 +94,10 @@ new Property(
                 '{{ tag.name }}' => new PropertyTag('{{ tag.name }}', {{ tag.priority is defined and tag.priority ? tag.priority : '1' }}),
 {% endfor %}
             ),
-            '{{ property.colspan }}'
-        );{% endmacro %}
+            '{{ property.colspan }}',
+            {{ property.indexField ? 'true' : 'false'}}
+        );
+        {% endmacro %}
 
 {% macro blockPropertyConstructor(property) %}
 new BlockProperty(
@@ -124,5 +130,4 @@ new BlockProperty(
                 '{{ key }}' => '{{ value }}',
 {% endif %}
 {% endfor %}
-            )
-{% endmacro %}
+            ){% endmacro %}

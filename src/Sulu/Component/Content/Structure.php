@@ -139,12 +139,6 @@ abstract class Structure implements StructureInterface
     private $nodeState;
 
     /**
-     * global state of node (with inheritance)
-     * @var int
-     */
-    private $globalState;
-
-    /**
      * first published
      * @var DateTime
      */
@@ -224,6 +218,12 @@ abstract class Structure implements StructureInterface
      * @var Metadata
      */
     private $metaData;
+
+    /**
+     * Name of index to use for search indexing
+     * @var string
+     */
+    private $indexName;
 
     /**
      * @param $key string
@@ -665,24 +665,6 @@ abstract class Structure implements StructureInterface
     }
 
     /**
-     * sets the global state of node (with inheritance)
-     * @param int $globalState
-     */
-    public function setGlobalState($globalState)
-    {
-        $this->globalState = $globalState;
-    }
-
-    /**
-     * returns global state of node (with inheritance)
-     * @return int
-     */
-    public function getGlobalState()
-    {
-        return $this->globalState;
-    }
-
-    /**
      * @param \DateTime $published
      */
     public function setPublished($published)
@@ -948,7 +930,7 @@ abstract class Structure implements StructureInterface
         if (isset($this->properties[$property])) {
             return $this->getProperty($property)->setValue($value);
         } else {
-            throw new NoSuchPropertyException();
+            throw new NoSuchPropertyException($property);
         }
     }
 
@@ -981,7 +963,6 @@ abstract class Structure implements StructureInterface
                 'internal' => $this->internal,
                 'nodeState' => $this->getNodeState(),
                 'published' => $this->getPublished(),
-                'globalState' => $this->getGlobalState(),
                 'publishedState' => $this->getPublishedState(),
                 'navContexts' => $this->getNavContexts(),
                 'enabledShadowLanguages' => $this->getEnabledShadowLanguages(),
@@ -1019,7 +1000,6 @@ abstract class Structure implements StructureInterface
                 'nodeType' => $this->nodeType,
                 'internal' => $this->internal,
                 'nodeState' => $this->getNodeState(),
-                'globalState' => $this->getGlobalState(),
                 'publishedState' => $this->getPublishedState(),
                 'navContexts' => $this->getNavContexts(),
                 'hasSub' => $this->hasChildren,
@@ -1104,5 +1084,20 @@ abstract class Structure implements StructureInterface
     public function setConcreteLanguages($concreteLanguages)
     {
         $this->concreteLanguages = $concreteLanguages;
+    }
+
+    /**
+     * Name of index to use when indexing this structure in a search index.
+     *
+     * @param string
+     */
+    public function setIndexName($indexName)
+    {
+        $this->indexName = $indexName;
+    }
+
+    public function getIndexName()
+    {
+        return $this->indexName;
     }
 }
