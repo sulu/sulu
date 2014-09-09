@@ -111,7 +111,7 @@ class TagControllerTest extends DatabaseTestCase
 
         $client->request(
             'GET',
-            '/api/tags?flat=true&search=tag2',
+            '/api/tags?flat=true&search=tag2&searchFields=name',
             array(),
             array(),
             array(
