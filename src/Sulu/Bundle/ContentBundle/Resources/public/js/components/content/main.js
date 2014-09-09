@@ -463,6 +463,7 @@ define([
                 }.bind(this),
                 error: function() {
                     this.sandbox.logger.log("error while saving profile");
+                    this.sandbox.emit('sulu.header.toolbar.item.enable', 'save-button');
                     this.sandbox.emit('sulu.content.contents.save-error');
                 }.bind(this)
             });
@@ -502,7 +503,6 @@ define([
                 if (this.options.id === 'index') {
                     this.sandbox.emit('husky.toolbar.header.item.disable', 'options-button', false);
                 }
-
 
                 if (!!this.options.preview && this.data.nodeType === TYPE_CONTENT && !this.data.shadowOn) {
                     this.sandbox.emit('husky.tabs.header.item.show', 'tab-content');
@@ -686,7 +686,7 @@ define([
          */
         setTitle: function(data) {
             if (!!this.options.id && data['sulu.node.name'] !== '') {
-                this.sandbox.emit('sulu.header.set-title', data['sulu.node.name']);
+                this.sandbox.emit('sulu.header.set-title', this.sandbox.util.cropMiddle(data['sulu.node.name'], 40));
             } else {
                 this.sandbox.emit('sulu.header.set-title', this.sandbox.translate('content.contents.title'));
             }
