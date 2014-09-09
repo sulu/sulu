@@ -41,6 +41,8 @@ class RequestAnalyzerResolver implements RequestAnalyzerResolverInterface
     {
         return array(
             'request' => array(
+                'webspaceKey' => $requestAnalyzer->getCurrentWebspace()->getKey(),
+                'locale' => $requestAnalyzer->getCurrentLocalization(),
                 'portalUrl' => $requestAnalyzer->getCurrentPortalUrl(),
                 'resourceLocatorPrefix' => $requestAnalyzer->getCurrentResourceLocatorPrefix(),
                 'resourceLocator' => $requestAnalyzer->getCurrentResourceLocator()
@@ -59,6 +61,8 @@ class RequestAnalyzerResolver implements RequestAnalyzerResolverInterface
 
         return array(
             'request' => array(
+                'webspaceKey' => $webspaceKey,
+                'locale' => $locale,
                 'portalUrl' => $portalUrl,
                 'resourceLocatorPrefix' => '',
                 'resourceLocator' => ''

@@ -70,7 +70,12 @@ class RequestAnalyzerResolverTest extends ProphecyTestCase
 
     public function testResolve()
     {
+        $webspace = new Webspace();
+        $webspace->setKey('sulu_io');
+
         $requestAnalyzer = $this->prophesize('Sulu\Component\Webspace\Analyzer\RequestAnalyzer');
+        $requestAnalyzer->getCurrentWebspace()->willReturn($webspace);
+        $requestAnalyzer->getCurrentLocalization()->willReturn('de');
         $requestAnalyzer->getCurrentPortalUrl()->willReturn('sulu.io/de');
         $requestAnalyzer->getCurrentResourceLocatorPrefix()->willReturn('/de');
         $requestAnalyzer->getCurrentResourceLocator()->willReturn('/search');
@@ -79,6 +84,8 @@ class RequestAnalyzerResolverTest extends ProphecyTestCase
         $this->assertEquals(
             array(
                 'request' => array(
+                    'webspaceKey' => 'sulu_io',
+                    'locale' => 'de',
                     'portalUrl' => 'sulu.io/de',
                     'resourceLocatorPrefix' => '/de',
                     'resourceLocator' => '/search'
@@ -96,6 +103,8 @@ class RequestAnalyzerResolverTest extends ProphecyTestCase
         $this->assertEquals(
             array(
                 'request' => array(
+                    'webspaceKey' => 'sulu_io',
+                    'locale' => 'de',
                     'portalUrl' => 'sulu.io/de',
                     'resourceLocatorPrefix' => '',
                     'resourceLocator' => ''
