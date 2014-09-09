@@ -111,6 +111,8 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Das ist das Template 1', $structure->getLocalizedTitle('de'));
         $this->assertEquals('That´s the template 1', $structure->getLocalizedTitle('en'));
 
+        $this->assertEquals('foo_index', $structure->getIndexName());
+
         // check properties
         $this->assertEquals('template', $structure->getKey());
         $this->assertEquals('page.html.twig', $structure->getView());
@@ -124,6 +126,7 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         // check title
         $this->assertArrayHasKey('title', $properties);
         $property = $structure->getProperty('title');
+        $this->assertTrue($property->getIndexed());
         $this->assertEquals('title', $property->getName());
 
         $this->assertEquals('Titel', $property->getTitle('de'));
@@ -161,6 +164,7 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('url', $properties);
         $property = $structure->getProperty('url');
         $this->assertEquals('url', $property->getName());
+        $this->assertFalse($property->getIndexed());
         $this->assertEquals('resource_locator', $property->getContentTypeName());
         $this->assertEquals(true, $property->isMandatory());
         $this->assertEquals(true, $property->isMultilingual());
@@ -251,7 +255,7 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\Sulu\Component\Content\StructureInterface', $structure);
 
         // check properties
-        $this->assertEquals('complex', $structure->getKey());
+        $this->assertEquals('template_block', $structure->getKey());
         $this->assertEquals('ClientWebsiteBundle:Website:complex.html.twig', $structure->getView());
         $this->assertEquals('SuluWebsiteBundle:Default:index', $structure->getController());
         $this->assertEquals(4800, $structure->getCacheLifeTime());
@@ -482,7 +486,7 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\Sulu\Component\Content\StructureInterface', $structure);
 
         // check properties
-        $this->assertEquals('complex', $structure->getKey());
+        $this->assertEquals('template_block_types', $structure->getKey());
         $this->assertEquals('ClientWebsiteBundle:Website:complex.html.twig', $structure->getView());
         $this->assertEquals('SuluWebsiteBundle:Default:index', $structure->getController());
         $this->assertEquals(4800, $structure->getCacheLifeTime());

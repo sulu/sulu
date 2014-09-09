@@ -23,8 +23,6 @@
         <parameter key="sulu.content.rlp.mapper.phpcr.class">Sulu\Component\Content\Types\Rlp\Mapper\PhpcrMapper</parameter>
         <parameter key="sulu.content.rlp.strategy.tree.class">Sulu\Component\Content\Types\Rlp\Strategy\TreeStrategy</parameter>
         <parameter key="sulu.content.parent_child_any_finder.class">Sulu\Component\Content\Mapper\LocalizationFinder\ParentChildAnyFinder</parameter>
-
-        <parameter key="sulu.content.structure_resolver.class">Sulu\Component\Content\Resolver\StructureResolver</parameter>
     </parameters>
 
     <services>
@@ -59,11 +57,6 @@
         <!-- content type manager -->
         <service id="sulu.content.type_manager" class="%sulu.content.type_manager.class%">
             <argument type="service" id="service_container"/>
-        </service>
-
-        <!-- structure resolver -->
-        <service id="sulu.content.structure_resolver" class="%sulu.content.structure_resolver.class%">
-            <argument type="service" id="sulu.content.type_manager" />
         </service>
 
         <!-- structure manager -->
@@ -124,7 +117,5 @@
             <argument>%sulu.content.language.namespace%</argument>
             <tag name="sulu.content.type" alias="block"/>
         </service>
-
     </services>
-
 </container>

@@ -333,6 +333,21 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
         $this->doctrineListBuilder->execute();
     }
 
+    public function testSetIn()
+    {
+        $fieldDescriptor = new DoctrineFieldDescriptor('id', 'title_id', self::$entityName);
+
+        $this->doctrineListBuilder->addField($fieldDescriptor);
+        $this->doctrineListBuilder->in($fieldDescriptor, array(1, 2));
+
+        $this->queryBuilder
+            ->expects($this->once())
+            ->method('andWhere')
+            ->with('(SuluCoreBundle:Example.id IN (:title_id))');
+
+        $this->doctrineListBuilder->execute();
+    }
+
     public function testJoinMethods()
     {
         $fieldDescriptors = array(

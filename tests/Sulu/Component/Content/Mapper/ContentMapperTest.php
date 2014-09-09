@@ -3122,6 +3122,22 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertFalse($this->sessionManager->getSession()->nodeExists('/cmf/default/contents/google'));
         $this->assertTrue($this->sessionManager->getSession()->nodeExists('/cmf/default/contents/test'));
     }
+
+    public function testSaveInvalidResourceLocator()
+    {
+        $data = array(
+            'name' => 'Testname',
+            'tags' => array(
+                'tag1',
+                'tag2'
+            ),
+            'url' => '/news/test.xml',
+            'article' => 'default'
+        );
+
+        $this->setExpectedException('Sulu\Component\Content\Exception\ResourceLocatorNotValidException', "ResourceLocator '/news/test.xml' is not valid");
+        $this->mapper->save($data, 'overview', 'default', 'de', 1);
+    }
 }
 
 class TestExtension extends StructureExtension
