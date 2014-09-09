@@ -13,6 +13,7 @@
         <parameter key="sulu_website.routing.portal_loader.class">Sulu\Bundle\WebsiteBundle\Routing\PortalLoader</parameter>
         <parameter key="sulu_website.exception.controller.class">Sulu\Bundle\WebsiteBundle\Controller\ExceptionController</parameter>
         <parameter key="sulu_website.resolver.request_analyzer.class">Sulu\Bundle\WebsiteBundle\Resolver\RequestAnalyzerResolver</parameter>
+        <parameter key="sulu_website.resolver.structure.class">Sulu\Component\Content\Resolver\StructureResolver</parameter>
     </parameters>
 
     <services>
@@ -75,6 +76,10 @@
             <argument type="service" id="twig" />
             <argument>%kernel.debug%</argument>
             <argument type="service" id="sulu_core.webspace.request_analyzer" on-invalid="ignore"/>
+        </service>
+
+        <service id="sulu_website.resolver.structure" class="%sulu_website.resolver.structure.class%">
+            <argument type="service" id="sulu.content.type_manager" />
         </service>
 
         <service id="sulu_website.resolver.request_analyzer" class="%sulu_website.resolver.request_analyzer.class%">
