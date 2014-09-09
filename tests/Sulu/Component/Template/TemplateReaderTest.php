@@ -217,7 +217,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
     public function testReadBlockTemplate()
     {
         $template = array(
-            'key' => 'complex',
+            'key' => 'template_block',
             'view' => 'ClientWebsiteBundle:Website:complex.html.twig',
             'controller' => 'SuluWebsiteBundle:Default:index',
             'cacheLifetime' => '4800',
@@ -524,7 +524,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
     public function testBlockMultipleTypes()
     {
         $template = array(
-            'key' => 'complex',
+            'key' => 'template_block_types',
             'view' => 'ClientWebsiteBundle:Website:complex.html.twig',
             'controller' => 'SuluWebsiteBundle:Default:index',
             'cacheLifetime' => '4800',
@@ -706,7 +706,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
     public function testSections()
     {
         $template = array(
-            'key' => 'template',
+            'key' => 'template_sections',
             'view' => 'page.html.twig',
             'controller' => 'SuluContentBundle:Default:index',
             'cacheLifetime' => '2400',

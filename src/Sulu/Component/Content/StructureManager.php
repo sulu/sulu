@@ -186,6 +186,11 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
         if (!$cache->isFresh()) {
             try {
                 $result = $this->loader->load($fileName);
+
+                if ($result['key'] !== $key) {
+                    throw new TemplateNotFoundException($fileName, $key);
+                }
+
                 $resources[] = new FileResource($fileName);
                 $cache->write(
                     $this->dumper->dump(

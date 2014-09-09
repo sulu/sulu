@@ -11,6 +11,7 @@
 namespace Sulu\Component\Content\Types\Rlp\Strategy;
 
 use PHPCR\NodeInterface;
+use Sulu\Component\Content\Exception\ResourceLocatorNotValidException;
 use Sulu\Component\Content\Types\Rlp\Mapper\RlpMapperInterface;
 use Sulu\Component\PHPCR\PathCleanupInterface;
 
@@ -103,15 +104,14 @@ abstract class RlpStrategy implements RlpStrategyInterface
     protected abstract function generatePath($title, $parentPath = null);
 
     /**
-     * creates a new route for given path
-     * @param NodeInterface $contentNode reference node
-     * @param string $path path to generate
-     * @param string $webspaceKey key of portal
-     * @param string $languageCode
-     * @param string $segmentKey
+     * {@inheritdoc}
      */
     public function save(NodeInterface $contentNode, $path, $webspaceKey, $languageCode, $segmentKey = null)
     {
+        if (!$this->isValid($path, $webspaceKey, $languageCode, $segmentKey)) {
+            throw new ResourceLocatorNotValidException($path);
+        }
+
         // delegate to mapper
         return $this->mapper->save($contentNode, $path, $webspaceKey, $languageCode, $segmentKey);
     }

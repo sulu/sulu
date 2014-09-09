@@ -23,7 +23,7 @@ class PathCleanup implements PathCleanupInterface
         'default' => array(
             ' ' => '-',
             '+' => '-',
-            '.' => '_',
+            '.' => '-',
             'ä' => 'ae',
             'ö' => 'oe',
             'ü' => 'ue',
@@ -31,6 +31,7 @@ class PathCleanup implements PathCleanupInterface
             'Ä' => 'ae',
             'Ö' => 'oe',
             'Ü' => 'ue',
+            'ß' => 'ss',
             // TODO should be filled
         ),
         'de' => array(
@@ -97,6 +98,6 @@ class PathCleanup implements PathCleanupInterface
      */
     public function validate($path)
     {
-        return preg_match($this->pattern, $path) === 1;
+        return $path === '/' || preg_match($this->pattern, $path) === 1;
     }
 } 

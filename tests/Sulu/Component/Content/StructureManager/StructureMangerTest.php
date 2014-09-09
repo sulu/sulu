@@ -255,7 +255,7 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\Sulu\Component\Content\StructureInterface', $structure);
 
         // check properties
-        $this->assertEquals('complex', $structure->getKey());
+        $this->assertEquals('template_block', $structure->getKey());
         $this->assertEquals('ClientWebsiteBundle:Website:complex.html.twig', $structure->getView());
         $this->assertEquals('SuluWebsiteBundle:Default:index', $structure->getController());
         $this->assertEquals(4800, $structure->getCacheLifeTime());
@@ -486,7 +486,7 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\Sulu\Component\Content\StructureInterface', $structure);
 
         // check properties
-        $this->assertEquals('complex', $structure->getKey());
+        $this->assertEquals('template_block_types', $structure->getKey());
         $this->assertEquals('ClientWebsiteBundle:Website:complex.html.twig', $structure->getView());
         $this->assertEquals('SuluWebsiteBundle:Default:index', $structure->getController());
         $this->assertEquals(4800, $structure->getCacheLifeTime());
