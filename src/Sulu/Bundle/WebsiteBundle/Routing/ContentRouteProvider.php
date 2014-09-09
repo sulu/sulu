@@ -108,7 +108,7 @@ class ContentRouteProvider implements RouteProviderInterface
                     $language
                 );
                 if (
-                    $content->getGlobalState() === StructureInterface::STATE_TEST ||
+                    $content->getNodeState() === StructureInterface::STATE_TEST ||
                     !$content->getHasTranslation() ||
                     !$this->checkResourceLocator()
                 ) {
