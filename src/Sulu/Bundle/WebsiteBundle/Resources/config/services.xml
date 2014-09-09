@@ -13,7 +13,7 @@
         <parameter key="sulu_website.routing.portal_loader.class">Sulu\Bundle\WebsiteBundle\Routing\PortalLoader</parameter>
         <parameter key="sulu_website.exception.controller.class">Sulu\Bundle\WebsiteBundle\Controller\ExceptionController</parameter>
         <parameter key="sulu_website.resolver.request_analyzer.class">Sulu\Bundle\WebsiteBundle\Resolver\RequestAnalyzerResolver</parameter>
-        <parameter key="sulu_website.resolver.structure.class">Sulu\Component\Content\Resolver\StructureResolver</parameter>
+        <parameter key="sulu_website.resolver.structure.class">Sulu\Bundle\WebsiteBundle\Resolver\StructureResolver</parameter>
     </parameters>
 
     <services>
