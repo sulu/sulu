@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+    <file source-language="en" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="123f522ac181350142c0b4720e29001" resname="navigation.settings.cache">
+                <source>navigation.settings.cache</source>
+                <target>Cache</target>
+            </trans-unit>
+            <trans-unit id="123f522ac181350142c0b4720e29002" resname="sulu.website.cache.remove.title">
+                <source>sulu.website.cache.remove</source>
+                <target>Cache clear</target>
+            </trans-unit>
+            <trans-unit id="123f522ac181350142c0b4720e29003" resname="sulu.website.cache.remove.title">
+                <source>sulu.website.cache.remove</source>
+                <target>Cache settings</target>
+            </trans-unit>
+            <trans-unit id="123f522ac181350142c0b4720e29004" resname="sulu.website.cache.remove.success.title">
+                <source>sulu.website.cache.remove.success.title</source>
+                <target>Cache</target>
+            </trans-unit>
+            <trans-unit id="123f522ac181350142c0b4720e29005" resname="sulu.website.cache.remove.success.description">
+                <source>sulu.website.cache.remove.success.description</source>
+                <target>successfully cleared</target>
+            </trans-unit>
+            <trans-unit id="123f522ac181350142c0b4720e29006" resname="sulu.website.cache.remove.error.title">
+                <source>sulu.website.cache.remove.error.title</source>
+                <target>Cache</target>
+            </trans-unit>
+            <trans-unit id="123f522ac181350142c0b4720e29007" resname="sulu.website.cache.remove.error.description">
+                <source>sulu.website.cache.remove.error.description</source>
+                <target>clear failed</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

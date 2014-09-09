@@ -16,10 +16,20 @@ use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 
 class SuluWebsiteAdmin extends Admin
 {
-
     public function __construct($title)
     {
         $rootNavigationItem = new NavigationItem($title);
+        $section = new NavigationItem('');
+
+        $settings = new NavigationItem('navigation.settings');
+        $settings->setIcon('gear');
+
+        $roles = new NavigationItem('navigation.settings.cache', $settings);
+        $roles->setAction('settings/cache');
+        $roles->setIcon('hdd-o');
+
+        $section->addChild($settings);
+        $rootNavigationItem->addChild($section);
         $this->setNavigation(new Navigation($rootNavigationItem));
     }
 
