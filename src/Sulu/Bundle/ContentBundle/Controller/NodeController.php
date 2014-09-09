@@ -22,7 +22,6 @@ use Sulu\Component\Rest\RestController;
 use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\Annotations\Post;
 
-
 /**
  * handles content nodes
  */
@@ -425,13 +424,6 @@ class NodeController extends RestController implements ClassResourceInterface
         }
 
         $data = $request->request->all();
-
-        if ($navigation === '0') {
-            $navigation = false;
-        } else {
-            // default navigation
-            $navigation = 'main';
-        }
 
         $result = $this->getRepository()->saveNode(
             $data,
