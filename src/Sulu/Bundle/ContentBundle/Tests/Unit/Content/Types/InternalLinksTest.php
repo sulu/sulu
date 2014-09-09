@@ -10,13 +10,8 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Unit\Content\Types;
 
-//FIXME remove on update to phpunit 3.8, caused by https://github.com/sebastianbergmann/phpunit/issues/604
 use Sulu\Bundle\ContentBundle\Content\Types\InternalLinks;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
-
-interface NodeInterface extends \PHPCR\NodeInterface, \Iterator
-{
-}
 
 class InternalLinksTest extends \PHPUnit_Framework_TestCase
 {
