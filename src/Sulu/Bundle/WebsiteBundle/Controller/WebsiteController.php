@@ -85,7 +85,7 @@ abstract class WebsiteController extends Controller
     protected function getAttributes($attributes, StructureInterface $structure = null, $preview = false)
     {
         if ($structure !== null) {
-            $structureData = $this->get('sulu.content.structure_resolver')->resolve($structure);
+            $structureData = $this->get('sulu_website.resolver.structure')->resolve($structure);
         } else {
             $structureData = array();
         }
