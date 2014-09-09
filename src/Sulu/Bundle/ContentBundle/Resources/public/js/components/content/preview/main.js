@@ -283,78 +283,80 @@ define(['app-config'], function(AppConfig) {
             }, this);
         };
 
-    return {
-        sandbox: null,
-        options: null,
-        data: null,
-        $el: null,
+    return function() {
+        return{
+            sandbox: null,
+            options: null,
+            data: null,
+            $el: null,
 
-        initiated: false,
-        opened: false,
-        method: 'ws',
+            initiated: false,
+            opened: false,
+            method: 'ws',
 
-        formId: '#content-form',
+            formId: '#content-form',
 
-        initialize: function(sandbox, options, $el) {
-            this.sandbox = sandbox;
-            this.options = options;
-            this.$el = $el;
-        },
+            initialize: function(sandbox, options, $el) {
+                this.sandbox = sandbox;
+                this.options = options;
+                this.$el = $el;
+            },
 
-        start: function(data, options) {
-            this.data = data;
-            this.options = options;
-            start.call(this).then(function() {
-                bindCustomEvents.call(this);
-
-                this.sandbox.emit('sulu.preview.initiated');
-            }.bind(this));
-        },
-
-        restart: function(data, options, template) {
-            this.options = options;
-            stop.call(this).then(function() {
+            start: function(data, options) {
                 this.data = data;
+                this.options = options;
+                start.call(this).then(function() {
+                    bindCustomEvents.call(this);
 
-                this.initiated = false;
-                this.opened = false;
-                this.method = 'ws';
-
-                ajax.initiated = false;
-
-                start.call(this, template).then(function() {
                     this.sandbox.emit('sulu.preview.initiated');
                 }.bind(this));
-            }.bind(this));
-        },
+            },
 
-        getSequence: function($element, sandbox) {
-            if (!!this.sandbox) {
-                sandbox = this.sandbox;
-            }
+            restart: function(data, options, template) {
+                this.options = options;
+                stop.call(this).then(function() {
+                    this.data = data;
 
-            $element = $($element);
-            var sequence = sandbox.dom.data($element, 'mapperProperty'),
-                $parents = $element.parents('*[data-mapper-property]'),
-                item = $element.parents('*[data-mapper-property-tpl]')[0],
-                parentProperty;
+                    this.initiated = false;
+                    this.opened = false;
+                    this.method = 'ws';
 
-            while (!$element.data('element')) {
-                $element = $element.parent();
-            }
+                    ajax.initiated = false;
 
-            if ($parents.length > 0) {
-                parentProperty = sandbox.dom.data($parents[0], 'mapperProperty');
-                if (typeof parentProperty !== 'string') {
-                    parentProperty = sandbox.dom.data($parents[0], 'mapperProperty')[0].data;
+                    start.call(this, template).then(function() {
+                        this.sandbox.emit('sulu.preview.initiated');
+                    }.bind(this));
+                }.bind(this));
+            },
+
+            getSequence: function($element, sandbox) {
+                if (!!this.sandbox) {
+                    sandbox = this.sandbox;
                 }
-                sequence = [
-                    parentProperty,
-                    $(item).index(),
-                    sandbox.dom.data($element, 'mapperProperty')
-                ];
+
+                $element = $($element);
+                var sequence = sandbox.dom.data($element, 'mapperProperty'),
+                    $parents = $element.parents('*[data-mapper-property]'),
+                    item = $element.parents('*[data-mapper-property-tpl]')[0],
+                    parentProperty;
+
+                while (!$element.data('element')) {
+                    $element = $element.parent();
+                }
+
+                if ($parents.length > 0) {
+                    parentProperty = sandbox.dom.data($parents[0], 'mapperProperty');
+                    if (typeof parentProperty !== 'string') {
+                        parentProperty = sandbox.dom.data($parents[0], 'mapperProperty')[0].data;
+                    }
+                    sequence = [
+                        parentProperty,
+                        $(item).index(),
+                        sandbox.dom.data($element, 'mapperProperty')
+                    ];
+                }
+                return sequence;
             }
-            return sequence;
-        }
+        };
     };
 });

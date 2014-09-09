@@ -29,6 +29,8 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
         initialize: function() {
             this.sandbox.emit('husky.toolbar.header.item.enable', 'template', false);
 
+            this.preview = new Preview();
+
             this.dfdListenForChange = this.sandbox.data.deferred();
             this.load();
         },
@@ -379,7 +381,7 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
             this.getDomElementsForTagName('sulu.rlp.part', function(property) {
                 var value = property.$el.data('element').getValue();
                 if (value !== '') {
-                    parts[Preview.getSequence(property.$el, this.sandbox)] = value;
+                    parts[this.preview.getSequence(property.$el, this.sandbox)] = value;
                 } else {
                     complete = false;
                 }

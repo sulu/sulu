@@ -100,7 +100,7 @@ class Preview implements PreviewInterface
         $webspaceKey,
         $locale,
         $changes,
-        $render = false
+        $render = true
     ) {
         /** @var StructureInterface $content */
         $content = $this->previewCache->fetchStructure($userId, $webspaceKey, $locale);
