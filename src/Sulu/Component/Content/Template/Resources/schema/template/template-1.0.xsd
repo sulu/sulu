@@ -10,6 +10,7 @@
     <xs:complexType name="templateType">
         <xs:choice maxOccurs="unbounded">
             <xs:element type="xs:string" name="key" minOccurs="1" maxOccurs="1"/>
+            <xs:element type="indexType" name="index" minOccurs="1" maxOccurs="1"/>
             <xs:element type="xs:string" name="view" minOccurs="1" maxOccurs="1"/>
             <xs:element type="xs:string" name="controller" minOccurs="1" maxOccurs="1"/>
             <xs:element type="xs:integer" name="cacheLifetime" minOccurs="1" maxOccurs="1"/>
@@ -72,6 +73,7 @@
             <xs:element type="metaType" name="meta" minOccurs="0" maxOccurs="1"/>
             <xs:element type="tagType" name="tag" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="paramsType" name="params" minOccurs="0" maxOccurs="1"/>
+            <xs:element type="xs:string" name="indexField" minOccurs="0" maxOccurs="1"/>
         </xs:choice>
 
         <xs:attribute type="xs:string" name="name" use="required"/>
@@ -136,6 +138,14 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="name" use="optional"/>
                 <xs:attribute type="xs:string" name="value" use="optional"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="indexType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="name" use="required"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>

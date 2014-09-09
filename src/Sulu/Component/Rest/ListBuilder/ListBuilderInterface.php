@@ -103,6 +103,14 @@ interface ListBuilderInterface
     public function whereNot(AbstractFieldDescriptor $fieldDescriptor, $value);
 
     /**
+     * Defines a constraint
+     * @param AbstractFieldDescriptor $fieldDescriptor
+     * @param $values
+     * @return mixed
+     */
+    public function in(AbstractFieldDescriptor $fieldDescriptor, $values);
+
+    /**
      * The number of total elements for this list
      * @return integer
      */
