@@ -11,9 +11,10 @@
 namespace Sulu\Bundle\ContentBundle\Content\Types;
 
 use PHPCR\NodeInterface;
+use Psr\Log\LoggerInterface;
 use Sulu\Bundle\ContentBundle\Content\InternalLinksContainer;
-use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
 use Sulu\Component\Content\ComplexContentType;
+use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Util\ArrayableInterface;
 
@@ -24,18 +25,24 @@ use Sulu\Component\Util\ArrayableInterface;
 class InternalLinks extends ComplexContentType
 {
     /**
-     * @var NodeRepositoryInterface
+     * @var ContentMapperInterface
      */
-    private $repository;
+    private $contentMapper;
+
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
     /**
      * @var string
      */
     private $template;
 
-    function __construct(NodeRepositoryInterface $repository, $template)
+    function __construct(ContentMapperInterface $contentMapper, LoggerInterface $logger, $template)
     {
-        $this->repository = $repository;
+        $this->contentMapper = $contentMapper;
+        $this->logger = $logger;
         $this->template = $template;
     }
 
@@ -90,7 +97,8 @@ class InternalLinks extends ComplexContentType
     {
         $container = new InternalLinksContainer(
             isset($data['ids']) ? $data['ids'] : array(),
-            $this->repository,
+            $this->contentMapper,
+            $this->logger,
             $webspaceKey,
             $languageCode
         );
