@@ -132,6 +132,18 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(null, $webspace->getPortals()[0]->getLocalizations()[1]->getCountry());
         $this->assertEquals(true, $webspace->getPortals()[0]->getLocalizations()[1]->isDefault());
 
+        $this->assertEquals(2, count($webspace->getNavigation()->getContexts()));
+
+        $this->assertEquals('main', $webspace->getNavigation()->getContexts()[0]->getKey());
+        $this->assertEquals('Hauptnavigation', $webspace->getNavigation()->getContexts()[0]->getTitle('de'));
+        $this->assertEquals('Mainnavigation', $webspace->getNavigation()->getContexts()[0]->getTitle('en'));
+        $this->assertEquals('Main', $webspace->getNavigation()->getContexts()[0]->getTitle('fr'));
+
+        $this->assertEquals('footer', $webspace->getNavigation()->getContexts()[1]->getKey());
+        $this->assertEquals('Unten', $webspace->getNavigation()->getContexts()[1]->getTitle('de'));
+        $this->assertEquals('Footer', $webspace->getNavigation()->getContexts()[1]->getTitle('en'));
+        $this->assertEquals('Footer', $webspace->getNavigation()->getContexts()[1]->getTitle('fr'));
+
         $this->assertEquals('de', $webspace->getPortals()[0]->getDefaultLocalization()->getLocalization());
 
         $this->assertEquals('Massive Art US', $webspace->getPortals()[0]->getName());

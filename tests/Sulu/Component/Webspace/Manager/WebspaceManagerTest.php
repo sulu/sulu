@@ -84,6 +84,18 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, count($webspace->getTheme()->getExcludedTemplates()));
         $this->assertEquals('overview', $webspace->getTheme()->getExcludedTemplates()[0]);
 
+        $this->assertEquals(2, count($webspace->getNavigation()->getContexts()));
+
+        $this->assertEquals('main', $webspace->getNavigation()->getContexts()[0]->getKey());
+        $this->assertEquals('Hauptnavigation', $webspace->getNavigation()->getContexts()[0]->getTitle('de'));
+        $this->assertEquals('Mainnavigation', $webspace->getNavigation()->getContexts()[0]->getTitle('en'));
+        $this->assertEquals('Main', $webspace->getNavigation()->getContexts()[0]->getTitle('fr'));
+
+        $this->assertEquals('footer', $webspace->getNavigation()->getContexts()[1]->getKey());
+        $this->assertEquals('Unten', $webspace->getNavigation()->getContexts()[1]->getTitle('de'));
+        $this->assertEquals('Footer', $webspace->getNavigation()->getContexts()[1]->getTitle('en'));
+        $this->assertEquals('Footer', $webspace->getNavigation()->getContexts()[1]->getTitle('fr'));
+
         $portal = $webspace->getPortals()[0];
 
         $this->assertEquals('Massive Art US', $portal->getName());

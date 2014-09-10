@@ -197,12 +197,6 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
             $contentConfig['templates']['paths']
         );
 
-        // Navigation Contexts
-        $container->setParameter(
-            'sulu.content.nav_contexts',
-            $contentConfig['nav_contexts']
-        );
-
         $loader->load('content.xml');
     }
 }
