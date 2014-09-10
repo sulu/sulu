@@ -10,7 +10,8 @@
     ],
     "require": {
         "massive/search-bundle": "dev-master",
-        "sulu/sulu": "dev-develop"
+        "sulu/sulu": "dev-develop",
+        "massive/build-bundle": "dev-master"
     },
     "require-dev": {
         "symfony-cmf/testing": "dev-master",

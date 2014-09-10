@@ -2,6 +2,8 @@
 
 namespace Sulu\Bundle\SearchBundle\Tests\Functional;
 
+use Sulu\Component\Content\Mapper\ContentMapperInterface;
+use Sulu\Component\Content\Structure;
 use Symfony\Cmf\Component\Testing\Functional\BaseTestCase as SymfonyCmfBaseTestCase;
 use Symfony\Component\Filesystem\Filesystem;
 use Sulu\Bundle\SearchBundle\Tests\Fixtures\DefaultStructureCache;
@@ -50,14 +52,15 @@ class BaseTestCase extends SymfonyCmfBaseTestCase
         $session = $this->getContainer()->get('doctrine_phpcr')->getConnection();
 
         try {
-            $node = $session->getNode('/cmf/sulu_io/routes/de/'.$url);
+            $node = $session->getNode('/cmf/sulu_io/routes/de'.$url);
             $node->remove();
             $session->save();
         } catch (\PHPCR\PathNotFoundException $e) {
         }
 
+        /** @var ContentMapperInterface $mapper */
         $mapper = $this->getContainer()->get('sulu.content.mapper');
-        $mapper->save($data, 'overview', 'sulu_io', 'de', 1, true, null);
+        $mapper->save($data, 'overview', 'sulu_io', 'de', 1, true, null, null, Structure::STATE_PUBLISHED);
     }
 }
 

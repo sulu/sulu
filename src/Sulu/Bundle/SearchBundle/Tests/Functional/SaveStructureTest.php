@@ -19,10 +19,10 @@ class SaveStructureTest extends BaseTestCase
 
     public function testSaveStructure()
     {
-        $this->indexStructure('About Us', 'about-us');
+        $this->indexStructure('About Us', '/about-us');
 
         $searchManager = $this->getContainer()->get('massive_search.search_manager');
-        $res = $searchManager->search('About*', 'content');
+        $res = $searchManager->search('About*', 'content_de');
         $this->assertCount(1, $res);
         $hit = $res[0];
         $document = $hit->getDocument();

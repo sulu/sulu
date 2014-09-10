@@ -16,7 +16,7 @@ class SearchController extends Controller
         }
 
         $searchManager = $this->get('massive_search.search_manager');
-        $hits = $searchManager->search($q, 'content');
+        $hits = $searchManager->search($q, 'content_de');
 
         return $this->render('TestBundle:Search:query.html.twig', array(
             'hits' => $hits,

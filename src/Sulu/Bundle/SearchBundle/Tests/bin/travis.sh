@@ -1,3 +1,4 @@
+#!/bin/sh
 DIR_NAME=`dirname $0`
 CONSOLE_DIR=$DIR_NAME"/../../vendor/symfony-cmf/testing/bin"
 
