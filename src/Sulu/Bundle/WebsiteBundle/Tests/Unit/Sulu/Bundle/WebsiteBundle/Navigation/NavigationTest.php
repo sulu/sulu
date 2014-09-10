@@ -16,6 +16,8 @@ use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyTag;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Webspace\Localization;
+use Sulu\Component\Webspace\Navigation;
+use Sulu\Component\Webspace\NavigationContext;
 use Sulu\Component\Webspace\Webspace;
 
 class NavigationTest extends PhpcrTestCase
@@ -54,6 +56,15 @@ class NavigationTest extends PhpcrTestCase
 
             $this->webspace->setLocalizations(array($local));
             $this->webspace->setName('Default');
+
+            $this->webspace->setNavigation(
+                new Navigation(
+                    array(
+                        new NavigationContext('main', array()),
+                        new NavigationContext('footer', array())
+                    )
+                )
+            );
 
             $this->webspaceManager = $this->getMock('Sulu\Component\Webspace\Manager\WebspaceManagerInterface');
             $this->webspaceManager
