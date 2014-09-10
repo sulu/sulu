@@ -5,7 +5,7 @@
 
     <key>overview</key>
 
-    <view>page.html.twig</view>
+    <view>page</view>
     <controller>SuluContentBundle:Default:index</controller>
     <cacheLifetime>2400</cacheLifetime>
 
