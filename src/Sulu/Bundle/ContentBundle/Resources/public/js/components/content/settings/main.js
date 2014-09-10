@@ -189,6 +189,9 @@ define(['app-config'], function(AppConfig) {
                 this.sandbox.dom.html(this.$el, this.sandbox.util.template(template, {
                     translate: this.sandbox.translate
                 }));
+
+                this.buildAllNavContexts(this.sandbox.dom.data('#nav-contexts', 'auraData'));
+
                 this.bindDomEvents();
                 this.setData(this.data);
                 this.listenForChange();
@@ -203,6 +206,14 @@ define(['app-config'], function(AppConfig) {
 
                 this.sandbox.emit('sulu.preview.initialize');
             }.bind(this));
+        },
+
+        buildAllNavContexts: function(navContexts) {
+            this.allNavContexts = {};
+
+            for (var i = 0, len = navContexts.length; i < len; i++) {
+                this.allNavContexts[navContexts[i].id] = navContexts[i].name;
+            }
         },
 
         setData: function(data) {
@@ -229,8 +240,13 @@ define(['app-config'], function(AppConfig) {
 
             // updated after init
             this.sandbox.on('husky.select.nav-contexts.initialize', function() {
+                var navContextsValues = [], i, len;
+                for (i = 0, len = data.navContexts.length; i < len; i++) {
+                    navContextsValues.push(this.allNavContexts[data.navContexts[i]]);
+                }
+
                 this.sandbox.dom.data('#nav-contexts', 'selection', data.navContexts);
-                this.sandbox.dom.data('#nav-contexts', 'selectionValues', data.navContexts);
+                this.sandbox.dom.data('#nav-contexts', 'selectionValues', navContextsValues);
 
                 $('#nav-contexts').trigger('data-changed');
             }.bind(this));
@@ -277,6 +293,10 @@ define(['app-config'], function(AppConfig) {
             }
 
             this.data = this.sandbox.util.extend(true, {}, this.data, data);
+
+            // nav contexts not extend
+            this.data.navContexts = data.navContexts;
+
             this.sandbox.emit('sulu.content.contents.save', this.data);
         }
     };
