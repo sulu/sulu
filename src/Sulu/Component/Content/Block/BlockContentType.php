@@ -186,7 +186,7 @@ class BlockContentType extends ComplexContentType
             for ($i = 0; $i < $len; $i++) {
                 /** @var PropertyInterface $subProperty */
                 foreach ($blockProperty->initProperties($i, $data[$i]['type']) as $key => $subProperty) {
-                    if ($key !== 'type') {
+                    if ($key !== 'type' && isset($data[$i][$subProperty->getName()])) {
                         $contentType = $this->contentTypeManager->get($subProperty->getContentTypeName());
                         $contentType->readForPreview(
                             $data[$i][$subProperty->getName()],
