@@ -124,7 +124,7 @@ class TagControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(1, $response->total);
-        $this->assertEquals('tag2', $response->_embedded->tags[1]->name);
+        $this->assertEquals('tag2', $response->_embedded->tags[0]->name);
     }
 
     public function testGetByIdNotExisting()
