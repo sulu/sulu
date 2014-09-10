@@ -129,7 +129,10 @@ class RequestAnalyzer implements RequestAnalyzerInterface
 
                 // get the path and set it on the request
                 $this->setCurrentResourceLocator($resourceLocator);
-                $request->setRequestFormat($format);
+
+                if ($format) {
+                    $request->setRequestFormat($format);
+                }
 
                 // get the resource locator prefix and set it
                 $this->setCurrentResourceLocatorPrefix(
@@ -307,8 +310,7 @@ class RequestAnalyzer implements RequestAnalyzerInterface
      */
     private function getResourceLocatorFromRequest(
         PortalInformation $portalInformation,
-        Request $request,
-        $defaultFormat = 'html'
+        Request $request
     )
     {
         $path = $request->getPathInfo();
@@ -321,7 +323,7 @@ class RequestAnalyzer implements RequestAnalyzerInterface
         if (sizeof($fileInfo) > 1) {
             $formatResult = $fileInfo[1];
         } else {
-            $formatResult = $defaultFormat;
+            $formatResult = null;
         }
 
         $resourceLocator = substr(
