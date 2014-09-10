@@ -19,6 +19,16 @@
         </excluded>
     </theme>
 
+    <navigation>
+        <contexts>
+            <context key="main">
+                <meta>
+                    <title lang="en">Mainnavigation</title>
+                </meta>
+            </context>
+        </contexts>
+    </navigation>
+
     <portals>
         <portal>
             <name>Sulu CMF AT</name>

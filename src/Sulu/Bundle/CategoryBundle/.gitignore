@@ -5,6 +5,7 @@
 /composer.phar
 /composer.lock
 /.sass-cache/
+phpunit.xml
 *~
 
 # IDEs
