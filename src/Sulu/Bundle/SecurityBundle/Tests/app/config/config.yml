@@ -84,7 +84,8 @@ sulu_core:
         username: admin
         password: admin
     webspace:
-        ~
+        request_analyzer:
+            enabled: false
     content:
         ~
 
