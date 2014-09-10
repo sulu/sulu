@@ -47,7 +47,8 @@ sulu_core:
     content:
         ~
     webspace:
-        ~
+        request_analyzer:
+            enabled: false
 
 # define the account types and form of address
 # tabs key must match tab-id specified in content-navigation

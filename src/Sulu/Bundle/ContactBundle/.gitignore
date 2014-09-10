@@ -6,6 +6,7 @@
 /composer.lock
 /.sass-cache/
 *~
+phpunit.xml
 
 # IDEs
 .idea/*

@@ -28,6 +28,7 @@ class AppKernel extends Kernel
             new \Sulu\Bundle\TestBundle\SuluTestBundle(),
             new \Sulu\Bundle\TagBundle\SuluTagBundle(),
             new \Sulu\Bundle\CategoryBundle\SuluCategoryBundle(),
+            new \Sulu\Bundle\SecurityBundle\SuluSecurityBundle(),
 
             new \Doctrine\Bundle\PHPCRBundle\DoctrinePHPCRBundle()
         );

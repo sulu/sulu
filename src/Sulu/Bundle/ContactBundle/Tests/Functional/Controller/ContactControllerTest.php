@@ -1448,8 +1448,6 @@ class ContactControllerTest extends DatabaseTestCase
 
     public function testDelete()
     {
-        $this->setExpectedException('Doctrine\ORM\EntityNotFoundException');
-
         $client = $this->createTestClient();
         $client->request('DELETE', '/api/contacts/1');
 

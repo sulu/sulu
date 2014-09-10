@@ -130,8 +130,6 @@ class TermsOfDeliveryControllerTest extends DatabaseTestCase
 
     public function testPostNonUniqueName()
     {
-        $this->setExpectedException('Doctrine\DBAL\DBALException');
-
         $client = $this->createTestClient();
         $client->request(
             'POST',
