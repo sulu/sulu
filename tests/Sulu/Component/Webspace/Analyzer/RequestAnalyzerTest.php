@@ -249,7 +249,6 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
                     return $requestFormat;
                 }
             )
-
         );
         
         $this->requestAnalyzer->analyze($request);
