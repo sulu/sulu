@@ -138,6 +138,21 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
                     'format' => 'rss'
                 ),
             ),
+            array(
+                array(
+                    'portal_url' => 'sulu.lo/test',
+                    'path_info' => '/test/path/to',
+                    'match_type' => RequestAnalyzerInterface::MATCH_TYPE_FULL,
+                    'redirect' => '',
+                ),
+                array(
+                    'redirect' => null,
+                    'resource_locator_prefix' => '/test',
+                    'resource_locator' => '/path/to',
+                    'portal_url' => 'sulu.lo/test',
+                    'format' => null
+                ),
+            ),
         );
     }
 
@@ -217,21 +232,25 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
         $request->expects($this->any())->method('getHost')->will($this->returnValue('sulu.lo'));
         $request->expects($this->any())->method('getPathInfo')->will($this->returnValue($config['path_info']));
         $request->expects($this->once())->method('setLocale')->with('de_at');
-        $request->expects($this->once())->method('setRequestFormat')->will(
-            $this->returnCallback(
-                function ($format) use (&$requestFormat) {
-                    $requestFormat = $format;
-                }
-            )
-        );
+
+        if ($expected['format']) {
+            $request->expects($this->once())->method('setRequestFormat')->will(
+                $this->returnCallback(
+                    function ($format) use (&$requestFormat) {
+                        $requestFormat = $format;
+                    }
+                )
+            );
+        }
+
         $request->expects($this->once())->method('getRequestFormat')->will(
             $this->returnCallback(
                 function () use (&$requestFormat) {
                     return $requestFormat;
                 }
             )
-
         );
+        
         $this->requestAnalyzer->analyze($request);
 
         $this->assertEquals('de_at', $this->requestAnalyzer->getCurrentLocalization()->getLocalization());
