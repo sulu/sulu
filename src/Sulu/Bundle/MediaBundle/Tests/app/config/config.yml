@@ -47,4 +47,5 @@ sulu_core:
     content:
         ~
     webspace:
-        ~
+        request_analyzer:
+            enabled: false
