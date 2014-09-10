@@ -119,6 +119,8 @@ class NavigationTest extends PhpcrTestCase
             )
         );
 
+        $this->mapper->saveStartPage(array('name' => 'Startpage', 'url' => '/'), 'simple', 'default', 'en', 1);
+
         $data['news'] = $this->mapper->save(
             $data['news'],
             'simple',
@@ -326,7 +328,7 @@ class NavigationTest extends PhpcrTestCase
         $this->assertEquals(3, sizeof($breadcrumb));
 
         // startpage has no title
-        $this->assertEquals('', $breadcrumb[0]->getTitle());
+        $this->assertEquals('Startpage', $breadcrumb[0]->getTitle());
         $this->assertEquals('/', $breadcrumb[0]->getUrl());
         $this->assertEquals('News', $breadcrumb[1]->getTitle());
         $this->assertEquals('/news', $breadcrumb[1]->getUrl());
@@ -428,5 +430,80 @@ class NavigationTest extends PhpcrTestCase
         $this->assertEquals('Products', $result[2]->getTitle());
         $this->assertEquals('Products-1', $result[3]->getTitle());
         $this->assertEquals('Products-2', $result[4]->getTitle());
+    }
+
+    public function testNavigationTestPage()
+    {
+        $data = array(
+            'name' => 'Products-3',
+            'rl' => '/products/products-3'
+        );
+
+        $this->data['products/products-3'] = $this->mapper->save(
+            $data,
+            'simple',
+            'default',
+            'en',
+            1,
+            true,
+            null,
+            $this->data['products']->getUuid(),
+            StructureInterface::STATE_TEST
+        );
+
+        $main = $this->navigation->getNavigation($this->data['products']->getUuid(), 'default', 'en', 1);
+        $this->assertEquals(2, sizeof($main));
+        $this->assertEquals('/products/products-1', $main[0]->getUrl());
+        $this->assertEquals('/products/products-2', $main[1]->getUrl());
+
+        $this->data['products/products-3'] = $this->mapper->save(
+            $data,
+            'simple',
+            'default',
+            'en',
+            1,
+            true,
+            $this->data['products/products-3']->getUuid(),
+            null,
+            StructureInterface::STATE_PUBLISHED
+        );
+
+        $main = $this->navigation->getNavigation($this->data['products']->getUuid(), 'default', 'en', 1);
+        $this->assertEquals(3, sizeof($main));
+        $this->assertEquals('/products/products-1', $main[0]->getUrl());
+        $this->assertEquals('/products/products-2', $main[1]->getUrl());
+        $this->assertEquals('/products/products-3', $main[2]->getUrl());
+
+        $main = $this->navigation->getNavigation($this->data['products']->getUuid(), 'default', 'en', 1, false, 'main');
+        $this->assertEquals(2, sizeof($main));
+        $this->assertEquals('/products/products-1', $main[0]->getUrl());
+        $this->assertEquals('/products/products-2', $main[1]->getUrl());
+
+        $data = array(
+            'name' => 'Products-3',
+            'rl' => '/products/products-3',
+            'navContexts' => array('main')
+        );
+        $this->data['products/products-3'] = $this->mapper->save(
+            $data,
+            'simple',
+            'default',
+            'en',
+            1,
+            true,
+            $this->data['products/products-3']->getUuid()
+        );
+
+        $main = $this->navigation->getNavigation($this->data['products']->getUuid(), 'default', 'en', 1);
+        $this->assertEquals(3, sizeof($main));
+        $this->assertEquals('/products/products-1', $main[0]->getUrl());
+        $this->assertEquals('/products/products-2', $main[1]->getUrl());
+        $this->assertEquals('/products/products-3', $main[2]->getUrl());
+
+        $main = $this->navigation->getNavigation($this->data['products']->getUuid(), 'default', 'en', 1, false, 'main');
+        $this->assertEquals(3, sizeof($main));
+        $this->assertEquals('/products/products-1', $main[0]->getUrl());
+        $this->assertEquals('/products/products-2', $main[1]->getUrl());
+        $this->assertEquals('/products/products-3', $main[2]->getUrl());
     }
 }
