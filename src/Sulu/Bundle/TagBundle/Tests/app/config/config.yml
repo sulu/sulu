@@ -22,7 +22,8 @@ doctrine:
         auto_generate_proxy_classes: %kernel.debug%
         auto_mapping: true
         resolve_target_entities:
-                    Sulu\Component\Security\UserInterface: Sulu\Bundle\TestBundle\Entity\TestUser
+            Sulu\Component\Security\UserInterface: Sulu\Bundle\TestBundle\Entity\TestUser
+            Sulu\Bundle\SecurityBundle\Entity\RoleInterface: Sulu\Bundle\SecurityBundle\Entity\Role
 
 monolog:
     handlers:
@@ -47,8 +48,9 @@ sulu_core:
         username: admin
         password: admin
     content: ~
-    webspace: ~
-
+    webspace:
+        request_analyzer:
+            enabled: false
             
 # Configuration file for security in the test environment
 # Grants access to every User

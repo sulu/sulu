@@ -480,8 +480,6 @@ class TagControllerTest extends DatabaseTestCase
             )
         );
 
-        echo $client->getResponse()->getContent();
-
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(6, $response->total);
