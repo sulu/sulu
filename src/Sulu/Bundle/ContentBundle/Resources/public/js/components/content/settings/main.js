@@ -293,6 +293,10 @@ define(['app-config'], function(AppConfig) {
             }
 
             this.data = this.sandbox.util.extend(true, {}, this.data, data);
+
+            // nav contexts not extend
+            this.data.navContexts = data.navContexts;
+
             this.sandbox.emit('sulu.content.contents.save', this.data);
         }
     };
