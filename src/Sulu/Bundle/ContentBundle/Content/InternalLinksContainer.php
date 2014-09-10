@@ -10,8 +10,9 @@
 
 namespace Sulu\Bundle\ContentBundle\Content;
 
+use PHPCR\ItemNotFoundException;
 use Psr\Log\LoggerInterface;
-use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
+use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\StructureInterface;
 use JMS\Serializer\Annotation\Exclude;
 use Sulu\Component\Util\ArrayableInterface;
@@ -23,11 +24,17 @@ use Sulu\Component\Util\ArrayableInterface;
 class InternalLinksContainer implements ArrayableInterface
 {
     /**
-     * The node repository, which is needed for lazy loading
+     * The content mapper, which is needed for lazy loading
      * @Exclude
-     * @var NodeRepositoryInterface
+     * @var ContentMapperInterface
      */
-    private $repository;
+    private $contentMapper;
+
+    /**
+     * @Exclude
+     * @var LoggerInterface
+     */
+    private $logger;
 
     /**
      * The key of the webspace
@@ -56,12 +63,14 @@ class InternalLinksContainer implements ArrayableInterface
 
     public function __construct(
         $ids,
-        NodeRepositoryInterface $repository,
+        ContentMapperInterface $contentMapper,
+        LoggerInterface $logger,
         $webspaceKey,
         $languageCode
     ) {
         $this->ids = $ids;
-        $this->repository = $repository;
+        $this->contentMapper = $contentMapper;
+        $this->logger = $logger;
         $this->webspaceKey = $webspaceKey;
         $this->languageCode = $languageCode;
     }
@@ -84,11 +93,20 @@ class InternalLinksContainer implements ArrayableInterface
      */
     private function loadData()
     {
+        $result = array();
         if ($this->ids !== null) {
-            return $this->repository->getNodesByIds($this->ids, $this->webspaceKey, $this->languageCode)['_embedded']['nodes'];
-        } else {
-            return array();
+            foreach ($this->ids as $id) {
+                try {
+                    $result[] = $this->contentMapper->load($id, $this->webspaceKey, $this->languageCode);
+                } catch (ItemNotFoundException $ex) {
+                    $this->logger->warning(
+                        sprintf("%s in internal links not found. Exception: %s", $id, $ex->getMessage())
+                    );
+                }
+            }
         }
+
+        return $result;
     }
 
     /**
