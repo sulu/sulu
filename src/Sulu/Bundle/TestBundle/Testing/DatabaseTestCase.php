@@ -47,6 +47,11 @@ abstract class DatabaseTestCase extends WebTestCase
 
         self::$tool->dropSchema(self::$userClasses);
         self::$tool->createSchema(self::$userClasses);
+
+        static::$kernel->getContainer()->set(
+            'sulu_security.user_repository',
+            static::$kernel->getContainer()->get('test_user_provider')
+        );
     }
 
     public static function tearDownAfterClass()
