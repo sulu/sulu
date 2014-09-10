@@ -97,7 +97,9 @@ class InternalLinksContainer implements ArrayableInterface
         if ($this->ids !== null) {
             foreach ($this->ids as $id) {
                 try {
-                    $result[] = $this->contentMapper->load($id, $this->webspaceKey, $this->languageCode);
+                    if (!empty($id)) {
+                        $result[] = $this->contentMapper->load($id, $this->webspaceKey, $this->languageCode);
+                    }
                 } catch (ItemNotFoundException $ex) {
                     $this->logger->warning(
                         sprintf("%s in internal links not found. Exception: %s", $id, $ex->getMessage())
