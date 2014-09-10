@@ -25,12 +25,12 @@ define({
 
         app.components.addSource('suluwebsite', '/bundles/suluwebsite/js/components');
 
-        // Example: list all contacts
-        // sandbox.mvc.routes.push({
-        //     route: 'contacts/contacts',
-        //    callback: function(){
-        //         this.html('<div data-aura-component="contacts@sulucontact" data-aura-display="list"/>');
-        //     }
-        // });
+        // cache clear button
+        sandbox.mvc.routes.push({
+            route: 'settings/cache',
+            callback: function() {
+                this.html('<div data-aura-component="cache@suluwebsite"/>');
+            }
+        });
     }
 });
