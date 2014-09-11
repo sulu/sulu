@@ -19,6 +19,7 @@ use Sulu\Component\Webspace\Manager\WebspaceManager;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Webspace;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
@@ -99,11 +100,15 @@ class RequestListenerTest extends \PHPUnit_Framework_TestCase
 
         $kernel = $this->getMock('\Symfony\Component\HttpKernel\Kernel', array(), array(), '', false);
         $request = $this->getMock('\Symfony\Component\HttpFoundation\Request');
+        $request->request = new ParameterBag(array('post' => 1));
+        $request->query = new ParameterBag(array('get' => 1));
         $this->requestListener->onKernelRequest(new GetResponseEvent($kernel, $request, ''));
 
         $this->assertEquals('de_at', $this->requestAnalyzer->getCurrentLocalization()->getLocalization());
         $this->assertEquals('sulu', $this->requestAnalyzer->getCurrentWebspace()->getKey());
         $this->assertEquals('sulu', $this->requestAnalyzer->getCurrentPortal()->getKey());
         $this->assertEquals(null, $this->requestAnalyzer->getCurrentSegment());
+        $this->assertEquals(array('post' => 1), $this->requestAnalyzer->getCurrentPostParameter());
+        $this->assertEquals(array('get' => 1), $this->requestAnalyzer->getCurrentGetParameter());
     }
 }
