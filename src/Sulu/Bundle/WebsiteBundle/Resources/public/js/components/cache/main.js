@@ -30,7 +30,25 @@ define([], function() {
 
         header: {
             title: 'sulu.website.cache.title',
-            noBack: true
+            noBack: true,
+            toolbar: {
+                options: false,
+                languageChanger: false,
+                template: 'empty'
+            },
+            breadcrumb: [
+                {title: 'navigation.settings'},
+                {title: 'sulu.website.cache.title'}
+            ]
+        },
+
+        layout: {
+            content: {
+                width: 'fixed',
+                leftSpace: true,
+                rightSpace: true,
+                topSpace: true
+            }
         },
 
         initialize: function() {
