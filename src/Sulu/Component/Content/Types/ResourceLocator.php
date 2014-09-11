@@ -49,6 +49,9 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
         $property->setValue($value);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function hasValue(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
         try {
@@ -88,12 +91,7 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
     }
 
     /**
-     * reads the value for given property out of the database + sets the value of the property
-     * @param string $uuid
-     * @param string $webspaceKey
-     * @param string $languageCode
-     * @param string $segmentKey
-     * @return string
+     * {@inheritdoc}
      */
     public function getResourceLocatorByUuid($uuid, $webspaceKey, $languageCode, $segmentKey = null)
     {
@@ -123,11 +121,7 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
     }
 
     /**
-     * restore given resource locator
-     * @param string $path of resource locator
-     * @param string $webspaceKey key of portal
-     * @param string $languageCode
-     * @param string $segmentKey
+     * {@inheritdoc}
      */
     public function restoreByPath($path, $webspaceKey, $languageCode, $segmentKey = null)
     {
@@ -170,12 +164,7 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
     }
 
     /**
-     * returns the node uuid of referenced content node
-     * @param string $resourceLocator
-     * @param string $webspaceKey
-     * @param string $languageCode
-     * @param string $segmentKey
-     * @return string
+     * {@inheritdoc}
      */
     public function loadContentNodeUuid($resourceLocator, $webspaceKey, $languageCode, $segmentKey = null)
     {
@@ -192,9 +181,7 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
     }
 
     /**
-     * returns type of ContentType
-     * PRE_SAVE or POST_SAVE
-     * @return int
+     * {@inheritdoc}
      */
     public function getType()
     {
@@ -202,8 +189,7 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
     }
 
     /**
-     * returns a template to render a form
-     * @return string
+     * {@inheritdoc}
      */
     public function getTemplate()
     {

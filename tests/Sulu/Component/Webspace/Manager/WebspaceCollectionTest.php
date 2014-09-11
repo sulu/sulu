@@ -13,6 +13,8 @@ namespace Sulu\Component\Webspace\Manager;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Environment;
 use Sulu\Component\Webspace\Localization;
+use Sulu\Component\Webspace\Navigation;
+use Sulu\Component\Webspace\NavigationContext;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Segment;
@@ -97,6 +99,8 @@ class WebspaceCollectionTest extends \PHPUnit_Framework_TestCase
         $webspace->setName('Default');
         $webspace->addPortal($portal);
 
+        $webspace->setNavigation(new Navigation(array(new NavigationContext('main', array()))));
+
         $portals[] = $portal;
         $webspaces[] = $webspace;
 
@@ -148,6 +152,11 @@ class WebspaceCollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(false, $webspace['segments'][1]['default']);
         $this->assertEquals('portal1theme', $webspace['theme']['key']);
         $this->assertEquals(array('overview', 'default'), $webspace['theme']['excludedTemplates']);
+
+        $this->assertEquals(1, count($webspace['navigation']));
+        $this->assertEquals(1, count($webspace['navigation']['contexts']));
+        $this->assertEquals('main', $webspace['navigation']['contexts'][0]['key']);
+        $this->assertEquals(array(), $webspace['navigation']['contexts'][0]['metadata']);
 
         $portal = $webspace['portals'][0];
 

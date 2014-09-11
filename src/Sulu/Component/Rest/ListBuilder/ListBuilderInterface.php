@@ -16,6 +16,10 @@ namespace Sulu\Component\Rest\ListBuilder;
  */
 interface ListBuilderInterface
 {
+    const WHERE_COMPARATOR_EQUAL = '=';
+
+    const WHERE_COMPARATOR_UNEQUAL = '!=';
+
     const SORTORDER_ASC = 'ASC';
 
     const SORTORDER_DESC = 'DESC';
@@ -89,6 +93,22 @@ interface ListBuilderInterface
      * @return mixed
      */
     public function where(AbstractFieldDescriptor $fieldDescriptor, $value);
+
+    /**
+     * Defines a constraint for the rows to return which are not equal the specified values
+     * @param AbstractFieldDescriptor $fieldDescriptor The FieldDescriptor which is checked
+     * @param string $value The value the FieldDescriptor should not have
+     * @return mixed
+     */
+    public function whereNot(AbstractFieldDescriptor $fieldDescriptor, $value);
+
+    /**
+     * Defines a constraint
+     * @param AbstractFieldDescriptor $fieldDescriptor
+     * @param $values
+     * @return mixed
+     */
+    public function in(AbstractFieldDescriptor $fieldDescriptor, $values);
 
     /**
      * The number of total elements for this list

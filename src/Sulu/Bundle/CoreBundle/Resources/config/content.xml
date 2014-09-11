@@ -5,6 +5,7 @@
 
     <parameters>
         <parameter key="sulu.content.path_cleaner.class">Sulu\Component\PHPCR\PathCleanup</parameter>
+        <parameter key="sulu.content.template_resolver.class">Sulu\Component\Content\Template\TemplateResolver</parameter>
         <parameter key="sulu.content.mapper.class">Sulu\Component\Content\Mapper\ContentMapper</parameter>
 
         <parameter key="sulu.content.structure_manager.class">Sulu\Component\Content\StructureManager</parameter>
@@ -27,6 +28,7 @@
     <services>
 
         <service id="sulu.content.path_cleaner" public="false" class="%sulu.content.path_cleaner.class%"/>
+        <service id="sulu.content.template_resolver" public="false" class="%sulu.content.template_resolver.class%"/>
         <!-- content mapper -->
         <!-- optional stopwatch: in prod not available -->
         <service id="sulu.content.mapper" class="%sulu.content.mapper.class%">
@@ -37,11 +39,11 @@
             <argument type="service" id="sulu.content.localization_finder"/>
             <argument type="service" id="sulu.content.path_cleaner"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+            <argument type="service" id="sulu.content.template_resolver"/>
             <argument>%sulu.content.language.default%</argument>
             <argument>%sulu.content.template.default%</argument>
             <argument>%sulu.content.language.namespace%</argument>
             <argument>%sulu.content.internal_prefix%</argument>
-            <argument>%sulu.content.nav_contexts%</argument>
             <argument type="service" id="debug.stopwatch" on-invalid="null"/>
         </service>
 
@@ -115,7 +117,5 @@
             <argument>%sulu.content.language.namespace%</argument>
             <tag name="sulu.content.type" alias="block"/>
         </service>
-
     </services>
-
 </container>

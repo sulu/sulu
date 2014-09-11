@@ -14,6 +14,7 @@ use Sulu\Component\Webspace\Analyzer\Exception\UrlMatchNotFoundException;
 use Sulu\Component\Webspace\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Portal;
+use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Segment;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
@@ -87,6 +88,18 @@ class RequestAnalyzer implements RequestAnalyzerInterface
      */
     private $resourceLocatorPrefix;
 
+    /**
+     * Get parameter of request
+     * @var array
+     */
+    private $getParameter;
+
+    /**
+     * Post parameter of request
+     * @var array
+     */
+    private $postParameter;
+
     public function __construct(WebspaceManagerInterface $webspaceManager, $environment)
     {
         $this->webspaceManager = $webspaceManager;
@@ -100,11 +113,14 @@ class RequestAnalyzer implements RequestAnalyzerInterface
      */
     public function analyze(Request $request)
     {
-        $url = $request->getHost() . $request->getRequestUri();
+        $url = $request->getHost() . $request->getPathInfo();
         $portalInformation = $this->webspaceManager->findPortalInformationByUrl(
             $url,
             $this->environment
         );
+
+        $this->getParameter = $request->query->all();
+        $this->postParameter = $request->request->all();
 
         if ($portalInformation != null) {
             $this->setCurrentMatchType($portalInformation->getType());
@@ -120,13 +136,18 @@ class RequestAnalyzer implements RequestAnalyzerInterface
 
                 $this->setCurrentSegment($portalInformation->getSegment());
                 $request->setLocale($portalInformation->getLocalization()->getLocalization());
-                // get the path and set it on the request
-                $this->setCurrentResourceLocator(
-                    substr(
-                        $request->getHost() . $request->getRequestUri(),
-                        strlen($portalInformation->getUrl())
-                    )
+
+                list($resourceLocator, $format) = $this->getResourceLocatorFromRequest(
+                    $portalInformation,
+                    $request
                 );
+
+                // get the path and set it on the request
+                $this->setCurrentResourceLocator($resourceLocator);
+
+                if ($format) {
+                    $request->setRequestFormat($format);
+                }
 
                 // get the resource locator prefix and set it
                 $this->setCurrentResourceLocatorPrefix(
@@ -219,6 +240,24 @@ class RequestAnalyzer implements RequestAnalyzerInterface
     }
 
     /**
+     * Returns the post parameters
+     * @return array
+     */
+    public function getCurrentPostParameter()
+    {
+        return $this->postParameter;
+    }
+
+    /**
+     * Returns the get parameters
+     * @return array
+     */
+    public function getCurrentGetParameter()
+    {
+        return $this->getParameter;
+    }
+
+    /**
      * Sets the current match type
      * @param int $matchType
      */
@@ -297,5 +336,33 @@ class RequestAnalyzer implements RequestAnalyzerInterface
     protected function setCurrentResourceLocatorPrefix($resourceLocatorPrefix)
     {
         $this->resourceLocatorPrefix = $resourceLocatorPrefix;
+    }
+
+    /**
+     * Retrurns resourcelocator and format of current request
+     */
+    private function getResourceLocatorFromRequest(
+        PortalInformation $portalInformation,
+        Request $request
+    ) {
+        $path = $request->getPathInfo();
+
+        // extract file and extension info
+        $pathParts = explode('/', $path);
+        $fileInfo = explode('.', array_pop($pathParts));
+
+        $path = rtrim(implode('/', $pathParts), '/') . '/' . $fileInfo[0];
+        if (sizeof($fileInfo) > 1) {
+            $formatResult = $fileInfo[1];
+        } else {
+            $formatResult = null;
+        }
+
+        $resourceLocator = substr(
+            $request->getHost() . $path,
+            strlen($portalInformation->getUrl())
+        );
+
+        return array($resourceLocator, $formatResult);
     }
 }

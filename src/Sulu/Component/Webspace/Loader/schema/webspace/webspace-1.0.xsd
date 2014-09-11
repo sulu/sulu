@@ -10,6 +10,7 @@
             <xs:element type="localizationsType" name="localizations"/>
             <xs:element type="segmentsType" name="segments" maxOccurs="1" minOccurs="0"/>
             <xs:element type="themeType" name="theme"/>
+            <xs:element type="navigationType" name="navigation"/>
             <xs:element type="portalsType" name="portals"/>
         </xs:sequence>
     </xs:complexType>
@@ -52,6 +53,37 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="key" use="optional"/>
                 <xs:attribute type="xs:boolean" name="default" use="optional"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="navigationType">
+        <xs:sequence>
+            <xs:element type="navigationContextsType" name="contexts" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="navigationContextsType">
+        <xs:sequence>
+            <xs:element type="navigationContextType" name="context" minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="navigationContextType">
+        <xs:sequence>
+            <xs:element name="meta">
+                <xs:complexType>
+                    <xs:choice maxOccurs="unbounded">
+                        <xs:element type="langType" name="title"/>
+                    </xs:choice>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+
+        <xs:attribute name="key" type="xs:string" use="required"/>
+    </xs:complexType>
+    <xs:complexType name="langType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="lang" use="required" type="xs:string"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>

@@ -23,13 +23,15 @@ class PathCleanup implements PathCleanupInterface
         'default' => array(
             ' ' => '-',
             '+' => '-',
+            '.' => '-',
             'ä' => 'ae',
             'ö' => 'oe',
             'ü' => 'ue',
             // because strtolower ignores Ä,Ö,Ü
             'Ä' => 'ae',
             'Ö' => 'oe',
-            'Ü' => 'ue'
+            'Ü' => 'ue',
+            'ß' => 'ss',
             // TODO should be filled
         ),
         'de' => array(
@@ -96,6 +98,6 @@ class PathCleanup implements PathCleanupInterface
      */
     public function validate($path)
     {
-        return preg_match($this->pattern, $path) === 1;
+        return $path === '/' || preg_match($this->pattern, $path) === 1;
     }
 } 

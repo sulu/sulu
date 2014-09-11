@@ -60,6 +60,18 @@ class WebspaceCollectionBuilderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Massive Art', $webspaces[0]->getName());
         $this->assertEquals('Sulu CMF', $webspaces[1]->getName());
 
+        $this->assertEquals(2, count($webspaces[0]->getNavigation()->getContexts()));
+
+        $this->assertEquals('main', $webspaces[0]->getNavigation()->getContexts()[0]->getKey());
+        $this->assertEquals('Hauptnavigation', $webspaces[0]->getNavigation()->getContexts()[0]->getTitle('de'));
+        $this->assertEquals('Mainnavigation', $webspaces[0]->getNavigation()->getContexts()[0]->getTitle('en'));
+        $this->assertEquals('Main', $webspaces[0]->getNavigation()->getContexts()[0]->getTitle('fr'));
+
+        $this->assertEquals('footer', $webspaces[0]->getNavigation()->getContexts()[1]->getKey());
+        $this->assertEquals('Unten', $webspaces[0]->getNavigation()->getContexts()[1]->getTitle('de'));
+        $this->assertEquals('Footer', $webspaces[0]->getNavigation()->getContexts()[1]->getTitle('en'));
+        $this->assertEquals('Footer', $webspaces[0]->getNavigation()->getContexts()[1]->getTitle('fr'));
+
         $portals = $webspaceCollection->getPortals();
 
         $this->assertCount(3, $portals);
