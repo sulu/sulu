@@ -200,8 +200,10 @@ class TermsOfDeliveryControllerTest extends DatabaseTestCase
         $response2 = json_decode($client2->getResponse()->getContent(), true);
         $this->assertEquals(200, $client2->getResponse()->getStatusCode());
 
-        $this->assertContains(array('terms' => 'Term 2', 'id' => 2), $response2['_embedded']['termsOfDeliveries']);
         $this->assertContains(array('terms' => 'Term 1.1', 'id' => 1), $response2['_embedded']['termsOfDeliveries']);
+        $this->assertContains(array('terms' => 'Term 2', 'id' => 2), $response2['_embedded']['termsOfDeliveries']);
+
+        $this->assertEquals(2, sizeof($response2['_embedded']['termsOfDeliveries']));
     }
 
     public function testPutInvalidId()
