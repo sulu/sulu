@@ -154,17 +154,18 @@ define(['app-config'], function(AppConfig) {
             }.bind(this), '.content-type');
         },
 
-        updateTabVisibilityForShadowCheckbox: function() {
+        updateTabVisibilityForShadowCheckbox: function(isInitial) {
             var checkboxEl = this.sandbox.dom.find('#shadow_on_checkbox')[0],
                 action = checkboxEl.checked ? 'hide' : 'show';
 
-            this.sandbox.util.each(['excerpt', 'seo'], function(i, tabName) {
-                this.sandbox.emit('husky.tabs.header.item.' + action, 'tab-' + tabName);
-            }.bind(this));
-
-            if (action === 'hide') {
-                this.sandbox.emit('husky.tabs.header.item.' + action, 'tab-content');
+            var tabAction = action;
+            if (false === isInitial) {
+                tabAction = 'hide';
             }
+
+            this.sandbox.util.each(['content', 'excerpt', 'seo'], function(i, tabName) {
+                this.sandbox.emit('husky.tabs.header.item.' + tabAction, 'tab-' + tabName);
+            }.bind(this));
 
             this.sandbox.util.each(['show-in-navigation-container', 'settings-content-form-container'], function(i, formGroupId) {
                 if (action === 'hide') {
@@ -199,10 +200,10 @@ define(['app-config'], function(AppConfig) {
                 this.sandbox.start(this.$el, {reset: true});
 
                 this.sandbox.dom.on('#shadow_on_checkbox', 'click', function() {
-                    this.updateTabVisibilityForShadowCheckbox();
+                    this.updateTabVisibilityForShadowCheckbox(false);
                 }.bind(this));
 
-                this.updateTabVisibilityForShadowCheckbox();
+                this.updateTabVisibilityForShadowCheckbox(true);
 
                 this.sandbox.emit('sulu.preview.initialize');
             }.bind(this));
