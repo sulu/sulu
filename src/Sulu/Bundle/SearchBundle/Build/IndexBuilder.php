@@ -17,7 +17,6 @@ use Sulu\Bundle\CoreBundle\Build\SuluBuilder;
  */
 class IndexBuilder extends SuluBuilder
 {
-
     /**
      * Return the name for this builder
      *
