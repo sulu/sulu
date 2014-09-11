@@ -1,0 +1,1 @@
+<?php return unserialize('a:2:{i:0;O:32:"JMS\\Serializer\\Annotation\\Expose":0:{}i:1;O:38:"JMS\\Serializer\\Annotation\\XmlAttribute":1:{s:9:"namespace";N;}}');

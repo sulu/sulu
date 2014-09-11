@@ -18,15 +18,18 @@ define(function () {
 
         listViews = {
             table: {
+                itemId: 'table',
                 name: 'table'
             },
             thumbnailSmall: {
+                itemId: 'small-thumbnails',
                 name: 'thumbnail',
                 thViewOptions: {
                     large: false
                 }
             },
             thumbnailLarge: {
+                itemId: 'big-thumbnails',
                 name: 'thumbnail',
                 thViewOptions: {
                     large: true
@@ -104,6 +107,11 @@ define(function () {
             // open data-source folder-overlay
             this.sandbox.on('sulu.list-toolbar.add', function () {
                 this.sandbox.emit('husky.dropzone.' + this.options.instanceName + '.open-data-source');
+            }.bind(this));
+
+            // premark the current view in the toolbar
+            this.sandbox.on('husky.toolbar.'+ this.options.instanceName +'.initialized', function() {
+                this.sandbox.emit('sulu.header.toolbar.item.mark', listViews[this.listView].itemId);
             }.bind(this));
 
             // open edit overlay on datagrid click
