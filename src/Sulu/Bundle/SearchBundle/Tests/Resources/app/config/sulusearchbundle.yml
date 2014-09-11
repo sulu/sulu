@@ -1,1 +1,21 @@
 sulu_search: ~
+
+doctrine:
+    orm: ~
+
+sulu_core:
+    phpcr:
+        backend: %phpcr_backend%
+        workspace: %phpcr_workspace%
+        username: %phpcr_user%
+        password: %phpcr_pass%
+    webspace:
+        config_dir: %kernel.root_dir%/Resources/webspaces
+    content:
+        templates:
+            paths:
+                app:
+                    path: "%kernel.root_dir%/Resources/templates"
+                    internal: false
+    http_cache:
+        ~

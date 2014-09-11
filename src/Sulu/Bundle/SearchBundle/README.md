@@ -34,7 +34,6 @@ You can map search indexes on structure documents in the structure template:
 
     <index name="my_index_name" />
 
-
     <properties>
         <property name="title" type="text_line" mandatory="true">
             <!-- ... -->
@@ -75,6 +74,25 @@ Likewise, searching is exactly the same as with the massive search bundle:
 // we get a structure from somewhere..
 $searchManager = $container->get('massive_search.search_manager');
 $searchManager->search('This is a search string', 'my_index_name);
+````
+
+### Search from the command line
+
+See the [MassiveSearchBundle](https://github.com/massiveart/MassiveSearchBundle) documentation.
+
+### Rendering results
+
+You can iterate over search results and retrieve the associated search
+document. The URL will be the Structure URL (determined automatically).
+
+````php
+{% for hit in hits %}
+    <section>
+        <h3><a href="{{ hit.document.url }}">{{ hit.document.title }}</a></h3>
+        <p><i>Class: {{ hit.document.class }}</i></p>
+        <p>{{ hit.document.description }}</p>
+    </section>
+{% endfor %}
 ````
 
 ## Requirements
