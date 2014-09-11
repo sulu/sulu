@@ -16,7 +16,7 @@ class SearchManagerTest extends BaseTestCase
 
             $this->generateStructureIndex($nbResults);
 
-            $res = $this->getSearchManager()->search('Structure*', 'content');
+            $res = $this->getSearchManager()->search('Structure*', 'de', 'content');
 
             $this->assertCount($nbResults, $res);
         }

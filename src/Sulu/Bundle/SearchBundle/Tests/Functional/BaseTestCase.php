@@ -7,6 +7,7 @@ use Sulu\Component\Content\Structure;
 use Symfony\Cmf\Component\Testing\Functional\BaseTestCase as SymfonyCmfBaseTestCase;
 use Symfony\Component\Filesystem\Filesystem;
 use Sulu\Bundle\SearchBundle\Tests\Fixtures\DefaultStructureCache;
+use Sulu\Component\Content\StructureInterface;
 
 class BaseTestCase extends SymfonyCmfBaseTestCase
 {
@@ -23,7 +24,7 @@ class BaseTestCase extends SymfonyCmfBaseTestCase
 
     public function getSearchManager()
     {
-        $searchManager = $this->getContainer()->get('massive_search.search_manager');
+        $searchManager = $this->getContainer()->get('sulu_search.localized_search_manager');
         return $searchManager;
     }
 
@@ -37,8 +38,9 @@ class BaseTestCase extends SymfonyCmfBaseTestCase
 
             $structure->getProperty('url')->setValue('/');
             $structure->getProperty('url')->setIndexed(false);
+            $structure->setNodeState(StructureInterface::STATE_PUBLISHED);
 
-            $this->getSearchManager()->index($structure, 'content');
+            $this->getSearchManager()->index($structure, 'de', 'content');
         }
     }
 
