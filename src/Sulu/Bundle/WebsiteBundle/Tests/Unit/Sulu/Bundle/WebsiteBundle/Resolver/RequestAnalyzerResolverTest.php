@@ -79,6 +79,8 @@ class RequestAnalyzerResolverTest extends ProphecyTestCase
         $requestAnalyzer->getCurrentPortalUrl()->willReturn('sulu.io/de');
         $requestAnalyzer->getCurrentResourceLocatorPrefix()->willReturn('/de');
         $requestAnalyzer->getCurrentResourceLocator()->willReturn('/search');
+        $requestAnalyzer->getCurrentGetParameter()->willReturn(array('p' => 1));
+        $requestAnalyzer->getCurrentPostParameter()->willReturn(array());
 
         $result = $this->resolver->resolve($requestAnalyzer->reveal());
         $this->assertEquals(
@@ -88,7 +90,9 @@ class RequestAnalyzerResolverTest extends ProphecyTestCase
                     'locale' => 'de',
                     'portalUrl' => 'sulu.io/de',
                     'resourceLocatorPrefix' => '/de',
-                    'resourceLocator' => '/search'
+                    'resourceLocator' => '/search',
+                    'get' => array('p' => 1),
+                    'post' => array()
                 )
             ),
             $result
@@ -107,7 +111,9 @@ class RequestAnalyzerResolverTest extends ProphecyTestCase
                     'locale' => 'de',
                     'portalUrl' => 'sulu.io/de',
                     'resourceLocatorPrefix' => '',
-                    'resourceLocator' => ''
+                    'resourceLocator' => '',
+                    'get' => array(),
+                    'post' => array()
                 )
             ),
             $result
