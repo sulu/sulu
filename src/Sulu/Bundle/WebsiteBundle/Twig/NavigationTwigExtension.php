@@ -51,21 +51,23 @@ class NavigationTwigExtension extends \Twig_Extension
 
     /**
      * Returns navigation for content node at given level or (if level null) sub-navigation of page
-     * @param StructureInterface $content
+     * @param $webspaceKey
+     * @param $localization
      * @param int $depth depth of navigation returned
      * @param bool $flat
      * @param string $context
      * @return NavigationItem[]
      */
     public function rootNavigationFunction(
-        StructureInterface $content,
+        $webspaceKey,
+        $localization,
         $depth = 1,
         $flat = false,
         $context = null
     ) {
         return $this->navigationMapper->getRootNavigation(
-            $content->getWebspaceKey(),
-            $content->getLanguageCode(),
+            $webspaceKey,
+            $localization,
             $depth,
             $flat,
             $context
@@ -74,7 +76,9 @@ class NavigationTwigExtension extends \Twig_Extension
 
     /**
      * Returns navigation for content node at given level or (if level null) sub-navigation of page
-     * @param StructureInterface $content
+     * @param $uuid
+     * @param $webspaceKey
+     * @param $localization
      * @param int $depth depth of navigation returned
      * @param integer|null $level
      * @param bool $flat
@@ -82,22 +86,23 @@ class NavigationTwigExtension extends \Twig_Extension
      * @return NavigationItem[]
      */
     public function navigationFunction(
-        StructureInterface $content,
+        $uuid,
+        $webspaceKey,
+        $localization,
         $depth = 1,
         $level = null,
         $flat = false,
         $context = null
     ) {
-        $uuid = $content->getUuid();
         if ($level !== null) {
             $breadcrumb = $this->contentMapper->loadBreadcrumb(
                 $uuid,
-                $content->getLanguageCode(),
-                $content->getWebspaceKey()
+                $localization,
+                $webspaceKey
             );
 
             // return empty array if level does not exists
-            if(!isset($breadcrumb[$level])){
+            if (!isset($breadcrumb[$level])) {
                 return array();
             }
 
@@ -106,8 +111,8 @@ class NavigationTwigExtension extends \Twig_Extension
 
         return $this->navigationMapper->getNavigation(
             $uuid,
-            $content->getWebspaceKey(),
-            $content->getLanguageCode(),
+            $webspaceKey,
+            $localization,
             $depth,
             $flat,
             $context
@@ -116,15 +121,17 @@ class NavigationTwigExtension extends \Twig_Extension
 
     /**
      * Returns breadcrumb for given node
-     * @param StructureInterface $content
+     * @param $uuid
+     * @param $webspaceKey
+     * @param $localization
      * @return \Sulu\Bundle\WebsiteBundle\Navigation\NavigationItem[]
      */
-    public function breadcrumbFunction(StructureInterface $content)
+    public function breadcrumbFunction($uuid, $webspaceKey, $localization)
     {
         return $this->navigationMapper->getBreadcrumb(
-            $content->getUuid(),
-            $content->getWebspaceKey(),
-            $content->getLanguageCode()
+            $uuid,
+            $webspaceKey,
+            $localization
         );
     }
 

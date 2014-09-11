@@ -51,38 +51,31 @@ class ContentPathTwigExtension extends \Twig_Extension
 
     /**
      * generates real url for given content
-     * @param NavigationItem|StructureInterface $item
+     * @param string $url
      * @return string
      */
-    public function contentPathFunction($item)
+    public function contentPathFunction($url)
     {
-        $external = false;
-        if ($item instanceof NavigationItem) {
-            $rl = $item->getUrl();
-            $external = $item->getNodeType() === Structure::NODE_TYPE_EXTERNAL_LINK;
-        } elseif ($item instanceof StructureInterface) {
-            $rl = $item->getResourceLocator();
-            $external = $item->getNodeType() === Structure::NODE_TYPE_EXTERNAL_LINK;
-        } elseif (isset($item['url'])) {
-            $rl = $item['url'];
+        if (strpos($url, '/') === 0 && $this->requestAnalyzer) {
+            return rtrim($this->requestAnalyzer->getCurrentResourceLocatorPrefix() . $url, '/');
         } else {
-            $rl = '/';
-        }
-        if ($this->requestAnalyzer !== null && $item !== null && !$external) {
-            return $this->requestAnalyzer->getCurrentResourceLocatorPrefix() . $rl;
-        } else {
-            return $rl;
+            return $url;
         }
     }
 
     /**
      * generates real root url
+     * @param boolean $full if TRUE the full url will be returned, if FALSE only the current prefix is returned
      * @return string
      */
-    public function  contentRootPathFunction()
+    public function contentRootPathFunction($full = false)
     {
         if ($this->requestAnalyzer !== null) {
-            return $this->requestAnalyzer->getCurrentResourceLocatorPrefix();
+            if ($full) {
+                return $this->requestAnalyzer->getCurrentPortalUrl();
+            } else {
+                return $this->requestAnalyzer->getCurrentResourceLocatorPrefix();
+            }
         } else {
             return '/';
         }

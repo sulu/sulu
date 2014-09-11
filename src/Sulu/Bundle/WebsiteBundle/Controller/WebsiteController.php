@@ -10,11 +10,11 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Controller;
 
-use Sulu\Bundle\WebsiteBundle\Navigation\NavigationMapper;
-use Sulu\Bundle\WebsiteBundle\Navigation\NavigationMapperInterface;
+use InvalidArgumentException;
 use Sulu\Component\Content\StructureInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
  * Basic class to render Website from phpcr content
@@ -32,53 +32,81 @@ abstract class WebsiteController extends Controller
         $partial = false
     )
     {
-        // if partial render only content block else full page
-        if ($partial) {
-            $content = $this->renderBlock(
-                $structure->getView(),
-                'content',
-                array_merge($attributes, array('content' => $structure))
-            );
-        } else {
-            $content = parent::renderView(
-                $structure->getView(),
-                array_merge($attributes, array('content' => $structure))
-            );
+        // extract format twig file
+        $request = $this->getRequest();
+        $viewTemplate = $structure->getView() . '.' . $request->getRequestFormat() . '.twig';
+
+        // get attributes to render template
+        $data = $this->getAttributes($attributes, $structure, $preview);
+
+        try {
+            // if partial render only content block else full page
+            if ($partial) {
+                $content = $this->renderBlock(
+                    $viewTemplate,
+                    'content',
+                    $data
+                );
+            } else {
+                $content = parent::renderView(
+                    $viewTemplate,
+                    $data
+                );
+            }
+
+            // remove empty first line
+            if (ob_get_length()) {
+                ob_clean();
+            }
+
+            $response = new Response();
+            $response->setContent($content);
+
+            // if not preview enable cache handling
+            if (!$preview) {
+                // mark the response as either public or private
+                $response->setPublic();
+
+                // set the private or shared max age
+                $response->setMaxAge($structure->getCacheLifeTime());
+                $response->setSharedMaxAge($structure->getCacheLifeTime());
+            }
+
+            return $response;
+        } catch (InvalidArgumentException $ex) {
+            // template not found
+            throw new HttpException(406);
         }
-
-        $response = new Response();
-        $response->setContent($content);
-
-        // if not preview enable cache handling
-        if (!$preview) {
-            // mark the response as either public or private
-            $response->setPublic();
-            //$response->setPrivate();
-
-            // set the private or shared max age
-            //$response->setMaxAge($structure->getCacheLifeTime());
-            $response->setSharedMaxAge($structure->getCacheLifeTime());
-        }
-
-        return $response;
     }
 
     /**
-     * Returns rendered error response
+     * Generates attributes
      */
-    protected function renderError($template, $parameters, $code = 404)
+    protected function getAttributes($attributes, StructureInterface $structure = null, $preview = false)
     {
-        $content = $this->renderView(
-            $template,
-            $parameters
+        if ($structure !== null) {
+            $structureData = $this->get('sulu_website.resolver.structure')->resolve($structure);
+        } else {
+            $structureData = array();
+        }
+
+        if (!$preview) {
+            $requestAnalyzerData = $this
+                ->get('sulu_website.resolver.request_analyzer')
+                ->resolve(
+                    $this->get('sulu_core.webspace.request_analyzer')
+                );
+        } else {
+            $requestAnalyzerData = $this
+                ->get('sulu_website.resolver.request_analyzer')
+                ->resolveForPreview($structure->getWebspaceKey(), $structure->getLanguageCode());
+        }
+
+        return array_merge(
+            $attributes,
+            $structureData,
+            $requestAnalyzerData
         );
-
-        $response = new Response();
-        $response->setStatusCode($code);
-
-        $response->setContent($content);
-
-        return $response;
     }
 
     /**
