@@ -264,6 +264,11 @@ define([], function () {
              */
             changeHeader = function (tabsData) {
                 // set the variables for the header-component-options properties
+                var toolbarLanguageChanger = true;
+                if (!!header.toolbar) {
+                    toolbarLanguageChanger = !!header.toolbar.languageChanger ? header.toolbar.languageChanger : false;
+                }
+
                 options = {
                     tabsData: tabsData,
                     heading: this.sandbox.translate(header.title),
@@ -276,7 +281,7 @@ define([], function () {
                     tabsOptions: (!!header.tabs && !!header.tabs.options) ? header.tabs.options : {},
                     tabsFullControl: (!!header.tabs && typeof header.tabs.fullControl === 'boolean') ? header.tabs.fullControl : false,
                     toolbarDisabled: (typeof header.toolbar === 'undefined'),
-                    toolbarLanguageChanger: !!header.toolbar ? !!header.toolbar.languageChanger : true,
+                    toolbarLanguageChanger: toolbarLanguageChanger,
                     noBack: (typeof header.noBack !== 'undefined') ? header.noBack : false,
                     titleColor: (!!header.titleColor) ? header.titleColor : null
                 };
