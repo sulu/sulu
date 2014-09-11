@@ -17,6 +17,7 @@ use Sulu\Component\Webspace\Manager\WebspaceManager;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Webspace;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 
 class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
@@ -184,6 +185,8 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
         $this->prepareWebspaceManager($portalInformation);
 
         $request = $this->getMock('\Symfony\Component\HttpFoundation\Request');
+        $request->request = new ParameterBag(array('post' => 1));
+        $request->query = new ParameterBag(array('get' => 1));
         $request->expects($this->any())->method('getHost')->will($this->returnValue('sulu.lo'));
         $request->expects($this->any())->method('getPathInfo')->will($this->returnValue($config['path_info']));
         $request->expects($this->once())->method('setLocale')->with('de_at');
@@ -197,6 +200,8 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected['redirect'], $this->requestAnalyzer->getCurrentRedirect());
         $this->assertEquals($expected['resource_locator'], $this->requestAnalyzer->getCurrentResourceLocator());
         $this->assertEquals($expected['resource_locator_prefix'], $this->requestAnalyzer->getCurrentResourceLocatorPrefix());
+        $this->assertEquals(array('post' => 1), $this->requestAnalyzer->getCurrentPostParameter());
+        $this->assertEquals(array('get' => 1), $this->requestAnalyzer->getCurrentGetParameter());
     }
 
     /**
@@ -229,6 +234,8 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
         $requestFormat = false;
 
         $request = $this->getMock('\Symfony\Component\HttpFoundation\Request');
+        $request->request = new ParameterBag(array('post' => 1));
+        $request->query = new ParameterBag(array('get' => 1));
         $request->expects($this->any())->method('getHost')->will($this->returnValue('sulu.lo'));
         $request->expects($this->any())->method('getPathInfo')->will($this->returnValue($config['path_info']));
         $request->expects($this->once())->method('setLocale')->with('de_at');
@@ -250,7 +257,7 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
                 }
             )
         );
-        
+
         $this->requestAnalyzer->analyze($request);
 
         $this->assertEquals('de_at', $this->requestAnalyzer->getCurrentLocalization()->getLocalization());
@@ -265,6 +272,8 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
             $this->requestAnalyzer->getCurrentResourceLocatorPrefix()
         );
         $this->assertEquals($expected['format'], $request->getRequestFormat());
+        $this->assertEquals(array('post' => 1), $this->requestAnalyzer->getCurrentPostParameter());
+        $this->assertEquals(array('get' => 1), $this->requestAnalyzer->getCurrentGetParameter());
     }
 
     /**
@@ -277,6 +286,9 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
         );
 
         $request = $this->getMock('\Symfony\Component\HttpFoundation\Request');
+        $request->request = new ParameterBag(array('post' => 1));
+        $request->query = new ParameterBag(array('get' => 1));
+        
         $this->requestAnalyzer->analyze($request);
     }
 }
