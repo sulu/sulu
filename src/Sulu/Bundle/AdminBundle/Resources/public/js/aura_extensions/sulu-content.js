@@ -276,7 +276,7 @@ define([], function () {
                     tabsOptions: (!!header.tabs && !!header.tabs.options) ? header.tabs.options : {},
                     tabsFullControl: (!!header.tabs && typeof header.tabs.fullControl === 'boolean') ? header.tabs.fullControl : false,
                     toolbarDisabled: (typeof header.toolbar === 'undefined'),
-                    toolbarLanguageChanger: (!!header.toolbar && !!header.toolbar.languageChanger) ? header.toolbar.languageChanger : true,
+                    toolbarLanguageChanger: !!header.toolbar ? !!header.toolbar.languageChanger : true,
                     noBack: (typeof header.noBack !== 'undefined') ? header.noBack : false,
                     titleColor: (!!header.titleColor) ? header.titleColor : null
                 };

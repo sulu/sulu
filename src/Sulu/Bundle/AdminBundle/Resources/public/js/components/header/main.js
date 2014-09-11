@@ -371,6 +371,10 @@ define([], function () {
                 ];
             },
 
+            empty: function() {
+                return [];
+            },
+
             save: function () {
                 return [toolbarTemplates.default.call(this)[0]];
             },
