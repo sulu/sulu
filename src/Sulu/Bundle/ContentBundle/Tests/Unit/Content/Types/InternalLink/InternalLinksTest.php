@@ -8,17 +8,23 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\ContentBundle\Tests\Unit\Content\Types;
+namespace Sulu\Bundle\ContentBundle\Tests\Unit\Content\Types\InternalLink;
 
+use Psr\Log\NullLogger;
 use Sulu\Bundle\ContentBundle\Content\Types\InternalLinks;
-use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
+use Sulu\Component\Content\Mapper\ContentMapperInterface;
+
+//FIXME remove on update to phpunit 3.8, caused by https://github.com/sebastianbergmann/phpunit/issues/604
+interface NodeInterface extends \PHPCR\NodeInterface, \Iterator
+{
+}
 
 class InternalLinksTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var NodeRepositoryInterface
+     * @var ContentMapperInterface
      */
-    private $nodeRepository;
+    private $contentMapper;
 
     /**
      * @var InternalLinks
@@ -27,19 +33,19 @@ class InternalLinksTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->nodeRepository = $this->getMockForAbstractClass(
-            'Sulu\Bundle\ContentBundle\Repository\NodeRepository',
+        $this->contentMapper = $this->getMockForAbstractClass(
+            'Sulu\Component\Content\Mapper\ContentMapper',
             array(),
             '',
             false
         );
-        $this->internalLinks = new InternalLinks($this->nodeRepository, 'asdf');
+        $this->internalLinks = new InternalLinks($this->contentMapper, new NullLogger(), 'asdf');
     }
 
     public function testWriteWithNoneExistingUUID()
     {
         $subNode1 = $this->getMockForAbstractClass(
-            'Sulu\Bundle\ContentBundle\Tests\Unit\Content\Types\NodeInterface',
+            'Sulu\Bundle\ContentBundle\Tests\Unit\Content\Types\InternalLink\NodeInterface',
             array(),
             '',
             true,
@@ -48,7 +54,7 @@ class InternalLinksTest extends \PHPUnit_Framework_TestCase
         );
         $subNode1->expects($this->any())->method('getIdentifier')->will($this->returnValue('123-123-123'));
         $subNode2 = $this->getMockForAbstractClass(
-            'Sulu\Bundle\ContentBundle\Tests\Unit\Content\Types\NodeInterface',
+            'Sulu\Bundle\ContentBundle\Tests\Unit\Content\Types\InternalLink\NodeInterface',
             array(),
             '',
             true,
@@ -58,7 +64,7 @@ class InternalLinksTest extends \PHPUnit_Framework_TestCase
         $subNode2->expects($this->any())->method('getIdentifier')->will($this->returnValue('123-456-789'));
 
         $node = $this->getMockForAbstractClass(
-            'Sulu\Bundle\ContentBundle\Tests\Unit\Content\Types\NodeInterface',
+            'Sulu\Bundle\ContentBundle\Tests\Unit\Content\Types\InternalLink\NodeInterface',
             array(),
             '',
             true,
