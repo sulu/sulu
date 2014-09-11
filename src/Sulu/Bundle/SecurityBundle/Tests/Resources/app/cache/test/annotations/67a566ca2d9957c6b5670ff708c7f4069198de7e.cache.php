@@ -1,1 +1,0 @@
-<?php return unserialize('a:1:{i:0;O:55:"Doctrine\\ODM\\PHPCR\\Mapping\\Annotations\\MappedSuperclass":6:{s:8:"nodeType";N;s:15:"repositoryClass";N;s:10:"translator";N;s:6:"mixins";a:1:{i:0;s:11:"mix:created";}s:11:"versionable";N;s:13:"referenceable";N;}}');
