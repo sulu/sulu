@@ -17,6 +17,7 @@ use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\PropertyInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Sulu\Component\Util\ArrayableInterface;
 
 /**
@@ -39,14 +40,21 @@ class SmartContent extends ComplexContentType
      */
     private $template;
 
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
+
     function __construct(
         NodeRepositoryInterface $nodeRepository,
         TagManagerInterface $tagManager,
+        RequestStack $requestStack,
         $template
     ) {
         $this->nodeRepository = $nodeRepository;
         $this->tagManager = $tagManager;
         $this->template = $template;
+        $this->requestStack = $requestStack;
     }
 
     /**
@@ -161,5 +169,44 @@ class SmartContent extends ComplexContentType
     public function remove(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
         // TODO: Implement remove() method.
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getDefaultParams()
+    {
+        $params = parent::getDefaultParams();
+        $params['max_per_page'] = 25;
+        $params['page_parameter'] = 'p';
+
+        return $params;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getViewData(PropertyInterface $property)
+    {
+        return $property->getValue()->getConfig();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getContentData(PropertyInterface $property)
+    {
+        $params = array_merge(
+            $this->getDefaultParams(),
+            $property->getParams()
+        );
+
+        $data = $property->getValue()->getData();
+
+        $page = $this->requestStack->getCurrentRequest()->get($params['page_parameter'], 1);
+
+        $data = array_slice($data, ($page - 1) * $params['max_per_page'], $params['max_per_page']);
+
+        return $data;
     }
 }
