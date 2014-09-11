@@ -286,13 +286,22 @@ class ContentMapper implements ContentMapperInterface
             // shadow base resource locator
             if ($structure->hasTag('sulu.rlp')) {
                 $property = $structure->getPropertyByTagName('sulu.rlp');
-                $baseLanguageRlpProperty = new TranslatedProperty($property, $shadowBaseLanguage, $this->languageNamespace);
+                $baseLanguageRlProperty = new TranslatedProperty($property, $shadowBaseLanguage, $this->languageNamespace);
                 if (!isset($data[$property->getName()])) {
-                    $rlpContentType = $this->getContentType($baseLanguageRlpProperty->getContentTypeName());
-                    $rlpContentType->read($node, $baseLanguageRlpProperty, $webspaceKey, $shadowBaseLanguage);
-                    $rl = $baseLanguageRlpProperty->getValue();
+                    $rlpContentType = $this->getContentType($baseLanguageRlProperty->getContentTypeName());
+                    $rlpContentType->read($node, $baseLanguageRlProperty, $webspaceKey, $shadowBaseLanguage);
+                    $rl = $baseLanguageRlProperty->getValue();
                     $data[$property->getName()] = $rl;
                 }
+            }
+        }
+
+        $shadowChanged = false;
+
+        if ($node->hasProperty($this->properties->getName('shadow-on'))) {
+            $oldShadowStatus = $node->getPropertyValue($this->properties->getName('shadow-on'));
+            if ($isShadow !== $oldShadowStatus) {
+                $shadowChanged = true;
             }
         }
 
@@ -324,54 +333,57 @@ class ContentMapper implements ContentMapperInterface
             $node->setProperty($this->properties->getName('navContexts'), $data['navContexts']);
         }
 
+        // if the shadow status has changed, do not process the rest of the form.
         $postSave = array();
+        if (false === $shadowChanged) {
 
-        // go through every property in the template
-        /** @var PropertyInterface $property */
-        foreach ($structure->getProperties(true) as $property) {
-            // allow null values in data
-            if (isset($data[$property->getName()])) {
-                $type = $this->getContentType($property->getContentTypeName());
-                $value = $data[$property->getName()];
-                $property->setValue($value);
+            // go through every property in the template
+            /** @var PropertyInterface $property */
+            foreach ($structure->getProperties(true) as $property) {
+                // allow null values in data
+                if (isset($data[$property->getName()])) {
+                    $type = $this->getContentType($property->getContentTypeName());
+                    $value = $data[$property->getName()];
+                    $property->setValue($value);
 
-                // add property to post save action
-                if ($type->getType() == ContentTypeInterface::POST_SAVE) {
-                    $postSave[] = array(
-                        'type' => $type,
-                        'property' => $property
-                    );
-                } else {
-                    $type->write(
+                    // add property to post save action
+                    if ($type->getType() == ContentTypeInterface::POST_SAVE) {
+                        $postSave[] = array(
+                            'type' => $type,
+                            'property' => $property
+                        );
+                    } else {
+                        $type->write(
+                            $node,
+                            new TranslatedProperty($property, $languageCode, $this->languageNamespace),
+                            $userId,
+                            $webspaceKey,
+                            $languageCode,
+                            null
+                        );
+                    }
+                } elseif ($isShadow) {
+                    // nothing
+                } elseif (!$this->ignoreMandatoryFlag && $property->getMandatory()) {
+                    $type = $this->getContentType($property->getContentTypeName());
+                    $translatedProperty = new TranslatedProperty($property, $languageCode, $this->languageNamespace);
+
+                    if (false === $type->hasValue($node, $translatedProperty, $webspaceKey, $languageCode, null)) {
+                        throw new MandatoryPropertyException($templateKey, $property);
+                    }
+                } elseif (!$partialUpdate) {
+                    $type = $this->getContentType($property->getContentTypeName());
+                    // if it is not a partial update remove property
+                    $type->remove(
                         $node,
                         new TranslatedProperty($property, $languageCode, $this->languageNamespace),
-                        $userId,
                         $webspaceKey,
                         $languageCode,
                         null
                     );
                 }
-            } elseif ($isShadow) {
-                // nothing
-            } elseif (!$this->ignoreMandatoryFlag && $property->getMandatory()) {
-                $type = $this->getContentType($property->getContentTypeName());
-                $translatedProperty = new TranslatedProperty($property, $languageCode, $this->languageNamespace);
-
-                if (false === $type->hasValue($node, $translatedProperty, $webspaceKey, $languageCode, null)) {
-                    throw new MandatoryPropertyException($templateKey, $property);
-                }
-            } elseif (!$partialUpdate) {
-                $type = $this->getContentType($property->getContentTypeName());
-                // if it is not a partial update remove property
-                $type->remove(
-                    $node,
-                    new TranslatedProperty($property, $languageCode, $this->languageNamespace),
-                    $webspaceKey,
-                    $languageCode,
-                    null
-                );
+                // if it is a partial update ignore property
             }
-            // if it is a partial update ignore property
         }
 
         // save node now
@@ -401,21 +413,24 @@ class ContentMapper implements ContentMapperInterface
         }
         $session->save();
 
-        // save data of extensions
-        $ext = array();
-        foreach ($this->structureManager->getExtensions($structure->getKey()) as $extension) {
-            $extension->setLanguageCode($languageCode, $this->languageNamespace, $this->internalPrefix);
-            if (isset($data['ext']) && isset($data['ext'][$extension->getName()])) {
-                $extension->save(
-                    $node,
-                    $data['ext'][$extension->getName()],
-                    $webspaceKey,
-                    $languageCode
-                );
+        if (false === $shadowChanged) {
+            // save data of extensions
+            $ext = array();
+            foreach ($this->structureManager->getExtensions($structure->getKey()) as $extension) {
+                $extension->setLanguageCode($languageCode, $this->languageNamespace, $this->internalPrefix);
+                if (isset($data['ext']) && isset($data['ext'][$extension->getName()])) {
+                    $extension->save(
+                        $node,
+                        $data['ext'][$extension->getName()],
+                        $webspaceKey,
+                        $languageCode
+                    );
+                }
+                $ext[$extension->getName()] = $extension->load($node, $webspaceKey, $languageCode);
             }
-            $ext[$extension->getName()] = $extension->load($node, $webspaceKey, $languageCode);
+
+            $structure->setExt($ext);
         }
-        $structure->setExt($ext);
 
         $session->save();
 
@@ -990,7 +1005,6 @@ class ContentMapper implements ContentMapperInterface
 
     /**
      * returns a sql2 query
-     * @param string $sql2 The query, which returns the content
      * @param int $limit Limits the number of returned rows
      * @return QueryInterface
      */
