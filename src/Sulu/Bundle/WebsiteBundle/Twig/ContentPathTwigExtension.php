@@ -51,13 +51,13 @@ class ContentPathTwigExtension extends \Twig_Extension
 
     /**
      * generates real url for given content
-     * @param NavigationItem|StructureInterface $item
+     * @param string $url
      * @return string
      */
     public function contentPathFunction($url)
     {
         if (strpos($url, '/') === 0 && $this->requestAnalyzer) {
-            return $this->requestAnalyzer->getCurrentResourceLocatorPrefix() . $url;
+            return rtrim($this->requestAnalyzer->getCurrentResourceLocatorPrefix() . $url, '/');
         } else {
             return $url;
         }

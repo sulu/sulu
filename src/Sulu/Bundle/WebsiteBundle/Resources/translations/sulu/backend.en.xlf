@@ -6,12 +6,12 @@
                 <source>navigation.settings.cache</source>
                 <target>Cache</target>
             </trans-unit>
-            <trans-unit id="123f522ac181350142c0b4720e29002" resname="sulu.website.cache.remove.title">
+            <trans-unit id="123f522ac181350142c0b4720e29002" resname="sulu.website.cache.remove">
                 <source>sulu.website.cache.remove</source>
                 <target>Cache clear</target>
             </trans-unit>
-            <trans-unit id="123f522ac181350142c0b4720e29003" resname="sulu.website.cache.remove.title">
-                <source>sulu.website.cache.remove</source>
+            <trans-unit id="123f522ac181350142c0b4720e29003" resname="sulu.website.cache.title">
+                <source>sulu.website.cache.title</source>
                 <target>Cache settings</target>
             </trans-unit>
             <trans-unit id="123f522ac181350142c0b4720e29004" resname="sulu.website.cache.remove.success.title">

@@ -12,6 +12,7 @@ namespace Sulu\Bundle\WebsiteBundle\Resolver;
 
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Resolves the request_analyzer to an array
@@ -45,7 +46,9 @@ class RequestAnalyzerResolver implements RequestAnalyzerResolverInterface
                 'locale' => $requestAnalyzer->getCurrentLocalization(),
                 'portalUrl' => $requestAnalyzer->getCurrentPortalUrl(),
                 'resourceLocatorPrefix' => $requestAnalyzer->getCurrentResourceLocatorPrefix(),
-                'resourceLocator' => $requestAnalyzer->getCurrentResourceLocator()
+                'resourceLocator' => $requestAnalyzer->getCurrentResourceLocator(),
+                'get' => $requestAnalyzer->getCurrentGetParameter(),
+                'post' => $requestAnalyzer->getCurrentPostParameter()
             )
         );
     }
@@ -65,7 +68,9 @@ class RequestAnalyzerResolver implements RequestAnalyzerResolverInterface
                 'locale' => $locale,
                 'portalUrl' => $portalUrl,
                 'resourceLocatorPrefix' => '',
-                'resourceLocator' => ''
+                'resourceLocator' => '',
+                'get' => array(),
+                'post' => array()
             )
         );
     }
