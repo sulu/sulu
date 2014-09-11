@@ -104,4 +104,16 @@ interface RequestAnalyzerInterface
      * @return string
      */
     public function getCurrentResourceLocatorPrefix();
+
+    /**
+     * Returns the post parameters
+     * @return array
+     */
+    public function getCurrentPostParameter();
+
+    /**
+     * Returns the get parameters
+     * @return array
+     */
+    public function getCurrentGetParameter();
 }

@@ -88,6 +88,18 @@ class RequestAnalyzer implements RequestAnalyzerInterface
      */
     private $resourceLocatorPrefix;
 
+    /**
+     * Get parameter of request
+     * @var array
+     */
+    private $getParameter;
+
+    /**
+     * Post parameter of request
+     * @var array
+     */
+    private $postParameter;
+
     public function __construct(WebspaceManagerInterface $webspaceManager, $environment)
     {
         $this->webspaceManager = $webspaceManager;
@@ -106,6 +118,9 @@ class RequestAnalyzer implements RequestAnalyzerInterface
             $url,
             $this->environment
         );
+
+        $this->getParameter = $request->query->all();
+        $this->postParameter = $request->request->all();
 
         if ($portalInformation != null) {
             $this->setCurrentMatchType($portalInformation->getType());
@@ -225,6 +240,24 @@ class RequestAnalyzer implements RequestAnalyzerInterface
     }
 
     /**
+     * Returns the post parameters
+     * @return array
+     */
+    public function getCurrentPostParameter()
+    {
+        return $this->postParameter;
+    }
+
+    /**
+     * Returns the get parameters
+     * @return array
+     */
+    public function getCurrentGetParameter()
+    {
+        return $this->getParameter;
+    }
+
+    /**
      * Sets the current match type
      * @param int $matchType
      */
@@ -311,8 +344,7 @@ class RequestAnalyzer implements RequestAnalyzerInterface
     private function getResourceLocatorFromRequest(
         PortalInformation $portalInformation,
         Request $request
-    )
-    {
+    ) {
         $path = $request->getPathInfo();
 
         // extract file and extension info
