@@ -13,7 +13,7 @@
     ],
     "require": {
         "php": ">=5.4",
-        "sulu/sulu": "dev-develop"
+        "sulu/sulu": "0.7.*"
     },
     "require-dev": {
         "symfony/symfony": "2.5.*",
