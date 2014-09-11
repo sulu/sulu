@@ -188,12 +188,11 @@ define([], function() {
          */
         changeWidth: function(width) {
             if (width === 'fixed') {
-                this.showColumn();
                 this.changeToFixedWidth();
             } else if (width === 'max') {
-                this.showColumn();
                 this.changeToMaxWidth();
             }
+            this.sandbox.dom.trigger(this.sandbox.dom.window, 'resize');
         },
 
         /**
@@ -246,6 +245,7 @@ define([], function() {
             this.sandbox.dom.removeClass($parent, constants.visibleSidebarClass);
             this.sandbox.dom.addClass($parent, constants.noVisibleSidebarClass);
             this.sandbox.dom.addClass($column, constants.hiddenClass);
+            this.sandbox.dom.trigger(this.sandbox.dom.window, 'resize');
         },
 
         /**
@@ -257,6 +257,7 @@ define([], function() {
             this.sandbox.dom.removeClass($parent, constants.noVisibleSidebarClass);
             this.sandbox.dom.addClass($parent, constants.visibleSidebarClass);
             this.sandbox.dom.removeClass($column, constants.hiddenClass);
+            this.sandbox.dom.trigger(this.sandbox.dom.window, 'resize');
         },
 
         /**
@@ -280,6 +281,7 @@ define([], function() {
                     this.sandbox.start($widget);
                 }.bind(this));
             } else {
+                this.showColumn();
                 this.widgets.push({
                     url: null,
                     $el: $element
@@ -309,6 +311,7 @@ define([], function() {
                     this.sandbox.start($widget);
                 }.bind(this));
             } else {
+                this.showColumn();
                 this.widgets.push({
                     url: null,
                     $el: $element
@@ -327,7 +330,7 @@ define([], function() {
                 // only load widget if sidebar-content changes
                 if (this.widgets.length !== 1 || this.widgets[0].url !== url) {
                     var $widget;
-                    this.emptySidebar();
+                    this.emptySidebar(false);
                     this.loadWidget(url).then(function(widget) {
                         $widget = this.sandbox.dom.createElement(
                             this.sandbox.util.template(
@@ -342,7 +345,8 @@ define([], function() {
                     }.bind(this));
                 }
             } else {
-                this.emptySidebar();
+                this.emptySidebar(true);
+                this.showColumn();
                 this.widgets.push({
                     url: null,
                     $el: $element
@@ -357,6 +361,7 @@ define([], function() {
          */
         loadWidget: function(url) {
             var def = this.sandbox.data.deferred();
+            this.showColumn();
             this.startLoader();
             this.sandbox.util.load(url).then(function(widget) {
                 this.stopLoader();
@@ -368,11 +373,14 @@ define([], function() {
         /**
          * Empties the sidebar
          */
-        emptySidebar: function() {
+        emptySidebar: function(noHide) {
             while (this.widgets.length > 0) {
                 this.sandbox.stop(this.widgets[0].$el);
                 this.sandbox.dom.remove(this.widgets[0].$el);
                 this.widgets.splice(0, 1);
+            }
+            if (noHide !== true) {
+                this.hideColumn();
             }
         },
 

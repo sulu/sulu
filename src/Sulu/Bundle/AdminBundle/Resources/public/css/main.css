@@ -174,7 +174,7 @@ input, select {
   display: block;
 }
 
-@media only screen and (max-width: 1010px) {
+@media only screen and (max-width: 1110px) {
   /* line 130, ../scss/modules/layout.scss */
   .sidebar-column.fixed {
     width: 0;
@@ -283,9 +283,8 @@ input, select {
   top: 0;
   left: 0;
   z-index: 90;
-  width: 100%;
 }
-/* line 11, ../scss/modules/header.scss */
+/* line 10, ../scss/modules/header.scss */
 .sulu-header .inner {
   position: relative;
   top: 0px;
@@ -297,19 +296,19 @@ input, select {
   -o-transition: margin 700ms;
   transition: margin 700ms;
 }
-/* line 20, ../scss/modules/header.scss */
+/* line 19, ../scss/modules/header.scss */
 .sulu-header .headline {
   position: absolute;
   top: 45px;
   left: 0;
 }
-/* line 25, ../scss/modules/header.scss */
+/* line 24, ../scss/modules/header.scss */
 .sulu-header .headline::after {
   display: table;
   content: "";
   clear: both;
 }
-/* line 31, ../scss/modules/header.scss */
+/* line 30, ../scss/modules/header.scss */
 .sulu-header .headline .back {
   display: block;
   padding: 10px;
@@ -325,11 +324,11 @@ input, select {
   -o-transition: opacity 0.5s;
   transition: opacity 0.5s;
 }
-/* line 43, ../scss/modules/header.scss */
+/* line 42, ../scss/modules/header.scss */
 .sulu-header .headline .h1 {
   float: left;
 }
-/* line 46, ../scss/modules/header.scss */
+/* line 45, ../scss/modules/header.scss */
 .sulu-header .headline .title-color {
   display: none;
   width: 20px;
@@ -339,18 +338,18 @@ input, select {
   margin-top: 19px;
   margin-right: 10px;
 }
-/* line 54, ../scss/modules/header.scss */
+/* line 53, ../scss/modules/header.scss */
 .sulu-header .headline .title-color.color-set {
   display: block;
 }
-/* line 60, ../scss/modules/header.scss */
+/* line 59, ../scss/modules/header.scss */
 .sulu-header .bottom-row {
   position: absolute;
   bottom: 10px;
   left: 0;
   width: 100%;
 }
-/* line 66, ../scss/modules/header.scss */
+/* line 65, ../scss/modules/header.scss */
 .sulu-header .bottom-row::after {
   content: ".";
   display: block;
@@ -359,44 +358,44 @@ input, select {
   line-height: 0;
   height: 0;
 }
-/* line 75, ../scss/modules/header.scss */
+/* line 74, ../scss/modules/header.scss */
 .sulu-header .bottom-row .bottom-content {
   float: left;
   line-height: 29px;
 }
-/* line 78, ../scss/modules/header.scss */
+/* line 77, ../scss/modules/header.scss */
 .sulu-header .bottom-row .bottom-content * {
   color: white;
 }
-/* line 84, ../scss/modules/header.scss */
+/* line 83, ../scss/modules/header.scss */
 .sulu-header .tabs {
   height: 50px;
 }
-/* line 86, ../scss/modules/header.scss */
+/* line 85, ../scss/modules/header.scss */
 .sulu-header .tabs .tabs-container {
   -webkit-transition: padding 700ms;
   -moz-transition: padding 700ms;
   -o-transition: padding 700ms;
   transition: padding 700ms;
 }
-/* line 91, ../scss/modules/header.scss */
+/* line 90, ../scss/modules/header.scss */
 .sulu-header .info {
   position: absolute;
   top: 10px;
   left: 0px;
 }
-/* line 98, ../scss/modules/header.scss */
+/* line 97, ../scss/modules/header.scss */
 .sulu-header + .page {
   margin-top: 150px;
   padding-bottom: 150px;
 }
-/* line 102, ../scss/modules/header.scss */
+/* line 101, ../scss/modules/header.scss */
 .sulu-header.has-tabs + .page {
   margin-top: 200px;
   padding-bottom: 200px;
 }
 
-/* line 108, ../scss/modules/header.scss */
+/* line 107, ../scss/modules/header.scss */
 .sulu-header-background {
   position: absolute;
   top: 0px;
@@ -405,22 +404,22 @@ input, select {
   height: 150px;
   width: 100%;
 }
-/* line 115, ../scss/modules/header.scss */
+/* line 114, ../scss/modules/header.scss */
 .sulu-header-background.has-tabs {
   height: 200px;
   border-bottom: 50px solid white;
 }
 
-/* line 122, ../scss/modules/header.scss */
+/* line 121, ../scss/modules/header.scss */
 .small-fixed .sulu-header .inner {
   margin-left: 10px;
   margin-right: 10px;
 }
-/* line 126, ../scss/modules/header.scss */
+/* line 125, ../scss/modules/header.scss */
 .small-fixed .tabs-container {
   padding-left: 10px;
 }
-/* line 129, ../scss/modules/header.scss */
+/* line 128, ../scss/modules/header.scss */
 .small-fixed .sulu-header .back {
   opacity: 0;
 }

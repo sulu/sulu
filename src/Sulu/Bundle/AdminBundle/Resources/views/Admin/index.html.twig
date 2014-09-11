@@ -25,6 +25,7 @@
         <link rel="stylesheet" type="text/css" href="/bundles/sululocation/js/vendor/leaflet/leaflet.css"/>
     </head>
     <body>
+        <div class="sulu-header-background" id="sulu-header-background" style="display: none;"></div>
         <div id="main">
             <div data-aura-component="navigation@husky" data-aura-url="/admin/navigation" data-aura-collapse="true"
                 {% if user.username is not defined %}
@@ -36,12 +37,21 @@
                  data-aura-user-locales='["en", "de"]'
                  data-aura-user-locale="{{ user.locale }}"
                  data-aura-logout-route="{{ user.logout }}"
-                 class="navigation-column"
-            ></div>
+                 class="navigation-column">
+            </div>
 
             <div class="content-column fixed">
+                <div class="sulu-header"
+                     id="sulu-header-container"
+                     data-aura-component="header@suluadmin"
+                     style="display: none;"
+                ></div>
                 <div class="page">
-                    <main class="grid" id="content" data-aura-component="app@suluadmin" data-aura-user="{{ user| json_encode }}"></main>
+                    <main class="grid"
+                          id="content"
+                          data-aura-component="app@suluadmin"
+                          data-aura-user="{{ user| json_encode }}">
+                    </main>
                 </div>
                 <div id="labels-container" data-aura-component="labels@suluadmin"></div>
             </div>

@@ -111,12 +111,12 @@ define([], function() {
             App.stop('#' + constants.tabsComponentId);
             
             // start the new tab-component
-            if (!!item.contentComponent) {
+            if (!!item.component) {
                 this.sandbox.dom.append(this.$el, this.sandbox.dom.createElement('<div id="'+ constants.tabsComponentId +'"/>'));
-                options = this.sandbox.util.extend(true, {}, this.options.contentOptions, {el: '#' + constants.tabsComponentId}, item.contentComponentOptions);
+                options = this.sandbox.util.extend(true, {}, this.options.contentOptions, {el: '#' + constants.tabsComponentId}, item.componentOptions);
                 // start component defined by
                 this.sandbox.start([{
-                    name: item.contentComponent,
+                    name: item.component,
                     options: options
                 }]);
             }

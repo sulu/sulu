@@ -196,20 +196,24 @@ define(function() {
          * @param route {String} the route to navigate to
          * @param trigger {Boolean} if trigger is true it will be actually navigated to the route. Otherwise only the borswer-url will be updated
          * @param noLoader {Boolean} if false no loader will be instantiated
+         * @param forceReload {Boolean} force page to reload
          */
-        navigate: function(route, trigger, noLoader) {
+        navigate: function(route, trigger, noLoader, forceReload) {
             // if trigger is not define make it always true to actually route to
             trigger = (typeof trigger !== 'undefined') ? trigger : true;
 
-            // only route if route has changed
-            if (this.currentRoute !== route) {
-                if (noLoader !== true && this.currentRoute !== route && this.currentRoute !== null) {
-                    // todo: start loader
-                }
-                // navigate
-                router.navigate(route, {trigger: trigger});
-                this.sandbox.dom.scrollTop(this.sandbox.dom.$window, 0);
+            forceReload = forceReload === true ? true : false;
+
+            if (forceReload) {
+                this.sandbox.mvc.history.fragment = null;
             }
+            // only route if route has changed
+            if (noLoader !== true && this.currentRoute !== route && this.currentRoute !== null) {
+                // todo: start loader
+            }
+            // navigate
+            router.navigate(route, {trigger: trigger});
+            this.sandbox.dom.scrollTop(this.sandbox.dom.$window, 0);
         },
 
         /**
@@ -218,12 +222,13 @@ define(function() {
          */
         beforeNavigateCleanup: function(route) {
             this.currentRoute = route;
-            this.sandbox.dom.remove('.sulu-header-background');
+
+            // hide the header
+            App.emit('sulu.header.hide');
 
             // FIXME App.stop is used in global context; possibly there is a better solution
             // and the stop method will be called
             App.stop('#sulu-content-container');
-            App.stop('#sulu-header-container');
             App.stop('#content > *');
             App.stop('#preview > *');
         },
@@ -375,6 +380,7 @@ define(function() {
             } else if (width === 'fixed-small') {
                 this.changeToFixedWidth(true);
             }
+            this.sandbox.dom.trigger(this.sandbox.dom.window, 'resize');
         },
 
         /**
