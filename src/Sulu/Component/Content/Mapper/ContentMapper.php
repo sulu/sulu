@@ -286,13 +286,22 @@ class ContentMapper implements ContentMapperInterface
             // shadow base resource locator
             if ($structure->hasTag('sulu.rlp')) {
                 $property = $structure->getPropertyByTagName('sulu.rlp');
-                $baseLanguageRlpProperty = new TranslatedProperty($property, $shadowBaseLanguage, $this->languageNamespace);
+                $baseLanguageRlProperty = new TranslatedProperty($property, $shadowBaseLanguage, $this->languageNamespace);
                 if (!isset($data[$property->getName()])) {
-                    $rlpContentType = $this->getContentType($baseLanguageRlpProperty->getContentTypeName());
-                    $rlpContentType->read($node, $baseLanguageRlpProperty, $webspaceKey, $shadowBaseLanguage);
-                    $rl = $baseLanguageRlpProperty->getValue();
+                    $rlpContentType = $this->getContentType($baseLanguageRlProperty->getContentTypeName());
+                    $rlpContentType->read($node, $baseLanguageRlProperty, $webspaceKey, $shadowBaseLanguage);
+                    $rl = $baseLanguageRlProperty->getValue();
                     $data[$property->getName()] = $rl;
                 }
+            }
+        }
+
+        $shadowChanged = false;
+
+        if ($node->hasProperty($this->properties->getName('shadow-on'))) {
+            $oldShadowStatus = $node->getPropertyValue($this->properties->getName('shadow-on'));
+            if ($isShadow !== $oldShadowStatus) {
+                $shadowChanged = true;
             }
         }
 
@@ -322,6 +331,12 @@ class ContentMapper implements ContentMapperInterface
             && $this->validateNavContexts($data['navContexts'], $this->webspaceManager->findWebspaceByKey($webspaceKey))
         ) {
             $node->setProperty($this->properties->getName('navContexts'), $data['navContexts']);
+        }
+
+        // if the shadow status has changed, do not process the rest of the form.
+        if ($shadowChanged) {
+            $session->save();
+            return $structure;
         }
 
         $postSave = array();
@@ -990,7 +1005,6 @@ class ContentMapper implements ContentMapperInterface
 
     /**
      * returns a sql2 query
-     * @param string $sql2 The query, which returns the content
      * @param int $limit Limits the number of returned rows
      * @return QueryInterface
      */
