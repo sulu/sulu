@@ -281,6 +281,19 @@ class ContentMapper implements ContentMapperInterface
 
         if ($isShadow) {
             $this->validateShadow($node, $languageCode, $shadowBaseLanguage);
+
+            // If the URL for the shadow resource locator is not set, fallback to the shadow page for the
+            // shadow base resource locator
+            if ($structure->hasTag('sulu.rlp')) {
+                $property = $structure->getPropertyByTagName('sulu.rlp');
+                $baseLanguageRlpProperty = new TranslatedProperty($property, $shadowBaseLanguage, $this->languageNamespace);
+                if (!isset($data[$property->getName()])) {
+                    $rlpContentType = $this->getContentType($baseLanguageRlpProperty->getContentTypeName());
+                    $rlpContentType->read($node, $baseLanguageRlpProperty, $webspaceKey, $shadowBaseLanguage);
+                    $rl = $baseLanguageRlpProperty->getValue();
+                    $data[$property->getName()] = $rl;
+                }
+            }
         }
 
         $node->setProperty($this->properties->getName('changer'), $userId);
