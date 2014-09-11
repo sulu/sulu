@@ -2,6 +2,7 @@
     "name": "sulu/search-bundle",
     "description": "Sulu Search Bundle",
     "license": "MIT",
+    "version": "0.1.0",
     "authors": [
         {
             "name": "Daniel Leech",
