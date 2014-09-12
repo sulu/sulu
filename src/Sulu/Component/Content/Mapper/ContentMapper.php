@@ -884,7 +884,10 @@ class ContentMapper implements ContentMapperInterface
 
         foreach ($result->getNodes() as $node) {
             try {
-                $structures[] = $this->loadByNode($node, $languageCode, $webspaceKey);
+                $structure = $this->loadByNode($node, $languageCode, $webspaceKey);
+                if (null !== $structure) {
+                    $structures[] = $structure;
+                }
             } catch (TemplateNotFoundException $ex) {
                 // ignore pages without valid template
             }
