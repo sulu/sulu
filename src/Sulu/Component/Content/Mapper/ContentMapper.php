@@ -211,76 +211,57 @@ class ContentMapper implements ContentMapperInterface
         $isShadow = null,
         $shadowBaseLanguage = null
     ) {
-        // create translated properties
-        $this->properties->setLanguage($languageCode);
-
-        // set default node-type
-        if (!isset($data['nodeType'])) {
-            $data['nodeType'] = Structure::NODE_TYPE_CONTENT;
-        }
-
-        $resolvedTemplateKey = $this->templateResolver->resolve($data['nodeType'], $templateKey);
-        $structure = $this->getStructure($resolvedTemplateKey);
-
         $session = $this->getSession();
 
-        if ($parentUuid !== null) {
-            $root = $session->getNodeByIdentifier($parentUuid);
-        } else {
-            $root = $this->getContentNode($webspaceKey);
-        }
-
-        $nodeNameProperty = $structure->getPropertyByTagName('sulu.node.name');
-        $translatedNodeNameProperty = new TranslatedProperty(
-            $nodeNameProperty,
-            $languageCode,
-            $this->languageNamespace
+        $data = array_merge(
+            array(
+                'nodeType' => Structure::NODE_TYPE_CONTENT
+            ),
+            $data
         );
 
-        $dateTime = new \DateTime();
+        $resolvedTemplateKey = $this->structureResolver->resolve($data['nodeType'], $structureKey);
+        $structure = $this->getStructure($resolvedStructureKey);
+        $nodeNameProperty = $structure->getPropertyByTagName('sulu.node.name');
 
-        $newTranslatedNode = function (NodeInterface $node) use ($userId, $dateTime, &$state) {
-            $node->setProperty($this->properties->getName('creator'), $userId);
-            $node->setProperty($this->properties->getName('created'), $dateTime);
-
-            if (!isset($state)) {
-                $state = StructureInterface::STATE_TEST;
-            }
-        };
-
-        /** @var NodeInterface $node */
         if ($uuid === null) {
+            if ($parentUuid !== null) {
+                $root = $session->getNodeByIdentifier($parentUuid);
+            } else {
+                $root = $this->getContentNode($webspaceKey);
+            }
+
             // create a new node
             $path = $this->cleaner->cleanUp($data[$nodeNameProperty->getName()], $languageCode);
             $path = $this->getUniquePath($path, $root);
             $node = $root->addNode($path);
-            $newTranslatedNode($node);
 
             $node->addMixin('sulu:content');
+            $structureNode = $session->getNode($node->getPath()); // refresh the node (and return an instance of StructureNode)
         } else {
-            $node = $session->getNodeByIdentifier($uuid);
+            $structureNode = $session->getNodeByIdentifier($uuid);
+        }
 
-            if (!$node->hasProperty($this->properties->getName('template'))) {
-                $newTranslatedNode($node);
-            } else {
-                $hasSameLanguage = ($languageCode == $this->defaultLanguage);
-                $hasSamePath = ($node->getPath() !== $this->getContentNode($webspaceKey)->getPath());
-                $hasDifferentTitle = !$node->hasProperty($translatedNodeNameProperty->getName()) ||
-                    $node->getPropertyValue(
-                        $translatedNodeNameProperty->getName()
-                    ) !== $data[$nodeNameProperty->getName()];
+        $structureNode->setLocale($languageCode);
+        $nodeTitle = $node->getTitle();
 
-                if (!$this->noRenamingFlag && $hasSameLanguage && $hasSamePath && $hasDifferentTitle) {
-                    $path = $this->cleaner->cleanUp($data[$nodeNameProperty->getName()], $languageCode);
-                    $path = $this->getUniquePath($path, $node->getParent());
-                    $node->rename($path);
-                    // FIXME refresh session here
-                }
+
+        // if the node is NOT new, see if we need to rename it
+        if ($node->getTemplate()) {
+            $hasSameLanguage = ($languageCode == $this->defaultLanguage);
+            $hasSamePath = $node->getPath() !== $this->getContentNode($webspaceKey)->getPath();
+            $hasDifferentTitle = null === $nodeTitle  || $nodeTitle !== $data[$nodeNameProperty->getName()];
+
+            if (!$this->noRenamingFlag && $hasSameLanguage && $hasSamePath && $hasDifferentTitle) {
+                $path = $this->cleaner->cleanUp($data[$nodeNameProperty->getName()], $languageCode);
+                $path = $this->getUniquePath($path, $node->getParent());
+                $node->rename($path);
+                // FIXME refresh session here
             }
         }
 
         if ($isShadow) {
-            $this->validateShadow($node, $languageCode, $shadowBaseLanguage);
+            $node->setShadow($isShadow ? $shadowBaseLanguage : null);
 
             // If the URL for the shadow resource locator is not set, fallback to the shadow page for the
             // shadow base resource locator
@@ -296,23 +277,12 @@ class ContentMapper implements ContentMapperInterface
             }
         }
 
-        $shadowChanged = false;
-
-        if ($node->hasProperty($this->properties->getName('shadow-on'))) {
-            $oldShadowStatus = $node->getPropertyValue($this->properties->getName('shadow-on'));
-            if ($isShadow !== $oldShadowStatus) {
-                $shadowChanged = true;
-            }
-        }
-
-        $node->setProperty($this->properties->getName('changer'), $userId);
-        $node->setProperty($this->properties->getName('changed'), $dateTime);
-        $node->setProperty($this->properties->getName('template'), $templateKey);
-        $node->setProperty($this->properties->getName('shadow-on'), $isShadow);
-        $node->setProperty($this->properties->getName('shadow-base'), $shadowBaseLanguage);
+        $node->setChanger($userId);
+        $node->setChanged($dateTime);
+        $node->setTemplate($templateKey);
 
         if (isset($data['nodeType'])) {
-            $node->setProperty($this->properties->getName('nodeType'), $data['nodeType']);
+            $node->setNodeType($data['nodeType']);
         }
 
         // do not state transition for root (contents) node
@@ -333,57 +303,55 @@ class ContentMapper implements ContentMapperInterface
             $node->setProperty($this->properties->getName('navContexts'), $data['navContexts']);
         }
 
-        // if the shadow status has changed, do not process the rest of the form.
-        $postSave = array();
-        if (false === $shadowChanged) {
+        // go through every property in the template
+        /** @var PropertyInterface $property */
+        foreach ($structure->getProperties(true) as $property) {
+            // allow null values in data
+            //
+            // I AM HERE
+            // =========
+            if (isset($data[$property->getName()])) {
+                $type = $this->getContentType($property->getContentTypeName());
+                $value = $data[$property->getName()];
+                $property->setValue($value);
 
-            // go through every property in the template
-            /** @var PropertyInterface $property */
-            foreach ($structure->getProperties(true) as $property) {
-                // allow null values in data
-                if (isset($data[$property->getName()])) {
-                    $type = $this->getContentType($property->getContentTypeName());
-                    $value = $data[$property->getName()];
-                    $property->setValue($value);
-
-                    // add property to post save action
-                    if ($type->getType() == ContentTypeInterface::POST_SAVE) {
-                        $postSave[] = array(
-                            'type' => $type,
-                            'property' => $property
-                        );
-                    } else {
-                        $type->write(
-                            $node,
-                            new TranslatedProperty($property, $languageCode, $this->languageNamespace),
-                            $userId,
-                            $webspaceKey,
-                            $languageCode,
-                            null
-                        );
-                    }
-                } elseif ($isShadow) {
-                    // nothing
-                } elseif (!$this->ignoreMandatoryFlag && $property->getMandatory()) {
-                    $type = $this->getContentType($property->getContentTypeName());
-                    $translatedProperty = new TranslatedProperty($property, $languageCode, $this->languageNamespace);
-
-                    if (false === $type->hasValue($node, $translatedProperty, $webspaceKey, $languageCode, null)) {
-                        throw new MandatoryPropertyException($templateKey, $property);
-                    }
-                } elseif (!$partialUpdate) {
-                    $type = $this->getContentType($property->getContentTypeName());
-                    // if it is not a partial update remove property
-                    $type->remove(
+                // add property to post save action
+                if ($type->getType() == ContentTypeInterface::POST_SAVE) {
+                    $postSave[] = array(
+                        'type' => $type,
+                        'property' => $property
+                    );
+                } else {
+                    $type->write(
                         $node,
                         new TranslatedProperty($property, $languageCode, $this->languageNamespace),
+                        $userId,
                         $webspaceKey,
                         $languageCode,
                         null
                     );
                 }
-                // if it is a partial update ignore property
+            } elseif ($isShadow) {
+                // nothing
+            } elseif (!$this->ignoreMandatoryFlag && $property->getMandatory()) {
+                $type = $this->getContentType($property->getContentTypeName());
+                $translatedProperty = new TranslatedProperty($property, $languageCode, $this->languageNamespace);
+
+                if (false === $type->hasValue($node, $translatedProperty, $webspaceKey, $languageCode, null)) {
+                    throw new MandatoryPropertyException($templateKey, $property);
+                }
+            } elseif (!$partialUpdate) {
+                $type = $this->getContentType($property->getContentTypeName());
+                // if it is not a partial update remove property
+                $type->remove(
+                    $node,
+                    new TranslatedProperty($property, $languageCode, $this->languageNamespace),
+                    $webspaceKey,
+                    $languageCode,
+                    null
+                );
             }
+            // if it is a partial update ignore property
         }
 
         // save node now
@@ -434,7 +402,6 @@ class ContentMapper implements ContentMapperInterface
 
         $session->save();
 
-        $structure->setUuid($node->getPropertyValue('jcr:uuid'));
         $structure->setPath(str_replace($this->getContentNode($webspaceKey)->getPath(), '', $node->getPath()));
         $structure->setNodeType(
             $node->getPropertyValueWithDefault($this->properties->getName('nodeType'), Structure::NODE_TYPE_CONTENT)
@@ -476,94 +443,6 @@ class ContentMapper implements ContentMapperInterface
         $this->eventDispatcher->dispatch(ContentEvents::NODE_SAVE, $event);
 
         return $structure;
-    }
-
-    /**
-     * Validate a shadow language mapping.
-     *
-     * If a node of $language is set to shadow language $shadowBaseLanguage then
-     * it must not shadow either itself or a language which is not concrete.
-     *
-     * @param NodeInterface $node
-     * @param string $language
-     * @param string $shadowBaseLanguage
-     * @throws \RuntimeException
-     */
-    protected function validateShadow(NodeInterface $node, $language, $shadowBaseLanguage)
-    {
-        if ($language == $shadowBaseLanguage) {
-            throw new \RuntimeException(
-                sprintf(
-                    'Attempting to make language "%s" a shadow of itself! ("%s")',
-                    $language,
-                    $shadowBaseLanguage
-                )
-            );
-        }
-
-        $concreteLanguages = $this->getConcreteLanguages($node);
-
-        if (!in_array($shadowBaseLanguage, $concreteLanguages)) {
-            throw new \RuntimeException(
-                sprintf(
-                    'Attempting to make language "%s" a shadow of a non-concrete language "%s". Concrete languages are "%s"',
-                    $language,
-                    $shadowBaseLanguage,
-                    implode(', ', $concreteLanguages)
-                )
-            );
-        }
-
-    }
-
-    /**
-     * Return the enabled shadow languages on the given node
-     *
-     * @param NodeInterface $node
-     *
-     * @return array
-     */
-    protected function getEnabledShadowLanguages(NodeInterface $node)
-    {
-        $nodeLanguages = $this->properties->getLanguagesForNode($node);
-        $shadowBaseLanguages = array();
-
-        foreach ($nodeLanguages as $nodeLanguage) {
-            $propertyMap = clone $this->properties;
-            $propertyMap->setLanguage($nodeLanguage);
-
-            $shadowOn = $node->getPropertyValueWithDefault($propertyMap->getName('shadow-on'), null);
-
-            if ($shadowOn) {
-                $nodeShadowBaseLanguage = $node->getPropertyValueWithDefault(
-                    $propertyMap->getName('shadow-base'),
-                    null
-                );
-
-                if (null !== $nodeShadowBaseLanguage) {
-                    $shadowBaseLanguages[$nodeShadowBaseLanguage] = $nodeLanguage;
-                }
-            }
-        }
-
-        return $shadowBaseLanguages;
-    }
-
-    /**
-     * Return the "concrete" languages in a node - i.e. all languages
-     * excluding shadow languages.
-     *
-     * @param NodeInterface $node
-     *
-     * @return array
-     */
-    protected function getConcreteLanguages(NodeInterface $node)
-    {
-        $enabledLanguages = $this->properties->getLanguagesForNode($node);
-        $enabledShadowLanguages = $this->getEnabledShadowLanguages($node);
-        $concreteTranslations = array_diff($enabledLanguages, array_values($enabledShadowLanguages));
-
-        return $concreteTranslations;
     }
 
     /**
@@ -884,7 +763,10 @@ class ContentMapper implements ContentMapperInterface
 
         foreach ($result->getNodes() as $node) {
             try {
-                $structures[] = $this->loadByNode($node, $languageCode, $webspaceKey);
+                $structure = $this->loadByNode($node, $languageCode, $webspaceKey);
+                if (null !== $structure) {
+                    $structures[] = $structure;
+                }
             } catch (TemplateNotFoundException $ex) {
                 // ignore pages without valid template
             }

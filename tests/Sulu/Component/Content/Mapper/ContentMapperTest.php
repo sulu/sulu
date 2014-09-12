@@ -427,20 +427,6 @@ class ContentMapperTest extends PhpcrTestCase
                 ),
                 array()
             ),
-            array(
-                array(
-                    'is_shadow' => false,
-                    'language' => 'de_at',
-                    'shadow_base_language' => 'en_us'
-                ),
-                array(
-                    'is_shadow' => true,
-                    'language' => 'en_us',
-                    'shadow_base_language' => 'de_at',
-                    'url' => null,
-                ),
-                array()
-            ),
         );
     }
 
@@ -474,10 +460,6 @@ class ContentMapperTest extends PhpcrTestCase
 
         $structures = array();
         foreach ($nodes as $i => $node) {
-            if (array_key_exists('url', $node)) {
-                $data['url'] = $node['url'];
-            }
-
             $structures[$i] = $this->mapper->save(
                 $data, 
                 'overview',
@@ -493,12 +475,12 @@ class ContentMapperTest extends PhpcrTestCase
             );
         }
 
-        $this->assertFalse($structures[0]->getIsShadow());
-
-        if (isset($structures[1]) && $nodes[1]['is_shadow']) {
-            $this->assertTrue($structures[1]->getIsShadow());
-
-            $node = $this->session->getNode('/cmf/default/routes/' . $node['language'] . '/news/test');
+        if (isset($nodes[0]['is_shadow']) && $nodes[0]['is_shadow'] === true) {
+            $this->assertTrue($structures[0]->getIsShadow());
+            $this->assertEquals($nodes[0]['shadow_base_language'], $structures[0]->getShadowBaseLanguage());
+            die();
+        } else {
+            $this->assertFalse($structures[0]->getIsShadow());
         }
     }
 
