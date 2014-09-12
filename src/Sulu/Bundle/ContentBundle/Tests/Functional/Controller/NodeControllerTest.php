@@ -886,6 +886,12 @@ class NodeControllerTest extends DatabaseTestCase
 
         $this->assertEquals('', $response->title);
         $this->assertEquals(2, sizeof($items));
+
+        $client->request(
+            'GET',
+            '/api/nodes/filter?webspace=sulu_io&language=en&dataSource=' . $data[1]['id'] . '&includeSubFolders=true&limitResult=2&sortBy=title'
+        );
+        $response = json_decode($client->getResponse()->getContent());
     }
 
     public function testBreadcrumb()
