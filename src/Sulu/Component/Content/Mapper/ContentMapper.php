@@ -882,9 +882,12 @@ class ContentMapper implements ContentMapperInterface
         $query = $this->createSql2Query($sql2, $limit);
         $result = $query->execute();
 
-        foreach ($result->getNodes() as $node) {
+        foreach ($result as $row) {
             try {
-                $structures[] = $this->loadByNode($node, $languageCode, $webspaceKey);
+                $structure = $this->loadByNode($row->getNode(), $languageCode, $webspaceKey);
+                if (null !== $structure) {
+                    $structures[] = $structure;
+                }
             } catch (TemplateNotFoundException $ex) {
                 // ignore pages without valid template
             }
