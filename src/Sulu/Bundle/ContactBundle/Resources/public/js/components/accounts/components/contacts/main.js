@@ -48,6 +48,11 @@ define([
                 this.sandbox.emit('husky.datagrid.record.add', model);
             }, this);
 
+            // add new record to datagrid
+            this.sandbox.on('sulu.contacts.accounts.contact.created', function(model) {
+                this.sandbox.emit('husky.datagrid.record.add', model);
+            }, this);
+
             // remove record from datagrid
             this.sandbox.on('sulu.contacts.accounts.contacts.removed', function(id) {
                 this.sandbox.emit('husky.datagrid.record.remove', id);

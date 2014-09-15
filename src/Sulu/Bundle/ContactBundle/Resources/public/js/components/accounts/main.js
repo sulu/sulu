@@ -208,13 +208,13 @@ define([
             }.bind(this));
 
             // add a new contact
-            this.sandbox.on('sulu.contacts.accounts.new.contact', this.addNewContact.bind(this));
+            this.sandbox.on('sulu.contacts.accounts.new.contact', this.createNewContact.bind(this));
         },
 
         /**
          * adds a new contact and assigns the current account to it
          */
-        addNewContact: function(data) {
+        createNewContact: function(data) {
             var contact = new Contact(data);
             contact.set('emails', [ new Email({
                     email: data.email,
@@ -222,6 +222,10 @@ define([
                 })
             ]);
             contact.save(null, {
+                success: function(response){
+                  var model = response.toJSON();
+                  this.sandbox.emit('sulu.contacts.accounts.contact.created', model);
+                }.bind(this),
                 error: function() {
                     this.sandbox.logger.log("error while saving a new contact");
                 }.bind(this)
