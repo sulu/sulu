@@ -219,6 +219,7 @@ class ContentNavigationItem
             'display' => $this->getDisplay(),
             'component' => $this->getComponent(),
             'componentOptions' => $this->getComponentOptions(),
+            'disabled' => $this->getDisabled()
         );
 
         return $array;
