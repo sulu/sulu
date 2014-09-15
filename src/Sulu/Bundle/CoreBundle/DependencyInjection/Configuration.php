@@ -36,9 +36,18 @@ class Configuration implements ConfigurationInterface
         $this->getWebspaceConfiguration($children);
         $this->getHttpCacheConfiguration($children);
         $this->getFieldsConfiguration($children);
+        $this->getCoreConfiguration($children);
         $children->end();
 
         return $treeBuilder;
+    }
+
+    /**
+     * @param NodeBuilder $rootNode
+     */
+    private function getCoreConfiguration(NodeBuilder $rootNode)
+    {
+        $rootNode->scalarNode('cache_dir')->defaultValue('%kernel.cache_dir%/sulu')->end();
     }
 
     /**
