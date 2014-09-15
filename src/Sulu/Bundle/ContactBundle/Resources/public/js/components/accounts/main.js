@@ -216,15 +216,16 @@ define([
          */
         createNewContact: function(data) {
             var contact = new Contact(data);
-            contact.set('emails', [ new Email({
+            contact.set('emails', [
+                new Email({
                     email: data.email,
                     emailType: EmailType.findOrCreate({id: this.emailTypes[0].id})
                 })
             ]);
             contact.save(null, {
-                success: function(response){
-                  var model = response.toJSON();
-                  this.sandbox.emit('sulu.contacts.accounts.contact.created', model);
+                success: function(response) {
+                    var model = response.toJSON();
+                    this.sandbox.emit('sulu.contacts.accounts.contact.created', model);
                 }.bind(this),
                 error: function() {
                     this.sandbox.logger.log("error while saving a new contact");

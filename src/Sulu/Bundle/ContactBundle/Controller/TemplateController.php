@@ -11,6 +11,7 @@ class TemplateController extends RestController
 
     /**
      * Returns Template for contact list
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function contactListAction()
@@ -25,7 +26,7 @@ class TemplateController extends RestController
             ->getRepository($emailTypeEntity)
             ->findAll();
 
-        return $this->render('SuluContactBundle:Template:contact.list.html.twig',$data);
+        return $this->render('SuluContactBundle:Template:contact.list.html.twig', $data);
     }
 
     /**
