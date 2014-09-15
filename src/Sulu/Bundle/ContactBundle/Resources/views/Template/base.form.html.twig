@@ -33,7 +33,7 @@
                     <script type="text/template" id="address-tpl">
                         <div class="grid-col-12 floating m-top-0 address-component">
                             <~ var uid = _.uniqueId('address_'), first = true; ~>
-                            <~ var checkIfFirstField = function(field) { if (typeof field !== 'undefined' && !!field) { if(first) {first = false; return false;} else {return true;} } }~>
+                            <~ var getAddressString=function(street,number,zip,city,country){var str=!!street?street:"",part=(zip+" "+city).trim();str+=!!str.length&&!!number?" "+number:number;str+=!!str.length&&!!part?", "+part:part;str+=!!str.length&&!!country?", "+country:country;return str}; ~>
                             <div class="form-group">
 
                                 <label class="visible"></label>
@@ -51,36 +51,22 @@
                                 </label>
 
                                 <div class="address-row clickable pointer">
-                                    <input type="hidden" data-mapper-property="id" class="id-value"/>
 
-                                    <~ if(city || street || state || zip) { ~>
-                                        <span data-mapper-property="street" data-form="true"></span><~ checkIfFirstField(street); ~>
-                                        <span data-mapper-property="number" data-form="true"></span><~ checkIfFirstField(number); ~>
-                                        <span data-mapper-property="addition" data-form="true" <~ if (checkIfFirstField(addition)) { print('class="comma-before"') } ~>></span>
-                                        <span data-mapper-property="zip" data-form="true" <~ if (checkIfFirstField(zip)) { print('class="comma-before"') } ~>></span>
-                                        <span data-mapper-property="city" data-form="true" <~ if (checkIfFirstField(city)) { print('class="comma-before"') } ~>></span>
-                                        <span data-mapper-property="state" data-form="true" <~ if (checkIfFirstField(state)) { print('class="comma-before"') } ~>></span>
-                                        <span data-mapper-property="country" data-form="true" data-type="readonly-select" data-type-id-property="id" data-type-output-property="name" data-type-data="{{ countries | json_encode() }}" <~ if (checkIfFirstField(addition)) { print('class="comma-before"') } ~>>></span>
+                                    <span><~ print(getAddressString(street, number, zip, city, country.name)) ~></span>
 
-                                        <div class="hidden">
-                                            <span data-mapper-property="postboxNumber" data-form="true"></span>
-                                            <span data-mapper-property="postboxPostcode" data-form="true"></span>
-                                            <span data-mapper-property="postboxCity" data-form="true"></span>
-                                        </div>
-                                        <~ } else { ~>
-                                        <div class="hidden">
-                                            <span data-mapper-property="street" data-form="true"></span><~ checkIfFirstField(street); ~>
-                                            <span data-mapper-property="number" data-form="true"></span><~ checkIfFirstField(number); ~>
-                                            <span data-mapper-property="addition" data-form="true" <~ if (checkIfFirstField(addition)) { print('class="comma-before"') } ~>></span>
-                                            <span data-mapper-property="zip" data-form="true" <~ if (checkIfFirstField(zip)) { print('class="comma-before"') } ~>></span>
-                                            <span data-mapper-property="city" data-form="true" <~ if (checkIfFirstField(city)) { print('class="comma-before"') } ~>></span>
-                                            <span data-mapper-property="state" data-form="true" <~ if (checkIfFirstField(state)) { print('class="comma-before"') } ~>></span>
-                                        </div>
-                                            <span data-mapper-property="postboxNumber" data-form="true"></span>
-                                            <span data-mapper-property="postboxPostcode" data-form="true" <~ if (checkIfFirstField(addition)) { print('class="comma-before"') } ~>></span>
-                                            <span data-mapper-property="postboxCity" data-form="true" <~ if (checkIfFirstField(addition)) { print('class="comma-before"') } ~>></span>
-                                            <span data-mapper-property="country" data-form="true" data-type="readonly-select" data-type-id-property="id" data-type-output-property="name" data-type-data="{{ countries | json_encode() }}" <~ if (checkIfFirstField(addition)) { print('class="comma-before"') } ~>>></span>
-                                    <~ } ~>
+                                    <div class="hidden">
+                                        <input type="hidden" data-mapper-property="id" class="id-value"/>
+                                        <span data-mapper-property="street" data-form="true"></span>
+                                        <span data-mapper-property="number" data-form="true"></span>
+                                        <span data-mapper-property="zip" data-form="true"></span>
+                                        <span data-mapper-property="city" data-form="true"></span>
+                                        <span data-mapper-property="country" data-form="true" data-type="readonly-select" data-type-id-property="id" data-type-output-property="name" data-type-data="{{ countries | json_encode() }}"></span>
+                                        <span data-mapper-property="state" data-form="true"></span>
+                                        <span data-mapper-property="addition" data-form="true"></span>
+                                        <span data-mapper-property="postboxNumber" data-form="true"></span>
+                                        <span data-mapper-property="postboxPostcode" data-form="true"></span>
+                                        <span data-mapper-property="postboxCity" data-form="true"></span>
+                                    </div>
 
                                     <~ if(billingAddress && deliveryAddress) { ~>
                                     <span>(<%=translate('contact.address.billingAddress')%>, <%=translate('contact.address.deliveryAddress')%>)</span>

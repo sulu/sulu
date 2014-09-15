@@ -130,8 +130,6 @@ class TermsOfDeliveryControllerTest extends DatabaseTestCase
 
     public function testPostNonUniqueName()
     {
-        $this->setExpectedException('Doctrine\DBAL\DBALException');
-
         $client = $this->createTestClient();
         $client->request(
             'POST',
@@ -199,22 +197,13 @@ class TermsOfDeliveryControllerTest extends DatabaseTestCase
             '/api/termsofdeliveries'
         );
 
-        $response2 = json_decode($client2->getResponse()->getContent());
+        $response2 = json_decode($client2->getResponse()->getContent(), true);
         $this->assertEquals(200, $client2->getResponse()->getStatusCode());
 
-        if ($response2->_embedded->termsOfDeliveries[1]->terms === 'Term 2') {
-            $this->assertEquals('Term 2', $response2->_embedded->termsOfDeliveries[1]->terms);
-            $this->assertEquals(2, $response2->_embedded->termsOfDeliveries[1]->id);
+        $this->assertContains(array('terms' => 'Term 1.1', 'id' => 1), $response2['_embedded']['termsOfDeliveries']);
+        $this->assertContains(array('terms' => 'Term 2', 'id' => 2), $response2['_embedded']['termsOfDeliveries']);
 
-            $this->assertEquals('Term 1.1', $response2->_embedded->termsOfDeliveries[0]->terms);
-            $this->assertEquals(1, $response2->_embedded->termsOfDeliveries[0]->id);
-        } else {
-            $this->assertEquals('Term 1.1', $response2->_embedded->termsOfDeliveries[1]->terms);
-            $this->assertEquals(1, $response2->_embedded->termsOfDeliveries[1]->id);
-
-            $this->assertEquals('Term 2', $response2->_embedded->termsOfDeliveries[0]->terms);
-            $this->assertEquals(2, $response2->_embedded->termsOfDeliveries[0]->id);
-        }
+        $this->assertEquals(2, sizeof($response2['_embedded']['termsOfDeliveries']));
     }
 
     public function testPutInvalidId()

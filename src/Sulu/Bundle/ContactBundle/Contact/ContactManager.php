@@ -123,7 +123,7 @@ class ContactManager extends AbstractContactManager
     {
         $contact = $this->em->getRepository($this->contactEntity)->find($id);
         if(!$contact){
-            throw new EntityNotFoundException($this->contactEntity, $id);
+            return null;
         }
         return new Contact($contact, $locale, $this->tagManager);
     }
