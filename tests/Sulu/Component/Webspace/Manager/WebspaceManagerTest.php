@@ -344,6 +344,30 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('sulu.lo', $environmentDev->getUrls()[0]->getUrl());
     }
 
+    public function provideFindPortalInformationByUrl()
+    {
+        return array(
+            array('dan.lo/de-asd/test/test', false),
+            array('dan.lo/de/test/test', true),
+            array('dan.lo/de-asd', false),
+            array('dan.lo/de/s', true),
+        );
+    }
+
+    /**
+     * @dataProvider provideFindPortalInformationByUrl
+     */
+    public function testFindPortalInformationByUrlWithInvalidSuffix($url, $shouldFind)
+    {
+        $portalInformation = $this->webspaceManager->findPortalInformationByUrl($url, 'dev');
+
+        if ($shouldFind) {
+            $this->assertNotNull($portalInformation);
+        } else {
+            $this->assertNull($portalInformation);
+        }
+    }
+
     public function testFindPortalInformationByUrlWithSegment()
     {
         $portalInformation = $this->webspaceManager->findPortalInformationByUrl('en.massiveart.us/w/about-us', 'prod');
@@ -493,7 +517,7 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
     {
         $portals = $this->webspaceManager->getPortals();
 
-        $this->assertCount(5, $portals);
+        $this->assertCount(6, $portals);
         $this->assertEquals('massiveart_us', $portals['massiveart_us']->getKey());
         $this->assertEquals('massiveart_ca', $portals['massiveart_ca']->getKey());
         $this->assertEquals('sulucmf_at', $portals['sulucmf_at']->getKey());
@@ -505,7 +529,7 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
     {
         $urls = $this->webspaceManager->getUrls('dev');
 
-        $this->assertCount(12, $urls);
+        $this->assertCount(13, $urls);
         $this->assertContains('sulu.lo', $urls);
         $this->assertContains('sulu-single-language.lo', $urls);
         $this->assertContains('sulu-without.lo', $urls);
@@ -524,7 +548,7 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
     {
         $portalInformations = $this->webspaceManager->getPortalInformations('dev');
 
-        $this->assertCount(12, $portalInformations);
+        $this->assertCount(13, $portalInformations);
         $this->assertArrayHasKey('sulu.lo', $portalInformations);
         $this->assertArrayHasKey('sulu-single-language.lo', $portalInformations);
         $this->assertArrayHasKey('sulu-without.lo', $portalInformations);
