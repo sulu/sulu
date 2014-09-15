@@ -100,6 +100,8 @@ class PreviewController extends Controller
      */
     public function renderAction(Request $request, $contentUuid)
     {
+        $request->request->set('preview', true);
+
         $uid = $this->getUserId();
         $preview = $this->getPreview();
 
