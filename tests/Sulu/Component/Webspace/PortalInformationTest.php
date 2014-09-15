@@ -10,7 +10,9 @@
 
 namespace Sulu\Component\Webspace;
 
-class PortalInformationTest extends \PHPUnit_Framework_TestCase
+use Prophecy\PhpUnit\ProphecyTestCase;
+
+class PortalInformationTest extends ProphecyTestCase
 {
     /**
      * @var PortalInformation
@@ -19,7 +21,11 @@ class PortalInformationTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        parent::setUp();
         $this->portalInformation = new PortalInformation(null, null, null, null, null);
+        $this->webspace = $this->prophesize('Sulu\Component\Webspace\Webspace');
+        $this->portal = $this->prophesize('Sulu\Component\Webspace\Portal');
+        $this->localization = $this->prophesize('Sulu\Component\Webspace\Localization');
     }
 
     public function provideUrl()
@@ -40,5 +46,32 @@ class PortalInformationTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($host, $this->portalInformation->getHost());
         $this->assertEquals($prefix, $this->portalInformation->getPrefix());
+    }
+
+    public function testToArray()
+    {
+        $expected = array(
+            'type' => 'foo',
+            'portal' => 'portal_key',
+            'webspace' => 'my_webspace',
+            'url' => 'http://example.emp',
+            'portal' => 'portal',
+            'localization' => array('foo'),
+            'redirect' => true,
+        );
+
+        $this->portal->getKey()->willReturn($expected['portal']);
+        $this->webspace->getKey()->willReturn($expected['webspace']);
+        $this->localization->toArray()->willReturn($expected['localization']);
+
+        $this->portalInformation->setType($expected['type']);
+        $this->portalInformation->setUrl($expected['url']);
+        $this->portalInformation->setWebspace($this->webspace->reveal());
+        $this->portalInformation->setPortal($this->portal->reveal());
+        $this->portalInformation->setLocalization($this->localization->reveal());
+        $this->portalInformation->setRedirect($expected['redirect']);
+
+        $res = $this->portalInformation->toArray();
+        $this->assertEquals($expected, $res);
     }
 }

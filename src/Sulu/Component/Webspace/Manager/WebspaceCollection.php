@@ -17,6 +17,7 @@ use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\Config\Resource\FileResource;
 use Traversable;
+use Sulu\Component\Webspace\Util\SerializerHelper;
 
 /**
  * A collection of all webspaces and portals in a specific sulu installation
@@ -135,197 +136,22 @@ class WebspaceCollection implements \IteratorAggregate
 
         $webspaces = array();
         foreach ($this->webspaces as $webspace) {
-            $webspaceData = array();
-            $webspaceData['key'] = $webspace->getKey();
-            $webspaceData['name'] = $webspace->getName();
-            $webspaceData['localizations'] = $this->toArrayLocalizations($webspace->getLocalizations());
-
-            $webspaceSecurity = $webspace->getSecurity();
-            if ($webspaceSecurity != null) {
-                $webspaceData['security']['system'] = $webspaceSecurity->getSystem();
-            }
-
-            $webspaceData = $this->toArraySegments($webspace, $webspaceData);
-
-            $webspaceData['portals'] = array();
-
-            $webspaceData['theme']['key'] = $webspace->getTheme()->getKey();
-            $webspaceData['theme']['excludedTemplates'] = $webspace->getTheme()->getExcludedTemplates();
-
-            $webspaceData['navigation'] = array();
-            $webspaceData['navigation']['contexts'] = array();
-            foreach ($webspace->getNavigation()->getContexts() as $context) {
-                $webspaceData['navigation']['contexts'][] = array(
-                    'key' => $context->getKey(),
-                    'metadata' => $context->getMetadata()
-                );
-            }
-
-            $webspaceData = $this->toArrayPortals($webspace, $webspaceData);
-            $webspaces[] = $webspaceData;
+            $webspaces[] = $webspace->toArray();
         }
 
         $portalInformations = array();
         foreach ($this->portalInformations as $environment => $environmentPortalInformations) {
-            $portalInformations[$environment] = $this->toArrayPortalInformations($environmentPortalInformations);
+            $portalInformations[$environment] = array();
+            
+            foreach ($environmentPortalInformations as $environmentPortalInformation) {
+                $portalInformations[$environment][$environmentPortalInformation->getUrl()] = $environmentPortalInformation->toArray();
+            }
         }
 
         $collection['webspaces'] = $webspaces;
         $collection['portalInformations'] = $portalInformations;
 
         return $collection;
-    }
-
-    /**
-     * @param $localizations Localization[]
-     * @param bool $withAdditionalOptions
-     * @return array
-     */
-    private function toArrayLocalizations($localizations, $withAdditionalOptions = false)
-    {
-        $localizationsArray = array();
-
-        if (!empty($localizations)) {
-            foreach ($localizations as $localization) {
-                $localizationData = array();
-                $localizationData['country'] = $localization->getCountry();
-                $localizationData['language'] = $localization->getLanguage();
-                $localizationData['localization'] = $localization->getLocalization();
-                $localizationData['default'] = $localization->isDefault();
-
-                if (!$withAdditionalOptions) {
-                    $localizationData['children'] = $this->toArrayLocalizations($localization->getChildren(), true);
-                    $localizationData['shadow'] = $localization->getShadow();
-                }
-
-                $localizationsArray[] = $localizationData;
-            }
-        }
-
-        return $localizationsArray;
-    }
-
-    /**
-     * @param Webspace $webspace
-     * @param array $webspaceData
-     * @return mixed
-     */
-    private function toArraySegments($webspace, $webspaceData)
-    {
-        $segments = $webspace->getSegments();
-        if (!empty($segments)) {
-            foreach ($segments as $segment) {
-                $segmentData = array();
-                $segmentData['key'] = $segment->getKey();
-                $segmentData['name'] = $segment->getName();
-                $segmentData['default'] = $segment->isDefault();
-
-                $webspaceData['segments'][] = $segmentData;
-            }
-
-            return $webspaceData;
-        }
-
-        return $webspaceData;
-    }
-
-    /**
-     * @param Webspace $webspace
-     * @param array $webspaceData
-     * @return mixed
-     */
-    private function toArrayPortals($webspace, $webspaceData)
-    {
-        foreach ($webspace->getPortals() as $portal) {
-            $portalData = array();
-            $portalData['name'] = $portal->getName();
-            $portalData['key'] = $portal->getKey();
-            $portalData['resourceLocator']['strategy'] = $portal->getResourceLocatorStrategy();
-
-            $portalData['localizations'] = $this->toArrayLocalizations($portal->getLocalizations());
-
-            $portalData = $this->toArrayEnvironments($portal, $portalData);
-
-            $webspaceData['portals'][] = $portalData;
-        }
-
-        return $webspaceData;
-    }
-
-    /**
-     * @param Portal $portal
-     * @param array $portalData
-     * @return mixed
-     */
-    private function toArrayEnvironments($portal, $portalData)
-    {
-        foreach ($portal->getEnvironments() as $environment) {
-            $environmentData = array();
-            $environmentData['type'] = $environment->getType();
-
-            $environmentData = $this->toArrayUrls($environment, $environmentData);
-            $portalData['environments'][] = $environmentData;
-        }
-
-        return $portalData;
-    }
-
-    /**
-     * @param Environment $environment
-     * @param array $environmentData
-     * @return mixed
-     */
-    private function toArrayUrls($environment, $environmentData)
-    {
-        foreach ($environment->getUrls() as $url) {
-            $urlData = array();
-            $urlData['url'] = $url->getUrl();
-            $urlData['language'] = $url->getLanguage();
-            $urlData['country'] = $url->getCountry();
-            $urlData['segment'] = $url->getSegment();
-            $urlData['redirect'] = $url->getRedirect();
-
-            $environmentData['urls'][] = $urlData;
-        }
-
-        return $environmentData;
-    }
-
-    /**
-     * @param PortalInformation[] $portalInformations
-     * @param array $portalInformationsData
-     */
-    private function toArrayPortalInformations($portalInformations)
-    {
-        $portalInformationArray = array();
-
-        foreach ($portalInformations as $portalInformation) {
-            $portalInformationData = array();
-            $portalInformationData['type'] = $portalInformation->getType();
-            $portalInformationData['webspace'] = $portalInformation->getWebspace()->getKey();
-            $portalInformationData['url'] = $portalInformation->getUrl();
-
-            $portal = $portalInformation->getPortal();
-            if ($portal) {
-                $portalInformationData['portal'] = $portal->getKey();
-            }
-
-            $localization = $portalInformation->getLocalization();
-            if ($localization) {
-                $portalInformationData['localization'] = $localization->getLocalization();
-            }
-
-            $portalInformationData['redirect'] = $portalInformation->getRedirect();
-
-            $segment = $portalInformation->getSegment();
-            if ($segment) {
-                $portalInformationData['segment'] = $segment->getKey();
-            }
-
-            $portalInformationArray[$portalInformationData['url']] = $portalInformationData;
-        }
-
-        return $portalInformationArray;
     }
 
     /**

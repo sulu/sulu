@@ -186,7 +186,7 @@ class WebspaceCollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(RequestAnalyzerInterface::MATCH_TYPE_FULL, $portalInformation['type']);
         $this->assertEquals('default', $portalInformation['webspace']);
         $this->assertEquals('portal1', $portalInformation['portal']);
-        $this->assertEquals('en_us', $portalInformation['localization']);
+        $this->assertEquals('en_us', $portalInformation['localization']['localization']);
         $this->assertEquals('s', $portalInformation['segment']);
         $this->assertEquals('www.portal1.com', $portalInformation['url']);
 
@@ -195,7 +195,7 @@ class WebspaceCollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(RequestAnalyzerInterface::MATCH_TYPE_FULL, $portalInformation['type']);
         $this->assertEquals('default', $portalInformation['webspace']);
         $this->assertEquals('portal1', $portalInformation['portal']);
-        $this->assertEquals('en_us', $portalInformation['localization']);
+        $this->assertEquals('en_us', $portalInformation['localization']['localization']);
         $this->assertEquals('s', $portalInformation['segment']);
         $this->assertEquals('portal1.lo', $portalInformation['url']);
     }

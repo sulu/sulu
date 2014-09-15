@@ -10,7 +10,9 @@
 
 namespace Sulu\Component\Webspace;
 
-class PortalTest extends \PHPUnit_Framework_TestCase
+use Prophecy\PhpUnit\ProphecyTestCase;
+
+class PortalTest extends ProphecyTestCase
 {
     /**
      * @var Portal
@@ -19,26 +21,23 @@ class PortalTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        parent::setUp();
         $this->portal = new Portal();
+        $this->environment = $this->prophesize('Sulu\Component\Webspace\Environment');
+        $this->localization = $this->prophesize('Sulu\Component\Webspace\Localization');
+        $this->url = $this->prophesize('Sulu\Component\Webspace\Url');
     }
 
     public function testGetEnvironment()
     {
-        $environment = new Environment();
-        $environment->setType('dev');
+        $this->environment->getType()->willReturn('dev');
+        $this->portal->addEnvironment($this->environment->reveal());
 
-        $this->portal->addEnvironment($environment);
-
-        $this->assertEquals($environment, $this->portal->getEnvironment('dev'));
+        $this->assertEquals($this->environment->reveal(), $this->portal->getEnvironment('dev'));
     }
 
     public function testGetNotExistringEnvironment()
     {
-        $environment = new Environment();
-        $environment->setType('prod');
-
-        $this->portal->addEnvironment($environment);
-
         $this->setExpectedException('Sulu\Component\Webspace\Exception\EnvironmentNotFoundException');
 
         $this->portal->getEnvironment('dev');
@@ -47,7 +46,39 @@ class PortalTest extends \PHPUnit_Framework_TestCase
     public function testGetEnvironmentFromEmptyPortal()
     {
         $this->setExpectedException('Sulu\Component\Webspace\Exception\EnvironmentNotFoundException');
-
         $this->portal->getEnvironment('dev');
+    }
+
+    public function testToArray()
+    {
+        $expected = array(
+            'name' => 'foo',
+            'key' => 'bar',
+            'resourceLocator' => array(
+                'strategy' => 'hello',
+            ),
+            'localizations' => array(
+                array('foo'),
+            ),
+            'environments' => array(
+                array(
+                    'type' => 'd',
+                ),
+            ),
+        );
+
+        $this->environment->toArray()->willReturn($expected['environments'][0]);
+        $this->environment->getType()->willReturn('d');
+        $this->localization->toArray()->willReturn($expected['localizations'][0]);
+        $this->localization->isDefault()->willReturn(true);
+        $this->environment->getUrls()->willReturn(array());
+
+        $this->portal->addEnvironment($this->environment->reveal());
+        $this->portal->addLocalization($this->localization->reveal());
+        $this->portal->setResourceLocatorStrategy($expected['resourceLocator']['strategy']);
+        $this->portal->setName($expected['name']);
+        $this->portal->setKey($expected['key']);
+
+        $this->assertEquals($expected, $this->portal->toArray());
     }
 }
