@@ -38,6 +38,7 @@
 
         <service id="sulu_content.preview.exception_listener" class="%sulu_content.preview.exception_listener.class%">
             <argument type="service" id="templating" />
+            <argument type="string">%sulu.content.preview.error_template%</argument>
             <tag name="kernel.event_listener" event="kernel.exception" method="onKernelException" />
         </service>
     </services>
