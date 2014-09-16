@@ -52,8 +52,10 @@ class ExceptionController extends BaseExceptionController
                     $this->twig->render(
                         'ClientWebsiteBundle:views:error404.html.twig',
                         array(
-                            'webspaceKey' => $this->requestAnalyzer->getCurrentWebspace()->getKey(),
-                            'locale' => $this->requestAnalyzer->getCurrentLocalization()->getLocalization(),
+                            'request' => array(
+                                'webspaceKey' => $this->requestAnalyzer->getCurrentWebspace()->getKey(),
+                                'locale' => $this->requestAnalyzer->getCurrentLocalization()->getLocalization(),
+                            ),
                             'path' => $request->getPathInfo()
                         )
                     ),
@@ -71,8 +73,10 @@ class ExceptionController extends BaseExceptionController
                             'status_text' => isset(Response::$statusTexts[$code]) ? Response::$statusTexts[$code] : '',
                             'exception' => $exception,
                             'currentContent' => $currentContent,
-                            'webspaceKey' => $this->requestAnalyzer->getCurrentWebspace()->getKey(),
-                            'locale' => $this->requestAnalyzer->getCurrentLocalization()->getLocalization()
+                            'request' => array(
+                                'webspaceKey' => $this->requestAnalyzer->getCurrentWebspace()->getKey(),
+                                'locale' => $this->requestAnalyzer->getCurrentLocalization()->getLocalization()
+                            )
                         )
                     ),
                     $exception->getStatusCode()
