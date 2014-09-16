@@ -16,6 +16,7 @@
         <parameter key="sulu_media.image.command.scale.class">Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\ScaleCommand</parameter>
         <parameter key="sulu_media.media_selection.class">Sulu\Bundle\MediaBundle\Content\Types\MediaSelectionContentType</parameter>
         <parameter key="sulu_media.collection_manager.class">Sulu\Bundle\MediaBundle\Collection\Manager\DefaultCollectionManager</parameter>
+        <parameter key="sulu_media.search.subscriber.class">Sulu\Bundle\MediaBundle\Search\MediaSearchSubscriber</parameter>
     </parameters>
     <services>
         <service id="sulu_media.admin" class="%sulu_media.admin.class%">
@@ -105,6 +106,13 @@
             <argument type="service" id="doctrine.orm.entity_manager" />
             <argument type="string">%sulu_media.collection.previews.limit%</argument>
             <argument type="string">%sulu_media.collection.previews.format%</argument>
+        </service>
+
+        <service id="sulu_media.search.subscriber" class="%sulu_media.search.subscriber.class%" >
+            <argument type="service" id="sulu_media.media_manager" />
+            <argument type="service" id="sulu_core.webspace.request_analyzer" on-invalid="ignore"/>
+            <argument>%sulu_media.search.default_image_format%</argument>
+            <tag name="kernel.event_subscriber" />
         </service>
     </services>
 </container>

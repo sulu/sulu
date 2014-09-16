@@ -35,7 +35,10 @@
         "doctrine/doctrine-bundle": "1.2.*",
         "symfony/monolog-bundle": "2.4.*",
         "phpunit/phpunit": "4.0.*",
-        "sulu/test-bundle": "dev-develop"
+        "sulu/test-bundle": "dev-develop",
+
+        "sulu/search-bundle": "dev-feature/structure-metadata-load@dev",
+        "massive/search-bundle": "dev-master@dev"
     },
     "autoload": {
         "psr-0": {

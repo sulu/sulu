@@ -22,6 +22,8 @@ use Symfony\Component\DependencyInjection\Loader;
  */
 class SuluMediaExtension extends Extension
 {
+    const DEFAULT_FORMAT_NAME = '170x170';
+
     /**
      * {@inheritDoc}
      */
@@ -30,6 +32,7 @@ class SuluMediaExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
+        $container->setParameter('sulu_media.search.default_image_format', $config['search']['default_image_format']);
         $container->setParameter('sulu_media.collection.type.default', array(
             'id' => 1
         ));
@@ -56,7 +59,7 @@ class SuluMediaExtension extends Extension
         ));
         $container->setParameter('sulu_media.image.formats', array(
             array(
-                'name' => '170x170',
+                'name' => self::DEFAULT_FORMAT_NAME,
                 'commands' => array(
                     array(
                         'action' => 'scale',

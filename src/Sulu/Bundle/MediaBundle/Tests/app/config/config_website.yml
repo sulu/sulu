@@ -1,0 +1,17 @@
+imports:
+    - { resource: config.yml }
+
+security:
+    access_decision_manager:
+        strategy: affirmative
+
+    encoders:
+        Sulu\Bundle\TestBundle\Entity\TestUser: plaintext
+
+    providers:
+        sulu:
+            id: sulu_security.user_repository
+
+    firewalls:
+        test:
+            http_basic:

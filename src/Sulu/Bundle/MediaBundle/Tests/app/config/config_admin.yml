@@ -1,6 +1,5 @@
-# Configuration file for security in the test environment
-# Grants access to every User
-# DO NOT USE IN PRODUCTION ENVIRONMENT
+imports:
+    - { resource: config.yml }
 
 security:
     access_decision_manager:

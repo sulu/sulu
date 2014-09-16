@@ -5,6 +5,8 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 
 class AppKernel extends Kernel
 {
+    public $suluContext = 'admin';
+
     public function registerBundles()
     {
         $bundles = array(
@@ -27,7 +29,10 @@ class AppKernel extends Kernel
             new \Sulu\Bundle\TestBundle\SuluTestBundle(),
             new \Sulu\Bundle\TagBundle\SuluTagBundle(),
 
-            new \Doctrine\Bundle\PHPCRBundle\DoctrinePHPCRBundle()
+            new \Doctrine\Bundle\PHPCRBundle\DoctrinePHPCRBundle(),
+
+            new \Massive\Bundle\SearchBundle\MassiveSearchBundle(),
+            new \Sulu\Bundle\SearchBundle\SuluSearchBundle(),
         );
 
         return $bundles;
@@ -42,6 +47,7 @@ class AppKernel extends Kernel
         } else {
             $loader->load(__DIR__ . '/config/config.mysql.yml');
         }
-    }
 
+        $loader->load(__DIR__ . '/config/config_' . $this->suluContext .'.yml');
+    }
 }

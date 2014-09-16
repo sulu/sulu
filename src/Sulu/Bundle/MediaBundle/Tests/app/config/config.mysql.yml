@@ -1,7 +1,3 @@
-imports:
-    - { resource: config.yml }
-    - { resource: security.yml }
-
 doctrine:
     dbal:
         driver:   pdo_mysql
