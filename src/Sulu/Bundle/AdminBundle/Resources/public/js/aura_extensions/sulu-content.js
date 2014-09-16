@@ -173,7 +173,7 @@ define([], function () {
                 topSpace = !!content.topSpace;
             this.sandbox.emit('sulu.app.change-width', width);
             this.sandbox.emit('sulu.app.change-spacing', leftSpace, rightSpace, topSpace);
-            this.sandbox.emit('sulu.app.toggle-shrinker', !!content.shrinkable);
+            this.sandbox.emit('sulu.app.toggle-shrinker', false);
         },
 
         /**
@@ -205,7 +205,7 @@ define([], function () {
          * Generates defaults, handles tabs data if tabs are configured, starts the header-component
          *
          * @param {Object|Function} [header] the header property found in the started component. If it's function it must return an object
-         * @param {String} [header.title] title in the header
+         * @param {String} [header.title] title in the headehr
          * @param {Array} [header.breadcrumb] breadcrumb object which gets passed to the header-component
          * @param {Object} [header.toolbar] object that contains configurations for the toolbar - if not set no toolbar will be displayed
          * @param {Object} [header.tabs] object that contains configurations for the tabs - if not set no tabs will be displayed
@@ -264,6 +264,11 @@ define([], function () {
              */
             changeHeader = function (tabsData) {
                 // set the variables for the header-component-options properties
+                var toolbarLanguageChanger = true;
+                if (!!header.toolbar) {
+                    toolbarLanguageChanger = !!header.toolbar.languageChanger ? header.toolbar.languageChanger : false;
+                }
+
                 options = {
                     tabsData: tabsData,
                     heading: this.sandbox.translate(header.title),
@@ -276,7 +281,7 @@ define([], function () {
                     tabsOptions: (!!header.tabs && !!header.tabs.options) ? header.tabs.options : {},
                     tabsFullControl: (!!header.tabs && typeof header.tabs.fullControl === 'boolean') ? header.tabs.fullControl : false,
                     toolbarDisabled: (typeof header.toolbar === 'undefined'),
-                    toolbarLanguageChanger: (!!header.toolbar && !!header.toolbar.languageChanger) ? header.toolbar.languageChanger : true,
+                    toolbarLanguageChanger: toolbarLanguageChanger,
                     noBack: (typeof header.noBack !== 'undefined') ? header.noBack : false,
                     titleColor: (!!header.titleColor) ? header.titleColor : null
                 };

@@ -371,6 +371,10 @@ define([], function () {
                 ];
             },
 
+            empty: function() {
+                return [];
+            },
+
             save: function () {
                 return [toolbarTemplates.default.call(this)[0]];
             },
@@ -428,9 +432,9 @@ define([], function () {
         changeStateCallbacks = {
             default: function (saved, type, highlight) {
                 if (!!saved) {
-                    this.sandbox.emit('husky.toolbar.header.item.disable', 'save-button', !!highlight);
+                    this.sandbox.emit('husky.toolbar.' + this.toolbarInstanceName + '.item.disable', 'save-button', !!highlight);
                 } else {
-                    this.sandbox.emit('husky.toolbar.header.item.enable', 'save-button', false);
+                    this.sandbox.emit('husky.toolbar.' + this.toolbarInstanceName + '.item.enable', 'save-button', false);
                 }
             }
         },
@@ -476,6 +480,11 @@ define([], function () {
          * Initializes the component
          */
         initialize: function () {
+            this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
+
+            // store the instance-name of the toolbar
+            this.toolbarInstanceName = 'header' + this.options.instanceName;
+
             this.html(this.sandbox.util.template(templates.skeleton)());
 
             this.bindCustomEvents();
@@ -697,12 +706,12 @@ define([], function () {
                 componentOptions = {
                     el: $container,
                     skin: 'blueish',
-                    instanceName: 'header' + this.options.instanceName
+                    instanceName: this.toolbarInstanceName
                 };
 
             // wait for initialized
             if (!!def) {
-                this.sandbox.on('husky.toolbar.header' + this.options.instanceName + '.initialized', function () {
+                this.sandbox.on('husky.toolbar.' + this.toolbarInstanceName  + '.initialized', function () {
                     def.resolve();
                 }.bind(this));
             }
@@ -712,9 +721,6 @@ define([], function () {
 
             // merge default tabs-options with passed ones
             componentOptions = this.sandbox.util.extend(true, {}, componentOptions, options);
-
-            // store the instance-name of the toolbar
-            this.toolbarInstanceName = componentOptions.instanceName;
 
             this.sandbox.start([
                 {
@@ -729,7 +735,7 @@ define([], function () {
          */
         bindCustomEvents: function () {
             // enable langauge-dropdown after loading the language items
-            this.sandbox.on('husky.toolbar.header' + this.options.instanceName + '.items.set', function (id) {
+            this.sandbox.on('husky.toolbar.' + this.toolbarInstanceName + '.items.set', function (id) {
                 if (id === 'language') {
                     this.enableLanguageChanger();
                 }
@@ -817,11 +823,11 @@ define([], function () {
          */
         bindAbstractTabsEvents: function () {
             this.sandbox.on(TABS_ACTIVATE.call(this), function () {
-                this.sandbox.emit('husky.tabs.header' + this.options.instanceName + '.deactivate');
+                this.sandbox.emit('husky.tabs.header.deactivate');
             }.bind(this));
 
             this.sandbox.on(TABS_DEACTIVATE.call(this), function () {
-                this.sandbox.emit('husky.tabs.header' + this.options.instanceName + '.activate');
+                this.sandbox.emit('husky.tabs.header.activate');
             }.bind(this));
         },
 
@@ -901,7 +907,6 @@ define([], function () {
             // initialize deferreds
             var toolbarDef, tabsDef;
 
-            // merge new options with old ones
             this.options = this.sandbox.util.extend(true, {}, defaults, options);
 
             // set default callback when no callback is provided
@@ -911,7 +916,6 @@ define([], function () {
 
             this.$inner = null;
             this.$tabs = null;
-            this.toolbarInstanceName = null;
 
             this.render();
 

@@ -1389,6 +1389,10 @@
                 <source>public.overview</source>
                 <target>Übersicht</target>
             </trans-unit>
+            <trans-unit id="a50af522de18a350142c0b4720e29a4f" resname="public.details">
+                <source>public.details</source>
+                <target>Details</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
