@@ -19,6 +19,7 @@ use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
+use Sulu\Component\Webspace\WebspaceContext;
 
 class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
 {
@@ -32,11 +33,6 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
      */
     private $webspaceManager;
 
-    /**
-     * @var PHPUnit_Framework_MockObject_MockObject
-     */
-    private $userRepository;
-
     public function setUp()
     {
         $this->webspaceManager = $this->getMockForAbstractClass(
@@ -49,17 +45,8 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
             array('findPortalInformationByUrl')
         );
 
-        $this->userRepository = $this->getMockForAbstractClass(
-            '\Sulu\Component\Security\UserRepositoryInterface',
-            array(),
-            '',
-            true,
-            true,
-            true,
-            array('setSystem')
-        );
-
-        $this->requestAnalyzer = new RequestAnalyzer($this->webspaceManager, $this->userRepository, 'prod');
+        $webspaceContext = new WebspaceContext();
+        $this->requestAnalyzer = new RequestAnalyzer($this->webspaceManager, 'prod', $webspaceContext);
     }
 
     /**

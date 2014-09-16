@@ -2,8 +2,16 @@
 
 namespace Sulu\Component\Webspace;
 
+use Symfony\Component\HttpFoundation\Request;
+
+/**
+ * The webspace context holds information about the current
+ * webspace request.
+ */
 class WebspaceContext
 {
+    protected $masterRequest;
+
     /**
      * {@inheritDoc}
      */
@@ -138,5 +146,28 @@ class WebspaceContext
     public function getResourceLocatorPrefix()
     {
         return $this->resourceLocatorPrefix;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setResourceLocatorPrefix($resourceLocatorPrefix)
+    {
+        $this->resourceLocatorPrefix = $resourceLocatorPrefix;
+    }
+
+    /**
+     * Request
+     *
+     * @param Request
+     */
+    public function setMasterRequest(Request $masterRequest)
+    {
+        $this->masterRequest = $masterRequest;
+    }
+
+    public function getMasterRequest()
+    {
+        return $this->masterRequest;
     }
 }

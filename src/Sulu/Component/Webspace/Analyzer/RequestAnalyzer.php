@@ -18,10 +18,10 @@ use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Segment;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
+use Sulu\Component\Webspace\WebspaceContext;
 
 class RequestAnalyzer implements RequestAnalyzerInterface
 {
-
     /**
      * Describes the match
      * @var int
@@ -108,15 +108,13 @@ class RequestAnalyzer implements RequestAnalyzerInterface
     public function analyze(Request $request)
     {
         $webspaceContext = $this->webspaceContext;
+        $webspaceContext->setMasterRequest($request);
 
         $url = $request->getHost() . $request->getPathInfo();
         $portalInformation = $this->webspaceManager->findPortalInformationByUrl(
             $url,
             $this->environment
         );
-
-        $this->getParameter = $request->query->all();
-        $this->postParameter = $request->request->all();
 
         if ($portalInformation != null) {
             $this->webspaceContext->setMatchType($portalInformation->getType());
@@ -170,6 +168,8 @@ class RequestAnalyzer implements RequestAnalyzerInterface
     /**
      * Returns the current webspace for this request
      * @return Webspace
+     *
+     * @deprecated inject the sulu_core.webspace_context class instead
      */
     public function getCurrentWebspace()
     {
@@ -179,6 +179,8 @@ class RequestAnalyzer implements RequestAnalyzerInterface
     /**
      * Returns the current portal for this request
      * @return Portal
+     *
+     * @deprecated inject the sulu_core.webspace_context class instead
      */
     public function getCurrentPortal()
     {
@@ -188,6 +190,8 @@ class RequestAnalyzer implements RequestAnalyzerInterface
     /**
      * Returns the current segment for this request
      * @return Segment
+     *
+     * @deprecated inject the sulu_core.webspace_context class instead
      */
     public function getCurrentSegment()
     {
@@ -197,6 +201,8 @@ class RequestAnalyzer implements RequestAnalyzerInterface
     /**
      * Returns the current localization for this Request
      * @return Localization
+     *
+     * @deprecated inject the sulu_core.webspace_context class instead
      */
     public function getCurrentLocalization()
     {
@@ -206,6 +212,8 @@ class RequestAnalyzer implements RequestAnalyzerInterface
     /**
      * Returns the url of the current Portal
      * @return string
+     *
+     * @deprecated inject the sulu_core.webspace_context class instead
      */
     public function getCurrentPortalUrl()
     {
@@ -215,6 +223,8 @@ class RequestAnalyzer implements RequestAnalyzerInterface
     /**
      * Returns the redirect, null if there is no redirect
      * @return string
+     *
+     * @deprecated inject the sulu_core.webspace_context class instead
      */
     public function getCurrentRedirect()
     {
@@ -224,6 +234,8 @@ class RequestAnalyzer implements RequestAnalyzerInterface
     /**
      * Returns the path of the current request, which is the url without host, language and so on
      * @return string
+     *
+     * @deprecated inject the sulu_core.webspace_context class instead
      */
     public function getCurrentResourceLocator()
     {
@@ -233,6 +245,8 @@ class RequestAnalyzer implements RequestAnalyzerInterface
     /**
      * Returns the prefix required before the resource locator
      * @return string
+     *
+     * @deprecated inject the sulu_core.webspace_context class instead
      */
     public function getCurrentResourceLocatorPrefix()
     {
@@ -242,19 +256,23 @@ class RequestAnalyzer implements RequestAnalyzerInterface
     /**
      * Returns the post parameters
      * @return array
+     *
+     * @deprecated inject the sulu_core.webspace_context class instead
      */
     public function getCurrentPostParameter()
     {
-        return $this->webspaceContext->getRequest()->request->all();
+        return $this->webspaceContext->getMasterRequest()->request->all();
     }
 
     /**
      * Returns the get parameters
      * @return array
+     *
+     * @deprecated inject the sulu_core.webspace_context class instead
      */
     public function getCurrentGetParameter()
     {
-        return $this->webspaceContext->getRequest()->query->all();
+        return $this->webspaceContext->getMasterRequest()->query->all();
     }
 
     /**
