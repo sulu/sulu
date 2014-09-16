@@ -2,11 +2,15 @@
 
 namespace Sulu\Bundle\SearchBundle\Search\Metadata;
 
-use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadataInterface;
-use Metadata\Driver\DriverInterface;
-use Metadata\Driver\AbstractFileDriver;
+use Massive\Bundle\SearchBundle\Search\Factory;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
+use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadataInterface;
+use Metadata\Driver\AbstractFileDriver;
+use Metadata\Driver\DriverInterface;
 use Sulu\Component\Content\StructureInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Sulu\Bundle\SearchBundle\Search\SuluSearchEvents;
+use Sulu\Bundle\SearchBundle\Search\Event\StructureMetadataLoadEvent;
 
 /**
  * Provides a Metadata Driver for massive search-bundle
@@ -14,6 +18,15 @@ use Sulu\Component\Content\StructureInterface;
  */
 class StructureDriver implements DriverInterface
 {
+    protected $factory;
+    protected $eventDispatcher;
+
+    public function __construct(Factory $factory, EventDispatcherInterface $eventDispatcher)
+    {
+        $this->factory = $factory;
+        $this->eventDispatcher = $eventDispatcher;
+    }
+
     /**
      * loads metadata for a given class if its derived from StructureInterface
      * @param \ReflectionClass $class
@@ -29,31 +42,35 @@ class StructureDriver implements DriverInterface
             return null;
         }
 
-        /** @var StructureInterface $instance */
-        $instance = $class->newInstance();
-        $meta = new IndexMetadata($class->name);
+        /** @var StructureInterface $structure */
+        $structure = $class->newInstance();
+        $indexMeta = $this->factory->makeIndexMetadata($class->name);
 
-        $meta->setIndexName('content');
-        $meta->setIdField('uuid');
+        $indexMeta->setIndexName('content');
+        $indexMeta->setIdField('uuid');
 
-        if ($instance->hasTag('sulu.rlp')) {
-            $prop = $instance->getPropertyByTagName('sulu.rlp');
-            $meta->setUrlField($prop->getName());
+        if ($structure->hasTag('sulu.rlp')) {
+            $prop = $structure->getPropertyByTagName('sulu.rlp');
+            $indexMeta->setUrlField($prop->getName());
         }
 
-        if ($instance->hasTag('sulu.node.name')) {
-            $prop = $instance->getPropertyByTagName('sulu.node.name');
-            $meta->setTitleField($prop->getName());
+        if ($structure->hasTag('sulu.node.name')) {
+            $prop = $structure->getPropertyByTagName('sulu.node.name');
+            $indexMeta->setTitleField($prop->getName());
         }
 
-        foreach ($instance->getProperties(true) as $property) {
+        foreach ($structure->getProperties(true) as $property) {
             if (true === $property->getIndexed()) {
-                $meta->addFieldMapping($property->getName(), array(
+                $indexMeta->addFieldMapping($property->getName(), array(
                     'type' => 'string',
                 ));
             }
         }
 
-        return $meta;
+        $this->eventDispatcher->dispatch(
+            SuluSearchEvents::STRUCTURE_LOAD_METADATA, new StructureMetadataLoadEvent($structure, $indexMeta)
+        );
+
+        return $indexMeta;
     }
 }

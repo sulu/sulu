@@ -10,6 +10,8 @@
     <services>
 
         <service id="sulu_search.metadata.driver.structure" class="%sulu_search.metadata.driver.structure.class%">
+            <argument type="service" id="massive_search.factory" />
+            <argument type="service" id="event_dispatcher" />
             <tag name="massive_search.metadata.driver" />
         </service>
 
