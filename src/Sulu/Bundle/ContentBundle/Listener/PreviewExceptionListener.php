@@ -61,9 +61,10 @@ class PreviewExceptionListener
         $responseContent = $this->templateEngine->render(
             $this->findTemplate(),
             array(
-                'status_code'    => $code,
-                'status_text'    => $statusText,
-                'exception'      => FlattenException::create($ex, $code),
+                'status_code' => $code,
+                'status_text' => $statusText,
+                'exception' => FlattenException::create($ex, $code),
+                'logger' => null,
                 'currentContent' => $content,
             )
         );
