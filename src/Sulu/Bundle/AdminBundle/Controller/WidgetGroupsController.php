@@ -26,90 +26,17 @@ class WidgetGroupsController extends Controller
     protected $widgetsHandler;
 
     /**
-     * Sidebar for contact list view
+     * renders a widget group
+     * @param String $groupAlias
      * @param Request $request
      * @return Response
      */
-    public function contactInfoAction(Request $request)
-    {
-        $aliases = array(
-            'sulu-contact-contact-info'
-        );
-
+    public function groupAction($groupAlias, Request $request) {
         try {
+            $groupAlias = str_replace('-', '_', $groupAlias);
             return new Response(
-                $this->getWidgetsHandler()->render(
-                    $aliases,
-                    $request->query->all()
-                )
-            );
-        } catch (WidgetException $ex) {
-            return new Response($ex->getMessage());
-        }
-    }
-
-    /**
-     * Sidebar for account list view
-     * @param Request $request
-     * @return Response
-     */
-    public function accountInfoAction(Request $request)
-    {
-        $aliases = array(
-            'sulu-contact-account-info',
-            'sulu-contact-main-contact'
-        );
-
-        try {
-            return new Response(
-                $this->getWidgetsHandler()->render(
-                    $aliases,
-                    $request->query->all()
-                )
-            );
-        } catch (WidgetException $ex) {
-            return new Response($ex->getMessage());
-        }
-    }
-
-    /**
-     * Sidebar for contact detail view
-     * @param Request $request
-     * @return Response
-     */
-    public function contactDetailAction(Request $request)
-    {
-        $aliases = array(
-            'sulu-contact-main-account'
-        );
-
-        try {
-            return new Response(
-                $this->getWidgetsHandler()->render(
-                    $aliases,
-                    $request->query->all()
-                )
-            );
-        } catch (WidgetException $ex) {
-            return new Response($ex->getMessage());
-        }
-    }
-
-    /**
-     * Sidebar for account detail view
-     * @param Request $request
-     * @return Response
-     */
-    public function accountDetailAction(Request $request)
-    {
-        $aliases = array(
-            'sulu-contact-main-contact'
-        );
-
-        try {
-            return new Response(
-                $this->getWidgetsHandler()->render(
-                    $aliases,
+                $this->getWidgetsHandler()->renderWidgetGroup(
+                    $groupAlias,
                     $request->query->all()
                 )
             );

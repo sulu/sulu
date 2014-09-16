@@ -19,7 +19,7 @@ use Symfony\Component\Templating\EngineInterface;
 class WidgetsHandler implements WidgetsHandlerInterface
 {
     /**
-     * @var array
+     * @var WidgetInterface[]
      */
     protected $widgets = array();
 
@@ -38,14 +38,36 @@ class WidgetsHandler implements WidgetsHandlerInterface
      */
     protected $header;
 
-    function __construct(EngineInterface $templateEngine)
+    /**
+     * @var array
+     */
+    protected $widgetGroups;
+
+    function __construct(EngineInterface $templateEngine, $widgetGroups)
     {
         $this->templateEngine = $templateEngine;
+        $this->widgetGroups = $widgetGroups;
     }
 
     public function addWidget(WidgetInterface $widget, $alias)
     {
-        $this->widgets[$alias] = array('instance' => $widget);
+        $this->widgets[$alias] = $widget;
+    }
+
+    /**
+     * renders a widget group
+     * @param string $groupAlias
+     * @param array $parameters
+     * @return string
+     * @throws WidgetGroupNotFoundException
+     */
+    public function renderWidgetGroup($groupAlias, $parameters = array())
+    {
+        if (array_key_exists($groupAlias, $this->widgetGroups)) {
+            return $this->render($this->widgetGroups[$groupAlias]['mappings'], $parameters);
+        } else {
+            throw new WidgetGroupNotFoundException('Widget group not found', $groupAlias);
+        }
     }
 
     /**
@@ -60,9 +82,9 @@ class WidgetsHandler implements WidgetsHandlerInterface
         $widgets = array();
         foreach ($aliases as $alias) {
             $widgets[] = array(
-                'name' => $this->widgets[$alias]['instance']->getName(),
-                'template' => $this->widgets[$alias]['instance']->getTemplate(),
-                'data' => $this->widgets[$alias]['instance']->getData($parameters)
+                'name' => $this->widgets[$alias]->getName(),
+                'template' => $this->widgets[$alias]->getTemplate(),
+                'data' => $this->widgets[$alias]->getData($parameters)
             );
         }
 
