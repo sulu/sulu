@@ -413,6 +413,16 @@ class NodeRepositoryTest extends PhpcrTestCase
         $this->assertEquals('Hello me', $nodes[0]->title);
         $this->assertEquals('hello you', $nodes[1]->title);
         $this->assertEquals('Test', $nodes[2]->title);
+
+        $nodes = $this->nodeRepository->getFilteredNodes(
+            array('sortBy' => array('title'), 'sortMethod' => 'desc'),
+            'en',
+            'default'
+        );
+
+        $this->assertEquals('Hello me', $nodes[2]->title);
+        $this->assertEquals('hello you', $nodes[1]->title);
+        $this->assertEquals('Test', $nodes[0]->title);
     }
 
     /**
@@ -1120,7 +1130,7 @@ class NodeRepositoryTest extends PhpcrTestCase
             $structureMock,
             array(
                 new Property(
-                    'title', 'title', 'text_line', false, false, 1, 1, array(),
+                    'title', 'title', 'text_line', false, true, 1, 1, array(),
                     array(
                         new PropertyTag('sulu.node.name', 100)
                     )

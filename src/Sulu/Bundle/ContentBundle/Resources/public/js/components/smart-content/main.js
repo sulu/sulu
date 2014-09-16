@@ -896,7 +896,8 @@ define([], function() {
                         value: 'name',
                         data: this.options.sortBy,
                         preSelectedElements: [this.options.preSelectedSortBy],
-                        disabled: this.overlayDisabled.sortBy
+                        disabled: this.overlayDisabled.sortBy,
+                        deselectField: this.sandbox.translate('smart-content.no-sorting')
                     }
                 },
                 {
