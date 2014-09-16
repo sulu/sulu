@@ -115,6 +115,7 @@ class PreviewController extends Controller
 
         $content = null;
         $i = 0;
+        // FIXME Remove this ugly fix as soon as possible
         while (true) {
             $i++;
             try {
