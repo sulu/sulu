@@ -113,10 +113,21 @@ class PreviewController extends Controller
             $contentUuid = $startPage->getUuid();
         }
 
-        try {
-            $content = $preview->render($uid, $contentUuid, $webspaceKey, $locale);
-        } catch (PreviewNotFoundException $ex) {
-            return new JsonResponse($ex->toArray(), 404);
+        $content = null;
+        $i = 0;
+        // FIXME Remove this ugly fix as soon as possible
+        while (true) {
+            $i++;
+            try {
+                $content = $preview->render($uid, $contentUuid, $webspaceKey, $locale);
+                break;
+            } catch (PreviewNotFoundException $ex) {
+                if ($i > 4) {
+                    return new JsonResponse($ex->toArray(), 404);
+                } else {
+                    usleep(50);
+                }
+            }
         }
 
         $script = $this->render(
