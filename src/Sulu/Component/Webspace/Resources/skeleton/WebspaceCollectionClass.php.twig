@@ -142,7 +142,7 @@ class {{ cache_class }} extends {{ base_class }}
             null,
 {% endif %}
 {% if portalInformation.localization %}
-            $localizationRefs['{{ portalInformation.webspace }}_{{ portalInformation.localization }}'],
+            $localizationRefs['{{ portalInformation.webspace }}_{{ portalInformation.localization.localization }}'],
 {% else %}
             null,
 {% endif %}
