@@ -115,11 +115,7 @@ class PreviewController extends Controller
             $contentUuid = $startPage->getUuid();
         }
 
-        try {
-            $content = $preview->render($uid, $contentUuid, $webspaceKey, $locale);
-        } catch (PreviewNotFoundException $ex) {
-            return new JsonResponse($ex->toArray(), 404);
-        }
+        $content = $preview->render($uid, $contentUuid, $webspaceKey, $locale);
 
         $script = $this->render(
             'SuluContentBundle:Preview:script.html.twig',

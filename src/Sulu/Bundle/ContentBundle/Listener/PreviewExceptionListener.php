@@ -13,6 +13,7 @@ namespace Sulu\Bundle\ContentBundle\Listener;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Exception\FlattenException;
 
 /**
  * Kernel exception listener to render error page
@@ -31,9 +32,10 @@ class PreviewExceptionListener
      */
     private $templateName;
 
-    public function __construct(EngineInterface $templateEngine, $templateName)
+    public function __construct(EngineInterface $templateEngine, $templateName = null)
     {
         $this->templateEngine = $templateEngine;
+        $this->templateName = $templateName;
     }
 
     /**
@@ -51,23 +53,22 @@ class PreviewExceptionListener
 
         $ex = $event->getException();
         $code = 500;
+        $previousContent = $event->getResponse();
+        $content = $previousContent !== null ? $previousContent->getContent() : '';
+        $statusTexts = Response::$statusTexts;
+        $statusText = isset($statusTexts[$code]) ? $statusTexts[$code] : '';
 
-        $response = $this->templateEngine->render(
+        $responseContent = $this->templateEngine->render(
             $this->findTemplate(),
             array(
-                'status_code' => $code,
-                'status_text' => isset(Response::$statusTexts[$code]) ? Response::$statusTexts[$code] : '',
-                'code' => $ex->getCode(),
-                'file' => $ex->getFile(),
-                'line' => $ex->getLine(),
-                'message' => $ex->getMessage(),
-                'trace' => $ex->getTrace(),
-                'trace_string' => $ex->getTraceAsString(),
-                'previous_content' => $event->getResponse()->getContent()
+                'status_code'    => $code,
+                'status_text'    => $statusText,
+                'exception'      => FlattenException::create($ex, $code),
+                'currentContent' => $content,
             )
         );
 
-        $event->setResponse(new Response($response));
+        $event->setResponse(new Response($responseContent));
     }
 
     /**
@@ -76,11 +77,11 @@ class PreviewExceptionListener
      */
     private function findTemplate()
     {
-        if ($this->templateEngine->exists($this->templateName)) {
+        if ($this->templateName !== null && $this->templateEngine->exists($this->templateName)) {
             return $this->templateName;
         }
 
-        return 'SuluContentBundle:Preview:error.html.twig';
+        return 'TwigBundle:Exception:exception_full.html.twig';
     }
 
 } 
