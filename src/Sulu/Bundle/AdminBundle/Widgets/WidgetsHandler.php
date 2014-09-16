@@ -19,7 +19,7 @@ use Symfony\Component\Templating\EngineInterface;
 class WidgetsHandler implements WidgetsHandlerInterface
 {
     /**
-     * @var array
+     * @var WidgetInterface[]
      */
     protected $widgets = array();
 
@@ -51,7 +51,7 @@ class WidgetsHandler implements WidgetsHandlerInterface
 
     public function addWidget(WidgetInterface $widget, $alias)
     {
-        $this->widgets[$alias] = array('instance' => $widget);
+        $this->widgets[$alias] = $widget;
     }
 
     /**
@@ -82,9 +82,9 @@ class WidgetsHandler implements WidgetsHandlerInterface
         $widgets = array();
         foreach ($aliases as $alias) {
             $widgets[] = array(
-                'name' => $this->widgets[$alias]['instance']->getName(),
-                'template' => $this->widgets[$alias]['instance']->getTemplate(),
-                'data' => $this->widgets[$alias]['instance']->getData($parameters)
+                'name' => $this->widgets[$alias]->getName(),
+                'template' => $this->widgets[$alias]->getTemplate(),
+                'data' => $this->widgets[$alias]->getData($parameters)
             );
         }
 

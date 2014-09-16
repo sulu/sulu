@@ -10,8 +10,6 @@
 
 namespace Sulu\Bundle\AdminBundle\Widgets;
 
-use Sulu\Bundle\AdminBundle\Widgets\WidgetException;
-
 class WidgetEntityNotFoundException extends WidgetException
 {
     protected $id;
