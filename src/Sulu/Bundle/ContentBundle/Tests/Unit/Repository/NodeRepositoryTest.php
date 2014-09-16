@@ -357,6 +357,64 @@ class NodeRepositoryTest extends PhpcrTestCase
         $this->assertEquals('Testtitle1', $nodes[1]->title);
     }
 
+    public function testGetFilteredNodesInOrderByTitle()
+    {
+        $data = array(
+            array(
+                'title' => 'hello you',
+                'tags' => array(
+                    'tag1',
+                    'tag2'
+                ),
+                'url' => '/news/test1',
+                'article' => 'Test'
+            ),
+            array(
+                'title' => 'Hello me',
+                'tags' => array(
+                    'tag1',
+                    'tag2'
+                ),
+                'url' => '/news/test2',
+                'article' => 'Test'
+            ),
+            array(
+                'title' => 'Test',
+                'tags' => array(
+                    'tag1',
+                    'tag2'
+                ),
+                'url' => '/news/test3',
+                'article' => 'Test'
+            ),
+        );
+
+        foreach ($data as &$element) {
+            $element = $this->mapper->save(
+                $element,
+                'overview',
+                'default',
+                'en',
+                1,
+                true,
+                null,
+                null,
+                StructureInterface::STATE_PUBLISHED
+            );
+            sleep(1);
+        }
+
+        $nodes = $this->nodeRepository->getFilteredNodes(
+            array('sortBy' => array('title'), 'sortMethod' => 'asc'),
+            'en',
+            'default'
+        );
+
+        $this->assertEquals('Hello me', $nodes[0]->title);
+        $this->assertEquals('hello you', $nodes[1]->title);
+        $this->assertEquals('Test', $nodes[2]->title);
+    }
+
     /**
      * @return StructureInterface[]
      */
