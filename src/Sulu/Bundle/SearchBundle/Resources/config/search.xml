@@ -7,6 +7,7 @@
         <parameter key="sulu_search.event_listener.node_save.class">Sulu\Bundle\SearchBundle\EventListener\NodeSaveListener</parameter>
         <parameter key="sulu_search.localized_search_manager.class">Sulu\Bundle\SearchBundle\LocalizedSearchManager\LocalizedSearchManager</parameter>
         <parameter key="sulu_search.event_listener.search.class">Sulu\Bundle\SearchBundle\EventListener\SearchListener</parameter>
+        <parameter key="sulu_search.factory">Sulu\Bundle\SearchBundle\Search\Factory</parameter>
     </parameters>
 
     <services>
@@ -31,5 +32,8 @@
 
             <tag name="kernel.event_listener" event="massive_search.search" method="onSearch" />
         </service>
+
+        <!-- custom factory class -->
+        <service id="sulu_search.factory" class="%sulu_search.factory%" />
     </services>
 </container>

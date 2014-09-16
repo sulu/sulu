@@ -14,14 +14,29 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 
 /**
  * This is the class that loads and manages your bundle configuration
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
  */
-class SuluSearchExtension extends Extension
+class SuluSearchExtension extends Extension implements PrependExtensionInterface
 {
+    /**
+     * Override configuration settings from massive_search bundle
+     *
+     * {@inheritDoc}
+     */
+    public function prepend(ContainerBuilder $container)
+    {
+        $container->prependextensionconfig('massive_search', array(
+            'services' => array(
+                'factory' => 'sulu_search.factory'
+            )
+        ));
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -32,7 +47,7 @@ class SuluSearchExtension extends Extension
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('metadata.xml');
-        $loader->load('content.xml');
+        $loader->load('search.xml');
         $loader->load('build.xml');
 
         if ($container->hasParameter('sulu.context') && 'website' == $container->getParameter('sulu.context')) {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Sulu\Bundle\SearchBundle\Metadata;
+namespace Sulu\Bundle\SearchBundle\Search\Metadata;
 
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadataInterface;
 use Metadata\Driver\DriverInterface;
@@ -57,4 +57,3 @@ class StructureDriver implements DriverInterface
         return $meta;
     }
 }
-

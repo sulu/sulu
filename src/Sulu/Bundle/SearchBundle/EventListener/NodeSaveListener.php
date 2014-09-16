@@ -46,6 +46,8 @@ class NodeSaveListener
     {
         $structure = $event->getStructure();
         $path = $this->sessionManager->getSession()->getNodeByIdentifier($structure->getUuid())->getPath();
+
+        // TODO: Move logic to determine if node is preview to somewhere else ...
         preg_match('{/' . $this->baseName . '/(.*?)/(.*?)(/.*)*$}', $path, $matches);
 
         // only if it is none temp node and it is published
