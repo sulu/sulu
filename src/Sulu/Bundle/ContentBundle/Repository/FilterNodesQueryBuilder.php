@@ -119,7 +119,12 @@ class FilterNodesQueryBuilder
         if (!empty($sortBy) && is_array($sortBy)) {
             foreach ($this->getConfig('sortBy', array()) as $sortColumn) {
                 // TODO implement more generic
-                $sql2Order[] = 'c.[i18n:' . $languageCode . '-' . $sortColumn . ']';
+                $order = 'c.[i18n:' . $languageCode . '-' . $sortColumn . ']';
+                if (!in_array($sortColumn, array('published', 'created', 'changed'))) {
+                    $order = sprintf('lower(%s)', $order);
+                }
+
+                $sql2Order[] = $order;
             }
         }
 

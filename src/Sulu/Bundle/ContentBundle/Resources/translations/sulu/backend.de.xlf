@@ -154,6 +154,10 @@
                 <source>smart-content.view-less</source>
                 <target>weniger ansehen</target>
             </trans-unit>
+            <trans-unit id="cc88fcd370c8ff1d96f0b9f99adb8317" resname="smart-content.title">
+                <source>smart-content.title</source>
+                <target>Titel</target>
+            </trans-unit>
             <trans-unit id="ad64f69edc5ce6dae6033001f5d01b6e" resname="content.template.dialog.titile">
                 <source>content.template.dialog.titile</source>
                 <target>Template ändern</target>
