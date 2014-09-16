@@ -21,7 +21,7 @@
             <argument type="service" id="logger"/>
             <argument type="collection">
                 <argument key="config_dir">%sulu_core.webspace.config_dir%</argument>
-                <argument key="cache_dir">%kernel.cache_dir%</argument>
+                <argument key="cache_dir">%sulu.cache_dir%</argument>
                 <argument key="debug">%kernel.debug%</argument>
                 <argument key="cache_class">%sulu_core.webspace.cache_class%</argument>
                 <argument key="base_class">%sulu_core.webspace.base_class%</argument>
