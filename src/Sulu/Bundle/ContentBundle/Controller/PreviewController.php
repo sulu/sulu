@@ -156,7 +156,8 @@ class PreviewController extends Controller
             )
         );
 
-        $content = str_replace('</body>', $script->getContent() . '</body>', $content);
+        $script = $script->getContent();
+        $content = str_replace('</body>', $script . '</body>', $content);
 
         return new Response($content);
     }
