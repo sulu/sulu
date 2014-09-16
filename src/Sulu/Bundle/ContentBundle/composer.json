@@ -4,7 +4,7 @@
     "description": "The bundle responsible for content management in Sulu",
     "license": "MIT",
     "keywords": ["content", "cmf"],
-    "version": "0.7.0",
+    "version": "dev-develop",
     "authors": [
         {
             "name": "Sulu Community",
@@ -14,15 +14,15 @@
     "require": {
         "php": ">=5.4",
 
-        "sulu/sulu": "0.7.*",
-        "sulu/admin-bundle": "0.7.*",
-        "sulu/contact-bundle": "0.7.*",
-        "sulu/security-bundle": "0.7.*",
-        "sulu/website-bundle": "0.7.*",
-        "sulu/tag-bundle": "0.7.*",
+        "sulu/sulu": "dev-develop",
+        "sulu/admin-bundle": "dev-develop",
+        "sulu/contact-bundle": "dev-develop",
+        "sulu/security-bundle": "dev-develop",
+        "sulu/website-bundle": "dev-develop",
+        "sulu/tag-bundle": "dev-develop",
 
-	    "sulu/category-bundle": "0.4.*",
-        "sulu/media-bundle": "0.4.*",
+	    "sulu/category-bundle": "dev-develop",
+        "sulu/media-bundle": "dev-develop",
         "liip/theme-bundle": "@dev",
 
         "jackalope/jackalope-jackrabbit": "1.1.*",
@@ -47,7 +47,7 @@
         "doctrine/doctrine-bundle": "1.2.*",
         "symfony/monolog-bundle": "2.4.*",
         "phpunit/phpunit": "3.7.*",
-        "sulu/test-bundle": "0.7.*"
+        "sulu/test-bundle": "dev-develop"
     },
     "autoload": {
         "psr-0": {
