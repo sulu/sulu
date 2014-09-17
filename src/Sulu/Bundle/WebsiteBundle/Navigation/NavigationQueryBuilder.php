@@ -14,10 +14,20 @@ use Sulu\Bundle\WebsiteBundle\ContentQuery\ContentQueryBuilder;
 
 class NavigationQueryBuilder extends ContentQueryBuilder
 {
+    /**
+     * @var array
+     */
     protected $properties = array('navContexts');
 
-    private $depth = 1;
-    private $context = '';
+    /**
+     * @var string|null
+     */
+    private $context = null;
+
+    /**
+     * @var string|null
+     */
+    private $parent = null;
 
     /**
      * Returns custom select statement
@@ -25,21 +35,14 @@ class NavigationQueryBuilder extends ContentQueryBuilder
     protected function buildWhere($webspaceKey, $locale)
     {
         $where = array();
-        if ($this->depth !== -1) {
-            $where[] = $this->buildDepthWhere();
+        if ($this->context !== null) {
+            $where[] = sprintf("page.[i18n:%s-navContexts] = '%s'", $locale, $this->context);
+        }
+        if ($this->parent !== null) {
+            $where[] = sprintf("ISDESCENDANTNODE(page, '%s')", $this->parent);
         }
 
-        return implode(', ', $where);
-    }
-
-    private function buildDepthWhere()
-    {
-        $path = '';
-        for ($i = 0; $i < $this->depth; $i++) {
-            $path .= '/%';
-        }
-
-        return "page.[jcr:path] LIKE '" . $path . "' AND NOT page.[jcr:path] LIKE '" . $path . "/%'";
+        return implode(' AND ', $where);
     }
 
     /**
@@ -52,6 +55,7 @@ class NavigationQueryBuilder extends ContentQueryBuilder
 
     public function init(array $options)
     {
-        $this->depth = (isset($options['depth'])) ? $options['depth'] : 1;
+        $this->context = (isset($options['context'])) ? $options['context'] : null;
+        $this->parent = (isset($options['parent'])) ? $options['parent'] : null;
     }
 }

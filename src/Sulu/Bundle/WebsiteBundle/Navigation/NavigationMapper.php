@@ -13,6 +13,7 @@ namespace Sulu\Bundle\WebsiteBundle\Navigation;
 use Sulu\Bundle\WebsiteBundle\ContentQuery\ContentQueryBuilderInterface;
 use Sulu\Bundle\WebsiteBundle\ContentQuery\ContentQueryInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
+use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManagerInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
@@ -60,19 +61,17 @@ class NavigationMapper implements NavigationMapperInterface
      */
     public function getNavigation($parent, $webspaceKey, $locale, $depth = 1, $flat = false, $context = null)
     {
-        if ($depth !== null) {
-            $contentDepth = $this->sessionManager->getContentNode($webspaceKey)->getDepth();
-            $depth += $contentDepth;
-        }
+        $rootDepth = substr_count($this->sessionManager->getContentNode($webspaceKey)->getPath(), '/');
+        $parent = $this->sessionManager->getSession()->getNodeByIdentifier($parent)->getPath();
+        $depth = $depth + substr_count($parent, '/') - $rootDepth;
 
         $this->queryBuilder->init(
             array(
-                'depth' => $depth,
                 'context' => $context,
                 'parent' => $parent
             )
         );
-        $result = $this->contentQuery->execute($webspaceKey, array($locale), $this->queryBuilder, $flat);
+        $result = $this->contentQuery->execute($webspaceKey, array($locale), $this->queryBuilder, $flat, $depth);
 
         return $this->convertArrayToNavigation($result);
     }
@@ -82,8 +81,8 @@ class NavigationMapper implements NavigationMapperInterface
      */
     public function getRootNavigation($webspaceKey, $locale, $depth = 1, $flat = false, $context = null)
     {
-        $this->queryBuilder->init(array('depth' => $depth, 'context' => $context));
-        $result = $this->contentQuery->execute($webspaceKey, array($locale), $this->queryBuilder, $flat);
+        $this->queryBuilder->init(array('context' => $context));
+        $result = $this->contentQuery->execute($webspaceKey, array($locale), $this->queryBuilder, $flat, $depth);
 
         return $this->convertArrayToNavigation($result);
     }
@@ -93,9 +92,10 @@ class NavigationMapper implements NavigationMapperInterface
         $navigation = array();
         foreach ($items as $item) {
             $children = (isset($item['children']) ? $this->convertArrayToNavigation($item['children']) : array());
+            unset($item['children']);
 
             $navigation[] = new NavigationItem(
-                null,
+                $item,
                 $item['title'],
                 $item['url'],
                 $children,

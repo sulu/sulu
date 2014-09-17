@@ -23,7 +23,17 @@
             <tag name="sulu.admin"/>
         </service>
 
+        <!-- content query -->
+        <service id="sulu_website.content.query" class="%%">
+            <argument type="service" id="sulu.phpcr.session"/>
+            <argument type="service" id="sulu.content.structure_manager"/>
+            <argument type="service" id="sulu.content.template_resolver"/>
+            <argument>%sulu.content.language.namespace%</argument>
+        </service>
+
         <!-- navigation mapper -->
+        <service id="sulu_website.navigation_mapper.conten"></service>
+
         <service id="sulu_website.navigation_mapper" class="%sulu_website.navigation_mapper.class%">
             <argument type="service" id="sulu.content.mapper"/>
             <argument type="service" id="sulu.phpcr.session"/>

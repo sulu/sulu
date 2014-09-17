@@ -307,12 +307,10 @@ class NavigationTest extends PhpcrTestCase
 
         $this->assertEquals($this->data['news/news-1']->getUuid(), $main[0]->getId());
         $this->assertEquals('News-1', $main[0]->getTitle());
-        $this->assertInstanceOf('Sulu\Component\Content\StructureInterface', $main[0]->getContent());
         $this->assertEquals('/news/news-1', $main[0]->getUrl());
 
         $this->assertEquals($this->data['news/news-2']->getUuid(), $main[1]->getId());
         $this->assertEquals('News-2', $main[1]->getTitle());
-        $this->assertInstanceOf('Sulu\Component\Content\StructureInterface', $main[1]->getContent());
         $this->assertEquals('/news/news-2', $main[1]->getUrl());
     }
 
@@ -394,12 +392,10 @@ class NavigationTest extends PhpcrTestCase
 
         $this->assertEquals($this->data['news/news-1']->getUuid(), $main[0]->getId());
         $this->assertEquals('News-1', $main[0]->getTitle());
-        $this->assertInstanceOf('Sulu\Component\Content\StructureInterface', $main[0]->getContent());
         $this->assertEquals('/news/news-1', $main[0]->getUrl());
 
         $this->assertEquals($this->data['news/news-2']->getUuid(), $main[1]->getId());
         $this->assertEquals('News-2', $main[1]->getTitle());
-        $this->assertInstanceOf('Sulu\Component\Content\StructureInterface', $main[1]->getContent());
         $this->assertEquals('/news/news-2', $main[1]->getUrl());
     }
 
@@ -408,25 +404,34 @@ class NavigationTest extends PhpcrTestCase
         // context footer (only news and one sub page news-1)
         $result = $this->navigation->getRootNavigation('default', 'en', 2, false, 'footer');
 
-        $this->assertEquals(1, sizeof($result));
-        $layer1 = $result[0];
+        $this->assertEquals(2, sizeof($result));
+        $layer1 = $result;
 
-        $this->assertEquals(1, sizeof($layer1->getChildren()));
-        $layer2 = $layer1->getChildren()[0];
+        $this->assertEquals(1, sizeof($layer1[0]->getChildren()));
+        $layer2 = $layer1[0]->getChildren()[0];
 
-        $this->assertEquals('News', $layer1->getTitle());
+        $this->assertEquals('News', $layer1[0]->getTitle());
         $this->assertEquals('News-1', $layer2->getTitle());
+
+        $this->assertEquals(0, sizeof($layer1[1]->getChildren()));
+        $this->assertEquals('Products-1', $layer1[1]->getTitle());
 
         // context main (only products and two sub pages
         $result = $this->navigation->getRootNavigation('default', 'en', 2, false, 'main');
 
-        $this->assertEquals(1, sizeof($result));
-        $layer1 = $result[0];
+        $this->assertEquals(3, sizeof($result));
+        $layer1 = $result;
 
-        $this->assertEquals(2, sizeof($layer1->getChildren()));
-        $layer2 = $layer1->getChildren();
+        $this->assertEquals(0, sizeof($layer1[0]->getChildren()));
+        $this->assertEquals(0, sizeof($layer1[1]->getChildren()));
 
-        $this->assertEquals('Products', $layer1->getTitle());
+        $this->assertEquals('News-1', $layer1[0]->getTitle());
+        $this->assertEquals('News-2', $layer1[1]->getTitle());
+
+        $this->assertEquals(2, sizeof($layer1[2]->getChildren()));
+        $layer2 = $layer1[2]->getChildren();
+
+        $this->assertEquals('Products', $layer1[2]->getTitle());
         $this->assertEquals('Products-1', $layer2[0]->getTitle());
         $this->assertEquals('Products-2', $layer2[1]->getTitle());
     }
@@ -439,9 +444,9 @@ class NavigationTest extends PhpcrTestCase
         $this->assertEquals(3, sizeof($result));
 
         // check children
-        $this->assertNull($result[0]->getChildren());
-        $this->assertNull($result[1]->getChildren());
-        $this->assertNull($result[2]->getChildren());
+        $this->assertEquals(0, sizeof($result[0]->getChildren()));
+        $this->assertEquals(0, sizeof($result[1]->getChildren()));
+        $this->assertEquals(0, sizeof($result[2]->getChildren()));
 
         // check title
         $this->assertEquals('News', $result[0]->getTitle());
@@ -454,11 +459,11 @@ class NavigationTest extends PhpcrTestCase
         $this->assertEquals(5, sizeof($result));
 
         // check children
-        $this->assertNull($result[0]->getChildren());
-        $this->assertNull($result[1]->getChildren());
-        $this->assertNull($result[2]->getChildren());
-        $this->assertNull($result[3]->getChildren());
-        $this->assertNull($result[4]->getChildren());
+        $this->assertEquals(0, sizeof($result[0]->getChildren()));
+        $this->assertEquals(0, sizeof($result[1]->getChildren()));
+        $this->assertEquals(0, sizeof($result[2]->getChildren()));
+        $this->assertEquals(0, sizeof($result[3]->getChildren()));
+        $this->assertEquals(0, sizeof($result[4]->getChildren()));
 
         // check title
         $this->assertEquals('News-1', $result[0]->getTitle());
