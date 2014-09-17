@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Content\Query;
+namespace Sulu\Component\Content\Query;
 
 /**
  * Interface for content query
