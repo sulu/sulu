@@ -21,7 +21,7 @@ class ErrorStructure extends Structure
 {
     protected $exception;
 
-    public function setException(\Exception $e)
+    public function setException(\Exception $exception)
     {
         $this->exception = $exception;
     }
