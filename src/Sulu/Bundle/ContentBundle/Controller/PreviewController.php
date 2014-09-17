@@ -130,6 +130,9 @@ class PreviewController extends Controller
                     throw $ex;
                 } else {
                     usleep(50000);
+
+                    // refresh session before check for new node
+                    $this->get('sulu.phpcr.session')->getSession()->refresh();
                 }
             }
         }
