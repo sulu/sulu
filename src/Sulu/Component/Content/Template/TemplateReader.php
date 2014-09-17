@@ -22,6 +22,10 @@ use Symfony\Component\Config\Util\XmlUtils;
  */
 class TemplateReader implements LoaderInterface
 {
+    /**
+     * path to schema
+     * @var string
+     */
     protected $schemaPath = '/Resources/schema/template/template-1.0.xsd';
 
     /**
@@ -430,7 +434,7 @@ class TemplateReader implements LoaderInterface
     {
         return is_string($resource) && 'xml' === pathinfo($resource, PATHINFO_EXTENSION);
     }
-    
+
     /**
      * {@inheritdoc}
      */
