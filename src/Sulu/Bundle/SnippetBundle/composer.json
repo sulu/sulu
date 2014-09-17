@@ -1,0 +1,31 @@
+{
+    "name": "sulu/snippet-bundle",
+    "description": "The bundle provides to create/manage/use snippets for content management in Sulu",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Sulu Community",
+            "homepage": "https://github.com/massiveart/SuluContentBundle/contributors"
+        }
+    ],
+    "require": {
+        "php": ">=5.4",
+
+        "sulu/sulu": "dev-develop",
+        "sulu/admin-bundle": "dev-develop"
+    },
+    "require-dev": {
+        "symfony/symfony": "2.5.*",
+        "sensio/framework-extra-bundle":  "~3.0",
+        "doctrine/doctrine-bundle": "1.2.*",
+        "symfony/monolog-bundle": "2.4.*",
+        "phpunit/phpunit": "3.7.*",
+        "sulu/test-bundle": "dev-develop"
+    },
+    "autoload": {
+        "psr-0": {
+            "Sulu\\Bundle\\SnippetBundle": ""
+        }
+    },
+    "target-dir": "Sulu/Bundle/SnippetBundle"
+}
