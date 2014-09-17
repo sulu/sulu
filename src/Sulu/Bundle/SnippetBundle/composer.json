@@ -12,14 +12,19 @@
         "php": ">=5.4",
 
         "sulu/sulu": "dev-develop",
-        "sulu/admin-bundle": "dev-develop"
+        "sulu/admin-bundle": "dev-develop",
+
+        "friendsofsymfony/http-cache": "@dev",
+        "friendsofsymfony/rest-bundle": "@dev"
     },
     "require-dev": {
+        "phpunit/phpunit": "3.7.*",
+
         "symfony/symfony": "2.5.*",
+        "symfony/monolog-bundle": "2.4.*",
         "sensio/framework-extra-bundle":  "~3.0",
         "doctrine/doctrine-bundle": "1.2.*",
-        "symfony/monolog-bundle": "2.4.*",
-        "phpunit/phpunit": "3.7.*",
+
         "sulu/test-bundle": "dev-develop"
     },
     "autoload": {
