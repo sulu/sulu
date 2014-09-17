@@ -428,9 +428,9 @@ class TemplateReader implements LoaderInterface
      */
     public function supports($resource, $type = null)
     {
-        throw new FeatureNotImplementedException();
+        return is_string($resource) && 'xml' === pathinfo($resource, PATHINFO_EXTENSION);
     }
-
+    
     /**
      * {@inheritdoc}
      */
