@@ -22,14 +22,14 @@ use Symfony\Component\Config\Util\XmlUtils;
  */
 class TemplateReader implements LoaderInterface
 {
-    const SCHEME_PATH = '/Resources/schema/template/template-1.0.xsd';
+    protected $schemaPath = '/Resources/schema/template/template-1.0.xsd';
 
     /**
      * tags that are required in template
      * TODO should be possible to inject from config
      * @var array
      */
-    private $requiredTags = array(
+    protected $requiredTags = array(
         'sulu.node.name'
     );
 
@@ -38,7 +38,7 @@ class TemplateReader implements LoaderInterface
      * TODO should be possible to inject from config
      * @var array
      */
-    private $reservedPropertyNames = array(
+    protected $reservedPropertyNames = array(
         'template',
         'changer',
         'changed',
@@ -52,6 +52,53 @@ class TemplateReader implements LoaderInterface
     );
 
     /**
+     * xml namespaces
+     * @var array
+     */
+    protected $namespaces = array(
+        'x' => 'http://schemas.sulu.io/template/template'
+    );
+
+    /**
+     * template attributes
+     * @var array
+     */
+    protected $attributes = array(
+        'key' => array(
+            'xpath' => '/x:template/x:key',
+            'mandatory' => true
+        ),
+        'view' => array(
+            'xpath' => '/x:template/x:view',
+            'mandatory' => true
+        ),
+        'controller' => array(
+            'xpath' => '/x:template/x:controller',
+            'mandatory' => true
+        ),
+        'cacheLifetime' => array(
+            'xpath' => '/x:template/x:cacheLifetime',
+            'mandatory' => true
+        ),
+        'indexName' => array(
+            'xpath' => '/x:template/x:index/@name',
+            'mandatory' => false
+        )
+    );
+
+    /**
+     * xpath to properties
+     * @var string
+     */
+    protected $propertiesPath = '/x:template/x:properties/x:*';
+
+    /**
+     * xpath to meta
+     * @var string
+     */
+    protected $metaPath = '/x:template/x:meta/x:*';
+
+    /**
      * {@inheritdoc}
      */
     public function load($resource, $type = null)
@@ -62,17 +109,19 @@ class TemplateReader implements LoaderInterface
         $tags = array();
 
         // read file
-        $xmlDocument = XmlUtils::loadFile($resource, __DIR__ . static::SCHEME_PATH);
+        $xmlDocument = XmlUtils::loadFile($resource, __DIR__ . $this->schemaPath);
 
         // generate xpath for file
         $xpath = new \DOMXPath($xmlDocument);
-        $xpath->registerNamespace('x', 'http://schemas.sulu.io/template/template');
+        foreach ($this->namespaces as $key => $value) {
+            $xpath->registerNamespace($key, $value);
+        }
 
         // init result
         $result = $this->loadTemplateAttributes($xpath);
 
         // load properties
-        $result['properties'] = $this->loadProperties('/x:template/x:properties/x:*', $requiredTags, $tags, $xpath);
+        $result['properties'] = $this->loadProperties($this->propertiesPath, $requiredTags, $tags, $xpath);
 
         if (sizeof($requiredTags) > 0) {
             throw new InvalidXmlException(
@@ -91,20 +140,20 @@ class TemplateReader implements LoaderInterface
      */
     private function loadTemplateAttributes(\DOMXPath $xpath)
     {
-        $result = array(
-            'key' => $this->getValueFromXPath('/x:template/x:key', $xpath),
-            'view' => $this->getValueFromXPath('/x:template/x:view', $xpath),
-            'controller' => $this->getValueFromXPath('/x:template/x:controller', $xpath),
-            'cacheLifetime' => $this->getValueFromXPath('/x:template/x:cacheLifetime', $xpath),
-            'meta' => $this->loadMeta('/x:template/x:meta/x:*', $xpath),
-            'indexName' => $this->getValueFromXPath('/x:template/x:index/@name', $xpath),
-        );
+        $result = array();
+        foreach ($this->attributes as $key => $attribute) {
+            $value = $this->getValueFromXPath($attribute['xpath'], $xpath);
+            if ($value === null && $attribute['mandatory']) {
+                throw new InvalidXmlException(sprintf('Mandatory key "%s" not found', $key));
+            }
 
-        $result = array_filter($result);
-
-        if (sizeof($result) < 4) {
-            throw new InvalidXmlException();
+            $result[$key] = $value;
         }
+
+        $result['meta'] =$this->loadMeta($this->metaPath, $xpath);
+
+        // filter null values
+        $result = array_filter($result);
 
         return $result;
     }
