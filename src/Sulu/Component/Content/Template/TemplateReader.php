@@ -26,7 +26,7 @@ class TemplateReader implements LoaderInterface
      * path to schema
      * @var string
      */
-    protected $schemaPath = '/Resources/schema/template/template-1.0.xsd';
+    protected $schemaPath;
 
     /**
      * tags that are required in template
@@ -102,6 +102,11 @@ class TemplateReader implements LoaderInterface
      */
     protected $metaPath = '/x:template/x:meta/x:*';
 
+    function __construct()
+    {
+        $this->schemaPath = __DIR__ . '/Resources/schema/template/template-1.0.xsd';
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -113,7 +118,7 @@ class TemplateReader implements LoaderInterface
         $tags = array();
 
         // read file
-        $xmlDocument = XmlUtils::loadFile($resource, __DIR__ . $this->schemaPath);
+        $xmlDocument = XmlUtils::loadFile($resource, $this->schemaPath);
 
         // generate xpath for file
         $xpath = new \DOMXPath($xmlDocument);
