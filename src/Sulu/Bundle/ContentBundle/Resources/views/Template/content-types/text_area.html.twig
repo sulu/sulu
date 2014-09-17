@@ -2,4 +2,5 @@
           data-property='{{ property|json_encode }}'
           class="form-element preview-update trigger-save-button"
           data-mapper-property="{{ property.name }}"
+          placeholder="{{ property.getPlaceholder(userLocale) }}"
           {% if property.mandatory %}data-validation-required="true"{% endif %}></textarea>
