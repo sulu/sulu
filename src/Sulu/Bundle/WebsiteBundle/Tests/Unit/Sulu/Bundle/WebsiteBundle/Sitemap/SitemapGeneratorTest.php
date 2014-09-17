@@ -12,9 +12,9 @@ namespace Sulu\Bundle\WebsiteBundle\Sitemap;
 
 use ReflectionMethod;
 use Sulu\Bundle\TestBundle\Testing\PhpcrTestCase;
-use Sulu\Bundle\WebsiteBundle\ContentQuery\ContentQuery;
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyTag;
+use Sulu\Component\Content\Query\ContentQuery;
 use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Webspace\Localization;

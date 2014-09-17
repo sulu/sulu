@@ -14,6 +14,7 @@ use Sulu\Bundle\WebsiteBundle\Navigation\NavigationItem;
 use Sulu\Bundle\WebsiteBundle\Navigation\NavigationMapperInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Webspace\Localization;
 
 /**
  * provides the navigation function
@@ -65,6 +66,10 @@ class NavigationTwigExtension extends \Twig_Extension
         $flat = false,
         $context = null
     ) {
+        if ($localization instanceof Localization) {
+            $localization = $localization->getLocalization();
+        }
+
         return $this->navigationMapper->getRootNavigation(
             $webspaceKey,
             $localization,

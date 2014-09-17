@@ -10,20 +10,8 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Sitemap;
 
-use Jackalope\Query\Row;
-use PHPCR\Query\QueryInterface;
-use PHPCR\Query\QueryResultInterface;
-use PHPCR\RepositoryException;
-use Sulu\Bundle\WebsiteBundle\ContentQuery\ContentQueryBuilderInterface;
-use Sulu\Bundle\WebsiteBundle\ContentQuery\ContentQueryInterface;
-use Sulu\Component\Content\Mapper\ContentMapperInterface;
-use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
-use Sulu\Component\Content\PropertyInterface;
-use Sulu\Component\Content\Structure;
-use Sulu\Component\Content\StructureInterface;
-use Sulu\Component\Content\StructureManagerInterface;
-use Sulu\Component\Content\Template\TemplateResolverInterface;
-use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
+use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
+use Sulu\Component\Content\Query\ContentQueryInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
 /**

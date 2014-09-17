@@ -14,6 +14,9 @@
         <parameter key="sulu_website.exception.controller.class">Sulu\Bundle\WebsiteBundle\Controller\ExceptionController</parameter>
         <parameter key="sulu_website.resolver.request_analyzer.class">Sulu\Bundle\WebsiteBundle\Resolver\RequestAnalyzerResolver</parameter>
         <parameter key="sulu_website.resolver.structure.class">Sulu\Bundle\WebsiteBundle\Resolver\StructureResolver</parameter>
+
+        <parameter key="sulu_website.navigation_mapper.query_builder.class">Sulu\Bundle\WebsiteBundle\Navigation\NavigationQueryBuilder</parameter>
+        <parameter key="sulu_website.sitemap.query_builder.class">Sulu\Bundle\WebsiteBundle\Sitemap\SitemapContentQueryBuilder</parameter>
     </parameters>
 
     <services>
@@ -23,31 +26,27 @@
             <tag name="sulu.admin"/>
         </service>
 
-        <!-- content query -->
-        <service id="sulu_website.content.query" class="%%">
-            <argument type="service" id="sulu.phpcr.session"/>
+        <!-- navigation mapper -->
+        <service id="sulu_website.navigation_mapper.query_builder" class="%sulu_website.navigation_mapper.query_builder.class%" public="false">
             <argument type="service" id="sulu.content.structure_manager"/>
-            <argument type="service" id="sulu.content.template_resolver"/>
             <argument>%sulu.content.language.namespace%</argument>
         </service>
-
-        <!-- navigation mapper -->
-        <service id="sulu_website.navigation_mapper.conten"></service>
-
         <service id="sulu_website.navigation_mapper" class="%sulu_website.navigation_mapper.class%">
             <argument type="service" id="sulu.content.mapper"/>
+            <argument type="service" id="sulu.content.query"/>
+            <argument type="service" id="sulu_website.navigation_mapper.query_builder"/>
             <argument type="service" id="sulu.phpcr.session"/>
-            <argument type="service" id="sulu.content.structure_manager"/>
-            <argument>%sulu.content.language.namespace%</argument>
         </service>
 
         <!-- sitemap generator -->
-        <service id="sulu_website.sitemap" class="%sulu_website.sitemap.class%">
-            <argument type="service" id="sulu.phpcr.session"/>
+        <service id="sulu_website.sitemap.query_builder" class="%sulu_website.sitemap.query_builder.class%" public="false">
             <argument type="service" id="sulu.content.structure_manager"/>
-            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
-            <argument type="service" id="sulu.content.template_resolver"/>
             <argument>%sulu.content.language.namespace%</argument>
+        </service>
+        <service id="sulu_website.sitemap" class="%sulu_website.sitemap.class%">
+            <argument type="service" id="sulu.content.query"/>
+            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+            <argument type="service" id="sulu_website.navigation_mapper.query_builder"/>
         </service>
 
         <!-- twig extension: content path -->
