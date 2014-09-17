@@ -10,7 +10,7 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Navigation;
 
-use Sulu\Bundle\WebsiteBundle\ContentQuery\ContentQueryBuilder;
+use Sulu\Component\Content\Query\ContentQueryBuilder;
 
 class NavigationQueryBuilder extends ContentQueryBuilder
 {

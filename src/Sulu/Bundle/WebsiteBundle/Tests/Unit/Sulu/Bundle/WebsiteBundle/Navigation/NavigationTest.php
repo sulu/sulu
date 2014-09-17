@@ -12,7 +12,7 @@ namespace Sulu\Bundle\WebsiteBundle\Navigation;
 
 use ReflectionMethod;
 use Sulu\Bundle\TestBundle\Testing\PhpcrTestCase;
-use Sulu\Bundle\WebsiteBundle\ContentQuery\ContentQuery;
+use Sulu\Component\Content\Query\ContentQuery;
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyTag;
 use Sulu\Component\Content\StructureInterface;
