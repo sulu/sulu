@@ -25,7 +25,7 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
     /**
      * @var StructureManagerInterface
      */
-    private $structureManager;
+    protected $structureManager;
 
     /**
      * @var string
@@ -237,7 +237,7 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
     /**
      * Returns single select statement
      */
-    private function buildSelector($name)
+    protected function buildSelector($name)
     {
         return sprintf("page.[%s]", $name);
     }
@@ -245,7 +245,7 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
     /**
      * Returns a translated property
      */
-    private function getTranslatedProperty(PropertyInterface $property, $locale)
+    protected function getTranslatedProperty(PropertyInterface $property, $locale)
     {
         return new TranslatedProperty($property, $locale, $this->languageNamespace);
     }

@@ -169,12 +169,19 @@ class ContentQuery implements ContentQueryInterface
             $structure = $this->structureManager->getStructure($templateKey);
 
             $fieldsData = array();
+            $target = & $fieldsData;
             foreach ($fields[$locale] as $field) {
-                if (!isset($fieldsData[$field['target']])) {
-                    $fieldsData[$field['target']] = array();
+                if (isset($fieldsData['target'])) {
+                    if (!isset($fieldsData[$field['target']])) {
+                        $fieldsData[$field['target']] = array();
+                    }
+                    $target = & $fieldsData[$field['target']];
+                } else {
+                    $target = & $fieldsData;
                 }
+
                 if (!isset($field['property'])) {
-                    $fieldsData[$field['target']][$field['name']] = $row->getValue($field['column']);
+                    $target[$field['name']] = $row->getValue($field['column']);
                 } else {
                     /** @var PropertyInterface $property */
                     $property = $field['property'];
@@ -194,7 +201,7 @@ class ContentQuery implements ContentQueryInterface
                     );
 
                     $value = $contentType->getContentData($property);
-                    $fieldsData[$field['target']][$field['name']] = $value;
+                    $target[$field['name']] = $value;
                 }
             }
 
