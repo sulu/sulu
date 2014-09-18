@@ -127,6 +127,7 @@
             <argument type="service" id="sulu.content.template_resolver"/>
             <argument type="service" id="sulu.content.type_manager"/>
             <argument>%sulu.content.language.namespace%</argument>
+            <argument type="service" id="debug.stopwatch" on-invalid="null"/>
         </service>
     </services>
 </container>

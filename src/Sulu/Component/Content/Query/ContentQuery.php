@@ -21,6 +21,7 @@ use Sulu\Component\Content\StructureManagerInterface;
 use Sulu\Component\Content\Template\TemplateResolverInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Util\ArrayableInterface;
+use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
  * Executes a query over the content
@@ -52,18 +53,25 @@ class ContentQuery implements ContentQueryInterface
      */
     private $languageNamespace;
 
+    /**
+     * @var Stopwatch
+     */
+    private $stopwatch;
+
     function __construct(
         SessionManagerInterface $sessionManager,
         StructureManagerInterface $structureManager,
         TemplateResolverInterface $templateResolver,
         ContentTypeManagerInterface $contentTypeManager,
-        $languageNamespace
+        $languageNamespace,
+        Stopwatch $stopwatch = null
     ) {
         $this->languageNamespace = $languageNamespace;
         $this->sessionManager = $sessionManager;
         $this->structureManager = $structureManager;
         $this->templateResolver = $templateResolver;
         $this->contentTypeManager = $contentTypeManager;
+        $this->stopwatch = $stopwatch;
     }
 
     /**
@@ -75,18 +83,43 @@ class ContentQuery implements ContentQueryInterface
         ContentQueryBuilderInterface $contentQueryBuilder,
         $flat = true,
         $depth = -1
-    )
-    {
+    ) {
+        if ($this->stopwatch) {
+            $this->stopwatch->start('ContentQuery::execute.build-query');
+        }
+
         list($sql2, $fields) = $contentQueryBuilder->build($webspaceKey, $locales);
+
+        if ($this->stopwatch) {
+            $this->stopwatch->stop('ContentQuery::execute.build-query');
+            $this->stopwatch->start('ContentQuery::execute.execute-query');
+        }
 
         $query = $this->createSql2Query($sql2);
         $queryResult = $query->execute();
 
+        if ($this->stopwatch) {
+            $this->stopwatch->stop('ContentQuery::execute.execute-query');
+            $this->stopwatch->start('ContentQuery::execute.rowsToList');
+        }
+
         $result = $this->rowsToList($queryResult, $webspaceKey, $locales, $fields, $depth);
 
+        if ($this->stopwatch) {
+            $this->stopwatch->stop('ContentQuery::execute.rowsToList');
+        }
+
         if (!$flat) {
+            if ($this->stopwatch) {
+                $this->stopwatch->start('ContentQuery::execute.build-tree');
+            }
+
             $converter = new ListToTreeConverter($this->sessionManager);
             $result = $converter->convert($result, $webspaceKey);
+
+            if ($this->stopwatch) {
+                $this->stopwatch->stop('ContentQuery::execute.build-tree');
+            }
         }
 
         return $result;
