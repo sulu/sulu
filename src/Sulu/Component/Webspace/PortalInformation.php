@@ -10,11 +10,13 @@
 
 namespace Sulu\Component\Webspace;
 
+use Sulu\Component\Util\ArrayableInterface;
+
 /**
  * This class represents the information for a given URL
  * @package Sulu\Component\Webspace
  */
-class PortalInformation
+class PortalInformation implements ArrayableInterface
 {
     /**
      * The type of the match
@@ -230,5 +232,37 @@ class PortalInformation
         $hostLength = ($hostLength === false) ? strlen($this->url) : $hostLength;
 
         return $hostLength;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function toArray($depth = null)
+    {
+        $res = array();
+        $res['type'] = $this->getType();
+        $res['webspace'] = $this->getWebspace()->getKey();
+        $res['url'] = $this->getUrl();
+
+        $portal = $this->getPortal();
+
+        if ($portal) {
+            $res['portal'] = $portal->getKey();
+        }
+
+        $localization = $this->getLocalization();
+
+        if ($localization) {
+            $res['localization'] = $localization->toArray();
+        }
+
+        $res['redirect'] = $this->getRedirect();
+
+        $segment = $this->getSegment();
+        if ($segment) {
+            $res['segment'] = $segment->getKey();
+        }
+
+        return $res;
     }
 }

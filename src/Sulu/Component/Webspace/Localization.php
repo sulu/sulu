@@ -10,11 +10,13 @@
 
 namespace Sulu\Component\Webspace;
 
+use Sulu\Component\Util\ArrayableInterface;
+
 /**
  * Represents a localization of a webspace definition
  * @package Sulu\Component\Portal
  */
-class Localization implements \JsonSerializable
+class Localization implements \JsonSerializable, ArrayableInterface
 {
     /**
      * The language of the localization
@@ -238,5 +240,29 @@ class Localization implements \JsonSerializable
             'localization' => $this->getLocalization(),
             'name' => $this->getLocalization()
         );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function toArray($depth = null)
+    {
+        $res = array();
+        $res['country'] = $this->getCountry();
+        $res['language'] = $this->getLanguage();
+        $res['localization'] = $this->getLocalization();
+        $res['default'] = $this->isDefault();
+        $res['children'] = array();
+
+        $children = $this->getChildren();
+        if ($children) {
+            foreach ($this->getChildren() as $childLocalization) {
+                $res['children'][] = $childLocalization->toArray(null);
+            }
+        }
+
+        $res['shadow'] = $this->getShadow();
+
+        return $res;
     }
 }

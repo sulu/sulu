@@ -10,8 +10,9 @@
 
 namespace Sulu\Component\Webspace;
 
+use Sulu\Component\Util\ArrayableInterface;
 
-class Url
+class Url implements ArrayableInterface
 {
     /**
      * The url itself
@@ -132,4 +133,20 @@ class Url
     {
         return $this->redirect;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function toArray($depth = null)
+    {
+        $res = array();
+        $res['url'] = $this->getUrl();
+        $res['language'] = $this->getLanguage();
+        $res['country'] = $this->getCountry();
+        $res['segment'] = $this->getSegment();
+        $res['redirect'] = $this->getRedirect();
+
+        return $res;
+    }
+
 }

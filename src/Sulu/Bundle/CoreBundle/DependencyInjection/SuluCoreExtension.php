@@ -73,6 +73,8 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         $config = $this->processConfiguration($configuration, $configs);
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
 
+        $container->setParameter('sulu.cache_dir', $config['cache_dir']);
+
         // PHPCR
         if (isset($config['phpcr'])) {
             $this->initPhpcr($config['phpcr'], $container, $loader);
