@@ -132,7 +132,7 @@ class SmartContentQueryBuilderTest extends PhpcrTestCase
     public function propertiesProvider()
     {
         $nodes = array();
-        $max = 150;
+        $max = 15;
         for ($i = 0; $i < $max; $i++) {
             $data = array(
                 'title' => 'News ' . $i,
@@ -211,5 +211,5 @@ class SmartContentQueryBuilderTest extends PhpcrTestCase
         }
     }
 
-    
+
 }
