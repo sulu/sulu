@@ -44,24 +44,55 @@ class StructureDriver implements DriverInterface
 
         /** @var StructureInterface $structure */
         $structure = $class->newInstance();
+
         $indexMeta = $this->factory->makeIndexMetadata($class->name);
 
         $indexMeta->setIndexName('content');
         $indexMeta->setIdField('uuid');
+
+        foreach ($structure->getProperties(true) as $property) {
+            if ($property->hasTag('sulu.search.field')) {
+                $tag = $property->getTag('sulu.search.field');
+                $tagAttrs = $tag->getAttributes();
+
+                if (isset($tagAttrs['index']) && $tagsAttrs['index'] !== 'false') {
+                    $indexMeta->addFieldMapping($property->getName(), array(
+                        'type' => isset($tagAttrs['type']) ? $tagAttrs['type'] : 'string',
+                    ));
+                }
+
+                if (isset($tagAttrs['role'])) {
+                    switch ($tagAttrs['role']) {
+                        case 'title':
+                            $indexMeta->setTitleField($property->getName());
+                            break;
+                        case 'description':
+                            $indexMeta->setDescriptionField($property->getName());
+                            break;
+                        case 'image':
+                            $indexMeta->setImageUrlField($property->getName());
+                            break;
+                        default:
+                            throw new \InvalidArgumentException(sprintf(
+                                'Unknown search field role "%s", role must be one of "%s"',
+                                $tagAttrs['role'], implode(', ', array('title', 'description', 'image'))
+                            ));
+                    }
+                }
+            }
+        }
 
         if ($structure->hasTag('sulu.rlp')) {
             $prop = $structure->getPropertyByTagName('sulu.rlp');
             $indexMeta->setUrlField($prop->getName());
         }
 
-        if ($structure->hasTag('sulu.node.name')) {
-            $prop = $structure->getPropertyByTagName('sulu.node.name');
-            $indexMeta->setTitleField($prop->getName());
-        }
+        if (!$indexMeta->getTitleField()) {
+            if ($structure->hasTag('sulu.node.name')) {
+                $prop = $structure->getPropertyByTagName('sulu.node.name');
+                $indexMeta->setTitleField($prop->getName());
 
-        foreach ($structure->getProperties(true) as $property) {
-            if (true === $property->getIndexed()) {
-                $indexMeta->addFieldMapping($property->getName(), array(
+                $indexMeta->addFieldMapping($prop->getName(), array(
                     'type' => 'string',
                 ));
             }

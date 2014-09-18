@@ -34,10 +34,8 @@ class BaseTestCase extends SymfonyCmfBaseTestCase
             $structure = new DefaultStructureCache();
             $structure->setUuid($i);
             $structure->getProperty('title')->setValue('Structure Title ' . $i);
-            $structure->getProperty('title')->setIndexed(true);
 
             $structure->getProperty('url')->setValue('/');
-            $structure->getProperty('url')->setIndexed(false);
             $structure->setNodeState(StructureInterface::STATE_PUBLISHED);
 
             $this->getSearchManager()->index($structure, 'de', 'content');
