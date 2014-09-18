@@ -146,7 +146,10 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
                 $where = $where . ($where !== '' ? ' AND ' : '') . $customWhere;
             }
             $where .= ')';
+
+            $order[] = $this->buildOrder($webspaceKey, $locale);
         }
+
 
         // build sql2 query string
         $sql2 = sprintf(
@@ -174,6 +177,14 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
      * Returns custom where statement
      */
     protected abstract function buildSelect($webspaceKey, $locale, &$additionalFields);
+
+    /**
+     * Returns custom order statement
+     */
+    protected function buildOrder($webspaceKey, $locale)
+    {
+        return '';
+    }
 
     /**
      * Returns select statement with all url and title properties
