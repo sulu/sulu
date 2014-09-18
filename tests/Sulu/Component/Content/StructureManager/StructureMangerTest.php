@@ -111,8 +111,6 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Das ist das Template 1', $structure->getLocalizedTitle('de'));
         $this->assertEquals('That´s the template 1', $structure->getLocalizedTitle('en'));
 
-        $this->assertEquals('foo_index', $structure->getIndexName());
-
         // check properties
         $this->assertEquals('template', $structure->getKey());
         $this->assertEquals('page.html.twig', $structure->getView());
@@ -126,7 +124,6 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         // check title
         $this->assertArrayHasKey('title', $properties);
         $property = $structure->getProperty('title');
-        $this->assertTrue($property->getIndexed());
         $this->assertEquals('title', $property->getName());
 
         $this->assertEquals('Titel', $property->getTitle('de'));
@@ -148,7 +145,7 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
             array(),
             $property->getParams()
         );
-        $this->assertEquals(2, sizeof($property->getTags()));
+        $this->assertEquals(3, sizeof($property->getTags()));
         $this->assertEquals(
             new PropertyTag('sulu.node.name', 1),
             $property->getTags()['sulu.node.name']
@@ -157,6 +154,10 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
             new PropertyTag('sulu.node.title', 10),
             $property->getTags()['sulu.node.title']
         );
+        $this->assertEquals(
+            new PropertyTag('some.random.tag', 1, array('one' => '1', 'two' => 2, 'three' => 'three')),
+            $property->getTags()['some.random.tag']
+        );
         $this->assertEquals($property, $structure->getPropertyByTagName('sulu.node.title', true));
         $this->assertEquals($property, $structure->getPropertyByTagName('sulu.node.name', true));
 
@@ -164,7 +165,6 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('url', $properties);
         $property = $structure->getProperty('url');
         $this->assertEquals('url', $property->getName());
-        $this->assertFalse($property->getIndexed());
         $this->assertEquals('resource_locator', $property->getContentTypeName());
         $this->assertEquals(true, $property->isMandatory());
         $this->assertEquals(true, $property->isMultilingual());
@@ -243,6 +243,8 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
             array(),
             $property->getTags()
         );
+
+        $this->assertTrue($structure->hasStructureTag('some.random.structure.tag'));
     }
 
 

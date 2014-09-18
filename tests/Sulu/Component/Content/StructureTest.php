@@ -12,6 +12,7 @@ namespace Sulu\Component\Content;
 
 use DateTime;
 use Symfony\Component\Config\Definition\Exception\Exception;
+use Sulu\Component\Content\StructureTag;
 
 class StructureTest extends \PHPUnit_Framework_TestCase
 {
@@ -52,7 +53,6 @@ class StructureTest extends \PHPUnit_Framework_TestCase
         $this->structure->setPublished(new DateTime('2014-03-16'));
         $this->structure->setNavContexts(true);
         $this->structure->setHasTranslation(true);
-
     }
 
     public function testToArray()
@@ -245,5 +245,27 @@ class StructureTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($data, $this->structure->getConcreteLanguages());
         $this->structure->setEnabledShadowLanguages($data);
         $this->assertEquals($data, $this->structure->getEnabledShadowLanguages());
+    }
+
+    public function testStructureTag()
+    {
+        $structureTag = new StructureTag('foobar', array('one', 'two'));
+        $this->structure->addStructureTag($structureTag);
+
+        $this->assertTrue($this->structure->hasStructureTag('foobar'));
+        $this->assertFalse($this->structure->hasStructureTag('barfoo'));
+        $this->assertSame($structureTag, $this->structure->getStructureTag('foobar'));
+
+        $structureTag = $this->structure->getStructureTag('foobar');
+        $this->assertEquals('foobar', $structureTag->getName());
+        $this->assertEquals(array('one', 'two'), $structureTag->getAttributes());
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testGetUndefinedStructureTag()
+    {
+        $this->structure->getStructureTag('foobar');
     }
 }
