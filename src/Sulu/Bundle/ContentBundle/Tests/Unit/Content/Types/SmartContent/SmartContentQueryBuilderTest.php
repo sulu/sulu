@@ -180,7 +180,12 @@ class SmartContentQueryBuilderTest extends PhpcrTestCase
     {
         $nodes = $this->propertiesProvider();
 
-        $builder = new SmartContentQueryBuilder($this->structureManager, $this->languageNamespace);
+        $builder = new SmartContentQueryBuilder(
+            $this->structureManager,
+            $this->webspaceManager,
+            $this->sessionManager,
+            $this->languageNamespace
+        );
         $builder->init(array('properties' => array('my_article' => 'article')));
 
         $tStart = microtime(true);
@@ -211,5 +216,79 @@ class SmartContentQueryBuilderTest extends PhpcrTestCase
         }
     }
 
+    public function datasourceProvider()
+    {
+        $news = $this->mapper->save(array('title' => 'News', 'url' => '/news'), 'simple', 'default', 'en', 1);
+        $products = $this->mapper->save(
+            array('title' => 'Products', 'url' => '/products'),
+            'simple',
+            'default',
+            'en',
+            1
+        );
 
+        $nodes = array();
+        $max = 15;
+        for ($i = 0; $i < $max; $i++) {
+            $data = array(
+                'title' => 'News ' . $i,
+                'url' => '/news/news-' . $i
+            );
+            $template = 'simple';
+            $node = $this->mapper->save(
+                $data,
+                $template,
+                'default',
+                'en',
+                1,
+                true,
+                null,
+                $news->getUuid(),
+                Structure::STATE_PUBLISHED
+            );
+            $nodes[$node->getUuid()] = $node;
+        }
+
+        return array($news, $products, $nodes);
+    }
+
+    public function testDatasource()
+    {
+        list($news, $products, $nodes) = $this->datasourceProvider();
+
+        $builder = new SmartContentQueryBuilder(
+            $this->structureManager,
+            $this->webspaceManager,
+            $this->sessionManager,
+            $this->languageNamespace
+        );
+        // test news
+        $builder->init(array('config' => array('dataSource' => $news->getUuid())));
+
+        $tStart = microtime(true);
+        $result = $this->contentQuery->execute('default', array('en'), $builder);
+        $tDiff = microtime(true) - $tStart;
+        echo('estimated time: ' . $tDiff);
+
+        $this->assertEquals(sizeof($nodes), sizeof($result));
+        foreach ($result as $item) {
+            /** @var StructureInterface $expected */
+            $expected = $nodes[$item['uuid']];
+
+            $this->assertEquals($expected->getUuid(), $item['uuid']);
+            $this->assertEquals($expected->getNodeType(), $item['nodeType']);
+            $this->assertEquals($expected->getPath(), $item['path']);
+            $this->assertEquals($expected->title, $item['title']);
+        }
+
+        // test products
+        $builder->init(array('config' => array('dataSource' => $products->getUuid())));
+
+        $tStart = microtime(true);
+        $result = $this->contentQuery->execute('default', array('en'), $builder);
+        $tDiff = microtime(true) - $tStart;
+        echo('estimated time: ' . $tDiff);
+
+        $this->assertEquals(0, sizeof($result));
+    }
 }
