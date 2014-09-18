@@ -17,6 +17,7 @@ use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Webspace\Localization;
+use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
  * {@inheritdoc}
@@ -43,17 +44,23 @@ class NavigationMapper implements NavigationMapperInterface
      */
     private $sessionManager;
 
+    /**
+     * @var Stopwatch
+     */
+    private $stopwatch;
+
     function __construct(
         ContentMapperInterface $contentMapper,
         ContentQueryInterface $contentQuery,
         ContentQueryBuilderInterface $queryBuilder,
-        SessionManagerInterface $sessionManager
-    )
-    {
+        SessionManagerInterface $sessionManager,
+        Stopwatch $stopwatch = null
+    ) {
         $this->contentMapper = $contentMapper;
         $this->contentQuery = $contentQuery;
         $this->queryBuilder = $queryBuilder;
         $this->sessionManager = $sessionManager;
+        $this->stopwatch = $stopwatch;
     }
 
     /**
@@ -61,6 +68,9 @@ class NavigationMapper implements NavigationMapperInterface
      */
     public function getNavigation($parent, $webspaceKey, $locale, $depth = 1, $flat = false, $context = null)
     {
+        if ($this->stopwatch) {
+            $this->stopwatch->start('NavigationMapper::getNavigation');
+        }
         $rootDepth = substr_count($this->sessionManager->getContentNode($webspaceKey)->getPath(), '/');
         $parent = $this->sessionManager->getSession()->getNodeByIdentifier($parent)->getPath();
         $depth = $depth + substr_count($parent, '/') - $rootDepth;
@@ -73,7 +83,13 @@ class NavigationMapper implements NavigationMapperInterface
         );
         $result = $this->contentQuery->execute($webspaceKey, array($locale), $this->queryBuilder, $flat, $depth);
 
-        return $this->convertArrayToNavigation($result);
+        $result = $this->convertArrayToNavigation($result);
+
+        if ($this->stopwatch) {
+            $this->stopwatch->stop('NavigationMapper::getNavigation');
+        }
+
+        return $result;
     }
 
     /**
@@ -136,8 +152,7 @@ class NavigationMapper implements NavigationMapperInterface
         $flat = false,
         $context = null,
         $breakOnNotInNavigation = false
-    )
-    {
+    ) {
         $result = array();
 
         /** @var StructureInterface $content */
