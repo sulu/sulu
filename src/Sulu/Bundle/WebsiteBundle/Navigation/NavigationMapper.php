@@ -193,11 +193,21 @@ class NavigationMapper implements NavigationMapperInterface
 
                 if (false === $flat) {
                     $result[] = new NavigationItem(
-                        $content, $title, $url, $children, $content->getUuid(), $content->getNodeType()
+                        $title,
+                        $url,
+                        isset($content->getExt()['excerpt']) ? $content->getExt()['excerpt'] : null,
+                        $children,
+                        $content->getUuid(),
+                        $content->getNodeType()
                     );
                 } else {
                     $result[] = new NavigationItem(
-                        $content, $title, $url, null, $content->getUuid(), $content->getNodeType()
+                        $title,
+                        $url,
+                        isset($content->getExt()['excerpt']) ? $content->getExt()['excerpt'] : null,
+                        null,
+                        $content->getUuid(),
+                        $content->getNodeType()
                     );
                     $result = array_merge($result, $children);
                 }
