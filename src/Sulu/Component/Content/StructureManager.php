@@ -19,6 +19,7 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\Resource\FileResource;
+use Doctrine\Common\Util\Inflector;
 
 /**
  * generates subclasses of structure to match template definitions.
@@ -177,7 +178,7 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
     {
         $fileName = $templateConfig['path'];
 
-        $class = str_replace('-', '_', ucfirst($key)) . $this->options['cache_class_suffix'];
+        $class = Inflector::camelize($key) . $this->options['cache_class_suffix'];
         $cache = new ConfigCache(
             $this->options['cache_dir'] . '/' . $class . '.php',
             $this->options['debug']
@@ -188,7 +189,10 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
                 $result = $this->loader->load($fileName);
 
                 if ($result['key'] !== $key) {
-                    throw new TemplateNotFoundException($fileName, $key);
+                    throw new \InvalidArgumentException(sprintf(
+                        'Template with filename "%s" loaded for key "%s" but the key it defines is "%s"',
+                        $fileName, $key, $result['key']
+                    ));
                 }
 
                 $resources[] = new FileResource($fileName);

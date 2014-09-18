@@ -571,6 +571,17 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $extensions = array_values($this->structureManager->getExtensions('template_sections'));
         $this->assertEquals('test1', $extensions[0]->getName());
     }
+
+    public function testGetStructureFilenameKeyMismatch()
+    {
+        try {
+            $this->structureManager->getStructure('template_key_mismatch');
+        } catch (\Exception $e) {
+            $previous = $e->getPrevious();
+            $this->assertInstanceOf('InvalidArgumentException', $previous);
+            $this->assertContains('but the key it defines is', $previous->getMessage());
+        }
+    }
 }
 
 class TestExtension extends StructureExtension
@@ -607,4 +618,3 @@ class TestExtension extends StructureExtension
         );
     }
 }
-
