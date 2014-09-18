@@ -152,11 +152,13 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'params' => array(
                         array(
                             'name' => 'minLinks',
-                            'value' => 1
+                            'value' => 1,
+                            'type' => 'string'
                         ),
                         array(
                             'name' => 'maxLinks',
-                            'value' => 10
+                            'value' => 10,
+                            'type' => 'string'
                         )
                     ),
                     'meta' => array()
@@ -888,11 +890,13 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'params' => array(
                         '0' => array(
                             'name' => 'minLinks',
-                            'value' => 1
+                            'value' => 1,
+                            'type' => 'string'
                         ),
                         '1' => array(
                             'name' => 'maxLinks',
-                            'value' => 10
+                            'value' => 10,
+                            'type' => 'string'
                         )
                     ),
                     'meta' => array(),
@@ -943,16 +947,17 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                         )
                     ),
                     'params' => array(
-                        array('name' => 'minLinks', 'value' => '1'),
-                        array('name' => 'maxLinks', 'value' => '10'),
+                        array('name' => 'minLinks', 'value' => '1', 'type' => 'string'),
+                        array('name' => 'maxLinks', 'value' => '10', 'type' => 'string'),
                         array(
                             'name' => 'test',
                             'value' => array(
-                                array('name' => 't1', 'value' => 'v1'),
-                                array('name' => 't2', 'value' => 'v2'),
-                                array('name' => 't3', 'value' => 'v3'),
-                                array('name' => 't4', 'value' => 'v4')
-                            )
+                                array('name' => 't1', 'value' => 'v1', 'type' => 'string'),
+                                array('name' => 't2', 'value' => 'v2', 'type' => 'string'),
+                                array('name' => 't3', 'value' => 'v3', 'type' => 'string'),
+                                array('name' => 't4', 'value' => 'v4', 'type' => 'string')
+                            ),
+                            'type' => 'collection'
                         )
                     ),
                     'meta' => array()
@@ -967,6 +972,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
 
         $x = $this->arrayRecursiveDiff($result, $template);
         $this->assertEquals(0, sizeof($x));
+        $this->assertEquals($template, $result);
     }
 
     function arrayRecursiveDiff($aArray1, $aArray2)
