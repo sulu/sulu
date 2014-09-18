@@ -48,7 +48,9 @@ class TemplateReader implements LoaderInterface
         'state',
         'internal',
         'nodeType',
-        'navContexts'
+        'navContexts',
+        'shadow-on',
+        'shadow-base'
     );
 
     /**
