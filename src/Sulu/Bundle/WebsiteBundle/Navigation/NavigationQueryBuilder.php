@@ -57,5 +57,6 @@ class NavigationQueryBuilder extends ContentQueryBuilder
     {
         $this->context = (isset($options['context'])) ? $options['context'] : null;
         $this->parent = (isset($options['parent'])) ? $options['parent'] : null;
+        $this->excerpt = (isset($options['excerpt'])) ? $options['excerpt'] : true;
     }
 }

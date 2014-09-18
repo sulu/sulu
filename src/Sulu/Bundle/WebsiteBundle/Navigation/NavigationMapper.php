@@ -66,8 +66,15 @@ class NavigationMapper implements NavigationMapperInterface
     /**
      * {@inheritdoc}
      */
-    public function getNavigation($parent, $webspaceKey, $locale, $depth = 1, $flat = false, $context = null)
-    {
+    public function getNavigation(
+        $parent,
+        $webspaceKey,
+        $locale,
+        $depth = 1,
+        $flat = false,
+        $context = null,
+        $loadExcerpt = false
+    ) {
         if ($this->stopwatch) {
             $this->stopwatch->start('NavigationMapper::getNavigation');
         }
@@ -78,7 +85,8 @@ class NavigationMapper implements NavigationMapperInterface
         $this->queryBuilder->init(
             array(
                 'context' => $context,
-                'parent' => $parent
+                'parent' => $parent,
+                'excerpt' => $loadExcerpt
             )
         );
         $result = $this->contentQuery->execute($webspaceKey, array($locale), $this->queryBuilder, $flat, $depth);
@@ -95,12 +103,33 @@ class NavigationMapper implements NavigationMapperInterface
     /**
      * {@inheritdoc}
      */
-    public function getRootNavigation($webspaceKey, $locale, $depth = 1, $flat = false, $context = null)
-    {
-        $this->queryBuilder->init(array('context' => $context));
+    public function getRootNavigation(
+        $webspaceKey,
+        $locale,
+        $depth = 1,
+        $flat = false,
+        $context = null,
+        $loadExcerpt = false
+    ) {
+        if ($this->stopwatch) {
+            $this->stopwatch->start('NavigationMapper::getRootNavigation.query');
+        }
+
+        $this->queryBuilder->init(array('context' => $context, 'excerpt' => $loadExcerpt));
         $result = $this->contentQuery->execute($webspaceKey, array($locale), $this->queryBuilder, $flat, $depth);
 
-        return $this->convertArrayToNavigation($result);
+        if ($this->stopwatch) {
+            $this->stopwatch->stop('NavigationMapper::getRootNavigation.query');
+            $this->stopwatch->start('NavigationMapper::getRootNavigation.toArray');
+        }
+
+        $result = $this->convertArrayToNavigation($result);
+
+        if ($this->stopwatch) {
+            $this->stopwatch->stop('NavigationMapper::getRootNavigation.toArray');
+        }
+
+        return $result;
     }
 
     private function convertArrayToNavigation($items)
@@ -112,7 +141,7 @@ class NavigationMapper implements NavigationMapperInterface
             $navigation[] = new NavigationItem(
                 $item['title'],
                 $item['url'],
-                $item['excerpt'],
+                isset($item['excerpt']) ? : null,
                 $children,
                 $item['uuid'],
                 $item['nodeType']

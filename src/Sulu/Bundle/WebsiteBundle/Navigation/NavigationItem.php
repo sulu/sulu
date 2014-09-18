@@ -10,8 +10,6 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Navigation;
 
-use Sulu\Component\Content\StructureInterface;
-
 /**
  * Frontend navigation item
  * @package Sulu\Bundle\WebsiteBundle\Navigation
