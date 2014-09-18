@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\ContentBundle\Content\Types;
+namespace Sulu\Bundle\ContentBundle\Content\Types\SmartContent;
 
 use JMS\Serializer\Serializer;
 use PHPCR\NodeInterface;
