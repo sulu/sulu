@@ -161,15 +161,19 @@ class ContentQuery implements ContentQueryInterface
         $uuid = $row->getValue('page.jcr:uuid');
 
         $templateKey = $row->getValue('page.i18n:' . $locale . '-template');
-        $changed = $row->getValue('page.i18n:' . $locale . '-changed');
         $nodeType = $row->getValue('page.i18n:' . $locale . '-nodeType');
+
+        $changed = $row->getValue('page.i18n:' . $locale . '-changed');
+        $changer = $row->getValue('page.i18n:' . $locale . '-changer');
+        $created = $row->getValue('page.i18n:' . $locale . '-created');
+        $creator = $row->getValue('page.i18n:' . $locale . '-creator');
+
         if ($templateKey !== '') {
             $path = $row->getPath('page');
             $templateKey = $this->templateResolver->resolve($nodeType, $templateKey);
             $structure = $this->structureManager->getStructure($templateKey);
 
             $fieldsData = array();
-            $target = & $fieldsData;
             foreach ($fields[$locale] as $field) {
                 if (isset($fieldsData['target'])) {
                     if (!isset($fieldsData[$field['target']])) {
@@ -182,19 +186,14 @@ class ContentQuery implements ContentQueryInterface
 
                 if (!isset($field['property'])) {
                     $target[$field['name']] = $row->getValue($field['column']);
-                } else {
+                } elseif (!isset($field['templateKey']) || $field['templateKey'] === $templateKey) {
                     /** @var PropertyInterface $property */
                     $property = $field['property'];
                     $contentType = $this->contentTypeManager->get($property->getContentTypeName());
 
-                    $data = $row->getValue($field['column']);
-                    if ($data !== '' && $this->isJson($data)) {
-                        $data = json_decode($data, true);
-                    }
-
-                    $contentType->readForPreview(
-                        $data,
-                        $property,
+                    $contentType->read(
+                        $row->getNode('page'),
+                        $this->getTranslatedProperty($property, $locale),
                         $webspaceKey,
                         $locale,
                         null
@@ -209,24 +208,21 @@ class ContentQuery implements ContentQueryInterface
                 array(
                     'uuid' => $uuid,
                     'nodeType' => $nodeType,
-                    'path' => $path,
+                    'path' => str_replace($this->sessionManager->getContentNode($webspaceKey)->getPath(), '', $path),
                     'changed' => $changed,
+                    'changer' => $changer,
+                    'created' => $created,
+                    'creator' => $creator,
                     'title' => $this->getTitle($row, $structure, $locale),
                     'url' => $this->getUrl($path, $row, $structure, $webspaceKey, $locale, $routesPath),
-                    'locale' => $locale
+                    'locale' => $locale,
+                    'template' => $templateKey
                 ),
                 $fieldsData
             );
         }
 
         return false;
-    }
-
-    private function isJson($string)
-    {
-        json_decode($string);
-
-        return (json_last_error() == JSON_ERROR_NONE);
     }
 
     /**

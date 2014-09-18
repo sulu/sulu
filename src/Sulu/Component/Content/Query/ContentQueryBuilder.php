@@ -40,7 +40,16 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
     /**
      * @var string[]
      */
-    private $defaultProperties = array('template', 'changed', 'nodeType', 'state');
+    private $defaultProperties = array(
+        'template',
+        'changed',
+        'changer',
+        'created',
+        'creator',
+        'created',
+        'nodeType',
+        'state'
+    );
 
     /**
      * @var string[]
@@ -105,9 +114,12 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
             }
             // select internal properties
             $select .= sprintf(
-                "route.[jcr:uuid] as routeUuid, route.[jcr:path] as routePath, page.[jcr:uuid], page.[jcr:path], page.[%s], page.[%s], page.[%s]",
+                "route.[jcr:uuid] as routeUuid, route.[jcr:path] as routePath, page.[jcr:uuid], page.[jcr:path], page.[%s], page.[%s], page.[%s], page.[%s], page.[%s], page.[%s]",
                 $this->getPropertyName('template'),
                 $this->getPropertyName('changed'),
+                $this->getPropertyName('changer'),
+                $this->getPropertyName('created'),
+                $this->getPropertyName('creator'),
                 $this->getPropertyName('nodeType')
             );
 
@@ -117,7 +129,8 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
                 $select .= ',' . $this->buildSelectorForExcerpt($locale, $additionalFields);
             }
 
-            $select .= $this->buildSelect($webspaceKey, $locale, $additionalFields);
+            $customSelect = $this->buildSelect($webspaceKey, $locale, $additionalFields);
+            $select .= (!empty($customSelect) ? ', ' : '') . $customSelect;
 
             if ($this->published) {
                 $where .= sprintf(
