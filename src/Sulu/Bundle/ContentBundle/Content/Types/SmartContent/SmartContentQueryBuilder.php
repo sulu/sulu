@@ -66,7 +66,7 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
      */
     public function init(array $options)
     {
-        $this->propertyConfig = isset($options['property']) ? $options['property'] : array();
+        $this->propertyConfig = isset($options['properties']) ? $options['properties'] : array();
         $this->extensionConfig = isset($options['extension']) ? $options['extension'] : array();
     }
 
@@ -86,20 +86,11 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
         foreach ($this->structureManager->getStructures() as $structure) {
             if ($structure->hasProperty($propertyName)) {
                 $property = $structure->getProperty($propertyName);
-                $column = sprintf('%s_%s_%s', $structure->getKey(), $locale, $property->getName());
-
                 $additionalFields[$locale][] = array(
                     'name' => $alias,
-                    'column' => $column,
-                    'property' => $property
+                    'property' => $property,
+                    'templateKey' => $structure->getKey()
                 );
-
-                $select[] = sprintf(
-                    '%s AS %s',
-                    $this->buildSelector($this->getTranslatedProperty($property, $locale)->getName()),
-                    $column
-                );
-
             }
         }
 

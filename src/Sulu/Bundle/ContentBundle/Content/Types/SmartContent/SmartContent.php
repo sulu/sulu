@@ -10,13 +10,14 @@
 
 namespace Sulu\Bundle\ContentBundle\Content\Types\SmartContent;
 
-use JMS\Serializer\Serializer;
 use PHPCR\NodeInterface;
 use Sulu\Bundle\ContentBundle\Content\SmartContentContainer;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\PropertyInterface;
+use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
+use Sulu\Component\Content\Query\ContentQueryInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Sulu\Component\Util\ArrayableInterface;
 
@@ -26,9 +27,14 @@ use Sulu\Component\Util\ArrayableInterface;
 class SmartContent extends ComplexContentType
 {
     /**
-     * @var NodeRepositoryInterface
+     * @var ContentQueryInterface
      */
-    private $nodeRepository;
+    private $contentQuery;
+
+    /**
+     * @var ContentQueryBuilderInterface
+     */
+    private $contentQueryBuilder;
 
     /**
      * @var TagManagerInterface
@@ -46,12 +52,14 @@ class SmartContent extends ComplexContentType
     private $requestStack;
 
     function __construct(
-        NodeRepositoryInterface $nodeRepository,
+        ContentQueryInterface $contentQuery,
+        ContentQueryBuilderInterface $contentQueryBuilder,
         TagManagerInterface $tagManager,
         RequestStack $requestStack,
         $template
     ) {
-        $this->nodeRepository = $nodeRepository;
+        $this->contentQuery = $contentQuery;
+        $this->contentQueryBuilder = $contentQueryBuilder;
         $this->tagManager = $tagManager;
         $this->template = $template;
         $this->requestStack = $requestStack;
@@ -93,8 +101,10 @@ class SmartContent extends ComplexContentType
         $preview = false
     ) {
         $smartContent = new SmartContentContainer(
-            $this->nodeRepository,
+            $this->contentQuery,
+            $this->contentQueryBuilder,
             $this->tagManager,
+            array_merge($this->getDefaultParams(), $property->getParams()),
             $webspaceKey,
             $languageCode,
             $segmentKey,
@@ -181,6 +191,8 @@ class SmartContent extends ComplexContentType
         $params = parent::getDefaultParams();
         $params['max_per_page'] = 25;
         $params['page_parameter'] = 'p';
+        $params['properties'] = array();
+        $params['extensions'] = array();
 
         return $params;
     }
