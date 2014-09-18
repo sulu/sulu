@@ -217,7 +217,8 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
             $additionalFields[$locale][] = array(
                 'name' => $property->getName(),
                 'column' => $column,
-                'target' => 'excerpt'
+                'target' => 'excerpt',
+                'property' => $property
             );
 
             $singleSelect = sprintf(

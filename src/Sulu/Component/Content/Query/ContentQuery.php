@@ -13,12 +13,14 @@ namespace Sulu\Component\Content\Query;
 use Jackalope\Query\Row;
 use PHPCR\Query\QueryResultInterface;
 use PHPCR\RepositoryException;
+use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManagerInterface;
 use Sulu\Component\Content\Template\TemplateResolverInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
+use Sulu\Component\Util\ArrayableInterface;
 
 /**
  * Executes a query over the content
@@ -41,6 +43,11 @@ class ContentQuery implements ContentQueryInterface
     private $templateResolver;
 
     /**
+     * @var ContentTypeManagerInterface
+     */
+    private $contentTypeManager;
+
+    /**
      * @var string
      */
     private $languageNamespace;
@@ -49,12 +56,14 @@ class ContentQuery implements ContentQueryInterface
         SessionManagerInterface $sessionManager,
         StructureManagerInterface $structureManager,
         TemplateResolverInterface $templateResolver,
+        ContentTypeManagerInterface $contentTypeManager,
         $languageNamespace
     ) {
         $this->languageNamespace = $languageNamespace;
         $this->sessionManager = $sessionManager;
         $this->structureManager = $structureManager;
         $this->templateResolver = $templateResolver;
+        $this->contentTypeManager = $contentTypeManager;
     }
 
     /**
@@ -131,8 +140,29 @@ class ContentQuery implements ContentQueryInterface
                 if (!isset($fieldsData[$field['target']])) {
                     $fieldsData[$field['target']] = array();
                 }
+                if (!isset($field['property'])) {
+                    $fieldsData[$field['target']][$field['name']] = $row->getValue($field['column']);
+                } else {
+                    /** @var PropertyInterface $property */
+                    $property = $field['property'];
+                    $contentType = $this->contentTypeManager->get($property->getContentTypeName());
 
-                $fieldsData[$field['target']][$field['name']] = $row->getValue($field['column']);
+                    $data = $row->getValue($field['column']);
+                    if ($data !== '' && $this->isJson($data)) {
+                        $data = json_decode($data, true);
+                    }
+
+                    $contentType->readForPreview(
+                        $data,
+                        $property,
+                        $webspaceKey,
+                        $locale,
+                        null
+                    );
+
+                    $value = $contentType->getContentData($property);
+                    $fieldsData[$field['target']][$field['name']] = $value;
+                }
             }
 
             return array_merge(
@@ -150,6 +180,13 @@ class ContentQuery implements ContentQueryInterface
         }
 
         return false;
+    }
+
+    private function isJson($string)
+    {
+        json_decode($string);
+
+        return (json_last_error() == JSON_ERROR_NONE);
     }
 
     /**
