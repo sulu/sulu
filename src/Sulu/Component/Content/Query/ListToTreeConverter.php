@@ -33,9 +33,8 @@ class ListToTreeConverter
     public function convert($data, $webspaceKey)
     {
         $map = array();
-        $contentsPath = $this->sessionManager->getContentNode($webspaceKey)->getPath();
         foreach ($data as $item) {
-            $map[str_replace($contentsPath, 'root', $item['path'])] = $item;
+            $map['/root' . $item['path']] = $item;
         }
 
         $tree = $this->explodeTree($map, '/');
