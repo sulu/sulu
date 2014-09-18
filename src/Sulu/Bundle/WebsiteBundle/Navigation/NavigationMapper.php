@@ -92,12 +92,11 @@ class NavigationMapper implements NavigationMapperInterface
         $navigation = array();
         foreach ($items as $item) {
             $children = (isset($item['children']) ? $this->convertArrayToNavigation($item['children']) : array());
-            unset($item['children']);
 
             $navigation[] = new NavigationItem(
-                $item,
                 $item['title'],
                 $item['url'],
+                $item['excerpt'],
                 $children,
                 $item['uuid'],
                 $item['nodeType']

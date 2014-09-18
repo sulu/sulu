@@ -34,11 +34,6 @@ class NavigationItem
     private $url;
 
     /**
-     * @var StructureInterface
-     */
-    private $content;
-
-    /**
      * @var NavigationItem[]
      */
     private $children;
@@ -48,12 +43,17 @@ class NavigationItem
      */
     private $nodeType;
 
-    function __construct($content, $title, $url, $children = array(), $id = null, $nodeType = 1)
+    /**
+     * @var array
+     */
+    private $excerpt;
+
+    function __construct($title, $url, $excerpt, $children = array(), $id = null, $nodeType = 1)
     {
-        $this->content = $content;
         $this->title = $title;
         $this->url = $url;
         $this->nodeType = $nodeType;
+        $this->excerpt = $excerpt;
 
         $this->id = ($id === null ? uniqid() : $id);
 
@@ -61,11 +61,11 @@ class NavigationItem
     }
 
     /**
-     * @return string
+     * @return array
      */
-    public function getContent()
+    public function getExcerpt()
     {
-        return $this->content;
+        return $this->excerpt;
     }
 
     /**
