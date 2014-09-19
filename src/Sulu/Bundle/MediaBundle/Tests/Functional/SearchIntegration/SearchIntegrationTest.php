@@ -18,6 +18,16 @@ class SearchIntegrationTest extends WebTestCase
         static::$kernel->suluContext = 'website';
         static::$kernel->boot();
         $this->container = self::$kernel->getContainer();
+
+        $mediaEntity = new Media();
+        $tagManager = $this->getMock('Sulu\Bundle\TagBundle\Tag\TagManagerInterface');
+        $this->media = new ApiMedia($mediaEntity, 'de', null, $tagManager);
+
+        $this->mediaSelectionContainer = $this->getMockBuilder('Sulu\Bundle\MediaBundle\Content\MediaSelectionContainer')
+            ->disableOriginalConstructor()->getMock();
+        $this->mediaSelectionContainer->expects($this->any())
+            ->method('getData')
+            ->willReturn(array($this->media));
     }
 
     public function provideIndex()
@@ -37,17 +47,15 @@ class SearchIntegrationTest extends WebTestCase
             $this->setExpectedException($expectedException);
         }
 
+        $this->media->setFormats(array(
+            $format => 'myimage.jpg'
+        ));
+
         $searchManager = $this->container->get('massive_search.search_manager');
         $testAdapter = $this->container->get('massive_search.adapter.test');
 
         $structure = new DefaultStructureCache();
-        $mediaEntity = new Media();
-        $tagManager = $this->getMock('Sulu\Bundle\TagBundle\Tag\TagManagerInterface');
-        $media = new ApiMedia($mediaEntity, 'de', null, $tagManager);
-        $media->setFormats(array(
-            $format => 'myimage.jpg'
-        ));
-        $structure->getProperty('images')->setValue(array($media));
+        $structure->getProperty('images')->setValue($this->mediaSelectionContainer);
         $searchManager->index($structure);
 
         $documents = $testAdapter->getDocuments();

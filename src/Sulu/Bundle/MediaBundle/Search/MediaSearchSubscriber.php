@@ -6,15 +6,19 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Sulu\Bundle\SearchBundle\Search\SuluSearchEvents;
 use Sulu\Bundle\SearchBundle\Search\Event\StructureMetadataLoadEvent;
 use Massive\Bundle\SearchBundle\Search\SearchEvents;
-use Massive\Bundle\SearchBundle\Search\Event\HitEvent;
+use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadataInterface;
 use Massive\Bundle\SearchBundle\Search\Event\PreIndexEvent;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Content\StructureInterface;
-use Symfony\Component\PropertyAccess\PropertyAccessor;
 use Symfony\Component\PropertyAccess\PropertyAccess;
+use Sulu\Bundle\MediaBundle\Content\MediaSelectionContainer;
 
+/**
+ * This subscriber populates the image URL field
+ * when a Structure containing an image field is indexed.
+ */
 class MediaSearchSubscriber implements EventSubscriberInterface
 {
     protected $mediaManager;
@@ -31,17 +35,8 @@ class MediaSearchSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-            SuluSearchEvents::STRUCTURE_LOAD_METADATA => 'handleStructureLoadMetadata',
             SearchEvents::PRE_INDEX => 'handlePreIndex',
         );
-    }
-
-    public function handleStructureLoadMetadata(StructureMetadataLoadEvent $event)
-    {
-        $structure = $event->getStructure();
-        $indexMetadata = $event->getIndexMetadata();
-
-        $this->loadMetadata($structure, $indexMetadata);
     }
 
     public function handlePreIndex(PreIndexEvent $e)
@@ -54,20 +49,48 @@ class MediaSearchSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $accessor = PropertyAccess::createPropertyAccessor();
         if (!$imageUrlField = $metadata->getImageUrlField()) {
             return;
         }
 
-        $media = $accessor->getValue($subject, $imageUrlField);
-        $media = (array) $media;
+        $accessor = PropertyAccess::createPropertyAccessor();
+        $data = $accessor->getValue($subject, $imageUrlField);
+        $locale = $subject->getLanguageCode();
 
-        // always use the first media
-        $media = current($media);
+        if (!$data) {
+            return;
+        }
+
+        $imageUrl = $this->getImageUrl($data, $metadata, $locale);
+        $document->setImageUrl($imageUrl);
+    }
+
+    private function getImageUrl($data, IndexMetadataInterface $metadata, $locale)
+    {
+        // new structures will container an instance of MediaSelectionContainer
+        if ($data instanceof MediaSelectionContainer) {
+            $medias = $data->getData('de');
+        // old ones an array ...
+        } else {
+            if (!isset($data['ids'])) {
+                throw new \RuntimeException('Was expecting media value to contain array key "ids", got: "%s"', print_r($data, true));
+            }
+
+            $medias = array();
+            foreach ($data['ids'] as $mediaId) {
+                $medias[] = $this->mediaManager->getById($mediaId, $locale);
+            }
+        }
 
         // no media, no thumbnail URL
+        if (!$medias) {
+            return null;
+        }
+
+        $media = current($medias);
+
         if (!$media) {
-            return;
+            return null;
         }
 
         $formats = $media->getThumbnails();
@@ -76,23 +99,6 @@ class MediaSearchSubscriber implements EventSubscriberInterface
             throw new \InvalidArgumentException(sprintf('Search image format "%s" is not known', $this->searchImageFormat));
         }
 
-        $document->setImageUrl($formats[$this->searchImageFormat]);
-    }
-
-    private function loadMetadata(StructureInterface $structure, IndexMetadata $indexMetadata)
-    {
-        foreach ($structure->getProperties(true) as $property) {
-            if ($property->hasTag('sulu.search.field')) {
-                $tag = $property->getTag('sulu.search.field');
-                $attrs = $tag->getAttributes();
-                if (isset($attrs['role']) && $attrs['role'] === 'image') {
-                    $contentType = $property->getContentTypeName();
-                    if ($contentType !== 'media_selection') {
-                        throw new \InvalidArgumentException('Cannot use content type "%s" in search role "%s"', $contentType, $attrs['role']);
-                    }
-                    $indexMetadata->setImageUrlField($property->getName());
-                }
-            }
-        }
+        return $formats[$this->searchImageFormat];
     }
 }
