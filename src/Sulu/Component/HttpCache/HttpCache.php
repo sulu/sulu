@@ -20,7 +20,7 @@ class HttpCache extends HttpCacheAbstract
     const HEADER_REVERSE_PROXY_TTL = 'X-Reverse-Proxy-TTL';
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function handle(Request $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true)
     {
