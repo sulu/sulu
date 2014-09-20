@@ -21,8 +21,6 @@ class HttpCache extends HttpCacheAbstract
 
     /**
      * {@inheritdoc}
-     *
-     * @api
      */
     public function handle(Request $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true)
     {
