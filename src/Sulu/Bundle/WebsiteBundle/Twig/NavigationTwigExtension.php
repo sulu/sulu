@@ -46,7 +46,6 @@ class NavigationTwigExtension extends \Twig_Extension
         $this->contentMapper = $contentMapper;
         $this->navigationMapper = $navigationMapper;
         $this->requestAnalyzer = $requestAnalyzer;
-
     }
 
     /**
