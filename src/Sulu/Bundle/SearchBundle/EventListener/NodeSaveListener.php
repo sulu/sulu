@@ -51,8 +51,12 @@ class NodeSaveListener
         preg_match('{/' . $this->baseName . '/(.*?)/(.*?)(/.*)*$}', $path, $matches);
 
         // only if it is none temp node and it is published
-        if ($matches[2] !== $this->tempName && $structure->getNodeState() === Structure::STATE_PUBLISHED) {
-            $this->searchManager->index($structure);
+        if ($matches[2] !== $this->tempName) {
+            if ($structure->getNodeState() === Structure::STATE_PUBLISHED) {
+                $this->searchManager->index($structure);
+            } else {
+                $this->searchManager->deindex($structure);
+            }
         }
     }
 }

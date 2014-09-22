@@ -79,9 +79,14 @@ EOT
 
                     if ($structure->getNodeState() === Structure::STATE_PUBLISHED) {
                         $output->writeln(
-                            ' - <comment>Indexing structure (locale: ' . $locale . ')</comment>: ' . $node->getPath()
+                            '  [+] <comment>Indexing published structure (locale: ' . $locale . ')</comment>: ' . $node->getPath()
                         );
                         $searchManager->index($structure, $locale);
+                    } else {
+                        $output->writeln(
+                            '  [-] <comment>De-indexing unpublished structure (locale: ' . $locale . ')</comment>: ' . $node->getPath()
+                        );
+                        $searchManager->deindex($structure, $locale);
                     }
                 }
             }
