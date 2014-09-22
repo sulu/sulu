@@ -447,4 +447,105 @@ class SmartContentQueryBuilderTest extends PhpcrTestCase
         $result = $this->contentQuery->execute('default', array('en'), $builder);
         $this->assertEquals(0, sizeof($result));
     }
+
+    public function orderByProvider()
+    {
+        $node = $this->mapper->save(
+            array(
+                'title' => 'ASDF',
+                'url' => '/asdf-1'
+            ),
+            'simple',
+            'default',
+            'en',
+            1,
+            true,
+            null,
+            null,
+            Structure::STATE_PUBLISHED
+        );
+        $nodes[$node->url] = $node;
+        $node = $this->mapper->save(
+            array(
+                'title' => 'QWERTZ',
+                'url' => '/qwertz-1'
+            ),
+            'simple',
+            'default',
+            'en',
+            1,
+            true,
+            null,
+            null,
+            Structure::STATE_PUBLISHED
+        );
+        $nodes[$node->url] = $node;
+        $node = $this->mapper->save(
+            array(
+                'title' => 'qwertz',
+                'url' => '/qwertz'
+            ),
+            'simple',
+            'default',
+            'en',
+            1,
+            true,
+            null,
+            null,
+            Structure::STATE_PUBLISHED
+        );
+        $nodes[$node->url] = $node;
+        $node = $this->mapper->save(
+            array(
+                'title' => 'asdf',
+                'url' => '/asdf'
+            ),
+            'simple',
+            'default',
+            'en',
+            1,
+            true,
+            null,
+            null,
+            Structure::STATE_PUBLISHED
+        );
+        $nodes[$node->url] = $node;
+
+        return array($nodes);
+    }
+
+    public function testOrderBy()
+    {
+        $root = $this->sessionManager->getContentNode('default');
+        list($nodes) = $this->orderByProvider();
+
+        $builder = new SmartContentQueryBuilder(
+            $this->structureManager,
+            $this->webspaceManager,
+            $this->sessionManager,
+            $this->languageNamespace
+        );
+
+        // order by title
+        $builder->init(
+            array('config' => array('dataSource' => $root->getIdentifier(), 'orderBy' => array('title')))
+        );
+        $result = $this->contentQuery->execute('default', array('en'), $builder);
+
+        $this->assertEquals('ASDF', $result[0]['title']);
+        $this->assertEquals('asdf', $result[1]['title']);
+        $this->assertEquals('QWERTZ', $result[2]['title']);
+        $this->assertEquals('qwertz', $result[3]['title']);
+
+        // order by title and desc
+        $builder->init(
+            array('config' => array('dataSource' => $root->getIdentifier(), 'sortBy' => array('title'), 'sortMethod' => 'desc'))
+        );
+        $result = $this->contentQuery->execute('default', array('en'), $builder);
+
+        $this->assertEquals('QWERTZ', $result[0]['title']);
+        $this->assertEquals('qwertz', $result[1]['title']);
+        $this->assertEquals('ASDF', $result[2]['title']);
+        $this->assertEquals('asdf', $result[3]['title']);
+    }
 }

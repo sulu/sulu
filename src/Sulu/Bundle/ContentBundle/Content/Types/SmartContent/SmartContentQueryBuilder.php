@@ -108,21 +108,24 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
      */
     protected function buildOrder($webspaceKey, $locale)
     {
+        $sortOrder = (isset($this->config['sortMethod']) && $this->config['sortMethod'] == 'asc')
+            ? 'ASC' : 'DESC';
+
         $sql2Order = array();
         $sortBy = $this->getConfig('sortBy', array());
         if (!empty($sortBy) && is_array($sortBy)) {
-            foreach ($this->getConfig('sortBy', array()) as $sortColumn) {
+            foreach ($sortBy as $sortColumn) {
                 // TODO implement more generic
-                $order = 'c.[i18n:' . $locale . '-' . $sortColumn . ']';
+                $order = 'page.[i18n:' . $locale . '-' . $sortColumn . '] ';
                 if (!in_array($sortColumn, array('published', 'created', 'changed'))) {
                     $order = sprintf('lower(%s)', $order);
                 }
 
-                $sql2Order[] = $order;
+                $sql2Order[] = $order . ' ' . $sortOrder;
             }
         }
 
-        return $sql2Order;
+        return implode(', ', $sql2Order);
     }
 
     /**
