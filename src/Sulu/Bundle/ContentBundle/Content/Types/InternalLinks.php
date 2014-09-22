@@ -13,6 +13,7 @@ namespace Sulu\Bundle\ContentBundle\Content\Types;
 use PHPCR\NodeInterface;
 use Psr\Log\LoggerInterface;
 use Sulu\Bundle\ContentBundle\Content\InternalLinksContainer;
+use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\PropertyInterface;
@@ -28,6 +29,11 @@ class InternalLinks extends ComplexContentType
      * @var ContentMapperInterface
      */
     private $contentMapper;
+
+    /**
+     * @var StructureResolverInterface
+     */
+    private $structureResolver;
 
     /**
      * @var LoggerInterface

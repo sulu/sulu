@@ -393,7 +393,7 @@ class SmartContentQueryBuilderTest extends PhpcrTestCase
             }
 
             $data = array(
-                'title' => 'News ' . $i,
+                'title' => 'News ' . rand(1, 100),
                 'url' => '/news/news-' . $i,
                 'ext' => array(
                     'excerpt' => array(
@@ -585,5 +585,27 @@ class SmartContentQueryBuilderTest extends PhpcrTestCase
             $this->assertEquals($expected->getExt()['excerpt']->title, $item['ext_title']);
             $this->assertEquals($expected->getExt()['excerpt']->tags, $item['ext_tags']);
         }
+    }
+
+    public function testIds()
+    {
+        $nodes = $this->propertiesProvider();
+
+        $builder = new SmartContentQueryBuilder(
+            $this->structureManager,
+            $this->webspaceManager,
+            $this->sessionManager,
+            $this->languageNamespace
+        );
+        $builder->init(array('ids' => array(array_keys($nodes)[0], array_keys($nodes)[1])));
+
+        $tStart = microtime(true);
+        $result = $this->contentQuery->execute('default', array('en'), $builder);
+        $tDiff = microtime(true) - $tStart;
+        echo("\r\nIds estimated time (1 nodes): " . $tDiff);
+
+        $this->assertEquals(2, sizeof($result));
+        $this->assertEquals(array_keys($nodes)[0], $result[0]['uuid']);
+        $this->assertEquals(array_keys($nodes)[1], $result[1]['uuid']);
     }
 }

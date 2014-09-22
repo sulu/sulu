@@ -13,6 +13,9 @@ namespace Sulu\Bundle\ContentBundle\Content;
 use PHPCR\ItemNotFoundException;
 use Psr\Log\LoggerInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
+use Sulu\Component\Content\Query\ContentQuery;
+use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
+use Sulu\Component\Content\Query\ContentQueryInterface;
 use Sulu\Component\Content\StructureInterface;
 use JMS\Serializer\Annotation\Exclude;
 use Sulu\Component\Util\ArrayableInterface;
@@ -26,9 +29,23 @@ class InternalLinksContainer implements ArrayableInterface
     /**
      * The content mapper, which is needed for lazy loading
      * @Exclude
-     * @var ContentMapperInterface
+     * @var ContentQueryInterface
      */
-    private $contentMapper;
+    private $contentQuery;
+
+    /**
+     * The content mapper, which is needed for lazy loading
+     * @Exclude
+     * @var ContentQueryBuilderInterface
+     */
+    private $contentQueryBuilder;
+
+    /**
+     * The params to load
+     * @Exclude
+     * @var array
+     */
+    private $params;
 
     /**
      * @Exclude
@@ -63,13 +80,16 @@ class InternalLinksContainer implements ArrayableInterface
 
     public function __construct(
         $ids,
-        ContentMapperInterface $contentMapper,
+        ContentQueryInterface $contentQuery,
+        ContentQueryBuilderInterface $contentQueryBuilder,
+        $params,
         LoggerInterface $logger,
         $webspaceKey,
         $languageCode
     ) {
         $this->ids = $ids;
-        $this->contentMapper = $contentMapper;
+        $this->contentQuery = $contentQuery;
+        $this->contentQueryBuilder = $contentQueryBuilder;
         $this->logger = $logger;
         $this->webspaceKey = $webspaceKey;
         $this->languageCode = $languageCode;
@@ -98,7 +118,12 @@ class InternalLinksContainer implements ArrayableInterface
             foreach ($this->ids as $id) {
                 try {
                     if (!empty($id)) {
-                        $result[] = $this->contentMapper->load($id, $this->webspaceKey, $this->languageCode);
+                        $this->contentQueryBuilder->init(array('ids' => $this->ids, 'properties' => $this->params['properties']));
+                        $result = $this->contentQuery->execute(
+                            $this->webspaceKey,
+                            array($this->languageCode),
+                            $this->contentQueryBuilder
+                        );
                     }
                 } catch (ItemNotFoundException $ex) {
                     $this->logger->warning(

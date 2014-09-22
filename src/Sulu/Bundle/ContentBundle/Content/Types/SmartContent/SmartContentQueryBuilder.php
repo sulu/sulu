@@ -33,16 +33,16 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
     private $propertiesConfig = array();
 
     /**
-     * configuration which extension properties should be loaded
-     * @var array
-     */
-    private $extensionsConfig = array();
-
-    /**
      * configuration of
      * @var array
      */
     private $config = array();
+
+    /**
+     * array of ids to load
+     * @var array
+     */
+    private $ids = array();
 
     /**
      * @var WebspaceManagerInterface
@@ -82,6 +82,14 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
             $sql2Where = array_merge($sql2Where, $this->buildTagsWhere($locale));
         }
 
+        if (sizeof($this->ids) > 0) {
+            $idsWhere = array();
+            foreach ($this->ids as $id) {
+                $idsWhere[] = sprintf("page.[jcr:uuid] = '%s'", $id);
+            }
+            $sql2Where[] = implode(' OR ', $idsWhere);
+        }
+
         return implode(' AND ', $sql2Where);
     }
 
@@ -94,10 +102,6 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
 
         if (sizeof($this->propertiesConfig) > 0) {
             $this->buildPropertiesSelect($locale, $additionalFields);
-        }
-
-        if (sizeof($this->extensionsConfig) > 0) {
-            $this->buildExtensionsSelect($webspaceKey, $locale, $additionalFields);
         }
 
         return implode(', ', $select);
@@ -134,7 +138,7 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
     public function init(array $options)
     {
         $this->propertiesConfig = isset($options['properties']) ? $options['properties'] : array();
-        $this->extensionsConfig = isset($options['extension']) ? $options['extension'] : array();
+        $this->ids = isset($options['ids']) ? $options['ids'] : array();
         $this->config = isset($options['config']) ? $options['config'] : array();
     }
 
