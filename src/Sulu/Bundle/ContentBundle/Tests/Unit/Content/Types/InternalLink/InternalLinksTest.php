@@ -13,6 +13,8 @@ namespace Sulu\Bundle\ContentBundle\Tests\Unit\Content\Types\InternalLink;
 use Psr\Log\NullLogger;
 use Sulu\Bundle\ContentBundle\Content\Types\InternalLinks;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
+use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
+use Sulu\Component\Content\Query\ContentQueryInterface;
 
 //FIXME remove on update to phpunit 3.8, caused by https://github.com/sebastianbergmann/phpunit/issues/604
 interface NodeInterface extends \PHPCR\NodeInterface, \Iterator
@@ -22,24 +24,35 @@ interface NodeInterface extends \PHPCR\NodeInterface, \Iterator
 class InternalLinksTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var ContentMapperInterface
+     * @var ContentQueryInterface
      */
-    private $contentMapper;
+    private $contentQuery;
 
     /**
      * @var InternalLinks
      */
     private $internalLinks;
 
+    /**
+     * @var ContentQueryBuilderInterface
+     */
+    private $contentQueryBuilder;
+
     protected function setUp()
     {
-        $this->contentMapper = $this->getMockForAbstractClass(
-            'Sulu\Component\Content\Mapper\ContentMapper',
+        $this->contentQuery = $this->getMockForAbstractClass(
+            'Sulu\Component\Content\Query\ContentQuery',
             array(),
             '',
             false
         );
-        $this->internalLinks = new InternalLinks($this->contentMapper, new NullLogger(), 'asdf');
+        $this->contentQueryBuilder = $this->getMockForAbstractClass(
+            'Sulu\Component\Content\Query\ContentQueryBuilderInterface',
+            array(),
+            '',
+            false
+        );
+        $this->internalLinks = new InternalLinks($this->contentQuery, $this->contentQueryBuilder, new NullLogger(), 'asdf');
     }
 
     public function testWriteWithNoneExistingUUID()
