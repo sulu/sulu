@@ -3,3 +3,16 @@
 {% block list %}
     <div id="people-list"></div>
 {% endblock %}
+
+{% block data %}
+    {# used in contacts tab in accounts#}
+    <script type="text/javascript">
+        (function() {
+            var types = {
+                formOfAddress: {{ form_of_address|json_encode()|raw }},
+                emailTypes: {{ email_types|json_encode()|raw }}
+            };
+            App.emit('sulu.contacts.set-types', types);
+        })();
+    </script>
+{% endblock %}

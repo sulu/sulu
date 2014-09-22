@@ -15,8 +15,10 @@ define([
     'sulucontact/model/activity',
     'sulucontact/model/termsOfPayment',
     'sulucontact/model/termsOfDelivery',
+    'sulucontact/model/email',
+    'sulucontact/model/emailType',
     'sulumedia/model/media'
-], function(Account, Contact, AccountContact, AccountsUtilHeader, Activity, TermsOfPayment, TermsOfDelivery, Media) {
+], function(Account, Contact, AccountContact, AccountsUtilHeader, Activity, TermsOfPayment, TermsOfDelivery, Email, EmailType, Media) {
 
     'use strict';
 
@@ -193,6 +195,42 @@ define([
 
             // handling documents
             this.sandbox.on('sulu.contacts.accounts.medias.save', this.saveDocuments.bind(this));
+
+            // receive form of address values via template
+            this.sandbox.on('sulu.contacts.set-types', function(types) {
+                this.formOfAddress = types.formOfAddress;
+                this.emailTypes = types.emailTypes;
+            }.bind(this));
+
+            // pass them on to the contact tab when fully loaded
+            this.sandbox.on('sulu.contacts.accounts.contacts.initialized', function() {
+                this.sandbox.emit('sulu.contacts.accounts.set-form-of-address', this.formOfAddress);
+            }.bind(this));
+
+            // add a new contact
+            this.sandbox.on('sulu.contacts.accounts.new.contact', this.createNewContact.bind(this));
+        },
+
+        /**
+         * adds a new contact and assigns the current account to it
+         */
+        createNewContact: function(data) {
+            var contact = new Contact(data);
+            contact.set('emails', [
+                new Email({
+                    email: data.email,
+                    emailType: EmailType.findOrCreate({id: this.emailTypes[0].id})
+                })
+            ]);
+            contact.save(null, {
+                success: function(response) {
+                    var model = response.toJSON();
+                    this.sandbox.emit('sulu.contacts.accounts.contact.created', model);
+                }.bind(this),
+                error: function() {
+                    this.sandbox.logger.log("error while saving a new contact");
+                }.bind(this)
+            });
         },
 
         saveDocuments: function(accountId, newMediaIds, removedMediaIds) {

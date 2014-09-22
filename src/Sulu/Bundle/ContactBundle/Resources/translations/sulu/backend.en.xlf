@@ -34,6 +34,14 @@
                 <source>contact.contacts.categories.label</source>
                 <target>Categories</target>
             </trans-unit>
+            <trans-unit id="a50af522ac181350142c0b4720e41a8f" resname="contact.account.add-account-contact">
+                <source>contact.account.add-account-contact</source>
+                <target>Add contact</target>
+            </trans-unit>
+            <trans-unit id="a50af522ac181350142c0b4720e42a8f" resname="contact.accounts.add-new-contact-to-account">
+                <source>contact.accounts.add-new-contact-to-account</source>
+                <target>Create and add new contact</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
