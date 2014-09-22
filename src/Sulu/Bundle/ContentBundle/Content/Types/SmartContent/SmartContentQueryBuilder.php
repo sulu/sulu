@@ -187,7 +187,7 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
     {
         $sql2Where = array();
         foreach ($this->getConfig('tags', array()) as $tag) {
-            $sql2Where[] = 'c.[i18n:' . $languageCode . '-excerpt-tags] = ' . $tag;
+            $sql2Where[] = 'page.[i18n:' . $languageCode . '-excerpt-tags] = ' . $tag;
         }
 
         return $sql2Where;

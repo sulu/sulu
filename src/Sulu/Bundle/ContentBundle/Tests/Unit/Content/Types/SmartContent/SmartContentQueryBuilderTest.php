@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\ContentBundle\Tests\Unit\Content\Types;
 
 use ReflectionMethod;
+use Sulu\Bundle\ContentBundle\Content\Structure\ExcerptStructureExtension;
 use Sulu\Bundle\ContentBundle\Content\Types\SmartContent\SmartContentQueryBuilder;
 use Sulu\Bundle\TestBundle\Testing\PhpcrTestCase;
 use Sulu\Component\Content\Block\BlockProperty;
@@ -57,6 +58,8 @@ class SmartContentQueryBuilderTest extends PhpcrTestCase
             return $this->getStructureMock(2, 'article');
         } elseif ($structureKey == 'block') {
             return $this->getStructureMock(3, 'block');
+        } elseif ($structureKey == 'excerpt') {
+            return $this->getStructureMock(4, 'excerpt');
         }
 
         return null;
@@ -69,6 +72,11 @@ class SmartContentQueryBuilderTest extends PhpcrTestCase
             $this->getStructureMock(2, 'article'),
             $this->getStructureMock(3, 'block')
         );
+    }
+
+    public function getExtensionsCallback()
+    {
+        return array(new ExcerptStructureExtension($this->structureManager, $this->contentTypeManager));
     }
 
     public function getStructureMock($type, $name)
@@ -87,7 +95,7 @@ class SmartContentQueryBuilderTest extends PhpcrTestCase
             $structureMock,
             array(
                 new Property(
-                    'title', 'title', 'text_line', false, true, 1, 1, array(),
+                    'title', array(), 'text_line', false, true, 1, 1, array(),
                     array(
                         new PropertyTag('sulu.node.name', 1)
                     )
@@ -100,7 +108,7 @@ class SmartContentQueryBuilderTest extends PhpcrTestCase
                 $structureMock,
                 array(
                     new Property(
-                        'article', 'title', 'text_area', false, true
+                        'article', array(), 'text_area', false, true
                     )
                 )
             );
@@ -112,6 +120,15 @@ class SmartContentQueryBuilderTest extends PhpcrTestCase
             $block->addType($type);
 
             $method->invokeArgs($structureMock, array($block));
+        } elseif ($type === 4) {
+            $method->invokeArgs(
+                $structureMock,
+                array(
+                    new Property(
+                        'tags', array(), 'text_line', false, true, 1, 10
+                    )
+                )
+            );
         }
 
         $method->invokeArgs(
@@ -218,13 +235,27 @@ class SmartContentQueryBuilderTest extends PhpcrTestCase
 
     public function datasourceProvider()
     {
-        $news = $this->mapper->save(array('title' => 'News', 'url' => '/news'), 'simple', 'default', 'en', 1);
+        $news = $this->mapper->save(
+            array('title' => 'News', 'url' => '/news'),
+            'simple',
+            'default',
+            'en',
+            1,
+            true,
+            null,
+            null,
+            Structure::STATE_PUBLISHED
+        );
         $products = $this->mapper->save(
             array('title' => 'Products', 'url' => '/products'),
             'simple',
             'default',
             'en',
-            1
+            1,
+            true,
+            null,
+            null,
+            Structure::STATE_PUBLISHED
         );
 
         $nodes = array();
@@ -289,6 +320,132 @@ class SmartContentQueryBuilderTest extends PhpcrTestCase
         $tDiff = microtime(true) - $tStart;
         echo("\r\nDatasource estimated time (0 nodes): " . $tDiff);
 
+        $this->assertEquals(0, sizeof($result));
+    }
+
+    public function testIncludeSubFolder()
+    {
+        $root = $this->sessionManager->getContentNode('default');
+        list($news, $products, $nodes) = $this->datasourceProvider();
+        $builder = new SmartContentQueryBuilder(
+            $this->structureManager,
+            $this->webspaceManager,
+            $this->sessionManager,
+            $this->languageNamespace
+        );
+        $builder->init(array('config' => array('dataSource' => $root->getIdentifier(), 'includeSubFolders' => true)));
+
+        $tStart = microtime(true);
+        $result = $this->contentQuery->execute('default', array('en'), $builder);
+        $tDiff = microtime(true) - $tStart;
+        echo("\r\nIncludeSubFolders estimated time (" . sizeof($nodes) . " nodes): " . $tDiff);
+
+        // nodes + news + products
+        $this->assertEquals(sizeof($nodes) + 2, sizeof($result));
+
+        for ($i = 0; $i < sizeof($nodes) + 2; $i++) {
+            if ($i === 0) {
+                $item = $result[0];
+
+                $expected = $news;
+            } elseif ($i === sizeof($nodes) + 1) {
+                $item = $result[sizeof($nodes) + 1];
+
+                $expected = $products;
+            } else {
+                $item = $result[$i];
+
+                /** @var StructureInterface $expected */
+                $expected = $nodes[$item['uuid']];
+            }
+
+            $this->assertEquals($expected->getUuid(), $item['uuid']);
+            $this->assertEquals($expected->getNodeType(), $item['nodeType']);
+            $this->assertEquals($expected->getPath(), $item['path']);
+            $this->assertEquals($expected->title, $item['title']);
+        }
+    }
+
+    public function tagsProvider()
+    {
+        $nodes = array();
+        $max = 15;
+        $t1t2 = 0;
+        $t1 = 0;
+        $t2 = 0;
+        for ($i = 0; $i < $max; $i++) {
+            if ($i % 2 === 1) {
+                $tags = array(1, 2);
+                $t1t2++;
+            } else {
+                $tags = array(2);
+                $t2++;
+            }
+
+            $data = array(
+                'title' => 'News ' . $i,
+                'url' => '/news/news-' . $i,
+                'ext' => array(
+                    'excerpt' => array(
+                        'tags' => $tags
+                    )
+                )
+            );
+            $template = 'simple';
+            $node = $this->mapper->save(
+                $data,
+                $template,
+                'default',
+                'en',
+                1,
+                true,
+                null,
+                null,
+                Structure::STATE_PUBLISHED
+            );
+            $nodes[$node->getUuid()] = $node;
+        }
+
+        return array($nodes, $t1, $t2, $t1t2);
+    }
+
+    public function testTags()
+    {
+        $root = $this->sessionManager->getContentNode('default');
+        list($nodes, $t1, $t2, $t1t2) = $this->tagsProvider();
+        $builder = new SmartContentQueryBuilder(
+            $this->structureManager,
+            $this->webspaceManager,
+            $this->sessionManager,
+            $this->languageNamespace
+        );
+
+        // tag 1, 2
+        $builder->init(
+            array('config' => array('dataSource' => $root->getIdentifier(), 'tags' => array(1, 2)))
+        );
+        $result = $this->contentQuery->execute('default', array('en'), $builder);
+        $this->assertEquals($t1t2, sizeof($result));
+
+        // tag 1
+        $builder->init(
+            array('config' => array('dataSource' => $root->getIdentifier(), 'tags' => array(1)))
+        );
+        $result = $this->contentQuery->execute('default', array('en'), $builder);
+        $this->assertEquals($t1t2 + $t1, sizeof($result));
+
+        // tag 2
+        $builder->init(
+            array('config' => array('dataSource' => $root->getIdentifier(), 'tags' => array(2)))
+        );
+        $result = $this->contentQuery->execute('default', array('en'), $builder);
+        $this->assertEquals($t1t2 + $t2, sizeof($result));
+
+        // tag 3
+        $builder->init(
+            array('config' => array('dataSource' => $root->getIdentifier(), 'tags' => array(3)))
+        );
+        $result = $this->contentQuery->execute('default', array('en'), $builder);
         $this->assertEquals(0, sizeof($result));
     }
 }
