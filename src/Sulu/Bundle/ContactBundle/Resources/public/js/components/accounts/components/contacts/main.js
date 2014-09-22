@@ -19,7 +19,8 @@ define([
             relationFormSelector: '#contact-relation-form',
             contactSelector: '#contact-field',
             positionSelector: '#company-contact-position',
-            newContactFormSelector: '#contact-form'
+            newContactFormSelector: '#contact-form',
+            contactListSelector: '#people-list'
         },
 
         companyPosition = null,
@@ -106,7 +107,7 @@ define([
 
             // create container for overlay
             $overlay = this.sandbox.dom.createElement('<div />');
-            $list = this.sandbox.dom.find('#people-list');
+            $list = this.sandbox.dom.find(constants.contactListSelector);
             this.sandbox.dom.append($list, $overlay);
 
             // create overlay with data
@@ -128,7 +129,7 @@ define([
         },
 
         /**
-         * adds a new contact to when the form is valid
+         * adds a new contact to an account when the form is valid
          */
         addNewContact = function(){
             if (this.sandbox.form.validate(constants.newContactFormSelector)) {
