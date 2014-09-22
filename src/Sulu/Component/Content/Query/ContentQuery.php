@@ -158,6 +158,10 @@ class ContentQuery implements ContentQueryInterface
      */
     private function rowToArray(Row $row, $locale, $webspaceKey, $routesPath, $fields)
     {
+        // cache for extension data
+        $extData = array();
+
+        // load default data
         $uuid = $row->getValue('page.jcr:uuid');
 
         $templateKey = $row->getValue('page.i18n:' . $locale . '-template');
@@ -170,11 +174,15 @@ class ContentQuery implements ContentQueryInterface
 
         if ($templateKey !== '') {
             $path = $row->getPath('page');
+
+            // get structure
             $templateKey = $this->templateResolver->resolve($nodeType, $templateKey);
             $structure = $this->structureManager->getStructure($templateKey);
 
+            // generate field data
             $fieldsData = array();
             foreach ($fields[$locale] as $field) {
+                // determine target for data in result array
                 if (isset($fieldsData['target'])) {
                     if (!isset($fieldsData[$field['target']])) {
                         $fieldsData[$field['target']] = array();
@@ -185,8 +193,10 @@ class ContentQuery implements ContentQueryInterface
                 }
 
                 if (!isset($field['property'])) {
+                    // normal data from node property
                     $target[$field['name']] = $row->getValue($field['column']);
-                } elseif (!isset($field['templateKey']) || $field['templateKey'] === $templateKey) {
+                } elseif (!isset($field['extension']) && (!isset($field['templateKey']) || $field['templateKey'] === $templateKey)) {
+                    // not extension data but property of node
                     /** @var PropertyInterface $property */
                     $property = $field['property'];
                     $contentType = $this->contentTypeManager->get($property->getContentTypeName());
@@ -201,6 +211,28 @@ class ContentQuery implements ContentQueryInterface
 
                     $value = $contentType->getContentData($property);
                     $target[$field['name']] = $value;
+                } elseif (isset($field['extension'])) {
+                    $extensionName = $field['extension']->getName();
+                    // extension data: load ones
+                    if (!isset($extData[$extensionName])) {
+                        $field['extension']->setLanguageCode($locale, $this->languageNamespace, '');
+                        $data = $field['extension']->load(
+                            $row->getNode('page'),
+                            $webspaceKey,
+                            $locale
+                        );
+
+                        // insure array
+                        if ($data instanceof ArrayableInterface) {
+                            $data = $data->toArray();
+                        }
+
+                        // cache data
+                        $extData[$field['extension']->getName()] = $data;
+                    }
+
+                    // if property exists set it to target (with default value '')
+                    $target[$field['name']] = isset($extData[$extensionName][$field['property']]) ? $extData[$extensionName][$field['property']] : '';
                 }
             }
 
