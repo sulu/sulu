@@ -103,6 +103,7 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
 
         $where = '';
         $select = '';
+        $order = array();
         $names = array();
 
         foreach ($locales as $locale) {
@@ -147,9 +148,11 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
             }
             $where .= ')';
 
-            $order[] = $this->buildOrder($webspaceKey, $locale);
+            $customOrder = $this->buildOrder($webspaceKey, $locale);
+            if (!empty($customOrder)) {
+                $order[] = $this->buildOrder($webspaceKey, $locale);
+            }
         }
-
 
         // build sql2 query string
         $sql2 = sprintf(
@@ -158,11 +161,14 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
              LEFT OUTER JOIN [nt:unstructured] AS route ON page.[jcr:uuid] = route.[sulu:content]
              WHERE page.[jcr:mixinTypes] = 'sulu:content'
                 AND (ISDESCENDANTNODE(page, '/cmf/%s/contents') OR ISSAMENODE(page, '/cmf/%s/contents'))
-                AND (%s)",
+                AND (%s)
+                %s %s",
             $select,
             $webspaceKey,
             $webspaceKey,
-            $where
+            $where,
+            sizeof($order) > 0 ? 'ORDER BY' : '',
+            implode(', ', $order)
         );
 
         return array($sql2, $additionalFields);
