@@ -40,7 +40,7 @@ class NavigationTwigExtension extends \Twig_Extension
     function __construct(
         ContentMapperInterface $contentMapper,
         NavigationMapperInterface $navigationMapper,
-        RequestAnalyzerInterface $requestAnalyzer
+        RequestAnalyzerInterface $requestAnalyzer = null
     )
     {
         $this->contentMapper = $contentMapper;
