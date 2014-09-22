@@ -17,7 +17,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * Sulu HttpCache - Lookups a valid Response from the cache for the given request
- * or forwards the Request to the backend and stores teh Response in the cahce.
+ * or forwards the Request to the backend and stores the Response in the cache.
  */
 class HttpCache extends HttpCacheAbstract
 {
