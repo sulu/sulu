@@ -78,6 +78,11 @@ class SmartContentQueryBuilderTest extends PhpcrTestCase
         return array(new ExcerptStructureExtension($this->structureManager, $this->contentTypeManager));
     }
 
+    public function getExtensionCallback()
+    {
+        return new ExcerptStructureExtension($this->structureManager, $this->contentTypeManager);
+    }
+
     public function getStructureMock($type, $name)
     {
         $structureMock = $this->getMockForAbstractClass(
@@ -152,7 +157,13 @@ class SmartContentQueryBuilderTest extends PhpcrTestCase
         for ($i = 0; $i < $max; $i++) {
             $data = array(
                 'title' => 'News ' . $i,
-                'url' => '/news/news-' . $i
+                'url' => '/news/news-' . $i,
+                'ext' => array(
+                    'excerpt' => array(
+                        'title' => 'Excerpt Title ' . $i,
+                        'tags' => array($i)
+                    )
+                )
             );
             $template = 'simple';
 
@@ -547,5 +558,32 @@ class SmartContentQueryBuilderTest extends PhpcrTestCase
         $this->assertEquals('qwertz', $result[1]['title']);
         $this->assertEquals('ASDF', $result[2]['title']);
         $this->assertEquals('asdf', $result[3]['title']);
+    }
+
+    public function testExtension()
+    {
+        $nodes = $this->propertiesProvider();
+
+        $builder = new SmartContentQueryBuilder(
+            $this->structureManager,
+            $this->webspaceManager,
+            $this->sessionManager,
+            $this->languageNamespace
+        );
+        $builder->init(array('properties' => array('my_title' => 'title', 'ext_title' => 'excerpt.title', 'ext_tags' => 'excerpt.tags')));
+
+        $tStart = microtime(true);
+        $result = $this->contentQuery->execute('default', array('en'), $builder);
+        $tDiff = microtime(true) - $tStart;
+        echo("\r\nExtensions estimated time (" . sizeof($nodes) . " nodes): " . $tDiff);
+
+        foreach ($result as $item) {
+            /** @var StructureInterface $expected */
+            $expected = $nodes[$item['uuid']];
+
+            $this->assertEquals($expected->title, $item['my_title']);
+            $this->assertEquals($expected->getExt()['excerpt']->title, $item['ext_title']);
+            $this->assertEquals($expected->getExt()['excerpt']->tags, $item['ext_tags']);
+        }
     }
 }

@@ -93,11 +93,11 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
         $select = array();
 
         if (sizeof($this->propertiesConfig) > 0) {
-            $select[] = $this->buildPropertiesSelect($locale, $additionalFields);
+            $this->buildPropertiesSelect($locale, $additionalFields);
         }
 
         if (sizeof($this->extensionsConfig) > 0) {
-            // $select[] = $this->buildExtensionsSelect($webspaceKey, $locale, $additionalFields);
+            $this->buildExtensionsSelect($webspaceKey, $locale, $additionalFields);
         }
 
         return implode(', ', $select);
@@ -143,12 +143,15 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
      */
     private function buildPropertiesSelect($locale, &$additionalFields)
     {
-        $select = array();
         foreach ($this->propertiesConfig as $alias => $propertyName) {
-            $select[] = $this->buildPropertySelect($alias, $propertyName, $locale, $additionalFields);
-        }
+            if (strpos($propertyName, '.') !== false) {
+                $parts = explode('.', $propertyName);
 
-        return implode(', ', $select);
+                $this->buildExtensionSelect($alias, $parts[0], $parts[1], $locale, $additionalFields);
+            } else {
+                $this->buildPropertySelect($alias, $propertyName, $locale, $additionalFields);
+            }
+        }
     }
 
     /**
@@ -156,7 +159,6 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
      */
     private function buildPropertySelect($alias, $propertyName, $locale, &$additionalFields)
     {
-        $select = array();
         foreach ($this->structureManager->getStructures() as $structure) {
             if ($structure->hasProperty($propertyName)) {
                 $property = $structure->getProperty($propertyName);
@@ -167,8 +169,19 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
                 );
             }
         }
+    }
 
-        return implode(', ', $select);
+    /**
+     * build select for extension property
+     */
+    private function buildExtensionSelect($alias, $extension, $propertyName, $locale, &$additionalFields)
+    {
+        $extension = $this->structureManager->getExtension('', $extension);
+        $additionalFields[$locale][] = array(
+            'name' => $alias,
+            'extension' => $extension,
+            'property' => $propertyName
+        );
     }
 
     /**
@@ -200,14 +213,6 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
         }
 
         return $sql2Where;
-    }
-
-    /**
-     * build select for extensions
-     */
-    private function buildExtensionsSelect($webspaceKey, $locale, &$additionalFields)
-    {
-        return '';
     }
 
     /**
