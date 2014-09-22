@@ -63,7 +63,7 @@ class AdminRequestAnalyzer implements RequestAnalyzerInterface
         // TODO rename to locale
         $locale = $request->get('language');
 
-        if ($webspaceKey === null) {
+        if ($webspaceKey !== null) {
             $this->webspace = $this->webspaceManager->findWebspaceByKey($webspaceKey);
         }
         if ($this->webspace !== null && $locale !== null) {
