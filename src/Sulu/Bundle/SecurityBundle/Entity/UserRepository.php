@@ -237,7 +237,11 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
     protected function getSystem()
     {
         $system = $this->suluSystem;
-        if ($this->requestAnalyzer != null) {
+        if (
+            $this->requestAnalyzer != null &&
+            $this->requestAnalyzer->getCurrentWebspace() !== null &&
+            $this->requestAnalyzer->getCurrentWebspace()->getSecurity() !== null
+        ) {
             // if the request analyzer is available, overwrite the system
             $system = $this->requestAnalyzer->getCurrentWebspace()->getSecurity()->getSystem();
         }
