@@ -18,6 +18,7 @@ use Sulu\Component\Content\Query\ContentQueryInterface;
 use Sulu\Component\Content\StructureInterface;
 use JMS\Serializer\Annotation\Exclude;
 use Sulu\Component\Util\ArrayableInterface;
+use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
  * Container for SmartContent, holds the config for a smart content, and lazy loads the structures meeting its criteria
@@ -82,6 +83,11 @@ class SmartContentContainer implements ArrayableInterface
     private $preview;
 
     /**
+     * @var Stopwatch
+     */
+    private $stopwatch;
+
+    /**
      * @param ContentQueryInterface $contentQuery
      * @param ContentQueryBuilderInterface $contentQueryBuilder
      * @param TagManagerInterface $tagManager
@@ -90,6 +96,7 @@ class SmartContentContainer implements ArrayableInterface
      * @param string $languageCode
      * @param string $segmentKey
      * @param bool $preview
+     * @param Stopwatch $stopwatch
      */
     public function __construct(
         ContentQueryInterface $contentQuery,
@@ -99,7 +106,8 @@ class SmartContentContainer implements ArrayableInterface
         $webspaceKey,
         $languageCode,
         $segmentKey,
-        $preview = false
+        $preview = false,
+        Stopwatch $stopwatch = null
     ) {
         $this->contentQuery = $contentQuery;
         $this->contentQueryBuilder = $contentQueryBuilder;
@@ -108,6 +116,7 @@ class SmartContentContainer implements ArrayableInterface
         $this->languageCode = $languageCode;
         $this->preview = $preview;
         $this->params = $params;
+        $this->stopwatch = $stopwatch;
     }
 
     /**
@@ -162,12 +171,24 @@ class SmartContentContainer implements ArrayableInterface
      */
     private function loadData($config)
     {
+        if ($this->stopwatch) {
+            $this->stopwatch->start('SmartContent:loadData');
+        }
+        $result = array();
         if (array_key_exists('dataSource', $config) && $config['dataSource'] !== '') {
             $this->contentQueryBuilder->init($this->params);
-            return $this->contentQuery->execute($this->webspaceKey, array($this->languageCode), $this->contentQueryBuilder);
-        } else {
-            return array();
+            $result = $this->contentQuery->execute(
+                $this->webspaceKey,
+                array($this->languageCode),
+                $this->contentQueryBuilder
+            );
         }
+
+        if ($this->stopwatch) {
+            $this->stopwatch->stop('SmartContent:loadData');
+        }
+
+        return $result;
     }
 
     /**

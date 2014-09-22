@@ -19,6 +19,7 @@ use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Sulu\Component\Util\ArrayableInterface;
+use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
  * ContentType for TextEditor
@@ -50,18 +51,25 @@ class SmartContent extends ComplexContentType
      */
     private $requestStack;
 
+    /**
+     * @var Stopwatch
+     */
+private $stopwatch;
+
     function __construct(
         ContentQueryInterface $contentQuery,
         ContentQueryBuilderInterface $contentQueryBuilder,
         TagManagerInterface $tagManager,
         RequestStack $requestStack,
-        $template
+        $template,
+        Stopwatch $stopwatch = null
     ) {
         $this->contentQuery = $contentQuery;
         $this->contentQueryBuilder = $contentQueryBuilder;
         $this->tagManager = $tagManager;
         $this->template = $template;
         $this->requestStack = $requestStack;
+        $this->stopwatch = $stopwatch;
     }
 
     /**
@@ -107,7 +115,8 @@ class SmartContent extends ComplexContentType
             $webspaceKey,
             $languageCode,
             $segmentKey,
-            $preview
+            $preview,
+            $this->stopwatch
         );
         $smartContent->setConfig($data === null || !is_array($data) ? array() : $data);
         $property->setValue($smartContent);
@@ -191,7 +200,6 @@ class SmartContent extends ComplexContentType
         $params['max_per_page'] = 25;
         $params['page_parameter'] = 'p';
         $params['properties'] = array();
-        $params['extensions'] = array();
 
         return $params;
     }

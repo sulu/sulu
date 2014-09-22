@@ -29,6 +29,7 @@
             <argument type="service" id="sulu_tag.tag_manager"/>
             <argument type="service" id="request_stack" />
             <argument>%sulu.content.type.smart_content.template%</argument>
+            <argument type="service" id="debug.stopwatch" on-invalid="null" />
 
             <tag name="sulu.content.type" alias="smart_content" />
         </service>
