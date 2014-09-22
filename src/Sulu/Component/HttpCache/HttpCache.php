@@ -15,6 +15,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
+/**
+ * Sulu HttpCache - Lookups a valid Response from the cache for the given request
+ * or forwards the Request to the backend and stores teh Response in the cahce.
+ */
 class HttpCache extends HttpCacheAbstract
 {
     const HEADER_REVERSE_PROXY_TTL = 'X-Reverse-Proxy-TTL';
