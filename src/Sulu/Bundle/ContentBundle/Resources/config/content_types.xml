@@ -3,6 +3,8 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <parameters>
         <parameter key="sulu.content.type.smart_content.class">Sulu\Bundle\ContentBundle\Content\Types\SmartContent\SmartContent</parameter>
+        <parameter key="sulu.content.type.smart_content.query_builder.class">Sulu\Bundle\ContentBundle\Content\Types\SmartContent\SmartContentQueryBuilder</parameter>
+
         <parameter key="sulu.content.type.internal_links.class">Sulu\Bundle\ContentBundle\Content\Types\InternalLinks</parameter>
         <parameter key="sulu.content.type.single_internal_link.class">Sulu\Bundle\ContentBundle\Content\Types\SingleInternalLink</parameter>
         <parameter key="sulu.content.type.phone.class">Sulu\Bundle\ContentBundle\Content\Types\Phone</parameter>
@@ -15,11 +17,19 @@
     </parameters>
     <services>
         <!-- content-types -->
+        <service id="sulu.content.type.smart_content.query_builder" class="%sulu.content.type.smart_content.query_builder.class%" public="false">
+            <argument type="service" id="sulu.content.structure_manager"/>
+            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+            <argument type="service" id="sulu.phpcr.session"/>
+            <argument>%sulu.content.language.namespace%</argument>
+        </service>
         <service id="sulu.content.type.smart_content" class="%sulu.content.type.smart_content.class%">
-            <argument type="service" id="sulu_content.node_repository"/>
+            <argument type="service" id="sulu.content.query"/>
+            <argument type="service" id="sulu.content.type.smart_content.query_builder"/>
             <argument type="service" id="sulu_tag.tag_manager"/>
             <argument type="service" id="request_stack" />
             <argument>%sulu.content.type.smart_content.template%</argument>
+
             <tag name="sulu.content.type" alias="smart_content" />
         </service>
 

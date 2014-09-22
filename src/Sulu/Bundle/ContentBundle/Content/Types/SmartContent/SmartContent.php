@@ -12,7 +12,6 @@ namespace Sulu\Bundle\ContentBundle\Content\Types\SmartContent;
 
 use PHPCR\NodeInterface;
 use Sulu\Bundle\ContentBundle\Content\SmartContentContainer;
-use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\PropertyInterface;
