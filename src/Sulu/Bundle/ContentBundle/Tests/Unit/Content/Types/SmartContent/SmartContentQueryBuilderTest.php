@@ -21,7 +21,6 @@ use Sulu\Component\Content\PropertyTag;
 use Sulu\Component\Content\Query\ContentQuery;
 use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\StructureInterface;
-use vendor\sulu\sulu\tests\Sulu\Component\Content\Block\BlockPropertyTest;
 
 class SmartContentQueryBuilderTest extends PhpcrTestCase
 {
