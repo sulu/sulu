@@ -138,6 +138,9 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
         $this->config = isset($options['config']) ? $options['config'] : array();
     }
 
+    /**
+     * build select for properties
+     */
     private function buildPropertiesSelect($locale, &$additionalFields)
     {
         $select = array();
@@ -148,6 +151,9 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
         return implode(', ', $select);
     }
 
+    /**
+     * build select for single property
+     */
     private function buildPropertySelect($alias, $propertyName, $locale, &$additionalFields)
     {
         $select = array();
