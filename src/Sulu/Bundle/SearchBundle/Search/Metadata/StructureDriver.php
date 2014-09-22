@@ -49,13 +49,14 @@ class StructureDriver implements DriverInterface
 
         $indexMeta->setIndexName('content');
         $indexMeta->setIdField('uuid');
+        $indexMeta->setLocaleField('languageCode');
 
         foreach ($structure->getProperties(true) as $property) {
             if ($property->hasTag('sulu.search.field')) {
                 $tag = $property->getTag('sulu.search.field');
                 $tagAttrs = $tag->getAttributes();
 
-                if (isset($tagAttrs['index']) && $tagsAttrs['index'] !== 'false') {
+                if ((isset($tagAttrs['index']) && $tagAttrs['index'] !== 'false') || !isset($tagAttrs['index'])) {
                     $indexMeta->addFieldMapping($property->getName(), array(
                         'type' => isset($tagAttrs['type']) ? $tagAttrs['type'] : 'string',
                     ));

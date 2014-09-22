@@ -15,8 +15,8 @@ class SearchController extends Controller
             throw new \Exception('Length of query string must be greater than 3 (Zend Search)');
         }
 
-        $searchManager = $this->get('sulu_search.localized_search_manager');
-        $hits = $searchManager->search($q, 'de', 'content');
+        $searchManager = $this->get('massive_search.search_manager');
+        $hits = $searchManager->createSearch($q)->locale('de')->index('content');
 
         return $this->render('TestBundle:Search:query.html.twig', array(
             'hits' => $hits,

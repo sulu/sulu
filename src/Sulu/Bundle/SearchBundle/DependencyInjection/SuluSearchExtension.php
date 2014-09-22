@@ -21,22 +21,8 @@ use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
  */
-class SuluSearchExtension extends Extension implements PrependExtensionInterface
+class SuluSearchExtension extends Extension
 {
-    /**
-     * Override configuration settings from massive_search bundle
-     *
-     * {@inheritDoc}
-     */
-    public function prepend(ContainerBuilder $container)
-    {
-        $container->prependextensionconfig('massive_search', array(
-            'services' => array(
-                'factory' => 'sulu_search.factory'
-            )
-        ));
-    }
-
     /**
      * {@inheritDoc}
      */

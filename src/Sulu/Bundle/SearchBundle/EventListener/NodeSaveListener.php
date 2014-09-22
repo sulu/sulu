@@ -34,7 +34,7 @@ class NodeSaveListener
      */
     protected $baseName;
 
-    public function __construct(LocalizedSearchManagerInterface $searchManager, SessionManagerInterface $sessionManager, $baseName, $tempName)
+    public function __construct(SearchManagerInterface $searchManager, SessionManagerInterface $sessionManager, $baseName, $tempName)
     {
         $this->searchManager = $searchManager;
         $this->sessionManager = $sessionManager;
@@ -52,7 +52,7 @@ class NodeSaveListener
 
         // only if it is none temp node and it is published
         if ($matches[2] !== $this->tempName && $structure->getNodeState() === Structure::STATE_PUBLISHED) {
-            $this->searchManager->index($structure, $structure->getLanguageCode());
+            $this->searchManager->index($structure);
         }
     }
 }

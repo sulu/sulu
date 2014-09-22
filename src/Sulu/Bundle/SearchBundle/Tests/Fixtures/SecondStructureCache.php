@@ -106,11 +106,7 @@ class SecondStructureCache extends \Sulu\Component\Content\Structure
             1,
             1,
             array(
-            ),
-            array(
-                'sulu.search.field' => new PropertyTag('sulu.search.field', 1, array('type' => 'string', 'role' => 'image')),
-            ),
-            ''
+            )
         );
         $this->addChild($prop1);
 

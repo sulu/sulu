@@ -37,7 +37,7 @@ EOT
         $contentMapper = $container->get('sulu.content.mapper');
 
         /** @var LocalizedSearchManagerInterface $searchManager */
-        $searchManager = $container->get('sulu_search.localized_search_manager');
+        $searchManager = $container->get('massive_search.search_manager');
 
         /** @var WebspaceManagerInterface $webspaceManager */
         $webspaceManager = $container->get('sulu_core.webspace.webspace_manager');
@@ -75,12 +75,12 @@ EOT
                 $webspaceKey = $matches[1];
 
                 if ($tempName !== $matches[2] && $webspaceManager->findWebspaceByKey($webspaceKey) !== null) {
-                    $output->writeln(
-                        ' - <comment>Indexing structure (locale: ' . $locale . ')</comment>: ' . $node->getPath()
-                    );
                     $structure = $contentMapper->load($node->getIdentifier(), $webspaceKey, $locale);
 
                     if ($structure->getNodeState() === Structure::STATE_PUBLISHED) {
+                        $output->writeln(
+                            ' - <comment>Indexing structure (locale: ' . $locale . ')</comment>: ' . $node->getPath()
+                        );
                         $searchManager->index($structure, $locale);
                     }
                 }

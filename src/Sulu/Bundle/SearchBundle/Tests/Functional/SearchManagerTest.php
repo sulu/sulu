@@ -15,8 +15,7 @@ class SearchManagerTest extends BaseTestCase
         for ($i = 1; $i <= 2; $i++) {
 
             $this->generateStructureIndex($nbResults);
-
-            $res = $this->getSearchManager()->search('Structure*', 'de', 'content');
+            $res = $this->getSearchManager()->createSearch('Structure*')->locale('de')->index('content')->go();
 
             $this->assertCount($nbResults, $res);
         }

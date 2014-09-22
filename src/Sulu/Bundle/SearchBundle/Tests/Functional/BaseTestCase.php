@@ -24,7 +24,7 @@ class BaseTestCase extends SymfonyCmfBaseTestCase
 
     public function getSearchManager()
     {
-        $searchManager = $this->getContainer()->get('sulu_search.localized_search_manager');
+        $searchManager = $this->getContainer()->get('massive_search.search_manager');
         return $searchManager;
     }
 
@@ -37,8 +37,9 @@ class BaseTestCase extends SymfonyCmfBaseTestCase
 
             $structure->getProperty('url')->setValue('/');
             $structure->setNodeState(StructureInterface::STATE_PUBLISHED);
+            $structure->setLanguageCode('de');
 
-            $this->getSearchManager()->index($structure, 'de', 'content');
+            $this->getSearchManager()->index($structure);
         }
     }
 
@@ -60,7 +61,7 @@ class BaseTestCase extends SymfonyCmfBaseTestCase
 
         /** @var ContentMapperInterface $mapper */
         $mapper = $this->getContainer()->get('sulu.content.mapper');
-        $mapper->save($data, 'overview', 'sulu_io', 'de', 1, true, null, null, Structure::STATE_PUBLISHED);
+        $mapper->save($data, 'default', 'sulu_io', 'de', 1, true, null, null, Structure::STATE_PUBLISHED);
     }
 }
 
