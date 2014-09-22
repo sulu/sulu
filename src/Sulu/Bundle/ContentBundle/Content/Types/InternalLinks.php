@@ -124,6 +124,14 @@ class InternalLinks extends ComplexContentType
     /**
      * {@inheritdoc}
      */
+    public function getDefaultParams()
+    {
+        return array('properties' => array());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function write(
         NodeInterface $node,
         PropertyInterface $property,

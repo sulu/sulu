@@ -93,6 +93,7 @@ class InternalLinksContainer implements ArrayableInterface
         $this->logger = $logger;
         $this->webspaceKey = $webspaceKey;
         $this->languageCode = $languageCode;
+        $this->params = $params;
     }
 
     /**
