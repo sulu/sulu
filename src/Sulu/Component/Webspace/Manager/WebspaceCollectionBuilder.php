@@ -303,7 +303,7 @@ class WebspaceCollectionBuilder
                 $replacers = array(
                     self::REPLACER_LANGUAGE => $language,
                     self::REPLACER_COUNTRY => $country,
-                    self::REPLACER_LOCALIZATION => $localization->getLocalization()
+                    self::REPLACER_LOCALIZATION => $localization->getLocalization('-')
                 );
 
                 $this->buildUrlFullMatch($portal, $environment, $segments, $replacers, $urlAddress, $localization);
