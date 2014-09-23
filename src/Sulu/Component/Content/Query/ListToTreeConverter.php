@@ -41,11 +41,27 @@ class ListToTreeConverter
         if (!array_key_exists('children', $tree)) {
             return array();
         }
+        $tree = $this->toArray($tree);
         $tree = $tree['children'];
 
         // root node exists
         if (array_key_exists('root', $tree)) {
             return $tree['root'];
+        }
+
+        return $tree;
+    }
+
+    private function toArray($tree)
+    {
+        if (isset($tree['children'])) {
+            $tree['children'] = array_values($tree['children']);
+
+            for ($i = 0; $i < sizeof($tree['children']); $i++) {
+                $tree['children'][$i] = $this->toArray($tree['children'][$i]);
+            }
+        } else {
+            $tree['children'] = array();
         }
 
         return $tree;
