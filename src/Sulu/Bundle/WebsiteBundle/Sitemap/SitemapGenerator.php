@@ -62,6 +62,11 @@ class SitemapGenerator implements SitemapGeneratorInterface
      */
     public function generate($webspaceKey, $locale, $flat = false)
     {
-        return $this->contentQuery->execute($webspaceKey, array($locale), $this->contentQueryBuilder, $flat);
+        $result = $this->contentQuery->execute($webspaceKey, array($locale), $this->contentQueryBuilder, $flat);
+        if (sizeof($result) === 1) {
+            $result = $result[0];
+        }
+
+        return $result;
     }
 }

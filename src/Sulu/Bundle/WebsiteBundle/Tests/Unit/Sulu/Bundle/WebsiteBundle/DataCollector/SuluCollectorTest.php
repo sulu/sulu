@@ -47,7 +47,6 @@ class SuluCollectorTest extends ProphecyTestCase
 
         $this->dataCollector->collect($this->request, $this->response->reveal());
 
-        $this->structure->toArray()->shouldHaveBeenCalled();
         $this->portal->toArray()->shouldHaveBeenCalled();
         $this->webspace->toArray()->shouldHaveBeenCalled();
         $this->segment->toArray()->shouldHaveBeenCalled();

@@ -47,13 +47,7 @@ class NavigationTest extends PhpcrTestCase
             ->method('getStructures')
             ->will($this->returnCallback(array($this, 'structuresCallback')));
 
-        $contentQuery = new ContentQueryExecutor(
-            $this->sessionManager,
-            $this->structureManager,
-            $this->templateResolver,
-            $this->contentTypeManager,
-            $this->languageNamespace
-        );
+        $contentQuery = new ContentQueryExecutor($this->sessionManager, $this->mapper);
 
         $this->navigation = new NavigationMapper($this->mapper, $contentQuery, new NavigationQueryBuilder($this->structureManager, $this->languageNamespace), $this->sessionManager);
     }

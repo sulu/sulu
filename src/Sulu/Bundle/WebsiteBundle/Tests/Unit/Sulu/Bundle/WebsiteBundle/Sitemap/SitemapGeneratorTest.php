@@ -60,10 +60,7 @@ class SitemapGeneratorTest extends PhpcrTestCase
 
         $contentQuery = new ContentQueryExecutor(
             $this->sessionManager,
-            $this->structureManager,
-            $this->templateResolver,
-            $this->contentTypeManager,
-            $this->languageNamespace
+            $this->mapper
         );
 
         $this->sitemapGenerator = new SitemapGenerator(
