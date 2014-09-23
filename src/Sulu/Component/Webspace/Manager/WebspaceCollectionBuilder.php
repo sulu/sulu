@@ -18,6 +18,7 @@ use Sulu\Component\Webspace\Localization;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Segment;
+use Sulu\Component\Webspace\Url;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Resource\FileResource;
@@ -112,11 +113,12 @@ class WebspaceCollectionBuilder
                 $this->buildPortals($webspace);
             } catch (\InvalidArgumentException $iae) {
                 $this->logger->warning(
-                    'Error in file "' . $file->getRealPath() . '" (' . $iae->getMessage() .'). The file has been skipped'
+                    'Error in file "' . $file->getRealPath() . '" (' . $iae->getMessage(
+                    ) . '). The file has been skipped'
                 );
             } catch (InvalidUrlDefinitionException $iude) {
                 $this->logger->warning(
-                    'Error: "' . $iude->getMessage() .'" in "' . $file->getRealPath() . '". File was skipped'
+                    'Error: "' . $iude->getMessage() . '" in "' . $file->getRealPath() . '". File was skipped'
                 );
             }
         }
@@ -155,11 +157,11 @@ class WebspaceCollectionBuilder
     private function buildEnvironments(Portal $portal)
     {
         foreach ($portal->getEnvironments() as $environment) {
-            $this->buildUrls($portal, $environment);
+            $this->buildEnvironment($portal, $environment);
         }
     }
 
-    private function buildUrls(Portal $portal, Environment $environment)
+    private function buildEnvironment(Portal $portal, Environment $environment)
     {
         $segments = $portal->getWebspace()->getSegments();
 
@@ -167,21 +169,7 @@ class WebspaceCollectionBuilder
             $urlAddress = $url->getUrl();
             $urlRedirect = $url->getRedirect();
             if ($urlRedirect == null) {
-                // create all the urls for every localization/segment combination
-                foreach ($portal->getLocalizations() as $localization) {
-                    $language = $url->getLanguage() ? $url->getLanguage() : $localization->getLanguage();
-                    $country = $url->getCountry() ? $url->getCountry() : $localization->getCountry();
-                    $locale = $language . ($country ? '-' . $country : '');
-
-                    $replacers = array(
-                        self::REPLACER_LANGUAGE => $language,
-                        self::REPLACER_COUNTRY => $country,
-                        self::REPLACER_LOCALIZATION => $locale
-                    );
-
-                    $this->buildUrlFullMatch($portal, $environment, $segments, $replacers, $urlAddress, $localization);
-                }
-                $this->buildUrlPartialMatch($portal, $environment, $urlAddress);
+                $this->buildUrls($portal, $environment, $url, $segments, $urlAddress);
             } else {
                 // create the redirect
                 $this->buildUrlRedirect($portal->getWebspace(), $environment, $urlAddress, $urlRedirect);
@@ -223,8 +211,7 @@ class WebspaceCollectionBuilder
         $replacers,
         $urlAddress,
         Localization $localization
-    )
-    {
+    ) {
         if (!empty($segments)) {
             foreach ($segments as $segment) {
                 $replacers[self::REPLACER_SEGMENT] = $segment->getKey();
@@ -281,6 +268,47 @@ class WebspaceCollectionBuilder
                 $portal->getWebspace()->getDefaultSegment(),
                 $urlRedirect
             );
+        }
+    }
+
+    /**
+     * Builds the URLs for the portal, which are not a redirect
+     * @param Portal $portal
+     * @param Environment $environment
+     * @param $url
+     * @param $segments
+     * @param $urlAddress
+     */
+    private function buildUrls(Portal $portal, Environment $environment, Url $url, $segments, $urlAddress)
+    {
+        if ($url->getLanguage()) {
+            $language = $url->getLanguage();
+            $country = $url->getCountry();
+            $locale = $language . ($country ? '_' . $country : '');
+
+            $this->buildUrlFullMatch(
+                $portal,
+                $environment,
+                $segments,
+                array(),
+                $urlAddress,
+                $portal->getLocalization($locale)
+            );
+        } else {
+            // create all the urls for every localization/segment combination
+            foreach ($portal->getLocalizations() as $localization) {
+                $language = $url->getLanguage() ? $url->getLanguage() : $localization->getLanguage();
+                $country = $url->getCountry() ? $url->getCountry() : $localization->getCountry();
+
+                $replacers = array(
+                    self::REPLACER_LANGUAGE => $language,
+                    self::REPLACER_COUNTRY => $country,
+                    self::REPLACER_LOCALIZATION => $localization->getLocalization('-')
+                );
+
+                $this->buildUrlFullMatch($portal, $environment, $segments, $replacers, $urlAddress, $localization);
+            }
+            $this->buildUrlPartialMatch($portal, $environment, $urlAddress);
         }
     }
 
