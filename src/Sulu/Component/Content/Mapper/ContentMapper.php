@@ -1691,19 +1691,20 @@ class ContentMapper implements ContentMapperInterface
         $this->properties->setLanguage($locale);
 
         // check and determine shadow-nodes
-        $locale = $this->getShadowLocale($row->getNode('page'), $locale);
+        $node = $row->getNode('page');
+        $locale = $this->getShadowLocale($node, $locale);
         $this->properties->setLanguage($locale);
 
         // load default data
         $uuid = $row->getValue('page.jcr:uuid');
 
-        $templateKey = $row->getValue('page.' . $this->properties->getName('template'));
-        $nodeType = $row->getValue('page.' . $this->properties->getName('nodeType'));
+        $templateKey = $node->getPropertyValue($this->properties->getName('template'));
+        $nodeType = $node->getPropertyValue($this->properties->getName('nodeType'));
 
-        $changed = $row->getValue('page.' . $this->properties->getName('changed'));
-        $changer = $row->getValue('page.' . $this->properties->getName('changer'));
-        $created = $row->getValue('page.' . $this->properties->getName('created'));
-        $creator = $row->getValue('page.' . $this->properties->getName('creator'));
+        $changed = $node->getPropertyValue($this->properties->getName('changed'));
+        $changer = $node->getPropertyValue($this->properties->getName('changer'));
+        $created = $node->getPropertyValue($this->properties->getName('created'));
+        $creator = $node->getPropertyValue($this->properties->getName('creator'));
 
         if ($templateKey !== '') {
             $path = $row->getPath('page');
