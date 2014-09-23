@@ -59,7 +59,8 @@ class ContentQueryExecutor implements ContentQueryExecutorInterface
         $locales,
         ContentQueryBuilderInterface $contentQueryBuilder,
         $flat = true,
-        $depth = -1
+        $depth = -1,
+        $limit = null
     ) {
         if ($this->stopwatch) {
             $this->stopwatch->start('ContentQuery::execute.build-query');
@@ -72,7 +73,7 @@ class ContentQueryExecutor implements ContentQueryExecutorInterface
             $this->stopwatch->start('ContentQuery::execute.execute-query');
         }
 
-        $query = $this->createSql2Query($sql2);
+        $query = $this->createSql2Query($sql2, $limit);
         $queryResult = $query->execute();
 
         if ($this->stopwatch) {
@@ -80,7 +81,13 @@ class ContentQueryExecutor implements ContentQueryExecutorInterface
             $this->stopwatch->start('ContentQuery::execute.rowsToList');
         }
 
-        $result = $this->contentMapper->convertQueryResultToArray($queryResult, $webspaceKey, $locales, $fields, $depth);
+        $result = $this->contentMapper->convertQueryResultToArray(
+            $queryResult,
+            $webspaceKey,
+            $locales,
+            $fields,
+            $depth
+        );
 
         if ($this->stopwatch) {
             $this->stopwatch->stop('ContentQuery::execute.rowsToList');
