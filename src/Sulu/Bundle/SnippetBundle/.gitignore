@@ -1,26 +1,4 @@
-/node_modules/
-/vendor/
-/composer.phar
-/composer.lock
-/.sass-cache/
-*~
-
-# temp file / folders
-TEMP_*/
-TEMP_*.php
-
-# IDEs
-.idea/*
-*.iml
-
-# Jackrabbit
-/bin/jackrabbit-standalone*
-/bin/jackrabbit/*
-
-# test cache
-/Tests/app/cache/*
-/Tests/app/logs/*
-
-# custom phpunit xml
-phpunit.xml
-
+Tests/Resources/app/cache
+Tests/Resources/app/logs
+composer.lock
+vendor

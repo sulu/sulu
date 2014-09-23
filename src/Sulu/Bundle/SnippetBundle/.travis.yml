@@ -1,0 +1,13 @@
+language: php
+
+php:
+  - 5.4
+
+before_script:
+  - composer install
+  - vendor/symfony-cmf/testing/bin/travis/phpcr_odm_doctrine_dbal.sh
+
+script: phpunit --coverage-text
+
+notifications:
+    irc: "irc.freenode.org#sulu-cmf"
