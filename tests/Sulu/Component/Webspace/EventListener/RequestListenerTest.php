@@ -22,6 +22,7 @@ use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Sulu\Component\Webspace\WebspaceContext;
 
 class RequestListenerTest extends \PHPUnit_Framework_TestCase
 {
@@ -57,17 +58,8 @@ class RequestListenerTest extends \PHPUnit_Framework_TestCase
             array('findPortalInformationByUrl')
         );
 
-        $this->userRepository = $this->getMockForAbstractClass(
-            '\Sulu\Component\Security\UserRepositoryInterface',
-            array(),
-            '',
-            true,
-            true,
-            true,
-            array('setSystem')
-        );
-
-        $this->requestAnalyzer = new RequestAnalyzer($this->webspaceManager, $this->userRepository, 'prod');
+        $webspaceContext = new WebspaceContext();
+        $this->requestAnalyzer = new RequestAnalyzer($this->webspaceManager, 'prod', $webspaceContext);
 
         $this->requestListener = new RequestListener($this->requestAnalyzer);
     }
