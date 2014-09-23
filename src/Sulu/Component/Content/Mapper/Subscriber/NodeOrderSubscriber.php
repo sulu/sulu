@@ -1,4 +1,12 @@
 <?php
+/*
+ * This file is part of the Sulu CMS.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace Sulu\Component\Content\Mapper\Subscriber;
 
@@ -10,7 +18,7 @@ use Sulu\Component\Content\Event\ContentOrderBeforeEvent;
 
 /**
  * Calculate the vertical position of the saved node relative to its siblings
- * and update the "order" property accordinly. This is used for sorting results
+ * and update the "order" property accordingly. This is used for sorting results
  * obtained from queries.
  */
 class NodeOrderSubscriber implements EventSubscriberInterface

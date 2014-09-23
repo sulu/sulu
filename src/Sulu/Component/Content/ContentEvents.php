@@ -25,7 +25,8 @@ final class ContentEvents
     const NODE_PRE_SAVE = 'sulu.content.node.pre_save';
 
     /**
-     * Thrown before a structure node is persisted in the PHPCR session.
+     * Thrown before a structure before the session save after a content move
+     * operation.
      * @var string
      */
     const NODE_ORDER_BEFORE = 'sulu.content.node.order_before';
