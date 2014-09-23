@@ -11,7 +11,7 @@
 namespace Sulu\Bundle\WebsiteBundle\Sitemap;
 
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
-use Sulu\Component\Content\Query\ContentQueryInterface;
+use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
 /**
@@ -20,7 +20,7 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 class SitemapGenerator implements SitemapGeneratorInterface
 {
     /**
-     * @var ContentQueryInterface
+     * @var ContentQueryExecutorInterface
      */
     private $contentQuery;
 
@@ -35,7 +35,7 @@ class SitemapGenerator implements SitemapGeneratorInterface
     private $contentQueryBuilder;
 
     function __construct(
-        ContentQueryInterface $contentQuery,
+        ContentQueryExecutorInterface $contentQuery,
         WebspaceManagerInterface $webspaceManager,
         ContentQueryBuilderInterface $contentQueryBuilder
     ) {

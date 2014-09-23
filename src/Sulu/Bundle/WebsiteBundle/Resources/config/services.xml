@@ -33,7 +33,7 @@
         </service>
         <service id="sulu_website.navigation_mapper" class="%sulu_website.navigation_mapper.class%">
             <argument type="service" id="sulu.content.mapper"/>
-            <argument type="service" id="sulu.content.query"/>
+            <argument type="service" id="sulu.content.query_executor"/>
             <argument type="service" id="sulu_website.navigation_mapper.query_builder"/>
             <argument type="service" id="sulu.phpcr.session"/>
             <argument type="service" id="debug.stopwatch" on-invalid="null"/>
@@ -45,7 +45,7 @@
             <argument>%sulu.content.language.namespace%</argument>
         </service>
         <service id="sulu_website.sitemap" class="%sulu_website.sitemap.class%">
-            <argument type="service" id="sulu.content.query"/>
+            <argument type="service" id="sulu.content.query_executor"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument type="service" id="sulu_website.navigation_mapper.query_builder"/>
         </service>

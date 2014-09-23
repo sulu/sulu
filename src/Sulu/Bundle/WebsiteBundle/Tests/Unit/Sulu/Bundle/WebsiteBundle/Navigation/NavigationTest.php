@@ -12,7 +12,7 @@ namespace Sulu\Bundle\WebsiteBundle\Navigation;
 
 use ReflectionMethod;
 use Sulu\Bundle\TestBundle\Testing\PhpcrTestCase;
-use Sulu\Component\Content\Query\ContentQuery;
+use Sulu\Component\Content\Query\ContentQueryExecutor;
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyTag;
 use Sulu\Component\Content\StructureInterface;
@@ -47,7 +47,7 @@ class NavigationTest extends PhpcrTestCase
             ->method('getStructures')
             ->will($this->returnCallback(array($this, 'structuresCallback')));
 
-        $contentQuery = new ContentQuery(
+        $contentQuery = new ContentQueryExecutor(
             $this->sessionManager,
             $this->structureManager,
             $this->templateResolver,

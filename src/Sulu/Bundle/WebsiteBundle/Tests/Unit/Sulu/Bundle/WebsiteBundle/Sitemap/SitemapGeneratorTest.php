@@ -14,7 +14,7 @@ use ReflectionMethod;
 use Sulu\Bundle\TestBundle\Testing\PhpcrTestCase;
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyTag;
-use Sulu\Component\Content\Query\ContentQuery;
+use Sulu\Component\Content\Query\ContentQueryExecutor;
 use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Webspace\Localization;
@@ -58,7 +58,7 @@ class SitemapGeneratorTest extends PhpcrTestCase
         $this->contents->setProperty('i18n:en-nodeType', Structure::NODE_TYPE_CONTENT);
         $this->session->save();
 
-        $contentQuery = new ContentQuery(
+        $contentQuery = new ContentQueryExecutor(
             $this->sessionManager,
             $this->structureManager,
             $this->templateResolver,
