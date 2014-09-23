@@ -1026,8 +1026,6 @@ class ContentMapper implements ContentMapperInterface
 
     /**
      * returns a sql2 query
-     * @param int $limit Limits the number of returned rows
-     * @return QueryInterface
      */
     private function createSql2Query($sql2, $limit = null)
     {

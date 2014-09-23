@@ -64,8 +64,7 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
         PHPTemplateDumper $dumper,
         LoggerInterface $logger,
         $options = array()
-    )
-    {
+    ) {
         $this->loader = $loader;
         $this->dumper = $dumper;
         $this->logger = $logger;
@@ -130,7 +129,7 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
             $this->extensions[$template] = array();
         }
 
-        $this->extensions[$template][] = $extension;
+        $this->extensions[$template][$extension->getName()] = $extension;
     }
 
     /**
@@ -163,13 +162,7 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
     {
         $extensions = $this->getExtensions($key);
 
-        foreach ($extensions as $extension) {
-            if($extension->getName() === $name){
-                return $extension;
-            }
-        }
-
-        return null;
+        return isset($extensions[$name]) ? $extensions[$name] : null;
     }
 
     /**
@@ -257,10 +250,13 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
             $triedDirs[] = $templateDir['path'];
         }
 
-        throw new \InvalidArgumentException(sprintf(
-            'Could not find a template named "%s.xml" in the following directories: %s',
-            $key, implode(', ', $triedDirs)
-        ));
+        throw new \InvalidArgumentException(
+            sprintf(
+                'Could not find a template named "%s.xml" in the following directories: %s',
+                $key,
+                implode(', ', $triedDirs)
+            )
+        );
     }
 
     /**

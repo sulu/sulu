@@ -12,7 +12,7 @@ namespace Sulu\Component\Webspace\EventListener;
 
 
 use PHPUnit_Framework_MockObject_MockObject;
-use Sulu\Component\Webspace\Analyzer\RequestAnalyzer;
+use Sulu\Component\Webspace\Analyzer\WebsiteRequestAnalyzer;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceManager;
@@ -31,7 +31,7 @@ class RequestListenerTest extends \PHPUnit_Framework_TestCase
     private $requestListener;
 
     /**
-     * @var RequestAnalyzer
+     * @var WebsiteRequestAnalyzer
      */
     private $requestAnalyzer;
 
@@ -67,7 +67,7 @@ class RequestListenerTest extends \PHPUnit_Framework_TestCase
             array('setSystem')
         );
 
-        $this->requestAnalyzer = new RequestAnalyzer($this->webspaceManager, $this->userRepository, 'prod');
+        $this->requestAnalyzer = new WebsiteRequestAnalyzer($this->webspaceManager, $this->userRepository, 'prod');
 
         $this->requestListener = new RequestListener($this->requestAnalyzer);
     }

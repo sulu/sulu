@@ -13,17 +13,15 @@ namespace Sulu\Component\Webspace\Analyzer;
 
 use PHPUnit_Framework_MockObject_MockObject;
 use Sulu\Component\Webspace\Localization;
-use Sulu\Component\Webspace\Manager\WebspaceManager;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\ParameterBag;
-use Symfony\Component\HttpFoundation\Request;
 
 class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var RequestAnalyzer
+     * @var WebsiteRequestAnalyzer
      */
     private $requestAnalyzer;
 
@@ -59,7 +57,7 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
             array('setSystem')
         );
 
-        $this->requestAnalyzer = new RequestAnalyzer($this->webspaceManager, $this->userRepository, 'prod');
+        $this->requestAnalyzer = new WebsiteRequestAnalyzer($this->webspaceManager, $this->userRepository, 'prod');
     }
 
     /**
