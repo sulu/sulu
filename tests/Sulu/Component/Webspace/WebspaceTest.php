@@ -59,6 +59,9 @@ class WebspaceTest extends \PHPUnit_Framework_TestCase
 
         $result = $this->webspace->getLocalization('en');
         $this->assertEquals('en', $result->getLocalization());
+
+        $result = $this->webspace->getLocalization('en_us');
+        $this->assertEquals(null, $result->getLocalization());
     }
 
 }
