@@ -10,12 +10,16 @@
 
 namespace Sulu\Component\Content\Query;
 
+use Doctrine\Common\Cache\ArrayCache;
+use Doctrine\Common\Cache\Cache;
 use Jackalope\Query\Row;
+use PHPCR\NodeInterface;
 use PHPCR\Query\QueryResultInterface;
 use PHPCR\RepositoryException;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\PropertyInterface;
+use Sulu\Component\Content\StructureExtension\StructureExtension;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManagerInterface;
 use Sulu\Component\Content\Template\TemplateResolverInterface;
@@ -58,6 +62,11 @@ class ContentQuery implements ContentQueryInterface
      */
     private $stopwatch;
 
+    /**
+     * @var Cache
+     */
+    private $extensionDataCache;
+
     function __construct(
         SessionManagerInterface $sessionManager,
         StructureManagerInterface $structureManager,
@@ -72,6 +81,13 @@ class ContentQuery implements ContentQueryInterface
         $this->templateResolver = $templateResolver;
         $this->contentTypeManager = $contentTypeManager;
         $this->stopwatch = $stopwatch;
+
+        $this->createExtensionCache();
+    }
+
+    private function createExtensionCache()
+    {
+        $this->extensionDataCache = new ArrayCache();
     }
 
     /**
@@ -158,8 +174,8 @@ class ContentQuery implements ContentQueryInterface
      */
     private function rowToArray(Row $row, $locale, $webspaceKey, $routesPath, $fields)
     {
-        // cache for extension data
-        $extData = array();
+        // reset cache
+        $this->createExtensionCache();
 
         // load default data
         $uuid = $row->getValue('page.jcr:uuid');
@@ -180,61 +196,7 @@ class ContentQuery implements ContentQueryInterface
             $structure = $this->structureManager->getStructure($templateKey);
 
             // generate field data
-            $fieldsData = array();
-            foreach ($fields[$locale] as $field) {
-                // determine target for data in result array
-                if (isset($fieldsData['target'])) {
-                    if (!isset($fieldsData[$field['target']])) {
-                        $fieldsData[$field['target']] = array();
-                    }
-                    $target = & $fieldsData[$field['target']];
-                } else {
-                    $target = & $fieldsData;
-                }
-
-                if (!isset($field['property'])) {
-                    // normal data from node property
-                    $target[$field['name']] = $row->getValue($field['column']);
-                } elseif (!isset($field['extension']) && (!isset($field['templateKey']) || $field['templateKey'] === $templateKey)) {
-                    // not extension data but property of node
-                    /** @var PropertyInterface $property */
-                    $property = $field['property'];
-                    $contentType = $this->contentTypeManager->get($property->getContentTypeName());
-
-                    $contentType->read(
-                        $row->getNode('page'),
-                        $this->getTranslatedProperty($property, $locale),
-                        $webspaceKey,
-                        $locale,
-                        null
-                    );
-
-                    $value = $contentType->getContentData($property);
-                    $target[$field['name']] = $value;
-                } elseif (isset($field['extension'])) {
-                    $extensionName = $field['extension']->getName();
-                    // extension data: load ones
-                    if (!isset($extData[$extensionName])) {
-                        $field['extension']->setLanguageCode($locale, $this->languageNamespace, '');
-                        $data = $field['extension']->load(
-                            $row->getNode('page'),
-                            $webspaceKey,
-                            $locale
-                        );
-
-                        // insure array
-                        if ($data instanceof ArrayableInterface) {
-                            $data = $data->toArray();
-                        }
-
-                        // cache data
-                        $extData[$field['extension']->getName()] = $data;
-                    }
-
-                    // if property exists set it to target (with default value '')
-                    $target[$field['name']] = isset($extData[$extensionName][$field['property']]) ? $extData[$extensionName][$field['property']] : '';
-                }
-            }
+            $fieldsData = $this->getFieldsData($row, $fields, $templateKey, $webspaceKey, $locale);
 
             return array_merge(
                 array(
@@ -255,6 +217,122 @@ class ContentQuery implements ContentQueryInterface
         }
 
         return false;
+    }
+
+    private function getFieldsData(Row $row, $fields, $templateKey, $webspaceKey, $locale)
+    {
+        $fieldsData = array();
+        foreach ($fields[$locale] as $field) {
+            // determine target for data in result array
+            if (isset($fieldsData['target'])) {
+                if (!isset($fieldsData[$field['target']])) {
+                    $fieldsData[$field['target']] = array();
+                }
+                $target = & $fieldsData[$field['target']];
+            } else {
+                $target = & $fieldsData;
+            }
+
+            // create target
+            if (!isset($target[$field['name']])) {
+                $target[$field['name']] = '';
+            }
+            if (($data = $this->getFieldData($field, $row, $templateKey, $webspaceKey, $locale)) !== null) {
+                $target[$field['name']] = $data;
+            }
+        }
+
+        return $fieldsData;
+    }
+
+    private function getFieldData($field, Row $row, $templateKey, $webspaceKey, $locale)
+    {
+        if (!isset($field['property'])) {
+            // normal data from node property
+            return $row->getValue($field['column']);
+        } elseif (!isset($field['extension']) && (!isset($field['templateKey']) || $field['templateKey'] === $templateKey)) {
+            // not extension data but property of node
+            return $this->getPropertyData($row->getNode('page'), $field['property'], $webspaceKey, $locale);
+        } elseif (isset($field['extension'])) {
+            // data from extension
+            return $this->getExtensionData(
+                $row->getNode('page'),
+                $field['extension'],
+                $field['property'],
+                $webspaceKey,
+                $locale
+            );
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns data for property
+     */
+    private function getPropertyData(NodeInterface $node, PropertyInterface $property, $webspaceKey, $locale)
+    {
+        $contentType = $this->contentTypeManager->get($property->getContentTypeName());
+
+        $contentType->read(
+            $node,
+            $this->getTranslatedProperty($property, $locale),
+            $webspaceKey,
+            $locale,
+            null
+        );
+
+        return $contentType->getContentData($property);
+    }
+
+    /**
+     * Returns data for extension and property name
+     */
+    private function getExtensionData(
+        NodeInterface $node,
+        StructureExtension $extension,
+        $propertyName,
+        $webspaceKey,
+        $locale
+    ) {
+        // extension data: load ones
+        if (!$this->extensionDataCache->contains($extension->getName())) {
+            $this->extensionDataCache->save(
+                $extension->getName(),
+                $this->loadExtensionData(
+                    $node,
+                    $extension,
+                    $webspaceKey,
+                    $locale
+                )
+            );
+        }
+
+        // get extension data from cache
+        $data = $this->extensionDataCache->fetch($extension->getName());
+
+        // if property exists set it to target (with default value '')
+        return isset($data[$propertyName]) ? $data[$propertyName] : null;
+    }
+
+    /**
+     * load data from extension
+     */
+    private function loadExtensionData(NodeInterface $node, StructureExtension $extension, $webspaceKey, $locale)
+    {
+        $extension->setLanguageCode($locale, $this->languageNamespace, '');
+        $data = $extension->load(
+            $node,
+            $webspaceKey,
+            $locale
+        );
+
+        // insure array
+        if ($data instanceof ArrayableInterface) {
+            $data = $data->toArray();
+        }
+
+        return $data;
     }
 
     /**
