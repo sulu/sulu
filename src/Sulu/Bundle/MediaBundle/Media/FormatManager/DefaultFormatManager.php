@@ -128,6 +128,9 @@ class DefaultFormatManager implements FormatManagerInterface
                 // convert Media to format
                 $image = $this->converter->convert($original, $format);
 
+                $image->strip();
+                $image->interlace(ImageInterface::INTERLACE_PLANE);
+
                 // get image
                 $image = $image->get($imageExtension, $this->getOptionsFromImage($image));
 
