@@ -200,7 +200,10 @@ class Localization implements \JsonSerializable, ArrayableInterface
         $children = $this->getChildren();
         if (!empty($children)) {
             foreach ($children as $childLocalization) {
-                return $childLocalization->findLocalization($localization);
+                $result = $childLocalization->findLocalization($localization);
+                if ($result) {
+                    return $result;
+                }
             }
         }
 
@@ -220,6 +223,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
                 $localizations = array_merge($localizations, $child->getAllLocalizations());
             }
         }
+
         return $localizations;
     }
 
