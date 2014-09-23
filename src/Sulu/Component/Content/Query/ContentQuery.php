@@ -82,10 +82,10 @@ class ContentQuery implements ContentQueryInterface
         $this->contentTypeManager = $contentTypeManager;
         $this->stopwatch = $stopwatch;
 
-        $this->createExtensionCache();
+        $this->initializeExtensionCache();
     }
 
-    private function createExtensionCache()
+    private function initializeExtensionCache()
     {
         $this->extensionDataCache = new ArrayCache();
     }
@@ -175,7 +175,7 @@ class ContentQuery implements ContentQueryInterface
     private function rowToArray(Row $row, $locale, $webspaceKey, $routesPath, $fields)
     {
         // reset cache
-        $this->createExtensionCache();
+        $this->initializeExtensionCache();
 
         // load default data
         $uuid = $row->getValue('page.jcr:uuid');
