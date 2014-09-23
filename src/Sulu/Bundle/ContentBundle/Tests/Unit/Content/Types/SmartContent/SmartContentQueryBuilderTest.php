@@ -39,10 +39,7 @@ class SmartContentQueryBuilderTest extends PhpcrTestCase
 
         $this->contentQuery = new ContentQueryExecutor(
             $this->sessionManager,
-            $this->structureManager,
-            $this->templateResolver,
-            $this->contentTypeManager,
-            $this->languageNamespace
+            $this->mapper
         );
     }
 

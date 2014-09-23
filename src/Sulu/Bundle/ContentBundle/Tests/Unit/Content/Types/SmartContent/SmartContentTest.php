@@ -52,7 +52,7 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->contentQuery = $this->getMockForAbstractClass('Sulu\Component\Content\Query\ContentQueryInterface');
+        $this->contentQuery = $this->getMockForAbstractClass('Sulu\Component\Content\Query\ContentQueryExecutorInterface');
         $this->contentQueryBuilder = $this->getMockForAbstractClass(
             'Sulu\Component\Content\Query\ContentQueryBuilderInterface'
         );

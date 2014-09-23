@@ -41,7 +41,7 @@ class InternalLinksTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->contentQuery = $this->getMockForAbstractClass(
-            'Sulu\Component\Content\Query\ContentQuery',
+            'Sulu\Component\Content\Query\ContentQueryExecutor',
             array(),
             '',
             false
