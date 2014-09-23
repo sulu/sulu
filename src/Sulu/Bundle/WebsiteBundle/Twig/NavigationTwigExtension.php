@@ -159,16 +159,17 @@ class NavigationTwigExtension extends \Twig_Extension
     /**
      * Returns breadcrumb for given node
      * @param $uuid
-     * @param $webspaceKey
-     * @param $localization
      * @return \Sulu\Bundle\WebsiteBundle\Navigation\NavigationItem[]
      */
-    public function breadcrumbFunction($uuid, $webspaceKey, $localization)
+    public function breadcrumbFunction($uuid)
     {
+        $webspaceKey = $this->requestAnalyzer->getCurrentWebspace()->getKey();
+        $locale = $this->requestAnalyzer->getCurrentLocalization()->getLocalization();
+
         return $this->navigationMapper->getBreadcrumb(
             $uuid,
             $webspaceKey,
-            $localization
+            $locale
         );
     }
 
