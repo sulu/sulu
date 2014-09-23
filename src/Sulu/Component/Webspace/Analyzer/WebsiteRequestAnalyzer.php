@@ -19,7 +19,7 @@ use Sulu\Component\Webspace\Segment;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
 
-class RequestAnalyzer implements RequestAnalyzerInterface
+class WebsiteRequestAnalyzer implements RequestAnalyzerInterface
 {
 
     /**

@@ -163,7 +163,13 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
     {
         $extensions = $this->getExtensions($key);
 
-        return $extensions[$name];
+        foreach ($extensions as $extension) {
+            if($extension->getName() === $name){
+                return $extension;
+            }
+        }
+
+        return null;
     }
 
     /**

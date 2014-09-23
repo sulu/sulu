@@ -18,11 +18,6 @@ use Sulu\Component\Webspace\Manager\WebspaceCollectionBuilder;
 class WebspaceCollectionBuilderTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var WebspaceCollectionBuilder
-     */
-    private $webspaceCollectionBuilder;
-
-    /**
      * @var XmlFileLoader
      */
     private $loader;
@@ -39,19 +34,19 @@ class WebspaceCollectionBuilderTest extends \PHPUnit_Framework_TestCase
         $this->loader = new XmlFileLoader($locator);
 
         $this->logger = $this->getMockBuilder('\Psr\Log\LoggerInterface')->getMock();
-
-        $this->webspaceCollectionBuilder = new WebspaceCollectionBuilder(
-            $this->loader,
-            $this->logger,
-            __DIR__ . '/../../../../Resources/DataFixtures/Webspace/both'
-        );
     }
 
     public function testBuild()
     {
+        $webspaceCollectionBuilder = new WebspaceCollectionBuilder(
+            $this->loader,
+            $this->logger,
+            __DIR__ . '/../../../../Resources/DataFixtures/Webspace/both'
+        );
+
         $this->logger->expects($this->once())->method('warning');
 
-        $webspaceCollection = $this->webspaceCollectionBuilder->build();
+        $webspaceCollection = $webspaceCollectionBuilder->build();
 
         $webspaces = $webspaceCollection->getWebspaces();
 
@@ -134,5 +129,26 @@ class WebspaceCollectionBuilderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('s', $devPortalInformationValues[6]->getSegment()->getKey());
         $this->assertEquals('fr_ca', $devPortalInformationValues[7]->getLocalization()->getLocalization());
         $this->assertEquals('s', $devPortalInformationValues[7]->getSegment()->getKey());
+    }
+
+    public function testBuildWithMultipleLocalizationUrls()
+    {
+        $webspaceCollectionBuilder = new WebspaceCollectionBuilder(
+            $this->loader,
+            $this->logger,
+            __DIR__ . '/../../../../Resources/DataFixtures/Webspace/multiple-localization-urls'
+        );
+
+        $webspaceCollection = $webspaceCollectionBuilder->build();
+
+        $portalInformations = $webspaceCollection->getPortalInformations('prod');
+
+        $this->assertEquals(RequestAnalyzerInterface::MATCH_TYPE_FULL, $portalInformations['sulu.de']->getType());
+        $this->assertEquals('sulu.de', $portalInformations['sulu.de']->getUrl());
+        $this->assertEquals('de', $portalInformations['sulu.de']->getLocalization()->getLocalization());
+
+        $this->assertEquals(RequestAnalyzerInterface::MATCH_TYPE_FULL, $portalInformations['sulu.us']->getType());
+        $this->assertEquals('sulu.us', $portalInformations['sulu.us']->getUrl());
+        $this->assertEquals('en', $portalInformations['sulu.us']->getLocalization()->getLocalization());
     }
 }
