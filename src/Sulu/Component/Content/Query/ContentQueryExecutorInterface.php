@@ -13,7 +13,7 @@ namespace Sulu\Component\Content\Query;
 /**
  * Interface for content query
  */
-interface ContentQueryInterface
+interface ContentQueryExecutorInterface
 {
     /**
      * Executes a query and returns loaded content as array

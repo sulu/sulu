@@ -30,7 +30,7 @@ use Symfony\Component\Stopwatch\Stopwatch;
 /**
  * Executes a query over the content
  */
-class ContentQuery implements ContentQueryInterface
+class ContentQueryExecutor implements ContentQueryExecutorInterface
 {
     /**
      * @var SessionManagerInterface

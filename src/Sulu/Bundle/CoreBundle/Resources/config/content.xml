@@ -24,7 +24,7 @@
         <parameter key="sulu.content.rlp.strategy.tree.class">Sulu\Component\Content\Types\Rlp\Strategy\TreeStrategy</parameter>
         <parameter key="sulu.content.parent_child_any_finder.class">Sulu\Component\Content\Mapper\LocalizationFinder\ParentChildAnyFinder</parameter>
 
-        <parameter key="sulu.content.query.class">Sulu\Component\Content\Query\ContentQuery</parameter>
+        <parameter key="sulu.content.query_executor.class">Sulu\Component\Content\Query\ContentQueryExecutor</parameter>
     </parameters>
 
     <services>
@@ -121,7 +121,7 @@
         </service>
 
         <!-- content query -->
-        <service id="sulu.content.query" class="%sulu.content.query.class%">
+        <service id="sulu.content.query_executor" class="%sulu.content.query_executor.class%">
             <argument type="service" id="sulu.phpcr.session"/>
             <argument type="service" id="sulu.content.structure_manager"/>
             <argument type="service" id="sulu.content.template_resolver"/>
