@@ -11,6 +11,7 @@
 namespace Sulu\Component\Webspace;
 
 use Sulu\Component\Webspace\Exception\EnvironmentNotFoundException;
+use Sulu\Component\Webspace\Exception\PortalLocalizationNotFoundException;
 
 /**
  * Container for a portal configuration
@@ -137,6 +138,17 @@ class Portal
     public function getLocalizations()
     {
         return $this->localizations;
+    }
+
+    public function getLocalization($locale)
+    {
+        foreach ($this->getLocalizations() as $localization) {
+            if ($locale === $localization->getLocalization()) {
+                return $localization;
+            }
+        }
+
+        throw new PortalLocalizationNotFoundException($this, $locale);
     }
 
     /**

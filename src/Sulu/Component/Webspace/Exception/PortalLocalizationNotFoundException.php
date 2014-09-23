@@ -16,28 +16,28 @@ use Sulu\Component\Webspace\Portal;
  * This exception is thrown when an environment in a portal does not exist
  * @package Sulu\Component\Webspace\Exception
  */
-class EnvironmentNotFoundException extends PortalException
+class PortalLocalizationNotFoundException extends PortalException
 {
     /**
      * @var string
      */
-    private $environment;
+    private $locale;
 
-    public function __construct(Portal $portal, $environment)
+    public function __construct(Portal $portal, $locale)
     {
         parent::__construct(
-            sprintf('The environment "%s" could not be found in the portal "%s".', $environment, $portal->getKey())
+            sprintf('The locale "%s" could not be found in the portal "%s".', $locale, $portal->getKey())
         );
 
         $this->portal = $portal;
-        $this->environment = $environment;
+        $this->locale = $locale;
     }
 
     /**
      * @return string
      */
-    public function getEnvironment()
+    public function getLocale()
     {
-        return $this->environment;
+        return $this->locale;
     }
 }
