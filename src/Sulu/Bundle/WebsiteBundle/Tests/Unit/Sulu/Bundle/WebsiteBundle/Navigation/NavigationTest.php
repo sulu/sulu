@@ -274,62 +274,62 @@ class NavigationTest extends PhpcrTestCase
     {
         $main = $this->navigation->getRootNavigation('default', 'en', 2);
         $this->assertEquals(2, sizeof($main));
-        $this->assertEquals(2, sizeof($main[0]->getChildren()));
-        $this->assertEquals(2, sizeof($main[1]->getChildren()));
+        $this->assertEquals(2, sizeof($main[0]['children']));
+        $this->assertEquals(2, sizeof($main[1]['children']));
 
-        $this->assertEquals('/news', $main[0]->getUrl());
-        $this->assertEquals('/news/news-1', $main[0]->getChildren()[0]->getUrl());
-        $this->assertEquals('/news/news-2', $main[0]->getChildren()[1]->getUrl());
-        $this->assertEquals('/products', $main[1]->getUrl());
-        $this->assertEquals('/products/products-1', $main[1]->getChildren()[0]->getUrl());
-        $this->assertEquals('/products/products-2', $main[1]->getChildren()[1]->getUrl());
+        $this->assertEquals('/news', $main[0]['url']);
+        $this->assertEquals('/news/news-1', $main[0]['children'][0]['url']);
+        $this->assertEquals('/news/news-2', $main[0]['children'][1]['url']);
+        $this->assertEquals('/products', $main[1]['url']);
+        $this->assertEquals('/products/products-1', $main[1]['children'][0]['url']);
+        $this->assertEquals('/products/products-2', $main[1]['children'][1]['url']);
 
         $main = $this->navigation->getRootNavigation('default', 'en', 1);
         $this->assertEquals(2, sizeof($main));
-        $this->assertEquals(0, sizeof($main[0]->getChildren()));
-        $this->assertEquals(0, sizeof($main[1]->getChildren()));
+        $this->assertEquals(0, sizeof($main[0]['children']));
+        $this->assertEquals(0, sizeof($main[1]['children']));
 
         $main = $this->navigation->getRootNavigation('default', 'en', null);
         $this->assertEquals(2, sizeof($main));
-        $this->assertEquals(2, sizeof($main[0]->getChildren()));
-        $this->assertEquals(2, sizeof($main[1]->getChildren()));
-        $this->assertEquals(0, sizeof($main[0]->getChildren()[0]->getChildren()));
-        $this->assertEquals(0, sizeof($main[0]->getChildren()[1]->getChildren()));
-        $this->assertEquals(0, sizeof($main[1]->getChildren()[0]->getChildren()));
-        $this->assertEquals(0, sizeof($main[1]->getChildren()[1]->getChildren()));
+        $this->assertEquals(2, sizeof($main[0]['children']));
+        $this->assertEquals(2, sizeof($main[1]['children']));
+        $this->assertEquals(0, sizeof($main[0]['children'][0]['children']));
+        $this->assertEquals(0, sizeof($main[0]['children'][1]['children']));
+        $this->assertEquals(0, sizeof($main[1]['children'][0]['children']));
+        $this->assertEquals(0, sizeof($main[1]['children'][1]['children']));
     }
 
     public function testNavigation()
     {
         $main = $this->navigation->getNavigation($this->data['news']->getUuid(), 'default', 'en', 1);
         $this->assertEquals(2, sizeof($main));
-        $this->assertEquals(0, sizeof($main[0]->getChildren()));
-        $this->assertEquals(0, sizeof($main[1]->getChildren()));
+        $this->assertEquals(0, sizeof($main[0]['children']));
+        $this->assertEquals(0, sizeof($main[1]['children']));
 
-        $this->assertEquals($this->data['news/news-1']->getUuid(), $main[0]->getId());
-        $this->assertEquals('News-1', $main[0]->getTitle());
-        $this->assertEquals('/news/news-1', $main[0]->getUrl());
+        $this->assertEquals($this->data['news/news-1']->getUuid(), $main[0]['uuid']);
+        $this->assertEquals('News-1', $main[0]['title']);
+        $this->assertEquals('/news/news-1', $main[0]['url']);
 
-        $this->assertEquals($this->data['news/news-2']->getUuid(), $main[1]->getId());
-        $this->assertEquals('News-2', $main[1]->getTitle());
-        $this->assertEquals('/news/news-2', $main[1]->getUrl());
+        $this->assertEquals($this->data['news/news-2']->getUuid(), $main[1]['uuid']);
+        $this->assertEquals('News-2', $main[1]['title']);
+        $this->assertEquals('/news/news-2', $main[1]['url']);
     }
 
     public function testMainNavigationFlat()
     {
         $result = $this->navigation->getRootNavigation('default', 'en', 1, true);
         $this->assertEquals(2, sizeof($result));
-        $this->assertEquals('News', $result[0]->getTitle());
-        $this->assertEquals('Products', $result[1]->getTitle());
+        $this->assertEquals('News', $result[0]['title']);
+        $this->assertEquals('Products', $result[1]['title']);
 
         $result = $this->navigation->getRootNavigation('default', 'en', 2, true);
         $this->assertEquals(6, sizeof($result));
-        $this->assertEquals('News', $result[0]->getTitle());
-        $this->assertEquals('News-1', $result[1]->getTitle());
-        $this->assertEquals('News-2', $result[2]->getTitle());
-        $this->assertEquals('Products', $result[3]->getTitle());
-        $this->assertEquals('Products-1', $result[4]->getTitle());
-        $this->assertEquals('Products-2', $result[5]->getTitle());
+        $this->assertEquals('News', $result[0]['title']);
+        $this->assertEquals('News-1', $result[1]['title']);
+        $this->assertEquals('News-2', $result[2]['title']);
+        $this->assertEquals('Products', $result[3]['title']);
+        $this->assertEquals('Products-1', $result[4]['title']);
+        $this->assertEquals('Products-2', $result[5]['title']);
     }
 
     public function testNavigationFlat()
@@ -352,9 +352,9 @@ class NavigationTest extends PhpcrTestCase
 
         $result = $this->navigation->getNavigation($this->data['news']->getUuid(), 'default', 'en', 2, true);
         $this->assertEquals(3, sizeof($result));
-        $this->assertEquals('News-1', $result[0]->getTitle());
-        $this->assertEquals('SubNews', $result[1]->getTitle());
-        $this->assertEquals('News-2', $result[2]->getTitle());
+        $this->assertEquals('News-1', $result[0]['title']);
+        $this->assertEquals('SubNews', $result[1]['title']);
+        $this->assertEquals('News-2', $result[2]['title']);
     }
 
     public function testBreadcrumb()
@@ -388,16 +388,16 @@ class NavigationTest extends PhpcrTestCase
 
         $main = $this->navigation->getNavigation($this->data['news']->getUuid(), 'default', 'en', 1);
         $this->assertEquals(2, sizeof($main));
-        $this->assertEquals(0, sizeof($main[0]->getChildren()));
-        $this->assertEquals(0, sizeof($main[1]->getChildren()));
+        $this->assertEquals(0, sizeof($main[0]['children']));
+        $this->assertEquals(0, sizeof($main[1]['children']));
 
-        $this->assertEquals($this->data['news/news-1']->getUuid(), $main[0]->getId());
-        $this->assertEquals('News-1', $main[0]->getTitle());
-        $this->assertEquals('/news/news-1', $main[0]->getUrl());
+        $this->assertEquals($this->data['news/news-1']->getUuid(), $main[0]['uuid']);
+        $this->assertEquals('News-1', $main[0]['title']);
+        $this->assertEquals('/news/news-1', $main[0]['url']);
 
-        $this->assertEquals($this->data['news/news-2']->getUuid(), $main[1]->getId());
-        $this->assertEquals('News-2', $main[1]->getTitle());
-        $this->assertEquals('/news/news-2', $main[1]->getUrl());
+        $this->assertEquals($this->data['news/news-2']->getUuid(), $main[1]['uuid']);
+        $this->assertEquals('News-2', $main[1]['title']);
+        $this->assertEquals('/news/news-2', $main[1]['url']);
     }
 
     public function testNavContexts()
@@ -408,14 +408,14 @@ class NavigationTest extends PhpcrTestCase
         $this->assertEquals(2, sizeof($result));
         $layer1 = $result;
 
-        $this->assertEquals(1, sizeof($layer1[0]->getChildren()));
-        $layer2 = $layer1[0]->getChildren()[0];
+        $this->assertEquals(1, sizeof($layer1[0]['children']));
+        $layer2 = $layer1[0]['children'][0];
 
-        $this->assertEquals('News', $layer1[0]->getTitle());
-        $this->assertEquals('News-1', $layer2->getTitle());
+        $this->assertEquals('News', $layer1[0]['title']);
+        $this->assertEquals('News-1', $layer2['title']);
 
-        $this->assertEquals(0, sizeof($layer1[1]->getChildren()));
-        $this->assertEquals('Products-1', $layer1[1]->getTitle());
+        $this->assertEquals(0, sizeof($layer1[1]['children']));
+        $this->assertEquals('Products-1', $layer1[1]['title']);
 
         // context main (only products and two sub pages
         $result = $this->navigation->getRootNavigation('default', 'en', 2, false, 'main');
@@ -423,18 +423,18 @@ class NavigationTest extends PhpcrTestCase
         $this->assertEquals(3, sizeof($result));
         $layer1 = $result;
 
-        $this->assertEquals(0, sizeof($layer1[0]->getChildren()));
-        $this->assertEquals(0, sizeof($layer1[1]->getChildren()));
+        $this->assertEquals(0, sizeof($layer1[0]['children']));
+        $this->assertEquals(0, sizeof($layer1[1]['children']));
 
-        $this->assertEquals('News-1', $layer1[0]->getTitle());
-        $this->assertEquals('News-2', $layer1[1]->getTitle());
+        $this->assertEquals('News-1', $layer1[0]['title']);
+        $this->assertEquals('News-2', $layer1[1]['title']);
 
-        $this->assertEquals(2, sizeof($layer1[2]->getChildren()));
-        $layer2 = $layer1[2]->getChildren();
+        $this->assertEquals(2, sizeof($layer1[2]['children']));
+        $layer2 = $layer1[2]['children'];
 
-        $this->assertEquals('Products', $layer1[2]->getTitle());
-        $this->assertEquals('Products-1', $layer2[0]->getTitle());
-        $this->assertEquals('Products-2', $layer2[1]->getTitle());
+        $this->assertEquals('Products', $layer1[2]['title']);
+        $this->assertEquals('Products-1', $layer2[0]['title']);
+        $this->assertEquals('Products-2', $layer2[1]['title']);
     }
 
     public function testNavContextsFlat()
@@ -445,14 +445,14 @@ class NavigationTest extends PhpcrTestCase
         $this->assertEquals(3, sizeof($result));
 
         // check children
-        $this->assertEquals(0, sizeof($result[0]->getChildren()));
-        $this->assertEquals(0, sizeof($result[1]->getChildren()));
-        $this->assertEquals(0, sizeof($result[2]->getChildren()));
+        $this->assertEquals(0, sizeof($result[0]['children']));
+        $this->assertEquals(0, sizeof($result[1]['children']));
+        $this->assertEquals(0, sizeof($result[2]['children']));
 
         // check title
-        $this->assertEquals('News', $result[0]->getTitle());
-        $this->assertEquals('News-1', $result[1]->getTitle());
-        $this->assertEquals('Products-1', $result[2]->getTitle());
+        $this->assertEquals('News', $result[0]['title']);
+        $this->assertEquals('News-1', $result[1]['title']);
+        $this->assertEquals('Products-1', $result[2]['title']);
 
         // context main (only products and two sub pages
         $result = $this->navigation->getRootNavigation('default', 'en', 2, true, 'main');
@@ -460,18 +460,18 @@ class NavigationTest extends PhpcrTestCase
         $this->assertEquals(5, sizeof($result));
 
         // check children
-        $this->assertEquals(0, sizeof($result[0]->getChildren()));
-        $this->assertEquals(0, sizeof($result[1]->getChildren()));
-        $this->assertEquals(0, sizeof($result[2]->getChildren()));
-        $this->assertEquals(0, sizeof($result[3]->getChildren()));
-        $this->assertEquals(0, sizeof($result[4]->getChildren()));
+        $this->assertEquals(0, sizeof($result[0]['children']));
+        $this->assertEquals(0, sizeof($result[1]['children']));
+        $this->assertEquals(0, sizeof($result[2]['children']));
+        $this->assertEquals(0, sizeof($result[3]['children']));
+        $this->assertEquals(0, sizeof($result[4]['children']));
 
         // check title
-        $this->assertEquals('News-1', $result[0]->getTitle());
-        $this->assertEquals('News-2', $result[1]->getTitle());
-        $this->assertEquals('Products', $result[2]->getTitle());
-        $this->assertEquals('Products-1', $result[3]->getTitle());
-        $this->assertEquals('Products-2', $result[4]->getTitle());
+        $this->assertEquals('News-1', $result[0]['title']);
+        $this->assertEquals('News-2', $result[1]['title']);
+        $this->assertEquals('Products', $result[2]['title']);
+        $this->assertEquals('Products-1', $result[3]['title']);
+        $this->assertEquals('Products-2', $result[4]['title']);
     }
 
     public function testNavigationTestPage()
@@ -495,8 +495,8 @@ class NavigationTest extends PhpcrTestCase
 
         $main = $this->navigation->getNavigation($this->data['products']->getUuid(), 'default', 'en', 1);
         $this->assertEquals(2, sizeof($main));
-        $this->assertEquals('/products/products-1', $main[0]->getUrl());
-        $this->assertEquals('/products/products-2', $main[1]->getUrl());
+        $this->assertEquals('/products/products-1', $main[0]['url']);
+        $this->assertEquals('/products/products-2', $main[1]['url']);
 
         $this->data['products/products-3'] = $this->mapper->save(
             $data,
@@ -512,14 +512,14 @@ class NavigationTest extends PhpcrTestCase
 
         $main = $this->navigation->getNavigation($this->data['products']->getUuid(), 'default', 'en', 1);
         $this->assertEquals(3, sizeof($main));
-        $this->assertEquals('/products/products-1', $main[0]->getUrl());
-        $this->assertEquals('/products/products-2', $main[1]->getUrl());
-        $this->assertEquals('/products/products-3', $main[2]->getUrl());
+        $this->assertEquals('/products/products-1', $main[0]['url']);
+        $this->assertEquals('/products/products-2', $main[1]['url']);
+        $this->assertEquals('/products/products-3', $main[2]['url']);
 
         $main = $this->navigation->getNavigation($this->data['products']->getUuid(), 'default', 'en', 1, false, 'main');
         $this->assertEquals(2, sizeof($main));
-        $this->assertEquals('/products/products-1', $main[0]->getUrl());
-        $this->assertEquals('/products/products-2', $main[1]->getUrl());
+        $this->assertEquals('/products/products-1', $main[0]['url']);
+        $this->assertEquals('/products/products-2', $main[1]['url']);
 
         $data = array(
             'name' => 'Products-3',
@@ -538,14 +538,14 @@ class NavigationTest extends PhpcrTestCase
 
         $main = $this->navigation->getNavigation($this->data['products']->getUuid(), 'default', 'en', 1);
         $this->assertEquals(3, sizeof($main));
-        $this->assertEquals('/products/products-1', $main[0]->getUrl());
-        $this->assertEquals('/products/products-2', $main[1]->getUrl());
-        $this->assertEquals('/products/products-3', $main[2]->getUrl());
+        $this->assertEquals('/products/products-1', $main[0]['url']);
+        $this->assertEquals('/products/products-2', $main[1]['url']);
+        $this->assertEquals('/products/products-3', $main[2]['url']);
 
         $main = $this->navigation->getNavigation($this->data['products']->getUuid(), 'default', 'en', 1, false, 'main');
         $this->assertEquals(3, sizeof($main));
-        $this->assertEquals('/products/products-1', $main[0]->getUrl());
-        $this->assertEquals('/products/products-2', $main[1]->getUrl());
-        $this->assertEquals('/products/products-3', $main[2]->getUrl());
+        $this->assertEquals('/products/products-1', $main[0]['url']);
+        $this->assertEquals('/products/products-2', $main[1]['url']);
+        $this->assertEquals('/products/products-3', $main[2]['url']);
     }
 }

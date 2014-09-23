@@ -91,7 +91,11 @@ class NavigationMapper implements NavigationMapperInterface
         );
         $result = $this->contentQuery->execute($webspaceKey, array($locale), $this->queryBuilder, $flat, $depth);
 
-        $result = $this->convertArrayToNavigation($result);
+        foreach ($result as $item) {
+            if (!isset($item['children'])) {
+                $item['children'] = array();
+            }
+        }
 
         if ($this->stopwatch) {
             $this->stopwatch->stop('NavigationMapper::getNavigation');
@@ -118,37 +122,17 @@ class NavigationMapper implements NavigationMapperInterface
         $this->queryBuilder->init(array('context' => $context, 'excerpt' => $loadExcerpt));
         $result = $this->contentQuery->execute($webspaceKey, array($locale), $this->queryBuilder, $flat, $depth);
 
-        if ($this->stopwatch) {
-            $this->stopwatch->stop('NavigationMapper::getRootNavigation.query');
-            $this->stopwatch->start('NavigationMapper::getRootNavigation.toArray');
+        for ($i = 0; $i < sizeof($result); $i++) {
+            if (!isset($result[$i]['children'])) {
+                $result[$i]['children'] = array();
+            }
         }
 
-        $result = $this->convertArrayToNavigation($result);
-
         if ($this->stopwatch) {
-            $this->stopwatch->stop('NavigationMapper::getRootNavigation.toArray');
+            $this->stopwatch->stop('NavigationMapper::getRootNavigation.query');
         }
 
         return $result;
-    }
-
-    private function convertArrayToNavigation($items)
-    {
-        $navigation = array();
-        foreach ($items as $item) {
-            $children = (isset($item['children']) ? $this->convertArrayToNavigation($item['children']) : array());
-
-            $navigation[] = new NavigationItem(
-                $item['title'],
-                $item['url'],
-                isset($item['excerpt']) ? : null,
-                $children,
-                $item['uuid'],
-                $item['nodeType']
-            );
-        }
-
-        return $navigation;
     }
 
     /**
