@@ -75,6 +75,7 @@
             <argument type="service" id="sulu_website.sitemap"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument>%kernel.environment%</argument>
+            <argument type="service" id="sulu_core.webspace.request_analyzer" on-invalid="ignore"/>
 
             <tag name="twig.extension"/>
         </service>
