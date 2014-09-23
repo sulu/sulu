@@ -115,7 +115,7 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
             }
             // select internal properties
             $select .= sprintf(
-                "route.[jcr:uuid] as routeUuid, route.[jcr:path] as routePath, page.[jcr:uuid], page.[jcr:path], page.[%s], page.[%s], page.[%s], page.[%s], page.[%s], page.[%s]",
+                "route.[jcr:uuid] as routeUuid, route.[jcr:path] as routePath, page.[jcr:uuid], page.[%s], page.[%s], page.[%s], page.[%s], page.[%s], page.[%s]",
                 $this->getPropertyName('template'),
                 $this->getPropertyName('changed'),
                 $this->getPropertyName('changer'),
