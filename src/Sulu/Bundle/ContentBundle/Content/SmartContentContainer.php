@@ -180,7 +180,10 @@ class SmartContentContainer implements ArrayableInterface
             $result = $this->contentQuery->execute(
                 $this->webspaceKey,
                 array($this->languageCode),
-                $this->contentQueryBuilder
+                $this->contentQueryBuilder,
+                true,
+                -1,
+                isset($config['limitResult']) ? $config['limitResult'] : null
             );
         }
 
