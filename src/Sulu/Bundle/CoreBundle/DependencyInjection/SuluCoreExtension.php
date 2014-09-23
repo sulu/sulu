@@ -57,6 +57,8 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
             }
         }
 
+        // note with the next iteration of massive build bundle we can remove this
+        // as it will allow the definition of explicit build targets with options
         if ($container->hasExtension('massive_build')) {
             $container->prependExtensionConfig('massive_build', array(
                 'command_class' => 'Sulu\Bundle\CoreBundle\Command\SuluBuildCommand'
@@ -102,6 +104,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
 
         $loader->load('rest.xml');
         $loader->load('build.xml');
+        $loader->load('maintenance.xml');
     }
 
     /**
