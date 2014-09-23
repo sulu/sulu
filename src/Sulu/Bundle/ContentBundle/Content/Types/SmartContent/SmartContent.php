@@ -54,7 +54,7 @@ class SmartContent extends ComplexContentType
     /**
      * @var Stopwatch
      */
-private $stopwatch;
+    private $stopwatch;
 
     function __construct(
         ContentQueryInterface $contentQuery,
