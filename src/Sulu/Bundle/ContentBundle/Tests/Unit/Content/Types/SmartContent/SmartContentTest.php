@@ -15,7 +15,7 @@ use Sulu\Bundle\ContentBundle\Content\Types\SmartContent\SmartContent;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepository;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
-use Sulu\Component\Content\Query\ContentQueryInterface;
+use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 //FIXME remove on update to phpunit 3.8, caused by https://github.com/sebastianbergmann/phpunit/issues/604
@@ -31,7 +31,7 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
     private $smartContent;
 
     /**
-     * @var ContentQueryInterface
+     * @var ContentQueryExecutorInterface
      */
     private $contentQuery;
 

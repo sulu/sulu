@@ -18,7 +18,7 @@ use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
-use Sulu\Component\Content\Query\ContentQueryInterface;
+use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 use Sulu\Component\Util\ArrayableInterface;
 
 /**
@@ -28,7 +28,7 @@ use Sulu\Component\Util\ArrayableInterface;
 class InternalLinks extends ComplexContentType
 {
     /**
-     * @var ContentQueryInterface
+     * @var ContentQueryExecutorInterface
      */
     private $contentQuery;
     /**
@@ -47,7 +47,7 @@ class InternalLinks extends ComplexContentType
     private $template;
 
     function __construct(
-        ContentQueryInterface $contentQuery,
+        ContentQueryExecutorInterface $contentQuery,
         ContentQueryBuilderInterface $contentQueryBuilder,
         LoggerInterface $logger,
         $template

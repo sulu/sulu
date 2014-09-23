@@ -24,7 +24,7 @@
             <argument>%sulu.content.language.namespace%</argument>
         </service>
         <service id="sulu.content.type.smart_content" class="%sulu.content.type.smart_content.class%">
-            <argument type="service" id="sulu.content.query"/>
+            <argument type="service" id="sulu.content.query_executor"/>
             <argument type="service" id="sulu.content.type.smart_content.query_builder"/>
             <argument type="service" id="sulu_tag.tag_manager"/>
             <argument type="service" id="request_stack" />
@@ -35,7 +35,7 @@
         </service>
 
         <service id="sulu.content.type.internal_links" class="%sulu.content.type.internal_links.class%">
-            <argument type="service" id="sulu.content.query"/>
+            <argument type="service" id="sulu.content.query_executor"/>
             <argument type="service" id="sulu.content.type.smart_content.query_builder"/>
             <argument type="service" id="logger"/>
             <argument>%sulu.content.type.internal_links.template%</argument>

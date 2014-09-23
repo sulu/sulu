@@ -13,9 +13,9 @@ namespace Sulu\Bundle\ContentBundle\Content;
 use PHPCR\ItemNotFoundException;
 use Psr\Log\LoggerInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
-use Sulu\Component\Content\Query\ContentQuery;
+use Sulu\Component\Content\Query\ContentQueryExecutor;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
-use Sulu\Component\Content\Query\ContentQueryInterface;
+use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 use Sulu\Component\Content\StructureInterface;
 use JMS\Serializer\Annotation\Exclude;
 use Sulu\Component\Util\ArrayableInterface;
@@ -29,7 +29,7 @@ class InternalLinksContainer implements ArrayableInterface
     /**
      * The content mapper, which is needed for lazy loading
      * @Exclude
-     * @var ContentQueryInterface
+     * @var ContentQueryExecutorInterface
      */
     private $contentQuery;
 
@@ -80,7 +80,7 @@ class InternalLinksContainer implements ArrayableInterface
 
     public function __construct(
         $ids,
-        ContentQueryInterface $contentQuery,
+        ContentQueryExecutorInterface $contentQuery,
         ContentQueryBuilderInterface $contentQueryBuilder,
         $params,
         LoggerInterface $logger,

@@ -14,7 +14,7 @@ use JMS\Serializer\Serializer;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
-use Sulu\Component\Content\Query\ContentQueryInterface;
+use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 use Sulu\Component\Content\StructureInterface;
 use JMS\Serializer\Annotation\Exclude;
 use Sulu\Component\Util\ArrayableInterface;
@@ -27,7 +27,7 @@ use Symfony\Component\Stopwatch\Stopwatch;
 class SmartContentContainer implements ArrayableInterface
 {
     /**
-     * @var ContentQueryInterface
+     * @var ContentQueryExecutorInterface
      * @Exclude
      */
     private $contentQuery;
@@ -88,7 +88,7 @@ class SmartContentContainer implements ArrayableInterface
     private $stopwatch;
 
     /**
-     * @param ContentQueryInterface $contentQuery
+     * @param ContentQueryExecutorInterface $contentQuery
      * @param ContentQueryBuilderInterface $contentQueryBuilder
      * @param TagManagerInterface $tagManager
      * @param array $params
@@ -99,7 +99,7 @@ class SmartContentContainer implements ArrayableInterface
      * @param Stopwatch $stopwatch
      */
     public function __construct(
-        ContentQueryInterface $contentQuery,
+        ContentQueryExecutorInterface $contentQuery,
         ContentQueryBuilderInterface $contentQueryBuilder,
         TagManagerInterface $tagManager,
         $params,

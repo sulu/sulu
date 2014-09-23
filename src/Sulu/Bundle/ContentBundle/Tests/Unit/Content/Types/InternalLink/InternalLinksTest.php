@@ -14,7 +14,7 @@ use Psr\Log\NullLogger;
 use Sulu\Bundle\ContentBundle\Content\Types\InternalLinks;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
-use Sulu\Component\Content\Query\ContentQueryInterface;
+use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 
 //FIXME remove on update to phpunit 3.8, caused by https://github.com/sebastianbergmann/phpunit/issues/604
 interface NodeInterface extends \PHPCR\NodeInterface, \Iterator
@@ -24,7 +24,7 @@ interface NodeInterface extends \PHPCR\NodeInterface, \Iterator
 class InternalLinksTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var ContentQueryInterface
+     * @var ContentQueryExecutorInterface
      */
     private $contentQuery;
 

@@ -16,7 +16,7 @@ use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
-use Sulu\Component\Content\Query\ContentQueryInterface;
+use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Sulu\Component\Util\ArrayableInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
@@ -27,7 +27,7 @@ use Symfony\Component\Stopwatch\Stopwatch;
 class SmartContent extends ComplexContentType
 {
     /**
-     * @var ContentQueryInterface
+     * @var ContentQueryExecutorInterface
      */
     private $contentQuery;
 
@@ -57,7 +57,7 @@ class SmartContent extends ComplexContentType
     private $stopwatch;
 
     function __construct(
-        ContentQueryInterface $contentQuery,
+        ContentQueryExecutorInterface $contentQuery,
         ContentQueryBuilderInterface $contentQueryBuilder,
         TagManagerInterface $tagManager,
         RequestStack $requestStack,

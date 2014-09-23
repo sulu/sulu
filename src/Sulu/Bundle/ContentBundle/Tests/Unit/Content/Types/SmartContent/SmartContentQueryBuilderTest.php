@@ -18,14 +18,14 @@ use Sulu\Component\Content\Block\BlockProperty;
 use Sulu\Component\Content\Block\BlockPropertyType;
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyTag;
-use Sulu\Component\Content\Query\ContentQuery;
+use Sulu\Component\Content\Query\ContentQueryExecutor;
 use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\StructureInterface;
 
 class SmartContentQueryBuilderTest extends PhpcrTestCase
 {
     /**
-     * @var ContentQuery
+     * @var ContentQueryExecutor
      */
     private $contentQuery;
 
@@ -37,7 +37,7 @@ class SmartContentQueryBuilderTest extends PhpcrTestCase
             ->method('getStructures')
             ->will($this->returnCallback(array($this, 'structuresCallback')));
 
-        $this->contentQuery = new ContentQuery(
+        $this->contentQuery = new ContentQueryExecutor(
             $this->sessionManager,
             $this->structureManager,
             $this->templateResolver,
