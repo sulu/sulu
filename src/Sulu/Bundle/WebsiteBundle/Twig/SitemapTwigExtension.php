@@ -13,6 +13,7 @@ namespace Sulu\Bundle\WebsiteBundle\Twig;
 use Sulu\Bundle\WebsiteBundle\Sitemap\SitemapGeneratorInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
 /**
@@ -32,6 +33,11 @@ class SitemapTwigExtension extends \Twig_Extension
     private $sitemapGenerator;
 
     /**
+     * @var RequestAnalyzerInterface
+     */
+    private $requestAnalyzer;
+
+    /**
      * @var string
      */
     private $environment;
@@ -39,11 +45,13 @@ class SitemapTwigExtension extends \Twig_Extension
     function __construct(
         SitemapGeneratorInterface $sitemapGenerator,
         WebspaceManagerInterface $webspaceManager,
-        $environment
+        $environment,
+        RequestAnalyzerInterface $requestAnalyzer = null
     ) {
         $this->environment = $environment;
         $this->sitemapGenerator = $sitemapGenerator;
         $this->webspaceManager = $webspaceManager;
+        $this->requestAnalyzer = $requestAnalyzer;
     }
 
     /**
@@ -59,13 +67,17 @@ class SitemapTwigExtension extends \Twig_Extension
 
     /**
      * Returns prefixed resourcelocator with the url and locale
-     * @param string $url
-     * @param string $webspaceKey
-     * @param string $locale
-     * @return string
      */
-    public function sitemapUrlFunction($url, $webspaceKey, $locale)
+    public function sitemapUrlFunction($url, $locale = null, $webspaceKey = null)
     {
+        if ($webspaceKey === null) {
+            $webspaceKey = $this->requestAnalyzer->getCurrentWebspace()->getKey();
+        }
+
+        if ($locale === null) {
+            $locale = $this->requestAnalyzer->getCurrentLocalization()->getLocalization();
+        }
+
         // FIXME which url or all urls?
         $portalUrls = $this->webspaceManager->findUrlsByResourceLocator(
             $url,
@@ -83,13 +95,18 @@ class SitemapTwigExtension extends \Twig_Extension
 
     /**
      * Returns full sitemap of webspace and language from the content
-     * @param string $webspaceKey
-     * @param string $languageCode
-     * @return array
      */
-    public function sitemapFunction($webspaceKey, $languageCode)
+    public function sitemapFunction($locale = null, $webspaceKey = null)
     {
-        return $this->sitemapGenerator->generate($webspaceKey, $languageCode);
+        if ($webspaceKey === null) {
+            $webspaceKey = $this->requestAnalyzer->getCurrentWebspace()->getKey();
+        }
+
+        if ($locale === null) {
+            $locale = $this->requestAnalyzer->getCurrentLocalization()->getLocalization();
+        }
+
+        return $this->sitemapGenerator->generate($webspaceKey, $locale);
     }
 
     /**

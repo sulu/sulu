@@ -54,10 +54,10 @@ class NavigationTwigExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            new \Twig_SimpleFunction('flat_root_navigation', array($this, 'flatRootNavigationFunction')),
-            new \Twig_SimpleFunction('tree_root_navigation', array($this, 'treeRootNavigationFunction')),
-            new \Twig_SimpleFunction('flat_navigation', array($this, 'flatNavigationFunction')),
-            new \Twig_SimpleFunction('tree_navigation', array($this, 'treeNavigationFunction')),
+            new \Twig_SimpleFunction('navigation_root_flat', array($this, 'flatRootNavigationFunction')),
+            new \Twig_SimpleFunction('navigation_root_tree', array($this, 'treeRootNavigationFunction')),
+            new \Twig_SimpleFunction('navigation_flat', array($this, 'flatNavigationFunction')),
+            new \Twig_SimpleFunction('navigation_tree', array($this, 'treeNavigationFunction')),
             new \Twig_SimpleFunction('breadcrumb', array($this, 'breadcrumbFunction'))
         );
     }

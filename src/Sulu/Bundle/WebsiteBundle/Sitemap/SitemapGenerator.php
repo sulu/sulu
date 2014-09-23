@@ -25,7 +25,7 @@ class SitemapGenerator implements SitemapGeneratorInterface
     private $contentQuery;
 
     /**
-     * @var  WebspaceManagerInterface
+     * @var WebspaceManagerInterface
      */
     private $webspaceManager;
 

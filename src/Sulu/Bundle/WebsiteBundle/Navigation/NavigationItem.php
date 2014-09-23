@@ -10,6 +10,8 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Navigation;
 
+use Sulu\Component\Content\Structure;
+
 /**
  * Frontend navigation item
  * @package Sulu\Bundle\WebsiteBundle\Navigation
@@ -46,7 +48,7 @@ class NavigationItem
      */
     private $excerpt;
 
-    function __construct($title, $url, $excerpt, $children = array(), $id = null, $nodeType = 1)
+    function __construct($title, $url, $excerpt, $children = array(), $id = null, $nodeType = Structure::STATE_TEST)
     {
         $this->title = $title;
         $this->url = $url;
