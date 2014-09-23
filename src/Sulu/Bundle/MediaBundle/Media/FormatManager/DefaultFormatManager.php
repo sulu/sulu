@@ -128,7 +128,10 @@ class DefaultFormatManager implements FormatManagerInterface
                 // convert Media to format
                 $image = $this->converter->convert($original, $format);
 
+                // remove profiles and comments
                 $image->strip();
+
+                // set Interlacing to plane for smaller image size
                 $image->interlace(ImageInterface::INTERLACE_PLANE);
 
                 // get image
