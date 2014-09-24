@@ -8,10 +8,14 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Rest;
+namespace Sulu\Component\Persistence;
 
 use Traversable;
 
+/**
+ * Offers methods for easier handling of relations
+ * @package Sulu\Component\Persistence
+ */
 trait RelationTrait
 {
     /**
