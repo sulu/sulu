@@ -1307,7 +1307,6 @@ class NodeControllerTest extends DatabaseTestCase
         $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en', $data);
         $data = json_decode($client->getResponse()->getContent(), true);
 
-        $this->assertEquals(25, sizeof($data));
         $this->assertArrayHasKey('id', $data);
         $this->assertEquals('test1', $data['title']);
         $this->assertEquals('/test1', $data['path']);
