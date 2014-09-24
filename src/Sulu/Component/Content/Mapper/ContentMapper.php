@@ -11,9 +11,13 @@
 namespace Sulu\Component\Content\Mapper;
 
 use DateTime;
+use Doctrine\Common\Cache\ArrayCache;
+use Doctrine\Common\Cache\Cache;
 use Jackalope\Query\Row;
 use PHPCR\NodeInterface;
 use PHPCR\Query\QueryInterface;
+use PHPCR\Query\QueryResultInterface;
+use PHPCR\RepositoryException;
 use PHPCR\SessionInterface;
 use PHPCR\Util\PathHelper;
 use Sulu\Component\Content\BreadcrumbItem;
@@ -32,6 +36,7 @@ use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\Section\SectionPropertyInterface;
 use Sulu\Component\Content\Structure;
+use Sulu\Component\Content\StructureExtension\StructureExtension;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManagerInterface;
 use Sulu\Component\Content\StructureType;
@@ -40,6 +45,7 @@ use Sulu\Component\Content\Template\Exception\TemplateNotFoundException;
 use Sulu\Component\Content\Types\ResourceLocatorInterface;
 use Sulu\Component\PHPCR\PathCleanupInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
+use Sulu\Component\Util\ArrayableInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -144,6 +150,11 @@ class ContentMapper implements ContentMapperInterface
      * @var boolean
      */
     private $noRenamingFlag = false;
+
+    /**
+     * @var Cache
+     */
+    private $extensionDataCache;
 
     public function __construct(
         ContentTypeManager $contentTypeManager,
@@ -290,10 +301,14 @@ class ContentMapper implements ContentMapperInterface
             // shadow base resource locator
             if ($structure->hasTag('sulu.rlp')) {
                 $property = $structure->getPropertyByTagName('sulu.rlp');
-                $baseLanguageRlProperty = new TranslatedProperty($property, $shadowBaseLanguage, $this->languageNamespace);
+                $baseLanguageRlProperty = new TranslatedProperty(
+                    $property,
+                    $shadowBaseLanguage,
+                    $this->languageNamespace
+                );
                 if (!isset($data[$property->getName()])) {
                     $rlpContentType = $this->getContentType($baseLanguageRlProperty->getContentTypeName());
-                    $rlpContentType->read($node, $baseLanguageRlProperty, $webspaceKey, $shadowBaseLanguage);
+                    $rlpContentType->read($node, $baseLanguageRlProperty, $webspaceKey, $shadowBaseLanguage, null);
                     $rl = $baseLanguageRlProperty->getValue();
                     $data[$property->getName()] = $rl;
                 }
@@ -1015,8 +1030,6 @@ class ContentMapper implements ContentMapperInterface
 
     /**
      * returns a sql2 query
-     * @param int $limit Limits the number of returned rows
-     * @return QueryInterface
      */
     private function createSql2Query($sql2, $limit = null)
     {
@@ -1064,17 +1077,12 @@ class ContentMapper implements ContentMapperInterface
         }
 
         $shadowOn = $contentNode->getPropertyValueWithDefault($this->properties->getName('shadow-on'), false);
-        $shadowBaseLanguage = null;
-        if (true === $shadowOn) {
-            $shadowBaseLanguage = $contentNode->getPropertyValueWithDefault(
-                $this->properties->getName('shadow-base'),
-                false
-            );
+        $shadowBaseLanguage = $contentNode->getPropertyValueWithDefault(
+            $this->properties->getName('shadow-base'),
+            false
+        );
 
-            if ($shadowBaseLanguage) {
-                $availableLocalization = $shadowBaseLanguage;
-            }
-        }
+        $availableLocalization = $this->getShadowLocale($contentNode, $availableLocalization);
 
         if (($excludeGhost && $excludeShadow) && $availableLocalization != $localization) {
             return null;
@@ -1197,6 +1205,27 @@ class ContentMapper implements ContentMapperInterface
         }
 
         return $structure;
+    }
+
+    /**
+     * Determites locale for shadow-pages
+     */
+    private function getShadowLocale(NodeInterface $node, $defaultLocale)
+    {
+        $shadowOn = $node->getPropertyValueWithDefault($this->properties->getName('shadow-on'), false);
+        $shadowBaseLanguage = null;
+        if (true === $shadowOn) {
+            $shadowBaseLanguage = $node->getPropertyValueWithDefault(
+                $this->properties->getName('shadow-base'),
+                false
+            );
+
+            if ($shadowBaseLanguage) {
+                return $shadowBaseLanguage;
+            }
+        }
+
+        return $defaultLocale;
     }
 
     /**
@@ -1617,4 +1646,277 @@ class ContentMapper implements ContentMapperInterface
             return $name;
         }
     }
+
+    // =================================
+    // START: Row to array mapping logic
+    // =================================
+
+    /**
+     * initializes cache for extension data
+     */
+    private function initializeExtensionCache()
+    {
+        $this->extensionDataCache = new ArrayCache();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function convertQueryResultToArray(
+        QueryResultInterface $queryResult,
+        $webspaceKey,
+        $locales,
+        $fields,
+        $maxDepth
+    ) {
+        $rootDepth = substr_count($this->sessionManager->getContentNode($webspaceKey)->getPath(), '/');
+
+        $result = array();
+        foreach ($locales as $locale) {
+            $routesPath = $this->sessionManager->getRouteNode($webspaceKey, $locale)->getPath();
+
+            /** @var \Jackalope\Query\Row $row */
+            foreach ($queryResult->getRows() as $row) {
+                $pageDepth = substr_count($row->getPath('page'), '/') - $rootDepth;
+
+                if ($maxDepth === null || $maxDepth < 0 || ($maxDepth > 0 && $pageDepth <= $maxDepth)) {
+                    $item = $this->rowToArray($row, $locale, $webspaceKey, $routesPath, $fields);
+
+                    if (false !== $item && !in_array($item, $result)) {
+                        $result[] = $item;
+                    }
+                }
+            };
+        }
+
+        return $result;
+    }
+
+    /**
+     * converts a query row to an array
+     */
+    private function rowToArray(Row $row, $locale, $webspaceKey, $routesPath, $fields)
+    {
+        // reset cache
+        $this->initializeExtensionCache();
+        $this->properties->setLanguage($locale);
+
+        // check and determine shadow-nodes
+        $node = $row->getNode('page');
+        $locale = $this->getShadowLocale($node, $locale);
+        $this->properties->setLanguage($locale);
+
+        // load default data
+        $uuid = $row->getValue('page.jcr:uuid');
+
+        $templateKey = $node->getPropertyValue($this->properties->getName('template'));
+        $nodeType = $node->getPropertyValue($this->properties->getName('nodeType'));
+
+        $changed = $node->getPropertyValue($this->properties->getName('changed'));
+        $changer = $node->getPropertyValue($this->properties->getName('changer'));
+        $created = $node->getPropertyValue($this->properties->getName('created'));
+        $creator = $node->getPropertyValue($this->properties->getName('creator'));
+
+        if ($templateKey !== '') {
+            $path = $row->getPath('page');
+
+            // get structure
+            $templateKey = $this->templateResolver->resolve($nodeType, $templateKey);
+            $structure = $this->structureManager->getStructure($templateKey);
+
+            // generate field data
+            $fieldsData = $this->getFieldsData($row, $fields, $templateKey, $webspaceKey, $locale);
+
+            return array_merge(
+                array(
+                    'uuid' => $uuid,
+                    'nodeType' => $nodeType,
+                    'path' => str_replace($this->sessionManager->getContentNode($webspaceKey)->getPath(), '', $path),
+                    'changed' => $changed,
+                    'changer' => $changer,
+                    'created' => $created,
+                    'creator' => $creator,
+                    'title' => $this->getTitle($row, $structure, $locale),
+                    'url' => $this->getUrl($path, $row, $structure, $webspaceKey, $locale, $routesPath),
+                    'locale' => $locale,
+                    'template' => $templateKey
+                ),
+                $fieldsData
+            );
+        }
+
+        return false;
+    }
+
+    private function getFieldsData(Row $row, $fields, $templateKey, $webspaceKey, $locale)
+    {
+        $fieldsData = array();
+        foreach ($fields[$locale] as $field) {
+            // determine target for data in result array
+            if (isset($fieldsData['target'])) {
+                if (!isset($fieldsData[$field['target']])) {
+                    $fieldsData[$field['target']] = array();
+                }
+                $target = & $fieldsData[$field['target']];
+            } else {
+                $target = & $fieldsData;
+            }
+
+            // create target
+            if (!isset($target[$field['name']])) {
+                $target[$field['name']] = '';
+            }
+            if (($data = $this->getFieldData($field, $row, $templateKey, $webspaceKey, $locale)) !== null) {
+                $target[$field['name']] = $data;
+            }
+        }
+
+        return $fieldsData;
+    }
+
+    private function getFieldData($field, Row $row, $templateKey, $webspaceKey, $locale)
+    {
+        if (!isset($field['property'])) {
+            // normal data from node property
+            return $row->getValue($field['column']);
+        } elseif (!isset($field['extension']) && (!isset($field['templateKey']) || $field['templateKey'] === $templateKey)) {
+            // not extension data but property of node
+            return $this->getPropertyData($row->getNode('page'), $field['property'], $webspaceKey, $locale);
+        } elseif (isset($field['extension'])) {
+            // data from extension
+            return $this->getExtensionData(
+                $row->getNode('page'),
+                $field['extension'],
+                $field['property'],
+                $webspaceKey,
+                $locale
+            );
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns data for property
+     */
+    private function getPropertyData(NodeInterface $node, PropertyInterface $property, $webspaceKey, $locale)
+    {
+        $contentType = $this->contentTypeManager->get($property->getContentTypeName());
+
+        $contentType->read(
+            $node,
+            new TranslatedProperty($property, $locale, $this->languageNamespace),
+            $webspaceKey,
+            $locale,
+            null
+        );
+
+        return $contentType->getContentData($property);
+    }
+
+    /**
+     * Returns data for extension and property name
+     */
+    private function getExtensionData(
+        NodeInterface $node,
+        StructureExtension $extension,
+        $propertyName,
+        $webspaceKey,
+        $locale
+    ) {
+        // extension data: load ones
+        if (!$this->extensionDataCache->contains($extension->getName())) {
+            $this->extensionDataCache->save(
+                $extension->getName(),
+                $this->loadExtensionData(
+                    $node,
+                    $extension,
+                    $webspaceKey,
+                    $locale
+                )
+            );
+        }
+
+        // get extension data from cache
+        $data = $this->extensionDataCache->fetch($extension->getName());
+
+        // if property exists set it to target (with default value '')
+        return isset($data[$propertyName]) ? $data[$propertyName] : null;
+    }
+
+    /**
+     * load data from extension
+     */
+    private function loadExtensionData(NodeInterface $node, StructureExtension $extension, $webspaceKey, $locale)
+    {
+        $extension->setLanguageCode($locale, $this->languageNamespace, '');
+        $data = $extension->load(
+            $node,
+            $webspaceKey,
+            $locale
+        );
+
+        // insure array
+        if ($data instanceof ArrayableInterface) {
+            $data = $data->toArray();
+        }
+
+        return $data;
+    }
+
+    /**
+     * Returns title of a row
+     */
+    private function getTitle(Row $row, StructureInterface $structure, $locale)
+    {
+        $property = new TranslatedProperty(
+            $structure->getPropertyByTagName('sulu.node.name'),
+            $locale,
+            $this->languageNamespace
+        );
+
+        return $row->getValue('page.' . $property->getName());
+    }
+
+    /**
+     * Returns url of a row
+     */
+    private function getUrl($path, Row $row, StructureInterface $structure, $webspaceKey, $locale, $routesPath)
+    {
+        $url = '';
+        // if homepage
+        if ($this->sessionManager->getContentNode($webspaceKey)->getPath() === $path) {
+            $url = '/';
+        } else {
+            if ($structure->hasTag('sulu.rlp')) {
+                $property = $structure->getPropertyByTagName('sulu.rlp');
+
+                if ($property->getContentTypeName() !== 'resource_locator') {
+                    $property = new TranslatedProperty(
+                        $structure->getPropertyByTagName('sulu.rlp'),
+                        $locale,
+                        $this->languageNamespace
+                    );
+                    $url = $row->getValue('page.' . $property->getName());
+                }
+            }
+
+            try {
+                $routePath = $row->getPath('route');
+                $url = str_replace($routesPath, '', $routePath);
+            } catch (RepositoryException $ex) {
+                // ignore exception because no route node exists
+                // could have several reasons:
+                //  - external links has text-line as "rlp"
+                //  - internal links has a "reference" on another node
+                //  - no url exists
+            }
+        }
+
+        return $url;
+    }
+
+    // ===============================
+    // END: Row to array mapping logic
+    // ===============================
 }

@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+<template xmlns="http://schemas.sulu.io/template/template"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/template-1.0.xsd">
+
+    <key>template_nesting_params</key>
+
+    <view>page.html.twig</view>
+    <controller>SuluContentBundle:Default:index</controller>
+    <cacheLifetime>2400</cacheLifetime>
+
+    <properties>
+        <property name="title" type="text_line" mandatory="true">
+            <tag name="sulu.node.name"/>
+
+            <params>
+                <param name="minLinks" value="1"/>
+                <param name="maxLinks" value="10"/>
+                <param name="test" type="collection">
+                    <param name="t1" value="v1"/>
+                    <param name="t2" value="v2"/>
+                    <param name="t3" value="v3"/>
+                    <param name="t4" value="v4"/>
+                </param>
+            </params>
+        </property>
+    </properties>
+</template>

@@ -48,9 +48,7 @@ class BlockContentType extends ComplexContentType
     }
 
     /**
-     * returns type of ContentType
-     * PRE_SAVE or POST_SAVE
-     * @return int
+     * {@inheritDoc}
      */
     public function getType()
     {
@@ -58,15 +56,7 @@ class BlockContentType extends ComplexContentType
     }
 
     /**
-     * reads the value for given property
-     * from the node + sets the value of the property
-     * @param NodeInterface $node
-     * @param PropertyInterface $property
-     * @param string $webspaceKey
-     * @param string $languageCode
-     * @param string $segmentKey
-     * @throws \Sulu\Component\Content\Exception\UnexpectedPropertyType
-     * @return mixed
+     * {@inheritDoc}
      */
     public function read(
         NodeInterface $node,
@@ -157,14 +147,7 @@ class BlockContentType extends ComplexContentType
     }
 
     /**
-     * sets the value of the property with the data given
-     * @param mixed $data
-     * @param PropertyInterface $property
-     * @param $webspaceKey
-     * @param string $languageCode
-     * @param string $segmentKey
-     * @throws \Sulu\Component\Content\Exception\UnexpectedPropertyType
-     * @return mixed
+     * {@inheritDoc}
      */
     public function readForPreview(
         $data,
@@ -204,15 +187,7 @@ class BlockContentType extends ComplexContentType
     }
 
     /**
-     * save the value from given property
-     * @param NodeInterface $node
-     * @param PropertyInterface $property
-     * @param int $userId
-     * @param string $webspaceKey
-     * @param string $languageCode
-     * @param string $segmentKey
-     * @throws \Sulu\Component\Content\Exception\UnexpectedPropertyType
-     * @return mixed
+     * {@inheritDoc}
      */
     public function write(
         NodeInterface $node,
@@ -290,12 +265,7 @@ class BlockContentType extends ComplexContentType
     }
 
     /**
-     * remove property from given node
-     * @param NodeInterface $node
-     * @param PropertyInterface $property
-     * @param string $webspaceKey
-     * @param string $languageCode
-     * @param string $segmentKey
+     * {@inheritDoc}
      */
     public function remove(
         NodeInterface $node,
@@ -309,11 +279,42 @@ class BlockContentType extends ComplexContentType
     }
 
     /**
-     * returns a template to render a form
-     * @return string
+     * {@inheritdoc}
      */
     public function getTemplate()
     {
         return $this->template;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getContentData(PropertyInterface $property)
+    {
+        /** @var BlockPropertyInterface $blockProperty */
+        $blockProperty = $property;
+        while (!($blockProperty instanceof BlockPropertyInterface)) {
+            $blockProperty = $blockProperty->getProperty();
+        }
+
+        $data = array();
+        for ($i = 0; $i < $blockProperty->getLength(); $i++) {
+            $properties = $blockProperty->getProperties($i);
+
+            $type = $properties['type'];
+            unset($properties['type']);
+
+            $data[$i] = array('type' => $type);
+            foreach ($properties as $property) {
+                $contentType = $this->contentTypeManager->get($property->getContentTypeName());
+                $data[$i][$property->getName()] = $contentType->getContentData($property);
+            }
+        }
+
+        if (!$property->getIsMultiple() && sizeof($data) === 1) {
+            $data = $data[0];
+        }
+
+        return $data;
     }
 }

@@ -24,12 +24,14 @@
         <parameter key="sulu.content.rlp.mapper.phpcr.class">Sulu\Component\Content\Types\Rlp\Mapper\PhpcrMapper</parameter>
         <parameter key="sulu.content.rlp.strategy.tree.class">Sulu\Component\Content\Types\Rlp\Strategy\TreeStrategy</parameter>
         <parameter key="sulu.content.parent_child_any_finder.class">Sulu\Component\Content\Mapper\LocalizationFinder\ParentChildAnyFinder</parameter>
+
+        <parameter key="sulu.content.query_executor.class">Sulu\Component\Content\Query\ContentQueryExecutor</parameter>
     </parameters>
 
     <services>
-
         <service id="sulu.content.path_cleaner" public="false" class="%sulu.content.path_cleaner.class%"/>
         <service id="sulu.content.template_resolver" public="false" class="%sulu.content.template_resolver.class%"/>
+
         <!-- content mapper -->
         <!-- optional stopwatch: in prod not available -->
         <service id="sulu.content.mapper" class="%sulu.content.mapper.class%">
@@ -121,6 +123,13 @@
             <argument>%sulu.content.type.block.template%</argument>
             <argument>%sulu.content.language.namespace%</argument>
             <tag name="sulu.content.type" alias="block"/>
+        </service>
+
+        <!-- content query -->
+        <service id="sulu.content.query_executor" class="%sulu.content.query_executor.class%">
+            <argument type="service" id="sulu.phpcr.session"/>
+            <argument type="service" id="sulu.content.mapper"/>
+            <argument type="service" id="debug.stopwatch" on-invalid="null"/>
         </service>
     </services>
 </container>

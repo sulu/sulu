@@ -10,6 +10,7 @@
 
 namespace Sulu\Component\Content\Mapper;
 
+use PHPCR\Query\QueryResultInterface;
 use Sulu\Component\Content\BreadcrumbItemInterface;
 use Sulu\Component\Content\StructureInterface;
 
@@ -247,4 +248,21 @@ interface ContentMapperInterface
      * @return $this
      */
     public function setIgnoreMandatoryFlag($ignoreMandatoryFlag);
+
+    /**
+     * converts a query result in a list of arrays
+     * @param QueryResultInterface $queryResult
+     * @param string $webspaceKey
+     * @param string[] $locales
+     * @param array $fields
+     * @param integer $maxDepth
+     * @return array
+     */
+    public function convertQueryResultToArray(
+        QueryResultInterface $queryResult,
+        $webspaceKey,
+        $locales,
+        $fields,
+        $maxDepth
+    );
 }
