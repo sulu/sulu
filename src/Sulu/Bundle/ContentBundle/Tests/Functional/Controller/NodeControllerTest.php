@@ -541,6 +541,7 @@ class NodeControllerTest extends DatabaseTestCase
         );
         $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en', $data[0]);
         $data[0] = (array)json_decode($client->getResponse()->getContent(), true);
+
         $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en', $data[1]);
         $data[1] = (array)json_decode($client->getResponse()->getContent(), true);
         $client->request(

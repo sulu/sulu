@@ -123,14 +123,14 @@ class FilterNodesQueryBuilder
         } elseif (is_array($sortBy)) {
             foreach ($this->getConfig('sortBy', array()) as $sortColumn) {
                 $order = 'c.[i18n:' . $languageCode . '-' . $sortColumn . ']';
-                if (!in_array($sortColumn, array('published', 'created', 'changed'))) {
+
+                if (false === in_array($sortColumn, array('published', 'created', 'changed'))) {
                     $order = sprintf('lower(%s)', $order);
                 }
 
                 $sql2Order[] = $order;
             }
         }
-
 
         return $sql2Order;
     }
