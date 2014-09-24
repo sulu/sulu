@@ -73,7 +73,7 @@ class RequestAnalyzerResolverTest extends ProphecyTestCase
         $webspace = new Webspace();
         $webspace->setKey('sulu_io');
 
-        $requestAnalyzer = $this->prophesize('Sulu\Component\Webspace\Analyzer\RequestAnalyzer');
+        $requestAnalyzer = $this->prophesize('Sulu\Component\Webspace\Analyzer\WebsiteRequestAnalyzer');
         $requestAnalyzer->getCurrentWebspace()->willReturn($webspace);
         $requestAnalyzer->getCurrentLocalization()->willReturn('de');
         $requestAnalyzer->getCurrentPortalUrl()->willReturn('sulu.io/de');
