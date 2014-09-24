@@ -26,7 +26,7 @@ class RouteProviderCompilerPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        if ($container->hasDefinition('sulu_core.webspace.request_analyzer')) {
+        if ($container->hasAlias('sulu_core.webspace.request_analyzer')) {
             $container->setDefinition(
                 'sulu_website.provider.content',
                 new Definition('Sulu\Bundle\WebsiteBundle\Routing\ContentRouteProvider', array(
