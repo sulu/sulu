@@ -1709,15 +1709,15 @@ class ContentMapper implements ContentMapperInterface
         // load default data
         $uuid = $row->getValue('page.jcr:uuid');
 
-        $templateKey = $node->getPropertyValue($this->properties->getName('template'));
-        $nodeType = $node->getPropertyValue($this->properties->getName('nodeType'));
+        if($node->hasProperty($this->properties->getName('template'))){
+            $templateKey = $node->getPropertyValue($this->properties->getName('template'));
+            $nodeType = $node->getPropertyValue($this->properties->getName('nodeType'));
 
-        $changed = $node->getPropertyValue($this->properties->getName('changed'));
-        $changer = $node->getPropertyValue($this->properties->getName('changer'));
-        $created = $node->getPropertyValue($this->properties->getName('created'));
-        $creator = $node->getPropertyValue($this->properties->getName('creator'));
+            $changed = $node->getPropertyValue($this->properties->getName('changed'));
+            $changer = $node->getPropertyValue($this->properties->getName('changer'));
+            $created = $node->getPropertyValue($this->properties->getName('created'));
+            $creator = $node->getPropertyValue($this->properties->getName('creator'));
 
-        if ($templateKey !== '') {
             $path = $row->getPath('page');
 
             // get structure
