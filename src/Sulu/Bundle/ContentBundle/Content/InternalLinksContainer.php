@@ -31,7 +31,7 @@ class InternalLinksContainer implements ArrayableInterface
      * @Exclude
      * @var ContentQueryExecutorInterface
      */
-    private $contentQuery;
+    private $contentQueryExecutor;
 
     /**
      * The content mapper, which is needed for lazy loading
@@ -80,7 +80,7 @@ class InternalLinksContainer implements ArrayableInterface
 
     public function __construct(
         $ids,
-        ContentQueryExecutorInterface $contentQuery,
+        ContentQueryExecutorInterface $contentQueryExecutor,
         ContentQueryBuilderInterface $contentQueryBuilder,
         $params,
         LoggerInterface $logger,
@@ -88,7 +88,7 @@ class InternalLinksContainer implements ArrayableInterface
         $languageCode
     ) {
         $this->ids = $ids;
-        $this->contentQuery = $contentQuery;
+        $this->contentQueryExecutor = $contentQueryExecutor;
         $this->contentQueryBuilder = $contentQueryBuilder;
         $this->logger = $logger;
         $this->webspaceKey = $webspaceKey;
@@ -120,7 +120,7 @@ class InternalLinksContainer implements ArrayableInterface
                 try {
                     if (!empty($id)) {
                         $this->contentQueryBuilder->init(array('ids' => $this->ids, 'properties' => $this->params['properties']));
-                        $result = $this->contentQuery->execute(
+                        $result = $this->contentQueryExecutor->execute(
                             $this->webspaceKey,
                             array($this->languageCode),
                             $this->contentQueryBuilder

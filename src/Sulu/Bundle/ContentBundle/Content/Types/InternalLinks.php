@@ -30,7 +30,7 @@ class InternalLinks extends ComplexContentType
     /**
      * @var ContentQueryExecutorInterface
      */
-    private $contentQuery;
+    private $contentQueryExecutor;
     /**
      * @var ContentQueryBuilderInterface
      */
@@ -47,13 +47,13 @@ class InternalLinks extends ComplexContentType
     private $template;
 
     function __construct(
-        ContentQueryExecutorInterface $contentQuery,
+        ContentQueryExecutorInterface $contentQueryExecutor,
         ContentQueryBuilderInterface $contentQueryBuilder,
         LoggerInterface $logger,
         $template
     )
     {
-        $this->contentQuery = $contentQuery;
+        $this->contentQueryExecutor = $contentQueryExecutor;
         $this->contentQueryBuilder = $contentQueryBuilder;
         $this->logger = $logger;
         $this->template = $template;
@@ -110,7 +110,7 @@ class InternalLinks extends ComplexContentType
     {
         $container = new InternalLinksContainer(
             isset($data['ids']) ? $data['ids'] : array(),
-            $this->contentQuery,
+            $this->contentQueryExecutor,
             $this->contentQueryBuilder,
             array_merge($this->getDefaultParams(), $property->getParams()),
             $this->logger,

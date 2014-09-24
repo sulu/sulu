@@ -30,7 +30,7 @@ class SmartContentContainer implements ArrayableInterface
      * @var ContentQueryExecutorInterface
      * @Exclude
      */
-    private $contentQuery;
+    private $contentQueryExecutor;
 
     /**
      * @var ContentQueryBuilderInterface
@@ -99,7 +99,7 @@ class SmartContentContainer implements ArrayableInterface
      * @param Stopwatch $stopwatch
      */
     public function __construct(
-        ContentQueryExecutorInterface $contentQuery,
+        ContentQueryExecutorInterface $contentQueryExecutor,
         ContentQueryBuilderInterface $contentQueryBuilder,
         TagManagerInterface $tagManager,
         $params,
@@ -109,7 +109,7 @@ class SmartContentContainer implements ArrayableInterface
         $preview = false,
         Stopwatch $stopwatch = null
     ) {
-        $this->contentQuery = $contentQuery;
+        $this->contentQueryExecutor = $contentQueryExecutor;
         $this->contentQueryBuilder = $contentQueryBuilder;
         $this->tagManager = $tagManager;
         $this->webspaceKey = $webspaceKey;
@@ -177,7 +177,7 @@ class SmartContentContainer implements ArrayableInterface
         $result = array();
         if (array_key_exists('dataSource', $config) && $config['dataSource'] !== '') {
             $this->contentQueryBuilder->init(array('config' => $config, 'properties' => $this->params['properties']));
-            $result = $this->contentQuery->execute(
+            $result = $this->contentQueryExecutor->execute(
                 $this->webspaceKey,
                 array($this->languageCode),
                 $this->contentQueryBuilder,
