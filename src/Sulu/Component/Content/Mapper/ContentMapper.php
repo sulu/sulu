@@ -1640,6 +1640,10 @@ class ContentMapper implements ContentMapperInterface
         }
     }
 
+    // =================================
+    // START: Row to array mapping logic
+    // =================================
+
     /**
      * initializes cache for extension data
      */
@@ -1904,4 +1908,8 @@ class ContentMapper implements ContentMapperInterface
 
         return $url;
     }
+
+    // ===============================
+    // END: Row to array mapping logic
+    // ===============================
 }

@@ -19,9 +19,11 @@ use Sulu\Component\Webspace\Segment;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * Request analyzer for the admin context
+ */
 class AdminRequestAnalyzer implements RequestAnalyzerInterface
 {
-
     /**
      * The WebspaceManager, responsible for loading the required webspaces
      * @var WebspaceManagerInterface

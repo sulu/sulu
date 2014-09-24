@@ -29,6 +29,8 @@ class ListToTreeConverter
 
     /**
      * generate a tree of the given data with the path property
+     * @param array $data
+     * @param string $webspaceKey
      */
     public function convert($data, $webspaceKey)
     {
