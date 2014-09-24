@@ -16,4 +16,16 @@ namespace Sulu\Component\Webspace\Exception;
  */
 class PortalException extends \Exception
 {
+    /**
+     * @var Portal
+     */
+    protected $portal;
+
+    /**
+     * @return Portal
+     */
+    public function getPortal()
+    {
+        return $this->portal;
+    }
 }
