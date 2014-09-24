@@ -44,6 +44,7 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
+use Sulu\Component\Content\Event\ContentOrderBeforeEvent;
 
 /**
  * Maps content nodes to phpcr nodes with content types and provides utility function to handle content nodes
@@ -434,6 +435,9 @@ class ContentMapper implements ContentMapperInterface
 
             $structure->setExt($ext);
         }
+
+        $event = new ContentNodeEvent($node, $structure);
+        $this->eventDispatcher->dispatch(ContentEvents::NODE_PRE_SAVE, $event);
 
         $session->save();
 
@@ -1351,6 +1355,9 @@ class ContentMapper implements ContentMapperInterface
         // set changer of node in specific language
         $this->setChanger($beforeTargetNode, $userId, $languageCode);
         $this->setChanger($subjectNode, $userId, $languageCode);
+
+        $event = new ContentOrderBeforeEvent($subjectNode, $beforeTargetNode);
+        $this->eventDispatcher->dispatch(ContentEvents::NODE_ORDER_BEFORE, $event);
 
         // save session
         $session->save();
