@@ -81,6 +81,8 @@ class ContentQueryExecutor implements ContentQueryExecutorInterface
             $this->stopwatch->start('ContentQuery::execute.preload-nodes');
         }
 
+        // this preloads all node which should are selected in the statement before
+        // prevent the system to load each node individual
         $uuids = array();
         /** @var Row $row */
         foreach ($queryResult as $row) {
