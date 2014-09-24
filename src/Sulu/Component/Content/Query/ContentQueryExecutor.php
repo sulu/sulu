@@ -78,6 +78,19 @@ class ContentQueryExecutor implements ContentQueryExecutorInterface
 
         if ($this->stopwatch) {
             $this->stopwatch->stop('ContentQuery::execute.execute-query');
+            $this->stopwatch->start('ContentQuery::execute.preload-nodes');
+        }
+
+        $uuids = array();
+        /** @var Row $row */
+        foreach ($queryResult as $row) {
+            $uuids[] = $row->getValue('page.jcr:uuid');
+        }
+
+        $this->sessionManager->getSession()->getNodesByIdentifier($uuids);
+
+        if ($this->stopwatch) {
+            $this->stopwatch->stop('ContentQuery::execute.preload-nodes');
             $this->stopwatch->start('ContentQuery::execute.rowsToList');
         }
 
