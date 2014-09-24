@@ -391,7 +391,7 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent(), true);
 
-        $this->assertEquals(25, sizeof($response));
+        $this->assertEquals(26, sizeof($response));
         $this->assertEquals($data[0]['title'], $response['title']);
         $this->assertEquals($data[0]['path'], $response['path']);
         $this->assertEquals($data[0]['tags'], $response['tags']);
@@ -541,6 +541,7 @@ class NodeControllerTest extends DatabaseTestCase
         );
         $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en', $data[0]);
         $data[0] = (array)json_decode($client->getResponse()->getContent(), true);
+
         $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en', $data[1]);
         $data[1] = (array)json_decode($client->getResponse()->getContent(), true);
         $client->request(
