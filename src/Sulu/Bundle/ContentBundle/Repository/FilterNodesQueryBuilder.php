@@ -124,7 +124,7 @@ class FilterNodesQueryBuilder
             foreach ($this->getConfig('sortBy', array()) as $sortColumn) {
                 $order = 'c.[i18n:' . $languageCode . '-' . $sortColumn . ']';
 
-                if (false === in_array($sortColumn, array('published', 'created', 'changed'))) {
+                if (!in_array($sortColumn, array('published', 'created', 'changed'))) {
                     $order = sprintf('lower(%s)', $order);
                 }
 
