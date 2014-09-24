@@ -116,9 +116,12 @@ class FilterNodesQueryBuilder
     {
         $sql2Order = array();
         $sortBy = $this->getConfig('sortBy', array());
-        if (!empty($sortBy) && is_array($sortBy)) {
+
+        // if no order given, order by the sulu:order property
+        if (empty($sortBy)) {
+            $sql2Order[] = 'c.[sulu:order]';
+        } elseif (is_array($sortBy)) {
             foreach ($this->getConfig('sortBy', array()) as $sortColumn) {
-                // TODO implement more generic
                 $order = 'c.[i18n:' . $languageCode . '-' . $sortColumn . ']';
                 if (!in_array($sortColumn, array('published', 'created', 'changed'))) {
                     $order = sprintf('lower(%s)', $order);
@@ -127,6 +130,7 @@ class FilterNodesQueryBuilder
                 $sql2Order[] = $order;
             }
         }
+
 
         return $sql2Order;
     }
