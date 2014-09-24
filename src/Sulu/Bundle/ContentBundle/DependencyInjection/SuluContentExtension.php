@@ -34,6 +34,15 @@ class SuluContentExtension extends Extension
         $container->setParameter('sulu_content.preview.websocket.port', $config['preview']['websocket']['port']);
         $container->setParameter('sulu_content.preview.websocket.url', $config['preview']['websocket']['url']);
 
+        $errorTemplate = null;
+        if (isset($config['preview']['error_template'])) {
+            $errorTemplate = $config['preview']['error_template'];
+        }
+        $container->setParameter(
+            'sulu.content.preview.error_template',
+            $errorTemplate
+        );
+
         $container->setParameter(
             'sulu.content.type.smart_content.template',
             $config['types']['smart_content']['template']

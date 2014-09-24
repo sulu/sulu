@@ -214,10 +214,10 @@ class TemplateController extends Controller
         $webspace = $this->getWebspaceManager()->findWebspaceByKey($webspaceKey);
 
         $navContexts = array();
-        foreach ($this->container->getParameter('sulu.content.nav_contexts') as $context) {
+        foreach ($webspace->getNavigation()->getContexts() as $context) {
             $navContexts[] = array(
-                'name' => $context,
-                'id' => $context
+                'name' => $context->getTitle($languageCode),
+                'id' => $context->getKey()
             );
         }
 

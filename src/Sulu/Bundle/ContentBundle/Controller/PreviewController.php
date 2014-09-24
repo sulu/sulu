@@ -96,10 +96,14 @@ class PreviewController extends Controller
      * render content for logged in user with data from FORM
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param string $contentUuid
+     * @throws \Exception
+     * @throws \Sulu\Bundle\ContentBundle\Preview\PreviewNotFoundException
      * @return Response
      */
     public function renderAction(Request $request, $contentUuid)
     {
+        $request->request->set('preview', true);
+
         $uid = $this->getUserId();
         $preview = $this->getPreview();
 
@@ -113,10 +117,24 @@ class PreviewController extends Controller
             $contentUuid = $startPage->getUuid();
         }
 
-        try {
-            $content = $preview->render($uid, $contentUuid, $webspaceKey, $locale);
-        } catch (PreviewNotFoundException $ex) {
-            return new JsonResponse($ex->toArray(), 404);
+        $content = null;
+        $i = 0;
+        // FIXME Remove this ugly fix as soon as possible
+        while (true) {
+            $i++;
+            try {
+                $content = $preview->render($uid, $contentUuid, $webspaceKey, $locale);
+                break;
+            } catch (PreviewNotFoundException $ex) {
+                if ($i > 4) {
+                    throw $ex;
+                } else {
+                    usleep(50000);
+
+                    // refresh session before check for new node
+                    $this->get('sulu.phpcr.session')->getSession()->refresh(false);
+                }
+            }
         }
 
         $script = $this->render(
@@ -141,27 +159,8 @@ class PreviewController extends Controller
             )
         );
 
-        $doc = new DOMDocument();
-        $doc->encoding = 'utf-8';
-
-        // FIXME hack found in http://stackoverflow.com/a/6090728
-        libxml_use_internal_errors(true);
-        $doc->loadHTML(utf8_decode($content));
-        $errors = json_encode(libxml_get_errors());
-        /** @var \Symfony\Bridge\Monolog\Logger $logger */
-        $logger = $this->get('logger');
-        $logger->debug('ERRORS in Preview Template: ' . $errors);
-        libxml_clear_errors();
-
-        $body = $doc->getElementsByTagName('body');
-        $body = $body->item(0);
-
-        $fragment = $doc->createDocumentFragment();
-        $fragment->appendXML($script->getContent());
-        $body->appendChild($fragment);
-        $doc->formatOutput = true;
-
-        $content = $doc->saveHTML();
+        $script = $script->getContent();
+        $content = str_replace('</body>', $script . '</body>', $content);
 
         return new Response($content);
     }

@@ -2,6 +2,7 @@
      data-property='{{ property|json_encode }}'
      data-mapper-property="{{ property.name }}"
      data-aura-component="smart-content@sulucontent"
+     data-aura-title="{{ property.getTitle(languageCode) }}"
      data-type="smartContent"
      data-type-instance-name="{{ id|raw }}"
      data-instance-name="{{ id|raw }}"
@@ -14,4 +15,4 @@
      data-aura-column-navigation-result-key="nodes"
      data-aura-url="/admin/api/nodes/filter?webspace={{ webspaceKey }}&language={{ languageCode }}"
      data-aura-tags-auto-complete-url="/admin/api/tags?flat=true"
-     data-aura-sort-by='[{"id":"published","name":"<%= translate("public.published") %>"},{"id":"created","name":"<%= translate("public.created") %>"},{"id":"changed","name":"<%= translate("public.changed") %>"}]'></div>
+     data-aura-sort-by='[{"id":"title","name":"<%= translate("smart-content.title") %>"},{"id":"published","name":"<%= translate("public.published") %>"},{"id":"created","name":"<%= translate("public.created") %>"},{"id":"changed","name":"<%= translate("public.changed") %>"}]'></div>

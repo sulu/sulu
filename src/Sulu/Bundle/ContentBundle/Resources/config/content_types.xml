@@ -19,12 +19,14 @@
         <service id="sulu.content.type.smart_content" class="%sulu.content.type.smart_content.class%">
             <argument type="service" id="sulu_content.node_repository"/>
             <argument type="service" id="sulu_tag.tag_manager"/>
+            <argument type="service" id="request_stack" />
             <argument>%sulu.content.type.smart_content.template%</argument>
             <tag name="sulu.content.type" alias="smart_content" />
         </service>
 
         <service id="sulu.content.type.internal_links" class="%sulu.content.type.internal_links.class%">
             <argument type="service" id="sulu.content.mapper"/>
+            <argument type="service" id="logger"/>
             <argument>%sulu.content.type.internal_links.template%</argument>
             <tag name="sulu.content.type" alias="internal_links"/>
         </service>

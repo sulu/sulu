@@ -11,9 +11,9 @@
 namespace Sulu\Bundle\ContentBundle\Content\Types;
 
 use PHPCR\NodeInterface;
+use Psr\Log\LoggerInterface;
 use Sulu\Bundle\ContentBundle\Content\InternalLinksContainer;
 use Sulu\Component\Content\ComplexContentType;
-use Sulu\Component\Content\Mapper\ContentMapper;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Util\ArrayableInterface;
@@ -30,13 +30,19 @@ class InternalLinks extends ComplexContentType
     private $contentMapper;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * @var string
      */
     private $template;
 
-    function __construct(ContentMapperInterface $contentMapper, $template)
+    function __construct(ContentMapperInterface $contentMapper, LoggerInterface $logger, $template)
     {
         $this->contentMapper = $contentMapper;
+        $this->logger = $logger;
         $this->template = $template;
     }
 
@@ -92,6 +98,7 @@ class InternalLinks extends ComplexContentType
         $container = new InternalLinksContainer(
             isset($data['ids']) ? $data['ids'] : array(),
             $this->contentMapper,
+            $this->logger,
             $webspaceKey,
             $languageCode
         );
@@ -115,10 +122,20 @@ class InternalLinks extends ComplexContentType
             $value = $value->toArray();
         }
 
-
         // if whole container is pushed
         if (isset($value['data'])) {
             unset($value['data']);
+        }
+
+        if (isset($value['ids'])) {
+            // remove not existing ids
+            $session = $node->getSession();
+            $selectedNodes = $session->getNodesByIdentifier($value['ids']);
+            $ids = array();
+            foreach ($selectedNodes as $selectedNode) {
+                $ids[] = $selectedNode->getIdentifier();
+            }
+            $value['ids'] = $ids;
         }
 
         // set value to node
@@ -145,4 +162,12 @@ class InternalLinks extends ComplexContentType
     {
         return $this->template;
     }
-} 
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getContentData(PropertyInterface $property)
+    {
+        return $property->getValue()->getData();
+    }
+}

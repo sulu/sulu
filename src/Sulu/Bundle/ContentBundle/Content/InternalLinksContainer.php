@@ -10,7 +10,8 @@
 
 namespace Sulu\Bundle\ContentBundle\Content;
 
-use JMS\Serializer\Serializer;
+use PHPCR\ItemNotFoundException;
+use Psr\Log\LoggerInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\StructureInterface;
 use JMS\Serializer\Annotation\Exclude;
@@ -23,11 +24,17 @@ use Sulu\Component\Util\ArrayableInterface;
 class InternalLinksContainer implements ArrayableInterface
 {
     /**
-     * The node repository, which is needed for lazy loading
+     * The content mapper, which is needed for lazy loading
      * @Exclude
      * @var ContentMapperInterface
      */
     private $contentMapper;
+
+    /**
+     * @Exclude
+     * @var LoggerInterface
+     */
+    private $logger;
 
     /**
      * The key of the webspace
@@ -57,11 +64,13 @@ class InternalLinksContainer implements ArrayableInterface
     public function __construct(
         $ids,
         ContentMapperInterface $contentMapper,
+        LoggerInterface $logger,
         $webspaceKey,
         $languageCode
     ) {
         $this->ids = $ids;
         $this->contentMapper = $contentMapper;
+        $this->logger = $logger;
         $this->webspaceKey = $webspaceKey;
         $this->languageCode = $languageCode;
     }
@@ -85,10 +94,17 @@ class InternalLinksContainer implements ArrayableInterface
     private function loadData()
     {
         $result = array();
-
         if ($this->ids !== null) {
             foreach ($this->ids as $id) {
-                $result[] = $this->contentMapper->load($id, $this->webspaceKey, $this->languageCode);
+                try {
+                    if (!empty($id)) {
+                        $result[] = $this->contentMapper->load($id, $this->webspaceKey, $this->languageCode);
+                    }
+                } catch (ItemNotFoundException $ex) {
+                    $this->logger->warning(
+                        sprintf("%s in internal links not found. Exception: %s", $id, $ex->getMessage())
+                    );
+                }
             }
         }
 
@@ -120,6 +136,6 @@ class InternalLinksContainer implements ArrayableInterface
      */
     public function toArray($depth = null)
     {
-        return $this->ids;
+        return array('ids' => $this->ids);
     }
 }

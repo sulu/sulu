@@ -5,7 +5,7 @@
 
     <key>default</key>
 
-    <view>::default.html.twig</view>
+    <view>::default</view>
     <controller>SuluWebsiteBundle:Default:index</controller>
     <cacheLifetime>2400</cacheLifetime>
 

@@ -65,7 +65,8 @@ define([
             this.$preview = null;
             this.contentChanged = false;
 
-            Preview.initialize(this.sandbox, this.options, this.$el);
+            this.preview = new Preview();
+            this.preview.initialize(this.sandbox, this.options, this.$el);
 
             if (this.options.display === 'column') {
                 this.renderColumn();
@@ -128,7 +129,8 @@ define([
             // getter for content data
             this.sandbox.on('sulu.content.contents.get-data', function(callback) {
                 this.loadDataDeferred.then(function() {
-                    callback(this.data);
+                    // deep copy of object
+                    callback(JSON.parse(JSON.stringify(this.data)));
                 }.bind(this));
             }.bind(this));
 
@@ -461,6 +463,7 @@ define([
                 }.bind(this),
                 error: function() {
                     this.sandbox.logger.log("error while saving profile");
+                    this.sandbox.emit('sulu.header.toolbar.item.enable', 'save-button');
                     this.sandbox.emit('sulu.content.contents.save-error');
                 }.bind(this)
             });
@@ -501,22 +504,24 @@ define([
                     this.sandbox.emit('husky.toolbar.header.item.disable', 'options-button', false);
                 }
 
-
                 if (!!this.options.preview && this.data.nodeType === TYPE_CONTENT && !this.data.shadowOn) {
-                    this.sandbox.emit('husky.tabs.header.item.show', 'tab-content');
+                    this.sandbox.util.each(['content', 'excerpt', 'seo'], function(i, tabName) {
+                        this.sandbox.emit('husky.tabs.header.item.show', 'tab-' + tabName);
+                    }.bind(this));
+
                     this.sandbox.on('sulu.preview.initiated', function() {
                         this.renderPreview(data);
                     }.bind(this));
 
                     this.sandbox.on('sulu.preview.initialize', function(data, restart) {
                         data = this.sandbox.util.extend(true, {}, this.data, data);
-                        if (!Preview.initiated) {
-                            Preview.start(data, this.options);
+                        if (!this.preview.initiated) {
+                            this.preview.start(data, this.options);
                         } else if(!!restart) {
                             // force reload
                             this.$preview = null;
                             this.sandbox.dom.remove(this.$preview);
-                            Preview.restart(data, this.options, this.template);
+                            this.preview.restart(data, this.options, this.template);
                         }
                     }.bind(this));
                 } else {
@@ -527,7 +532,9 @@ define([
                 if (!!this.options.id) {
                     // disable content tab
                     if (this.data.shadowOn === true || this.data.nodeType !== TYPE_CONTENT) {
-                        this.sandbox.emit('husky.tabs.header.item.hide', 'tab-content');
+                        this.sandbox.util.each(['content'], function(i, tabName) {
+                            this.sandbox.emit('husky.tabs.header.item.hide', 'tab-' + tabName);
+                        }.bind(this));
                     }
 
                     // route to settings
@@ -684,7 +691,7 @@ define([
          */
         setTitle: function(data) {
             if (!!this.options.id && data['sulu.node.name'] !== '') {
-                this.sandbox.emit('sulu.header.set-title', data['sulu.node.name']);
+                this.sandbox.emit('sulu.header.set-title', this.sandbox.util.cropMiddle(data['sulu.node.name'], 40));
             } else {
                 this.sandbox.emit('sulu.header.set-title', this.sandbox.translate('content.contents.title'));
             }

@@ -67,7 +67,7 @@ class Preview implements PreviewInterface
                 $this->previewCache->updateTemplate($template, $userId, $contentUuid, $webspaceKey, $locale);
             }
 
-            $result = $this->updateProperties($userId, $contentUuid, $webspaceKey, $locale, $data);
+            $result = $this->updateProperties($userId, $contentUuid, $webspaceKey, $locale, $data, false);
         }
 
         return $result;
@@ -94,8 +94,14 @@ class Preview implements PreviewInterface
     /**
      * {@inheritdoc}
      */
-    public function updateProperties($userId, $contentUuid, $webspaceKey, $locale, $changes)
-    {
+    public function updateProperties(
+        $userId,
+        $contentUuid,
+        $webspaceKey,
+        $locale,
+        $changes,
+        $render = true
+    ) {
         /** @var StructureInterface $content */
         $content = $this->previewCache->fetchStructure($userId, $webspaceKey, $locale);
 
@@ -111,7 +117,8 @@ class Preview implements PreviewInterface
                     $locale,
                     $property,
                     $data,
-                    $content
+                    $content,
+                    $render
                 );
             }
 
@@ -142,8 +149,15 @@ class Preview implements PreviewInterface
     /**
      * updates one property without saving structure
      */
-    private function update($userId, $webspaceKey, $locale, $property, $data, StructureInterface $content)
-    {
+    private function update(
+        $userId,
+        $webspaceKey,
+        $locale,
+        $property,
+        $data,
+        StructureInterface $content,
+        $render = true
+    ) {
         $sequence = $this->setValue($content, $property, $data, $webspaceKey, $locale);
 
         if (false !== $sequence) {
@@ -154,9 +168,11 @@ class Preview implements PreviewInterface
             );
         }
 
-        $changes = $this->renderStructure($content, true, $property);
-        if ($changes !== false) {
-            $this->previewCache->appendChanges(array($property => $changes), $userId, $webspaceKey);
+        if ($render === true) {
+            $changes = $this->renderStructure($content, true, $property);
+            if ($changes !== false) {
+                $this->previewCache->appendChanges(array($property => $changes), $userId, $webspaceKey);
+            }
         }
 
         return $content;

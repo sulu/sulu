@@ -44,23 +44,23 @@
             </trans-unit>
             <trans-unit id="f1234df37123123ed4a73a4123dfdf007" resname="content.contents.settings.copy">
                 <source>content.contents.settings.copy</source>
-                <target>Copy node</target>
+                <target>Copy page</target>
             </trans-unit>
             <trans-unit id="f1234df37123123ed4a73a4123dfdf008" resname="content.contents.settings.copy.title">
                 <source>content.contents.settings.copy.title</source>
-                <target>Choose new parent after copy</target>
+                <target>Choose parent-page</target>
             </trans-unit>
             <trans-unit id="f1234df37123123ed4a73a4123dfdf009" resname="content.contents.settings.move">
                 <source>content.contents.settings.move</source>
-                <target>Move node</target>
+                <target>Move page</target>
             </trans-unit>
             <trans-unit id="f1234df37123123ed4a73a4123dfdf00A" resname="content.contents.settings.move.title">
                 <source>content.contents.settings.move.title</source>
-                <target>Choose new parent after move</target>
+                <target>Choose parent-page</target>
             </trans-unit>
             <trans-unit id="f1234df37123123ed4a73a4123dfdf00B" resname="content.contents.settings.order">
                 <source>content.contents.settings.order</source>
-                <target>Order node</target>
+                <target>Order pages</target>
             </trans-unit>
             <trans-unit id="f1234df37123123ed4a73a4123dfdf00C" resname="content.contents.settings.order.title">
                 <source>content.contents.settings.order.title</source>
@@ -84,7 +84,7 @@
             </trans-unit>
             <trans-unit id="f85e55126a0ec3ab6617b52fc033bc18" resname="smart-content.configure-smart-content">
                 <source>smart-content.configure-smart-content</source>
-                <target>Configure smart content</target>
+                <target>Configure {title}</target>
             </trans-unit>
             <trans-unit id="7a9bd49b2b4443383bff6eb67dd0afb6" resname="smart-content.data-source">
                 <source>smart-content.data-source</source>
@@ -92,7 +92,7 @@
             </trans-unit>
             <trans-unit id="66f18ec54ed3b6a089ee3712167c4e87" resname="smart-content.include-sub-folders">
                 <source>smart-content.include-sub-folders</source>
-                <target>Include Sub folders</target>
+                <target>Include sub-pages</target>
             </trans-unit>
             <trans-unit id="4cf5babee84aa0eef15db3ce11648b35" resname="smart-content.filter-by-category">
                 <source>smart-content.filter-by-category</source>
@@ -153,6 +153,10 @@
             <trans-unit id="cc88fcd370c8ff1d96f0b9f99adb8316" resname="smart-content.view-less">
                 <source>smart-content.view-less</source>
                 <target>view less</target>
+            </trans-unit>
+            <trans-unit id="cc88fcd370c8ff1d96f0b9f99adb8317" resname="smart-content.title">
+                <source>smart-content.title</source>
+                <target>Title</target>
             </trans-unit>
             <trans-unit id="ad64f69edc5ce6dae6033001f5d01b6e" resname="content.template.dialog.titile">
                 <source>content.template.dialog.titile</source>

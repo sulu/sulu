@@ -42,3 +42,11 @@
 .column-navigation-wrapper {
     overflow: inherit;
 }
+
+/* block add-button */
+.text-block-footer.full {
+    .action .dropdown-label {
+        background-color: $grayLighter;
+        cursor: default;
+    }
+}
