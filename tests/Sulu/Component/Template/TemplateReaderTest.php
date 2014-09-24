@@ -152,11 +152,13 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'params' => array(
                         array(
                             'name' => 'minLinks',
-                            'value' => 1
+                            'value' => 1,
+                            'type' => 'string'
                         ),
                         array(
                             'name' => 'maxLinks',
-                            'value' => 10
+                            'value' => 10,
+                            'type' => 'string'
                         )
                     ),
                     'meta' => array()
@@ -888,11 +890,13 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'params' => array(
                         '0' => array(
                             'name' => 'minLinks',
-                            'value' => 1
+                            'value' => 1,
+                            'type' => 'string'
                         ),
                         '1' => array(
                             'name' => 'maxLinks',
-                            'value' => 10
+                            'value' => 10,
+                            'type' => 'string'
                         )
                     ),
                     'meta' => array(),
@@ -916,6 +920,59 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
 
         $templateReader = new TemplateReader();
         $result = $templateReader->load(__DIR__ . '/../../../Resources/DataFixtures/Template/template_reserved.xml');
+    }
+
+    function testNestingParams()
+    {
+        $template = array(
+            'key' => 'template_nesting_params',
+            'view' => 'page.html.twig',
+            'controller' => 'SuluContentBundle:Default:index',
+            'cacheLifetime' => '2400',
+            'properties' => array(
+                'title' => array(
+                    'name' => 'title',
+                    'type' => 'text_line',
+                    'minOccurs' => null,
+                    'maxOccurs' => null,
+                    'colspan' => null,
+                    'cssClass' => null,
+                    'indexField' => false,
+                    'mandatory' => true,
+                    'multilingual' => true,
+                    'tags' => array(
+                        '0' => array(
+                            'name' => 'sulu.node.name',
+                            'priority' => null
+                        )
+                    ),
+                    'params' => array(
+                        array('name' => 'minLinks', 'value' => '1', 'type' => 'string'),
+                        array('name' => 'maxLinks', 'value' => '10', 'type' => 'string'),
+                        array(
+                            'name' => 'test',
+                            'value' => array(
+                                array('name' => 't1', 'value' => 'v1', 'type' => 'string'),
+                                array('name' => 't2', 'value' => 'v2', 'type' => 'string'),
+                                array('name' => 't3', 'value' => 'v3', 'type' => 'string'),
+                                array('name' => 't4', 'value' => 'v4', 'type' => 'string')
+                            ),
+                            'type' => 'collection'
+                        )
+                    ),
+                    'meta' => array()
+                )
+            )
+        );
+
+        $templateReader = new TemplateReader();
+        $result = $templateReader->load(
+            __DIR__ . '/../../../Resources/DataFixtures/Template/template_nesting_params.xml'
+        );
+
+        $x = $this->arrayRecursiveDiff($result, $template);
+        $this->assertEquals(0, sizeof($x));
+        $this->assertEquals($template, $result);
     }
 
     function arrayRecursiveDiff($aArray1, $aArray2)

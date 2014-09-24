@@ -83,6 +83,7 @@ class BlockProperty extends Property implements BlockPropertyInterface
     /**
      * returns type with given name
      * @param string $name of property
+     * @throws \InvalidArgumentException
      * @return BlockPropertyType
      */
     public function getType($name)
@@ -142,6 +143,15 @@ class BlockProperty extends Property implements BlockPropertyInterface
     public function getProperties($index)
     {
         return $this->properties[$index];
+    }
+
+    /**
+     * Returns sizeof block
+     * @return int
+     */
+    public function getLength()
+    {
+        return sizeof($this->properties);
     }
 
     /**

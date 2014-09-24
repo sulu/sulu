@@ -504,4 +504,34 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
         // check resulted structure
         $this->assertEquals($data, $this->blockProperty->getValue());
     }
+
+    public function testGetContentData()
+    {
+        $this->prepareSingleBlockProperty();
+
+        $data = array(
+            array(
+                'type' => 'type1',
+                'title' => 'Test-Title-1',
+                'article' => array(
+                    'Test-Article-1-1',
+                    'Test-Article-1-2'
+                ),
+                'sub-block' => array(
+                    'type' => 'subType1',
+                    'title' => 'Test-Title-Sub-1',
+                    'article' => 'Test-Article-Sub-1'
+                )
+            ),
+            array(
+                'type' => 'type2',
+                'name' => 'Test-Name-2',
+            )
+        );
+        $this->blockProperty->setValue($data);
+
+        $result = $this->blockContentType->getContentData($this->blockProperty);
+
+        $this->assertEquals($data, $result);
+    }
 }
