@@ -28,19 +28,19 @@ class FilterNodesQueryBuilderTest extends ProphecyTestCase
         return array(
             array(
                 array(),
-                'SELECT * FROM [nt:base] AS c WHERE c.[jcr:mixinTypes] = "sulu:content" AND c.[i18n:de-state] = 2 ORDER BY c.[sulu:order] DESC',
+                'SELECT * FROM [nt:base] AS c WHERE c.[jcr:mixinTypes] = "sulu:content" AND c.[i18n:de-state] = 2 ORDER BY c.[sulu:order] ASC',
             ),
             array(
                 array(
                     'sortBy' => array('foobar'),
                 ),
-                'SELECT * FROM [nt:base] AS c WHERE c.[jcr:mixinTypes] = "sulu:content" AND c.[i18n:de-state] = 2 ORDER BY lower(c.[i18n:de-foobar]) DESC',
+                'SELECT * FROM [nt:base] AS c WHERE c.[jcr:mixinTypes] = "sulu:content" AND c.[i18n:de-state] = 2 ORDER BY lower(c.[i18n:de-foobar]) ASC',
             ),
             array(
                 array(
                     'sortBy' => array('foobar', 'created'),
                 ),
-                'SELECT * FROM [nt:base] AS c WHERE c.[jcr:mixinTypes] = "sulu:content" AND c.[i18n:de-state] = 2 ORDER BY lower(c.[i18n:de-foobar]), c.[i18n:de-created] DESC',
+                'SELECT * FROM [nt:base] AS c WHERE c.[jcr:mixinTypes] = "sulu:content" AND c.[i18n:de-state] = 2 ORDER BY lower(c.[i18n:de-foobar]), c.[i18n:de-created] ASC',
             ),
         );
     }
