@@ -324,7 +324,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         }
 
         $portalManager = $this->getMockForAbstractClass(
-            '\Sulu\Component\Webspace\Analyzer\RequestAnalyzer',
+            '\Sulu\Component\Webspace\Analyzer\WebsiteRequestAnalyzer',
             array(),
             '',
             false,
