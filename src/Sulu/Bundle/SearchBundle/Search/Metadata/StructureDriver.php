@@ -1,4 +1,12 @@
 <?php
+/*
+ * This file is part of the Sulu CMS.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace Sulu\Bundle\SearchBundle\Search\Metadata;
 
@@ -54,16 +62,16 @@ class StructureDriver implements DriverInterface
         foreach ($structure->getProperties(true) as $property) {
             if ($property->hasTag('sulu.search.field')) {
                 $tag = $property->getTag('sulu.search.field');
-                $tagAttrs = $tag->getAttributes();
+                $tagAttributes = $tag->getAttributes();
 
-                if ((isset($tagAttrs['index']) && $tagAttrs['index'] !== 'false') || !isset($tagAttrs['index'])) {
+                if (!isset($tagAttributes['index']) || $tagAttributes['index'] !== 'false') {
                     $indexMeta->addFieldMapping($property->getName(), array(
-                        'type' => isset($tagAttrs['type']) ? $tagAttrs['type'] : 'string',
+                        'type' => isset($tagAttributes['type']) ? $tagAttributes['type'] : 'string',
                     ));
                 }
 
-                if (isset($tagAttrs['role'])) {
-                    switch ($tagAttrs['role']) {
+                if (isset($tagAttributes['role'])) {
+                    switch ($tagAttributes['role']) {
                         case 'title':
                             $indexMeta->setTitleField($property->getName());
                             break;
@@ -76,7 +84,7 @@ class StructureDriver implements DriverInterface
                         default:
                             throw new \InvalidArgumentException(sprintf(
                                 'Unknown search field role "%s", role must be one of "%s"',
-                                $tagAttrs['role'], implode(', ', array('title', 'description', 'image'))
+                                $tagAttributes['role'], implode(', ', array('title', 'description', 'image'))
                             ));
                     }
                 }

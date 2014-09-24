@@ -83,7 +83,7 @@ Likewise, searching is exactly the same as with the massive search bundle:
 
 // we get a structure from somewhere..
 $searchManager = $container->get('massive_search.search_manager');
-$searchManager->createSearch('This is a search string')->locale('de')->index('content')->go();
+$searchManager->createSearch('This is a search string')->locale('de')->index('content')->execute();
 ````
 
 ### Search from the command line

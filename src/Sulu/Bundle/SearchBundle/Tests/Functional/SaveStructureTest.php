@@ -1,4 +1,12 @@
 <?php
+/*
+ * This file is part of the Sulu CMS.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace Sulu\Bundle\SearchBundle\Tests\Functional;
 
@@ -28,7 +36,7 @@ class SaveStructureTest extends BaseTestCase
         $this->indexStructure('About Us', '/about-us');
 
         $searchManager = $this->getSearchManager();
-        $res = $searchManager->createSearch('About*')->locale('de')->index('content')->go();
+        $res = $searchManager->createSearch('About*')->locale('de')->index('content')->execute();
         $this->assertCount(1, $res);
         $hit = $res[0];
         $document = $hit->getDocument();
@@ -63,13 +71,13 @@ class SaveStructureTest extends BaseTestCase
 
         $searchManager->index($structure);
 
-        $res = $searchManager->createSearch('Giraffe')->locale('de')->index('content')->go();
+        $res = $searchManager->createSearch('Giraffe')->locale('de')->index('content')->execute();
         $this->assertCount(1, $res); 
 
         $structure->getProperty('title')->setValue('Pen and Paper');
         $searchManager->index($structure);
 
-        // $res = $searchManager->createSearch('Pen')->locale('de')->index('content')->go();
+        // $res = $searchManager->createSearch('Pen')->locale('de')->index('content')->execute();
         // $this->assertCount(1, $res); 
     }
 }
