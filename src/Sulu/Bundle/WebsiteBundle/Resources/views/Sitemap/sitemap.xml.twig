@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 {% for site in sitemap %}
-{% set url = sitemap_url(site.url, webspaceKey, site.locale) %}
+{% set url = sitemap_url(site.url, site.locale) %}
 {% if url != false %}
     <url>
         <loc>{{ url }}</loc>

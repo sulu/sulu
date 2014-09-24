@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\WebsiteBundle\DataCollector;
 
+use Sulu\Component\Content\StructureInterface;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -61,7 +62,30 @@ class SuluCollector extends DataCollector
         if ($request->attributes->has('_route_params')) {
             $params = $request->attributes->get('_route_params');
             if (isset($params['structure'])) {
-                $structure = $params['structure']->toArray();
+                /** @var StructureInterface $structureObject */
+                $structureObject = $params['structure'];
+
+                $structure = array(
+                    'id' => $structureObject->getUuid(),
+                    'path' => $structureObject->getPath(),
+                    'nodeType' => $structureObject->getNodeType(),
+                    'internal' => $structureObject->getInternal(),
+                    'nodeState' => $structureObject->getNodeState(),
+                    'published' => $structureObject->getPublished(),
+                    'publishedState' => $structureObject->getPublishedState(),
+                    'navContexts' => $structureObject->getNavContexts(),
+                    'enabledShadowLanguages' => $structureObject->getEnabledShadowLanguages(),
+                    'concreteLanguages' => $structureObject->getConcreteLanguages(),
+                    'shadowOn' => $structureObject->getIsShadow(),
+                    'shadowBaseLanguage' => $structureObject->getShadowBaseLanguage(),
+                    'template' => $structureObject->getKey(),
+                    'originTemplate' => $structureObject->getOriginTemplate(),
+                    'hasSub' => $structureObject->getHasChildren(),
+                    'creator' => $structureObject->getCreator(),
+                    'changer' => $structureObject->getChanger(),
+                    'created' => $structureObject->getCreated(),
+                    'changed' => $structureObject->getChanged()
+                );
             }
         }
         $this->data['structure'] = $structure;
