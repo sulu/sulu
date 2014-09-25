@@ -1725,7 +1725,7 @@ class ContentMapper implements ContentMapperInterface
             $structure = $this->structureManager->getStructure($templateKey);
 
             // generate field data
-            $fieldsData = $this->getFieldsData($row, $fields, $templateKey, $webspaceKey, $locale);
+            $fieldsData = $this->getFieldsData($row, $node, $fields, $templateKey, $webspaceKey, $locale);
 
             return array_merge(
                 array(
@@ -1737,7 +1737,7 @@ class ContentMapper implements ContentMapperInterface
                     'created' => $created,
                     'creator' => $creator,
                     'title' => $this->getTitle($node, $structure, $webspaceKey, $locale),
-                    'url' => $this->getUrl($path, $row, $structure, $webspaceKey, $locale, $routesPath),
+                    'url' => $this->getUrl($path, $row, $node, $structure, $webspaceKey, $locale, $routesPath),
                     'locale' => $locale,
                     'template' => $templateKey
                 ),
@@ -1748,7 +1748,7 @@ class ContentMapper implements ContentMapperInterface
         return false;
     }
 
-    private function getFieldsData(Row $row, $fields, $templateKey, $webspaceKey, $locale)
+    private function getFieldsData(Row $row, NodeInterface $node, $fields, $templateKey, $webspaceKey, $locale)
     {
         $fieldsData = array();
         foreach ($fields[$locale] as $field) {
@@ -1766,7 +1766,7 @@ class ContentMapper implements ContentMapperInterface
             if (!isset($target[$field['name']])) {
                 $target[$field['name']] = '';
             }
-            if (($data = $this->getFieldData($field, $row, $templateKey, $webspaceKey, $locale)) !== null) {
+            if (($data = $this->getFieldData($field, $row, $node, $templateKey, $webspaceKey, $locale)) !== null) {
                 $target[$field['name']] = $data;
             }
         }
@@ -1774,18 +1774,18 @@ class ContentMapper implements ContentMapperInterface
         return $fieldsData;
     }
 
-    private function getFieldData($field, Row $row, $templateKey, $webspaceKey, $locale)
+    private function getFieldData($field, Row $row, NodeInterface $node, $templateKey, $webspaceKey, $locale)
     {
         if (!isset($field['property'])) {
             // normal data from node property
             return $row->getValue($field['column']);
         } elseif (!isset($field['extension']) && (!isset($field['templateKey']) || $field['templateKey'] === $templateKey)) {
             // not extension data but property of node
-            return $this->getPropertyData($row->getNode('page'), $field['property'], $webspaceKey, $locale);
+            return $this->getPropertyData($node, $field['property'], $webspaceKey, $locale);
         } elseif (isset($field['extension'])) {
             // data from extension
             return $this->getExtensionData(
-                $row->getNode('page'),
+                $node,
                 $field['extension'],
                 $field['property'],
                 $webspaceKey,
@@ -1875,7 +1875,7 @@ class ContentMapper implements ContentMapperInterface
     /**
      * Returns url of a row
      */
-    private function getUrl($path, Row $row, StructureInterface $structure, $webspaceKey, $locale, $routesPath)
+    private function getUrl($path, Row $row, NodeInterface $node, StructureInterface $structure, $webspaceKey, $locale, $routesPath)
     {
         $url = '';
         // if homepage
@@ -1886,7 +1886,7 @@ class ContentMapper implements ContentMapperInterface
                 $property = $structure->getPropertyByTagName('sulu.rlp');
 
                 if ($property->getContentTypeName() !== 'resource_locator') {
-                    $url = $this->getPropertyData($row->getNode('page'), $property, $webspaceKey, $locale);
+                    $url = $this->getPropertyData($node, $property, $webspaceKey, $locale);
                 }
             }
 
