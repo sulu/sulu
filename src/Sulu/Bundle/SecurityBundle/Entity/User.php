@@ -106,6 +106,11 @@ class User extends ApiEntity implements UserInterface, Serializable
     private $lastLogin;
 
     /**
+     * @var string
+     */
+    private $confirmationKey;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -507,5 +512,28 @@ class User extends ApiEntity implements UserInterface, Serializable
     public function getLastLogin()
     {
         return $this->lastLogin;
+    }
+
+    /**
+     * Set confirmationKey
+     *
+     * @param string $confirmationKey
+     * @return User
+     */
+    public function setConfirmationKey($confirmationKey)
+    {
+        $this->confirmationKey = $confirmationKey;
+    
+        return $this;
+    }
+
+    /**
+     * Get confirmationKey
+     *
+     * @return string 
+     */
+    public function getConfirmationKey()
+    {
+        return $this->confirmationKey;
     }
 }
