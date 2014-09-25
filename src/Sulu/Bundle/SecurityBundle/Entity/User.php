@@ -93,12 +93,12 @@ class User extends ApiEntity implements UserInterface, Serializable
     /**
      * @var boolean
      */
-    private $locked;
+    private $locked = false;
 
     /**
      * @var boolean
      */
-    private $enabled;
+    private $enabled = true;
 
     /**
      * @var \DateTime
