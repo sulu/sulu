@@ -33,9 +33,14 @@ abstract class WebsiteController extends Controller
         $partial = false
     ) {
         // extract format twig file
-        $request = $this->getRequest();
-        $viewTemplate = $structure->getView() . '.' . $request->getRequestFormat() . '.twig';
+        if (!$preview) {
+            $request = $this->getRequest();
+            $requestFormat = $request->getRequestFormat();
+        } else {
+            $requestFormat = 'html';
+        }
 
+        $viewTemplate = $structure->getView() . '.' . $requestFormat . '.twig';
         // get attributes to render template
         $data = $this->getAttributes($attributes, $structure, $preview);
 
