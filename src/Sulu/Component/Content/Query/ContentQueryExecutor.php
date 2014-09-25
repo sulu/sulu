@@ -78,7 +78,7 @@ class ContentQueryExecutor implements ContentQueryExecutorInterface
 
         if ($this->stopwatch) {
             $this->stopwatch->stop('ContentQuery::execute.execute-query');
-            $this->stopwatch->start('ContentQuery::execute.preload-nodes');
+            $this->stopwatch->start('ContentQuery::execute.preload-nodes.get-paths');
         }
 
         // this preloads all node which should are selected in the statement before
@@ -94,10 +94,16 @@ class ContentQueryExecutor implements ContentQueryExecutorInterface
             }
         }
 
+
+        if ($this->stopwatch) {
+            $this->stopwatch->stop('ContentQuery::execute.preload-nodes.get-paths');
+            $this->stopwatch->start('ContentQuery::execute.preload-nodes.execute');
+        }
+
         $this->sessionManager->getSession()->getNodes($paths);
 
         if ($this->stopwatch) {
-            $this->stopwatch->stop('ContentQuery::execute.preload-nodes');
+            $this->stopwatch->stop('ContentQuery::execute.preload-nodes.execute');
             $this->stopwatch->start('ContentQuery::execute.rowsToList');
         }
 
