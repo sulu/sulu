@@ -12,8 +12,16 @@
         <field name="password" type="string" column="password" length="128"/>
         <field name="locale" type="string" column="locale" length="60"/>
         <field name="salt" type="string" column="salt" length="60"/>
-        <field name="locked" column="locked" type="boolean" />
-        <field name="enabled" column="enabled" type="boolean" />
+        <field name="locked" column="locked" type="boolean">
+            <options>
+                <option name="default">0</option>
+            </options>
+        </field>
+        <field name="enabled" column="enabled" type="boolean">
+            <options>
+                <option name="default">1</option>
+            </options>
+        </field>
         <field name="lastLogin" column="lastLogin" type="datetime" nullable="true" />
         <field name="privateKey" type="string" column="privateKey" length="2000" nullable="true"/>
         <field name="apiKey" type="guid" column="apiKey" length="128" nullable="true"/>
