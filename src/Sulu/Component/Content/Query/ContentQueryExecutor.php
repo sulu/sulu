@@ -83,10 +83,15 @@ class ContentQueryExecutor implements ContentQueryExecutorInterface
 
         // this preloads all node which should are selected in the statement before
         // prevent the system to load each node individual
+        $rootDepth = substr_count($this->sessionManager->getContentNode($webspaceKey)->getPath(), '/');
         $uuids = array();
         /** @var Row $row */
         foreach ($queryResult as $row) {
-            $uuids[] = $row->getValue('page.jcr:uuid');
+            $pageDepth = substr_count($row->getPath('page'), '/') - $rootDepth;
+
+            if ($depth === null || $depth < 0 || ($depth > 0 && $pageDepth <= $depth)) {
+                $uuids[] = $row->getValue('page.jcr:uuid');
+            }
         }
 
         $this->sessionManager->getSession()->getNodesByIdentifier($uuids);
