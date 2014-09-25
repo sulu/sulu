@@ -12,7 +12,6 @@ namespace Sulu\Bundle\ContactBundle\Api;
 
 use Sulu\Bundle\ContactBundle\Entity\Account as AccountEntity;
 use Doctrine\Entity;
-use Sulu\Bundle\ContactBundle\Entity\AccountAddress as AccountAddressEntity;
 use Sulu\Bundle\ContactBundle\Entity\AccountCategory as AccountCategoryEntity;
 use Sulu\Bundle\ContactBundle\Entity\AccountContact as AccountContactEntity;
 use Sulu\Bundle\ContactBundle\Entity\Activity as ActivityEntity;
@@ -22,7 +21,7 @@ use Sulu\Bundle\ContactBundle\Entity\ActivityType as ActivityTypeEntity;
 use Sulu\Bundle\ContactBundle\Entity\AddressType as AddressTypeEntity;
 use Sulu\Bundle\ContactBundle\Entity\BankAccount as BankAccountEntity;
 use Sulu\Bundle\ContactBundle\Entity\Contact as ContactEntity;
-use Sulu\Bundle\ContactBundle\Entity\ContactAddress as ContactAddressEntity;
+use Sulu\Bundle\ContactBundle\Entity\AccountAddress as AccountAddressEntity;
 use Sulu\Bundle\ContactBundle\Entity\Country;
 use Sulu\Bundle\ContactBundle\Entity\Email as EmailEntity;
 use Sulu\Bundle\ContactBundle\Entity\Fax as FaxEntity;
@@ -45,23 +44,21 @@ use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Groups;
 
 /**
- * The ContactAddress class which will be exported to the API
+ * The AccountAddress class which will be exported to the API
  *
  * @package Sulu\Bundle\ContactBundle\Api
  * @ExclusionPolicy("all")
  */
-class ContactAddress extends ApiWrapper
+class AccountAddress extends ApiWrapper
 {
     /**
      */
-    public function __construct(ContactAddressEntity $address)
+    public function __construct(AccountAddressEntity $address)
     {
         $this->entity = $address;
     }
 
     /**
-     * Returns the id of the product
-     *
      * @return int
      * @VirtualProperty
      * @SerializedName("id")
@@ -76,7 +73,7 @@ class ContactAddress extends ApiWrapper
      * Set main
      *
      * @param boolean $main
-     * @return ContactAddress
+     * @return AccountAddress
      */
     public function setMain($main)
     {
@@ -102,7 +99,7 @@ class ContactAddress extends ApiWrapper
      * Set address
      *
      * @param AddressEntity $address
-     * @return ContactAddress
+     * @return AccountAddress
      */
     public function setAddress(AddressEntity $address)
     {
