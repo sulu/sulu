@@ -1707,9 +1707,9 @@ class ContentMapper implements ContentMapperInterface
         $this->properties->setLanguage($locale);
 
         // load default data
-        $uuid = $row->getValue('page.jcr:uuid');
+        $uuid = $node->getIdentifier();
 
-        if($node->hasProperty($this->properties->getName('template'))){
+        if ($node->hasProperty($this->properties->getName('template'))) {
             $templateKey = $node->getPropertyValue($this->properties->getName('template'));
             $nodeType = $node->getPropertyValue($this->properties->getName('nodeType'));
 
@@ -1736,7 +1736,7 @@ class ContentMapper implements ContentMapperInterface
                     'changer' => $changer,
                     'created' => $created,
                     'creator' => $creator,
-                    'title' => $this->getTitle($row, $structure, $locale),
+                    'title' => $this->getTitle($node, $structure, $webspaceKey, $locale),
                     'url' => $this->getUrl($path, $row, $structure, $webspaceKey, $locale, $routesPath),
                     'locale' => $locale,
                     'template' => $templateKey
@@ -1867,15 +1867,9 @@ class ContentMapper implements ContentMapperInterface
     /**
      * Returns title of a row
      */
-    private function getTitle(Row $row, StructureInterface $structure, $locale)
+    private function getTitle(NodeInterface $node, StructureInterface $structure, $webspaceKey, $locale)
     {
-        $property = new TranslatedProperty(
-            $structure->getPropertyByTagName('sulu.node.name'),
-            $locale,
-            $this->languageNamespace
-        );
-
-        return $row->getValue('page.' . $property->getName());
+        return $this->getPropertyData($node, $structure->getPropertyByTagName('sulu.node.name'), $webspaceKey, $locale);
     }
 
     /**
@@ -1892,12 +1886,7 @@ class ContentMapper implements ContentMapperInterface
                 $property = $structure->getPropertyByTagName('sulu.rlp');
 
                 if ($property->getContentTypeName() !== 'resource_locator') {
-                    $property = new TranslatedProperty(
-                        $structure->getPropertyByTagName('sulu.rlp'),
-                        $locale,
-                        $this->languageNamespace
-                    );
-                    $url = $row->getValue('page.' . $property->getName());
+                    $url = $this->getPropertyData($row->getNode('page'), $property, $webspaceKey, $locale);
                 }
             }
 
