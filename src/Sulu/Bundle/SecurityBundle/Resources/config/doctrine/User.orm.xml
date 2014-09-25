@@ -14,12 +14,12 @@
         <field name="salt" type="string" column="salt" length="60"/>
         <field name="locked" column="locked" type="boolean">
             <options>
-                <option name="default">0</option>
+                <option name="default">false</option>
             </options>
         </field>
         <field name="enabled" column="enabled" type="boolean">
             <options>
-                <option name="default">1</option>
+                <option name="default">true</option>
             </options>
         </field>
         <field name="lastLogin" column="lastLogin" type="datetime" nullable="true" />
