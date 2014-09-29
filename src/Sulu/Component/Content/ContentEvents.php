@@ -13,15 +13,26 @@ namespace Sulu\Component\Content;
 final class ContentEvents
 {
     /**
-     * The sulu.content.node.save event is thrown when a Node is saved.
-     * The event listener receives a ContentNodeEvent instance.
+     * Thrown after a structure node is persisted in the PHPCR session.
      * @var string
      */
     const NODE_SAVE = 'sulu.content.node.save';
 
     /**
-     * The sulu.content.node.load event is thrown when a Node is loaded.
-     * The event listener receives a ContentNodeEvent instance.
+     * Thrown before a structure node is persisted in the PHPCR session.
+     * @var string
+     */
+    const NODE_PRE_SAVE = 'sulu.content.node.pre_save';
+
+    /**
+     * Thrown before a structure before the session save after a content move
+     * operation.
+     * @var string
+     */
+    const NODE_ORDER_BEFORE = 'sulu.content.node.order_before';
+
+    /**
+     * Thrown before Node is loaded.
      * @var string
      */
     const NODE_LOAD = 'sulu.content.node.load';

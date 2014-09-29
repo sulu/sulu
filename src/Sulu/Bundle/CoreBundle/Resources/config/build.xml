@@ -7,6 +7,7 @@
        <parameter key="sulu.core.build.builder.database.class">Sulu\Bundle\CoreBundle\Build\DatabaseBuilder</parameter>
        <parameter key="sulu.core.build.builder.phpcr.class">Sulu\Bundle\CoreBundle\Build\PhpcrBuilder</parameter>
        <parameter key="sulu.core.build.builder.fixtures.class">Sulu\Bundle\CoreBundle\Build\FixturesBuilder</parameter>
+       <parameter key="sulu.core.build.builder.node_order.class">Sulu\Bundle\CoreBundle\Build\NodeOrderBuilder</parameter>
    </parameters>
 
     <services>
@@ -20,6 +21,12 @@
         </service>
 
         <service id="sulu.core.build.builder.fixtures" class="%sulu.core.build.builder.fixtures.class%">
+            <tag name="massive_build.builder" />
+        </service>
+
+        <service id="sulu.core.build.builder.node_order" class="%sulu.core.build.builder.node_order.class%">
+            <argument type="service" id="sulu.phpcr.session"/>
+            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <tag name="massive_build.builder" />
         </service>
 

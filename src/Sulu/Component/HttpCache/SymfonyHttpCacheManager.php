@@ -11,6 +11,7 @@
 namespace Sulu\Component\HttpCache;
 
 use FOS\HttpCache\CacheInvalidator;
+use FOS\HttpCache\Exception\ExceptionCollection;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Sulu\Component\Content\StructureInterface;
@@ -79,7 +80,16 @@ class SymfonyHttpCacheManager implements HttpCacheManagerInterface
 
     private function flush()
     {
-        $this->getCacheInvalidator()->flush();
+        try {
+            $this->getCacheInvalidator()->flush();
+        } catch (ExceptionCollection $exceptions) {
+            // Log exception, but prevent bubbling up.
+            // It would only confuse the end user.
+            foreach ($exceptions as $exception) {
+                /** @var \Exception $exception */
+                $this->logger->info($exception->getMessage());
+            }
+        }
     }
 
     /**

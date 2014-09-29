@@ -45,6 +45,12 @@ interface BlockPropertyInterface extends PropertyInterface
     public function getProperties($index);
 
     /**
+     * Returns sizeof block
+     * @return int
+     */
+    public function getLength();
+
+    /**
      * initiate new child with given type name
      * @param integer $index
      * @param string $typeName

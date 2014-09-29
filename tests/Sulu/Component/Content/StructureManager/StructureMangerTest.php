@@ -60,7 +60,8 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
             $cacheDir . '/Template_Structure_template.php',
             $cacheDir . '/Template_blockStructureCache.php',
             $cacheDir . '/Template_block_typesStructureCache.php',
-            $cacheDir . '/Template_SectionsStructureCache.php'
+            $cacheDir . '/Template_SectionsStructureCache.php',
+            $cacheDir . '/Template_nesting_paramsStructureCache.php'
         );
 
         if (!is_dir($cacheDir)) {
@@ -572,6 +573,20 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
 
         $extensions = array_values($this->structureManager->getExtensions('template_sections'));
         $this->assertEquals('test1', $extensions[0]->getName());
+    }
+
+    public function testNestedParams()
+    {
+        $structure = $this->structureManager->getStructure('template_nesting_params');
+
+        $this->assertEquals(
+            array(
+                'minLinks' => 1,
+                'maxLinks' => 10,
+                'test' => array('t1' => 'v1', 't2' => 'v2', 't3' => 'v3', 't4' => 'v4')
+            ),
+            $structure->getProperty('title')->getParams()
+        );
     }
 }
 

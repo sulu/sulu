@@ -968,7 +968,7 @@ abstract class Structure implements StructureInterface
                 'enabledShadowLanguages' => $this->getEnabledShadowLanguages(),
                 'concreteLanguages' => $this->getConcreteLanguages(),
                 'shadowOn' => $this->getIsShadow(),
-                'shadowBaseLanguage' => $this->getShadowBaseLanguage(),
+                'shadowBaseLanguage' => $this->getShadowBaseLanguage() ? : false,
                 'template' => $this->getKey(),
                 'originTemplate' => $this->getOriginTemplate(),
                 'hasSub' => $this->hasChildren,

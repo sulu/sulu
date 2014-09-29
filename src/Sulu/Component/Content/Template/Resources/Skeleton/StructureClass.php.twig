@@ -85,11 +85,7 @@ new Property(
             {{ property.multilingual is same as(false) ? 'false' : 'true' }},
             {{ property.maxOccurs != null ? property.maxOccurs : 999 }},
             {{ property.minOccurs != null ? property.minOccurs : 1 }},
-            array(
-{% for param in property.params %}
-                '{{ param.name }}' => '{{ param.value }}',
-{% endfor %}
-            ),
+            {{ _self.renderParams(property.params) }},
             array(
 {% for tag in property.tags %}
                 '{{ tag.name }}' => {{ _self.propertyTag(tag) }},
@@ -136,3 +132,15 @@ new PropertyTag('{{ tag.name }}', {{ tag.priority is defined and tag.priority ? 
 {% endif %}
 {% endfor %}
             ){% endmacro %}
+
+{% macro renderParams(params) %}
+            array(
+{% for param in params %}
+{% if param.type == 'collection'  %}
+                '{{ param.name }}' => {{ _self.renderParams(param.value) }}
+{% elseif param.type == 'string'  %}
+                '{{ param.name }}' => '{{ param.value }}',
+{% endif %}
+{% endfor %}
+            )
+{% endmacro %}

@@ -310,7 +310,23 @@ class TemplateReader implements LoaderInterface
      */
     private function loadParam(\DOMXPath $xpath, \DOMNode $node)
     {
-        return $this->loadValues($xpath, $node, array('name', 'value'));
+        $name = $this->getValueFromXPath('@name', $xpath, $node, 'string');
+        $type = $this->getValueFromXPath('@type', $xpath, $node, 'string');
+
+        switch ($type) {
+            case 'collection':
+                $value = $this->loadParams('x:param', $xpath, $node);
+                break;
+            default:
+                $value = $this->getValueFromXPath('@value', $xpath, $node, 'string');
+                break;
+        }
+
+        return array(
+            'name' => $name,
+            'value' => $value,
+            'type' => $type
+        );
     }
 
     /**

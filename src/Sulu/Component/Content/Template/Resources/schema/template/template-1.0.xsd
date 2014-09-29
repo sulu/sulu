@@ -136,13 +136,20 @@
     </xs:complexType>
 
     <xs:complexType name="paramType">
-        <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="name" use="optional"/>
-                <xs:attribute type="xs:string" name="value" use="optional"/>
-            </xs:extension>
-        </xs:simpleContent>
+        <xs:choice maxOccurs="unbounded">
+            <xs:element name="param" type="paramType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:choice>
+        <xs:attribute name="type" type="paramTypeType" default="string"/>
+        <xs:attribute name="name" type="xs:string"/>
+        <xs:attribute name="value" type="xs:string"/>
     </xs:complexType>
+
+    <xs:simpleType name="paramTypeType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="collection"/>
+            <xs:enumeration value="string"/>
+        </xs:restriction>
+    </xs:simpleType>
 
     <xs:complexType name="indexType">
         <xs:simpleContent>
