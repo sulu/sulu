@@ -8,10 +8,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\SearchBundle\Tests\Resources\TestBundle;
+namespace Sulu\Bundle\SearchBundle\Search;
 
-use Symfony\Component\HttpKernel\Bundle\Bundle;
-
-class TestBundle extends Bundle
+class SuluSearchEvents
 {
+    const STRUCTURE_LOAD_METADATA = 'sulu_search.structure.load.metadata';
 }

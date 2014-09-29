@@ -1,4 +1,12 @@
 <?php
+/*
+ * This file is part of the Sulu CMS.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace Sulu\Bundle\SearchBundle\Tests\Functional;
 
@@ -24,7 +32,7 @@ class BaseTestCase extends SymfonyCmfBaseTestCase
 
     public function getSearchManager()
     {
-        $searchManager = $this->getContainer()->get('sulu_search.localized_search_manager');
+        $searchManager = $this->getContainer()->get('massive_search.search_manager');
         return $searchManager;
     }
 
@@ -34,13 +42,12 @@ class BaseTestCase extends SymfonyCmfBaseTestCase
             $structure = new DefaultStructureCache();
             $structure->setUuid($i);
             $structure->getProperty('title')->setValue('Structure Title ' . $i);
-            $structure->getProperty('title')->setIndexed(true);
 
             $structure->getProperty('url')->setValue('/');
-            $structure->getProperty('url')->setIndexed(false);
             $structure->setNodeState(StructureInterface::STATE_PUBLISHED);
+            $structure->setLanguageCode('de');
 
-            $this->getSearchManager()->index($structure, 'de', 'content');
+            $this->getSearchManager()->index($structure);
         }
     }
 
@@ -62,7 +69,7 @@ class BaseTestCase extends SymfonyCmfBaseTestCase
 
         /** @var ContentMapperInterface $mapper */
         $mapper = $this->getContainer()->get('sulu.content.mapper');
-        $mapper->save($data, 'overview', 'sulu_io', 'de', 1, true, null, null, Structure::STATE_PUBLISHED);
+        $mapper->save($data, 'default', 'sulu_io', 'de', 1, true, null, null, Structure::STATE_PUBLISHED);
     }
 }
 

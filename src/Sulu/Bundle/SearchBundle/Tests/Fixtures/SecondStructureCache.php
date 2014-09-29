@@ -17,9 +17,9 @@ use Sulu\Component\Content\PropertyTag;
 use Sulu\Component\Content\Section\SectionProperty;
 
 /**
- * DefaultStructureCache
+ * This structure cache has more search features than DefaultStructureCache
  */
-class DefaultStructureCache extends \Sulu\Component\Content\Structure
+class SecondStructureCache extends \Sulu\Component\Content\Structure
 {
     public function __construct()
     {
@@ -45,6 +45,7 @@ class DefaultStructureCache extends \Sulu\Component\Content\Structure
             array(
                 'sulu.node.name' => new PropertyTag('sulu.node.name', 1),
                 'sulu.rlp.part' => new PropertyTag('sulu.rlp.part', 1),
+                'sulu.search.field' => new PropertyTag('sulu.search.field', 1, array('type' => 'string', 'role' => 'title')),
             ),
             ''
         );
@@ -113,10 +114,7 @@ class DefaultStructureCache extends \Sulu\Component\Content\Structure
             1,
             1,
             array(
-            ),
-            array(
-            ),
-            ''
+            )
         );
         $this->addChild($prop1);
 
@@ -157,6 +155,7 @@ class DefaultStructureCache extends \Sulu\Component\Content\Structure
                 'godMode' => 'true',
             ),
             array(
+                'sulu.search.field' => new PropertyTag('sulu.search.field', 1, array('type' => 'string', 'role' => 'description')),
             ),
             ''
         );
