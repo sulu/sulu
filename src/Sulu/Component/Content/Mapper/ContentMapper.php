@@ -686,7 +686,7 @@ class ContentMapper implements ContentMapperInterface
             $oldState = $node->getPropertyValue($statePropertyName);
 
             if ($oldState === $state) {
-                // do nothing
+                $structure->setNodeState($state);
                 return;
             } elseif (
                 // from test to published
