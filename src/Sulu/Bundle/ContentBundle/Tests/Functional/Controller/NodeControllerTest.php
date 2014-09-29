@@ -391,7 +391,7 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent(), true);
 
-        $this->assertEquals(25, sizeof($response));
+        $this->assertEquals(26, sizeof($response));
         $this->assertEquals($data[0]['title'], $response['title']);
         $this->assertEquals($data[0]['path'], $response['path']);
         $this->assertEquals($data[0]['tags'], $response['tags']);
@@ -1117,6 +1117,8 @@ class NodeControllerTest extends DatabaseTestCase
         unset($data[0]['tags']);
         unset($response['ext']);
         unset($response['tags']);
+
+        $data[0]['shadowBaseLanguage'] = null;
 
         $this->assertEquals($data[0], $response);
     }
