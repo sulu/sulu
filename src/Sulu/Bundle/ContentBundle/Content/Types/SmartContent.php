@@ -202,10 +202,12 @@ class SmartContent extends ComplexContentType
         );
 
         $data = $property->getValue()->getData();
+        $request = $this->requestStack->getCurrentRequest();
 
-        $page = $this->requestStack->getCurrentRequest()->get($params['page_parameter'], 1);
-
-        $data = array_slice($data, ($page - 1) * $params['max_per_page'], $params['max_per_page']);
+        if($request) {
+            $page =$request->get($params['page_parameter'], 1);
+            $data = array_slice($data, ($page - 1) * $params['max_per_page'], $params['max_per_page']);
+        }
 
         return $data;
     }
