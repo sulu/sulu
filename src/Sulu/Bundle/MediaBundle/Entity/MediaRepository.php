@@ -91,6 +91,11 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
                 isset($filter['types']) ? $filter['types'] : null,
             );
 
+            // if empty array of ids is requested return empty array of medias
+            if ($ids !== null && sizeof($ids) === 0) {
+                return array();
+            }
+
             $qb = $this->createQueryBuilder('media')
                 ->leftJoin('media.type', 'type')
                 ->leftJoin('media.collection', 'collection')
@@ -113,12 +118,12 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
                 ->addSelect('fileVersion')
                 ->addSelect('fileVersionMeta')
                 ->addSelect('fileVersionContentLanguage')
-                ->addSelect('fileVersionPublishLanguage')
-                /*
+                ->addSelect('fileVersionPublishLanguage')/*
                 ->addSelect('creator')
                 ->addSelect('changer')
                 ->addSelect('creatorContact')
-                ->addSelect('changerContact')*/;
+                ->addSelect('changerContact')*/
+            ;
 
             if ($ids !== null) {
                 $qb->andWhere('media.id IN (:mediaIds)');
