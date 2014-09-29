@@ -57,7 +57,6 @@
                 <environment type="phpcr">
                     <urls>
                         <url>sulu.lo/{localization}</url>
-                        <url language="en" country="us">localhost</url>
                     </urls>
                 </environment>
             </environments>
