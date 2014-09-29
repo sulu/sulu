@@ -33443,6 +33443,7 @@ define('__component__$toolbar@husky',[],function() {
                     this.items[button].initialized.then(function () {
                         var index = getItemIndexById.call(this, id, this.items[button]);
                         changeMainListItem.call(this, this.items[button].$el, this.items[button].items[index]);
+                        this.sandbox.emit(ITEM_MARK.call(this), this.items[button].items[index].id);
                         if (executeCallback === true || !!this.items[button].items[index].callback) {
                             if (typeof this.items[button].items[index].callback === 'function') {
                                 this.items[button].items[index].callback();

@@ -396,6 +396,7 @@ define([], function () {
                         titleAttribute: 'name',
                         idAttribute: 'localization',
                         translate: false,
+                        markable: true,
                         callback: callback
                     }
                 });
@@ -419,6 +420,7 @@ define([], function () {
                     title: this.options.toolbarLanguageChanger.preSelected || this.sandbox.sulu.user.locale,
                     items: items,
                     itemsOption: {
+                        markable: true,
                         callback: function (item) {
                             this.sandbox.emit(LANGUAGE_CHANGED.call(this), item.locale);
                         }.bind(this)
