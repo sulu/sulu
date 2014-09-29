@@ -29,7 +29,7 @@ class {{ cache_class }} extends {{ base_class }}
 {% endfor %}
 
     {% for tag in content.tags %}
-        $this->addStructureTag(new StructureTag('{{ tag.name }}', {{ _self.renderArray(tag.attrs) }}));
+        $this->addStructureTag(new StructureTag('{{ tag.name }}', {{ _self.renderArray(tag.attributes) }}));
     {% endfor %}
     }
 }
@@ -123,7 +123,7 @@ new BlockProperty(
         );{% endmacro %}
 
 {% macro propertyTag(tag) %}
-new PropertyTag('{{ tag.name }}', {{ tag.priority is defined and tag.priority ? tag.priority : '1' }}, array({% for attrName, attrValue in tag.attrs %}'{{ attrName }}' => '{{ attrValue }}'{% if not loop.last %},{% endif %}{% endfor %}))
+new PropertyTag('{{ tag.name }}', {{ tag.priority is defined and tag.priority ? tag.priority : '1' }}, array({% for attrName, attrValue in tag.attributes %}'{{ attrName }}' => '{{ attrValue }}'{% if not loop.last %},{% endif %}{% endfor %}))
 {% endmacro %}
 
 {% macro renderArray(array) %}

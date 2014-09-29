@@ -15,7 +15,6 @@ use Sulu\Component\Content\Template\TemplateReader;
 
 class TemplateReaderTest extends \PHPUnit_Framework_TestCase
 {
-
     public function testReadTemplate()
     {
         $template = array(
@@ -32,7 +31,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
             'tags' => array(
                 array(
                     'name' => 'some.random.structure.tag',
-                    'attrs' => array('foo' => 'bar', 'bar' => 'foo'
+                    'attributes' => array('foo' => 'bar', 'bar' => 'foo'
                 )),
             ),
 
@@ -50,17 +49,17 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                         array(
                             'name' => 'sulu.node.name',
                             'priority' => null,
-                            'attrs' => array(),
+                            'attributes' => array(),
                         ),
                         array(
                             'name' => 'sulu.node.title',
                             'priority' => 10,
-                            'attrs' => array(),
+                            'attributes' => array(),
                         ),
                         array(
                             'name' => 'some.random.tag',
                             'priority' => null,
-                            'attrs' => array(
+                            'attributes' => array(
                                 'one' => '1',
                                 'two' => '2',
                                 'three' => 'three',
@@ -96,7 +95,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                         array(
                             'name' => 'sulu.rlp.part',
                             'priority' => 1,
-                            'attrs' => array(),
+                            'attributes' => array(),
                         ),
                     ),
                     'params' => array(),
@@ -115,7 +114,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                         array(
                             'name' => 'sulu.node.title',
                             'priority' => 5,
-                            'attrs' => array(),
+                            'attributes' => array(),
                         )
                     ),
                     'params' => array(),
@@ -134,7 +133,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                         array(
                             'name' => 'sulu.node.title',
                             'priority' => null,
-                            'attrs' => array(),
+                            'attributes' => array(),
                         )
                     ),
                     'params' => array(),
@@ -248,12 +247,12 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                         array(
                             'name' => 'sulu.node.name',
                             'priority' => null,
-                            'attrs' => array(),
+                            'attributes' => array(),
                         ),
                         array(
                             'name' => 'sulu.node.title',
                             'priority' => 10,
-                            'attrs' => array(),
+                            'attributes' => array(),
                         )
                     ),
                     'params' => array(),
@@ -272,7 +271,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                         array(
                             'name' => 'sulu.rlp.part',
                             'priority' => 1,
-                            'attrs' => array(),
+                            'attributes' => array(),
                         )
                     ),
                     'params' => array(),
@@ -304,12 +303,12 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                         array(
                             'name' => 'sulu.node.block',
                             'priority' => 20,
-                            'attrs' => array(),
+                            'attributes' => array(),
                         ),
                         array(
                             'name' => 'sulu.test.block',
                             'priority' => 1,
-                            'attrs' => array(),
+                            'attributes' => array(),
                         )
                     ),
                     'params' => array(),
@@ -392,7 +391,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                                                         array(
                                                                             'name' => 'sulu.node.title',
                                                                             'priority' => 5,
-                                                                            'attrs' => array(),
+                                                                            'attributes' => array(),
                                                                         )
                                                                     ),
                                                                     'params' => array(),
@@ -515,18 +514,6 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(0, sizeof($x));
     }
 
-    public function testDuplicatedPriority()
-    {
-        $this->setExpectedException(
-            '\Sulu\Component\Content\Template\Exception\InvalidXmlException',
-            'The given XML is invalid! Priority 10 of tag sulu.node.title exists duplicated'
-        );
-        $templateReader = new TemplateReader();
-        $result = $templateReader->load(
-            __DIR__ . '/../../../Resources/DataFixtures/Template/template_duplicated_priority.xml'
-        );
-    }
-
     public function testBlockMultipleTypes()
     {
         $template = array(
@@ -548,12 +535,12 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                         array(
                             'name' => 'sulu.node.name',
                             'priority' => null,
-                            'attrs' => array(),
+                            'attributes' => array(),
                         ),
                         array(
                             'name' => 'sulu.node.title',
                             'priority' => 10,
-                            'attrs' => array(),
+                            'attributes' => array(),
                         )
                     ),
                     'params' => array(),
@@ -572,7 +559,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                         array(
                             'name' => 'sulu.rlp.part',
                             'priority' => 1,
-                            'attrs' => array(),
+                            'attributes' => array(),
                         )
                     ),
                     'params' => array(),
@@ -591,12 +578,12 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                         array(
                             'name' => 'sulu.node.block',
                             'priority' => 20,
-                            'attrs' => array(),
+                            'attributes' => array(),
                         ),
                         array(
                             'name' => 'sulu.test.block',
                             'priority' => 1,
-                            'attrs' => array(),
+                            'attributes' => array(),
                         )
                     ),
                     'params' => array(),
@@ -726,12 +713,12 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                         '0' => array(
                             'name' => 'sulu.node.name',
                             'priority' => null,
-                            'attrs' => array(),
+                            'attributes' => array(),
                         ),
                         '1' => array(
                             'name' => 'sulu.node.title',
                             'priority' => 10,
-                            'attrs' => array(),
+                            'attributes' => array(),
                         )
                     ),
                     'params' => array(),
@@ -781,7 +768,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                 (
                                     'name' => 'sulu.rlp.part',
                                     'priority' => 1,
-                                    'attrs' => array(),
+                                    'attributes' => array(),
                                 )
 
                             ),
@@ -802,7 +789,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                 (
                                     'name' => 'sulu.node.title',
                                     'priority' => 5,
-                                    'attrs' => array(),
+                                    'attributes' => array(),
                                 )
 
                             ),
@@ -868,7 +855,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                         '0' => array(
                             'name' => 'sulu.node.title',
                             'priority' => null,
-                            'attrs' => array(),
+                            'attributes' => array(),
                         )
                     ),
                     'params' => array(),

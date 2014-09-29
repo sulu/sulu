@@ -217,6 +217,13 @@ class TemplateReader implements LoaderInterface
         return $result;
     }
 
+    /**
+     * Loads the tags for the structure
+     * @param $path
+     * @param $xpath
+     * @return array
+     * @throws \InvalidArgumentException
+     */
     private function loadStructureTags($path, $xpath)
     {
         $result = array();
@@ -224,14 +231,14 @@ class TemplateReader implements LoaderInterface
         foreach ($xpath->query($path) as $node) {
             $tag = array(
                 'name' => null,
-                'attrs' => array(),
+                'attributes' => array(),
             );
 
             foreach ($node->attributes as $key => $attr) {
                 if (in_array($key, array('name'))) {
                     $tag[$key] = $attr->value;
                 } else {
-                    $tag['attrs'][$key] = $attr->value;
+                    $tag['attributes'][$key] = $attr->value;
                 }
             }
 
@@ -269,14 +276,14 @@ class TemplateReader implements LoaderInterface
         $tag = array(
             'name' => null,
             'priority' => null,
-            'attrs' => array(),
+            'attributes' => array(),
         );
 
         foreach ($node->attributes as $key => $attr) {
             if (in_array($key, array('name', 'priority'))) {
                 $tag[$key] = $attr->value;
             } else {
-                $tag['attrs'][$key] = $attr->value;
+                $tag['attributes'][$key] = $attr->value;
             }
         }
 
