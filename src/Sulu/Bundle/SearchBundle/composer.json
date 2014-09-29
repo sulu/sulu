@@ -9,7 +9,7 @@
         }
     ],
     "require": {
-        "massive/search-bundle": "dev-master",
+        "massive/search-bundle": "dev-develop",
         "sulu/sulu": "dev-develop"
     },
     "require-dev": {
