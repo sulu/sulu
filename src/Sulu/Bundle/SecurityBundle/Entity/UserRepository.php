@@ -156,15 +156,15 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
             /** @var User $user */
             $user = $query->getSingleResult();
             foreach ($user->getUserRoles() as $ur) {
+                if (!$user->getEnabled()) {
+                    throw new DisabledException();
+                }
+
+                if ($user->getLocked()) {
+                    throw new LockedException();
+                }
                 /** @var UserRole $ur */
                 if ($ur->getRole()->getSystem() == $this->getSystem()) {
-                    if (!$user->getEnabled()) {
-                        throw new DisabledException();
-                    }
-
-                    if ($user->getLocked()) {
-                        throw new LockedException();
-                    }
                     return $user;
                 }
             }
