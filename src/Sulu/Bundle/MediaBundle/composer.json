@@ -37,7 +37,7 @@
         "phpunit/phpunit": "4.0.*",
         "sulu/test-bundle": "dev-develop",
 
-        "sulu/search-bundle": "dev-feature/structure-metadata-load@dev",
+        "sulu/search-bundle": "dev-develop",
         "massive/search-bundle": "dev-develop"
     },
     "autoload": {
