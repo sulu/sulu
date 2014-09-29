@@ -134,7 +134,13 @@ new BlockProperty(
 {% if param.type == 'collection'  %}
                 '{{ param.name }}' => {{ _self.renderParams(param.value) }}
 {% elseif param.type == 'string'  %}
+{% if param.value == 'true' %}
+                '{{ param.name }}' => {{ param.value }},
+{% elseif param.value == 'false' %}
+                '{{ param.name }}' => {{ param.value }},
+{% else %}
                 '{{ param.name }}' => '{{ param.value }}',
+{% endif %}
 {% endif %}
 {% endfor %}
             )
