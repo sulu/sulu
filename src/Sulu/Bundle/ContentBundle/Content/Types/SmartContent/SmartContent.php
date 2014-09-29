@@ -197,7 +197,6 @@ class SmartContent extends ComplexContentType
     public function getDefaultParams()
     {
         $params = parent::getDefaultParams();
-        $params['max_per_page'] = 25;
         $params['page_parameter'] = 'p';
         $params['properties'] = array();
 
@@ -224,9 +223,11 @@ class SmartContent extends ComplexContentType
 
         $data = $property->getValue()->getData();
 
-        $page = $this->requestStack->getCurrentRequest()->get($params['page_parameter'], 1);
-
-        $data = array_slice($data, ($page - 1) * $params['max_per_page'], $params['max_per_page']);
+        // paginate
+        if (isset($params['max_per_page'])) {
+            $page = $this->requestStack->getCurrentRequest()->get($params['page_parameter'], 1);
+            $data = array_slice($data, ($page - 1) * $params['max_per_page'], $params['max_per_page']);
+        }
 
         return $data;
     }
