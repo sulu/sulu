@@ -923,13 +923,13 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'maxOccurs' => null,
                     'colspan' => null,
                     'cssClass' => null,
-                    'indexField' => false,
                     'mandatory' => true,
                     'multilingual' => true,
                     'tags' => array(
                         '0' => array(
                             'name' => 'sulu.node.name',
-                            'priority' => null
+                            'priority' => null,
+                            'attributes' => array()
                         )
                     ),
                     'params' => array(
@@ -946,7 +946,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                             'type' => 'collection'
                         )
                     ),
-                    'meta' => array()
+                    'meta' => array(),
                 )
             )
         );
