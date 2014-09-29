@@ -11,7 +11,6 @@
 namespace Sulu\Bundle\SearchBundle\Search\Metadata;
 
 use Massive\Bundle\SearchBundle\Search\Factory;
-use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadataInterface;
 use Metadata\Driver\AbstractFileDriver;
 use Metadata\Driver\DriverInterface;
@@ -26,7 +25,14 @@ use Sulu\Bundle\SearchBundle\Search\Event\StructureMetadataLoadEvent;
  */
 class StructureDriver implements DriverInterface
 {
+    /**
+     * @var Factory
+     */
     protected $factory;
+
+    /**
+     * @var EventDispatcherInterface
+     */
     protected $eventDispatcher;
 
     public function __construct(Factory $factory, EventDispatcherInterface $eventDispatcher)
@@ -38,6 +44,7 @@ class StructureDriver implements DriverInterface
     /**
      * loads metadata for a given class if its derived from StructureInterface
      * @param \ReflectionClass $class
+     * @throws \InvalidArgumentException
      * @return IndexMetadataInterface|null
      */
     public function loadMetadataForClass(\ReflectionClass $class)

@@ -20,7 +20,16 @@ use Symfony\Component\EventDispatcher\Event;
  */
 class StructureMetadataLoadEvent extends Event
 {
+    /**
+     * The structure, which has been loaded for indexing
+     * @var StructureInterface
+     */
     private $structure;
+
+    /**
+     * The metadata based on which the data has been loaded
+     * @var IndexMetadata
+     */
     private $indexMetadata;
 
     /**
