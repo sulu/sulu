@@ -38,7 +38,7 @@
         "sulu/test-bundle": "dev-develop",
 
         "sulu/search-bundle": "dev-feature/structure-metadata-load@dev",
-        "massive/search-bundle": "dev-master@dev"
+        "massive/search-bundle": "dev-develop"
     },
     "autoload": {
         "psr-0": {

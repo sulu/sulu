@@ -1,14 +1,18 @@
 <?php
+/*
+ * This file is part of the Sulu CMS.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace Sulu\Bundle\MediaBundle\Search;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Sulu\Bundle\SearchBundle\Search\SuluSearchEvents;
-use Sulu\Bundle\SearchBundle\Search\Event\StructureMetadataLoadEvent;
 use Massive\Bundle\SearchBundle\Search\SearchEvents;
-use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadataInterface;
 use Massive\Bundle\SearchBundle\Search\Event\PreIndexEvent;
-use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Content\StructureInterface;
@@ -21,17 +25,41 @@ use Sulu\Bundle\MediaBundle\Content\MediaSelectionContainer;
  */
 class MediaSearchSubscriber implements EventSubscriberInterface
 {
+    /**
+     * @var MediaManagerInterface
+     */
     protected $mediaManager;
+
+    /**
+     * @var RequestAnalyzerInterface
+     */
     protected $requestAnalyzer;
+
+    /**
+     * The format of the image, which will be returned in the search
+     * @var string
+     */
     protected $searchImageFormat;
 
-    public function __construct(MediaManagerInterface $mediaManager, RequestAnalyzerInterface $requestAnalyzer = null, $searchImageFormat)
-    {
+    /**
+     * @param MediaManagerInterface $mediaManager
+     * @param RequestAnalyzerInterface $requestAnalyzer
+     * @param $searchImageFormat
+     */
+    public function __construct(
+        MediaManagerInterface $mediaManager,
+        RequestAnalyzerInterface $requestAnalyzer = null,
+        $searchImageFormat
+    ) {
         $this->mediaManager = $mediaManager;
         $this->requestAnalyzer = $requestAnalyzer;
         $this->searchImageFormat = $searchImageFormat;
     }
 
+    /**
+     * Returns the events this subscriber has subscribed
+     * @return array
+     */
     public static function getSubscribedEvents()
     {
         return array(
@@ -39,6 +67,10 @@ class MediaSearchSubscriber implements EventSubscriberInterface
         );
     }
 
+    /**
+     * Adds the image to the search document
+     * @param PreIndexEvent $e
+     */
     public function handlePreIndex(PreIndexEvent $e)
     {
         $metadata = $e->getMetadata();
@@ -61,19 +93,30 @@ class MediaSearchSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $imageUrl = $this->getImageUrl($data, $metadata, $locale);
+        $imageUrl = $this->getImageUrl($data, $locale);
         $document->setImageUrl($imageUrl);
     }
 
-    private function getImageUrl($data, IndexMetadataInterface $metadata, $locale)
+    /**
+     * Returns the url for the image
+     * @param $data
+     * @param $locale
+     * @return null
+     * @throws \RuntimeException
+     * @throws \InvalidArgumentException
+     */
+    private function getImageUrl($data, $locale)
     {
         // new structures will container an instance of MediaSelectionContainer
         if ($data instanceof MediaSelectionContainer) {
             $medias = $data->getData('de');
-        // old ones an array ...
+            // old ones an array ...
         } else {
             if (!isset($data['ids'])) {
-                throw new \RuntimeException('Was expecting media value to contain array key "ids", got: "%s"', print_r($data, true));
+                throw new \RuntimeException(
+                    'Was expecting media value to contain array key "ids", got: "%s"',
+                    print_r($data, true)
+                );
             }
 
             $medias = array();
@@ -96,7 +139,9 @@ class MediaSearchSubscriber implements EventSubscriberInterface
         $formats = $media->getThumbnails();
 
         if (!isset($formats[$this->searchImageFormat])) {
-            throw new \InvalidArgumentException(sprintf('Search image format "%s" is not known', $this->searchImageFormat));
+            throw new \InvalidArgumentException(
+                sprintf('Search image format "%s" is not known', $this->searchImageFormat)
+            );
         }
 
         return $formats[$this->searchImageFormat];

@@ -32,7 +32,10 @@ class Configuration implements ConfigurationInterface
             ->arrayNode('search')
                 ->addDefaultsIfNotSet()
                 ->children()
-                    ->scalarNode('default_image_format')->defaultValue(SuluMediaExtension::DEFAULT_FORMAT_NAME)->end();
+                    ->scalarNode('default_image_format')->defaultValue(SuluMediaExtension::DEFAULT_FORMAT_NAME)
+                ->end()
+            ->end();
+
 
         // Here you should define the parameters that are allowed to
         // configure your bundle. See the documentation linked above for

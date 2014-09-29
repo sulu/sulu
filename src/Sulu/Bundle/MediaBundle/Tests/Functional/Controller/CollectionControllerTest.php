@@ -131,7 +131,6 @@ class CollectionControllerTest extends DatabaseTestCase
     public function testGetById()
     {
         $client = $this->createTestClient();
-        $container=$client->getContainer();
 
         $client->request(
             'GET',
