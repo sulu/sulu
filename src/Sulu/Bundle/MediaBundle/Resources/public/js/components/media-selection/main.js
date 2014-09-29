@@ -388,7 +388,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
             this.uploadCollection = collectionId;
             this.sandbox.emit(
                 'husky.dropzone.media-selection-'+ this.options.instanceName +'.change-url',
-                '/admin/api/media?collection%5Bid%5D=' + collectionId);
+                '/admin/api/media?collection=' + collectionId);
         },
 
         /**
