@@ -17,9 +17,6 @@
 
     <theme>
         <key>default</key>
-        <excluded>
-            <template>overview</template>
-        </excluded>
     </theme>
 
     <navigation>

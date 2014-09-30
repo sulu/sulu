@@ -114,6 +114,9 @@ class StructureDriver implements DriverInterface
             }
         }
 
+        // index the webspace
+        $indexMeta->addFieldMapping('webspaceKey', array('type' => 'string'));
+
         $this->eventDispatcher->dispatch(
             SuluSearchEvents::STRUCTURE_LOAD_METADATA, new StructureMetadataLoadEvent($structure, $indexMeta)
         );

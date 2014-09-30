@@ -39,20 +39,6 @@
             <tag name="sulu.rlp"/>
         </property>
 
-        <property name="links" type="internal_links">
-            <meta>
-                <title lang="de">Interne Links</title>
-                <title lang="en">Internal links</title>
-            </meta>
-        </property>
-
-        <property name="images" type="media_selection">
-            <meta>
-                <title lang="de">Bilder</title>
-                <title lang="en">Images</title>
-            </meta>
-        </property>
-
         <section name="content">
             <meta>
                 <title lang="de">Inhalt</title>
