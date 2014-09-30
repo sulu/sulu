@@ -969,7 +969,7 @@ define([], function() {
 
                     success: function(data) {
                         this.overlayData.title = data[this.options.titleKey];
-                        this.overlayData.path = data[this.options.pathKey];
+                        this.overlayData.path = data[this.options.pathKey] || '/';
                         this.items = data._embedded[this.options.resultKey];
                         this.sandbox.emit(DATA_RETRIEVED.call(this));
                     }.bind(this),
