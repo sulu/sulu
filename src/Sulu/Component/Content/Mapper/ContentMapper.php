@@ -200,7 +200,8 @@ class ContentMapper implements ContentMapperInterface
                 'nodeType',
                 'navContexts',
                 'shadow-on',
-                'shadow-base'
+                'shadow-base',
+                'internal_link'
             ),
             $this->languageNamespace,
             $this->internalPrefix
@@ -1703,6 +1704,14 @@ class ContentMapper implements ContentMapperInterface
 
         // check and determine shadow-nodes
         $node = $row->getNode('page');
+        if ($node->getPropertyValue($this->properties->getName('nodeType')) === Structure::NODE_TYPE_INTERNAL_LINK) {
+            $propertyName = $this->properties->getName('internal_link');
+            $uuid = $node->getPropertyValue($propertyName);
+            $node = $this->sessionManager->getSession()->getNodeByIdentifier($uuid);
+            $structure = $this->load($uuid, $webspaceKey, $locale);
+            $url = $structure->getResourceLocator();
+        }
+
         $locale = $this->getShadowLocale($node, $locale);
         $this->properties->setLanguage($locale);
 
@@ -1724,10 +1733,12 @@ class ContentMapper implements ContentMapperInterface
             $templateKey = $this->templateResolver->resolve($nodeType, $templateKey);
             $structure = $this->structureManager->getStructure($templateKey);
 
-            $url = $this->getUrl($path, $row, $structure, $webspaceKey, $locale, $routesPath);
+            if (!isset($url)) {
+                $url = $this->getUrl($path, $row, $structure, $webspaceKey, $locale, $routesPath);
+            }
 
             // get url returns false if route is not this language
-            if($url !== false) {
+            if ($url !== false) {
                 // generate field data
                 $fieldsData = $this->getFieldsData($row, $node, $fields, $templateKey, $webspaceKey, $locale);
 
@@ -1910,7 +1921,7 @@ class ContentMapper implements ContentMapperInterface
                 $property = $structure->getPropertyByTagName('sulu.rlp');
 
                 if ($property->getContentTypeName() !== 'resource_locator') {
-                    $url = $this->getPropertyData($row->getNode('page'), $property, $webspaceKey, $locale);
+                    return 'http://' . $this->getPropertyData($row->getNode('page'), $property, $webspaceKey, $locale);
                 }
             }
 
