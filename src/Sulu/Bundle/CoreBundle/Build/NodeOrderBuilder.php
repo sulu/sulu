@@ -56,7 +56,7 @@ class NodeOrderBuilder implements BuilderInterface
      */
     public function getName()
     {
-        return 'node-order';
+        return 'node_order';
     }
 
     /**
