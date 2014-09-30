@@ -60,13 +60,20 @@ class FilterNodesQueryBuilder
     public function build($languageCode)
     {
         // build sql2 query
-        $sql2 = 'SELECT * FROM [sulu:content] AS c';
+        //
+        // TODO We "should" be selecting from the mixin type "sulu:content"
+        //      but this does not work with jackalope-doctrine-dbal at time of
+        //      writing. The performance penalty for this alernative method in
+        //      jackeabbit is apparently negligble or non-existant, but selecting
+        //      from the mixin WOULD be quicker in doctrine-dbal when the feature is
+        //      finally implemented.
+        $sql2 = 'SELECT * FROM [nt:base] AS c WHERE c.[jcr:mixinTypes] = "sulu:content"';
         $sql2Where = $this->buildWhereClauses($languageCode);
         $sql2Order = $this->buildOrderClauses($languageCode);
 
         // append where clause to sql2 query
         if (!empty($sql2Where)) {
-            $sql2 .= ' WHERE ' . join(' AND ', $sql2Where);
+            $sql2 .= ' AND ' . join(' AND ', $sql2Where);
         }
 
         // append order clause

@@ -8,17 +8,18 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\ContentBundle\Content\Types;
+namespace Sulu\Bundle\ContentBundle\Content\Types\SmartContent;
 
-use JMS\Serializer\Serializer;
 use PHPCR\NodeInterface;
 use Sulu\Bundle\ContentBundle\Content\SmartContentContainer;
-use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\PropertyInterface;
+use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
+use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Sulu\Component\Util\ArrayableInterface;
+use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
  * ContentType for TextEditor
@@ -26,9 +27,14 @@ use Sulu\Component\Util\ArrayableInterface;
 class SmartContent extends ComplexContentType
 {
     /**
-     * @var NodeRepositoryInterface
+     * @var ContentQueryExecutorInterface
      */
-    private $nodeRepository;
+    private $contentQuery;
+
+    /**
+     * @var ContentQueryBuilderInterface
+     */
+    private $contentQueryBuilder;
 
     /**
      * @var TagManagerInterface
@@ -45,16 +51,25 @@ class SmartContent extends ComplexContentType
      */
     private $requestStack;
 
+    /**
+     * @var Stopwatch
+     */
+    private $stopwatch;
+
     function __construct(
-        NodeRepositoryInterface $nodeRepository,
+        ContentQueryExecutorInterface $contentQuery,
+        ContentQueryBuilderInterface $contentQueryBuilder,
         TagManagerInterface $tagManager,
         RequestStack $requestStack,
-        $template
+        $template,
+        Stopwatch $stopwatch = null
     ) {
-        $this->nodeRepository = $nodeRepository;
+        $this->contentQuery = $contentQuery;
+        $this->contentQueryBuilder = $contentQueryBuilder;
         $this->tagManager = $tagManager;
         $this->template = $template;
         $this->requestStack = $requestStack;
+        $this->stopwatch = $stopwatch;
     }
 
     /**
@@ -93,12 +108,15 @@ class SmartContent extends ComplexContentType
         $preview = false
     ) {
         $smartContent = new SmartContentContainer(
-            $this->nodeRepository,
+            $this->contentQuery,
+            $this->contentQueryBuilder,
             $this->tagManager,
+            array_merge($this->getDefaultParams(), $property->getParams()),
             $webspaceKey,
             $languageCode,
             $segmentKey,
-            $preview
+            $preview,
+            $this->stopwatch
         );
         $smartContent->setConfig($data === null || !is_array($data) ? array() : $data);
         $property->setValue($smartContent);
@@ -168,7 +186,9 @@ class SmartContent extends ComplexContentType
      */
     public function remove(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
-        // TODO: Implement remove() method.
+        if ($node->hasProperty($property->getName())) {
+            $node->getProperty($property->getName())->remove();
+        }
     }
 
     /**
@@ -177,8 +197,8 @@ class SmartContent extends ComplexContentType
     public function getDefaultParams()
     {
         $params = parent::getDefaultParams();
-        $params['max_per_page'] = 25;
         $params['page_parameter'] = 'p';
+        $params['properties'] = array();
 
         return $params;
     }
@@ -202,10 +222,10 @@ class SmartContent extends ComplexContentType
         );
 
         $data = $property->getValue()->getData();
-        $request = $this->requestStack->getCurrentRequest();
 
-        if($request) {
-            $page =$request->get($params['page_parameter'], 1);
+        // paginate
+        if (isset($params['max_per_page'])) {
+            $page = $this->requestStack->getCurrentRequest()->get($params['page_parameter'], 1);
             $data = array_slice($data, ($page - 1) * $params['max_per_page'], $params['max_per_page']);
         }
 

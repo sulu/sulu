@@ -13,9 +13,12 @@ namespace Sulu\Bundle\ContentBundle\Content;
 use JMS\Serializer\Serializer;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
+use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
+use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 use Sulu\Component\Content\StructureInterface;
 use JMS\Serializer\Annotation\Exclude;
 use Sulu\Component\Util\ArrayableInterface;
+use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
  * Container for SmartContent, holds the config for a smart content, and lazy loads the structures meeting its criteria
@@ -24,11 +27,22 @@ use Sulu\Component\Util\ArrayableInterface;
 class SmartContentContainer implements ArrayableInterface
 {
     /**
-     * The node repository, which is needed for lazy loading the smart content data
-     * @var NodeRepositoryInterface
+     * @var ContentQueryExecutorInterface
      * @Exclude
      */
-    private $nodeRepository;
+    private $contentQueryExecutor;
+
+    /**
+     * @var ContentQueryBuilderInterface
+     * @Exclude
+     */
+    private $contentQueryBuilder;
+
+    /**
+     * @var array
+     * @Exclude
+     */
+    private $params;
 
     /**
      * Required for resolving the Tags to ids
@@ -69,26 +83,40 @@ class SmartContentContainer implements ArrayableInterface
     private $preview;
 
     /**
-     * @param NodeRepositoryInterface $nodeRepository
+     * @var Stopwatch
+     */
+    private $stopwatch;
+
+    /**
+     * @param ContentQueryExecutorInterface $contentQuery
+     * @param ContentQueryBuilderInterface $contentQueryBuilder
      * @param TagManagerInterface $tagManager
+     * @param array $params
      * @param string $webspaceKey
      * @param string $languageCode
      * @param string $segmentKey
      * @param bool $preview
+     * @param Stopwatch $stopwatch
      */
     public function __construct(
-        NodeRepositoryInterface $nodeRepository,
+        ContentQueryExecutorInterface $contentQueryExecutor,
+        ContentQueryBuilderInterface $contentQueryBuilder,
         TagManagerInterface $tagManager,
+        $params,
         $webspaceKey,
         $languageCode,
         $segmentKey,
-        $preview = false
+        $preview = false,
+        Stopwatch $stopwatch = null
     ) {
-        $this->nodeRepository = $nodeRepository;
+        $this->contentQueryExecutor = $contentQueryExecutor;
+        $this->contentQueryBuilder = $contentQueryBuilder;
         $this->tagManager = $tagManager;
         $this->webspaceKey = $webspaceKey;
         $this->languageCode = $languageCode;
         $this->preview = $preview;
+        $this->params = $params;
+        $this->stopwatch = $stopwatch;
     }
 
     /**
@@ -135,16 +163,27 @@ class SmartContentContainer implements ArrayableInterface
      */
     private function loadData($config)
     {
-        if (array_key_exists('dataSource', $config) && $config['dataSource'] !== '') {
-            return $this->nodeRepository->getFilteredNodes(
-                $config,
-                $this->languageCode,
-                $this->webspaceKey,
-                $this->preview
-            );
-        } else {
-            return array();
+        if ($this->stopwatch) {
+            $this->stopwatch->start('SmartContent:loadData');
         }
+        $result = array();
+        if (array_key_exists('dataSource', $config) && $config['dataSource'] !== '') {
+            $this->contentQueryBuilder->init(array('config' => $config, 'properties' => $this->params['properties']));
+            $result = $this->contentQueryExecutor->execute(
+                $this->webspaceKey,
+                array($this->languageCode),
+                $this->contentQueryBuilder,
+                true,
+                -1,
+                isset($config['limitResult']) ? $config['limitResult'] : null
+            );
+        }
+
+        if ($this->stopwatch) {
+            $this->stopwatch->stop('SmartContent:loadData');
+        }
+
+        return $result;
     }
 
     /**
