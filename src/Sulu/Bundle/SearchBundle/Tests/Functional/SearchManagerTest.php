@@ -28,4 +28,15 @@ class SearchManagerTest extends BaseTestCase
             $this->assertCount($nbResults, $res);
         }
     }
+
+    public function testSearchByWebspace()
+    {
+        $this->generateStructureIndex(4, 'webspace_four');
+        $this->generateStructureIndex(2, 'webspace_two');
+        $res = $this->getSearchManager()->createSearch('Structure*')->locale('de')->index('content')->execute();
+        $this->assertCount(6, $res);
+
+        $res = $this->getSearchManager()->createSearch('+webspaceKey:webspace_four Structure*')->locale('de')->index('content')->execute();
+        $this->assertCount(4, $res);
+    }
 }

@@ -36,11 +36,12 @@ class BaseTestCase extends SymfonyCmfBaseTestCase
         return $searchManager;
     }
 
-    public function generateStructureIndex($count)
+    public function generateStructureIndex($count, $webspaceName = 'sulu_io')
     {
         for ($i = 1; $i <= $count; $i++) {
             $structure = new DefaultStructureCache();
-            $structure->setUuid($i);
+            $structure->setUuid($webspaceName . $i);
+            $structure->setWebspaceKey($webspaceName);
             $structure->getProperty('title')->setValue('Structure Title ' . $i);
 
             $structure->getProperty('url')->setValue('/');
