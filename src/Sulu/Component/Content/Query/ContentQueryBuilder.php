@@ -157,7 +157,7 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
                 AND (ISDESCENDANTNODE(page, '/cmf/%s/contents') OR ISSAMENODE(page, '/cmf/%s/contents'))
                 AND (%s)
                 %s %s",
-            strlen($select) > 0 ? ',' : '',
+            strlen($select) > 0 && substr($select, 0 ,1) !== ',' ? ',' : '',
             $select,
             $webspaceKey,
             $webspaceKey,
