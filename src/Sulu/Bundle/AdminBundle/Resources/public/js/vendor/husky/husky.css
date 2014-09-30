@@ -2985,7 +2985,7 @@ fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset
 }
 
 /* line 4, ../scss/fontsawesome/_core.scss */
-.fa, [class^="fa-"], .custom-checkbox input:checked + .icon::after, .custom-checkbox input.is-checked + .icon::after, .navigation-item-container .navigation-items li:hover:not(.navigation-subitems) a::before, .navigation-item-container .navigation-items li.is-selected a::before, .addButton, .pagination-wrapper.dropdowns .pagination .pagination-prev::after, .pagination-wrapper.dropdowns .pagination .pagination-next::after, .auto-complete-list-selection .tm-tag-remove, .husky-datagrid .husky-table.overflow:after, .husky-datagrid thead tr th.sorted-asc .cell-content::after, .husky-datagrid thead tr th.sorted-desc .cell-content::after, .husky-matcher.overflow .wrapper:after, .sortable .text-block .head label::before {
+.fa, [class^="fa-"], .custom-checkbox input:checked + .icon::after, .custom-checkbox input.is-checked + .icon::after, .navigation-item-container .navigation-items li:hover:not(.navigation-subitems) a::before, .navigation-item-container .navigation-items li.is-selected a::before, .addButton, .pagination-wrapper.dropdowns .pagination .pagination-prev::after, .pagination-wrapper.dropdowns .pagination .pagination-next::after, .toolbar-dropdown-menu li.marked::before, .auto-complete-list-selection .tm-tag-remove, .husky-datagrid .husky-table.overflow:after, .husky-datagrid thead tr th.sorted-asc .cell-content::after, .husky-datagrid thead tr th.sorted-desc .cell-content::after, .husky-matcher.overflow .wrapper:after, .sortable .text-block .head label::before {
   display: inline-block;
   font-family: FontAwesome;
   font-style: normal;
@@ -3071,11 +3071,11 @@ fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset
 }
 
 /* line 14, ../scss/fontsawesome/_bordered-pulled.scss */
-.fa.pull-left, .pull-left[class^="fa-"], .custom-checkbox input:checked + .pull-left.icon::after, .custom-checkbox input.is-checked + .pull-left.icon::after, .navigation-item-container .navigation-items li:hover:not(.navigation-subitems) a.pull-left::before, .navigation-item-container .navigation-items li.is-selected a.pull-left::before, .pull-left.addButton, .pagination-wrapper.dropdowns .pagination .pull-left.pagination-prev::after, .pagination-wrapper.dropdowns .pagination .pull-left.pagination-next::after, .auto-complete-list-selection .pull-left.tm-tag-remove, .husky-datagrid .pull-left.husky-table.overflow:after, .husky-datagrid thead tr th.sorted-asc .pull-left.cell-content::after, .husky-datagrid thead tr th.sorted-desc .pull-left.cell-content::after, .husky-matcher.overflow .pull-left.wrapper:after, .sortable .text-block .head label.pull-left::before {
+.fa.pull-left, .pull-left[class^="fa-"], .custom-checkbox input:checked + .pull-left.icon::after, .custom-checkbox input.is-checked + .pull-left.icon::after, .navigation-item-container .navigation-items li:hover:not(.navigation-subitems) a.pull-left::before, .navigation-item-container .navigation-items li.is-selected a.pull-left::before, .pull-left.addButton, .pagination-wrapper.dropdowns .pagination .pull-left.pagination-prev::after, .pagination-wrapper.dropdowns .pagination .pull-left.pagination-next::after, .toolbar-dropdown-menu li.pull-left.marked::before, .auto-complete-list-selection .pull-left.tm-tag-remove, .husky-datagrid .pull-left.husky-table.overflow:after, .husky-datagrid thead tr th.sorted-asc .pull-left.cell-content::after, .husky-datagrid thead tr th.sorted-desc .pull-left.cell-content::after, .husky-matcher.overflow .pull-left.wrapper:after, .sortable .text-block .head label.pull-left::before {
   margin-right: .3em;
 }
 /* line 15, ../scss/fontsawesome/_bordered-pulled.scss */
-.fa.pull-right, .pull-right[class^="fa-"], .custom-checkbox input:checked + .pull-right.icon::after, .custom-checkbox input.is-checked + .pull-right.icon::after, .navigation-item-container .navigation-items li:hover:not(.navigation-subitems) a.pull-right::before, .navigation-item-container .navigation-items li.is-selected a.pull-right::before, .pull-right.addButton, .pagination-wrapper.dropdowns .pagination .pull-right.pagination-prev::after, .pagination-wrapper.dropdowns .pagination .pull-right.pagination-next::after, .auto-complete-list-selection .pull-right.tm-tag-remove, .husky-datagrid .pull-right.husky-table.overflow:after, .husky-datagrid thead tr th.sorted-asc .pull-right.cell-content::after, .husky-datagrid thead tr th.sorted-desc .pull-right.cell-content::after, .husky-matcher.overflow .pull-right.wrapper:after, .sortable .text-block .head label.pull-right::before {
+.fa.pull-right, .pull-right[class^="fa-"], .custom-checkbox input:checked + .pull-right.icon::after, .custom-checkbox input.is-checked + .pull-right.icon::after, .navigation-item-container .navigation-items li:hover:not(.navigation-subitems) a.pull-right::before, .navigation-item-container .navigation-items li.is-selected a.pull-right::before, .pull-right.addButton, .pagination-wrapper.dropdowns .pagination .pull-right.pagination-prev::after, .pagination-wrapper.dropdowns .pagination .pull-right.pagination-next::after, .toolbar-dropdown-menu li.pull-right.marked::before, .auto-complete-list-selection .pull-right.tm-tag-remove, .husky-datagrid .pull-right.husky-table.overflow:after, .husky-datagrid thead tr th.sorted-asc .pull-right.cell-content::after, .husky-datagrid thead tr th.sorted-desc .pull-right.cell-content::after, .husky-matcher.overflow .pull-right.wrapper:after, .sortable .text-block .head label.pull-right::before {
   margin-left: .3em;
 }
 
@@ -8207,85 +8207,97 @@ a.btn-black, a.btn-highlight {
 .toolbar-dropdown-menu li {
   display: list-item;
   float: none;
-  line-height: 1;
   height: 30px;
   line-height: 30px;
   white-space: nowrap;
   cursor: pointer;
+  position: relative;
+  top: 0;
+  left: 0;
   padding: 0 20px;
 }
-/* line 264, ../scss/modules/toolbar.scss */
+/* line 266, ../scss/modules/toolbar.scss */
 .toolbar-dropdown-menu li a {
   color: black;
   text-decoration: none;
   padding: 0;
 }
-/* line 271, ../scss/modules/toolbar.scss */
+/* line 273, ../scss/modules/toolbar.scss */
 .toolbar-dropdown-menu li.is-selected, .toolbar-dropdown-menu li:hover {
   background-color: #52b6ca;
+  color: white;
 }
-/* line 273, ../scss/modules/toolbar.scss */
+/* line 276, ../scss/modules/toolbar.scss */
 .toolbar-dropdown-menu li.is-selected a, .toolbar-dropdown-menu li:hover a {
   color: white;
 }
-/* line 279, ../scss/modules/toolbar.scss */
+/* line 282, ../scss/modules/toolbar.scss */
+.toolbar-dropdown-menu li.marked::before {
+  content: "\f0da";
+  display: block;
+  position: absolute;
+  top: 9px;
+  left: 7px;
+  font-size: 12px;
+}
+/* line 294, ../scss/modules/toolbar.scss */
 .toolbar-dropdown-menu li.disabled:hover, .toolbar-dropdown-menu li.disabled {
   cursor: default;
   background-color: inherit;
 }
-/* line 282, ../scss/modules/toolbar.scss */
+/* line 297, ../scss/modules/toolbar.scss */
 .toolbar-dropdown-menu li.disabled:hover a, .toolbar-dropdown-menu li.disabled a {
   cursor: default;
   color: #999999;
 }
-/* line 288, ../scss/modules/toolbar.scss */
+/* line 303, ../scss/modules/toolbar.scss */
 .toolbar-dropdown-menu li:active {
   background-color: #66bed0;
 }
-/* line 292, ../scss/modules/toolbar.scss */
+/* line 307, ../scss/modules/toolbar.scss */
 .toolbar-dropdown-menu li.divider {
   height: 1px;
   margin: 5px 0;
   overflow: hidden;
   background-color: #dddddd;
 }
-/* line 299, ../scss/modules/toolbar.scss */
+/* line 314, ../scss/modules/toolbar.scss */
 .toolbar-dropdown-menu li a {
   clear: both;
   text-align: left;
 }
 
-/* line 313, ../scss/modules/toolbar.scss */
+/* line 328, ../scss/modules/toolbar.scss */
 .blueish .toolbar-item {
   background-color: #b4dfe8;
   border-color: #52b6ca;
 }
-/* line 317, ../scss/modules/toolbar.scss */
+/* line 332, ../scss/modules/toolbar.scss */
 .blueish .toolbar-item.highlight {
   background-color: #e8ce33;
 }
-/* line 319, ../scss/modules/toolbar.scss */
+/* line 334, ../scss/modules/toolbar.scss */
 .blueish .toolbar-item.highlight > a {
   color: black;
 }
-/* line 324, ../scss/modules/toolbar.scss */
+/* line 339, ../scss/modules/toolbar.scss */
 .blueish .toolbar-item.highlight-white {
   background-color: white;
 }
-/* line 326, ../scss/modules/toolbar.scss */
+/* line 341, ../scss/modules/toolbar.scss */
 .blueish .toolbar-item.highlight-white .title {
   text-align: left;
 }
-/* line 331, ../scss/modules/toolbar.scss */
+/* line 346, ../scss/modules/toolbar.scss */
 .blueish .toolbar-item.disabled, .blueish .toolbar-item.disabled:hover {
   background-color: #b4dfe8;
   border-color: #52b6ca;
 }
-/* line 335, ../scss/modules/toolbar.scss */
+/* line 350, ../scss/modules/toolbar.scss */
 .blueish .toolbar-item.disabled a, .blueish .toolbar-item.disabled:hover a {
   color: white;
 }
-/* line 337, ../scss/modules/toolbar.scss */
+/* line 352, ../scss/modules/toolbar.scss */
 .blueish .toolbar-item.disabled a.dropdown-toggle::after, .blueish .toolbar-item.disabled:hover a.dropdown-toggle::after {
   border-top-color: white;
 }

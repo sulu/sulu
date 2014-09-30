@@ -33245,7 +33245,8 @@ define('__component__$toolbar@husky',[],function() {
             collapsedWidth: 50,
             dropdownToggleWidth: 5, //px
             loaderWhiteColor: 'white',
-            loaderDarkColor: '#cccccc'
+            loaderDarkColor: '#cccccc',
+            markedClass: 'marked'
         },
 
         /** templates container */
@@ -33339,6 +33340,16 @@ define('__component__$toolbar@husky',[],function() {
          },
 
         /**
+         * event to mark a subitem
+         *
+         * @event husky.toolbar.[INSTANCE_NAME.]item.mark
+         * @param {string} button The id of the button
+         */
+         ITEM_MARK = function() {
+            return createEventName.call(this, 'item.mark');
+         },
+
+        /**
          * event to change a buttons default title and default icon
          *
          * @event husky.toolbar.[INSTANCE_NAME.]button.set
@@ -33425,11 +33436,14 @@ define('__component__$toolbar@husky',[],function() {
                 expandAll.call(this);
             }.bind(this));
 
+            this.sandbox.on(ITEM_MARK.call(this), uniqueMarkItem.bind(this));
+
             this.sandbox.on(ITEM_CHANGE.call(this), function(button, id, executeCallback) {
                 if (!!this.items[button]) {
                     this.items[button].initialized.then(function () {
                         var index = getItemIndexById.call(this, id, this.items[button]);
                         changeMainListItem.call(this, this.items[button].$el, this.items[button].items[index]);
+                        this.sandbox.emit(ITEM_MARK.call(this), this.items[button].items[index].id);
                         if (executeCallback === true || !!this.items[button].items[index].callback) {
                             if (typeof this.items[button].items[index].callback === 'function') {
                                 this.items[button].items[index].callback();
@@ -33637,13 +33651,17 @@ define('__component__$toolbar@husky',[],function() {
             this.sandbox.dom.preventDefault(event);
 
             var item = this.items[this.sandbox.dom.data(event.currentTarget, 'id')],
-                $parent = this.sandbox.dom.parents(event.currentTarget, 'li').eq(0);
+                $parent = (!!this.items[item.parentId]) ? this.items[item.parentId].$el : null;
 
             // stop if item has subitems
             if ((item.items && item.items.length > 0) || item.loading) {
                 return;
             }
             hideDropdowns.call(this);
+            if (!!item.parentId && !!this.items[item.parentId].itemsOption
+                && this.items[item.parentId].itemsOption.markable === true) {
+                uniqueMarkItem.call(this, item.id);
+            }
             if (!item.disabled) {
                 triggerSelectEvent.call(this, item, $parent);
             } else {
@@ -33762,18 +33780,37 @@ define('__component__$toolbar@husky',[],function() {
                 item.parentId = parent.id;
                 // check id for uniqueness
                 checkItemId.call(this, item);
-                this.items[item.id] = item;
-
                 $item = this.sandbox.dom.createElement(
                     '<li data-id="' + item.id + '"><a href="#">' + item.title + '</a></li>'
                 );
+                item.$el = $item;
+                this.items[item.id] = item;
 
                 if (item.disabled === true) {
                     this.sandbox.dom.addClass($item, 'disabled');
                 }
-
+                if (item.marked === true) {
+                    uniqueMarkItem.call(this, item.id);
+                }
                 this.sandbox.dom.append($list, $item);
             }.bind(this));
+        },
+
+        /**
+         * Marks an item with a css class und unmarks all other items with the same parent
+         * @param itemId {Number|String} the id of the item
+         */
+        uniqueMarkItem = function(itemId) {
+            if (!!this.items[itemId] && !!this.items[itemId].parentId) {
+                // unmark all items with the same parent
+                this.sandbox.util.each(this.items, function(id, item) {
+                    if (item.parentId === this.items[itemId].parentId) {
+                        this.sandbox.dom.removeClass(item.$el, constants.markedClass);
+                    }
+                }.bind(this));
+                // mark passed element
+                this.sandbox.dom.addClass(this.items[itemId].$el, constants.markedClass);
+            }
         },
 
         /**
@@ -38210,13 +38247,13 @@ define('__component__$ckeditor@husky',[], function() {
          * namespace for events
          * @type {string}
          */
-            eventNamespace = 'husky.ckeditor.',
+        eventNamespace = 'husky.ckeditor.',
 
         /**
          * @event husky.ckeditor.changed
          * @description the component has loaded everything successfully and will be rendered
          */
-            CHANGED = function() {
+        CHANGED = function() {
             return eventNamespace + (this.options.instanceName !== null ? this.options.instanceName + '.' : '') + 'changed';
         },
 
@@ -38224,7 +38261,7 @@ define('__component__$ckeditor@husky',[], function() {
          * @event husky.ckeditor.focusout
          * @description triggered when focus of editor is lost
          */
-            FOCUSOUT = function() {
+        FOCUSOUT = function() {
             return eventNamespace + (this.options.instanceName !== null ? this.options.instanceName + '.' : '') + 'focusout';
         },
 
@@ -38232,7 +38269,7 @@ define('__component__$ckeditor@husky',[], function() {
          * Removes the not needed elements from the config object for the ckeditor
          * @returns {Object} configuration object for ckeditor
          */
-            getConfig = function() {
+        getConfig = function() {
             var config = this.sandbox.util.extend(false, {}, this.options);
 
             config.toolbar = [
@@ -38279,55 +38316,53 @@ define('__component__$ckeditor@husky',[], function() {
             return config;
         };
 
-return {
+    return {
 
-    initialize: function() {
-        this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
+        initialize: function() {
+            this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
-        var config = getConfig.call(this);
-        this.editor = this.sandbox.ckeditor.init(this.$el, this.options.initializedCallback, config);
-        this.data = this.editor.getData();
-        this.$overlay = null;
+            var config = getConfig.call(this);
+            this.editor = this.sandbox.ckeditor.init(this.$el, this.options.initializedCallback, config);
+            this.data = this.editor.getData();
 
-        this.bindChangeEvents();
+            this.bindChangeEvents();
 
-        this.editor.on('instanceReady', function() {
-            // bind class to editor
-            this.sandbox.dom.addClass(this.sandbox.dom.find('.cke', this.sandbox.dom.parent(this.$el)), 'form-element');
-        }.bind(this));
+            this.editor.on('instanceReady', function() {
+                // bind class to editor
+                this.sandbox.dom.addClass(this.sandbox.dom.find('.cke', this.sandbox.dom.parent(this.$el)), 'form-element');
+            }.bind(this));
 
-        this.editor.on('blur', function() {
-            this.sandbox.emit(FOCUSOUT.call(this), this.editor.getData(), this.$el);
-        }.bind(this));
-    },
+            this.editor.on('blur', function() {
+                this.sandbox.emit(FOCUSOUT.call(this), this.editor.getData(), this.$el);
+            }.bind(this));
+        },
 
-    /**
-     * Binds Events to emit a custom changed event
-     */
-    bindChangeEvents: function() {
-        this.editor.on('change', function() {
-            this.emitChangedEvent();
-        }.bind(this));
-
-        // check if the content of the editor has changed if the mode is switched (html/wisiwig)
-        this.editor.on('mode', function() {
-            if (this.data !== this.editor.getData()) {
+        /**
+         * Binds Events to emit a custom changed event
+         */
+        bindChangeEvents: function() {
+            this.editor.on('change', function() {
                 this.emitChangedEvent();
-            }
-        }.bind(this));
-    },
+            }.bind(this));
 
-    /**
-     * Emits the custom changed event
-     */
-    emitChangedEvent: function() {
-        this.data = this.editor.getData();
-        this.sandbox.emit(CHANGED.call(this), this.data, this.$el);
-    }
-};
+            // check if the content of the editor has changed if the mode is switched (html/wisiwig)
+            this.editor.on('mode', function() {
+                if (this.data !== this.editor.getData()) {
+                    this.emitChangedEvent();
+                }
+            }.bind(this));
+        },
 
-})
-;
+        /**
+         * Emits the custom changed event
+         */
+        emitChangedEvent: function() {
+            this.data = this.editor.getData();
+            this.sandbox.emit(CHANGED.call(this), this.data, this.$el);
+        }
+    };
+
+});
 
 /**
  * This file is part of Husky frontend development framework.
@@ -38361,6 +38396,8 @@ return {
  * @params {Array} [options.supportKeyInput] if true pressing enter will submit the overlay and esc will close it
  * @params {Array} [options.propagateEvents] If false click-events will be stoped at the components-element
  * @params {Array} [options.verticalSpacing] defines the minimum spacing in pixel to the bottom and the top
+ * @params {Null|Number} [options.left] to fix the left position of the overlay. (px)
+ * @params {Null|Number} [options.top] to fix the top position of the overlay. (px)
  *
  * @params {Array} [options.slides] array of slide objects, will be rendered in a row and can slided with events
  * @params {String} [options.slides[].title] the title of the overlay
@@ -38409,7 +38446,9 @@ define('__component__$overlay@husky',[], function() {
             type: 'normal',
             backdropAlpha: 0.5,
             cssClass: '',
-            slides: []
+            slides: [],
+            top: null,
+            left: null
         },
 
         slideDefaults = {
@@ -39378,8 +39417,18 @@ define('__component__$overlay@husky',[], function() {
          * Positions the overlay in the middle of the screen
          */
         setCoordinates: function() {
-            this.updateCoordinates((this.sandbox.dom.$window.height() - this.overlay.$el.outerHeight()) / 2,
-                (this.sandbox.dom.$window.width() - this.overlay.$el.outerWidth()) / 2);
+            var top, left;
+            if (!!this.options.top) {
+                top = this.options.top;
+            } else {
+                top = (this.sandbox.dom.$window.height() - this.overlay.$el.outerHeight()) / 2;
+            }
+            if (!!this.options.left) {
+                left = this.options.left;
+            } else {
+                left = (this.sandbox.dom.$window.width() - this.overlay.$el.outerWidth()) / 2;
+            }
+            this.updateCoordinates(top, left);
         },
 
         /**
@@ -40947,7 +40996,13 @@ define('__component__$dropzone@husky',[], function () {
                 this.sandbox.dom.on(this.sandbox.dom.$document, 'dragenter', function () {
                     this.openOverlay();
                 }.bind(this));
+                this.sandbox.dom.on(this.sandbox.dom.$document, 'drop', function(event) {
+                    this.addFiles(event.originalEvent.dataTransfer.files);
+                }.bind(this));
             }
+            this.sandbox.dom.on(this.sandbox.dom.$document, 'dragover drop', function(event) {
+                this.sandbox.dom.preventDefault(event);
+            }.bind(this));
         },
 
         /**
@@ -40981,10 +41036,11 @@ define('__component__$dropzone@husky',[], function () {
         openOverlay: function () {
             // open the overlay only if it's not already opened and if the dropzone is not visible
             if (this.overlayOpened === false && this.lockPopUp === false) {
-                // set height of components element to prevent the site from bumping
+                // set height of components element to prevent the site from jumping
                 this.sandbox.dom.height(this.$el, this.sandbox.dom.outerHeight(this.$el));
 
-                var $container = this.sandbox.dom.createElement('<div/>');
+                var $container = this.sandbox.dom.createElement('<div/>'),
+                    coordinates = this.getOverlayCoordinates();
                 this.sandbox.dom.append(this.$el, $container);
                 this.sandbox.start([
                     {
@@ -40998,6 +41054,8 @@ define('__component__$dropzone@husky',[], function () {
                             instanceName: 'dropzone-' + this.options.instanceName,
                             skin: 'dropzone',
                             smallHeader: true,
+                            top: coordinates.top,
+                            left: coordinates.left,
                             closeCallback: function () {
                                 this.sandbox.dom.append(this.$el, this.$dropzone);
                                 this.sandbox.dom.height(this.$el, '');
@@ -41008,6 +41066,18 @@ define('__component__$dropzone@husky',[], function () {
                 ]);
                 this.overlayOpened = true;
             }
+        },
+
+        /**
+         * Returns the positon of the element relative to the browser window
+         * @returns {{top: Number|Null, left: Number|Null}}
+         */
+        getOverlayCoordinates: function() {
+            var orientation = this.sandbox.dom.get(this.$el, 0).getBoundingClientRect();
+            return {
+                top: (orientation.top > 0) ? orientation.top : null,
+                left: (orientation.left > 0) ? orientation.left : null
+            };
         },
 
         /**
@@ -41048,8 +41118,15 @@ define('__component__$dropzone@husky',[], function () {
                         that.dropzone = this;
 
                         this.on('drop', function(event) {
+                            this.sandbox.dom.stopPropagation(event);
                             this.filesDropped = event.dataTransfer.files.length;
                         }.bind(that));
+
+                        if (that.options.showOverlay === true) {
+                            this.on('dragenter', function() {
+                                this.openOverlay();
+                            }.bind(that));
+                        }
 
                         // gets called if file gets added (drop or via the upload window)
                         this.on('addedfile', function (file) {
@@ -41119,6 +41196,16 @@ define('__component__$dropzone@husky',[], function () {
             // merge the default plugin options with with passed ones
             options = this.sandbox.util.extend(true, {}, options, this.options.pluginOptions);
             this.sandbox.dropzone.initialize(this.$dropzone, options);
+        },
+
+        /**
+         * Adds an array of files to the dropzone to upload them
+         * @param files {array} an array of files
+         */
+        addFiles: function(files) {
+            this.sandbox.util.each(files, function(index, file) {
+                this.dropzone.addFile(file);
+            }.bind(this));
         },
 
         /**
