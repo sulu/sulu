@@ -1724,10 +1724,10 @@ class ContentMapper implements ContentMapperInterface
             $templateKey = $this->templateResolver->resolve($nodeType, $templateKey);
             $structure = $this->structureManager->getStructure($templateKey);
 
-            $url = $this->getUrl($path, $row, $node, $structure, $webspaceKey, $locale, $routesPath);
+            $url = $this->getUrl($path, $row, $structure, $webspaceKey, $locale, $routesPath);
 
             // get url returns false if route is not this language
-            if ($url !== false) {
+            if($url !== false) {
                 // generate field data
                 $fieldsData = $this->getFieldsData($row, $node, $fields, $templateKey, $webspaceKey, $locale);
 
@@ -1745,7 +1745,7 @@ class ContentMapper implements ContentMapperInterface
                         'created' => $created,
                         'creator' => $creator,
                         'title' => $this->getTitle($node, $structure, $webspaceKey, $locale),
-                        'url' => $this->getUrl($path, $row, $node, $structure, $webspaceKey, $locale, $routesPath),
+                        'url' => $url,
                         'locale' => $locale,
                         'template' => $templateKey
                     ),
@@ -1757,6 +1757,9 @@ class ContentMapper implements ContentMapperInterface
         return false;
     }
 
+    /**
+     * Return extracted data (configured by fields array) from node
+     */
     private function getFieldsData(Row $row, NodeInterface $node, $fields, $templateKey, $webspaceKey, $locale)
     {
         $fieldsData = array();
@@ -1783,17 +1786,14 @@ class ContentMapper implements ContentMapperInterface
         return $fieldsData;
     }
 
+    /**
+     * Return data for one field
+     */
     private function getFieldData($field, Row $row, NodeInterface $node, $templateKey, $webspaceKey, $locale)
     {
-        if (!isset($field['property'])) {
+        if (isset($field['column'])) {
             // normal data from node property
             return $row->getValue($field['column']);
-        } elseif (
-            !isset($field['extension'])
-            && (!isset($field['templateKey']) || $field['templateKey'] === $templateKey)
-        ) {
-            // not extension data but property of node
-            return $this->getPropertyData($node, $field['property'], $webspaceKey, $locale);
         } elseif (isset($field['extension'])) {
             // data from extension
             return $this->getExtensionData(
@@ -1803,6 +1803,9 @@ class ContentMapper implements ContentMapperInterface
                 $webspaceKey,
                 $locale
             );
+        } elseif (isset($field['property']) && (!isset($field['templateKey']) || $field['templateKey'] === $templateKey)) {
+            // not extension data but property of node
+            return $this->getPropertyData($node, $field['property'], $webspaceKey, $locale);
         }
 
         return null;
@@ -1890,7 +1893,6 @@ class ContentMapper implements ContentMapperInterface
     private function getUrl(
         $path,
         Row $row,
-        NodeInterface $node,
         StructureInterface $structure,
         $webspaceKey,
         $locale,
@@ -1905,7 +1907,7 @@ class ContentMapper implements ContentMapperInterface
                 $property = $structure->getPropertyByTagName('sulu.rlp');
 
                 if ($property->getContentTypeName() !== 'resource_locator') {
-                    $url = $this->getPropertyData($node, $property, $webspaceKey, $locale);
+                    $url = $this->getPropertyData($row->getNode('page'), $property, $webspaceKey, $locale);
                 }
             }
 
