@@ -1803,7 +1803,10 @@ class ContentMapper implements ContentMapperInterface
                 $webspaceKey,
                 $locale
             );
-        } elseif (isset($field['property']) && (!isset($field['templateKey']) || $field['templateKey'] === $templateKey)) {
+        } elseif (
+            isset($field['property'])
+            && (!isset($field['templateKey']) || $field['templateKey'] === $templateKey)
+        ) {
             // not extension data but property of node
             return $this->getPropertyData($node, $field['property'], $webspaceKey, $locale);
         }
