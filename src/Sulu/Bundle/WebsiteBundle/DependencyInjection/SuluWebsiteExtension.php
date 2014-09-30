@@ -14,6 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
+use Sulu\Component\HttpKernel\SuluKernel;
 
 /**
  * This is the class that loads and manages your bundle configuration
@@ -32,5 +33,9 @@ class SuluWebsiteExtension extends Extension
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
+
+        if (SuluKernel::CONTEXT_WEBSITE == $container->getParameter('sulu.context')) {
+            $loader->load('website.xml');
+        }
     }
 }

@@ -13,7 +13,8 @@ namespace Sulu\Bundle\WebsiteBundle\Twig;
 use Sulu\Bundle\WebsiteBundle\Navigation\NavigationItem;
 use Sulu\Bundle\WebsiteBundle\Navigation\NavigationMapperInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
-use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Sulu\Component\Webspace\Localization;
 
 /**
  * provides the navigation function
@@ -31,10 +32,20 @@ class NavigationTwigExtension extends \Twig_Extension
      */
     private $navigationMapper;
 
-    function __construct(ContentMapperInterface $contentMapper, NavigationMapperInterface $navigationMapper)
+    /**
+     * @var RequestAnalyzerInterface
+     */
+    private $requestAnalyzer;
+
+    function __construct(
+        ContentMapperInterface $contentMapper,
+        NavigationMapperInterface $navigationMapper,
+        RequestAnalyzerInterface $requestAnalyzer = null
+    )
     {
         $this->contentMapper = $contentMapper;
         $this->navigationMapper = $navigationMapper;
+        $this->requestAnalyzer = $requestAnalyzer;
     }
 
     /**
@@ -43,61 +54,62 @@ class NavigationTwigExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            new \Twig_SimpleFunction('root_navigation', array($this, 'rootNavigationFunction')),
-            new \Twig_SimpleFunction('navigation', array($this, 'navigationFunction')),
+            new \Twig_SimpleFunction('navigation_root_flat', array($this, 'flatRootNavigationFunction')),
+            new \Twig_SimpleFunction('navigation_root_tree', array($this, 'treeRootNavigationFunction')),
+            new \Twig_SimpleFunction('navigation_flat', array($this, 'flatNavigationFunction')),
+            new \Twig_SimpleFunction('navigation_tree', array($this, 'treeNavigationFunction')),
             new \Twig_SimpleFunction('breadcrumb', array($this, 'breadcrumbFunction'))
         );
     }
 
     /**
-     * Returns navigation for content node at given level or (if level null) sub-navigation of page
-     * @param $webspaceKey
-     * @param $localization
-     * @param int $depth depth of navigation returned
-     * @param bool $flat
+     * Returns a flat navigation of first layer
      * @param string $context
+     * @param int $depth
+     * @param bool $loadExcerpt
      * @return NavigationItem[]
      */
-    public function rootNavigationFunction(
-        $webspaceKey,
-        $localization,
-        $depth = 1,
-        $flat = false,
-        $context = null
-    ) {
-        return $this->navigationMapper->getRootNavigation(
-            $webspaceKey,
-            $localization,
-            $depth,
-            $flat,
-            $context
-        );
+    public function flatRootNavigationFunction($context = null, $depth = 1, $loadExcerpt = false)
+    {
+        $webspaceKey = $this->requestAnalyzer->getCurrentWebspace()->getKey();
+        $locale = $this->requestAnalyzer->getCurrentLocalization()->getLocalization();
+
+        return $this->navigationMapper->getRootNavigation($webspaceKey, $locale, $depth, true, $context, $loadExcerpt);
     }
 
     /**
-     * Returns navigation for content node at given level or (if level null) sub-navigation of page
-     * @param $uuid
-     * @param $webspaceKey
-     * @param $localization
-     * @param int $depth depth of navigation returned
-     * @param integer|null $level
-     * @param bool $flat
+     * Returns a tree navigation of first layer
      * @param string $context
+     * @param int $depth
+     * @param bool $loadExcerpt
      * @return NavigationItem[]
      */
-    public function navigationFunction(
-        $uuid,
-        $webspaceKey,
-        $localization,
-        $depth = 1,
-        $level = null,
-        $flat = false,
-        $context = null
-    ) {
+    public function treeRootNavigationFunction($context = null, $depth = 1, $loadExcerpt = false)
+    {
+        $webspaceKey = $this->requestAnalyzer->getCurrentWebspace()->getKey();
+        $locale = $this->requestAnalyzer->getCurrentLocalization()->getLocalization();
+
+        return $this->navigationMapper->getRootNavigation($webspaceKey, $locale, $depth, false, $context, $loadExcerpt);
+    }
+
+    /**
+     * Returns a flat navigation of children from given parent (uuid)
+     * @param string $uuid
+     * @param string $context
+     * @param int $depth
+     * @param bool $loadExcerpt
+     * @param int $level
+     * @return \Sulu\Bundle\WebsiteBundle\Navigation\NavigationItem[]
+     */
+    public function flatNavigationFunction($uuid, $context = null, $depth = 1, $loadExcerpt = false, $level = null)
+    {
+        $webspaceKey = $this->requestAnalyzer->getCurrentWebspace()->getKey();
+        $locale = $this->requestAnalyzer->getCurrentLocalization()->getLocalization();
+
         if ($level !== null) {
             $breadcrumb = $this->contentMapper->loadBreadcrumb(
                 $uuid,
-                $localization,
+                $locale,
                 $webspaceKey
             );
 
@@ -109,29 +121,55 @@ class NavigationTwigExtension extends \Twig_Extension
             $uuid = $breadcrumb[$level]->getUuid();
         }
 
-        return $this->navigationMapper->getNavigation(
-            $uuid,
-            $webspaceKey,
-            $localization,
-            $depth,
-            $flat,
-            $context
-        );
+        return $this->navigationMapper->getNavigation($uuid, $webspaceKey, $locale, $depth, true, $context, $loadExcerpt);
+    }
+
+    /**
+     * Returns a tree navigation of children from given parent (uuid)
+     * @param string $uuid
+     * @param string $context
+     * @param int $depth
+     * @param bool $loadExcerpt
+     * @param int $level
+     * @return \Sulu\Bundle\WebsiteBundle\Navigation\NavigationItem[]
+     */
+    public function treeNavigationFunction($uuid, $context = null, $depth = 1, $loadExcerpt = false, $level = null)
+    {
+        $webspaceKey = $this->requestAnalyzer->getCurrentWebspace()->getKey();
+        $locale = $this->requestAnalyzer->getCurrentLocalization()->getLocalization();
+
+        if ($level !== null) {
+            $breadcrumb = $this->contentMapper->loadBreadcrumb(
+                $uuid,
+                $locale,
+                $webspaceKey
+            );
+
+            // return empty array if level does not exists
+            if (!isset($breadcrumb[$level])) {
+                return array();
+            }
+
+            $uuid = $breadcrumb[$level]->getUuid();
+        }
+
+        return $this->navigationMapper->getNavigation($uuid, $webspaceKey, $locale, $depth, false, $context, $loadExcerpt);
     }
 
     /**
      * Returns breadcrumb for given node
      * @param $uuid
-     * @param $webspaceKey
-     * @param $localization
      * @return \Sulu\Bundle\WebsiteBundle\Navigation\NavigationItem[]
      */
-    public function breadcrumbFunction($uuid, $webspaceKey, $localization)
+    public function breadcrumbFunction($uuid)
     {
+        $webspaceKey = $this->requestAnalyzer->getCurrentWebspace()->getKey();
+        $locale = $this->requestAnalyzer->getCurrentLocalization()->getLocalization();
+
         return $this->navigationMapper->getBreadcrumb(
             $uuid,
             $webspaceKey,
-            $localization
+            $locale
         );
     }
 

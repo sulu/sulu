@@ -5,6 +5,8 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 
 class AppKernel extends Kernel
 {
+    static $suluContext = 'admin';
+
     public function registerBundles()
     {
         $bundles = array(
@@ -27,5 +29,18 @@ class AppKernel extends Kernel
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
         $loader->load(__DIR__ . '/config/config.yml');
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function getKernelParameters()
+    {
+        return array_merge(
+            parent::getKernelParameters(),
+            array(
+                'sulu.context' => self::$suluContext,
+            )
+        );
     }
 }

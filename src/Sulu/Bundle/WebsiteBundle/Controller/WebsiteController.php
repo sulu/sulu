@@ -12,6 +12,7 @@ namespace Sulu\Bundle\WebsiteBundle\Controller;
 
 use InvalidArgumentException;
 use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\HttpCache\HttpCache;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -30,8 +31,7 @@ abstract class WebsiteController extends Controller
         $attributes = array(),
         $preview = false,
         $partial = false
-    )
-    {
+    ) {
         // extract format twig file
         if (!$preview) {
             $request = $this->getRequest();
@@ -72,9 +72,15 @@ abstract class WebsiteController extends Controller
                 // mark the response as either public or private
                 $response->setPublic();
 
-                // set the private or shared max age
-                $response->setMaxAge($structure->getCacheLifeTime());
-                $response->setSharedMaxAge($structure->getCacheLifeTime());
+                // set the private and shared max age
+                $response->setMaxAge(240);
+                $response->setSharedMaxAge(960);
+
+                // set reverse-proxy TTL (Symfony HttpCache, Varnish, ...)
+                $response->headers->set(
+                    HttpCache::HEADER_REVERSE_PROXY_TTL,
+                    $response->getAge() + intval($structure->getCacheLifeTime())
+                );
             }
 
             return $response;
