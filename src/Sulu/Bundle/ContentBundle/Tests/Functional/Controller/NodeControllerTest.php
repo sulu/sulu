@@ -391,7 +391,6 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent(), true);
 
-        $this->assertEquals(26, sizeof($response));
         $this->assertEquals($data[0]['title'], $response['title']);
         $this->assertEquals($data[0]['path'], $response['path']);
         $this->assertEquals($data[0]['tags'], $response['tags']);
@@ -931,6 +930,42 @@ class NodeControllerTest extends DatabaseTestCase
                 'PHP_AUTH_PW' => 'test',
             )
         );
+        $data = $this->beforeTestGet();
+
+        $client->request('GET', '/api/nodes/' . $data[0]['id'] . '?webspace=sulu_io&language=en');
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $bigResponse = json_decode($client->getResponse()->getContent(), true);
+
+        $bigSize = sizeof($bigResponse);
+
+        $client->request('GET', '/api/nodes/' . $data[0]['id'] . '?webspace=sulu_io&language=en&complete=false');
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $smallResponse = json_decode($client->getResponse()->getContent(), true);
+
+        $smallSize = sizeof($smallResponse);
+
+        $this->assertTrue($smallSize < $bigSize);
+        $this->assertTrue(isset($smallResponse['title']));
+        $this->assertFalse(isset($smallResponse['article']));
+        $this->assertFalse(isset($smallResponse['tags']));
+        $this->assertFalse(isset($smallResponse['ext']));
+        $this->assertFalse(isset($smallResponse['enabledShadowLanguages']));
+        $this->assertFalse(isset($smallResponse['concreteLanguages']));
+        $this->assertFalse(isset($smallResponse['shadowOn']));
+        $this->assertFalse(isset($smallResponse['shadowBaseLanguage']));
+    }
+
+    public function testCgetAction()
+    {
+        $client = $this->createClient(
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test',
+            )
+        );
         $data = $this->buildTree();
 
         // get child nodes from root
@@ -1308,7 +1343,6 @@ class NodeControllerTest extends DatabaseTestCase
         $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en', $data);
         $data = json_decode($client->getResponse()->getContent(), true);
 
-        $this->assertEquals(25, sizeof($data));
         $this->assertArrayHasKey('id', $data);
         $this->assertEquals('test1', $data['title']);
         $this->assertEquals('/test1', $data['path']);
