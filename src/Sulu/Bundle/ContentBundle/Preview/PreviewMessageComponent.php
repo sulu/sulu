@@ -13,6 +13,8 @@ namespace Sulu\Bundle\ContentBundle\Preview;
 use Psr\Log\LoggerInterface;
 use Ratchet\ConnectionInterface;
 use Ratchet\MessageComponentInterface;
+use Sulu\Component\Webspace\Analyzer\AdminRequestAnalyzer;
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 
 class PreviewMessageComponent implements MessageComponentInterface
@@ -32,12 +34,18 @@ class PreviewMessageComponent implements MessageComponentInterface
      */
     private $logger;
 
-    public function __construct(PreviewInterface $preview, LoggerInterface $logger)
+    /**
+     * @var RequestAnalyzerInterface
+     */
+    private $requestAnalyzer;
+
+    public function __construct(PreviewInterface $preview, AdminRequestAnalyzer $requestAnalyzer, LoggerInterface $logger)
     {
         $this->content = array();
 
         $this->preview = $preview;
         $this->logger = $logger;
+        $this->requestAnalyzer = $requestAnalyzer;
     }
 
     public function onOpen(ConnectionInterface $conn)
@@ -165,6 +173,8 @@ class PreviewMessageComponent implements MessageComponentInterface
         if ($type == 'form' && $changes !== null && is_array($changes)) {
             $languageCode = $msg['languageCode'];
             $webspaceKey = $msg['webspaceKey'];
+            $this->requestAnalyzer->setWebspaceKey($webspaceKey);
+            $this->requestAnalyzer->setLocalizationCode($languageCode);
 
             foreach ($changes as $property => $data) {
                 // update property
