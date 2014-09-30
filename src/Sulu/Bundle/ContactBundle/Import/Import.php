@@ -1462,7 +1462,7 @@ class Import
      */
     public function createLogFile()
     {
-        $root = 'import-files/logs/';
+        $root = 'import-files/logs/contactimport/';
         $timestamp = time();
         $file = fopen($root . 'log-' . $timestamp . '.txt', 'w');
         fwrite($file, implode("\n", $this->log));
