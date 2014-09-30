@@ -932,29 +932,19 @@ class NodeControllerTest extends DatabaseTestCase
         );
         $data = $this->beforeTestGet();
 
-        $client->request('GET', '/api/nodes/' . $data[0]['id'] . '?webspace=sulu_io&language=en');
-
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $bigResponse = json_decode($client->getResponse()->getContent(), true);
-
-        $bigSize = sizeof($bigResponse);
-
         $client->request('GET', '/api/nodes/' . $data[0]['id'] . '?webspace=sulu_io&language=en&complete=false');
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $smallResponse = json_decode($client->getResponse()->getContent(), true);
+        $response = json_decode($client->getResponse()->getContent(), true);
 
-        $smallSize = sizeof($smallResponse);
-
-        $this->assertTrue($smallSize < $bigSize);
-        $this->assertTrue(isset($smallResponse['title']));
-        $this->assertFalse(isset($smallResponse['article']));
-        $this->assertFalse(isset($smallResponse['tags']));
-        $this->assertFalse(isset($smallResponse['ext']));
-        $this->assertFalse(isset($smallResponse['enabledShadowLanguages']));
-        $this->assertFalse(isset($smallResponse['concreteLanguages']));
-        $this->assertFalse(isset($smallResponse['shadowOn']));
-        $this->assertFalse(isset($smallResponse['shadowBaseLanguage']));
+        $this->assertArrayHasKey('title', $response);
+        $this->assertArrayNotHasKey('article', $response);
+        $this->assertArrayNotHasKey('tags', $response);
+        $this->assertArrayNotHasKey('ext', $response);
+        $this->assertArrayNotHasKey('enabledShadowLanguage', $response);
+        $this->assertArrayNotHasKey('concreteLanguages', $response);
+        $this->assertArrayNotHasKey('shadowOn', $response);
+        $this->assertArrayNotHasKey('shadowBaseLanguage', $response);
     }
 
     public function testCgetAction()
