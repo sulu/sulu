@@ -2,7 +2,7 @@
 <phpunit
     colors="true"
     bootstrap="vendor/symfony-cmf/testing/bootstrap/bootstrap.php"
-    processIsolation="true"
+    processIsolation="false"
 >
 
     <testsuites>

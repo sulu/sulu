@@ -71,19 +71,15 @@ class StructureDriver implements DriverInterface
                 $tag = $property->getTag('sulu.search.field');
                 $tagAttributes = $tag->getAttributes();
 
-                if (!isset($tagAttributes['index']) || $tagAttributes['index'] !== 'false') {
-                    $indexMeta->addFieldMapping($property->getName(), array(
-                        'type' => isset($tagAttributes['type']) ? $tagAttributes['type'] : 'string',
-                    ));
-                }
-
                 if (isset($tagAttributes['role'])) {
                     switch ($tagAttributes['role']) {
                         case 'title':
                             $indexMeta->setTitleField($property->getName());
+                            $indexMeta->addFieldMapping($property->getName(), array('type' => 'string'));
                             break;
                         case 'description':
                             $indexMeta->setDescriptionField($property->getName());
+                            $indexMeta->addFieldMapping($property->getName(), array('type' => 'string'));
                             break;
                         case 'image':
                             $indexMeta->setImageUrlField($property->getName());
@@ -94,6 +90,10 @@ class StructureDriver implements DriverInterface
                                 $tagAttributes['role'], implode(', ', array('title', 'description', 'image'))
                             ));
                     }
+                } elseif (!isset($tagAttributes['index']) || $tagAttributes['index'] !== 'false') {
+                    $indexMeta->addFieldMapping($property->getName(), array(
+                        'type' => isset($tagAttributes['type']) ? $tagAttributes['type'] : 'string',
+                    ));
                 }
             }
         }
