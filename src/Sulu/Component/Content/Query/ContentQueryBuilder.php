@@ -102,7 +102,7 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
         $additionalFields = array();
 
         $where = '';
-        $select = '';
+        $select = array('route.*', 'page.*');
         $order = array();
 
         foreach ($locales as $locale) {
@@ -110,11 +110,16 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
             $additionalFields[$locale] = array();
 
             if ($this->excerpt) {
-                $select .= ',' . $this->buildSelectorForExcerpt($locale, $additionalFields);
+                $excerptSelect =  $this->buildSelectorForExcerpt($locale, $additionalFields);
+                if($excerptSelect !== '') {
+                    $select[] = $this->buildSelectorForExcerpt($locale, $additionalFields);
+                }
             }
 
             $customSelect = $this->buildSelect($webspaceKey, $locale, $additionalFields);
-            $select .= (!empty($customSelect) ? ', ' : '') . $customSelect;
+            if ($customSelect !== '') {
+                $select[] = $customSelect;
+            }
 
             if ($this->published) {
                 $where .= sprintf(
@@ -150,15 +155,14 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
 
         // build sql2 query string
         $sql2 = sprintf(
-            "SELECT route.*, page.*%s %s
+            "SELECT %s
              FROM [nt:unstructured] AS page
              LEFT OUTER JOIN [nt:unstructured] AS route ON page.[jcr:uuid] = route.[sulu:content]
              WHERE page.[jcr:mixinTypes] = 'sulu:content'
                 AND (ISDESCENDANTNODE(page, '/cmf/%s/contents') OR ISSAMENODE(page, '/cmf/%s/contents'))
                 AND (%s)
                 %s %s",
-            strlen($select) > 0 ? ',' : '',
-            $select,
+            implode(', ', $select),
             $webspaceKey,
             $webspaceKey,
             $where,
