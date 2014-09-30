@@ -148,7 +148,14 @@ define([
             this.sandbox.on('sulu.header.toolbar.language-changed', function(item) {
                 this.sandbox.sulu.saveUserSetting(CONTENT_LANGUAGE, item.localization);
                 if (this.options.display !== 'column') {
-                    this.sandbox.emit('sulu.content.contents.load', this.content.toJSON(), this.options.webspace, item.localization);
+                    var data = this.content.toJSON();
+
+                    // if there is a index id this should be after reload
+                    if (this.options.id === 'index') {
+                        data.id = this.options.id;
+                    }
+                    
+                    this.sandbox.emit('sulu.content.contents.load', data, this.options.webspace, item.localization);
                 } else {
                     this.sandbox.emit('sulu.content.contents.list', this.options.webspace, item.localization);
                 }
