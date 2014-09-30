@@ -73,6 +73,24 @@ class AdminRequestAnalyzer implements RequestAnalyzerInterface
         }
     }
 
+    /**
+     * set webspace for current request
+     * @param string $webspaceKey
+     */
+    public function setWebspaceKey($webspaceKey)
+    {
+        $this->webspace = $this->webspaceManager->findWebspaceByKey($webspaceKey);
+    }
+
+    /**
+     * set localization for current request
+     * @param string $locale
+     */
+    public function setLocalizationCode($locale)
+    {
+        $this->localization = $this->webspace->getLocalization($locale);
+    }
+
     public function getCurrentMatchType()
     {
         return null;
