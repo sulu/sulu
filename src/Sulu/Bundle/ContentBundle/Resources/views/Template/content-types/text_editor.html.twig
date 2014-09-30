@@ -20,6 +20,11 @@
           {% else %}
           data-aura-links-enabled="false"
           {% endif %}
+          {% if params.pasteFromWord is defined and params.pasteFromWord == true %}
+          data-aura-paste-from-word="true"
+          {% else %}
+          data-aura-paste-from-word="false"
+          {% endif %}
           data-mapper-property="{{ property.name }}"
           data-aura-instance-name="{{ id|raw }}"
           placeholder="{{ property.getPlaceholder(userLocale) }}"
