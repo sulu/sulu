@@ -10,8 +10,12 @@
 
 namespace Sulu\Bundle\ContentBundle\Content;
 
-use JMS\Serializer\Serializer;
+use PHPCR\ItemNotFoundException;
+use Psr\Log\LoggerInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
+use Sulu\Component\Content\Query\ContentQueryExecutor;
+use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
+use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 use Sulu\Component\Content\StructureInterface;
 use JMS\Serializer\Annotation\Exclude;
 use Sulu\Component\Util\ArrayableInterface;
@@ -23,11 +27,31 @@ use Sulu\Component\Util\ArrayableInterface;
 class InternalLinksContainer implements ArrayableInterface
 {
     /**
-     * The node repository, which is needed for lazy loading
+     * The content mapper, which is needed for lazy loading
      * @Exclude
-     * @var ContentMapperInterface
+     * @var ContentQueryExecutorInterface
      */
-    private $contentMapper;
+    private $contentQueryExecutor;
+
+    /**
+     * The content mapper, which is needed for lazy loading
+     * @Exclude
+     * @var ContentQueryBuilderInterface
+     */
+    private $contentQueryBuilder;
+
+    /**
+     * The params to load
+     * @Exclude
+     * @var array
+     */
+    private $params;
+
+    /**
+     * @Exclude
+     * @var LoggerInterface
+     */
+    private $logger;
 
     /**
      * The key of the webspace
@@ -56,14 +80,20 @@ class InternalLinksContainer implements ArrayableInterface
 
     public function __construct(
         $ids,
-        ContentMapperInterface $contentMapper,
+        ContentQueryExecutorInterface $contentQueryExecutor,
+        ContentQueryBuilderInterface $contentQueryBuilder,
+        $params,
+        LoggerInterface $logger,
         $webspaceKey,
         $languageCode
     ) {
         $this->ids = $ids;
-        $this->contentMapper = $contentMapper;
+        $this->contentQueryExecutor = $contentQueryExecutor;
+        $this->contentQueryBuilder = $contentQueryBuilder;
+        $this->logger = $logger;
         $this->webspaceKey = $webspaceKey;
         $this->languageCode = $languageCode;
+        $this->params = $params;
     }
 
     /**
@@ -85,10 +115,22 @@ class InternalLinksContainer implements ArrayableInterface
     private function loadData()
     {
         $result = array();
-
         if ($this->ids !== null) {
             foreach ($this->ids as $id) {
-                $result[] = $this->contentMapper->load($id, $this->webspaceKey, $this->languageCode);
+                try {
+                    if (!empty($id)) {
+                        $this->contentQueryBuilder->init(array('ids' => $this->ids, 'properties' => $this->params['properties']));
+                        $result = $this->contentQueryExecutor->execute(
+                            $this->webspaceKey,
+                            array($this->languageCode),
+                            $this->contentQueryBuilder
+                        );
+                    }
+                } catch (ItemNotFoundException $ex) {
+                    $this->logger->warning(
+                        sprintf("%s in internal links not found. Exception: %s", $id, $ex->getMessage())
+                    );
+                }
             }
         }
 
@@ -120,6 +162,6 @@ class InternalLinksContainer implements ArrayableInterface
      */
     public function toArray($depth = null)
     {
-        return $this->ids;
+        return array('ids' => $this->ids);
     }
 }

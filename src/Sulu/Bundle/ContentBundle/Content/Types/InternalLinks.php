@@ -11,11 +11,14 @@
 namespace Sulu\Bundle\ContentBundle\Content\Types;
 
 use PHPCR\NodeInterface;
+use Psr\Log\LoggerInterface;
 use Sulu\Bundle\ContentBundle\Content\InternalLinksContainer;
+use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
 use Sulu\Component\Content\ComplexContentType;
-use Sulu\Component\Content\Mapper\ContentMapper;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\PropertyInterface;
+use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
+use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 use Sulu\Component\Util\ArrayableInterface;
 
 /**
@@ -25,18 +28,34 @@ use Sulu\Component\Util\ArrayableInterface;
 class InternalLinks extends ComplexContentType
 {
     /**
-     * @var ContentMapperInterface
+     * @var ContentQueryExecutorInterface
      */
-    private $contentMapper;
+    private $contentQueryExecutor;
+    /**
+     * @var ContentQueryBuilderInterface
+     */
+    private $contentQueryBuilder;
+
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
     /**
      * @var string
      */
     private $template;
 
-    function __construct(ContentMapperInterface $contentMapper, $template)
+    function __construct(
+        ContentQueryExecutorInterface $contentQueryExecutor,
+        ContentQueryBuilderInterface $contentQueryBuilder,
+        LoggerInterface $logger,
+        $template
+    )
     {
-        $this->contentMapper = $contentMapper;
+        $this->contentQueryExecutor = $contentQueryExecutor;
+        $this->contentQueryBuilder = $contentQueryBuilder;
+        $this->logger = $logger;
         $this->template = $template;
     }
 
@@ -91,12 +110,23 @@ class InternalLinks extends ComplexContentType
     {
         $container = new InternalLinksContainer(
             isset($data['ids']) ? $data['ids'] : array(),
-            $this->contentMapper,
+            $this->contentQueryExecutor,
+            $this->contentQueryBuilder,
+            array_merge($this->getDefaultParams(), $property->getParams()),
+            $this->logger,
             $webspaceKey,
             $languageCode
         );
 
         $property->setValue($container);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDefaultParams()
+    {
+        return array('properties' => array());
     }
 
     /**
@@ -111,10 +141,24 @@ class InternalLinks extends ComplexContentType
         $segmentKey
     ) {
         $value = $property->getValue();
+        if ($value instanceof ArrayableInterface) {
+            $value = $value->toArray();
+        }
 
         // if whole container is pushed
         if (isset($value['data'])) {
             unset($value['data']);
+        }
+
+        if (isset($value['ids'])) {
+            // remove not existing ids
+            $session = $node->getSession();
+            $selectedNodes = $session->getNodesByIdentifier($value['ids']);
+            $ids = array();
+            foreach ($selectedNodes as $selectedNode) {
+                $ids[] = $selectedNode->getIdentifier();
+            }
+            $value['ids'] = $ids;
         }
 
         // set value to node
@@ -141,4 +185,12 @@ class InternalLinks extends ComplexContentType
     {
         return $this->template;
     }
-} 
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getContentData(PropertyInterface $property)
+    {
+        return $property->getValue()->getData();
+    }
+}

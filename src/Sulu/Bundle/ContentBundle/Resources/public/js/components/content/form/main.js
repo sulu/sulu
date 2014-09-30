@@ -29,6 +29,8 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
         initialize: function() {
             this.sandbox.emit('husky.toolbar.header.item.enable', 'template', false);
 
+            this.preview = new Preview();
+
             this.dfdListenForChange = this.sandbox.data.deferred();
             this.load();
         },
@@ -273,19 +275,19 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
                 this.setHeaderBar(false);
             }.bind(this));
 
-            this.sandbox.dom.on(this.formId, 'form-add', function(e, propertyName, data) {
+            this.sandbox.dom.on(this.formId, 'form-add', function(e, propertyName, data, index) {
                 this.createConfiguration(e.currentTarget);
 
+                var $elements = this.sandbox.dom.children(this.$find('[data-mapper-property="' + propertyName + '"]')),
+                    $element = (index !== undefined && $elements.length > index) ? $elements[index] : this.sandbox.dom.last($elements),
+                    changes;
+
                 // start new subcomponents
-                this.sandbox.start(
-                    this.sandbox.dom.last(
-                        this.sandbox.dom.children(this.$find('[data-mapper-property="'+ propertyName +'"]'))
-                    )
-                );
+                this.sandbox.start($element);
 
                 // update changes
                 try {
-                    var changes = this.sandbox.form.getData(this.formId);
+                    changes = this.sandbox.form.getData(this.formId);
                     this.sandbox.emit('sulu.preview.update-property', propertyName, changes[propertyName]);
                 } catch (ex) {
                     // ignore exceptions
@@ -379,7 +381,7 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
             this.getDomElementsForTagName('sulu.rlp.part', function(property) {
                 var value = property.$el.data('element').getValue();
                 if (value !== '') {
-                    parts[Preview.getSequence(property.$el, this.sandbox)] = value;
+                    parts[this.preview.getSequence(property.$el, this.sandbox)] = value;
                 } else {
                     complete = false;
                 }

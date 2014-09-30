@@ -108,7 +108,10 @@ class PhpcrCacheProvider implements PreviewCacheProviderInterface
             return false;
         }
 
-        return $this->contentMapper->load($cacheNode->getIdentifier(), $webspaceKey, $locale);
+        $content = $this->contentMapper->load($cacheNode->getIdentifier(), $webspaceKey, $locale);
+        $content->setUuid($cacheNode->getPropertyValue($this->getContentPropertyName()));
+
+        return $content;
     }
 
     /**

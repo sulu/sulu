@@ -11,7 +11,9 @@
 namespace Sulu\Bundle\ContentBundle\Repository;
 
 use Doctrine\ODM\PHPCR\PHPCRException;
+use PHPCR\ItemNotFoundException;
 use PHPCR\RepositoryException;
+use Psr\Log\LoggerInterface;
 use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\StructureInterface;
@@ -50,16 +52,23 @@ class NodeRepository implements NodeRepositoryInterface
      */
     private $webspaceManager;
 
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
     function __construct(
         ContentMapperInterface $mapper,
         SessionManagerInterface $sessionManager,
         UserManagerInterface $userManager,
-        WebspaceManagerInterface $webspaceManager
+        WebspaceManagerInterface $webspaceManager,
+        LoggerInterface $logger
     ) {
         $this->mapper = $mapper;
         $this->sessionManager = $sessionManager;
         $this->userManager = $userManager;
         $this->webspaceManager = $webspaceManager;
+        $this->logger = $logger;
     }
 
     /**
@@ -236,7 +245,15 @@ class NodeRepository implements NodeRepositoryInterface
 
         if (!empty($ids)) {
             foreach ($ids as $id) {
-                $result[] = $this->getNode($id, $webspaceKey, $languageCode);
+                try {
+                    if(!empty($id)) {
+                        $result[] = $this->getNode($id, $webspaceKey, $languageCode);
+                    }
+                } catch (ItemNotFoundException $ex) {
+                    $this->logger->warning(
+                        sprintf("%s in internal links not found. Exception: %s", $id, $ex->getMessage())
+                    );
+                }
             }
             $idString = implode(',', $ids);
         }
@@ -321,11 +338,11 @@ class NodeRepository implements NodeRepositoryInterface
             $result = $this->prepareNode($parentNode, $webspaceKey, $languageCode, 1, false);
             $result['_embedded']['nodes'] = $this->prepareNodesTree($nodes, $webspaceKey, $languageCode, false);
             $result['total'] = sizeof($result['_embedded']['nodes']);
-
-            return $result;
         } else {
-            return $nodes;
+            $result = $nodes;
         }
+
+        return $result;
     }
 
     /**
@@ -386,8 +403,7 @@ class NodeRepository implements NodeRepositoryInterface
         $state = null,
         $isShadow = false,
         $shadowBaseLanguage = null
-    )
-    {
+    ) {
         $node = $this->getMapper()->save(
             $data,
             $templateKey,

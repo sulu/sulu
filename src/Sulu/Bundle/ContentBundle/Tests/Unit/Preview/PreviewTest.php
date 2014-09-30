@@ -25,6 +25,8 @@ use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyTag;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Webspace\Localization;
+use Sulu\Component\Webspace\Navigation;
+use Sulu\Component\Webspace\NavigationContext;
 use Sulu\Component\Webspace\Theme;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Response;
@@ -107,6 +109,8 @@ class PreviewTest extends PhpcrTestCase
             $webspace->addLocalization($en);
             $webspace->addLocalization($de);
             $webspace->addLocalization($es);
+
+            $webspace->setNavigation(new Navigation(array(new NavigationContext('main', array()))));
 
             $this->webspaceManager = $this->getMock('Sulu\Component\Webspace\Manager\WebspaceManagerInterface');
             $this->webspaceManager->expects($this->any())

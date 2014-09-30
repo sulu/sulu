@@ -10,11 +10,13 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Unit\Content\Types;
 
-use JMS\Serializer\Serializer;
 use Sulu\Bundle\ContentBundle\Content\SmartContentContainer;
-use Sulu\Bundle\ContentBundle\Content\Types\SmartContent;
+use Sulu\Bundle\ContentBundle\Content\Types\SmartContent\SmartContent;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepository;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
+use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
+use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 //FIXME remove on update to phpunit 3.8, caused by https://github.com/sebastianbergmann/phpunit/issues/604
 interface NodeInterface extends \PHPCR\NodeInterface, \Iterator
@@ -29,9 +31,14 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
     private $smartContent;
 
     /**
-     * @var NodeRepository
+     * @var ContentQueryExecutorInterface
      */
-    private $nodeRepository;
+    private $contentQuery;
+
+    /**
+     * @var ContentQueryBuilderInterface
+     */
+    private $contentQueryBuilder;
 
     /**
      * @var TagManagerInterface
@@ -39,17 +46,15 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
     private $tagManager;
 
     /**
-     * @var Serializer
+     * @var RequestStack
      */
-    private $serializer;
+    private $requestStack;
 
     public function setUp()
     {
-        $this->nodeRepository = $this->getMockForAbstractClass(
-            'Sulu\Bundle\ContentBundle\Repository\NodeRepository',
-            array(),
-            '',
-            false
+        $this->contentQuery = $this->getMockForAbstractClass('Sulu\Component\Content\Query\ContentQueryExecutorInterface');
+        $this->contentQueryBuilder = $this->getMockForAbstractClass(
+            'Sulu\Component\Content\Query\ContentQueryBuilderInterface'
         );
 
         $this->tagManager = $this->getMockForAbstractClass(
@@ -62,9 +67,13 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
             array('resolveTagIds', 'resolveTagNames')
         );
 
+        $this->requestStack = $this->getMockBuilder('Symfony\Component\HttpFoundation\RequestStack')->getMock();
+
         $this->smartContent = new SmartContent(
-            $this->nodeRepository,
+            $this->contentQuery,
+            $this->contentQueryBuilder,
             $this->tagManager,
+            $this->requestStack,
             'SuluContentBundle:Template:content-types/smart_content.html.twig'
         );
 
@@ -205,7 +214,18 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
 
     public function testRead()
     {
-        $smartContentContainer = new SmartContentContainer($this->nodeRepository, $this->tagManager, 'test', 'en', 's');
+        $smartContentContainer = new SmartContentContainer(
+            $this->contentQuery,
+            $this->contentQueryBuilder,
+            $this->tagManager,
+            array(
+                'page_parameter' => 'p',
+                'properties' => array('my_title'=>'title')
+            ),
+            'test',
+            'en',
+            's'
+        );
         $smartContentContainer->setConfig(
             array(
                 'tags' => array('Tag1', 'Tag2'),
@@ -242,6 +262,7 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
         );
 
         $property->expects($this->any())->method('getName')->will($this->returnValue('property'));
+        $property->expects($this->any())->method('getParams')->will($this->returnValue(array('properties' => array('my_title' => 'title'))));
 
         $property->expects($this->exactly(1))->method('setValue')->with($smartContentContainer);
 
@@ -252,8 +273,14 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
     {
 
         $smartContentContainerPreview = new SmartContentContainer(
-            $this->nodeRepository,
-            $this->tagManager, 'test', 'en', 's', true
+            $this->contentQuery,
+            $this->contentQueryBuilder,
+            $this->tagManager,
+            array(
+                'page_parameter' => 'p',
+                'properties' => array()
+            ),
+            'test', 'en', 's', true
         );
         $smartContentContainerPreview->setConfig(
             array(
@@ -291,6 +318,7 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
         );
 
         $property->expects($this->any())->method('getName')->will($this->returnValue('property'));
+        $property->expects($this->any())->method('getParams')->will($this->returnValue(array()));
 
         $property->expects($this->exactly(1))->method('setValue')->with($smartContentContainerPreview);
 
@@ -301,5 +329,33 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
             'en',
             's'
         );
+    }
+
+    public function testGetViewData()
+    {
+        $property = $this->getMockForAbstractClass(
+            'Sulu\Component\Content\PropertyInterface',
+            array(),
+            '',
+            true,
+            true,
+            true,
+            array('getValue', 'getParams')
+        );
+
+        $config = array('dataSource' => 'some-uuid');
+
+        $smartContentContainer = $this->getMockBuilder('Sulu\Bundle\ContentBundle\Content\SmartContentContainer')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $smartContentContainer->expects($this->once())->method('getConfig')->will($this->returnValue($config));
+
+        $property->expects($this->exactly(1))->method('getValue')
+            ->will($this->returnValue($smartContentContainer));
+
+        $viewData = $this->smartContent->getViewData($property);
+
+        $this->assertEquals($config, $viewData);
     }
 }

@@ -154,17 +154,18 @@ define(['app-config'], function(AppConfig) {
             }.bind(this), '.content-type');
         },
 
-        updateTabVisibilityForShadowCheckbox: function() {
+        updateTabVisibilityForShadowCheckbox: function(isInitial) {
             var checkboxEl = this.sandbox.dom.find('#shadow_on_checkbox')[0],
                 action = checkboxEl.checked ? 'hide' : 'show';
 
-            this.sandbox.util.each(['excerpt', 'seo'], function(i, tabName) {
-                this.sandbox.emit('husky.tabs.header.item.' + action, 'tab-' + tabName);
-            }.bind(this));
-
-            if (action === 'hide') {
-                this.sandbox.emit('husky.tabs.header.item.' + action, 'tab-content');
+            var tabAction = action;
+            if (false === isInitial) {
+                tabAction = 'hide';
             }
+
+            this.sandbox.util.each(['content', 'excerpt', 'seo'], function(i, tabName) {
+                this.sandbox.emit('husky.tabs.header.item.' + tabAction, 'tab-' + tabName);
+            }.bind(this));
 
             this.sandbox.util.each(['show-in-navigation-container', 'settings-content-form-container'], function(i, formGroupId) {
                 if (action === 'hide') {
@@ -189,6 +190,9 @@ define(['app-config'], function(AppConfig) {
                 this.sandbox.dom.html(this.$el, this.sandbox.util.template(template, {
                     translate: this.sandbox.translate
                 }));
+
+                this.buildAllNavContexts(this.sandbox.dom.data('#nav-contexts', 'auraData'));
+
                 this.bindDomEvents();
                 this.setData(this.data);
                 this.listenForChange();
@@ -196,13 +200,21 @@ define(['app-config'], function(AppConfig) {
                 this.sandbox.start(this.$el, {reset: true});
 
                 this.sandbox.dom.on('#shadow_on_checkbox', 'click', function() {
-                    this.updateTabVisibilityForShadowCheckbox();
+                    this.updateTabVisibilityForShadowCheckbox(false);
                 }.bind(this));
 
-                this.updateTabVisibilityForShadowCheckbox();
+                this.updateTabVisibilityForShadowCheckbox(true);
 
                 this.sandbox.emit('sulu.preview.initialize');
             }.bind(this));
+        },
+
+        buildAllNavContexts: function(navContexts) {
+            this.allNavContexts = {};
+
+            for (var i = 0, len = navContexts.length; i < len; i++) {
+                this.allNavContexts[navContexts[i].id] = navContexts[i].name;
+            }
         },
 
         setData: function(data) {
@@ -229,8 +241,13 @@ define(['app-config'], function(AppConfig) {
 
             // updated after init
             this.sandbox.on('husky.select.nav-contexts.initialize', function() {
+                var navContextsValues = [], i, len;
+                for (i = 0, len = data.navContexts.length; i < len; i++) {
+                    navContextsValues.push(this.allNavContexts[data.navContexts[i]]);
+                }
+
                 this.sandbox.dom.data('#nav-contexts', 'selection', data.navContexts);
-                this.sandbox.dom.data('#nav-contexts', 'selectionValues', data.navContexts);
+                this.sandbox.dom.data('#nav-contexts', 'selectionValues', navContextsValues);
 
                 $('#nav-contexts').trigger('data-changed');
             }.bind(this));
@@ -268,7 +285,7 @@ define(['app-config'], function(AppConfig) {
                 data.title = this.sandbox.dom.val('#internal-title');
                 data.internal_link = this.sandbox.dom.data('#internal-link', 'singleInternalLink');
             } else if (data.nodeType === TYPE_EXTERNAL) {
-                data.title = this.sandbox.dom.val('#internal-title');
+                data.title = this.sandbox.dom.val('#external-title');
                 data.external = this.sandbox.dom.val(this.sandbox.dom.find('input', '#external'));
             }
 
@@ -277,6 +294,10 @@ define(['app-config'], function(AppConfig) {
             }
 
             this.data = this.sandbox.util.extend(true, {}, this.data, data);
+
+            // nav contexts not extend
+            this.data.navContexts = data.navContexts;
+
             this.sandbox.emit('sulu.content.contents.save', this.data);
         }
     };

@@ -16,6 +16,11 @@ use Sulu\Bundle\TestBundle\Testing\PhpcrTestCase;
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyTag;
 use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Webspace\Localization;
+use Sulu\Component\Webspace\Navigation;
+use Sulu\Component\Webspace\NavigationContext;
+use Sulu\Component\Webspace\Theme;
+use Sulu\Component\Webspace\Webspace;
 
 class PhpcrCacheProviderTest extends PhpcrTestCase
 {
@@ -29,6 +34,46 @@ class PhpcrCacheProviderTest extends PhpcrTestCase
         $this->prepareMapper();
 
         $this->cache = new PhpcrCacheProvider($this->mapper, $this->sessionManager);
+    }
+
+    protected function prepareWebspaceManager()
+    {
+        if ($this->webspaceManager === null) {
+            $webspace = new Webspace();
+            $en = new Localization();
+            $en->setLanguage('en');
+            $en_us = new Localization();
+            $en_us->setLanguage('en');
+            $en_us->setCountry('us');
+            $en_us->setParent($en);
+            $en->addChild($en_us);
+
+            $de = new Localization();
+            $de->setLanguage('de');
+            $de_at = new Localization();
+            $de_at->setLanguage('de');
+            $de_at->setCountry('at');
+            $de_at->setParent($de);
+            $de->addChild($de_at);
+
+            $theme = new Theme();
+            $theme->setKey('test');
+            $webspace->setTheme($theme);
+
+            $es = new Localization();
+            $es->setLanguage('es');
+
+            $webspace->addLocalization($en);
+            $webspace->addLocalization($de);
+            $webspace->addLocalization($es);
+
+            $webspace->setNavigation(new Navigation(array(new NavigationContext('main', array()))));
+
+            $this->webspaceManager = $this->getMock('Sulu\Component\Webspace\Manager\WebspaceManagerInterface');
+            $this->webspaceManager->expects($this->any())
+                ->method('findWebspaceByKey')
+                ->will($this->returnValue($webspace));
+        }
     }
 
     public function structureCallback()
