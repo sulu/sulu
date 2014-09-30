@@ -1708,6 +1708,8 @@ class ContentMapper implements ContentMapperInterface
             $propertyName = $this->properties->getName('internal_link');
             $uuid = $node->getPropertyValue($propertyName);
             $node = $this->sessionManager->getSession()->getNodeByIdentifier($uuid);
+            $structure = $this->load($uuid, $webspaceKey, $locale);
+            $url = $structure->getResourceLocator();
         }
 
         $locale = $this->getShadowLocale($node, $locale);
@@ -1731,7 +1733,9 @@ class ContentMapper implements ContentMapperInterface
             $templateKey = $this->templateResolver->resolve($nodeType, $templateKey);
             $structure = $this->structureManager->getStructure($templateKey);
 
-            $url = $this->getUrl($path, $row, $structure, $webspaceKey, $locale, $routesPath);
+            if (!isset($url)) {
+                $url = $this->getUrl($path, $row, $structure, $webspaceKey, $locale, $routesPath);
+            }
 
             // get url returns false if route is not this language
             if ($url !== false) {
