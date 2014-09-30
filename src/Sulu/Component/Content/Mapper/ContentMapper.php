@@ -1710,9 +1710,7 @@ class ContentMapper implements ContentMapperInterface
             $node->hasProperty($this->properties->getName('nodeType'))
         ) {
             if (
-                $node->getPropertyValue(
-                    $this->properties->getName('nodeType')
-                ) === Structure::NODE_TYPE_INTERNAL_LINK
+                $node->getPropertyValue($this->properties->getName('nodeType')) === Structure::NODE_TYPE_INTERNAL_LINK
             ) {
                 $propertyName = $this->properties->getName('internal_link');
                 $uuid = $node->getPropertyValue($propertyName);
