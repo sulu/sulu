@@ -1727,7 +1727,7 @@ class ContentMapper implements ContentMapperInterface
             $url = $this->getUrl($path, $row, $node, $structure, $webspaceKey, $locale, $routesPath);
 
             // get url returns false if route is not this language
-            if($url !== false) {
+            if ($url !== false) {
                 // generate field data
                 $fieldsData = $this->getFieldsData($row, $node, $fields, $templateKey, $webspaceKey, $locale);
 
@@ -1788,7 +1788,10 @@ class ContentMapper implements ContentMapperInterface
         if (!isset($field['property'])) {
             // normal data from node property
             return $row->getValue($field['column']);
-        } elseif (!isset($field['extension']) && (!isset($field['templateKey']) || $field['templateKey'] === $templateKey)) {
+        } elseif (
+            !isset($field['extension'])
+            && (!isset($field['templateKey']) || $field['templateKey'] === $templateKey)
+        ) {
             // not extension data but property of node
             return $this->getPropertyData($node, $field['property'], $webspaceKey, $locale);
         } elseif (isset($field['extension'])) {
