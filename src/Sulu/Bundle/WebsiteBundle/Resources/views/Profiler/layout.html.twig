@@ -14,15 +14,19 @@
             <b>Webspace</b>
             <span>{{ collector.data('webspace').name }}</span>
         </div>
+        {% if collector.data('structure') %}
         <div class="sf-toolbar-info-piece">
             <b>Structure</b>
             <span>{{ collector.data('structure').template }}</span>
         </div>
+        {% endif %}
         <div class="sf-toolbar-info-piece">
             <b>Localization</b>
             <span>
                 {{ collector.data('localization') }}
+                {% if collector.data('structure') %}
                 ({{ collector.data('structure').shadowOn ? collector.data('structure').shadowBaseLanguage : 'no shadow' }})</b>
+                {% endif %}
             </span>
         </div>
     {% endset %}
