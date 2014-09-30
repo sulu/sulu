@@ -111,7 +111,7 @@ class ContentRouteProvider implements RouteProviderInterface
                     $content->getNodeType() === Structure::NODE_TYPE_INTERNAL_LINK &&
                     $content->getNodeState() === StructureInterface::STATE_PUBLISHED
                 ) {
-                    // redirect *.html to * (without url)
+                    // redirect to linked page
                     $route = new Route(
                         $request->getRequestUri(), array(
                             '_controller' => 'SuluWebsiteBundle:Default:redirect',
