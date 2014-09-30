@@ -117,6 +117,7 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
 
         $sql2Order = array();
         $sortBy = $this->getConfig('sortBy', array());
+
         if (!empty($sortBy) && is_array($sortBy)) {
             foreach ($sortBy as $sortColumn) {
                 // TODO implement more generic
@@ -127,6 +128,8 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
 
                 $sql2Order[] = $order . ' ' . $sortOrder;
             }
+        } else {
+            $sql2Order[] = 'page.[sulu:order]';
         }
 
         return implode(', ', $sql2Order);
