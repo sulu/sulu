@@ -300,7 +300,9 @@ class NodeController extends RestController implements ClassResourceInterface
         if (isset($sortBy)) {
             $columns = explode(',', $sortBy);
             foreach ($columns as $column) {
-                $sortColumns[] = $column;
+                if ($column) {
+                    $sortColumns[] = $column;
+                }
             }
         }
 
