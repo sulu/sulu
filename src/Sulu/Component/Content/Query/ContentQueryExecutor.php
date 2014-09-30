@@ -94,8 +94,6 @@ class ContentQueryExecutor implements ContentQueryExecutorInterface
             }
         }
 
-        $this->sessionManager->getSession()->getNodes($paths);
-
         if ($this->stopwatch) {
             $this->stopwatch->stop('ContentQuery::execute.preload-nodes.get-paths');
             $this->stopwatch->start('ContentQuery::execute.preload-nodes.execute');

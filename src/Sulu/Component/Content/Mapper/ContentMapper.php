@@ -1724,25 +1724,34 @@ class ContentMapper implements ContentMapperInterface
             $templateKey = $this->templateResolver->resolve($nodeType, $templateKey);
             $structure = $this->structureManager->getStructure($templateKey);
 
-            // generate field data
-            $fieldsData = $this->getFieldsData($row, $node, $fields, $templateKey, $webspaceKey, $locale);
+            $url = $this->getUrl($path, $row, $node, $structure, $webspaceKey, $locale, $routesPath);
 
-            return array_merge(
-                array(
-                    'uuid' => $uuid,
-                    'nodeType' => $nodeType,
-                    'path' => str_replace($this->sessionManager->getContentNode($webspaceKey)->getPath(), '', $path),
-                    'changed' => $changed,
-                    'changer' => $changer,
-                    'created' => $created,
-                    'creator' => $creator,
-                    'title' => $this->getTitle($node, $structure, $webspaceKey, $locale),
-                    'url' => $this->getUrl($path, $row, $node, $structure, $webspaceKey, $locale, $routesPath),
-                    'locale' => $locale,
-                    'template' => $templateKey
-                ),
-                $fieldsData
-            );
+            // get url returns false if route is not this language
+            if($url !== false) {
+                // generate field data
+                $fieldsData = $this->getFieldsData($row, $node, $fields, $templateKey, $webspaceKey, $locale);
+
+                return array_merge(
+                    array(
+                        'uuid' => $uuid,
+                        'nodeType' => $nodeType,
+                        'path' => str_replace(
+                            $this->sessionManager->getContentNode($webspaceKey)->getPath(),
+                            '',
+                            $path
+                        ),
+                        'changed' => $changed,
+                        'changer' => $changer,
+                        'created' => $created,
+                        'creator' => $creator,
+                        'title' => $this->getTitle($node, $structure, $webspaceKey, $locale),
+                        'url' => $this->getUrl($path, $row, $node, $structure, $webspaceKey, $locale, $routesPath),
+                        'locale' => $locale,
+                        'template' => $templateKey
+                    ),
+                    $fieldsData
+                );
+            }
         }
 
         return false;
@@ -1875,8 +1884,15 @@ class ContentMapper implements ContentMapperInterface
     /**
      * Returns url of a row
      */
-    private function getUrl($path, Row $row, NodeInterface $node, StructureInterface $structure, $webspaceKey, $locale, $routesPath)
-    {
+    private function getUrl(
+        $path,
+        Row $row,
+        NodeInterface $node,
+        StructureInterface $structure,
+        $webspaceKey,
+        $locale,
+        $routesPath
+    ) {
         $url = '';
         // if homepage
         if ($this->sessionManager->getContentNode($webspaceKey)->getPath() === $path) {
@@ -1892,7 +1908,11 @@ class ContentMapper implements ContentMapperInterface
 
             try {
                 $routePath = $row->getPath('route');
-                $url = str_replace($routesPath, '', $routePath);
+                if (strpos($routePath, $routesPath) === 0) {
+                    $url = str_replace($routesPath, '', $routePath);
+                } else {
+                    return false;
+                }
             } catch (RepositoryException $ex) {
                 // ignore exception because no route node exists
                 // could have several reasons:
