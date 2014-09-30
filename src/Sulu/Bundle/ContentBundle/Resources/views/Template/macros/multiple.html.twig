@@ -12,8 +12,8 @@
             <script id="{{ id|raw }}-tpl" type="text/template">
                 <div class="text-block {{ property.name }}-element">
                     <div class="head">
-                        <label class="move" title="{{ property.getInfoText(languageCode) }}">
-                            {{ property.getTitle(languageCode) }}
+                        <label class="move" title="{{ property.getInfoText(userLocale) }}">
+                            {{ property.getTitle(userLocale) }}
                         </label>
 
                         <div data-mapper-remove="{{ property.name }}"
@@ -21,7 +21,7 @@
                     </div>
 
                     <div class="container">
-                        {% include type.template with {'property': property, 'params':params, 'type': type, 'id': id ~ '-' ~ property.name ~ '<~=index~>', 'webspaceKey': webspaceKey, 'languageCode': languageCode} only %}
+                        {% include type.template with {'property': property, 'params':params, 'type': type, 'id': id ~ '-' ~ property.name ~ '<~=index~>', 'webspaceKey': webspaceKey, 'languageCode': languageCode, 'userLocale': userLocale} only %}
                     </div>
                 </div>
             </script>
