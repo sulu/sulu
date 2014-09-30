@@ -61,7 +61,8 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
             $cacheDir . '/Template_blockStructureCache.php',
             $cacheDir . '/Template_block_typesStructureCache.php',
             $cacheDir . '/Template_SectionsStructureCache.php',
-            $cacheDir . '/Template_nesting_paramsStructureCache.php'
+            $cacheDir . '/Template_nesting_paramsStructureCache.php',
+            $cacheDir . '/Template_boolean_paramsStructureCache.php'
         );
 
         if (!is_dir($cacheDir)) {
@@ -587,6 +588,19 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
             ),
             $structure->getProperty('title')->getParams()
         );
+    }
+
+    public function testBooleanParams()
+    {
+        $structure = $this->structureManager->getStructure('template_boolean_params');
+
+        $params = $structure->getProperty('title')->getParams();
+
+        $this->assertSame(true, $params['test1']);
+        $this->assertSame(true, $params['test2']);
+        $this->assertSame(false, $params['test3']);
+        $this->assertSame(false, $params['test4']);
+        $this->assertSame('test', $params['test5']);
     }
 }
 

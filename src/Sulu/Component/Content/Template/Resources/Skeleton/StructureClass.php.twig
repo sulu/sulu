@@ -138,8 +138,14 @@ new PropertyTag('{{ tag.name }}', {{ tag.priority is defined and tag.priority ? 
 {% for param in params %}
 {% if param.type == 'collection'  %}
                 '{{ param.name }}' => {{ _self.renderParams(param.value) }}
-{% elseif param.type == 'string'  %}
+{% elseif param.type|lower == 'string'  %}
+{% if param.value|lower == 'true' %}
+                '{{ param.name }}' => {{ param.value|lower }},
+{% elseif param.value|lower == 'false' %}
+                '{{ param.name }}' => {{ param.value|lower }},
+{% else %}
                 '{{ param.name }}' => '{{ param.value }}',
+{% endif %}
 {% endif %}
 {% endfor %}
             )
