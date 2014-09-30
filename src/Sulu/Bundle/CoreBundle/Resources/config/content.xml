@@ -24,7 +24,6 @@
         <parameter key="sulu.content.rlp.mapper.phpcr.class">Sulu\Component\Content\Types\Rlp\Mapper\PhpcrMapper</parameter>
         <parameter key="sulu.content.rlp.strategy.tree.class">Sulu\Component\Content\Types\Rlp\Strategy\TreeStrategy</parameter>
         <parameter key="sulu.content.parent_child_any_finder.class">Sulu\Component\Content\Mapper\LocalizationFinder\ParentChildAnyFinder</parameter>
-
         <parameter key="sulu.content.query_executor.class">Sulu\Component\Content\Query\ContentQueryExecutor</parameter>
     </parameters>
 

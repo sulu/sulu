@@ -15,6 +15,8 @@
         <title lang="en">That´s the template 1</title>
     </meta>
 
+    <tag name="some.random.structure.tag" foo="bar" bar="foo"/>
+
     <properties>
         <property name="title" type="text_line" mandatory="true">
             <meta>
@@ -32,6 +34,8 @@
 
             <tag name="sulu.node.name"/>
             <tag name="sulu.node.title" priority="10"/>
+
+            <tag name="some.random.tag" one="1" two="2" three="three" />
         </property>
 
         <property name="url" type="resource_locator" mandatory="true">

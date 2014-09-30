@@ -48,7 +48,9 @@ class TemplateReader implements LoaderInterface
         'state',
         'internal',
         'nodeType',
-        'navContexts'
+        'navContexts',
+        'shadow-on',
+        'shadow-base'
     );
 
     /**
@@ -96,8 +98,8 @@ class TemplateReader implements LoaderInterface
             'view' => $this->getValueFromXPath('/x:template/x:view', $xpath),
             'controller' => $this->getValueFromXPath('/x:template/x:controller', $xpath),
             'cacheLifetime' => $this->getValueFromXPath('/x:template/x:cacheLifetime', $xpath),
+            'tags' => $this->loadStructureTags('/x:template/x:tag', $xpath),
             'meta' => $this->loadMeta('/x:template/x:meta/x:*', $xpath),
-            'indexName' => $this->getValueFromXPath('/x:template/x:index/@name', $xpath),
         );
 
         $result = array_filter($result);
@@ -150,7 +152,6 @@ class TemplateReader implements LoaderInterface
             );
         }
 
-        $result['indexField'] = $xpath->query('x:indexField', $node)->length ? true : false;
         $result['mandatory'] = $this->getBooleanValueFromXPath('@mandatory', $xpath, $node, false);
         $result['multilingual'] = $this->getBooleanValueFromXPath('@multilingual', $xpath, $node, true);
         $result['tags'] = $this->loadTags('x:tag', $requiredTags, $tags, $xpath, $node);
@@ -219,6 +220,42 @@ class TemplateReader implements LoaderInterface
     }
 
     /**
+     * Loads the tags for the structure
+     * @param $path
+     * @param $xpath
+     * @return array
+     * @throws \InvalidArgumentException
+     */
+    private function loadStructureTags($path, $xpath)
+    {
+        $result = array();
+
+        foreach ($xpath->query($path) as $node) {
+            $tag = array(
+                'name' => null,
+                'attributes' => array(),
+            );
+
+            foreach ($node->attributes as $key => $attr) {
+                if (in_array($key, array('name'))) {
+                    $tag[$key] = $attr->value;
+                } else {
+                    $tag['attributes'][$key] = $attr->value;
+                }
+            }
+
+            if (!isset($tag['name'])) {
+                // this should not happen because of the XSD validation
+                throw new \InvalidArgumentException('Tag does not have a name in template definition');
+            }
+
+            $result[] = $tag;
+        }
+
+        return $result;
+    }
+
+    /**
      * validates a single tag
      */
     private function validateTag($tag, &$requiredTags, &$tags)
@@ -226,22 +263,7 @@ class TemplateReader implements LoaderInterface
         // remove tag from required tags
         $requiredTags = array_diff($requiredTags, array($tag['name']));
 
-        // check for duplicated priority
-        if (
-            isset($tags[$tag['name']]) &&
-            in_array(
-                $tag['priority'],
-                $tags[$tag['name']]
-            )
-        ) {
-            throw new InvalidXmlException(
-                sprintf(
-                    'Priority %s of tag %s exists duplicated',
-                    $tag['priority'],
-                    $tag['name']
-                )
-            );
-        } elseif (!isset($tags[$tag['name']])) {
+        if (!isset($tags[$tag['name']])) {
             $tags[$tag['name']] = array();
         }
 
@@ -253,7 +275,21 @@ class TemplateReader implements LoaderInterface
      */
     private function loadTag(\DOMXPath $xpath, \DOMNode $node)
     {
-        return $this->loadValues($xpath, $node, array('name', 'priority'));
+        $tag = array(
+            'name' => null,
+            'priority' => null,
+            'attributes' => array(),
+        );
+
+        foreach ($node->attributes as $key => $attr) {
+            if (in_array($key, array('name', 'priority'))) {
+                $tag[$key] = $attr->value;
+            } else {
+                $tag['attributes'][$key] = $attr->value;
+            }
+        }
+
+        return $tag;
     }
 
     /**
