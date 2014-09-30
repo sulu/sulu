@@ -54,8 +54,8 @@ define([
                     if (typeof(config.sortMethod) !== 'undefined' && !!config.sortMethod) {
                         App.dom.data($el, 'auraPreSelectedSortMethod', config.sortMethod);
                     }
-                    if ((typeof(config.sortBy) !== 'undefined') && !!config.sortBy && config.sortBy.length > 0) {
-                        App.dom.data($el, 'auraPreSelectedSortBy', config.sortBy[0]);
+                    if ((typeof(config.sortBy) !== 'undefined') && !!config.sortBy) {
+                        App.dom.data($el, 'auraPreSelectedSortBy', config.sortBy);
                     }
                     if (typeof(config.limitResult) !== 'undefined' && !!config.limitResult) {
                         App.dom.data($el, 'auraLimitResult', config.limitResult);

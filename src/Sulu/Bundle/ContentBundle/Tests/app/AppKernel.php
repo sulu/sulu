@@ -38,6 +38,19 @@ class AppKernel extends Kernel
         return $bundles;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    protected function getKernelParameters()
+    {
+        return array_merge(
+            parent::getKernelParameters(),
+            array(
+                'sulu.context' => \Sulu\Component\HttpKernel\SuluKernel::CONTEXT_ADMIN
+            )
+        );
+    }
+
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
         if (array_key_exists('APP_DB', $GLOBALS) &&

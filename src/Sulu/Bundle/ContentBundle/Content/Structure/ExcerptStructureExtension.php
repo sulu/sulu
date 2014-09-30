@@ -112,7 +112,7 @@ class ExcerptStructureExtension extends StructureExtension
                 $languageCode,
                 null // segmentkey
             );
-            $data[$property->getName()] = $property->getValue();
+            $data[$property->getName()] = $contentType->getContentData($property);
         }
 
         return new ExcerptValueContainer($data);

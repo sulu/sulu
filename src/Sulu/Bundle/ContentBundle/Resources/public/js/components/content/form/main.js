@@ -262,6 +262,7 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
                         propertyName = this.sandbox.dom.data(event.currentTarget, 'mapperProperty');
 
                     this.sandbox.emit('sulu.preview.update-property', propertyName, changes[propertyName]);
+                    this.sandbox.emit('sulu.content.changed');
                 }.bind(this));
             }
         },
