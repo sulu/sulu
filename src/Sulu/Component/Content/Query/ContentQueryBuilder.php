@@ -110,11 +110,16 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
             $additionalFields[$locale] = array();
 
             if ($this->excerpt) {
-                $select[] = $this->buildSelectorForExcerpt($locale, $additionalFields);
+                $excerptSelect =  $this->buildSelectorForExcerpt($locale, $additionalFields);
+                if($excerptSelect !== '') {
+                    $select[] = $this->buildSelectorForExcerpt($locale, $additionalFields);
+                }
             }
 
             $customSelect = $this->buildSelect($webspaceKey, $locale, $additionalFields);
-            $select[] = $customSelect;
+            if ($customSelect !== '') {
+                $select[] = $customSelect;
+            }
 
             if ($this->published) {
                 $where .= sprintf(
