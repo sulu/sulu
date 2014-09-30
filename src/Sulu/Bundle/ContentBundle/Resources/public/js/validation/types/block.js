@@ -157,8 +157,8 @@ define([
                                 {
                                     name: 'dropdown@husky',
                                     options: {
-                                        el: '#change' + options.index,
-                                        trigger: App.dom.find('.drop-down-trigger', this.$el),
+                                        el: App.dom.find('#change' + options.index, $template),
+                                        trigger: App.dom.find('.drop-down-trigger', $template),
                                         setParentDropDown: true,
                                         instanceName: 'change' + options.index,
                                         alignment: 'left',

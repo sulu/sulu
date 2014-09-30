@@ -285,7 +285,7 @@ define(['app-config'], function(AppConfig) {
                 data.title = this.sandbox.dom.val('#internal-title');
                 data.internal_link = this.sandbox.dom.data('#internal-link', 'singleInternalLink');
             } else if (data.nodeType === TYPE_EXTERNAL) {
-                data.title = this.sandbox.dom.val('#internal-title');
+                data.title = this.sandbox.dom.val('#external-title');
                 data.external = this.sandbox.dom.val(this.sandbox.dom.find('input', '#external'));
             }
 
