@@ -686,7 +686,7 @@ class ContentMapper implements ContentMapperInterface
             $oldState = $node->getPropertyValue($statePropertyName);
 
             if ($oldState === $state) {
-                // do nothing
+                $structure->setNodeState($state);
                 return;
             } elseif (
                 // from test to published
@@ -1707,9 +1707,9 @@ class ContentMapper implements ContentMapperInterface
         $this->properties->setLanguage($locale);
 
         // load default data
-        $uuid = $row->getValue('page.jcr:uuid');
+        $uuid = $node->getIdentifier();
 
-        if($node->hasProperty($this->properties->getName('template'))){
+        if ($node->hasProperty($this->properties->getName('template'))) {
             $templateKey = $node->getPropertyValue($this->properties->getName('template'));
             $nodeType = $node->getPropertyValue($this->properties->getName('nodeType'));
 
@@ -1724,31 +1724,43 @@ class ContentMapper implements ContentMapperInterface
             $templateKey = $this->templateResolver->resolve($nodeType, $templateKey);
             $structure = $this->structureManager->getStructure($templateKey);
 
-            // generate field data
-            $fieldsData = $this->getFieldsData($row, $fields, $templateKey, $webspaceKey, $locale);
+            $url = $this->getUrl($path, $row, $structure, $webspaceKey, $locale, $routesPath);
 
-            return array_merge(
-                array(
-                    'uuid' => $uuid,
-                    'nodeType' => $nodeType,
-                    'path' => str_replace($this->sessionManager->getContentNode($webspaceKey)->getPath(), '', $path),
-                    'changed' => $changed,
-                    'changer' => $changer,
-                    'created' => $created,
-                    'creator' => $creator,
-                    'title' => $this->getTitle($row, $structure, $locale),
-                    'url' => $this->getUrl($path, $row, $structure, $webspaceKey, $locale, $routesPath),
-                    'locale' => $locale,
-                    'template' => $templateKey
-                ),
-                $fieldsData
-            );
+            // get url returns false if route is not this language
+            if($url !== false) {
+                // generate field data
+                $fieldsData = $this->getFieldsData($row, $node, $fields, $templateKey, $webspaceKey, $locale);
+
+                return array_merge(
+                    array(
+                        'uuid' => $uuid,
+                        'nodeType' => $nodeType,
+                        'path' => str_replace(
+                            $this->sessionManager->getContentNode($webspaceKey)->getPath(),
+                            '',
+                            $path
+                        ),
+                        'changed' => $changed,
+                        'changer' => $changer,
+                        'created' => $created,
+                        'creator' => $creator,
+                        'title' => $this->getTitle($node, $structure, $webspaceKey, $locale),
+                        'url' => $url,
+                        'locale' => $locale,
+                        'template' => $templateKey
+                    ),
+                    $fieldsData
+                );
+            }
         }
 
         return false;
     }
 
-    private function getFieldsData(Row $row, $fields, $templateKey, $webspaceKey, $locale)
+    /**
+     * Return extracted data (configured by fields array) from node
+     */
+    private function getFieldsData(Row $row, NodeInterface $node, $fields, $templateKey, $webspaceKey, $locale)
     {
         $fieldsData = array();
         foreach ($fields[$locale] as $field) {
@@ -1766,7 +1778,7 @@ class ContentMapper implements ContentMapperInterface
             if (!isset($target[$field['name']])) {
                 $target[$field['name']] = '';
             }
-            if (($data = $this->getFieldData($field, $row, $templateKey, $webspaceKey, $locale)) !== null) {
+            if (($data = $this->getFieldData($field, $row, $node, $templateKey, $webspaceKey, $locale)) !== null) {
                 $target[$field['name']] = $data;
             }
         }
@@ -1774,23 +1786,29 @@ class ContentMapper implements ContentMapperInterface
         return $fieldsData;
     }
 
-    private function getFieldData($field, Row $row, $templateKey, $webspaceKey, $locale)
+    /**
+     * Return data for one field
+     */
+    private function getFieldData($field, Row $row, NodeInterface $node, $templateKey, $webspaceKey, $locale)
     {
-        if (!isset($field['property'])) {
+        if (isset($field['column'])) {
             // normal data from node property
             return $row->getValue($field['column']);
-        } elseif (!isset($field['extension']) && (!isset($field['templateKey']) || $field['templateKey'] === $templateKey)) {
-            // not extension data but property of node
-            return $this->getPropertyData($row->getNode('page'), $field['property'], $webspaceKey, $locale);
         } elseif (isset($field['extension'])) {
             // data from extension
             return $this->getExtensionData(
-                $row->getNode('page'),
+                $node,
                 $field['extension'],
                 $field['property'],
                 $webspaceKey,
                 $locale
             );
+        } elseif (
+            isset($field['property'])
+            && (!isset($field['templateKey']) || $field['templateKey'] === $templateKey)
+        ) {
+            // not extension data but property of node
+            return $this->getPropertyData($node, $field['property'], $webspaceKey, $locale);
         }
 
         return null;
@@ -1867,22 +1885,22 @@ class ContentMapper implements ContentMapperInterface
     /**
      * Returns title of a row
      */
-    private function getTitle(Row $row, StructureInterface $structure, $locale)
+    private function getTitle(NodeInterface $node, StructureInterface $structure, $webspaceKey, $locale)
     {
-        $property = new TranslatedProperty(
-            $structure->getPropertyByTagName('sulu.node.name'),
-            $locale,
-            $this->languageNamespace
-        );
-
-        return $row->getValue('page.' . $property->getName());
+        return $this->getPropertyData($node, $structure->getPropertyByTagName('sulu.node.name'), $webspaceKey, $locale);
     }
 
     /**
      * Returns url of a row
      */
-    private function getUrl($path, Row $row, StructureInterface $structure, $webspaceKey, $locale, $routesPath)
-    {
+    private function getUrl(
+        $path,
+        Row $row,
+        StructureInterface $structure,
+        $webspaceKey,
+        $locale,
+        $routesPath
+    ) {
         $url = '';
         // if homepage
         if ($this->sessionManager->getContentNode($webspaceKey)->getPath() === $path) {
@@ -1892,18 +1910,17 @@ class ContentMapper implements ContentMapperInterface
                 $property = $structure->getPropertyByTagName('sulu.rlp');
 
                 if ($property->getContentTypeName() !== 'resource_locator') {
-                    $property = new TranslatedProperty(
-                        $structure->getPropertyByTagName('sulu.rlp'),
-                        $locale,
-                        $this->languageNamespace
-                    );
-                    $url = $row->getValue('page.' . $property->getName());
+                    $url = $this->getPropertyData($row->getNode('page'), $property, $webspaceKey, $locale);
                 }
             }
 
             try {
                 $routePath = $row->getPath('route');
-                $url = str_replace($routesPath, '', $routePath);
+                if (strpos($routePath, $routesPath) === 0) {
+                    $url = str_replace($routesPath, '', $routePath);
+                } else {
+                    return false;
+                }
             } catch (RepositoryException $ex) {
                 // ignore exception because no route node exists
                 // could have several reasons:

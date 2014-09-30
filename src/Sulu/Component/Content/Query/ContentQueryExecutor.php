@@ -78,6 +78,31 @@ class ContentQueryExecutor implements ContentQueryExecutorInterface
 
         if ($this->stopwatch) {
             $this->stopwatch->stop('ContentQuery::execute.execute-query');
+            $this->stopwatch->start('ContentQuery::execute.preload-nodes.get-paths');
+        }
+
+        // this preloads all node which should are selected in the statement before
+        // prevent the system to load each node individual
+        $rootDepth = substr_count($this->sessionManager->getContentNode($webspaceKey)->getPath(), '/');
+        $paths = array();
+        /** @var Row $row */
+        foreach ($queryResult as $row) {
+            $pageDepth = substr_count($row->getPath('page'), '/') - $rootDepth;
+
+            if ($depth === null || $depth < 0 || ($depth > 0 && $pageDepth <= $depth)) {
+                $paths[] = $row->getPath('page');
+            }
+        }
+
+        if ($this->stopwatch) {
+            $this->stopwatch->stop('ContentQuery::execute.preload-nodes.get-paths');
+            $this->stopwatch->start('ContentQuery::execute.preload-nodes.execute');
+        }
+
+        $this->sessionManager->getSession()->getNodes($paths);
+
+        if ($this->stopwatch) {
+            $this->stopwatch->stop('ContentQuery::execute.preload-nodes.execute');
             $this->stopwatch->start('ContentQuery::execute.rowsToList');
         }
 

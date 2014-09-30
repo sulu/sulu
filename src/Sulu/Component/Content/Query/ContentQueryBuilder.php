@@ -104,27 +104,10 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
         $where = '';
         $select = '';
         $order = array();
-        $names = array();
 
         foreach ($locales as $locale) {
             $this->setLocale($locale);
             $additionalFields[$locale] = array();
-
-            if ($select != '') {
-                $select .= ',';
-            }
-            // select internal properties
-            $select .= sprintf(
-                "route.[jcr:uuid] as routeUuid, route.[jcr:path] as routePath, page.[jcr:uuid], page.[%s], page.[%s], page.[%s], page.[%s], page.[%s], page.[%s]",
-                $this->getPropertyName('template'),
-                $this->getPropertyName('changed'),
-                $this->getPropertyName('changer'),
-                $this->getPropertyName('created'),
-                $this->getPropertyName('creator'),
-                $this->getPropertyName('nodeType')
-            );
-
-            $select .= $this->buildSelectForStructures($locale, $this->structureManager->getStructures(), $names);
 
             if ($this->excerpt) {
                 $select .= ',' . $this->buildSelectorForExcerpt($locale, $additionalFields);
@@ -161,19 +144,20 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
 
             $customOrder = $this->buildOrder($webspaceKey, $locale);
             if (!empty($customOrder)) {
-                $order[] = $this->buildOrder($webspaceKey, $locale);
+                $order[] = $customOrder;
             }
         }
 
         // build sql2 query string
         $sql2 = sprintf(
-            "SELECT route.*, page.*, %s
+            "SELECT route.*, page.*%s %s
              FROM [nt:unstructured] AS page
              LEFT OUTER JOIN [nt:unstructured] AS route ON page.[jcr:uuid] = route.[sulu:content]
              WHERE page.[jcr:mixinTypes] = 'sulu:content'
                 AND (ISDESCENDANTNODE(page, '/cmf/%s/contents') OR ISSAMENODE(page, '/cmf/%s/contents'))
                 AND (%s)
                 %s %s",
+            strlen($select) > 0 ? ',' : '',
             $select,
             $webspaceKey,
             $webspaceKey,

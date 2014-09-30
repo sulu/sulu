@@ -11,6 +11,7 @@
 namespace Sulu\Component\Content;
 
 use Sulu\Component\Util\ArrayableInterface;
+use Sulu\Component\Content\PropertyTag;
 
 /**
  * Property of Structure generated from Structure Manager to map a template
@@ -82,11 +83,6 @@ class Property implements PropertyInterface, \JsonSerializable
      */
     private $value;
 
-    /**
-     * @var boolean
-     */
-    private $indexed = false;
-
     function __construct(
         $name,
         $metaData,
@@ -97,8 +93,7 @@ class Property implements PropertyInterface, \JsonSerializable
         $minOccurs = 1,
         $params = array(),
         $tags = array(),
-        $col = null,
-        $indexed = false
+        $col = null
     )
     {
         $this->contentTypeName = $contentTypeName;
@@ -111,7 +106,6 @@ class Property implements PropertyInterface, \JsonSerializable
         $this->params = $params;
         $this->tags =$tags;
         $this->col = $col;
-        $this->indexed = $indexed;
     }
 
     /**
@@ -194,6 +188,24 @@ class Property implements PropertyInterface, \JsonSerializable
     public function getTag($tagName)
     {
         return $this->tags[$tagName];
+    }
+
+    /**
+     * add a property tag
+     * @param PropertyTag $tag
+     */
+    public function addTag(PropertyTag $tag)
+    {
+        return $this->tags[$tag->getName()] = $tag;
+    }
+
+    /**
+     * return true if a tag with the given name exists
+     * @return boolean
+     */
+    public function hasTag($tagName)
+    {
+        return isset($this->tags[$tagName]);
     }
 
     /**
@@ -295,16 +307,6 @@ class Property implements PropertyInterface, \JsonSerializable
     public function getMetadata()
     {
         return $this->metadata;
-    }
-
-    public function getIndexed() 
-    {
-        return $this->indexed;
-    }
-    
-    public function setIndexed($indexed)
-    {
-        $this->indexed = $indexed;
     }
 
     /**
