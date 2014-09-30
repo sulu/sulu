@@ -33,6 +33,7 @@
         </service>
         <service id="sulu_content.preview.message_component" class="%sulu_content.preview.message_component.class%">
             <argument type="service" id="sulu_content.preview"/>
+            <argument type="service" id="sulu_core.webspace.request_analyzer"/>
             <argument type="service" id="logger"/>
         </service>
 

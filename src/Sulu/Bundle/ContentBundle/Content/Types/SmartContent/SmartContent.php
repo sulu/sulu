@@ -225,7 +225,11 @@ class SmartContent extends ComplexContentType
 
         // paginate
         if (isset($params['max_per_page'])) {
-            $page = $this->requestStack->getCurrentRequest()->get($params['page_parameter'], 1);
+            if ($this->requestStack->getCurrentRequest() !== null) {
+                $page = $this->requestStack->getCurrentRequest()->get($params['page_parameter'], 1);
+            } else {
+                $page = 1;
+            }
             $data = array_slice($data, ($page - 1) * $params['max_per_page'], $params['max_per_page']);
         }
 
