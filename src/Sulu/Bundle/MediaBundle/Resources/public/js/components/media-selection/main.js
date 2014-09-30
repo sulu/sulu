@@ -388,7 +388,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
             this.uploadCollection = collectionId;
             this.sandbox.emit(
                 'husky.dropzone.media-selection-'+ this.options.instanceName +'.change-url',
-                '/admin/api/media?collection%5Bid%5D=' + collectionId);
+                '/admin/api/media?collection=' + collectionId);
         },
 
         /**
@@ -782,16 +782,24 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                 // reset item visible
                 this.itemsVisible = this.options.visibleItems;
 
-                this.sandbox.util.load(this.URI.str)
-                    .then(function (data) {
-                        this.items = data._embedded[this.options.resultKey];
-
-                        this.sandbox.emit(DATA_RETRIEVED.call(this));
-                    }.bind(this))
-                    .then(function (error) {
-                        this.sandbox.logger.log(error);
-                    }.bind(this));
+                if (this.data.ids.length > 0) {
+                    this.sandbox.util.load(this.URI.str)
+                        .then(function(data) {
+                            dataRetrieved.call(this, data._embedded[this.options.resultKey]);
+                        }.bind(this))
+                        .then(function(error) {
+                            this.sandbox.logger.log(error);
+                        }.bind(this));
+                } else {
+                    dataRetrieved.call(this, []);
+                }
             }
+        },
+
+        dataRetrieved = function(data) {
+            this.items = data;
+
+            this.sandbox.emit(DATA_RETRIEVED.call(this));
         },
 
         /**
