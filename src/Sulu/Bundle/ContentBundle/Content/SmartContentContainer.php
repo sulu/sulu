@@ -126,10 +126,6 @@ class SmartContentContainer implements ArrayableInterface
     public function setConfig(array $config)
     {
         $this->config = $config;
-        // TODO Remove when multi sorting is possible in javascript component
-        if (isset($this->config['sortBy'])) {
-            $this->config['sortBy'] = array($this->config['sortBy']);
-        }
     }
 
     /**
@@ -139,10 +135,6 @@ class SmartContentContainer implements ArrayableInterface
     public function getConfig()
     {
         $config = $this->config;
-        // TODO Remove when multi sorting is possible in javascript component
-        if (isset($config['sortBy']) && is_array($config['sortBy']) && sizeof($config['sortBy']) > 0) {
-            $config['sortBy'] = $config['sortBy'][0];
-        }
 
         return $config;
     }
