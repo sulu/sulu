@@ -3,6 +3,7 @@ use Sulu\Component\Content\Property;
 use Sulu\Component\Content\Block\BlockProperty;
 use Sulu\Component\Content\Block\BlockPropertyType;
 use Sulu\Component\Content\PropertyTag;
+use Sulu\Component\Content\StructureTag;
 use Sulu\Component\Content\Section\SectionProperty;
 
 /**
@@ -23,13 +24,13 @@ class {{ cache_class }} extends {{ base_class }}
             {{ _self.renderArray(content.meta) }}
         );
 
-{% if content.indexName is defined %}
-        $this->setIndexName('{{ content.indexName }}');
-{% endif %}
-
 {% for property in content.properties %}
 {{ _self.buildProperty(property, '$this', 1) }}
 {% endfor %}
+
+    {% for tag in content.tags %}
+        $this->addStructureTag(new StructureTag('{{ tag.name }}', {{ _self.renderArray(tag.attributes) }}));
+    {% endfor %}
     }
 }
 
@@ -87,7 +88,7 @@ new Property(
             {{ _self.renderParams(property.params) }},
             array(
 {% for tag in property.tags %}
-                '{{ tag.name }}' => new PropertyTag('{{ tag.name }}', {{ tag.priority is defined and tag.priority ? tag.priority : '1' }}),
+                '{{ tag.name }}' => {{ _self.propertyTag(tag) }},
 {% endfor %}
             ),
             '{{ property.colspan }}',
@@ -111,11 +112,15 @@ new BlockProperty(
             ),
             array(
 {% for tag in property.tags %}
-                '{{ tag.name }}' => new PropertyTag('{{ tag.name }}', {{ tag.priority is defined and tag.priority ? tag.priority : '1' }}),
+                '{{ tag.name }}' => {{ _self.propertyTag(tag) }},
 {% endfor %}
             ),
             '{{ property.colspan }}'
         );{% endmacro %}
+
+{% macro propertyTag(tag) %}
+new PropertyTag('{{ tag.name }}', {{ tag.priority is defined and tag.priority ? tag.priority : '1' }}, array({% for attrName, attrValue in tag.attributes %}'{{ attrName }}' => '{{ attrValue }}'{% if not loop.last %},{% endif %}{% endfor %}))
+{% endmacro %}
 
 {% macro renderArray(array) %}
             array(

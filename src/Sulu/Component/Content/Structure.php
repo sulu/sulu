@@ -14,6 +14,7 @@ use DateTime;
 use Sulu\Component\Content\Section\SectionPropertyInterface;
 use Sulu\Component\Util\ArrayableInterface;
 use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
+use Sulu\Component\Content\StructureTag;
 
 /**
  * Structure generated from Structure Manager to map a template.
@@ -220,10 +221,9 @@ abstract class Structure implements StructureInterface
     private $metaData;
 
     /**
-     * Name of index to use for search indexing
-     * @var string
+     * @var StructureTag[]
      */
-    private $indexName;
+    private $structureTags;
 
     /**
      * @param $key string
@@ -968,7 +968,7 @@ abstract class Structure implements StructureInterface
                 'enabledShadowLanguages' => $this->getEnabledShadowLanguages(),
                 'concreteLanguages' => $this->getConcreteLanguages(),
                 'shadowOn' => $this->getIsShadow(),
-                'shadowBaseLanguage' => $this->getShadowBaseLanguage(),
+                'shadowBaseLanguage' => $this->getShadowBaseLanguage() ? : false,
                 'template' => $this->getKey(),
                 'originTemplate' => $this->getOriginTemplate(),
                 'hasSub' => $this->hasChildren,
@@ -1076,28 +1076,58 @@ abstract class Structure implements StructureInterface
         $this->enabledShadowLanguages = $enabledShadowLanguages;
     }
 
+    /**
+     * Return the available concrete languages (i.e.
+     * the languages which are set and are not shadows)
+     *
+     * @return array
+     */
     public function getConcreteLanguages() 
     {
         return $this->concreteLanguages;
     }
-    
+
+    /**
+     * Set the available concrete languages (note this should
+     * only be done internally)
+     *
+     * @param array $concreteLanguages
+     */
     public function setConcreteLanguages($concreteLanguages)
     {
         $this->concreteLanguages = $concreteLanguages;
     }
 
     /**
-     * Name of index to use when indexing this structure in a search index.
-     *
-     * @param string
+     * Add a tag to this structure
      */
-    public function setIndexName($indexName)
+    public function addStructureTag(StructureTag $structureTag)
     {
-        $this->indexName = $indexName;
+        $this->structureTags[$structureTag->getName()] = $structureTag;
     }
 
-    public function getIndexName()
+    /**
+     * Return true if this structure has the given tag
+     *
+     * @return boolean
+     */
+    public function hasStructureTag($name)
     {
-        return $this->indexName;
+        return isset($this->structureTags[$name]);
+    }
+
+    /**
+     * Return the tag with the given name
+     *
+     * @param string $name
+     * @throws \InvalidArgumentException
+     */
+    public function getStructureTag($name)
+    {
+        if (!isset($this->structureTags[$name])) {
+            throw new \InvalidArgumentException(sprintf('Trying to get undefined structure StructureTag "%s"', $name));
+        }
+
+        return $this->structureTags[$name];
     }
 }
