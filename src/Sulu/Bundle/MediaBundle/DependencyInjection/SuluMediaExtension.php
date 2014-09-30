@@ -120,5 +120,15 @@ class SuluMediaExtension extends Extension
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');
+
+        if (true === $config['search']['enabled']) {
+            if (!class_exists('Sulu\Bundle\SearchBundle\SuluSearchBundle')) {
+                throw new \InvalidArgumentException(
+                    'You have enabled sulu search integration for the SuluMediaBundle, but the SuluSearchBundle must be installed'
+                );
+            }
+
+            $loader->load('search.xml');
+        }
     }
 }

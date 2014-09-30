@@ -32,7 +32,8 @@ class Configuration implements ConfigurationInterface
             ->arrayNode('search')
                 ->addDefaultsIfNotSet()
                 ->children()
-                    ->scalarNode('default_image_format')->defaultValue(SuluMediaExtension::DEFAULT_FORMAT_NAME)
+                    ->scalarNode('default_image_format')->defaultValue(SuluMediaExtension::DEFAULT_FORMAT_NAME)->end()
+                    ->booleanNode('enabled')->info('Enable integration with SuluMediaBundle')->defaultValue(false)->end()
                 ->end()
             ->end();
 
