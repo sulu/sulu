@@ -3,5 +3,5 @@
        type="text"
        class="form-element preview-update trigger-save-button"
        data-mapper-property="{{ property.name }}"
-       placeholder="{{ property.getPlaceholder(languageCode) }}"
+       placeholder="{{ property.getPlaceholder(userLocale) }}"
        {% if property.mandatory %}data-validation-required="true"{% endif %}/>

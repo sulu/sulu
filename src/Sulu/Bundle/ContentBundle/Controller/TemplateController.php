@@ -12,6 +12,7 @@ namespace Sulu\Bundle\ContentBundle\Controller;
 
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManagerInterface;
+use Sulu\Component\Security\UserInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -86,6 +87,9 @@ class TemplateController extends Controller
         $webspace = $request->get('webspace');
         $language = $request->get('language');
 
+        /** @var UserInterface $user */
+        $user= $this->getUser();
+        $userLocale = $user->getLocale();
 
         $template = $this->getTemplateStructure($key);
 
@@ -95,6 +99,7 @@ class TemplateController extends Controller
                 'template' => $template,
                 'webspaceKey' => $webspace,
                 'languageCode' => $language,
+                'userLocale' => $userLocale,
                 'templateKey' => $key,
                 'fireEvent' => $fireEvent
             )

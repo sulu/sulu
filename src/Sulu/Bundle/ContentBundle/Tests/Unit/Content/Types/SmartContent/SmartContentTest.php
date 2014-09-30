@@ -219,7 +219,6 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
             $this->contentQueryBuilder,
             $this->tagManager,
             array(
-                'max_per_page' => 25,
                 'page_parameter' => 'p',
                 'properties' => array('my_title'=>'title')
             ),
@@ -278,7 +277,6 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
             $this->contentQueryBuilder,
             $this->tagManager,
             array(
-                'max_per_page' => 25,
                 'page_parameter' => 'p',
                 'properties' => array()
             ),
