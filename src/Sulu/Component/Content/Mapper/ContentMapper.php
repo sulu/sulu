@@ -688,6 +688,7 @@ class ContentMapper implements ContentMapperInterface
 
             if ($oldState === $state) {
                 $structure->setNodeState($state);
+
                 return;
             } elseif (
                 // from test to published
@@ -1704,21 +1705,28 @@ class ContentMapper implements ContentMapperInterface
 
         // check and determine shadow-nodes
         $node = $row->getNode('page');
-        if ($node->getPropertyValue($this->properties->getName('nodeType')) === Structure::NODE_TYPE_INTERNAL_LINK) {
-            $propertyName = $this->properties->getName('internal_link');
-            $uuid = $node->getPropertyValue($propertyName);
-            $node = $this->sessionManager->getSession()->getNodeByIdentifier($uuid);
-            $structure = $this->load($uuid, $webspaceKey, $locale);
-            $url = $structure->getResourceLocator();
-        }
+        if (
+            $node->hasProperty($this->properties->getName('template')) &&
+            $node->hasProperty($this->properties->getName('nodeType'))
+        ) {
+            if (
+                $node->getPropertyValue(
+                    $this->properties->getName('nodeType')
+                ) === Structure::NODE_TYPE_INTERNAL_LINK
+            ) {
+                $propertyName = $this->properties->getName('internal_link');
+                $uuid = $node->getPropertyValue($propertyName);
+                $node = $this->sessionManager->getSession()->getNodeByIdentifier($uuid);
+                $structure = $this->load($uuid, $webspaceKey, $locale);
+                $url = $structure->getResourceLocator();
+            }
 
-        $locale = $this->getShadowLocale($node, $locale);
-        $this->properties->setLanguage($locale);
+            $locale = $this->getShadowLocale($node, $locale);
+            $this->properties->setLanguage($locale);
 
-        // load default data
-        $uuid = $node->getIdentifier();
+            // load default data
+            $uuid = $node->getIdentifier();
 
-        if ($node->hasProperty($this->properties->getName('template'))) {
             $templateKey = $node->getPropertyValue($this->properties->getName('template'));
             $nodeType = $node->getPropertyValue($this->properties->getName('nodeType'));
 
