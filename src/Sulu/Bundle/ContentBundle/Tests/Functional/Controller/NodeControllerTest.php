@@ -50,6 +50,7 @@ class NodeControllerTest extends DatabaseTestCase
         $contact->setCreated(new DateTime());
         $contact->setChanged(new DateTime());
         self::$em->persist($contact);
+        self::$em->flush();
 
         $emailType = new EmailType();
         $emailType->setName('Private');
@@ -68,6 +69,7 @@ class NodeControllerTest extends DatabaseTestCase
         $role1->setChanged(new DateTime());
         $role1->setCreated(new DateTime());
         self::$em->persist($role1);
+        self::$em->flush();
 
         $user = new User();
         $user->setUsername('admin');
@@ -97,18 +99,21 @@ class NodeControllerTest extends DatabaseTestCase
         $tag1->setCreated(new DateTime());
         $tag1->setName('tag1');
         self::$em->persist($tag1);
+        self::$em->flush();
 
         $tag2 = new Tag();
         $tag2->setChanged(new DateTime());
         $tag2->setCreated(new DateTime());
         $tag2->setName('tag2');
         self::$em->persist($tag2);
+        self::$em->flush();
 
         $tag3 = new Tag();
         $tag3->setChanged(new DateTime());
         $tag3->setCreated(new DateTime());
         $tag3->setName('tag3');
         self::$em->persist($tag3);
+        self::$em->flush();
 
         $tag4 = new Tag();
         $tag4->setChanged(new DateTime());
