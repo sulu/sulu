@@ -1,10 +1,12 @@
 <?php
 
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\HttpKernel\Kernel;
 
 class AppKernel extends Kernel
 {
+    static $suluContext = 'admin';
+
     public function registerBundles()
     {
         $bundles = array(
@@ -43,5 +45,18 @@ class AppKernel extends Kernel
         } else {
             $loader->load(__DIR__ . '/config/config.mysql.yml');
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function getKernelParameters()
+    {
+        return array_merge(
+            parent::getKernelParameters(),
+            array(
+                'sulu.context' => self::$suluContext,
+            )
+        );
     }
 }
