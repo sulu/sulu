@@ -1,4 +1,12 @@
 <?php
+/*
+ * This file is part of the Sulu CMS.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace Sulu\Bundle\SearchBundle\Command;
 
@@ -37,7 +45,7 @@ EOT
         $contentMapper = $container->get('sulu.content.mapper');
 
         /** @var LocalizedSearchManagerInterface $searchManager */
-        $searchManager = $container->get('sulu_search.localized_search_manager');
+        $searchManager = $container->get('massive_search.search_manager');
 
         /** @var WebspaceManagerInterface $webspaceManager */
         $webspaceManager = $container->get('sulu_core.webspace.webspace_manager');
@@ -75,13 +83,18 @@ EOT
                 $webspaceKey = $matches[1];
 
                 if ($tempName !== $matches[2] && $webspaceManager->findWebspaceByKey($webspaceKey) !== null) {
-                    $output->writeln(
-                        ' - <comment>Indexing structure (locale: ' . $locale . ')</comment>: ' . $node->getPath()
-                    );
                     $structure = $contentMapper->load($node->getIdentifier(), $webspaceKey, $locale);
 
                     if ($structure->getNodeState() === Structure::STATE_PUBLISHED) {
+                        $output->writeln(
+                            '  [+] <comment>Indexing published structure (locale: ' . $locale . ')</comment>: ' . $node->getPath()
+                        );
                         $searchManager->index($structure, $locale);
+                    } else {
+                        $output->writeln(
+                            '  [-] <comment>De-indexing unpublished structure (locale: ' . $locale . ')</comment>: ' . $node->getPath()
+                        );
+                        $searchManager->deindex($structure, $locale);
                     }
                 }
             }

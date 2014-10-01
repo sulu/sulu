@@ -17,9 +17,6 @@
 
     <theme>
         <key>default</key>
-        <excluded>
-            <template>overview</template>
-        </excluded>
     </theme>
 
     <navigation>
@@ -57,7 +54,6 @@
                 <environment type="phpcr">
                     <urls>
                         <url>sulu.lo/{localization}</url>
-                        <url language="en" country="us">localhost</url>
                     </urls>
                 </environment>
             </environments>

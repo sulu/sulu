@@ -25,4 +25,12 @@ class AppKernel extends TestKernel
     {
         $loader->load(__DIR__.'/config/config.php');
     }
+
+    protected function getEnvParameters()
+    {
+        return array_merge(
+            parent::getEnvParameters(),
+            array('sulu.context' => 'admin')
+        );
+    }
 }

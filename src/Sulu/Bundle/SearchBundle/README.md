@@ -32,13 +32,11 @@ You can map search indexes on structure documents in the structure template:
 
     <!-- ... -->
 
-    <index name="my_index_name" />
-
     <properties>
         <property name="title" type="text_line" mandatory="true">
             <!-- ... -->
 
-            <indexField />
+            <tag name="sulu.search.field" index="true" type="string" role="title" />
             
             <!-- ... -->
         </property>
@@ -46,15 +44,27 @@ You can map search indexes on structure documents in the structure template:
 </template>
 ```
 
-Note:
+The `tag` in the property is a hint for the search indexer. It will index the
+field as type "string" and it will use this field as the "title" for the
+search results.
 
-- We will index this document into the `my_index_name` index.
-- The property named `title` will be indexed.
+### Roles
+
+When you tag structure properties you can optionally assign roles. Roles tell
+the search engine which fields should be available in the document via.
+various standard getters:
+
+- `title`: The title for the search result: `$document->getTitle()`
+- `description`: The description / excerpt for the search result: `$document->getDescription()`
+- `image`: Indicate a field which should be used to determine the image URL: `$document->getImageUrl()`
+
+NOTE: If you are using the [SuluMediaBundle](https://github.com/sulu-cmf/SuluMediaBundle)  you can 
+specify a media field as the image field.
 
 ### Indexing Structure documents
 
 You index structure documents as you would any other object with the
-MassiveSearchBundle:
+[MassiveSearchBundle](https://github.com/massiveart/MassiveSearchBundle):
 
 ````php
 
@@ -73,7 +83,7 @@ Likewise, searching is exactly the same as with the massive search bundle:
 
 // we get a structure from somewhere..
 $searchManager = $container->get('massive_search.search_manager');
-$searchManager->search('This is a search string', 'my_index_name);
+$searchManager->createSearch('This is a search string')->locale('de')->index('content')->execute();
 ````
 
 ### Search from the command line
@@ -91,6 +101,7 @@ document. The URL will be the Structure URL (determined automatically).
         <h3><a href="{{ hit.document.url }}">{{ hit.document.title }}</a></h3>
         <p><i>Class: {{ hit.document.class }}</i></p>
         <p>{{ hit.document.description }}</p>
+        <p><img src="{{ hit.document.imageUrl }}" /></p>
     </section>
 {% endfor %}
 ````

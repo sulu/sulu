@@ -5,24 +5,18 @@
 
     <parameters>
         <parameter key="sulu_search.event_listener.node_save.class">Sulu\Bundle\SearchBundle\EventListener\NodeSaveListener</parameter>
-        <parameter key="sulu_search.localized_search_manager.class">Sulu\Bundle\SearchBundle\LocalizedSearchManager\LocalizedSearchManager</parameter>
         <parameter key="sulu_search.event_listener.search.class">Sulu\Bundle\SearchBundle\EventListener\SearchListener</parameter>
     </parameters>
 
     <services>
         <!-- node save event listener -->
         <service id="sulu_search.event_listener.node_save" class="%sulu_search.event_listener.node_save.class%">
-            <argument type="service" id="sulu_search.localized_search_manager" />
+            <argument type="service" id="massive_search.search_manager" />
             <argument type="service" id="sulu.phpcr.session" />
             <argument type="string">%sulu.content.node_names.base%</argument>
             <argument type="string">%sulu.content.node_names.temp%</argument>
 
             <tag name="kernel.event_listener" event="sulu.content.node.save" method="onNodeSave" />
-        </service>
-
-        <!-- localized search manager -->
-        <service id="sulu_search.localized_search_manager" class="%sulu_search.localized_search_manager.class%">
-            <argument type="service" id="massive_search.search_manager" />
         </service>
 
         <!-- search event to be sure that all structures are loaded (generated) -->
