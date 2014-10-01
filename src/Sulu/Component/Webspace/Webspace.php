@@ -10,11 +10,14 @@
 
 namespace Sulu\Component\Webspace;
 
+use Sulu\Component\Webspace\Util\WebspaceSerializerHelper;
+use Sulu\Component\Util\ArrayableInterface;
+
 /**
  * Container for a webspace definition
  * @package Sulu\Component\Webspace
  */
-class Webspace
+class Webspace implements ArrayableInterface
 {
     /**
      * The name of the webspace
@@ -322,5 +325,56 @@ class Webspace
     public function setNavigation($navigation)
     {
         $this->navigation = $navigation;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function toArray($depth = null)
+    {
+        $res = array();
+        $res['key'] = $this->getKey();
+        $res['name'] = $this->getName();
+        $res['localizations'] = array();
+        
+        foreach ($this->getLocalizations() as $localization) {
+            $res['localizations'][] = $localization->toArray();
+        }
+
+        $thisSecurity = $this->getSecurity();
+        if ($thisSecurity != null) {
+            $res['security']['system'] = $thisSecurity->getSystem();
+        }
+
+        $res['segments'] = array();
+        $segments = $this->getSegments();
+
+        if (!empty($segments)) {
+            foreach ($segments as $segment) {
+                $res['segments'][] = $segment->toArray();
+            }
+        }
+
+
+        $res['theme'] = $this->getTheme()->toArray();
+
+        $res['portals'] = array();
+
+        foreach ($this->getPortals() as $portal) {
+            $res['portals'][] = $portal->toArray();
+        }
+
+        $res['navigation'] = array();
+        $res['navigation']['contexts'] = array();
+        if ($navigation = $this->getNavigation()) {
+            foreach ($this->getNavigation()->getContexts() as $context) {
+                $res['navigation']['contexts'][] = array(
+                    'key' => $context->getKey(),
+                    'metadata' => $context->getMetadata()
+                );
+            }
+        }
+
+        return $res;
     }
 }

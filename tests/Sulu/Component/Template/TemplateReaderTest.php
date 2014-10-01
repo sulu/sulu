@@ -15,7 +15,6 @@ use Sulu\Component\Content\Template\TemplateReader;
 
 class TemplateReaderTest extends \PHPUnit_Framework_TestCase
 {
-
     public function testReadTemplate()
     {
         $template = array(
@@ -29,7 +28,13 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'en' => 'That´s the template 1'
                 )
             ),
-            'indexName' => 'foo_index',
+            'tags' => array(
+                array(
+                    'name' => 'some.random.structure.tag',
+                    'attributes' => array('foo' => 'bar', 'bar' => 'foo'
+                )),
+            ),
+
             'properties' => array(
                 'title' => array(
                     'name' => 'title',
@@ -38,17 +43,27 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'maxOccurs' => null,
                     'colspan' => null,
                     'cssClass' => null,
-                    'indexField' => true,
                     'mandatory' => true,
                     'multilingual' => true,
                     'tags' => array(
                         array(
                             'name' => 'sulu.node.name',
-                            'priority' => null
+                            'priority' => null,
+                            'attributes' => array(),
                         ),
                         array(
                             'name' => 'sulu.node.title',
-                            'priority' => 10
+                            'priority' => 10,
+                            'attributes' => array(),
+                        ),
+                        array(
+                            'name' => 'some.random.tag',
+                            'priority' => null,
+                            'attributes' => array(
+                                'one' => '1',
+                                'two' => '2',
+                                'three' => 'three',
+                            )
                         )
                     ),
                     'params' => array(),
@@ -74,14 +89,14 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'maxOccurs' => null,
                     'colspan' => null,
                     'cssClass' => null,
-                    'indexField' => false,
                     'mandatory' => true,
                     'multilingual' => true,
                     'tags' => array(
                         array(
                             'name' => 'sulu.rlp.part',
-                            'priority' => 1
-                        )
+                            'priority' => 1,
+                            'attributes' => array(),
+                        ),
                     ),
                     'params' => array(),
                     'meta' => array()
@@ -93,13 +108,13 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'maxOccurs' => null,
                     'colspan' => null,
                     'cssClass' => null,
-                    'indexField' => false,
                     'mandatory' => false,
                     'multilingual' => true,
                     'tags' => array(
                         array(
                             'name' => 'sulu.node.title',
-                            'priority' => 5
+                            'priority' => 5,
+                            'attributes' => array(),
                         )
                     ),
                     'params' => array(),
@@ -112,13 +127,13 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'maxOccurs' => null,
                     'colspan' => null,
                     'cssClass' => null,
-                    'indexField' => false,
                     'mandatory' => false,
                     'multilingual' => true,
                     'tags' => array(
                         array(
                             'name' => 'sulu.node.title',
-                            'priority' => null
+                            'priority' => null,
+                            'attributes' => array(),
                         )
                     ),
                     'params' => array(),
@@ -131,7 +146,6 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'maxOccurs' => null,
                     'colspan' => null,
                     'cssClass' => null,
-                    'indexField' => false,
                     'mandatory' => false,
                     'multilingual' => false,
                     'tags' => array(),
@@ -145,18 +159,19 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'maxOccurs' => 2,
                     'colspan' => null,
                     'cssClass' => null,
-                    'indexField' => false,
                     'mandatory' => false,
                     'multilingual' => true,
                     'tags' => array(),
                     'params' => array(
                         array(
                             'name' => 'minLinks',
-                            'value' => 1
+                            'value' => 1,
+                            'type' => 'string'
                         ),
                         array(
                             'name' => 'maxLinks',
-                            'value' => 10
+                            'value' => 10,
+                            'type' => 'string'
                         )
                     ),
                     'meta' => array()
@@ -167,10 +182,9 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
         $templateReader = new TemplateReader();
         $result = $templateReader->load(__DIR__ . '/../../../Resources/DataFixtures/Template/template.xml');
 
+        $this->assertEquals($template, $result);
         $x = $this->arrayRecursiveDiff($result, $template);
         $this->assertEquals(0, sizeof($x));
-
-        $this->assertEquals($template, $result);
     }
 
     /**
@@ -229,17 +243,18 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'maxOccurs' => null,
                     'colspan' => null,
                     'cssClass' => null,
-                    'indexField' => false,
                     'mandatory' => true,
                     'multilingual' => true,
                     'tags' => array(
                         array(
                             'name' => 'sulu.node.name',
-                            'priority' => null
+                            'priority' => null,
+                            'attributes' => array(),
                         ),
                         array(
                             'name' => 'sulu.node.title',
-                            'priority' => 10
+                            'priority' => 10,
+                            'attributes' => array(),
                         )
                     ),
                     'params' => array(),
@@ -252,13 +267,13 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'maxOccurs' => null,
                     'colspan' => null,
                     'cssClass' => null,
-                    'indexField' => false,
                     'mandatory' => true,
                     'multilingual' => true,
                     'tags' => array(
                         array(
                             'name' => 'sulu.rlp.part',
-                            'priority' => 1
+                            'priority' => 1,
+                            'attributes' => array(),
                         )
                     ),
                     'params' => array(),
@@ -271,7 +286,6 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'maxOccurs' => null,
                     'colspan' => null,
                     'cssClass' => null,
-                    'indexField' => false,
                     'mandatory' => true,
                     'multilingual' => true,
                     'tags' => array(),
@@ -285,17 +299,18 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'maxOccurs' => '10',
                     'colspan' => null,
                     'cssClass' => null,
-                    'indexField' => false,
                     'mandatory' => true,
                     'type' => 'block',
                     'tags' => array(
                         array(
                             'name' => 'sulu.node.block',
-                            'priority' => 20
+                            'priority' => 20,
+                            'attributes' => array(),
                         ),
                         array(
                             'name' => 'sulu.test.block',
-                            'priority' => 1
+                            'priority' => 1,
+                            'attributes' => array(),
                         )
                     ),
                     'params' => array(),
@@ -312,7 +327,6 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                     'maxOccurs' => null,
                                     'colspan' => null,
                                     'cssClass' => null,
-                                    'indexField' => false,
                                     'mandatory' => true,
                                     'multilingual' => true,
                                     'tags' => array(),
@@ -328,7 +342,6 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                     'maxOccurs' => null,
                                     'colspan' => null,
                                     'cssClass' => null,
-                                    'indexField' => false,
                                     'tags' => array(),
                                     'params' => array(),
                                     'meta' => array()
@@ -340,7 +353,6 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                     'maxOccurs' => null,
                                     'colspan' => null,
                                     'cssClass' => null,
-                                    'indexField' => false,
                                     'mandatory' => false,
                                     'type' => 'block',
                                     'tags' => array(),
@@ -358,7 +370,6 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                                     'maxOccurs' => null,
                                                     'colspan' => null,
                                                     'cssClass' => null,
-                                                    'indexField' => false,
                                                     'mandatory' => false,
                                                     'type' => 'block',
                                                     'tags' => array(),
@@ -376,13 +387,13 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                                                     'maxOccurs' => null,
                                                                     'colspan' => null,
                                                                     'cssClass' => null,
-                                                                    'indexField' => false,
                                                                     'mandatory' => true,
                                                                     'multilingual' => true,
                                                                     'tags' => array(
                                                                         array(
                                                                             'name' => 'sulu.node.title',
-                                                                            'priority' => 5
+                                                                            'priority' => 5,
+                                                                            'attributes' => array(),
                                                                         )
                                                                     ),
                                                                     'params' => array(),
@@ -395,7 +406,6 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                                                     'maxOccurs' => null,
                                                                     'colspan' => null,
                                                                     'cssClass' => null,
-                                                                    'indexField' => false,
                                                                     'mandatory' => true,
                                                                     'multilingual' => true,
                                                                     'tags' => array(),
@@ -409,7 +419,6 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                                                     'maxOccurs' => null,
                                                                     'colspan' => null,
                                                                     'cssClass' => null,
-                                                                    'indexField' => false,
                                                                     'mandatory' => false,
                                                                     'type' => 'block',
                                                                     'tags' => array(),
@@ -427,7 +436,6 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                                                                     'maxOccurs' => null,
                                                                                     'colspan' => null,
                                                                                     'cssClass' => null,
-                                                                                    'indexField' => false,
                                                                                     'mandatory' => true,
                                                                                     'multilingual' => true,
                                                                                     'tags' => array(),
@@ -466,7 +474,6 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                                                     'maxOccurs' => null,
                                                                     'colspan' => null,
                                                                     'cssClass' => null,
-                                                                    'indexField' => false,
                                                                     'mandatory' => true,
                                                                     'multilingual' => true,
                                                                     'tags' => array(),
@@ -492,7 +499,6 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'maxOccurs' => null,
                     'colspan' => null,
                     'cssClass' => null,
-                    'indexField' => false,
                     'mandatory' => true,
                     'multilingual' => true,
                     'tags' => array(),
@@ -505,20 +511,9 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
         $templateReader = new TemplateReader();
         $result = $templateReader->load(__DIR__ . '/../../../Resources/DataFixtures/Template/template_block.xml');
 
+        $this->assertEquals($template, $result);
         $x = $this->arrayRecursiveDiff($result, $template);
         $this->assertEquals(0, sizeof($x));
-    }
-
-    public function testDuplicatedPriority()
-    {
-        $this->setExpectedException(
-            '\Sulu\Component\Content\Template\Exception\InvalidXmlException',
-            'The given XML is invalid! Priority 10 of tag sulu.node.title exists duplicated'
-        );
-        $templateReader = new TemplateReader();
-        $result = $templateReader->load(
-            __DIR__ . '/../../../Resources/DataFixtures/Template/template_duplicated_priority.xml'
-        );
     }
 
     public function testBlockMultipleTypes()
@@ -536,17 +531,18 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'maxOccurs' => null,
                     'colspan' => null,
                     'cssClass' => null,
-                    'indexField' => false,
                     'mandatory' => true,
                     'multilingual' => true,
                     'tags' => array(
                         array(
                             'name' => 'sulu.node.name',
-                            'priority' => null
+                            'priority' => null,
+                            'attributes' => array(),
                         ),
                         array(
                             'name' => 'sulu.node.title',
-                            'priority' => 10
+                            'priority' => 10,
+                            'attributes' => array(),
                         )
                     ),
                     'params' => array(),
@@ -559,13 +555,13 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'maxOccurs' => null,
                     'colspan' => null,
                     'cssClass' => null,
-                    'indexField' => false,
                     'mandatory' => true,
                     'multilingual' => true,
                     'tags' => array(
                         array(
                             'name' => 'sulu.rlp.part',
-                            'priority' => 1
+                            'priority' => 1,
+                            'attributes' => array(),
                         )
                     ),
                     'params' => array(),
@@ -583,11 +579,13 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'tags' => array(
                         array(
                             'name' => 'sulu.node.block',
-                            'priority' => 20
+                            'priority' => 20,
+                            'attributes' => array(),
                         ),
                         array(
                             'name' => 'sulu.test.block',
-                            'priority' => 1
+                            'priority' => 1,
+                            'attributes' => array(),
                         )
                     ),
                     'params' => array(),
@@ -604,7 +602,6 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                     'maxOccurs' => null,
                                     'colspan' => null,
                                     'cssClass' => null,
-                                    'indexField' => false,
                                     'mandatory' => true,
                                     'multilingual' => true,
                                     'tags' => array(),
@@ -618,7 +615,6 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                     'maxOccurs' => null,
                                     'colspan' => null,
                                     'cssClass' => null,
-                                    'indexField' => false,
                                     'mandatory' => true,
                                     'multilingual' => true,
                                     'tags' => array(),
@@ -638,7 +634,6 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                     'maxOccurs' => null,
                                     'colspan' => null,
                                     'cssClass' => null,
-                                    'indexField' => false,
                                     'mandatory' => true,
                                     'multilingual' => true,
                                     'tags' => array(),
@@ -652,7 +647,6 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                     'maxOccurs' => null,
                                     'colspan' => null,
                                     'cssClass' => null,
-                                    'indexField' => false,
                                     'mandatory' => true,
                                     'multilingual' => true,
                                     'tags' => array(),
@@ -666,7 +660,6 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                     'maxOccurs' => null,
                                     'colspan' => null,
                                     'cssClass' => null,
-                                    'indexField' => false,
                                     'mandatory' => true,
                                     'multilingual' => true,
                                     'tags' => array(),
@@ -684,7 +677,6 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'maxOccurs' => null,
                     'colspan' => null,
                     'cssClass' => null,
-                    'indexField' => false,
                     'mandatory' => true,
                     'multilingual' => true,
                     'tags' => array(),
@@ -697,10 +689,9 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
         $templateReader = new TemplateReader();
         $result = $templateReader->load(__DIR__ . '/../../../Resources/DataFixtures/Template/template_block_types.xml');
 
+        $this->assertEquals($template, $result);
         $x = $this->arrayRecursiveDiff($result, $template);
         $this->assertEquals(0, sizeof($x));
-
-        $this->assertEquals($template, $result);
     }
 
     public function testSections()
@@ -718,17 +709,18 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'maxOccurs' => null,
                     'colspan' => 6,
                     'cssClass' => null,
-                    'indexField' => false,
                     'mandatory' => true,
                     'multilingual' => true,
                     'tags' => array(
                         '0' => array(
                             'name' => 'sulu.node.name',
-                            'priority' => null
+                            'priority' => null,
+                            'attributes' => array(),
                         ),
                         '1' => array(
                             'name' => 'sulu.node.title',
-                            'priority' => 10
+                            'priority' => 10,
+                            'attributes' => array(),
                         )
                     ),
                     'params' => array(),
@@ -751,7 +743,6 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'name' => 'test',
                     'colspan' => null,
                     'cssClass' => 'test',
-                    'indexField' => false,
                     'type' => 'section',
                     'params' => array(),
                     'meta' => array(
@@ -772,14 +763,14 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                             'maxOccurs' => null,
                             'colspan' => 6,
                             'cssClass' => 'test',
-                            'indexField' => false,
                             'mandatory' => true,
                             'multilingual' => true,
                             'tags' => array(
                                 '0' => Array
                                 (
                                     'name' => 'sulu.rlp.part',
-                                    'priority' => 1
+                                    'priority' => 1,
+                                    'attributes' => array(),
                                 )
 
                             ),
@@ -793,14 +784,14 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                             'maxOccurs' => null,
                             'colspan' => 6,
                             'cssClass' => null,
-                            'indexField' => false,
                             'mandatory' => null,
                             'multilingual' => true,
                             'tags' => array(
                                 '0' => Array
                                 (
                                     'name' => 'sulu.node.title',
-                                    'priority' => 5
+                                    'priority' => 5,
+                                    'attributes' => array(),
                                 )
 
                             ),
@@ -814,7 +805,6 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                             'maxOccurs' => null,
                             'colspan' => null,
                             'cssClass' => null,
-                            'indexField' => false,
                             'mandatory' => null,
                             'type' => 'block',
                             'tags' => array(),
@@ -842,7 +832,6 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                             'maxOccurs' => null,
                                             'colspan' => null,
                                             'cssClass' => null,
-                                            'indexField' => false,
                                             'mandatory' => null,
                                             'multilingual' => true,
                                             'tags' => array(),
@@ -862,13 +851,13 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'maxOccurs' => null,
                     'colspan' => null,
                     'cssClass' => null,
-                    'indexField' => false,
                     'mandatory' => false,
                     'multilingual' => true,
                     'tags' => array(
                         '0' => array(
                             'name' => 'sulu.node.title',
-                            'priority' => null
+                            'priority' => null,
+                            'attributes' => array(),
                         )
                     ),
                     'params' => array(),
@@ -881,18 +870,19 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'maxOccurs' => 2,
                     'colspan' => 6,
                     'cssClass' => null,
-                    'indexField' => false,
                     'mandatory' => false,
                     'multilingual' => true,
                     'tags' => array(),
                     'params' => array(
                         '0' => array(
                             'name' => 'minLinks',
-                            'value' => 1
+                            'value' => 1,
+                            'type' => 'string'
                         ),
                         '1' => array(
                             'name' => 'maxLinks',
-                            'value' => 10
+                            'value' => 10,
+                            'type' => 'string'
                         )
                     ),
                     'meta' => array(),
@@ -916,6 +906,59 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
 
         $templateReader = new TemplateReader();
         $result = $templateReader->load(__DIR__ . '/../../../Resources/DataFixtures/Template/template_reserved.xml');
+    }
+
+    function testNestingParams()
+    {
+        $template = array(
+            'key' => 'template_nesting_params',
+            'view' => 'page.html.twig',
+            'controller' => 'SuluContentBundle:Default:index',
+            'cacheLifetime' => '2400',
+            'properties' => array(
+                'title' => array(
+                    'name' => 'title',
+                    'type' => 'text_line',
+                    'minOccurs' => null,
+                    'maxOccurs' => null,
+                    'colspan' => null,
+                    'cssClass' => null,
+                    'mandatory' => true,
+                    'multilingual' => true,
+                    'tags' => array(
+                        '0' => array(
+                            'name' => 'sulu.node.name',
+                            'priority' => null,
+                            'attributes' => array()
+                        )
+                    ),
+                    'params' => array(
+                        array('name' => 'minLinks', 'value' => '1', 'type' => 'string'),
+                        array('name' => 'maxLinks', 'value' => '10', 'type' => 'string'),
+                        array(
+                            'name' => 'test',
+                            'value' => array(
+                                array('name' => 't1', 'value' => 'v1', 'type' => 'string'),
+                                array('name' => 't2', 'value' => 'v2', 'type' => 'string'),
+                                array('name' => 't3', 'value' => 'v3', 'type' => 'string'),
+                                array('name' => 't4', 'value' => 'v4', 'type' => 'string')
+                            ),
+                            'type' => 'collection'
+                        )
+                    ),
+                    'meta' => array(),
+                )
+            )
+        );
+
+        $templateReader = new TemplateReader();
+        $result = $templateReader->load(
+            __DIR__ . '/../../../Resources/DataFixtures/Template/template_nesting_params.xml'
+        );
+
+        $x = $this->arrayRecursiveDiff($result, $template);
+        $this->assertEquals(0, sizeof($x));
+        $this->assertEquals($template, $result);
     }
 
     function arrayRecursiveDiff($aArray1, $aArray2)

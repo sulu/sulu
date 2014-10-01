@@ -1,0 +1,35 @@
+<?xml version="1.0" ?>
+<template xmlns="http://schemas.sulu.io/template/template"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/template-1.0.xsd">
+
+    <key>template_boolean_params</key>
+
+    <view>page.html.twig</view>
+    <controller>SuluContentBundle:Default:index</controller>
+    <cacheLifetime>2400</cacheLifetime>
+
+    <properties>
+        <property name="title" type="text_line" mandatory="true" colspan="6">
+            <meta>
+                <title lang="de">Titel</title>
+                <title lang="en">Title</title>
+
+                <info_text lang="de">Titel-Info-DE</info_text>
+                <info_text lang="en">Title-Info-EN</info_text>
+
+                <placeholder lang="de">Platzhalter-Info-DE</placeholder>
+                <placeholder lang="en">Placeholder-Info-EN</placeholder>
+            </meta>
+            <tag name="sulu.node.name"/>
+
+            <params>
+                <param name="test1" value="true"/>
+                <param name="test2" value="TRUE"/>
+                <param name="test3" value="false"/>
+                <param name="test4" value="FALSE"/>
+                <param name="test5" value="test"/>
+            </params>
+        </property>
+    </properties>
+</template>

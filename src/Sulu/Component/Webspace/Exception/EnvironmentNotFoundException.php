@@ -19,11 +19,6 @@ use Sulu\Component\Webspace\Portal;
 class EnvironmentNotFoundException extends PortalException
 {
     /**
-     * @var Portal
-     */
-    private $portal;
-
-    /**
      * @var string
      */
     private $environment;
@@ -44,13 +39,5 @@ class EnvironmentNotFoundException extends PortalException
     public function getEnvironment()
     {
         return $this->environment;
-    }
-
-    /**
-     * @return Portal
-     */
-    public function getPortal()
-    {
-        return $this->portal;
     }
 }

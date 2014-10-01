@@ -11,6 +11,7 @@
 namespace Sulu\Component\Webspace;
 
 use Sulu\Component\Webspace\Exception\EnvironmentNotFoundException;
+use Sulu\Component\Webspace\Exception\PortalLocalizationNotFoundException;
 
 /**
  * Container for a portal configuration
@@ -139,6 +140,17 @@ class Portal
         return $this->localizations;
     }
 
+    public function getLocalization($locale)
+    {
+        foreach ($this->getLocalizations() as $localization) {
+            if ($locale === $localization->getLocalization()) {
+                return $localization;
+            }
+        }
+
+        throw new PortalLocalizationNotFoundException($this, $locale);
+    }
+
     /**
      * @param \Sulu\Component\Webspace\Localization $defaultLocalization
      */
@@ -215,5 +227,28 @@ class Portal
     public function getWebspace()
     {
         return $this->webspace;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function toArray($depth = null)
+    {
+        $res = array();
+        $res['name'] = $this->getName();
+        $res['key'] = $this->getKey();
+        $res['resourceLocator']['strategy'] = $this->getResourceLocatorStrategy();
+
+        $res['localizations'] = array();
+
+        foreach ($this->getLocalizations() as $localization) {
+            $res['localizations'][] = $localization->toArray();
+        }
+
+        foreach ($this->getEnvironments() as $environment) {
+            $res['environments'][] = $environment->toArray();
+        }
+
+        return $res;
     }
 }

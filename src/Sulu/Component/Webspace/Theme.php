@@ -10,8 +10,9 @@
 
 namespace Sulu\Component\Webspace;
 
+use Sulu\Component\Util\ArrayableInterface;
 
-class Theme
+class Theme implements ArrayableInterface
 {
     /**
      * The key of the theme
@@ -68,5 +69,16 @@ class Theme
     public function getExcludedTemplates()
     {
         return $this->excludedTemplates;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function toArray($depth = null)
+    {
+        return array(
+            'key' => $this->getKey(),
+            'excludedTemplates' => $this->getExcludedTemplates()
+        );
     }
 }

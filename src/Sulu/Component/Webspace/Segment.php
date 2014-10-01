@@ -10,11 +10,13 @@
 
 namespace Sulu\Component\Webspace;
 
+use Sulu\Component\Util\ArrayableInterface;
+
 /**
  * Represents the segments defined in a webspace
  * @package Sulu\Component\Portal
  */
-class Segment
+class Segment implements ArrayableInterface
 {
     /**
      * The key of the segment
@@ -86,5 +88,18 @@ class Segment
     public function isDefault()
     {
         return $this->default;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function toArray($depth = null)
+    {
+        $res = array();
+        $res['key'] = $this->getKey();
+        $res['name'] = $this->getName();
+        $res['default'] = $this->isDefault();
+
+        return $res;
     }
 }

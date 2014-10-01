@@ -10,8 +10,7 @@
 
 namespace Sulu\Component\Rest;
 
-use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
-use Sulu\Component\Rest\ListBuilder\FieldDescriptor\AbstractFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\AbstractFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
 use Traversable;
 

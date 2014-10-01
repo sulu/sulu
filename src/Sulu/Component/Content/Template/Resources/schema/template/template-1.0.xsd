@@ -5,12 +5,13 @@
            xmlns="http://schemas.sulu.io/template/template"
            xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
-    <xs:element name="template" type="templateType"/>
+   <xs:element name="template" type="templateType"/>
 
     <xs:complexType name="templateType">
         <xs:choice maxOccurs="unbounded">
             <xs:element type="xs:string" name="key" minOccurs="1" maxOccurs="1"/>
             <xs:element type="indexType" name="index" minOccurs="1" maxOccurs="1"/>
+            <xs:element type="tagType" name="tag" maxOccurs="unbounded"/>
             <xs:element type="xs:string" name="view" minOccurs="1" maxOccurs="1"/>
             <xs:element type="xs:string" name="controller" minOccurs="1" maxOccurs="1"/>
             <xs:element type="xs:integer" name="cacheLifetime" minOccurs="1" maxOccurs="1"/>
@@ -123,6 +124,7 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="name" use="required"/>
                 <xs:attribute type="xs:int" name="priority" use="optional"/>
+                <xs:anyAttribute namespace="##any" processContents="lax" />
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
@@ -134,13 +136,20 @@
     </xs:complexType>
 
     <xs:complexType name="paramType">
-        <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="name" use="optional"/>
-                <xs:attribute type="xs:string" name="value" use="optional"/>
-            </xs:extension>
-        </xs:simpleContent>
+        <xs:choice maxOccurs="unbounded">
+            <xs:element name="param" type="paramType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:choice>
+        <xs:attribute name="type" type="paramTypeType" default="string"/>
+        <xs:attribute name="name" type="xs:string"/>
+        <xs:attribute name="value" type="xs:string"/>
     </xs:complexType>
+
+    <xs:simpleType name="paramTypeType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="collection"/>
+            <xs:enumeration value="string"/>
+        </xs:restriction>
+    </xs:simpleType>
 
     <xs:complexType name="indexType">
         <xs:simpleContent>
