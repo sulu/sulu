@@ -148,7 +148,14 @@ define([
             this.sandbox.on('sulu.header.toolbar.language-changed', function(item) {
                 this.sandbox.sulu.saveUserSetting(CONTENT_LANGUAGE, item.localization);
                 if (this.options.display !== 'column') {
-                    this.sandbox.emit('sulu.content.contents.load', this.content.toJSON(), this.options.webspace, item.localization);
+                    var data = this.content.toJSON();
+
+                    // if there is a index id this should be after reload
+                    if (this.options.id === 'index') {
+                        data.id = this.options.id;
+                    }
+                    
+                    this.sandbox.emit('sulu.content.contents.load', data, this.options.webspace, item.localization);
                 } else {
                     this.sandbox.emit('sulu.content.contents.list', this.options.webspace, item.localization);
                 }
@@ -517,7 +524,7 @@ define([
                         data = this.sandbox.util.extend(true, {}, this.data, data);
                         if (!this.preview.initiated) {
                             this.preview.start(data, this.options);
-                        } else if(!!restart) {
+                        } else if (!!restart) {
                             // force reload
                             this.$preview = null;
                             this.sandbox.dom.remove(this.$preview);
@@ -794,24 +801,27 @@ define([
 
                                 template: [
                                     {
-                                        'id': 'state',
-                                        'group': 'left',
-                                        'position': 100,
-                                        'type': 'select',
+                                        id: 'state',
+                                        group: 'left',
+                                        position: 100,
+                                        type: 'select',
+                                        itemsOption: {
+                                            markable: true
+                                        },
                                         items: [
                                             {
-                                                'id': 2,
-                                                'title': this.sandbox.translate('toolbar.state-publish'),
-                                                'icon': 'husky-publish',
-                                                'callback': function() {
+                                                id: 2,
+                                                title: this.sandbox.translate('toolbar.state-publish'),
+                                                icon: 'husky-publish',
+                                                callback: function() {
                                                     this.sandbox.emit('sulu.dropdown.state.item-clicked', 2);
                                                 }.bind(this)
                                             },
                                             {
-                                                'id': 1,
-                                                'title': this.sandbox.translate('toolbar.state-test'),
-                                                'icon': 'husky-test',
-                                                'callback': function() {
+                                                id: 1,
+                                                title: this.sandbox.translate('toolbar.state-test'),
+                                                icon: 'husky-test',
+                                                callback: function() {
                                                     this.sandbox.emit('sulu.dropdown.state.item-clicked', 1);
                                                 }.bind(this)
                                             }
@@ -831,6 +841,7 @@ define([
                                             titleAttribute: 'title',
                                             idAttribute: 'template',
                                             translate: false,
+                                            markable: true,
                                             callback: function(item) {
                                                 this.template = item.template;
                                                 this.sandbox.emit('sulu.dropdown.template.item-clicked', item);

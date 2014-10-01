@@ -45,7 +45,7 @@ sulu_core:
                      internal: true
     webspace:
         request_analyzer:
-            enabled: false
+            enabled: true
 
 sulu_admin:
     name: SULU 2.0

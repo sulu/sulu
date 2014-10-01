@@ -60,19 +60,26 @@ class FilterNodesQueryBuilder
     public function build($languageCode)
     {
         // build sql2 query
-        $sql2 = 'SELECT * FROM [sulu:content] AS c';
+        //
+        // TODO We "should" be selecting from the mixin type "sulu:content"
+        //      but this does not work with jackalope-doctrine-dbal at time of
+        //      writing. The performance penalty for this alernative method in
+        //      jackeabbit is apparently negligble or non-existant, but selecting
+        //      from the mixin WOULD be quicker in doctrine-dbal when the feature is
+        //      finally implemented.
+        $sql2 = 'SELECT * FROM [nt:base] AS c WHERE c.[jcr:mixinTypes] = "sulu:content"';
         $sql2Where = $this->buildWhereClauses($languageCode);
         $sql2Order = $this->buildOrderClauses($languageCode);
 
         // append where clause to sql2 query
         if (!empty($sql2Where)) {
-            $sql2 .= ' WHERE ' . join(' AND ', $sql2Where);
+            $sql2 .= ' AND ' . join(' AND ', $sql2Where);
         }
 
         // append order clause
         if (!empty($sql2Order)) {
-            $sortOrder = (isset($this->filterConfig['sortMethod']) && $this->filterConfig['sortMethod'] == 'asc')
-                ? 'ASC' : 'DESC';
+            $sortOrder = (isset($this->filterConfig['sortMethod']) && strtolower($this->filterConfig['sortMethod']) == 'desc')
+                ? 'DESC' : 'ASC';
             $sql2 .= ' ORDER BY ' . join(', ', $sql2Order) . ' ' . $sortOrder;
         }
 
@@ -109,10 +116,14 @@ class FilterNodesQueryBuilder
     {
         $sql2Order = array();
         $sortBy = $this->getConfig('sortBy', array());
-        if (!empty($sortBy) && is_array($sortBy)) {
+
+        // if no order given, order by the sulu:order property
+        if (empty($sortBy)) {
+            $sql2Order[] = 'c.[sulu:order]';
+        } elseif (is_array($sortBy)) {
             foreach ($this->getConfig('sortBy', array()) as $sortColumn) {
-                // TODO implement more generic
                 $order = 'c.[i18n:' . $languageCode . '-' . $sortColumn . ']';
+
                 if (!in_array($sortColumn, array('published', 'created', 'changed'))) {
                     $order = sprintf('lower(%s)', $order);
                 }

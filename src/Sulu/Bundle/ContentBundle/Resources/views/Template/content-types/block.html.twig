@@ -4,7 +4,7 @@
              id="{{ id|raw }}"
              data-form="true"
              data-type="block"
-             data-type-config='[{% for type in property.types %}{"data": "{{ type.name }}", "title": "{{ type.getTitle(languageCode) }}", "tpl": "{{ type.name }}-{{ id|raw }}-tpl"}{{ loop.last==false?',':'' }}{% endfor %}]'
+             data-type-config='[{% for type in property.types %}{"data": "{{ type.name }}", "title": "{{ type.getTitle(userLocale) }}", "tpl": "{{ type.name }}-{{ id|raw }}-tpl"}{{ loop.last==false?',':'' }}{% endfor %}]'
              data-type-min="{{ property.minOccurs }}"
              data-type-max="{{ property.maxOccurs }}"
              data-type-default="{{ property.defaultTypeName }}"
@@ -19,7 +19,7 @@
 
                         <div class="head">
                             <label class="move">
-                                {{ property.getTitle(languageCode) }} ({{ type.getTitle(languageCode) }})
+                                {{ property.getTitle(userLocale) }} ({{ type.getTitle(userLocale) }})
                             </label>
 
                             <div data-mapper-remove="{{ property.name }}"
@@ -42,9 +42,9 @@
                                     {% set params = getParams(child) %}
 
                                     {% if child is multiple %}
-                                        {% include 'SuluContentBundle:Template:macros/multiple.html.twig' with {'property': child, 'params': params, 'type': type, 'id': id ~ '-' ~ child.name ~ '<~=index~>', 'webspaceKey': webspaceKey, 'languageCode': languageCode} only %}
+                                        {% include 'SuluContentBundle:Template:macros/multiple.html.twig' with {'property': child, 'params': params, 'type': type, 'id': id ~ '-' ~ child.name ~ '<~=index~>', 'webspaceKey': webspaceKey, 'languageCode': languageCode, 'userLocale': userLocale} only %}
                                     {% else %}
-                                        {% include 'SuluContentBundle:Template:macros/single.html.twig' with {'property': child, 'params': params, 'type': type, 'id': id ~ '-' ~ child.name ~ '<~=index~>', 'webspaceKey': webspaceKey, 'languageCode': languageCode} only %}
+                                        {% include 'SuluContentBundle:Template:macros/single.html.twig' with {'property': child, 'params': params, 'type': type, 'id': id ~ '-' ~ child.name ~ '<~=index~>', 'webspaceKey': webspaceKey, 'languageCode': languageCode, 'userLocale': userLocale} only %}
                                     {% endif %}
                                 {% endfor %}
                             </div>

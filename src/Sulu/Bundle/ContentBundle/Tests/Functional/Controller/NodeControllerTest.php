@@ -50,6 +50,7 @@ class NodeControllerTest extends DatabaseTestCase
         $contact->setCreated(new DateTime());
         $contact->setChanged(new DateTime());
         self::$em->persist($contact);
+        self::$em->flush();
 
         $emailType = new EmailType();
         $emailType->setName('Private');
@@ -68,6 +69,7 @@ class NodeControllerTest extends DatabaseTestCase
         $role1->setChanged(new DateTime());
         $role1->setCreated(new DateTime());
         self::$em->persist($role1);
+        self::$em->flush();
 
         $user = new User();
         $user->setUsername('admin');
@@ -97,18 +99,21 @@ class NodeControllerTest extends DatabaseTestCase
         $tag1->setCreated(new DateTime());
         $tag1->setName('tag1');
         self::$em->persist($tag1);
+        self::$em->flush();
 
         $tag2 = new Tag();
         $tag2->setChanged(new DateTime());
         $tag2->setCreated(new DateTime());
         $tag2->setName('tag2');
         self::$em->persist($tag2);
+        self::$em->flush();
 
         $tag3 = new Tag();
         $tag3->setChanged(new DateTime());
         $tag3->setCreated(new DateTime());
         $tag3->setName('tag3');
         self::$em->persist($tag3);
+        self::$em->flush();
 
         $tag4 = new Tag();
         $tag4->setChanged(new DateTime());
@@ -391,7 +396,6 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent(), true);
 
-        $this->assertEquals(25, sizeof($response));
         $this->assertEquals($data[0]['title'], $response['title']);
         $this->assertEquals($data[0]['path'], $response['path']);
         $this->assertEquals($data[0]['tags'], $response['tags']);
@@ -541,6 +545,7 @@ class NodeControllerTest extends DatabaseTestCase
         );
         $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en', $data[0]);
         $data[0] = (array)json_decode($client->getResponse()->getContent(), true);
+
         $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en', $data[1]);
         $data[1] = (array)json_decode($client->getResponse()->getContent(), true);
         $client->request(
@@ -886,6 +891,12 @@ class NodeControllerTest extends DatabaseTestCase
 
         $this->assertEquals('', $response->title);
         $this->assertEquals(2, sizeof($items));
+
+        $client->request(
+            'GET',
+            '/api/nodes/filter?webspace=sulu_io&language=en&dataSource=' . $data[1]['id'] . '&includeSubFolders=true&limitResult=2&sortBy=title'
+        );
+        $response = json_decode($client->getResponse()->getContent());
     }
 
     public function testBreadcrumb()
@@ -917,6 +928,32 @@ class NodeControllerTest extends DatabaseTestCase
     }
 
     public function testSmallResponse()
+    {
+        $client = $this->createClient(
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test',
+            )
+        );
+        $data = $this->beforeTestGet();
+
+        $client->request('GET', '/api/nodes/' . $data[0]['id'] . '?webspace=sulu_io&language=en&complete=false');
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertArrayHasKey('title', $response);
+        $this->assertArrayNotHasKey('article', $response);
+        $this->assertArrayNotHasKey('tags', $response);
+        $this->assertArrayNotHasKey('ext', $response);
+        $this->assertArrayNotHasKey('enabledShadowLanguage', $response);
+        $this->assertArrayNotHasKey('concreteLanguages', $response);
+        $this->assertArrayNotHasKey('shadowOn', $response);
+        $this->assertArrayNotHasKey('shadowBaseLanguage', $response);
+    }
+
+    public function testCgetAction()
     {
         $client = $this->createClient(
             array(),
@@ -1112,6 +1149,8 @@ class NodeControllerTest extends DatabaseTestCase
         unset($response['ext']);
         unset($response['tags']);
 
+        $data[0]['shadowBaseLanguage'] = null;
+
         $this->assertEquals($data[0], $response);
     }
 
@@ -1300,7 +1339,6 @@ class NodeControllerTest extends DatabaseTestCase
         $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en', $data);
         $data = json_decode($client->getResponse()->getContent(), true);
 
-        $this->assertEquals(25, sizeof($data));
         $this->assertArrayHasKey('id', $data);
         $this->assertEquals('test1', $data['title']);
         $this->assertEquals('/test1', $data['path']);
