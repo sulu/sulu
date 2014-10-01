@@ -34,7 +34,7 @@ class IndexBuilder extends SuluBuilder
      */
     public function getDependencies()
     {
-        return array('phpcr', 'fixtures');
+        return array();
     }
 
     /**
