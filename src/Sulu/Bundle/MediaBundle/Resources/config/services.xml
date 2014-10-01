@@ -106,5 +106,6 @@
             <argument type="string">%sulu_media.collection.previews.limit%</argument>
             <argument type="string">%sulu_media.collection.previews.format%</argument>
         </service>
+
     </services>
 </container>

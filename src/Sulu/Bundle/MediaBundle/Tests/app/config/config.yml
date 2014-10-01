@@ -49,3 +49,10 @@ sulu_core:
     webspace:
         request_analyzer:
             enabled: false
+
+massive_search:
+    adapter_id: massive_search.adapter.test
+
+sulu_media:
+    search:
+        enabled: true

@@ -12,3 +12,6 @@
 .idea/*
 *.iml
 *.IGNORE
+
+# phpunit
+/phpunit.xml
