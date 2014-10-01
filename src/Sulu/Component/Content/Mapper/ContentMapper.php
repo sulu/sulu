@@ -1713,6 +1713,7 @@ class ContentMapper implements ContentMapperInterface
                 $node->getPropertyValue($this->properties->getName('nodeType')) === Structure::NODE_TYPE_INTERNAL_LINK
             ) {
                 $nodeType = $node->getPropertyValue($this->properties->getName('nodeType'));
+                $parent = $node->getParent()->getIdentifier();
 
                 // get structure (without data)
                 $templateKey = $node->getPropertyValue($this->properties->getName('template'));
@@ -1740,8 +1741,13 @@ class ContentMapper implements ContentMapperInterface
             $templateKey = $node->getPropertyValue($this->properties->getName('template'));
 
             // if nodetype is set before (internal link)
-            if(!isset($nodeType)) {
+            if (!isset($nodeType)) {
                 $nodeType = $node->getPropertyValue($this->properties->getName('nodeType'));
+            }
+
+            // if parent is set before (internal link)
+            if (!isset($parent)) {
+                $parent = $node->getParent()->getIdentifier();
             }
 
             $nodeState = $node->getPropertyValue($this->properties->getName('state'));
@@ -1759,7 +1765,10 @@ class ContentMapper implements ContentMapperInterface
             $path = $row->getPath('page');
 
             // get structure
-            $templateKey = $this->templateResolver->resolve($node->getPropertyValue($this->properties->getName('nodeType')), $templateKey);
+            $templateKey = $this->templateResolver->resolve(
+                $node->getPropertyValue($this->properties->getName('nodeType')),
+                $templateKey
+            );
             $structure = $this->structureManager->getStructure($templateKey);
 
             if (!isset($url)) {
@@ -1787,7 +1796,8 @@ class ContentMapper implements ContentMapperInterface
                         'title' => $this->getTitle($node, $structure, $webspaceKey, $locale),
                         'url' => $url,
                         'locale' => $locale,
-                        'template' => $templateKey
+                        'template' => $templateKey,
+                        'parent' => $parent
                     ),
                     $fieldsData
                 );
