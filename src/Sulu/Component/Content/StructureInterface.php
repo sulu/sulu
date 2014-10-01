@@ -22,6 +22,8 @@ interface StructureInterface extends \JsonSerializable
     const STATE_TEST = 1;
     const STATE_PUBLISHED = 2;
 
+    const TYPE_PAGE = 'page';
+
     /**
      * @param string $language
      */

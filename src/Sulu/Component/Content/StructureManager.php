@@ -19,6 +19,7 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\Resource\FileResource;
+use Sulu\Component\Content\StructureInterface;
 
 /**
  * generates subclasses of structure to match template definitions.
@@ -72,14 +73,26 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
     }
 
     /**
-     * returns a structure for given key
+     * @deprecated Use getPage instead
+     */
+    public function getStructure($key)
+    {
+        trigger_error('getStructure is deprecated, use getPage instead', E_USER_DEPRECATED);
+
+        return $this->getPage($key);
+    }
+
+    /**
+     * Returns a page for given key
+     *
      * @param $key string
      * @throws Template\Exception\TemplateNotFoundException
      * @return StructureInterface
      */
-    public function getStructure($key)
+    public function getPage($key)
     {
-        return $this->getStructureByFile($key, $this->getTemplate($key));
+        $templateFile = $this->getTemplate($key, 'page');
+        return $this->getStructureByFile($key, $templateFile, 'page');
     }
 
     /**
@@ -88,22 +101,28 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
      */
     public function setOptions($options)
     {
-        $this->options = array(
-            'template_dir' => array(),
+        $defaultOptions = array(
+            'structure_paths' => array(),
             'cache_dir' => null,
             'debug' => false,
-            'cache_class_suffix' => 'StructureCache',
-            'base_class' => 'Sulu\Component\Content\Structure'
+            'page_cache_class_suffix' => 'PageCache',
+            'page_base_class' => 'Sulu\Component\Content\Structure\Page'
         );
 
         // overwrite the default values with the given options
-        $this->options = array_merge($this->options, $options);
+        $this->options = array_merge($defaultOptions, $options);
     }
 
     /**
      * @return StructureInterface[]
+     * @deprecated
      */
     public function getStructures()
+    {
+        return $this->getPages();
+    }
+
+    public function getPages()
     {
         $result = array();
         foreach ($this->getTemplates() as $file) {
@@ -172,11 +191,18 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
      * @return StructureInterface
      * @throws Template\Exception\TemplateNotFoundException
      */
-    private function getStructureByFile($key, $templateConfig)
+    private function getStructureByFile($key, $templateConfig, $type)
     {
+        if (!in_array($type, array('page'))) {
+            throw new \InvalidArgumentException(sprintf(
+                'Invalid structure type "%s"', $type
+            ));
+        }
+
         $fileName = $templateConfig['path'];
 
-        $class = str_replace('-', '_', ucfirst($key)) . $this->options['cache_class_suffix'];
+        $class = str_replace('-', '_', ucfirst($key)) . $this->options[$type . '_cache_class_suffix'];
+
         $cache = new ConfigCache(
             $this->options['cache_dir'] . '/' . $class . '.php',
             $this->options['debug']
@@ -196,7 +222,7 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
                         $result,
                         array(
                             'cache_class' => $class,
-                            'base_class' => $this->options['base_class']
+                            'base_class' => $this->options[$type . '_base_class']
                         )
                     ),
                     $resources
@@ -233,11 +259,15 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
      * @param $key
      * @return bool|string
      */
-    private function getTemplate($key)
+    private function getTemplate($key, $type)
     {
         $triedDirs = array();
 
-        foreach ($this->options['template_dir'] as $templateDir) {
+        foreach ($this->options['structure_paths'] as $templateDir) {
+            if ($templateDir['type'] != $type) {
+                continue;
+            }
+
             $path = $templateDir['path'] . '/' . $key . '.xml';
 
             if (file_exists($path)) {
@@ -247,13 +277,14 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
                 );
             }
 
-            $triedDirs[] = $templateDir['path'];
+            $triedDirs[] = '"' . $templateDir['path'] . '"';
         }
 
         throw new \InvalidArgumentException(
             sprintf(
-                'Could not find a template named "%s.xml" in the following directories: %s',
+                'Could not find a structure template named "%s.xml" of type "%s" in the following directories: %s',
                 $key,
+                $type,
                 implode(', ', $triedDirs)
             )
         );
@@ -266,7 +297,7 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
     private function getTemplates()
     {
         $result = array();
-        foreach ($this->options['template_dir'] as $templateDir) {
+        foreach ($this->options['structure_paths'] as $templateDir) {
             foreach (glob($templateDir['path'] . '/*.xml', GLOB_BRACE) as $path) {
                 $result[] = array(
                     'path' => $path,

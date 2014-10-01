@@ -19,16 +19,17 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 interface StructureManagerInterface extends ContainerAwareInterface
 {
     /**
-     * returns a structure for given key
+     * Returns a page structure for given key
+     *
      * @param $key string
      * @return StructureInterface
      */
-    public function getStructure($key);
+    public function getPage($key);
 
     /**
      * @return StructureInterface[]
      */
-    public function getStructures();
+    public function getPages();
 
     /**
      * add dynamically an extension to structures

@@ -2,23 +2,12 @@
 
 namespace Sulu\Component\Content\Structure;
 
+use Sulu\Component\Content\Structure;
+use Sulu\Component\Content\Metadata;
+use Sulu\Component\Content\StructureInterface;
+
 abstract class Page extends Structure
 {
-    /**
-     * indicates that the node is a content node
-     */
-    const NODE_TYPE_CONTENT = 1;
-
-    /**
-     * indicates that the node links to an internal resource
-     */
-    const NODE_TYPE_INTERNAL_LINK = 2;
-
-    /**
-     * indicates that the node links to an external resource
-     */
-    const NODE_TYPE_EXTERNAL_LINK = 4;
-
     /**
      * template to render content
      * @var string
@@ -55,6 +44,17 @@ abstract class Page extends Structure
     private $ext = array();
 
     /**
+     * @var string
+     */
+    private $originTemplate;
+
+    /**
+     * content node that holds the internal link
+     * @var StructureInterface
+     */
+    private $internalLinkContent;
+
+    /**
      * @param $key string
      * @param $view string
      * @param $controller string
@@ -64,16 +64,14 @@ abstract class Page extends Structure
      */
     public function __construct($key, $view, $controller, $cacheLifeTime = 604800, $metaData = array())
     {
-        parent::__construct($key);
+        parent::__construct($key, $metaData);
 
         $this->view = $view;
         $this->controller = $controller;
         $this->cacheLifeTime = $cacheLifeTime;
-        $this->metaData = new Metadata($metaData);
 
         // default state is test
         $this->nodeState = StructureInterface::STATE_TEST;
-        $this->published = null;
 
         // default hide in navigation
         $this->navContexts = array();
@@ -190,14 +188,20 @@ abstract class Page extends Structure
             parent::toArray($complete),
             array(
                 'nodeState' => $this->getNodeState(),
-                'published' => $this->getPublished(),
                 'publishedState' => $this->getPublishedState(),
                 'navContexts' => $this->getNavContexts(),
             )
         );
 
+        if ($complete === true) {
+            $result['published'] = $this->getPublished();
+        }
+
+        $result['ext'] = $this->extToArray();
+
         return $result;
     }
+
     /**
      * @return StructureInterface
      */
@@ -227,4 +231,20 @@ abstract class Page extends Structure
 
         return $result;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getExt()
+    {
+        return $this->ext;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setExt($ext)
+    {
+        $this->ext = $ext;
+    }
+}
