@@ -105,7 +105,9 @@ define([], function() {
             this.action = item.action;
             
             // resets store to prevent duplicated models
-            this.sandbox.mvc.Store.reset();
+            if (!!item.resetStore) {
+                this.sandbox.mvc.Store.reset();
+            }
 
             // stop the current tab
             App.stop('#' + constants.tabsComponentId);

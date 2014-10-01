@@ -10,8 +10,6 @@
 
 namespace Sulu\Bundle\AdminBundle\Widgets;
 
-use Sulu\Bundle\AdminBundle\Widgets\WidgetException;
-
 class WidgetParameterException extends WidgetException
 {
     protected $param;
@@ -27,7 +25,7 @@ class WidgetParameterException extends WidgetException
         return array(
             'code' => $this->code,
             'message' => $this->message,
-            'widget' => $this->widget,
+            'widget' => $this->subject,
             'param' => $this->param
         );
     }

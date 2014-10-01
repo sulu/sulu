@@ -10,4 +10,4 @@ services:
         class: %sulu_admin.js_config_pool.class%
     sulu_admin.widgets_handler:
             class: %sulu_admin.widgets_handler.class%
-            arguments: [@templating]
+            arguments: [@templating, %sulu_admin.widget_groups%]

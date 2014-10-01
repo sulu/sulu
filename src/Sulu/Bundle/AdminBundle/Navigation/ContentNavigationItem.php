@@ -70,12 +70,19 @@ class ContentNavigationItem
     private $disabled;
 
     /**
+     * Defines if the relationship manager in the frontend should be resetted
+     * @var boolean
+     */
+    private $resetStore;
+
+    /**
      * @param $name
      */
     function __construct($name)
     {
         $this->name = $name;
         $this->display = array(static::DISPLAY_NEW, static::DISPLAY_EDIT);
+        $this->resetStore = true;
     }
 
     /**
@@ -207,6 +214,22 @@ class ContentNavigationItem
     }
 
     /**
+     * @return boolean
+     */
+    public function getResetStore()
+    {
+        return $this->resetStore;
+    }
+
+    /**
+     * @param boolean $resetStore
+     */
+    public function setResetStore($resetStore)
+    {
+        $this->resetStore = $resetStore;
+    }
+
+    /**
      * Returns an array representation of the content navigation item
      * @return array
      */
@@ -219,6 +242,8 @@ class ContentNavigationItem
             'display' => $this->getDisplay(),
             'component' => $this->getComponent(),
             'componentOptions' => $this->getComponentOptions(),
+            'disabled' => $this->getDisabled(),
+            'resetStore' => $this->getResetStore(),
         );
 
         return $array;

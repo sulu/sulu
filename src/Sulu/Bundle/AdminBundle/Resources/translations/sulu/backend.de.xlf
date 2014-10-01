@@ -744,6 +744,10 @@
                 <source>sulu.overlay.unsaved-changes-confirm</source>
                 <target><![CDATA[Sie haben Änderungen die noch nicht gespeichert wurden.<br/>Wollen Sie wirklich fortfahren ohne zu speichern?]]></target>
             </trans-unit>
+            <trans-unit id="d5f4a99d54bb05a92a78146053452810" resname="sulu.overlay.save-unsaved-changes-confirm">
+                <source>sulu.overlay.save-unsaved-changes-confirm</source>
+                <target><![CDATA[Sie haben Änderungen die noch nicht gespeichert wurden.<br/>Wollen Sie speichern und fortfahren?]]></target>
+            </trans-unit>
             <trans-unit id="deb752167002b44bbc2030c7f1c8250b" resname="public.show-history">
                 <source>public.show-history</source>
                 <target>Verlauf anzeigen</target>
@@ -1388,6 +1392,18 @@
             <trans-unit id="a50af522de181350142c0b4720e29a4f" resname="public.overview">
                 <source>public.overview</source>
                 <target>Übersicht</target>
+            </trans-unit>
+            <trans-unit id="a50af522de18a350142c0b4720e29a4f" resname="public.details">
+                <source>public.details</source>
+                <target>Details</target>
+            </trans-unit>
+            <trans-unit id="a50af522de145350142c0b4720e29a4f" resname="public.selection">
+                <source>public.selection</source>
+                <target>Auswahl</target>
+            </trans-unit>
+            <trans-unit id="a50af522de18a35014430b4720e29a4f" resname="form.validation-warning">
+                <source>form.validation-warning</source>
+                <target><![CDATA[Bitte überprüfen deine Eingabe.<br/>Erst wenn alle Felder korrekt ausgefüllt sind, kann gespeichert werden.]]></target>
             </trans-unit>
         </body>
     </file>

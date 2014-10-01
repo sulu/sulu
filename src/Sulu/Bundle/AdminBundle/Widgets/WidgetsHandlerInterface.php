@@ -16,6 +16,14 @@ namespace Sulu\Bundle\AdminBundle\Widgets;
 interface WidgetsHandlerInterface
 {
     /**
+     * renders a widget group
+     * @param string $groupAlias
+     * @param array $parameters
+     * @return string
+     */
+    public function renderWidgetGroup($groupAlias, $parameters = array());
+
+    /**
      * renders widgets for given aliases
      * @param array $aliases
      * @param array $parameters
