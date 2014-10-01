@@ -53,6 +53,14 @@ class NavigationQueryBuilder extends ContentQueryBuilder
         return '';
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    protected function buildOrder($webspaceKey, $locale)
+    {
+        return 'page.[sulu:order]';
+    }
+
     public function init(array $options)
     {
         $this->context = (isset($options['context'])) ? $options['context'] : null;
