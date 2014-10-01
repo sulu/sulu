@@ -201,6 +201,32 @@ class UserRepositoryTest extends DatabaseTestCase
         self::$tool->createSchema(self::$entities);
     }
 
+    public function testLoadLockedUserByUsername()
+    {
+        $client = static::createClient();
+
+        $client->request(
+            'POST',
+            '/login_check',
+            array(
+                '_username' => 'admin',
+                '_password'=> 'securepassword',
+                '_target_path' => '/toptronic'
+            ),
+            array(),
+            array(
+                'HTTP_X-Requested-With' => 'XMLHttpRequest',
+                'Content-Type' => 'application/x-www-form-urlencoded; charset=UTF-8',
+            )
+    );
+        $response = json_decode($client->getResponse()->getContent());
+
+//        $this->setExpectedException('Symfony\Security\Core\Exception\UsernameNotFoundException');
+//        $this->setExpectedException('Symfony\Security\Core\Exception\DisabledException');
+//        $this->setExpectedException('Symfony\Security\Core\Exception\LockedException');
+
+    }
+
     public function testFindBySystem()
     {
 //        $client = static::createClient();
