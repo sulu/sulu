@@ -1712,8 +1712,20 @@ class ContentMapper implements ContentMapperInterface
             if (
                 $node->getPropertyValue($this->properties->getName('nodeType')) === Structure::NODE_TYPE_INTERNAL_LINK
             ) {
-                $propertyName = $this->properties->getName('internal_link');
-                $uuid = $node->getPropertyValue($propertyName);
+                $nodeType = $node->getPropertyValue($this->properties->getName('nodeType'));
+
+                // get structure (without data)
+                $templateKey = $node->getPropertyValue($this->properties->getName('template'));
+                $templateKey = $this->templateResolver->resolve($nodeType, $templateKey);
+                $structure = $this->structureManager->getStructure($templateKey);
+
+                $property = new TranslatedProperty(
+                    $structure->getPropertyByTagName('sulu.rlp'),
+                    $locale,
+                    $this->languageNamespace
+                );
+                $uuid = $node->getPropertyValue($property->getName());
+
                 $node = $this->sessionManager->getSession()->getNodeByIdentifier($uuid);
                 $structure = $this->load($uuid, $webspaceKey, $locale);
                 $url = $structure->getResourceLocator();
@@ -1726,7 +1738,18 @@ class ContentMapper implements ContentMapperInterface
             $uuid = $node->getIdentifier();
 
             $templateKey = $node->getPropertyValue($this->properties->getName('template'));
-            $nodeType = $node->getPropertyValue($this->properties->getName('nodeType'));
+
+            // if nodetype is set before (internal link)
+            if(!isset($nodeType)) {
+                $nodeType = $node->getPropertyValue($this->properties->getName('nodeType'));
+            }
+
+            $nodeState = $node->getPropertyValue($this->properties->getName('state'));
+
+            // if page is not piblished ignore it
+            if ($nodeState !== Structure::STATE_PUBLISHED) {
+                return false;
+            }
 
             $changed = $node->getPropertyValue($this->properties->getName('changed'));
             $changer = $node->getPropertyValue($this->properties->getName('changer'));
@@ -1736,7 +1759,7 @@ class ContentMapper implements ContentMapperInterface
             $path = $row->getPath('page');
 
             // get structure
-            $templateKey = $this->templateResolver->resolve($nodeType, $templateKey);
+            $templateKey = $this->templateResolver->resolve($node->getPropertyValue($this->properties->getName('nodeType')), $templateKey);
             $structure = $this->structureManager->getStructure($templateKey);
 
             if (!isset($url)) {
