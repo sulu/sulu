@@ -11,9 +11,13 @@
 namespace Sulu\Bundle\WebsiteBundle\Navigation;
 
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
+use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
+use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\StructureInterface;
-use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
+use Sulu\Component\Webspace\Localization;
+use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
  * {@inheritdoc}
@@ -25,27 +29,110 @@ class NavigationMapper implements NavigationMapperInterface
      */
     private $contentMapper;
 
-    function __construct(ContentMapperInterface $contentMapper)
-    {
+    /**
+     * @var ContentQueryExecutorInterface
+     */
+    private $contentQuery;
+
+    /**
+     * @var ContentQueryBuilderInterface
+     */
+    private $queryBuilder;
+
+    /**
+     * @var SessionManagerInterface
+     */
+    private $sessionManager;
+
+    /**
+     * @var Stopwatch
+     */
+    private $stopwatch;
+
+    function __construct(
+        ContentMapperInterface $contentMapper,
+        ContentQueryExecutorInterface $contentQuery,
+        ContentQueryBuilderInterface $queryBuilder,
+        SessionManagerInterface $sessionManager,
+        Stopwatch $stopwatch = null
+    ) {
         $this->contentMapper = $contentMapper;
+        $this->contentQuery = $contentQuery;
+        $this->queryBuilder = $queryBuilder;
+        $this->sessionManager = $sessionManager;
+        $this->stopwatch = $stopwatch;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getNavigation($parent, $webspace, $language, $depth = 1, $flat = false, $context = null)
-    {
-        $contents = $this->contentMapper->loadByParent($parent, $webspace, $language, $depth, false, true, true);
+    public function getNavigation(
+        $parent,
+        $webspaceKey,
+        $locale,
+        $depth = 1,
+        $flat = false,
+        $context = null,
+        $loadExcerpt = false
+    ) {
+        if ($this->stopwatch) {
+            $this->stopwatch->start('NavigationMapper::getNavigation');
+        }
+        $rootDepth = substr_count($this->sessionManager->getContentNode($webspaceKey)->getPath(), '/');
+        $parent = $this->sessionManager->getSession()->getNodeByIdentifier($parent)->getPath();
+        $depth = $depth + substr_count($parent, '/') - $rootDepth;
 
-        return $this->generateNavigation($contents, $webspace, $language, $flat, $context);
+        $this->queryBuilder->init(
+            array(
+                'context' => $context,
+                'parent' => $parent,
+                'excerpt' => $loadExcerpt
+            )
+        );
+        $result = $this->contentQuery->execute($webspaceKey, array($locale), $this->queryBuilder, $flat, $depth);
+
+        foreach ($result as $item) {
+            if (!isset($item['children'])) {
+                $item['children'] = array();
+            }
+        }
+
+        if ($this->stopwatch) {
+            $this->stopwatch->stop('NavigationMapper::getNavigation');
+        }
+
+        return $result;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getRootNavigation($webspace, $language, $depth = 1, $flat = false, $context = null)
-    {
-        return $this->getNavigation(null, $webspace, $language, $depth, $flat, $context);
+    public function getRootNavigation(
+        $webspaceKey,
+        $locale,
+        $depth = 1,
+        $flat = false,
+        $context = null,
+        $loadExcerpt = false
+    ) {
+        if ($this->stopwatch) {
+            $this->stopwatch->start('NavigationMapper::getRootNavigation.query');
+        }
+
+        $this->queryBuilder->init(array('context' => $context, 'excerpt' => $loadExcerpt));
+        $result = $this->contentQuery->execute($webspaceKey, array($locale), $this->queryBuilder, $flat, $depth);
+
+        for ($i = 0; $i < sizeof($result); $i++) {
+            if (!isset($result[$i]['children'])) {
+                $result[$i]['children'] = array();
+            }
+        }
+
+        if ($this->stopwatch) {
+            $this->stopwatch->stop('NavigationMapper::getRootNavigation.query');
+        }
+
+        return $result;
     }
 
     /**
@@ -78,8 +165,7 @@ class NavigationMapper implements NavigationMapperInterface
         $flat = false,
         $context = null,
         $breakOnNotInNavigation = false
-    )
-    {
+    ) {
         $result = array();
 
         /** @var StructureInterface $content */
@@ -91,11 +177,21 @@ class NavigationMapper implements NavigationMapperInterface
 
                 if (false === $flat) {
                     $result[] = new NavigationItem(
-                        $content, $title, $url, $children, $content->getUuid(), $content->getNodeType()
+                        $title,
+                        $url,
+                        isset($content->getExt()['excerpt']) ? $content->getExt()['excerpt'] : null,
+                        $children,
+                        $content->getUuid(),
+                        $content->getNodeType()
                     );
                 } else {
                     $result[] = new NavigationItem(
-                        $content, $title, $url, null, $content->getUuid(), $content->getNodeType()
+                        $title,
+                        $url,
+                        isset($content->getExt()['excerpt']) ? $content->getExt()['excerpt'] : null,
+                        null,
+                        $content->getUuid(),
+                        $content->getNodeType()
                     );
                     $result = array_merge($result, $children);
                 }

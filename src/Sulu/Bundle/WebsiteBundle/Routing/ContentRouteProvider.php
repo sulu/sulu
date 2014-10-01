@@ -10,10 +10,10 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Routing;
 
-
 use Liip\ThemeBundle\ActiveTheme;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
+use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Cmf\Bundle\RoutingBundle\Model\RedirectRoute;
@@ -42,8 +42,7 @@ class ContentRouteProvider implements RouteProviderInterface
     public function __construct(
         ContentMapperInterface $contentMapper,
         RequestAnalyzerInterface $requestAnalyzer
-    )
-    {
+    ) {
         $this->contentMapper = $contentMapper;
         $this->requestAnalyzer = $requestAnalyzer;
     }
@@ -107,7 +106,21 @@ class ContentRouteProvider implements RouteProviderInterface
                     $portal->getWebspace()->getKey(),
                     $language
                 );
+
                 if (
+                    $content->getNodeType() === Structure::NODE_TYPE_INTERNAL_LINK &&
+                    $content->getNodeState() === StructureInterface::STATE_PUBLISHED
+                ) {
+                    // redirect to linked page
+                    $route = new Route(
+                        $request->getRequestUri(), array(
+                            '_controller' => 'SuluWebsiteBundle:Default:redirect',
+                            'url' => $this->requestAnalyzer->getCurrentResourceLocatorPrefix() . $content->getResourceLocator()
+                        )
+                    );
+
+                    $collection->add($content->getKey() . '_' . uniqid(), $route);
+                } elseif (
                     $content->getNodeState() === StructureInterface::STATE_TEST ||
                     !$content->getHasTranslation() ||
                     !$this->checkResourceLocator()

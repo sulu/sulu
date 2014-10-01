@@ -54,7 +54,12 @@ class ExceptionController extends BaseExceptionController
                         array(
                             'request' => array(
                                 'webspaceKey' => $this->requestAnalyzer->getCurrentWebspace()->getKey(),
-                                'locale' => $this->requestAnalyzer->getCurrentLocalization()->getLocalization(),
+                                'locale' => $this->requestAnalyzer->getCurrentLocalization(),
+                                'portalUrl' => $this->requestAnalyzer->getCurrentPortalUrl(),
+                                'resourceLocatorPrefix' => $this->requestAnalyzer->getCurrentResourceLocatorPrefix(),
+                                'resourceLocator' => $this->requestAnalyzer->getCurrentResourceLocator(),
+                                'get' => $this->requestAnalyzer->getCurrentGetParameter(),
+                                'post' => $this->requestAnalyzer->getCurrentPostParameter()
                             ),
                             'path' => $request->getPathInfo()
                         )
