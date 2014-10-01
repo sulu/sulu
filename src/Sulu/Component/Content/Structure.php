@@ -25,6 +25,21 @@ use Sulu\Component\Content\StructureTag;
 abstract class Structure implements StructureInterface
 {
     /**
+     * indicates that the node is a content node
+     */
+    const NODE_TYPE_CONTENT = 1;
+
+    /**
+     * indicates that the node links to an internal resource
+     */
+    const NODE_TYPE_INTERNAL_LINK = 2;
+
+    /**
+     * indicates that the node links to an external resource
+     */
+    const NODE_TYPE_EXTERNAL_LINK = 4;
+
+    /**
      * webspaceKey of node
      * @var string
      */
@@ -131,12 +146,6 @@ abstract class Structure implements StructureInterface
     private $internal;
 
     /**
-     * content node that holds the internal link
-     * @var StructureInterface
-     */
-    private $internalLinkContent;
-
-    /**
      * content node is a shadow for another content
      * @var boolean
      */
@@ -174,12 +183,14 @@ abstract class Structure implements StructureInterface
     /**
      * @param $key string
      */
-    public function __construct($key)
+    public function __construct($key, $metaData)
     {
         $this->key = $key;
 
         // default content node-type
         $this->nodeType = self::NODE_TYPE_CONTENT;
+        $this->metaData = new Metadata($metaData);
+        $this->published = null;
     }
 
     /**
@@ -783,8 +794,6 @@ abstract class Structure implements StructureInterface
             }
 
             $this->appendProperties($this->getProperties(), $result);
-
-            $result['ext'] = $this->extToArray();
 
             return $result;
         } else {

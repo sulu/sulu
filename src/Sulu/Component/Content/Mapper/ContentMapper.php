@@ -52,6 +52,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
 use Sulu\Component\Content\Event\ContentOrderBeforeEvent;
 use Sulu\Component\Util\SuluNodeHelper;
+use Sulu\Component\Content\Mapper\ContentMapperRequest;
 
 /**
  * Maps content nodes to phpcr nodes with content types and provides utility function to handle content nodes
@@ -217,6 +218,28 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function saveRequest(ContentMapperRequest $request)
+    {
+        return $this->save(
+            $request->getData(),
+            $request->getTemplateKey(),
+            $request->getWebspaceKey(),
+            $request->getLocale(),
+            $request->getUserId(),
+            $request->getPartialUpdate(),
+            $request->getUuid(),
+            $request->getParentUuid(),
+            $request->getState(),
+            $request->getIsShadow(),
+            $request->getShadowBaseLanguage()
+        );
+    }
+
+    /**
+     * @deprecated
+     *
      * {@inheritdoc}
      */
     public function save(
@@ -1592,7 +1615,7 @@ class ContentMapper implements ContentMapperInterface
      */
     protected function getStructure($key)
     {
-        return $this->structureManager->getStructure($key);
+        return $this->structureManager->getPage($key);
     }
 
     /**

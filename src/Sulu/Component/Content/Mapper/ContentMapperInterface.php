@@ -34,6 +34,8 @@ interface ContentMapperInterface
      * @param null $shadowBaseLanguage
      *
      * @return StructureInterface
+     *
+     * @deprecated Use the saveRequest method instead.
      */
     public function save(
         $data,
@@ -265,4 +267,11 @@ interface ContentMapperInterface
         $fields,
         $maxDepth
     );
+
+    /**
+     * Map and save the content given in the request object.
+     *
+     * @param ContentMapperRequest
+     */
+    public function saveRequest(ContentMapperRequest $request);
 }
