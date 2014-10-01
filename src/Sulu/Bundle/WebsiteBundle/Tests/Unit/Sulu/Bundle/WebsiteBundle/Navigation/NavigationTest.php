@@ -542,4 +542,38 @@ class NavigationTest extends PhpcrTestCase
         $this->assertEquals('/products/products-2', $main[1]['url']);
         $this->assertEquals('/products/products-3', $main[2]['url']);
     }
+
+    public function testNavigationOrder()
+    {
+        $main = $this->navigation->getNavigation($this->data['news']->getUuid(), 'default', 'en', 1);
+        $this->assertEquals(2, sizeof($main));
+        $this->assertEquals(0, sizeof($main[0]['children']));
+        $this->assertEquals(0, sizeof($main[1]['children']));
+
+        $this->assertEquals($this->data['news/news-1']->getUuid(), $main[0]['uuid']);
+        $this->assertEquals('News-1', $main[0]['title']);
+        $this->assertEquals('/news/news-1', $main[0]['url']);
+
+        $this->assertEquals($this->data['news/news-2']->getUuid(), $main[1]['uuid']);
+        $this->assertEquals('News-2', $main[1]['title']);
+        $this->assertEquals('/news/news-2', $main[1]['url']);
+
+        $session = $this->sessionManager->getSession();
+        $session->getNodeByIdentifier($this->data['news/news-1']->getUuid())->setProperty('sulu:order', 100);
+        $session->save();
+        $session->refresh(false);
+
+        $main = $this->navigation->getNavigation($this->data['news']->getUuid(), 'default', 'en', 1);
+        $this->assertEquals(2, sizeof($main));
+        $this->assertEquals(0, sizeof($main[0]['children']));
+        $this->assertEquals(0, sizeof($main[1]['children']));
+
+        $this->assertEquals($this->data['news/news-2']->getUuid(), $main[0]['uuid']);
+        $this->assertEquals('News-2', $main[0]['title']);
+        $this->assertEquals('/news/news-2', $main[0]['url']);
+
+        $this->assertEquals($this->data['news/news-1']->getUuid(), $main[1]['uuid']);
+        $this->assertEquals('News-1', $main[1]['title']);
+        $this->assertEquals('/news/news-1', $main[1]['url']);
+    }
 }
