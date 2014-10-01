@@ -35,7 +35,7 @@
         "doctrine/doctrine-bundle": "1.2.*",
         "symfony/monolog-bundle": "2.4.*",
         "phpunit/phpunit": "4.0.*",
-        "sulu/test-bundle": "0.8.*"
+        "sulu/test-bundle": "0.8.*",
         "sulu/search-bundle": "0.2.*",
         "massive/search-bundle": "0.2.*"
     },
