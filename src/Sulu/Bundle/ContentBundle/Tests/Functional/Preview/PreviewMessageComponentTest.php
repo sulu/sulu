@@ -25,6 +25,7 @@ use Sulu\Component\Content\Block\BlockPropertyType;
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyTag;
 use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Webspace\Analyzer\AdminRequestAnalyzer;
 use Sulu\Component\Webspace\Localization;
 use Sulu\Component\Webspace\Navigation;
 use Sulu\Component\Webspace\NavigationContext;
@@ -66,6 +67,11 @@ class PreviewMessageComponentTest extends PhpcrTestCase
     private $resolver;
 
     /**
+     * @var AdminRequestAnalyzer
+     */
+    private $requestAnalyzer;
+
+    /**
      * @var PreviewMessageComponent
      */
     private $component;
@@ -81,9 +87,16 @@ class PreviewMessageComponentTest extends PhpcrTestCase
         $this->previewCache = new PhpcrCacheProvider($this->mapper, $this->sessionManager);
         $this->renderer = new PreviewRenderer($this->activeTheme, $this->resolver, $this->webspaceManager);
         $this->crawler = new RdfaCrawler();
+        $this->requestAnalyzer = $this->getMockBuilder('Sulu\Component\Webspace\Analyzer\AdminRequestAnalyzer')
+            ->disableOriginalConstructor()
+            ->getMock();
 
         $this->preview = new Preview($this->contentTypeManager, $this->previewCache, $this->renderer, $this->crawler);
-        $this->component = new PreviewMessageComponent($this->preview, $this->getMock('\Psr\Log\LoggerInterface'));
+        $this->component = new PreviewMessageComponent(
+            $this->preview,
+            $this->requestAnalyzer,
+            $this->getMock('\Psr\Log\LoggerInterface')
+        );
     }
 
     protected function prepareWebspaceManager()
