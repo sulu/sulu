@@ -40,6 +40,16 @@ abstract class Structure implements StructureInterface
     const NODE_TYPE_EXTERNAL_LINK = 4;
 
     /**
+     * Structure type page
+     */
+    const TYPE_PAGE = 'page';
+
+    /**
+     * Structure type page
+     */
+    const TYPE_SNIPPET = 'snippet';
+
+    /**
      * webspaceKey of node
      * @var string
      */
@@ -916,5 +926,9 @@ abstract class Structure implements StructureInterface
         }
 
         return $this->structureTags[$name];
+    }
+
+    protected function getPhpcrPropertyName($name)
+    {
     }
 }

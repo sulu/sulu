@@ -48,7 +48,8 @@ interface ContentMapperInterface
         $parentUuid = null,
         $state = null,
         $isShadow = null,
-        $shadowBaseLanguage = null
+        $shadowBaseLanguage = null,
+        $type
     );
 
     /**

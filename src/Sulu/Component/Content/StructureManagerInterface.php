@@ -32,6 +32,19 @@ interface StructureManagerInterface extends ContainerAwareInterface
     public function getPages();
 
     /**
+     * Returns a snippet structure for given key
+     *
+     * @param $key string
+     * @return StructureInterface
+     */
+    public function getSnippet($key);
+
+    /**
+     * @return StructureInterface[]
+     */
+    public function getSnippets();
+
+    /**
      * add dynamically an extension to structures
      * @param StructureExtensionInterface $extension
      * @param string $template default is all templates

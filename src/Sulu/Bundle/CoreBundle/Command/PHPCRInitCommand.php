@@ -56,7 +56,8 @@ class PHPCRInitCommand extends ContainerAwareCommand
         $workspace->getNodeTypeManager()->registerNodeType(new SuluNodeType(), true);
         $workspace->getNodeTypeManager()->registerNodeType(new PathNodeType(), true);
         $workspace->getNodeTypeManager()->registerNodeType(new ContentNodeType(), true);
-
+        $workspace->getNodeTypeManager()->registerNodeType(new SnippetNodeType(), true);
+        $workspace->getNodeTypeManager()->registerNodeType(new PageNodeType(), true);
 
         /** @var SessionInterface $session */
         $session = $this->getContainer()->get('sulu.phpcr.session')->getSession();
