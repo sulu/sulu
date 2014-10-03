@@ -25,20 +25,17 @@ class CategoryRepository extends EntityRepository implements CategoryRepositoryI
 {
     /**
      * Gets a category-entity by id
+     *
      * @param $id
      * @return mixed|null
      */
     public function findCategoryById($id)
     {
         try {
-            $qb = $this->getCategoryQuery()->where('category.id = :categoryId');
-
-            $query = $qb->getQuery();
-            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+            $queryBuilder = $this->getCategoryQuery()->where('category.id = :categoryId');
+            $query = $queryBuilder->getQuery();
             $query->setParameter('categoryId', $id);
-
             return $query->getSingleResult();
-
         } catch (NoResultException $ex) {
             return null;
         }
@@ -46,6 +43,7 @@ class CategoryRepository extends EntityRepository implements CategoryRepositoryI
 
     /**
      * Returns all categories. Can be filtered with parent and depth
+     *
      * @param number $parent the id of the parent to filter for
      * @param number $depth the depth-level to filter for
      * @param string|null $sortBy column name to sort the categories by
@@ -55,29 +53,28 @@ class CategoryRepository extends EntityRepository implements CategoryRepositoryI
     public function findCategories($parent = null, $depth = null, $sortBy = null, $sortOrder = null)
     {
         try {
-            $qb = $this->getCategoryQuery();
+            $queryBuilder = $this->getCategoryQuery();
+            $queryBuilder->andWhere('category.parent IS NULL');
 
             if ($parent !== null) {
-                $qb->andWhere('categoryParent.id = :parentId');
+                $queryBuilder->andWhere('categoryParent.id = :parentId');
             }
             if ($depth !== null) {
-                $qb->andWhere('category.depth = :depth');
+                $queryBuilder->andWhere('category.depth = :depth');
             }
 
             if ($sortBy) {
                 $sortOrder = ($sortOrder) ? $sortOrder : 'asc';
-                $qb->addOrderBy('category.' . $sortBy, $sortOrder);
+                $queryBuilder->addOrderBy('category.' . $sortBy, $sortOrder);
             }
 
-            $query = $qb->getQuery();
-            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+            $query = $queryBuilder->getQuery();
             if ($parent !== null) {
                 $query->setParameter('parentId', $parent);
             }
             if ($depth !== null) {
                 $query->setParameter('depth', $depth);
             }
-
             return $query->getResult();
         } catch (NoResultException $ex) {
             return null;
@@ -86,27 +83,27 @@ class CategoryRepository extends EntityRepository implements CategoryRepositoryI
 
     /**
      * Returns the children for a given category
+     *
      * @param int $key the key of the category to return the children for
      * @param string|null $sortBy column name to sort by
      * @param string|null $sortOrder sort order
      * @return Category[]
      */
-    public function findChildren($key, $sortBy = null, $sortOrder = null) {
+    public function findChildren($key, $sortBy = null, $sortOrder = null)
+    {
         try {
-            $qb = $this->getCategoryQuery()
+            $queryBuilder = $this->getCategoryQuery()
                 ->from('SuluCategoryBundle:Category', 'parent')
                 ->andWhere('parent.key = :key')
-                ->andWhere('category.lft BETWEEN parent.lft AND parent.rgt', 'category.lft != parent.lft');
-
+                ->andWhere('category.lft = parent.lft + 1');
 
             if ($sortBy) {
                 $sortOrder = ($sortOrder) ? $sortOrder : 'asc';
-                $qb->addOrderBy('category.' . $sortBy, $sortOrder);
+                $queryBuilder->addOrderBy('category.' . $sortBy, $sortOrder);
             }
 
-            $qb->setParameter('key', $key);
-            $query = $qb->getQuery();
-            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+            $query = $queryBuilder->getQuery();
+            $query->setParameter('key', $key);
 
             return $query->getResult();
         } catch (NoResultException $ex) {
@@ -116,6 +113,7 @@ class CategoryRepository extends EntityRepository implements CategoryRepositoryI
 
     /**
      * Finds the categories with the given ids
+     *
      * @param array $ids The ids to load
      * @return Category[]
      */
@@ -126,12 +124,12 @@ class CategoryRepository extends EntityRepository implements CategoryRepositoryI
                 throw new NoResultException();
             }
 
-            $qb = $this->getCategoryQuery();
+            $queryBuilder = $this->getCategoryQuery();
 
-            $qb->where($qb->expr()->in('category.id', ':ids'));
-            $qb->setParameter('ids', $ids);
+            $queryBuilder->where($queryBuilder->expr()->in('category.id', ':ids'));
+            $queryBuilder->setParameter('ids', $ids);
 
-            return $qb->getQuery()->getResult();
+            return $queryBuilder->getQuery()->getResult();
         } catch (NoResultException $ex) {
             return array();
         }
@@ -139,34 +137,21 @@ class CategoryRepository extends EntityRepository implements CategoryRepositoryI
 
     /**
      * Returns the general part of the query
+     *
      * @return \Doctrine\ORM\QueryBuilder
      */
     private function getCategoryQuery()
     {
-        $qb = $this->createQueryBuilder('category')
+        return $this->createQueryBuilder('category')
             ->leftJoin('category.meta', 'categoryMeta')
             ->leftJoin('category.translations', 'categoryTranslations')
             ->leftJoin('category.parent', 'categoryParent')
             ->leftJoin('category.children', 'categoryChildren')
-            /*
-            ->leftJoin('category.creator', 'creator')
-            ->leftJoin('creator.contact', 'creatorContact')
-            ->leftJoin('category.changer', 'changer')
-            ->leftJoin('changer.contact', 'changerContact')
-            */
 
             ->addSelect('category')
             ->addSelect('categoryMeta')
             ->addSelect('categoryTranslations')
             ->addSelect('categoryParent')
             ->addSelect('categoryChildren');
-            /*
-            ->addSelect('creator')
-            ->addSelect('creatorContact')
-            ->addSelect('changer')
-            ->addSelect('changerContact')
-            */
-
-        return $qb;
     }
 }

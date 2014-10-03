@@ -52,20 +52,7 @@ class Category extends ApiEntityWrapper
      */
     public function getName()
     {
-        $translations = $this->entity->getTranslations();
-        if (!empty($translations)) {
-            $name = $translations[0]->getTranslation();
-            foreach ($translations as $translation) {
-                if ($translation->getLocale() === $this->locale) {
-                    $name = $translation->getTranslation();
-                    break;
-                }
-            }
-
-            return $name;
-        }
-
-        return null;
+        return $this->getTranslation()->getTranslation();
     }
 
     /**
@@ -73,7 +60,7 @@ class Category extends ApiEntityWrapper
      * @VirtualProperty
      * @SerializedName("meta")
      * @return array
-     * @Groups({"fullCategory"})
+     * @Groups({"fullCategory","partialCategory"})
      */
     public function getMeta()
     {
@@ -153,62 +140,40 @@ class Category extends ApiEntityWrapper
     }
 
     /**
-     * Returns the id of the parent or null
-     * @VirtualProperty
-     * @SerializedName("parent")
-     * @return null|number
-     * @Groups({"fullCategory"})
-     */
-    public function getParent()
-    {
-        $parent = $this->getEntity()->getParent();
-        if ($parent) {
-            return $parent->getId();
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * Returns the number of children
+     * Returns the children of a category
      * @VirtualProperty
      * @SerializedName("children")
-     * @return number
+     * @return List
      * @Groups({"fullCategory"})
      */
-    public function getChildren() {
-        if($this->getEntity()->getChildren()) {
-            return $this->getEntity()->getChildren()->count();
+    public function getChildren()
+    {
+        $children = [];
+        if ($this->entity->getChildren()) {
+            foreach ($this->entity->getChildren() as $child) {
+                $children[] = new Category($child, $this->locale);
+            }
         }
-        return 0;
+        return $children;
     }
 
     /**
      * Takes a name as string and sets it to the entity
+     *
      * @param string $name
+     * @return Sulu\Bundle\CategoryBundle\Api\Category
      */
     public function setName($name)
     {
-        $translations = $this->entity->getTranslations();
-        $categoryName = null;
-        foreach ($translations as $translation) {
-            if ($translation->getLocale() === $this->locale) {
-                $categoryName = $translation;
-            }
-        }
-        if (!$categoryName) {
-            $categoryName = new CategoryTranslation();
-            $this->entity->addTranslation($categoryName);
-        }
-
-        $categoryName->setTranslation($name);
-        $categoryName->setLocale($this->locale);
-        $categoryName->setCategory($this->entity);
+        $this->getTranslation()->setTranslation($name);
+        return $this;
     }
 
     /**
      * Takes meta as array and sets it to the entity
+     *
      * @param array $meta
+     * @return Sulu\Bundle\CategoryBundle\Api\Category
      */
     public function setMeta($meta)
     {
@@ -231,24 +196,31 @@ class Category extends ApiEntityWrapper
                 $metaEntity->setLocale($singleMeta['locale']);
             }
         }
+        return $this;
     }
 
     /**
      * Sets a given category as the parent of the entity
+     *
      * @param Entity $parent
+     * @return Sulu\Bundle\CategoryBundle\Api\Category
      */
     public function setParent($parent)
     {
         $this->entity->setParent($parent);
+        return $this;
     }
 
     /**
      * Sets the key of the category
+     *
      * @param string $key
+     * @return Sulu\Bundle\CategoryBundle\Api\Category
      */
     public function setKey($key)
     {
         $this->entity->setKey($key);
+        return $this;
     }
 
     /**
@@ -299,5 +271,25 @@ class Category extends ApiEntityWrapper
             'created' => $this->getCreated(),
             'changed' => $this->getChanged()
         );
+    }
+
+    /**
+     * Returns the translation with the given locale
+     * @param string $locale The locale to return
+     * @return MappingAttributeTranslation
+     */
+    public function getTranslation()
+    {
+        foreach ($this->entity->getTranslations() as $translation) {
+            if ($translation->getLocale() == $this->locale) {
+                return $translation;
+            }
+        }
+        $translation = new CategoryTranslation();
+        $translation->setLocale($this->locale);
+        $translation->setCategory($this->entity);
+
+        $this->entity->addTranslation($translation);
+        return $translation;
     }
 }

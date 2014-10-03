@@ -31,7 +31,7 @@ use Sulu\Bundle\CategoryBundle\Category\Exception\KeyNotUniqueException;
 class CategoryManager implements CategoryManagerInterface
 {
     protected static $categoryEntityName = 'SuluCategoryBundle:Category';
-    protected static $categoryTranslationEntityName = 'SuluCategoryBundle:CategoryTranslation';
+    protected static $catTranslationEntityName = 'SuluCategoryBundle:CategoryTranslation';
 
     /**
      * @var ObjectManager
@@ -53,19 +53,12 @@ class CategoryManager implements CategoryManagerInterface
      */
     private $categoryRepository;
 
-    /**
-     * Describes the fields, which are handled by the controller
-     * @var DoctrineFieldDescriptor[]
-     */
-    protected $fieldDescriptors = array();
-
     public function __construct(
         CategoryRepositoryInterface $categoryRepository,
         UserRepositoryInterface $userRepository,
         ObjectManager $em,
         EventDispatcherInterface $eventDispatcher
-    )
-    {
+    ) {
         $this->em = $em;
         $this->userRepository = $userRepository;
         $this->categoryRepository = $categoryRepository;
@@ -75,26 +68,19 @@ class CategoryManager implements CategoryManagerInterface
     /**
      * {@inheritDoc}
      */
-    public function getFieldDescriptors()
-    {
-        return $this->fieldDescriptors;
-    }
-
-
-    /**
-     * {@inheritDoc}
-     */
     public function getFieldDescriptor($key)
     {
-        return $this->fieldDescriptors[$key];
+        return $this->getFieldDescriptors[$key];
     }
 
     /**
      * Initializes the field descriptors used by the list-helper
      */
-    public function createFieldDescriptors()
+    public function getFieldDescriptors()
     {
-        $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor(
+        $fieldDescriptors = array();
+
+        $fieldDescriptors['id'] = new DoctrineFieldDescriptor(
             'id',
             'id',
             self::$categoryEntityName,
@@ -102,28 +88,28 @@ class CategoryManager implements CategoryManagerInterface
             array(),
             true
         );
-        $this->fieldDescriptors['key'] = new DoctrineFieldDescriptor(
-            'category_key',
+        $fieldDescriptors['key'] = new DoctrineFieldDescriptor(
+            'key',
             'key',
             self::$categoryEntityName,
             'public.key',
             array(),
             true
         );
-        $this->fieldDescriptors['name'] = new DoctrineFieldDescriptor(
+        $fieldDescriptors['name'] = new DoctrineFieldDescriptor(
             'translation',
             'name',
-            self::$categoryTranslationEntityName,
+            self::$catTranslationEntityName,
             'public.name',
             array(
-                self::$categoryTranslationEntityName => new DoctrineJoinDescriptor(
-                        self::$categoryTranslationEntityName,
-                        self::$categoryEntityName .
-                        '.translations'
-                    )
+                self::$catTranslationEntityName => new DoctrineJoinDescriptor(
+                    self::$catTranslationEntityName,
+                    self::$categoryEntityName .
+                    '.translations'
+                )
             )
         );
-        $this->fieldDescriptors['created'] = new DoctrineFieldDescriptor(
+        $fieldDescriptors['created'] = new DoctrineFieldDescriptor(
             'created',
             'created',
             self::$categoryEntityName,
@@ -131,7 +117,7 @@ class CategoryManager implements CategoryManagerInterface
             array(),
             true
         );
-        $this->fieldDescriptors['changed'] = new DoctrineFieldDescriptor(
+        $fieldDescriptors['changed'] = new DoctrineFieldDescriptor(
             'changed',
             'changed',
             self::$categoryEntityName,
@@ -139,7 +125,28 @@ class CategoryManager implements CategoryManagerInterface
             array(),
             true
         );
-
+        $fieldDescriptors['depth'] = new DoctrineFieldDescriptor(
+            'depth',
+            'depth',
+            self::$categoryEntityName,
+            'public.depth',
+            array(),
+            false
+        );
+        $fieldDescriptors['parent'] = new DoctrineFieldDescriptor(
+            'id',
+            'parent',
+            self::$categoryEntityName . 'Parent',
+            'category.parent',
+            array(
+                self::$categoryEntityName . 'Parent' => new DoctrineJoinDescriptor(
+                    self::$categoryEntityName,
+                    self::$categoryEntityName . '.parent'
+                )
+            ),
+            true
+        );
+        return $fieldDescriptors;
     }
 
     /**
@@ -163,7 +170,8 @@ class CategoryManager implements CategoryManagerInterface
      * @param string|null $sortOrder sort order
      * @return CategoryEntity[]
      */
-    public function findChildren($key, $sortBy = null, $sortOrder = null) {
+    public function findChildren($key, $sortBy = null, $sortOrder = null)
+    {
         return $this->categoryRepository->findChildren($key, $sortBy, $sortOrder);
     }
 

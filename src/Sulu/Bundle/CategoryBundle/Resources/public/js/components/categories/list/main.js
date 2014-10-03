@@ -71,7 +71,7 @@ define(function () {
                 },
                 {
                     el: this.$find(constants.listSelector),
-                    url: '/admin/api/categories?flat=true&sortBy=depth&sortOrder=asc',
+                    url: '/admin/api/categories?flat=true&sortBy=epth&sortOrder=asc',
                     childrenPropertyName: 'children',
                     resultKey: 'categories',
                     pagination: false,
