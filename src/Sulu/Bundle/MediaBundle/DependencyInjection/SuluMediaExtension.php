@@ -23,6 +23,7 @@ use Symfony\Component\DependencyInjection\Loader;
 class SuluMediaExtension extends Extension
 {
     const DEFAULT_FORMAT_NAME = '170x170';
+    const DEFAULT_GHOST_SCRIPT_PATH = 'ghostscript';
 
     /**
      * {@inheritDoc}
@@ -46,7 +47,7 @@ class SuluMediaExtension extends Extension
         $container->setParameter('sulu_media.format_cache.save_image', 'true');
         $container->setParameter('sulu_media.format_cache.path', '%kernel.root_dir%/../web/uploads/media');
         $container->setParameter('sulu_media.format_cache.segments', '10');
-        $container->setParameter('ghost_script.path', '/usr/local/bin/gs');
+        $container->setParameter('ghost_script.path', $config['ghost_script']['path']);
         $container->setParameter('sulu_media.format_manager.extensions', array(
             'jpeg',
             'jpg',

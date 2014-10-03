@@ -35,8 +35,13 @@ class Configuration implements ConfigurationInterface
                     ->scalarNode('default_image_format')->defaultValue(SuluMediaExtension::DEFAULT_FORMAT_NAME)->end()
                     ->booleanNode('enabled')->info('Enable integration with SuluMediaBundle')->defaultValue(false)->end()
                 ->end()
+            ->end()
+            ->arrayNode('ghost_script')
+                ->addDefaultsIfNotSet()
+                ->children()
+                     ->scalarNode('path')->defaultValue(SuluMediaExtension::DEFAULT_GHOST_SCRIPT_PATH)->end()
+                ->end()
             ->end();
-
 
         // Here you should define the parameters that are allowed to
         // configure your bundle. See the documentation linked above for
