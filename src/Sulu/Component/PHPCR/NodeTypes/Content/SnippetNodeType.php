@@ -14,7 +14,10 @@ use PHPCR\NodeType\NodeDefinitionInterface;
 use PHPCR\NodeType\NodeTypeDefinitionInterface;
 use PHPCR\NodeType\PropertyDefinitionInterface;
 
-class SnippetNodeType
+/**
+ * Node type for representing snippets in the PHPCR
+ */
+class SnippetNodeType extends ContentNodeType
 {
     /**
      * {@inheritDoc}

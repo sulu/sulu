@@ -91,9 +91,9 @@ class WebspacesInitCommand extends ContainerAwareCommand
 
             // create content node
             $output->writeln("    content: '/{$contentsPath}'");
-            $content = $this->createRecursive($contentsPath, $root);
+            $content = $this->createRecursive($contentsPath, $root, 'sulu:page');
+            $content->addMixin('sulu:page');
             $this->setBasicProperties($webspace, $content, $template, $userId);
-            $content->addMixin('sulu:content');
             $session->save();
 
             // create routes node
@@ -146,7 +146,7 @@ class WebspacesInitCommand extends ContainerAwareCommand
      * @param NodeInterface $rootNode base node to begin
      * @return \PHPCR\NodeInterface
      */
-    private function createRecursive($path, $rootNode)
+    private function createRecursive($path, $rootNode, $type = null)
     {
         $pathParts = explode('/', ltrim($path, '/'));
         $curNode = $rootNode;

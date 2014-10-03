@@ -22,6 +22,8 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Sulu\Component\PHPCR\NodeTypes\Content\PageNodeType;
+use Sulu\Component\PHPCR\NodeTypes\Content\SnippetNodeType;
 
 /**
  * initiate phpcr repository (namespaces, nodetypes)
