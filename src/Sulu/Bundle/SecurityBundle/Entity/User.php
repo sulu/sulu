@@ -97,6 +97,7 @@ class User extends ApiEntity implements UserInterface, Serializable
 
     /**
      * @var boolean
+     * @Expose
      */
     private $enabled = true;
 
@@ -484,7 +485,7 @@ class User extends ApiEntity implements UserInterface, Serializable
     /**
      * Get enabled
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getEnabled()
     {

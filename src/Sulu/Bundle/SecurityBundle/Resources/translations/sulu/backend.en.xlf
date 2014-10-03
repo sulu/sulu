@@ -10,6 +10,10 @@
                 <source>security.user.error.missingPassword</source>
                 <target>To add a new user you need to define a password!</target>
             </trans-unit>
+            <trans-unit id="a50af522ac183350142c0b4720e29a5f" resname="security.user.activate">
+                <source>security.user.activate</source>
+                <target>Activate user</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

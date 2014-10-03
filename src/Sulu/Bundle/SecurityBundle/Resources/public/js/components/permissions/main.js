@@ -58,6 +58,10 @@ define([
                     }
                 }.bind(this));
             }, this);
+
+            this.sandbox.on('sulu.user.activate', function() {
+                this.enableUser();
+            }.bind(this));
         },
 
         save: function(data) {
@@ -242,6 +246,10 @@ define([
                     callbackFunction(true);
                 }.bind(this)
             );
+        },
+
+        enableUser: function() {
+            //TODO: enable user!
         }
     };
 });
