@@ -297,7 +297,7 @@ class ContentMapper implements ContentMapperInterface
             $node = $root->addNode($path);
             $newTranslatedNode($node);
 
-            $node->addMixin('sulu:content');
+            $node->setPrimaryType('sulu:' . $structureType);
         } else {
             $node = $session->getNodeByIdentifier($uuid);
 

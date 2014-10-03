@@ -14,12 +14,8 @@ use PHPCR\NodeType\NodeDefinitionInterface;
 use PHPCR\NodeType\NodeTypeDefinitionInterface;
 use PHPCR\NodeType\PropertyDefinitionInterface;
 
-/**
- * TODO: Rename this to StructureNodeType
- */
 class ContentNodeType implements NodeTypeDefinitionInterface
 {
-
     /**
      * Returns the name of the node type.
      *
