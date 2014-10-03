@@ -233,7 +233,8 @@ class ContentMapper implements ContentMapperInterface
             $request->getParentUuid(),
             $request->getState(),
             $request->getIsShadow(),
-            $request->getShadowBaseLanguage()
+            $request->getShadowBaseLanguage(),
+            $request->getType()
         );
     }
 
@@ -253,7 +254,8 @@ class ContentMapper implements ContentMapperInterface
         $parentUuid = null,
         $state = null,
         $isShadow = null,
-        $shadowBaseLanguage = null
+        $shadowBaseLanguage = null,
+        $structureType = Structure::TYPE_PAGE
     ) {
         // create translated properties
         $this->properties->setLanguage($languageCode);
@@ -264,7 +266,7 @@ class ContentMapper implements ContentMapperInterface
         }
 
         $resolvedTemplateKey = $this->templateResolver->resolve($data['nodeType'], $templateKey);
-        $structure = $this->getStructure($resolvedTemplateKey);
+        $structure = $this->getStructure($resolvedTemplateKey, $structureType);
 
         $session = $this->getSession();
 
@@ -381,10 +383,12 @@ class ContentMapper implements ContentMapperInterface
             );
         }
 
-        if (isset($data['navContexts']) && $data['navContexts'] !== false
-            && $this->validateNavContexts($data['navContexts'], $this->webspaceManager->findWebspaceByKey($webspaceKey))
-        ) {
-            $node->setProperty($this->properties->getName('navContexts'), $data['navContexts']);
+        if (Structure::TYPE_PAGE === $structureType) {
+            if (isset($data['navContexts']) && $data['navContexts'] !== false
+                && $this->validateNavContexts($data['navContexts'], $this->webspaceManager->findWebspaceByKey($webspaceKey))
+            ) {
+                $node->setProperty($this->properties->getName('navContexts'), $data['navContexts']);
+            }
         }
 
         // if the shadow status has changed, do not process the rest of the form.
@@ -467,7 +471,7 @@ class ContentMapper implements ContentMapperInterface
         }
         $session->save();
 
-        if (false === $shadowChanged) {
+        if (Structure::TYPE_PAGE === $structureType && false === $shadowChanged) {
             // save data of extensions
             $ext = array();
             foreach ($this->structureManager->getExtensions($structure->getKey()) as $extension) {
@@ -521,12 +525,14 @@ class ContentMapper implements ContentMapperInterface
             $node->getPropertyValueWithDefault($this->properties->getName('template'), $this->defaultLanguage)
         );
 
-        // load dependencies for internal links
-        $this->loadInternalLinkDependencies(
-            $structure,
-            $languageCode,
-            $webspaceKey
-        );
+        if (Structure::TYPE_PAGE === $structureType) {
+            // load dependencies for internal links
+            $this->loadInternalLinkDependencies(
+                $structure,
+                $languageCode,
+                $webspaceKey
+            );
+        }
 
         // throw an content.node.save event
         $event = new ContentNodeEvent($node, $structure);
@@ -1613,9 +1619,13 @@ class ContentMapper implements ContentMapperInterface
      * @param string $key key of content type
      * @return StructureInterface
      */
-    protected function getStructure($key)
+    protected function getStructure($key, $type = Structure::TYPE_PAGE)
     {
-        return $this->structureManager->getPage($key);
+        if (Structure::TYPE_PAGE === $type) {
+            return $this->structureManager->getPage($key);
+        } else {
+            return $this->structureManager->getSnippet($key);
+        }
     }
 
     /**

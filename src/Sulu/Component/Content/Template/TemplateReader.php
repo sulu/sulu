@@ -71,7 +71,7 @@ class TemplateReader implements LoaderInterface
         $xpath->registerNamespace('x', 'http://schemas.sulu.io/template/template');
 
         // init result
-        $result = $this->loadTemplateAttributes($xpath);
+        $result = $this->loadTemplateAttributes($xpath, $type);
 
         // load properties
         $result['properties'] = $this->loadProperties('/x:template/x:properties/x:*', $requiredTags, $tags, $xpath);
@@ -91,21 +91,33 @@ class TemplateReader implements LoaderInterface
     /**
      * load basic template attributes
      */
-    private function loadTemplateAttributes(\DOMXPath $xpath)
+    private function loadTemplateAttributes(\DOMXPath $xpath, $type)
     {
-        $result = array(
-            'key' => $this->getValueFromXPath('/x:template/x:key', $xpath),
-            'view' => $this->getValueFromXPath('/x:template/x:view', $xpath),
-            'controller' => $this->getValueFromXPath('/x:template/x:controller', $xpath),
-            'cacheLifetime' => $this->getValueFromXPath('/x:template/x:cacheLifetime', $xpath),
-            'tags' => $this->loadStructureTags('/x:template/x:tag', $xpath),
-            'meta' => $this->loadMeta('/x:template/x:meta/x:*', $xpath),
-        );
+        if ($type === 'page') {
+            $result = array(
+                'key' => $this->getValueFromXPath('/x:template/x:key', $xpath),
+                'view' => $this->getValueFromXPath('/x:template/x:view', $xpath),
+                'controller' => $this->getValueFromXPath('/x:template/x:controller', $xpath),
+                'cacheLifetime' => $this->getValueFromXPath('/x:template/x:cacheLifetime', $xpath),
+                'tags' => $this->loadStructureTags('/x:template/x:tag', $xpath),
+                'meta' => $this->loadMeta('/x:template/x:meta/x:*', $xpath),
+            );
 
-        $result = array_filter($result);
+            $result = array_filter($result);
 
-        if (sizeof($result) < 4) {
-            throw new InvalidXmlException();
+            if (sizeof($result) < 4) {
+                throw new InvalidXmlException();
+            }
+        } else {
+            $result = array(
+                'key' => $this->getValueFromXPath('/x:template/x:key', $xpath),
+            );
+
+            $result = array_filter($result);
+
+            if (sizeof($result) < 1) {
+                throw new InvalidXmlException();
+            }
         }
 
         return $result;

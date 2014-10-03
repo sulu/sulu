@@ -22,8 +22,6 @@ interface StructureInterface extends \JsonSerializable
     const STATE_TEST = 1;
     const STATE_PUBLISHED = 2;
 
-    const TYPE_PAGE = 'page';
-
     /**
      * @param string $language
      */
@@ -123,34 +121,6 @@ interface StructureInterface extends \JsonSerializable
     public function getKey();
 
     /**
-     * twig template of template definition
-     * @return string
-     */
-    public function getView();
-
-    /**
-     * controller which renders the template definition
-     * @return string
-     */
-    public function getController();
-
-    /**
-     * cacheLifeTime of template definition
-     * @return int
-     */
-    public function getCacheLifeTime();
-
-    /**
-     * @return string
-     */
-    public function getOriginTemplate();
-
-    /**
-     * @param string $originTemplate
-     */
-    public function setOriginTemplate($originTemplate);
-
-    /**
      * returns a property instance with given name
      * @param $name string name of property
      * @return PropertyInterface
@@ -195,18 +165,6 @@ interface StructureInterface extends \JsonSerializable
     public function getChildren();
 
     /**
-     * @param int $state
-     * @return int
-     */
-    public function setNodeState($state);
-
-    /**
-     * returns state of node
-     * @return int
-     */
-    public function getNodeState();
-
-    /**
      * returns true if state of site is "published"
      * @return boolean
      */
@@ -246,17 +204,6 @@ interface StructureInterface extends \JsonSerializable
      * @return \Sulu\Component\Content\StructureType
      */
     public function getType();
-
-    /**
-     * returns true if this node is shown in navigation
-     * @return string[]
-     */
-    public function getNavContexts();
-
-    /**
-     * @param string[] $navContexts
-     */
-    public function setNavContexts($navContexts);
 
     /**
      * @param boolean $hasTranslation
@@ -307,59 +254,15 @@ interface StructureInterface extends \JsonSerializable
     public function hasTag($tag);
 
     /**
-     * @return StructureExtensionInterface[]
-     */
-    public function getExt();
-
-    /**
-     * @param $data
-     * @return array
-     */
-    public function setExt($data);
-
-    /**
      * @return int
      */
     public function getNodeType();
-
-    /**
-     * @param int $nodeType
-     */
-    public function setNodeType($nodeType);
-
-    /**
-     * @return boolean
-     */
-    public function getInternal();
-
-    /**
-     * @param boolean $internal
-     */
-    public function setInternal($internal);
-
-    /**
-     * returns resourcelocator addicted to the type
-     * @return string
-     */
-    public function getResourceLocator();
 
     /**
      * returns node name addicted to the type
      * @return string
      */
     public function getNodeName();
-
-    /**
-     * returns content node that holds the internal link
-     * @return StructureInterface
-     */
-    public function getInternalLinkContent();
-
-    /**
-     * set content node that holds the internal link
-     * @param StructureInterface $internalLinkContent
-     */
-    public function setInternalLinkContent($internalLinkContent);
 
     /**
      * returns title of property

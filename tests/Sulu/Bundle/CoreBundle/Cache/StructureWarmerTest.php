@@ -16,6 +16,7 @@ class StructureWarmerTest extends ProphecyTestCase
     public function testWarmup()
     {
         $this->structureManager->getPages()->shouldBeCalled();
+        $this->structureManager->getSnippets()->shouldBeCalled();
         $this->warmer->warmup('/not/important/argument');
     }
 }

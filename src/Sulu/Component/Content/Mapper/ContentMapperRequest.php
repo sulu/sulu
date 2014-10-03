@@ -14,7 +14,7 @@ class ContentMapperRequest
     /**
      * @var string
      */
-    protected $type;
+    protected $type = 'page';
 
     /**
      * @var array
