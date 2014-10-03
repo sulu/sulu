@@ -270,4 +270,10 @@ interface StructureInterface extends \JsonSerializable
      * @return string
      */
     public function getLocalizedTitle($languageCode);
+
+    /**
+     * return the published status of the node
+     * @return integer
+     */
+    public function getNodeState();
 }

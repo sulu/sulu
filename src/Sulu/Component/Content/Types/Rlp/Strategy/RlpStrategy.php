@@ -193,13 +193,21 @@ abstract class RlpStrategy implements RlpStrategyInterface
      */
     public function isValid($path, $webspaceKey, $languageCode, $segmentKey = null)
     {
-        // check for valid signs and uniqueness
-        return $this->cleaner->validate($path) && $this->mapper->unique(
+        if (!$this->mapper->unique(
             $path,
             $webspaceKey,
             $languageCode,
             $segmentKey
-        );
+        )) {
+            throw new \InvalidArgumentException(sprintf(
+                'Path "%s" already exists',
+                $path
+            ));
+        }
+
+        // check for valid signs and uniqueness
+        return $this->cleaner->validate($path);
+        
     }
 
     /**

@@ -97,7 +97,7 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
      */
     public function getStructure($key)
     {
-        trigger_error('getStructure is deprecated, use getPage instead', E_USER_DEPRECATED);
+        // trigger_error('getStructure is deprecated, use getPage instead', E_USER_DEPRECATED);
 
         return $this->getPage($key);
     }

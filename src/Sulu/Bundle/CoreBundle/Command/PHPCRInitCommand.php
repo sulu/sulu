@@ -55,11 +55,16 @@ class PHPCRInitCommand extends ContainerAwareCommand
         );
 
         $output->writeln('Register node types');
-        $workspace->getNodeTypeManager()->registerNodeType(new SuluNodeType(), true);
-        $workspace->getNodeTypeManager()->registerNodeType(new PathNodeType(), true);
-        $workspace->getNodeTypeManager()->registerNodeType(new ContentNodeType(), true);
-        $workspace->getNodeTypeManager()->registerNodeType(new SnippetNodeType(), true);
-        $workspace->getNodeTypeManager()->registerNodeType(new PageNodeType(), true);
+        foreach (array(
+            new SuluNodeType(),
+            new PathNodeType(),
+            new ContentNodeType(),
+            new SnippetNodeType(),
+            new PageNodeType()
+        ) as $nodeType) {
+            $output->writeln('  - ' . $nodeType->getName());
+            $workspace->getNodeTypeManager()->registerNodeType($nodeType, true);
+        }
 
         /** @var SessionInterface $session */
         $session = $this->getContainer()->get('sulu.phpcr.session')->getSession();
