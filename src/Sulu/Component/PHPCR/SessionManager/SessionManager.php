@@ -88,4 +88,15 @@ class SessionManager implements SessionManagerInterface
 
         return $tempNode->getNode($alias);
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSnippetNode()
+    {
+        $path = '/' . $this->nodeNames['base'] . '/' . $this->nodeNames['snippet'];
+        $node = $this->getSession()->getNode($path);
+
+        return $node;
+    }
 }

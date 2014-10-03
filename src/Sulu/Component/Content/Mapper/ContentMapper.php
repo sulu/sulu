@@ -270,10 +270,14 @@ class ContentMapper implements ContentMapperInterface
 
         $session = $this->getSession();
 
-        if ($parentUuid !== null) {
-            $root = $session->getNodeByIdentifier($parentUuid);
+        if (Structure::TYPE_PAGE === $structureType) {
+            if ($parentUuid !== null) {
+                $root = $session->getNodeByIdentifier($parentUuid);
+            } else {
+                $root = $this->getContentNode($webspaceKey);
+            }
         } else {
-            $root = $this->getContentNode($webspaceKey);
+            $root = $this->sessionManager->getSnippetNode();
         }
 
         $nodeNameProperty = $structure->getPropertyByTagName('sulu.node.name');
@@ -299,13 +303,22 @@ class ContentMapper implements ContentMapperInterface
 
         /** @var NodeInterface $node */
         if ($uuid === null) {
+            $nodeNamePropertyName = $nodeNameProperty->getName();
+
+            if (!isset($data[$nodeNamePropertyName])) {
+                throw new \InvalidArgumentException(sprintf(
+                    'You must set the "%s" data key which is tagged as the sulu.node.name',
+                    $nodeNamePropertyName
+                ));
+            }
+
             // create a new node
             $path = $this->cleaner->cleanUp($title, $languageCode);
             $path = $this->getUniquePath($path, $root);
             $node = $root->addNode($path);
             $newTranslatedNode($node);
 
-            $node->setPrimaryType('sulu:' . $structureType);
+            $node->addMixin('sulu:' . $structureType);
         } else {
             $node = $session->getNodeByIdentifier($uuid);
 
@@ -371,16 +384,18 @@ class ContentMapper implements ContentMapperInterface
             $node->setProperty($this->properties->getName('nodeType'), $data['nodeType']);
         }
 
-        // do not state transition for root (contents) node
-        $contentRootNode = $this->getContentNode($webspaceKey);
-        if ($node->getPath() !== $contentRootNode->getPath() && isset($state)) {
-            $this->changeState(
-                $node,
-                $state,
-                $structure,
-                $this->properties->getName('state'),
-                $this->properties->getName('published')
-            );
+        if (Structure::TYPE_PAGE === $structureType) {
+            // do not state transition for root (contents) node
+            $contentRootNode = $this->getContentNode($webspaceKey);
+            if ($node->getPath() !== $contentRootNode->getPath() && isset($state)) {
+                $this->changeState(
+                    $node,
+                    $state,
+                    $structure,
+                    $this->properties->getName('state'),
+                    $this->properties->getName('published')
+                );
+            }
         }
 
         if (Structure::TYPE_PAGE === $structureType) {
@@ -471,6 +486,10 @@ class ContentMapper implements ContentMapperInterface
         }
         $session->save();
 
+        $contentNode = Structure::TYPE_PAGE === $structureType ? 
+            $this->sessionManager->getContentNode($webspaceKey) :
+            $this->sessionManager->getSnippetNode();
+
         if (Structure::TYPE_PAGE === $structureType && false === $shadowChanged) {
             // save data of extensions
             $ext = array();
@@ -496,7 +515,7 @@ class ContentMapper implements ContentMapperInterface
         $session->save();
 
         $structure->setUuid($node->getPropertyValue('jcr:uuid'));
-        $structure->setPath(str_replace($this->getContentNode($webspaceKey)->getPath(), '', $node->getPath()));
+        $structure->setPath(str_replace($contentNode->getPath(), '', $node->getPath()));
         $structure->setNodeType(
             $node->getPropertyValueWithDefault($this->properties->getName('nodeType'), Structure::NODE_TYPE_CONTENT)
         );
@@ -515,17 +534,17 @@ class ContentMapper implements ContentMapperInterface
         );
         $structure->setConcreteLanguages($this->nodeHelper->getLanguagesForNode($node));
 
-        $structure->setNavContexts(
-            $node->getPropertyValueWithDefault($this->properties->getName('navContexts'), array())
-        );
         $structure->setPublished(
             $node->getPropertyValueWithDefault($this->properties->getName('published'), null)
         );
-        $structure->setOriginTemplate(
-            $node->getPropertyValueWithDefault($this->properties->getName('template'), $this->defaultLanguage)
-        );
 
         if (Structure::TYPE_PAGE === $structureType) {
+            $structure->setNavContexts(
+                $node->getPropertyValueWithDefault($this->properties->getName('navContexts'), array())
+            );
+            $structure->setOriginTemplate(
+                $node->getPropertyValueWithDefault($this->properties->getName('template'), $this->defaultLanguage)
+            );
             // load dependencies for internal links
             $this->loadInternalLinkDependencies(
                 $structure,

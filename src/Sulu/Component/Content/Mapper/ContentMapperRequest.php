@@ -202,6 +202,7 @@ class ContentMapperRequest
     public function setUuid($uuid)
     {
         $this->uuid = $uuid;
+        return $this;
     }
 
     /**
