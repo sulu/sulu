@@ -18,21 +18,11 @@ use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 class ListToTreeConverter
 {
     /**
-     * @var SessionManagerInterface
-     */
-    private $sessionManager;
-
-    function __construct(SessionManagerInterface $sessionManager)
-    {
-        $this->sessionManager = $sessionManager;
-    }
-
-    /**
      * generate a tree of the given data with the path property
      * @param array $data
-     * @param string $webspaceKey
+     * @return array
      */
-    public function convert($data, $webspaceKey)
+    public function convert($data)
     {
         $map = array();
         foreach ($data as $item) {

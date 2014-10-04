@@ -123,8 +123,8 @@ class ContentQueryExecutor implements ContentQueryExecutorInterface
                 $this->stopwatch->start('ContentQuery::execute.build-tree');
             }
 
-            $converter = new ListToTreeConverter($this->sessionManager);
-            $result = $converter->convert($result, $webspaceKey);
+            $converter = new ListToTreeConverter();
+            $result = $converter->convert($result);
 
             if ($this->stopwatch) {
                 $this->stopwatch->stop('ContentQuery::execute.build-tree');
