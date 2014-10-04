@@ -10,8 +10,6 @@
 
 namespace Sulu\Component\Content\Query;
 
-use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
-
 /**
  * Converts a list of nodes to a tree
  */
@@ -25,23 +23,30 @@ class ListToTreeConverter
     public function convert($data)
     {
         $map = array();
+        $minDepth = 99;
         foreach ($data as $item) {
-            $map['/root' . $item['path']] = $item;
+            $path = '/root' . $item['path'];
+            $map[$path] = $item;
+
+            $parts = explode('/', $path);
+            $depth = sizeof($parts) - 1;
+            if ($minDepth > $depth) {
+                $minDepth = $depth;
+            }
         }
 
         $tree = $this->explodeTree($map, '/');
-        if (!array_key_exists('children', $tree)) {
-            return array();
-        }
+
         $tree = $this->toArray($tree);
-        $tree = $tree['children'];
+        for ($i = 0; $i < $minDepth - 1; $i++) {
+            if (!array_key_exists('children', $tree) || !array_key_exists(0, $tree['children'])) {
+                return array();
+            }
 
-        // root node exists
-        if (array_key_exists('root', $tree)) {
-            return $tree['root'];
+            $tree = $tree['children'][0];
         }
 
-        return $tree;
+        return $tree['children'];
     }
 
     private function toArray($tree)
