@@ -25,7 +25,7 @@ class ListToTreeConverter
         $map = array();
         $minDepth = 99;
         foreach ($data as $item) {
-            $path = $item['path'];
+            $path = rtrim('/root' . $item['path'], '/');
             $map[$path] = $item;
 
             $parts = explode('/', $path);

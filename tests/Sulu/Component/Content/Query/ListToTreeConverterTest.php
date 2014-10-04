@@ -82,6 +82,5 @@ class ListToTreeConverterTest extends \PHPUnit_Framework_TestCase
         $result = $converter->convert($data);
 
         $this->assertEquals($expected, $result);
-
     }
 }
