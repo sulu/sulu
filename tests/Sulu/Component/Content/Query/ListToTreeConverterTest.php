@@ -83,4 +83,64 @@ class ListToTreeConverterTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($expected, $result);
     }
+
+    public function testConvertWithoutRoot()
+    {
+        $i = 0;
+        $data = array(
+            $this->createItem('/a/a/a', $i++), // 0
+            $this->createItem('/a/a', $i++), // 1
+            $this->createItem('/a', $i++), // 2
+            $this->createItem('/b/a', $i++), // 3
+            $this->createItem('/b', $i++), // 4
+            $this->createItem('/b/b', $i++), // 5
+            $this->createItem('/c', $i++), // 6
+        );
+
+        $expected = array(
+            array(
+                'path' => '/a',
+                'a' => 2,
+                'children' => array(
+                    array(
+                        'path' => '/a/a',
+                        'a' => 1,
+                        'children' => array(
+                            array(
+                                'path' => '/a/a/a',
+                                'a' => 0,
+                                'children' => array()
+                            )
+                        )
+                    )
+                )
+            ),
+            array(
+                'path' => '/b',
+                'a' => 4,
+                'children' => array(
+                    array(
+                        'path' => '/b/a',
+                        'a' => 3,
+                        'children' => array()
+                    ),
+                    array(
+                        'path' => '/b/b',
+                        'a' => 5,
+                        'children' => array()
+                    )
+                )
+            ),
+            array(
+                'path' => '/c',
+                'a' => 6,
+                'children' => array()
+            )
+        );
+
+        $converter = new ListToTreeConverter();
+        $result = $converter->convert($data);
+
+        $this->assertEquals($expected, $result);
+    }
 }
