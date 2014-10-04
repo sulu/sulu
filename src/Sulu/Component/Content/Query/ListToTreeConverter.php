@@ -126,6 +126,9 @@ class ListToTreeConverter
                         }
                     }
                     $parentArr = & $parentArr['children'][$part];
+                } else {
+                    $parentArr['children'][$part] = array();
+                    $parentArr = & $parentArr['children'][$part];
                 }
             }
 
@@ -134,6 +137,8 @@ class ListToTreeConverter
                 $parentArr['children'][$leafPart] = $val;
             } elseif ($baseval && is_array($parentArr['children'][$leafPart])) {
                 $parentArr['children'][$leafPart]['__base_val'] = $val;
+            } else {
+                $parentArr['children'][$leafPart] = array_merge($val, $parentArr['children'][$leafPart]);
             }
         }
 

@@ -14,38 +14,74 @@ class ListToTreeConverterTest extends \PHPUnit_Framework_TestCase
 {
     private function createItem($path, $number)
     {
-        return array('path' => $path, 'a' => $number, 'b' => 'b' . $number);
+        return array('path' => $path, 'a' => $number);
     }
 
     public function testConvert()
     {
         $i = 0;
         $data = array(
-            $this->createItem('/', $i++),
-            $this->createItem('/a', $i++),
-            $this->createItem('/a/a', $i++),
-            $this->createItem('/a/a/a', $i++),
-            $this->createItem('/a/b/a', $i++),
-            $this->createItem('/a/b/b', $i++),
-            $this->createItem('/a/b/a', $i++),
-            $this->createItem('/a/b/b', $i++),
-            $this->createItem('/a/b/c', $i++),
-            $this->createItem('/a/b/c', $i++),
-            $this->createItem('/b', $i++),
-            $this->createItem('/b/a', $i++),
-            $this->createItem('/b/a/a', $i++),
-            $this->createItem('/b/a/a/a', $i++),
-            $this->createItem('/b/a/a/a/a', $i++),
-            $this->createItem('/b/b', $i++),
-            $this->createItem('/c', $i++),
-            $this->createItem('/d', $i++),
-            $this->createItem('/e', $i++),
-            $this->createItem('/f', $i++),
-            $this->createItem('/g', $i++),
+            $this->createItem('/', $i++),       // 0
+            $this->createItem('/a/a/a', $i++), // 1
+            $this->createItem('/a/a', $i++), // 2
+            $this->createItem('/a', $i++), // 3
+            $this->createItem('/b/a', $i++), // 4
+            $this->createItem('/b', $i++), // 5
+            $this->createItem('/b/b', $i++), // 6
+            $this->createItem('/c', $i++), // 7
+        );
+
+        $expected = array(
+            array(
+                'path' => '/',
+                'a' => 0,
+                'children' => array(
+                    array(
+                        'path' => '/a',
+                        'a' => 3,
+                        'children' => array(
+                            array(
+                                'path' => '/a/a',
+                                'a' => 2,
+                                'children' => array(
+                                    array(
+                                        'path' => '/a/a/a',
+                                        'a' => 1,
+                                        'children' => array()
+                                    )
+                                )
+                            )
+                        )
+                    ),
+                    array(
+                        'path' => '/b',
+                        'a' => 5,
+                        'children' => array(
+                            array(
+                                'path' => '/b/a',
+                                'a' => 4,
+                                'children' => array()
+                            ),
+                            array(
+                                'path' => '/b/b',
+                                'a' => 6,
+                                'children' => array()
+                            )
+                        )
+                    ),
+                    array(
+                        'path' => '/c',
+                        'a' => 7,
+                        'children' => array()
+                    )
+                )
+            ),
         );
 
         $converter = new ListToTreeConverter();
         $result = $converter->convert($data);
+
+        $this->assertEquals($expected, $result);
 
     }
 }
