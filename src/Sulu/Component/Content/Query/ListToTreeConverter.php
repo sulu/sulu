@@ -25,12 +25,12 @@ class ListToTreeConverter
         $map = array();
         $minDepth = 99;
         foreach ($data as $item) {
-            $path = '/root' . $item['path'];
+            $path = $item['path'];
             $map[$path] = $item;
 
             $parts = explode('/', $path);
             $parts = array_filter($parts);
-            $depth = sizeof($parts) - 1;
+            $depth = sizeof($parts);
             if ($minDepth > $depth) {
                 $minDepth = $depth;
             }
