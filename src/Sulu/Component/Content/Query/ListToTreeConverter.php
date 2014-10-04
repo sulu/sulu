@@ -29,6 +29,7 @@ class ListToTreeConverter
             $map[$path] = $item;
 
             $parts = explode('/', $path);
+            $parts = array_filter($parts);
             $depth = sizeof($parts) - 1;
             if ($minDepth > $depth) {
                 $minDepth = $depth;
