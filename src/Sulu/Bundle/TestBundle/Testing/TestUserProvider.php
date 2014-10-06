@@ -31,7 +31,7 @@ class TestUserProvider implements UserProviderInterface
 
     public function __construct(ObjectManager $em)
     {
-        $this->user = $em->find('Sulu\Bundle\TestBundle\Entity\TestUser', 1);
+        $this->user = $em->getRepository('Sulu\Bundle\TestBundle\Entity\TestUser')->findOneByUsername('test');
         if (!$this->user) {
             $contact = new TestContact();
             $contact->setFirstName('Max');
