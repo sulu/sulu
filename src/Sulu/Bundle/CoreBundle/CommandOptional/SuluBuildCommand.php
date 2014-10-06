@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\CoreBundle\Command;
+namespace Sulu\Bundle\CoreBundle\CommandOptional;
 
 use Massive\Bundle\BuildBundle\Command\BuildCommand;
 use Symfony\Component\Console\Input\InputArgument;

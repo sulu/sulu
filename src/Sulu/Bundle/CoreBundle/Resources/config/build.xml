@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <container xmlns="http://symfony.com/schema/dic/services"
-           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
-   <parameters>
-       <parameter key="sulu.core.build.builder.database.class">Sulu\Bundle\CoreBundle\Build\DatabaseBuilder</parameter>
-       <parameter key="sulu.core.build.builder.phpcr.class">Sulu\Bundle\CoreBundle\Build\PhpcrBuilder</parameter>
-       <parameter key="sulu.core.build.builder.fixtures.class">Sulu\Bundle\CoreBundle\Build\FixturesBuilder</parameter>
-       <parameter key="sulu.core.build.builder.node_order.class">Sulu\Bundle\CoreBundle\Build\NodeOrderBuilder</parameter>
-   </parameters>
+    <parameters>
+        <parameter key="sulu_core.build.builder.database.class">Sulu\Bundle\CoreBundle\Build\DatabaseBuilder</parameter>
+        <parameter key="sulu_core.build.builder.phpcr.class">Sulu\Bundle\CoreBundle\Build\PhpcrBuilder</parameter>
+        <parameter key="sulu_core.build.builder.fixtures.class">Sulu\Bundle\CoreBundle\Build\FixturesBuilder</parameter>
+        <parameter key="sulu.core.build.builder.node_order.class">Sulu\Bundle\CoreBundle\Build\NodeOrderBuilder</parameter>
+    </parameters>
 
     <services>
 
-        <service id="sulu.core.build.builder.database" class="%sulu.core.build.builder.database.class%">
+        <service id="sulu_core.build.builder.database" class="%sulu_core.build.builder.database.class%">
             <tag name="massive_build.builder" />
         </service>
 
-        <service id="sulu.core.build.builder.phpcr" class="%sulu.core.build.builder.phpcr.class%">
+        <service id="sulu_core.build.builder.phpcr" class="%sulu_core.build.builder.phpcr.class%">
             <tag name="massive_build.builder" />
         </service>
 
-        <service id="sulu.core.build.builder.fixtures" class="%sulu.core.build.builder.fixtures.class%">
+        <service id="sulu_core.build.builder.fixtures" class="%sulu_core.build.builder.fixtures.class%">
             <tag name="massive_build.builder" />
         </service>
 
