@@ -19,7 +19,7 @@
         "friendsofsymfony/http-cache": "@dev",
 
         "doctrine/orm": ">=2.2.3,<2.4-dev",
-        "liip/theme-bundle": "1.0.*@dev",
+        "liip/theme-bundle": "@dev",
         "symfony-cmf/routing-bundle": "1.2.*@dev",
         "symfony-cmf/routing": "1.2.*@dev"
     },
