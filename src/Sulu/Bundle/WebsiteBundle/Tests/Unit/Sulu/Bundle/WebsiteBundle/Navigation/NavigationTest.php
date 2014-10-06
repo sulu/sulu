@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\WebsiteBundle\Navigation;
 
 use ReflectionMethod;
+use Sulu\Bundle\ContentBundle\Content\Structure\ExcerptStructureExtension;
 use Sulu\Bundle\TestBundle\Testing\PhpcrTestCase;
 use Sulu\Component\Content\Query\ContentQueryExecutor;
 use Sulu\Component\Content\Property;
@@ -49,7 +50,12 @@ class NavigationTest extends PhpcrTestCase
 
         $contentQuery = new ContentQueryExecutor($this->sessionManager, $this->mapper);
 
-        $this->navigation = new NavigationMapper($this->mapper, $contentQuery, new NavigationQueryBuilder($this->structureManager, $this->languageNamespace), $this->sessionManager);
+        $this->navigation = new NavigationMapper(
+            $this->mapper,
+            $contentQuery,
+            new NavigationQueryBuilder($this->structureManager, $this->languageNamespace),
+            $this->sessionManager
+        );
     }
 
     protected function prepareWebspaceManager()
@@ -89,7 +95,7 @@ class NavigationTest extends PhpcrTestCase
         if ($structureKey == 'default_template') {
             return $this->getStructureMock($structureKey);
         } elseif ($structureKey == 'excerpt') {
-            return $this->getStructureMock($structureKey);
+            return $this->getStructureMock($structureKey, false);
         } elseif ($structureKey == 'simple') {
             return $this->getStructureMock($structureKey);
         } elseif ($structureKey == 'overview') {
@@ -112,6 +118,16 @@ class NavigationTest extends PhpcrTestCase
         );
     }
 
+    public function getExtensionCallback()
+    {
+        return new ExcerptStructureExtension($this->structureManager, $this->contentTypeManager);
+    }
+
+    public function getExtensionsCallback()
+    {
+        return array($this->getExtensionCallback());
+    }
+
     /**
      * @return StructureInterface[]
      */
@@ -121,31 +137,37 @@ class NavigationTest extends PhpcrTestCase
             'news' => array(
                 'name' => 'News',
                 'rl' => '/news',
+                'ext' => array('excerpt' => array('name' => 'Excerpt News')),
                 'navContexts' => array('footer')
             ),
             'products' => array(
                 'name' => 'Products',
                 'rl' => '/products',
+                'ext' => array('excerpt' => array('name' => 'Excerpt Products')),
                 'navContexts' => array('main')
             ),
             'news/news-1' => array(
                 'name' => 'News-1',
                 'rl' => '/news/news-1',
+                'ext' => array('excerpt' => array('name' => 'Excerpt News 1')),
                 'navContexts' => array('main', 'footer')
             ),
             'news/news-2' => array(
                 'name' => 'News-2',
                 'rl' => '/news/news-2',
+                'ext' => array('excerpt' => array('name' => 'Excerpt News 2')),
                 'navContexts' => array('main')
             ),
             'products/products-1' => array(
                 'name' => 'Products-1',
                 'rl' => '/products/products-1',
+                'ext' => array('excerpt' => array('name' => 'Excerpt Products 1')),
                 'navContexts' => array('main', 'footer')
             ),
             'products/products-2' => array(
                 'name' => 'Products-2',
                 'rl' => '/products/products-2',
+                'ext' => array('excerpt' => array('name' => 'Excerpt Products 2')),
                 'navContexts' => array('main')
             )
         );
@@ -238,7 +260,17 @@ class NavigationTest extends PhpcrTestCase
         $method->invokeArgs(
             $structureMock,
             array(
-                new Property('name', '', 'text_line', false, false, 1, 1, array(), array(new PropertyTag('sulu.node.name', 1)))
+                new Property(
+                    'name',
+                    '',
+                    'text_line',
+                    true,
+                    true,
+                    1,
+                    1,
+                    array(),
+                    array(new PropertyTag('sulu.node.name', 1))
+                )
             )
         );
 
@@ -250,8 +282,8 @@ class NavigationTest extends PhpcrTestCase
                         'rl',
                         '',
                         'resource_locator',
-                        false,
-                        false,
+                        true,
+                        true,
                         1,
                         1,
                         array(),
@@ -349,6 +381,44 @@ class NavigationTest extends PhpcrTestCase
         $this->assertEquals('News-1', $result[0]['title']);
         $this->assertEquals('SubNews', $result[1]['title']);
         $this->assertEquals('News-2', $result[2]['title']);
+    }
+
+    public function testNavigationExcerpt()
+    {
+        $data['news'] = $this->mapper->save(
+            array(
+                'name' => 'SubNews',
+                'rl' => '/asdf',
+                'navContexts' => array('footer')
+            ),
+            'simple',
+            'default',
+            'en',
+            1,
+            true,
+            null,
+            $this->data['news/news-1']->getUuid(),
+            StructureInterface::STATE_PUBLISHED
+        );
+
+        $result = $this->navigation->getNavigation(
+            $this->data['news']->getUuid(),
+            'default',
+            'en',
+            2,
+            true,
+            null,
+            true
+        );
+        $this->assertEquals(3, sizeof($result));
+        $this->assertEquals('News-1', $result[0]['title']);
+        $this->assertEquals('Excerpt News 1', $result[0]['excerpt']['name']);
+
+        $this->assertEquals('SubNews', $result[1]['title']);
+        $this->assertEquals('', $result[1]['excerpt']['name']);
+
+        $this->assertEquals('News-2', $result[2]['title']);
+        $this->assertEquals('Excerpt News 2', $result[2]['excerpt']['name']);
     }
 
     public function testBreadcrumb()
