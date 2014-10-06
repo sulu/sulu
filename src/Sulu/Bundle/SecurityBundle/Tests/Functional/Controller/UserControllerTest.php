@@ -64,6 +64,14 @@ class UserControllerTest extends DatabaseTestCase
         $contact1->addEmail($email);
         self::$em->persist($contact1);
 
+        $contact2 = new Contact();
+        $contact2->setFirstName("Disabled");
+        $contact2->setLastName("User");
+        $contact2->setCreated(new DateTime());
+        $contact2->setChanged(new DateTime());
+        $contact2->addEmail($email);
+        self::$em->persist($contact2);
+
         self::$em->flush();
 
         $role1 = new Role();
@@ -89,6 +97,17 @@ class UserControllerTest extends DatabaseTestCase
         $user->setContact($contact1);
         self::$em->persist($user);
 
+        // User 2
+        $user1 = new User();
+        $user1->setUsername('disabled');
+        $user1->setPassword('securepassword');
+        $user1->setSalt('salt');
+        $user1->setLocale('de');
+        $user1->setContact($contact2);
+        $user1->setEnabled(false);
+        self::$em->persist($user1);
+
+
         self::$em->flush();
 
         $userRole1 = new UserRole();
@@ -102,6 +121,12 @@ class UserControllerTest extends DatabaseTestCase
         $userRole2->setUser($user);
         $userRole2->setLocale(json_encode(array('de', 'en')));
         self::$em->persist($userRole2);
+
+        $userRole3 = new UserRole();
+        $userRole3->setRole($role2);
+        $userRole3->setUser($user);
+        $userRole3->setLocale(json_encode(array('de', 'en')));
+        self::$em->persist($userRole3);
 
         $permission1 = new Permission();
         $permission1->setPermissions(122);
@@ -208,7 +233,7 @@ class UserControllerTest extends DatabaseTestCase
 
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(1, count($response->_embedded->users));
+        $this->assertEquals(2, count($response->_embedded->users));
         $this->assertEquals('admin', $response->_embedded->users[0]->username);
         $this->assertEquals('securepassword', $response->_embedded->users[0]->password);
         $this->assertEquals('de', $response->_embedded->users[0]->locale);
@@ -306,7 +331,7 @@ class UserControllerTest extends DatabaseTestCase
 
         $client->request(
             'GET',
-            '/api/users/2'
+            '/api/users/3'
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -697,7 +722,7 @@ class UserControllerTest extends DatabaseTestCase
 
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(1, count($response->_embedded->users));
+        $this->assertEquals(2, count($response->_embedded->users));
         $this->assertEquals('admin', $response->_embedded->users[0]->username);
         $this->assertEquals('securepassword', $response->_embedded->users[0]->password);
         $this->assertEquals('de', $response->_embedded->users[0]->locale);
@@ -942,6 +967,27 @@ class UserControllerTest extends DatabaseTestCase
         $this->assertEquals('en', $response->userRoles[1]->locales[0]);
     }
 
+    public function testEnableUser() {
+        $client = static::createClient();
+
+        $client->request(
+            'PUT',
+            '/api/users/2',
+            array(
+                'username' => 'disabled',
+                'password'=> '',
+                'locale' => 'de',
+                'contact' => array(
+                    'id' => 1
+                ),
+                'enabled' => true,
+            )
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(true, $response->enabled);
+    }
 
     public function testUserDataHandler() {
 
