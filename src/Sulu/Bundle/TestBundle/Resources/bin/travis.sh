@@ -11,5 +11,5 @@ echo "Updating schema"
 php vendor/symfony-cmf/testing/bin/console doctrine:schema:create
 
 echo "Initialzing PHPCR (including doctrine-dbal, this may fail)"
-php vendor/symfony-cmf/testing/bin/console doctrine:phpcr:dbal:init
+php vendor/symfony-cmf/testing/bin/console doctrine:phpcr:init:dbal
 php vendor/symfony-cmf/testing/bin/console sulu:phpcr:init

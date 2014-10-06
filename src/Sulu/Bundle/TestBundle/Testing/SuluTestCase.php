@@ -3,9 +3,23 @@
 namespace Sulu\Bundle\TestBundle\Testing;
 
 use Symfony\Cmf\Component\Testing\Functional\BaseTestCase;
+use Doctrine\Common\DataFixtures\Purger\ORMPurger;
+use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
+use Doctrine\Common\DataFixtures\ProxyReferenceRepository;
 
+/**
+ * Base test case for functional tests in Sulu
+ *
+ * NOTE: This class deprecates both PhpcrTestCase and DatabaseTestCase
+ */
 class SuluTestCase extends BaseTestCase
 {
+    /**
+     * Return the ID of the test user (which is provided / created
+     * by the test_user_provider in this Bundle at runtime)
+     *
+     * @return TestUser
+     */
     protected function getTestUserId()
     {
         $user = $this->em->getRepository('Sulu\Bundle\TestBundle\Entity\TestUser')
@@ -14,6 +28,9 @@ class SuluTestCase extends BaseTestCase
         return $user->getId();
     }
 
+    /**
+     * Initialize / reset the Sulu PHPCR environment
+     */
     protected function initPhpcr()
     {
         $session = $this->db('PHPCR')->getOm()->getPhpcrSession();
@@ -41,5 +58,17 @@ class SuluTestCase extends BaseTestCase
         $webspace->addNode('temp');
 
         $session->save();
+    }
+
+    /**
+     * Purge the Doctrine ORM database
+     */
+    protected function purgeDatabase()
+    {
+        $purger = new ORMPurger();
+        $executor = new ORMExecutor($this->db('ORM')->getOm(), $purger);
+        $referenceRepository = new ProxyReferenceRepository($this->db('ORM')->getOm());
+        $executor->setReferenceRepository($referenceRepository);
+        $executor->purge();
     }
 }
