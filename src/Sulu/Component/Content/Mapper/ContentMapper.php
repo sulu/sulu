@@ -1815,7 +1815,7 @@ class ContentMapper implements ContentMapperInterface
         $fieldsData = array();
         foreach ($fields[$locale] as $field) {
             // determine target for data in result array
-            if (isset($fieldsData['target'])) {
+            if (isset($field['target'])) {
                 if (!isset($fieldsData[$field['target']])) {
                     $fieldsData[$field['target']] = array();
                 }
