@@ -135,7 +135,7 @@ class CategoryManager implements CategoryManagerInterface
         );
         $fieldDescriptors['parent'] = new DoctrineFieldDescriptor(
             'id',
-            'parent',
+            'parentId',
             self::$categoryEntityName . 'Parent',
             'category.parent',
             array(
@@ -144,7 +144,20 @@ class CategoryManager implements CategoryManagerInterface
                     self::$categoryEntityName . '.parent'
                 )
             ),
-            true
+            false
+        );
+        $fieldDescriptors['children'] = new DoctrineFieldDescriptor(
+            'id',
+            'childId',
+            self::$categoryEntityName . 'Children',
+            'category.children',
+            array(
+                self::$categoryEntityName . 'Children' => new DoctrineJoinDescriptor(
+                    self::$categoryEntityName,
+                    self::$categoryEntityName . '.children'
+                )
+            ),
+            false
         );
         return $fieldDescriptors;
     }
