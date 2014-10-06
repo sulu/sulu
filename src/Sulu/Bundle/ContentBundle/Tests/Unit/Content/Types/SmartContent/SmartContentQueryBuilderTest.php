@@ -557,6 +557,53 @@ class SmartContentQueryBuilderTest extends PhpcrTestCase
         $this->assertEquals('asdf', $result[3]['title']);
     }
 
+    public function testOrderByOrder()
+    {
+        $root = $this->sessionManager->getContentNode('default');
+        list($nodes) = $this->orderByProvider();
+        $session = $this->sessionManager->getSession();
+
+        $node = $session->getNodeByIdentifier($nodes['/qwertz']->getUuid());
+        $node->setProperty('sulu:order', 10);
+        $node = $session->getNodeByIdentifier($nodes['/asdf']->getUuid());
+        $node->setProperty('sulu:order', 20);
+        $node = $session->getNodeByIdentifier($nodes['/asdf-1']->getUuid());
+        $node->setProperty('sulu:order', 30);
+        $node = $session->getNodeByIdentifier($nodes['/qwertz-1']->getUuid());
+        $node->setProperty('sulu:order', 40);
+        $session->save();
+        $session->refresh(false);
+
+        $builder = new SmartContentQueryBuilder(
+            $this->structureManager,
+            $this->webspaceManager,
+            $this->sessionManager,
+            $this->languageNamespace
+        );
+
+        // order by default
+        $builder->init(
+            array('config' => array('dataSource' => $root->getIdentifier(), 'orderBy' => array(), 'sortMethod' => 'asc'))
+        );
+        $result = $this->contentQuery->execute('default', array('en'), $builder);
+
+        $this->assertEquals('qwertz', $result[0]['title']);
+        $this->assertEquals('asdf', $result[1]['title']);
+        $this->assertEquals('ASDF', $result[2]['title']);
+        $this->assertEquals('QWERTZ', $result[3]['title']);
+
+        // order by default
+        $builder->init(
+            array('config' => array('dataSource' => $root->getIdentifier(), 'orderBy' => array(), 'sortMethod' => 'desc'))
+        );
+        $result = $this->contentQuery->execute('default', array('en'), $builder);
+
+        $this->assertEquals('QWERTZ', $result[0]['title']);
+        $this->assertEquals('ASDF', $result[1]['title']);
+        $this->assertEquals('asdf', $result[2]['title']);
+        $this->assertEquals('qwertz', $result[3]['title']);
+    }
+
     public function testExtension()
     {
         $nodes = $this->propertiesProvider();
