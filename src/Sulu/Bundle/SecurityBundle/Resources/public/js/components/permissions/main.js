@@ -249,7 +249,23 @@ define([
         },
 
         enableUser: function() {
-            //TODO: enable user!
+            var dfd = this.sandbox.data.deferred();
+
+            this.user.set('enabled', true);
+            this.user.url = '/admin/api/users/' + this.user.id;
+
+            this.user.save(null, {
+                success: function(response) {
+                    this.sandbox.logger.log('successfully enabled user', response);
+                    this.sandbox.emit('sulu.router.navigate', 'contacts/contacts/edit:' + this.user.id + '/permissions', true, false, true);
+                    dfd.resolve();
+                }.bind(this),
+                error: function() {
+                    dfd.reject();
+                }
+            });
+
+            return dfd;
         }
     };
 });
