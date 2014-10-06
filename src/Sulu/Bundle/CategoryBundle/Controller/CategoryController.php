@@ -50,7 +50,6 @@ class CategoryController extends RestController implements ClassResourceInterfac
     protected $fieldsWidth = array();
 
     /**
-     *
      * {@inheritdoc}
      */
     protected $bundlePrefix = 'category.category.';
@@ -299,8 +298,18 @@ class CategoryController extends RestController implements ClassResourceInterfac
             $this->getManager()->getFieldDescriptors()
         );
 
+        // TODO: Since no adequate FieldDescriptor is available for returning a count or a
+        // boolean state we manipulate the 'hasChildren' value which currently contains an id to a
+        // boolean value. Also see todo in CategoryManager.
+        $results = $listBuilder->execute();
+        $manipulatedResults = [];
+        foreach ($results as $result) {
+            $result['hasChildren'] = $result['hasChildren'] != null ? true : false;
+            $manipulatedResults[] = $result;
+        }
+
         $list = new ListRepresentation(
-            $listBuilder->execute(),
+            $manipulatedResults,
             self::$entityKey,
             'get_categories',
             $request->query->all(),
