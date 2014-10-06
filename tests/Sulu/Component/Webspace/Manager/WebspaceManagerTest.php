@@ -357,6 +357,8 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
             array('dan.lo/de/s.rss', true),
             array('dan.lo/de', true),
             array('dan.lo/de.rss', true),
+            array('dan.lo/.rss', false),
+            array('asdf.lo/.rss', true),
         );
     }
 
@@ -507,13 +509,8 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
     public function testFindUrlsByResourceLocator()
     {
         $result = $this->webspaceManager->findUrlsByResourceLocator('/test', 'dev', 'en_us', 'massiveart');
-        $this->assertEquals(
-            array(
-                'http://massiveart.lo/en-us/w/test',
-                'http://massiveart.lo/en-us/s/test',
-            ),
-            $result
-        );
+        $this->assertContains('http://massiveart.lo/en-us/w/test',$result);
+        $this->assertContains('http://massiveart.lo/en-us/s/test',$result);
 
         $result = $this->webspaceManager->findUrlsByResourceLocator('/test', 'dev', 'de_at', 'sulu_io');
         $this->assertEquals(array('http://sulu.lo/test'), $result);
@@ -535,7 +532,7 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
     {
         $urls = $this->webspaceManager->getUrls('dev');
 
-        $this->assertCount(13, $urls);
+        $this->assertCount(14, $urls);
         $this->assertContains('sulu.lo', $urls);
         $this->assertContains('sulu-single-language.lo', $urls);
         $this->assertContains('sulu-without.lo', $urls);
@@ -548,13 +545,15 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('massiveart.lo/fr-ca/s', $urls);
         $this->assertContains('massiveart.lo/de/w', $urls);
         $this->assertContains('massiveart.lo/de/s', $urls);
+        $this->assertContains('dan.lo/de', $urls);
+        $this->assertContains('asdf.lo', $urls);
     }
 
     public function testGetPortalInformations()
     {
         $portalInformations = $this->webspaceManager->getPortalInformations('dev');
 
-        $this->assertCount(13, $portalInformations);
+        $this->assertCount(14, $portalInformations);
         $this->assertArrayHasKey('sulu.lo', $portalInformations);
         $this->assertArrayHasKey('sulu-single-language.lo', $portalInformations);
         $this->assertArrayHasKey('sulu-without.lo', $portalInformations);
@@ -567,5 +566,7 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('massiveart.lo/fr-ca/s', $portalInformations);
         $this->assertArrayHasKey('massiveart.lo/de/w', $portalInformations);
         $this->assertArrayHasKey('massiveart.lo/de/s', $portalInformations);
+        $this->assertArrayHasKey('dan.lo/de', $portalInformations);
+        $this->assertArrayHasKey('asdf.lo', $portalInformations);
     }
 }

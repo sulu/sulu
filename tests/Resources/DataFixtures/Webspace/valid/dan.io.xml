@@ -55,6 +55,7 @@
                 <environment type="dev">
                     <urls>
                         <url language="de" country="at">dan.lo/de</url>
+                        <url language="de" country="at">asdf.lo</url>
                     </urls>
                 </environment>
             </environments>
