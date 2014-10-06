@@ -20,6 +20,7 @@ use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Sulu\Component\Content\Mapper\ContentMapperRequest;
 
 /**
  * repository for node objects
@@ -419,6 +420,12 @@ class NodeRepository implements NodeRepositoryInterface
         );
 
         return $this->prepareNode($node, $webspaceKey, $languageCode);
+    }
+
+    public function saveNodeRequest(ContentMapperRequest $request)
+    {
+        $this->getMapper()->saveRequest($request);
+        return $this->prepareNode($node, $request->getWebspaceKey(), $request->getLocale());
     }
 
     /**

@@ -21,6 +21,8 @@ use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
 use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\Annotations\Post;
+use Sulu\Component\Content\Mapper\ContentMapperRequest;
+use Sulu\Component\Content\Structure;
 
 /**
  * handles content nodes
@@ -346,6 +348,7 @@ class NodeController extends RestController implements ClassResourceInterface
         $shadowBaseLanguage = $this->getRequestParameter($request, 'shadowBaseLanguage', null);
 
         $state = $this->getRequestParameter($request, 'state');
+        $type = $this->getRequestParameter($request, 'type');
 
         if ($state !== null) {
             $state = intval($state);
@@ -353,18 +356,18 @@ class NodeController extends RestController implements ClassResourceInterface
 
         $data = $request->request->all();
 
-        $result = $this->getRepository()->saveNode(
-            $data,
-            $template,
-            $webspace,
-            $language,
-            $this->getUser()->getId(),
-            $uuid,
-            null, // parentUuid
-            $state,
-            $isShadow,
-            $shadowBaseLanguage
-        );
+        $request = ContentMapperRequest::create()
+            ->setType($type)
+            ->setTemplateKey($template)
+            ->setWebspaceKey($webspace)
+            ->setUserId($this->getUser()->getId())
+            ->setState($state)
+            ->setIsShadow($isShadow)
+            ->setShadowBaseLanguage($shadowBaseLanguage)
+            ->setLocale($language)
+            ->setUuid($uuid)
+            ->setData($data);
+        $result = $this->getRepository()->saveNodeRequest($mapperRequest);
 
         return $this->handleView(
             $this->view($result)
@@ -416,7 +419,7 @@ class NodeController extends RestController implements ClassResourceInterface
         $language = $this->getLanguage($request);
         $webspace = $this->getWebspace($request);
         $template = $this->getRequestParameter($request, 'template', true);
-        $navigation = $this->getRequestParameter($request, 'navigation');
+        $nnavigation = $this->getRequestParameter($request, 'navigation');
         $isShadow = $this->getRequestParameter($request, 'isShadow', false);
         $shadowBaseLanguage = $this->getRequestParameter($request, 'shadowBaseLanguage', null);
         $parent = $this->getRequestParameter($request, 'parent');
@@ -424,21 +427,23 @@ class NodeController extends RestController implements ClassResourceInterface
         if ($state !== null) {
             $state = intval($state);
         }
+        $type = $request->query->get('type', Structure::TYPE_PAGE);
 
         $data = $request->request->all();
 
-        $result = $this->getRepository()->saveNode(
-            $data,
-            $template,
-            $webspace,
-            $language,
-            $this->getUser()->getId(),
-            null, // uuid
-            $parent,
-            $state,
-            $isShadow,
-            $shadowBaseLanguage
-        );
+        $mapperRequest = ContentMapperRequest::create()
+            ->setType($type)
+            ->setTemplateKey($template)
+            ->setWebspaceKey($webspace)
+            ->setUserId($this->getUser()->getId())
+            ->setState($state)
+            ->setIsShadow($isShadow)
+            ->setShadowBaseLanguage($shadowBaseLanguage)
+            ->setLocale($language)
+            ->setParentUuid($parent)
+            ->setData($data);
+
+        $result = $this->getRepository()->saveNodeRequest($mapperRequest);
 
         return $this->handleView(
             $this->view($result)
