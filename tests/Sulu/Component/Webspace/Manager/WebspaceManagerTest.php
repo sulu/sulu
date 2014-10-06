@@ -348,9 +348,15 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
     {
         return array(
             array('dan.lo/de-asd/test/test', false),
+            array('dan.lo/de-asd/test/test.rss', false),
             array('dan.lo/de/test/test', true),
+            array('dan.lo/de/test/test.rss', true),
             array('dan.lo/de-asd', false),
+            array('dan.lo/de-asd.rss', false),
             array('dan.lo/de/s', true),
+            array('dan.lo/de/s.rss', true),
+            array('dan.lo/de', true),
+            array('dan.lo/de.rss', true),
         );
     }
 
