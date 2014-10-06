@@ -118,7 +118,7 @@ define([], function() {
                             matched = true;
                             contextDataKey = matrixData.push([]) - 1;
                             permissions.forEach(function(permission) {
-                                matrixData[contextDataKey].push(contextData.permissions[permission]);
+                                matrixData[contextDataKey].push(contextData.permissions[permission.value]);
                             });
                         }
                     });
