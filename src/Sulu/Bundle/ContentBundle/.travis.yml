@@ -17,6 +17,7 @@ before_script:
   - if [[ "$DB" == "pgsql" ]]; then psql -c "CREATE DATABASE sulu_test;" -U postgres; fi
   - php vendor/sulu/test-bundle/Sulu/Bundle/TestBundle/Testing/GeneratePhpunitConfig.php $DB
   - php bin/jackrabbit.php
+  - php vendor/sulu/test-bundle/Sulu/Bundle/TestBundle/Resources/bin/travis.sh
 
 script: phpunit -c $DB.phpunit.xml --coverage-text
 

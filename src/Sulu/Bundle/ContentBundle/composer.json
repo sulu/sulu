@@ -5,6 +5,7 @@
     "license": "MIT",
     "keywords": ["content", "cmf"],
     "version": "dev-develop",
+    "minimum-stability": "RC",
     "authors": [
         {
             "name": "Sulu Community",
