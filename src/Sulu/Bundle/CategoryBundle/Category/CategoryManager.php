@@ -149,7 +149,7 @@ class CategoryManager implements CategoryManagerInterface
         // TODO: Workaround - this returns a (random) id of a child
         // Since we need the count, use a DoctrineCountDescriptor here as soon as such one
         // is available and remove the manipulated response in the CategoryController.
-        $fieldDescriptors['children'] = new DoctrineFieldDescriptor(
+        $fieldDescriptors['hasChildren'] = new DoctrineFieldDescriptor(
             'id',
             'hasChildren',
             self::$categoryEntityName . 'Children',

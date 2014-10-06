@@ -304,8 +304,10 @@ class CategoryController extends RestController implements ClassResourceInterfac
         $results = $listBuilder->execute();
         $manipulatedResults = [];
         foreach ($results as $result) {
-            $result['hasChildren'] = $result['hasChildren'] != null ? true : false;
-            $manipulatedResults[] = $result;
+            if (isset($result['hasChildren'])) {
+                $result['hasChildren'] = $result['hasChildren'] != null ? true : false;
+                $manipulatedResults[] = $result;
+            }
         }
 
         $list = new ListRepresentation(
