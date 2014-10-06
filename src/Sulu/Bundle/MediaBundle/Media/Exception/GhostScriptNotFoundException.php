@@ -13,13 +13,13 @@ namespace Sulu\Bundle\MediaBundle\Media\Exception;
 /**
  * @package Sulu\Bundle\MediaBundle\Media\Exception
  */
-class InvalidMimeTypeForPreviewException extends MediaException
+class GhostScriptNotFoundException extends MediaException
 {
     /**
-     * @param string $mimeType
+     * @param string $message
      */
-    public function __construct($mimeType)
+    public function __construct($message)
     {
-        parent::__construct('The mimeType "' . $mimeType . '" is not supported for preview.', self::EXCEPTION_INVALID_MIMETYPE_FOR_PREVIEW);
+        parent::__construct($message, self::EXCEPTION_CODE_GHOST_SCRIPT_NOT_FOUND);
     }
 }

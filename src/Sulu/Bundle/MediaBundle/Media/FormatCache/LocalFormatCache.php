@@ -126,7 +126,7 @@ class LocalFormatCache implements FormatCacheInterface
         $segment = ($id % $this->segments) . '/';
         $prePath = rtrim($prePath, '/');
 
-        return str_replace('{slug}', $format . '/' . $segment . $id . '-' . $fileName, $prePath);
+        return str_replace('{slug}', $format . '/' . $segment . $id . '-' . urlencode($fileName), $prePath);
     }
 
     /**

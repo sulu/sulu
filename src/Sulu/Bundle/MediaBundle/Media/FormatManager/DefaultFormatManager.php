@@ -10,14 +10,17 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\FormatManager;
 
+use Imagick;
 use Imagine\Image\ImageInterface;
 use Imagine\Imagick\Imagine;
+use SebastianBergmann\Exporter\Exception;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepository;
+use Sulu\Bundle\MediaBundle\Media\Exception\GhostScriptNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyMediaNotFoundException;
-use Sulu\Bundle\MediaBundle\Media\Exception\InvalidExtensionForPreviewException;
+use Sulu\Bundle\MediaBundle\Media\Exception\InvalidMimeTypeForPreviewException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaException;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\ImageConverterInterface;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
@@ -63,7 +66,7 @@ class DefaultFormatManager implements FormatManagerInterface
     /**
      * @var array
      */
-    private $previewExtensions = array();
+    private $previewMimeTypes = array();
 
     /**
      * @param MediaRepository $mediaRepository
@@ -72,7 +75,7 @@ class DefaultFormatManager implements FormatManagerInterface
      * @param ImageConverterInterface $converter
      * @param string $ghostScriptPath
      * @param string $saveImage
-     * @param array $previewExtensions
+     * @param array $previewMimeTypes
      */
     public function __construct(
         MediaRepository $mediaRepository,
@@ -81,7 +84,7 @@ class DefaultFormatManager implements FormatManagerInterface
         ImageConverterInterface $converter,
         $ghostScriptPath,
         $saveImage,
-        $previewExtensions
+        $previewMimeTypes
     ) {
         $this->mediaRepository = $mediaRepository;
         $this->originalStorage = $originalStorage;
@@ -89,7 +92,7 @@ class DefaultFormatManager implements FormatManagerInterface
         $this->converter = $converter;
         $this->ghostScriptPath = $ghostScriptPath;
         $this->saveImage = $saveImage == 'true' ? true : false;
-        $this->previewExtensions = $previewExtensions;
+        $this->previewMimeTypes = $previewMimeTypes;
     }
 
     /**
@@ -106,13 +109,12 @@ class DefaultFormatManager implements FormatManagerInterface
             }
 
             // load Media Data
-            list($fileName, $version, $storageOptions) = $this->getMediaData($media);
+            list($fileName, $version, $storageOptions, $mimeType) = $this->getMediaData($media);
 
             try {
                 // check if file has supported preview
-                $extension = $this->getRealFileExtension($fileName);
-                if (!in_array($extension, $this->previewExtensions)) {
-                    throw new InvalidExtensionForPreviewException($extension);
+                if (!in_array($mimeType, $this->previewMimeTypes)) {
+                    throw new InvalidMimeTypeForPreviewException($mimeType);
                 }
 
                 // load Original
@@ -120,10 +122,7 @@ class DefaultFormatManager implements FormatManagerInterface
                 $original = $this->createTmpFile($this->getFile($uri));
 
                 // prepare Media
-                $this->prepareMedia($fileName, $original);
-
-                // set extension
-                $imageExtension = $this->getImageExtension($fileName);
+                $this->prepareMedia($mimeType, $original);
 
                 // convert Media to format
                 $image = $this->converter->convert($original, $format);
@@ -134,8 +133,11 @@ class DefaultFormatManager implements FormatManagerInterface
                 // set Interlacing to plane for smaller image size
                 $image->interlace(ImageInterface::INTERLACE_PLANE);
 
+                // set extension
+                $imageExtension = $this->getImageExtension($fileName);
+
                 // get image
-                $image = $image->get($imageExtension, $this->getOptionsFromImage($image));
+                $image = $image->get($imageExtension, $this->getOptionsFromImage($image, $imageExtension));
 
                 // set header
                 $headers = array(
@@ -214,12 +216,13 @@ class DefaultFormatManager implements FormatManagerInterface
 
     /**
      * @param ImageInterface $image
+     * @param string $imageExtension
      * @return array
      */
-    protected function getOptionsFromImage(ImageInterface $image)
+    protected function getOptionsFromImage(ImageInterface $image, $imageExtension)
     {
         $options = array();
-        if (count($image->layers()) > 1) {
+        if (count($image->layers()) > 1 && $imageExtension == 'gif') {
             $options['animated'] = true;
         }
 
@@ -227,28 +230,33 @@ class DefaultFormatManager implements FormatManagerInterface
     }
 
     /**
-     * @param string $fileName
+     * @param string $mimeType
      * @param string $path
      */
-    protected function prepareMedia($fileName, $path)
+    protected function prepareMedia($mimeType, $path)
     {
-        switch ($this->getRealFileExtension($fileName)) {
-            case 'pdf':
+        switch ($mimeType) {
+            case 'application/pdf':
                 $this->convertPdfToImage($path);
                 break;
-            case 'psd':
+            case 'image/vnd.adobe.photoshop':
                 $this->convertPsdToImage($path);
                 break;
         }
     }
 
     /**
-     * @param string $path
+     * @param sstring $path
+     * @throws GhostScriptNotFoundException
      */
     protected function convertPdfToImage($path)
     {
         $command = $this->ghostScriptPath . ' -dNOPAUSE -sDEVICE=jpeg -dFirstPage=1 -dLastPage=1 -sOutputFile=' . $path . ' -dJPEGQ=100 -r300x300 -q ' . $path . ' -c quit';
         exec($command);
+
+        if (mime_content_type($path) == 'application/pdf') {
+            throw new GhostScriptNotFoundException('Ghostscript was not found at "' . $this->ghostScriptPath . '" or user has no Permission for "' . $path . '"');
+        }
     }
 
     /**
@@ -337,7 +345,7 @@ class DefaultFormatManager implements FormatManagerInterface
      */
     protected function createTmpFile($content)
     {
-        $tempFile = tempnam('/tmp', 'media_original');
+        $tempFile = tempnam(null, 'media_original');
         $handle = fopen($tempFile, 'w');
         fwrite($handle, $content);
         fclose($handle);
@@ -355,6 +363,7 @@ class DefaultFormatManager implements FormatManagerInterface
         $fileName = null;
         $storageOptions = null;
         $version = null;
+        $mimeType = null;
 
         /** @var File $file */
         foreach ($media->getFiles() as $file) {
@@ -364,6 +373,7 @@ class DefaultFormatManager implements FormatManagerInterface
                 if ($fileVersion->getVersion() == $version) {
                     $fileName = $fileVersion->getName();
                     $storageOptions = $fileVersion->getStorageOptions();
+                    $mimeType = $fileVersion->getMimeType();
                     break;
                 }
             }
@@ -374,7 +384,7 @@ class DefaultFormatManager implements FormatManagerInterface
             throw new ImageProxyMediaNotFoundException('Media file version was not found');
         }
 
-        return array($fileName, $version, $storageOptions);
+        return array($fileName, $version, $storageOptions, $mimeType);
     }
 
     /**
