@@ -108,7 +108,7 @@
             </trans-unit>
             <trans-unit id="831eaac1fa8a279d10e452f59e716b35" resname="smart-content.no-sorting">
                 <source>smart-content.no-sorting</source>
-                <target>No sorting</target>
+                <target>Default Sorting</target>
             </trans-unit>
             <trans-unit id="fc27db8368ee8e93b0432c6f929eb22c" resname="smart-content.ascending">
                 <source>smart-content.ascending</source>
