@@ -222,6 +222,7 @@ class ContentMapper implements ContentMapperInterface
      */
     public function saveRequest(ContentMapperRequest $request)
     {
+        $this->validateRequest($request);
         return $this->save(
             $request->getData(),
             $request->getTemplateKey(),
@@ -298,19 +299,19 @@ class ContentMapper implements ContentMapperInterface
             }
         };
 
+        $nodeNamePropertyName = $nodeNameProperty->getName();
+        if (!isset($data[$nodeNamePropertyName])) {
+            throw new \InvalidArgumentException(sprintf(
+                'You must set the "%s" data key which is tagged as the sulu.node.name',
+                $nodeNamePropertyName
+            ));
+        }
+
         // title should not have a slash
-        $title = str_replace('/', '-', $data[$nodeNameProperty->getName()]);
+        $title = str_replace('/', '-', $data[$nodeNamePropertyName]);
 
         /** @var NodeInterface $node */
         if ($uuid === null) {
-            $nodeNamePropertyName = $nodeNameProperty->getName();
-
-            if (!isset($data[$nodeNamePropertyName])) {
-                throw new \InvalidArgumentException(sprintf(
-                    'You must set the "%s" data key which is tagged as the sulu.node.name',
-                    $nodeNamePropertyName
-                ));
-            }
 
             // create a new node
             $path = $this->cleaner->cleanUp($title, $languageCode);
@@ -2055,4 +2056,42 @@ class ContentMapper implements ContentMapperInterface
     // ===============================
     // END: Row to array mapping logic
     // ===============================
+
+    /**
+     * Validate the content mapper request
+     *
+     * TODO: We should be validating the domain object, i.e. the Page or Snippet structure
+     *       types. But this requires refactoring the ContentMapper
+     */
+    private function validateRequest(ContentMapperRequest $request)
+    {
+        $this->validateRequired($request, array(
+            'templateKey',
+            'userId',
+            'locale',
+            'type',
+        ));
+
+        if ($request->getType() === Structure::TYPE_PAGE) {
+            $this->validateRequired($request, array(
+                'webspaceKey',
+                'state',
+            ));
+        }
+    }
+
+    private function validateRequired(ContentMapperRequest $request, $keys)
+    {
+        foreach ($keys as $required) {
+            $method = 'get' . ucfirst($required);
+            $val = $request->$method();
+
+            if (null === $val) {
+                throw new \InvalidArgumentException(sprintf(
+                    'ContentMapperRequest "%s" cannot be null',
+                    $required
+                ));
+            }
+        }
+    }
 }
