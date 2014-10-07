@@ -12,7 +12,7 @@ use Doctrine\Common\DataFixtures\ProxyReferenceRepository;
  *
  * NOTE: This class deprecates both PhpcrTestCase and DatabaseTestCase
  */
-class SuluTestCase extends BaseTestCase
+abstract class SuluTestCase extends BaseTestCase
 {
     /**
      * Return the ID of the test user (which is provided / created
@@ -56,6 +56,7 @@ class SuluTestCase extends BaseTestCase
         $content->setProperty('i18n:en-changed', new \DateTime());
         $content->addMixin('sulu:content');
         $webspace->addNode('temp');
+        $cmf->addNode('snippets');
 
         $session->save();
     }
