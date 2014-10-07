@@ -14,6 +14,7 @@ class AppKernel extends TestKernel
 
         $this->addBundles(array(
             new \Sulu\Bundle\CoreBundle\SuluCoreBundle(),
+            new \Sulu\Bundle\SnippetBundle\SuluSnippetBundle(),
         ));
     }
 

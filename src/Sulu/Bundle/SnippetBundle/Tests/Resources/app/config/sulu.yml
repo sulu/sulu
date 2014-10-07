@@ -8,12 +8,17 @@ sulu_core:
         username: %phpcr_user%
         password: %phpcr_pass%
     webspace:
-        config_dir: %kernel.root_dir%/Resources/webspaces
+        config_dir: %kernel.root_dir%/../../../vendor/sulu/test-bundle/Sulu/Bundle/TestBundle/Resources/webspaces
     content:
-        templates:
+        structure:
             paths:
-                app:
-                    path: "%kernel.root_dir%/Resources/templates"
+                structure:
+                    path: "%kernel.root_dir%/../../../vendor/sulu/test-bundle/Sulu/Bundle/TestBundle/Resources/structures/snippets"
                     internal: false
+                    type: snippet
+                page:
+                    path: "%kernel.root_dir%/Resources/pages"
+                    internal: false
+                    type: page
     http_cache:
         ~

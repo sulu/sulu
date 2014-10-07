@@ -14,6 +14,7 @@
         "sulu/admin-bundle": "dev-develop"
     },
     "require-dev": {
+        "sulu/test-bundle": "dev-develop",
         "symfony/symfony": "2.5.*",
         "symfony-cmf/testing": "~1.1",
         "symfony/monolog-bundle": "2.4.*",
