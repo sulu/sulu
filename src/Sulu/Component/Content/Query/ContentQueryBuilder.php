@@ -133,17 +133,6 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
             }
             $where .= ')';
 
-            $where .= sprintf(
-                " AND (ISDESCENDANTNODE(route, '/cmf/%s/routes/%s') OR ISSAMENODE(route, '/cmf/%s/routes/%s') OR NOT (page.[%s:%s-nodeType] = '%s'))",
-                $webspaceKey,
-                $locale,
-                $webspaceKey,
-                $locale,
-                $this->languageNamespace,
-                $locale,
-                Structure::NODE_TYPE_CONTENT
-            );
-
             $customOrder = $this->buildOrder($webspaceKey, $locale);
             if (!empty($customOrder)) {
                 $order[] = $customOrder;
