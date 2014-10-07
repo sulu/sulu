@@ -77,12 +77,6 @@ define([
                 this.user.set('password', '');
             }
 
-            if (!!data.user.id) { // PUT
-                this.user.url = '/admin/api/users/' + data.user.id;
-            } else { // POST
-                this.user.url = '/admin/api/users';
-            }
-
             // prepare deselected roles
             this.sandbox.util.each(data.deselectedRoles, function(index, value) {
                 var userRole;
