@@ -150,7 +150,8 @@ class ListToTreeConverterTest extends \PHPUnit_Framework_TestCase
         $data = array(
             $this->createItem('/a/a/a', $i++), // 0
             $this->createItem('/a', $i++), // 1
-            $this->createItem('/b/b', $i++), // 2
+            $this->createItem('/b/a', $i++), // 2
+            $this->createItem('/b/b', $i++), // 3
         );
 
         $expected = array(
@@ -166,8 +167,13 @@ class ListToTreeConverterTest extends \PHPUnit_Framework_TestCase
                 )
             ),
             array(
-                'path' => '/b/b',
+                'path' => '/b/a',
                 'a' => 2,
+                'children' => array()
+            ),
+            array(
+                'path' => '/b/b',
+                'a' => 3,
                 'children' => array()
             )
         );
