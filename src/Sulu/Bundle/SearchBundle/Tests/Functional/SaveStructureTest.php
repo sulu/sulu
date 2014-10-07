@@ -14,18 +14,13 @@ use Symfony\Component\Filesystem\Filesystem;
 use Sulu\Bundle\SearchBundle\Tests\Fixtures\SecondStructureCache;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\PropertyTag;
+use Sulu\Component\Content\Structure;
 
 class SaveStructureTest extends BaseTestCase
 {
     public function getKernelConfiguration()
     {
         return array('environment' => 'dev');
-    }
-
-    public function setUp()
-    {
-        $fs = new Filesystem;
-        $fs->remove(__DIR__ . '/../Resources/app/data');
     }
 
     /**
@@ -49,6 +44,42 @@ class SaveStructureTest extends BaseTestCase
         $metadataListener = $this->getContainer()->get('structure_metadata_load_listener');
         $this->assertInstanceOf('Sulu\Component\Content\StructureInterface', $metadataListener->structure);
         $this->assertInstanceOf('Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata', $metadataListener->indexMetadata);
+    }
+
+    public function testSaveStructureWithBlocks()
+    {
+        $mapper = $this->getContainer()->get('sulu.content.mapper');
+
+        $data = array(
+            'title' => 'Places',
+            'block' => array(
+                array(
+                    'type' => 'article',
+                    'title' => 'Dornbirn',
+                    'article' => 'Dornbirn Austrua',
+                ),
+                array(
+                    'type' => 'article',
+                    'title' => 'Basel',
+                    'article' => 'Basel Switzerland',
+                ),
+            ),
+        );
+
+        $mapper->save($data, 'blocks', 'sulu_io', 'de', 1, true, null, null, Structure::STATE_PUBLISHED);
+
+        $searchManager = $this->getSearchManager();
+
+        $searches = array(
+            'Places' => 1,
+            'Basel' => 1,
+            'Dornbirn' => 1,
+        );
+
+        foreach ($searches as $search => $count) {
+            $res = $searchManager->createSearch($search)->locale('de')->index('content')->execute();
+            $this->assertCount($count, $res, 'Searching for: ' . $search);
+        }
     }
 
     /**
