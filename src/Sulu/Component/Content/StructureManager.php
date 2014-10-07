@@ -286,6 +286,12 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
             $triedDirs[] = '"' . $templateDir['path'] . '"';
         }
 
+        if (empty($triedDirs)) {
+            throw new \InvalidArgumentException(sprintf(
+                'Could not find any template directories for structure type "%s"', $type
+            ));
+        }
+
         throw new \InvalidArgumentException(
             sprintf(
                 'Could not find a structure template named "%s.xml" of type "%s" in the following directories: %s',
