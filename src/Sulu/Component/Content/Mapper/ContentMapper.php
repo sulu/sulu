@@ -261,10 +261,13 @@ class ContentMapper implements ContentMapperInterface
             }
         };
 
+        // title should not have a slash
+        $title = str_replace('/', '-', $data[$nodeNameProperty->getName()]);
+
         /** @var NodeInterface $node */
         if ($uuid === null) {
             // create a new node
-            $path = $this->cleaner->cleanUp($data[$nodeNameProperty->getName()], $languageCode);
+            $path = $this->cleaner->cleanUp($title, $languageCode);
             $path = $this->getUniquePath($path, $root);
             $node = $root->addNode($path);
             $newTranslatedNode($node);
@@ -284,7 +287,7 @@ class ContentMapper implements ContentMapperInterface
                     ) !== $data[$nodeNameProperty->getName()];
 
                 if (!$this->noRenamingFlag && $hasSameLanguage && $hasSamePath && $hasDifferentTitle) {
-                    $path = $this->cleaner->cleanUp($data[$nodeNameProperty->getName()], $languageCode);
+                    $path = $this->cleaner->cleanUp($title, $languageCode);
                     $path = $this->getUniquePath($path, $node->getParent());
 
                     if ($path) {
