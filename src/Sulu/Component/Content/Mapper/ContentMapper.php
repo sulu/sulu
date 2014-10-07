@@ -1732,6 +1732,7 @@ class ContentMapper implements ContentMapperInterface
                 $url = $structure->getResourceLocator();
             }
 
+            $originLocale = $locale;
             $locale = $this->getShadowLocale($node, $locale);
             $this->properties->setLanguage($locale);
 
@@ -1778,7 +1779,7 @@ class ContentMapper implements ContentMapperInterface
             // get url returns false if route is not this language
             if ($url !== false) {
                 // generate field data
-                $fieldsData = $this->getFieldsData($row, $node, $fields, $templateKey, $webspaceKey, $locale);
+                $fieldsData = $this->getFieldsData($row, $node, $fields[$originLocale], $templateKey, $webspaceKey, $locale);
 
                 return array_merge(
                     array(
@@ -1813,7 +1814,7 @@ class ContentMapper implements ContentMapperInterface
     private function getFieldsData(Row $row, NodeInterface $node, $fields, $templateKey, $webspaceKey, $locale)
     {
         $fieldsData = array();
-        foreach ($fields[$locale] as $field) {
+        foreach ($fields as $field) {
             // determine target for data in result array
             if (isset($fieldsData['target'])) {
                 if (!isset($fieldsData[$field['target']])) {
