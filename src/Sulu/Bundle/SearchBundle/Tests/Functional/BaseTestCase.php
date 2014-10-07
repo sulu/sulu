@@ -19,6 +19,8 @@ use Sulu\Component\Content\StructureInterface;
 
 class BaseTestCase extends SymfonyCmfBaseTestCase
 {
+    protected $session;
+
     public function getKernelConfiguration()
     {
         return array('environment' => 'dev');
@@ -28,6 +30,9 @@ class BaseTestCase extends SymfonyCmfBaseTestCase
     {
         $fs = new Filesystem;
         $fs->remove(__DIR__ . '/../Resources/app/data');
+        $this->session = $this->getContainer()->get('doctrine_phpcr')->getConnection();
+        $this->purgeNode('/cmf/sulu_io/routes/de');
+        $this->purgeNode('/cmf/sulu_io/contents');
     }
 
     public function getSearchManager()
@@ -59,18 +64,19 @@ class BaseTestCase extends SymfonyCmfBaseTestCase
             'url' => $url
         );
 
-        $session = $this->getContainer()->get('doctrine_phpcr')->getConnection();
-
-        try {
-            $node = $session->getNode('/cmf/sulu_io/routes/de'.$url);
-            $node->remove();
-            $session->save();
-        } catch (\PHPCR\PathNotFoundException $e) {
-        }
-
         /** @var ContentMapperInterface $mapper */
         $mapper = $this->getContainer()->get('sulu.content.mapper');
         $mapper->save($data, 'default', 'sulu_io', 'de', 1, true, null, null, Structure::STATE_PUBLISHED);
+    }
+
+    protected function purgeNode($path)
+    {
+        $node = $this->session->getNode($path);
+        foreach ($node->getNodes() as $child) {
+            $child->remove();
+        }
+
+        $this->session->save();
     }
 }
 
