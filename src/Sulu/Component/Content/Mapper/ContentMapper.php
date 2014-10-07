@@ -1965,11 +1965,16 @@ class ContentMapper implements ContentMapperInterface
                 if ($property->getContentTypeName() !== 'resource_locator') {
                     return 'http://' . $this->getPropertyData($row->getNode('page'), $property, $webspaceKey, $locale);
                 }
+            } else {
+                return '';
             }
 
             try {
                 $routePath = $row->getPath('route');
-                if (strpos($routePath, $routesPath) === 0) {
+
+                $nextChar = substr($routePath, strlen($routesPath), 1);
+                $position = strpos($routePath, $routesPath);
+                if ($position === 0 && ($nextChar === '/' || $nextChar === '.' || $nextChar === false)) {
                     $url = str_replace($routesPath, '', $routePath);
                 } else {
                     return false;
