@@ -4,7 +4,7 @@
     "description": "Symfony bundle that provides basic core functionality",
     "license": "MIT",
     "keywords": ["core", "sulu"],
-    "version": "dev-develop",
+    "version": "0.8.0",
     "authors": [
         {
             "name": "Sulu Community",
@@ -27,10 +27,10 @@
         "symfony/symfony": "2.5.*",
         "phpunit/phpunit": "4.0.*",
         "phpspec/prophecy-phpunit": "~1.0",
-        "sulu/test-bundle": "dev-develop",
         "jackalope/jackalope-doctrine-dbal": "1.1.*",
         "matthiasnoback/symfony-dependency-injection-test": "~0.1",
-        "matthiasnoback/symfony-config-test": "~0.3"
+        "matthiasnoback/symfony-config-test": "~0.3",
+        "sulu/test-bundle": "dev-develop"
     },
     "suggest": {
         "massive/build-bundle": "For initializing the Sulu environment"
