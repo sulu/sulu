@@ -1974,7 +1974,7 @@ class ContentMapper implements ContentMapperInterface
 
                 $nextChar = substr($routePath, strlen($routesPath), 1);
                 $position = strpos($routePath, $routesPath);
-                if ($position === 0 && ($nextChar === '/' || $nextChar === '.' || $nextChar === false)) {
+                if ($position === 0 && ($nextChar === '/' || $nextChar === false)) {
                     $url = str_replace($routesPath, '', $routePath);
                 } else {
                     return false;
