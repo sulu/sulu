@@ -176,6 +176,13 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('/products/aepfel', $result);
     }
 
+    public function testGenerateSlash()
+    {
+        // /products/machines => not unique add -1
+        $result = $this->strategy->generate('test / test', '/products', 'default', 'de');
+        $this->assertEquals('/products/test-test', $result);
+    }
+
     /**
      * @return NodeInterface
      */

@@ -67,6 +67,9 @@ abstract class RlpStrategy implements RlpStrategyInterface
      */
     public function generate($title, $parentPath, $webspaceKey, $languageCode, $segmentKey = null)
     {
+        // title should not have a slash
+        $title = str_replace('/', '-', $title);
+
         // get generated path from childClass
         $path = $this->generatePath($title, $parentPath);
 
