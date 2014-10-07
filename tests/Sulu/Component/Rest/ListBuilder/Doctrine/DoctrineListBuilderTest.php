@@ -188,7 +188,7 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
     {
         $this->doctrineListBuilder->sort(new DoctrineFieldDescriptor('desc', 'desc', self::$entityName));
 
-        $this->queryBuilder->expects($this->once())->method('orderBy')->with('desc', 'ASC');
+        $this->queryBuilder->expects($this->once())->method('orderBy')->with(self::$entityName. '.desc', 'ASC');
 
         $this->doctrineListBuilder->execute();
     }
