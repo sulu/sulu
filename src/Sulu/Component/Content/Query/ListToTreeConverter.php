@@ -38,14 +38,16 @@ class ListToTreeConverter
 
         $tree = $this->explodeTree($map, '/');
 
-        $tree = $this->toArray($tree);
         for ($i = 0; $i < $minDepth - 1; $i++) {
+            $tree['children'] = array_values($tree['children']);
             if (!array_key_exists('children', $tree) || !array_key_exists(0, $tree['children'])) {
                 return array();
             }
 
             $tree = $tree['children'][0];
         }
+
+        $tree = $this->toArray($tree);
 
         return $tree['children'];
     }
@@ -55,6 +57,17 @@ class ListToTreeConverter
         if (isset($tree['children'])) {
             $tree['children'] = array_values($tree['children']);
 
+            // search for empty nodes
+            for ($i = 0; $i < sizeof($tree['children']); $i++) {
+                if (array_keys($tree['children'][$i]) === array('children')) {
+                    array_splice($tree['children'], $i + 1, 0, $tree['children'][$i]['children']);
+                    unset($tree['children'][$i]);
+                }
+            }
+
+            $tree['children'] = array_values($tree['children']);
+
+            // recursive to array
             for ($i = 0; $i < sizeof($tree['children']); $i++) {
                 $tree['children'][$i] = $this->toArray($tree['children'][$i]);
             }
