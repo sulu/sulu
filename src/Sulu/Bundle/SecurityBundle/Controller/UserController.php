@@ -199,10 +199,7 @@ class UserController extends RestController implements ClassResourceInterface
                 );
             }
 
-            if ($request->get('enabled') != '') {
-                $user->setEnabled($request->get('enabled'));
-            }
-
+            $user->setEnabled($request->get('enabled'));
             $user->setLocale($request->get('locale'));
 
             if (
