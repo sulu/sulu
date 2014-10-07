@@ -118,17 +118,11 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
     /**
      * Loads the user for the given username.
      *
-     * This method throws:
-     * UsernameNotFoundException if the user is not found,
-     * DisabledException if the user is not enabled,
-     * LockedException if the user is locked
-     *
      * @param string $username The username
-     * @throws \Symfony\Component\Security\Core\Exception\LockedException
-     * @throws \Symfony\Component\Security\Core\Exception\DisabledException
-     * @throws \Symfony\Component\Security\Core\Exception\UsernameNotFoundException
+     * @throws LockedException
+     * @throws DisabledException
+     * @throws UsernameNotFoundException
      * @return UserInterface
-     * @see UsernameNotFoundException
      */
     public function loadUserByUsername($username)
     {
