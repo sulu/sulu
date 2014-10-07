@@ -34,6 +34,7 @@ use Sulu\Component\Webspace\Webspace;
 
 /**
  * tests content mapper with tree strategy and phpcr mapper
+ * TODO: REFACTOR THIS NOW - make it an integration test.
  */
 class ContentMapperTest extends PhpcrTestCase
 {
@@ -334,7 +335,14 @@ class ContentMapperTest extends PhpcrTestCase
                 $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeEvent')
             );
 
-        $result = $this->mapper->save($data, 'overview', 'default', 'de', 1);
+        $result = $this->mapper->saveRequest(
+            ContentMapperRequest::create()
+                ->setWebspaceKey('this_is_fake_so_there')
+                ->setTemplateKey('overview')
+                ->setLocale('de')
+                ->setUserId(1)
+                ->setData($data)
+            );
 
         $this->assertEquals('Testname', $result->getPropertyValue('name'));
         $this->assertEquals(
@@ -3042,6 +3050,16 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals('/my-your-nice-test', $result->getPath());
         $this->assertEquals('/my-your-nice-test', $result->getPropertyValue('url'));
         $this->assertEquals('My / Your nice test', $result->getPropertyValue('name'));
+    }
+
+    public function testLoadSnippet()
+    {
+        throw new \Exception('Do this');
+    }
+
+    public function testSaveSnippet()
+    {
+        throw new \Exception('Do this');
     }
 }
 
