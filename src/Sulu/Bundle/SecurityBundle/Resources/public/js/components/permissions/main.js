@@ -254,7 +254,6 @@ define([
             this.user.set('enabled', true);
             this.user.url = '/admin/api/users/' + this.user.id;
 
-
             this.user.save(null, {
                 success: function(response) {
                     this.sandbox.logger.log('successfully enabled user', response);
