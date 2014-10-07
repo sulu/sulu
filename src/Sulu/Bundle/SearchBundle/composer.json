@@ -2,7 +2,7 @@
     "name": "sulu/search-bundle",
     "description": "Sulu Search Bundle",
     "license": "MIT",
-    "version": "0.3.0",
+    "version": "dev-develop",
     "authors": [
         {
             "name": "Daniel Leech",
@@ -11,7 +11,7 @@
     ],
     "require": {
         "massive/search-bundle": "0.3.*",
-        "sulu/sulu": "0.8.*"
+        "sulu/sulu": "dev-develop"
     },
     "require-dev": {
         "symfony-cmf/testing": "dev-master",
